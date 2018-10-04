@@ -1,0 +1,38 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "io.dentall.totoro",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "5.4.0",
+    "applicationType": "monolith",
+    "baseName": "totoro",
+    "packageName": "io.dentall.totoro",
+    "packageFolder": "io/dentall/totoro",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "NDY1ZDY2NzEzMjFlZjgyM2Q5MmEyYTRkMTA0YjQyMGUwYzhlNDMzNjRiOTAyNzI3NzI2OGM1MzA3Y2Y1ZGZjNGQ4NzI3MzRiNDkwYjI1ZTQ4NTE3NjI2ZGRiZjUxMDMxMmNjMjYzZDU0NjIxZDBmZjAxNDA2MWM3OWFkNzhmMDM=",
+    "clientFramework": "react",
+    "useSass": false,
+    "clientPackageManager": "npm",
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "enableTranslation": true,
+    "nativeLanguage": "en",
+    "languages": [
+      "en",
+      "zh-tw"
+    ]
+  }
+}
