@@ -3,12 +3,9 @@ import './header.css';
 import React from 'react';
 import { Translate } from 'react-jhipster';
 import { Navbar, Nav, NavbarToggler, NavbarBrand, Collapse } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { NavLink as Link } from 'react-router-dom';
 import LoadingBar from 'react-redux-loading-bar';
 
-import { Home, Brand } from './header-components';
+import { Home, Brand, Version } from './header-components';
 import { AdminMenu, EntitiesMenu, AccountMenu, LocaleMenu } from './menus';
 
 export interface IHeaderProps {
@@ -43,6 +40,8 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
       </div>
     ) : null;
 
+  renderVersion = () => !this.props.isInProduction && <Version />;
+
   toggleMenu = () => {
     this.setState({ menuOpen: !this.state.menuOpen });
   };
@@ -59,6 +58,7 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
         <Navbar dark expand="sm" fixed="top" className="jh-navbar">
           <NavbarToggler aria-label="Menu" onClick={this.toggleMenu} />
           <Brand />
+          {this.renderVersion()}
           <Collapse isOpen={this.state.menuOpen} navbar>
             <Nav id="header-tabs" className="ml-auto" navbar>
               <Home />

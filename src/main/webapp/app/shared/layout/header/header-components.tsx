@@ -1,7 +1,7 @@
 import React from 'react';
 import { Translate } from 'react-jhipster';
 
-import { UncontrolledDropdown, DropdownToggle, DropdownMenu, NavItem, NavLink, NavbarBrand } from 'reactstrap';
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, NavItem, NavLink, NavbarBrand } from 'reactstrap';
 import { NavLink as Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -14,14 +14,14 @@ export const NavDropdown = props => (
       <span>{props.name}</span>
     </DropdownToggle>
     <DropdownMenu right style={props.style}>
-      {props.children}
+      {props.children || <DropdownItem disabled>No Resource</DropdownItem>}
     </DropdownMenu>
   </UncontrolledDropdown>
 );
 
 export const BrandIcon = props => (
   <div {...props} className="brand-icon">
-    <img src="content/images/logo-jhipster-react.svg" alt="Logo" />
+    <img src="content/images/logo.svg" alt="Logo" />
   </div>
 );
 
@@ -31,8 +31,11 @@ export const Brand = props => (
     <span className="brand-title">
       <Translate contentKey="global.title">Totoro</Translate>
     </span>
-    <span className="navbar-version">{appConfig.VERSION}</span>
   </NavbarBrand>
+);
+
+export const Version = () => (
+  <div className="navbar-version">{appConfig.VERSION}</div>
 );
 
 export const Home = props => (
