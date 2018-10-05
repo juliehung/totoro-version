@@ -112,3 +112,7 @@ logging:
 # ===================================================================
 
 # application:
+
+calendar:
+    secret:
+        google: service-account.json

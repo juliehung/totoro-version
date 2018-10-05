@@ -1,6 +1,7 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
+import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.jwt.TokenProvider;
@@ -69,6 +70,9 @@ public class UserJWTControllerIntTest {
         user.setActivated(true);
         user.setPassword(passwordEncoder.encode("test"));
 
+        ExtendUser extendUser = ExtendUserResourceIntTest.createEntity();
+        extendUser.setUser(user);
+        user.setExtendUser(extendUser);
         userRepository.saveAndFlush(user);
 
         LoginVM login = new LoginVM();
@@ -93,6 +97,9 @@ public class UserJWTControllerIntTest {
         user.setActivated(true);
         user.setPassword(passwordEncoder.encode("test"));
 
+        ExtendUser extendUser = ExtendUserResourceIntTest.createEntity();
+        extendUser.setUser(user);
+        user.setExtendUser(extendUser);
         userRepository.saveAndFlush(user);
 
         LoginVM login = new LoginVM();

@@ -3,6 +3,7 @@ package io.dentall.totoro.service.dto;
 import io.dentall.totoro.config.Constants;
 
 import io.dentall.totoro.domain.Authority;
+import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.User;
 
 import javax.validation.constraints.Email;
@@ -53,6 +54,8 @@ public class UserDTO {
 
     private Set<String> authorities;
 
+    private ExtendUser extendUser;
+
     public UserDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -73,6 +76,7 @@ public class UserDTO {
         this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());
+        this.extendUser = user.getExtendUser();
     }
 
     public Long getId() {
@@ -179,6 +183,14 @@ public class UserDTO {
         this.authorities = authorities;
     }
 
+    public ExtendUser getExtendUser() {
+        return extendUser;
+    }
+
+    public void setExtendUser(ExtendUser extendUser) {
+        this.extendUser = extendUser;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -194,6 +206,7 @@ public class UserDTO {
             ", lastModifiedBy='" + lastModifiedBy + '\'' +
             ", lastModifiedDate=" + lastModifiedDate +
             ", authorities=" + authorities +
+            ", extendUser=" + extendUser +
             "}";
     }
 }

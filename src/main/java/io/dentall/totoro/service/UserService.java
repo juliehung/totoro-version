@@ -2,6 +2,7 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.config.Constants;
 import io.dentall.totoro.domain.Authority;
+import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.AuthorityRepository;
 import io.dentall.totoro.repository.UserRepository;
@@ -157,6 +158,10 @@ public class UserService {
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
+
+        ExtendUser extendUser = new ExtendUser();
+        extendUser.setUser(user);
+
         userRepository.save(user);
         this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);
@@ -218,6 +223,23 @@ public class UserService {
                 return user;
             })
             .map(UserDTO::new);
+    }
+
+    /**
+     * Update gmail and calendarId for a user
+     * @param gmail
+     * @param calendarId
+     */
+    public void updateExtendUser(String gmail, String calendarId) {
+        SecurityUtils.getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .map(User::getExtendUser)
+            .ifPresent(extendUser -> {
+                extendUser.setGmail(gmail);
+                extendUser.setCalendarId(calendarId);
+                this.clearUserCaches(extendUser.getUser());
+                log.debug("Changed Information for ExtendUser: {}", extendUser);
+            });
     }
 
     public void deleteUser(String login) {
