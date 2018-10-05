@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.Authority;
+import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.AuthoritiesConstants;
@@ -136,6 +137,10 @@ public class UserResourceIntTest {
         user = createEntity(em);
         user.setLogin(DEFAULT_LOGIN);
         user.setEmail(DEFAULT_EMAIL);
+
+        ExtendUser extendUser = ExtendUserResourceIntTest.createEntity();
+        extendUser.setUser(user);
+        user.setExtendUser(extendUser);
     }
 
     @Test

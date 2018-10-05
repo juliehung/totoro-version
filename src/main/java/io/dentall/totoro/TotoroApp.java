@@ -84,7 +84,8 @@ public class TotoroApp {
                 "Application '{}' is running! Access URLs:\n\t" +
                 "Local: \t\t{}://localhost:{}{}\n\t" +
                 "External: \t{}://{}:{}{}\n\t" +
-                "Profile(s): \t{}\n----------------------------------------------------------",
+                "Profile(s): \t{}\n\t" +
+                "Calendar: \t{}\n----------------------------------------------------------",
             env.getProperty("spring.application.name"),
             protocol,
             serverPort,
@@ -93,6 +94,7 @@ public class TotoroApp {
             hostAddress,
             serverPort,
             contextPath,
-            env.getActiveProfiles());
+            env.getActiveProfiles(),
+            env.getProperty("calendar.secret.google"));
     }
 }

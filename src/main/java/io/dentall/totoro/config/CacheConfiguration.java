@@ -38,6 +38,7 @@ public class CacheConfiguration {
             cm.createCache(io.dentall.totoro.domain.User.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.User.class.getName() + ".authorities", jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

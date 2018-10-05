@@ -229,6 +229,7 @@ dependencies {
     annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
+    compile 'com.google.apis:google-api-services-calendar:v3-rev337-1.25.0'
     testCompile "com.jayway.jsonpath:json-path"
     testCompile ("org.springframework.boot:spring-boot-starter-test") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
