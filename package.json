@@ -127,7 +127,7 @@
     "cleanup": "rimraf build/www",
     "start": "npm run webpack:dev",
     "start-tls": "npm run webpack:dev -- --env.tls",
-    "test": "npm run lint && jest --coverage --logHeapUsage -w=2 --config src/test/javascript/jest.conf.js",
+    "test": "npm run lint && jest --coverage --logHeapUsage -w=2 --config src/test/javascript/jest.conf.js --updateSnapshot",
     "test:watch": "npm test -- --watch",
     "webpack:dev": "npm run webpack-dev-server -- --config webpack/webpack.dev.js --inline --port=9060 --env.stats=minimal",
     "webpack:dev-verbose": "npm run webpack-dev-server -- --config webpack/webpack.dev.js --inline --port=9060 --profile --progress --env.stats=normal",
