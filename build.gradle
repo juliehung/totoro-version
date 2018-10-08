@@ -22,7 +22,8 @@ plugins {
     id "net.ltgt.apt" version "0.18"
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id "com.moowork.node" version "1.2.0"
-    id 'org.liquibase.gradle' version '2.0.1'
+    id "org.liquibase.gradle" version "2.0.1"
+    id "com.github.ben-manes.versions" version "0.20.0"
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
@@ -229,7 +230,7 @@ dependencies {
     annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
-    compile 'com.google.apis:google-api-services-calendar:v3-rev337-1.25.0'
+    compile "com.google.apis:google-api-services-calendar:${google_calendar_version}"
     testCompile "com.jayway.jsonpath:json-path"
     testCompile ("org.springframework.boot:spring-boot-starter-test") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
