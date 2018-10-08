@@ -91,6 +91,12 @@ if (OperatingSystem.current().isWindows()) {
     }
 }
 
+task testReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn test
+}
+
+apply from: 'gradle/sonar.gradle'
 test {
     exclude '**/CucumberTest*'
 
@@ -98,16 +104,12 @@ test {
     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
     // ignoreFailures true
     reports.html.enabled = false
-}
 
-task testReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn test
+    finalizedBy testReport, jacocoTestReport
 }
 
 
 apply from: 'gradle/docker.gradle'
-apply from: 'gradle/sonar.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
 if (project.hasProperty('prod')) {

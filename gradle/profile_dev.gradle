@@ -20,15 +20,6 @@ bootRun {
     args = []
 }
 
-task webpackBuildDev(type: NpmTask, dependsOn: 'npm_install') {
-    onlyIf { shouldWebpackRun() == true }
-    args = ["run", "webpack:build"]
-}
-
-war {
-    webAppDirName = 'src/main/webapp/'
-}
-
 task copyIntoStatic (type: Copy) {
     from 'build/www/'
     into 'build/resources/main/static'
@@ -45,7 +36,6 @@ processResources {
     }
 }
 
-processResources.dependsOn webpackBuildDev
 copyIntoStatic.dependsOn processResources
 bootJar.dependsOn copyIntoStatic
 
@@ -53,4 +43,27 @@ yarn_install.onlyIf { shouldWebpackRun() == true }
 
 def shouldWebpackRun() {
     file('build/www/app/main.bundle.js').exists() == false || project.hasProperty('webpack')
+}
+
+if (project.hasProperty('4fe')) {
+    task webpack(type: NpmTask, dependsOn: 'npm_install') {
+        args = ["run", "webpack:prod"]
+    }
+
+    war {
+        webAppDirName = 'build/www/'
+    }
+    
+    processResources.dependsOn webpack
+} else {
+    task webpackBuildDev(type: NpmTask, dependsOn: 'npm_install') {
+        onlyIf { shouldWebpackRun() == true }
+        args = ["run", "webpack:build"]
+    }
+
+    war {
+        webAppDirName = 'src/main/webapp/'
+    }
+
+    processResources.dependsOn webpackBuildDev
 }
