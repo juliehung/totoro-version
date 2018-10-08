@@ -21,7 +21,7 @@ export const NavDropdown = props => (
 
 export const BrandIcon = props => (
   <div {...props} className="brand-icon">
-    <img src="content/images/logo.svg" alt="Logo" />
+    <img src="content/images/logo.png" alt="Logo" />
   </div>
 );
 
@@ -34,9 +34,7 @@ export const Brand = props => (
   </NavbarBrand>
 );
 
-export const Version = () => (
-  <div className="navbar-version">{appConfig.VERSION}</div>
-);
+export const Version = () => <div className="navbar-version">{appConfig.VERSION}</div>;
 
 export const Home = props => (
   <NavItem>
