@@ -39,6 +39,7 @@ gradle-front-test:
     artifacts:
         paths:
             - build/test-results/jest/*
+            - build/test-results/lcov-report/*
 #       expire_in: 90 day
 gradle-repackage:
     stage: package
@@ -53,10 +54,12 @@ pages:
     stage: testReport
     dependencies:
         - gradle-test
+        - gradle-front-test
     script:
         - mkdir public
         - mv build/reports/tests/* public
         - mv build/jacocoHtml public
+        - mv build/test-results/lcov-report public
     artifacts:
         paths:
             - public
