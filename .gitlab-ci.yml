@@ -1,11 +1,10 @@
-image: openjdk:8
-
 cache:
     key: "$CI_COMMIT_REF_NAME"
     paths:
         - node_modules
         - .gradle/wrapper
         - .gradle/caches
+
 stages:
     - build
     - test
@@ -15,15 +14,15 @@ stages:
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x gradlew
-    - apt-get update && apt-get install -y --no-install-recommends gcc make libpng-dev
-    - ./gradlew npmInstall -PnodeInstall --no-daemon
 
 gradle-build:
     stage: build
+    image: jimlin/java8-node8
     script:
         - ./gradlew compileJava -x check -PnodeInstall --no-daemon
 gradle-test:
     stage: test
+    image: jimlin/java8-node8
     script:
         - ./gradlew test -PnodeInstall --no-daemon
     artifacts:
@@ -34,6 +33,7 @@ gradle-test:
 #       expire_in: 90 day
 gradle-front-test:
     stage: test
+    image: jimlin/java8-node8
     script:
         - ./gradlew npm_test -PnodeInstall --no-daemon
     artifacts:
@@ -43,6 +43,7 @@ gradle-front-test:
 #       expire_in: 90 day
 gradle-repackage:
     stage: package
+    image: jimlin/java8-node8
     script:
         - ./gradlew bootWar -Pdev -P4fe -x check -PnodeInstall --no-daemon
     artifacts:
@@ -52,6 +53,7 @@ gradle-repackage:
 
 pages:
     stage: testReport
+    image: alpine
     dependencies:
         - gradle-test
         - gradle-front-test
