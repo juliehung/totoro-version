@@ -77,6 +77,17 @@ public class UserService {
             });
     }
 
+    public Optional<User> resetPasswordbyAdmin(String login) {
+        log.debug("Reset user password without reset key {}");
+        return userRepository.findOneByLogin(login)
+            .map(user -> {
+                user.setPassword(passwordEncoder.encode(login));
+                user.getExtendUser().setFirstLogin(true);
+                this.clearUserCaches(user);
+                return user;
+            });
+    }
+
     public Optional<User> requestPasswordReset(String mail) {
         return userRepository.findOneByEmailIgnoreCase(mail)
             .filter(User::getActivated)
@@ -118,6 +129,11 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
+
+        ExtendUser newExtendUser = new ExtendUser();
+        newExtendUser.setUser(newUser);
+
+        newUser.setExtendUser(newExtendUser);
         userRepository.save(newUser);
         this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
@@ -162,6 +178,7 @@ public class UserService {
         ExtendUser extendUser = new ExtendUser();
         extendUser.setUser(user);
 
+        user.setExtendUser(extendUser);
         userRepository.save(user);
         this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);

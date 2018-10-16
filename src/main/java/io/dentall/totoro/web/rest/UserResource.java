@@ -7,9 +7,7 @@ import io.dentall.totoro.security.AuthoritiesConstants;
 import io.dentall.totoro.service.MailService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.dto.UserDTO;
-import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
-import io.dentall.totoro.web.rest.errors.EmailAlreadyUsedException;
-import io.dentall.totoro.web.rest.errors.LoginAlreadyUsedException;
+import io.dentall.totoro.web.rest.errors.*;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import com.codahale.metrics.annotation.Timed;
@@ -186,5 +184,20 @@ public class UserResource {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
         return ResponseEntity.ok().headers(HeaderUtil.createAlert( "userManagement.deleted", login)).build();
+    }
+
+    /**
+     * Post /users/reset-password : Admin reset the password of the user to login
+     *
+     * @param   login the username
+     * @throws InternalServerErrorException 400 (Bad Request) if the login is incorrect
+     * @throws RuntimeException 500 (Internal Server Error) if the password could not be reset
+     */
+
+    @PostMapping("/users/{login:" + Constants.LOGIN_REGEX + "}/reset-password")
+    @Timed
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")") // 跟Secured(AuthoritiesConstants.ADMIN)差在哪裡？
+    public ResponseEntity<User> resetUserPassword(@PathVariable String login){
+        return ResponseUtil.wrapOrNotFound(userService.resetPasswordbyAdmin(login));
     }
 }

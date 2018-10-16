@@ -129,6 +129,11 @@ public class UserResourceIntTest {
         user.setLastName(DEFAULT_LASTNAME);
         user.setImageUrl(DEFAULT_IMAGEURL);
         user.setLangKey(DEFAULT_LANGKEY);
+
+        ExtendUser extendUser = ExtendUserResourceIntTest.createEntity();
+        extendUser.setUser(user);
+        user.setExtendUser(extendUser);
+
         return user;
     }
 
@@ -137,10 +142,6 @@ public class UserResourceIntTest {
         user = createEntity(em);
         user.setLogin(DEFAULT_LOGIN);
         user.setEmail(DEFAULT_EMAIL);
-
-        ExtendUser extendUser = ExtendUserResourceIntTest.createEntity();
-        extendUser.setUser(user);
-        user.setExtendUser(extendUser);
     }
 
     @Test
@@ -615,5 +616,20 @@ public class UserResourceIntTest {
         authorityB.setName(AuthoritiesConstants.USER);
         assertThat(authorityA).isEqualTo(authorityB);
         assertThat(authorityA.hashCode()).isEqualTo(authorityB.hashCode());
+
+    }
+
+
+    @Test
+    @Transactional
+    public void testResetPassword() throws Exception {
+        user.getExtendUser().setFirstLogin(false);
+        userRepository.saveAndFlush(user);
+
+        restUserMockMvc.perform(post("/api/users/{login}/reset-password", user.getLogin()))
+            .andExpect(status().isOk());
+
+        User updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
+        assertThat(updatedUser.getExtendUser().isFirstLogin()).isTrue();
     }
 }
