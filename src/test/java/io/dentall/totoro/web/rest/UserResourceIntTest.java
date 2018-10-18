@@ -22,10 +22,12 @@ import org.springframework.cache.CacheManager;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
@@ -34,6 +36,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -96,7 +99,12 @@ public class UserResourceIntTest {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private WebApplicationContext context;
+
     private MockMvc restUserMockMvc;
+
+    private MockMvc restIntegrationUserMockMvc;
 
     private User user;
 
@@ -110,6 +118,10 @@ public class UserResourceIntTest {
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setMessageConverters(jacksonMessageConverter)
+            .build();
+
+        this.restIntegrationUserMockMvc = MockMvcBuilders.webAppContextSetup(context)
+            .apply(springSecurity())
             .build();
     }
 
@@ -510,6 +522,35 @@ public class UserResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").value(hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN)));
+    }
+
+    @Test
+    @Transactional
+    public void getAllAuthoritiesWithUnauthorizedUser() throws Exception {
+        restIntegrationUserMockMvc.perform(get("/api/users/authorities")
+            .accept(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser
+    public void getAllAuthoritiesWithForbiddenUser() throws Exception {
+        restIntegrationUserMockMvc.perform(get("/api/users/authorities")
+            .accept(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(authorities = AuthoritiesConstants.MANAGER)
+    public void getAllAuthoritiesWithManager() throws Exception {
+        restIntegrationUserMockMvc.perform(get("/api/users/authorities")
+            .accept(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
     }
 
     @Test

@@ -85,7 +85,7 @@ public class UserResource {
      */
     @PostMapping("/users")
     @Timed
-    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\") OR hasRole(\"" + AuthoritiesConstants.MANAGER + "\")")
     public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) throws URISyntaxException {
         log.debug("REST request to save User : {}", userDTO);
 
@@ -115,7 +115,7 @@ public class UserResource {
      */
     @PutMapping("/users")
     @Timed
-    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\") OR hasRole(\"" + AuthoritiesConstants.MANAGER + "\")")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO) {
         log.debug("REST request to update User : {}", userDTO);
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
@@ -151,7 +151,7 @@ public class UserResource {
      */
     @GetMapping("/users/authorities")
     @Timed
-    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\") OR hasRole(\"" + AuthoritiesConstants.MANAGER + "\")")
     public List<String> getAuthorities() {
         return userService.getAuthorities();
     }
@@ -179,7 +179,7 @@ public class UserResource {
      */
     @DeleteMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
     @Timed
-    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\") OR hasRole(\"" + AuthoritiesConstants.MANAGER + "\")")
     public ResponseEntity<Void> deleteUser(@PathVariable String login) {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
@@ -193,10 +193,9 @@ public class UserResource {
      * @throws InternalServerErrorException 400 (Bad Request) if the login is incorrect
      * @throws RuntimeException 500 (Internal Server Error) if the password could not be reset
      */
-
     @PostMapping("/users/{login:" + Constants.LOGIN_REGEX + "}/reset-password")
     @Timed
-    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")") // 跟Secured(AuthoritiesConstants.ADMIN)差在哪裡？
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\") OR hasRole(\"" + AuthoritiesConstants.MANAGER + "\")")
     public ResponseEntity<User> resetUserPassword(@PathVariable String login){
         return ResponseUtil.wrapOrNotFound(userService.resetPasswordbyAdmin(login));
     }
