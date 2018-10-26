@@ -1,0 +1,12 @@
+{
+    "totoroApp": {
+        "Blood" : {
+            "null": "",
+            "UNKNOWN": "UNKNOWN",
+            "A": "A",
+            "AB": "AB",
+            "B": "B",
+            "O": "O"
+        }
+    }
+}

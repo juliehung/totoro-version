@@ -1,0 +1,51 @@
+
+{
+    "totoroApp": {
+        "patient" : {
+            "home": {
+                "title": "Patients",
+                "createLabel": "建立一筆新的 Patient",
+                "createOrEditLabel": "建立或編輯 Patient"
+            },
+            "created": "新的 Patient 建立成功，識別碼為 {{ param }}",
+            "updated": "識別碼為 {{ param }} 的 Patient 更新成功",
+            "deleted": "識別碼為 {{ param }} 的 Patient 刪除成功",
+            "delete": {
+                "question": "您確定要刪除 Patient {{ id }} 嗎?"
+            },
+            "detail": {
+                "title": "Patient"
+            },
+            "name": "Name",
+            "nationalId": "National Id",
+            "gender": "Gender",
+            "birth": "Birth",
+            "phone": "Phone",
+            "medicalId": "Medical Id",
+            "zip": "Zip",
+            "address": "Address",
+            "email": "Email",
+            "photo": "Photo",
+            "blood": "Blood",
+            "cardId": "Card Id",
+            "vip": "Vip",
+            "dominantDoctor": "Dominant Doctor",
+            "firstDoctor": "First Doctor",
+            "introducer": "Introducer",
+            "updateUser": "Update User",
+            "emergencyName": "Emergency Name",
+            "emergencyPhone": "Emergency Phone",
+            "deleteDate": "Delete Date",
+            "scaling": "Scaling",
+            "allergy": "Allergy",
+            "inconvenience": "Inconvenience",
+            "seriousDisease": "Serious Disease",
+            "lineId": "Line Id",
+            "fbId": "Fb Id",
+            "reminder": "Reminder",
+            "lastModifiedTime": "Last Modified Time",
+            "writeIcTime": "Write Ic Time",
+            "appointment": "Appointment"
+        }
+    }
+}

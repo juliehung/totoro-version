@@ -1,0 +1,18 @@
+package io.dentall.totoro.domain.enumeration;
+
+/**
+ * The RegistrationStatus enumeration.
+ */
+public enum RegistrationStatus {
+    PENDING(0), FINISH(1);
+
+    private final int value;
+
+    RegistrationStatus(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return this.value;
+    }
+}

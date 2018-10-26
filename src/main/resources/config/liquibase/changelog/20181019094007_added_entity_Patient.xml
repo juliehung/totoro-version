@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Added the entity Patient.
+    -->
+    <changeSet id="20181019094007-1" author="jhipster">
+        <createTable tableName="patient">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="national_id" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="gender" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="birth" type="date">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="phone" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="medical_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="zip" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="address" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="email" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="photo" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="blood" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="card_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="vip" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="emergency_name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="emergency_phone" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="delete_date" type="datetime">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="scaling" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="allergy" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="inconvenience" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="serious_disease" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="line_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="fb_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="reminder" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="last_modified_time" type="datetime">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="write_ic_time" type="datetime">
+                <constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        <dropDefaultValue tableName="patient" columnName="delete_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="patient" columnName="last_modified_time" columnDataType="datetime"/>
+        <dropDefaultValue tableName="patient" columnName="write_ic_time" columnDataType="datetime"/>
+        
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+</databaseChangeLog>

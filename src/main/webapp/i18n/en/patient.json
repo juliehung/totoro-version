@@ -1,0 +1,51 @@
+
+{
+    "totoroApp": {
+        "patient" : {
+            "home": {
+                "title": "Patients",
+                "createLabel": "Create a new Patient",
+                "createOrEditLabel": "Create or edit a Patient"
+            },
+            "created": "A new Patient is created with identifier {{ param }}",
+            "updated": "A Patient is updated with identifier {{ param }}",
+            "deleted": "A Patient is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Patient {{ id }}?"
+            },
+            "detail": {
+                "title": "Patient"
+            },
+            "name": "Name",
+            "nationalId": "National Id",
+            "gender": "Gender",
+            "birth": "Birth",
+            "phone": "Phone",
+            "medicalId": "Medical Id",
+            "zip": "Zip",
+            "address": "Address",
+            "email": "Email",
+            "photo": "Photo",
+            "blood": "Blood",
+            "cardId": "Card Id",
+            "vip": "Vip",
+            "dominantDoctor": "Dominant Doctor",
+            "firstDoctor": "First Doctor",
+            "introducer": "Introducer",
+            "updateUser": "Update User",
+            "emergencyName": "Emergency Name",
+            "emergencyPhone": "Emergency Phone",
+            "deleteDate": "Delete Date",
+            "scaling": "Scaling",
+            "allergy": "Allergy",
+            "inconvenience": "Inconvenience",
+            "seriousDisease": "Serious Disease",
+            "lineId": "Line Id",
+            "fbId": "Fb Id",
+            "reminder": "Reminder",
+            "lastModifiedTime": "Last Modified Time",
+            "writeIcTime": "Write Ic Time",
+            "appointment": "Appointment"
+        }
+    }
+}

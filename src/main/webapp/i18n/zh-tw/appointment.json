@@ -1,0 +1,30 @@
+
+{
+    "totoroApp": {
+        "appointment" : {
+            "home": {
+                "title": "Appointments",
+                "createLabel": "建立一筆新的 Appointment",
+                "createOrEditLabel": "建立或編輯 Appointment"
+            },
+            "created": "新的 Appointment 建立成功，識別碼為 {{ param }}",
+            "updated": "識別碼為 {{ param }} 的 Appointment 更新成功",
+            "deleted": "識別碼為 {{ param }} 的 Appointment 刪除成功",
+            "delete": {
+                "question": "您確定要刪除 Appointment {{ id }} 嗎?"
+            },
+            "detail": {
+                "title": "Appointment"
+            },
+            "status": "Status",
+            "subject": "Subject",
+            "expectedArrivalTime": "Expected Arrival Time",
+            "requiredTreatmentTime": "Required Treatment Time",
+            "pregnancy": "Pregnancy",
+            "microscope": "Microscope",
+            "newPatient": "New Patient",
+            "patient": "Patient",
+            "registration": "Registration"
+        }
+    }
+}

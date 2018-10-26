@@ -1,0 +1,62 @@
+{
+    "name": "Appointment",
+    "fields": [
+        {
+            "fieldName": "status",
+            "fieldType": "AppointmentStatus",
+            "fieldValues": "TO_BE_CONFIRMED,CONFIRMED,CANCEL,NO",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "subject",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "expectedArrivalTime",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "requiredTreatmentTime",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "pregnancy",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "microscope",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "newPatient",
+            "fieldType": "Boolean"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "patient",
+            "otherEntityName": "patient",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "registration",
+            "otherEntityName": "registration",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "appointment"
+        }
+    ],
+    "changelogDate": "20181019094008",
+    "entityTableName": "appointment",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

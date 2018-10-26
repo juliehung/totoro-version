@@ -6,6 +6,24 @@
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180802025804_added_entity_ExtendUser.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181019094007_added_entity_Patient.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181019094008_added_entity_Appointment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181019094009_added_entity_Registration.xml" relativeToChangelogFile="false"/>
+
+    <!-- add custom columns -->
+    <include file="config/liquibase/changelog/20181024_addColumn_Patient.xml" relativeToChangelogFile="false"/>
+
+    <!-- add default value -->
+    <include file="config/liquibase/changelog/20181024_addDefaultValue_Appointment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181024_addDefaultValue_Registration.xml" relativeToChangelogFile="false"/>
+
+    <!-- insert fake data -->
+    <include file="config/liquibase/changelog/20181023_fake_data.xml" relativeToChangelogFile="false"/>
+
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20181019094008_added_entity_constraints_Appointment.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+
+    <!-- add custom constraints -->
+    <include file="config/liquibase/changelog/20181023_added_entity_constraints_Patient.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

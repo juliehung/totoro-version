@@ -1,0 +1,44 @@
+{
+    "name": "Registration",
+    "fields": [
+        {
+            "fieldName": "status",
+            "fieldType": "RegistrationStatus",
+            "fieldValues": "PENDING,FINISH",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "arrivalTime",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "RegistrationType",
+            "fieldValues": "OWN_EXPENSE,NHI,NHI_NO_CARD"
+        },
+        {
+            "fieldName": "onSite",
+            "fieldType": "Boolean"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "appointment",
+            "otherEntityName": "appointment",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "registration"
+        }
+    ],
+    "changelogDate": "20181019094009",
+    "entityTableName": "registration",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

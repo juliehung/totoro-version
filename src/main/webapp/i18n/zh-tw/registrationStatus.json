@@ -1,0 +1,9 @@
+{
+    "totoroApp": {
+        "RegistrationStatus" : {
+            "null": "",
+            "PENDING": "PENDING",
+            "FINISH": "FINISH"
+        }
+    }
+}

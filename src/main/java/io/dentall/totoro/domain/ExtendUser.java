@@ -6,7 +6,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A ExtendUser.
@@ -34,6 +36,14 @@ public class ExtendUser implements Serializable {
     @MapsId
     @JsonIgnore
     private User user;
+
+    @OneToMany(mappedBy = "dominantDoctor")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Patient> dominantPatients = new HashSet<>();
+
+    @OneToMany(mappedBy = "firstDoctor")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Patient> firstPatients = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -85,6 +95,56 @@ public class ExtendUser implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Patient> getDominantPatients() {
+        return dominantPatients;
+    }
+
+    public ExtendUser dominantPatients(Set<Patient> dominantPatients) {
+        this.dominantPatients = dominantPatients;
+        return this;
+    }
+
+    public ExtendUser addDominantPatient(Patient dominantPatient) {
+        this.dominantPatients.add(dominantPatient);
+        dominantPatient.setDominantDoctor(this);
+        return this;
+    }
+
+    public ExtendUser removeAppointment(Patient dominantPatient) {
+        this.dominantPatients.remove(dominantPatient);
+        dominantPatient.setDominantDoctor(null);
+        return this;
+    }
+
+    public void setDominantPatients(Set<Patient> dominantPatients) {
+        this.dominantPatients = dominantPatients;
+    }
+
+    public Set<Patient> getFirstPatients() {
+        return firstPatients;
+    }
+
+    public ExtendUser firstPatients(Set<Patient> firstPatients) {
+        this.firstPatients = firstPatients;
+        return this;
+    }
+
+    public ExtendUser addFirstPatient(Patient firstPatient) {
+        this.firstPatients.add(firstPatient);
+        firstPatient.setFirstDoctor(this);
+        return this;
+    }
+
+    public ExtendUser removeFirstPatient(Patient firstPatient) {
+        this.firstPatients.remove(firstPatient);
+        firstPatient.setFirstDoctor(null);
+        return this;
+    }
+
+    public void setFirstPatients(Set<Patient> firstPatients) {
+        this.firstPatients = firstPatients;
     }
 
     @Override
