@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20181024-AddColumnAddDefaultValuePatient" author="Jim">
+
+        <addColumn tableName="patient">
+            <column name="dominant_doctor_user_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="first_doctor_user_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="introducer_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="update_user_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

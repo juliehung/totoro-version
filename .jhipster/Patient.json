@@ -1,0 +1,139 @@
+{
+    "name": "Patient",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "nationalId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "gender",
+            "fieldType": "Gender",
+            "fieldValues": "OTHER,MALE,FEMALE",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "birth",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "phone",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "medicalId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "zip",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "address",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "email",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "photo",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "blood",
+            "fieldType": "Blood",
+            "fieldValues": "UNKNOWN,A,AB,B,O"
+        },
+        {
+            "fieldName": "cardId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "vip",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "emergencyName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "emergencyPhone",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "deleteDate",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "scaling",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "allergy",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "inconvenience",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "seriousDisease",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "lineId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fbId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "reminder",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "lastModifiedTime",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "writeIcTime",
+            "fieldType": "ZonedDateTime"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "appointment",
+            "otherEntityName": "appointment",
+            "otherEntityRelationshipName": "patient"
+        }
+    ],
+    "changelogDate": "20181019094007",
+    "entityTableName": "patient",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

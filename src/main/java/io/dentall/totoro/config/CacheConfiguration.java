@@ -39,7 +39,14 @@ public class CacheConfiguration {
             cm.createCache(io.dentall.totoro.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.User.class.getName() + ".authorities", jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName(), jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.Patient.class.getName(), jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.Patient.class.getName() + ".appointments", jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.Appointment.class.getName(), jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.Registration.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
+
+            cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".dominantPatients", jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".firstPatients", jcacheConfiguration);
         };
     }
 }

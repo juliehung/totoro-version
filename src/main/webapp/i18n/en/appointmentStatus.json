@@ -1,0 +1,11 @@
+{
+    "totoroApp": {
+        "AppointmentStatus" : {
+            "null": "",
+            "TO_BE_CONFIRMED": "TO_BE_CONFIRMED",
+            "CONFIRMED": "CONFIRMED",
+            "CANCEL": "CANCEL",
+            "NO": "NO"
+        }
+    }
+}
