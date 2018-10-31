@@ -9,7 +9,7 @@ stages:
     - build
     - test
     - package
-    - testReport
+    - deploy
 
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
@@ -17,14 +17,15 @@ before_script:
 
 gradle-build:
     stage: build
-    image: jimlin/java8-node8
+    image: openjdk:8-jdk-stretch
     script:
-        - ./gradlew compileJava -x check -PnodeInstall --no-daemon
+        - ./gradlew compileJava -x check -x webpackBuildDev --no-daemon
+
 gradle-test:
     stage: test
-    image: jimlin/java8-node8
+    image: openjdk:8-jdk-stretch
     script:
-        - ./gradlew test -PnodeInstall --no-daemon
+        - ./gradlew test -x webpackBuildDev --no-daemon
     artifacts:
         paths:
             - build/reports/tests/*
@@ -33,9 +34,10 @@ gradle-test:
 #       expire_in: 90 day
 gradle-front-test:
     stage: test
-    image: jimlin/java8-node8
+    image: openjdk:8-jre-stretch
     script:
-        - ./gradlew npm_test -PnodeInstall --no-daemon
+        - apt-get update && apt-get install -y --no-install-recommends gcc make libpng-dev
+        - ./gradlew npm_install npm_test -PnodeInstall --no-daemon
     artifacts:
         paths:
             - build/test-results/jest/*
@@ -43,16 +45,28 @@ gradle-front-test:
 #       expire_in: 90 day
 gradle-repackage:
     stage: package
-    image: jimlin/java8-node8
+    image: openjdk:8-jdk-stretch
     script:
         - ./gradlew bootWar -Pdev -P4fe -x check -PnodeInstall --no-daemon
     artifacts:
         paths:
-            - build/libs/*.war
+            - build/*
 #       expire_in: 90 day
 
+depolyDockerImage:
+    stage: deploy
+    image: docker
+    services:
+        - docker:dind
+    dependencies:
+        - gradle-repackage
+    script:
+        - apk --update add openjdk8-jre
+        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+        - ./gradlew jib --image=registry.gitlab.com/dentall/totoro-admin/$CI_COMMIT_REF_NAME:latest -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
+
 pages:
-    stage: testReport
+    stage: deploy
     image: alpine
     dependencies:
         - gradle-test
