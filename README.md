@@ -140,6 +140,34 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 
 To enable google calendar api, you need a service account which can be registered from Google API console. After creating a service account, download the corresponding secret file and put it in the same folder with the war file.
 
+## Launch totoro-admin on local env. by Docker
+
+### requirement
+install Docker
+- [Mac](https://docs.docker.com/docker-for-mac/install/)
+- [Windows](https://docs.docker.com/docker-for-windows/install/)
+
+login to **GitLab’s Container Registry**
+```
+docker login registry.gitlab.com
+```
+
+### build & run image
+#### clone repo.
+```
+git clone https://gitlab.com/dentall/totoro-admin.git
+```
+
+#### start Docker container
+```
+docker-compose -f src/main/docker/app-dev.yml up -d
+```
+
+#### cleanup
+```
+docker-compose -f src/main/docker/app-dev.yml rm -s
+```
+
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0
 
