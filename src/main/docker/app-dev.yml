@@ -1,0 +1,24 @@
+version: '3'
+services:
+    totoro-app:
+        image: registry.gitlab.com/dentall/totoro-admin/master
+        environment:
+            # - _JAVA_OPTIONS=-Xmx512m -Xms256m
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+        ports:
+            - 8080:8080
+        networks:
+            - backend
+        container_name: totoro-admin
+
+    totoro-data-faker:
+        build:
+            context: ./data-faker
+        image: totoro-data-faker
+        command: ["./wait-for-it.sh", "totoro-app:5435", "-s", "-t", "120", "--", "echo", "generates fake data"]
+        networks:
+            - backend
+        container_name: totoro-data-faker
+
+networks:
+    backend:
