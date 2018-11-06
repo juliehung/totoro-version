@@ -27,6 +27,7 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneOffset;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -87,12 +88,6 @@ public class PatientResourceIntTest {
     private static final String DEFAULT_VIP = "AAAAAAAAAA";
     private static final String UPDATED_VIP = "BBBBBBBBBB";
 
-    private static final Long DEFAULT_INTRODUCER = 1L;
-    private static final Long UPDATED_INTRODUCER = 2L;
-
-    private static final Long DEFAULT_UPDATE_USER = 1L;
-    private static final Long UPDATED_UPDATE_USER = 2L;
-
     private static final String DEFAULT_EMERGENCY_NAME = "AAAAAAAAAA";
     private static final String UPDATED_EMERGENCY_NAME = "BBBBBBBBBB";
 
@@ -123,11 +118,10 @@ public class PatientResourceIntTest {
     private static final String DEFAULT_REMINDER = "AAAAAAAAAA";
     private static final String UPDATED_REMINDER = "BBBBBBBBBB";
 
-    private static final ZonedDateTime DEFAULT_LAST_MODIFIED_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_LAST_MODIFIED_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
-
     private static final ZonedDateTime DEFAULT_WRITE_IC_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_WRITE_IC_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
+    private static final String CREATED_BY = "system";
 
     @Autowired
     private PatientRepository patientRepository;
@@ -196,8 +190,8 @@ public class PatientResourceIntTest {
             .lineId(DEFAULT_LINE_ID)
             .fbId(DEFAULT_FB_ID)
             .reminder(DEFAULT_REMINDER)
-            .lastModifiedTime(DEFAULT_LAST_MODIFIED_TIME)
-            .writeIcTime(DEFAULT_WRITE_IC_TIME);
+            .writeIcTime(DEFAULT_WRITE_IC_TIME)
+            .createdBy(CREATED_BY);
         return patient;
     }
 
@@ -211,7 +205,6 @@ public class PatientResourceIntTest {
         extendUser = user.getExtendUser();
         patient.setDominantDoctor(extendUser);
         patient.setFirstDoctor(extendUser);
-        patient.setUpdateUser(extendUser);
     }
 
     @Test
@@ -245,7 +238,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getIntroducer()).isEqualTo(null);
-        assertThat(testPatient.getUpdateUser()).isEqualTo(extendUser);
         assertThat(testPatient.getEmergencyName()).isEqualTo(DEFAULT_EMERGENCY_NAME);
         assertThat(testPatient.getEmergencyPhone()).isEqualTo(DEFAULT_EMERGENCY_PHONE);
         assertThat(testPatient.getDeleteDate()).isEqualTo(DEFAULT_DELETE_DATE);
@@ -256,7 +248,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getLineId()).isEqualTo(DEFAULT_LINE_ID);
         assertThat(testPatient.getFbId()).isEqualTo(DEFAULT_FB_ID);
         assertThat(testPatient.getReminder()).isEqualTo(DEFAULT_REMINDER);
-        assertThat(testPatient.getLastModifiedTime()).isEqualTo(DEFAULT_LAST_MODIFIED_TIME);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(DEFAULT_WRITE_IC_TIME);
     }
 
@@ -380,30 +371,29 @@ public class PatientResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(patient.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].nationalId").value(hasItem(DEFAULT_NATIONAL_ID.toString())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].nationalId").value(hasItem(DEFAULT_NATIONAL_ID)))
             .andExpect(jsonPath("$.[*].gender").value(hasItem(DEFAULT_GENDER.toString())))
             .andExpect(jsonPath("$.[*].birth").value(hasItem(DEFAULT_BIRTH.toString())))
-            .andExpect(jsonPath("$.[*].phone").value(hasItem(DEFAULT_PHONE.toString())))
-            .andExpect(jsonPath("$.[*].medicalId").value(hasItem(DEFAULT_MEDICAL_ID.toString())))
-            .andExpect(jsonPath("$.[*].zip").value(hasItem(DEFAULT_ZIP.toString())))
-            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS.toString())))
-            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())))
-            .andExpect(jsonPath("$.[*].photo").value(hasItem(DEFAULT_PHOTO.toString())))
+            .andExpect(jsonPath("$.[*].phone").value(hasItem(DEFAULT_PHONE)))
+            .andExpect(jsonPath("$.[*].medicalId").value(hasItem(DEFAULT_MEDICAL_ID)))
+            .andExpect(jsonPath("$.[*].zip").value(hasItem(DEFAULT_ZIP)))
+            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
+            .andExpect(jsonPath("$.[*].photo").value(hasItem(DEFAULT_PHOTO)))
             .andExpect(jsonPath("$.[*].blood").value(hasItem(DEFAULT_BLOOD.toString())))
-            .andExpect(jsonPath("$.[*].cardId").value(hasItem(DEFAULT_CARD_ID.toString())))
-            .andExpect(jsonPath("$.[*].vip").value(hasItem(DEFAULT_VIP.toString())))
-            .andExpect(jsonPath("$.[*].emergencyName").value(hasItem(DEFAULT_EMERGENCY_NAME.toString())))
-            .andExpect(jsonPath("$.[*].emergencyPhone").value(hasItem(DEFAULT_EMERGENCY_PHONE.toString())))
+            .andExpect(jsonPath("$.[*].cardId").value(hasItem(DEFAULT_CARD_ID)))
+            .andExpect(jsonPath("$.[*].vip").value(hasItem(DEFAULT_VIP)))
+            .andExpect(jsonPath("$.[*].emergencyName").value(hasItem(DEFAULT_EMERGENCY_NAME)))
+            .andExpect(jsonPath("$.[*].emergencyPhone").value(hasItem(DEFAULT_EMERGENCY_PHONE)))
             .andExpect(jsonPath("$.[*].deleteDate").value(hasItem(sameInstant(DEFAULT_DELETE_DATE))))
             .andExpect(jsonPath("$.[*].scaling").value(hasItem(DEFAULT_SCALING.toString())))
-            .andExpect(jsonPath("$.[*].allergy").value(hasItem(DEFAULT_ALLERGY.booleanValue())))
-            .andExpect(jsonPath("$.[*].inconvenience").value(hasItem(DEFAULT_INCONVENIENCE.booleanValue())))
-            .andExpect(jsonPath("$.[*].seriousDisease").value(hasItem(DEFAULT_SERIOUS_DISEASE.booleanValue())))
-            .andExpect(jsonPath("$.[*].lineId").value(hasItem(DEFAULT_LINE_ID.toString())))
-            .andExpect(jsonPath("$.[*].fbId").value(hasItem(DEFAULT_FB_ID.toString())))
-            .andExpect(jsonPath("$.[*].reminder").value(hasItem(DEFAULT_REMINDER.toString())))
-            .andExpect(jsonPath("$.[*].lastModifiedTime").value(hasItem(sameInstant(DEFAULT_LAST_MODIFIED_TIME))))
+            .andExpect(jsonPath("$.[*].allergy").value(hasItem(DEFAULT_ALLERGY)))
+            .andExpect(jsonPath("$.[*].inconvenience").value(hasItem(DEFAULT_INCONVENIENCE)))
+            .andExpect(jsonPath("$.[*].seriousDisease").value(hasItem(DEFAULT_SERIOUS_DISEASE)))
+            .andExpect(jsonPath("$.[*].lineId").value(hasItem(DEFAULT_LINE_ID)))
+            .andExpect(jsonPath("$.[*].fbId").value(hasItem(DEFAULT_FB_ID)))
+            .andExpect(jsonPath("$.[*].reminder").value(hasItem(DEFAULT_REMINDER)))
             .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem(sameInstant(DEFAULT_WRITE_IC_TIME))));
     }
     
@@ -418,30 +408,29 @@ public class PatientResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(patient.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.nationalId").value(DEFAULT_NATIONAL_ID.toString()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.nationalId").value(DEFAULT_NATIONAL_ID))
             .andExpect(jsonPath("$.gender").value(DEFAULT_GENDER.toString()))
             .andExpect(jsonPath("$.birth").value(DEFAULT_BIRTH.toString()))
-            .andExpect(jsonPath("$.phone").value(DEFAULT_PHONE.toString()))
-            .andExpect(jsonPath("$.medicalId").value(DEFAULT_MEDICAL_ID.toString()))
-            .andExpect(jsonPath("$.zip").value(DEFAULT_ZIP.toString()))
-            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS.toString()))
-            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()))
-            .andExpect(jsonPath("$.photo").value(DEFAULT_PHOTO.toString()))
+            .andExpect(jsonPath("$.phone").value(DEFAULT_PHONE))
+            .andExpect(jsonPath("$.medicalId").value(DEFAULT_MEDICAL_ID))
+            .andExpect(jsonPath("$.zip").value(DEFAULT_ZIP))
+            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS))
+            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
+            .andExpect(jsonPath("$.photo").value(DEFAULT_PHOTO))
             .andExpect(jsonPath("$.blood").value(DEFAULT_BLOOD.toString()))
-            .andExpect(jsonPath("$.cardId").value(DEFAULT_CARD_ID.toString()))
-            .andExpect(jsonPath("$.vip").value(DEFAULT_VIP.toString()))
-            .andExpect(jsonPath("$.emergencyName").value(DEFAULT_EMERGENCY_NAME.toString()))
-            .andExpect(jsonPath("$.emergencyPhone").value(DEFAULT_EMERGENCY_PHONE.toString()))
+            .andExpect(jsonPath("$.cardId").value(DEFAULT_CARD_ID))
+            .andExpect(jsonPath("$.vip").value(DEFAULT_VIP))
+            .andExpect(jsonPath("$.emergencyName").value(DEFAULT_EMERGENCY_NAME))
+            .andExpect(jsonPath("$.emergencyPhone").value(DEFAULT_EMERGENCY_PHONE))
             .andExpect(jsonPath("$.deleteDate").value(sameInstant(DEFAULT_DELETE_DATE)))
             .andExpect(jsonPath("$.scaling").value(DEFAULT_SCALING.toString()))
-            .andExpect(jsonPath("$.allergy").value(DEFAULT_ALLERGY.booleanValue()))
-            .andExpect(jsonPath("$.inconvenience").value(DEFAULT_INCONVENIENCE.booleanValue()))
-            .andExpect(jsonPath("$.seriousDisease").value(DEFAULT_SERIOUS_DISEASE.booleanValue()))
-            .andExpect(jsonPath("$.lineId").value(DEFAULT_LINE_ID.toString()))
-            .andExpect(jsonPath("$.fbId").value(DEFAULT_FB_ID.toString()))
-            .andExpect(jsonPath("$.reminder").value(DEFAULT_REMINDER.toString()))
-            .andExpect(jsonPath("$.lastModifiedTime").value(sameInstant(DEFAULT_LAST_MODIFIED_TIME)))
+            .andExpect(jsonPath("$.allergy").value(DEFAULT_ALLERGY))
+            .andExpect(jsonPath("$.inconvenience").value(DEFAULT_INCONVENIENCE))
+            .andExpect(jsonPath("$.seriousDisease").value(DEFAULT_SERIOUS_DISEASE))
+            .andExpect(jsonPath("$.lineId").value(DEFAULT_LINE_ID))
+            .andExpect(jsonPath("$.fbId").value(DEFAULT_FB_ID))
+            .andExpect(jsonPath("$.reminder").value(DEFAULT_REMINDER))
             .andExpect(jsonPath("$.writeIcTime").value(sameInstant(DEFAULT_WRITE_IC_TIME)));
     }
 
@@ -456,6 +445,7 @@ public class PatientResourceIntTest {
     @Test
     @Transactional
     public void updatePatient() throws Exception {
+        Patient introducer = createPatientByName("introducer");
         // Initialize the database
         patientRepository.saveAndFlush(patient);
 
@@ -481,8 +471,7 @@ public class PatientResourceIntTest {
             .vip(UPDATED_VIP)
             .dominantDoctor(extendUser)
             .firstDoctor(extendUser)
-            .introducer(null)
-            .updateUser(extendUser)
+            .introducer(introducer)
             .emergencyName(UPDATED_EMERGENCY_NAME)
             .emergencyPhone(UPDATED_EMERGENCY_PHONE)
             .deleteDate(UPDATED_DELETE_DATE)
@@ -493,7 +482,6 @@ public class PatientResourceIntTest {
             .lineId(UPDATED_LINE_ID)
             .fbId(UPDATED_FB_ID)
             .reminder(UPDATED_REMINDER)
-            .lastModifiedTime(UPDATED_LAST_MODIFIED_TIME)
             .writeIcTime(UPDATED_WRITE_IC_TIME);
 
         restPatientMockMvc.perform(put("/api/patients")
@@ -520,8 +508,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getVip()).isEqualTo(UPDATED_VIP);
         assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
-        assertThat(testPatient.getIntroducer()).isEqualTo(null);
-        assertThat(testPatient.getUpdateUser()).isEqualTo(extendUser);
+        assertThat(testPatient.getIntroducer()).isEqualTo(introducer);
         assertThat(testPatient.getEmergencyName()).isEqualTo(UPDATED_EMERGENCY_NAME);
         assertThat(testPatient.getEmergencyPhone()).isEqualTo(UPDATED_EMERGENCY_PHONE);
         assertThat(testPatient.getDeleteDate()).isEqualTo(UPDATED_DELETE_DATE);
@@ -532,7 +519,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getLineId()).isEqualTo(UPDATED_LINE_ID);
         assertThat(testPatient.getFbId()).isEqualTo(UPDATED_FB_ID);
         assertThat(testPatient.getReminder()).isEqualTo(UPDATED_REMINDER);
-        assertThat(testPatient.getLastModifiedTime()).isEqualTo(UPDATED_LAST_MODIFIED_TIME);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(UPDATED_WRITE_IC_TIME);
     }
 
@@ -585,5 +571,121 @@ public class PatientResourceIntTest {
         assertThat(patient1).isNotEqualTo(patient2);
         patient1.setId(null);
         assertThat(patient1).isNotEqualTo(patient2);
+    }
+
+    @Test
+    @Transactional
+    public void getPatientParents() throws Exception {
+        Patient parent1 = createPatientByName("parent1");
+        Patient parent2 = createPatientByName("parent2");
+        patient.getParents().addAll(Arrays.asList(parent1, parent2));
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Get the parents
+        restPatientMockMvc.perform(get("/api/patients/{id}/parents", patient.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[0].name").value(parent1.getName()))
+            .andExpect(jsonPath("$.[1].name").value(parent2.getName()));
+    }
+
+    @Test
+    @Transactional
+    public void createPatientParent() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        Patient parent = createPatientByName("parent");
+
+        // Create a parent of the patient
+        restPatientMockMvc.perform(post("/api/patients/{id}/parents/{parent_id}", patient.getId(), parent.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.length()").value(patient.getParents().size()));
+    }
+
+    @Test
+    @Transactional
+    public void deletePatientParent() throws Exception {
+        Patient parent = createPatientByName("parent");
+        patient.getParents().add(parent);
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Delete a parent of the patient
+        restPatientMockMvc.perform(delete("/api/patients/{id}/parents/{parent_id}", patient.getId(), parent.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.length()").value(patient.getParents().size()));
+    }
+
+    @Test
+    @Transactional
+    public void getPatientChildren() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        Patient child1 = createPatientByName("child1");
+        child1.getParents().add(patient);
+        Patient child2 = createPatientByName("child2");
+        child2.getParents().add(patient);
+        patient.getChildren().addAll(Arrays.asList(child1, child2));
+
+        // Initialize the database
+        patientRepository.saveAndFlush(child1);
+        patientRepository.saveAndFlush(child2);
+
+        // Get the children
+        restPatientMockMvc.perform(get("/api/patients/{id}/children", patient.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[0].name").value(child1.getName()))
+            .andExpect(jsonPath("$.[1].name").value(child2.getName()));
+    }
+
+    @Test
+    @Transactional
+    public void createPatientChild() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        Patient child = createPatientByName("child");
+
+        // Create a child of the patient
+        restPatientMockMvc.perform(post("/api/patients/{id}/children/{child_id}", patient.getId(), child.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.length()").value(patient.getChildren().size()));
+    }
+
+    @Test
+    @Transactional
+    public void deletePatientChild() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        Patient child = createPatientByName("child");
+        child.getParents().add(patient);
+        patient.getChildren().add(child);
+        patientRepository.saveAndFlush(child);
+
+        int childrenSizeBeforeTest = patientRepository.findById(patient.getId()).get().getChildren().size();
+
+        // Delete a child of the patient
+        restPatientMockMvc.perform(delete("/api/patients/{id}/children/{child_id}", patient.getId(), child.getId()))
+            .andExpect(status().isOk());
+
+        assertThat(patientRepository.findById(patient.getId()).get().getChildren()).hasSize(childrenSizeBeforeTest - 1);
+    }
+
+    private Patient createPatientByName(String name) {
+        Patient patient = createEntity(em);
+        patient.setName(name);
+        patientRepository.saveAndFlush(patient);
+
+        return patient;
     }
 }

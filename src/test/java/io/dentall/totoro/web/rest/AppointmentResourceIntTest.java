@@ -52,7 +52,7 @@ public class AppointmentResourceIntTest {
     private static final String UPDATED_SUBJECT = "BBBBBBBBBB";
 
     private static final ZonedDateTime DEFAULT_EXPECTED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
-    private static final ZonedDateTime UPDATED_EXPECTED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final ZonedDateTime UPDATED_EXPECTED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).plusHours(1).withNano(0);
 
     private static final Integer DEFAULT_REQUIRED_TREATMENT_TIME = 1;
     private static final Integer UPDATED_REQUIRED_TREATMENT_TIME = 2;
@@ -201,9 +201,9 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT.toString())))
             .andExpect(jsonPath("$.[*].expectedArrivalTime").value(hasItem(sameInstant(DEFAULT_EXPECTED_ARRIVAL_TIME))))
             .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(hasItem(DEFAULT_REQUIRED_TREATMENT_TIME)))
-            .andExpect(jsonPath("$.[*].pregnancy").value(hasItem(DEFAULT_PREGNANCY.booleanValue())))
-            .andExpect(jsonPath("$.[*].microscope").value(hasItem(DEFAULT_MICROSCOPE.booleanValue())))
-            .andExpect(jsonPath("$.[*].newPatient").value(hasItem(DEFAULT_NEW_PATIENT.booleanValue())));
+            .andExpect(jsonPath("$.[*].pregnancy").value(hasItem(DEFAULT_PREGNANCY)))
+            .andExpect(jsonPath("$.[*].microscope").value(hasItem(DEFAULT_MICROSCOPE)))
+            .andExpect(jsonPath("$.[*].newPatient").value(hasItem(DEFAULT_NEW_PATIENT)));
     }
     
     @Test
@@ -221,9 +221,9 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.subject").value(DEFAULT_SUBJECT.toString()))
             .andExpect(jsonPath("$.expectedArrivalTime").value(sameInstant(DEFAULT_EXPECTED_ARRIVAL_TIME)))
             .andExpect(jsonPath("$.requiredTreatmentTime").value(DEFAULT_REQUIRED_TREATMENT_TIME))
-            .andExpect(jsonPath("$.pregnancy").value(DEFAULT_PREGNANCY.booleanValue()))
-            .andExpect(jsonPath("$.microscope").value(DEFAULT_MICROSCOPE.booleanValue()))
-            .andExpect(jsonPath("$.newPatient").value(DEFAULT_NEW_PATIENT.booleanValue()));
+            .andExpect(jsonPath("$.pregnancy").value(DEFAULT_PREGNANCY))
+            .andExpect(jsonPath("$.microscope").value(DEFAULT_MICROSCOPE))
+            .andExpect(jsonPath("$.newPatient").value(DEFAULT_NEW_PATIENT));
     }
 
     @Test
@@ -328,7 +328,8 @@ public class AppointmentResourceIntTest {
     @Transactional
     public void getAllPatientCards() throws Exception {
         // Initialize the database
-        Patient patient = createPatient();
+        Patient patient = TestUtil.createPatient(
+            UserResourceIntTest.createEntity(em), userRepository, PatientResourceIntTest.createEntity(em), patientRepository);
         appointment.setPatient(patient);
         patient.addAppointment(appointment);
         appointmentRepository.saveAndFlush(appointment);
@@ -350,21 +351,6 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[0].ConsultationStatus").doesNotExist())
             .andExpect(jsonPath("$.[0].FirstDoc").value(patient.getFirstDoctor().getUser().getLogin()))
             .andExpect(jsonPath("$.[0].Reminder").value(patient.getReminder()))
-            .andExpect(jsonPath("$.[0].EmrLastModifyTime").value(sameInstant(patient.getLastModifiedTime())))
             .andExpect(jsonPath("$.[0].IcWrittenTime").value(sameInstant(patient.getWriteIcTime())));
-    }
-
-    private Patient createPatient() {
-        User user = UserResourceIntTest.createEntity(em);
-        userRepository.saveAndFlush(user);
-
-        ExtendUser extendUser = user.getExtendUser();
-        Patient patient = PatientResourceIntTest.createEntity(em);
-        patient.setDominantDoctor(extendUser);
-        patient.setFirstDoctor(extendUser);
-        patient.setUpdateUser(extendUser);
-        patientRepository.saveAndFlush(patient);
-
-        return patient;
     }
 }

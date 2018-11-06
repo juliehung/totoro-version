@@ -1,5 +1,6 @@
 import { Moment } from 'moment';
 import { IAppointment } from 'app/shared/model//appointment.model';
+import { IPatient } from 'app/shared/model//patient.model';
 
 export const enum Gender {
   OTHER = 'OTHER',
@@ -30,10 +31,6 @@ export interface IPatient {
   blood?: Blood;
   cardId?: string;
   vip?: string;
-  dominantDoctor?: number;
-  firstDoctor?: number;
-  introducer?: number;
-  updateUser?: number;
   emergencyName?: string;
   emergencyPhone?: string;
   deleteDate?: Moment;
@@ -44,9 +41,11 @@ export interface IPatient {
   lineId?: string;
   fbId?: string;
   reminder?: string;
-  lastModifiedTime?: Moment;
   writeIcTime?: Moment;
   appointments?: IAppointment[];
+  introducer?: IPatient;
+  parents?: IPatient[];
+  children?: IPatient[];
 }
 
 export const defaultValue: Readonly<IPatient> = {

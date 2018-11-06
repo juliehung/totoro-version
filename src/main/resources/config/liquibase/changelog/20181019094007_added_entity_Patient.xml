@@ -113,19 +113,29 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="last_modified_time" type="datetime">
+            <column name="write_ic_time" type="datetime">
                 <constraints nullable="true" />
             </column>
 
-            <column name="write_ic_time" type="datetime">
+            <column name="introducer_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         <dropDefaultValue tableName="patient" columnName="delete_date" columnDataType="datetime"/>
-        <dropDefaultValue tableName="patient" columnName="last_modified_time" columnDataType="datetime"/>
         <dropDefaultValue tableName="patient" columnName="write_ic_time" columnDataType="datetime"/>
+        
+        <createTable tableName="patient_parent">
+            <column name="parents_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patients_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="patients_id, parents_id" tableName="patient_parent"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

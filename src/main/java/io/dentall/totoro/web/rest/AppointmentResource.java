@@ -157,10 +157,10 @@ public class AppointmentResource {
                 card.setGender(patient.getGender().getValue());
                 card.setMedicalId(patient.getMedicalId());
                 card.setBirthday(patient.getBirth());
-                card.setDominantDoctor(patient.getDominantDoctor().getUser().getLogin());
-                card.setFirstDoctor(patient.getFirstDoctor().getUser().getLogin());
+                card.setDominantDoctor(patient.getDominantDoctor());
+                card.setFirstDoctor(patient.getFirstDoctor());
                 card.setReminder(patient.getReminder());
-                card.setLastModifiedTime(patient.getLastModifiedTime());
+                card.setLastModifiedDate(patient.getLastModifiedDate());
                 card.setWriteIcTime(patient.getWriteIcTime());
 
                 card.setExpectedArrivalTime(appointment.getExpectedArrivalTime());

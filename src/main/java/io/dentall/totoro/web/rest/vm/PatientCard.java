@@ -1,10 +1,13 @@
 package io.dentall.totoro.web.rest.vm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.Registration;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 /**
@@ -58,7 +61,7 @@ public class PatientCard implements Serializable {
     private String reminder;
 
     @JsonProperty("EmrLastModifyTime")
-    private ZonedDateTime lastModifiedTime;
+    private ZonedDateTime lastModifiedDate;
 
     @JsonProperty("IcWrittenTime")
     private ZonedDateTime writeIcTime;
@@ -123,8 +126,10 @@ public class PatientCard implements Serializable {
         return dominantDoctor;
     }
 
-    public void setDominantDoctor(String dominantDoctor) {
-        this.dominantDoctor = dominantDoctor;
+    public void setDominantDoctor(ExtendUser dominantDoctor) {
+        if (dominantDoctor != null) {
+            this.dominantDoctor = dominantDoctor.getUser().getLogin();
+        }
     }
 
     public int getRequiredTreatmentTime() {
@@ -147,8 +152,10 @@ public class PatientCard implements Serializable {
         return firstDoctor;
     }
 
-    public void setFirstDoctor(String firstDoctor) {
-        this.firstDoctor = firstDoctor;
+    public void setFirstDoctor(ExtendUser firstDoctor) {
+        if (firstDoctor != null) {
+            this.firstDoctor = firstDoctor.getUser().getLogin();
+        }
     }
 
     public String getReminder() {
@@ -159,12 +166,14 @@ public class PatientCard implements Serializable {
         this.reminder = reminder;
     }
 
-    public ZonedDateTime getLastModifiedTime() {
-        return lastModifiedTime;
+    public ZonedDateTime getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setLastModifiedTime(ZonedDateTime lastModifiedTime) {
-        this.lastModifiedTime = lastModifiedTime;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        if (lastModifiedDate != null) {
+            this.lastModifiedDate = lastModifiedDate.atZone(ZoneId.systemDefault());
+        }
     }
 
     public ZonedDateTime getWriteIcTime() {

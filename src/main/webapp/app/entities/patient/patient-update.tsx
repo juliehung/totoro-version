@@ -8,6 +8,7 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
+import { getEntities as getPatients } from 'app/entities/patient/patient.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './patient.reducer';
 import { IPatient } from 'app/shared/model/patient.model';
 // tslint:disable-next-line:no-unused-variable
@@ -18,12 +19,18 @@ export interface IPatientUpdateProps extends StateProps, DispatchProps, RouteCom
 
 export interface IPatientUpdateState {
   isNew: boolean;
+  idsparent: any[];
+  introducerId: string;
+  childId: string;
 }
 
 export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatientUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
+      idsparent: [],
+      introducerId: '0',
+      childId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -34,18 +41,20 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
     } else {
       this.props.getEntity(this.props.match.params.id);
     }
+
+    this.props.getPatients();
   }
 
   saveEntity = (event, errors, values) => {
     values.deleteDate = new Date(values.deleteDate);
-    values.lastModifiedTime = new Date(values.lastModifiedTime);
     values.writeIcTime = new Date(values.writeIcTime);
 
     if (errors.length === 0) {
       const { patientEntity } = this.props;
       const entity = {
         ...patientEntity,
-        ...values
+        ...values,
+        parents: mapIdList(values.parents)
       };
 
       if (this.state.isNew) {
@@ -62,7 +71,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
   };
 
   render() {
-    const { patientEntity, loading, updating } = this.props;
+    const { patientEntity, patients, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -234,30 +243,6 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   <AvField id="patient-vip" type="text" name="vip" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="dominantDoctorLabel" for="dominantDoctor">
-                    <Translate contentKey="totoroApp.patient.dominantDoctor">Dominant Doctor</Translate>
-                  </Label>
-                  <AvField id="patient-dominantDoctor" type="string" className="form-control" name="dominantDoctor" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="firstDoctorLabel" for="firstDoctor">
-                    <Translate contentKey="totoroApp.patient.firstDoctor">First Doctor</Translate>
-                  </Label>
-                  <AvField id="patient-firstDoctor" type="string" className="form-control" name="firstDoctor" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="introducerLabel" for="introducer">
-                    <Translate contentKey="totoroApp.patient.introducer">Introducer</Translate>
-                  </Label>
-                  <AvField id="patient-introducer" type="string" className="form-control" name="introducer" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="updateUserLabel" for="updateUser">
-                    <Translate contentKey="totoroApp.patient.updateUser">Update User</Translate>
-                  </Label>
-                  <AvField id="patient-updateUser" type="string" className="form-control" name="updateUser" />
-                </AvGroup>
-                <AvGroup>
                   <Label id="emergencyNameLabel" for="emergencyName">
                     <Translate contentKey="totoroApp.patient.emergencyName">Emergency Name</Translate>
                   </Label>
@@ -324,18 +309,6 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   <AvField id="patient-reminder" type="text" name="reminder" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="lastModifiedTimeLabel" for="lastModifiedTime">
-                    <Translate contentKey="totoroApp.patient.lastModifiedTime">Last Modified Time</Translate>
-                  </Label>
-                  <AvInput
-                    id="patient-lastModifiedTime"
-                    type="datetime-local"
-                    className="form-control"
-                    name="lastModifiedTime"
-                    value={isNew ? null : convertDateTimeFromServer(this.props.patientEntity.lastModifiedTime)}
-                  />
-                </AvGroup>
-                <AvGroup>
                   <Label id="writeIcTimeLabel" for="writeIcTime">
                     <Translate contentKey="totoroApp.patient.writeIcTime">Write Ic Time</Translate>
                   </Label>
@@ -346,6 +319,43 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                     name="writeIcTime"
                     value={isNew ? null : convertDateTimeFromServer(this.props.patientEntity.writeIcTime)}
                   />
+                </AvGroup>
+                <AvGroup>
+                  <Label for="introducer.id">
+                    <Translate contentKey="totoroApp.patient.introducer">Introducer</Translate>
+                  </Label>
+                  <AvInput id="patient-introducer" type="select" className="form-control" name="introducer.id">
+                    <option value="" key="0" />
+                    {patients
+                      ? patients.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
+                <AvGroup>
+                  <Label for="patients">
+                    <Translate contentKey="totoroApp.patient.parent">Parent</Translate>
+                  </Label>
+                  <AvInput
+                    id="patient-parent"
+                    type="select"
+                    multiple
+                    className="form-control"
+                    name="parents"
+                    value={patientEntity.parents && patientEntity.parents.map(e => e.id)}
+                  >
+                    <option value="" key="0" />
+                    {patients
+                      ? patients.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
                 </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/patient" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
@@ -370,12 +380,14 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
+  patients: storeState.patient.entities,
   patientEntity: storeState.patient.entity,
   loading: storeState.patient.loading,
   updating: storeState.patient.updating
 });
 
 const mapDispatchToProps = {
+  getPatients,
   getEntity,
   updateEntity,
   createEntity,

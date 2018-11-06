@@ -114,18 +114,6 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('vip')}>
                   <Translate contentKey="totoroApp.patient.vip">Vip</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('dominantDoctor')}>
-                  <Translate contentKey="totoroApp.patient.dominantDoctor">Dominant Doctor</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('firstDoctor')}>
-                  <Translate contentKey="totoroApp.patient.firstDoctor">First Doctor</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('introducer')}>
-                  <Translate contentKey="totoroApp.patient.introducer">Introducer</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('updateUser')}>
-                  <Translate contentKey="totoroApp.patient.updateUser">Update User</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
                 <th className="hand" onClick={this.sort('emergencyName')}>
                   <Translate contentKey="totoroApp.patient.emergencyName">Emergency Name</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -156,11 +144,11 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('reminder')}>
                   <Translate contentKey="totoroApp.patient.reminder">Reminder</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('lastModifiedTime')}>
-                  <Translate contentKey="totoroApp.patient.lastModifiedTime">Last Modified Time</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
                 <th className="hand" onClick={this.sort('writeIcTime')}>
                   <Translate contentKey="totoroApp.patient.writeIcTime">Write Ic Time</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.patient.introducer">Introducer</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -192,10 +180,6 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                   </td>
                   <td>{patient.cardId}</td>
                   <td>{patient.vip}</td>
-                  <td>{patient.dominantDoctor}</td>
-                  <td>{patient.firstDoctor}</td>
-                  <td>{patient.introducer}</td>
-                  <td>{patient.updateUser}</td>
                   <td>{patient.emergencyName}</td>
                   <td>{patient.emergencyPhone}</td>
                   <td>
@@ -211,11 +195,9 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                   <td>{patient.fbId}</td>
                   <td>{patient.reminder}</td>
                   <td>
-                    <TextFormat type="date" value={patient.lastModifiedTime} format={APP_DATE_FORMAT} />
-                  </td>
-                  <td>
                     <TextFormat type="date" value={patient.writeIcTime} format={APP_DATE_FORMAT} />
                   </td>
+                  <td>{patient.introducer ? <Link to={`patient/${patient.introducer.id}`}>{patient.introducer.id}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${patient.id}`} color="info" size="sm">

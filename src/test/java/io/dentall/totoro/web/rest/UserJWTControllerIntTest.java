@@ -5,6 +5,7 @@ import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.jwt.TokenProvider;
+import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 import io.dentall.totoro.web.rest.vm.LoginVM;
 import org.junit.Before;
@@ -51,11 +52,14 @@ public class UserJWTControllerIntTest {
     @Autowired
     private ExceptionTranslator exceptionTranslator;
 
+    @Autowired
+    private UserService userService;
+
     private MockMvc mockMvc;
 
     @Before
     public void setup() {
-        UserJWTController userJWTController = new UserJWTController(tokenProvider, authenticationManager);
+        UserJWTController userJWTController = new UserJWTController(tokenProvider, authenticationManager, userService);
         this.mockMvc = MockMvcBuilders.standaloneSetup(userJWTController)
             .setControllerAdvice(exceptionTranslator)
             .build();
@@ -84,6 +88,8 @@ public class UserJWTControllerIntTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id_token").isString())
             .andExpect(jsonPath("$.id_token").isNotEmpty())
+            .andExpect(jsonPath("$.first_login").isBoolean())
+            .andExpect(jsonPath("$.first_login").isNotEmpty())
             .andExpect(header().string("Authorization", not(nullValue())))
             .andExpect(header().string("Authorization", not(isEmptyString())));
     }
@@ -112,6 +118,8 @@ public class UserJWTControllerIntTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id_token").isString())
             .andExpect(jsonPath("$.id_token").isNotEmpty())
+            .andExpect(jsonPath("$.first_login").isBoolean())
+            .andExpect(jsonPath("$.first_login").isNotEmpty())
             .andExpect(header().string("Authorization", not(nullValue())))
             .andExpect(header().string("Authorization", not(isEmptyString())));
     }
@@ -127,6 +135,7 @@ public class UserJWTControllerIntTest {
             .content(TestUtil.convertObjectToJsonBytes(login)))
             .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("$.id_token").doesNotExist())
+            .andExpect(jsonPath("$.first_login").doesNotExist())
             .andExpect(header().doesNotExist("Authorization"));
     }
 }

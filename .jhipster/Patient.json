@@ -111,10 +111,6 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "lastModifiedTime",
-            "fieldType": "ZonedDateTime"
-        },
-        {
             "fieldName": "writeIcTime",
             "fieldType": "ZonedDateTime"
         }
@@ -125,6 +121,27 @@
             "relationshipName": "appointment",
             "otherEntityName": "appointment",
             "otherEntityRelationshipName": "patient"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "introducer",
+            "otherEntityName": "patient",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "child",
+            "relationshipName": "parent",
+            "otherEntityName": "patient",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "child",
+            "otherEntityName": "patient",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "parent"
         }
     ],
     "changelogDate": "20181019094007",

@@ -1,6 +1,8 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -8,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -24,7 +27,7 @@ import io.dentall.totoro.domain.enumeration.Blood;
 @Entity
 @Table(name = "patient")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Patient implements Serializable {
+public class Patient extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -79,24 +82,6 @@ public class Patient implements Serializable {
     @Column(name = "vip")
     private String vip;
 
-    @ManyToOne
-    @JsonIgnoreProperties({"dominantPatients", "firstPatients"})
-    private ExtendUser dominantDoctor;
-
-    @ManyToOne
-    @JsonIgnoreProperties({"dominantPatients", "firstPatients"})
-    private ExtendUser firstDoctor;
-
-    @ManyToOne
-    @JoinColumn(name = "introducer_id")
-    @JsonIgnoreProperties("introducer")
-    private Patient introducer;
-
-    @ManyToOne
-    @JoinColumn(name = "update_user_id")
-    @JsonIgnoreProperties({"dominantPatients", "firstPatients"})
-    private ExtendUser updateUser;
-
     @Column(name = "emergency_name")
     private String emergencyName;
 
@@ -127,16 +112,36 @@ public class Patient implements Serializable {
     @Column(name = "reminder")
     private String reminder;
 
-    @Column(name = "last_modified_time")
-    private ZonedDateTime lastModifiedTime;
-
     @Column(name = "write_ic_time")
     private ZonedDateTime writeIcTime;
 
     @OneToMany(mappedBy = "patient")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Appointment> appointments = new HashSet<>();
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Patient introducer;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "patient_parent",
+               joinColumns = @JoinColumn(name = "patients_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "parents_id", referencedColumnName = "id"))
+    private Set<Patient> parents = new HashSet<>();
+
+    @ManyToMany(mappedBy = "parents", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<Patient> children = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    @ManyToOne
+    @JsonIgnoreProperties({"dominantPatients", "firstPatients"})
+    private ExtendUser dominantDoctor;
+
+    @ManyToOne
+    @JsonIgnoreProperties({"dominantPatients", "firstPatients"})
+    private ExtendUser firstDoctor;
+
     public Long getId() {
         return id;
     }
@@ -314,58 +319,6 @@ public class Patient implements Serializable {
         this.vip = vip;
     }
 
-    public ExtendUser getDominantDoctor() {
-        return dominantDoctor;
-    }
-
-    public Patient dominantDoctor(ExtendUser dominantDoctor) {
-        this.dominantDoctor = dominantDoctor;
-        return this;
-    }
-
-    public void setDominantDoctor(ExtendUser dominantDoctor) {
-        this.dominantDoctor = dominantDoctor;
-    }
-
-    public ExtendUser getFirstDoctor() {
-        return firstDoctor;
-    }
-
-    public Patient firstDoctor(ExtendUser firstDoctor) {
-        this.firstDoctor = firstDoctor;
-        return this;
-    }
-
-    public void setFirstDoctor(ExtendUser firstDoctor) {
-        this.firstDoctor = firstDoctor;
-    }
-
-    public Patient getIntroducer() {
-        return introducer;
-    }
-
-    public Patient introducer(Patient introducer) {
-        this.introducer = introducer;
-        return this;
-    }
-
-    public void setIntroducer(Patient introducer) {
-        this.introducer = introducer;
-    }
-
-    public ExtendUser getUpdateUser() {
-        return updateUser;
-    }
-
-    public Patient updateUser(ExtendUser updateUser) {
-        this.updateUser = updateUser;
-        return this;
-    }
-
-    public void setUpdateUser(ExtendUser updateUser) {
-        this.updateUser = updateUser;
-    }
-
     public String getEmergencyName() {
         return emergencyName;
     }
@@ -496,19 +449,6 @@ public class Patient implements Serializable {
         this.reminder = reminder;
     }
 
-    public ZonedDateTime getLastModifiedTime() {
-        return lastModifiedTime;
-    }
-
-    public Patient lastModifiedTime(ZonedDateTime lastModifiedTime) {
-        this.lastModifiedTime = lastModifiedTime;
-        return this;
-    }
-
-    public void setLastModifiedTime(ZonedDateTime lastModifiedTime) {
-        this.lastModifiedTime = lastModifiedTime;
-    }
-
     public ZonedDateTime getWriteIcTime() {
         return writeIcTime;
     }
@@ -546,7 +486,115 @@ public class Patient implements Serializable {
     public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
     }
+
+    public Patient getIntroducer() {
+        return introducer;
+    }
+
+    public Patient introducer(Patient patient) {
+        this.introducer = patient;
+        return this;
+    }
+
+    public void setIntroducer(Patient patient) {
+        this.introducer = patient;
+    }
+
+    public Set<Patient> getParents() {
+        return parents;
+    }
+
+    public Patient parents(Set<Patient> patients) {
+        this.parents = patients;
+        return this;
+    }
+
+    public Patient addParent(Patient patient) {
+        this.parents.add(patient);
+        patient.getChildren().add(this);
+        return this;
+    }
+
+    public Patient removeParent(Patient patient) {
+        this.parents.remove(patient);
+        patient.getChildren().remove(this);
+        return this;
+    }
+
+    public void setParents(Set<Patient> patients) {
+        this.parents = patients;
+    }
+
+    public Set<Patient> getChildren() {
+        return children;
+    }
+
+    public Patient children(Set<Patient> patients) {
+        this.children = patients;
+        return this;
+    }
+
+    public Patient addChild(Patient patient) {
+        this.children.add(patient);
+        patient.getParents().add(this);
+        return this;
+    }
+
+    public Patient removeChild(Patient patient) {
+        this.children.remove(patient);
+        patient.getParents().remove(this);
+        return this;
+    }
+
+    public void setChildren(Set<Patient> patients) {
+        this.children = patients;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public ExtendUser getDominantDoctor() {
+        return dominantDoctor;
+    }
+
+    public Patient dominantDoctor(ExtendUser dominantDoctor) {
+        this.dominantDoctor = dominantDoctor;
+        return this;
+    }
+
+    public void setDominantDoctor(ExtendUser dominantDoctor) {
+        this.dominantDoctor = dominantDoctor;
+    }
+
+    public ExtendUser getFirstDoctor() {
+        return firstDoctor;
+    }
+
+    public Patient firstDoctor(ExtendUser firstDoctor) {
+        this.firstDoctor = firstDoctor;
+        return this;
+    }
+
+    public void setFirstDoctor(ExtendUser firstDoctor) {
+        this.firstDoctor = firstDoctor;
+    }
+
+    public Patient createdBy(String createdBy) {
+        super.setCreatedBy(createdBy);
+        return this;
+    }
+
+    @Override
+    @JsonIgnore(false)
+    @JsonProperty
+    public String getLastModifiedBy() {
+        return super.getLastModifiedBy();
+    }
+
+    @Override
+    @JsonIgnore(false)
+    @JsonProperty
+    public Instant getLastModifiedDate() {
+        return super.getLastModifiedDate();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -585,10 +633,6 @@ public class Patient implements Serializable {
             ", blood='" + getBlood() + "'" +
             ", cardId='" + getCardId() + "'" +
             ", vip='" + getVip() + "'" +
-            ", dominantDoctor=" + getDominantDoctor() +
-            ", firstDoctor=" + getFirstDoctor() +
-            ", introducer=" + getIntroducer() +
-            ", updateUser=" + getUpdateUser() +
             ", emergencyName='" + getEmergencyName() + "'" +
             ", emergencyPhone='" + getEmergencyPhone() + "'" +
             ", deleteDate='" + getDeleteDate() + "'" +
@@ -599,7 +643,6 @@ public class Patient implements Serializable {
             ", lineId='" + getLineId() + "'" +
             ", fbId='" + getFbId() + "'" +
             ", reminder='" + getReminder() + "'" +
-            ", lastModifiedTime='" + getLastModifiedTime() + "'" +
             ", writeIcTime='" + getWriteIcTime() + "'" +
             "}";
     }
