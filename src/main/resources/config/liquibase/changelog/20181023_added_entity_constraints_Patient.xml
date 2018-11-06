@@ -20,17 +20,5 @@
                                  referencedColumnNames="user_id"
                                  referencedTableName="extend_user"/>
 
-        <addForeignKeyConstraint baseColumnNames="introducer_id"
-                                 baseTableName="patient"
-                                 constraintName="fk_patient_introducer_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="patient"/>
-
-        <addForeignKeyConstraint baseColumnNames="update_user_id"
-                                 baseTableName="patient"
-                                 constraintName="fk_patient_update_user_id"
-                                 referencedColumnNames="user_id"
-                                 referencedTableName="extend_user"/>
-
     </changeSet>
 </databaseChangeLog>

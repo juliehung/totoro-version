@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
     totoro-app:
         image: registry.gitlab.com/dentall/totoro-admin/master
@@ -22,3 +22,4 @@ services:
 
 networks:
     backend:
+        name: backend

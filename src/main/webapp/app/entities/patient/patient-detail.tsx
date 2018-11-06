@@ -109,30 +109,6 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
             </dt>
             <dd>{patientEntity.vip}</dd>
             <dt>
-              <span id="dominantDoctor">
-                <Translate contentKey="totoroApp.patient.dominantDoctor">Dominant Doctor</Translate>
-              </span>
-            </dt>
-            <dd>{patientEntity.dominantDoctor}</dd>
-            <dt>
-              <span id="firstDoctor">
-                <Translate contentKey="totoroApp.patient.firstDoctor">First Doctor</Translate>
-              </span>
-            </dt>
-            <dd>{patientEntity.firstDoctor}</dd>
-            <dt>
-              <span id="introducer">
-                <Translate contentKey="totoroApp.patient.introducer">Introducer</Translate>
-              </span>
-            </dt>
-            <dd>{patientEntity.introducer}</dd>
-            <dt>
-              <span id="updateUser">
-                <Translate contentKey="totoroApp.patient.updateUser">Update User</Translate>
-              </span>
-            </dt>
-            <dd>{patientEntity.updateUser}</dd>
-            <dt>
               <span id="emergencyName">
                 <Translate contentKey="totoroApp.patient.emergencyName">Emergency Name</Translate>
               </span>
@@ -197,20 +173,29 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
             </dt>
             <dd>{patientEntity.reminder}</dd>
             <dt>
-              <span id="lastModifiedTime">
-                <Translate contentKey="totoroApp.patient.lastModifiedTime">Last Modified Time</Translate>
-              </span>
-            </dt>
-            <dd>
-              <TextFormat value={patientEntity.lastModifiedTime} type="date" format={APP_DATE_FORMAT} />
-            </dd>
-            <dt>
               <span id="writeIcTime">
                 <Translate contentKey="totoroApp.patient.writeIcTime">Write Ic Time</Translate>
               </span>
             </dt>
             <dd>
               <TextFormat value={patientEntity.writeIcTime} type="date" format={APP_DATE_FORMAT} />
+            </dd>
+            <dt>
+              <Translate contentKey="totoroApp.patient.introducer">Introducer</Translate>
+            </dt>
+            <dd>{patientEntity.introducer ? patientEntity.introducer.id : ''}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.patient.parent">Parent</Translate>
+            </dt>
+            <dd>
+              {patientEntity.parents
+                ? patientEntity.parents.map((val, i) => (
+                    <span key={val.id}>
+                      <a>{val.id}</a>
+                      {i === patientEntity.parents.length - 1 ? '' : ', '}
+                    </span>
+                  ))
+                : null}
             </dd>
           </dl>
           <Button tag={Link} to="/entity/patient" replace color="info">

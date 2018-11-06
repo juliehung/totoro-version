@@ -50,8 +50,8 @@ public class RegistrationResourceIntTest {
     private static final RegistrationStatus DEFAULT_STATUS = RegistrationStatus.PENDING;
     private static final RegistrationStatus UPDATED_STATUS = RegistrationStatus.FINISH;
 
-    private static final ZonedDateTime DEFAULT_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).minusDays(1).withNano(0);
-    private static final ZonedDateTime UPDATED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final ZonedDateTime DEFAULT_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).plusMinutes(10).withNano(0);
+    private static final ZonedDateTime UPDATED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).plusHours(1).plusMinutes(10).withNano(0);
 
     private static final RegistrationType DEFAULT_TYPE = RegistrationType.OWN_EXPENSE;
     private static final RegistrationType UPDATED_TYPE = RegistrationType.NHI;
@@ -207,7 +207,7 @@ public class RegistrationResourceIntTest {
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.arrivalTime").value(sameInstant(DEFAULT_ARRIVAL_TIME)))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
-            .andExpect(jsonPath("$.onSite").value(DEFAULT_ON_SITE.booleanValue()));
+            .andExpect(jsonPath("$.onSite").value(DEFAULT_ON_SITE));
     }
 
     @Test
@@ -307,7 +307,8 @@ public class RegistrationResourceIntTest {
     public void getAllPatientCards() throws Exception {
         // Initialize the database
         registrationRepository.saveAndFlush(registration);
-        Patient patient = createPatient();
+        Patient patient = TestUtil.createPatient(
+            UserResourceIntTest.createEntity(em), userRepository, PatientResourceIntTest.createEntity(em), patientRepository);
         Appointment appointment = createAppointment(patient);
 
         restRegistrationMockMvc.perform(get("/api/registrations/patient-cards?sort=arrivalTime,desc"))
@@ -327,22 +328,7 @@ public class RegistrationResourceIntTest {
             .andExpect(jsonPath("$.[0].ConsultationStatus").value(DEFAULT_STATUS.getValue()))
             .andExpect(jsonPath("$.[0].FirstDoc").value(patient.getFirstDoctor().getUser().getLogin()))
             .andExpect(jsonPath("$.[0].Reminder").value(patient.getReminder()))
-            .andExpect(jsonPath("$.[0].EmrLastModifyTime").value(sameInstant(patient.getLastModifiedTime())))
             .andExpect(jsonPath("$.[0].IcWrittenTime").value(sameInstant(patient.getWriteIcTime())));
-    }
-
-    private Patient createPatient() {
-        User user = UserResourceIntTest.createEntity(em);
-        userRepository.saveAndFlush(user);
-
-        ExtendUser extendUser = user.getExtendUser();
-        Patient patient = PatientResourceIntTest.createEntity(em);
-        patient.setDominantDoctor(extendUser);
-        patient.setFirstDoctor(extendUser);
-        patient.setUpdateUser(extendUser);
-        patientRepository.saveAndFlush(patient);
-
-        return patient;
     }
 
     private Appointment createAppointment(Patient patient) {

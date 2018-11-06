@@ -29,5 +29,11 @@
                   separator=";"
                   tableName="registration">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/patients_parents.csv"
+                  separator=";"
+                  tableName="patient_parent">
+        </loadData>
     </changeSet>
 </databaseChangeLog>

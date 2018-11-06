@@ -3,6 +3,11 @@ package io.dentall.totoro.web.rest;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.dentall.totoro.domain.ExtendUser;
+import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.User;
+import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.repository.UserRepository;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
@@ -131,5 +136,16 @@ public class TestUtil {
         registrar.setUseIsoFormat(true);
         registrar.registerFormatters(dfcs);
         return dfcs;
+    }
+
+    public static Patient createPatient(User user, UserRepository userRepository, Patient patient, PatientRepository patientRepository) {
+        userRepository.saveAndFlush(user);
+
+        ExtendUser extendUser = user.getExtendUser();
+        patient.setDominantDoctor(extendUser);
+        patient.setFirstDoctor(extendUser);
+        patientRepository.saveAndFlush(patient);
+
+        return patient;
     }
 }

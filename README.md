@@ -165,7 +165,7 @@ docker-compose -f src/main/docker/app-dev.yml up -d
 
 #### cleanup
 ```
-docker-compose -f src/main/docker/app-dev.yml rm -s
+docker-compose -f src/main/docker/app-dev.yml down --rmi all
 ```
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech

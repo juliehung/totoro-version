@@ -1,3 +1,3 @@
 id;status;expected_arrival_time;required_treatment_time;registration_id;patient_id
-1;CONFIRMED;2018-10-23T10:30:00;20;1;1
-2;CONFIRMED;2018-10-21T13:30:00;20;2;1
+1;CONFIRMED;2018-11-01T10:30:00;20;1;1
+2;NO;NULL;20;2;1

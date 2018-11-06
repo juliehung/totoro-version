@@ -29,10 +29,6 @@
             "blood": "Blood",
             "cardId": "Card Id",
             "vip": "Vip",
-            "dominantDoctor": "Dominant Doctor",
-            "firstDoctor": "First Doctor",
-            "introducer": "Introducer",
-            "updateUser": "Update User",
             "emergencyName": "Emergency Name",
             "emergencyPhone": "Emergency Phone",
             "deleteDate": "Delete Date",
@@ -43,9 +39,11 @@
             "lineId": "Line Id",
             "fbId": "Fb Id",
             "reminder": "Reminder",
-            "lastModifiedTime": "Last Modified Time",
             "writeIcTime": "Write Ic Time",
-            "appointment": "Appointment"
+            "appointment": "Appointment",
+            "introducer": "Introducer",
+            "parent": "Parent",
+            "child": "Child"
         }
     }
 }
