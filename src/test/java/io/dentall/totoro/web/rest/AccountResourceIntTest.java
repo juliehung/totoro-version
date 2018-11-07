@@ -2,11 +2,13 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.config.Constants;
+import io.dentall.totoro.config.ResourceConfiguration;
 import io.dentall.totoro.domain.Authority;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.AuthorityRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.AuthoritiesConstants;
+import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.MailService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.dto.PasswordChangeDTO;
@@ -14,8 +16,10 @@ import io.dentall.totoro.service.dto.UserDTO;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 import io.dentall.totoro.web.rest.vm.KeyAndPasswordVM;
 import io.dentall.totoro.web.rest.vm.ManagedUserVM;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,12 +29,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
 
 import java.time.Instant;
 import java.util.*;
@@ -51,6 +58,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = TotoroApp.class)
 public class AccountResourceIntTest {
 
+    private static final String UPLOAD_FILENAME = "chrome.png";
+
     @Autowired
     private UserRepository userRepository;
 
@@ -69,6 +78,9 @@ public class AccountResourceIntTest {
     @Autowired
     private ExceptionTranslator exceptionTranslator;
 
+    @Autowired
+    private ImageService imageService;
+
     @Mock
     private UserService mockUserService;
 
@@ -84,10 +96,10 @@ public class AccountResourceIntTest {
         MockitoAnnotations.initMocks(this);
         doNothing().when(mockMailService).sendActivationEmail(any());
         AccountResource accountResource =
-            new AccountResource(userRepository, userService, mockMailService);
+            new AccountResource(userRepository, userService, mockMailService, imageService);
 
         AccountResource accountUserMockResource =
-            new AccountResource(userRepository, mockUserService, mockMailService);
+            new AccountResource(userRepository, mockUserService, mockMailService, imageService);
         this.restMvc = MockMvcBuilders.standaloneSetup(accountResource)
             .setMessageConverters(httpMessageConverters)
             .setControllerAdvice(exceptionTranslator)
@@ -807,5 +819,43 @@ public class AccountResourceIntTest {
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(keyAndPassword)))
             .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser("upload-profile")
+    public void testUploadProfile() throws Exception {
+        User user = new User();
+        user.setLogin("upload-profile");
+        user.setEmail("upload-profile@example.com");
+        user.setActivated(true);
+        user.setPassword(passwordEncoder.encode("test"));
+        userRepository.saveAndFlush(user);
+
+        MockMultipartFile file = new MockMultipartFile(
+            "file",
+            UPLOAD_FILENAME,
+            "image/png",
+            FileUtils.openInputStream(ResourceUtils.getFile(getClass().getResource("/static/" + UPLOAD_FILENAME))));
+        restMvc.perform(MockMvcRequestBuilders.multipart("/api/account/avatar").file(file))
+            .andExpect(status().isOk())
+            .andExpect(content().string(Matchers.containsString(user.getLogin())));
+
+        User updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
+        assertThat(updatedUser.getImageUrl()).isNotEmpty();
+    }
+
+    @Test
+    @WithMockUser("get-profile")
+    public void testGetProfile() throws Exception {
+        User user = new User();
+        user.setLogin("get-profile");
+        user.setEmail("get-profile@example.com");
+        user.setActivated(true);
+        user.setPassword(passwordEncoder.encode("test"));
+        user.setImageUrl(ResourceConfiguration.IMAGE_URL_BASE + UPLOAD_FILENAME);
+        userRepository.saveAndFlush(user);
+
+        restMvc.perform(get("/api/account/avatar")).andExpect(status().isMovedPermanently());
     }
 }

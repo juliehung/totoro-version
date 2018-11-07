@@ -5,6 +5,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.SecurityUtils;
+import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.MailService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.dto.PasswordChangeDTO;
@@ -16,8 +17,11 @@ import io.dentall.totoro.web.rest.vm.ManagedUserVM;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -39,11 +43,14 @@ public class AccountResource {
 
     private final MailService mailService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
+    private final ImageService imageService;
+
+    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, ImageService imageService) {
 
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
+        this.imageService = imageService;
     }
 
     /**
@@ -179,6 +186,35 @@ public class AccountResource {
         if (!user.isPresent()) {
             throw new InternalServerErrorException("No user was found for this reset key");
         }
+    }
+
+    /**
+     * POST  /account/avatar : upload the current user's avatar.
+     *
+     * @param file the avatar to create
+     * @return the current user image url
+     * @throws InternalServerErrorException 500 (InternalServerError) if user could not store avatar
+     */
+    @PostMapping("/account/avatar")
+    @Timed
+    public String uploadAvatar(@RequestParam("file") MultipartFile file) {
+        return imageService.storeAvatar(file).orElseThrow(() -> new InternalServerErrorException("User could not store avatar"));
+    }
+
+    /**
+     * GET /account//avatar : get the current user's avatar.
+     *
+     * @return the ResponseEntity with status 301 redirect to avatar resource
+     */
+    @GetMapping("/account/avatar")
+    @Timed
+    public ResponseEntity getAvatar() {
+        Optional<String> avatar = userService.getUserWithAuthorities().map(User::getImageUrl);
+        if (!avatar.isPresent()) {
+            throw new InternalServerErrorException("No user avatar was found");
+        }
+
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, avatar.get()).build();
     }
 
     private static boolean checkPasswordLength(String password) {

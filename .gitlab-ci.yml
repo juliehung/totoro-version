@@ -47,6 +47,7 @@ gradle-repackage:
     stage: package
     image: openjdk:8-jdk-stretch
     script:
+        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
         - ./gradlew bootWar -Pdev -P4fe -x check -PnodeInstall --no-daemon
     artifacts:
         paths:
