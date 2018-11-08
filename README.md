@@ -163,6 +163,23 @@ git clone https://gitlab.com/dentall/totoro-admin.git
 docker-compose -f src/main/docker/app-dev.yml up -d
 ```
 
+#### list containers
+```
+docker ps -a
+```
+
+#### fetch the logs of a container
+```
+docker logs -f totoro-admin
+```
+
+#### run a command in a running container
+```
+docker exec -it totoro-admin sh
+/ # ...
+/ # exit
+```
+
 #### cleanup
 ```
 docker-compose -f src/main/docker/app-dev.yml down --rmi all
