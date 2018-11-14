@@ -48,10 +48,10 @@ import io.dentall.totoro.domain.enumeration.RegistrationType;
 public class RegistrationResourceIntTest {
 
     private static final RegistrationStatus DEFAULT_STATUS = RegistrationStatus.PENDING;
-    private static final RegistrationStatus UPDATED_STATUS = RegistrationStatus.FINISH;
+    private static final RegistrationStatus UPDATED_STATUS = RegistrationStatus.FINISHED;
 
-    private static final ZonedDateTime DEFAULT_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).plusMinutes(10).withNano(0);
-    private static final ZonedDateTime UPDATED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).plusHours(1).plusMinutes(10).withNano(0);
+    private static final ZonedDateTime DEFAULT_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withHour(21).plusMinutes(10).withNano(0);
+    private static final ZonedDateTime UPDATED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withHour(21).plusHours(1).plusMinutes(10).withNano(0);
 
     private static final RegistrationType DEFAULT_TYPE = RegistrationType.OWN_EXPENSE;
     private static final RegistrationType UPDATED_TYPE = RegistrationType.NHI;

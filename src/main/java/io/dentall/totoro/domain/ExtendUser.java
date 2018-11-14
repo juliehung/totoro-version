@@ -32,6 +32,13 @@ public class ExtendUser implements Serializable {
     @Column(name = "calendar_id")
     private String calendarId;
 
+    @Lob
+    @Column(name = "avatar")
+    private byte[] avatar;
+
+    @Column(name = "avatar_content_type")
+    private String avatarContentType;
+
     @OneToOne
     @MapsId
     @JsonIgnore
@@ -86,6 +93,32 @@ public class ExtendUser implements Serializable {
 
     public void setCalendarId(String calendarId) {
         this.calendarId = calendarId;
+    }
+
+    public byte[] getAvatar() {
+        return avatar;
+    }
+
+    public ExtendUser avatar(byte[] avatar) {
+        this.avatar = avatar;
+        return this;
+    }
+
+    public void setAvatar(byte[] avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getAvatarContentType() {
+        return avatarContentType;
+    }
+
+    public ExtendUser avatarContentType(String avatarContentType) {
+        this.avatarContentType = avatarContentType;
+        return this;
+    }
+
+    public void setAvatarContentType(String avatarContentType) {
+        this.avatarContentType = avatarContentType;
     }
 
     public ExtendUser user(User user) {

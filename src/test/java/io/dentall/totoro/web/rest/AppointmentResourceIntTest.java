@@ -51,8 +51,8 @@ public class AppointmentResourceIntTest {
     private static final String DEFAULT_SUBJECT = "AAAAAAAAAA";
     private static final String UPDATED_SUBJECT = "BBBBBBBBBB";
 
-    private static final ZonedDateTime DEFAULT_EXPECTED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
-    private static final ZonedDateTime UPDATED_EXPECTED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).plusHours(1).withNano(0);
+    private static final ZonedDateTime DEFAULT_EXPECTED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withHour(21).withNano(0);
+    private static final ZonedDateTime UPDATED_EXPECTED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withHour(21).plusHours(1).withNano(0);
 
     private static final Integer DEFAULT_REQUIRED_TREATMENT_TIME = 1;
     private static final Integer UPDATED_REQUIRED_TREATMENT_TIME = 2;

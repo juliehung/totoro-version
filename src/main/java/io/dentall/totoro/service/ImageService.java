@@ -1,21 +1,14 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.config.ResourceConfiguration;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.SecurityUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 
 /**
@@ -37,11 +30,12 @@ public class ImageService {
         return SecurityUtils.getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
             .flatMap(user -> {
-                Path imageDir = Paths.get(ResourceConfiguration.IMAGE_FILE_BASE);
-                String filename = StringUtils.cleanPath(user.getLogin() + "." + FilenameUtils.getExtension(file.getOriginalFilename()));
                 try {
-                    Files.copy(file.getInputStream(), imageDir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
-                    user.setImageUrl(ResourceConfiguration.IMAGE_URL_BASE + filename);
+                    user.getExtendUser().setAvatar(file.getBytes());
+                    user.getExtendUser().setAvatarContentType(file.getContentType());
+                    log.debug("Set Avatar for ExtendUser");
+
+                    user.setImageUrl(file.getOriginalFilename());
                     log.debug("Set ImageUrl for User: {}", user);
 
                     return Optional.of(user.getImageUrl());

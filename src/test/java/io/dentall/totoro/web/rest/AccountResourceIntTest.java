@@ -2,8 +2,8 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.config.Constants;
-import io.dentall.totoro.config.ResourceConfiguration;
 import io.dentall.totoro.domain.Authority;
+import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.AuthorityRepository;
 import io.dentall.totoro.repository.UserRepository;
@@ -39,6 +39,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 
+import java.nio.file.Files;
 import java.time.Instant;
 import java.util.*;
 
@@ -59,6 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AccountResourceIntTest {
 
     private static final String UPLOAD_FILENAME = "chrome.png";
+    private static final String UPLOAD_CONTENT_TYPE = "image/png";
 
     @Autowired
     private UserRepository userRepository;
@@ -823,39 +825,55 @@ public class AccountResourceIntTest {
 
     @Test
     @Transactional
-    @WithMockUser("upload-profile")
-    public void testUploadProfile() throws Exception {
+    @WithMockUser("upload-avatar")
+    public void testUploadAvatar() throws Exception {
         User user = new User();
-        user.setLogin("upload-profile");
-        user.setEmail("upload-profile@example.com");
+        user.setLogin("upload-avatar");
+        user.setEmail("upload-avatar@example.com");
         user.setActivated(true);
         user.setPassword(passwordEncoder.encode("test"));
+
+        ExtendUser extendUser = new ExtendUser();
+        extendUser.setUser(user);
+        user.setExtendUser(extendUser);
+
         userRepository.saveAndFlush(user);
 
         MockMultipartFile file = new MockMultipartFile(
             "file",
             UPLOAD_FILENAME,
-            "image/png",
+            UPLOAD_CONTENT_TYPE,
             FileUtils.openInputStream(ResourceUtils.getFile(getClass().getResource("/static/" + UPLOAD_FILENAME))));
         restMvc.perform(MockMvcRequestBuilders.multipart("/api/account/avatar").file(file))
             .andExpect(status().isOk())
-            .andExpect(content().string(Matchers.containsString(user.getLogin())));
+            .andExpect(content().string(Matchers.containsString(UPLOAD_FILENAME)));
 
         User updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
         assertThat(updatedUser.getImageUrl()).isNotEmpty();
+        assertThat(updatedUser.getExtendUser().getAvatarContentType()).isEqualToIgnoringCase(UPLOAD_CONTENT_TYPE);
     }
 
     @Test
-    @WithMockUser("get-profile")
-    public void testGetProfile() throws Exception {
+    @WithMockUser("get-avatar")
+    public void testGetAvatar() throws Exception {
         User user = new User();
-        user.setLogin("get-profile");
-        user.setEmail("get-profile@example.com");
+        user.setLogin("get-avatar");
+        user.setEmail("get-avatare@example.com");
         user.setActivated(true);
         user.setPassword(passwordEncoder.encode("test"));
-        user.setImageUrl(ResourceConfiguration.IMAGE_URL_BASE + UPLOAD_FILENAME);
+        user.setImageUrl(UPLOAD_FILENAME);
+
+        ExtendUser extendUser = new ExtendUser();
+        extendUser.setUser(user);
+        extendUser.setAvatarContentType(UPLOAD_CONTENT_TYPE);
+        byte[] avatar = Files.readAllBytes(ResourceUtils.getFile(getClass().getResource("/static/" + UPLOAD_FILENAME)).toPath());
+        extendUser.setAvatar(avatar);
+        user.setExtendUser(extendUser);
+
         userRepository.saveAndFlush(user);
 
-        restMvc.perform(get("/api/account/avatar")).andExpect(status().isMovedPermanently());
+        restMvc.perform(get("/api/account/avatar"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(Matchers.equalTo(Base64.getEncoder().withoutPadding().encodeToString(avatar))));
     }
 }

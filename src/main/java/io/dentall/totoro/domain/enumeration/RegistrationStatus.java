@@ -4,7 +4,7 @@ package io.dentall.totoro.domain.enumeration;
  * The RegistrationStatus enumeration.
  */
 public enum RegistrationStatus {
-    PENDING(0), FINISH(1);
+    PENDING(0), FINISHED(1);
 
     private final int value;
 

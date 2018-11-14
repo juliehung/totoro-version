@@ -49,7 +49,7 @@ public class PatientCard implements Serializable {
     private int requiredTreatmentTime;
 
     @JsonProperty("IsNewPatient")
-    private boolean newPatient;
+    private Boolean newPatient;
 
     @JsonProperty("ConsultationStatus")
     private Integer registrationStatus;
