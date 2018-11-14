@@ -138,10 +138,25 @@
         },
         {
             "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "spouse2",
+            "relationshipName": "spouse1",
+            "otherEntityName": "patient",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
             "relationshipName": "child",
             "otherEntityName": "patient",
             "ownerSide": false,
             "otherEntityRelationshipName": "parent"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "spouse2",
+            "otherEntityName": "patient",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "spouse1"
         }
     ],
     "changelogDate": "20181019094007",

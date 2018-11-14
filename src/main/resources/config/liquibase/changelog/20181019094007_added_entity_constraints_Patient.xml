@@ -25,5 +25,16 @@
                                  referencedColumnNames="id"
                                  referencedTableName="patient"/>
         
+        <addForeignKeyConstraint baseColumnNames="patients_id"
+                                 baseTableName="patient_spouse1"
+                                 constraintName="fk_patient_spouse1_patients_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="patient"/>
+        <addForeignKeyConstraint baseColumnNames="spouse1s_id"
+                                 baseTableName="patient_spouse1"
+                                 constraintName="fk_patient_spouse1_spouse1s_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="patient"/>
+        
     </changeSet>
 </databaseChangeLog>

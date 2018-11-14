@@ -43,7 +43,9 @@
             "appointment": "Appointment",
             "introducer": "Introducer",
             "parent": "Parent",
-            "child": "Child"
+            "spouse1": "Spouse 1",
+            "child": "Child",
+            "spouse2": "Spouse 2"
         }
     }
 }

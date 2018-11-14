@@ -128,9 +128,19 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
                inverseJoinColumns = @JoinColumn(name = "parents_id", referencedColumnName = "id"))
     private Set<Patient> parents = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "patient_spouse1",
+               joinColumns = @JoinColumn(name = "patients_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "spouse1s_id", referencedColumnName = "id"))
+    private Set<Patient> spouse1S = new HashSet<>();
+
     @ManyToMany(mappedBy = "parents", fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<Patient> children = new HashSet<>();
+
+    @ManyToMany(mappedBy = "spouse1S", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<Patient> spouse2S = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
@@ -525,6 +535,31 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
         this.parents = patients;
     }
 
+    public Set<Patient> getSpouse1S() {
+        return spouse1S;
+    }
+
+    public Patient spouse1S(Set<Patient> patients) {
+        this.spouse1S = patients;
+        return this;
+    }
+
+    public Patient addSpouse1(Patient patient) {
+        this.spouse1S.add(patient);
+        patient.getSpouse2S().add(this);
+        return this;
+    }
+
+    public Patient removeSpouse1(Patient patient) {
+        this.spouse1S.remove(patient);
+        patient.getSpouse2S().remove(this);
+        return this;
+    }
+
+    public void setSpouse1S(Set<Patient> patients) {
+        this.spouse1S = patients;
+    }
+
     public Set<Patient> getChildren() {
         return children;
     }
@@ -548,6 +583,31 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
 
     public void setChildren(Set<Patient> patients) {
         this.children = patients;
+    }
+
+    public Set<Patient> getSpouse2S() {
+        return spouse2S;
+    }
+
+    public Patient spouse2S(Set<Patient> patients) {
+        this.spouse2S = patients;
+        return this;
+    }
+
+    public Patient addSpouse2(Patient patient) {
+        this.spouse2S.add(patient);
+        patient.getSpouse1S().add(this);
+        return this;
+    }
+
+    public Patient removeSpouse2(Patient patient) {
+        this.spouse2S.remove(patient);
+        patient.getSpouse1S().remove(this);
+        return this;
+    }
+
+    public void setSpouse2S(Set<Patient> patients) {
+        this.spouse2S = patients;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

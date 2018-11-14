@@ -305,11 +305,12 @@ public class RegistrationResourceIntTest {
     @Test
     @Transactional
     public void getAllPatientCards() throws Exception {
-        // Initialize the database
-        registrationRepository.saveAndFlush(registration);
         Patient patient = TestUtil.createPatient(
             UserResourceIntTest.createEntity(em), userRepository, PatientResourceIntTest.createEntity(em), patientRepository);
         Appointment appointment = createAppointment(patient);
+
+        // Initialize the database
+        registrationRepository.saveAndFlush(registration);
 
         restRegistrationMockMvc.perform(get("/api/registrations/patient-cards?sort=arrivalTime,desc"))
             .andExpect(status().isOk())
@@ -328,7 +329,8 @@ public class RegistrationResourceIntTest {
             .andExpect(jsonPath("$.[0].ConsultationStatus").value(DEFAULT_STATUS.getValue()))
             .andExpect(jsonPath("$.[0].FirstDoc").value(patient.getFirstDoctor().getUser().getLogin()))
             .andExpect(jsonPath("$.[0].Reminder").value(patient.getReminder()))
-            .andExpect(jsonPath("$.[0].IcWrittenTime").value(sameInstant(patient.getWriteIcTime())));
+            .andExpect(jsonPath("$.[0].IcWrittenTime").value(sameInstant(patient.getWriteIcTime())))
+            .andExpect(jsonPath("$.[0].EmrLastModifyTime").exists());
     }
 
     private Appointment createAppointment(Patient patient) {
@@ -336,7 +338,7 @@ public class RegistrationResourceIntTest {
         appointment.setPatient(patient);
         appointment.setRegistration(registration);
         registration.setAppointment(appointment);
-        appointmentRepository.saveAndFlush(appointment);
+        appointmentRepository.save(appointment);
 
         return appointment;
     }

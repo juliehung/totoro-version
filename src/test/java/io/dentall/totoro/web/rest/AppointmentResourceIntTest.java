@@ -327,11 +327,11 @@ public class AppointmentResourceIntTest {
     @Test
     @Transactional
     public void getAllPatientCards() throws Exception {
-        // Initialize the database
         Patient patient = TestUtil.createPatient(
             UserResourceIntTest.createEntity(em), userRepository, PatientResourceIntTest.createEntity(em), patientRepository);
-        appointment.setPatient(patient);
         patient.addAppointment(appointment);
+
+        // Initialize the database
         appointmentRepository.saveAndFlush(appointment);
 
         restAppointmentMockMvc.perform(get("/api/appointments/patient-cards?sort=expectedArrivalTime,desc"))
@@ -351,6 +351,7 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[0].ConsultationStatus").doesNotExist())
             .andExpect(jsonPath("$.[0].FirstDoc").value(patient.getFirstDoctor().getUser().getLogin()))
             .andExpect(jsonPath("$.[0].Reminder").value(patient.getReminder()))
-            .andExpect(jsonPath("$.[0].IcWrittenTime").value(sameInstant(patient.getWriteIcTime())));
+            .andExpect(jsonPath("$.[0].IcWrittenTime").value(sameInstant(patient.getWriteIcTime())))
+            .andExpect(jsonPath("$.[0].EmrLastModifyTime").exists());
     }
 }

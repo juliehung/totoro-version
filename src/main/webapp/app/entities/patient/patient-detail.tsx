@@ -197,6 +197,19 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
                   ))
                 : null}
             </dd>
+            <dt>
+              <Translate contentKey="totoroApp.patient.spouse1">Spouse 1</Translate>
+            </dt>
+            <dd>
+              {patientEntity.spouse1S
+                ? patientEntity.spouse1S.map((val, i) => (
+                    <span key={val.id}>
+                      <a>{val.id}</a>
+                      {i === patientEntity.spouse1S.length - 1 ? '' : ', '}
+                    </span>
+                  ))
+                : null}
+            </dd>
           </dl>
           <Button tag={Link} to="/entity/patient" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}
