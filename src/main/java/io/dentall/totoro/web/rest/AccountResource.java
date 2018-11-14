@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 
+import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.SecurityUtils;
@@ -11,6 +12,7 @@ import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.dto.PasswordChangeDTO;
 import io.dentall.totoro.service.dto.UserDTO;
 import io.dentall.totoro.web.rest.errors.*;
+import io.dentall.totoro.web.rest.vm.AvatarVM;
 import io.dentall.totoro.web.rest.vm.KeyAndPasswordVM;
 import io.dentall.totoro.web.rest.vm.ManagedUserVM;
 
@@ -18,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -202,19 +205,24 @@ public class AccountResource {
     /**
      * GET /account/avatar : get the current user's avatar.
      *
-     * @return Base64 string
+     * @return AvatarVM object body
      */
     @GetMapping("/account/avatar")
     @Timed
-    public String getAvatar() {
-        Optional<byte[]> avatar = userService.getUserWithAuthorities().map(user -> user.getExtendUser().getAvatar());
-        if (!avatar.isPresent()) {
-            throw new InternalServerErrorException("No user avatar was found");
-        }
+    public ResponseEntity<AvatarVM> getAvatar() {
+        ExtendUser extendUser = userService.getUserWithAuthorities().map(User::getExtendUser)
+            .orElseThrow(() -> new InternalServerErrorException("No extendUser was found"));
 
-        return avatar
-            .map(bytes -> Base64.getEncoder().withoutPadding().encodeToString(bytes))
-            .orElseThrow(() -> new InternalServerErrorException("User avatar could not Base64 encode"));
+        if (extendUser.getAvatar() == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(
+                new AvatarVM(
+                    extendUser.getAvatarContentType(),
+                    Base64.getEncoder().withoutPadding().encodeToString(extendUser.getAvatar())),
+                HttpStatus.OK
+            );
+        }
     }
 
     private static boolean checkPasswordLength(String password) {

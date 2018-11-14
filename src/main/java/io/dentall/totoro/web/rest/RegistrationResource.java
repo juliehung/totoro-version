@@ -8,7 +8,7 @@ import io.dentall.totoro.repository.RegistrationRepository;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.dentall.totoro.web.rest.vm.PatientCard;
+import io.dentall.totoro.web.rest.vm.PatientCardVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,15 +151,15 @@ public class RegistrationResource {
      */
     @GetMapping("/registrations/patient-cards")
     @Timed
-    public ResponseEntity<List<PatientCard>> getAllPatientCards(Pageable pageable) {
+    public ResponseEntity<List<PatientCardVM>> getAllPatientCards(Pageable pageable) {
         log.debug("REST request to get registration patient cards");
         ZonedDateTime start = LocalDate.now().minusDays(2).atTime(LocalTime.MIN).atZone(ZoneId.systemDefault());
         ZonedDateTime end = LocalDate.now().atTime(LocalTime.MAX).atZone(ZoneId.systemDefault());
         Page<Registration> registrations = registrationRepository.findByArrivalTimeBetween(start, end, pageable);
 
-        Page<PatientCard> page = registrations
+        Page<PatientCardVM> page = registrations
             .map(registration -> {
-                PatientCard card = new PatientCard();
+                PatientCardVM card = new PatientCardVM();
 
                 Appointment appointment = registration.getAppointment();
                 card.setExpectedArrivalTime(appointment.getExpectedArrivalTime());

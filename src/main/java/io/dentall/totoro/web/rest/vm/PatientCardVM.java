@@ -11,9 +11,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 /**
- * View Model object for PatientCard.
+ * View Model object for PatientCardVM.
  */
-public class PatientCard implements Serializable {
+public class PatientCardVM implements Serializable {
 
     @JsonProperty("Name")
     private String name;

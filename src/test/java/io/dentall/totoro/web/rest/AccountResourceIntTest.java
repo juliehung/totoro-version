@@ -850,7 +850,7 @@ public class AccountResourceIntTest {
 
         User updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
         assertThat(updatedUser.getImageUrl()).isNotEmpty();
-        assertThat(updatedUser.getExtendUser().getAvatarContentType()).isEqualToIgnoringCase(UPLOAD_CONTENT_TYPE);
+        assertThat(updatedUser.getExtendUser().getAvatarContentType()).isEqualTo(UPLOAD_CONTENT_TYPE);
     }
 
     @Test
@@ -874,6 +874,27 @@ public class AccountResourceIntTest {
 
         restMvc.perform(get("/api/account/avatar"))
             .andExpect(status().isOk())
-            .andExpect(content().string(Matchers.equalTo(Base64.getEncoder().withoutPadding().encodeToString(avatar))));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.EncodedType").value(UPLOAD_CONTENT_TYPE))
+            .andExpect(jsonPath("$.EncodedBase64").value(Base64.getEncoder().withoutPadding().encodeToString(avatar)));
+    }
+
+    @Test
+    @WithMockUser("get-non-existing-avatar")
+    public void testGetNonExistingAvatar() throws Exception {
+        User user = new User();
+        user.setLogin("get-non-existing-avatar");
+        user.setEmail("get-non-existing-avatar@example.com");
+        user.setActivated(true);
+        user.setPassword(passwordEncoder.encode("test"));
+
+        ExtendUser extendUser = new ExtendUser();
+        extendUser.setUser(user);
+        user.setExtendUser(extendUser);
+
+        userRepository.saveAndFlush(user);
+
+        restMvc.perform(get("/api/account/avatar"))
+            .andExpect(status().isNotFound());
     }
 }
