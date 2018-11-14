@@ -3,12 +3,11 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Appointment;
 import io.dentall.totoro.domain.Patient;
-import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.dentall.totoro.web.rest.vm.PatientCard;
+import io.dentall.totoro.web.rest.vm.PatientCardVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 /**
  * REST controller for managing Appointment.
@@ -142,15 +140,15 @@ public class AppointmentResource {
      */
     @GetMapping("/appointments/patient-cards")
     @Timed
-    public ResponseEntity<List<PatientCard>> getAllPatientCards(Pageable pageable) {
+    public ResponseEntity<List<PatientCardVM>> getAllPatientCards(Pageable pageable) {
         log.debug("REST request to get appointment patient cards");
         ZonedDateTime start = LocalDate.now().atTime(LocalTime.MIN).atZone(ZoneId.systemDefault());
         ZonedDateTime end = LocalDate.now().atTime(LocalTime.MAX).atZone(ZoneId.systemDefault());
         Page<Appointment> appointments = appointmentRepository.findByRegistrationIsNullAndExpectedArrivalTimeBetween(start, end, pageable);
 
-        Page<PatientCard> page = appointments
+        Page<PatientCardVM> page = appointments
             .map(appointment -> {
-                PatientCard card = new PatientCard();
+                PatientCardVM card = new PatientCardVM();
 
                 Patient patient = appointment.getPatient();
                 card.setName(patient.getName());
