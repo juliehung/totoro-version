@@ -139,12 +139,12 @@ public class TestUtil {
     }
 
     public static Patient createPatient(User user, UserRepository userRepository, Patient patient, PatientRepository patientRepository) {
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         ExtendUser extendUser = user.getExtendUser();
         patient.setDominantDoctor(extendUser);
         patient.setFirstDoctor(extendUser);
-        patientRepository.saveAndFlush(patient);
+        patientRepository.save(patient);
 
         return patient;
     }

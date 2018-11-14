@@ -137,6 +137,17 @@
 
         <addPrimaryKey columnNames="patients_id, parents_id" tableName="patient_parent"/>
         
+        <createTable tableName="patient_spouse1">
+            <column name="spouse1s_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patients_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="patients_id, spouse1s_id" tableName="patient_spouse1"/>
+        
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

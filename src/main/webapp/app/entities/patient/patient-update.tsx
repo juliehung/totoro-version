@@ -20,8 +20,10 @@ export interface IPatientUpdateProps extends StateProps, DispatchProps, RouteCom
 export interface IPatientUpdateState {
   isNew: boolean;
   idsparent: any[];
+  idsspouse1: any[];
   introducerId: string;
   childId: string;
+  spouse2Id: string;
 }
 
 export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatientUpdateState> {
@@ -29,8 +31,10 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
     super(props);
     this.state = {
       idsparent: [],
+      idsspouse1: [],
       introducerId: '0',
       childId: '0',
+      spouse2Id: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -54,7 +58,8 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
       const entity = {
         ...patientEntity,
         ...values,
-        parents: mapIdList(values.parents)
+        parents: mapIdList(values.parents),
+        spouse1S: mapIdList(values.spouse1S)
       };
 
       if (this.state.isNew) {
@@ -346,6 +351,28 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                     className="form-control"
                     name="parents"
                     value={patientEntity.parents && patientEntity.parents.map(e => e.id)}
+                  >
+                    <option value="" key="0" />
+                    {patients
+                      ? patients.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
+                <AvGroup>
+                  <Label for="patients">
+                    <Translate contentKey="totoroApp.patient.spouse1">Spouse 1</Translate>
+                  </Label>
+                  <AvInput
+                    id="patient-spouse1"
+                    type="select"
+                    multiple
+                    className="form-control"
+                    name="spouse1S"
+                    value={patientEntity.spouse1S && patientEntity.spouse1S.map(e => e.id)}
                   >
                     <option value="" key="0" />
                     {patients

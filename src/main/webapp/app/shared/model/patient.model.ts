@@ -45,7 +45,9 @@ export interface IPatient {
   appointments?: IAppointment[];
   introducer?: IPatient;
   parents?: IPatient[];
+  spouse1S?: IPatient[];
   children?: IPatient[];
+  spouse2S?: IPatient[];
 }
 
 export const defaultValue: Readonly<IPatient> = {

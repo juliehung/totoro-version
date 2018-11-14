@@ -2,7 +2,9 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 
-import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.ExtendUser;
+import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
@@ -10,9 +12,11 @@ import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -27,6 +31,7 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneOffset;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +40,7 @@ import static io.dentall.totoro.web.rest.TestUtil.sameInstant;
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -126,6 +132,9 @@ public class PatientResourceIntTest {
     @Autowired
     private PatientRepository patientRepository;
 
+    @Mock
+    private PatientRepository patientRepositoryMock;
+
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -179,7 +188,6 @@ public class PatientResourceIntTest {
             .blood(DEFAULT_BLOOD)
             .cardId(DEFAULT_CARD_ID)
             .vip(DEFAULT_VIP)
-            .introducer(null)
             .emergencyName(DEFAULT_EMERGENCY_NAME)
             .emergencyPhone(DEFAULT_EMERGENCY_PHONE)
             .deleteDate(DEFAULT_DELETE_DATE)
@@ -191,6 +199,7 @@ public class PatientResourceIntTest {
             .fbId(DEFAULT_FB_ID)
             .reminder(DEFAULT_REMINDER)
             .writeIcTime(DEFAULT_WRITE_IC_TIME)
+            .introducer(null)
             .createdBy(CREATED_BY);
         return patient;
     }
@@ -235,9 +244,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getBlood()).isEqualTo(DEFAULT_BLOOD);
         assertThat(testPatient.getCardId()).isEqualTo(DEFAULT_CARD_ID);
         assertThat(testPatient.getVip()).isEqualTo(DEFAULT_VIP);
-        assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
-        assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
-        assertThat(testPatient.getIntroducer()).isEqualTo(null);
         assertThat(testPatient.getEmergencyName()).isEqualTo(DEFAULT_EMERGENCY_NAME);
         assertThat(testPatient.getEmergencyPhone()).isEqualTo(DEFAULT_EMERGENCY_PHONE);
         assertThat(testPatient.getDeleteDate()).isEqualTo(DEFAULT_DELETE_DATE);
@@ -249,6 +255,9 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getFbId()).isEqualTo(DEFAULT_FB_ID);
         assertThat(testPatient.getReminder()).isEqualTo(DEFAULT_REMINDER);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(DEFAULT_WRITE_IC_TIME);
+        assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
+        assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
+        assertThat(testPatient.getIntroducer()).isEqualTo(null);
     }
 
     @Test
@@ -397,6 +406,22 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem(sameInstant(DEFAULT_WRITE_IC_TIME))));
     }
     
+    public void getAllPatientsWithEagerRelationshipsIsEnabled() throws Exception {
+        PatientResource patientResource = new PatientResource(patientRepositoryMock);
+        when(patientRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        MockMvc restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restPatientMockMvc.perform(get("/api/patients?eagerload=true"))
+        .andExpect(status().isOk());
+
+        verify(patientRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
     @Test
     @Transactional
     public void getPatient() throws Exception {
@@ -446,6 +471,7 @@ public class PatientResourceIntTest {
     @Transactional
     public void updatePatient() throws Exception {
         Patient introducer = createPatientByName("introducer");
+
         // Initialize the database
         patientRepository.saveAndFlush(patient);
 
@@ -469,9 +495,6 @@ public class PatientResourceIntTest {
             .blood(UPDATED_BLOOD)
             .cardId(UPDATED_CARD_ID)
             .vip(UPDATED_VIP)
-            .dominantDoctor(extendUser)
-            .firstDoctor(extendUser)
-            .introducer(introducer)
             .emergencyName(UPDATED_EMERGENCY_NAME)
             .emergencyPhone(UPDATED_EMERGENCY_PHONE)
             .deleteDate(UPDATED_DELETE_DATE)
@@ -482,7 +505,10 @@ public class PatientResourceIntTest {
             .lineId(UPDATED_LINE_ID)
             .fbId(UPDATED_FB_ID)
             .reminder(UPDATED_REMINDER)
-            .writeIcTime(UPDATED_WRITE_IC_TIME);
+            .writeIcTime(UPDATED_WRITE_IC_TIME)
+            .dominantDoctor(extendUser)
+            .firstDoctor(extendUser)
+            .introducer(introducer);
 
         restPatientMockMvc.perform(put("/api/patients")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -506,9 +532,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getBlood()).isEqualTo(UPDATED_BLOOD);
         assertThat(testPatient.getCardId()).isEqualTo(UPDATED_CARD_ID);
         assertThat(testPatient.getVip()).isEqualTo(UPDATED_VIP);
-        assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
-        assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
-        assertThat(testPatient.getIntroducer()).isEqualTo(introducer);
         assertThat(testPatient.getEmergencyName()).isEqualTo(UPDATED_EMERGENCY_NAME);
         assertThat(testPatient.getEmergencyPhone()).isEqualTo(UPDATED_EMERGENCY_PHONE);
         assertThat(testPatient.getDeleteDate()).isEqualTo(UPDATED_DELETE_DATE);
@@ -520,6 +543,9 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getFbId()).isEqualTo(UPDATED_FB_ID);
         assertThat(testPatient.getReminder()).isEqualTo(UPDATED_REMINDER);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(UPDATED_WRITE_IC_TIME);
+        assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
+        assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
+        assertThat(testPatient.getIntroducer()).isEqualTo(introducer);
     }
 
     @Test
@@ -594,10 +620,10 @@ public class PatientResourceIntTest {
     @Test
     @Transactional
     public void createPatientParent() throws Exception {
+        Patient parent = createPatientByName("parent");
+
         // Initialize the database
         patientRepository.saveAndFlush(patient);
-
-        Patient parent = createPatientByName("parent");
 
         // Create a parent of the patient
         restPatientMockMvc.perform(post("/api/patients/{id}/parents/{parent_id}", patient.getId(), parent.getId()))
@@ -625,18 +651,13 @@ public class PatientResourceIntTest {
     @Test
     @Transactional
     public void getPatientChildren() throws Exception {
+        Patient child1 = createPatientByName("child1");
+        patient.addChild(child1);
+        Patient child2 = createPatientByName("child2");
+        patient.addChild(child2);
+
         // Initialize the database
         patientRepository.saveAndFlush(patient);
-
-        Patient child1 = createPatientByName("child1");
-        child1.getParents().add(patient);
-        Patient child2 = createPatientByName("child2");
-        child2.getParents().add(patient);
-        patient.getChildren().addAll(Arrays.asList(child1, child2));
-
-        // Initialize the database
-        patientRepository.saveAndFlush(child1);
-        patientRepository.saveAndFlush(child2);
 
         // Get the children
         restPatientMockMvc.perform(get("/api/patients/{id}/children", patient.getId()))
@@ -649,10 +670,10 @@ public class PatientResourceIntTest {
     @Test
     @Transactional
     public void createPatientChild() throws Exception {
+        Patient child = createPatientByName("child");
+
         // Initialize the database
         patientRepository.saveAndFlush(patient);
-
-        Patient child = createPatientByName("child");
 
         // Create a child of the patient
         restPatientMockMvc.perform(post("/api/patients/{id}/children/{child_id}", patient.getId(), child.getId()))
@@ -664,13 +685,11 @@ public class PatientResourceIntTest {
     @Test
     @Transactional
     public void deletePatientChild() throws Exception {
+        Patient child = createPatientByName("child");
+        patient.addChild(child);
+
         // Initialize the database
         patientRepository.saveAndFlush(patient);
-
-        Patient child = createPatientByName("child");
-        child.getParents().add(patient);
-        patient.getChildren().add(child);
-        patientRepository.saveAndFlush(child);
 
         int childrenSizeBeforeTest = patientRepository.findById(patient.getId()).get().getChildren().size();
 
@@ -681,10 +700,110 @@ public class PatientResourceIntTest {
         assertThat(patientRepository.findById(patient.getId()).get().getChildren()).hasSize(childrenSizeBeforeTest - 1);
     }
 
+    @Test
+    @Transactional
+    public void getPatientSpouse1S() throws Exception {
+        Patient andy = createPatientByName("andy");
+        patient.addSpouse1(andy);
+        Patient john = createPatientByName("john");
+        patient.addSpouse1(john);
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Get the spouse1S
+        restPatientMockMvc.perform(get("/api/patients/{id}/spouse1S", patient.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[0].name").value(andy.getName()))
+            .andExpect(jsonPath("$.[1].name").value(john.getName()));
+    }
+
+    @Test
+    @Transactional
+    public void createPatientSpouse1() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        Patient spouse1 = createPatientByName("spouse1");
+
+        // Create a spouse1 of the patient
+        restPatientMockMvc.perform(post("/api/patients/{id}/spouse1S/{spouse1_id}", patient.getId(), spouse1.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.length()").value(patient.getSpouse1S().size()));
+    }
+
+    @Test
+    @Transactional
+    public void deletePatientSpouse1() throws Exception {
+        Patient spouse1 = createPatientByName("spouse1");
+        patient.addSpouse1(spouse1);
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Delete a spouse1 of the patient
+        restPatientMockMvc.perform(delete("/api/patients/{id}/spouse1S/{spouse1_id}", patient.getId(), spouse1.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.length()").value(patient.getSpouse1S().size()));
+    }
+
+    @Test
+    @Transactional
+    public void getPatientSpouse2S() throws Exception {
+        Patient andy = createPatientByName("andy");
+        patient.addSpouse2(andy);
+        Patient john = createPatientByName("john");
+        patient.addSpouse2(john);
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Get the spouse2S
+        restPatientMockMvc.perform(get("/api/patients/{id}/spouse2S", patient.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[0].name").value(andy.getName()))
+            .andExpect(jsonPath("$.[1].name").value(john.getName()));
+    }
+
+    @Test
+    @Transactional
+    public void createPatientSpouse2() throws Exception {
+        Patient spouse2 = createPatientByName("spouse2");
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Create a spouse2 of the patient
+        restPatientMockMvc.perform(post("/api/patients/{id}/spouse2S/{spouse2_id}", patient.getId(), spouse2.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.length()").value(patient.getSpouse2S().size()));
+    }
+
+    @Test
+    @Transactional
+    public void deletePatientSpouse2() throws Exception {
+        Patient spouse2 = createPatientByName("spouse2");
+        patient.addSpouse2(spouse2);
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Delete a spouse1 of the patient
+        restPatientMockMvc.perform(delete("/api/patients/{id}/spouse2S/{spouse2_id}", patient.getId(), spouse2.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.length()").value(patient.getSpouse2S().size()));
+    }
+
     private Patient createPatientByName(String name) {
         Patient patient = createEntity(em);
         patient.setName(name);
-        patientRepository.saveAndFlush(patient);
+        patientRepository.save(patient);
 
         return patient;
     }

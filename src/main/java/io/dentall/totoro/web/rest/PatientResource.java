@@ -23,6 +23,7 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -31,6 +32,29 @@ import java.util.function.Function;
 @RestController
 @RequestMapping("/api")
 public class PatientResource {
+
+    @FunctionalInterface
+    private interface FourParameterFunction<T, U, V, W, R> {
+        R apply(T t, U u, V v, W w);
+    }
+
+    private BiFunction<Patient, Patient, Patient> addParent = Patient::addParent;
+    private BiFunction<Patient, Patient, Patient> removeParent = Patient::removeParent;
+    private BiFunction<Patient, Patient, Patient> addChild = Patient::addChild;
+    private BiFunction<Patient, Patient, Patient> removeChild = Patient::removeChild;
+    private BiFunction<Patient, Patient, Patient> addSpouse1 = Patient::addSpouse1;
+    private BiFunction<Patient, Patient, Patient> removeSpouse1 = Patient::removeSpouse1;
+    private BiFunction<Patient, Patient, Patient> addSpouse2= Patient::addSpouse2;
+    private BiFunction<Patient, Patient, Patient> removeSpouse2 = Patient::removeSpouse2;
+
+    private FourParameterFunction<Patient, PatientRepository, Long, BiFunction<Patient, Patient, Patient>, Patient> crudFunc =
+        (patient, repo, id, crud) -> {
+            Patient target = repo
+                .findById(id)
+                .orElseThrow(() -> new BadRequestAlertException("Invalid id", ENTITY_NAME, "target_not_found"));
+
+            return repo.save(crud.apply(patient, target));
+        };
 
     private final Logger log = LoggerFactory.getLogger(PatientResource.class);
 
@@ -138,22 +162,22 @@ public class PatientResource {
      * GET  /patients/:id/parents : get the parents of "id" patient.
      *
      * @param id the id of the patient to retrieve parents
-     * @return the ResponseEntity with status 200 (OK) and the list of patients in body
+     * @return the ResponseEntity with status 200 (OK) and the list of parents in body
      */
     @GetMapping("/patients/{id}/parents")
     @Timed
     public ResponseEntity<Collection<Patient>> getPatientParents(@PathVariable Long id) {
         log.debug("REST request to get parents of Patient : {}", id);
 
-        return ResponseEntity.ok().body(getPatientParentChildCRUDResult(id).getParents());
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id).getParents());
     }
 
     /**
-     * POST  /patients/{id}/parents : Create a new parent of patient.
+     * POST  /patients/:id/parents/:parent_id : Create a new parent of patient.
      *
      * @param id the id of the patient
      * @param parent_id the id of the parent
-     * @return the ResponseEntity with status 200 (OK)
+     * @return the ResponseEntity with status 200 (OK) and the list of parents in body
      */
     @PostMapping("/patients/{id}/parents/{parent_id}")
     @Timed
@@ -163,16 +187,8 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals parent_id not allow", ENTITY_NAME, "patient_id_equal_parent_id");
         }
 
-        Function<Patient, Patient> func = patient -> {
-            Patient parent = patientRepository
-                .findById(parent_id)
-                .orElseThrow(() -> new BadRequestAlertException("Invalid parent_id", ENTITY_NAME, "parent_not_found"));
-            patient.getParents().add(parent);
-
-            return patientRepository.save(patient);
-        };
-
-        return ResponseEntity.ok().body(getPatientParentChildCRUDResult(id, func).getParents());
+        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, parent_id, addParent);
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getParents());
     }
 
     /**
@@ -180,7 +196,7 @@ public class PatientResource {
      *
      * @param id the id of the patient
      * @param parent_id the id of the parent
-     * @return the ResponseEntity with status 200 (OK)
+     * @return the ResponseEntity with status 200 (OK) and the list of parents in body
      */
     @DeleteMapping("/patients/{id}/parents/{parent_id}")
     @Timed
@@ -190,38 +206,30 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals parent_id not allow", ENTITY_NAME, "patient_id_equal_parent_id");
         }
 
-        Function<Patient, Patient> func = patient -> {
-            Patient parent = patientRepository
-                .findById(parent_id)
-                .orElseThrow(() -> new BadRequestAlertException("Invalid parent_id", ENTITY_NAME, "parent_not_found"));
-            patient.getParents().remove(parent);
-
-            return patientRepository.save(patient);
-        };
-
-        return ResponseEntity.ok().body(getPatientParentChildCRUDResult(id, func).getParents());
+        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, parent_id, removeParent);
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getParents());
     }
 
     /**
      * GET  /patients/:id/children : get the children of "id" patient.
      *
      * @param id the id of the patient to retrieve children
-     * @return the ResponseEntity with status 200 (OK) and the list of patients in body
+     * @return the ResponseEntity with status 200 (OK) and the list of children in body
      */
     @GetMapping("/patients/{id}/children")
     @Timed
     public ResponseEntity<Collection<Patient>> getPatientChildren(@PathVariable Long id) {
         log.debug("REST request to get children of Patient : {}", id);
 
-        return ResponseEntity.ok().body(getPatientParentChildCRUDResult(id).getChildren());
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id).getChildren());
     }
 
     /**
-     * POST  /patients/{id}/children : Create a new child of patient.
+     * POST  /patients/:id/children/:child_id : Create a new child of patient.
      *
      * @param id the id of the patient
      * @param child_id the id of the child
-     * @return the ResponseEntity with status 200 (OK)
+     * @return the ResponseEntity with status 200 (OK) and the list of children in body
      */
     @PostMapping("/patients/{id}/children/{child_id}")
     @Timed
@@ -231,18 +239,8 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals child_id not allow", ENTITY_NAME, "patient_id_equal_child_id");
         }
 
-        Function<Patient, Patient> func = patient -> {
-            Patient child = patientRepository
-                .findById(child_id)
-                .orElseThrow(() -> new BadRequestAlertException("Invalid child_id", ENTITY_NAME, "child_not_found"));
-            child.getParents().add(patient);
-            patient.getChildren().add(child);
-            patientRepository.save(child);
-
-            return patient;
-        };
-
-        return ResponseEntity.ok().body(getPatientParentChildCRUDResult(id, func).getChildren());
+        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, child_id, addChild);
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getChildren());
     }
 
     /**
@@ -250,7 +248,7 @@ public class PatientResource {
      *
      * @param id the id of the patient
      * @param child_id the id of the child
-     * @return the ResponseEntity with status 200 (OK)
+     * @return the ResponseEntity with status 200 (OK) and the list of children in body
      */
     @DeleteMapping("/patients/{id}/children/{child_id}")
     @Timed
@@ -260,25 +258,119 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals child_id not allow", ENTITY_NAME, "patient_id_equal_child_id");
         }
 
-        Function<Patient, Patient> func = patient -> {
-            Patient child = patientRepository
-                .findById(child_id)
-                .orElseThrow(() -> new BadRequestAlertException("Invalid child_id", ENTITY_NAME, "child_not_found"));
-            child.getParents().remove(patient);
-            patient.getChildren().remove(child);
-            patientRepository.save(child);
-
-            return patient;
-        };
-
-        return ResponseEntity.ok().body(getPatientParentChildCRUDResult(id, func).getChildren());
+        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, child_id, removeChild);
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getChildren());
     }
 
-    private Patient getPatientParentChildCRUDResult(Long id) {
-        return getPatientParentChildCRUDResult(id, patient -> patient);
+    /**
+     * GET  /patients/:id/spouse1S : get the spouse1S of "id" patient.
+     *
+     * @param id the id of the patient to retrieve spouse1S
+     * @return the ResponseEntity with status 200 (OK) and the list of spouse1S in body
+     */
+    @GetMapping("/patients/{id}/spouse1S")
+    @Timed
+    public ResponseEntity<Collection<Patient>> getPatientSpouse1S(@PathVariable Long id) {
+        log.debug("REST request to get spouse1S of Patient : {}", id);
+
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id).getSpouse1S());
     }
 
-    private Patient getPatientParentChildCRUDResult(Long id, Function<Patient, Patient> func) {
+    /**
+     * POST  /patients/:id/spouse1S/:spouse1_id : Create a new spouse1 of patient.
+     *
+     * @param id the id of the patient
+     * @param spouse1_id the id of the spouse1
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @PostMapping("/patients/{id}/spouse1S/{spouse1_id}")
+    @Timed
+    public ResponseEntity<Collection<Patient>> createPatientSpouse1(@PathVariable Long id, @PathVariable Long spouse1_id) {
+        log.debug("REST request to save Spouse1(id: {}) of Patient(id: {})", spouse1_id, id);
+        if (id.equals(spouse1_id)) {
+            throw new BadRequestAlertException("patient_id equals spouse1_id not allow", ENTITY_NAME, "patient_id_equal_spouse1_id");
+        }
+
+        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, spouse1_id, addSpouse1);
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getSpouse1S());
+    }
+
+    /**
+     * DELETE  /patients/:id/spouse1S/:spouse1_id : delete the "spouse1_id" spouse1 of "id" patient.
+     *
+     * @param id the id of the patient
+     * @param spouse1_id the id of the spouse1
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @DeleteMapping("/patients/{id}/spouse1S/{spouse1_id}")
+    @Timed
+    public ResponseEntity<Collection<Patient>> deletePatientSpouse(@PathVariable Long id, @PathVariable Long spouse1_id) {
+        log.debug("REST request to delete Spouse1(id: {}) of Patient(id: {})", spouse1_id, id);
+        if (id.equals(spouse1_id)) {
+            throw new BadRequestAlertException("patient_id equals spouse1_id not allow", ENTITY_NAME, "patient_id_equal_spouse1_id");
+        }
+
+        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, spouse1_id, removeSpouse1);
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getSpouse1S());
+    }
+
+    /**
+     * GET  /patients/:id/spouse2S : get the spouse2S of "id" patient.
+     *
+     * @param id the id of the patient to retrieve spouse2S
+     * @return the ResponseEntity with status 200 (OK) and the list of spouse2S in body
+     */
+    @GetMapping("/patients/{id}/spouse2S")
+    @Timed
+    public ResponseEntity<Collection<Patient>> getPatientSpouse2S(@PathVariable Long id) {
+        log.debug("REST request to get spouse2S of Patient : {}", id);
+
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id).getSpouse2S());
+    }
+
+    /**
+     * POST  /patients/:id/spouse2S/:spouse2_id : Create a new spouse2 of patient.
+     *
+     * @param id the id of the patient
+     * @param spouse2_id the id of the spouse2
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @PostMapping("/patients/{id}/spouse2S/{spouse2_id}")
+    @Timed
+    public ResponseEntity<Collection<Patient>> createPatientSpouse2(@PathVariable Long id, @PathVariable Long spouse2_id) {
+        log.debug("REST request to save Spouse2(id: {}) of Patient(id: {})", spouse2_id, id);
+        if (id.equals(spouse2_id)) {
+            throw new BadRequestAlertException("patient_id equals spouse2_id not allow", ENTITY_NAME, "patient_id_equal_spouse2_id");
+        }
+
+        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, spouse2_id, addSpouse2);
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getSpouse2S());
+    }
+
+    /**
+     * DELETE  /patients/:id/spouse2S/:spouse2_id : delete the "spouse2_id" spouse of "id" patient.
+     *
+     * @param id the id of the patient
+     * @param spouse2_id the id of the spouse2
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @DeleteMapping("/patients/{id}/spouse2S/{spouse2_id}")
+    @Timed
+    public ResponseEntity<Collection<Patient>> deletePatientSpouse2(@PathVariable Long id, @PathVariable Long spouse2_id) {
+        log.debug("REST request to delete Spouse2(id: {}) of Patient(id: {})", spouse2_id, id);
+        if (id.equals(spouse2_id)) {
+            throw new BadRequestAlertException("patient_id equals spouse2_id not allow", ENTITY_NAME, "patient_id_equal_spouse2_id");
+        }
+
+        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, spouse2_id, removeSpouse2);
+        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getSpouse2S());
+    }
+
+    private Patient getPatientSelfCRUDResult(Long id) {
+        return getPatientSelfCRUDResult(id, patient -> patient);
+    }
+
+    private Patient getPatientSelfCRUDResult(Long id, Function<Patient, Patient> func) {
         return patientRepository
             .findById(id)
             .map(func)
