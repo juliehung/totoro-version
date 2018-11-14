@@ -17,9 +17,7 @@ import io.dentall.totoro.web.rest.vm.ManagedUserVM;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -202,19 +200,21 @@ public class AccountResource {
     }
 
     /**
-     * GET /account//avatar : get the current user's avatar.
+     * GET /account/avatar : get the current user's avatar.
      *
-     * @return the ResponseEntity with status 301 redirect to avatar resource
+     * @return Base64 string
      */
     @GetMapping("/account/avatar")
     @Timed
-    public ResponseEntity getAvatar() {
-        Optional<String> avatar = userService.getUserWithAuthorities().map(User::getImageUrl);
+    public String getAvatar() {
+        Optional<byte[]> avatar = userService.getUserWithAuthorities().map(user -> user.getExtendUser().getAvatar());
         if (!avatar.isPresent()) {
             throw new InternalServerErrorException("No user avatar was found");
         }
 
-        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, avatar.get()).build();
+        return avatar
+            .map(bytes -> Base64.getEncoder().withoutPadding().encodeToString(bytes))
+            .orElseThrow(() -> new InternalServerErrorException("User avatar could not Base64 encode"));
     }
 
     private static boolean checkPasswordLength(String password) {
