@@ -4,7 +4,7 @@
         {
             "fieldName": "status",
             "fieldType": "AppointmentStatus",
-            "fieldValues": "TO_BE_CONFIRMED,CONFIRMED,CANCEL,NO",
+            "fieldValues": "TO_BE_CONFIRMED,CONFIRMED,CANCEL",
             "fieldValidateRules": [
                 "required"
             ]
@@ -14,16 +14,16 @@
             "fieldType": "String"
         },
         {
+            "fieldName": "note",
+            "fieldType": "String"
+        },
+        {
             "fieldName": "expectedArrivalTime",
-            "fieldType": "ZonedDateTime"
+            "fieldType": "Instant"
         },
         {
             "fieldName": "requiredTreatmentTime",
             "fieldType": "Integer"
-        },
-        {
-            "fieldName": "pregnancy",
-            "fieldType": "Boolean"
         },
         {
             "fieldName": "microscope",
@@ -31,6 +31,10 @@
         },
         {
             "fieldName": "newPatient",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "baseFloor",
             "fieldType": "Boolean"
         }
     ],

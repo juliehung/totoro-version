@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
 import { getEntities as getPatients } from 'app/entities/patient/patient.reducer';
+import { ITag } from 'app/shared/model/tag.model';
+import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './patient.reducer';
 import { IPatient } from 'app/shared/model/patient.model';
 // tslint:disable-next-line:no-unused-variable
@@ -21,6 +23,7 @@ export interface IPatientUpdateState {
   isNew: boolean;
   idsparent: any[];
   idsspouse1: any[];
+  idstag: any[];
   introducerId: string;
   childId: string;
   spouse2Id: string;
@@ -32,6 +35,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
     this.state = {
       idsparent: [],
       idsspouse1: [],
+      idstag: [],
       introducerId: '0',
       childId: '0',
       spouse2Id: '0',
@@ -47,6 +51,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
     }
 
     this.props.getPatients();
+    this.props.getTags();
   }
 
   saveEntity = (event, errors, values) => {
@@ -59,7 +64,8 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
         ...patientEntity,
         ...values,
         parents: mapIdList(values.parents),
-        spouse1S: mapIdList(values.spouse1S)
+        spouse1S: mapIdList(values.spouse1S),
+        tags: mapIdList(values.tags)
       };
 
       if (this.state.isNew) {
@@ -76,7 +82,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
   };
 
   render() {
-    const { patientEntity, patients, loading, updating } = this.props;
+    const { patientEntity, patients, tags, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -278,24 +284,6 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   <AvField id="patient-scaling" type="date" className="form-control" name="scaling" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="allergyLabel" check>
-                    <AvInput id="patient-allergy" type="checkbox" className="form-control" name="allergy" />
-                    <Translate contentKey="totoroApp.patient.allergy">Allergy</Translate>
-                  </Label>
-                </AvGroup>
-                <AvGroup>
-                  <Label id="inconvenienceLabel" check>
-                    <AvInput id="patient-inconvenience" type="checkbox" className="form-control" name="inconvenience" />
-                    <Translate contentKey="totoroApp.patient.inconvenience">Inconvenience</Translate>
-                  </Label>
-                </AvGroup>
-                <AvGroup>
-                  <Label id="seriousDiseaseLabel" check>
-                    <AvInput id="patient-seriousDisease" type="checkbox" className="form-control" name="seriousDisease" />
-                    <Translate contentKey="totoroApp.patient.seriousDisease">Serious Disease</Translate>
-                  </Label>
-                </AvGroup>
-                <AvGroup>
                   <Label id="lineIdLabel" for="lineId">
                     <Translate contentKey="totoroApp.patient.lineId">Line Id</Translate>
                   </Label>
@@ -384,6 +372,28 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                       : null}
                   </AvInput>
                 </AvGroup>
+                <AvGroup>
+                  <Label for="tags">
+                    <Translate contentKey="totoroApp.patient.tag">Tag</Translate>
+                  </Label>
+                  <AvInput
+                    id="patient-tag"
+                    type="select"
+                    multiple
+                    className="form-control"
+                    name="tags"
+                    value={patientEntity.tags && patientEntity.tags.map(e => e.id)}
+                  >
+                    <option value="" key="0" />
+                    {tags
+                      ? tags.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/patient" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
@@ -408,6 +418,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
 
 const mapStateToProps = (storeState: IRootState) => ({
   patients: storeState.patient.entities,
+  tags: storeState.tag.entities,
   patientEntity: storeState.patient.entity,
   loading: storeState.patient.loading,
   updating: storeState.patient.updating
@@ -415,6 +426,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 
 const mapDispatchToProps = {
   getPatients,
+  getTags,
   getEntity,
   updateEntity,
   createEntity,

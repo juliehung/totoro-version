@@ -4,14 +4,14 @@
         {
             "fieldName": "status",
             "fieldType": "RegistrationStatus",
-            "fieldValues": "PENDING,FINISH",
+            "fieldValues": "PENDING,FINISHED",
             "fieldValidateRules": [
                 "required"
             ]
         },
         {
             "fieldName": "arrivalTime",
-            "fieldType": "ZonedDateTime"
+            "fieldType": "Instant"
         },
         {
             "fieldName": "type",

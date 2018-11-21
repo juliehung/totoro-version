@@ -1,0 +1,10 @@
+{
+    "totoroApp": {
+        "TagType" : {
+            "null": "",
+            "ALLERGY": "ALLERGY",
+            "DISEASE": "DISEASE",
+            "TEMPORALITY": "TEMPORALITY"
+        }
+    }
+}

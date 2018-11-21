@@ -12,7 +12,6 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -89,19 +88,10 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
     private String emergencyPhone;
 
     @Column(name = "delete_date")
-    private ZonedDateTime deleteDate;
+    private Instant deleteDate;
 
     @Column(name = "scaling")
     private LocalDate scaling;
-
-    @Column(name = "allergy")
-    private Boolean allergy;
-
-    @Column(name = "inconvenience")
-    private Boolean inconvenience;
-
-    @Column(name = "serious_disease")
-    private Boolean seriousDisease;
 
     @Column(name = "line_id")
     private String lineId;
@@ -113,7 +103,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
     private String reminder;
 
     @Column(name = "write_ic_time")
-    private ZonedDateTime writeIcTime;
+    private Instant writeIcTime;
 
     @OneToMany(mappedBy = "patient")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -133,6 +123,12 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
                joinColumns = @JoinColumn(name = "patients_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "spouse1s_id", referencedColumnName = "id"))
     private Set<Patient> spouse1S = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "patient_tag",
+               joinColumns = @JoinColumn(name = "patients_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
+    private Set<Tag> tags = new HashSet<>();
 
     @ManyToMany(mappedBy = "parents", fetch = FetchType.EAGER)
     @JsonIgnore
@@ -355,16 +351,16 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
         this.emergencyPhone = emergencyPhone;
     }
 
-    public ZonedDateTime getDeleteDate() {
+    public Instant getDeleteDate() {
         return deleteDate;
     }
 
-    public Patient deleteDate(ZonedDateTime deleteDate) {
+    public Patient deleteDate(Instant deleteDate) {
         this.deleteDate = deleteDate;
         return this;
     }
 
-    public void setDeleteDate(ZonedDateTime deleteDate) {
+    public void setDeleteDate(Instant deleteDate) {
         this.deleteDate = deleteDate;
     }
 
@@ -379,45 +375,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
 
     public void setScaling(LocalDate scaling) {
         this.scaling = scaling;
-    }
-
-    public Boolean isAllergy() {
-        return allergy;
-    }
-
-    public Patient allergy(Boolean allergy) {
-        this.allergy = allergy;
-        return this;
-    }
-
-    public void setAllergy(Boolean allergy) {
-        this.allergy = allergy;
-    }
-
-    public Boolean isInconvenience() {
-        return inconvenience;
-    }
-
-    public Patient inconvenience(Boolean inconvenience) {
-        this.inconvenience = inconvenience;
-        return this;
-    }
-
-    public void setInconvenience(Boolean inconvenience) {
-        this.inconvenience = inconvenience;
-    }
-
-    public Boolean isSeriousDisease() {
-        return seriousDisease;
-    }
-
-    public Patient seriousDisease(Boolean seriousDisease) {
-        this.seriousDisease = seriousDisease;
-        return this;
-    }
-
-    public void setSeriousDisease(Boolean seriousDisease) {
-        this.seriousDisease = seriousDisease;
     }
 
     public String getLineId() {
@@ -459,16 +416,16 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
         this.reminder = reminder;
     }
 
-    public ZonedDateTime getWriteIcTime() {
+    public Instant getWriteIcTime() {
         return writeIcTime;
     }
 
-    public Patient writeIcTime(ZonedDateTime writeIcTime) {
+    public Patient writeIcTime(Instant writeIcTime) {
         this.writeIcTime = writeIcTime;
         return this;
     }
 
-    public void setWriteIcTime(ZonedDateTime writeIcTime) {
+    public void setWriteIcTime(Instant writeIcTime) {
         this.writeIcTime = writeIcTime;
     }
 
@@ -560,6 +517,31 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
         this.spouse1S = patients;
     }
 
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public Patient tags(Set<Tag> tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public Patient addTag(Tag tag) {
+        this.tags.add(tag);
+        tag.getPatients().add(this);
+        return this;
+    }
+
+    public Patient removeTag(Tag tag) {
+        this.tags.remove(tag);
+        tag.getPatients().remove(this);
+        return this;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
     public Set<Patient> getChildren() {
         return children;
     }
@@ -637,11 +619,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
         this.firstDoctor = firstDoctor;
     }
 
-    public Patient createdBy(String createdBy) {
-        super.setCreatedBy(createdBy);
-        return this;
-    }
-
     @Override
     @JsonIgnore(false)
     @JsonProperty
@@ -697,9 +674,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
             ", emergencyPhone='" + getEmergencyPhone() + "'" +
             ", deleteDate='" + getDeleteDate() + "'" +
             ", scaling='" + getScaling() + "'" +
-            ", allergy='" + isAllergy() + "'" +
-            ", inconvenience='" + isInconvenience() + "'" +
-            ", seriousDisease='" + isSeriousDisease() + "'" +
             ", lineId='" + getLineId() + "'" +
             ", fbId='" + getFbId() + "'" +
             ", reminder='" + getReminder() + "'" +

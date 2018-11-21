@@ -3,7 +3,7 @@ import { IAppointment } from 'app/shared/model//appointment.model';
 
 export const enum RegistrationStatus {
   PENDING = 'PENDING',
-  FINISH = 'FINISH'
+  FINISHED = 'FINISHED'
 }
 
 export const enum RegistrationType {

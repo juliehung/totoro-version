@@ -33,9 +33,6 @@
             "emergencyPhone": "Emergency Phone",
             "deleteDate": "Delete Date",
             "scaling": "Scaling",
-            "allergy": "Allergy",
-            "inconvenience": "Inconvenience",
-            "seriousDisease": "Serious Disease",
             "lineId": "Line Id",
             "fbId": "Fb Id",
             "reminder": "Reminder",
@@ -44,6 +41,7 @@
             "introducer": "Introducer",
             "parent": "Parent",
             "spouse1": "Spouse 1",
+            "tag": "Tag",
             "child": "Child",
             "spouse2": "Spouse 2"
         }

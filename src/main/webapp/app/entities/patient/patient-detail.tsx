@@ -137,24 +137,6 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
               <TextFormat value={patientEntity.scaling} type="date" format={APP_LOCAL_DATE_FORMAT} />
             </dd>
             <dt>
-              <span id="allergy">
-                <Translate contentKey="totoroApp.patient.allergy">Allergy</Translate>
-              </span>
-            </dt>
-            <dd>{patientEntity.allergy ? 'true' : 'false'}</dd>
-            <dt>
-              <span id="inconvenience">
-                <Translate contentKey="totoroApp.patient.inconvenience">Inconvenience</Translate>
-              </span>
-            </dt>
-            <dd>{patientEntity.inconvenience ? 'true' : 'false'}</dd>
-            <dt>
-              <span id="seriousDisease">
-                <Translate contentKey="totoroApp.patient.seriousDisease">Serious Disease</Translate>
-              </span>
-            </dt>
-            <dd>{patientEntity.seriousDisease ? 'true' : 'false'}</dd>
-            <dt>
               <span id="lineId">
                 <Translate contentKey="totoroApp.patient.lineId">Line Id</Translate>
               </span>
@@ -206,6 +188,19 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
                     <span key={val.id}>
                       <a>{val.id}</a>
                       {i === patientEntity.spouse1S.length - 1 ? '' : ', '}
+                    </span>
+                  ))
+                : null}
+            </dd>
+            <dt>
+              <Translate contentKey="totoroApp.patient.tag">Tag</Translate>
+            </dt>
+            <dd>
+              {patientEntity.tags
+                ? patientEntity.tags.map((val, i) => (
+                    <span key={val.id}>
+                      <a>{val.id}</a>
+                      {i === patientEntity.tags.length - 1 ? '' : ', '}
                     </span>
                   ))
                 : null}

@@ -81,23 +81,11 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="delete_date" type="datetime">
+            <column name="delete_date" type="timestamp">
                 <constraints nullable="true" />
             </column>
 
             <column name="scaling" type="date">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="allergy" type="boolean">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="inconvenience" type="boolean">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="serious_disease" type="boolean">
                 <constraints nullable="true" />
             </column>
 
@@ -113,7 +101,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="write_ic_time" type="datetime">
+            <column name="write_ic_time" type="timestamp">
                 <constraints nullable="true" />
             </column>
 
@@ -123,8 +111,6 @@
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        <dropDefaultValue tableName="patient" columnName="delete_date" columnDataType="datetime"/>
-        <dropDefaultValue tableName="patient" columnName="write_ic_time" columnDataType="datetime"/>
         
         <createTable tableName="patient_parent">
             <column name="parents_id" type="bigint">
@@ -147,6 +133,17 @@
         </createTable>
 
         <addPrimaryKey columnNames="patients_id, spouse1s_id" tableName="patient_spouse1"/>
+        
+        <createTable tableName="patient_tag">
+            <column name="tags_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patients_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="patients_id, tags_id" tableName="patient_tag"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

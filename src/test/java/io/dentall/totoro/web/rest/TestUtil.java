@@ -144,8 +144,7 @@ public class TestUtil {
         ExtendUser extendUser = user.getExtendUser();
         patient.setDominantDoctor(extendUser);
         patient.setFirstDoctor(extendUser);
-        patientRepository.save(patient);
 
-        return patient;
+        return patientRepository.save(patient);
     }
 }

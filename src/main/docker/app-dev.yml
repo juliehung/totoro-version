@@ -15,9 +15,12 @@ services:
         build:
             context: ./data-faker
         image: totoro-data-faker
-        command: ["./wait-for-it.sh", "totoro-app:5435", "-s", "-t", "120", "--", "echo", "generates fake data"]
+        command: ["./wait-for-it.sh", "totoro-app:5435", "-s", "-t", "120", "--", "python", "./fake_data_dynamic.py"]
         networks:
             - backend
+        volumes:
+            - ./data-faker/current_update_date.json:/usr/src/app/current_update_date.json
+            - ../resources/config/liquibase/:/usr/src/app/data/
         container_name: totoro-data-faker
 
 networks:

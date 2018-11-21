@@ -23,10 +23,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -153,8 +150,8 @@ public class RegistrationResource {
     @Timed
     public ResponseEntity<List<PatientCardVM>> getAllPatientCards(Pageable pageable) {
         log.debug("REST request to get registration patient cards");
-        ZonedDateTime start = LocalDate.now().minusDays(2).atTime(LocalTime.MIN).atZone(ZoneId.systemDefault());
-        ZonedDateTime end = LocalDate.now().atTime(LocalTime.MAX).atZone(ZoneId.systemDefault());
+        Instant start = LocalDate.now().minusDays(2).atTime(LocalTime.MIN).atZone(ZoneOffset.UTC).toInstant();
+        Instant end = LocalDate.now().atTime(LocalTime.MAX).atZone(ZoneOffset.UTC).toInstant();
         Page<Registration> registrations = registrationRepository.findByArrivalTimeBetween(start, end, pageable);
 
         Page<PatientCardVM> page = registrations
@@ -164,8 +161,10 @@ public class RegistrationResource {
                 Appointment appointment = registration.getAppointment();
                 card.setExpectedArrivalTime(appointment.getExpectedArrivalTime());
                 card.setSubject(appointment.getSubject());
+                card.setNote(appointment.getNote());
                 card.setRequiredTreatmentTime(appointment.getRequiredTreatmentTime());
                 card.setNewPatient(appointment.isNewPatient());
+                card.setBaseFloor(appointment.isBaseFloor());
 
                 Patient patient = appointment.getPatient();
                 card.setName(patient.getName());
@@ -177,6 +176,8 @@ public class RegistrationResource {
                 card.setReminder(patient.getReminder());
                 card.setLastModifiedDate(patient.getLastModifiedDate());
                 card.setWriteIcTime(patient.getWriteIcTime());
+                card.setLineId(patient.getLineId());
+                card.setFbId(patient.getFbId());
 
                 card.setRegistration(registration);
 

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 
 /**
@@ -16,5 +16,5 @@ import java.time.ZonedDateTime;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
-    Page<Appointment> findByRegistrationIsNullAndExpectedArrivalTimeBetween(ZonedDateTime start, ZonedDateTime end, Pageable pageable);
+    Page<Appointment> findByRegistrationIsNullAndExpectedArrivalTimeBetween(Instant start, Instant end, Pageable pageable);
 }

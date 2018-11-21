@@ -1,70 +1,59 @@
 package io.dentall.totoro.web.rest.vm;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.Registration;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 /**
  * View Model object for PatientCardVM.
  */
 public class PatientCardVM implements Serializable {
 
-    @JsonProperty("Name")
     private String name;
 
-    @JsonProperty("Gender")
     private int gender;
 
-    @JsonProperty("Pid")
     private String medicalId;
 
-    @JsonProperty("Birthday")
     private LocalDate birthday;
 
-    @JsonProperty("RegistrationTime")
-    private ZonedDateTime expectedArrivalTime;
+    private Instant expectedArrivalTime;
 
-    @JsonProperty("ArrivalTime")
-    private ZonedDateTime arrivalTime;
+    private Instant arrivalTime;
 
-    @JsonProperty("ConsultType")
     private Integer registrationType;
 
 //    @JsonProperty("MedicalOrder")
 //    private String medicalOrder;
 
-    @JsonProperty("Subject")
     private String subject;
 
-    @JsonProperty("DominantDoc")
     private String dominantDoctor;
 
-    @JsonProperty("NeedTime")
     private int requiredTreatmentTime;
 
-    @JsonProperty("IsNewPatient")
     private Boolean newPatient;
 
-    @JsonProperty("ConsultationStatus")
     private Integer registrationStatus;
 
-    @JsonProperty("FirstDoc")
     private String firstDoctor;
 
-    @JsonProperty("Reminder")
     private String reminder;
 
-    @JsonProperty("EmrLastModifyTime")
-    private ZonedDateTime lastModifiedDate;
+    private String note;
 
-    @JsonProperty("IcWrittenTime")
-    private ZonedDateTime writeIcTime;
+    private Instant lastModifiedDate;
+
+    private Instant writeIcTime;
+
+    private String lineId;
+
+    private String fbId;
+
+    private Boolean baseFloor;
 
     public String getName() {
         return name;
@@ -98,11 +87,11 @@ public class PatientCardVM implements Serializable {
         this.birthday = birthday;
     }
 
-    public ZonedDateTime getExpectedArrivalTime() {
+    public Instant getExpectedArrivalTime() {
         return expectedArrivalTime;
     }
 
-    public void setExpectedArrivalTime(ZonedDateTime expectedArrivalTime) {
+    public void setExpectedArrivalTime(Instant expectedArrivalTime) {
         this.expectedArrivalTime = expectedArrivalTime;
     }
 
@@ -166,22 +155,54 @@ public class PatientCardVM implements Serializable {
         this.reminder = reminder;
     }
 
-    public ZonedDateTime getLastModifiedDate() {
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
     public void setLastModifiedDate(Instant lastModifiedDate) {
         if (lastModifiedDate != null) {
-            this.lastModifiedDate = lastModifiedDate.atZone(ZoneId.systemDefault());
+            this.lastModifiedDate = lastModifiedDate;
         }
     }
 
-    public ZonedDateTime getWriteIcTime() {
+    public Instant getWriteIcTime() {
         return writeIcTime;
     }
 
-    public void setWriteIcTime(ZonedDateTime writeIcTime) {
+    public void setWriteIcTime(Instant writeIcTime) {
         this.writeIcTime = writeIcTime;
+    }
+
+    public String getLineId() {
+        return lineId;
+    }
+
+    public void setLineId(String lineId) {
+        this.lineId = lineId;
+    }
+
+    public String getFbId() {
+        return fbId;
+    }
+
+    public void setFbId(String fbId) {
+        this.fbId = fbId;
+    }
+
+    public Boolean isBaseFloor() {
+        return baseFloor;
+    }
+
+    public void setBaseFloor(Boolean baseFloor) {
+        this.baseFloor = baseFloor;
     }
 
     public Integer getRegistrationType() {
@@ -192,7 +213,7 @@ public class PatientCardVM implements Serializable {
         return registrationStatus;
     }
 
-    public ZonedDateTime getArrivalTime() {
+    public Instant getArrivalTime() {
         return arrivalTime;
     }
 

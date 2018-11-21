@@ -875,8 +875,8 @@ public class AccountResourceIntTest {
         restMvc.perform(get("/api/account/avatar"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.EncodedType").value(UPLOAD_CONTENT_TYPE))
-            .andExpect(jsonPath("$.EncodedBase64").value(Base64.getEncoder().withoutPadding().encodeToString(avatar)));
+            .andExpect(jsonPath("$.contentType").value(UPLOAD_CONTENT_TYPE))
+            .andExpect(jsonPath("$.base64").value(Base64.getEncoder().withoutPadding().encodeToString(avatar)));
     }
 
     @Test

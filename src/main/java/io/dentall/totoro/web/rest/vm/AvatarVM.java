@@ -6,10 +6,10 @@ import java.io.Serializable;
 
 public class AvatarVM implements Serializable {
 
-    @JsonProperty("EncodedType")
+    @JsonProperty
     private String contentType;
 
-    @JsonProperty("EncodedBase64")
+    @JsonProperty
     private String base64;
 
     public AvatarVM(String contentType, String base64) {
