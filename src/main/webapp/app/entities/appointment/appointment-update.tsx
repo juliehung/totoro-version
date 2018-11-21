@@ -117,9 +117,6 @@ export class AppointmentUpdate extends React.Component<IAppointmentUpdateProps, 
                     <option value="CANCEL">
                       <Translate contentKey="totoroApp.AppointmentStatus.CANCEL" />
                     </option>
-                    <option value="NO">
-                      <Translate contentKey="totoroApp.AppointmentStatus.NO" />
-                    </option>
                   </AvInput>
                 </AvGroup>
                 <AvGroup>
@@ -127,6 +124,12 @@ export class AppointmentUpdate extends React.Component<IAppointmentUpdateProps, 
                     <Translate contentKey="totoroApp.appointment.subject">Subject</Translate>
                   </Label>
                   <AvField id="appointment-subject" type="text" name="subject" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="noteLabel" for="note">
+                    <Translate contentKey="totoroApp.appointment.note">Note</Translate>
+                  </Label>
+                  <AvField id="appointment-note" type="text" name="note" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="expectedArrivalTimeLabel" for="expectedArrivalTime">
@@ -145,12 +148,6 @@ export class AppointmentUpdate extends React.Component<IAppointmentUpdateProps, 
                     <Translate contentKey="totoroApp.appointment.requiredTreatmentTime">Required Treatment Time</Translate>
                   </Label>
                   <AvField id="appointment-requiredTreatmentTime" type="string" className="form-control" name="requiredTreatmentTime" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="pregnancyLabel" check>
-                    <AvInput id="appointment-pregnancy" type="checkbox" className="form-control" name="pregnancy" />
-                    <Translate contentKey="totoroApp.appointment.pregnancy">Pregnancy</Translate>
-                  </Label>
                 </AvGroup>
                 <AvGroup>
                   <Label id="microscopeLabel" check>

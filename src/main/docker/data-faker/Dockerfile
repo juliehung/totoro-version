@@ -1,3 +1,9 @@
 FROM python:3.7.1-stretch
 
-COPY wait-for-it.sh wait-for-it.sh
+WORKDIR /usr/src/app
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY fake_data_dynamic.py ./
+COPY wait-for-it.sh ./

@@ -80,23 +80,11 @@
         },
         {
             "fieldName": "deleteDate",
-            "fieldType": "ZonedDateTime"
+            "fieldType": "Instant"
         },
         {
             "fieldName": "scaling",
             "fieldType": "LocalDate"
-        },
-        {
-            "fieldName": "allergy",
-            "fieldType": "Boolean"
-        },
-        {
-            "fieldName": "inconvenience",
-            "fieldType": "Boolean"
-        },
-        {
-            "fieldName": "seriousDisease",
-            "fieldType": "Boolean"
         },
         {
             "fieldName": "lineId",
@@ -112,7 +100,7 @@
         },
         {
             "fieldName": "writeIcTime",
-            "fieldType": "ZonedDateTime"
+            "fieldType": "Instant"
         }
     ],
     "relationships": [
@@ -141,6 +129,14 @@
             "otherEntityRelationshipName": "spouse2",
             "relationshipName": "spouse1",
             "otherEntityName": "patient",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "patient",
+            "relationshipName": "tag",
+            "otherEntityName": "tag",
             "otherEntityField": "id",
             "ownerSide": true
         },

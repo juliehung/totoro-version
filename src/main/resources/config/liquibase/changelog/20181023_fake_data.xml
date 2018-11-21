@@ -35,5 +35,17 @@
                   separator=";"
                   tableName="patient_parent">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/tags.csv"
+                  separator=";"
+                  tableName="tag">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/patients_tags.csv"
+                  separator=";"
+                  tableName="patient_tag">
+        </loadData>
     </changeSet>
 </databaseChangeLog>

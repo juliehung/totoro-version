@@ -13,9 +13,9 @@ export interface IAppointment {
   id?: number;
   status?: AppointmentStatus;
   subject?: string;
+  note?: string;
   expectedArrivalTime?: Moment;
   requiredTreatmentTime?: number;
-  pregnancy?: boolean;
   microscope?: boolean;
   newPatient?: boolean;
   patient?: IPatient;
@@ -23,7 +23,6 @@ export interface IAppointment {
 }
 
 export const defaultValue: Readonly<IAppointment> = {
-  pregnancy: false,
   microscope: false,
   newPatient: false
 };

@@ -17,14 +17,14 @@ import java.util.Optional;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long> {
 
-    @Query(value = "select distinct patient from Patient patient left join fetch patient.parents left join fetch patient.spouse1S",
+    @Query(value = "select distinct patient from Patient patient left join fetch patient.parents left join fetch patient.spouse1S left join fetch patient.tags",
         countQuery = "select count(distinct patient) from Patient patient")
     Page<Patient> findAllWithEagerRelationships(Pageable pageable);
 
-    @Query(value = "select distinct patient from Patient patient left join fetch patient.parents left join fetch patient.spouse1S")
+    @Query(value = "select distinct patient from Patient patient left join fetch patient.parents left join fetch patient.spouse1S left join fetch patient.tags")
     List<Patient> findAllWithEagerRelationships();
 
-    @Query("select patient from Patient patient left join fetch patient.parents left join fetch patient.spouse1S where patient.id =:id")
+    @Query("select patient from Patient patient left join fetch patient.parents left join fetch patient.spouse1S left join fetch patient.tags where patient.id =:id")
     Optional<Patient> findOneWithEagerRelationships(@Param("id") Long id);
 
 }

@@ -106,8 +106,8 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
                     <option value="PENDING">
                       <Translate contentKey="totoroApp.RegistrationStatus.PENDING" />
                     </option>
-                    <option value="FINISH">
-                      <Translate contentKey="totoroApp.RegistrationStatus.FINISH" />
+                    <option value="FINISHED">
+                      <Translate contentKey="totoroApp.RegistrationStatus.FINISHED" />
                     </option>
                   </AvInput>
                 </AvGroup>

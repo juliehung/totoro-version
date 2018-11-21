@@ -1,0 +1,9 @@
+id;jhi_type;name;modifiable
+1;ALLERGY;Aspirin;FALSE
+2;ALLERGY;Penicillin;FALSE
+3;ALLERGY;Pyrine;FALSE
+4;ALLERGY;NSAID;FALSE
+5;ALLERGY;Sulfadrugs(Sulfonamides);FALSE
+6;ALLERGY;消炎藥;FALSE
+7;TEMPORALITY;pregnancy;FALSE
+8;DISEASE;AIDS;FALSE

@@ -10,6 +10,7 @@
                 "patient": "Patient",
                 "appointment": "Appointment",
                 "registration": "Registration",
+                "tag": "Tag",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

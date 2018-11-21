@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
@@ -36,7 +36,7 @@ public class Registration implements Serializable {
     private RegistrationStatus status;
 
     @Column(name = "arrival_time")
-    private ZonedDateTime arrivalTime;
+    private Instant arrivalTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "jhi_type")
@@ -71,16 +71,16 @@ public class Registration implements Serializable {
         this.status = status;
     }
 
-    public ZonedDateTime getArrivalTime() {
+    public Instant getArrivalTime() {
         return arrivalTime;
     }
 
-    public Registration arrivalTime(ZonedDateTime arrivalTime) {
+    public Registration arrivalTime(Instant arrivalTime) {
         this.arrivalTime = arrivalTime;
         return this;
     }
 
-    public void setArrivalTime(ZonedDateTime arrivalTime) {
+    public void setArrivalTime(Instant arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 

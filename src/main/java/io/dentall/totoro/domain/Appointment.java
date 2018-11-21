@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.AppointmentStatus;
@@ -36,20 +36,23 @@ public class Appointment implements Serializable {
     @Column(name = "subject")
     private String subject;
 
+    @Column(name = "note")
+    private String note;
+
     @Column(name = "expected_arrival_time")
-    private ZonedDateTime expectedArrivalTime;
+    private Instant expectedArrivalTime;
 
     @Column(name = "required_treatment_time")
     private Integer requiredTreatmentTime;
-
-    @Column(name = "pregnancy")
-    private Boolean pregnancy;
 
     @Column(name = "microscope")
     private Boolean microscope;
 
     @Column(name = "new_patient")
     private Boolean newPatient;
+
+    @Column(name = "base_floor")
+    private Boolean baseFloor;
 
     @ManyToOne
     @JsonIgnoreProperties("appointments")
@@ -93,16 +96,29 @@ public class Appointment implements Serializable {
         this.subject = subject;
     }
 
-    public ZonedDateTime getExpectedArrivalTime() {
+    public String getNote() {
+        return note;
+    }
+
+    public Appointment note(String note) {
+        this.note = note;
+        return this;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Instant getExpectedArrivalTime() {
         return expectedArrivalTime;
     }
 
-    public Appointment expectedArrivalTime(ZonedDateTime expectedArrivalTime) {
+    public Appointment expectedArrivalTime(Instant expectedArrivalTime) {
         this.expectedArrivalTime = expectedArrivalTime;
         return this;
     }
 
-    public void setExpectedArrivalTime(ZonedDateTime expectedArrivalTime) {
+    public void setExpectedArrivalTime(Instant expectedArrivalTime) {
         this.expectedArrivalTime = expectedArrivalTime;
     }
 
@@ -117,19 +133,6 @@ public class Appointment implements Serializable {
 
     public void setRequiredTreatmentTime(Integer requiredTreatmentTime) {
         this.requiredTreatmentTime = requiredTreatmentTime;
-    }
-
-    public Boolean isPregnancy() {
-        return pregnancy;
-    }
-
-    public Appointment pregnancy(Boolean pregnancy) {
-        this.pregnancy = pregnancy;
-        return this;
-    }
-
-    public void setPregnancy(Boolean pregnancy) {
-        this.pregnancy = pregnancy;
     }
 
     public Boolean isMicroscope() {
@@ -156,6 +159,19 @@ public class Appointment implements Serializable {
 
     public void setNewPatient(Boolean newPatient) {
         this.newPatient = newPatient;
+    }
+
+    public Boolean isBaseFloor() {
+        return baseFloor;
+    }
+
+    public Appointment baseFloor(Boolean baseFloor) {
+        this.baseFloor = baseFloor;
+        return this;
+    }
+
+    public void setBaseFloor(Boolean baseFloor) {
+        this.baseFloor = baseFloor;
     }
 
     public Patient getPatient() {
@@ -211,11 +227,12 @@ public class Appointment implements Serializable {
             "id=" + getId() +
             ", status='" + getStatus() + "'" +
             ", subject='" + getSubject() + "'" +
+            ", note='" + getNote() + "'" +
             ", expectedArrivalTime='" + getExpectedArrivalTime() + "'" +
             ", requiredTreatmentTime=" + getRequiredTreatmentTime() +
-            ", pregnancy='" + isPregnancy() + "'" +
             ", microscope='" + isMicroscope() + "'" +
             ", newPatient='" + isNewPatient() + "'" +
+            ", baseFloor='" + isBaseFloor() + "'" +
             "}";
     }
 }

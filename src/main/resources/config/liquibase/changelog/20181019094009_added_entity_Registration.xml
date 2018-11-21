@@ -25,7 +25,7 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="arrival_time" type="datetime">
+            <column name="arrival_time" type="timestamp">
                 <constraints nullable="true" />
             </column>
 
@@ -39,7 +39,6 @@
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        <dropDefaultValue tableName="registration" columnName="arrival_time" columnDataType="datetime"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

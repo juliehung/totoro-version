@@ -24,12 +24,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.List;
 
-
-import static io.dentall.totoro.web.rest.TestUtil.sameInstant;
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -50,8 +47,8 @@ public class RegistrationResourceIntTest {
     private static final RegistrationStatus DEFAULT_STATUS = RegistrationStatus.PENDING;
     private static final RegistrationStatus UPDATED_STATUS = RegistrationStatus.FINISHED;
 
-    private static final ZonedDateTime DEFAULT_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withHour(21).plusMinutes(10).withNano(0);
-    private static final ZonedDateTime UPDATED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withHour(21).plusHours(1).plusMinutes(10).withNano(0);
+    private static final Instant DEFAULT_ARRIVAL_TIME = Instant.now().atZone(ZoneOffset.UTC).withHour(21).plusMinutes(10).withNano(0).toInstant();
+    private static final Instant UPDATED_ARRIVAL_TIME = Instant.now().atZone(ZoneOffset.UTC).withHour(21).plusHours(1).plusMinutes(10).withNano(0).toInstant();
 
     private static final RegistrationType DEFAULT_TYPE = RegistrationType.OWN_EXPENSE;
     private static final RegistrationType UPDATED_TYPE = RegistrationType.NHI;
@@ -188,7 +185,7 @@ public class RegistrationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(registration.getId().intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].arrivalTime").value(hasItem(sameInstant(DEFAULT_ARRIVAL_TIME))))
+            .andExpect(jsonPath("$.[*].arrivalTime").value(hasItem(DEFAULT_ARRIVAL_TIME.toString())))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].onSite").value(hasItem(DEFAULT_ON_SITE.booleanValue())));
     }
@@ -205,7 +202,7 @@ public class RegistrationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(registration.getId().intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
-            .andExpect(jsonPath("$.arrivalTime").value(sameInstant(DEFAULT_ARRIVAL_TIME)))
+            .andExpect(jsonPath("$.arrivalTime").value((DEFAULT_ARRIVAL_TIME.toString())))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
             .andExpect(jsonPath("$.onSite").value(DEFAULT_ON_SITE));
     }
@@ -315,22 +312,25 @@ public class RegistrationResourceIntTest {
         restRegistrationMockMvc.perform(get("/api/registrations/patient-cards?sort=arrivalTime,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[0].Name").value(patient.getName()))
-            .andExpect(jsonPath("$.[0].Gender").value(patient.getGender().getValue()))
-            .andExpect(jsonPath("$.[0].Pid").value(patient.getMedicalId()))
-            .andExpect(jsonPath("$.[0].Birthday").value(patient.getBirth().toString()))
-            .andExpect(jsonPath("$.[0].RegistrationTime").value(sameInstant(appointment.getExpectedArrivalTime())))
-            .andExpect(jsonPath("$.[0].ArrivalTime").value(sameInstant(DEFAULT_ARRIVAL_TIME)))
-            .andExpect(jsonPath("$.[0].ConsultType").value(DEFAULT_TYPE.getValue()))
-            .andExpect(jsonPath("$.[0].Subject").value(appointment.getSubject()))
-            .andExpect(jsonPath("$.[0].DominantDoc").value(patient.getDominantDoctor().getUser().getLogin()))
-            .andExpect(jsonPath("$.[0].NeedTime").value(appointment.getRequiredTreatmentTime()))
-            .andExpect(jsonPath("$.[0].IsNewPatient").value(appointment.isNewPatient()))
-            .andExpect(jsonPath("$.[0].ConsultationStatus").value(DEFAULT_STATUS.getValue()))
-            .andExpect(jsonPath("$.[0].FirstDoc").value(patient.getFirstDoctor().getUser().getLogin()))
-            .andExpect(jsonPath("$.[0].Reminder").value(patient.getReminder()))
-            .andExpect(jsonPath("$.[0].IcWrittenTime").value(sameInstant(patient.getWriteIcTime())))
-            .andExpect(jsonPath("$.[0].EmrLastModifyTime").exists());
+            .andExpect(jsonPath("$.[*].name").value(hasItem(patient.getName())))
+            .andExpect(jsonPath("$.[*].gender").value(hasItem(patient.getGender().getValue())))
+            .andExpect(jsonPath("$.[*].medicalId").value(hasItem(patient.getMedicalId())))
+            .andExpect(jsonPath("$.[*].birthday").value(hasItem(patient.getBirth().toString())))
+            .andExpect(jsonPath("$.[*].expectedArrivalTime").value(hasItem(appointment.getExpectedArrivalTime().toString())))
+            .andExpect(jsonPath("$.[*].arrivalTime").value(hasItem(DEFAULT_ARRIVAL_TIME.toString())))
+            .andExpect(jsonPath("$.[*].registrationType").value(hasItem(DEFAULT_TYPE.getValue())))
+            .andExpect(jsonPath("$.[*].subject").value(hasItem(appointment.getSubject())))
+            .andExpect(jsonPath("$.[*].dominantDoctor").value(hasItem(patient.getDominantDoctor().getUser().getLogin())))
+            .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(appointment.getRequiredTreatmentTime()))
+            .andExpect(jsonPath("$.[*].newPatient").value(hasItem(appointment.isNewPatient())))
+            .andExpect(jsonPath("$.[*].registrationStatus").value(hasItem(DEFAULT_STATUS.getValue())))
+            .andExpect(jsonPath("$.[*].firstDoctor").value(hasItem(patient.getFirstDoctor().getUser().getLogin())))
+            .andExpect(jsonPath("$.[*].reminder").value(hasItem(patient.getReminder())))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(patient.getLastModifiedDate().toString())))
+            .andExpect(jsonPath("$.[*].writeIcTime").exists())
+            .andExpect(jsonPath("$.[*].lineId").value(hasItem(patient.getLineId())))
+            .andExpect(jsonPath("$.[*].fbId").value(hasItem(patient.getFbId())))
+            .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(appointment.isBaseFloor())));
     }
 
     private Appointment createAppointment(Patient patient) {

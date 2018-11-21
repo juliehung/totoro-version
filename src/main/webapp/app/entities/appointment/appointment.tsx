@@ -81,6 +81,9 @@ export class Appointment extends React.Component<IAppointmentProps, IAppointment
                 <th className="hand" onClick={this.sort('subject')}>
                   <Translate contentKey="totoroApp.appointment.subject">Subject</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('note')}>
+                  <Translate contentKey="totoroApp.appointment.note">Note</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th className="hand" onClick={this.sort('expectedArrivalTime')}>
                   <Translate contentKey="totoroApp.appointment.expectedArrivalTime">Expected Arrival Time</Translate>{' '}
                   <FontAwesomeIcon icon="sort" />
@@ -88,9 +91,6 @@ export class Appointment extends React.Component<IAppointmentProps, IAppointment
                 <th className="hand" onClick={this.sort('requiredTreatmentTime')}>
                   <Translate contentKey="totoroApp.appointment.requiredTreatmentTime">Required Treatment Time</Translate>{' '}
                   <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('pregnancy')}>
-                  <Translate contentKey="totoroApp.appointment.pregnancy">Pregnancy</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('microscope')}>
                   <Translate contentKey="totoroApp.appointment.microscope">Microscope</Translate> <FontAwesomeIcon icon="sort" />
@@ -119,11 +119,11 @@ export class Appointment extends React.Component<IAppointmentProps, IAppointment
                     <Translate contentKey={`totoroApp.AppointmentStatus.${appointment.status}`} />
                   </td>
                   <td>{appointment.subject}</td>
+                  <td>{appointment.note}</td>
                   <td>
                     <TextFormat type="date" value={appointment.expectedArrivalTime} format={APP_DATE_FORMAT} />
                   </td>
                   <td>{appointment.requiredTreatmentTime}</td>
-                  <td>{appointment.pregnancy ? 'true' : 'false'}</td>
                   <td>{appointment.microscope ? 'true' : 'false'}</td>
                   <td>{appointment.newPatient ? 'true' : 'false'}</td>
                   <td>{appointment.patient ? <Link to={`patient/${appointment.patient.id}`}>{appointment.patient.id}</Link> : ''}</td>

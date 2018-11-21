@@ -2,7 +2,8 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 
-import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.UserRepository;
@@ -23,12 +24,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 
 
-import static io.dentall.totoro.web.rest.TestUtil.sameInstant;
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -51,20 +51,23 @@ public class AppointmentResourceIntTest {
     private static final String DEFAULT_SUBJECT = "AAAAAAAAAA";
     private static final String UPDATED_SUBJECT = "BBBBBBBBBB";
 
-    private static final ZonedDateTime DEFAULT_EXPECTED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withHour(21).withNano(0);
-    private static final ZonedDateTime UPDATED_EXPECTED_ARRIVAL_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withHour(21).plusHours(1).withNano(0);
+    private static final String DEFAULT_NOTE = "AAAAAAAAAA";
+    private static final String UPDATED_NOTE = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_EXPECTED_ARRIVAL_TIME = Instant.now().atZone(ZoneOffset.UTC).withHour(21).withNano(0).toInstant();
+    private static final Instant UPDATED_EXPECTED_ARRIVAL_TIME = Instant.now().atZone(ZoneOffset.UTC).withHour(21).plusHours(1).withNano(0).toInstant();
 
     private static final Integer DEFAULT_REQUIRED_TREATMENT_TIME = 1;
     private static final Integer UPDATED_REQUIRED_TREATMENT_TIME = 2;
-
-    private static final Boolean DEFAULT_PREGNANCY = false;
-    private static final Boolean UPDATED_PREGNANCY = true;
 
     private static final Boolean DEFAULT_MICROSCOPE = false;
     private static final Boolean UPDATED_MICROSCOPE = true;
 
     private static final Boolean DEFAULT_NEW_PATIENT = false;
     private static final Boolean UPDATED_NEW_PATIENT = true;
+
+    private static final Boolean DEFAULT_BASE_FLOOR = false;
+    private static final Boolean UPDATED_BASE_FLOOR = true;
 
     @Autowired
     private AppointmentRepository appointmentRepository;
@@ -112,11 +115,12 @@ public class AppointmentResourceIntTest {
         Appointment appointment = new Appointment()
             .status(DEFAULT_STATUS)
             .subject(DEFAULT_SUBJECT)
+            .note(DEFAULT_NOTE)
             .expectedArrivalTime(DEFAULT_EXPECTED_ARRIVAL_TIME)
             .requiredTreatmentTime(DEFAULT_REQUIRED_TREATMENT_TIME)
-            .pregnancy(DEFAULT_PREGNANCY)
             .microscope(DEFAULT_MICROSCOPE)
-            .newPatient(DEFAULT_NEW_PATIENT);
+            .newPatient(DEFAULT_NEW_PATIENT)
+            .baseFloor(DEFAULT_BASE_FLOOR);
         return appointment;
     }
 
@@ -142,11 +146,12 @@ public class AppointmentResourceIntTest {
         Appointment testAppointment = appointmentList.get(appointmentList.size() - 1);
         assertThat(testAppointment.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testAppointment.getSubject()).isEqualTo(DEFAULT_SUBJECT);
+        assertThat(testAppointment.getNote()).isEqualTo(DEFAULT_NOTE);
         assertThat(testAppointment.getExpectedArrivalTime()).isEqualTo(DEFAULT_EXPECTED_ARRIVAL_TIME);
         assertThat(testAppointment.getRequiredTreatmentTime()).isEqualTo(DEFAULT_REQUIRED_TREATMENT_TIME);
-        assertThat(testAppointment.isPregnancy()).isEqualTo(DEFAULT_PREGNANCY);
         assertThat(testAppointment.isMicroscope()).isEqualTo(DEFAULT_MICROSCOPE);
         assertThat(testAppointment.isNewPatient()).isEqualTo(DEFAULT_NEW_PATIENT);
+        assertThat(testAppointment.isBaseFloor()).isEqualTo(DEFAULT_BASE_FLOOR);
     }
 
     @Test
@@ -199,11 +204,12 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(appointment.getId().intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT.toString())))
-            .andExpect(jsonPath("$.[*].expectedArrivalTime").value(hasItem(sameInstant(DEFAULT_EXPECTED_ARRIVAL_TIME))))
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
+            .andExpect(jsonPath("$.[*].expectedArrivalTime").value(hasItem(DEFAULT_EXPECTED_ARRIVAL_TIME.toString())))
             .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(hasItem(DEFAULT_REQUIRED_TREATMENT_TIME)))
-            .andExpect(jsonPath("$.[*].pregnancy").value(hasItem(DEFAULT_PREGNANCY)))
-            .andExpect(jsonPath("$.[*].microscope").value(hasItem(DEFAULT_MICROSCOPE)))
-            .andExpect(jsonPath("$.[*].newPatient").value(hasItem(DEFAULT_NEW_PATIENT)));
+            .andExpect(jsonPath("$.[*].microscope").value(hasItem(DEFAULT_MICROSCOPE.booleanValue())))
+            .andExpect(jsonPath("$.[*].newPatient").value(hasItem(DEFAULT_NEW_PATIENT.booleanValue())))
+            .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR.booleanValue())));
     }
     
     @Test
@@ -219,11 +225,12 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.id").value(appointment.getId().intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.subject").value(DEFAULT_SUBJECT.toString()))
-            .andExpect(jsonPath("$.expectedArrivalTime").value(sameInstant(DEFAULT_EXPECTED_ARRIVAL_TIME)))
+            .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
+            .andExpect(jsonPath("$.expectedArrivalTime").value(DEFAULT_EXPECTED_ARRIVAL_TIME.toString()))
             .andExpect(jsonPath("$.requiredTreatmentTime").value(DEFAULT_REQUIRED_TREATMENT_TIME))
-            .andExpect(jsonPath("$.pregnancy").value(DEFAULT_PREGNANCY))
-            .andExpect(jsonPath("$.microscope").value(DEFAULT_MICROSCOPE))
-            .andExpect(jsonPath("$.newPatient").value(DEFAULT_NEW_PATIENT));
+            .andExpect(jsonPath("$.microscope").value(DEFAULT_MICROSCOPE.booleanValue()))
+            .andExpect(jsonPath("$.newPatient").value(DEFAULT_NEW_PATIENT.booleanValue()))
+            .andExpect(jsonPath("$.baseFloor").value(DEFAULT_BASE_FLOOR.booleanValue()));
     }
 
     @Test
@@ -249,11 +256,12 @@ public class AppointmentResourceIntTest {
         updatedAppointment
             .status(UPDATED_STATUS)
             .subject(UPDATED_SUBJECT)
+            .note(UPDATED_NOTE)
             .expectedArrivalTime(UPDATED_EXPECTED_ARRIVAL_TIME)
             .requiredTreatmentTime(UPDATED_REQUIRED_TREATMENT_TIME)
-            .pregnancy(UPDATED_PREGNANCY)
             .microscope(UPDATED_MICROSCOPE)
-            .newPatient(UPDATED_NEW_PATIENT);
+            .newPatient(UPDATED_NEW_PATIENT)
+            .baseFloor(UPDATED_BASE_FLOOR);
 
         restAppointmentMockMvc.perform(put("/api/appointments")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -266,11 +274,12 @@ public class AppointmentResourceIntTest {
         Appointment testAppointment = appointmentList.get(appointmentList.size() - 1);
         assertThat(testAppointment.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testAppointment.getSubject()).isEqualTo(UPDATED_SUBJECT);
+        assertThat(testAppointment.getNote()).isEqualTo(UPDATED_NOTE);
         assertThat(testAppointment.getExpectedArrivalTime()).isEqualTo(UPDATED_EXPECTED_ARRIVAL_TIME);
         assertThat(testAppointment.getRequiredTreatmentTime()).isEqualTo(UPDATED_REQUIRED_TREATMENT_TIME);
-        assertThat(testAppointment.isPregnancy()).isEqualTo(UPDATED_PREGNANCY);
         assertThat(testAppointment.isMicroscope()).isEqualTo(UPDATED_MICROSCOPE);
         assertThat(testAppointment.isNewPatient()).isEqualTo(UPDATED_NEW_PATIENT);
+        assertThat(testAppointment.isBaseFloor()).isEqualTo(UPDATED_BASE_FLOOR);
     }
 
     @Test
@@ -334,24 +343,28 @@ public class AppointmentResourceIntTest {
         // Initialize the database
         appointmentRepository.saveAndFlush(appointment);
 
+        Object jsonNull = null;
         restAppointmentMockMvc.perform(get("/api/appointments/patient-cards?sort=expectedArrivalTime,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[0].Name").value(patient.getName()))
-            .andExpect(jsonPath("$.[0].Gender").value(patient.getGender().getValue()))
-            .andExpect(jsonPath("$.[0].Pid").value(patient.getMedicalId()))
-            .andExpect(jsonPath("$.[0].Birthday").value(patient.getBirth().toString()))
-            .andExpect(jsonPath("$.[0].RegistrationTime").value(sameInstant(DEFAULT_EXPECTED_ARRIVAL_TIME)))
-            .andExpect(jsonPath("$.[0].ArrivalTime").doesNotExist())
-            .andExpect(jsonPath("$.[0].ConsultType").doesNotExist())
-            .andExpect(jsonPath("$.[0].Subject").value(DEFAULT_SUBJECT))
-            .andExpect(jsonPath("$.[0].DominantDoc").value(patient.getDominantDoctor().getUser().getLogin()))
-            .andExpect(jsonPath("$.[0].NeedTime").value(DEFAULT_REQUIRED_TREATMENT_TIME))
-            .andExpect(jsonPath("$.[0].IsNewPatient").value(DEFAULT_NEW_PATIENT.toString()))
-            .andExpect(jsonPath("$.[0].ConsultationStatus").doesNotExist())
-            .andExpect(jsonPath("$.[0].FirstDoc").value(patient.getFirstDoctor().getUser().getLogin()))
-            .andExpect(jsonPath("$.[0].Reminder").value(patient.getReminder()))
-            .andExpect(jsonPath("$.[0].IcWrittenTime").value(sameInstant(patient.getWriteIcTime())))
-            .andExpect(jsonPath("$.[0].EmrLastModifyTime").exists());
+            .andExpect(jsonPath("$.[*].name").value(hasItem(patient.getName())))
+            .andExpect(jsonPath("$.[*].gender").value(hasItem(patient.getGender().getValue())))
+            .andExpect(jsonPath("$.[*].medicalId").value(hasItem(patient.getMedicalId())))
+            .andExpect(jsonPath("$.[*].birthday").value(hasItem(patient.getBirth().toString())))
+            .andExpect(jsonPath("$.[*].expectedArrivalTime").value(hasItem(DEFAULT_EXPECTED_ARRIVAL_TIME.toString())))
+            .andExpect(jsonPath("$.[*].arrivalTime").value(hasItem(jsonNull)))
+            .andExpect(jsonPath("$.[*].registrationType").value(hasItem(jsonNull)))
+            .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT)))
+            .andExpect(jsonPath("$.[*].dominantDoctor").value(hasItem(patient.getDominantDoctor().getUser().getLogin())))
+            .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(hasItem(DEFAULT_REQUIRED_TREATMENT_TIME)))
+            .andExpect(jsonPath("$.[*].newPatient").value(hasItem(DEFAULT_NEW_PATIENT)))
+            .andExpect(jsonPath("$.[*].registrationStatus").value(hasItem(jsonNull)))
+            .andExpect(jsonPath("$.[*].firstDoctor").value(hasItem(patient.getFirstDoctor().getUser().getLogin())))
+            .andExpect(jsonPath("$.[*].reminder").value(hasItem(patient.getReminder())))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(patient.getLastModifiedDate().toString())))
+            .andExpect(jsonPath("$.[*].writeIcTime").exists())
+            .andExpect(jsonPath("$.[*].lineId").value(hasItem(patient.getLineId())))
+            .andExpect(jsonPath("$.[*].fbId").value(hasItem(patient.getFbId())))
+            .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR)));
     }
 }

@@ -29,6 +29,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="note" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="expected_arrival_time" type="datetime">
                 <constraints nullable="true" />
             </column>
@@ -37,15 +41,15 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="pregnancy" type="boolean">
-                <constraints nullable="true" />
-            </column>
-
             <column name="microscope" type="boolean">
                 <constraints nullable="true" />
             </column>
 
             <column name="new_patient" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="base_floor" type="boolean">
                 <constraints nullable="true" />
             </column>
 

@@ -41,6 +41,12 @@ export class AppointmentDetail extends React.Component<IAppointmentDetailProps> 
             </dt>
             <dd>{appointmentEntity.subject}</dd>
             <dt>
+              <span id="note">
+                <Translate contentKey="totoroApp.appointment.note">Note</Translate>
+              </span>
+            </dt>
+            <dd>{appointmentEntity.note}</dd>
+            <dt>
               <span id="expectedArrivalTime">
                 <Translate contentKey="totoroApp.appointment.expectedArrivalTime">Expected Arrival Time</Translate>
               </span>
@@ -54,12 +60,6 @@ export class AppointmentDetail extends React.Component<IAppointmentDetailProps> 
               </span>
             </dt>
             <dd>{appointmentEntity.requiredTreatmentTime}</dd>
-            <dt>
-              <span id="pregnancy">
-                <Translate contentKey="totoroApp.appointment.pregnancy">Pregnancy</Translate>
-              </span>
-            </dt>
-            <dd>{appointmentEntity.pregnancy ? 'true' : 'false'}</dd>
             <dt>
               <span id="microscope">
                 <Translate contentKey="totoroApp.appointment.microscope">Microscope</Translate>

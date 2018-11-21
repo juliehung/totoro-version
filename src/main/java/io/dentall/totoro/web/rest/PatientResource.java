@@ -2,7 +2,9 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -11,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,37 +36,17 @@ import java.util.function.Function;
 @RequestMapping("/api")
 public class PatientResource {
 
-    @FunctionalInterface
-    private interface FourParameterFunction<T, U, V, W, R> {
-        R apply(T t, U u, V v, W w);
-    }
-
-    private BiFunction<Patient, Patient, Patient> addParent = Patient::addParent;
-    private BiFunction<Patient, Patient, Patient> removeParent = Patient::removeParent;
-    private BiFunction<Patient, Patient, Patient> addChild = Patient::addChild;
-    private BiFunction<Patient, Patient, Patient> removeChild = Patient::removeChild;
-    private BiFunction<Patient, Patient, Patient> addSpouse1 = Patient::addSpouse1;
-    private BiFunction<Patient, Patient, Patient> removeSpouse1 = Patient::removeSpouse1;
-    private BiFunction<Patient, Patient, Patient> addSpouse2= Patient::addSpouse2;
-    private BiFunction<Patient, Patient, Patient> removeSpouse2 = Patient::removeSpouse2;
-
-    private FourParameterFunction<Patient, PatientRepository, Long, BiFunction<Patient, Patient, Patient>, Patient> crudFunc =
-        (patient, repo, id, crud) -> {
-            Patient target = repo
-                .findById(id)
-                .orElseThrow(() -> new BadRequestAlertException("Invalid id", ENTITY_NAME, "target_not_found"));
-
-            return repo.save(crud.apply(patient, target));
-        };
-
     private final Logger log = LoggerFactory.getLogger(PatientResource.class);
 
     private static final String ENTITY_NAME = "patient";
 
     private final PatientRepository patientRepository;
 
-    public PatientResource(PatientRepository patientRepository) {
+    private final TagRepository tagRepository;
+
+    public PatientResource(PatientRepository patientRepository, TagRepository tagRepository) {
         this.patientRepository = patientRepository;
+        this.tagRepository = tagRepository;
     }
 
     /**
@@ -137,7 +120,7 @@ public class PatientResource {
      */
     @GetMapping("/patients/{id}")
     @Timed
-    public ResponseEntity<Patient> getPatient(@PathVariable Long id) {
+    public ResponseEntity<Patient> getPatientCRUDResult(@PathVariable Long id) {
         log.debug("REST request to get Patient : {}", id);
         Optional<Patient> patient = patientRepository.findOneWithEagerRelationships(id);
         return ResponseUtil.wrapOrNotFound(patient);
@@ -169,7 +152,7 @@ public class PatientResource {
     public ResponseEntity<Collection<Patient>> getPatientParents(@PathVariable Long id) {
         log.debug("REST request to get parents of Patient : {}", id);
 
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id).getParents());
+        return ResponseEntity.ok().body(getPatient(id).getParents());
     }
 
     /**
@@ -187,8 +170,9 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals parent_id not allow", ENTITY_NAME, "patient_id_equal_parent_id");
         }
 
-        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, parent_id, addParent);
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getParents());
+        Function<Patient, Patient> func = patient ->
+            getPatientCRUDResult(patient, getPatientCRUDTarget(parent_id, patientRepository), Patient::addParent);
+        return ResponseEntity.ok().body(getPatient(id, func).getParents());
     }
 
     /**
@@ -206,8 +190,9 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals parent_id not allow", ENTITY_NAME, "patient_id_equal_parent_id");
         }
 
-        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, parent_id, removeParent);
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getParents());
+        Function<Patient, Patient> func = patient ->
+            getPatientCRUDResult(patient, getPatientCRUDTarget(parent_id, patientRepository), Patient::removeParent);
+        return ResponseEntity.ok().body(getPatient(id, func).getParents());
     }
 
     /**
@@ -221,7 +206,7 @@ public class PatientResource {
     public ResponseEntity<Collection<Patient>> getPatientChildren(@PathVariable Long id) {
         log.debug("REST request to get children of Patient : {}", id);
 
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id).getChildren());
+        return ResponseEntity.ok().body(getPatient(id).getChildren());
     }
 
     /**
@@ -239,8 +224,9 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals child_id not allow", ENTITY_NAME, "patient_id_equal_child_id");
         }
 
-        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, child_id, addChild);
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getChildren());
+        Function<Patient, Patient> func = patient ->
+            getPatientCRUDResult(patient, getPatientCRUDTarget(child_id, patientRepository), Patient::addChild);
+        return ResponseEntity.ok().body(getPatient(id, func).getChildren());
     }
 
     /**
@@ -258,8 +244,9 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals child_id not allow", ENTITY_NAME, "patient_id_equal_child_id");
         }
 
-        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, child_id, removeChild);
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getChildren());
+        Function<Patient, Patient> func = patient ->
+            getPatientCRUDResult(patient, getPatientCRUDTarget(child_id, patientRepository), Patient::removeChild);
+        return ResponseEntity.ok().body(getPatient(id, func).getChildren());
     }
 
     /**
@@ -273,7 +260,7 @@ public class PatientResource {
     public ResponseEntity<Collection<Patient>> getPatientSpouse1S(@PathVariable Long id) {
         log.debug("REST request to get spouse1S of Patient : {}", id);
 
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id).getSpouse1S());
+        return ResponseEntity.ok().body(getPatient(id).getSpouse1S());
     }
 
     /**
@@ -291,8 +278,9 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals spouse1_id not allow", ENTITY_NAME, "patient_id_equal_spouse1_id");
         }
 
-        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, spouse1_id, addSpouse1);
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getSpouse1S());
+        Function<Patient, Patient> func = patient ->
+            getPatientCRUDResult(patient, getPatientCRUDTarget(spouse1_id, patientRepository), Patient::addSpouse1);
+        return ResponseEntity.ok().body(getPatient(id, func).getSpouse1S());
     }
 
     /**
@@ -310,8 +298,9 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals spouse1_id not allow", ENTITY_NAME, "patient_id_equal_spouse1_id");
         }
 
-        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, spouse1_id, removeSpouse1);
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getSpouse1S());
+        Function<Patient, Patient> func = patient ->
+            getPatientCRUDResult(patient, getPatientCRUDTarget(spouse1_id, patientRepository), Patient::removeSpouse1);
+        return ResponseEntity.ok().body(getPatient(id, func).getSpouse1S());
     }
 
     /**
@@ -325,7 +314,7 @@ public class PatientResource {
     public ResponseEntity<Collection<Patient>> getPatientSpouse2S(@PathVariable Long id) {
         log.debug("REST request to get spouse2S of Patient : {}", id);
 
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id).getSpouse2S());
+        return ResponseEntity.ok().body(getPatient(id).getSpouse2S());
     }
 
     /**
@@ -343,8 +332,9 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals spouse2_id not allow", ENTITY_NAME, "patient_id_equal_spouse2_id");
         }
 
-        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, spouse2_id, addSpouse2);
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getSpouse2S());
+        Function<Patient, Patient> func = patient ->
+            getPatientCRUDResult(patient, getPatientCRUDTarget(spouse2_id, patientRepository), Patient::addSpouse2);
+        return ResponseEntity.ok().body(getPatient(id, func).getSpouse2S());
     }
 
     /**
@@ -362,18 +352,77 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals spouse2_id not allow", ENTITY_NAME, "patient_id_equal_spouse2_id");
         }
 
-        Function<Patient, Patient> func = patient -> crudFunc.apply(patient, patientRepository, spouse2_id, removeSpouse2);
-        return ResponseEntity.ok().body(getPatientSelfCRUDResult(id, func).getSpouse2S());
+        Function<Patient, Patient> func = patient ->
+            getPatientCRUDResult(patient, getPatientCRUDTarget(spouse2_id, patientRepository), Patient::removeSpouse2);
+        return ResponseEntity.ok().body(getPatient(id, func).getSpouse2S());
     }
 
-    private Patient getPatientSelfCRUDResult(Long id) {
-        return getPatientSelfCRUDResult(id, patient -> patient);
+    /**
+     * GET  /patients/:id/tags : get the tags of "id" patient.
+     *
+     * @param id the id of the patient to retrieve tags
+     * @return the ResponseEntity with status 200 (OK) and the list of tags in body
+     */
+    @GetMapping("/patients/{id}/tags")
+    @Timed
+    public ResponseEntity<Collection<Tag>> getPatientTags(@PathVariable Long id) {
+        log.debug("REST request to get tags of Patient : {}", id);
+
+        return ResponseEntity.ok().body(getPatient(id).getTags());
     }
 
-    private Patient getPatientSelfCRUDResult(Long id, Function<Patient, Patient> func) {
+    /**
+     * POST  /patients/:id/tags/:tag_id : Create a new tag of patient.
+     *
+     * @param id the id of the patient
+     * @param tag_id the id of the tag
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @PostMapping("/patients/{id}/tags/{tag_id}")
+    @Timed
+    public ResponseEntity<Collection<Tag>> createPatientTag(@PathVariable Long id, @PathVariable Long tag_id) {
+        log.debug("REST request to save Tag(id: {}) of Patient(id: {})", tag_id, id);
+
+        Function<Patient, Patient> func = patient ->
+            getPatientCRUDResult(patient, getPatientCRUDTarget(tag_id, tagRepository), Patient::addTag);
+        return ResponseEntity.ok().body(getPatient(id, func).getTags());
+    }
+
+    /**
+     * DELETE  /patients/:id/tags/:tag_id : delete the "tag_id" spouse of "id" patient.
+     *
+     * @param id the id of the patient
+     * @param tag_id the id of the spouse2
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @DeleteMapping("/patients/{id}/tags/{tag_id}")
+    @Timed
+    public ResponseEntity<Collection<Tag>> deletePatientTag(@PathVariable Long id, @PathVariable Long tag_id) {
+        log.debug("REST request to delete Tag(id: {}) of Patient(id: {})", tag_id, id);
+
+        Function<Patient, Patient> func = patient ->
+            getPatientCRUDResult(patient, getPatientCRUDTarget(tag_id, tagRepository), Patient::removeTag);
+        return ResponseEntity.ok().body(getPatient(id, func).getTags());
+    }
+
+    private Patient getPatient(Long id) {
+        return getPatient(id, patient -> patient);
+    }
+
+    private Patient getPatient(Long id, Function<Patient, Patient> func) {
         return patientRepository
             .findById(id)
             .map(func)
             .orElseThrow(() -> new BadRequestAlertException("Invalid patient_id", ENTITY_NAME, "patient_not_found"));
+    }
+
+    private <T> T getPatientCRUDTarget(Long id, JpaRepository<T, Long> repo) {
+        return repo
+            .findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Invalid id", ENTITY_NAME, "target_not_found"));
+    }
+
+    private <T> Patient getPatientCRUDResult(Patient patient, T target, BiFunction<Patient, T, Patient> crud) {
+        return patientRepository.save(crud.apply(patient, target));
     }
 }

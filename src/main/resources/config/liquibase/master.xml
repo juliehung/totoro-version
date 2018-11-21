@@ -9,6 +9,7 @@
     <include file="config/liquibase/changelog/20181019094007_added_entity_Patient.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181019094008_added_entity_Appointment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181019094009_added_entity_Registration.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181115021401_added_entity_Tag.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/20181024_addColumn_Patient.xml" relativeToChangelogFile="false"/>

@@ -126,15 +126,6 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('scaling')}>
                   <Translate contentKey="totoroApp.patient.scaling">Scaling</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('allergy')}>
-                  <Translate contentKey="totoroApp.patient.allergy">Allergy</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('inconvenience')}>
-                  <Translate contentKey="totoroApp.patient.inconvenience">Inconvenience</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('seriousDisease')}>
-                  <Translate contentKey="totoroApp.patient.seriousDisease">Serious Disease</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
                 <th className="hand" onClick={this.sort('lineId')}>
                   <Translate contentKey="totoroApp.patient.lineId">Line Id</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -188,9 +179,6 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                   <td>
                     <TextFormat type="date" value={patient.scaling} format={APP_LOCAL_DATE_FORMAT} />
                   </td>
-                  <td>{patient.allergy ? 'true' : 'false'}</td>
-                  <td>{patient.inconvenience ? 'true' : 'false'}</td>
-                  <td>{patient.seriousDisease ? 'true' : 'false'}</td>
                   <td>{patient.lineId}</td>
                   <td>{patient.fbId}</td>
                   <td>{patient.reminder}</td>
