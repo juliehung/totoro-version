@@ -6,6 +6,7 @@ import io.dentall.totoro.domain.Appointment;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
@@ -89,6 +90,9 @@ public class AppointmentResourceIntTest {
 
     @Autowired
     private PatientRepository patientRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     private MockMvc restAppointmentMockMvc;
 
@@ -336,8 +340,7 @@ public class AppointmentResourceIntTest {
     @Test
     @Transactional
     public void getAllPatientCards() throws Exception {
-        Patient patient = TestUtil.createPatient(
-            UserResourceIntTest.createEntity(em), userRepository, PatientResourceIntTest.createEntity(em), patientRepository);
+        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
         patient.addAppointment(appointment);
 
         // Initialize the database
@@ -365,6 +368,8 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[*].writeIcTime").exists())
             .andExpect(jsonPath("$.[*].lineId").value(hasItem(patient.getLineId())))
             .andExpect(jsonPath("$.[*].fbId").value(hasItem(patient.getFbId())))
-            .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR)));
+            .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR)))
+            .andExpect(jsonPath("$.[*].microscope").value(hasItem(DEFAULT_MICROSCOPE)))
+            .andExpect(jsonPath("$.[*].tags.[*].name").value(hasItem(patient.getTags().iterator().next().getName())));
     }
 }

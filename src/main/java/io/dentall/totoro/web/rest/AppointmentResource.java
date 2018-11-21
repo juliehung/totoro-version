@@ -159,6 +159,7 @@ public class AppointmentResource {
                 card.setWriteIcTime(patient.getWriteIcTime());
                 card.setLineId(patient.getLineId());
                 card.setFbId(patient.getFbId());
+                card.setTags(patient.getTags());
 
                 card.setExpectedArrivalTime(appointment.getExpectedArrivalTime());
                 card.setSubject(appointment.getSubject());
@@ -166,6 +167,7 @@ public class AppointmentResource {
                 card.setRequiredTreatmentTime(appointment.getRequiredTreatmentTime());
                 card.setNewPatient(appointment.isNewPatient());
                 card.setBaseFloor(appointment.isBaseFloor());
+                card.setMicroscope(appointment.isMicroscope());
 
                 card.setRegistration(null);
 

@@ -146,6 +146,8 @@ public class PatientResourceIntTest {
 
     private ExtendUser extendUser;
 
+    private Tag tag;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -198,6 +200,9 @@ public class PatientResourceIntTest {
         patient = createEntity(em);
         patient.setDominantDoctor(extendUser);
         patient.setFirstDoctor(extendUser);
+
+        tag = TagResourceIntTest.createEntity(em);
+        patient.addTag(tagRepository.save(tag));
     }
 
     @Test
@@ -239,6 +244,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getIntroducer()).isEqualTo(null);
+        assertThat(testPatient.getTags()).contains(tag);
     }
 
     @Test
@@ -480,7 +486,8 @@ public class PatientResourceIntTest {
             .writeIcTime(UPDATED_WRITE_IC_TIME)
             .dominantDoctor(extendUser)
             .firstDoctor(extendUser)
-            .introducer(introducer);
+            .introducer(introducer)
+            .addTag(tag);
 
         restPatientMockMvc.perform(put("/api/patients")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -515,6 +522,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getIntroducer()).isEqualTo(introducer);
+        assertThat(testPatient.getTags()).contains(tag);
     }
 
     @Test
@@ -769,9 +777,6 @@ public class PatientResourceIntTest {
     @Test
     @Transactional
     public void getPatientTag() throws Exception {
-        Tag tag = tagRepository.saveAndFlush(TagResourceIntTest.createEntity(em));
-        patient.addTag(tag);
-
         // Initialize the database
         patientRepository.saveAndFlush(patient);
 
@@ -779,15 +784,12 @@ public class PatientResourceIntTest {
         restPatientMockMvc.perform(get("/api/patients/{id}/tags", patient.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[0].name").value(tag.getName()));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(tag.getName())));
     }
 
     @Test
     @Transactional
     public void createPatientTag() throws Exception {
-        Tag tag = TagResourceIntTest.createEntity(em);
-        tagRepository.saveAndFlush(tag);
-
         // Initialize the database
         patientRepository.saveAndFlush(patient);
 
@@ -801,9 +803,6 @@ public class PatientResourceIntTest {
     @Test
     @Transactional
     public void deletePatientTag() throws Exception {
-        Tag tag = tagRepository.save(TagResourceIntTest.createEntity(em));
-        patient.addTag(tag);
-
         // Initialize the database
         patientRepository.saveAndFlush(patient);
 
