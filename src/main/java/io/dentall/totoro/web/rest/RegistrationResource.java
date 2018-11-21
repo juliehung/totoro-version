@@ -165,6 +165,7 @@ public class RegistrationResource {
                 card.setRequiredTreatmentTime(appointment.getRequiredTreatmentTime());
                 card.setNewPatient(appointment.isNewPatient());
                 card.setBaseFloor(appointment.isBaseFloor());
+                card.setMicroscope(appointment.isMicroscope());
 
                 Patient patient = appointment.getPatient();
                 card.setName(patient.getName());
@@ -178,6 +179,7 @@ public class RegistrationResource {
                 card.setWriteIcTime(patient.getWriteIcTime());
                 card.setLineId(patient.getLineId());
                 card.setFbId(patient.getFbId());
+                card.setTags(patient.getTags());
 
                 card.setRegistration(registration);
 

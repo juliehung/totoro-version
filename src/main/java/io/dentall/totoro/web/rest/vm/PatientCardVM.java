@@ -2,10 +2,13 @@ package io.dentall.totoro.web.rest.vm;
 
 import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.Registration;
+import io.dentall.totoro.domain.Tag;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * View Model object for PatientCardVM.
@@ -54,6 +57,10 @@ public class PatientCardVM implements Serializable {
     private String fbId;
 
     private Boolean baseFloor;
+
+    private Boolean microscope;
+
+    private Set<Tag> tags = new HashSet<>();
 
     public String getName() {
         return name;
@@ -203,6 +210,22 @@ public class PatientCardVM implements Serializable {
 
     public void setBaseFloor(Boolean baseFloor) {
         this.baseFloor = baseFloor;
+    }
+
+    public Boolean isMicroscope() {
+        return microscope;
+    }
+
+    public void setMicroscope(Boolean microscope) {
+        this.microscope = microscope;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 
     public Integer getRegistrationType() {

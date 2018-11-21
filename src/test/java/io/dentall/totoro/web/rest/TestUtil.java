@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.repository.UserRepository;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -15,6 +17,7 @@ import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
 
+import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
@@ -138,12 +141,18 @@ public class TestUtil {
         return dfcs;
     }
 
-    public static Patient createPatient(User user, UserRepository userRepository, Patient patient, PatientRepository patientRepository) {
+    public static Patient createPatient(EntityManager em, UserRepository userRepository, TagRepository tagRepository, PatientRepository patientRepository) {
+        Patient patient = PatientResourceIntTest.createEntity(em);
+
+        User user = UserResourceIntTest.createEntity(em);
         userRepository.save(user);
 
         ExtendUser extendUser = user.getExtendUser();
         patient.setDominantDoctor(extendUser);
         patient.setFirstDoctor(extendUser);
+
+        Tag tag = TagResourceIntTest.createEntity(em);
+        patient.addTag(tagRepository.save(tag));
 
         return patientRepository.save(patient);
     }
