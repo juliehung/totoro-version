@@ -8,7 +8,6 @@ import numpy as np
 from datetime import datetime
 import json
 
-
 def execute_sql(sql_statement,item_value,item_id):
     conn = psycopg2.connect(host="totoro-app", port="5435", dbname="/build/h2db/db/totoro",user="totoro",password="totoro")
     cur = conn.cursor()
@@ -19,16 +18,23 @@ def execute_sql(sql_statement,item_value,item_id):
     # Close communication with the PostgreSQL database
     cur.close()
 def update_time(current_datetime,date_change):
-    if not isinstance(current_datetime,float):
+    if current_datetime!="NULL":
         date = current_datetime[:10]
         return (str(datetime.strptime(date,'%Y-%m-%d').date() + date_change )+current_datetime[10:])
     else:
         return("NULL")
-def update_time_df(path,colname,date_change):    
+def to_int(rid):
+    if rid != "NULL":
+        return(int(rid))
+    else:
+        return("NULL")
+def update_time_df(path,colname,date_change):
     appointments = pd.read_csv(path,sep=";")
+    appointments.fillna(value="NULL",inplace=True)
     update_datetime = [update_time(current_datetime,date_change) for current_datetime in appointments[colname]]
     appointments[colname] = update_datetime
     return(appointments)
+
 
 # read current update date from json
 with open('current_update_date.json', 'r') as f:
@@ -75,6 +81,7 @@ for i in range(0,len(registrations)):
 print("Finish update in SQL")
 
 # udpate csv file
+appointments.registration_id = [ to_int(rid) for rid in appointments.registration_id]
 appointments.to_csv(path+"appointments.csv",sep=";",index = False)
 registrations.to_csv(path+"registrations.csv",sep=";",index = False)
 print("Finish update csv file")

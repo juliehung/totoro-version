@@ -320,7 +320,7 @@ public class RegistrationResourceIntTest {
             .andExpect(jsonPath("$.[*].registrationType").value(hasItem(DEFAULT_TYPE.getValue())))
             .andExpect(jsonPath("$.[*].subject").value(hasItem(appointment.getSubject())))
             .andExpect(jsonPath("$.[*].dominantDoctor").value(hasItem(patient.getDominantDoctor().getUser().getLogin())))
-            .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(appointment.getRequiredTreatmentTime()))
+            .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(hasItem(appointment.getRequiredTreatmentTime())))
             .andExpect(jsonPath("$.[*].newPatient").value(hasItem(appointment.isNewPatient())))
             .andExpect(jsonPath("$.[*].registrationStatus").value(hasItem(DEFAULT_STATUS.getValue())))
             .andExpect(jsonPath("$.[*].firstDoctor").value(hasItem(patient.getFirstDoctor().getUser().getLogin())))
