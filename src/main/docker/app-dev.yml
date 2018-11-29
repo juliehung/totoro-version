@@ -9,19 +9,21 @@ services:
             - 8080:8080
         networks:
             - backend
+        volumes:
+            - ../resources/.h2.server.properties:/src/main/resources/.h2.server.properties
         container_name: totoro-admin
 
-    totoro-data-faker:
+    totoro-data-simulator:
         build:
-            context: ./data-faker
-        image: totoro-data-faker
+            context: ./data-simulator
+        image: totoro-data-simulator
         command: ["./wait-for-it.sh", "totoro-app:5435", "-s", "-t", "120", "--", "python", "./fake_data_dynamic.py"]
         networks:
             - backend
         volumes:
-            - ./data-faker/current_update_date.json:/usr/src/app/current_update_date.json
+            - ./data-simulator/current_update_date.json:/usr/src/app/current_update_date.json
             - ../resources/config/liquibase/:/usr/src/app/data/
-        container_name: totoro-data-faker
+        container_name: totoro-data-simulator
 
 networks:
     backend:
