@@ -142,6 +142,19 @@ public class PatientResource {
     }
 
     /**
+     * GET  /patients/search/:keyword : get all the patients who contain "keyword".
+     *
+     * @param keyword patients who contain keyword to retrieve
+     * @return the ResponseEntity with status 200 (OK) and the list of patients in body
+     */
+    @GetMapping("/patients/search/{keyword}")
+    @Timed
+    public ResponseEntity<List<Patient>> getPatientsByKeywordContaining(@PathVariable String keyword) {
+        log.debug("REST request to search Patients by keyword : {}", keyword);
+        return new ResponseEntity<>(patientRepository.findByKeywordContaining(keyword), HttpStatus.OK);
+    }
+
+    /**
      * GET  /patients/:id/parents : get the parents of "id" patient.
      *
      * @param id the id of the patient to retrieve parents
