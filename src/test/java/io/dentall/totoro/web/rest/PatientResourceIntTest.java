@@ -31,6 +31,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -811,6 +812,34 @@ public class PatientResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    @Transactional
+    public void getPatientsByNameKeywordContaining() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Search patients by name
+        restPatientMockMvc.perform(get("/api/patients/search/{keyword}", patient.getName().substring(2, 5)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(patient.getName())));
+    }
+
+    @Test
+    @Transactional
+    public void getPatientsByBirthKeywordContaining() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+        // Search patients by birth
+        restPatientMockMvc.perform(get("/api/patients/search/{keyword}", patient.getBirth().format(formatter).substring(2, 5)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].birth").value(hasItem(patient.getBirth().toString())));
     }
 
     private Patient createPatientByName(String name) {

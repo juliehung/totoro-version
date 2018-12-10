@@ -27,4 +27,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     @Query("select patient from Patient patient left join fetch patient.parents left join fetch patient.spouse1S left join fetch patient.tags where patient.id =:id")
     Optional<Patient> findOneWithEagerRelationships(@Param("id") Long id);
 
+    @Query("select patient from Patient patient where patient.name like %:keyword% or (patient.birth is not null and to_char(patient.birth, 'yyyyMMdd') like %:keyword%)")
+    List<Patient> findByKeywordContaining(@Param("keyword") String keyword);
 }
