@@ -5,6 +5,7 @@ import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
+import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -23,9 +24,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -44,9 +43,12 @@ public class PatientResource {
 
     private final TagRepository tagRepository;
 
-    public PatientResource(PatientRepository patientRepository, TagRepository tagRepository) {
+    private final PatientService patientService;
+
+    public PatientResource(PatientRepository patientRepository, TagRepository tagRepository, PatientService patientService) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
+        this.patientService = patientService;
     }
 
     /**
@@ -63,6 +65,8 @@ public class PatientResource {
         if (patient.getId() != null) {
             throw new BadRequestAlertException("A new patient cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        patientService.setTagsByQuestionnaire(patient.getTags(), patient.getQuestionnaire());
         Patient result = patientRepository.save(patient);
         return ResponseEntity.created(new URI("/api/patients/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -85,6 +89,8 @@ public class PatientResource {
         if (patient.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+
+        patientService.setTagsByQuestionnaire(patient.getTags(), patient.getQuestionnaire());
         Patient result = patientRepository.save(patient);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, patient.getId().toString()))
@@ -96,19 +102,21 @@ public class PatientResource {
      *
      * @param pageable the pagination information
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many)
+     * @param search patients who contain search keyword to retrieve
      * @return the ResponseEntity with status 200 (OK) and the list of patients in body
      */
     @GetMapping("/patients")
     @Timed
-    public ResponseEntity<List<Patient>> getAllPatients(Pageable pageable, @RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+    public ResponseEntity<List<Patient>> getAllPatients(Pageable pageable, @RequestParam(required = false, defaultValue = "false") boolean eagerload, @RequestParam(required = false) String search, @RequestParam(required = false) Boolean isDeleted) {
         log.debug("REST request to get a page of Patients");
         Page<Patient> page;
         if (eagerload) {
-            page = patientRepository.findAllWithEagerRelationships(pageable);
+            page = (search != null || isDeleted != null) ? patientRepository.findByQueryWithEagerRelationships(search, isDeleted, pageable) : patientRepository.findAllWithEagerRelationships(pageable);
         } else {
-            page = patientRepository.findAll(pageable);
+            page = (search != null || isDeleted != null) ? patientRepository.findByQuery(search, isDeleted, pageable) : patientRepository.findAll(pageable);
         }
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/patients?eagerload=%b", eagerload));
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/patients?eagerload=%b&search=%s", eagerload, search));
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
@@ -120,7 +128,7 @@ public class PatientResource {
      */
     @GetMapping("/patients/{id}")
     @Timed
-    public ResponseEntity<Patient> getPatientCRUDResult(@PathVariable Long id) {
+    public ResponseEntity<Patient> getPatientById(@PathVariable Long id) {
         log.debug("REST request to get Patient : {}", id);
         Optional<Patient> patient = patientRepository.findOneWithEagerRelationships(id);
         return ResponseUtil.wrapOrNotFound(patient);
@@ -139,19 +147,6 @@ public class PatientResource {
 
         patientRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    /**
-     * GET  /patients/search/:keyword : get all the patients who contain "keyword".
-     *
-     * @param keyword patients who contain keyword to retrieve
-     * @return the ResponseEntity with status 200 (OK) and the list of patients in body
-     */
-    @GetMapping("/patients/search/{keyword}")
-    @Timed
-    public ResponseEntity<List<Patient>> getPatientsByKeywordContaining(@PathVariable String keyword) {
-        log.debug("REST request to search Patients by keyword : {}", keyword);
-        return new ResponseEntity<>(patientRepository.findByKeywordContaining(keyword), HttpStatus.OK);
     }
 
     /**

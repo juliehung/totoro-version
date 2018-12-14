@@ -78,8 +78,8 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('name')}>
                   <Translate contentKey="totoroApp.patient.name">Name</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('nationalId')}>
-                  <Translate contentKey="totoroApp.patient.nationalId">National Id</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('phone')}>
+                  <Translate contentKey="totoroApp.patient.phone">Phone</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('gender')}>
                   <Translate contentKey="totoroApp.patient.gender">Gender</Translate> <FontAwesomeIcon icon="sort" />
@@ -87,14 +87,11 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('birth')}>
                   <Translate contentKey="totoroApp.patient.birth">Birth</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('phone')}>
-                  <Translate contentKey="totoroApp.patient.phone">Phone</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('nationalId')}>
+                  <Translate contentKey="totoroApp.patient.nationalId">National Id</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('medicalId')}>
                   <Translate contentKey="totoroApp.patient.medicalId">Medical Id</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('zip')}>
-                  <Translate contentKey="totoroApp.patient.zip">Zip</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('address')}>
                   <Translate contentKey="totoroApp.patient.address">Address</Translate> <FontAwesomeIcon icon="sort" />
@@ -138,6 +135,12 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('writeIcTime')}>
                   <Translate contentKey="totoroApp.patient.writeIcTime">Write Ic Time</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('burdenCost')}>
+                  <Translate contentKey="totoroApp.patient.burdenCost">Burden Cost</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.patient.introducer">Introducer</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -153,16 +156,15 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                     </Button>
                   </td>
                   <td>{patient.name}</td>
-                  <td>{patient.nationalId}</td>
+                  <td>{patient.phone}</td>
                   <td>
                     <Translate contentKey={`totoroApp.Gender.${patient.gender}`} />
                   </td>
                   <td>
                     <TextFormat type="date" value={patient.birth} format={APP_LOCAL_DATE_FORMAT} />
                   </td>
-                  <td>{patient.phone}</td>
+                  <td>{patient.nationalId}</td>
                   <td>{patient.medicalId}</td>
-                  <td>{patient.zip}</td>
                   <td>{patient.address}</td>
                   <td>{patient.email}</td>
                   <td>{patient.photo}</td>
@@ -184,6 +186,10 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                   <td>{patient.reminder}</td>
                   <td>
                     <TextFormat type="date" value={patient.writeIcTime} format={APP_DATE_FORMAT} />
+                  </td>
+                  <td>{patient.burdenCost}</td>
+                  <td>
+                    {patient.questionnaire ? <Link to={`questionnaire/${patient.questionnaire.id}`}>{patient.questionnaire.id}</Link> : ''}
                   </td>
                   <td>{patient.introducer ? <Link to={`patient/${patient.introducer.id}`}>{patient.introducer.id}</Link> : ''}</td>
                   <td className="text-right">

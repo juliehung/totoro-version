@@ -313,10 +313,16 @@ public class TagResourceIntTest {
         TestUtil.equalsVerifier(Tag.class);
         Tag tag1 = new Tag();
         tag1.setId(1L);
+        tag1.setType(DEFAULT_TYPE);
+        tag1.setName(DEFAULT_NAME);
         Tag tag2 = new Tag();
         tag2.setId(tag1.getId());
+        tag2.setType(tag1.getType());
+        tag2.setName(tag1.getName());
         assertThat(tag1).isEqualTo(tag2);
         tag2.setId(2L);
+        tag2.setType(UPDATED_TYPE);
+        tag2.setName(UPDATED_NAME);
         assertThat(tag1).isNotEqualTo(tag2);
         tag1.setId(null);
         assertThat(tag1).isNotEqualTo(tag2);

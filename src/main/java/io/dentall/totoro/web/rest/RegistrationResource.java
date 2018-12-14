@@ -150,8 +150,8 @@ public class RegistrationResource {
     @Timed
     public ResponseEntity<List<PatientCardVM>> getAllPatientCards(Pageable pageable) {
         log.debug("REST request to get registration patient cards");
-        Instant start = LocalDate.now().minusDays(2).atTime(LocalTime.MIN).atZone(ZoneOffset.UTC).toInstant();
-        Instant end = LocalDate.now().atTime(LocalTime.MAX).atZone(ZoneOffset.UTC).toInstant();
+        Instant start = OffsetDateTime.now().minusDays(2).toZonedDateTime().with(LocalTime.MIN).toInstant();
+        Instant end = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MAX).toInstant();
         Page<Registration> registrations = registrationRepository.findByArrivalTimeBetween(start, end, pageable);
 
         Page<PatientCardVM> page = registrations

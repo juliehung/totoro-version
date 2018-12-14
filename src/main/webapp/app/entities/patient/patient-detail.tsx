@@ -35,11 +35,11 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
             </dt>
             <dd>{patientEntity.name}</dd>
             <dt>
-              <span id="nationalId">
-                <Translate contentKey="totoroApp.patient.nationalId">National Id</Translate>
+              <span id="phone">
+                <Translate contentKey="totoroApp.patient.phone">Phone</Translate>
               </span>
             </dt>
-            <dd>{patientEntity.nationalId}</dd>
+            <dd>{patientEntity.phone}</dd>
             <dt>
               <span id="gender">
                 <Translate contentKey="totoroApp.patient.gender">Gender</Translate>
@@ -55,23 +55,17 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
               <TextFormat value={patientEntity.birth} type="date" format={APP_LOCAL_DATE_FORMAT} />
             </dd>
             <dt>
-              <span id="phone">
-                <Translate contentKey="totoroApp.patient.phone">Phone</Translate>
+              <span id="nationalId">
+                <Translate contentKey="totoroApp.patient.nationalId">National Id</Translate>
               </span>
             </dt>
-            <dd>{patientEntity.phone}</dd>
+            <dd>{patientEntity.nationalId}</dd>
             <dt>
               <span id="medicalId">
                 <Translate contentKey="totoroApp.patient.medicalId">Medical Id</Translate>
               </span>
             </dt>
             <dd>{patientEntity.medicalId}</dd>
-            <dt>
-              <span id="zip">
-                <Translate contentKey="totoroApp.patient.zip">Zip</Translate>
-              </span>
-            </dt>
-            <dd>{patientEntity.zip}</dd>
             <dt>
               <span id="address">
                 <Translate contentKey="totoroApp.patient.address">Address</Translate>
@@ -162,6 +156,16 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
             <dd>
               <TextFormat value={patientEntity.writeIcTime} type="date" format={APP_DATE_FORMAT} />
             </dd>
+            <dt>
+              <span id="burdenCost">
+                <Translate contentKey="totoroApp.patient.burdenCost">Burden Cost</Translate>
+              </span>
+            </dt>
+            <dd>{patientEntity.burdenCost}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate>
+            </dt>
+            <dd>{patientEntity.questionnaire ? patientEntity.questionnaire.id : ''}</dd>
             <dt>
               <Translate contentKey="totoroApp.patient.introducer">Introducer</Translate>
             </dt>

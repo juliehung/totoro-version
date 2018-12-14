@@ -1,0 +1,93 @@
+{
+    "name": "Questionnaire",
+    "fields": [
+        {
+            "fieldName": "hypertension",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "heartDiseases",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "kidneyDiseases",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "bloodDiseases",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "liverDiseases",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "hepatitisType",
+            "fieldType": "Hepatitis",
+            "fieldValues": "A,B,C,D,E"
+        },
+        {
+            "fieldName": "gastrointestinalDiseases",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "receivingMedication",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "anyAllergySensitivity",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "glycemicAC",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "glycemicPC",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "smokeNumberADay",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "productionYear",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "productionMonth",
+            "fieldType": "Month",
+            "fieldValues": "JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC"
+        },
+        {
+            "fieldName": "other",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "difficultExtractionOrContinuousBleeding",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "nauseaOrDizziness",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "adverseReactionsToAnestheticInjections",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "otherInTreatment",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20181207024725",
+    "entityTableName": "questionnaire",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

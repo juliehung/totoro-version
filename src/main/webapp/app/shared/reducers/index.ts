@@ -28,6 +28,10 @@ import registration, {
 import tag, {
   TagState
 } from 'app/entities/tag/tag.reducer';
+// prettier-ignore
+import questionnaire, {
+  QuestionnaireState
+} from 'app/entities/questionnaire/questionnaire.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -45,6 +49,7 @@ export interface IRootState {
   readonly appointment: AppointmentState;
   readonly registration: RegistrationState;
   readonly tag: TagState;
+  readonly questionnaire: QuestionnaireState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -64,6 +69,7 @@ const rootReducer = combineReducers<IRootState>({
   appointment,
   registration,
   tag,
+  questionnaire,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

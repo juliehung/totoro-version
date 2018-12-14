@@ -149,12 +149,12 @@ public class Tag implements Serializable {
         if (tag.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), tag.getId());
+        return Objects.equals(getType(), tag.getType()) && Objects.equals(getName(), tag.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return Objects.hashCode(getType() + getName());
     }
 
     @Override

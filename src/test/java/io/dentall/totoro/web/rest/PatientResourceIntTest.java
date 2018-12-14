@@ -2,13 +2,13 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 
-import io.dentall.totoro.domain.ExtendUser;
-import io.dentall.totoro.domain.Patient;
-import io.dentall.totoro.domain.Tag;
-import io.dentall.totoro.domain.User;
+import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.TagName;
 import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.repository.QuestionnaireRepository;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -36,6 +36,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -57,8 +58,8 @@ public class PatientResourceIntTest {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_NATIONAL_ID = "AAAAAAAAAA";
-    private static final String UPDATED_NATIONAL_ID = "BBBBBBBBBB";
+    private static final String DEFAULT_PHONE = "AAAAAAAAAA";
+    private static final String UPDATED_PHONE = "BBBBBBBBBB";
 
     private static final Gender DEFAULT_GENDER = Gender.OTHER;
     private static final Gender UPDATED_GENDER = Gender.MALE;
@@ -66,14 +67,11 @@ public class PatientResourceIntTest {
     private static final LocalDate DEFAULT_BIRTH = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_BIRTH = LocalDate.now(ZoneId.systemDefault());
 
-    private static final String DEFAULT_PHONE = "AAAAAAAAAA";
-    private static final String UPDATED_PHONE = "BBBBBBBBBB";
+    private static final String DEFAULT_NATIONAL_ID = "AAAAAAAAAA";
+    private static final String UPDATED_NATIONAL_ID = "BBBBBBBBBB";
 
     private static final String DEFAULT_MEDICAL_ID = "AAAAAAAAAA";
     private static final String UPDATED_MEDICAL_ID = "BBBBBBBBBB";
-
-    private static final String DEFAULT_ZIP = "AAAAAAAAAA";
-    private static final String UPDATED_ZIP = "BBBBBBBBBB";
 
     private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
@@ -117,6 +115,9 @@ public class PatientResourceIntTest {
     private static final Instant DEFAULT_WRITE_IC_TIME = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_WRITE_IC_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final Integer DEFAULT_BURDEN_COST = 1;
+    private static final Integer UPDATED_BURDEN_COST = 2;
+
     @Autowired
     private PatientRepository patientRepository;
 
@@ -141,6 +142,12 @@ public class PatientResourceIntTest {
     @Autowired
     private TagRepository tagRepository;
 
+    @Autowired
+    private QuestionnaireRepository questionnaireRepository;
+
+    @Autowired
+    private PatientService patientService;
+
     private MockMvc restPatientMockMvc;
 
     private Patient patient;
@@ -149,10 +156,12 @@ public class PatientResourceIntTest {
 
     private Tag tag;
 
+    private Questionnaire questionnaire;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository);
+        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, patientService);
         this.restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -169,12 +178,11 @@ public class PatientResourceIntTest {
     public static Patient createEntity(EntityManager em) {
         Patient patient = new Patient()
             .name(DEFAULT_NAME)
-            .nationalId(DEFAULT_NATIONAL_ID)
+            .phone(DEFAULT_PHONE)
             .gender(DEFAULT_GENDER)
             .birth(DEFAULT_BIRTH)
-            .phone(DEFAULT_PHONE)
+            .nationalId(DEFAULT_NATIONAL_ID)
             .medicalId(DEFAULT_MEDICAL_ID)
-            .zip(DEFAULT_ZIP)
             .address(DEFAULT_ADDRESS)
             .email(DEFAULT_EMAIL)
             .photo(DEFAULT_PHOTO)
@@ -189,7 +197,7 @@ public class PatientResourceIntTest {
             .fbId(DEFAULT_FB_ID)
             .reminder(DEFAULT_REMINDER)
             .writeIcTime(DEFAULT_WRITE_IC_TIME)
-            .introducer(null);
+            .burdenCost(DEFAULT_BURDEN_COST);
         return patient;
     }
 
@@ -204,6 +212,11 @@ public class PatientResourceIntTest {
 
         tag = TagResourceIntTest.createEntity(em);
         patient.addTag(tagRepository.save(tag));
+
+        questionnaire = QuestionnaireResourceIntTest.createEntity(em);
+        patient.setQuestionnaire(questionnaire);
+
+        patientService.setTagsByQuestionnaire(patient.getTags(), patient.getQuestionnaire());
     }
 
     @Test
@@ -222,12 +235,11 @@ public class PatientResourceIntTest {
         assertThat(patientList).hasSize(databaseSizeBeforeCreate + 1);
         Patient testPatient = patientList.get(patientList.size() - 1);
         assertThat(testPatient.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testPatient.getNationalId()).isEqualTo(DEFAULT_NATIONAL_ID);
+        assertThat(testPatient.getPhone()).isEqualTo(DEFAULT_PHONE);
         assertThat(testPatient.getGender()).isEqualTo(DEFAULT_GENDER);
         assertThat(testPatient.getBirth()).isEqualTo(DEFAULT_BIRTH);
-        assertThat(testPatient.getPhone()).isEqualTo(DEFAULT_PHONE);
+        assertThat(testPatient.getNationalId()).isEqualTo(DEFAULT_NATIONAL_ID);
         assertThat(testPatient.getMedicalId()).isEqualTo(DEFAULT_MEDICAL_ID);
-        assertThat(testPatient.getZip()).isEqualTo(DEFAULT_ZIP);
         assertThat(testPatient.getAddress()).isEqualTo(DEFAULT_ADDRESS);
         assertThat(testPatient.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testPatient.getPhoto()).isEqualTo(DEFAULT_PHOTO);
@@ -242,10 +254,14 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getFbId()).isEqualTo(DEFAULT_FB_ID);
         assertThat(testPatient.getReminder()).isEqualTo(DEFAULT_REMINDER);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(DEFAULT_WRITE_IC_TIME);
+        assertThat(testPatient.getBurdenCost()).isEqualTo(DEFAULT_BURDEN_COST);
         assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getIntroducer()).isEqualTo(null);
         assertThat(testPatient.getTags()).contains(tag);
+        assertThat(testPatient.getQuestionnaire().getHepatitisType()).isEqualTo(patient.getQuestionnaire().getHepatitisType());
+
+        tagRepository.findById(TagName.Hypertension.getValue()).ifPresent(tag -> assertThat(testPatient.getTags()).contains(tag));
     }
 
     @Test
@@ -287,60 +303,6 @@ public class PatientResourceIntTest {
 
     @Test
     @Transactional
-    public void checkNationalIdIsRequired() throws Exception {
-        int databaseSizeBeforeTest = patientRepository.findAll().size();
-        // set the field null
-        patient.setNationalId(null);
-
-        // Create the Patient, which fails.
-
-        restPatientMockMvc.perform(post("/api/patients")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(patient)))
-            .andExpect(status().isBadRequest());
-
-        List<Patient> patientList = patientRepository.findAll();
-        assertThat(patientList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkGenderIsRequired() throws Exception {
-        int databaseSizeBeforeTest = patientRepository.findAll().size();
-        // set the field null
-        patient.setGender(null);
-
-        // Create the Patient, which fails.
-
-        restPatientMockMvc.perform(post("/api/patients")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(patient)))
-            .andExpect(status().isBadRequest());
-
-        List<Patient> patientList = patientRepository.findAll();
-        assertThat(patientList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkBirthIsRequired() throws Exception {
-        int databaseSizeBeforeTest = patientRepository.findAll().size();
-        // set the field null
-        patient.setBirth(null);
-
-        // Create the Patient, which fails.
-
-        restPatientMockMvc.perform(post("/api/patients")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(patient)))
-            .andExpect(status().isBadRequest());
-
-        List<Patient> patientList = patientRepository.findAll();
-        assertThat(patientList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void checkPhoneIsRequired() throws Exception {
         int databaseSizeBeforeTest = patientRepository.findAll().size();
         // set the field null
@@ -368,31 +330,32 @@ public class PatientResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(patient.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].nationalId").value(hasItem(DEFAULT_NATIONAL_ID)))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+            .andExpect(jsonPath("$.[*].phone").value(hasItem(DEFAULT_PHONE.toString())))
             .andExpect(jsonPath("$.[*].gender").value(hasItem(DEFAULT_GENDER.toString())))
             .andExpect(jsonPath("$.[*].birth").value(hasItem(DEFAULT_BIRTH.toString())))
-            .andExpect(jsonPath("$.[*].phone").value(hasItem(DEFAULT_PHONE)))
-            .andExpect(jsonPath("$.[*].medicalId").value(hasItem(DEFAULT_MEDICAL_ID)))
-            .andExpect(jsonPath("$.[*].zip").value(hasItem(DEFAULT_ZIP)))
-            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)))
-            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
-            .andExpect(jsonPath("$.[*].photo").value(hasItem(DEFAULT_PHOTO)))
+            .andExpect(jsonPath("$.[*].nationalId").value(hasItem(DEFAULT_NATIONAL_ID.toString())))
+            .andExpect(jsonPath("$.[*].medicalId").value(hasItem(DEFAULT_MEDICAL_ID.toString())))
+            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS.toString())))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())))
+            .andExpect(jsonPath("$.[*].photo").value(hasItem(DEFAULT_PHOTO.toString())))
             .andExpect(jsonPath("$.[*].blood").value(hasItem(DEFAULT_BLOOD.toString())))
-            .andExpect(jsonPath("$.[*].cardId").value(hasItem(DEFAULT_CARD_ID)))
-            .andExpect(jsonPath("$.[*].vip").value(hasItem(DEFAULT_VIP)))
-            .andExpect(jsonPath("$.[*].emergencyName").value(hasItem(DEFAULT_EMERGENCY_NAME)))
-            .andExpect(jsonPath("$.[*].emergencyPhone").value(hasItem(DEFAULT_EMERGENCY_PHONE)))
+            .andExpect(jsonPath("$.[*].cardId").value(hasItem(DEFAULT_CARD_ID.toString())))
+            .andExpect(jsonPath("$.[*].vip").value(hasItem(DEFAULT_VIP.toString())))
+            .andExpect(jsonPath("$.[*].emergencyName").value(hasItem(DEFAULT_EMERGENCY_NAME.toString())))
+            .andExpect(jsonPath("$.[*].emergencyPhone").value(hasItem(DEFAULT_EMERGENCY_PHONE.toString())))
             .andExpect(jsonPath("$.[*].deleteDate").value(hasItem(DEFAULT_DELETE_DATE.toString())))
             .andExpect(jsonPath("$.[*].scaling").value(hasItem(DEFAULT_SCALING.toString())))
-            .andExpect(jsonPath("$.[*].lineId").value(hasItem(DEFAULT_LINE_ID)))
-            .andExpect(jsonPath("$.[*].fbId").value(hasItem(DEFAULT_FB_ID)))
-            .andExpect(jsonPath("$.[*].reminder").value(hasItem(DEFAULT_REMINDER)))
-            .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem((DEFAULT_WRITE_IC_TIME.toString()))));
+            .andExpect(jsonPath("$.[*].lineId").value(hasItem(DEFAULT_LINE_ID.toString())))
+            .andExpect(jsonPath("$.[*].fbId").value(hasItem(DEFAULT_FB_ID.toString())))
+            .andExpect(jsonPath("$.[*].reminder").value(hasItem(DEFAULT_REMINDER.toString())))
+            .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem(DEFAULT_WRITE_IC_TIME.toString())))
+            .andExpect(jsonPath("$.[*].burdenCost").value(hasItem(DEFAULT_BURDEN_COST)))
+            .andExpect(jsonPath("$.[*].questionnaire.id").value(hasItem(questionnaire.getId().intValue())));
     }
-
+    
     public void getAllPatientsWithEagerRelationshipsIsEnabled() throws Exception {
-        PatientResource patientResource = new PatientResource(patientRepositoryMock, tagRepository);
+        PatientResource patientResource = new PatientResource(patientRepositoryMock, tagRepository, patientService);
         when(patientRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         MockMvc restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
@@ -402,7 +365,7 @@ public class PatientResourceIntTest {
             .setMessageConverters(jacksonMessageConverter).build();
 
         restPatientMockMvc.perform(get("/api/patients?eagerload=true"))
-            .andExpect(status().isOk());
+        .andExpect(status().isOk());
 
         verify(patientRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
@@ -418,27 +381,27 @@ public class PatientResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(patient.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.nationalId").value(DEFAULT_NATIONAL_ID))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
+            .andExpect(jsonPath("$.phone").value(DEFAULT_PHONE.toString()))
             .andExpect(jsonPath("$.gender").value(DEFAULT_GENDER.toString()))
             .andExpect(jsonPath("$.birth").value(DEFAULT_BIRTH.toString()))
-            .andExpect(jsonPath("$.phone").value(DEFAULT_PHONE))
-            .andExpect(jsonPath("$.medicalId").value(DEFAULT_MEDICAL_ID))
-            .andExpect(jsonPath("$.zip").value(DEFAULT_ZIP))
-            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS))
-            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
-            .andExpect(jsonPath("$.photo").value(DEFAULT_PHOTO))
+            .andExpect(jsonPath("$.nationalId").value(DEFAULT_NATIONAL_ID.toString()))
+            .andExpect(jsonPath("$.medicalId").value(DEFAULT_MEDICAL_ID.toString()))
+            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS.toString()))
+            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()))
+            .andExpect(jsonPath("$.photo").value(DEFAULT_PHOTO.toString()))
             .andExpect(jsonPath("$.blood").value(DEFAULT_BLOOD.toString()))
-            .andExpect(jsonPath("$.cardId").value(DEFAULT_CARD_ID))
-            .andExpect(jsonPath("$.vip").value(DEFAULT_VIP))
-            .andExpect(jsonPath("$.emergencyName").value(DEFAULT_EMERGENCY_NAME))
-            .andExpect(jsonPath("$.emergencyPhone").value(DEFAULT_EMERGENCY_PHONE))
+            .andExpect(jsonPath("$.cardId").value(DEFAULT_CARD_ID.toString()))
+            .andExpect(jsonPath("$.vip").value(DEFAULT_VIP.toString()))
+            .andExpect(jsonPath("$.emergencyName").value(DEFAULT_EMERGENCY_NAME.toString()))
+            .andExpect(jsonPath("$.emergencyPhone").value(DEFAULT_EMERGENCY_PHONE.toString()))
             .andExpect(jsonPath("$.deleteDate").value(DEFAULT_DELETE_DATE.toString()))
             .andExpect(jsonPath("$.scaling").value(DEFAULT_SCALING.toString()))
-            .andExpect(jsonPath("$.lineId").value(DEFAULT_LINE_ID))
-            .andExpect(jsonPath("$.fbId").value(DEFAULT_FB_ID))
-            .andExpect(jsonPath("$.reminder").value(DEFAULT_REMINDER))
-            .andExpect(jsonPath("$.writeIcTime").value((DEFAULT_WRITE_IC_TIME.toString())));
+            .andExpect(jsonPath("$.lineId").value(DEFAULT_LINE_ID.toString()))
+            .andExpect(jsonPath("$.fbId").value(DEFAULT_FB_ID.toString()))
+            .andExpect(jsonPath("$.reminder").value(DEFAULT_REMINDER.toString()))
+            .andExpect(jsonPath("$.writeIcTime").value(DEFAULT_WRITE_IC_TIME.toString()))
+            .andExpect(jsonPath("$.burdenCost").value(DEFAULT_BURDEN_COST));
     }
 
     @Test
@@ -461,16 +424,39 @@ public class PatientResourceIntTest {
 
         // Update the patient
         Patient updatedPatient = patientRepository.findById(patient.getId()).get();
+
+        // Update the questionnaire
+        Questionnaire updatedQuestionnaire = questionnaireRepository.findById(patient.getQuestionnaire().getId()).get();
+
         // Disconnect from session so that the updates on updatedPatient are not directly saved in db
         em.detach(updatedPatient);
+        em.detach(updatedQuestionnaire);
+
+        String updateOther = "other";
+        updatedQuestionnaire = updatedQuestionnaire
+            .hypertension(null)
+            .heartDiseases(null)
+            .kidneyDiseases(null)
+            .bloodDiseases(null)
+            .liverDiseases(null)
+            .hepatitisType(null)
+            .gastrointestinalDiseases(null)
+            .receivingMedication(null)
+            .smokeNumberADay(null)
+            .productionYear(null)
+            .productionMonth(null)
+            .other(updateOther)
+            .difficultExtractionOrContinuousBleeding(null)
+            .nauseaOrDizziness(null)
+            .adverseReactionsToAnestheticInjections(null);
+
         updatedPatient
             .name(UPDATED_NAME)
-            .nationalId(UPDATED_NATIONAL_ID)
+            .phone(UPDATED_PHONE)
             .gender(UPDATED_GENDER)
             .birth(UPDATED_BIRTH)
-            .phone(UPDATED_PHONE)
+            .nationalId(UPDATED_NATIONAL_ID)
             .medicalId(UPDATED_MEDICAL_ID)
-            .zip(UPDATED_ZIP)
             .address(UPDATED_ADDRESS)
             .email(UPDATED_EMAIL)
             .photo(UPDATED_PHOTO)
@@ -485,10 +471,12 @@ public class PatientResourceIntTest {
             .fbId(UPDATED_FB_ID)
             .reminder(UPDATED_REMINDER)
             .writeIcTime(UPDATED_WRITE_IC_TIME)
-            .dominantDoctor(extendUser)
-            .firstDoctor(extendUser)
+            .burdenCost(UPDATED_BURDEN_COST)
+            .dominantDoctor(null)
+            .firstDoctor(null)
             .introducer(introducer)
-            .addTag(tag);
+            .removeTag(tag)
+            .questionnaire(updatedQuestionnaire);
 
         restPatientMockMvc.perform(put("/api/patients")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -500,12 +488,11 @@ public class PatientResourceIntTest {
         assertThat(patientList).hasSize(databaseSizeBeforeUpdate);
         Patient testPatient = patientList.get(patientList.size() - 1);
         assertThat(testPatient.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testPatient.getNationalId()).isEqualTo(UPDATED_NATIONAL_ID);
+        assertThat(testPatient.getPhone()).isEqualTo(UPDATED_PHONE);
         assertThat(testPatient.getGender()).isEqualTo(UPDATED_GENDER);
         assertThat(testPatient.getBirth()).isEqualTo(UPDATED_BIRTH);
-        assertThat(testPatient.getPhone()).isEqualTo(UPDATED_PHONE);
+        assertThat(testPatient.getNationalId()).isEqualTo(UPDATED_NATIONAL_ID);
         assertThat(testPatient.getMedicalId()).isEqualTo(UPDATED_MEDICAL_ID);
-        assertThat(testPatient.getZip()).isEqualTo(UPDATED_ZIP);
         assertThat(testPatient.getAddress()).isEqualTo(UPDATED_ADDRESS);
         assertThat(testPatient.getEmail()).isEqualTo(UPDATED_EMAIL);
         assertThat(testPatient.getPhoto()).isEqualTo(UPDATED_PHOTO);
@@ -520,10 +507,12 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getFbId()).isEqualTo(UPDATED_FB_ID);
         assertThat(testPatient.getReminder()).isEqualTo(UPDATED_REMINDER);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(UPDATED_WRITE_IC_TIME);
-        assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
-        assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
+        assertThat(testPatient.getBurdenCost()).isEqualTo(UPDATED_BURDEN_COST);
+        assertThat(testPatient.getDominantDoctor()).isNull();
+        assertThat(testPatient.getFirstDoctor()).isNull();
         assertThat(testPatient.getIntroducer()).isEqualTo(introducer);
-        assertThat(testPatient.getTags()).contains(tag);
+        assertThat(testPatient.getTags()).isEmpty();
+        assertThat(testPatient.getQuestionnaire().getOther()).isEqualTo(updateOther);
     }
 
     @Test
@@ -792,13 +781,16 @@ public class PatientResourceIntTest {
     @Transactional
     public void createPatientTag() throws Exception {
         // Initialize the database
+        patient.getTags().remove(tag);
         patientRepository.saveAndFlush(patient);
+
+        int size = patient.getTags().size();
 
         // Create a tag of the patient
         restPatientMockMvc.perform(post("/api/patients/{id}/tags/{tag_id}", patient.getId(), tag.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.length()").value(1));
+            .andExpect(jsonPath("$.length()").value(size + 1));
     }
 
     @Test
@@ -807,21 +799,23 @@ public class PatientResourceIntTest {
         // Initialize the database
         patientRepository.saveAndFlush(patient);
 
+        int size = patient.getTags().size();
+
         // Delete a tag of the patient
         restPatientMockMvc.perform(delete("/api/patients/{id}/tags/{tag_id}", patient.getId(), tag.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.length()").value(0));
+            .andExpect(jsonPath("$.length()").value(size - 1));
     }
 
     @Test
     @Transactional
-    public void getPatientsByNameKeywordContaining() throws Exception {
+    public void getPatientsByQueryNameContaining() throws Exception {
         // Initialize the database
         patientRepository.saveAndFlush(patient);
 
-        // Search patients by name
-        restPatientMockMvc.perform(get("/api/patients/search/{keyword}", patient.getName().substring(2, 5)))
+        // Get patients by name
+        restPatientMockMvc.perform(get("/api/patients?search={keyword}&sort=id,desc", patient.getName().substring(2, 5)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].name").value(hasItem(patient.getName())));
@@ -829,17 +823,46 @@ public class PatientResourceIntTest {
 
     @Test
     @Transactional
-    public void getPatientsByBirthKeywordContaining() throws Exception {
+    public void getPatientsByQueryBirthContaining() throws Exception {
         // Initialize the database
         patientRepository.saveAndFlush(patient);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-        // Search patients by birth
-        restPatientMockMvc.perform(get("/api/patients/search/{keyword}", patient.getBirth().format(formatter).substring(2, 5)))
+        // Get patients by birth
+        restPatientMockMvc.perform(get("/api/patients?search={keyword}&sort=id,desc", patient.getBirth().format(formatter).substring(2, 5)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].birth").value(hasItem(patient.getBirth().toString())));
+    }
+
+    @Test
+    @Transactional
+    public void getPatientsByQueryBirthContainingAndIsDeleted() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+        // Get patients by birth and deleted
+        restPatientMockMvc.perform(get("/api/patients?search={keyword}&isDeleted={isDeleted}&sort=id,desc", patient.getBirth().format(formatter).substring(2, 5), true))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].deleteDate").value(hasItem(patient.getDeleteDate().toString())));
+    }
+
+    @Test
+    @Transactional
+    public void getPatientsByQueryIsNotDeleted() throws Exception {
+        patient.setDeleteDate(null);
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Get patients by not deleted
+        restPatientMockMvc.perform(get("/api/patients?isDeleted={isDeleted}&sort=id,desc", false))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(patient.getId().intValue())));
     }
 
     private Patient createPatientByName(String name) {

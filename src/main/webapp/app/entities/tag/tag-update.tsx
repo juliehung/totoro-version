@@ -101,8 +101,8 @@ export class TagUpdate extends React.Component<ITagUpdateProps, ITagUpdateState>
                     <option value="DISEASE">
                       <Translate contentKey="totoroApp.TagType.DISEASE" />
                     </option>
-                    <option value="TEMPORALITY">
-                      <Translate contentKey="totoroApp.TagType.TEMPORALITY" />
+                    <option value="OTHER">
+                      <Translate contentKey="totoroApp.TagType.OTHER" />
                     </option>
                   </AvInput>
                 </AvGroup>

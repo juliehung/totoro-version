@@ -3,7 +3,7 @@ import { IPatient } from 'app/shared/model//patient.model';
 export const enum TagType {
   ALLERGY = 'ALLERGY',
   DISEASE = 'DISEASE',
-  TEMPORALITY = 'TEMPORALITY'
+  OTHER = 'OTHER'
 }
 
 export interface ITag {
