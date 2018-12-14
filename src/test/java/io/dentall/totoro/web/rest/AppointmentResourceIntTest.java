@@ -8,6 +8,7 @@ import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -26,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.time.ZoneOffset;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 
@@ -55,8 +56,8 @@ public class AppointmentResourceIntTest {
     private static final String DEFAULT_NOTE = "AAAAAAAAAA";
     private static final String UPDATED_NOTE = "BBBBBBBBBB";
 
-    private static final Instant DEFAULT_EXPECTED_ARRIVAL_TIME = Instant.now().atZone(ZoneOffset.UTC).withHour(21).withNano(0).toInstant();
-    private static final Instant UPDATED_EXPECTED_ARRIVAL_TIME = Instant.now().atZone(ZoneOffset.UTC).withHour(21).plusHours(1).withNano(0).toInstant();
+    private static final Instant DEFAULT_EXPECTED_ARRIVAL_TIME = OffsetDateTime.now().withHour(22).withNano(0).toInstant();
+    private static final Instant UPDATED_EXPECTED_ARRIVAL_TIME = OffsetDateTime.now().withHour(22).plusHours(1).withNano(0).toInstant();
 
     private static final Integer DEFAULT_REQUIRED_TREATMENT_TIME = 1;
     private static final Integer UPDATED_REQUIRED_TREATMENT_TIME = 2;
@@ -93,6 +94,9 @@ public class AppointmentResourceIntTest {
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    private PatientService patientService;
 
     private MockMvc restAppointmentMockMvc;
 
@@ -340,7 +344,7 @@ public class AppointmentResourceIntTest {
     @Test
     @Transactional
     public void getAllPatientCards() throws Exception {
-        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
+        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository, patientService);
         patient.addAppointment(appointment);
 
         // Initialize the database

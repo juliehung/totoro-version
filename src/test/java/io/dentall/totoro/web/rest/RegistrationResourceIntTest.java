@@ -4,6 +4,7 @@ import io.dentall.totoro.TotoroApp;
 
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -44,8 +45,8 @@ public class RegistrationResourceIntTest {
     private static final RegistrationStatus DEFAULT_STATUS = RegistrationStatus.PENDING;
     private static final RegistrationStatus UPDATED_STATUS = RegistrationStatus.FINISHED;
 
-    private static final Instant DEFAULT_ARRIVAL_TIME = Instant.now().atZone(ZoneOffset.UTC).withHour(21).plusMinutes(10).withNano(0).toInstant();
-    private static final Instant UPDATED_ARRIVAL_TIME = Instant.now().atZone(ZoneOffset.UTC).withHour(21).plusHours(1).plusMinutes(10).withNano(0).toInstant();
+    private static final Instant DEFAULT_ARRIVAL_TIME = OffsetDateTime.now().withHour(22).plusMinutes(10).withNano(0).toInstant();
+    private static final Instant UPDATED_ARRIVAL_TIME = OffsetDateTime.now().withHour(22).plusHours(1).plusMinutes(10).withNano(0).toInstant();
 
     private static final RegistrationType DEFAULT_TYPE = RegistrationType.OWN_EXPENSE;
     private static final RegistrationType UPDATED_TYPE = RegistrationType.NHI;
@@ -79,6 +80,9 @@ public class RegistrationResourceIntTest {
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    private PatientService patientService;
 
     private MockMvc restRegistrationMockMvc;
 
@@ -302,7 +306,7 @@ public class RegistrationResourceIntTest {
     @Test
     @Transactional
     public void getAllPatientCards() throws Exception {
-        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
+        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository, patientService);
         Appointment appointment = createAppointment(patient);
 
         // Initialize the database

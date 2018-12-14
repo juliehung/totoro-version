@@ -40,27 +40,21 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
     private String name;
 
     @NotNull
-    @Column(name = "national_id", nullable = false)
-    private String nationalId;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender", nullable = false)
-    private Gender gender;
-
-    @NotNull
-    @Column(name = "birth", nullable = false)
-    private LocalDate birth;
-
-    @NotNull
     @Column(name = "phone", nullable = false)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private Gender gender;
+
+    @Column(name = "birth")
+    private LocalDate birth;
+
+    @Column(name = "national_id")
+    private String nationalId;
+
     @Column(name = "medical_id")
     private String medicalId;
-
-    @Column(name = "zip")
-    private String zip;
 
     @Column(name = "address")
     private String address;
@@ -104,6 +98,13 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "write_ic_time")
     private Instant writeIcTime;
+
+    @Column(name = "burden_cost")
+    private Integer burdenCost;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(unique = true)
+    private Questionnaire questionnaire;
 
     @OneToMany(mappedBy = "patient")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -169,17 +170,17 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
         this.name = name;
     }
 
-    public String getNationalId() {
-        return nationalId;
+    public String getPhone() {
+        return phone;
     }
 
-    public Patient nationalId(String nationalId) {
-        this.nationalId = nationalId;
+    public Patient phone(String phone) {
+        this.phone = phone;
         return this;
     }
 
-    public void setNationalId(String nationalId) {
-        this.nationalId = nationalId;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Gender getGender() {
@@ -208,17 +209,17 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
         this.birth = birth;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getNationalId() {
+        return nationalId;
     }
 
-    public Patient phone(String phone) {
-        this.phone = phone;
+    public Patient nationalId(String nationalId) {
+        this.nationalId = nationalId;
         return this;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setNationalId(String nationalId) {
+        this.nationalId = nationalId;
     }
 
     public String getMedicalId() {
@@ -232,19 +233,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
 
     public void setMedicalId(String medicalId) {
         this.medicalId = medicalId;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-
-    public Patient zip(String zip) {
-        this.zip = zip;
-        return this;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
     }
 
     public String getAddress() {
@@ -427,6 +415,32 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
 
     public void setWriteIcTime(Instant writeIcTime) {
         this.writeIcTime = writeIcTime;
+    }
+
+    public Integer getBurdenCost() {
+        return burdenCost;
+    }
+
+    public Patient burdenCost(Integer burdenCost) {
+        this.burdenCost = burdenCost;
+        return this;
+    }
+
+    public void setBurdenCost(Integer burdenCost) {
+        this.burdenCost = burdenCost;
+    }
+
+    public Questionnaire getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public Patient questionnaire(Questionnaire questionnaire) {
+        this.questionnaire = questionnaire;
+        return this;
+    }
+
+    public void setQuestionnaire(Questionnaire questionnaire) {
+        this.questionnaire = questionnaire;
     }
 
     public Set<Appointment> getAppointments() {
@@ -658,12 +672,11 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
         return "Patient{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", nationalId='" + getNationalId() + "'" +
+            ", phone='" + getPhone() + "'" +
             ", gender='" + getGender() + "'" +
             ", birth='" + getBirth() + "'" +
-            ", phone='" + getPhone() + "'" +
+            ", nationalId='" + getNationalId() + "'" +
             ", medicalId='" + getMedicalId() + "'" +
-            ", zip='" + getZip() + "'" +
             ", address='" + getAddress() + "'" +
             ", email='" + getEmail() + "'" +
             ", photo='" + getPhoto() + "'" +
@@ -678,6 +691,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
             ", fbId='" + getFbId() + "'" +
             ", reminder='" + getReminder() + "'" +
             ", writeIcTime='" + getWriteIcTime() + "'" +
+            ", burdenCost=" + getBurdenCost() +
             "}";
     }
 }

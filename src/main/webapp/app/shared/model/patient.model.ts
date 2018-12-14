@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { IQuestionnaire } from 'app/shared/model//questionnaire.model';
 import { IAppointment } from 'app/shared/model//appointment.model';
 import { IPatient } from 'app/shared/model//patient.model';
 import { ITag } from 'app/shared/model//tag.model';
@@ -20,12 +21,11 @@ export const enum Blood {
 export interface IPatient {
   id?: number;
   name?: string;
-  nationalId?: string;
+  phone?: string;
   gender?: Gender;
   birth?: Moment;
-  phone?: string;
+  nationalId?: string;
   medicalId?: string;
-  zip?: string;
   address?: string;
   email?: string;
   photo?: string;
@@ -40,6 +40,8 @@ export interface IPatient {
   fbId?: string;
   reminder?: string;
   writeIcTime?: Moment;
+  burdenCost?: number;
+  questionnaire?: IQuestionnaire;
   appointments?: IAppointment[];
   introducer?: IPatient;
   parents?: IPatient[];

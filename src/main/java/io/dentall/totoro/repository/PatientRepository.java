@@ -21,12 +21,20 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
         countQuery = "select count(distinct patient) from Patient patient")
     Page<Patient> findAllWithEagerRelationships(Pageable pageable);
 
+    @Query(value = "select distinct patient from Patient patient left join fetch patient.parents left join fetch patient.spouse1S left join fetch patient.tags where 1 = 1" +
+        " and ((:search is null) or (:search is not null and (patient.name like %:search% or (patient.birth is not null and to_char(patient.birth, 'yyyyMMdd') like %:search%))))" +
+        " and ((:isDeleted is null) or (:isDeleted is false and patient.deleteDate is null) or (:isDeleted is true and patient.deleteDate is not null))",
+        countQuery = "select count(distinct patient) from Patient patient")
+    Page<Patient> findByQueryWithEagerRelationships(@Param("search") String search, @Param("isDeleted") Boolean isDeleted, Pageable pageable);
+
     @Query(value = "select distinct patient from Patient patient left join fetch patient.parents left join fetch patient.spouse1S left join fetch patient.tags")
     List<Patient> findAllWithEagerRelationships();
 
     @Query("select patient from Patient patient left join fetch patient.parents left join fetch patient.spouse1S left join fetch patient.tags where patient.id =:id")
     Optional<Patient> findOneWithEagerRelationships(@Param("id") Long id);
 
-    @Query("select patient from Patient patient where patient.name like %:keyword% or (patient.birth is not null and to_char(patient.birth, 'yyyyMMdd') like %:keyword%)")
-    List<Patient> findByKeywordContaining(@Param("keyword") String keyword);
+    @Query("select patient from Patient patient where 1 = 1" +
+        " and ((:search is null) or (:search is not null and (patient.name like %:search% or (patient.birth is not null and to_char(patient.birth, 'yyyyMMdd') like %:search%))))" +
+        " and ((:isDeleted is null) or (:isDeleted is false and patient.deleteDate is null) or (:isDeleted is true and patient.deleteDate is not null))")
+    Page<Patient> findByQuery(@Param("search") String search, @Param("isDeleted") Boolean isDeleted, Pageable pageable);
 }

@@ -25,27 +25,23 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="national_id" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-
-            <column name="gender" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-
-            <column name="birth" type="date">
-                <constraints nullable="false" />
-            </column>
-
             <column name="phone" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
 
-            <column name="medical_id" type="varchar(255)">
+            <column name="gender" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="zip" type="varchar(255)">
+            <column name="birth" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="national_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="medical_id" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
@@ -81,7 +77,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="delete_date" type="timestamp">
+            <column name="delete_date" type="datetime">
                 <constraints nullable="true" />
             </column>
 
@@ -101,16 +97,24 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="write_ic_time" type="timestamp">
+            <column name="write_ic_time" type="datetime">
                 <constraints nullable="true" />
             </column>
 
+            <column name="burden_cost" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="questionnaire_id" type="bigint">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_patient_questionnaire_id" />
+            </column>
             <column name="introducer_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
+        <dropDefaultValue tableName="patient" columnName="delete_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="patient" columnName="write_ic_time" columnDataType="datetime"/>
         
         <createTable tableName="patient_parent">
             <column name="parents_id" type="bigint">

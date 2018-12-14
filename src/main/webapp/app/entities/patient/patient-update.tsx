@@ -8,6 +8,8 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
+import { IQuestionnaire } from 'app/shared/model/questionnaire.model';
+import { getEntities as getQuestionnaires } from 'app/entities/questionnaire/questionnaire.reducer';
 import { getEntities as getPatients } from 'app/entities/patient/patient.reducer';
 import { ITag } from 'app/shared/model/tag.model';
 import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
@@ -24,6 +26,7 @@ export interface IPatientUpdateState {
   idsparent: any[];
   idsspouse1: any[];
   idstag: any[];
+  questionnaireId: string;
   introducerId: string;
   childId: string;
   spouse2Id: string;
@@ -36,6 +39,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
       idsparent: [],
       idsspouse1: [],
       idstag: [],
+      questionnaireId: '0',
       introducerId: '0',
       childId: '0',
       spouse2Id: '0',
@@ -50,6 +54,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
       this.props.getEntity(this.props.match.params.id);
     }
 
+    this.props.getQuestionnaires();
     this.props.getPatients();
     this.props.getTags();
   }
@@ -82,7 +87,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
   };
 
   render() {
-    const { patientEntity, patients, tags, loading, updating } = this.props;
+    const { patientEntity, questionnaires, patients, tags, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -122,13 +127,13 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="nationalIdLabel" for="nationalId">
-                    <Translate contentKey="totoroApp.patient.nationalId">National Id</Translate>
+                  <Label id="phoneLabel" for="phone">
+                    <Translate contentKey="totoroApp.patient.phone">Phone</Translate>
                   </Label>
                   <AvField
-                    id="patient-nationalId"
+                    id="patient-phone"
                     type="text"
-                    name="nationalId"
+                    name="phone"
                     validate={{
                       required: { value: true, errorMessage: translate('entity.validation.required') }
                     }}
@@ -160,40 +165,19 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   <Label id="birthLabel" for="birth">
                     <Translate contentKey="totoroApp.patient.birth">Birth</Translate>
                   </Label>
-                  <AvField
-                    id="patient-birth"
-                    type="date"
-                    className="form-control"
-                    name="birth"
-                    validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') }
-                    }}
-                  />
+                  <AvField id="patient-birth" type="date" className="form-control" name="birth" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="phoneLabel" for="phone">
-                    <Translate contentKey="totoroApp.patient.phone">Phone</Translate>
+                  <Label id="nationalIdLabel" for="nationalId">
+                    <Translate contentKey="totoroApp.patient.nationalId">National Id</Translate>
                   </Label>
-                  <AvField
-                    id="patient-phone"
-                    type="text"
-                    name="phone"
-                    validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') }
-                    }}
-                  />
+                  <AvField id="patient-nationalId" type="text" name="nationalId" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="medicalIdLabel" for="medicalId">
                     <Translate contentKey="totoroApp.patient.medicalId">Medical Id</Translate>
                   </Label>
                   <AvField id="patient-medicalId" type="text" name="medicalId" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="zipLabel" for="zip">
-                    <Translate contentKey="totoroApp.patient.zip">Zip</Translate>
-                  </Label>
-                  <AvField id="patient-zip" type="text" name="zip" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="addressLabel" for="address">
@@ -314,6 +298,27 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="burdenCostLabel" for="burdenCost">
+                    <Translate contentKey="totoroApp.patient.burdenCost">Burden Cost</Translate>
+                  </Label>
+                  <AvField id="patient-burdenCost" type="string" className="form-control" name="burdenCost" />
+                </AvGroup>
+                <AvGroup>
+                  <Label for="questionnaire.id">
+                    <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate>
+                  </Label>
+                  <AvInput id="patient-questionnaire" type="select" className="form-control" name="questionnaire.id">
+                    <option value="" key="0" />
+                    {questionnaires
+                      ? questionnaires.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
+                <AvGroup>
                   <Label for="introducer.id">
                     <Translate contentKey="totoroApp.patient.introducer">Introducer</Translate>
                   </Label>
@@ -417,6 +422,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
+  questionnaires: storeState.questionnaire.entities,
   patients: storeState.patient.entities,
   tags: storeState.tag.entities,
   patientEntity: storeState.patient.entity,
@@ -425,6 +431,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
+  getQuestionnaires,
   getPatients,
   getTags,
   getEntity,

@@ -9,7 +9,7 @@
             ]
         },
         {
-            "fieldName": "nationalId",
+            "fieldName": "phone",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"
@@ -18,31 +18,18 @@
         {
             "fieldName": "gender",
             "fieldType": "Gender",
-            "fieldValues": "OTHER,MALE,FEMALE",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldValues": "OTHER,MALE,FEMALE"
         },
         {
             "fieldName": "birth",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldType": "LocalDate"
         },
         {
-            "fieldName": "phone",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "medicalId",
+            "fieldName": "nationalId",
             "fieldType": "String"
         },
         {
-            "fieldName": "zip",
+            "fieldName": "medicalId",
             "fieldType": "String"
         },
         {
@@ -101,9 +88,21 @@
         {
             "fieldName": "writeIcTime",
             "fieldType": "Instant"
+        },
+        {
+            "fieldName": "burdenCost",
+            "fieldType": "Integer"
         }
     ],
     "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "questionnaire",
+            "otherEntityName": "questionnaire",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "patient"
+        },
         {
             "relationshipType": "one-to-many",
             "relationshipName": "appointment",

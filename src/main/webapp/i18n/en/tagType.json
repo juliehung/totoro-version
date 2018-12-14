@@ -4,7 +4,7 @@
             "null": "",
             "ALLERGY": "ALLERGY",
             "DISEASE": "DISEASE",
-            "TEMPORALITY": "TEMPORALITY"
+            "OTHER": "OTHER"
         }
     }
 }
