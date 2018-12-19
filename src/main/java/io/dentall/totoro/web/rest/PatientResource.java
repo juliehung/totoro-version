@@ -6,6 +6,7 @@ import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.service.PatientService;
+import io.dentall.totoro.service.dto.PatientDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -18,6 +19,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -84,17 +86,16 @@ public class PatientResource {
      */
     @PutMapping("/patients")
     @Timed
-    public ResponseEntity<Patient> updatePatient(@Valid @RequestBody Patient patient) throws URISyntaxException {
+    public ResponseEntity<Patient> updatePatient(@Validated(PatientDTO.NullGroup.class) @RequestBody PatientDTO patient) throws URISyntaxException {
         log.debug("REST request to update Patient : {}", patient);
         if (patient.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
 
-        patientService.setTagsByQuestionnaire(patient.getTags(), patient.getQuestionnaire());
-        Patient result = patientRepository.save(patient);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, patient.getId().toString()))
-            .body(result);
+        return ResponseUtil.wrapOrNotFound(
+            patientService.updatePatient(patient),
+            HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, patient.getId().toString())
+        );
     }
 
     /**
@@ -103,6 +104,7 @@ public class PatientResource {
      * @param pageable the pagination information
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many)
      * @param search patients who contain search keyword to retrieve
+     * @param isDeleted patients were deleted
      * @return the ResponseEntity with status 200 (OK) and the list of patients in body
      */
     @GetMapping("/patients")
@@ -116,7 +118,7 @@ public class PatientResource {
             page = (search != null || isDeleted != null) ? patientRepository.findByQuery(search, isDeleted, pageable) : patientRepository.findAll(pageable);
         }
 
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/patients?eagerload=%b&search=%s", eagerload, search));
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/patients?eagerload=%b&search=%s&isDeleted=%b", eagerload, search, isDeleted));
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
@@ -397,10 +399,10 @@ public class PatientResource {
     }
 
     /**
-     * DELETE  /patients/:id/tags/:tag_id : delete the "tag_id" spouse of "id" patient.
+     * DELETE  /patients/:id/tags/:tag_id : delete the "tag_id" tag of "id" patient.
      *
      * @param id the id of the patient
-     * @param tag_id the id of the spouse2
+     * @param tag_id the id of the tag
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/patients/{id}/tags/{tag_id}")
@@ -410,6 +412,44 @@ public class PatientResource {
 
         Function<Patient, Patient> func = patient ->
             getPatientCRUDResult(patient, getPatientCRUDTarget(tag_id, tagRepository), Patient::removeTag);
+        return ResponseEntity.ok().body(getPatient(id, func).getTags());
+    }
+
+    /**
+     * POST  /patients/:id/tags : Create tags of "id" patient.
+     *
+     * @param id the id of the patient
+     * @param tags the set of the tags
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @PostMapping("/patients/{id}/tags")
+    @Timed
+    public ResponseEntity<Collection<Tag>> createPatientTags(@PathVariable Long id, @RequestBody Collection<Tag> tags) {
+        log.debug("REST request to save Tags({}) of Patient(id: {})", tags, id);
+
+        Function<Patient, Patient> func = patient -> {
+            patient.getTags().clear();
+            tags.forEach(tag -> tagRepository.findById(tag.getId()).ifPresent(patient.getTags()::add));
+            return patientRepository.save(patient);
+        };
+        return ResponseEntity.ok().body(getPatient(id, func).getTags());
+    }
+
+    /**
+     * DELETE  /patients/:id/tags : delete the tags of "id" patient.
+     *
+     * @param id the id of the patient
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @DeleteMapping("/patients/{id}/tags")
+    @Timed
+    public ResponseEntity<Collection<Tag>> deletePatientTag(@PathVariable Long id) {
+        log.debug("REST request to delete tags of Patient(id: {})", id);
+
+        Function<Patient, Patient> func = patient -> {
+            patient.getTags().clear();
+            return patientRepository.save(patient);
+        };
         return ResponseEntity.ok().body(getPatient(id, func).getTags());
     }
 
