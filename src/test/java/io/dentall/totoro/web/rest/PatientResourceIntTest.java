@@ -34,6 +34,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -433,22 +434,10 @@ public class PatientResourceIntTest {
         em.detach(updatedQuestionnaire);
 
         String updateOther = "other";
+        String nonUpdateOtherInTreatment = updatedQuestionnaire.getOtherInTreatment();
         updatedQuestionnaire = updatedQuestionnaire
-            .hypertension(null)
-            .heartDiseases(null)
-            .kidneyDiseases(null)
-            .bloodDiseases(null)
-            .liverDiseases(null)
-            .hepatitisType(null)
-            .gastrointestinalDiseases(null)
-            .receivingMedication(null)
-            .smokeNumberADay(null)
-            .productionYear(null)
-            .productionMonth(null)
             .other(updateOther)
-            .difficultExtractionOrContinuousBleeding(null)
-            .nauseaOrDizziness(null)
-            .adverseReactionsToAnestheticInjections(null);
+            .otherInTreatment(null);
 
         updatedPatient
             .name(UPDATED_NAME)
@@ -472,10 +461,7 @@ public class PatientResourceIntTest {
             .reminder(UPDATED_REMINDER)
             .writeIcTime(UPDATED_WRITE_IC_TIME)
             .burdenCost(UPDATED_BURDEN_COST)
-            .dominantDoctor(null)
-            .firstDoctor(null)
             .introducer(introducer)
-            .removeTag(tag)
             .questionnaire(updatedQuestionnaire);
 
         restPatientMockMvc.perform(put("/api/patients")
@@ -508,11 +494,9 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getReminder()).isEqualTo(UPDATED_REMINDER);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(UPDATED_WRITE_IC_TIME);
         assertThat(testPatient.getBurdenCost()).isEqualTo(UPDATED_BURDEN_COST);
-        assertThat(testPatient.getDominantDoctor()).isNull();
-        assertThat(testPatient.getFirstDoctor()).isNull();
         assertThat(testPatient.getIntroducer()).isEqualTo(introducer);
-        assertThat(testPatient.getTags()).isEmpty();
         assertThat(testPatient.getQuestionnaire().getOther()).isEqualTo(updateOther);
+        assertThat(testPatient.getQuestionnaire().getOtherInTreatment()).isEqualTo(nonUpdateOtherInTreatment);
     }
 
     @Test
@@ -863,6 +847,45 @@ public class PatientResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(patient.getId().intValue())));
+    }
+
+    @Test
+    @Transactional
+    public void createPatientTags() throws Exception {
+        Tag tag1 = TagResourceIntTest.createEntity(em);
+        tag1.setName("tag1");
+        tagRepository.save(tag1);
+
+        Tag tag2 = TagResourceIntTest.createEntity(em);
+        tag1.setName("tag2");
+        tagRepository.save(tag2);
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Create a tag of the patient
+        restPatientMockMvc.perform(
+            post("/api/patients/{id}/tags", patient.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(Arrays.asList(tag1, tag2)))
+        )
+
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(tag1.getName())));
+    }
+
+    @Test
+    @Transactional
+    public void createDeleteTags() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Delete tags of the patient
+        restPatientMockMvc.perform(delete("/api/patients/{id}/tags", patient.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.length()").value(0));
     }
 
     private Patient createPatientByName(String name) {
