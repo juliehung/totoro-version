@@ -312,7 +312,7 @@ public class RegistrationResourceIntTest {
         // Initialize the database
         registrationRepository.saveAndFlush(registration);
 
-        restRegistrationMockMvc.perform(get("/api/registrations/patient-cards?sort=arrivalTime,desc"))
+        restRegistrationMockMvc.perform(get("/api/registrations/patient-cards"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].name").value(hasItem(patient.getName())))
@@ -335,7 +335,8 @@ public class RegistrationResourceIntTest {
             .andExpect(jsonPath("$.[*].fbId").value(hasItem(patient.getFbId())))
             .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(appointment.isBaseFloor())))
             .andExpect(jsonPath("$.[*].microscope").value(hasItem(appointment.isMicroscope())))
-            .andExpect(jsonPath("$.[*].tags.[*].name").value(hasItem(patient.getTags().iterator().next().getName())));
+            .andExpect(jsonPath("$.[*].tags.[*].name").value(hasItem(patient.getTags().iterator().next().getName())))
+            .andExpect(jsonPath("$.[*].doctor.id").value(hasItem(appointment.getDoctor().getUser().getId().intValue())));
     }
 
     private Appointment createAppointment(Patient patient) {
@@ -343,6 +344,7 @@ public class RegistrationResourceIntTest {
         appointment.setPatient(patient);
         appointment.setRegistration(registration);
         registration.setAppointment(appointment);
+        appointment.setDoctor(userRepository.save(UserResourceIntTest.createEntity(em)).getExtendUser());
         appointmentRepository.save(appointment);
 
         return appointment;

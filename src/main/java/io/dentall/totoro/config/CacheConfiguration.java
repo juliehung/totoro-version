@@ -50,6 +50,7 @@ public class CacheConfiguration {
 
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".dominantPatients", jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".firstPatients", jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".appointments", jcacheConfiguration);
         };
     }
 }

@@ -1,6 +1,8 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -19,7 +21,7 @@ import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 @Entity
 @Table(name = "appointment")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Appointment implements Serializable {
+public class Appointment extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -54,6 +56,9 @@ public class Appointment implements Serializable {
     @Column(name = "base_floor")
     private Boolean baseFloor;
 
+    @Column(name = "color_id")
+    private Integer colorId;
+
     @ManyToOne
     @JsonIgnoreProperties("appointments")
     private Patient patient;
@@ -62,6 +67,11 @@ public class Appointment implements Serializable {
     private Registration registration;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    @ManyToOne
+    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments"})
+    private ExtendUser doctor;
+
     public Long getId() {
         return id;
     }
@@ -174,6 +184,19 @@ public class Appointment implements Serializable {
         this.baseFloor = baseFloor;
     }
 
+    public Integer getColorId() {
+        return colorId;
+    }
+
+    public Appointment colorId(Integer colorId) {
+        this.colorId = colorId;
+        return this;
+    }
+
+    public void setColorId(Integer colorId) {
+        this.colorId = colorId;
+    }
+
     public Patient getPatient() {
         return patient;
     }
@@ -200,6 +223,33 @@ public class Appointment implements Serializable {
         this.registration = registration;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public ExtendUser getDoctor() {
+        return doctor;
+    }
+
+    public Appointment doctor(ExtendUser doctor) {
+        this.doctor = doctor;
+        return this;
+    }
+
+    public void setDoctor(ExtendUser doctor) {
+        this.doctor = doctor;
+    }
+
+    @Override
+    @JsonIgnore(false)
+    @JsonProperty
+    public String getCreatedBy() {
+        return super.getCreatedBy();
+    }
+
+    @Override
+    @JsonIgnore(false)
+    @JsonProperty
+    public Instant getCreatedDate() {
+        return super.getCreatedDate();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -233,6 +283,7 @@ public class Appointment implements Serializable {
             ", microscope='" + isMicroscope() + "'" +
             ", newPatient='" + isNewPatient() + "'" +
             ", baseFloor='" + isBaseFloor() + "'" +
+            ", colorId=" + getColorId() +
             "}";
     }
 }

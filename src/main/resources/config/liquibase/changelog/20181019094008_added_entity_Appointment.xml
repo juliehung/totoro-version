@@ -53,6 +53,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="color_id" type="integer">
+                <constraints nullable="true" />
+            </column>
+
             <column name="patient_id" type="bigint">
                 <constraints nullable="true" />
             </column>

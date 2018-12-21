@@ -1,12 +1,11 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.Appointment;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.List;
 
 
 /**
@@ -16,5 +15,7 @@ import java.time.Instant;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
-    Page<Appointment> findByRegistrationIsNullAndExpectedArrivalTimeBetween(Instant start, Instant end, Pageable pageable);
+    List<Appointment> findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end);
+
+    List<Appointment> findByExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end);
 }
