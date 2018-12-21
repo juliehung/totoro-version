@@ -14,6 +14,7 @@
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/20181024_addColumn_Patient.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181217_addColumn_Appointment.xml" relativeToChangelogFile="false"/>
 
     <!-- add default value -->
     <include file="config/liquibase/changelog/20181024_addDefaultValue_Appointment.xml" relativeToChangelogFile="false"/>
@@ -30,4 +31,5 @@
 
     <!-- add custom constraints -->
     <include file="config/liquibase/changelog/20181023_added_entity_constraints_Patient.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181217_added_entity_constraints_Appointment.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

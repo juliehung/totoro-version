@@ -2,7 +2,6 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
@@ -23,8 +22,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.time.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Appointment.
@@ -130,51 +131,46 @@ public class AppointmentResource {
     }
 
     /**
-     * GET  /patient-cards : get all today expected arrival patients.
+     * GET  /appointments/patient-cards : get all patient cards between start and end time interval
      *
-     * @param pageable the pagination information
-     * @return the ResponseEntity with status 200 (OK) and the list of patients in body
+     * @param start the start time
+     * @param end the end time
+     * @param doctorId the doctor id of the appointment
+     * @return the ResponseEntity with status 200 (OK) and the list of PatientCardVM in body
      */
     @GetMapping("/appointments/patient-cards")
     @Timed
-    public ResponseEntity<List<PatientCardVM>> getAllPatientCards(Pageable pageable) {
-        log.debug("REST request to get appointment patient cards");
-        Instant start = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MIN).toInstant();
-        Instant end = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MAX).toInstant();
-        Page<Appointment> appointments = appointmentRepository.findByRegistrationIsNullAndExpectedArrivalTimeBetween(start, end, pageable);
+    public ResponseEntity<List<PatientCardVM>> getAllPatientCards(@RequestParam(required = false) Instant start, @RequestParam(required = false) Instant end, @RequestParam(required = false) Long doctorId) {
+        List<Appointment> appointments = null;
 
-        Page<PatientCardVM> page = appointments
-            .map(appointment -> {
-                PatientCardVM card = new PatientCardVM();
+        // default start & end time is today
+        if (start == null && end == null) {
+            start = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MIN).toInstant();
+            end = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MAX).toInstant();
+            appointments = appointmentRepository.findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end);
+        }
 
-                Patient patient = appointment.getPatient();
-                card.setName(patient.getName());
-                card.setGender(patient.getGender().getValue());
-                card.setMedicalId(patient.getMedicalId());
-                card.setBirthday(patient.getBirth());
-                card.setDominantDoctor(patient.getDominantDoctor());
-                card.setFirstDoctor(patient.getFirstDoctor());
-                card.setReminder(patient.getReminder());
-                card.setLastModifiedDate(patient.getLastModifiedDate());
-                card.setWriteIcTime(patient.getWriteIcTime());
-                card.setLineId(patient.getLineId());
-                card.setFbId(patient.getFbId());
-                card.setTags(patient.getTags());
+        if (start != null && end != null) {
+            appointments = appointmentRepository.findByExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end);
+        }
 
-                card.setExpectedArrivalTime(appointment.getExpectedArrivalTime());
-                card.setSubject(appointment.getSubject());
-                card.setNote(appointment.getNote());
-                card.setRequiredTreatmentTime(appointment.getRequiredTreatmentTime());
-                card.setNewPatient(appointment.isNewPatient());
-                card.setBaseFloor(appointment.isBaseFloor());
-                card.setMicroscope(appointment.isMicroscope());
+        log.debug("REST request to get appointment patient cards between {} and {}", start, end);
+        if (appointments == null) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
+        } else {
+            List<PatientCardVM> patientCardVMS = appointments
+                .stream()
+                .filter(appointment -> {
+                    if (doctorId == null) {
+                        return true;
+                    } else {
+                        return appointment.getDoctor().getId().equals(doctorId);
+                    }
+                })
+                .map(appointment -> new PatientCardVM(appointment.getPatient(), appointment, appointment.getRegistration()))
+                .collect(Collectors.toList());
 
-                card.setRegistration(null);
-
-                return card;
-            });
-
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/appointments/patient-cards");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+            return new ResponseEntity<>(patientCardVMS, HttpStatus.OK);
+        }
     }
 }

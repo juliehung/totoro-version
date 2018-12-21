@@ -3,7 +3,9 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 
 import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
@@ -135,6 +137,7 @@ public class AppointmentResourceIntTest {
     @Before
     public void initTest() {
         appointment = createEntity(em);
+        appointment.setDoctor(userRepository.save(UserResourceIntTest.createEntity(em)).getExtendUser());
     }
 
     @Test
@@ -160,6 +163,7 @@ public class AppointmentResourceIntTest {
         assertThat(testAppointment.isMicroscope()).isEqualTo(DEFAULT_MICROSCOPE);
         assertThat(testAppointment.isNewPatient()).isEqualTo(DEFAULT_NEW_PATIENT);
         assertThat(testAppointment.isBaseFloor()).isEqualTo(DEFAULT_BASE_FLOOR);
+        assertThat(testAppointment.getDoctor()).isEqualTo(appointment.getDoctor());
     }
 
     @Test
@@ -351,7 +355,7 @@ public class AppointmentResourceIntTest {
         appointmentRepository.saveAndFlush(appointment);
 
         Object jsonNull = null;
-        restAppointmentMockMvc.perform(get("/api/appointments/patient-cards?sort=expectedArrivalTime,desc"))
+        restAppointmentMockMvc.perform(get("/api/appointments/patient-cards"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].name").value(hasItem(patient.getName())))
@@ -374,6 +378,7 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[*].fbId").value(hasItem(patient.getFbId())))
             .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR)))
             .andExpect(jsonPath("$.[*].microscope").value(hasItem(DEFAULT_MICROSCOPE)))
-            .andExpect(jsonPath("$.[*].tags.[*].name").value(hasItem(patient.getTags().iterator().next().getName())));
+            .andExpect(jsonPath("$.[*].tags.[*].name").value(hasItem(patient.getTags().iterator().next().getName())))
+            .andExpect(jsonPath("$.[*].doctor.id").value(hasItem(appointment.getDoctor().getUser().getId().intValue())));
     }
 }

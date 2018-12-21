@@ -143,50 +143,21 @@ public class RegistrationResource {
     /**
      * GET  /patient-cards : get all -2 ~ 0 dates arrival patients.
      *
-     * @param pageable the pagination information
-     * @return the ResponseEntity with status 200 (OK) and the list of patients in body
+     * @return the ResponseEntity with status 200 (OK) and the list of PatientCardVM in body
      */
     @GetMapping("/registrations/patient-cards")
     @Timed
-    public ResponseEntity<List<PatientCardVM>> getAllPatientCards(Pageable pageable) {
-        log.debug("REST request to get registration patient cards");
+    public ResponseEntity<List<PatientCardVM>> getAllPatientCards() {
         Instant start = OffsetDateTime.now().minusDays(2).toZonedDateTime().with(LocalTime.MIN).toInstant();
         Instant end = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MAX).toInstant();
-        Page<Registration> registrations = registrationRepository.findByArrivalTimeBetween(start, end, pageable);
+        log.debug("REST request to get registration patient cards between {} and {}", start, end);
+        List<Registration> registrations = registrationRepository.findByArrivalTimeBetweenOrderByArrivalTimeAsc(start, end);
 
-        Page<PatientCardVM> page = registrations
-            .map(registration -> {
-                PatientCardVM card = new PatientCardVM();
+        List<PatientCardVM> patientCardVMS = registrations
+            .stream()
+            .map(registration -> new PatientCardVM(registration.getAppointment().getPatient(), registration.getAppointment(), registration))
+            .collect(Collectors.toList());
 
-                Appointment appointment = registration.getAppointment();
-                card.setExpectedArrivalTime(appointment.getExpectedArrivalTime());
-                card.setSubject(appointment.getSubject());
-                card.setNote(appointment.getNote());
-                card.setRequiredTreatmentTime(appointment.getRequiredTreatmentTime());
-                card.setNewPatient(appointment.isNewPatient());
-                card.setBaseFloor(appointment.isBaseFloor());
-                card.setMicroscope(appointment.isMicroscope());
-
-                Patient patient = appointment.getPatient();
-                card.setName(patient.getName());
-                card.setGender(patient.getGender().getValue());
-                card.setMedicalId(patient.getMedicalId());
-                card.setBirthday(patient.getBirth());
-                card.setDominantDoctor(patient.getDominantDoctor());
-                card.setFirstDoctor(patient.getFirstDoctor());
-                card.setReminder(patient.getReminder());
-                card.setLastModifiedDate(patient.getLastModifiedDate());
-                card.setWriteIcTime(patient.getWriteIcTime());
-                card.setLineId(patient.getLineId());
-                card.setFbId(patient.getFbId());
-                card.setTags(patient.getTags());
-
-                card.setRegistration(registration);
-
-                return card;
-            });
-
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/registrations/patient-cards");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(patientCardVMS, HttpStatus.OK);
     }
 }

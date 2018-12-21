@@ -1,8 +1,7 @@
 package io.dentall.totoro.web.rest.vm;
 
-import io.dentall.totoro.domain.ExtendUser;
-import io.dentall.totoro.domain.Registration;
-import io.dentall.totoro.domain.Tag;
+import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -38,7 +37,7 @@ public class PatientCardVM implements Serializable {
 
     private int requiredTreatmentTime;
 
-    private Boolean newPatient;
+    private boolean newPatient = false;
 
     private Integer registrationStatus;
 
@@ -61,6 +60,53 @@ public class PatientCardVM implements Serializable {
     private Boolean microscope;
 
     private Set<Tag> tags = new HashSet<>();
+
+    private Integer colorId;
+
+    private User doctor;
+
+    private String createdBy;
+
+    private Instant createdDate;
+
+    private boolean alreadyRegistered = false;
+
+    private boolean isCancel = false;
+
+    private boolean notArrived = false;
+
+    public PatientCardVM(Patient patient, Appointment appointment, Registration registration) {
+        // patient
+        setName(patient.getName());
+        setGender(patient.getGender().getValue());
+        setMedicalId(patient.getMedicalId());
+        setBirthday(patient.getBirth());
+        setDominantDoctor(patient.getDominantDoctor());
+        setFirstDoctor(patient.getFirstDoctor());
+        setReminder(patient.getReminder());
+        setLastModifiedDate(patient.getLastModifiedDate());
+        setWriteIcTime(patient.getWriteIcTime());
+        setLineId(patient.getLineId());
+        setFbId(patient.getFbId());
+        setTags(patient.getTags());
+
+        // appointment
+        setExpectedArrivalTime(appointment.getExpectedArrivalTime());
+        setSubject(appointment.getSubject());
+        setNote(appointment.getNote());
+        setRequiredTreatmentTime(appointment.getRequiredTreatmentTime());
+        setNewPatient(appointment.isNewPatient());
+        setBaseFloor(appointment.isBaseFloor());
+        setMicroscope(appointment.isMicroscope());
+        setColorId(appointment.getColorId());
+        setAppointmentStatus(appointment.getStatus());
+        setDoctor(appointment.getDoctor().getUser());
+        setCreatedBy(appointment.getCreatedBy());
+        setCreatedDate(appointment.getCreatedDate());
+
+        // registration
+        setRegistration(registration);
+    }
 
     public String getName() {
         return name;
@@ -136,12 +182,14 @@ public class PatientCardVM implements Serializable {
         this.requiredTreatmentTime = requiredTreatmentTime;
     }
 
-    public Boolean isNewPatient() {
+    public boolean isNewPatient() {
         return newPatient;
     }
 
     public void setNewPatient(Boolean newPatient) {
-        this.newPatient = newPatient;
+        if (newPatient != null && newPatient) {
+            this.newPatient = newPatient;
+        }
     }
 
     public String getFirstDoctor() {
@@ -228,6 +276,38 @@ public class PatientCardVM implements Serializable {
         this.tags = tags;
     }
 
+    public Integer getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(Integer colorId) {
+        this.colorId = colorId;
+    }
+
+    public User getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(User doctor) {
+        this.doctor = doctor;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
     public Integer getRegistrationType() {
         return registrationType;
     }
@@ -242,23 +322,31 @@ public class PatientCardVM implements Serializable {
 
     public void setRegistration(Registration registration) {
         if (registration == null) {
-            this.registrationType = null;
-            this.registrationStatus = null;
-            this.arrivalTime = null;
+            registrationType = null;
+            registrationStatus = null;
+            arrivalTime = null;
+            notArrived = true;
         } else {
             if (registration.getType() == null) {
-                this.registrationType = null;
+                registrationType = null;
             } else {
-                this.registrationType = registration.getType().getValue();
+                registrationType = registration.getType().getValue();
             }
 
             if (registration.getStatus() == null) {
-                this.registrationStatus = null;
+                registrationStatus = null;
             } else {
-                this.registrationStatus = registration.getStatus().getValue();
+                registrationStatus = registration.getStatus().getValue();
             }
 
-            this.arrivalTime = registration.getArrivalTime();
+            arrivalTime = registration.getArrivalTime();
+            alreadyRegistered = true;
+        }
+    }
+
+    public void setAppointmentStatus(AppointmentStatus status) {
+        if (status == AppointmentStatus.CANCEL) {
+            isCancel = true;
         }
     }
 }
