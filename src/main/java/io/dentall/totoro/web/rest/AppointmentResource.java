@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Appointment;
 import io.dentall.totoro.repository.AppointmentRepository;
+import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -40,8 +41,11 @@ public class AppointmentResource {
 
     private final AppointmentRepository appointmentRepository;
 
-    public AppointmentResource(AppointmentRepository appointmentRepository) {
+    private final AppointmentService appointmentService;
+
+    public AppointmentResource(AppointmentRepository appointmentRepository, AppointmentService appointmentService) {
         this.appointmentRepository = appointmentRepository;
+        this.appointmentService = appointmentService;
     }
 
     /**
@@ -80,10 +84,11 @@ public class AppointmentResource {
         if (appointment.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Appointment result = appointmentRepository.save(appointment);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, appointment.getId().toString()))
-            .body(result);
+
+        return ResponseUtil.wrapOrNotFound(
+            appointmentService.updateAppointment(appointment),
+            HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, appointment.getId().toString())
+        );
     }
 
     /**

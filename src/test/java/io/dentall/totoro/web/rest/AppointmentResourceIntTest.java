@@ -3,13 +3,14 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 
 import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
@@ -73,6 +74,9 @@ public class AppointmentResourceIntTest {
     private static final Boolean DEFAULT_BASE_FLOOR = false;
     private static final Boolean UPDATED_BASE_FLOOR = true;
 
+    private static final Boolean DEFAULT_ARCHIVED = false;
+    private static final Boolean UPDATED_ARCHIVED = true;
+
     @Autowired
     private AppointmentRepository appointmentRepository;
 
@@ -100,6 +104,9 @@ public class AppointmentResourceIntTest {
     @Autowired
     private PatientService patientService;
 
+    @Autowired
+    private AppointmentService appointmentService;
+
     private MockMvc restAppointmentMockMvc;
 
     private Appointment appointment;
@@ -107,7 +114,7 @@ public class AppointmentResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AppointmentResource appointmentResource = new AppointmentResource(appointmentRepository);
+        final AppointmentResource appointmentResource = new AppointmentResource(appointmentRepository, appointmentService);
         this.restAppointmentMockMvc = MockMvcBuilders.standaloneSetup(appointmentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -130,7 +137,8 @@ public class AppointmentResourceIntTest {
             .requiredTreatmentTime(DEFAULT_REQUIRED_TREATMENT_TIME)
             .microscope(DEFAULT_MICROSCOPE)
             .newPatient(DEFAULT_NEW_PATIENT)
-            .baseFloor(DEFAULT_BASE_FLOOR);
+            .baseFloor(DEFAULT_BASE_FLOOR)
+            .archived(DEFAULT_ARCHIVED);
         return appointment;
     }
 
@@ -163,6 +171,7 @@ public class AppointmentResourceIntTest {
         assertThat(testAppointment.isMicroscope()).isEqualTo(DEFAULT_MICROSCOPE);
         assertThat(testAppointment.isNewPatient()).isEqualTo(DEFAULT_NEW_PATIENT);
         assertThat(testAppointment.isBaseFloor()).isEqualTo(DEFAULT_BASE_FLOOR);
+        assertThat(testAppointment.isArchived()).isEqualTo(DEFAULT_ARCHIVED);
         assertThat(testAppointment.getDoctor()).isEqualTo(appointment.getDoctor());
     }
 
@@ -221,7 +230,8 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(hasItem(DEFAULT_REQUIRED_TREATMENT_TIME)))
             .andExpect(jsonPath("$.[*].microscope").value(hasItem(DEFAULT_MICROSCOPE.booleanValue())))
             .andExpect(jsonPath("$.[*].newPatient").value(hasItem(DEFAULT_NEW_PATIENT.booleanValue())))
-            .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR.booleanValue())));
+            .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR.booleanValue())))
+            .andExpect(jsonPath("$.[*].archived").value(hasItem(DEFAULT_ARCHIVED.booleanValue())));
     }
     
     @Test
@@ -242,7 +252,8 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.requiredTreatmentTime").value(DEFAULT_REQUIRED_TREATMENT_TIME))
             .andExpect(jsonPath("$.microscope").value(DEFAULT_MICROSCOPE.booleanValue()))
             .andExpect(jsonPath("$.newPatient").value(DEFAULT_NEW_PATIENT.booleanValue()))
-            .andExpect(jsonPath("$.baseFloor").value(DEFAULT_BASE_FLOOR.booleanValue()));
+            .andExpect(jsonPath("$.baseFloor").value(DEFAULT_BASE_FLOOR.booleanValue()))
+            .andExpect(jsonPath("$.archived").value(DEFAULT_ARCHIVED.booleanValue()));
     }
 
     @Test
@@ -265,6 +276,9 @@ public class AppointmentResourceIntTest {
         Appointment updatedAppointment = appointmentRepository.findById(appointment.getId()).get();
         // Disconnect from session so that the updates on updatedAppointment are not directly saved in db
         em.detach(updatedAppointment);
+
+        User updateUser = userRepository.save(UserResourceIntTest.createEntity(em));
+        Registration registration = RegistrationResourceIntTest.createEntity(em);
         updatedAppointment
             .status(UPDATED_STATUS)
             .subject(UPDATED_SUBJECT)
@@ -273,7 +287,10 @@ public class AppointmentResourceIntTest {
             .requiredTreatmentTime(UPDATED_REQUIRED_TREATMENT_TIME)
             .microscope(UPDATED_MICROSCOPE)
             .newPatient(UPDATED_NEW_PATIENT)
-            .baseFloor(UPDATED_BASE_FLOOR);
+            .baseFloor(null) // test unchanged with null
+            .archived(UPDATED_ARCHIVED)
+            .registration(registration)
+            .doctor(updateUser.getExtendUser());
 
         restAppointmentMockMvc.perform(put("/api/appointments")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -291,7 +308,10 @@ public class AppointmentResourceIntTest {
         assertThat(testAppointment.getRequiredTreatmentTime()).isEqualTo(UPDATED_REQUIRED_TREATMENT_TIME);
         assertThat(testAppointment.isMicroscope()).isEqualTo(UPDATED_MICROSCOPE);
         assertThat(testAppointment.isNewPatient()).isEqualTo(UPDATED_NEW_PATIENT);
-        assertThat(testAppointment.isBaseFloor()).isEqualTo(UPDATED_BASE_FLOOR);
+        assertThat(testAppointment.isBaseFloor()).isEqualTo(DEFAULT_BASE_FLOOR);
+        assertThat(testAppointment.isArchived()).isEqualTo(UPDATED_ARCHIVED);
+        assertThat(testAppointment.getRegistration().getStatus()).isEqualTo(registration.getStatus());
+        assertThat(testAppointment.getDoctor().getId()).isEqualTo(updateUser.getId());
     }
 
     @Test

@@ -59,6 +59,9 @@ public class Appointment extends AbstractAuditingEntity implements Serializable 
     @Column(name = "color_id")
     private Integer colorId;
 
+    @Column(name = "archived")
+    private Boolean archived;
+
     @ManyToOne
     @JsonIgnoreProperties("appointments")
     private Patient patient;
@@ -197,6 +200,19 @@ public class Appointment extends AbstractAuditingEntity implements Serializable 
         this.colorId = colorId;
     }
 
+    public Boolean isArchived() {
+        return archived;
+    }
+
+    public Appointment archived(Boolean archived) {
+        this.archived = archived;
+        return this;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
+    }
+
     public Patient getPatient() {
         return patient;
     }
@@ -284,6 +300,7 @@ public class Appointment extends AbstractAuditingEntity implements Serializable 
             ", newPatient='" + isNewPatient() + "'" +
             ", baseFloor='" + isBaseFloor() + "'" +
             ", colorId=" + getColorId() +
+            ", archived='" + isArchived() + "'" +
             "}";
     }
 }
