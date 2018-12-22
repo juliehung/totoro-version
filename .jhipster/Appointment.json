@@ -40,6 +40,10 @@
         {
             "fieldName": "colorId",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "archived",
+            "fieldType": "Boolean"
         }
     ],
     "relationships": [
