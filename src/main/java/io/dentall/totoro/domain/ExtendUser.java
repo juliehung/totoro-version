@@ -6,9 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A ExtendUser.
@@ -55,6 +53,14 @@ public class ExtendUser implements Serializable {
     @OneToMany(mappedBy = "doctor")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Appointment> appointments = new HashSet<>();
+
+    @OneToMany(mappedBy = "doctor")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
+
+    @OneToMany(mappedBy = "doctor")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<TreatmentTask> treatmentTasks = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -207,6 +213,56 @@ public class ExtendUser implements Serializable {
 
     public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
+    }
+
+    public Set<TreatmentProcedure> getTreatmentProcedures() {
+        return treatmentProcedures;
+    }
+
+    public ExtendUser treatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
+        this.treatmentProcedures = treatmentProcedures;
+        return this;
+    }
+
+    public ExtendUser addTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
+        this.treatmentProcedures.add(treatmentProcedure);
+        treatmentProcedure.setDoctor(this);
+        return this;
+    }
+
+    public ExtendUser removeTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
+        this.treatmentProcedures.remove(treatmentProcedure);
+        treatmentProcedure.setDoctor(null);
+        return this;
+    }
+
+    public void setTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
+        this.treatmentProcedures = treatmentProcedures;
+    }
+
+    public Set<TreatmentTask> getTreatmentTasks() {
+        return treatmentTasks;
+    }
+
+    public ExtendUser treatmentTasks(Set<TreatmentTask> treatmentTasks) {
+        this.treatmentTasks = treatmentTasks;
+        return this;
+    }
+
+    public ExtendUser addTreatmentTask(TreatmentTask treatmentTask) {
+        this.treatmentTasks.add(treatmentTask);
+        treatmentTask.setDoctor(this);
+        return this;
+    }
+
+    public ExtendUser removeTreatmentTask(TreatmentTask treatmentTask) {
+        this.treatmentTasks.remove(treatmentTask);
+        treatmentTask.setDoctor(null);
+        return this;
+    }
+
+    public void setTreatmentTasks(Set<TreatmentTask> treatmentTasks) {
+        this.treatmentTasks = treatmentTasks;
     }
 
     @Override

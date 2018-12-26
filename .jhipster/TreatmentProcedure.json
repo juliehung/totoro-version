@@ -1,0 +1,44 @@
+{
+    "name": "TreatmentProcedure",
+    "fields": [
+        {
+            "fieldName": "price",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "teeth",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "surfaces",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nhiDeclared",
+            "fieldType": "Boolean"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "nhiProcedure",
+            "otherEntityName": "nHIProcedure",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "treatmentTask",
+            "otherEntityName": "treatmentTask",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181224042541",
+    "entityTableName": "treatment_procedure",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

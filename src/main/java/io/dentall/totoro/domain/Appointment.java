@@ -72,7 +72,7 @@ public class Appointment extends AbstractAuditingEntity implements Serializable 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     @ManyToOne
-    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments"})
+    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks"})
     private ExtendUser doctor;
 
     public Long getId() {

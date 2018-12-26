@@ -47,5 +47,17 @@
                   separator=";"
                   tableName="patient_tag">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_procedures.csv"
+                  separator=";"
+                  tableName="nhi_procedure">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_categories.csv"
+                  separator=";"
+                  tableName="nhi_category">
+        </loadData>
     </changeSet>
 </databaseChangeLog>

@@ -1,0 +1,26 @@
+{
+  "totoroApp": {
+    "treatmentProcedure": {
+      "home": {
+        "title": "Treatment Procedures",
+        "createLabel": "建立一筆新的 Treatment Procedure",
+        "createOrEditLabel": "建立或編輯 Treatment Procedure"
+      },
+      "created": "新的 Treatment Procedure 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Treatment Procedure 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Treatment Procedure 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Treatment Procedure {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Treatment Procedure"
+      },
+      "price": "Price",
+      "teeth": "Teeth",
+      "surfaces": "Surfaces",
+      "nhiDeclared": "Nhi Declared",
+      "nhiProcedure": "Nhi Procedure",
+      "treatmentTask": "Treatment Task"
+    }
+  }
+}

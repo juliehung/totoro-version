@@ -1,0 +1,43 @@
+{
+    "name": "TreatmentTask",
+    "fields": [
+        {
+            "fieldName": "status",
+            "fieldType": "TreatmentTaskStatus",
+            "fieldValues": "PLANNED,IN_PROGRESS,COMPLETED,CANCEL"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "teeth",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "surfaces",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "note",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "treatmentProcedure",
+            "otherEntityName": "treatmentProcedure",
+            "otherEntityRelationshipName": "treatmentTask"
+        }
+    ],
+    "changelogDate": "20181224042540",
+    "entityTableName": "treatment_task",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

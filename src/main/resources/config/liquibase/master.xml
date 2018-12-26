@@ -11,10 +11,16 @@
     <include file="config/liquibase/changelog/20181019094009_added_entity_Registration.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181115021401_added_entity_Tag.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181207024725_added_entity_Questionnaire.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181224042540_added_entity_TreatmentTask.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181224042541_added_entity_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181224042542_added_entity_NHIProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181224071116_added_entity_NHICategory.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/20181024_addColumn_Patient.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181217_addColumn_Appointment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181226_addColumn_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181226_addColumn_TreatmentTask.xml" relativeToChangelogFile="false"/>
 
     <!-- add default value -->
     <include file="config/liquibase/changelog/20181024_addDefaultValue_Appointment.xml" relativeToChangelogFile="false"/>
@@ -27,9 +33,12 @@
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20181019094008_added_entity_constraints_Appointment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181019094007_added_entity_constraints_Patient.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181224042541_added_entity_constraints_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 
     <!-- add custom constraints -->
     <include file="config/liquibase/changelog/20181023_added_entity_constraints_Patient.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181217_added_entity_constraints_Appointment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181226_added_entity_constraints_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181226_added_entity_constraints_TreatmentTask.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
