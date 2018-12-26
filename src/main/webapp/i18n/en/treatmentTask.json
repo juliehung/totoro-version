@@ -1,0 +1,27 @@
+
+{
+    "totoroApp": {
+        "treatmentTask" : {
+            "home": {
+                "title": "Treatment Tasks",
+                "createLabel": "Create a new Treatment Task",
+                "createOrEditLabel": "Create or edit a Treatment Task"
+            },
+            "created": "A new Treatment Task is created with identifier {{ param }}",
+            "updated": "A Treatment Task is updated with identifier {{ param }}",
+            "deleted": "A Treatment Task is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Treatment Task {{ id }}?"
+            },
+            "detail": {
+                "title": "Treatment Task"
+            },
+            "status": "Status",
+            "description": "Description",
+            "teeth": "Teeth",
+            "surfaces": "Surfaces",
+            "note": "Note",
+            "treatmentProcedure": "Treatment Procedure"
+        }
+    }
+}

@@ -32,6 +32,22 @@ import tag, {
 import questionnaire, {
   QuestionnaireState
 } from 'app/entities/questionnaire/questionnaire.reducer';
+// prettier-ignore
+import treatmentTask, {
+  TreatmentTaskState
+} from 'app/entities/treatment-task/treatment-task.reducer';
+// prettier-ignore
+import treatmentProcedure, {
+  TreatmentProcedureState
+} from 'app/entities/treatment-procedure/treatment-procedure.reducer';
+// prettier-ignore
+import nHIProcedure, {
+  NHIProcedureState
+} from 'app/entities/nhi-procedure/nhi-procedure.reducer';
+// prettier-ignore
+import nHICategory, {
+  NHICategoryState
+} from 'app/entities/nhi-category/nhi-category.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -50,6 +66,10 @@ export interface IRootState {
   readonly registration: RegistrationState;
   readonly tag: TagState;
   readonly questionnaire: QuestionnaireState;
+  readonly treatmentTask: TreatmentTaskState;
+  readonly treatmentProcedure: TreatmentProcedureState;
+  readonly nHIProcedure: NHIProcedureState;
+  readonly nHICategory: NHICategoryState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -70,6 +90,10 @@ const rootReducer = combineReducers<IRootState>({
   registration,
   tag,
   questionnaire,
+  treatmentTask,
+  treatmentProcedure,
+  nHIProcedure,
+  nHICategory,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

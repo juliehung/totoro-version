@@ -1,0 +1,11 @@
+{
+    "totoroApp": {
+        "TreatmentTaskStatus" : {
+            "null": "",
+            "PLANNED": "PLANNED",
+            "IN_PROGRESS": "IN_PROGRESS",
+            "COMPLETED": "COMPLETED",
+            "CANCEL": "CANCEL"
+        }
+    }
+}

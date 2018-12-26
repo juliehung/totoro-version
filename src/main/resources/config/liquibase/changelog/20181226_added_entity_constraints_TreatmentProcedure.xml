@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity TreatmentProcedure.
+    -->
+    <changeSet id="20181226-addedEntityConstraintsTreatmentProcedure" author="Jim">
+
+        <addForeignKeyConstraint baseColumnNames="doctor_user_id"
+                                 baseTableName="treatment_procedure"
+                                 constraintName="fk_treatment_procedure_doctor_user_id"
+                                 referencedColumnNames="user_id"
+                                 referencedTableName="extend_user"/>
+
+    </changeSet>
+</databaseChangeLog>
