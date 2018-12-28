@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Translate, ICrudGetAction, openFile, byteSize, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -143,11 +143,17 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
             </dt>
             <dd>{patientEntity.fbId}</dd>
             <dt>
-              <span id="reminder">
-                <Translate contentKey="totoroApp.patient.reminder">Reminder</Translate>
+              <span id="note">
+                <Translate contentKey="totoroApp.patient.note">Note</Translate>
               </span>
             </dt>
-            <dd>{patientEntity.reminder}</dd>
+            <dd>{patientEntity.note}</dd>
+            <dt>
+              <span id="treatmentNote">
+                <Translate contentKey="totoroApp.patient.treatmentNote">Treatment Note</Translate>
+              </span>
+            </dt>
+            <dd>{patientEntity.treatmentNote}</dd>
             <dt>
               <span id="writeIcTime">
                 <Translate contentKey="totoroApp.patient.writeIcTime">Write Ic Time</Translate>
@@ -162,6 +168,23 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
               </span>
             </dt>
             <dd>{patientEntity.burdenCost}</dd>
+            <dt>
+              <span id="avatar">
+                <Translate contentKey="totoroApp.patient.avatar">Avatar</Translate>
+              </span>
+            </dt>
+            <dd>
+              {patientEntity.avatar ? (
+                <div>
+                  <a onClick={openFile(patientEntity.avatarContentType, patientEntity.avatar)}>
+                    <img src={`data:${patientEntity.avatarContentType};base64,${patientEntity.avatar}`} style={{ maxHeight: '30px' }} />
+                  </a>
+                  <span>
+                    {patientEntity.avatarContentType}, {byteSize(patientEntity.avatar)}
+                  </span>
+                </div>
+              ) : null}
+            </dd>
             <dt>
               <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate>
             </dt>

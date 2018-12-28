@@ -1,5 +1,7 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.SecurityUtils;
 import org.slf4j.Logger;
@@ -22,11 +24,14 @@ public class ImageService {
 
     private final UserRepository userRepository;
 
-    public ImageService(UserRepository userRepository) {
+    private final PatientRepository patientRepository;
+
+    public ImageService(UserRepository userRepository, PatientRepository patientRepository) {
         this.userRepository = userRepository;
+        this.patientRepository = patientRepository;
     }
 
-    public Optional<String> storeAvatar(MultipartFile file) {
+    public Optional<String> storeUserAvatar(MultipartFile file) {
         return SecurityUtils.getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
             .flatMap(user -> {
@@ -45,5 +50,18 @@ public class ImageService {
                     return Optional.empty();
                 }
             });
+    }
+
+    public Optional<Patient> storePatientAvatar(Long id, MultipartFile file) throws IOException {
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isPresent()) {
+            patient.get().setAvatar(file.getBytes());
+            patient.get().setAvatarContentType(file.getContentType());
+            log.debug("Set Avatar for Patient");
+
+            return patient;
+        } else {
+            return Optional.empty();
+        }
     }
 }

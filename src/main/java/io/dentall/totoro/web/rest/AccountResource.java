@@ -12,6 +12,7 @@ import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.dto.PasswordChangeDTO;
 import io.dentall.totoro.service.dto.UserDTO;
 import io.dentall.totoro.web.rest.errors.*;
+import io.dentall.totoro.web.rest.util.AvatarUtil;
 import io.dentall.totoro.web.rest.vm.AvatarVM;
 import io.dentall.totoro.web.rest.vm.KeyAndPasswordVM;
 import io.dentall.totoro.web.rest.vm.ManagedUserVM;
@@ -200,7 +201,7 @@ public class AccountResource {
     @PostMapping("/account/avatar")
     @Timed
     public String uploadAvatar(@RequestParam("file") MultipartFile file) {
-        return imageService.storeAvatar(file).orElseThrow(() -> new InternalServerErrorException("User could not store avatar"));
+        return imageService.storeUserAvatar(file).orElseThrow(() -> new InternalServerErrorException("User could not store avatar"));
     }
 
     /**
@@ -213,17 +214,7 @@ public class AccountResource {
     public ResponseEntity<AvatarVM> getAvatar() {
         ExtendUser extendUser = userService.getUserWithAuthorities().map(User::getExtendUser)
             .orElseThrow(() -> new InternalServerErrorException("No extendUser was found"));
-
-        if (extendUser.getAvatar() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(
-                new AvatarVM(
-                    extendUser.getAvatarContentType(),
-                    Base64.getEncoder().withoutPadding().encodeToString(extendUser.getAvatar())),
-                HttpStatus.OK
-            );
-        }
+        return AvatarUtil.responseAvatarVM(extendUser);
     }
 
     private static boolean checkPasswordLength(String password) {

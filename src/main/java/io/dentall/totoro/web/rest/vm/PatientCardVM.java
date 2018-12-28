@@ -6,6 +6,7 @@ import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,9 +44,11 @@ public class PatientCardVM implements Serializable {
 
     private String firstDoctor;
 
-    private String reminder;
+    private String patientNote;
 
-    private String note;
+    private String patientClinicNote;
+
+    private String appointmentNote;
 
     private Instant lastModifiedDate;
 
@@ -69,6 +72,8 @@ public class PatientCardVM implements Serializable {
 
     private Instant createdDate;
 
+    private AvatarVM avatar;
+
     private boolean alreadyRegistered = false;
 
     private boolean isCancel = false;
@@ -83,17 +88,21 @@ public class PatientCardVM implements Serializable {
         setBirthday(patient.getBirth());
         setDominantDoctor(patient.getDominantDoctor());
         setFirstDoctor(patient.getFirstDoctor());
-        setReminder(patient.getReminder());
+        setPatientNote(patient.getNote());
+        setPatientClinicNote(patient.getClinicNote());
         setLastModifiedDate(patient.getLastModifiedDate());
         setWriteIcTime(patient.getWriteIcTime());
         setLineId(patient.getLineId());
         setFbId(patient.getFbId());
         setTags(patient.getTags());
+        if (patient.getAvatar() != null) {
+            setAvatar(new AvatarVM(patient));
+        }
 
         // appointment
         setExpectedArrivalTime(appointment.getExpectedArrivalTime());
         setSubject(appointment.getSubject());
-        setNote(appointment.getNote());
+        setAppointmentNote(appointment.getNote());
         setRequiredTreatmentTime(appointment.getRequiredTreatmentTime());
         setNewPatient(appointment.isNewPatient());
         setBaseFloor(appointment.isBaseFloor());
@@ -202,20 +211,28 @@ public class PatientCardVM implements Serializable {
         }
     }
 
-    public String getReminder() {
-        return reminder;
+    public String getPatientNote() {
+        return patientNote;
     }
 
-    public void setReminder(String reminder) {
-        this.reminder = reminder;
+    public void setPatientNote(String patientNote) {
+        this.patientNote = patientNote;
     }
 
-    public String getNote() {
-        return note;
+    public String getPatientClinicNote() {
+        return patientClinicNote;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setPatientClinicNote(String patientClinicNote) {
+        this.patientClinicNote = patientClinicNote;
+    }
+
+    public String getAppointmentNote() {
+        return appointmentNote;
+    }
+
+    public void setAppointmentNote(String appointmentNote) {
+        this.appointmentNote = appointmentNote;
     }
 
     public Instant getLastModifiedDate() {
@@ -306,6 +323,14 @@ public class PatientCardVM implements Serializable {
 
     public void setCreatedDate(Instant createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public AvatarVM getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(AvatarVM avatar) {
+        this.avatar = avatar;
     }
 
     public Integer getRegistrationType() {

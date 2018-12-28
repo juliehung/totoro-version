@@ -26,7 +26,7 @@ import io.dentall.totoro.domain.enumeration.Blood;
 @Entity
 @Table(name = "patient")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Patient extends AbstractAuditingEntity implements Serializable {
+public class Patient extends AbstractAuditingEntity implements Serializable, Avatar {
 
     private static final long serialVersionUID = 1L;
 
@@ -62,9 +62,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "photo")
-    private String photo;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "blood")
     private Blood blood;
@@ -93,14 +90,25 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
     @Column(name = "fb_id")
     private String fbId;
 
-    @Column(name = "reminder")
-    private String reminder;
+    @Column(name = "note")
+    private String note;
+
+    @Column(name = "clinic_note")
+    private String clinicNote;
 
     @Column(name = "write_ic_time")
     private Instant writeIcTime;
 
     @Column(name = "burden_cost")
     private Integer burdenCost;
+
+    
+    @Lob
+    @Column(name = "avatar")
+    private byte[] avatar;
+
+    @Column(name = "avatar_content_type")
+    private String avatarContentType;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
@@ -261,19 +269,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
         this.email = email;
     }
 
-    public String getPhoto() {
-        return photo;
-    }
-
-    public Patient photo(String photo) {
-        this.photo = photo;
-        return this;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
     public Blood getBlood() {
         return blood;
     }
@@ -391,17 +386,30 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
         this.fbId = fbId;
     }
 
-    public String getReminder() {
-        return reminder;
+    public String getNote() {
+        return note;
     }
 
-    public Patient reminder(String reminder) {
-        this.reminder = reminder;
+    public Patient note(String note) {
+        this.note = note;
         return this;
     }
 
-    public void setReminder(String reminder) {
-        this.reminder = reminder;
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getClinicNote() {
+        return clinicNote;
+    }
+
+    public Patient clinicNote(String clinicNote) {
+        this.clinicNote = clinicNote;
+        return this;
+    }
+
+    public void setClinicNote(String clinicNote) {
+        this.clinicNote = clinicNote;
     }
 
     public Instant getWriteIcTime() {
@@ -428,6 +436,34 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
 
     public void setBurdenCost(Integer burdenCost) {
         this.burdenCost = burdenCost;
+    }
+
+    @Override
+    public byte[] getAvatar() {
+        return avatar;
+    }
+
+    public Patient avatar(byte[] avatar) {
+        this.avatar = avatar;
+        return this;
+    }
+
+    public void setAvatar(byte[] avatar) {
+        this.avatar = avatar;
+    }
+
+    @Override
+    public String getAvatarContentType() {
+        return avatarContentType;
+    }
+
+    public Patient avatarContentType(String avatarContentType) {
+        this.avatarContentType = avatarContentType;
+        return this;
+    }
+
+    public void setAvatarContentType(String avatarContentType) {
+        this.avatarContentType = avatarContentType;
     }
 
     public Questionnaire getQuestionnaire() {
@@ -679,7 +715,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
             ", medicalId='" + getMedicalId() + "'" +
             ", address='" + getAddress() + "'" +
             ", email='" + getEmail() + "'" +
-            ", photo='" + getPhoto() + "'" +
             ", blood='" + getBlood() + "'" +
             ", cardId='" + getCardId() + "'" +
             ", vip='" + getVip() + "'" +
@@ -689,9 +724,12 @@ public class Patient extends AbstractAuditingEntity implements Serializable {
             ", scaling='" + getScaling() + "'" +
             ", lineId='" + getLineId() + "'" +
             ", fbId='" + getFbId() + "'" +
-            ", reminder='" + getReminder() + "'" +
+            ", note='" + getNote() + "'" +
+            ", clinicNote='" + getClinicNote() + "'" +
             ", writeIcTime='" + getWriteIcTime() + "'" +
             ", burdenCost=" + getBurdenCost() +
+            ", avatar='" + getAvatar() + "'" +
+            ", avatarContentType='" + getAvatarContentType() + "'" +
             "}";
     }
 }

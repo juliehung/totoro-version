@@ -4,6 +4,8 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
 import {
+  openFile,
+  byteSize,
   Translate,
   ICrudGetAllAction,
   TextFormat,
@@ -129,14 +131,20 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('fbId')}>
                   <Translate contentKey="totoroApp.patient.fbId">Fb Id</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('reminder')}>
-                  <Translate contentKey="totoroApp.patient.reminder">Reminder</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('note')}>
+                  <Translate contentKey="totoroApp.patient.note">Note</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('treatmentNote')}>
+                  <Translate contentKey="totoroApp.patient.treatmentNote">Treatment Note</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('writeIcTime')}>
                   <Translate contentKey="totoroApp.patient.writeIcTime">Write Ic Time</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('burdenCost')}>
                   <Translate contentKey="totoroApp.patient.burdenCost">Burden Cost</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('avatar')}>
+                  <Translate contentKey="totoroApp.patient.avatar">Avatar</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th>
                   <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate> <FontAwesomeIcon icon="sort" />
@@ -183,11 +191,25 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                   </td>
                   <td>{patient.lineId}</td>
                   <td>{patient.fbId}</td>
-                  <td>{patient.reminder}</td>
+                  <td>{patient.note}</td>
+                  <td>{patient.treatmentNote}</td>
                   <td>
                     <TextFormat type="date" value={patient.writeIcTime} format={APP_DATE_FORMAT} />
                   </td>
                   <td>{patient.burdenCost}</td>
+                  <td>
+                    {patient.avatar ? (
+                      <div>
+                        <a onClick={openFile(patient.avatarContentType, patient.avatar)}>
+                          <img src={`data:${patient.avatarContentType};base64,${patient.avatar}`} style={{ maxHeight: '30px' }} />
+                          &nbsp;
+                        </a>
+                        <span>
+                          {patient.avatarContentType}, {byteSize(patient.avatar)}
+                        </span>
+                      </div>
+                    ) : null}
+                  </td>
                   <td>
                     {patient.questionnaire ? <Link to={`questionnaire/${patient.questionnaire.id}`}>{patient.questionnaire.id}</Link> : ''}
                   </td>

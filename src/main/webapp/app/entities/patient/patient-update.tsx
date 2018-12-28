@@ -4,7 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col, Label } from 'reactstrap';
 import { AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Translate, translate, ICrudGetAction, ICrudGetAllAction, setFileData, openFile, byteSize, ICrudPutAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
@@ -13,7 +13,7 @@ import { getEntities as getQuestionnaires } from 'app/entities/questionnaire/que
 import { getEntities as getPatients } from 'app/entities/patient/patient.reducer';
 import { ITag } from 'app/shared/model/tag.model';
 import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
-import { getEntity, updateEntity, createEntity, reset } from './patient.reducer';
+import { getEntity, updateEntity, createEntity, setBlob, reset } from './patient.reducer';
 import { IPatient } from 'app/shared/model/patient.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
@@ -47,6 +47,12 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
     };
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
+      this.handleClose();
+    }
+  }
+
   componentDidMount() {
     if (this.state.isNew) {
       this.props.reset();
@@ -58,6 +64,14 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
     this.props.getPatients();
     this.props.getTags();
   }
+
+  onBlobChange = (isAnImage, name) => event => {
+    setFileData(event, (contentType, data) => this.props.setBlob(name, data, contentType), isAnImage);
+  };
+
+  clearBlob = name => () => {
+    this.props.setBlob(name, undefined, undefined);
+  };
 
   saveEntity = (event, errors, values) => {
     values.deleteDate = new Date(values.deleteDate);
@@ -78,7 +92,6 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
       } else {
         this.props.updateEntity(entity);
       }
-      this.handleClose();
     }
   };
 
@@ -89,6 +102,8 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
   render() {
     const { patientEntity, questionnaires, patients, tags, loading, updating } = this.props;
     const { isNew } = this.state;
+
+    const { avatar, avatarContentType } = patientEntity;
 
     return (
       <div>
@@ -280,10 +295,16 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   <AvField id="patient-fbId" type="text" name="fbId" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="reminderLabel" for="reminder">
-                    <Translate contentKey="totoroApp.patient.reminder">Reminder</Translate>
+                  <Label id="noteLabel" for="note">
+                    <Translate contentKey="totoroApp.patient.note">Note</Translate>
                   </Label>
-                  <AvField id="patient-reminder" type="text" name="reminder" />
+                  <AvField id="patient-note" type="text" name="note" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="treatmentNoteLabel" for="treatmentNote">
+                    <Translate contentKey="totoroApp.patient.treatmentNote">Treatment Note</Translate>
+                  </Label>
+                  <AvField id="patient-treatmentNote" type="text" name="treatmentNote" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="writeIcTimeLabel" for="writeIcTime">
@@ -302,6 +323,36 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                     <Translate contentKey="totoroApp.patient.burdenCost">Burden Cost</Translate>
                   </Label>
                   <AvField id="patient-burdenCost" type="string" className="form-control" name="burdenCost" />
+                </AvGroup>
+                <AvGroup>
+                  <AvGroup>
+                    <Label id="avatarLabel" for="avatar">
+                      <Translate contentKey="totoroApp.patient.avatar">Avatar</Translate>
+                    </Label>
+                    <br />
+                    {avatar ? (
+                      <div>
+                        <a onClick={openFile(avatarContentType, avatar)}>
+                          <img src={`data:${avatarContentType};base64,${avatar}`} style={{ maxHeight: '100px' }} />
+                        </a>
+                        <br />
+                        <Row>
+                          <Col md="11">
+                            <span>
+                              {avatarContentType}, {byteSize(avatar)}
+                            </span>
+                          </Col>
+                          <Col md="1">
+                            <Button color="danger" onClick={this.clearBlob('avatar')}>
+                              <FontAwesomeIcon icon="times-circle" />
+                            </Button>
+                          </Col>
+                        </Row>
+                      </div>
+                    ) : null}
+                    <input id="file_avatar" type="file" onChange={this.onBlobChange(true, 'avatar')} accept="image/*" />
+                    <AvInput type="hidden" name="avatar" value={avatar} validate={{}} />
+                  </AvGroup>
                 </AvGroup>
                 <AvGroup>
                   <Label for="questionnaire.id">
@@ -427,7 +478,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   tags: storeState.tag.entities,
   patientEntity: storeState.patient.entity,
   loading: storeState.patient.loading,
-  updating: storeState.patient.updating
+  updating: storeState.patient.updating,
+  updateSuccess: storeState.patient.updateSuccess
 });
 
 const mapDispatchToProps = {
@@ -436,6 +488,7 @@ const mapDispatchToProps = {
   getTags,
   getEntity,
   updateEntity,
+  setBlob,
   createEntity,
   reset
 };

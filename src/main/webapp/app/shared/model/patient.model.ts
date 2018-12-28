@@ -38,9 +38,12 @@ export interface IPatient {
   scaling?: Moment;
   lineId?: string;
   fbId?: string;
-  reminder?: string;
+  note?: string;
+  treatmentNote?: string;
   writeIcTime?: Moment;
   burdenCost?: number;
+  avatarContentType?: string;
+  avatar?: any;
   questionnaire?: IQuestionnaire;
   appointments?: IAppointment[];
   introducer?: IPatient;

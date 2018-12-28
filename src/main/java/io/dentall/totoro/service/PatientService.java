@@ -97,10 +97,6 @@ public class PatientService {
                 patient.setEmail(updatePatient.getEmail());
             }
 
-            if (updatePatient.getPhoto() != null) {
-                patient.setPhoto(updatePatient.getPhoto());
-            }
-
             if (updatePatient.getBlood() != null) {
                 patient.setBlood(updatePatient.getBlood());
             }
@@ -137,8 +133,12 @@ public class PatientService {
                 patient.setFbId(updatePatient.getFbId());
             }
 
-            if (updatePatient.getReminder() != null) {
-                patient.setReminder(updatePatient.getReminder());
+            if (updatePatient.getNote() != null) {
+                patient.setNote(updatePatient.getNote());
+            }
+
+            if (updatePatient.getClinicNote() != null) {
+                patient.setClinicNote(updatePatient.getClinicNote());
             }
 
             if (updatePatient.getWriteIcTime() != null) {
