@@ -1,50 +1,51 @@
-
 {
-    "totoroApp": {
-        "patient" : {
-            "home": {
-                "title": "Patients",
-                "createLabel": "建立一筆新的 Patient",
-                "createOrEditLabel": "建立或編輯 Patient"
-            },
-            "created": "新的 Patient 建立成功，識別碼為 {{ param }}",
-            "updated": "識別碼為 {{ param }} 的 Patient 更新成功",
-            "deleted": "識別碼為 {{ param }} 的 Patient 刪除成功",
-            "delete": {
-                "question": "您確定要刪除 Patient {{ id }} 嗎?"
-            },
-            "detail": {
-                "title": "Patient"
-            },
-            "name": "Name",
-            "phone": "Phone",
-            "gender": "Gender",
-            "birth": "Birth",
-            "nationalId": "National Id",
-            "medicalId": "Medical Id",
-            "address": "Address",
-            "email": "Email",
-            "photo": "Photo",
-            "blood": "Blood",
-            "cardId": "Card Id",
-            "vip": "Vip",
-            "emergencyName": "Emergency Name",
-            "emergencyPhone": "Emergency Phone",
-            "deleteDate": "Delete Date",
-            "scaling": "Scaling",
-            "lineId": "Line Id",
-            "fbId": "Fb Id",
-            "reminder": "Reminder",
-            "writeIcTime": "Write Ic Time",
-            "burdenCost": "Burden Cost",
-            "questionnaire": "Questionnaire",
-            "appointment": "Appointment",
-            "introducer": "Introducer",
-            "parent": "Parent",
-            "spouse1": "Spouse 1",
-            "tag": "Tag",
-            "child": "Child",
-            "spouse2": "Spouse 2"
-        }
+  "totoroApp": {
+    "patient": {
+      "home": {
+        "title": "Patients",
+        "createLabel": "建立一筆新的 Patient",
+        "createOrEditLabel": "建立或編輯 Patient"
+      },
+      "created": "新的 Patient 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Patient 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Patient 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Patient {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Patient"
+      },
+      "name": "Name",
+      "phone": "Phone",
+      "gender": "Gender",
+      "birth": "Birth",
+      "nationalId": "National Id",
+      "medicalId": "Medical Id",
+      "address": "Address",
+      "email": "Email",
+      "photo": "Photo",
+      "blood": "Blood",
+      "cardId": "Card Id",
+      "vip": "Vip",
+      "emergencyName": "Emergency Name",
+      "emergencyPhone": "Emergency Phone",
+      "deleteDate": "Delete Date",
+      "scaling": "Scaling",
+      "lineId": "Line Id",
+      "fbId": "Fb Id",
+      "note": "Note",
+      "treatmentNote": "Treatment Note",
+      "writeIcTime": "Write Ic Time",
+      "burdenCost": "Burden Cost",
+      "avatar": "Avatar",
+      "questionnaire": "Questionnaire",
+      "appointment": "Appointment",
+      "introducer": "Introducer",
+      "parent": "Parent",
+      "spouse1": "Spouse 1",
+      "tag": "Tag",
+      "child": "Child",
+      "spouse2": "Spouse 2"
     }
+  }
 }

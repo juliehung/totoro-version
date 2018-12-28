@@ -5,11 +5,15 @@ import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
+import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.service.dto.PatientDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.errors.InternalServerErrorException;
+import io.dentall.totoro.web.rest.util.AvatarUtil;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.web.rest.vm.AvatarVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +25,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -47,10 +53,13 @@ public class PatientResource {
 
     private final PatientService patientService;
 
-    public PatientResource(PatientRepository patientRepository, TagRepository tagRepository, PatientService patientService) {
+    private final ImageService imageService;
+
+    public PatientResource(PatientRepository patientRepository, TagRepository tagRepository, PatientService patientService, ImageService imageService) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
         this.patientService = patientService;
+        this.imageService = imageService;
     }
 
     /**
@@ -451,6 +460,36 @@ public class PatientResource {
             return patientRepository.save(patient);
         };
         return ResponseEntity.ok().body(getPatient(id, func).getTags());
+    }
+
+    /**
+     * POST  /patients/:id/avatar : upload the patient's avatar.
+     *
+     * @param id the id of the patient
+     * @param file the avatar to create
+     * @return the patient
+     * @throws InternalServerErrorException 500 (InternalServerError) if patient could not store avatar or not found
+     */
+    @PostMapping("/patients/{id}/avatar")
+    @Timed
+    public Patient uploadAvatar(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        try {
+            return imageService.storePatientAvatar(id, file).orElseThrow(() -> new InternalServerErrorException("Patient could not found"));
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Patient could not store avatar");
+        }
+    }
+
+    /**
+     * GET /patients/:id/avatar : get the patient's avatar.
+     *
+     * @return AvatarVM object body
+     */
+    @GetMapping("/patients/{id}/avatar")
+    @Timed
+    public ResponseEntity<AvatarVM> getAvatar(@PathVariable Long id) {
+        Patient patient = patientRepository.findById(id).orElseThrow(() -> new InternalServerErrorException("Patient could not found"));
+        return AvatarUtil.responseAvatarVM(patient);
     }
 
     private Patient getPatient(Long id) {

@@ -14,7 +14,7 @@ import java.util.*;
 @Entity
 @Table(name = "extend_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ExtendUser implements Serializable {
+public class ExtendUser implements Serializable, Avatar {
 
     private static final long serialVersionUID = 1L;
 
@@ -105,6 +105,7 @@ public class ExtendUser implements Serializable {
         this.calendarId = calendarId;
     }
 
+    @Override
     public byte[] getAvatar() {
         return avatar;
     }
@@ -118,6 +119,7 @@ public class ExtendUser implements Serializable {
         this.avatar = avatar;
     }
 
+    @Override
     public String getAvatarContentType() {
         return avatarContentType;
     }

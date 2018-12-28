@@ -1,10 +1,10 @@
 {
-    "totoroApp": {
-        "Gender" : {
-            "null": "",
-            "OTHER": "OTHER",
-            "MALE": "MALE",
-            "FEMALE": "FEMALE"
-        }
+  "totoroApp": {
+    "Gender": {
+      "null": "",
+      "OTHER": "OTHER",
+      "MALE": "MALE",
+      "FEMALE": "FEMALE"
     }
+  }
 }

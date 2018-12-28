@@ -41,10 +41,6 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "photo",
-            "fieldType": "String"
-        },
-        {
             "fieldName": "blood",
             "fieldType": "Blood",
             "fieldValues": "UNKNOWN,A,AB,B,O"
@@ -82,7 +78,11 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "reminder",
+            "fieldName": "note",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "clinicNote",
             "fieldType": "String"
         },
         {
@@ -92,6 +92,15 @@
         {
             "fieldName": "burdenCost",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "avatar",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "image",
+            "fieldValidateRules": [
+                "maxbytes"
+            ],
+            "fieldValidateRulesMaxbytes": 512000
         }
     ],
     "relationships": [

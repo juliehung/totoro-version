@@ -8,9 +8,11 @@ import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.QuestionnaireRepository;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,12 +24,18 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
+import org.springframework.util.ResourceUtils;
+import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -35,6 +43,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 
@@ -80,9 +89,6 @@ public class PatientResourceIntTest {
     private static final String DEFAULT_EMAIL = "AAAAAAAAAA";
     private static final String UPDATED_EMAIL = "BBBBBBBBBB";
 
-    private static final String DEFAULT_PHOTO = "AAAAAAAAAA";
-    private static final String UPDATED_PHOTO = "BBBBBBBBBB";
-
     private static final Blood DEFAULT_BLOOD = Blood.UNKNOWN;
     private static final Blood UPDATED_BLOOD = Blood.A;
 
@@ -110,14 +116,25 @@ public class PatientResourceIntTest {
     private static final String DEFAULT_FB_ID = "AAAAAAAAAA";
     private static final String UPDATED_FB_ID = "BBBBBBBBBB";
 
-    private static final String DEFAULT_REMINDER = "AAAAAAAAAA";
-    private static final String UPDATED_REMINDER = "BBBBBBBBBB";
+    private static final String DEFAULT_NOTE = "AAAAAAAAAA";
+    private static final String UPDATED_NOTE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CLINIC_NOTE = "AAAAAAAAAA";
+    private static final String UPDATED_CLINIC_NOTE = "BBBBBBBBBB";
 
     private static final Instant DEFAULT_WRITE_IC_TIME = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_WRITE_IC_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final Integer DEFAULT_BURDEN_COST = 1;
     private static final Integer UPDATED_BURDEN_COST = 2;
+
+    private static final byte[] DEFAULT_AVATAR = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_AVATAR = TestUtil.createByteArray(1, "1");
+    private static final String DEFAULT_AVATAR_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_AVATAR_CONTENT_TYPE = "image/png";
+
+    private static final String UPLOAD_FILENAME = "chrome.png";
+    private static final String UPLOAD_CONTENT_TYPE = "image/png";
 
     @Autowired
     private PatientRepository patientRepository;
@@ -138,6 +155,9 @@ public class PatientResourceIntTest {
     private EntityManager em;
 
     @Autowired
+    private Validator validator;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -148,6 +168,9 @@ public class PatientResourceIntTest {
 
     @Autowired
     private PatientService patientService;
+
+    @Autowired
+    private ImageService imageService;
 
     private MockMvc restPatientMockMvc;
 
@@ -162,12 +185,13 @@ public class PatientResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, patientService);
+        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, patientService, imageService);
         this.restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**
@@ -186,7 +210,6 @@ public class PatientResourceIntTest {
             .medicalId(DEFAULT_MEDICAL_ID)
             .address(DEFAULT_ADDRESS)
             .email(DEFAULT_EMAIL)
-            .photo(DEFAULT_PHOTO)
             .blood(DEFAULT_BLOOD)
             .cardId(DEFAULT_CARD_ID)
             .vip(DEFAULT_VIP)
@@ -196,9 +219,12 @@ public class PatientResourceIntTest {
             .scaling(DEFAULT_SCALING)
             .lineId(DEFAULT_LINE_ID)
             .fbId(DEFAULT_FB_ID)
-            .reminder(DEFAULT_REMINDER)
+            .note(DEFAULT_NOTE)
+            .clinicNote(DEFAULT_CLINIC_NOTE)
             .writeIcTime(DEFAULT_WRITE_IC_TIME)
-            .burdenCost(DEFAULT_BURDEN_COST);
+            .burdenCost(DEFAULT_BURDEN_COST)
+            .avatar(DEFAULT_AVATAR)
+            .avatarContentType(DEFAULT_AVATAR_CONTENT_TYPE);
         return patient;
     }
 
@@ -243,7 +269,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getMedicalId()).isEqualTo(DEFAULT_MEDICAL_ID);
         assertThat(testPatient.getAddress()).isEqualTo(DEFAULT_ADDRESS);
         assertThat(testPatient.getEmail()).isEqualTo(DEFAULT_EMAIL);
-        assertThat(testPatient.getPhoto()).isEqualTo(DEFAULT_PHOTO);
         assertThat(testPatient.getBlood()).isEqualTo(DEFAULT_BLOOD);
         assertThat(testPatient.getCardId()).isEqualTo(DEFAULT_CARD_ID);
         assertThat(testPatient.getVip()).isEqualTo(DEFAULT_VIP);
@@ -253,9 +278,12 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getScaling()).isEqualTo(DEFAULT_SCALING);
         assertThat(testPatient.getLineId()).isEqualTo(DEFAULT_LINE_ID);
         assertThat(testPatient.getFbId()).isEqualTo(DEFAULT_FB_ID);
-        assertThat(testPatient.getReminder()).isEqualTo(DEFAULT_REMINDER);
+        assertThat(testPatient.getNote()).isEqualTo(DEFAULT_NOTE);
+        assertThat(testPatient.getClinicNote()).isEqualTo(DEFAULT_CLINIC_NOTE);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(DEFAULT_WRITE_IC_TIME);
         assertThat(testPatient.getBurdenCost()).isEqualTo(DEFAULT_BURDEN_COST);
+        assertThat(testPatient.getAvatar()).isEqualTo(DEFAULT_AVATAR);
+        assertThat(testPatient.getAvatarContentType()).isEqualTo(DEFAULT_AVATAR_CONTENT_TYPE);
         assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getIntroducer()).isEqualTo(null);
@@ -339,7 +367,6 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.[*].medicalId").value(hasItem(DEFAULT_MEDICAL_ID.toString())))
             .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS.toString())))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())))
-            .andExpect(jsonPath("$.[*].photo").value(hasItem(DEFAULT_PHOTO.toString())))
             .andExpect(jsonPath("$.[*].blood").value(hasItem(DEFAULT_BLOOD.toString())))
             .andExpect(jsonPath("$.[*].cardId").value(hasItem(DEFAULT_CARD_ID.toString())))
             .andExpect(jsonPath("$.[*].vip").value(hasItem(DEFAULT_VIP.toString())))
@@ -349,14 +376,17 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.[*].scaling").value(hasItem(DEFAULT_SCALING.toString())))
             .andExpect(jsonPath("$.[*].lineId").value(hasItem(DEFAULT_LINE_ID.toString())))
             .andExpect(jsonPath("$.[*].fbId").value(hasItem(DEFAULT_FB_ID.toString())))
-            .andExpect(jsonPath("$.[*].reminder").value(hasItem(DEFAULT_REMINDER.toString())))
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
+            .andExpect(jsonPath("$.[*].clinicNote").value(hasItem(DEFAULT_CLINIC_NOTE.toString())))
             .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem(DEFAULT_WRITE_IC_TIME.toString())))
             .andExpect(jsonPath("$.[*].burdenCost").value(hasItem(DEFAULT_BURDEN_COST)))
-            .andExpect(jsonPath("$.[*].questionnaire.id").value(hasItem(questionnaire.getId().intValue())));
+            .andExpect(jsonPath("$.[*].avatarContentType").value(hasItem(DEFAULT_AVATAR_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].avatar").value(hasItem(Base64Utils.encodeToString(DEFAULT_AVATAR))));
     }
     
+    @SuppressWarnings({"unchecked"})
     public void getAllPatientsWithEagerRelationshipsIsEnabled() throws Exception {
-        PatientResource patientResource = new PatientResource(patientRepositoryMock, tagRepository, patientService);
+        PatientResource patientResource = new PatientResource(patientRepositoryMock, tagRepository, patientService, imageService);
         when(patientRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         MockMvc restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
@@ -369,6 +399,22 @@ public class PatientResourceIntTest {
         .andExpect(status().isOk());
 
         verify(patientRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public void getAllPatientsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        PatientResource patientResource = new PatientResource(patientRepositoryMock, tagRepository, patientService, imageService);
+            when(patientRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+            MockMvc restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restPatientMockMvc.perform(get("/api/patients?eagerload=true"))
+        .andExpect(status().isOk());
+
+            verify(patientRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -390,7 +436,6 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.medicalId").value(DEFAULT_MEDICAL_ID.toString()))
             .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS.toString()))
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()))
-            .andExpect(jsonPath("$.photo").value(DEFAULT_PHOTO.toString()))
             .andExpect(jsonPath("$.blood").value(DEFAULT_BLOOD.toString()))
             .andExpect(jsonPath("$.cardId").value(DEFAULT_CARD_ID.toString()))
             .andExpect(jsonPath("$.vip").value(DEFAULT_VIP.toString()))
@@ -400,9 +445,12 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.scaling").value(DEFAULT_SCALING.toString()))
             .andExpect(jsonPath("$.lineId").value(DEFAULT_LINE_ID.toString()))
             .andExpect(jsonPath("$.fbId").value(DEFAULT_FB_ID.toString()))
-            .andExpect(jsonPath("$.reminder").value(DEFAULT_REMINDER.toString()))
+            .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
+            .andExpect(jsonPath("$.clinicNote").value(DEFAULT_CLINIC_NOTE.toString()))
             .andExpect(jsonPath("$.writeIcTime").value(DEFAULT_WRITE_IC_TIME.toString()))
-            .andExpect(jsonPath("$.burdenCost").value(DEFAULT_BURDEN_COST));
+            .andExpect(jsonPath("$.burdenCost").value(DEFAULT_BURDEN_COST))
+            .andExpect(jsonPath("$.avatarContentType").value(DEFAULT_AVATAR_CONTENT_TYPE))
+            .andExpect(jsonPath("$.avatar").value(Base64Utils.encodeToString(DEFAULT_AVATAR)));
     }
 
     @Test
@@ -416,8 +464,6 @@ public class PatientResourceIntTest {
     @Test
     @Transactional
     public void updatePatient() throws Exception {
-        Patient introducer = createPatientByName("introducer");
-
         // Initialize the database
         patientRepository.saveAndFlush(patient);
 
@@ -425,20 +471,8 @@ public class PatientResourceIntTest {
 
         // Update the patient
         Patient updatedPatient = patientRepository.findById(patient.getId()).get();
-
-        // Update the questionnaire
-        Questionnaire updatedQuestionnaire = questionnaireRepository.findById(patient.getQuestionnaire().getId()).get();
-
         // Disconnect from session so that the updates on updatedPatient are not directly saved in db
         em.detach(updatedPatient);
-        em.detach(updatedQuestionnaire);
-
-        String updateOther = "other";
-        String nonUpdateOtherInTreatment = updatedQuestionnaire.getOtherInTreatment();
-        updatedQuestionnaire = updatedQuestionnaire
-            .other(updateOther)
-            .otherInTreatment(null);
-
         updatedPatient
             .name(UPDATED_NAME)
             .phone(UPDATED_PHONE)
@@ -448,7 +482,6 @@ public class PatientResourceIntTest {
             .medicalId(UPDATED_MEDICAL_ID)
             .address(UPDATED_ADDRESS)
             .email(UPDATED_EMAIL)
-            .photo(UPDATED_PHOTO)
             .blood(UPDATED_BLOOD)
             .cardId(UPDATED_CARD_ID)
             .vip(UPDATED_VIP)
@@ -458,11 +491,10 @@ public class PatientResourceIntTest {
             .scaling(UPDATED_SCALING)
             .lineId(UPDATED_LINE_ID)
             .fbId(UPDATED_FB_ID)
-            .reminder(UPDATED_REMINDER)
+            .note(UPDATED_NOTE)
+            .clinicNote(UPDATED_CLINIC_NOTE)
             .writeIcTime(UPDATED_WRITE_IC_TIME)
-            .burdenCost(UPDATED_BURDEN_COST)
-            .introducer(introducer)
-            .questionnaire(updatedQuestionnaire);
+            .burdenCost(UPDATED_BURDEN_COST);
 
         restPatientMockMvc.perform(put("/api/patients")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -481,7 +513,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getMedicalId()).isEqualTo(UPDATED_MEDICAL_ID);
         assertThat(testPatient.getAddress()).isEqualTo(UPDATED_ADDRESS);
         assertThat(testPatient.getEmail()).isEqualTo(UPDATED_EMAIL);
-        assertThat(testPatient.getPhoto()).isEqualTo(UPDATED_PHOTO);
         assertThat(testPatient.getBlood()).isEqualTo(UPDATED_BLOOD);
         assertThat(testPatient.getCardId()).isEqualTo(UPDATED_CARD_ID);
         assertThat(testPatient.getVip()).isEqualTo(UPDATED_VIP);
@@ -491,12 +522,12 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getScaling()).isEqualTo(UPDATED_SCALING);
         assertThat(testPatient.getLineId()).isEqualTo(UPDATED_LINE_ID);
         assertThat(testPatient.getFbId()).isEqualTo(UPDATED_FB_ID);
-        assertThat(testPatient.getReminder()).isEqualTo(UPDATED_REMINDER);
+        assertThat(testPatient.getNote()).isEqualTo(UPDATED_NOTE);
+        assertThat(testPatient.getClinicNote()).isEqualTo(UPDATED_CLINIC_NOTE);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(UPDATED_WRITE_IC_TIME);
         assertThat(testPatient.getBurdenCost()).isEqualTo(UPDATED_BURDEN_COST);
-        assertThat(testPatient.getIntroducer()).isEqualTo(introducer);
-        assertThat(testPatient.getQuestionnaire().getOther()).isEqualTo(updateOther);
-        assertThat(testPatient.getQuestionnaire().getOtherInTreatment()).isEqualTo(nonUpdateOtherInTreatment);
+        assertThat(testPatient.getAvatar()).isEqualTo(DEFAULT_AVATAR);
+        assertThat(testPatient.getAvatarContentType()).isEqualTo(DEFAULT_AVATAR_CONTENT_TYPE);
     }
 
     @Test
@@ -886,6 +917,52 @@ public class PatientResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    @Transactional
+    public void testUploadAvatar() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        MockMultipartFile file = new MockMultipartFile(
+            "file",
+            UPLOAD_FILENAME,
+            UPLOAD_CONTENT_TYPE,
+            FileUtils.openInputStream(ResourceUtils.getFile(getClass().getResource("/static/" + UPLOAD_FILENAME))));
+        restPatientMockMvc.perform(MockMvcRequestBuilders.multipart("/api/patients/{id}/avatar", patient.getId()).file(file))
+            .andExpect(status().isOk());
+
+        assertThat(patient.getAvatar()).isNotEmpty();
+        assertThat(patient.getAvatarContentType()).isEqualTo(UPLOAD_CONTENT_TYPE);
+    }
+
+    @Test
+    public void testGetAvatar() throws Exception {
+        patient.setAvatarContentType(UPLOAD_CONTENT_TYPE);
+        byte[] avatar = Files.readAllBytes(ResourceUtils.getFile(getClass().getResource("/static/" + UPLOAD_FILENAME)).toPath());
+        patient.setAvatar(avatar);
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        restPatientMockMvc.perform(get("/api/patients/{id}/avatar", patient.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.contentType").value(UPLOAD_CONTENT_TYPE))
+            .andExpect(jsonPath("$.base64").value(Base64.getEncoder().withoutPadding().encodeToString(avatar)));
+    }
+
+    @Test
+    public void testGetNonExistingAvatar() throws Exception {
+        patient.setAvatar(null);
+        patient.setAvatarContentType(null);
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        restPatientMockMvc.perform(get("/api/patients/{id}/avatar", patient.getId()))
+            .andExpect(status().isNotFound());
     }
 
     private Patient createPatientByName(String name) {
