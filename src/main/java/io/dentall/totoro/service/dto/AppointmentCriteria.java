@@ -60,6 +60,8 @@ public class AppointmentCriteria implements Serializable {
 
     private IntegerFilter registrationTypeValue;
 
+    private LongFilter doctorId;
+
     public LongFilter getId() {
         return id;
     }
@@ -180,6 +182,14 @@ public class AppointmentCriteria implements Serializable {
         this.registrationTypeValue = registrationTypeValue;
     }
 
+    public LongFilter getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(LongFilter doctorId) {
+        this.doctorId = doctorId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -190,8 +200,7 @@ public class AppointmentCriteria implements Serializable {
             return false;
         }
         final AppointmentCriteria that = (AppointmentCriteria) o;
-        return
-            Objects.equals(id, that.id) &&
+        return Objects.equals(id, that.id) &&
             Objects.equals(status, that.status) &&
             Objects.equals(subject, that.subject) &&
             Objects.equals(note, that.note) &&
@@ -204,8 +213,9 @@ public class AppointmentCriteria implements Serializable {
             Objects.equals(archived, that.archived) &&
             Objects.equals(patientId, that.patientId) &&
             Objects.equals(registrationId, that.registrationId) &&
-                Objects.equals(registrationType, that.registrationType) &&
-                Objects.equals(registrationTypeValue, that.registrationTypeValue);
+            Objects.equals(registrationType, that.registrationType) &&
+            Objects.equals(registrationTypeValue, that.registrationTypeValue) &&
+            Objects.equals(doctorId, that.doctorId);
     }
 
     @Override
@@ -225,7 +235,8 @@ public class AppointmentCriteria implements Serializable {
             patientId,
             registrationId,
             registrationType,
-            registrationTypeValue
+            registrationTypeValue,
+            doctorId
         );
     }
 
@@ -247,6 +258,7 @@ public class AppointmentCriteria implements Serializable {
             (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
             (registrationType != null ? "registrationType=" + registrationType + ", " : "") +
             (registrationTypeValue != null ? "registrationTypeValue=" + registrationTypeValue + ", " : "") +
+            (doctorId != null ? "doctorId=" + doctorId + ", " : "") +
             "}";
     }
 
