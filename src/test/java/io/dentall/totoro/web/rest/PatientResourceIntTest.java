@@ -282,8 +282,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getClinicNote()).isEqualTo(DEFAULT_CLINIC_NOTE);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(DEFAULT_WRITE_IC_TIME);
         assertThat(testPatient.getBurdenCost()).isEqualTo(DEFAULT_BURDEN_COST);
-        assertThat(testPatient.getAvatar()).isEqualTo(DEFAULT_AVATAR);
-        assertThat(testPatient.getAvatarContentType()).isEqualTo(DEFAULT_AVATAR_CONTENT_TYPE);
         assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getIntroducer()).isEqualTo(null);
@@ -379,9 +377,7 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].clinicNote").value(hasItem(DEFAULT_CLINIC_NOTE.toString())))
             .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem(DEFAULT_WRITE_IC_TIME.toString())))
-            .andExpect(jsonPath("$.[*].burdenCost").value(hasItem(DEFAULT_BURDEN_COST)))
-            .andExpect(jsonPath("$.[*].avatarContentType").value(hasItem(DEFAULT_AVATAR_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].avatar").value(hasItem(Base64Utils.encodeToString(DEFAULT_AVATAR))));
+            .andExpect(jsonPath("$.[*].burdenCost").value(hasItem(DEFAULT_BURDEN_COST)));
     }
     
     @SuppressWarnings({"unchecked"})
@@ -448,9 +444,7 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
             .andExpect(jsonPath("$.clinicNote").value(DEFAULT_CLINIC_NOTE.toString()))
             .andExpect(jsonPath("$.writeIcTime").value(DEFAULT_WRITE_IC_TIME.toString()))
-            .andExpect(jsonPath("$.burdenCost").value(DEFAULT_BURDEN_COST))
-            .andExpect(jsonPath("$.avatarContentType").value(DEFAULT_AVATAR_CONTENT_TYPE))
-            .andExpect(jsonPath("$.avatar").value(Base64Utils.encodeToString(DEFAULT_AVATAR)));
+            .andExpect(jsonPath("$.burdenCost").value(DEFAULT_BURDEN_COST));
     }
 
     @Test
@@ -526,8 +520,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getClinicNote()).isEqualTo(UPDATED_CLINIC_NOTE);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(UPDATED_WRITE_IC_TIME);
         assertThat(testPatient.getBurdenCost()).isEqualTo(UPDATED_BURDEN_COST);
-        assertThat(testPatient.getAvatar()).isEqualTo(DEFAULT_AVATAR);
-        assertThat(testPatient.getAvatarContentType()).isEqualTo(DEFAULT_AVATAR_CONTENT_TYPE);
     }
 
     @Test
@@ -853,6 +845,19 @@ public class PatientResourceIntTest {
 
     @Test
     @Transactional
+    public void getPatientsByQueryPhoneContaining() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Get patients by phone
+        restPatientMockMvc.perform(get("/api/patients?search={keyword}&sort=id,desc", patient.getPhone().substring(2, 5)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].phone").value(hasItem(patient.getPhone())));
+    }
+
+    @Test
+    @Transactional
     public void getPatientsByQueryBirthContainingAndIsDeleted() throws Exception {
         // Initialize the database
         patientRepository.saveAndFlush(patient);
@@ -878,6 +883,22 @@ public class PatientResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(patient.getId().intValue())));
+    }
+
+    @Test
+    @Transactional
+    public void getPatientsByQueryIsNP() throws Exception {
+        patient.setFirstDoctor(null);
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        // Get patients by np
+        Object jsonNull = null;
+        restPatientMockMvc.perform(get("/api/patients?isNP={isNP}&sort=id,desc", true))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].firstDoctor").value(hasItem(jsonNull)));
     }
 
     @Test

@@ -2,11 +2,12 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.service.dto.AppointmentCriteria;
+import io.dentall.totoro.service.AppointmentQueryService;
 import io.dentall.totoro.web.rest.vm.PatientCardVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.time.*;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -39,13 +40,13 @@ public class AppointmentResource {
 
     private static final String ENTITY_NAME = "appointment";
 
-    private final AppointmentRepository appointmentRepository;
-
     private final AppointmentService appointmentService;
 
-    public AppointmentResource(AppointmentRepository appointmentRepository, AppointmentService appointmentService) {
-        this.appointmentRepository = appointmentRepository;
+    private final AppointmentQueryService appointmentQueryService;
+
+    public AppointmentResource(AppointmentService appointmentService, AppointmentQueryService appointmentQueryService) {
         this.appointmentService = appointmentService;
+        this.appointmentQueryService = appointmentQueryService;
     }
 
     /**
@@ -62,7 +63,7 @@ public class AppointmentResource {
         if (appointment.getId() != null) {
             throw new BadRequestAlertException("A new appointment cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Appointment result = appointmentRepository.save(appointment);
+        Appointment result = appointmentService.save(appointment);
         return ResponseEntity.created(new URI("/api/appointments/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -95,15 +96,29 @@ public class AppointmentResource {
      * GET  /appointments : get all the appointments.
      *
      * @param pageable the pagination information
+     * @param criteria the criterias which the requested entities should match
      * @return the ResponseEntity with status 200 (OK) and the list of appointments in body
      */
     @GetMapping("/appointments")
     @Timed
-    public ResponseEntity<List<Appointment>> getAllAppointments(Pageable pageable) {
-        log.debug("REST request to get a page of Appointments");
-        Page<Appointment> page = appointmentRepository.findAll(pageable);
+    public ResponseEntity<List<Appointment>> getAllAppointments(AppointmentCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Appointments by criteria: {}", criteria);
+        Page<Appointment> page = appointmentQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/appointments");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+    * GET  /appointments/count : count all the appointments.
+    *
+    * @param criteria the criterias which the requested entities should match
+    * @return the ResponseEntity with status 200 (OK) and the count in body
+    */
+    @GetMapping("/appointments/count")
+    @Timed
+    public ResponseEntity<Long> countAppointments(AppointmentCriteria criteria) {
+        log.debug("REST request to count Appointments by criteria: {}", criteria);
+        return ResponseEntity.ok().body(appointmentQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -116,7 +131,7 @@ public class AppointmentResource {
     @Timed
     public ResponseEntity<Appointment> getAppointment(@PathVariable Long id) {
         log.debug("REST request to get Appointment : {}", id);
-        Optional<Appointment> appointment = appointmentRepository.findById(id);
+        Optional<Appointment> appointment = appointmentService.findOne(id);
         return ResponseUtil.wrapOrNotFound(appointment);
     }
 
@@ -130,8 +145,7 @@ public class AppointmentResource {
     @Timed
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
         log.debug("REST request to delete Appointment : {}", id);
-
-        appointmentRepository.deleteById(id);
+        appointmentService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -146,20 +160,7 @@ public class AppointmentResource {
     @GetMapping("/appointments/patient-cards")
     @Timed
     public ResponseEntity<List<PatientCardVM>> getAllPatientCards(@RequestParam(required = false) Instant start, @RequestParam(required = false) Instant end, @RequestParam(required = false) Long doctorId) {
-        List<Appointment> appointments = null;
-
-        // default start & end time is today
-        if (start == null && end == null) {
-            start = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MIN).toInstant();
-            end = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MAX).toInstant();
-            appointments = appointmentRepository.findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end);
-        }
-
-        if (start != null && end != null) {
-            appointments = appointmentRepository.findByExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end);
-        }
-
-        log.debug("REST request to get appointment patient cards between {} and {}", start, end);
+        List<Appointment> appointments = appointmentService.getAppointmentsForPatientCard(start, end);
         if (appointments == null) {
             return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
         } else {

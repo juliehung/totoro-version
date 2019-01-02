@@ -5,8 +5,7 @@ import { IRegistration } from 'app/shared/model//registration.model';
 export const enum AppointmentStatus {
   TO_BE_CONFIRMED = 'TO_BE_CONFIRMED',
   CONFIRMED = 'CONFIRMED',
-  CANCEL = 'CANCEL',
-  NO = 'NO'
+  CANCEL = 'CANCEL'
 }
 
 export interface IAppointment {
@@ -18,11 +17,16 @@ export interface IAppointment {
   requiredTreatmentTime?: number;
   microscope?: boolean;
   newPatient?: boolean;
+  baseFloor?: boolean;
+  colorId?: number;
+  archived?: boolean;
   patient?: IPatient;
   registration?: IRegistration;
 }
 
 export const defaultValue: Readonly<IAppointment> = {
   microscope: false,
-  newPatient: false
+  newPatient: false,
+  baseFloor: false,
+  archived: false
 };

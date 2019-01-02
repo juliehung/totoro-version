@@ -73,6 +73,24 @@ export class AppointmentDetail extends React.Component<IAppointmentDetailProps> 
             </dt>
             <dd>{appointmentEntity.newPatient ? 'true' : 'false'}</dd>
             <dt>
+              <span id="baseFloor">
+                <Translate contentKey="totoroApp.appointment.baseFloor">Base Floor</Translate>
+              </span>
+            </dt>
+            <dd>{appointmentEntity.baseFloor ? 'true' : 'false'}</dd>
+            <dt>
+              <span id="colorId">
+                <Translate contentKey="totoroApp.appointment.colorId">Color Id</Translate>
+              </span>
+            </dt>
+            <dd>{appointmentEntity.colorId}</dd>
+            <dt>
+              <span id="archived">
+                <Translate contentKey="totoroApp.appointment.archived">Archived</Translate>
+              </span>
+            </dt>
+            <dd>{appointmentEntity.archived ? 'true' : 'false'}</dd>
+            <dt>
               <Translate contentKey="totoroApp.appointment.patient">Patient</Translate>
             </dt>
             <dd>{appointmentEntity.patient ? appointmentEntity.patient.id : ''}</dd>

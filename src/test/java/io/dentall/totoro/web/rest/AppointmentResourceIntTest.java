@@ -13,6 +13,7 @@ import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
+import io.dentall.totoro.service.AppointmentQueryService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +28,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
@@ -74,11 +76,20 @@ public class AppointmentResourceIntTest {
     private static final Boolean DEFAULT_BASE_FLOOR = false;
     private static final Boolean UPDATED_BASE_FLOOR = true;
 
+    private static final Integer DEFAULT_COLOR_ID = 1;
+    private static final Integer UPDATED_COLOR_ID = 2;
+
     private static final Boolean DEFAULT_ARCHIVED = false;
     private static final Boolean UPDATED_ARCHIVED = true;
 
     @Autowired
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private AppointmentService appointmentService;
+
+    @Autowired
+    private AppointmentQueryService appointmentQueryService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -93,19 +104,19 @@ public class AppointmentResourceIntTest {
     private EntityManager em;
 
     @Autowired
-    private UserRepository userRepository;
+    private Validator validator;
 
     @Autowired
-    private PatientRepository patientRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private TagRepository tagRepository;
 
     @Autowired
-    private PatientService patientService;
+    private PatientRepository patientRepository;
 
     @Autowired
-    private AppointmentService appointmentService;
+    private PatientService patientService;
 
     private MockMvc restAppointmentMockMvc;
 
@@ -114,12 +125,13 @@ public class AppointmentResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AppointmentResource appointmentResource = new AppointmentResource(appointmentRepository, appointmentService);
+        final AppointmentResource appointmentResource = new AppointmentResource(appointmentService, appointmentQueryService);
         this.restAppointmentMockMvc = MockMvcBuilders.standaloneSetup(appointmentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**
@@ -138,12 +150,14 @@ public class AppointmentResourceIntTest {
             .microscope(DEFAULT_MICROSCOPE)
             .newPatient(DEFAULT_NEW_PATIENT)
             .baseFloor(DEFAULT_BASE_FLOOR)
+            .colorId(DEFAULT_COLOR_ID)
             .archived(DEFAULT_ARCHIVED);
         return appointment;
     }
 
     @Before
     public void initTest() {
+        appointmentRepository.deleteAll();
         appointment = createEntity(em);
         appointment.setDoctor(userRepository.save(UserResourceIntTest.createEntity(em)).getExtendUser());
     }
@@ -171,6 +185,7 @@ public class AppointmentResourceIntTest {
         assertThat(testAppointment.isMicroscope()).isEqualTo(DEFAULT_MICROSCOPE);
         assertThat(testAppointment.isNewPatient()).isEqualTo(DEFAULT_NEW_PATIENT);
         assertThat(testAppointment.isBaseFloor()).isEqualTo(DEFAULT_BASE_FLOOR);
+        assertThat(testAppointment.getColorId()).isEqualTo(DEFAULT_COLOR_ID);
         assertThat(testAppointment.isArchived()).isEqualTo(DEFAULT_ARCHIVED);
         assertThat(testAppointment.getDoctor()).isEqualTo(appointment.getDoctor());
     }
@@ -231,6 +246,7 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[*].microscope").value(hasItem(DEFAULT_MICROSCOPE.booleanValue())))
             .andExpect(jsonPath("$.[*].newPatient").value(hasItem(DEFAULT_NEW_PATIENT.booleanValue())))
             .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR.booleanValue())))
+            .andExpect(jsonPath("$.[*].colorId").value(hasItem(DEFAULT_COLOR_ID)))
             .andExpect(jsonPath("$.[*].archived").value(hasItem(DEFAULT_ARCHIVED.booleanValue())));
     }
     
@@ -253,8 +269,534 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.microscope").value(DEFAULT_MICROSCOPE.booleanValue()))
             .andExpect(jsonPath("$.newPatient").value(DEFAULT_NEW_PATIENT.booleanValue()))
             .andExpect(jsonPath("$.baseFloor").value(DEFAULT_BASE_FLOOR.booleanValue()))
+            .andExpect(jsonPath("$.colorId").value(DEFAULT_COLOR_ID))
             .andExpect(jsonPath("$.archived").value(DEFAULT_ARCHIVED.booleanValue()));
     }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByStatusIsEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where status equals to DEFAULT_STATUS
+        defaultAppointmentShouldBeFound("status.equals=" + DEFAULT_STATUS);
+
+        // Get all the appointmentList where status equals to UPDATED_STATUS
+        defaultAppointmentShouldNotBeFound("status.equals=" + UPDATED_STATUS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByStatusIsInShouldWork() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where status in DEFAULT_STATUS or UPDATED_STATUS
+        defaultAppointmentShouldBeFound("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS);
+
+        // Get all the appointmentList where status equals to UPDATED_STATUS
+        defaultAppointmentShouldNotBeFound("status.in=" + UPDATED_STATUS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByStatusIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where status is not null
+        defaultAppointmentShouldBeFound("status.specified=true");
+
+        // Get all the appointmentList where status is null
+        defaultAppointmentShouldNotBeFound("status.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsBySubjectIsEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where subject equals to DEFAULT_SUBJECT
+        defaultAppointmentShouldBeFound("subject.equals=" + DEFAULT_SUBJECT);
+
+        // Get all the appointmentList where subject equals to UPDATED_SUBJECT
+        defaultAppointmentShouldNotBeFound("subject.equals=" + UPDATED_SUBJECT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsBySubjectIsInShouldWork() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where subject in DEFAULT_SUBJECT or UPDATED_SUBJECT
+        defaultAppointmentShouldBeFound("subject.in=" + DEFAULT_SUBJECT + "," + UPDATED_SUBJECT);
+
+        // Get all the appointmentList where subject equals to UPDATED_SUBJECT
+        defaultAppointmentShouldNotBeFound("subject.in=" + UPDATED_SUBJECT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsBySubjectIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where subject is not null
+        defaultAppointmentShouldBeFound("subject.specified=true");
+
+        // Get all the appointmentList where subject is null
+        defaultAppointmentShouldNotBeFound("subject.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByNoteIsEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where note equals to DEFAULT_NOTE
+        defaultAppointmentShouldBeFound("note.equals=" + DEFAULT_NOTE);
+
+        // Get all the appointmentList where note equals to UPDATED_NOTE
+        defaultAppointmentShouldNotBeFound("note.equals=" + UPDATED_NOTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByNoteIsInShouldWork() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where note in DEFAULT_NOTE or UPDATED_NOTE
+        defaultAppointmentShouldBeFound("note.in=" + DEFAULT_NOTE + "," + UPDATED_NOTE);
+
+        // Get all the appointmentList where note equals to UPDATED_NOTE
+        defaultAppointmentShouldNotBeFound("note.in=" + UPDATED_NOTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByNoteIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where note is not null
+        defaultAppointmentShouldBeFound("note.specified=true");
+
+        // Get all the appointmentList where note is null
+        defaultAppointmentShouldNotBeFound("note.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByExpectedArrivalTimeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where expectedArrivalTime equals to DEFAULT_EXPECTED_ARRIVAL_TIME
+        defaultAppointmentShouldBeFound("expectedArrivalTime.equals=" + DEFAULT_EXPECTED_ARRIVAL_TIME);
+
+        // Get all the appointmentList where expectedArrivalTime equals to UPDATED_EXPECTED_ARRIVAL_TIME
+        defaultAppointmentShouldNotBeFound("expectedArrivalTime.equals=" + UPDATED_EXPECTED_ARRIVAL_TIME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByExpectedArrivalTimeIsInShouldWork() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where expectedArrivalTime in DEFAULT_EXPECTED_ARRIVAL_TIME or UPDATED_EXPECTED_ARRIVAL_TIME
+        defaultAppointmentShouldBeFound("expectedArrivalTime.in=" + DEFAULT_EXPECTED_ARRIVAL_TIME + "," + UPDATED_EXPECTED_ARRIVAL_TIME);
+
+        // Get all the appointmentList where expectedArrivalTime equals to UPDATED_EXPECTED_ARRIVAL_TIME
+        defaultAppointmentShouldNotBeFound("expectedArrivalTime.in=" + UPDATED_EXPECTED_ARRIVAL_TIME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByExpectedArrivalTimeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where expectedArrivalTime is not null
+        defaultAppointmentShouldBeFound("expectedArrivalTime.specified=true");
+
+        // Get all the appointmentList where expectedArrivalTime is null
+        defaultAppointmentShouldNotBeFound("expectedArrivalTime.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByRequiredTreatmentTimeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where requiredTreatmentTime equals to DEFAULT_REQUIRED_TREATMENT_TIME
+        defaultAppointmentShouldBeFound("requiredTreatmentTime.equals=" + DEFAULT_REQUIRED_TREATMENT_TIME);
+
+        // Get all the appointmentList where requiredTreatmentTime equals to UPDATED_REQUIRED_TREATMENT_TIME
+        defaultAppointmentShouldNotBeFound("requiredTreatmentTime.equals=" + UPDATED_REQUIRED_TREATMENT_TIME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByRequiredTreatmentTimeIsInShouldWork() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where requiredTreatmentTime in DEFAULT_REQUIRED_TREATMENT_TIME or UPDATED_REQUIRED_TREATMENT_TIME
+        defaultAppointmentShouldBeFound("requiredTreatmentTime.in=" + DEFAULT_REQUIRED_TREATMENT_TIME + "," + UPDATED_REQUIRED_TREATMENT_TIME);
+
+        // Get all the appointmentList where requiredTreatmentTime equals to UPDATED_REQUIRED_TREATMENT_TIME
+        defaultAppointmentShouldNotBeFound("requiredTreatmentTime.in=" + UPDATED_REQUIRED_TREATMENT_TIME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByRequiredTreatmentTimeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where requiredTreatmentTime is not null
+        defaultAppointmentShouldBeFound("requiredTreatmentTime.specified=true");
+
+        // Get all the appointmentList where requiredTreatmentTime is null
+        defaultAppointmentShouldNotBeFound("requiredTreatmentTime.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByRequiredTreatmentTimeIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where requiredTreatmentTime greater than or equals to DEFAULT_REQUIRED_TREATMENT_TIME
+        defaultAppointmentShouldBeFound("requiredTreatmentTime.greaterOrEqualThan=" + DEFAULT_REQUIRED_TREATMENT_TIME);
+
+        // Get all the appointmentList where requiredTreatmentTime greater than or equals to UPDATED_REQUIRED_TREATMENT_TIME
+        defaultAppointmentShouldNotBeFound("requiredTreatmentTime.greaterOrEqualThan=" + UPDATED_REQUIRED_TREATMENT_TIME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByRequiredTreatmentTimeIsLessThanSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where requiredTreatmentTime less than or equals to DEFAULT_REQUIRED_TREATMENT_TIME
+        defaultAppointmentShouldNotBeFound("requiredTreatmentTime.lessThan=" + DEFAULT_REQUIRED_TREATMENT_TIME);
+
+        // Get all the appointmentList where requiredTreatmentTime less than or equals to UPDATED_REQUIRED_TREATMENT_TIME
+        defaultAppointmentShouldBeFound("requiredTreatmentTime.lessThan=" + UPDATED_REQUIRED_TREATMENT_TIME);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByMicroscopeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where microscope equals to DEFAULT_MICROSCOPE
+        defaultAppointmentShouldBeFound("microscope.equals=" + DEFAULT_MICROSCOPE);
+
+        // Get all the appointmentList where microscope equals to UPDATED_MICROSCOPE
+        defaultAppointmentShouldNotBeFound("microscope.equals=" + UPDATED_MICROSCOPE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByMicroscopeIsInShouldWork() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where microscope in DEFAULT_MICROSCOPE or UPDATED_MICROSCOPE
+        defaultAppointmentShouldBeFound("microscope.in=" + DEFAULT_MICROSCOPE + "," + UPDATED_MICROSCOPE);
+
+        // Get all the appointmentList where microscope equals to UPDATED_MICROSCOPE
+        defaultAppointmentShouldNotBeFound("microscope.in=" + UPDATED_MICROSCOPE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByMicroscopeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where microscope is not null
+        defaultAppointmentShouldBeFound("microscope.specified=true");
+
+        // Get all the appointmentList where microscope is null
+        defaultAppointmentShouldNotBeFound("microscope.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByNewPatientIsEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where newPatient equals to DEFAULT_NEW_PATIENT
+        defaultAppointmentShouldBeFound("newPatient.equals=" + DEFAULT_NEW_PATIENT);
+
+        // Get all the appointmentList where newPatient equals to UPDATED_NEW_PATIENT
+        defaultAppointmentShouldNotBeFound("newPatient.equals=" + UPDATED_NEW_PATIENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByNewPatientIsInShouldWork() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where newPatient in DEFAULT_NEW_PATIENT or UPDATED_NEW_PATIENT
+        defaultAppointmentShouldBeFound("newPatient.in=" + DEFAULT_NEW_PATIENT + "," + UPDATED_NEW_PATIENT);
+
+        // Get all the appointmentList where newPatient equals to UPDATED_NEW_PATIENT
+        defaultAppointmentShouldNotBeFound("newPatient.in=" + UPDATED_NEW_PATIENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByNewPatientIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where newPatient is not null
+        defaultAppointmentShouldBeFound("newPatient.specified=true");
+
+        // Get all the appointmentList where newPatient is null
+        defaultAppointmentShouldNotBeFound("newPatient.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByBaseFloorIsEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where baseFloor equals to DEFAULT_BASE_FLOOR
+        defaultAppointmentShouldBeFound("baseFloor.equals=" + DEFAULT_BASE_FLOOR);
+
+        // Get all the appointmentList where baseFloor equals to UPDATED_BASE_FLOOR
+        defaultAppointmentShouldNotBeFound("baseFloor.equals=" + UPDATED_BASE_FLOOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByBaseFloorIsInShouldWork() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where baseFloor in DEFAULT_BASE_FLOOR or UPDATED_BASE_FLOOR
+        defaultAppointmentShouldBeFound("baseFloor.in=" + DEFAULT_BASE_FLOOR + "," + UPDATED_BASE_FLOOR);
+
+        // Get all the appointmentList where baseFloor equals to UPDATED_BASE_FLOOR
+        defaultAppointmentShouldNotBeFound("baseFloor.in=" + UPDATED_BASE_FLOOR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByBaseFloorIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where baseFloor is not null
+        defaultAppointmentShouldBeFound("baseFloor.specified=true");
+
+        // Get all the appointmentList where baseFloor is null
+        defaultAppointmentShouldNotBeFound("baseFloor.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByColorIdIsEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where colorId equals to DEFAULT_COLOR_ID
+        defaultAppointmentShouldBeFound("colorId.equals=" + DEFAULT_COLOR_ID);
+
+        // Get all the appointmentList where colorId equals to UPDATED_COLOR_ID
+        defaultAppointmentShouldNotBeFound("colorId.equals=" + UPDATED_COLOR_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByColorIdIsInShouldWork() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where colorId in DEFAULT_COLOR_ID or UPDATED_COLOR_ID
+        defaultAppointmentShouldBeFound("colorId.in=" + DEFAULT_COLOR_ID + "," + UPDATED_COLOR_ID);
+
+        // Get all the appointmentList where colorId equals to UPDATED_COLOR_ID
+        defaultAppointmentShouldNotBeFound("colorId.in=" + UPDATED_COLOR_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByColorIdIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where colorId is not null
+        defaultAppointmentShouldBeFound("colorId.specified=true");
+
+        // Get all the appointmentList where colorId is null
+        defaultAppointmentShouldNotBeFound("colorId.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByColorIdIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where colorId greater than or equals to DEFAULT_COLOR_ID
+        defaultAppointmentShouldBeFound("colorId.greaterOrEqualThan=" + DEFAULT_COLOR_ID);
+
+        // Get all the appointmentList where colorId greater than or equals to UPDATED_COLOR_ID
+        defaultAppointmentShouldNotBeFound("colorId.greaterOrEqualThan=" + UPDATED_COLOR_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByColorIdIsLessThanSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where colorId less than or equals to DEFAULT_COLOR_ID
+        defaultAppointmentShouldNotBeFound("colorId.lessThan=" + DEFAULT_COLOR_ID);
+
+        // Get all the appointmentList where colorId less than or equals to UPDATED_COLOR_ID
+        defaultAppointmentShouldBeFound("colorId.lessThan=" + UPDATED_COLOR_ID);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByArchivedIsEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where archived equals to DEFAULT_ARCHIVED
+        defaultAppointmentShouldBeFound("archived.equals=" + DEFAULT_ARCHIVED);
+
+        // Get all the appointmentList where archived equals to UPDATED_ARCHIVED
+        defaultAppointmentShouldNotBeFound("archived.equals=" + UPDATED_ARCHIVED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByArchivedIsInShouldWork() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where archived in DEFAULT_ARCHIVED or UPDATED_ARCHIVED
+        defaultAppointmentShouldBeFound("archived.in=" + DEFAULT_ARCHIVED + "," + UPDATED_ARCHIVED);
+
+        // Get all the appointmentList where archived equals to UPDATED_ARCHIVED
+        defaultAppointmentShouldNotBeFound("archived.in=" + UPDATED_ARCHIVED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByArchivedIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where archived is not null
+        defaultAppointmentShouldBeFound("archived.specified=true");
+
+        // Get all the appointmentList where archived is null
+        defaultAppointmentShouldNotBeFound("archived.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByPatientIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Patient patient = PatientResourceIntTest.createEntity(em);
+        em.persist(patient);
+        em.flush();
+        appointment.setPatient(patient);
+        appointmentRepository.saveAndFlush(appointment);
+        Long patientId = patient.getId();
+
+        // Get all the appointmentList where patient equals to patientId
+        defaultAppointmentShouldBeFound("patientId.equals=" + patientId);
+
+        // Get all the appointmentList where patient equals to patientId + 1
+        defaultAppointmentShouldNotBeFound("patientId.equals=" + (patientId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByRegistrationIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Registration registration = RegistrationResourceIntTest.createEntity(em);
+        em.persist(registration);
+        em.flush();
+        appointment.setRegistration(registration);
+        appointmentRepository.saveAndFlush(appointment);
+        Long registrationId = registration.getId();
+
+        // Get all the appointmentList where registration equals to registrationId
+        defaultAppointmentShouldBeFound("registrationId.equals=" + registrationId);
+
+        // Get all the appointmentList where registration equals to registrationId + 1
+        defaultAppointmentShouldNotBeFound("registrationId.equals=" + (registrationId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned
+     */
+    private void defaultAppointmentShouldBeFound(String filter) throws Exception {
+        restAppointmentMockMvc.perform(get("/api/appointments?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(appointment.getId().intValue())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT.toString())))
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
+            .andExpect(jsonPath("$.[*].expectedArrivalTime").value(hasItem(DEFAULT_EXPECTED_ARRIVAL_TIME.toString())))
+            .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(hasItem(DEFAULT_REQUIRED_TREATMENT_TIME)))
+            .andExpect(jsonPath("$.[*].microscope").value(hasItem(DEFAULT_MICROSCOPE.booleanValue())))
+            .andExpect(jsonPath("$.[*].newPatient").value(hasItem(DEFAULT_NEW_PATIENT.booleanValue())))
+            .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR.booleanValue())))
+            .andExpect(jsonPath("$.[*].colorId").value(hasItem(DEFAULT_COLOR_ID)))
+            .andExpect(jsonPath("$.[*].archived").value(hasItem(DEFAULT_ARCHIVED.booleanValue())));
+
+        // Check, that the count call also returns 1
+        restAppointmentMockMvc.perform(get("/api/appointments/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned
+     */
+    private void defaultAppointmentShouldNotBeFound(String filter) throws Exception {
+        restAppointmentMockMvc.perform(get("/api/appointments?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restAppointmentMockMvc.perform(get("/api/appointments/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("0"));
+    }
+
 
     @Test
     @Transactional
@@ -268,7 +810,7 @@ public class AppointmentResourceIntTest {
     @Transactional
     public void updateAppointment() throws Exception {
         // Initialize the database
-        appointmentRepository.saveAndFlush(appointment);
+        appointmentService.save(appointment);
 
         int databaseSizeBeforeUpdate = appointmentRepository.findAll().size();
 
@@ -288,6 +830,7 @@ public class AppointmentResourceIntTest {
             .microscope(UPDATED_MICROSCOPE)
             .newPatient(UPDATED_NEW_PATIENT)
             .baseFloor(null) // test unchanged with null
+            .colorId(UPDATED_COLOR_ID)
             .archived(UPDATED_ARCHIVED)
             .registration(registration)
             .doctor(updateUser.getExtendUser());
@@ -309,6 +852,7 @@ public class AppointmentResourceIntTest {
         assertThat(testAppointment.isMicroscope()).isEqualTo(UPDATED_MICROSCOPE);
         assertThat(testAppointment.isNewPatient()).isEqualTo(UPDATED_NEW_PATIENT);
         assertThat(testAppointment.isBaseFloor()).isEqualTo(DEFAULT_BASE_FLOOR);
+        assertThat(testAppointment.getColorId()).isEqualTo(UPDATED_COLOR_ID);
         assertThat(testAppointment.isArchived()).isEqualTo(UPDATED_ARCHIVED);
         assertThat(testAppointment.getRegistration().getStatus()).isEqualTo(registration.getStatus());
         assertThat(testAppointment.getDoctor().getId()).isEqualTo(updateUser.getId());
@@ -336,7 +880,7 @@ public class AppointmentResourceIntTest {
     @Transactional
     public void deleteAppointment() throws Exception {
         // Initialize the database
-        appointmentRepository.saveAndFlush(appointment);
+        appointmentService.save(appointment);
 
         int databaseSizeBeforeDelete = appointmentRepository.findAll().size();
 
@@ -402,5 +946,63 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[*].microscope").value(hasItem(DEFAULT_MICROSCOPE)))
             .andExpect(jsonPath("$.[*].tags.[*].name").value(hasItem(patient.getTags().iterator().next().getName())))
             .andExpect(jsonPath("$.[*].doctor.id").value(hasItem(appointment.getDoctor().getUser().getId().intValue())));
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByRegistrationIsNullAndPatientId() throws Exception {
+        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository, patientService);
+        patient.addAppointment(appointment);
+
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where registration is null and patient equals to
+        defaultAppointmentShouldBeFound("registrationId.specified=false&patientId.equals=" + patient.getId());
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByRegistrationType() throws Exception {
+        Registration registration = RegistrationResourceIntTest.createEntity(em);
+        em.persist(registration);
+        em.flush();
+        appointment.setRegistration(registration);
+
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where registration type equals to
+        defaultAppointmentShouldBeFound("registrationType.equals=" + registration.getType());
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByRegistrationTypeValue() throws Exception {
+        Registration registration = RegistrationResourceIntTest.createEntity(em);
+        em.persist(registration);
+        em.flush();
+        appointment.setRegistration(registration);
+
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where registration type equals to
+        defaultAppointmentShouldBeFound("registrationTypeValue.equals=" + registration.getType().getValue());
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByRegistrationTypeValueNotFound() throws Exception {
+        Registration registration = RegistrationResourceIntTest.createEntity(em);
+        em.persist(registration);
+        em.flush();
+        appointment.setRegistration(registration);
+
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where registration type equals to
+        defaultAppointmentShouldNotBeFound("registrationTypeValue.equals=" + -1);
     }
 }

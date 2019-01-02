@@ -1,5 +1,8 @@
 package io.dentall.totoro.domain.enumeration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The RegistrationType enumeration.
  */
@@ -14,5 +17,12 @@ public enum RegistrationType {
 
     public int getValue() {
         return this.value;
+    }
+
+    public static final Map<Integer, RegistrationType> intToTypeMap = new HashMap<>();
+    static {
+        for (RegistrationType type : RegistrationType.values()) {
+            intToTypeMap.put(type.value, type);
+        }
     }
 }

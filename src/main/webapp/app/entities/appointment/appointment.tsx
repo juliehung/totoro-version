@@ -98,6 +98,15 @@ export class Appointment extends React.Component<IAppointmentProps, IAppointment
                 <th className="hand" onClick={this.sort('newPatient')}>
                   <Translate contentKey="totoroApp.appointment.newPatient">New Patient</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('baseFloor')}>
+                  <Translate contentKey="totoroApp.appointment.baseFloor">Base Floor</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('colorId')}>
+                  <Translate contentKey="totoroApp.appointment.colorId">Color Id</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('archived')}>
+                  <Translate contentKey="totoroApp.appointment.archived">Archived</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.appointment.patient">Patient</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -126,6 +135,9 @@ export class Appointment extends React.Component<IAppointmentProps, IAppointment
                   <td>{appointment.requiredTreatmentTime}</td>
                   <td>{appointment.microscope ? 'true' : 'false'}</td>
                   <td>{appointment.newPatient ? 'true' : 'false'}</td>
+                  <td>{appointment.baseFloor ? 'true' : 'false'}</td>
+                  <td>{appointment.colorId}</td>
+                  <td>{appointment.archived ? 'true' : 'false'}</td>
                   <td>{appointment.patient ? <Link to={`patient/${appointment.patient.id}`}>{appointment.patient.id}</Link> : ''}</td>
                   <td>
                     {appointment.registration ? (

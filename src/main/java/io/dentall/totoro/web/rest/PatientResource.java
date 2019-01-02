@@ -114,17 +114,23 @@ public class PatientResource {
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many)
      * @param search patients who contain search keyword to retrieve
      * @param isDeleted patients were deleted
+     * @param isNP patients were NP
      * @return the ResponseEntity with status 200 (OK) and the list of patients in body
      */
     @GetMapping("/patients")
     @Timed
-    public ResponseEntity<List<Patient>> getAllPatients(Pageable pageable, @RequestParam(required = false, defaultValue = "false") boolean eagerload, @RequestParam(required = false) String search, @RequestParam(required = false) Boolean isDeleted) {
+    public ResponseEntity<List<Patient>> getAllPatients(
+        Pageable pageable,
+        @RequestParam(required = false, defaultValue = "false") boolean eagerload,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) Boolean isDeleted,
+        @RequestParam(required = false) Boolean isNP) {
         log.debug("REST request to get a page of Patients");
         Page<Patient> page;
         if (eagerload) {
-            page = (search != null || isDeleted != null) ? patientRepository.findByQueryWithEagerRelationships(search, isDeleted, pageable) : patientRepository.findAllWithEagerRelationships(pageable);
+            page = (search != null || isDeleted != null || isNP != null) ? patientRepository.findByQueryWithEagerRelationships(search, isDeleted, isNP, pageable) : patientRepository.findAllWithEagerRelationships(pageable);
         } else {
-            page = (search != null || isDeleted != null) ? patientRepository.findByQuery(search, isDeleted, pageable) : patientRepository.findAll(pageable);
+            page = (search != null || isDeleted != null || isNP != null) ? patientRepository.findByQuery(search, isDeleted, isNP, pageable) : patientRepository.findAll(pageable);
         }
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/patients?eagerload=%b&search=%s&isDeleted=%b", eagerload, search, isDeleted));

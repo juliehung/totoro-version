@@ -66,8 +66,8 @@
     "entityTableName": "appointment",
     "dto": "no",
     "pagination": "pagination",
-    "service": "no",
-    "jpaMetamodelFiltering": false,
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
     "fluentMethods": true,
     "clientRootFolder": "",
     "applications": "*"
