@@ -33,6 +33,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -408,9 +409,7 @@ public class PatientResource {
     public ResponseEntity<Collection<Tag>> createPatientTag(@PathVariable Long id, @PathVariable Long tag_id) {
         log.debug("REST request to save Tag(id: {}) of Patient(id: {})", tag_id, id);
 
-        Function<Patient, Patient> func = patient ->
-            getPatientCRUDResult(patient, getPatientCRUDTarget(tag_id, tagRepository), Patient::addTag);
-        return ResponseEntity.ok().body(getPatient(id, func).getTags());
+        return ResponseEntity.ok().body(getPatient(id, getPatientByTagConsumer(tag_id, (patient, tag) -> patient.getTags().add(tag))).getTags());
     }
 
     /**
@@ -425,9 +424,7 @@ public class PatientResource {
     public ResponseEntity<Collection<Tag>> deletePatientTag(@PathVariable Long id, @PathVariable Long tag_id) {
         log.debug("REST request to delete Tag(id: {}) of Patient(id: {})", tag_id, id);
 
-        Function<Patient, Patient> func = patient ->
-            getPatientCRUDResult(patient, getPatientCRUDTarget(tag_id, tagRepository), Patient::removeTag);
-        return ResponseEntity.ok().body(getPatient(id, func).getTags());
+        return ResponseEntity.ok().body(getPatient(id, getPatientByTagConsumer(tag_id, (patient, tag) -> patient.getTags().remove(tag))).getTags());
     }
 
     /**
@@ -517,5 +514,12 @@ public class PatientResource {
 
     private <T> Patient getPatientCRUDResult(Patient patient, T target, BiFunction<Patient, T, Patient> crud) {
         return patientRepository.save(crud.apply(patient, target));
+    }
+
+    private Function<Patient, Patient> getPatientByTagConsumer(Long id, BiConsumer<Patient, Tag> crud) {
+        return patient -> {
+            tagRepository.findById(id).ifPresent(tag -> crud.accept(patient, tag));
+            return patientRepository.save(patient);
+        };
     }
 }

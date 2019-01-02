@@ -929,7 +929,7 @@ public class PatientResourceIntTest {
 
     @Test
     @Transactional
-    public void createDeleteTags() throws Exception {
+    public void deletePatientTags() throws Exception {
         // Initialize the database
         patientRepository.saveAndFlush(patient);
 
