@@ -13,7 +13,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+public interface AppointmentRepository extends JpaRepository<Appointment, Long>, JpaSpecificationExecutor<Appointment> {
 
     List<Appointment> findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end);
 

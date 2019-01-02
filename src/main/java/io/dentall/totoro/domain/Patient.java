@@ -102,11 +102,12 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @Column(name = "burden_cost")
     private Integer burdenCost;
 
-    
+    @JsonIgnore
     @Lob
     @Column(name = "avatar")
     private byte[] avatar;
 
+    @JsonIgnore
     @Column(name = "avatar_content_type")
     private String avatarContentType;
 

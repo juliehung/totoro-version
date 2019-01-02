@@ -36,6 +36,12 @@ export class AppointmentUpdate extends React.Component<IAppointmentUpdateProps, 
     };
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
+      this.handleClose();
+    }
+  }
+
   componentDidMount() {
     if (this.state.isNew) {
       this.props.reset();
@@ -62,7 +68,6 @@ export class AppointmentUpdate extends React.Component<IAppointmentUpdateProps, 
       } else {
         this.props.updateEntity(entity);
       }
-      this.handleClose();
     }
   };
 
@@ -162,6 +167,24 @@ export class AppointmentUpdate extends React.Component<IAppointmentUpdateProps, 
                   </Label>
                 </AvGroup>
                 <AvGroup>
+                  <Label id="baseFloorLabel" check>
+                    <AvInput id="appointment-baseFloor" type="checkbox" className="form-control" name="baseFloor" />
+                    <Translate contentKey="totoroApp.appointment.baseFloor">Base Floor</Translate>
+                  </Label>
+                </AvGroup>
+                <AvGroup>
+                  <Label id="colorIdLabel" for="colorId">
+                    <Translate contentKey="totoroApp.appointment.colorId">Color Id</Translate>
+                  </Label>
+                  <AvField id="appointment-colorId" type="string" className="form-control" name="colorId" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="archivedLabel" check>
+                    <AvInput id="appointment-archived" type="checkbox" className="form-control" name="archived" />
+                    <Translate contentKey="totoroApp.appointment.archived">Archived</Translate>
+                  </Label>
+                </AvGroup>
+                <AvGroup>
                   <Label for="patient.id">
                     <Translate contentKey="totoroApp.appointment.patient">Patient</Translate>
                   </Label>
@@ -218,7 +241,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   registrations: storeState.registration.entities,
   appointmentEntity: storeState.appointment.entity,
   loading: storeState.appointment.loading,
-  updating: storeState.appointment.updating
+  updating: storeState.appointment.updating,
+  updateSuccess: storeState.appointment.updateSuccess
 });
 
 const mapDispatchToProps = {
