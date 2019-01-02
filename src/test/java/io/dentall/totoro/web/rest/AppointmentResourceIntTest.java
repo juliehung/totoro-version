@@ -1005,4 +1005,14 @@ public class AppointmentResourceIntTest {
         // Get all the appointmentList where registration type equals to
         defaultAppointmentShouldNotBeFound("registrationTypeValue.equals=" + -1);
     }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByDoctorId() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where doctor equals to
+        defaultAppointmentShouldBeFound("doctorId.equals=" + appointment.getDoctor().getId());
+    }
 }

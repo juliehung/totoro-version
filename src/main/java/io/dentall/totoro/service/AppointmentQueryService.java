@@ -104,7 +104,6 @@ public class AppointmentQueryService extends QueryService<Appointment> {
             if (criteria.getExpectedArrivalTime() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getExpectedArrivalTime(), Appointment_.expectedArrivalTime));
             } else {
-
                 if ((predicateRegistrationId.test(criteria.getRegistrationId()) && predicateFilterEquals.test(criteria.getPatientId())) ||
                     predicateFilterEquals.test(criteria.getRegistrationType()) ||
                     predicateFilterEquals.test(criteria.getRegistrationTypeValue())) {
@@ -152,6 +151,10 @@ public class AppointmentQueryService extends QueryService<Appointment> {
                     filter.setEquals(type);
                     specification = specification.and(buildReferringEntitySpecification(filter, Appointment_.registration, Registration_.type));
                 }
+            }
+            if (criteria.getDoctorId() != null) {
+                specification = specification.and(buildSpecification(criteria.getDoctorId(),
+                    root -> root.join(Appointment_.doctor, JoinType.LEFT).get(ExtendUser_.id)));
             }
         }
         return specification;
