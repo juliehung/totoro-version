@@ -211,19 +211,19 @@ public class AppointmentCriteria implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(
-        id,
-        status,
-        subject,
-        note,
-        expectedArrivalTime,
-        requiredTreatmentTime,
-        microscope,
-        newPatient,
-        baseFloor,
-        colorId,
-        archived,
-        patientId,
-        registrationId,
+            id,
+            status,
+            subject,
+            note,
+            expectedArrivalTime,
+            requiredTreatmentTime,
+            microscope,
+            newPatient,
+            baseFloor,
+            colorId,
+            archived,
+            patientId,
+            registrationId,
             registrationType,
             registrationTypeValue
         );
@@ -232,19 +232,19 @@ public class AppointmentCriteria implements Serializable {
     @Override
     public String toString() {
         return "AppointmentCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (status != null ? "status=" + status + ", " : "") +
-                (subject != null ? "subject=" + subject + ", " : "") +
-                (note != null ? "note=" + note + ", " : "") +
-                (expectedArrivalTime != null ? "expectedArrivalTime=" + expectedArrivalTime + ", " : "") +
-                (requiredTreatmentTime != null ? "requiredTreatmentTime=" + requiredTreatmentTime + ", " : "") +
-                (microscope != null ? "microscope=" + microscope + ", " : "") +
-                (newPatient != null ? "newPatient=" + newPatient + ", " : "") +
-                (baseFloor != null ? "baseFloor=" + baseFloor + ", " : "") +
-                (colorId != null ? "colorId=" + colorId + ", " : "") +
-                (archived != null ? "archived=" + archived + ", " : "") +
-                (patientId != null ? "patientId=" + patientId + ", " : "") +
-                (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
+            (id != null ? "id=" + id + ", " : "") +
+            (status != null ? "status=" + status + ", " : "") +
+            (subject != null ? "subject=" + subject + ", " : "") +
+            (note != null ? "note=" + note + ", " : "") +
+            (expectedArrivalTime != null ? "expectedArrivalTime=" + expectedArrivalTime + ", " : "") +
+            (requiredTreatmentTime != null ? "requiredTreatmentTime=" + requiredTreatmentTime + ", " : "") +
+            (microscope != null ? "microscope=" + microscope + ", " : "") +
+            (newPatient != null ? "newPatient=" + newPatient + ", " : "") +
+            (baseFloor != null ? "baseFloor=" + baseFloor + ", " : "") +
+            (colorId != null ? "colorId=" + colorId + ", " : "") +
+            (archived != null ? "archived=" + archived + ", " : "") +
+            (patientId != null ? "patientId=" + patientId + ", " : "") +
+            (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
             (registrationType != null ? "registrationType=" + registrationType + ", " : "") +
             (registrationTypeValue != null ? "registrationTypeValue=" + registrationTypeValue + ", " : "") +
             "}";
