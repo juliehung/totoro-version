@@ -1,0 +1,24 @@
+{
+  "totoroApp": {
+    "hospital": {
+      "home": {
+        "title": "Hospitals",
+        "createLabel": "Create a new Hospital",
+        "createOrEditLabel": "Create or edit a Hospital"
+      },
+      "created": "A new Hospital is created with identifier {{ param }}",
+      "updated": "A Hospital is updated with identifier {{ param }}",
+      "deleted": "A Hospital is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Hospital {{ id }}?"
+      },
+      "detail": {
+        "title": "Hospital"
+      },
+      "hospitalId": "Hospital Id",
+      "name": "Name",
+      "address": "Address",
+      "branch": "Branch"
+    }
+  }
+}

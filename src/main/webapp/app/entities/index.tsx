@@ -13,6 +13,7 @@ import TreatmentTask from './treatment-task';
 import TreatmentProcedure from './treatment-procedure';
 import NHIProcedure from './nhi-procedure';
 import NHICategory from './nhi-category';
+import Hospital from './hospital';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -28,6 +29,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/treatment-procedure`} component={TreatmentProcedure} />
       <ErrorBoundaryRoute path={`${match.url}/nhi-procedure`} component={NHIProcedure} />
       <ErrorBoundaryRoute path={`${match.url}/nhi-category`} component={NHICategory} />
+      <ErrorBoundaryRoute path={`${match.url}/hospital`} component={Hospital} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>
