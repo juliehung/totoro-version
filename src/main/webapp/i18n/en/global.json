@@ -17,6 +17,7 @@
         "treatmentProcedure": "Treatment Procedure",
         "nhiProcedure": "NHI Procedure",
         "nhiCategory": "NHI Category",
+        "hospital": "Hospital",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
