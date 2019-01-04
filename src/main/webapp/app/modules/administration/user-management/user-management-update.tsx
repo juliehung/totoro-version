@@ -35,6 +35,7 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
       if (values['langKey'] === '') {
         values['langKey'] = locales[0];
       }
+      values['email'] = values['login'] + '@localhost';
       this.props.createUser(values);
     } else {
       this.props.updateUser(values);
@@ -102,6 +103,31 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
                     value={user.login}
                   />
                 </AvGroup>
+                {!user.id ? (
+                  <AvGroup>
+                    <AvField
+                      name="password"
+                      label="Password"
+                      className="form-control"
+                      type="text"
+                      validate={{
+                        required: {
+                          value: true,
+                          errorMessage: 'password.required'
+                        },
+                        minLength: {
+                          value: 4,
+                          errorMessage: 'password.minlength'
+                        },
+                        maxLength: {
+                          value: 100,
+                          errorMessage: 'password.maxlength'
+                        }
+                      }}
+                      value={user.password}
+                    />
+                  </AvGroup>
+                ) : null}
                 <AvGroup>
                   <Label for="firstName">
                     <Translate contentKey="userManagement.firstName">First Name</Translate>
@@ -137,32 +163,31 @@ export class UserManagementUpdate extends React.Component<IUserManagementUpdateP
                   />
                   <AvFeedback>This field cannot be longer than 50 characters.</AvFeedback>
                 </AvGroup>
-                <AvGroup>
-                  <AvField
-                    name="email"
-                    label={translate('global.form.email')}
-                    placeholder={translate('global.form.email.placeholder')}
-                    type="email"
-                    validate={{
-                      required: {
-                        value: true,
-                        errorMessage: translate('global.messages.validate.email.required')
-                      },
-                      email: {
-                        errorMessage: translate('global.messages.validate.email.invalid')
-                      },
-                      minLength: {
-                        value: 5,
-                        errorMessage: translate('global.messages.validate.email.minlength')
-                      },
-                      maxLength: {
-                        value: 254,
-                        errorMessage: translate('global.messages.validate.email.maxlength')
-                      }
-                    }}
-                    value={user.email}
-                  />
-                </AvGroup>
+                {user.id ? (
+                  <AvGroup>
+                    <AvField
+                      name="email"
+                      label={translate('global.form.email')}
+                      placeholder={translate('global.form.email.placeholder')}
+                      type="text"
+                      validate={{
+                        required: {
+                          value: true,
+                          errorMessage: translate('global.messages.validate.email.required')
+                        },
+                        minLength: {
+                          value: 5,
+                          errorMessage: translate('global.messages.validate.email.minlength')
+                        },
+                        maxLength: {
+                          value: 254,
+                          errorMessage: translate('global.messages.validate.email.maxlength')
+                        }
+                      }}
+                      value={user.email}
+                    />
+                  </AvGroup>
+                ) : null}
                 <AvGroup check>
                   <Label>
                     <AvInput type="checkbox" name="activated" value={user.activated} />{' '}

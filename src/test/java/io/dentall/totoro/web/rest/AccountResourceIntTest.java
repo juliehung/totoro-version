@@ -652,6 +652,7 @@ public class AccountResourceIntTest {
         user.setPassword(passwordEncoder.encode(currentPassword));
         user.setLogin("change-password");
         user.setEmail("change-password@example.com");
+        user.setExtendUser(new ExtendUser().user(user));
         userRepository.saveAndFlush(user);
 
         restMvc.perform(post("/api/account/change-password")

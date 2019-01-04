@@ -129,11 +129,7 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
-
-        ExtendUser newExtendUser = new ExtendUser();
-        newExtendUser.setUser(newUser);
-
-        newUser.setExtendUser(newExtendUser);
+        newUser.setExtendUser(new ExtendUser().user(newUser));
         userRepository.save(newUser);
         this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
@@ -150,6 +146,10 @@ public class UserService {
     }
 
     public User createUser(UserDTO userDTO) {
+        return createUser(userDTO, userDTO.getLogin());
+    }
+
+    public User createUser(UserDTO userDTO, String password) {
         User user = new User();
         user.setLogin(userDTO.getLogin().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
@@ -161,7 +161,7 @@ public class UserService {
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
-        String encryptedPassword = passwordEncoder.encode(userDTO.getLogin());
+        String encryptedPassword = passwordEncoder.encode(password);
         user.setPassword(encryptedPassword);
         user.setResetDate(Instant.now());
         user.setActivated(true);
@@ -174,10 +174,7 @@ public class UserService {
             user.setAuthorities(authorities);
         }
 
-        ExtendUser extendUser = new ExtendUser();
-        extendUser.setUser(user);
-
-        user.setExtendUser(extendUser);
+        user.setExtendUser(new ExtendUser().user(user));
         userRepository.save(user);
         this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);
@@ -276,6 +273,7 @@ public class UserService {
                 }
                 String encryptedPassword = passwordEncoder.encode(newPassword);
                 user.setPassword(encryptedPassword);
+                user.getExtendUser().setFirstLogin(false);
                 this.clearUserCaches(user);
                 log.debug("Changed password for User: {}", user);
             });
