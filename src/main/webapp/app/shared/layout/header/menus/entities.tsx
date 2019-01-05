@@ -23,110 +23,20 @@ export const EntitiesMenu = props => (
       &nbsp;
       <Translate contentKey="global.menu.entities.registration" />
     </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/patient">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.patient" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/appointment">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.appointment" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/registration">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.registration" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/appointment">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.appointment" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/registration">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.registration" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/patient">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.patient" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/appointment">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.appointment" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/registration">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.registration" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/patient">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.patient" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/registration">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.registration" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/patient">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.patient" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/patient">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.patient" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/patient">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.patient" />
-    </DropdownItem>
     <DropdownItem tag={Link} to="/entity/tag">
       <FontAwesomeIcon icon="asterisk" />
       &nbsp;
       <Translate contentKey="global.menu.entities.tag" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/appointment">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.appointment" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/registration">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.registration" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/patient">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.patient" />
     </DropdownItem>
     <DropdownItem tag={Link} to="/entity/questionnaire">
       <FontAwesomeIcon icon="asterisk" />
       &nbsp;
       <Translate contentKey="global.menu.entities.questionnaire" />
     </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/tag">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.tag" />
-    </DropdownItem>
     <DropdownItem tag={Link} to="/entity/treatment-task">
       <FontAwesomeIcon icon="asterisk" />
       &nbsp;
       <Translate contentKey="global.menu.entities.treatmentTask" />
-    </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/treatment-procedure">
-      <FontAwesomeIcon icon="asterisk" />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.treatmentProcedure" />
     </DropdownItem>
     <DropdownItem tag={Link} to="/entity/nhi-procedure">
       <FontAwesomeIcon icon="asterisk" />
@@ -138,23 +48,13 @@ export const EntitiesMenu = props => (
       &nbsp;
       <Translate contentKey="global.menu.entities.nhiCategory" />
     </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/nhi-category">
-      <FontAwesomeIcon icon="asterisk" fixedWidth />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.nhiCategory" />
-    </DropdownItem>
     <DropdownItem tag={Link} to="/entity/treatment-procedure">
-      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      <FontAwesomeIcon icon="asterisk" />
       &nbsp;
       <Translate contentKey="global.menu.entities.treatmentProcedure" />
     </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/appointment">
-      <FontAwesomeIcon icon="asterisk" fixedWidth />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.appointment" />
-    </DropdownItem>
     <DropdownItem tag={Link} to="/entity/hospital">
-      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      <FontAwesomeIcon icon="asterisk" />
       &nbsp;
       <Translate contentKey="global.menu.entities.hospital" />
     </DropdownItem>
