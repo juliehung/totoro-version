@@ -33,6 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.domain.enumeration.RegistrationType;
+import org.springframework.validation.Validator;
+
 /**
  * Test class for the RegistrationResource REST controller.
  *
@@ -70,6 +72,9 @@ public class RegistrationResourceIntTest {
     private EntityManager em;
 
     @Autowired
+    private Validator validator;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -96,7 +101,8 @@ public class RegistrationResourceIntTest {
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**

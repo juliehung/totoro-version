@@ -1,5 +1,23 @@
 {
-    "name": "Registration",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "appointment",
+            "otherEntityName": "appointment",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "registration"
+        },
+        {
+            "relationshipName": "accounting",
+            "otherEntityName": "accounting",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "registration"
+        }
+    ],
     "fields": [
         {
             "fieldName": "status",
@@ -23,22 +41,11 @@
             "fieldType": "Boolean"
         }
     ],
-    "relationships": [
-        {
-            "relationshipType": "one-to-one",
-            "relationshipName": "appointment",
-            "otherEntityName": "appointment",
-            "ownerSide": false,
-            "otherEntityRelationshipName": "registration"
-        }
-    ],
     "changelogDate": "20181019094009",
-    "entityTableName": "registration",
     "dto": "no",
-    "pagination": "pagination",
+    "searchEngine": false,
     "service": "no",
+    "entityTableName": "registration",
     "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "pagination"
 }

@@ -2,10 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 
-import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.Patient;
-import io.dentall.totoro.domain.Registration;
-import io.dentall.totoro.domain.User;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
@@ -167,6 +164,8 @@ public class AppointmentResourceIntTest {
     public void createAppointment() throws Exception {
         int databaseSizeBeforeCreate = appointmentRepository.findAll().size();
 
+        appointment.setRegistration(RegistrationResourceIntTest.createEntity(em).accounting(AccountingResourceIntTest.createEntity(em)));
+
         // Create the Appointment
         restAppointmentMockMvc.perform(post("/api/appointments")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -188,6 +187,8 @@ public class AppointmentResourceIntTest {
         assertThat(testAppointment.getColorId()).isEqualTo(DEFAULT_COLOR_ID);
         assertThat(testAppointment.isArchived()).isEqualTo(DEFAULT_ARCHIVED);
         assertThat(testAppointment.getDoctor()).isEqualTo(appointment.getDoctor());
+        assertThat(testAppointment.getRegistration().getType()).isEqualTo(appointment.getRegistration().getType());
+        assertThat(testAppointment.getRegistration().getAccounting().getOwnExpense()).isEqualTo(appointment.getRegistration().getAccounting().getOwnExpense());
     }
 
     @Test
@@ -821,6 +822,8 @@ public class AppointmentResourceIntTest {
 
         User updateUser = userRepository.save(UserResourceIntTest.createEntity(em));
         Registration registration = RegistrationResourceIntTest.createEntity(em);
+        Accounting accounting = AccountingResourceIntTest.createEntity(em);
+        registration.setAccounting(accounting);
         updatedAppointment
             .status(UPDATED_STATUS)
             .subject(UPDATED_SUBJECT)
@@ -856,6 +859,7 @@ public class AppointmentResourceIntTest {
         assertThat(testAppointment.isArchived()).isEqualTo(UPDATED_ARCHIVED);
         assertThat(testAppointment.getRegistration().getStatus()).isEqualTo(registration.getStatus());
         assertThat(testAppointment.getDoctor().getId()).isEqualTo(updateUser.getId());
+        assertThat(testAppointment.getRegistration().getAccounting().getOwnExpense()).isEqualTo(accounting.getOwnExpense());
     }
 
     @Test

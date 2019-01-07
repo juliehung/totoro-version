@@ -1,26 +1,26 @@
-
 {
-    "totoroApp": {
-        "registration" : {
-            "home": {
-                "title": "Registrations",
-                "createLabel": "建立一筆新的 Registration",
-                "createOrEditLabel": "建立或編輯 Registration"
-            },
-            "created": "新的 Registration 建立成功，識別碼為 {{ param }}",
-            "updated": "識別碼為 {{ param }} 的 Registration 更新成功",
-            "deleted": "識別碼為 {{ param }} 的 Registration 刪除成功",
-            "delete": {
-                "question": "您確定要刪除 Registration {{ id }} 嗎?"
-            },
-            "detail": {
-                "title": "Registration"
-            },
-            "status": "Status",
-            "arrivalTime": "Arrival Time",
-            "type": "Type",
-            "onSite": "On Site",
-            "appointment": "Appointment"
-        }
+  "totoroApp": {
+    "registration": {
+      "home": {
+        "title": "Registrations",
+        "createLabel": "建立一筆新的 Registration",
+        "createOrEditLabel": "建立或編輯 Registration"
+      },
+      "created": "新的 Registration 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Registration 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Registration 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Registration {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Registration"
+      },
+      "status": "Status",
+      "arrivalTime": "Arrival Time",
+      "type": "Type",
+      "onSite": "On Site",
+      "appointment": "Appointment",
+      "accounting": "Accounting"
     }
+  }
 }

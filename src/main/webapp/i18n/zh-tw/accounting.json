@@ -1,0 +1,31 @@
+{
+  "totoroApp": {
+    "accounting": {
+      "home": {
+        "title": "Accountings",
+        "createLabel": "建立一筆新的 Accounting",
+        "createOrEditLabel": "建立或編輯 Accounting"
+      },
+      "created": "新的 Accounting 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Accounting 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Accounting 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Accounting {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Accounting"
+      },
+      "registrationFee": "Registration Fee",
+      "partialBurden": "Partial Burden",
+      "burdenCost": "Burden Cost",
+      "deposit": "Deposit",
+      "ownExpense": "Own Expense",
+      "other": "Other",
+      "patientIdentity": "Patient Identity",
+      "discountReason": "Discount Reason",
+      "discount": "Discount",
+      "hospital": "Hospital",
+      "registration": "Registration"
+    }
+  }
+}

@@ -14,34 +14,55 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity Registration.
+        Added the entity Accounting.
     -->
-    <changeSet id="20181019094009-1" author="jhipster">
-        <createTable tableName="registration">
+    <changeSet id="20190103032423-1" author="jhipster">
+        <createTable tableName="accounting">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="status" type="varchar(255)">
+            <column name="registration_fee" type="double">
                 <constraints nullable="false" />
             </column>
 
-            <column name="arrival_time" type="datetime">
+            <column name="partial_burden" type="double">
                 <constraints nullable="true" />
             </column>
 
-            <column name="jhi_type" type="varchar(255)">
+            <column name="burden_cost" type="double">
                 <constraints nullable="true" />
             </column>
 
-            <column name="on_site" type="boolean">
+            <column name="deposit" type="double">
                 <constraints nullable="true" />
             </column>
-            <column name="accounting_id" type="bigint">
-                <constraints unique="true" nullable="true" uniqueConstraintName="ux_registration_accounting_id" />
+
+            <column name="own_expense" type="double">
+                <constraints nullable="true" />
             </column>
+
+            <column name="other" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="patient_identity" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="discount_reason" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="discount" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="hospital_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        <dropDefaultValue tableName="registration" columnName="arrival_time" columnDataType="datetime"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

@@ -49,6 +49,9 @@ public class Registration implements Serializable {
     @JsonIgnore
     private Appointment appointment;
 
+    @OneToOne    @JoinColumn(unique = true)
+    private Accounting accounting;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -121,6 +124,19 @@ public class Registration implements Serializable {
 
     public void setAppointment(Appointment appointment) {
         this.appointment = appointment;
+    }
+
+    public Accounting getAccounting() {
+        return accounting;
+    }
+
+    public Registration accounting(Accounting accounting) {
+        this.accounting = accounting;
+        return this;
+    }
+
+    public void setAccounting(Accounting accounting) {
+        this.accounting = accounting;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

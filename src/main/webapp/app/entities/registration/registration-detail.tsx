@@ -54,6 +54,10 @@ export class RegistrationDetail extends React.Component<IRegistrationDetailProps
               </span>
             </dt>
             <dd>{registrationEntity.onSite ? 'true' : 'false'}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.registration.accounting">Accounting</Translate>
+            </dt>
+            <dd>{registrationEntity.accounting ? registrationEntity.accounting.id : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/registration" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

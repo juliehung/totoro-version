@@ -1,0 +1,73 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "hospital",
+            "otherEntityName": "hospital",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "registration",
+            "otherEntityName": "registration",
+            "relationshipType": "one-to-one",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "accounting"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "registrationFee",
+            "fieldType": "Double",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "partialBurden",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "burdenCost",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "deposit",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "ownExpense",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "other",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "patientIdentity",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "discountReason",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "discount",
+            "fieldType": "Double"
+        }
+    ],
+    "changelogDate": "20190103032423",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "accounting",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination"
+}

@@ -1,8 +1,6 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.repository.RegistrationRepository;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
@@ -23,7 +21,9 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -108,7 +108,7 @@ public class RegistrationResource {
         log.debug("REST request to get a page of Registrations");
         Page<Registration> page = registrationRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/registrations");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
