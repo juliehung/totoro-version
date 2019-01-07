@@ -10,6 +10,8 @@ import { IRootState } from 'app/shared/reducers';
 
 import { IAppointment } from 'app/shared/model/appointment.model';
 import { getEntities as getAppointments } from 'app/entities/appointment/appointment.reducer';
+import { IAccounting } from 'app/shared/model/accounting.model';
+import { getEntities as getAccountings } from 'app/entities/accounting/accounting.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './registration.reducer';
 import { IRegistration } from 'app/shared/model/registration.model';
 // tslint:disable-next-line:no-unused-variable
@@ -21,6 +23,7 @@ export interface IRegistrationUpdateProps extends StateProps, DispatchProps, Rou
 export interface IRegistrationUpdateState {
   isNew: boolean;
   appointmentId: string;
+  accountingId: string;
 }
 
 export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps, IRegistrationUpdateState> {
@@ -28,8 +31,15 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
     super(props);
     this.state = {
       appointmentId: '0',
+      accountingId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
+      this.handleClose();
+    }
   }
 
   componentDidMount() {
@@ -40,6 +50,7 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
     }
 
     this.props.getAppointments();
+    this.props.getAccountings();
   }
 
   saveEntity = (event, errors, values) => {
@@ -57,7 +68,6 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
       } else {
         this.props.updateEntity(entity);
       }
-      this.handleClose();
     }
   };
 
@@ -66,7 +76,7 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
   };
 
   render() {
-    const { registrationEntity, appointments, loading, updating } = this.props;
+    const { registrationEntity, appointments, accountings, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -151,6 +161,21 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
                     <Translate contentKey="totoroApp.registration.onSite">On Site</Translate>
                   </Label>
                 </AvGroup>
+                <AvGroup>
+                  <Label for="accounting.id">
+                    <Translate contentKey="totoroApp.registration.accounting">Accounting</Translate>
+                  </Label>
+                  <AvInput id="registration-accounting" type="select" className="form-control" name="accounting.id">
+                    <option value="" key="0" />
+                    {accountings
+                      ? accountings.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/registration" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
@@ -175,13 +200,16 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
 
 const mapStateToProps = (storeState: IRootState) => ({
   appointments: storeState.appointment.entities,
+  accountings: storeState.accounting.entities,
   registrationEntity: storeState.registration.entity,
   loading: storeState.registration.loading,
-  updating: storeState.registration.updating
+  updating: storeState.registration.updating,
+  updateSuccess: storeState.registration.updateSuccess
 });
 
 const mapDispatchToProps = {
   getAppointments,
+  getAccountings,
   getEntity,
   updateEntity,
   createEntity,

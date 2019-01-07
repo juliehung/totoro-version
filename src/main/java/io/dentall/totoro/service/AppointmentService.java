@@ -1,10 +1,10 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Registration;
-import io.dentall.totoro.repository.AppointmentRepository;
-import io.dentall.totoro.repository.ExtendUserRepository;
-import io.dentall.totoro.repository.RegistrationRepository;
+import io.dentall.totoro.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +34,26 @@ public class AppointmentService {
 
     private final ExtendUserRepository extendUserRepository;
 
-    public AppointmentService(AppointmentRepository appointmentRepository, RegistrationRepository registrationRepository, ExtendUserRepository extendUserRepository) {
+    private final AccountingRepository accountingRepository;
+
+    private final PatientRepository patientRepository;
+
+    private final HospitalRepository hospitalRepository;
+
+    public AppointmentService(
+        AppointmentRepository appointmentRepository,
+        RegistrationRepository registrationRepository,
+        ExtendUserRepository extendUserRepository,
+        AccountingRepository accountingRepository,
+        PatientRepository patientRepository,
+        HospitalRepository hospitalRepository
+    ) {
         this.appointmentRepository = appointmentRepository;
         this.registrationRepository = registrationRepository;
         this.extendUserRepository = extendUserRepository;
+        this.accountingRepository = accountingRepository;
+        this.patientRepository = patientRepository;
+        this.hospitalRepository = hospitalRepository;
     }
 
     /**
@@ -48,6 +64,34 @@ public class AppointmentService {
      */
     public Appointment save(Appointment appointment) {
         log.debug("Request to save Appointment : {}", appointment);
+
+        // patient
+        if (appointment.getPatient() != null) {
+            Patient patient = appointment.getPatient();
+            if (patient.getId() == null) {
+                log.debug("Save Patient({})", patient);
+                appointment.setPatient(patientRepository.save(patient));
+            }
+        }
+
+        // registration
+        if (appointment.getRegistration() != null) {
+            Registration registration = appointment.getRegistration();
+            if (registration.getId() == null) {
+                log.debug("Save Registration({})", registration);
+                appointment.setRegistration(registrationRepository.save(registration));
+            }
+
+            // accounting
+            if (registration.getAccounting() != null) {
+                Accounting accounting = registration.getAccounting();
+                if (accounting.getId() == null) {
+                    log.debug("Save Accounting({})", accounting);
+                    registration.setAccounting(accountingRepository.save(accounting));
+                }
+            }
+        }
+
         return appointmentRepository.save(appointment);
     }
 
@@ -111,7 +155,17 @@ public class AppointmentService {
                 log.debug("Update Registration({}) of Appointment(id: {})", updateAppointment.getRegistration(), updateAppointment.getId());
                 Registration registration = appointment.getRegistration();
                 Registration updateRegistration = updateAppointment.getRegistration();
-                appointment.setRegistration(registration == null ? registrationRepository.save(updateRegistration) : updateRegistration(registration, updateRegistration));
+
+                if (registration == null) {
+                    if (updateRegistration.getAccounting() != null) {
+                        log.debug("Save Accounting({})", updateRegistration.getAccounting());
+                        updateRegistration.accounting(accountingRepository.save(updateRegistration.getAccounting()));
+                    }
+
+                    appointment.setRegistration(registrationRepository.save(updateRegistration));
+                } else {
+                    appointment.setRegistration(updateRegistration(registration, updateRegistration));
+                }
             }
 
             if (updateAppointment.getStatus() != null) {
@@ -155,7 +209,7 @@ public class AppointmentService {
             }
 
             // doctor
-            if (updateAppointment.getDoctor() != null) {
+            if (updateAppointment.getDoctor() != null && updateAppointment.getDoctor().getId() != null) {
                 log.debug("Update Doctor({}) of Appointment(id: {})", updateAppointment.getDoctor(), updateAppointment.getId());
                 appointment.setDoctor(extendUserRepository.findById(updateAppointment.getDoctor().getId()).orElse(null));
             }
@@ -185,6 +239,59 @@ public class AppointmentService {
             registration.setOnSite(updateRegistration.isOnSite());
         }
 
+        if (updateRegistration.getAccounting() != null) {
+            log.debug("Update Accounting({}) of Registration(id: {})", updateRegistration.getAccounting(), updateRegistration.getId());
+            Accounting accounting = registration.getAccounting();
+            Accounting updateAccounting = updateRegistration.getAccounting();
+            registration.setAccounting(accounting == null ? accountingRepository.save(updateAccounting) : updateAccounting(accounting, updateAccounting));
+        }
+
         return registration;
+    }
+
+    private Accounting updateAccounting(Accounting accounting, Accounting updateAccounting) {
+        if (updateAccounting.getRegistrationFee() != null) {
+            accounting.setRegistrationFee(updateAccounting.getRegistrationFee());
+        }
+
+        if (updateAccounting.getPartialBurden() != null) {
+            accounting.setPartialBurden(updateAccounting.getPartialBurden());
+        }
+
+        if (updateAccounting.getBurdenCost() != null) {
+            accounting.setBurdenCost(updateAccounting.getBurdenCost());
+        }
+
+        if (updateAccounting.getDeposit() != null) {
+            accounting.setDeposit(updateAccounting.getDeposit());
+        }
+
+        if (updateAccounting.getOwnExpense() != null) {
+            accounting.setOwnExpense(updateAccounting.getOwnExpense());
+        }
+
+        if (updateAccounting.getOther() != null) {
+            accounting.setOther(updateAccounting.getOther());
+        }
+
+        if (updateAccounting.getPatientIdentity() != null) {
+            accounting.setPatientIdentity(updateAccounting.getPatientIdentity());
+        }
+
+        if (updateAccounting.getDiscountReason() != null) {
+            accounting.setDiscountReason(updateAccounting.getDiscountReason());
+        }
+
+        if (updateAccounting.getDiscount() != null) {
+            accounting.setDiscount(updateAccounting.getDiscount());
+        }
+
+        // hospital
+        if (updateAccounting.getHospital() != null && updateAccounting.getHospital().getId() != null) {
+            log.debug("Update Hospital({}) of Accounting(id: {})", updateAccounting.getHospital(), updateAccounting.getId());
+            accounting.setHospital(hospitalRepository.findById(updateAccounting.getHospital().getId()).orElse(null));
+        }
+
+        return accounting;
     }
 }

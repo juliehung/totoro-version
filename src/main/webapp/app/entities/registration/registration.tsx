@@ -87,6 +87,9 @@ export class Registration extends React.Component<IRegistrationProps, IRegistrat
                 <th className="hand" onClick={this.sort('onSite')}>
                   <Translate contentKey="totoroApp.registration.onSite">On Site</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th>
+                  <Translate contentKey="totoroApp.registration.accounting">Accounting</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -108,6 +111,13 @@ export class Registration extends React.Component<IRegistrationProps, IRegistrat
                     <Translate contentKey={`totoroApp.RegistrationType.${registration.type}`} />
                   </td>
                   <td>{registration.onSite ? 'true' : 'false'}</td>
+                  <td>
+                    {registration.accounting ? (
+                      <Link to={`accounting/${registration.accounting.id}`}>{registration.accounting.id}</Link>
+                    ) : (
+                      ''
+                    )}
+                  </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${registration.id}`} color="info" size="sm">

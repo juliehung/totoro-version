@@ -52,6 +52,10 @@ import nHICategory, {
 import hospital, {
   HospitalState
 } from 'app/entities/hospital/hospital.reducer';
+// prettier-ignore
+import accounting, {
+  AccountingState
+} from 'app/entities/accounting/accounting.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -75,6 +79,7 @@ export interface IRootState {
   readonly nHIProcedure: NHIProcedureState;
   readonly nHICategory: NHICategoryState;
   readonly hospital: HospitalState;
+  readonly accounting: AccountingState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -100,6 +105,7 @@ const rootReducer = combineReducers<IRootState>({
   nHIProcedure,
   nHICategory,
   hospital,
+  accounting,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

@@ -1,0 +1,31 @@
+{
+  "totoroApp": {
+    "accounting": {
+      "home": {
+        "title": "Accountings",
+        "createLabel": "Create a new Accounting",
+        "createOrEditLabel": "Create or edit a Accounting"
+      },
+      "created": "A new Accounting is created with identifier {{ param }}",
+      "updated": "A Accounting is updated with identifier {{ param }}",
+      "deleted": "A Accounting is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Accounting {{ id }}?"
+      },
+      "detail": {
+        "title": "Accounting"
+      },
+      "registrationFee": "Registration Fee",
+      "partialBurden": "Partial Burden",
+      "burdenCost": "Burden Cost",
+      "deposit": "Deposit",
+      "ownExpense": "Own Expense",
+      "other": "Other",
+      "patientIdentity": "Patient Identity",
+      "discountReason": "Discount Reason",
+      "discount": "Discount",
+      "hospital": "Hospital",
+      "registration": "Registration"
+    }
+  }
+}

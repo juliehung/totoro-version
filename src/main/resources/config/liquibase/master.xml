@@ -16,6 +16,7 @@
     <include file="config/liquibase/changelog/20181224042542_added_entity_NHIProcedure.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181224071116_added_entity_NHICategory.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190102095503_added_entity_Hospital.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190103032423_added_entity_Accounting.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/20181024_addColumn_Patient.xml" relativeToChangelogFile="false"/>
@@ -35,6 +36,8 @@
     <include file="config/liquibase/changelog/20181019094008_added_entity_constraints_Appointment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181019094007_added_entity_constraints_Patient.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181224042541_added_entity_constraints_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190103032423_added_entity_constraints_Accounting.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181019094009_added_entity_constraints_Registration.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 
     <!-- add custom constraints -->

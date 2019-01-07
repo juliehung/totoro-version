@@ -18,6 +18,7 @@
         "nhiProcedure": "NHI Procedure",
         "nhiCategory": "NHI Category",
         "hospital": "Hospital",
+        "accounting": "Accounting",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
