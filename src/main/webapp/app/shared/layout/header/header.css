@@ -103,7 +103,8 @@ Navbar styles
 }
 
 .brand-logo .brand-icon img {
-  height: 45px;
+  height: 40px;
+  margin-top: -5px;
 }
 
 .brand-title {
