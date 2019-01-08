@@ -4,6 +4,18 @@ exports[`Header Renders a Header component in dev profile with LoadingBar, Navba
 <div
   id="app-header"
 >
+  <div
+    className="ribbon dev"
+  >
+    <a
+      href=""
+    >
+      <Translate
+        component="span"
+        contentKey="global.ribbon.dev"
+      />
+    </a>
+  </div>
   <Connect(LoadingBar)
     className="loading-bar"
   />
@@ -11,6 +23,7 @@ exports[`Header Renders a Header component in dev profile with LoadingBar, Navba
     className="jh-navbar"
     dark={true}
     expand="sm"
+    fixed="top"
     tag="nav"
   >
     <NavbarToggler
@@ -19,11 +32,8 @@ exports[`Header Renders a Header component in dev profile with LoadingBar, Navba
       tag="button"
       type="button"
     />
-    <div
-      className="left-shift"
-    >
-      <Component />
-    </div>
+    <Component />
+    <Component />
     <Collapse
       appear={false}
       enter={true}
@@ -49,9 +59,18 @@ exports[`Header Renders a Header component in dev profile with LoadingBar, Navba
         tag="ul"
         vertical={false}
       >
+        <Component />
+        <Component />
+        <Component
+          showDatabase={true}
+          showSwagger={true}
+        />
         <Component
           currentLocale="en"
           onClick={[Function]}
+        />
+        <Component
+          isAuthenticated={true}
         />
       </Nav>
     </Collapse>
@@ -70,6 +89,7 @@ exports[`Header Renders a Header component in prod profile with LoadingBar, Navb
     className="jh-navbar"
     dark={true}
     expand="sm"
+    fixed="top"
     tag="nav"
   >
     <NavbarToggler
@@ -78,11 +98,7 @@ exports[`Header Renders a Header component in prod profile with LoadingBar, Navb
       tag="button"
       type="button"
     />
-    <div
-      className="left-shift"
-    >
-      <Component />
-    </div>
+    <Component />
     <Collapse
       appear={false}
       enter={true}
@@ -108,9 +124,18 @@ exports[`Header Renders a Header component in prod profile with LoadingBar, Navb
         tag="ul"
         vertical={false}
       >
+        <Component />
+        <Component />
+        <Component
+          showDatabase={false}
+          showSwagger={false}
+        />
         <Component
           currentLocale="en"
           onClick={[Function]}
+        />
+        <Component
+          isAuthenticated={true}
         />
       </Nav>
     </Collapse>
