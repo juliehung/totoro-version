@@ -1,0 +1,24 @@
+{
+  "totoroApp": {
+    "incident": {
+      "home": {
+        "title": "Incidents",
+        "createLabel": "建立一筆新的 Incident",
+        "createOrEditLabel": "建立或編輯 Incident"
+      },
+      "created": "新的 Incident 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Incident 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Incident 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Incident {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Incident"
+      },
+      "type": "Type",
+      "start": "Start",
+      "end": "End",
+      "content": "Content"
+    }
+  }
+}
