@@ -1,0 +1,11 @@
+{
+  "totoroApp": {
+    "DateType": {
+      "null": "",
+      "WORKTIME": "WORKTIME",
+      "HOLIDAY": "HOLIDAY",
+      "NHIPOINTEXCLUDE": "NHIPOINTEXCLUDE",
+      "OTHER": "OTHER"
+    }
+  }
+}

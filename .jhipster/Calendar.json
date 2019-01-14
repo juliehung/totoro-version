@@ -1,0 +1,55 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "date",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "intervalType",
+            "fieldType": "IntervalType",
+            "fieldValues": "MORNING,NOON,EVENING,NIGHT,ALL",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "dateType",
+            "fieldType": "DateType",
+            "fieldValues": "WORKTIME,HOLIDAY,NHIPOINTEXCLUDE,OTHER",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "start",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "pattern"
+            ],
+            "fieldValidateRulesPattern": "^([0-1][0-9]|2[0-3]):[0-5][0-9]$"
+        },
+        {
+            "fieldName": "end",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "pattern"
+            ],
+            "fieldValidateRulesPattern": "^([0-1][0-9]|2[0-3]):[0-5][0-9]$"
+        }
+    ],
+    "changelogDate": "20190111031613",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "serviceClass",
+    "entityTableName": "calendar",
+    "jpaMetamodelFiltering": true,
+    "pagination": "no"
+}
