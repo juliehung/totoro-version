@@ -33,6 +33,7 @@
     <!-- insert fake data -->
     <include file="config/liquibase/changelog/20181023_fake_data.xml" relativeToChangelogFile="false"/>
 
+    <include file="config/liquibase/changelog/20190111031613_added_entity_Calendar.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20181019094008_added_entity_constraints_Appointment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181019094007_added_entity_constraints_Patient.xml" relativeToChangelogFile="false"/>
