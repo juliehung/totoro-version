@@ -855,6 +855,7 @@ public class AccountResourceIntTest {
     }
 
     @Test
+    @Transactional
     @WithMockUser("get-avatar")
     public void testGetAvatar() throws Exception {
         User user = new User();
@@ -881,6 +882,7 @@ public class AccountResourceIntTest {
     }
 
     @Test
+    @Transactional
     @WithMockUser("get-non-existing-avatar")
     public void testGetNonExistingAvatar() throws Exception {
         User user = new User();

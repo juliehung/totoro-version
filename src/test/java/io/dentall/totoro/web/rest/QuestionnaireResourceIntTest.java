@@ -1,7 +1,6 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
-
 import io.dentall.totoro.domain.Questionnaire;
 import io.dentall.totoro.repository.QuestionnaireRepository;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;

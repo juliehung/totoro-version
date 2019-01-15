@@ -6,6 +6,6 @@ services:
         #     - ~/volumes/jhipster/totoro/postgresql/:/var/lib/postgresql/data/
         environment:
             - POSTGRES_USER=totoro
-            - POSTGRES_PASSWORD=
+            - POSTGRES_PASSWORD=totoro
         ports:
             - 5432:5432

@@ -24,8 +24,14 @@ gradle-build:
 gradle-test:
     stage: test
     image: openjdk:8-jdk-stretch
+    services:
+        - postgres:10.4
+    variables:
+        POSTGRES_DB: totoro
+        POSTGRES_USER: totoro
+        POSTGRES_PASSWORD: totoro
     script:
-        - ./gradlew test -x webpackBuildDev --no-daemon
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/totoro ./gradlew test -x webpackBuildDev --no-daemon
     artifacts:
         paths:
             - build/reports/tests/*

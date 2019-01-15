@@ -5,6 +5,7 @@ services:
         environment:
             # - _JAVA_OPTIONS=-Xmx512m -Xms256m
             - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://totoro-postgresql:5432/totoro
         ports:
             - 8080:8080
         networks:
@@ -13,11 +14,31 @@ services:
             - ../resources/.h2.server.properties:/src/main/resources/.h2.server.properties
         container_name: totoro-admin
 
+    postgresql: &postgresql
+        image: postgres:10.4
+        # volumes:
+        #     - ~/volumes/jhipster/totoro/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=totoro
+            - POSTGRES_PASSWORD=totoro
+
+    totoro-postgresql:
+        <<: *postgresql
+        ports:
+            - 5432:5432
+        networks:
+            - backend
+        container_name: totoro-postgresql
+
     totoro-data-simulator:
         build:
             context: ./data-simulator
         image: totoro-data-simulator
-        command: ["./wait-for-it.sh", "totoro-app:5435", "-s", "-t", "120", "--", "python", "./fake_data_dynamic.py"]
+        command: ["./wait-for-it.sh", "totoro-postgresql:5432", "-s", "-t", "120", "--", "python", "./fake_data_dynamic.py"]
+        environment:
+            - HOST=totoro-postgresql
+            - PORT=5432
+            - DB=totoro
         networks:
             - backend
         volumes:

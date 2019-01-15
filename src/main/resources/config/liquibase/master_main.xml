@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180802025804_added_entity_ExtendUser.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181019094007_added_entity_Patient.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181019094008_added_entity_Appointment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181019094009_added_entity_Registration.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181115021401_added_entity_Tag.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181207024725_added_entity_Questionnaire.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181224042540_added_entity_TreatmentTask.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181224042541_added_entity_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181224042542_added_entity_NHIProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181224071116_added_entity_NHICategory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190102095503_added_entity_Hospital.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190103032423_added_entity_Accounting.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190108063021_added_entity_Incident.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190110_added_entity_Setting.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190111031613_added_entity_Calendar.xml" relativeToChangelogFile="false"/>
+
+    <!-- add custom columns -->
+    <include file="config/liquibase/changelog/20181024_addColumn_Patient.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181217_addColumn_Appointment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181226_addColumn_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181226_addColumn_TreatmentTask.xml" relativeToChangelogFile="false"/>
+
+    <!-- add default value -->
+    <include file="config/liquibase/changelog/20181024_addDefaultValue_Appointment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181024_addDefaultValue_Registration.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181101_addDefaultValue_Patient.xml" relativeToChangelogFile="false"/>
+
+</databaseChangeLog>

@@ -7,9 +7,11 @@ import re
 import numpy as np
 from datetime import datetime
 import json
+import os
+from time import sleep
 
 def execute_sql(sql_statement,item_value,item_id):
-    conn = psycopg2.connect(host="totoro-app", port="5435", dbname="/build/h2db/db/totoro",user="totoro",password="totoro")
+    conn = psycopg2.connect(host=os.environ['HOST'], port=os.environ['PORT'], dbname=os.environ['DB'],user="totoro",password="totoro")
     cur = conn.cursor()
     cur.execute(sql_statement,(item_value,item_id))
     print(cur.rowcount)
@@ -35,6 +37,17 @@ def update_time_df(path,colname,date_change):
     appointments[colname] = update_datetime
     return(appointments)
 
+def is_data_existed(table):
+    conn = psycopg2.connect(host=os.environ['HOST'], port=os.environ['PORT'], dbname=os.environ['DB'], user="totoro", password="totoro")
+    cur = conn.cursor()
+    cur.execute("SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name = %s)", (table,))
+    result = cur.fetchone()[0]
+    cur.close()
+    return result
+
+while (not is_data_existed("appointment")) or (not is_data_existed("registration")):
+    print("sleep 1s to wait data loaded to db")
+    sleep(1)
 
 # read current update date from json
 with open('current_update_date.json', 'r') as f:
