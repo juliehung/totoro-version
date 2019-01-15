@@ -1,7 +1,6 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
-
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TagName;
 import io.dentall.totoro.repository.PatientRepository;
@@ -30,7 +29,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.validation.Validator;
 
@@ -959,6 +957,7 @@ public class PatientResourceIntTest {
     }
 
     @Test
+    @Transactional
     public void testGetAvatar() throws Exception {
         patient.setAvatarContentType(UPLOAD_CONTENT_TYPE);
         byte[] avatar = Files.readAllBytes(ResourceUtils.getFile(getClass().getResource("/static/" + UPLOAD_FILENAME)).toPath());
@@ -975,6 +974,7 @@ public class PatientResourceIntTest {
     }
 
     @Test
+    @Transactional
     public void testGetNonExistingAvatar() throws Exception {
         patient.setAvatar(null);
         patient.setAvatarContentType(null);

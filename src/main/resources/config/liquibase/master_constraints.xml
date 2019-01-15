@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <include file="config/liquibase/changelog/20181019094008_added_entity_constraints_Appointment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181019094007_added_entity_constraints_Patient.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181224042541_added_entity_constraints_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190103032423_added_entity_constraints_Accounting.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181019094009_added_entity_constraints_Registration.xml" relativeToChangelogFile="false"/>
+    <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+
+    <!-- add custom constraints -->
+    <include file="config/liquibase/changelog/20181023_added_entity_constraints_Patient.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181217_added_entity_constraints_Appointment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181226_added_entity_constraints_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181226_added_entity_constraints_TreatmentTask.xml" relativeToChangelogFile="false"/>
+</databaseChangeLog>

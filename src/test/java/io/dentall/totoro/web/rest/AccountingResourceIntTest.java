@@ -1,7 +1,6 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
-
 import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.repository.AccountingRepository;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;

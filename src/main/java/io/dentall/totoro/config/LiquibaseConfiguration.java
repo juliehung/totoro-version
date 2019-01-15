@@ -16,6 +16,8 @@ import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.config.liquibase.AsyncSpringLiquibase;
 import liquibase.integration.spring.SpringLiquibase;
 
+import java.util.Arrays;
+
 @Configuration
 public class LiquibaseConfiguration {
 
@@ -37,7 +39,11 @@ public class LiquibaseConfiguration {
         // Use liquibase.integration.spring.SpringLiquibase if you don't want Liquibase to start asynchronously
         SpringLiquibase liquibase = new AsyncSpringLiquibase(taskExecutor, env);
         liquibase.setDataSource(dataSource);
-        liquibase.setChangeLog("classpath:config/liquibase/master.xml");
+        if (Arrays.asList(env.getActiveProfiles()).contains(JHipsterConstants.SPRING_PROFILE_TEST)) {
+            liquibase.setChangeLog("classpath:config/liquibase/master_test.xml");
+        } else {
+            liquibase.setChangeLog("classpath:config/liquibase/master.xml");
+        }
         liquibase.setContexts(liquibaseProperties.getContexts());
         liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
         liquibase.setDropFirst(liquibaseProperties.isDropFirst());

@@ -248,6 +248,9 @@ dependencies {
     testCompile "com.h2database:h2"
     liquibaseRuntime "com.h2database:h2"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
+
+    compile "com.vladmihalcea:hibernate-types-52:2.4.0"
+    compile "ru.yandex.qatools.embed:postgresql-embedded:2.10"
 }
 
 task cleanResources(type: Delete) {

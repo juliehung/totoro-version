@@ -1,7 +1,7 @@
 package io.dentall.totoro.service;
+import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.config.Constants;
 
-import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.User;
 import io.github.jhipster.config.JHipsterProperties;
 import org.junit.Before;

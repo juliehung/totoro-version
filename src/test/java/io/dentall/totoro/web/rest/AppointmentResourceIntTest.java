@@ -1,7 +1,6 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
-
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.PatientRepository;

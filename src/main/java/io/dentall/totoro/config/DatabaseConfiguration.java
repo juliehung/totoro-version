@@ -1,19 +1,25 @@
 package io.dentall.totoro.config;
 
+import com.zaxxer.hikari.HikariDataSource;
+import de.flapdoodle.embed.process.runtime.Network;
 import io.github.jhipster.config.JHipsterConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import ru.yandex.qatools.embed.postgresql.*;
+import ru.yandex.qatools.embed.postgresql.config.AbstractPostgresConfig;
+import ru.yandex.qatools.embed.postgresql.config.PostgresConfig;
+import ru.yandex.qatools.embed.postgresql.distribution.Version;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.sql.SQLException;
+import javax.sql.DataSource;
+import java.io.IOException;
 
 @Configuration
 @EnableJpaRepositories("io.dentall.totoro.repository")
@@ -23,42 +29,38 @@ public class DatabaseConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
 
+    @Bean(destroyMethod = "stop")
+    @Profile("embedded-postgres")
+    public PostgresProcess postgresProcess() throws IOException {
+        log.info("Starting embedded Postgres");
 
-    /**
-     * Open the TCP port for the H2 database, so it is available remotely.
-     *
-     * @return the H2 database TCP server
-     * @throws SQLException if the server failed to start
-     */
-    @Bean(initMethod = "start", destroyMethod = "stop")
-    @Profile(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT)
-    public Object h2TCPServer() throws SQLException {
-        log.debug("Starting H2 database");
-        return createServer();
+        PostgresConfig postgresConfig = new PostgresConfig(
+            Version.V10_6,
+            new AbstractPostgresConfig.Net("localhost", 5432),
+            new AbstractPostgresConfig.Storage("totoro"),
+            new AbstractPostgresConfig.Timeout(),
+            new AbstractPostgresConfig.Credentials("totoro", "totoro")
+        );
+
+        PostgresStarter<PostgresExecutable, PostgresProcess> runtime =
+            PostgresStarter.getInstance(EmbeddedPostgres.defaultRuntimeConfig());
+
+        return runtime.prepare(postgresConfig).start();
     }
 
-    private Object createServer() throws SQLException {
-        try {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            Class<?> serverClass = Class.forName("org.h2.tools.Server", true, loader);
-            Method createServer = serverClass.getMethod("main", String[].class);
-            return createServer.invoke(null, new Object[] { new String[] { "-tcp", "-tcpAllowOthers", "-pg", "-pgAllowOthers" } });
+    @Bean(destroyMethod = "close")
+    @DependsOn("postgresProcess")
+    @Profile("embedded-postgres")
+    public DataSource dataSource(PostgresProcess postgresProcess) {
+        PostgresConfig postgresConfig = postgresProcess.getConfig();
 
-        } catch (ClassNotFoundException | LinkageError e) {
-            throw new RuntimeException("Failed to load and initialize org.h2.tools.Server", e);
+        HikariDataSource ds = new HikariDataSource();
+        ds.setJdbcUrl("jdbc:postgresql://localhost:" + postgresConfig.net().port() + "/" + postgresConfig.storage().dbName());
+        ds.setUsername(postgresConfig.credentials().username());
+        ds.setPassword(postgresConfig.credentials().password());
+        ds.setAutoCommit(false);
+        ds.setConnectionTimeout(postgresConfig.timeout().startupTimeout());
 
-        } catch (SecurityException | NoSuchMethodException e) {
-            throw new RuntimeException("Failed to get method org.h2.tools.Server.main()", e);
-
-        } catch (IllegalAccessException | IllegalArgumentException e) {
-            throw new RuntimeException("Failed to invoke org.h2.tools.Server.main()", e);
-
-        } catch (InvocationTargetException e) {
-            Throwable t = e.getTargetException();
-            if (t instanceof SQLException) {
-                throw (SQLException) t;
-            }
-            throw new RuntimeException("Unchecked exception in org.h2.tools.Server.main()", t);
-        }
+        return ds;
     }
 }

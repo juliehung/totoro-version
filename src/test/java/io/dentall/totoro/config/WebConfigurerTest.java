@@ -91,7 +91,6 @@ public class WebConfigurerTest {
         verify(servletContext).addFilter(eq("webappMetricsFilter"), any(InstrumentedFilter.class));
         verify(servletContext).addServlet(eq("metricsServlet"), any(MetricsServlet.class));
         verify(servletContext, never()).addFilter(eq("cachingHttpHeadersFilter"), any(CachingHttpHeadersFilter.class));
-        verify(servletContext).addServlet(eq("H2Console"), any(WebServlet.class));
     }
 
     @Test
