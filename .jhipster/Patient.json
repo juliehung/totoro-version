@@ -1,5 +1,72 @@
 {
-    "name": "Patient",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "questionnaire",
+            "otherEntityName": "questionnaire",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "patient"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "appointment",
+            "otherEntityName": "appointment",
+            "otherEntityRelationshipName": "patient"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "introducer",
+            "otherEntityName": "patient",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "child",
+            "relationshipName": "parent",
+            "otherEntityName": "patient",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "spouse2",
+            "relationshipName": "spouse1",
+            "otherEntityName": "patient",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "patient",
+            "relationshipName": "tag",
+            "otherEntityName": "tag",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "child",
+            "otherEntityName": "patient",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "parent"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "spouse2",
+            "otherEntityName": "patient",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "spouse1"
+        },
+        {
+            "relationshipName": "patientIdentity",
+            "otherEntityName": "patientIdentity",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
     "fields": [
         {
             "fieldName": "name",
@@ -90,10 +157,6 @@
             "fieldType": "Instant"
         },
         {
-            "fieldName": "burdenCost",
-            "fieldType": "Integer"
-        },
-        {
             "fieldName": "avatar",
             "fieldType": "byte[]",
             "fieldTypeBlobContent": "image",
@@ -103,73 +166,11 @@
             "fieldValidateRulesMaxbytes": 512000
         }
     ],
-    "relationships": [
-        {
-            "relationshipType": "one-to-one",
-            "relationshipName": "questionnaire",
-            "otherEntityName": "questionnaire",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "patient"
-        },
-        {
-            "relationshipType": "one-to-many",
-            "relationshipName": "appointment",
-            "otherEntityName": "appointment",
-            "otherEntityRelationshipName": "patient"
-        },
-        {
-            "relationshipType": "many-to-one",
-            "relationshipName": "introducer",
-            "otherEntityName": "patient",
-            "otherEntityField": "id"
-        },
-        {
-            "relationshipType": "many-to-many",
-            "otherEntityRelationshipName": "child",
-            "relationshipName": "parent",
-            "otherEntityName": "patient",
-            "otherEntityField": "id",
-            "ownerSide": true
-        },
-        {
-            "relationshipType": "many-to-many",
-            "otherEntityRelationshipName": "spouse2",
-            "relationshipName": "spouse1",
-            "otherEntityName": "patient",
-            "otherEntityField": "id",
-            "ownerSide": true
-        },
-        {
-            "relationshipType": "many-to-many",
-            "otherEntityRelationshipName": "patient",
-            "relationshipName": "tag",
-            "otherEntityName": "tag",
-            "otherEntityField": "id",
-            "ownerSide": true
-        },
-        {
-            "relationshipType": "many-to-many",
-            "relationshipName": "child",
-            "otherEntityName": "patient",
-            "ownerSide": false,
-            "otherEntityRelationshipName": "parent"
-        },
-        {
-            "relationshipType": "many-to-many",
-            "relationshipName": "spouse2",
-            "otherEntityName": "patient",
-            "ownerSide": false,
-            "otherEntityRelationshipName": "spouse1"
-        }
-    ],
     "changelogDate": "20181019094007",
-    "entityTableName": "patient",
     "dto": "no",
-    "pagination": "pagination",
+    "searchEngine": false,
     "service": "no",
+    "entityTableName": "patient",
     "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "pagination"
 }

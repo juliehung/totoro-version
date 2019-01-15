@@ -21,6 +21,7 @@
         "accounting": "Accounting",
         "incident": "Incident",
         "calendar": "Calendar",
+        "patientIdentity": "Patient Identity",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

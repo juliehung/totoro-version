@@ -1,7 +1,7 @@
 package io.dentall.totoro.domain;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import io.dentall.totoro.domain.jsonb.setting.Info;
+import io.dentall.totoro.domain.jsonb.setting.Preferences;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -26,9 +26,9 @@ public class Setting implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "info", nullable = false, columnDefinition = "jsonb")
+    @Column(name = "preferences", nullable = false, columnDefinition = "jsonb")
     @Type(type = "jsonb")
-    private Info info;
+    private Preferences preferences;
 
     public Long getId() {
         return id;
@@ -38,17 +38,17 @@ public class Setting implements Serializable {
         this.id = id;
     }
 
-    public Info getInfo() {
-        return info;
+    public Preferences getPreferences() {
+        return preferences;
     }
 
-    public Setting info(Info info) {
-        this.info = info;
+    public Setting preferences(Preferences preferences) {
+        this.preferences = preferences;
         return this;
     }
 
-    public void setInfo(Info info) {
-        this.info = info;
+    public void setPreferences(Preferences preferences) {
+        this.preferences = preferences;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class Setting implements Serializable {
     public String toString() {
         return "Setting{" +
             "id=" + getId() +
-            ", info='" + getInfo() + "'" +
+            ", preferences='" + getPreferences() + "'" +
             "}";
     }
 }

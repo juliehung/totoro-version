@@ -53,5 +53,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="tag"/>
         
+        <addForeignKeyConstraint baseColumnNames="patient_identity_id"
+                                 baseTableName="patient"
+                                 constraintName="fk_patient_patient_identity_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="patient_identity"/>
+
     </changeSet>
 </databaseChangeLog>

@@ -3,6 +3,7 @@ import { IQuestionnaire } from 'app/shared/model//questionnaire.model';
 import { IAppointment } from 'app/shared/model//appointment.model';
 import { IPatient } from 'app/shared/model//patient.model';
 import { ITag } from 'app/shared/model//tag.model';
+import { IPatientIdentity } from 'app/shared/model//patient-identity.model';
 
 export const enum Gender {
   OTHER = 'OTHER',
@@ -28,7 +29,6 @@ export interface IPatient {
   medicalId?: string;
   address?: string;
   email?: string;
-  photo?: string;
   blood?: Blood;
   cardId?: string;
   vip?: string;
@@ -39,9 +39,8 @@ export interface IPatient {
   lineId?: string;
   fbId?: string;
   note?: string;
-  treatmentNote?: string;
+  clinicNote?: string;
   writeIcTime?: Moment;
-  burdenCost?: number;
   avatarContentType?: string;
   avatar?: any;
   questionnaire?: IQuestionnaire;
@@ -52,6 +51,7 @@ export interface IPatient {
   tags?: ITag[];
   children?: IPatient[];
   spouse2S?: IPatient[];
+  patientIdentity?: IPatientIdentity;
 }
 
 export const defaultValue: Readonly<IPatient> = {};

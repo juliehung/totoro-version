@@ -37,7 +37,7 @@ def update_time_df(path,colname,date_change):
     appointments[colname] = update_datetime
     return(appointments)
 
-def is_data_existed(table):
+def check_data_existence(table):
     conn = psycopg2.connect(host=os.environ['HOST'], port=os.environ['PORT'], dbname=os.environ['DB'], user="totoro", password="totoro")
     cur = conn.cursor()
     cur.execute("SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name = %s)", (table,))
@@ -45,7 +45,7 @@ def is_data_existed(table):
     cur.close()
     return result
 
-while (not is_data_existed("appointment")) or (not is_data_existed("registration")):
+while (not check_data_existence("appointment")) or (not check_data_existence("registration")):
     print("sleep 1s to wait data loaded to db")
     sleep(1)
 
