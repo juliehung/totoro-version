@@ -12,6 +12,7 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -99,9 +100,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @Column(name = "write_ic_time")
     private Instant writeIcTime;
 
-    @Column(name = "burden_cost")
-    private Integer burdenCost;
-
     @JsonIgnore
     @Lob
     @Column(name = "avatar")
@@ -147,6 +145,10 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @ManyToMany(mappedBy = "spouse1S", fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<Patient> spouse2S = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private PatientIdentity patientIdentity;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
@@ -232,6 +234,10 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     }
 
     public String getMedicalId() {
+        if (medicalId == null) {
+            return birth == null ? null : birth.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        }
+
         return medicalId;
     }
 
@@ -424,19 +430,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
 
     public void setWriteIcTime(Instant writeIcTime) {
         this.writeIcTime = writeIcTime;
-    }
-
-    public Integer getBurdenCost() {
-        return burdenCost;
-    }
-
-    public Patient burdenCost(Integer burdenCost) {
-        this.burdenCost = burdenCost;
-        return this;
-    }
-
-    public void setBurdenCost(Integer burdenCost) {
-        this.burdenCost = burdenCost;
     }
 
     @Override
@@ -642,6 +635,20 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     public void setSpouse2S(Set<Patient> patients) {
         this.spouse2S = patients;
     }
+
+    public PatientIdentity getPatientIdentity() {
+        return patientIdentity;
+    }
+
+    public Patient patientIdentity(PatientIdentity patientIdentity) {
+        this.patientIdentity = patientIdentity;
+        return this;
+    }
+
+    public void setPatientIdentity(PatientIdentity patientIdentity) {
+        this.patientIdentity = patientIdentity;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     public ExtendUser getDominantDoctor() {
@@ -728,7 +735,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
             ", note='" + getNote() + "'" +
             ", clinicNote='" + getClinicNote() + "'" +
             ", writeIcTime='" + getWriteIcTime() + "'" +
-            ", burdenCost=" + getBurdenCost() +
             ", avatar='" + getAvatar() + "'" +
             ", avatarContentType='" + getAvatarContentType() + "'" +
             "}";

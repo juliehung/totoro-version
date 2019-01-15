@@ -79,12 +79,6 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
             </dt>
             <dd>{patientEntity.email}</dd>
             <dt>
-              <span id="photo">
-                <Translate contentKey="totoroApp.patient.photo">Photo</Translate>
-              </span>
-            </dt>
-            <dd>{patientEntity.photo}</dd>
-            <dt>
               <span id="blood">
                 <Translate contentKey="totoroApp.patient.blood">Blood</Translate>
               </span>
@@ -149,11 +143,11 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
             </dt>
             <dd>{patientEntity.note}</dd>
             <dt>
-              <span id="treatmentNote">
-                <Translate contentKey="totoroApp.patient.treatmentNote">Treatment Note</Translate>
+              <span id="clinicNote">
+                <Translate contentKey="totoroApp.patient.clinicNote">Clinic Note</Translate>
               </span>
             </dt>
-            <dd>{patientEntity.treatmentNote}</dd>
+            <dd>{patientEntity.clinicNote}</dd>
             <dt>
               <span id="writeIcTime">
                 <Translate contentKey="totoroApp.patient.writeIcTime">Write Ic Time</Translate>
@@ -162,12 +156,6 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
             <dd>
               <TextFormat value={patientEntity.writeIcTime} type="date" format={APP_DATE_FORMAT} />
             </dd>
-            <dt>
-              <span id="burdenCost">
-                <Translate contentKey="totoroApp.patient.burdenCost">Burden Cost</Translate>
-              </span>
-            </dt>
-            <dd>{patientEntity.burdenCost}</dd>
             <dt>
               <span id="avatar">
                 <Translate contentKey="totoroApp.patient.avatar">Avatar</Translate>
@@ -232,6 +220,10 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
                   ))
                 : null}
             </dd>
+            <dt>
+              <Translate contentKey="totoroApp.patient.patientIdentity">Patient Identity</Translate>
+            </dt>
+            <dd>{patientEntity.patientIdentity ? patientEntity.patientIdentity.id : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/patient" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

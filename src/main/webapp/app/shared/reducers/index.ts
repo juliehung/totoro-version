@@ -64,6 +64,10 @@ import incident, {
 import calendar, {
   CalendarState
 } from 'app/entities/calendar/calendar.reducer';
+// prettier-ignore
+import patientIdentity, {
+  PatientIdentityState
+} from 'app/entities/patient-identity/patient-identity.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -90,6 +94,7 @@ export interface IRootState {
   readonly accounting: AccountingState;
   readonly incident: IncidentState;
   readonly calendar: CalendarState;
+  readonly patientIdentity: PatientIdentityState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -118,6 +123,7 @@ const rootReducer = combineReducers<IRootState>({
   accounting,
   incident,
   calendar,
+  patientIdentity,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

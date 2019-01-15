@@ -13,6 +13,8 @@ import { getEntities as getQuestionnaires } from 'app/entities/questionnaire/que
 import { getEntities as getPatients } from 'app/entities/patient/patient.reducer';
 import { ITag } from 'app/shared/model/tag.model';
 import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
+import { IPatientIdentity } from 'app/shared/model/patient-identity.model';
+import { getEntities as getPatientIdentities } from 'app/entities/patient-identity/patient-identity.reducer';
 import { getEntity, updateEntity, createEntity, setBlob, reset } from './patient.reducer';
 import { IPatient } from 'app/shared/model/patient.model';
 // tslint:disable-next-line:no-unused-variable
@@ -30,6 +32,7 @@ export interface IPatientUpdateState {
   introducerId: string;
   childId: string;
   spouse2Id: string;
+  patientIdentityId: string;
 }
 
 export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatientUpdateState> {
@@ -43,6 +46,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
       introducerId: '0',
       childId: '0',
       spouse2Id: '0',
+      patientIdentityId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -63,6 +67,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
     this.props.getQuestionnaires();
     this.props.getPatients();
     this.props.getTags();
+    this.props.getPatientIdentities();
   }
 
   onBlobChange = (isAnImage, name) => event => {
@@ -100,7 +105,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
   };
 
   render() {
-    const { patientEntity, questionnaires, patients, tags, loading, updating } = this.props;
+    const { patientEntity, questionnaires, patients, tags, patientIdentities, loading, updating } = this.props;
     const { isNew } = this.state;
 
     const { avatar, avatarContentType } = patientEntity;
@@ -207,12 +212,6 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   <AvField id="patient-email" type="text" name="email" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="photoLabel" for="photo">
-                    <Translate contentKey="totoroApp.patient.photo">Photo</Translate>
-                  </Label>
-                  <AvField id="patient-photo" type="text" name="photo" />
-                </AvGroup>
-                <AvGroup>
                   <Label id="bloodLabel">
                     <Translate contentKey="totoroApp.patient.blood">Blood</Translate>
                   </Label>
@@ -301,10 +300,10 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   <AvField id="patient-note" type="text" name="note" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="treatmentNoteLabel" for="treatmentNote">
-                    <Translate contentKey="totoroApp.patient.treatmentNote">Treatment Note</Translate>
+                  <Label id="clinicNoteLabel" for="clinicNote">
+                    <Translate contentKey="totoroApp.patient.clinicNote">Clinic Note</Translate>
                   </Label>
-                  <AvField id="patient-treatmentNote" type="text" name="treatmentNote" />
+                  <AvField id="patient-clinicNote" type="text" name="clinicNote" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="writeIcTimeLabel" for="writeIcTime">
@@ -317,12 +316,6 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                     name="writeIcTime"
                     value={isNew ? null : convertDateTimeFromServer(this.props.patientEntity.writeIcTime)}
                   />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="burdenCostLabel" for="burdenCost">
-                    <Translate contentKey="totoroApp.patient.burdenCost">Burden Cost</Translate>
-                  </Label>
-                  <AvField id="patient-burdenCost" type="string" className="form-control" name="burdenCost" />
                 </AvGroup>
                 <AvGroup>
                   <AvGroup>
@@ -450,6 +443,21 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                       : null}
                   </AvInput>
                 </AvGroup>
+                <AvGroup>
+                  <Label for="patientIdentity.id">
+                    <Translate contentKey="totoroApp.patient.patientIdentity">Patient Identity</Translate>
+                  </Label>
+                  <AvInput id="patient-patientIdentity" type="select" className="form-control" name="patientIdentity.id">
+                    <option value="" key="0" />
+                    {patientIdentities
+                      ? patientIdentities.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/patient" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
@@ -476,6 +484,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   questionnaires: storeState.questionnaire.entities,
   patients: storeState.patient.entities,
   tags: storeState.tag.entities,
+  patientIdentities: storeState.patientIdentity.entities,
   patientEntity: storeState.patient.entity,
   loading: storeState.patient.loading,
   updating: storeState.patient.updating,
@@ -486,6 +495,7 @@ const mapDispatchToProps = {
   getQuestionnaires,
   getPatients,
   getTags,
+  getPatientIdentities,
   getEntity,
   updateEntity,
   setBlob,

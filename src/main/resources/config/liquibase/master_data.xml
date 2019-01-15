@@ -63,6 +63,12 @@
                   separator=";"
                   tableName="hospital">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/patientIdentities.csv"
+                  separator=";"
+                  tableName="patient_identity">
+        </loadData>
     </changeSet>
 
 </databaseChangeLog>

@@ -101,10 +101,6 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="burden_cost" type="integer">
-                <constraints nullable="true" />
-            </column>
-
             <column name="avatar" type="longblob">
                 <constraints nullable="true" />
             </column>
@@ -115,6 +111,10 @@
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_patient_questionnaire_id" />
             </column>
             <column name="introducer_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="patient_identity_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 

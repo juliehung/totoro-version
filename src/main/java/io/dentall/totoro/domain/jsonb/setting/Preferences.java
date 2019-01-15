@@ -2,7 +2,7 @@ package io.dentall.totoro.domain.jsonb.setting;
 
 import java.io.Serializable;
 
-public class Info implements Serializable {
+public class Preferences implements Serializable {
 
     private String theme;
 
@@ -16,7 +16,7 @@ public class Info implements Serializable {
 
     @Override
     public String toString() {
-        return "Info{" +
+        return "Preferences{" +
             "theme='" + getTheme() + "'" +
             "}";
     }

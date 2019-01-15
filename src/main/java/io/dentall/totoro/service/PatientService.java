@@ -2,10 +2,7 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TagName;
-import io.dentall.totoro.repository.ExtendUserRepository;
-import io.dentall.totoro.repository.PatientRepository;
-import io.dentall.totoro.repository.QuestionnaireRepository;
-import io.dentall.totoro.repository.TagRepository;
+import io.dentall.totoro.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -30,11 +27,20 @@ public class PatientService {
 
     private final ExtendUserRepository extendUserRepository;
 
-    public PatientService(PatientRepository patientRepository, TagRepository tagRepository, QuestionnaireRepository questionnaireRepository, ExtendUserRepository extendUserRepository) {
+    private final PatientIdentityRepository patientIdentityRepository;
+
+    public PatientService(
+        PatientRepository patientRepository,
+        TagRepository tagRepository,
+        QuestionnaireRepository questionnaireRepository,
+        ExtendUserRepository extendUserRepository,
+        PatientIdentityRepository patientIdentityRepository
+    ) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
         this.questionnaireRepository = questionnaireRepository;
         this.extendUserRepository = extendUserRepository;
+        this.patientIdentityRepository = patientIdentityRepository;
     }
 
     public void setTagsByQuestionnaire(Set<Tag> tags, Questionnaire questionnaire) {
@@ -145,10 +151,6 @@ public class PatientService {
                 patient.setWriteIcTime(updatePatient.getWriteIcTime());
             }
 
-            if (updatePatient.getBurdenCost() != null) {
-                patient.setBurdenCost(updatePatient.getBurdenCost());
-            }
-
             // introducer
             if (updatePatient.getIntroducer() != null) {
                 log.debug("Update introducer({}) of Patient(id: {})", updatePatient.getIntroducer(), updatePatient.getId());
@@ -165,6 +167,12 @@ public class PatientService {
             if (updatePatient.getFirstDoctor() != null) {
                 log.debug("Update firstDoctor({}) of Patient(id: {})", updatePatient.getFirstDoctor(), updatePatient.getId());
                 patient.setFirstDoctor(extendUserRepository.findById(updatePatient.getFirstDoctor().getId()).orElse(null));
+            }
+
+            // patientIdentity
+            if (updatePatient.getPatientIdentity() != null) {
+                log.debug("Update patientIdentity({}) of Patient(id: {})", updatePatient.getPatientIdentity(), updatePatient.getId());
+                patient.setPatientIdentity(patientIdentityRepository.findById(updatePatient.getPatientIdentity().getId()).orElse(null));
             }
 
             return patient;

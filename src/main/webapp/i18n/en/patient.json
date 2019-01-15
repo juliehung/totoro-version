@@ -23,7 +23,6 @@
       "medicalId": "Medical Id",
       "address": "Address",
       "email": "Email",
-      "photo": "Photo",
       "blood": "Blood",
       "cardId": "Card Id",
       "vip": "Vip",
@@ -34,9 +33,8 @@
       "lineId": "Line Id",
       "fbId": "Fb Id",
       "note": "Note",
-      "treatmentNote": "Treatment Note",
+      "clinicNote": "Clinic Note",
       "writeIcTime": "Write Ic Time",
-      "burdenCost": "Burden Cost",
       "avatar": "Avatar",
       "questionnaire": "Questionnaire",
       "appointment": "Appointment",
@@ -45,7 +43,8 @@
       "spouse1": "Spouse 1",
       "tag": "Tag",
       "child": "Child",
-      "spouse2": "Spouse 2"
+      "spouse2": "Spouse 2",
+      "patientIdentity": "Patient Identity"
     }
   }
 }

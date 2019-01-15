@@ -101,9 +101,6 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('email')}>
                   <Translate contentKey="totoroApp.patient.email">Email</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('photo')}>
-                  <Translate contentKey="totoroApp.patient.photo">Photo</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
                 <th className="hand" onClick={this.sort('blood')}>
                   <Translate contentKey="totoroApp.patient.blood">Blood</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -134,14 +131,11 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('note')}>
                   <Translate contentKey="totoroApp.patient.note">Note</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('treatmentNote')}>
-                  <Translate contentKey="totoroApp.patient.treatmentNote">Treatment Note</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('clinicNote')}>
+                  <Translate contentKey="totoroApp.patient.clinicNote">Clinic Note</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('writeIcTime')}>
                   <Translate contentKey="totoroApp.patient.writeIcTime">Write Ic Time</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('burdenCost')}>
-                  <Translate contentKey="totoroApp.patient.burdenCost">Burden Cost</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('avatar')}>
                   <Translate contentKey="totoroApp.patient.avatar">Avatar</Translate> <FontAwesomeIcon icon="sort" />
@@ -151,6 +145,9 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 </th>
                 <th>
                   <Translate contentKey="totoroApp.patient.introducer">Introducer</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.patient.patientIdentity">Patient Identity</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -175,7 +172,6 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                   <td>{patient.medicalId}</td>
                   <td>{patient.address}</td>
                   <td>{patient.email}</td>
-                  <td>{patient.photo}</td>
                   <td>
                     <Translate contentKey={`totoroApp.Blood.${patient.blood}`} />
                   </td>
@@ -192,11 +188,10 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                   <td>{patient.lineId}</td>
                   <td>{patient.fbId}</td>
                   <td>{patient.note}</td>
-                  <td>{patient.treatmentNote}</td>
+                  <td>{patient.clinicNote}</td>
                   <td>
                     <TextFormat type="date" value={patient.writeIcTime} format={APP_DATE_FORMAT} />
                   </td>
-                  <td>{patient.burdenCost}</td>
                   <td>
                     {patient.avatar ? (
                       <div>
@@ -214,6 +209,13 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                     {patient.questionnaire ? <Link to={`questionnaire/${patient.questionnaire.id}`}>{patient.questionnaire.id}</Link> : ''}
                   </td>
                   <td>{patient.introducer ? <Link to={`patient/${patient.introducer.id}`}>{patient.introducer.id}</Link> : ''}</td>
+                  <td>
+                    {patient.patientIdentity ? (
+                      <Link to={`patient-identity/${patient.patientIdentity.id}`}>{patient.patientIdentity.id}</Link>
+                    ) : (
+                      ''
+                    )}
+                  </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${patient.id}`} color="info" size="sm">

@@ -3,10 +3,7 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TagName;
-import io.dentall.totoro.repository.PatientRepository;
-import io.dentall.totoro.repository.QuestionnaireRepository;
-import io.dentall.totoro.repository.TagRepository;
-import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
@@ -78,8 +75,8 @@ public class PatientResourceIntTest {
     private static final String DEFAULT_NATIONAL_ID = "AAAAAAAAAA";
     private static final String UPDATED_NATIONAL_ID = "BBBBBBBBBB";
 
-    private static final String DEFAULT_MEDICAL_ID = "AAAAAAAAAA";
-    private static final String UPDATED_MEDICAL_ID = "BBBBBBBBBB";
+    private static final String DEFAULT_MEDICAL_ID = DEFAULT_BIRTH.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+    private static final String UPDATED_MEDICAL_ID = UPDATED_BIRTH.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
     private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
@@ -122,9 +119,6 @@ public class PatientResourceIntTest {
 
     private static final Instant DEFAULT_WRITE_IC_TIME = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_WRITE_IC_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
-    private static final Integer DEFAULT_BURDEN_COST = 1;
-    private static final Integer UPDATED_BURDEN_COST = 2;
 
     private static final byte[] DEFAULT_AVATAR = TestUtil.createByteArray(1, "0");
     private static final byte[] UPDATED_AVATAR = TestUtil.createByteArray(1, "1");
@@ -170,6 +164,9 @@ public class PatientResourceIntTest {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private PatientIdentityRepository patientIdentityRepository;
+
     private MockMvc restPatientMockMvc;
 
     private Patient patient;
@@ -179,6 +176,8 @@ public class PatientResourceIntTest {
     private Tag tag;
 
     private Questionnaire questionnaire;
+
+    private PatientIdentity patientIdentity;
 
     @Before
     public void setup() {
@@ -220,7 +219,6 @@ public class PatientResourceIntTest {
             .note(DEFAULT_NOTE)
             .clinicNote(DEFAULT_CLINIC_NOTE)
             .writeIcTime(DEFAULT_WRITE_IC_TIME)
-            .burdenCost(DEFAULT_BURDEN_COST)
             .avatar(DEFAULT_AVATAR)
             .avatarContentType(DEFAULT_AVATAR_CONTENT_TYPE);
         return patient;
@@ -240,6 +238,9 @@ public class PatientResourceIntTest {
 
         questionnaire = QuestionnaireResourceIntTest.createEntity(em);
         patient.setQuestionnaire(questionnaire);
+
+        patientIdentity = PatientIdentityResourceIntTest.createEntity(em);
+        patient.setPatientIdentity(patientIdentityRepository.save(patientIdentity));
 
         patientService.setTagsByQuestionnaire(patient.getTags(), patient.getQuestionnaire());
     }
@@ -279,12 +280,12 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getNote()).isEqualTo(DEFAULT_NOTE);
         assertThat(testPatient.getClinicNote()).isEqualTo(DEFAULT_CLINIC_NOTE);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(DEFAULT_WRITE_IC_TIME);
-        assertThat(testPatient.getBurdenCost()).isEqualTo(DEFAULT_BURDEN_COST);
         assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getIntroducer()).isEqualTo(null);
         assertThat(testPatient.getTags()).contains(tag);
         assertThat(testPatient.getQuestionnaire().getHepatitisType()).isEqualTo(patient.getQuestionnaire().getHepatitisType());
+        assertThat(testPatient.getPatientIdentity()).isEqualTo(patientIdentity);
 
         tagRepository.findById(TagName.Hypertension.getValue()).ifPresent(tag -> assertThat(testPatient.getTags()).contains(tag));
     }
@@ -374,8 +375,7 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.[*].fbId").value(hasItem(DEFAULT_FB_ID.toString())))
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].clinicNote").value(hasItem(DEFAULT_CLINIC_NOTE.toString())))
-            .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem(DEFAULT_WRITE_IC_TIME.toString())))
-            .andExpect(jsonPath("$.[*].burdenCost").value(hasItem(DEFAULT_BURDEN_COST)));
+            .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem(DEFAULT_WRITE_IC_TIME.toString())));
     }
     
     @SuppressWarnings({"unchecked"})
@@ -441,8 +441,7 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.fbId").value(DEFAULT_FB_ID.toString()))
             .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
             .andExpect(jsonPath("$.clinicNote").value(DEFAULT_CLINIC_NOTE.toString()))
-            .andExpect(jsonPath("$.writeIcTime").value(DEFAULT_WRITE_IC_TIME.toString()))
-            .andExpect(jsonPath("$.burdenCost").value(DEFAULT_BURDEN_COST));
+            .andExpect(jsonPath("$.writeIcTime").value(DEFAULT_WRITE_IC_TIME.toString()));
     }
 
     @Test
@@ -465,6 +464,10 @@ public class PatientResourceIntTest {
         Patient updatedPatient = patientRepository.findById(patient.getId()).get();
         // Disconnect from session so that the updates on updatedPatient are not directly saved in db
         em.detach(updatedPatient);
+
+        PatientIdentity updatePatientIdentity = PatientIdentityResourceIntTest.createEntity(em);
+        patientIdentityRepository.save(updatePatientIdentity);
+
         updatedPatient
             .name(UPDATED_NAME)
             .phone(UPDATED_PHONE)
@@ -485,8 +488,8 @@ public class PatientResourceIntTest {
             .fbId(UPDATED_FB_ID)
             .note(UPDATED_NOTE)
             .clinicNote(UPDATED_CLINIC_NOTE)
-            .writeIcTime(UPDATED_WRITE_IC_TIME)
-            .burdenCost(UPDATED_BURDEN_COST);
+            .writeIcTime(UPDATED_WRITE_IC_TIME);
+        updatedPatient.setPatientIdentity(updatePatientIdentity);
 
         restPatientMockMvc.perform(put("/api/patients")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -517,7 +520,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getNote()).isEqualTo(UPDATED_NOTE);
         assertThat(testPatient.getClinicNote()).isEqualTo(UPDATED_CLINIC_NOTE);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(UPDATED_WRITE_IC_TIME);
-        assertThat(testPatient.getBurdenCost()).isEqualTo(UPDATED_BURDEN_COST);
+        assertThat(testPatient.getPatientIdentity().getCode()).isEqualTo(updatePatientIdentity.getCode());
     }
 
     @Test

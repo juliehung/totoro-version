@@ -13,7 +13,7 @@
         <sql dbms="postgresql" splitStatements="true">
             CREATE TABLE setting (
                 id bigint NOT NULL PRIMARY KEY,
-                info jsonb NOT NULL
+                preferences jsonb NOT NULL
             );
         </sql>
     </changeSet>
