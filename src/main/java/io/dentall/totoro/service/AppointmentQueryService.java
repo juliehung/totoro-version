@@ -10,6 +10,7 @@ import javax.persistence.criteria.JoinType;
 
 import io.dentall.totoro.domain.enumeration.RegistrationType;
 import io.dentall.totoro.service.filter.RegistrationTypeFilter;
+import io.dentall.totoro.service.util.FilterUtil;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.InstantFilter;
 import io.github.jhipster.service.filter.LongFilter;
@@ -104,7 +105,7 @@ public class AppointmentQueryService extends QueryService<Appointment> {
             if (criteria.getExpectedArrivalTime() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getExpectedArrivalTime(), Appointment_.expectedArrivalTime));
             } else {
-                if ((predicateRegistrationId.test(criteria.getRegistrationId()) && predicateFilterEquals.test(criteria.getPatientId())) ||
+                if ((FilterUtil.predicateIsNull.test(criteria.getRegistrationId()) && predicateFilterEquals.test(criteria.getPatientId())) ||
                     predicateFilterEquals.test(criteria.getRegistrationType()) ||
                     predicateFilterEquals.test(criteria.getRegistrationTypeValue())) {
                     // default expectedArrivalTime is today
@@ -159,9 +160,6 @@ public class AppointmentQueryService extends QueryService<Appointment> {
         }
         return specification;
     }
-
-    // registrationId criteria is not null and registrationId specified is not null and registrationId specified is false (registrationId is null)
-    private Predicate<LongFilter> predicateRegistrationId = filter -> filter != null && filter.getSpecified() != null && !filter.getSpecified();
 
     // criteria is not null and criteria equals is not null
     private Predicate<Filter> predicateFilterEquals = filter -> filter != null && filter.getEquals() != null;

@@ -153,7 +153,6 @@ public class AppointmentResourceIntTest {
 
     @Before
     public void initTest() {
-        appointmentRepository.deleteAll();
         appointment = createEntity(em);
         appointment.setDoctor(userRepository.save(UserResourceIntTest.createEntity(em)).getExtendUser());
     }
