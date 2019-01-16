@@ -3,19 +3,32 @@ package io.dentall.totoro.service;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TagName;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.dto.PatientCriteria;
+import io.dentall.totoro.service.util.FilterUtil;
+import io.github.jhipster.service.QueryService;
+import io.github.jhipster.service.filter.InstantFilter;
+import io.github.jhipster.service.filter.LongFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.JoinType;
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
  * Service class for managing patients.
  */
 @Service
-public class PatientService {
+public class PatientService extends QueryService<Patient> {
 
     private final Logger log = LoggerFactory.getLogger(PatientService.class);
 
@@ -56,6 +69,19 @@ public class PatientService {
             setTag(tags, TagName.AdverseReactionsToAnestheticInjections,
                 () -> questionnaire.isAdverseReactionsToAnestheticInjections() != null && questionnaire.isAdverseReactionsToAnestheticInjections());
         }
+    }
+
+    /**
+     * Return a {@link Page} of {@link Patient} which matches the criteria from the database
+     * @param criteria The object which holds all the filters, which the entities should match.
+     * @param page The page, which should be returned.
+     * @return the matching entities.
+     */
+    @Transactional(readOnly = true)
+    public Page<Patient> findByCriteria(PatientCriteria criteria, Pageable page) {
+        log.debug("find by criteria : {}, page: {}", criteria, page);
+        final Specification<Patient> specification = createSpecification(criteria);
+        return patientRepository.findAll(specification, page);
     }
 
     @Transactional
@@ -267,4 +293,48 @@ public class PatientService {
             tag.ifPresent(tags::remove);
         }
     }
+
+    /**
+     * Function to convert PatientCriteria to a {@link Specification}
+     */
+    private Specification<Patient> createSpecification(PatientCriteria criteria) {
+        Specification<Patient> specification = Specification.where(null);
+        if (criteria != null) {
+            if (criteria.getQuestionnaireId() != null) {
+                specification = specification.and(buildSpecification(criteria.getQuestionnaireId(),
+                    root -> root.join(Patient_.questionnaire, JoinType.LEFT).get(Questionnaire_.id)));
+            }
+
+            if (criteria.getFirstDoctorId() != null) {
+                specification = specification.and(buildSpecification(criteria.getFirstDoctorId(),
+                    root -> root.join(Patient_.firstDoctor, JoinType.LEFT).get(ExtendUser_.id)));
+            }
+
+            if (criteria.getDeleteDate() != null) {
+                specification = specification.and(buildSpecification(criteria.getDeleteDate(), Patient_.deleteDate));
+            }
+
+            if (criteria.getCreatedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Patient_.createdDate));
+            } else {
+                if (FilterUtil.predicateIsNull.test(criteria.getQuestionnaireId())) {
+                    // default createdDate is today
+                    Instant start = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MIN).toInstant();
+                    Instant end = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MAX).toInstant();
+                    specification = specification.and(buildRangeSpecification(new InstantFilter().setGreaterOrEqualThan(start).setLessOrEqualThan(end), Patient_.createdDate));
+                }
+            }
+
+            if (criteria.getSearch() != null && criteria.getSearch().getContains() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getSearch(), Patient_.name)
+                    .or(buildStringSpecification(criteria.getSearch(), Patient_.phone))
+                    .or((root, query, builder) -> builder.like(builder.function("TO_CHAR", String.class, root.get(Patient_.birth), builder.literal("yyyyMMdd")), wrapLikeQuery(criteria.getSearch().getContains())))
+                );
+            }
+        }
+
+        return specification;
+    }
+
+
 }

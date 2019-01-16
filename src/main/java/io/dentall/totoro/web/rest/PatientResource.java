@@ -7,6 +7,7 @@ import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
+import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.dto.PatientDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.errors.InternalServerErrorException;
@@ -21,7 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -112,30 +112,16 @@ public class PatientResource {
      * GET  /patients : get all the patients.
      *
      * @param pageable the pagination information
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many)
-     * @param search patients who contain search keyword to retrieve
-     * @param isDeleted patients were deleted
-     * @param isNP patients were NP
+     * @param criteria the criterias which the requested entities should match
      * @return the ResponseEntity with status 200 (OK) and the list of patients in body
      */
     @GetMapping("/patients")
     @Timed
-    public ResponseEntity<List<Patient>> getAllPatients(
-        Pageable pageable,
-        @RequestParam(required = false, defaultValue = "false") boolean eagerload,
-        @RequestParam(required = false) String search,
-        @RequestParam(required = false) Boolean isDeleted,
-        @RequestParam(required = false) Boolean isNP) {
+    public ResponseEntity<List<Patient>> getAllPatients(Pageable pageable, PatientCriteria criteria) {
         log.debug("REST request to get a page of Patients");
-        Page<Patient> page;
-        if (eagerload) {
-            page = (search != null || isDeleted != null || isNP != null) ? patientRepository.findByQueryWithEagerRelationships(search, isDeleted, isNP, pageable) : patientRepository.findAllWithEagerRelationships(pageable);
-        } else {
-            page = (search != null || isDeleted != null || isNP != null) ? patientRepository.findByQuery(search, isDeleted, isNP, pageable) : patientRepository.findAll(pageable);
-        }
-
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/patients?eagerload=%b&search=%s&isDeleted=%b", eagerload, search, isDeleted));
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        Page<Patient> page = patientService.findByCriteria(criteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/patients");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -148,7 +134,7 @@ public class PatientResource {
     @Timed
     public ResponseEntity<Patient> getPatientById(@PathVariable Long id) {
         log.debug("REST request to get Patient : {}", id);
-        Optional<Patient> patient = patientRepository.findOneWithEagerRelationships(id);
+        Optional<Patient> patient = patientRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(patient);
     }
 

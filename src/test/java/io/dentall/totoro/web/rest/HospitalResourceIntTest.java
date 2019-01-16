@@ -102,7 +102,6 @@ public class HospitalResourceIntTest {
 
     @Before
     public void initTest() {
-        hospitalRepository.deleteAll();
         hospital = createEntity(em);
     }
 

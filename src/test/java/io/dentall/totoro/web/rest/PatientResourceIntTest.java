@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -36,7 +35,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -45,7 +43,6 @@ import java.util.List;
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -131,9 +128,6 @@ public class PatientResourceIntTest {
     @Autowired
     private PatientRepository patientRepository;
 
-    @Mock
-    private PatientRepository patientRepositoryMock;
-
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -154,9 +148,6 @@ public class PatientResourceIntTest {
 
     @Autowired
     private TagRepository tagRepository;
-
-    @Autowired
-    private QuestionnaireRepository questionnaireRepository;
 
     @Autowired
     private PatientService patientService;
@@ -376,39 +367,6 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].clinicNote").value(hasItem(DEFAULT_CLINIC_NOTE.toString())))
             .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem(DEFAULT_WRITE_IC_TIME.toString())));
-    }
-    
-    @SuppressWarnings({"unchecked"})
-    public void getAllPatientsWithEagerRelationshipsIsEnabled() throws Exception {
-        PatientResource patientResource = new PatientResource(patientRepositoryMock, tagRepository, patientService, imageService);
-        when(patientRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        MockMvc restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
-
-        restPatientMockMvc.perform(get("/api/patients?eagerload=true"))
-        .andExpect(status().isOk());
-
-        verify(patientRepositoryMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({"unchecked"})
-    public void getAllPatientsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        PatientResource patientResource = new PatientResource(patientRepositoryMock, tagRepository, patientService, imageService);
-            when(patientRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-            MockMvc restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
-
-        restPatientMockMvc.perform(get("/api/patients?eagerload=true"))
-        .andExpect(status().isOk());
-
-            verify(patientRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -818,92 +776,6 @@ public class PatientResourceIntTest {
 
     @Test
     @Transactional
-    public void getPatientsByQueryNameContaining() throws Exception {
-        // Initialize the database
-        patientRepository.saveAndFlush(patient);
-
-        // Get patients by name
-        restPatientMockMvc.perform(get("/api/patients?search={keyword}&sort=id,desc", patient.getName().substring(2, 5)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(patient.getName())));
-    }
-
-    @Test
-    @Transactional
-    public void getPatientsByQueryBirthContaining() throws Exception {
-        // Initialize the database
-        patientRepository.saveAndFlush(patient);
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-
-        // Get patients by birth
-        restPatientMockMvc.perform(get("/api/patients?search={keyword}&sort=id,desc", patient.getBirth().format(formatter).substring(2, 5)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].birth").value(hasItem(patient.getBirth().toString())));
-    }
-
-    @Test
-    @Transactional
-    public void getPatientsByQueryPhoneContaining() throws Exception {
-        // Initialize the database
-        patientRepository.saveAndFlush(patient);
-
-        // Get patients by phone
-        restPatientMockMvc.perform(get("/api/patients?search={keyword}&sort=id,desc", patient.getPhone().substring(2, 5)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].phone").value(hasItem(patient.getPhone())));
-    }
-
-    @Test
-    @Transactional
-    public void getPatientsByQueryBirthContainingAndIsDeleted() throws Exception {
-        // Initialize the database
-        patientRepository.saveAndFlush(patient);
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-
-        // Get patients by birth and deleted
-        restPatientMockMvc.perform(get("/api/patients?search={keyword}&isDeleted={isDeleted}&sort=id,desc", patient.getBirth().format(formatter).substring(2, 5), true))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].deleteDate").value(hasItem(patient.getDeleteDate().toString())));
-    }
-
-    @Test
-    @Transactional
-    public void getPatientsByQueryIsNotDeleted() throws Exception {
-        patient.setDeleteDate(null);
-        // Initialize the database
-        patientRepository.saveAndFlush(patient);
-
-        // Get patients by not deleted
-        restPatientMockMvc.perform(get("/api/patients?isDeleted={isDeleted}&sort=id,desc", false))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(patient.getId().intValue())));
-    }
-
-    @Test
-    @Transactional
-    public void getPatientsByQueryIsNP() throws Exception {
-        patient.setFirstDoctor(null);
-
-        // Initialize the database
-        patientRepository.saveAndFlush(patient);
-
-        // Get patients by np
-        Object jsonNull = null;
-        restPatientMockMvc.perform(get("/api/patients?isNP={isNP}&sort=id,desc", true))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].firstDoctor").value(hasItem(jsonNull)));
-    }
-
-    @Test
-    @Transactional
     public void createPatientTags() throws Exception {
         Tag tag1 = TagResourceIntTest.createEntity(em);
         tag1.setName("tag1");
@@ -987,6 +859,71 @@ public class PatientResourceIntTest {
 
         restPatientMockMvc.perform(get("/api/patients/{id}/avatar", patient.getId()))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    public void getAllPatientsByQuestionnaireIsNull() throws Exception {
+        patient.questionnaire(null);
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        restPatientMockMvc.perform(get("/api/patients?questionnaireId.specified=false"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(patient.getId().intValue())));
+    }
+
+    @Test
+    @Transactional
+    public void getAllPatientsIsNP() throws Exception {
+        patient.setFirstDoctor(null);
+
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        restPatientMockMvc.perform(get("/api/patients?firstDoctorId.specified=false"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(patient.getId().intValue())));
+    }
+
+    @Test
+    @Transactional
+    public void getAllPatientsIsDeleted() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        restPatientMockMvc.perform(get("/api/patients?deleteDate.specified=true"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].deleteDate").value(hasItem(patient.getDeleteDate().toString())));
+    }
+
+    @Test
+    @Transactional
+    public void getAllPatientsByBirthContaining() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        restPatientMockMvc.perform(get("/api/patients?search.contains={keyword}", patient.getBirth().format(formatter).substring(2, 5)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].birth").value(hasItem(patient.getBirth().toString())));
+    }
+
+    @Test
+    @Transactional
+    public void getAllPatientsByNameContaining() throws Exception {
+        // Initialize the database
+        patientRepository.saveAndFlush(patient);
+
+        restPatientMockMvc.perform(get("/api/patients?search.contains={keyword}", patient.getName().substring(2, 5)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(patient.getName())));
     }
 
     private Patient createPatientByName(String name) {
