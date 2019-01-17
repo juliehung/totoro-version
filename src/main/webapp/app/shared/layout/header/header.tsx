@@ -58,7 +58,7 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
   };
 
   render() {
-    const { currentLocale, isAuthenticated, isAdmin, isSwaggerEnabled, isInProduction } = this.props;
+    const { currentLocale, isAuthenticated, isAdmin, isSwaggerEnabled } = this.props;
 
     /* jhipster-needle-add-element-to-menu - JHipster will add new menu items here */
 
@@ -74,7 +74,7 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
             <Nav id="header-tabs" className="ml-auto" navbar>
               <Survey />
               {isAuthenticated && <EntitiesMenu />}
-              {isAuthenticated && isAdmin && <AdminMenu showSwagger={isSwaggerEnabled} showDatabase={!isInProduction} />}
+              {isAuthenticated && isAdmin && <AdminMenu showSwagger={isSwaggerEnabled} />}
               <LocaleMenu currentLocale={currentLocale} onClick={this.handleLocaleChange} />
               <AccountMenu isAuthenticated={isAuthenticated} />
             </Nav>
