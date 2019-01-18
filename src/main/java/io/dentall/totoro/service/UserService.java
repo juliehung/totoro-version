@@ -9,6 +9,7 @@ import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.AuthoritiesConstants;
 import io.dentall.totoro.security.SecurityUtils;
 import io.dentall.totoro.service.dto.UserDTO;
+import io.dentall.totoro.service.util.CacheUtil;
 import io.dentall.totoro.service.util.RandomUtil;
 import io.dentall.totoro.web.rest.errors.*;
 
@@ -323,7 +324,6 @@ public class UserService {
     }
 
     private void clearUserCaches(User user) {
-        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getLogin());
-        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
+        CacheUtil.clearUserCaches(user, cacheManager);
     }
 }

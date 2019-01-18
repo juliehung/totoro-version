@@ -292,6 +292,8 @@ public class ExtendUser implements Serializable, Avatar {
         return "ExtendUser{" +
             "id=" + getId() +
             ", firstLogin='" + isFirstLogin() + "'" +
+            ", avatar='" + getAvatar() + "'" +
+            ", avatarContentType='" + getAvatarContentType() + "'" +
             "}";
     }
 }
