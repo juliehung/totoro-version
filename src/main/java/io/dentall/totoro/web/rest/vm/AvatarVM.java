@@ -18,4 +18,12 @@ public class AvatarVM implements Serializable {
         this.contentType = avatarEntity.getAvatarContentType();
         this.base64 = Base64.getEncoder().withoutPadding().encodeToString(avatarEntity.getAvatar());
     }
+
+    @Override
+    public String toString() {
+        return "AvatarVM{" +
+            "contentType='" + contentType + "'" +
+            ", base64=" + base64 + "'" +
+            "}";
+    }
 }

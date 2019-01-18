@@ -48,7 +48,6 @@ public class AccountResource {
     private final ImageService imageService;
 
     public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, ImageService imageService) {
-
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
