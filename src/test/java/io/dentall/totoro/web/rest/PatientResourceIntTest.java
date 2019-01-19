@@ -845,7 +845,7 @@ public class PatientResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.contentType").value(UPLOAD_CONTENT_TYPE))
-            .andExpect(jsonPath("$.base64").value(Base64.getEncoder().withoutPadding().encodeToString(avatar)));
+            .andExpect(jsonPath("$.base64").value(Base64.getEncoder().encodeToString(avatar)));
     }
 
     @Test
