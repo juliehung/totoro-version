@@ -1,8 +1,8 @@
 package io.dentall.totoro.domain.enumeration;
 
 /**
- * The IntervalType enumeration.
+ * The TimeInterval enumeration.
  */
-public enum IntervalType {
+public enum TimeInterval {
     MORNING, NOON, EVENING, NIGHT, ALL
 }

@@ -1,0 +1,11 @@
+{
+  "totoroApp": {
+    "CalendarType": {
+      "null": "",
+      "WORK_TIME": "WORK_TIME",
+      "HOLIDAY": "HOLIDAY",
+      "NHI_POINT_EXCLUDE": "NHI_POINT_EXCLUDE",
+      "OTHER": "OTHER"
+    }
+  }
+}

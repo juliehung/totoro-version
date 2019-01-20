@@ -104,68 +104,67 @@ export class CalendarUpdate extends React.Component<ICalendarUpdateProps, ICalen
                   />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="intervalTypeLabel">
-                    <Translate contentKey="totoroApp.calendar.intervalType">Interval Type</Translate>
+                  <Label id="timeIntervalLabel">
+                    <Translate contentKey="totoroApp.calendar.timeInterval">Time Interval</Translate>
                   </Label>
                   <AvInput
-                    id="calendar-intervalType"
+                    id="calendar-timeInterval"
                     type="select"
                     className="form-control"
-                    name="intervalType"
-                    value={(!isNew && calendarEntity.intervalType) || 'MORNING'}
+                    name="timeInterval"
+                    value={(!isNew && calendarEntity.timeInterval) || 'MORNING'}
                   >
                     <option value="MORNING">
-                      <Translate contentKey="totoroApp.IntervalType.MORNING" />
+                      <Translate contentKey="totoroApp.TimeInterval.MORNING" />
                     </option>
                     <option value="NOON">
-                      <Translate contentKey="totoroApp.IntervalType.NOON" />
+                      <Translate contentKey="totoroApp.TimeInterval.NOON" />
                     </option>
                     <option value="EVENING">
-                      <Translate contentKey="totoroApp.IntervalType.EVENING" />
+                      <Translate contentKey="totoroApp.TimeInterval.EVENING" />
                     </option>
                     <option value="NIGHT">
-                      <Translate contentKey="totoroApp.IntervalType.NIGHT" />
+                      <Translate contentKey="totoroApp.TimeInterval.NIGHT" />
                     </option>
                     <option value="ALL">
-                      <Translate contentKey="totoroApp.IntervalType.ALL" />
+                      <Translate contentKey="totoroApp.TimeInterval.ALL" />
                     </option>
                   </AvInput>
                 </AvGroup>
                 <AvGroup>
-                  <Label id="dateTypeLabel">
-                    <Translate contentKey="totoroApp.calendar.dateType">Date Type</Translate>
+                  <Label id="timeTypeLabel">
+                    <Translate contentKey="totoroApp.calendar.timeType">Time Type</Translate>
                   </Label>
                   <AvInput
-                    id="calendar-dateType"
+                    id="calendar-timeType"
                     type="select"
                     className="form-control"
-                    name="dateType"
-                    value={(!isNew && calendarEntity.dateType) || 'WORKTIME'}
+                    name="timeType"
+                    value={(!isNew && calendarEntity.timeType) || 'WORK_TIME'}
                   >
-                    <option value="WORKTIME">
-                      <Translate contentKey="totoroApp.DateType.WORKTIME" />
+                    <option value="WORK_TIME">
+                      <Translate contentKey="totoroApp.TimeType.WORK_TIME" />
                     </option>
                     <option value="HOLIDAY">
-                      <Translate contentKey="totoroApp.DateType.HOLIDAY" />
+                      <Translate contentKey="totoroApp.TimeType.HOLIDAY" />
                     </option>
-                    <option value="NHIPOINTEXCLUDE">
-                      <Translate contentKey="totoroApp.DateType.NHIPOINTEXCLUDE" />
+                    <option value="NHI_POINT_EXCLUDE">
+                      <Translate contentKey="totoroApp.TimeType.NHI_POINT_EXCLUDE" />
                     </option>
                     <option value="OTHER">
-                      <Translate contentKey="totoroApp.DateType.OTHER" />
+                      <Translate contentKey="totoroApp.TimeType.OTHER" />
                     </option>
                   </AvInput>
                 </AvGroup>
                 <AvGroup>
-                  <Label id="startLabel" for="start">
-                    <Translate contentKey="totoroApp.calendar.start">Start</Translate>
+                  <Label id="startTimeLabel" for="startTime">
+                    <Translate contentKey="totoroApp.calendar.startTime">Start Time</Translate>
                   </Label>
                   <AvField
-                    id="calendar-start"
+                    id="calendar-startTime"
                     type="text"
-                    name="start"
+                    name="startTime"
                     validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') },
                       pattern: {
                         value: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$',
                         errorMessage: translate('entity.validation.pattern', { pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$' })
@@ -174,15 +173,14 @@ export class CalendarUpdate extends React.Component<ICalendarUpdateProps, ICalen
                   />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="endLabel" for="end">
-                    <Translate contentKey="totoroApp.calendar.end">End</Translate>
+                  <Label id="endTimeLabel" for="endTime">
+                    <Translate contentKey="totoroApp.calendar.endTime">End Time</Translate>
                   </Label>
                   <AvField
-                    id="calendar-end"
+                    id="calendar-endTime"
                     type="text"
-                    name="end"
+                    name="endTime"
                     validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') },
                       pattern: {
                         value: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$',
                         errorMessage: translate('entity.validation.pattern', { pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$' })

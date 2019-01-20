@@ -22,6 +22,7 @@
         "incident": "Incident",
         "calendar": "Calendar",
         "patientIdentity": "Patient Identity",
+        "calendarSetting": "Calendar Setting",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

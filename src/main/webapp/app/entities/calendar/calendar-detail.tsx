@@ -37,29 +37,29 @@ export class CalendarDetail extends React.Component<ICalendarDetailProps> {
               <TextFormat value={calendarEntity.date} type="date" format={APP_LOCAL_DATE_FORMAT} />
             </dd>
             <dt>
-              <span id="intervalType">
-                <Translate contentKey="totoroApp.calendar.intervalType">Interval Type</Translate>
+              <span id="timeInterval">
+                <Translate contentKey="totoroApp.calendar.timeInterval">Time Interval</Translate>
               </span>
             </dt>
-            <dd>{calendarEntity.intervalType}</dd>
+            <dd>{calendarEntity.timeInterval}</dd>
             <dt>
-              <span id="dateType">
-                <Translate contentKey="totoroApp.calendar.dateType">Date Type</Translate>
+              <span id="timeType">
+                <Translate contentKey="totoroApp.calendar.timeType">Time Type</Translate>
               </span>
             </dt>
-            <dd>{calendarEntity.dateType}</dd>
+            <dd>{calendarEntity.timeType}</dd>
             <dt>
-              <span id="start">
-                <Translate contentKey="totoroApp.calendar.start">Start</Translate>
+              <span id="startTime">
+                <Translate contentKey="totoroApp.calendar.startTime">Start Time</Translate>
               </span>
             </dt>
-            <dd>{calendarEntity.start}</dd>
+            <dd>{calendarEntity.startTime}</dd>
             <dt>
-              <span id="end">
-                <Translate contentKey="totoroApp.calendar.end">End</Translate>
+              <span id="endTime">
+                <Translate contentKey="totoroApp.calendar.endTime">End Time</Translate>
               </span>
             </dt>
-            <dd>{calendarEntity.end}</dd>
+            <dd>{calendarEntity.endTime}</dd>
           </dl>
           <Button tag={Link} to="/entity/calendar" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}
