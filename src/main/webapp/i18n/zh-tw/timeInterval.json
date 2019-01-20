@@ -1,0 +1,12 @@
+{
+  "totoroApp": {
+    "TimeInterval": {
+      "null": "",
+      "MORNING": "MORNING",
+      "NOON": "NOON",
+      "EVENING": "EVENING",
+      "NIGHT": "NIGHT",
+      "ALL": "ALL"
+    }
+  }
+}

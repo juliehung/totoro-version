@@ -16,10 +16,10 @@
         "title": "Calendar"
       },
       "date": "Date",
-      "intervalType": "Interval Type",
-      "dateType": "Date Type",
-      "start": "Start",
-      "end": "End"
+      "timeInterval": "Time Interval",
+      "timeType": "Time Type",
+      "startTime": "Start Time",
+      "endTime": "End Time"
     }
   }
 }

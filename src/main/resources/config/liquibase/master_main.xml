@@ -21,6 +21,7 @@
     <include file="config/liquibase/changelog/20190110_added_entity_Setting.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190111031613_added_entity_Calendar.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190114072058_added_entity_PatientIdentity.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190116041703_added_entity_CalendarSetting.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/20181024_addColumn_Patient.xml" relativeToChangelogFile="false"/>

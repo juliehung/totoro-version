@@ -14,14 +14,18 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity Calendar.
+        Added the entity CalendarSetting.
     -->
-    <changeSet id="20190111031613-1" author="jhipster">
-        <createTable tableName="calendar">
+    <changeSet id="20190116041703-1" author="jhipster">
+        <createTable tableName="calendar_setting">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="jhi_date" type="date">
+            <column name="start_time" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="end_time" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
 
@@ -29,15 +33,15 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="time_type" type="varchar(255)">
+            <column name="weekday" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
 
-            <column name="start_time" type="varchar(255)">
-                <constraints nullable="true" />
+            <column name="start_date" type="date">
+                <constraints nullable="false" />
             </column>
 
-            <column name="end_time" type="varchar(255)">
+            <column name="end_date" type="date">
                 <constraints nullable="true" />
             </column>
 

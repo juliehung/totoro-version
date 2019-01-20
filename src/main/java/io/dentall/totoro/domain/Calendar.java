@@ -10,9 +10,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import io.dentall.totoro.domain.enumeration.IntervalType;
+import io.dentall.totoro.domain.enumeration.TimeInterval;
 
-import io.dentall.totoro.domain.enumeration.DateType;
+import io.dentall.totoro.domain.enumeration.TimeType;
 
 /**
  * A Calendar.
@@ -35,23 +35,21 @@ public class Calendar implements Serializable {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "interval_type", nullable = false)
-    private IntervalType intervalType;
+    @Column(name = "time_interval", nullable = false)
+    private TimeInterval timeInterval;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "date_type", nullable = false)
-    private DateType dateType;
+    @Column(name = "time_type", nullable = false)
+    private TimeType timeType;
 
-    @NotNull
     @Pattern(regexp = "^([0-1][0-9]|2[0-3]):[0-5][0-9]$")
-    @Column(name = "jhi_start", nullable = false)
-    private String start;
+    @Column(name = "start_time")
+    private String startTime;
 
-    @NotNull
     @Pattern(regexp = "^([0-1][0-9]|2[0-3]):[0-5][0-9]$")
-    @Column(name = "jhi_end", nullable = false)
-    private String end;
+    @Column(name = "end_time")
+    private String endTime;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -75,56 +73,56 @@ public class Calendar implements Serializable {
         this.date = date;
     }
 
-    public IntervalType getIntervalType() {
-        return intervalType;
+    public TimeInterval getTimeInterval() {
+        return timeInterval;
     }
 
-    public Calendar intervalType(IntervalType intervalType) {
-        this.intervalType = intervalType;
+    public Calendar timeInterval(TimeInterval timeInterval) {
+        this.timeInterval = timeInterval;
         return this;
     }
 
-    public void setIntervalType(IntervalType intervalType) {
-        this.intervalType = intervalType;
+    public void setTimeInterval(TimeInterval timeInterval) {
+        this.timeInterval = timeInterval;
     }
 
-    public DateType getDateType() {
-        return dateType;
+    public TimeType getTimeType() {
+        return timeType;
     }
 
-    public Calendar dateType(DateType dateType) {
-        this.dateType = dateType;
+    public Calendar timeType(TimeType timeType) {
+        this.timeType = timeType;
         return this;
     }
 
-    public void setDateType(DateType dateType) {
-        this.dateType = dateType;
+    public void setTimeType(TimeType timeType) {
+        this.timeType = timeType;
     }
 
-    public String getStart() {
-        return start;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public Calendar start(String start) {
-        this.start = start;
+    public Calendar startTime(String startTime) {
+        this.startTime = startTime;
         return this;
     }
 
-    public void setStart(String start) {
-        this.start = start;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public String getEnd() {
-        return end;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public Calendar end(String end) {
-        this.end = end;
+    public Calendar endTime(String endTime) {
+        this.endTime = endTime;
         return this;
     }
 
-    public void setEnd(String end) {
-        this.end = end;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -153,10 +151,10 @@ public class Calendar implements Serializable {
         return "Calendar{" +
             "id=" + getId() +
             ", date='" + getDate() + "'" +
-            ", intervalType='" + getIntervalType() + "'" +
-            ", dateType='" + getDateType() + "'" +
-            ", start='" + getStart() + "'" +
-            ", end='" + getEnd() + "'" +
+            ", timeInterval='" + getTimeInterval() + "'" +
+            ", timeType='" + getTimeType() + "'" +
+            ", startTime='" + getStartTime() + "'" +
+            ", endTime='" + getEndTime() + "'" +
             "}";
     }
 }

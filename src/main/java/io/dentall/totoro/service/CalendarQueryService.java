@@ -86,17 +86,17 @@ public class CalendarQueryService extends QueryService<Calendar> {
             if (criteria.getDate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getDate(), Calendar_.date));
             }
-            if (criteria.getIntervalType() != null) {
-                specification = specification.and(buildSpecification(criteria.getIntervalType(), Calendar_.intervalType));
+            if (criteria.getTimeInterval() != null) {
+                specification = specification.and(buildSpecification(criteria.getTimeInterval(), Calendar_.timeInterval));
             }
-            if (criteria.getDateType() != null) {
-                specification = specification.and(buildSpecification(criteria.getDateType(), Calendar_.dateType));
+            if (criteria.getTimeType() != null) {
+                specification = specification.and(buildSpecification(criteria.getTimeType(), Calendar_.timeType));
             }
-            if (criteria.getStart() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getStart(), Calendar_.start));
+            if (criteria.getStartTime() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getStartTime(), Calendar_.startTime));
             }
-            if (criteria.getEnd() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getEnd(), Calendar_.end));
+            if (criteria.getEndTime() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getEndTime(), Calendar_.endTime));
             }
         }
         return specification;
