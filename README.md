@@ -159,7 +159,7 @@ git clone https://gitlab.com/dentall/totoro-admin.git
 
 #### start Docker container
 ```
-docker-compose -f src/main/docker/app-dev.yml up -d
+docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml up -d
 ```
 
 #### list containers
@@ -181,11 +181,11 @@ docker exec -it totoro-admin sh
 
 #### cleanup
 ```
-docker-compose -f src/main/docker/app-dev.yml down --rmi all
+docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml down --rmi all
 ```
 
 ## Launch totoro-admin on local env. for developer
-### with Docker
+### with Docker (recommend)
 #### start
 ```
 docker-compose -f src/main/docker/postgresql.yml up -d
@@ -199,13 +199,36 @@ docker-compose -f src/main/docker/postgresql.yml rm -s
 ### with Embedded Postgres
 #### dev
 ```
-SPRING_PROFILES_ACTIVE=dev,embedded-postgres ./gradlew clean bootRun
+SPRING_PROFILES_ACTIVE=dev,embedded-postgres TZ=UTC ./gradlew clean bootRun
+```
+##### windows
+```
+# powershell
+$env:SPRING_PROFILES_ACTIVE="dev,embedded-postgres"; $env:TZ="UTC"; .\gradlew.bat clean bootRun
 ```
 
 #### test
 ```
-SPRING_PROFILES_ACTIVE=embedded-postgres ./gradlew clean test -x webpackBuildDev
+SPRING_PROFILES_ACTIVE=embedded-postgres TZ=UTC ./gradlew clean test -x webpackBuildDev
 ```
+##### windows
+```
+# powershell
+$env:SPRING_PROFILES_ACTIVE="embedded-postgres"; $env:TZ="UTC"; .\gradlew.bat clean test -x webpackBuildDev
+```
+
+#### cleanup
+##### mac
+`lsof -i tcp:5432` check postgres pid, `kill -9 <pid>`, and delete the folder `/var/folders/.../postgresql-embed-<xxx>`
+
+##### windows
+```
+# pwershell
+Stop-Process -Name "postgres"
+```
+and delete folder
+`C:\Users\<user>\AppData\Local\Temp\postgresql-embed-<xxx>`
+
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0
