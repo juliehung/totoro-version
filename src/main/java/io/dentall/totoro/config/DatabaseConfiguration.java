@@ -1,8 +1,7 @@
 package io.dentall.totoro.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import de.flapdoodle.embed.process.runtime.Network;
-import io.github.jhipster.config.JHipsterConstants;
+import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +19,7 @@ import ru.yandex.qatools.embed.postgresql.distribution.Version;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Configuration
 @EnableJpaRepositories("io.dentall.totoro.repository")
@@ -41,6 +41,15 @@ public class DatabaseConfiguration {
             new AbstractPostgresConfig.Timeout(),
             new AbstractPostgresConfig.Credentials("totoro", "totoro")
         );
+
+        if (SystemUtils.IS_OS_WINDOWS) {
+            postgresConfig.getAdditionalInitDbParams().addAll(Arrays.asList(
+                "--encoding=UTF-8",
+                "--locale=en-US"
+            ));
+        } else if (SystemUtils.IS_OS_MAC) {
+            postgresConfig.getAdditionalInitDbParams().add("--locale=en_US.UTF-8");
+        }
 
         PostgresStarter<PostgresExecutable, PostgresProcess> runtime =
             PostgresStarter.getInstance(EmbeddedPostgres.defaultRuntimeConfig());

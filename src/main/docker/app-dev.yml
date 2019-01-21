@@ -14,18 +14,7 @@ services:
             - ../resources/.h2.server.properties:/src/main/resources/.h2.server.properties
         container_name: totoro-admin
 
-    postgresql: &postgresql
-        image: postgres:10.4
-        # volumes:
-        #     - ~/volumes/jhipster/totoro/postgresql/:/var/lib/postgresql/data/
-        environment:
-            - POSTGRES_USER=totoro
-            - POSTGRES_PASSWORD=totoro
-
     totoro-postgresql:
-        <<: *postgresql
-        ports:
-            - 5432:5432
         networks:
             - backend
         container_name: totoro-postgresql
