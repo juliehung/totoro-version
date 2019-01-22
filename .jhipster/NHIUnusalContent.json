@@ -1,0 +1,30 @@
+{
+    "name": "NHIUnusalContent",
+    "fields": [
+        {
+            "fieldName": "content",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "noSeqNumber",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "gotSeqNumber",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190115024445",
+    "entityTableName": "nhi_unusal_content",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

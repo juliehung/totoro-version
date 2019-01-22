@@ -19,8 +19,9 @@
         "nhiCategory": "NHI Category",
         "hospital": "Hospital",
         "accounting": "Accounting",
-        "incident": "Incident",
         "calendar": "Calendar",
+        "nhiUnusalIncident": "NHI Unusal Incident",
+        "nhiUnusalContent": "NHI Unusal Content",
         "patientIdentity": "Patient Identity",
         "calendarSetting": "Calendar Setting",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"

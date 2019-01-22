@@ -78,11 +78,6 @@ export const EntitiesMenu = props => (
       &nbsp;
       <Translate contentKey="global.menu.entities.registration" />
     </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/incident">
-      <FontAwesomeIcon icon="asterisk" fixedWidth />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.incident" />
-    </DropdownItem>
     <DropdownItem tag={Link} to="/entity/calendar">
       <FontAwesomeIcon icon="asterisk" />
       &nbsp;
@@ -92,6 +87,16 @@ export const EntitiesMenu = props => (
       <FontAwesomeIcon icon="asterisk" fixedWidth />
       &nbsp;
       <Translate contentKey="global.menu.entities.calendar" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/nhi-unusal-incident">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.nhiUnusalIncident" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/nhi-unusal-content">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.nhiUnusalContent" />
     </DropdownItem>
     <DropdownItem tag={Link} to="/entity/patient-identity">
       <FontAwesomeIcon icon="asterisk" fixedWidth />

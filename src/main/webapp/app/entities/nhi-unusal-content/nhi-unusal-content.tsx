@@ -3,32 +3,32 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAllAction, TextFormat } from 'react-jhipster';
+import { Translate, ICrudGetAllAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
-import { getEntities } from './incident.reducer';
-import { IIncident } from 'app/shared/model/incident.model';
+import { getEntities } from './nhi-unusal-content.reducer';
+import { INHIUnusalContent } from 'app/shared/model/nhi-unusal-content.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
-export interface IIncidentProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+export interface INHIUnusalContentProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
-export class Incident extends React.Component<IIncidentProps> {
+export class NHIUnusalContent extends React.Component<INHIUnusalContentProps> {
   componentDidMount() {
     this.props.getEntities();
   }
 
   render() {
-    const { incidentList, match } = this.props;
+    const { nHIUnusalContentList, match } = this.props;
     return (
       <div>
-        <h2 id="incident-heading">
-          <Translate contentKey="totoroApp.incident.home.title">Incidents</Translate>
+        <h2 id="nhi-unusal-content-heading">
+          <Translate contentKey="totoroApp.nHIUnusalContent.home.title">NHI Unusal Contents</Translate>
           <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
             <FontAwesomeIcon icon="plus" />
             &nbsp;
-            <Translate contentKey="totoroApp.incident.home.createLabel">Create new Incident</Translate>
+            <Translate contentKey="totoroApp.nHIUnusalContent.home.createLabel">Create new NHI Unusal Content</Translate>
           </Link>
         </h2>
         <div className="table-responsive">
@@ -39,53 +39,43 @@ export class Incident extends React.Component<IIncidentProps> {
                   <Translate contentKey="global.field.id">ID</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.incident.type">Type</Translate>
+                  <Translate contentKey="totoroApp.nHIUnusalContent.content">Content</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.incident.start">Start</Translate>
+                  <Translate contentKey="totoroApp.nHIUnusalContent.noSeqNumber">No Seq Number</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.incident.end">End</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="totoroApp.incident.content">Content</Translate>
+                  <Translate contentKey="totoroApp.nHIUnusalContent.gotSeqNumber">Got Seq Number</Translate>
                 </th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {incidentList.map((incident, i) => (
+              {nHIUnusalContentList.map((nHIUnusalContent, i) => (
                 <tr key={`entity-${i}`}>
                   <td>
-                    <Button tag={Link} to={`${match.url}/${incident.id}`} color="link" size="sm">
-                      {incident.id}
+                    <Button tag={Link} to={`${match.url}/${nHIUnusalContent.id}`} color="link" size="sm">
+                      {nHIUnusalContent.id}
                     </Button>
                   </td>
-                  <td>
-                    <Translate contentKey={`totoroApp.IncidentType.${incident.type}`} />
-                  </td>
-                  <td>
-                    <TextFormat type="date" value={incident.start} format={APP_DATE_FORMAT} />
-                  </td>
-                  <td>
-                    <TextFormat type="date" value={incident.end} format={APP_DATE_FORMAT} />
-                  </td>
-                  <td>{incident.content}</td>
+                  <td>{nHIUnusalContent.content}</td>
+                  <td>{nHIUnusalContent.noSeqNumber}</td>
+                  <td>{nHIUnusalContent.gotSeqNumber}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${incident.id}`} color="info" size="sm">
+                      <Button tag={Link} to={`${match.url}/${nHIUnusalContent.id}`} color="info" size="sm">
                         <FontAwesomeIcon icon="eye" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${incident.id}/edit`} color="primary" size="sm">
+                      <Button tag={Link} to={`${match.url}/${nHIUnusalContent.id}/edit`} color="primary" size="sm">
                         <FontAwesomeIcon icon="pencil-alt" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.edit">Edit</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${incident.id}/delete`} color="danger" size="sm">
+                      <Button tag={Link} to={`${match.url}/${nHIUnusalContent.id}/delete`} color="danger" size="sm">
                         <FontAwesomeIcon icon="trash" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -103,8 +93,8 @@ export class Incident extends React.Component<IIncidentProps> {
   }
 }
 
-const mapStateToProps = ({ incident }: IRootState) => ({
-  incidentList: incident.entities
+const mapStateToProps = ({ nHIUnusalContent }: IRootState) => ({
+  nHIUnusalContentList: nHIUnusalContent.entities
 });
 
 const mapDispatchToProps = {
@@ -117,4 +107,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Incident);
+)(NHIUnusalContent);

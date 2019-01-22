@@ -7,64 +7,57 @@ import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
-import { getEntity } from './incident.reducer';
-import { IIncident } from 'app/shared/model/incident.model';
+import { getEntity } from './nhi-unusal-incident.reducer';
+import { INHIUnusalIncident } from 'app/shared/model/nhi-unusal-incident.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
-export interface IIncidentDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface INHIUnusalIncidentDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export class IncidentDetail extends React.Component<IIncidentDetailProps> {
+export class NHIUnusalIncidentDetail extends React.Component<INHIUnusalIncidentDetailProps> {
   componentDidMount() {
     this.props.getEntity(this.props.match.params.id);
   }
 
   render() {
-    const { incidentEntity } = this.props;
+    const { nHIUnusalIncidentEntity } = this.props;
     return (
       <Row>
         <Col md="8">
           <h2>
-            <Translate contentKey="totoroApp.incident.detail.title">Incident</Translate> [<b>{incidentEntity.id}</b>]
+            <Translate contentKey="totoroApp.nHIUnusalIncident.detail.title">NHIUnusalIncident</Translate> [
+            <b>{nHIUnusalIncidentEntity.id}</b>]
           </h2>
           <dl className="jh-entity-details">
             <dt>
-              <span id="type">
-                <Translate contentKey="totoroApp.incident.type">Type</Translate>
-              </span>
-            </dt>
-            <dd>{incidentEntity.type}</dd>
-            <dt>
               <span id="start">
-                <Translate contentKey="totoroApp.incident.start">Start</Translate>
+                <Translate contentKey="totoroApp.nHIUnusalIncident.start">Start</Translate>
               </span>
             </dt>
             <dd>
-              <TextFormat value={incidentEntity.start} type="date" format={APP_DATE_FORMAT} />
+              <TextFormat value={nHIUnusalIncidentEntity.start} type="date" format={APP_DATE_FORMAT} />
             </dd>
             <dt>
               <span id="end">
-                <Translate contentKey="totoroApp.incident.end">End</Translate>
+                <Translate contentKey="totoroApp.nHIUnusalIncident.end">End</Translate>
               </span>
             </dt>
             <dd>
-              <TextFormat value={incidentEntity.end} type="date" format={APP_DATE_FORMAT} />
+              <TextFormat value={nHIUnusalIncidentEntity.end} type="date" format={APP_DATE_FORMAT} />
             </dd>
             <dt>
-              <span id="content">
-                <Translate contentKey="totoroApp.incident.content">Content</Translate>
-              </span>
+              <Translate contentKey="totoroApp.nHIUnusalIncident.nhiUnusalContent">Nhi Unusal Content</Translate>
             </dt>
-            <dd>{incidentEntity.content}</dd>
+            <dd>{nHIUnusalIncidentEntity.nhiUnusalContent ? nHIUnusalIncidentEntity.nhiUnusalContent.id : ''}</dd>
           </dl>
-          <Button tag={Link} to="/entity/incident" replace color="info">
+          <Button tag={Link} to="/entity/nhi-unusal-incident" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}
             <span className="d-none d-md-inline">
               <Translate contentKey="entity.action.back">Back</Translate>
             </span>
           </Button>
           &nbsp;
-          <Button tag={Link} to={`/entity/incident/${incidentEntity.id}/edit`} replace color="primary">
+          <Button tag={Link} to={`/entity/nhi-unusal-incident/${nHIUnusalIncidentEntity.id}/edit`} replace color="primary">
             <FontAwesomeIcon icon="pencil-alt" />{' '}
             <span className="d-none d-md-inline">
               <Translate contentKey="entity.action.edit">Edit</Translate>
@@ -76,8 +69,8 @@ export class IncidentDetail extends React.Component<IIncidentDetailProps> {
   }
 }
 
-const mapStateToProps = ({ incident }: IRootState) => ({
-  incidentEntity: incident.entity
+const mapStateToProps = ({ nHIUnusalIncident }: IRootState) => ({
+  nHIUnusalIncidentEntity: nHIUnusalIncident.entity
 });
 
 const mapDispatchToProps = { getEntity };
@@ -88,4 +81,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(IncidentDetail);
+)(NHIUnusalIncidentDetail);

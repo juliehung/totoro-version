@@ -1,0 +1,23 @@
+{
+  "totoroApp": {
+    "nHIUnusalContent": {
+      "home": {
+        "title": "NHI Unusal Contents",
+        "createLabel": "Create a new NHI Unusal Content",
+        "createOrEditLabel": "Create or edit a NHI Unusal Content"
+      },
+      "created": "A new NHI Unusal Content is created with identifier {{ param }}",
+      "updated": "A NHI Unusal Content is updated with identifier {{ param }}",
+      "deleted": "A NHI Unusal Content is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete NHI Unusal Content {{ id }}?"
+      },
+      "detail": {
+        "title": "NHI Unusal Content"
+      },
+      "content": "Content",
+      "noSeqNumber": "No Seq Number",
+      "gotSeqNumber": "Got Seq Number"
+    }
+  }
+}
