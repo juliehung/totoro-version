@@ -223,7 +223,7 @@ $env:SPRING_PROFILES_ACTIVE="embedded-postgres"; $env:TZ="UTC"; .\gradlew.bat cl
 
 ##### windows
 ```
-# pwershell
+# powershell
 Stop-Process -Name "postgres"
 ```
 and delete folder
