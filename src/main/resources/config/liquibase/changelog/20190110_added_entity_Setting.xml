@@ -13,6 +13,7 @@
         <sql dbms="postgresql" splitStatements="true">
             CREATE TABLE setting (
                 id bigint NOT NULL PRIMARY KEY,
+                jhi_type varchar(255) NOT NULL,
                 preferences jsonb NOT NULL
             );
         </sql>
