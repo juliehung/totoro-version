@@ -57,13 +57,17 @@ import accounting, {
   AccountingState
 } from 'app/entities/accounting/accounting.reducer';
 // prettier-ignore
-import incident, {
-  IncidentState
-} from 'app/entities/incident/incident.reducer';
-// prettier-ignore
 import calendar, {
   CalendarState
 } from 'app/entities/calendar/calendar.reducer';
+// prettier-ignore
+import nHIUnusalIncident, {
+  NHIUnusalIncidentState
+} from 'app/entities/nhi-unusal-incident/nhi-unusal-incident.reducer';
+// prettier-ignore
+import nHIUnusalContent, {
+  NHIUnusalContentState
+} from 'app/entities/nhi-unusal-content/nhi-unusal-content.reducer';
 // prettier-ignore
 import patientIdentity, {
   PatientIdentityState
@@ -96,8 +100,9 @@ export interface IRootState {
   readonly nHICategory: NHICategoryState;
   readonly hospital: HospitalState;
   readonly accounting: AccountingState;
-  readonly incident: IncidentState;
   readonly calendar: CalendarState;
+  readonly nHIUnusalIncident: NHIUnusalIncidentState;
+  readonly nHIUnusalContent: NHIUnusalContentState;
   readonly patientIdentity: PatientIdentityState;
   readonly calendarSetting: CalendarSettingState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
@@ -126,8 +131,9 @@ const rootReducer = combineReducers<IRootState>({
   nHICategory,
   hospital,
   accounting,
-  incident,
   calendar,
+  nHIUnusalIncident,
+  nHIUnusalContent,
   patientIdentity,
   calendarSetting,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */

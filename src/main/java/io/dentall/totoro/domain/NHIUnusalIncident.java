@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -10,15 +11,13 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
-import io.dentall.totoro.domain.enumeration.IncidentType;
-
 /**
- * A Incident.
+ * A NHIUnusalIncident.
  */
 @Entity
-@Table(name = "incident")
+@Table(name = "nhi_unusal_incident")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Incident implements Serializable {
+public class NHIUnusalIncident implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,20 +27,15 @@ public class Incident implements Serializable {
     private Long id;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "jhi_type", nullable = false)
-    private IncidentType type;
-
-    @NotNull
     @Column(name = "jhi_start", nullable = false)
     private Instant start;
 
     @Column(name = "jhi_end")
     private Instant end;
 
-    @NotNull
-    @Column(name = "content", nullable = false)
-    private String content;
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private NHIUnusalContent nhiUnusalContent;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -52,24 +46,11 @@ public class Incident implements Serializable {
         this.id = id;
     }
 
-    public IncidentType getType() {
-        return type;
-    }
-
-    public Incident type(IncidentType type) {
-        this.type = type;
-        return this;
-    }
-
-    public void setType(IncidentType type) {
-        this.type = type;
-    }
-
     public Instant getStart() {
         return start;
     }
 
-    public Incident start(Instant start) {
+    public NHIUnusalIncident start(Instant start) {
         this.start = start;
         return this;
     }
@@ -82,7 +63,7 @@ public class Incident implements Serializable {
         return end;
     }
 
-    public Incident end(Instant end) {
+    public NHIUnusalIncident end(Instant end) {
         this.end = end;
         return this;
     }
@@ -91,17 +72,17 @@ public class Incident implements Serializable {
         this.end = end;
     }
 
-    public String getContent() {
-        return content;
+    public NHIUnusalContent getNhiUnusalContent() {
+        return nhiUnusalContent;
     }
 
-    public Incident content(String content) {
-        this.content = content;
+    public NHIUnusalIncident nhiUnusalContent(NHIUnusalContent nHIUnusalContent) {
+        this.nhiUnusalContent = nHIUnusalContent;
         return this;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setNhiUnusalContent(NHIUnusalContent nHIUnusalContent) {
+        this.nhiUnusalContent = nHIUnusalContent;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -113,11 +94,11 @@ public class Incident implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Incident incident = (Incident) o;
-        if (incident.getId() == null || getId() == null) {
+        NHIUnusalIncident nHIUnusalIncident = (NHIUnusalIncident) o;
+        if (nHIUnusalIncident.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), incident.getId());
+        return Objects.equals(getId(), nHIUnusalIncident.getId());
     }
 
     @Override
@@ -127,12 +108,10 @@ public class Incident implements Serializable {
 
     @Override
     public String toString() {
-        return "Incident{" +
+        return "NHIUnusalIncident{" +
             "id=" + getId() +
-            ", type='" + getType() + "'" +
             ", start='" + getStart() + "'" +
             ", end='" + getEnd() + "'" +
-            ", content='" + getContent() + "'" +
             "}";
     }
 }

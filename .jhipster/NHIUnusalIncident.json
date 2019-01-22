@@ -1,0 +1,33 @@
+{
+    "name": "NHIUnusalIncident",
+    "fields": [
+        {
+            "fieldName": "start",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "end",
+            "fieldType": "Instant"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "nhiUnusalContent",
+            "otherEntityName": "nHIUnusalContent",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190115024444",
+    "entityTableName": "nhi_unusal_incident",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

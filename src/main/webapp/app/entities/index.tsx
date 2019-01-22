@@ -15,8 +15,9 @@ import NHIProcedure from './nhi-procedure';
 import NHICategory from './nhi-category';
 import Hospital from './hospital';
 import Accounting from './accounting';
-import Incident from './incident';
 import Calendar from './calendar';
+import NHIUnusalIncident from './nhi-unusal-incident';
+import NHIUnusalContent from './nhi-unusal-content';
 import PatientIdentity from './patient-identity';
 import CalendarSetting from './calendar-setting';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
@@ -36,8 +37,9 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/nhi-category`} component={NHICategory} />
       <ErrorBoundaryRoute path={`${match.url}/hospital`} component={Hospital} />
       <ErrorBoundaryRoute path={`${match.url}/accounting`} component={Accounting} />
-      <ErrorBoundaryRoute path={`${match.url}/incident`} component={Incident} />
       <ErrorBoundaryRoute path={`${match.url}/calendar`} component={Calendar} />
+      <ErrorBoundaryRoute path={`${match.url}/nhi-unusal-incident`} component={NHIUnusalIncident} />
+      <ErrorBoundaryRoute path={`${match.url}/nhi-unusal-content`} component={NHIUnusalContent} />
       <ErrorBoundaryRoute path={`${match.url}/patient-identity`} component={PatientIdentity} />
       <ErrorBoundaryRoute path={`${match.url}/calendar-setting`} component={CalendarSetting} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
