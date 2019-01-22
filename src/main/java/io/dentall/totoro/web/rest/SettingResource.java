@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
@@ -32,26 +31,6 @@ public class SettingResource {
 
     public SettingResource(SettingRepository settingRepository) {
         this.settingRepository = settingRepository;
-    }
-
-    /**
-     * POST  /settings : Create a new setting.
-     *
-     * @param setting the setting to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new setting, or with status 400 (Bad Request) if the setting has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/settings")
-    @Timed
-    public ResponseEntity<Setting> createSetting(@Valid @RequestBody Setting setting) throws URISyntaxException {
-        log.debug("REST request to save Setting : {}", setting);
-        if (setting.getId() != null) {
-            throw new BadRequestAlertException("A new setting cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        Setting result = settingRepository.save(setting);
-        return ResponseEntity.created(new URI("/api/settings/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
     }
 
     /**
@@ -100,20 +79,5 @@ public class SettingResource {
         log.debug("REST request to get Setting : {}", id);
         Optional<Setting> setting = settingRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(setting);
-    }
-
-    /**
-     * DELETE  /settings/:id : delete the "id" setting.
-     *
-     * @param id the id of the setting to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/settings/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteSetting(@PathVariable Long id) {
-        log.debug("REST request to delete Setting : {}", id);
-
-        settingRepository.deleteById(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

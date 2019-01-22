@@ -16,6 +16,104 @@
                 jhi_type varchar(255) NOT NULL,
                 preferences jsonb NOT NULL
             );
+
+            INSERT INTO setting VALUES (200, 'GENERAL', '{
+                "generalSetting":{
+                    "clinicName":"榛品牙醫診所",
+                    "showOwnExpense":true,
+                    "firstDayOfWeek":7,
+                    "morningStartTime":"09:00",
+                    "morningEndTime":"12:30",
+                    "noonStartTime":"14:30",
+                    "noonEndTime":"18:00",
+                    "eveningStartTime":"19:00",
+                    "eveningEndTime":"22:00",
+                    "nightStartTime":"22:30",
+                    "nightEndTime":"23:30",
+                    "requiredTreatmentTime":15,
+                    "calendarDisplayDay":7,
+                    "sun":{
+                        "morningShift":true,
+                        "noonShift":true,
+                        "eveningShift":true,
+                        "nightShift":false,
+                        "activated":true
+                    },
+                    "mon":{
+                        "morningShift":true,
+                        "noonShift":true,
+                        "eveningShift":true,
+                        "nightShift":false,
+                        "activated":true
+                    },
+                    "tue":{
+                        "morningShift":true,
+                        "noonShift":true,
+                        "eveningShift":true,
+                        "nightShift":false,
+                        "activated":true
+                    },
+                    "wed":{
+                        "morningShift":true,
+                        "noonShift":true,
+                        "eveningShift":true,
+                        "nightShift":false,
+                        "activated":true
+                    },
+                    "thu":{
+                        "morningShift":true,
+                        "noonShift":true,
+                        "eveningShift":true,
+                        "nightShift":false,
+                        "activated":true
+                    },
+                    "fri":{
+                        "morningShift":true,
+                        "noonShift":true,
+                        "eveningShift":true,
+                        "nightShift":false,
+                        "activated":true
+                    },
+                    "sat":{
+                        "morningShift":true,
+                        "noonShift":true,
+                        "eveningShift":true,
+                        "nightShift":false,
+                        "activated":true
+                    }
+                },
+                "expenseSetting":{
+                    "registrationFee":100,
+                    "depositAmount":500,
+                    "discountReasons":[
+                        {
+                            "reason":"VIP",
+                            "discountPrice":100,
+                            "activated":true,
+                            "canBeDeleted":false
+                        },
+                        {
+                            "reason":"公司員工",
+                            "discountPrice":100,
+                            "activated":true,
+                            "canBeDeleted":false
+                        },
+                        {
+                            "reason":"治療計畫優惠",
+                            "discountPrice":100,
+                            "activated":true,
+                            "canBeDeleted":false
+                        }
+                    ],
+                    "ownExpenseItems":[
+
+                    ]
+                },
+                "treatmentSetting":{
+                    "maxExceedTime":60,
+                    "minWaitingTime":10
+                }
+            }');
         </sql>
     </changeSet>
 </databaseChangeLog>
