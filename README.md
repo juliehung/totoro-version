@@ -224,10 +224,8 @@ $env:SPRING_PROFILES_ACTIVE="embedded-postgres"; $env:TZ="UTC"; .\gradlew.bat cl
 ##### windows
 ```
 # powershell
-Stop-Process -Name "postgres"
+Powershell.exe -File .\embedded-postgres-cleanup.ps1
 ```
-and delete folder
-`C:\Users\<user>\AppData\Local\Temp\postgresql-embed-<xxx>`
 
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
