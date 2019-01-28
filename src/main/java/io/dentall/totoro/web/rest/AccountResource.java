@@ -137,6 +137,7 @@ public class AccountResource {
         }
         userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(),
             userDTO.getLangKey(), userDTO.getImageUrl());
+        userService.updateExtendUser(userLogin, userDTO);
     }
 
     /**

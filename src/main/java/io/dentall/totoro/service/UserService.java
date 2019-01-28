@@ -197,7 +197,7 @@ public class UserService {
             .ifPresent(user -> {
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
-                user.setEmail(email.toLowerCase());
+                user.setEmail(email == null ? null : email.toLowerCase());
                 user.setLangKey(langKey);
                 user.setImageUrl(imageUrl);
                 this.clearUserCaches(user);
@@ -218,25 +218,60 @@ public class UserService {
             .map(Optional::get)
             .map(user -> {
                 this.clearUserCaches(user);
-                user.setLogin(userDTO.getLogin().toLowerCase());
-                user.setFirstName(userDTO.getFirstName());
-                user.setLastName(userDTO.getLastName());
-                user.setEmail(userDTO.getEmail() == null ? null : userDTO.getEmail().toLowerCase());
-                user.setImageUrl(userDTO.getImageUrl());
-                user.setActivated(userDTO.isActivated());
-                user.setLangKey(userDTO.getLangKey());
-                Set<Authority> managedAuthorities = user.getAuthorities();
-                managedAuthorities.clear();
-                userDTO.getAuthorities().stream()
-                    .map(authorityRepository::findById)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .forEach(managedAuthorities::add);
+                if (userDTO.getLogin() != null) {
+                    user.setLogin(userDTO.getLogin().toLowerCase());
+                }
+
+                if (userDTO.getFirstName() != null) {
+                    user.setFirstName(userDTO.getFirstName());
+                }
+
+                if (userDTO.getLastName() != null) {
+                    user.setLastName(userDTO.getLastName());
+                }
+
+                if (userDTO.getEmail() != null) {
+                    user.setEmail(userDTO.getEmail().toLowerCase());
+                }
+
+                if (userDTO.getImageUrl() != null) {
+                    user.setImageUrl(userDTO.getImageUrl());
+                }
+
+                if (userDTO.isActivated() != null) {
+                    user.setActivated(userDTO.isActivated());
+                }
+
+                if (userDTO.getLangKey() != null) {
+                    user.setLangKey(userDTO.getLangKey());
+                }
+
+                if (userDTO.getAuthorities() != null) {
+                    Set<Authority> managedAuthorities = user.getAuthorities();
+                    managedAuthorities.clear();
+                    userDTO.getAuthorities().stream()
+                        .map(authorityRepository::findById)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .forEach(managedAuthorities::add);
+                }
+
+                updateExtendUser(user.getExtendUser(), userDTO.getExtendUser());
                 this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
                 return user;
             })
             .map(UserDTO::new);
+    }
+
+    /**
+     * Update extendUser
+     *
+     * @param login login of user
+     * @param userDTO user to update
+     */
+    public void updateExtendUser(String login, UserDTO userDTO) {
+        userRepository.findOneByLogin(login).ifPresent(user -> updateExtendUser(user.getExtendUser(), userDTO.getExtendUser()));
     }
 
     /**
@@ -321,6 +356,25 @@ public class UserService {
      */
     public List<String> getAuthorities() {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+    }
+
+    private void updateExtendUser(ExtendUser extendUser, ExtendUser updateExtendUser) {
+        if (updateExtendUser != null) {
+            if (updateExtendUser.isFirstLogin() != null) {
+                extendUser.setFirstLogin(updateExtendUser.isFirstLogin());
+            }
+
+            if (updateExtendUser.getGmail() != null) {
+                extendUser.setGmail(updateExtendUser.getGmail());
+            }
+
+            if (updateExtendUser.getCalendarId() != null) {
+                extendUser.setCalendarId(updateExtendUser.getCalendarId() );
+            }
+
+            this.clearUserCaches(extendUser.getUser());
+            log.debug("Changed Information for ExtendUser: {}", extendUser);
+        }
     }
 
     private void clearUserCaches(User user) {

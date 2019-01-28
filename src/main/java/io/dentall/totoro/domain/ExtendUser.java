@@ -22,7 +22,7 @@ public class ExtendUser implements Serializable, Avatar {
     private Long id;
 
     @Column(name = "first_login")
-    private Boolean firstLogin = true;
+    private Boolean firstLogin;
 
     @Column(name = "gmail")
     private String gmail;
