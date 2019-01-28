@@ -24,6 +24,7 @@
         "nhiUnusalContent": "NHI Unusal Content",
         "patientIdentity": "Patient Identity",
         "calendarSetting": "Calendar Setting",
+        "tooth": "Tooth",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
