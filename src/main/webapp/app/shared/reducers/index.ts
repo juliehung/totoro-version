@@ -76,6 +76,10 @@ import patientIdentity, {
 import calendarSetting, {
   CalendarSettingState
 } from 'app/entities/calendar-setting/calendar-setting.reducer';
+// prettier-ignore
+import tooth, {
+  ToothState
+} from 'app/entities/tooth/tooth.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -105,6 +109,7 @@ export interface IRootState {
   readonly nHIUnusalContent: NHIUnusalContentState;
   readonly patientIdentity: PatientIdentityState;
   readonly calendarSetting: CalendarSettingState;
+  readonly tooth: ToothState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -136,6 +141,7 @@ const rootReducer = combineReducers<IRootState>({
   nHIUnusalContent,
   patientIdentity,
   calendarSetting,
+  tooth,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

@@ -1,0 +1,24 @@
+{
+  "totoroApp": {
+    "tooth": {
+      "home": {
+        "title": "Teeth",
+        "createLabel": "Create a new Tooth",
+        "createOrEditLabel": "Create or edit a Tooth"
+      },
+      "created": "A new Tooth is created with identifier {{ param }}",
+      "updated": "A Tooth is updated with identifier {{ param }}",
+      "deleted": "A Tooth is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Tooth {{ id }}?"
+      },
+      "detail": {
+        "title": "Tooth"
+      },
+      "position": "Position",
+      "before": "Before",
+      "planned": "Planned",
+      "after": "After"
+    }
+  }
+}
