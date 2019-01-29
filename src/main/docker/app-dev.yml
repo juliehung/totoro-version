@@ -23,7 +23,7 @@ services:
         build:
             context: ./data-simulator
         image: totoro-data-simulator
-        command: ["./wait-for-it.sh", "totoro-postgresql:5432", "-s", "-t", "120", "--", "python", "./fake_data_dynamic.py"]
+        command: ["./wait-for-it.sh", "totoro-postgresql:5432", "-s", "-t", "120", "--", "python", "./mock_data_dynamic.py"]
         environment:
             - HOST=totoro-postgresql
             - PORT=5432
