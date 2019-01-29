@@ -21,6 +21,7 @@ import NHIUnusalContent from './nhi-unusal-content';
 import PatientIdentity from './patient-identity';
 import CalendarSetting from './calendar-setting';
 import Tooth from './tooth';
+import Ledger from './ledger';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -44,6 +45,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/patient-identity`} component={PatientIdentity} />
       <ErrorBoundaryRoute path={`${match.url}/calendar-setting`} component={CalendarSetting} />
       <ErrorBoundaryRoute path={`${match.url}/tooth`} component={Tooth} />
+      <ErrorBoundaryRoute path={`${match.url}/ledger`} component={Ledger} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>

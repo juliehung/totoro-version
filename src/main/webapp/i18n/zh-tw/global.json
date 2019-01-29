@@ -25,6 +25,7 @@
         "patientIdentity": "Patient Identity",
         "calendarSetting": "Calendar Setting",
         "tooth": "Tooth",
+        "ledger": "Ledger",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
