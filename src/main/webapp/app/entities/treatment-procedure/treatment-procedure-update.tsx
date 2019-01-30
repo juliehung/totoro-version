@@ -69,6 +69,8 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
   }
 
   saveEntity = (event, errors, values) => {
+    values.completedDate = new Date(values.completedDate);
+
     if (errors.length === 0) {
       const { treatmentProcedureEntity } = this.props;
       const entity = {
@@ -169,6 +171,18 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                     <Translate contentKey="totoroApp.treatmentProcedure.note">Note</Translate>
                   </Label>
                   <AvField id="treatment-procedure-note" type="text" name="note" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="completedDateLabel" for="completedDate">
+                    <Translate contentKey="totoroApp.treatmentProcedure.completedDate">Completed Date</Translate>
+                  </Label>
+                  <AvInput
+                    id="treatment-procedure-completedDate"
+                    type="datetime-local"
+                    className="form-control"
+                    name="completedDate"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.treatmentProcedureEntity.completedDate)}
+                  />
                 </AvGroup>
                 <AvGroup>
                   <Label for="nhiProcedure.id">

@@ -3,7 +3,15 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAllAction, getSortState, IPaginationBaseState, getPaginationItemsNumber, JhiPagination } from 'react-jhipster';
+import {
+  Translate,
+  ICrudGetAllAction,
+  TextFormat,
+  getSortState,
+  IPaginationBaseState,
+  getPaginationItemsNumber,
+  JhiPagination
+} from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -79,6 +87,10 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                 <th className="hand" onClick={this.sort('note')}>
                   <Translate contentKey="totoroApp.treatmentProcedure.note">Note</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('completedDate')}>
+                  <Translate contentKey="totoroApp.treatmentProcedure.completedDate">Completed Date</Translate>{' '}
+                  <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.treatmentProcedure.nhiProcedure">Nhi Procedure</Translate>{' '}
                   <FontAwesomeIcon icon="sort" />
@@ -113,6 +125,9 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                   <td>{treatmentProcedure.quantity}</td>
                   <td>{treatmentProcedure.total}</td>
                   <td>{treatmentProcedure.note}</td>
+                  <td>
+                    <TextFormat type="date" value={treatmentProcedure.completedDate} format={APP_DATE_FORMAT} />
+                  </td>
                   <td>
                     {treatmentProcedure.nhiProcedure ? (
                       <Link to={`nhi-procedure/${treatmentProcedure.nhiProcedure.id}`}>{treatmentProcedure.nhiProcedure.id}</Link>

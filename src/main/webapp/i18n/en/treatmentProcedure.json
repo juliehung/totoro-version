@@ -19,11 +19,13 @@
       "quantity": "Quantity",
       "total": "Total",
       "note": "Note",
+      "completedDate": "Completed Date",
       "nhiProcedure": "Nhi Procedure",
       "treatmentTask": "Treatment Task",
       "procedure": "Procedure",
       "appointment": "Appointment",
-      "registration": "Registration"
+      "registration": "Registration",
+      "tooth": "Tooth"
     }
   }
 }

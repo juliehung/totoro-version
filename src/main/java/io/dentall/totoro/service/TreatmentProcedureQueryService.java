@@ -95,6 +95,9 @@ public class TreatmentProcedureQueryService extends QueryService<TreatmentProced
             if (criteria.getNote() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNote(), TreatmentProcedure_.note));
             }
+            if (criteria.getCompletedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCompletedDate(), TreatmentProcedure_.completedDate));
+            }
             if (criteria.getNhiProcedureId() != null) {
                 specification = specification.and(buildSpecification(criteria.getNhiProcedureId(),
                     root -> root.join(TreatmentProcedure_.nhiProcedure, JoinType.LEFT).get(NHIProcedure_.id)));
@@ -114,6 +117,10 @@ public class TreatmentProcedureQueryService extends QueryService<TreatmentProced
             if (criteria.getRegistrationId() != null) {
                 specification = specification.and(buildSpecification(criteria.getRegistrationId(),
                     root -> root.join(TreatmentProcedure_.registration, JoinType.LEFT).get(Registration_.id)));
+            }
+            if (criteria.getToothId() != null) {
+                specification = specification.and(buildSpecification(criteria.getToothId(),
+                    root -> root.join(TreatmentProcedure_.teeth, JoinType.LEFT).get(Tooth_.id)));
             }
         }
         return specification;

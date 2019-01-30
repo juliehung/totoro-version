@@ -18,7 +18,9 @@
       "position": "Position",
       "before": "Before",
       "planned": "Planned",
-      "after": "After"
+      "after": "After",
+      "treatmentTask": "Treatment Task",
+      "treatmentProcedure": "Treatment Procedure"
     }
   }
 }

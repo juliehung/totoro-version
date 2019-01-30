@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.service.ToothService;
 import io.dentall.totoro.service.TreatmentProcedureService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
@@ -40,9 +41,12 @@ public class TreatmentProcedureResource {
 
     private final TreatmentProcedureQueryService treatmentProcedureQueryService;
 
-    public TreatmentProcedureResource(TreatmentProcedureService treatmentProcedureService, TreatmentProcedureQueryService treatmentProcedureQueryService) {
+    private final ToothService toothService;
+
+    public TreatmentProcedureResource(TreatmentProcedureService treatmentProcedureService, TreatmentProcedureQueryService treatmentProcedureQueryService, ToothService toothService) {
         this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentProcedureQueryService = treatmentProcedureQueryService;
+        this.toothService = toothService;
     }
 
     /**
@@ -59,7 +63,11 @@ public class TreatmentProcedureResource {
         if (treatmentProcedure.getId() != null) {
             throw new BadRequestAlertException("A new treatmentProcedure cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
         TreatmentProcedure result = treatmentProcedureService.save(treatmentProcedure);
+
+        // create Tooth object and relationship with TreatmentProcedure
+        treatmentProcedure.getTeeth().forEach(tooth -> toothService.save(tooth.treatmentProcedure(result)));
         return ResponseEntity.created(new URI("/api/treatment-procedures/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -81,6 +89,9 @@ public class TreatmentProcedureResource {
         if (treatmentProcedure.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+
+        // update Tooth object
+        treatmentProcedure.getTeeth().forEach(toothService::update);
         TreatmentProcedure result = treatmentProcedureService.save(treatmentProcedure);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatmentProcedure.getId().toString()))

@@ -1,5 +1,20 @@
 {
-    "name": "Tooth",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "treatmentTask",
+            "otherEntityName": "treatmentTask",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "treatmentProcedure",
+            "otherEntityName": "treatmentProcedure",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
     "fields": [
         {
             "fieldName": "position",
@@ -21,14 +36,11 @@
             "fieldType": "String"
         }
     ],
-    "relationships": [],
     "changelogDate": "20190124080823",
-    "entityTableName": "tooth",
     "dto": "no",
-    "pagination": "pagination",
+    "searchEngine": false,
     "service": "serviceClass",
+    "entityTableName": "tooth",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "pagination"
 }

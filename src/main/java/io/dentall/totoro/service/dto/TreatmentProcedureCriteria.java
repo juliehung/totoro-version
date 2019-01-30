@@ -10,6 +10,7 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+import io.github.jhipster.service.filter.InstantFilter;
 
 /**
  * Criteria class for the TreatmentProcedure entity. This class is used in TreatmentProcedureResource to
@@ -38,6 +39,8 @@ public class TreatmentProcedureCriteria implements Serializable {
 
     private StringFilter note;
 
+    private InstantFilter completedDate;
+
     private LongFilter nhiProcedureId;
 
     private LongFilter treatmentTaskId;
@@ -47,6 +50,8 @@ public class TreatmentProcedureCriteria implements Serializable {
     private LongFilter appointmentId;
 
     private LongFilter registrationId;
+
+    private LongFilter toothId;
 
     public LongFilter getId() {
         return id;
@@ -86,6 +91,14 @@ public class TreatmentProcedureCriteria implements Serializable {
 
     public void setNote(StringFilter note) {
         this.note = note;
+    }
+
+    public InstantFilter getCompletedDate() {
+        return completedDate;
+    }
+
+    public void setCompletedDate(InstantFilter completedDate) {
+        this.completedDate = completedDate;
     }
 
     public LongFilter getNhiProcedureId() {
@@ -128,6 +141,14 @@ public class TreatmentProcedureCriteria implements Serializable {
         this.registrationId = registrationId;
     }
 
+    public LongFilter getToothId() {
+        return toothId;
+    }
+
+    public void setToothId(LongFilter toothId) {
+        this.toothId = toothId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -144,11 +165,13 @@ public class TreatmentProcedureCriteria implements Serializable {
             Objects.equals(quantity, that.quantity) &&
             Objects.equals(total, that.total) &&
             Objects.equals(note, that.note) &&
+            Objects.equals(completedDate, that.completedDate) &&
             Objects.equals(nhiProcedureId, that.nhiProcedureId) &&
             Objects.equals(treatmentTaskId, that.treatmentTaskId) &&
             Objects.equals(procedureId, that.procedureId) &&
             Objects.equals(appointmentId, that.appointmentId) &&
-            Objects.equals(registrationId, that.registrationId);
+            Objects.equals(registrationId, that.registrationId) &&
+            Objects.equals(toothId, that.toothId);
     }
 
     @Override
@@ -159,11 +182,13 @@ public class TreatmentProcedureCriteria implements Serializable {
         quantity,
         total,
         note,
+        completedDate,
         nhiProcedureId,
         treatmentTaskId,
         procedureId,
         appointmentId,
-        registrationId
+        registrationId,
+        toothId
         );
     }
 
@@ -175,11 +200,13 @@ public class TreatmentProcedureCriteria implements Serializable {
                 (quantity != null ? "quantity=" + quantity + ", " : "") +
                 (total != null ? "total=" + total + ", " : "") +
                 (note != null ? "note=" + note + ", " : "") +
+                (completedDate != null ? "completedDate=" + completedDate + ", " : "") +
                 (nhiProcedureId != null ? "nhiProcedureId=" + nhiProcedureId + ", " : "") +
                 (treatmentTaskId != null ? "treatmentTaskId=" + treatmentTaskId + ", " : "") +
                 (procedureId != null ? "procedureId=" + procedureId + ", " : "") +
                 (appointmentId != null ? "appointmentId=" + appointmentId + ", " : "") +
                 (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
+                (toothId != null ? "toothId=" + toothId + ", " : "") +
             "}";
     }
 

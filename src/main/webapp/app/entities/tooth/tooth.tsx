@@ -79,6 +79,12 @@ export class Tooth extends React.Component<IToothProps, IToothState> {
                 <th className="hand" onClick={this.sort('after')}>
                   <Translate contentKey="totoroApp.tooth.after">After</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th>
+                  <Translate contentKey="totoroApp.tooth.treatmentTask">Treatment Task</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.tooth.treatmentProcedure">Treatment Procedure</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -94,6 +100,16 @@ export class Tooth extends React.Component<IToothProps, IToothState> {
                   <td>{tooth.before}</td>
                   <td>{tooth.planned}</td>
                   <td>{tooth.after}</td>
+                  <td>
+                    {tooth.treatmentTask ? <Link to={`treatment-task/${tooth.treatmentTask.id}`}>{tooth.treatmentTask.id}</Link> : ''}
+                  </td>
+                  <td>
+                    {tooth.treatmentProcedure ? (
+                      <Link to={`treatment-procedure/${tooth.treatmentProcedure.id}`}>{tooth.treatmentProcedure.id}</Link>
+                    ) : (
+                      ''
+                    )}
+                  </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${tooth.id}`} color="info" size="sm">
