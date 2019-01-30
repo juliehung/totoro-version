@@ -1,5 +1,28 @@
 {
-    "name": "Appointment",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "patient",
+            "otherEntityName": "patient",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "registration",
+            "otherEntityName": "registration",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "appointment"
+        },
+        {
+            "relationshipName": "treatmentProcedure",
+            "otherEntityName": "treatmentProcedure",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "appointment"
+        }
+    ],
     "fields": [
         {
             "fieldName": "status",
@@ -46,29 +69,11 @@
             "fieldType": "Boolean"
         }
     ],
-    "relationships": [
-        {
-            "relationshipName": "patient",
-            "otherEntityName": "patient",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id"
-        },
-        {
-            "relationshipType": "one-to-one",
-            "relationshipName": "registration",
-            "otherEntityName": "registration",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "appointment"
-        }
-    ],
     "changelogDate": "20181019094008",
-    "entityTableName": "appointment",
     "dto": "no",
-    "pagination": "pagination",
+    "searchEngine": false,
     "service": "serviceClass",
+    "entityTableName": "appointment",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "pagination"
 }

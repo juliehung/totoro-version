@@ -1,4 +1,4 @@
-﻿id;status;subject;expected_arrival_time;required_treatment_time;microscope;new_patient;patient_id;registration_id;note;doctor_user_id;created_by
+id;status;subject;expected_arrival_time;required_treatment_time;microscope;new_patient;patient_id;registration_id;note;doctor_user_id;created_by
 1;CANCEL;拔牙;2018-08-14T17:30:00;65;TRUE;TRUE;1307;NULL;根管;5;system
 2;CONFIRMED;矯正;2019-01-20T15:45:00;25;FALSE;NULL;330;3390;根管;5;system
 3;CONFIRMED;拔牙;2018-10-17T10:05:00;10;FALSE;TRUE;1276;1505;檢查大臼齒蛀牙;7;system

@@ -1,6 +1,5 @@
 package io.dentall.totoro.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -11,15 +10,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 
-import io.dentall.totoro.domain.enumeration.TreatmentTaskStatus;
-
 /**
  * A TreatmentTask.
  */
 @Entity
 @Table(name = "treatment_task")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class TreatmentTask implements Serializable {
+public class TreatmentTask extends AbstractDoctorAndAuditingEntity<TreatmentTask> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,18 +25,8 @@ public class TreatmentTask implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private TreatmentTaskStatus status;
-
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "teeth")
-    private String teeth;
-
-    @Column(name = "surfaces")
-    private String surfaces;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "note")
     private String note;
@@ -49,10 +36,6 @@ public class TreatmentTask implements Serializable {
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
-    @ManyToOne
-    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks"})
-    private ExtendUser doctor;
-
     public Long getId() {
         return id;
     }
@@ -61,56 +44,17 @@ public class TreatmentTask implements Serializable {
         this.id = id;
     }
 
-    public TreatmentTaskStatus getStatus() {
-        return status;
+    public String getName() {
+        return name;
     }
 
-    public TreatmentTask status(TreatmentTaskStatus status) {
-        this.status = status;
+    public TreatmentTask name(String name) {
+        this.name = name;
         return this;
     }
 
-    public void setStatus(TreatmentTaskStatus status) {
-        this.status = status;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public TreatmentTask description(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getTeeth() {
-        return teeth;
-    }
-
-    public TreatmentTask teeth(String teeth) {
-        this.teeth = teeth;
-        return this;
-    }
-
-    public void setTeeth(String teeth) {
-        this.teeth = teeth;
-    }
-
-    public String getSurfaces() {
-        return surfaces;
-    }
-
-    public TreatmentTask surfaces(String surfaces) {
-        this.surfaces = surfaces;
-        return this;
-    }
-
-    public void setSurfaces(String surfaces) {
-        this.surfaces = surfaces;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getNote() {
@@ -152,19 +96,6 @@ public class TreatmentTask implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    public ExtendUser getDoctor() {
-        return doctor;
-    }
-
-    public TreatmentTask doctor(ExtendUser doctor) {
-        this.doctor = doctor;
-        return this;
-    }
-
-    public void setDoctor(ExtendUser doctor) {
-        this.doctor = doctor;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -189,10 +120,7 @@ public class TreatmentTask implements Serializable {
     public String toString() {
         return "TreatmentTask{" +
             "id=" + getId() +
-            ", status='" + getStatus() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", teeth='" + getTeeth() + "'" +
-            ", surfaces='" + getSurfaces() + "'" +
+            ", name='" + getName() + "'" +
             ", note='" + getNote() + "'" +
             "}";
     }

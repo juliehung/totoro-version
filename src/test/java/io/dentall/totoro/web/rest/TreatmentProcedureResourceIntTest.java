@@ -1,12 +1,19 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
-import io.dentall.totoro.domain.ExtendUser;
+
 import io.dentall.totoro.domain.TreatmentProcedure;
-import io.dentall.totoro.domain.User;
+import io.dentall.totoro.domain.NHIProcedure;
+import io.dentall.totoro.domain.TreatmentTask;
+import io.dentall.totoro.domain.Procedure;
+import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.service.TreatmentProcedureService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
+import io.dentall.totoro.service.dto.TreatmentProcedureCriteria;
+import io.dentall.totoro.service.TreatmentProcedureQueryService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +40,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 /**
  * Test class for the TreatmentProcedureResource REST controller.
  *
@@ -42,20 +50,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = TotoroApp.class)
 public class TreatmentProcedureResourceIntTest {
 
-    private static final Integer DEFAULT_PRICE = 1;
-    private static final Integer UPDATED_PRICE = 2;
+    private static final TreatmentProcedureStatus DEFAULT_STATUS = TreatmentProcedureStatus.PLANNED;
+    private static final TreatmentProcedureStatus UPDATED_STATUS = TreatmentProcedureStatus.IN_PROGRESS;
 
-    private static final String DEFAULT_TEETH = "AAAAAAAAAA";
-    private static final String UPDATED_TEETH = "BBBBBBBBBB";
+    private static final Integer DEFAULT_QUANTITY = 1;
+    private static final Integer UPDATED_QUANTITY = 2;
 
-    private static final String DEFAULT_SURFACES = "AAAAAAAAAA";
-    private static final String UPDATED_SURFACES = "BBBBBBBBBB";
+    private static final Double DEFAULT_TOTAL = 1D;
+    private static final Double UPDATED_TOTAL = 2D;
 
-    private static final Boolean DEFAULT_NHI_DECLARED = false;
-    private static final Boolean UPDATED_NHI_DECLARED = true;
+    private static final String DEFAULT_NOTE = "AAAAAAAAAA";
+    private static final String UPDATED_NOTE = "BBBBBBBBBB";
 
     @Autowired
     private TreatmentProcedureRepository treatmentProcedureRepository;
+
+    @Autowired
+    private TreatmentProcedureService treatmentProcedureService;
+
+    @Autowired
+    private TreatmentProcedureQueryService treatmentProcedureQueryService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -79,12 +93,10 @@ public class TreatmentProcedureResourceIntTest {
 
     private TreatmentProcedure treatmentProcedure;
 
-    private ExtendUser extendUser;
-
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TreatmentProcedureResource treatmentProcedureResource = new TreatmentProcedureResource(treatmentProcedureRepository);
+        final TreatmentProcedureResource treatmentProcedureResource = new TreatmentProcedureResource(treatmentProcedureService, treatmentProcedureQueryService);
         this.restTreatmentProcedureMockMvc = MockMvcBuilders.standaloneSetup(treatmentProcedureResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -101,20 +113,16 @@ public class TreatmentProcedureResourceIntTest {
      */
     public static TreatmentProcedure createEntity(EntityManager em) {
         TreatmentProcedure treatmentProcedure = new TreatmentProcedure()
-            .price(DEFAULT_PRICE)
-            .teeth(DEFAULT_TEETH)
-            .surfaces(DEFAULT_SURFACES)
-            .nhiDeclared(DEFAULT_NHI_DECLARED);
+            .status(DEFAULT_STATUS)
+            .quantity(DEFAULT_QUANTITY)
+            .total(DEFAULT_TOTAL)
+            .note(DEFAULT_NOTE);
         return treatmentProcedure;
     }
 
     @Before
     public void initTest() {
-        User user = userRepository.save(UserResourceIntTest.createEntity(em));
-        extendUser = user.getExtendUser();
-
         treatmentProcedure = createEntity(em);
-        treatmentProcedure.setDoctor(extendUser);
     }
 
     @Test
@@ -132,11 +140,10 @@ public class TreatmentProcedureResourceIntTest {
         List<TreatmentProcedure> treatmentProcedureList = treatmentProcedureRepository.findAll();
         assertThat(treatmentProcedureList).hasSize(databaseSizeBeforeCreate + 1);
         TreatmentProcedure testTreatmentProcedure = treatmentProcedureList.get(treatmentProcedureList.size() - 1);
-        assertThat(testTreatmentProcedure.getPrice()).isEqualTo(DEFAULT_PRICE);
-        assertThat(testTreatmentProcedure.getTeeth()).isEqualTo(DEFAULT_TEETH);
-        assertThat(testTreatmentProcedure.getSurfaces()).isEqualTo(DEFAULT_SURFACES);
-        assertThat(testTreatmentProcedure.isNhiDeclared()).isEqualTo(DEFAULT_NHI_DECLARED);
-        assertThat(testTreatmentProcedure.getDoctor()).isEqualTo(extendUser);
+        assertThat(testTreatmentProcedure.getStatus()).isEqualTo(DEFAULT_STATUS);
+        assertThat(testTreatmentProcedure.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
+        assertThat(testTreatmentProcedure.getTotal()).isEqualTo(DEFAULT_TOTAL);
+        assertThat(testTreatmentProcedure.getNote()).isEqualTo(DEFAULT_NOTE);
     }
 
     @Test
@@ -160,6 +167,24 @@ public class TreatmentProcedureResourceIntTest {
 
     @Test
     @Transactional
+    public void checkStatusIsRequired() throws Exception {
+        int databaseSizeBeforeTest = treatmentProcedureRepository.findAll().size();
+        // set the field null
+        treatmentProcedure.setStatus(null);
+
+        // Create the TreatmentProcedure, which fails.
+
+        restTreatmentProcedureMockMvc.perform(post("/api/treatment-procedures")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(treatmentProcedure)))
+            .andExpect(status().isBadRequest());
+
+        List<TreatmentProcedure> treatmentProcedureList = treatmentProcedureRepository.findAll();
+        assertThat(treatmentProcedureList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllTreatmentProcedures() throws Exception {
         // Initialize the database
         treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
@@ -169,10 +194,10 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(treatmentProcedure.getId().intValue())))
-            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE)))
-            .andExpect(jsonPath("$.[*].teeth").value(hasItem(DEFAULT_TEETH.toString())))
-            .andExpect(jsonPath("$.[*].surfaces").value(hasItem(DEFAULT_SURFACES.toString())))
-            .andExpect(jsonPath("$.[*].nhiDeclared").value(hasItem(DEFAULT_NHI_DECLARED.booleanValue())));
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)))
+            .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())))
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
     }
     
     @Test
@@ -186,11 +211,327 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(treatmentProcedure.getId().intValue()))
-            .andExpect(jsonPath("$.price").value(DEFAULT_PRICE))
-            .andExpect(jsonPath("$.teeth").value(DEFAULT_TEETH.toString()))
-            .andExpect(jsonPath("$.surfaces").value(DEFAULT_SURFACES.toString()))
-            .andExpect(jsonPath("$.nhiDeclared").value(DEFAULT_NHI_DECLARED.booleanValue()));
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
+            .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY))
+            .andExpect(jsonPath("$.total").value(DEFAULT_TOTAL.doubleValue()))
+            .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()));
     }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByStatusIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where status equals to DEFAULT_STATUS
+        defaultTreatmentProcedureShouldBeFound("status.equals=" + DEFAULT_STATUS);
+
+        // Get all the treatmentProcedureList where status equals to UPDATED_STATUS
+        defaultTreatmentProcedureShouldNotBeFound("status.equals=" + UPDATED_STATUS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByStatusIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where status in DEFAULT_STATUS or UPDATED_STATUS
+        defaultTreatmentProcedureShouldBeFound("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS);
+
+        // Get all the treatmentProcedureList where status equals to UPDATED_STATUS
+        defaultTreatmentProcedureShouldNotBeFound("status.in=" + UPDATED_STATUS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByStatusIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where status is not null
+        defaultTreatmentProcedureShouldBeFound("status.specified=true");
+
+        // Get all the treatmentProcedureList where status is null
+        defaultTreatmentProcedureShouldNotBeFound("status.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByQuantityIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where quantity equals to DEFAULT_QUANTITY
+        defaultTreatmentProcedureShouldBeFound("quantity.equals=" + DEFAULT_QUANTITY);
+
+        // Get all the treatmentProcedureList where quantity equals to UPDATED_QUANTITY
+        defaultTreatmentProcedureShouldNotBeFound("quantity.equals=" + UPDATED_QUANTITY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByQuantityIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where quantity in DEFAULT_QUANTITY or UPDATED_QUANTITY
+        defaultTreatmentProcedureShouldBeFound("quantity.in=" + DEFAULT_QUANTITY + "," + UPDATED_QUANTITY);
+
+        // Get all the treatmentProcedureList where quantity equals to UPDATED_QUANTITY
+        defaultTreatmentProcedureShouldNotBeFound("quantity.in=" + UPDATED_QUANTITY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByQuantityIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where quantity is not null
+        defaultTreatmentProcedureShouldBeFound("quantity.specified=true");
+
+        // Get all the treatmentProcedureList where quantity is null
+        defaultTreatmentProcedureShouldNotBeFound("quantity.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByQuantityIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where quantity greater than or equals to DEFAULT_QUANTITY
+        defaultTreatmentProcedureShouldBeFound("quantity.greaterOrEqualThan=" + DEFAULT_QUANTITY);
+
+        // Get all the treatmentProcedureList where quantity greater than or equals to UPDATED_QUANTITY
+        defaultTreatmentProcedureShouldNotBeFound("quantity.greaterOrEqualThan=" + UPDATED_QUANTITY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByQuantityIsLessThanSomething() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where quantity less than or equals to DEFAULT_QUANTITY
+        defaultTreatmentProcedureShouldNotBeFound("quantity.lessThan=" + DEFAULT_QUANTITY);
+
+        // Get all the treatmentProcedureList where quantity less than or equals to UPDATED_QUANTITY
+        defaultTreatmentProcedureShouldBeFound("quantity.lessThan=" + UPDATED_QUANTITY);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByTotalIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where total equals to DEFAULT_TOTAL
+        defaultTreatmentProcedureShouldBeFound("total.equals=" + DEFAULT_TOTAL);
+
+        // Get all the treatmentProcedureList where total equals to UPDATED_TOTAL
+        defaultTreatmentProcedureShouldNotBeFound("total.equals=" + UPDATED_TOTAL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByTotalIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where total in DEFAULT_TOTAL or UPDATED_TOTAL
+        defaultTreatmentProcedureShouldBeFound("total.in=" + DEFAULT_TOTAL + "," + UPDATED_TOTAL);
+
+        // Get all the treatmentProcedureList where total equals to UPDATED_TOTAL
+        defaultTreatmentProcedureShouldNotBeFound("total.in=" + UPDATED_TOTAL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByTotalIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where total is not null
+        defaultTreatmentProcedureShouldBeFound("total.specified=true");
+
+        // Get all the treatmentProcedureList where total is null
+        defaultTreatmentProcedureShouldNotBeFound("total.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByNoteIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where note equals to DEFAULT_NOTE
+        defaultTreatmentProcedureShouldBeFound("note.equals=" + DEFAULT_NOTE);
+
+        // Get all the treatmentProcedureList where note equals to UPDATED_NOTE
+        defaultTreatmentProcedureShouldNotBeFound("note.equals=" + UPDATED_NOTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByNoteIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where note in DEFAULT_NOTE or UPDATED_NOTE
+        defaultTreatmentProcedureShouldBeFound("note.in=" + DEFAULT_NOTE + "," + UPDATED_NOTE);
+
+        // Get all the treatmentProcedureList where note equals to UPDATED_NOTE
+        defaultTreatmentProcedureShouldNotBeFound("note.in=" + UPDATED_NOTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByNoteIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where note is not null
+        defaultTreatmentProcedureShouldBeFound("note.specified=true");
+
+        // Get all the treatmentProcedureList where note is null
+        defaultTreatmentProcedureShouldNotBeFound("note.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByNhiProcedureIsEqualToSomething() throws Exception {
+        // Initialize the database
+        NHIProcedure nhiProcedure = NHIProcedureResourceIntTest.createEntity(em);
+        em.persist(nhiProcedure);
+        em.flush();
+        treatmentProcedure.setNhiProcedure(nhiProcedure);
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+        Long nhiProcedureId = nhiProcedure.getId();
+
+        // Get all the treatmentProcedureList where nhiProcedure equals to nhiProcedureId
+        defaultTreatmentProcedureShouldBeFound("nhiProcedureId.equals=" + nhiProcedureId);
+
+        // Get all the treatmentProcedureList where nhiProcedure equals to nhiProcedureId + 1
+        defaultTreatmentProcedureShouldNotBeFound("nhiProcedureId.equals=" + (nhiProcedureId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByTreatmentTaskIsEqualToSomething() throws Exception {
+        // Initialize the database
+        TreatmentTask treatmentTask = TreatmentTaskResourceIntTest.createEntity(em);
+        em.persist(treatmentTask);
+        em.flush();
+        treatmentProcedure.setTreatmentTask(treatmentTask);
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+        Long treatmentTaskId = treatmentTask.getId();
+
+        // Get all the treatmentProcedureList where treatmentTask equals to treatmentTaskId
+        defaultTreatmentProcedureShouldBeFound("treatmentTaskId.equals=" + treatmentTaskId);
+
+        // Get all the treatmentProcedureList where treatmentTask equals to treatmentTaskId + 1
+        defaultTreatmentProcedureShouldNotBeFound("treatmentTaskId.equals=" + (treatmentTaskId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByProcedureIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Procedure procedure = ProcedureResourceIntTest.createEntity(em);
+        em.persist(procedure);
+        em.flush();
+        treatmentProcedure.setProcedure(procedure);
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+        Long procedureId = procedure.getId();
+
+        // Get all the treatmentProcedureList where procedure equals to procedureId
+        defaultTreatmentProcedureShouldBeFound("procedureId.equals=" + procedureId);
+
+        // Get all the treatmentProcedureList where procedure equals to procedureId + 1
+        defaultTreatmentProcedureShouldNotBeFound("procedureId.equals=" + (procedureId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByAppointmentIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Appointment appointment = AppointmentResourceIntTest.createEntity(em);
+        appointment.setDoctor(userRepository.save(UserResourceIntTest.createEntity(em)).getExtendUser());
+        em.persist(appointment);
+        em.flush();
+        treatmentProcedure.setAppointment(appointment);
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+        Long appointmentId = appointment.getId();
+
+        // Get all the treatmentProcedureList where appointment equals to appointmentId
+        defaultTreatmentProcedureShouldBeFound("appointmentId.equals=" + appointmentId);
+
+        // Get all the treatmentProcedureList where appointment equals to appointmentId + 1
+        defaultTreatmentProcedureShouldNotBeFound("appointmentId.equals=" + (appointmentId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByRegistrationIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Registration registration = RegistrationResourceIntTest.createEntity(em);
+        em.persist(registration);
+        em.flush();
+        treatmentProcedure.setRegistration(registration);
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+        Long registrationId = registration.getId();
+
+        // Get all the treatmentProcedureList where registration equals to registrationId
+        defaultTreatmentProcedureShouldBeFound("registrationId.equals=" + registrationId);
+
+        // Get all the treatmentProcedureList where registration equals to registrationId + 1
+        defaultTreatmentProcedureShouldNotBeFound("registrationId.equals=" + (registrationId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned
+     */
+    private void defaultTreatmentProcedureShouldBeFound(String filter) throws Exception {
+        restTreatmentProcedureMockMvc.perform(get("/api/treatment-procedures?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(treatmentProcedure.getId().intValue())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)))
+            .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())))
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
+
+        // Check, that the count call also returns 1
+        restTreatmentProcedureMockMvc.perform(get("/api/treatment-procedures/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned
+     */
+    private void defaultTreatmentProcedureShouldNotBeFound(String filter) throws Exception {
+        restTreatmentProcedureMockMvc.perform(get("/api/treatment-procedures?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restTreatmentProcedureMockMvc.perform(get("/api/treatment-procedures/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("0"));
+    }
+
 
     @Test
     @Transactional
@@ -204,7 +545,7 @@ public class TreatmentProcedureResourceIntTest {
     @Transactional
     public void updateTreatmentProcedure() throws Exception {
         // Initialize the database
-        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+        treatmentProcedureService.save(treatmentProcedure);
 
         int databaseSizeBeforeUpdate = treatmentProcedureRepository.findAll().size();
 
@@ -213,10 +554,10 @@ public class TreatmentProcedureResourceIntTest {
         // Disconnect from session so that the updates on updatedTreatmentProcedure are not directly saved in db
         em.detach(updatedTreatmentProcedure);
         updatedTreatmentProcedure
-            .price(UPDATED_PRICE)
-            .teeth(UPDATED_TEETH)
-            .surfaces(UPDATED_SURFACES)
-            .nhiDeclared(UPDATED_NHI_DECLARED);
+            .status(UPDATED_STATUS)
+            .quantity(UPDATED_QUANTITY)
+            .total(UPDATED_TOTAL)
+            .note(UPDATED_NOTE);
 
         restTreatmentProcedureMockMvc.perform(put("/api/treatment-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -227,10 +568,10 @@ public class TreatmentProcedureResourceIntTest {
         List<TreatmentProcedure> treatmentProcedureList = treatmentProcedureRepository.findAll();
         assertThat(treatmentProcedureList).hasSize(databaseSizeBeforeUpdate);
         TreatmentProcedure testTreatmentProcedure = treatmentProcedureList.get(treatmentProcedureList.size() - 1);
-        assertThat(testTreatmentProcedure.getPrice()).isEqualTo(UPDATED_PRICE);
-        assertThat(testTreatmentProcedure.getTeeth()).isEqualTo(UPDATED_TEETH);
-        assertThat(testTreatmentProcedure.getSurfaces()).isEqualTo(UPDATED_SURFACES);
-        assertThat(testTreatmentProcedure.isNhiDeclared()).isEqualTo(UPDATED_NHI_DECLARED);
+        assertThat(testTreatmentProcedure.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testTreatmentProcedure.getQuantity()).isEqualTo(UPDATED_QUANTITY);
+        assertThat(testTreatmentProcedure.getTotal()).isEqualTo(UPDATED_TOTAL);
+        assertThat(testTreatmentProcedure.getNote()).isEqualTo(UPDATED_NOTE);
     }
 
     @Test
@@ -255,7 +596,7 @@ public class TreatmentProcedureResourceIntTest {
     @Transactional
     public void deleteTreatmentProcedure() throws Exception {
         // Initialize the database
-        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+        treatmentProcedureService.save(treatmentProcedure);
 
         int databaseSizeBeforeDelete = treatmentProcedureRepository.findAll().size();
 

@@ -62,6 +62,8 @@ public class AppointmentCriteria implements Serializable {
 
     private LongFilter doctorId;
 
+    private LongFilter treatmentProcedureId;
+
     public LongFilter getId() {
         return id;
     }
@@ -190,6 +192,13 @@ public class AppointmentCriteria implements Serializable {
         this.doctorId = doctorId;
     }
 
+    public LongFilter getTreatmentProcedureId() {
+        return treatmentProcedureId;
+    }
+
+    public void setTreatmentProcedureId(LongFilter treatmentProcedureId) {
+        this.treatmentProcedureId = treatmentProcedureId;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -215,7 +224,8 @@ public class AppointmentCriteria implements Serializable {
             Objects.equals(registrationId, that.registrationId) &&
             Objects.equals(registrationType, that.registrationType) &&
             Objects.equals(registrationTypeValue, that.registrationTypeValue) &&
-            Objects.equals(doctorId, that.doctorId);
+            Objects.equals(doctorId, that.doctorId) &&
+            Objects.equals(treatmentProcedureId, that.treatmentProcedureId);
     }
 
     @Override
@@ -236,7 +246,8 @@ public class AppointmentCriteria implements Serializable {
             registrationId,
             registrationType,
             registrationTypeValue,
-            doctorId
+            doctorId,
+            treatmentProcedureId
         );
     }
 
@@ -259,6 +270,7 @@ public class AppointmentCriteria implements Serializable {
             (registrationType != null ? "registrationType=" + registrationType + ", " : "") +
             (registrationTypeValue != null ? "registrationTypeValue=" + registrationTypeValue + ", " : "") +
             (doctorId != null ? "doctorId=" + doctorId + ", " : "") +
+            (treatmentProcedureId != null ? "treatmentProcedureId=" + treatmentProcedureId + ", " : "") +
             "}";
     }
 

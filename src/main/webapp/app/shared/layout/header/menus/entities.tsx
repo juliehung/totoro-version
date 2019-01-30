@@ -133,6 +133,41 @@ export const EntitiesMenu = props => (
       &nbsp;
       <Translate contentKey="global.menu.entities.ledger" />
     </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/procedure">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.procedure" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/treatment-procedure">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.treatmentProcedure" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/procedure-type">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.procedureType" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/treatment-task">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.treatmentTask" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/appointment">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.appointment" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/treatment-procedure">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.treatmentProcedure" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/registration">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.registration" />
+    </DropdownItem>
     {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
   </NavDropdown>
 );

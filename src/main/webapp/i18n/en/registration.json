@@ -20,7 +20,8 @@
       "type": "Type",
       "onSite": "On Site",
       "appointment": "Appointment",
-      "accounting": "Accounting"
+      "accounting": "Accounting",
+      "treatmentProcedure": "Treatment Procedure"
     }
   }
 }

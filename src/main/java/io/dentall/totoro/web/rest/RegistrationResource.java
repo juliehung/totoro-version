@@ -2,7 +2,9 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Registration;
+import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.RegistrationRepository;
+import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,8 +45,11 @@ public class RegistrationResource {
 
     private final RegistrationRepository registrationRepository;
 
-    public RegistrationResource(RegistrationRepository registrationRepository) {
+    private final TreatmentProcedureRepository treatmentProcedureRepository;
+
+    public RegistrationResource(RegistrationRepository registrationRepository, TreatmentProcedureRepository treatmentProcedureRepository) {
         this.registrationRepository = registrationRepository;
+        this.treatmentProcedureRepository = treatmentProcedureRepository;
     }
 
     /**
@@ -159,5 +165,34 @@ public class RegistrationResource {
             .collect(Collectors.toList());
 
         return new ResponseEntity<>(patientCardVMS, HttpStatus.OK);
+    }
+
+    /**
+     * PUT  /registrations/:id/treatmentProcedures/list : Update a treatmentProcedures list of registration.
+     *
+     * @param id the id of the registration
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @PutMapping("/registrations/{id}/treatmentProcedures/list")
+    @Timed
+    @Transactional
+    public ResponseEntity<Registration> updateRegistrationTreatmentProcedures(@PathVariable Long id, @RequestBody List<TreatmentProcedure> treatmentProcedures) {
+        log.debug("REST request to save TreatmentProcedures({}) of Registration(id: {})", treatmentProcedures, id);
+
+        Optional<Registration> optionalRegistration = registrationRepository.findById(id);
+        if (optionalRegistration.isPresent()) {
+            Registration registration = optionalRegistration.get();
+            registration.getTreatmentProcedures().clear();
+            treatmentProcedures.stream().map(TreatmentProcedure::getId).forEach(treatmentProcedureId ->
+                treatmentProcedureRepository.findById(treatmentProcedureId).ifPresent(treatmentProcedure -> {
+                    treatmentProcedure.setRegistration(registration);
+                    registration.getTreatmentProcedures().add(treatmentProcedure);
+                })
+            );
+
+            return ResponseEntity.ok().body(registration);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -1,8 +1,6 @@
 package io.dentall.totoro.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -11,7 +9,9 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 
@@ -21,7 +21,7 @@ import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 @Entity
 @Table(name = "appointment")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Appointment extends AbstractAuditingEntity implements Serializable {
+public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -69,11 +69,10 @@ public class Appointment extends AbstractAuditingEntity implements Serializable 
     @OneToOne    @JoinColumn(unique = true)
     private Registration registration;
 
+    @OneToMany(mappedBy = "appointment")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-
-    @ManyToOne
-    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks"})
-    private ExtendUser doctor;
 
     public Long getId() {
         return id;
@@ -238,34 +237,32 @@ public class Appointment extends AbstractAuditingEntity implements Serializable 
     public void setRegistration(Registration registration) {
         this.registration = registration;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    public ExtendUser getDoctor() {
-        return doctor;
+    public Set<TreatmentProcedure> getTreatmentProcedures() {
+        return treatmentProcedures;
     }
 
-    public Appointment doctor(ExtendUser doctor) {
-        this.doctor = doctor;
+    public Appointment treatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
+        this.treatmentProcedures = treatmentProcedures;
         return this;
     }
 
-    public void setDoctor(ExtendUser doctor) {
-        this.doctor = doctor;
+    public Appointment addTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
+        this.treatmentProcedures.add(treatmentProcedure);
+        treatmentProcedure.setAppointment(this);
+        return this;
     }
 
-    @Override
-    @JsonIgnore(false)
-    @JsonProperty
-    public String getCreatedBy() {
-        return super.getCreatedBy();
+    public Appointment removeTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
+        this.treatmentProcedures.remove(treatmentProcedure);
+        treatmentProcedure.setAppointment(null);
+        return this;
     }
 
-    @Override
-    @JsonIgnore(false)
-    @JsonProperty
-    public Instant getCreatedDate() {
-        return super.getCreatedDate();
+    public void setTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
+        this.treatmentProcedures = treatmentProcedures;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

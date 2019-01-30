@@ -7,10 +7,21 @@
     <changeSet id="20181226-AddColumnTreatmentTask" author="Jim">
 
         <addColumn tableName="treatment_task">
-
             <column name="doctor_user_id" type="bigint">
                 <constraints nullable="true" />
             </column>
+
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_modified_by" type="varchar(50)"/>
+
+            <column name="last_modified_date" type="timestamp"/>
         </addColumn>
 
     </changeSet>

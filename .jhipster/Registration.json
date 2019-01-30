@@ -16,6 +16,12 @@
             "otherEntityField": "id",
             "ownerSide": true,
             "otherEntityRelationshipName": "registration"
+        },
+        {
+            "relationshipName": "treatmentProcedure",
+            "otherEntityName": "treatmentProcedure",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "registration"
         }
     ],
     "fields": [

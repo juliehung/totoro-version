@@ -60,6 +60,10 @@ public class CacheConfiguration {
             cm.createCache(io.dentall.totoro.domain.CalendarSetting.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.Tooth.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.Ledger.class.getName(), jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.Procedure.class.getName(), jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.ProcedureType.class.getName(), jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.Appointment.class.getName() + ".treatmentProcedures", jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.Registration.class.getName() + ".treatmentProcedures", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
 
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".dominantPatients", jcacheConfiguration);
@@ -67,6 +71,7 @@ public class CacheConfiguration {
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".appointments", jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".treatmentProcedures", jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".treatmentTasks", jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".procedures", jcacheConfiguration);
         };
     }
 }

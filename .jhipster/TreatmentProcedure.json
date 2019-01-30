@@ -1,23 +1,6 @@
 {
-    "name": "TreatmentProcedure",
-    "fields": [
-        {
-            "fieldName": "price",
-            "fieldType": "Integer"
-        },
-        {
-            "fieldName": "teeth",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "surfaces",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "nhiDeclared",
-            "fieldType": "Boolean"
-        }
-    ],
+    "fluentMethods": true,
+    "clientRootFolder": "",
     "relationships": [
         {
             "relationshipType": "many-to-one",
@@ -30,15 +13,53 @@
             "relationshipName": "treatmentTask",
             "otherEntityName": "treatmentTask",
             "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "procedure",
+            "otherEntityName": "procedure",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "appointment",
+            "otherEntityName": "appointment",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "registration",
+            "otherEntityName": "registration",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "status",
+            "fieldType": "TreatmentProcedureStatus",
+            "fieldValues": "PLANNED,IN_PROGRESS,COMPLETED,CANCEL,HIDE",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "quantity",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "total",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "note",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20181224042541",
-    "entityTableName": "treatment_procedure",
     "dto": "no",
-    "pagination": "pagination",
-    "service": "no",
-    "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "searchEngine": false,
+    "service": "serviceClass",
+    "entityTableName": "treatment_procedure",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
 }

@@ -7,7 +7,6 @@
     <changeSet id="20181217-AddColumnAppointment" author="Jim">
 
         <addColumn tableName="appointment">
-
             <column name="doctor_user_id" type="bigint">
                 <constraints nullable="false" />
             </column>

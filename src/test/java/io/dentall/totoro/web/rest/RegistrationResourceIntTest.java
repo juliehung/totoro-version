@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
@@ -88,6 +89,9 @@ public class RegistrationResourceIntTest {
     @Autowired
     private PatientService patientService;
 
+    @Autowired
+    private TreatmentProcedureRepository treatmentProcedureRepository;
+
     private MockMvc restRegistrationMockMvc;
 
     private Registration registration;
@@ -95,7 +99,7 @@ public class RegistrationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final RegistrationResource registrationResource = new RegistrationResource(registrationRepository);
+        final RegistrationResource registrationResource = new RegistrationResource(registrationRepository, treatmentProcedureRepository);
         this.restRegistrationMockMvc = MockMvcBuilders.standaloneSetup(registrationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -344,6 +348,22 @@ public class RegistrationResourceIntTest {
             .andExpect(jsonPath("$.[*].microscope").value(hasItem(appointment.isMicroscope())))
             .andExpect(jsonPath("$.[*].tags.[*].name").value(hasItem(patient.getTags().iterator().next().getName())))
             .andExpect(jsonPath("$.[*].doctor.id").value(hasItem(appointment.getDoctor().getUser().getId().intValue())));
+    }
+
+    @Test
+    @Transactional
+    public void updateTreatmentProceduresList() throws Exception {
+        // Initialize the database
+        registrationRepository.saveAndFlush(registration);
+
+        TreatmentProcedure treatmentProcedure = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
+        // Update the TreatmentProcedures list
+        restRegistrationMockMvc.perform(put("/api/registrations/{id}/treatmentProcedures/list", registration.getId())
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(Arrays.asList(treatmentProcedure))))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.treatmentProcedures.[*].note").value(hasItem(treatmentProcedure.getNote())));
     }
 
     private Appointment createAppointment(Patient patient) {

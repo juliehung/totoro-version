@@ -12,6 +12,12 @@ import { INHIProcedure } from 'app/shared/model/nhi-procedure.model';
 import { getEntities as getNHiProcedures } from 'app/entities/nhi-procedure/nhi-procedure.reducer';
 import { ITreatmentTask } from 'app/shared/model/treatment-task.model';
 import { getEntities as getTreatmentTasks } from 'app/entities/treatment-task/treatment-task.reducer';
+import { IProcedure } from 'app/shared/model/procedure.model';
+import { getEntities as getProcedures } from 'app/entities/procedure/procedure.reducer';
+import { IAppointment } from 'app/shared/model/appointment.model';
+import { getEntities as getAppointments } from 'app/entities/appointment/appointment.reducer';
+import { IRegistration } from 'app/shared/model/registration.model';
+import { getEntities as getRegistrations } from 'app/entities/registration/registration.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './treatment-procedure.reducer';
 import { ITreatmentProcedure } from 'app/shared/model/treatment-procedure.model';
 // tslint:disable-next-line:no-unused-variable
@@ -24,6 +30,9 @@ export interface ITreatmentProcedureUpdateState {
   isNew: boolean;
   nhiProcedureId: string;
   treatmentTaskId: string;
+  procedureId: string;
+  appointmentId: string;
+  registrationId: string;
 }
 
 export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedureUpdateProps, ITreatmentProcedureUpdateState> {
@@ -32,6 +41,9 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
     this.state = {
       nhiProcedureId: '0',
       treatmentTaskId: '0',
+      procedureId: '0',
+      appointmentId: '0',
+      registrationId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -51,6 +63,9 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
 
     this.props.getNHiProcedures();
     this.props.getTreatmentTasks();
+    this.props.getProcedures();
+    this.props.getAppointments();
+    this.props.getRegistrations();
   }
 
   saveEntity = (event, errors, values) => {
@@ -74,7 +89,16 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
   };
 
   render() {
-    const { treatmentProcedureEntity, nHIProcedures, treatmentTasks, loading, updating } = this.props;
+    const {
+      treatmentProcedureEntity,
+      nHIProcedures,
+      treatmentTasks,
+      procedures,
+      appointments,
+      registrations,
+      loading,
+      updating
+    } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -101,28 +125,50 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                   </AvGroup>
                 ) : null}
                 <AvGroup>
-                  <Label id="priceLabel" for="price">
-                    <Translate contentKey="totoroApp.treatmentProcedure.price">Price</Translate>
+                  <Label id="statusLabel">
+                    <Translate contentKey="totoroApp.treatmentProcedure.status">Status</Translate>
                   </Label>
-                  <AvField id="treatment-procedure-price" type="string" className="form-control" name="price" />
+                  <AvInput
+                    id="treatment-procedure-status"
+                    type="select"
+                    className="form-control"
+                    name="status"
+                    value={(!isNew && treatmentProcedureEntity.status) || 'PLANNED'}
+                  >
+                    <option value="PLANNED">
+                      <Translate contentKey="totoroApp.TreatmentProcedureStatus.PLANNED" />
+                    </option>
+                    <option value="IN_PROGRESS">
+                      <Translate contentKey="totoroApp.TreatmentProcedureStatus.IN_PROGRESS" />
+                    </option>
+                    <option value="COMPLETED">
+                      <Translate contentKey="totoroApp.TreatmentProcedureStatus.COMPLETED" />
+                    </option>
+                    <option value="CANCEL">
+                      <Translate contentKey="totoroApp.TreatmentProcedureStatus.CANCEL" />
+                    </option>
+                    <option value="HIDE">
+                      <Translate contentKey="totoroApp.TreatmentProcedureStatus.HIDE" />
+                    </option>
+                  </AvInput>
                 </AvGroup>
                 <AvGroup>
-                  <Label id="teethLabel" for="teeth">
-                    <Translate contentKey="totoroApp.treatmentProcedure.teeth">Teeth</Translate>
+                  <Label id="quantityLabel" for="quantity">
+                    <Translate contentKey="totoroApp.treatmentProcedure.quantity">Quantity</Translate>
                   </Label>
-                  <AvField id="treatment-procedure-teeth" type="text" name="teeth" />
+                  <AvField id="treatment-procedure-quantity" type="string" className="form-control" name="quantity" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="surfacesLabel" for="surfaces">
-                    <Translate contentKey="totoroApp.treatmentProcedure.surfaces">Surfaces</Translate>
+                  <Label id="totalLabel" for="total">
+                    <Translate contentKey="totoroApp.treatmentProcedure.total">Total</Translate>
                   </Label>
-                  <AvField id="treatment-procedure-surfaces" type="text" name="surfaces" />
+                  <AvField id="treatment-procedure-total" type="string" className="form-control" name="total" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="nhiDeclaredLabel" check>
-                    <AvInput id="treatment-procedure-nhiDeclared" type="checkbox" className="form-control" name="nhiDeclared" />
-                    <Translate contentKey="totoroApp.treatmentProcedure.nhiDeclared">Nhi Declared</Translate>
+                  <Label id="noteLabel" for="note">
+                    <Translate contentKey="totoroApp.treatmentProcedure.note">Note</Translate>
                   </Label>
+                  <AvField id="treatment-procedure-note" type="text" name="note" />
                 </AvGroup>
                 <AvGroup>
                   <Label for="nhiProcedure.id">
@@ -147,6 +193,51 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                     <option value="" key="0" />
                     {treatmentTasks
                       ? treatmentTasks.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
+                <AvGroup>
+                  <Label for="procedure.id">
+                    <Translate contentKey="totoroApp.treatmentProcedure.procedure">Procedure</Translate>
+                  </Label>
+                  <AvInput id="treatment-procedure-procedure" type="select" className="form-control" name="procedure.id">
+                    <option value="" key="0" />
+                    {procedures
+                      ? procedures.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
+                <AvGroup>
+                  <Label for="appointment.id">
+                    <Translate contentKey="totoroApp.treatmentProcedure.appointment">Appointment</Translate>
+                  </Label>
+                  <AvInput id="treatment-procedure-appointment" type="select" className="form-control" name="appointment.id">
+                    <option value="" key="0" />
+                    {appointments
+                      ? appointments.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
+                <AvGroup>
+                  <Label for="registration.id">
+                    <Translate contentKey="totoroApp.treatmentProcedure.registration">Registration</Translate>
+                  </Label>
+                  <AvInput id="treatment-procedure-registration" type="select" className="form-control" name="registration.id">
+                    <option value="" key="0" />
+                    {registrations
+                      ? registrations.map(otherEntity => (
                           <option value={otherEntity.id} key={otherEntity.id}>
                             {otherEntity.id}
                           </option>
@@ -179,6 +270,9 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
 const mapStateToProps = (storeState: IRootState) => ({
   nHIProcedures: storeState.nHIProcedure.entities,
   treatmentTasks: storeState.treatmentTask.entities,
+  procedures: storeState.procedure.entities,
+  appointments: storeState.appointment.entities,
+  registrations: storeState.registration.entities,
   treatmentProcedureEntity: storeState.treatmentProcedure.entity,
   loading: storeState.treatmentProcedure.loading,
   updating: storeState.treatmentProcedure.updating,
@@ -188,6 +282,9 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   getNHiProcedures,
   getTreatmentTasks,
+  getProcedures,
+  getAppointments,
+  getRegistrations,
   getEntity,
   updateEntity,
   createEntity,

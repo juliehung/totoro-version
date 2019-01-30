@@ -157,6 +157,11 @@ public class AppointmentQueryService extends QueryService<Appointment> {
                 specification = specification.and(buildSpecification(criteria.getDoctorId(),
                     root -> root.join(Appointment_.doctor, JoinType.LEFT).get(ExtendUser_.id)));
             }
+
+            if (criteria.getTreatmentProcedureId() != null) {
+                specification = specification.and(buildSpecification(criteria.getTreatmentProcedureId(),
+                    root -> root.join(Appointment_.treatmentProcedures, JoinType.LEFT).get(TreatmentProcedure_.id)));
+            }
         }
         return specification;
     }

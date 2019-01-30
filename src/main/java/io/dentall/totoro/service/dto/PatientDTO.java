@@ -14,7 +14,4 @@ public class PatientDTO extends Patient {
 
     @Null(groups = NullGroup.class)
     private String phone;
-
-    public interface NullGroup {
-    }
 }

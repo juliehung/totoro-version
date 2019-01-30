@@ -67,17 +67,8 @@ export class TreatmentTask extends React.Component<ITreatmentTaskProps, ITreatme
                 <th className="hand" onClick={this.sort('id')}>
                   <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('status')}>
-                  <Translate contentKey="totoroApp.treatmentTask.status">Status</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('description')}>
-                  <Translate contentKey="totoroApp.treatmentTask.description">Description</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('teeth')}>
-                  <Translate contentKey="totoroApp.treatmentTask.teeth">Teeth</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('surfaces')}>
-                  <Translate contentKey="totoroApp.treatmentTask.surfaces">Surfaces</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('name')}>
+                  <Translate contentKey="totoroApp.treatmentTask.name">Name</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('note')}>
                   <Translate contentKey="totoroApp.treatmentTask.note">Note</Translate> <FontAwesomeIcon icon="sort" />
@@ -93,12 +84,7 @@ export class TreatmentTask extends React.Component<ITreatmentTaskProps, ITreatme
                       {treatmentTask.id}
                     </Button>
                   </td>
-                  <td>
-                    <Translate contentKey={`totoroApp.TreatmentTaskStatus.${treatmentTask.status}`} />
-                  </td>
-                  <td>{treatmentTask.description}</td>
-                  <td>{treatmentTask.teeth}</td>
-                  <td>{treatmentTask.surfaces}</td>
+                  <td>{treatmentTask.name}</td>
                   <td>{treatmentTask.note}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

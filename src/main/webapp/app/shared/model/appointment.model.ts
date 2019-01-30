@@ -1,9 +1,9 @@
 import { Moment } from 'moment';
 import { IPatient } from 'app/shared/model//patient.model';
 import { IRegistration } from 'app/shared/model//registration.model';
+import { ITreatmentProcedure } from 'app/shared/model//treatment-procedure.model';
 
 export const enum AppointmentStatus {
-  TO_BE_CONFIRMED = 'TO_BE_CONFIRMED',
   CONFIRMED = 'CONFIRMED',
   CANCEL = 'CANCEL'
 }
@@ -22,6 +22,7 @@ export interface IAppointment {
   archived?: boolean;
   patient?: IPatient;
   registration?: IRegistration;
+  treatmentProcedures?: ITreatmentProcedure[];
 }
 
 export const defaultValue: Readonly<IAppointment> = {

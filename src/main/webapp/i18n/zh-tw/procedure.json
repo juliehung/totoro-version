@@ -1,0 +1,23 @@
+{
+  "totoroApp": {
+    "procedure": {
+      "home": {
+        "title": "Procedures",
+        "createLabel": "建立一筆新的 Procedure",
+        "createOrEditLabel": "建立或編輯 Procedure"
+      },
+      "created": "新的 Procedure 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Procedure 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Procedure 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Procedure {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Procedure"
+      },
+      "content": "Content",
+      "price": "Price",
+      "procedureType": "Procedure Type"
+    }
+  }
+}

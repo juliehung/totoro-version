@@ -111,11 +111,8 @@ export class AppointmentUpdate extends React.Component<IAppointmentUpdateProps, 
                     type="select"
                     className="form-control"
                     name="status"
-                    value={(!isNew && appointmentEntity.status) || 'TO_BE_CONFIRMED'}
+                    value={(!isNew && appointmentEntity.status) || 'CONFIRMED'}
                   >
-                    <option value="TO_BE_CONFIRMED">
-                      <Translate contentKey="totoroApp.AppointmentStatus.TO_BE_CONFIRMED" />
-                    </option>
                     <option value="CONFIRMED">
                       <Translate contentKey="totoroApp.AppointmentStatus.CONFIRMED" />
                     </option>

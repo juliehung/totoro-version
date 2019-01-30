@@ -15,12 +15,15 @@
       "detail": {
         "title": "Treatment Procedure"
       },
-      "price": "Price",
-      "teeth": "Teeth",
-      "surfaces": "Surfaces",
-      "nhiDeclared": "Nhi Declared",
+      "status": "Status",
+      "quantity": "Quantity",
+      "total": "Total",
+      "note": "Note",
       "nhiProcedure": "Nhi Procedure",
-      "treatmentTask": "Treatment Task"
+      "treatmentTask": "Treatment Task",
+      "procedure": "Procedure",
+      "appointment": "Appointment",
+      "registration": "Registration"
     }
   }
 }

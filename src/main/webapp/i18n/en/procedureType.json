@@ -1,0 +1,21 @@
+{
+  "totoroApp": {
+    "procedureType": {
+      "home": {
+        "title": "Procedure Types",
+        "createLabel": "Create a new Procedure Type",
+        "createOrEditLabel": "Create or edit a Procedure Type"
+      },
+      "created": "A new Procedure Type is created with identifier {{ param }}",
+      "updated": "A Procedure Type is updated with identifier {{ param }}",
+      "deleted": "A Procedure Type is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Procedure Type {{ id }}?"
+      },
+      "detail": {
+        "title": "Procedure Type"
+      },
+      "name": "Name"
+    }
+  }
+}

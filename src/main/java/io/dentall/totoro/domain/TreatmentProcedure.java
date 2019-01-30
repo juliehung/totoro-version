@@ -5,9 +5,12 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.Objects;
+
+import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 
 /**
  * A TreatmentProcedure.
@@ -15,7 +18,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "treatment_procedure")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class TreatmentProcedure implements Serializable {
+public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<TreatmentProcedure> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,17 +27,19 @@ public class TreatmentProcedure implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "price")
-    private Integer price;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private TreatmentProcedureStatus status;
 
-    @Column(name = "teeth")
-    private String teeth;
+    @Column(name = "quantity")
+    private Integer quantity;
 
-    @Column(name = "surfaces")
-    private String surfaces;
+    @Column(name = "total")
+    private Double total;
 
-    @Column(name = "nhi_declared")
-    private Boolean nhiDeclared;
+    @Column(name = "note")
+    private String note;
 
     @ManyToOne
     @JsonIgnoreProperties("")
@@ -44,11 +49,18 @@ public class TreatmentProcedure implements Serializable {
     @JsonIgnoreProperties("treatmentProcedures")
     private TreatmentTask treatmentTask;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Procedure procedure;
 
     @ManyToOne
-    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks"})
-    private ExtendUser doctor;
+    @JsonIgnoreProperties("treatmentProcedures")
+    private Appointment appointment;
+
+    @ManyToOne
+    @JsonIgnoreProperties("treatmentProcedures")
+    private Registration registration;
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     public Long getId() {
         return id;
@@ -58,56 +70,56 @@ public class TreatmentProcedure implements Serializable {
         this.id = id;
     }
 
-    public Integer getPrice() {
-        return price;
+    public TreatmentProcedureStatus getStatus() {
+        return status;
     }
 
-    public TreatmentProcedure price(Integer price) {
-        this.price = price;
+    public TreatmentProcedure status(TreatmentProcedureStatus status) {
+        this.status = status;
         return this;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
+    public void setStatus(TreatmentProcedureStatus status) {
+        this.status = status;
     }
 
-    public String getTeeth() {
-        return teeth;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public TreatmentProcedure teeth(String teeth) {
-        this.teeth = teeth;
+    public TreatmentProcedure quantity(Integer quantity) {
+        this.quantity = quantity;
         return this;
     }
 
-    public void setTeeth(String teeth) {
-        this.teeth = teeth;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
-    public String getSurfaces() {
-        return surfaces;
+    public Double getTotal() {
+        return total;
     }
 
-    public TreatmentProcedure surfaces(String surfaces) {
-        this.surfaces = surfaces;
+    public TreatmentProcedure total(Double total) {
+        this.total = total;
         return this;
     }
 
-    public void setSurfaces(String surfaces) {
-        this.surfaces = surfaces;
+    public void setTotal(Double total) {
+        this.total = total;
     }
 
-    public Boolean isNhiDeclared() {
-        return nhiDeclared;
+    public String getNote() {
+        return note;
     }
 
-    public TreatmentProcedure nhiDeclared(Boolean nhiDeclared) {
-        this.nhiDeclared = nhiDeclared;
+    public TreatmentProcedure note(String note) {
+        this.note = note;
         return this;
     }
 
-    public void setNhiDeclared(Boolean nhiDeclared) {
-        this.nhiDeclared = nhiDeclared;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public NHIProcedure getNhiProcedure() {
@@ -135,20 +147,46 @@ public class TreatmentProcedure implements Serializable {
     public void setTreatmentTask(TreatmentTask treatmentTask) {
         this.treatmentTask = treatmentTask;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    public ExtendUser getDoctor() {
-        return doctor;
+    public Procedure getProcedure() {
+        return procedure;
     }
 
-    public TreatmentProcedure doctor(ExtendUser doctor) {
-        this.doctor = doctor;
+    public TreatmentProcedure procedure(Procedure procedure) {
+        this.procedure = procedure;
         return this;
     }
 
-    public void setDoctor(ExtendUser doctor) {
-        this.doctor = doctor;
+    public void setProcedure(Procedure procedure) {
+        this.procedure = procedure;
     }
+
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    public TreatmentProcedure appointment(Appointment appointment) {
+        this.appointment = appointment;
+        return this;
+    }
+
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
+    }
+
+    public Registration getRegistration() {
+        return registration;
+    }
+
+    public TreatmentProcedure registration(Registration registration) {
+        this.registration = registration;
+        return this;
+    }
+
+    public void setRegistration(Registration registration) {
+        this.registration = registration;
+    }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -174,10 +212,10 @@ public class TreatmentProcedure implements Serializable {
     public String toString() {
         return "TreatmentProcedure{" +
             "id=" + getId() +
-            ", price=" + getPrice() +
-            ", teeth='" + getTeeth() + "'" +
-            ", surfaces='" + getSurfaces() + "'" +
-            ", nhiDeclared='" + isNhiDeclared() + "'" +
+            ", status='" + getStatus() + "'" +
+            ", quantity=" + getQuantity() +
+            ", total=" + getTotal() +
+            ", note='" + getNote() + "'" +
             "}";
     }
 }
