@@ -8,6 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
@@ -41,6 +44,9 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @Column(name = "note")
     private String note;
 
+    @Column(name = "completed_date")
+    private Instant completedDate;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private NHIProcedure nhiProcedure;
@@ -60,8 +66,11 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @ManyToOne
     @JsonIgnoreProperties("treatmentProcedures")
     private Registration registration;
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
+    @OneToMany(mappedBy = "treatmentProcedure")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Tooth> teeth = new HashSet<>();
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -120,6 +129,19 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public Instant getCompletedDate() {
+        return completedDate;
+    }
+
+    public TreatmentProcedure completedDate(Instant completedDate) {
+        this.completedDate = completedDate;
+        return this;
+    }
+
+    public void setCompletedDate(Instant completedDate) {
+        this.completedDate = completedDate;
     }
 
     public NHIProcedure getNhiProcedure() {
@@ -186,6 +208,31 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     public void setRegistration(Registration registration) {
         this.registration = registration;
     }
+
+    public Set<Tooth> getTeeth() {
+        return teeth;
+    }
+
+    public TreatmentProcedure teeth(Set<Tooth> teeth) {
+        this.teeth = teeth;
+        return this;
+    }
+
+    public TreatmentProcedure addTooth(Tooth tooth) {
+        this.teeth.add(tooth);
+        tooth.setTreatmentProcedure(this);
+        return this;
+    }
+
+    public TreatmentProcedure removeTooth(Tooth tooth) {
+        this.teeth.remove(tooth);
+        tooth.setTreatmentProcedure(null);
+        return this;
+    }
+
+    public void setTeeth(Set<Tooth> teeth) {
+        this.teeth = teeth;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -216,6 +263,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
             ", quantity=" + getQuantity() +
             ", total=" + getTotal() +
             ", note='" + getNote() + "'" +
+            ", completedDate='" + getCompletedDate() + "'" +
             "}";
     }
 }

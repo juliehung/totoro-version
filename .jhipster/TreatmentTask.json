@@ -1,5 +1,20 @@
 {
-    "name": "TreatmentTask",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "treatmentProcedure",
+            "otherEntityName": "treatmentProcedure",
+            "otherEntityRelationshipName": "treatmentTask"
+        },
+        {
+            "relationshipName": "tooth",
+            "otherEntityName": "tooth",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "treatmentTask"
+        }
+    ],
     "fields": [
         {
             "fieldName": "name",
@@ -10,21 +25,11 @@
             "fieldType": "String"
         }
     ],
-    "relationships": [
-        {
-            "relationshipType": "one-to-many",
-            "relationshipName": "treatmentProcedure",
-            "otherEntityName": "treatmentProcedure",
-            "otherEntityRelationshipName": "treatmentTask"
-        }
-    ],
     "changelogDate": "20181224042540",
-    "entityTableName": "treatment_task",
     "dto": "no",
-    "pagination": "pagination",
+    "searchEngine": false,
     "service": "no",
+    "entityTableName": "treatment_task",
     "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "pagination"
 }

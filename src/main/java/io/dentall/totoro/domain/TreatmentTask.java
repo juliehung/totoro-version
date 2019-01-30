@@ -34,8 +34,10 @@ public class TreatmentTask extends AbstractDoctorAndAuditingEntity<TreatmentTask
     @OneToMany(mappedBy = "treatmentTask")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
+    @OneToMany(mappedBy = "treatmentTask")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Tooth> teeth = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-
     public Long getId() {
         return id;
     }
@@ -93,6 +95,31 @@ public class TreatmentTask extends AbstractDoctorAndAuditingEntity<TreatmentTask
 
     public void setTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
         this.treatmentProcedures = treatmentProcedures;
+    }
+
+    public Set<Tooth> getTeeth() {
+        return teeth;
+    }
+
+    public TreatmentTask teeth(Set<Tooth> teeth) {
+        this.teeth = teeth;
+        return this;
+    }
+
+    public TreatmentTask addTooth(Tooth tooth) {
+        this.teeth.add(tooth);
+        tooth.setTreatmentTask(this);
+        return this;
+    }
+
+    public TreatmentTask removeTooth(Tooth tooth) {
+        this.teeth.remove(tooth);
+        tooth.setTreatmentTask(null);
+        return this;
+    }
+
+    public void setTeeth(Set<Tooth> teeth) {
+        this.teeth = teeth;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

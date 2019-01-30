@@ -2,8 +2,11 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 
+import io.dentall.totoro.domain.Tooth;
 import io.dentall.totoro.domain.TreatmentTask;
+import io.dentall.totoro.repository.ToothRepository;
 import io.dentall.totoro.repository.TreatmentTaskRepository;
+import io.dentall.totoro.service.ToothService;
 import io.dentall.totoro.service.TreatmentProcedureService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
@@ -23,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -66,7 +71,13 @@ public class TreatmentTaskResourceIntTest {
     private Validator validator;
 
     @Autowired
+    private ToothService toothService;
+
+    @Autowired
     private TreatmentProcedureService treatmentProcedureService;
+
+    @Autowired
+    private ToothRepository toothRepository;
 
     private MockMvc restTreatmentTaskMockMvc;
 
@@ -75,7 +86,7 @@ public class TreatmentTaskResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TreatmentTaskResource treatmentTaskResource = new TreatmentTaskResource(treatmentTaskRepository, treatmentProcedureService);
+        final TreatmentTaskResource treatmentTaskResource = new TreatmentTaskResource(treatmentTaskRepository, treatmentProcedureService, toothService);
         this.restTreatmentTaskMockMvc = MockMvcBuilders.standaloneSetup(treatmentTaskResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -106,6 +117,7 @@ public class TreatmentTaskResourceIntTest {
     @Transactional
     public void createTreatmentTask() throws Exception {
         int databaseSizeBeforeCreate = treatmentTaskRepository.findAll().size();
+        treatmentTask.getTeeth().add(ToothResourceIntTest.createEntity(em));
 
         // Create the TreatmentTask
         restTreatmentTaskMockMvc.perform(post("/api/treatment-tasks")
@@ -119,6 +131,8 @@ public class TreatmentTaskResourceIntTest {
         TreatmentTask testTreatmentTask = treatmentTaskList.get(treatmentTaskList.size() - 1);
         assertThat(testTreatmentTask.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testTreatmentTask.getNote()).isEqualTo(DEFAULT_NOTE);
+        assertThat(testTreatmentTask.getTreatmentProcedures().size()).isEqualTo(1);
+        assertThat(testTreatmentTask.getTeeth().size()).isEqualTo(1);
     }
 
     @Test
@@ -181,6 +195,8 @@ public class TreatmentTaskResourceIntTest {
     @Test
     @Transactional
     public void updateTreatmentTask() throws Exception {
+        Tooth tooth = toothRepository.save(ToothResourceIntTest.createEntity(em).treatmentTask(treatmentTask));
+
         // Initialize the database
         treatmentTaskRepository.saveAndFlush(treatmentTask);
 
@@ -188,11 +204,15 @@ public class TreatmentTaskResourceIntTest {
 
         // Update the treatmentTask
         TreatmentTask updatedTreatmentTask = treatmentTaskRepository.findById(treatmentTask.getId()).get();
+        Tooth updatedTooth = toothRepository.findById(tooth.getId()).get();
+
         // Disconnect from session so that the updates on updatedTreatmentTask are not directly saved in db
         em.detach(updatedTreatmentTask);
+        em.detach(updatedTooth.before("test").treatmentTask(null));
         updatedTreatmentTask
             .name(UPDATED_NAME)
             .note(UPDATED_NOTE);
+        updatedTreatmentTask.setTeeth(new HashSet<>(Collections.singletonList(updatedTooth)));
 
         restTreatmentTaskMockMvc.perform(put("/api/treatment-tasks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -205,6 +225,7 @@ public class TreatmentTaskResourceIntTest {
         TreatmentTask testTreatmentTask = treatmentTaskList.get(treatmentTaskList.size() - 1);
         assertThat(testTreatmentTask.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testTreatmentTask.getNote()).isEqualTo(UPDATED_NOTE);
+        assertThat(testTreatmentTask.getTeeth().iterator().next()).isEqualTo(updatedTooth);
     }
 
     @Test

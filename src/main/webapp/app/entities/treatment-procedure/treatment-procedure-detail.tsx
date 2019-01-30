@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -53,6 +53,14 @@ export class TreatmentProcedureDetail extends React.Component<ITreatmentProcedur
               </span>
             </dt>
             <dd>{treatmentProcedureEntity.note}</dd>
+            <dt>
+              <span id="completedDate">
+                <Translate contentKey="totoroApp.treatmentProcedure.completedDate">Completed Date</Translate>
+              </span>
+            </dt>
+            <dd>
+              <TextFormat value={treatmentProcedureEntity.completedDate} type="date" format={APP_DATE_FORMAT} />
+            </dd>
             <dt>
               <Translate contentKey="totoroApp.treatmentProcedure.nhiProcedure">Nhi Procedure</Translate>
             </dt>

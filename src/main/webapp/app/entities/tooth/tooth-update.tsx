@@ -8,6 +8,10 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
+import { ITreatmentTask } from 'app/shared/model/treatment-task.model';
+import { getEntities as getTreatmentTasks } from 'app/entities/treatment-task/treatment-task.reducer';
+import { ITreatmentProcedure } from 'app/shared/model/treatment-procedure.model';
+import { getEntities as getTreatmentProcedures } from 'app/entities/treatment-procedure/treatment-procedure.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './tooth.reducer';
 import { ITooth } from 'app/shared/model/tooth.model';
 // tslint:disable-next-line:no-unused-variable
@@ -18,12 +22,16 @@ export interface IToothUpdateProps extends StateProps, DispatchProps, RouteCompo
 
 export interface IToothUpdateState {
   isNew: boolean;
+  treatmentTaskId: string;
+  treatmentProcedureId: string;
 }
 
 export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
+      treatmentTaskId: '0',
+      treatmentProcedureId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -40,6 +48,9 @@ export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdate
     } else {
       this.props.getEntity(this.props.match.params.id);
     }
+
+    this.props.getTreatmentTasks();
+    this.props.getTreatmentProcedures();
   }
 
   saveEntity = (event, errors, values) => {
@@ -63,7 +74,7 @@ export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdate
   };
 
   render() {
-    const { toothEntity, loading, updating } = this.props;
+    const { toothEntity, treatmentTasks, treatmentProcedures, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -120,6 +131,36 @@ export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdate
                   </Label>
                   <AvField id="tooth-after" type="text" name="after" />
                 </AvGroup>
+                <AvGroup>
+                  <Label for="treatmentTask.id">
+                    <Translate contentKey="totoroApp.tooth.treatmentTask">Treatment Task</Translate>
+                  </Label>
+                  <AvInput id="tooth-treatmentTask" type="select" className="form-control" name="treatmentTask.id">
+                    <option value="" key="0" />
+                    {treatmentTasks
+                      ? treatmentTasks.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
+                <AvGroup>
+                  <Label for="treatmentProcedure.id">
+                    <Translate contentKey="totoroApp.tooth.treatmentProcedure">Treatment Procedure</Translate>
+                  </Label>
+                  <AvInput id="tooth-treatmentProcedure" type="select" className="form-control" name="treatmentProcedure.id">
+                    <option value="" key="0" />
+                    {treatmentProcedures
+                      ? treatmentProcedures.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/tooth" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
@@ -143,6 +184,8 @@ export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdate
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
+  treatmentTasks: storeState.treatmentTask.entities,
+  treatmentProcedures: storeState.treatmentProcedure.entities,
   toothEntity: storeState.tooth.entity,
   loading: storeState.tooth.loading,
   updating: storeState.tooth.updating,
@@ -150,6 +193,8 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
+  getTreatmentTasks,
+  getTreatmentProcedures,
   getEntity,
   updateEntity,
   createEntity,

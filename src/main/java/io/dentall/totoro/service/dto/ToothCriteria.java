@@ -32,6 +32,10 @@ public class ToothCriteria implements Serializable {
 
     private StringFilter after;
 
+    private LongFilter treatmentTaskId;
+
+    private LongFilter treatmentProcedureId;
+
     public LongFilter getId() {
         return id;
     }
@@ -72,6 +76,22 @@ public class ToothCriteria implements Serializable {
         this.after = after;
     }
 
+    public LongFilter getTreatmentTaskId() {
+        return treatmentTaskId;
+    }
+
+    public void setTreatmentTaskId(LongFilter treatmentTaskId) {
+        this.treatmentTaskId = treatmentTaskId;
+    }
+
+    public LongFilter getTreatmentProcedureId() {
+        return treatmentProcedureId;
+    }
+
+    public void setTreatmentProcedureId(LongFilter treatmentProcedureId) {
+        this.treatmentProcedureId = treatmentProcedureId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -87,7 +107,9 @@ public class ToothCriteria implements Serializable {
             Objects.equals(position, that.position) &&
             Objects.equals(before, that.before) &&
             Objects.equals(planned, that.planned) &&
-            Objects.equals(after, that.after);
+            Objects.equals(after, that.after) &&
+            Objects.equals(treatmentTaskId, that.treatmentTaskId) &&
+            Objects.equals(treatmentProcedureId, that.treatmentProcedureId);
     }
 
     @Override
@@ -97,7 +119,9 @@ public class ToothCriteria implements Serializable {
         position,
         before,
         planned,
-        after
+        after,
+        treatmentTaskId,
+        treatmentProcedureId
         );
     }
 
@@ -109,6 +133,8 @@ public class ToothCriteria implements Serializable {
                 (before != null ? "before=" + before + ", " : "") +
                 (planned != null ? "planned=" + planned + ", " : "") +
                 (after != null ? "after=" + after + ", " : "") +
+                (treatmentTaskId != null ? "treatmentTaskId=" + treatmentTaskId + ", " : "") +
+                (treatmentProcedureId != null ? "treatmentProcedureId=" + treatmentProcedureId + ", " : "") +
             "}";
     }
 

@@ -72,4 +72,26 @@ public class ToothService {
         log.debug("Request to delete Tooth : {}", id);
         toothRepository.deleteById(id);
     }
+
+    /**
+     * Update the tooth.
+     *
+     * @param updateTooth the update entity
+     */
+    public void update(Tooth updateTooth) {
+        log.debug("Request to update Tooth : {}", updateTooth);
+        toothRepository.findById(updateTooth.getId()).ifPresent(tooth -> {
+            if (updateTooth.getBefore() != null) {
+                tooth.setBefore((updateTooth.getBefore()));
+            }
+
+            if (updateTooth.getPlanned() != null) {
+                tooth.setPlanned((updateTooth.getPlanned()));
+            }
+
+            if (updateTooth.getAfter() != null) {
+                tooth.setAfter((updateTooth.getAfter()));
+            }
+        });
+    }
 }

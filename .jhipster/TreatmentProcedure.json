@@ -31,6 +31,12 @@
             "otherEntityName": "registration",
             "relationshipType": "many-to-one",
             "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "tooth",
+            "otherEntityName": "tooth",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "treatmentProcedure"
         }
     ],
     "fields": [
@@ -53,6 +59,10 @@
         {
             "fieldName": "note",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "completedDate",
+            "fieldType": "Instant"
         }
     ],
     "changelogDate": "20181224042541",

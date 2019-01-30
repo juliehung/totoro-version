@@ -52,6 +52,14 @@ export class ToothDetail extends React.Component<IToothDetailProps> {
               </span>
             </dt>
             <dd>{toothEntity.after}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.tooth.treatmentTask">Treatment Task</Translate>
+            </dt>
+            <dd>{toothEntity.treatmentTask ? toothEntity.treatmentTask.id : ''}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.tooth.treatmentProcedure">Treatment Procedure</Translate>
+            </dt>
+            <dd>{toothEntity.treatmentProcedure ? toothEntity.treatmentProcedure.id : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/tooth" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}
