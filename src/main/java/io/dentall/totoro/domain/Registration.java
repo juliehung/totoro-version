@@ -9,6 +9,8 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
@@ -52,6 +54,9 @@ public class Registration implements Serializable {
     @OneToOne    @JoinColumn(unique = true)
     private Accounting accounting;
 
+    @OneToMany(mappedBy = "registration")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -137,6 +142,31 @@ public class Registration implements Serializable {
 
     public void setAccounting(Accounting accounting) {
         this.accounting = accounting;
+    }
+
+    public Set<TreatmentProcedure> getTreatmentProcedures() {
+        return treatmentProcedures;
+    }
+
+    public Registration treatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
+        this.treatmentProcedures = treatmentProcedures;
+        return this;
+    }
+
+    public Registration addTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
+        this.treatmentProcedures.add(treatmentProcedure);
+        treatmentProcedure.setRegistration(this);
+        return this;
+    }
+
+    public Registration removeTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
+        this.treatmentProcedures.remove(treatmentProcedure);
+        treatmentProcedure.setRegistration(null);
+        return this;
+    }
+
+    public void setTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
+        this.treatmentProcedures = treatmentProcedures;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

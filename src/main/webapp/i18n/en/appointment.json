@@ -26,7 +26,8 @@
       "colorId": "Color Id",
       "archived": "Archived",
       "patient": "Patient",
-      "registration": "Registration"
+      "registration": "Registration",
+      "treatmentProcedure": "Treatment Procedure"
     }
   }
 }

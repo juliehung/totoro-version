@@ -2,10 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.repository.AppointmentRepository;
-import io.dentall.totoro.repository.PatientRepository;
-import io.dentall.totoro.repository.TagRepository;
-import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
@@ -48,8 +45,8 @@ import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 @SpringBootTest(classes = TotoroApp.class)
 public class AppointmentResourceIntTest {
 
-    private static final AppointmentStatus DEFAULT_STATUS = AppointmentStatus.TO_BE_CONFIRMED;
-    private static final AppointmentStatus UPDATED_STATUS = AppointmentStatus.CONFIRMED;
+    private static final AppointmentStatus DEFAULT_STATUS = AppointmentStatus.CONFIRMED;
+    private static final AppointmentStatus UPDATED_STATUS = AppointmentStatus.CANCEL;
 
     private static final String DEFAULT_SUBJECT = "AAAAAAAAAA";
     private static final String UPDATED_SUBJECT = "BBBBBBBBBB";
@@ -114,6 +111,9 @@ public class AppointmentResourceIntTest {
     @Autowired
     private PatientService patientService;
 
+    @Autowired
+    private TreatmentProcedureRepository treatmentProcedureRepository;
+
     private MockMvc restAppointmentMockMvc;
 
     private Appointment appointment;
@@ -163,6 +163,8 @@ public class AppointmentResourceIntTest {
         int databaseSizeBeforeCreate = appointmentRepository.findAll().size();
 
         appointment.setRegistration(RegistrationResourceIntTest.createEntity(em).accounting(AccountingResourceIntTest.createEntity(em)));
+        TreatmentProcedure treatmentProcedure = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
+        appointment.getTreatmentProcedures().add(treatmentProcedure);
 
         // Create the Appointment
         restAppointmentMockMvc.perform(post("/api/appointments")
@@ -187,6 +189,7 @@ public class AppointmentResourceIntTest {
         assertThat(testAppointment.getDoctor()).isEqualTo(appointment.getDoctor());
         assertThat(testAppointment.getRegistration().getType()).isEqualTo(appointment.getRegistration().getType());
         assertThat(testAppointment.getRegistration().getAccounting().getOwnExpense()).isEqualTo(appointment.getRegistration().getAccounting().getOwnExpense());
+        assertThat(treatmentProcedureRepository.findById(treatmentProcedure.getId()).get().getAppointment().getId()).isEqualTo(testAppointment.getId());
     }
 
     @Test

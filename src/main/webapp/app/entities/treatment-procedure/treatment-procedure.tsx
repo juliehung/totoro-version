@@ -67,17 +67,17 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                 <th className="hand" onClick={this.sort('id')}>
                   <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('price')}>
-                  <Translate contentKey="totoroApp.treatmentProcedure.price">Price</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('status')}>
+                  <Translate contentKey="totoroApp.treatmentProcedure.status">Status</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('teeth')}>
-                  <Translate contentKey="totoroApp.treatmentProcedure.teeth">Teeth</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('quantity')}>
+                  <Translate contentKey="totoroApp.treatmentProcedure.quantity">Quantity</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('surfaces')}>
-                  <Translate contentKey="totoroApp.treatmentProcedure.surfaces">Surfaces</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('total')}>
+                  <Translate contentKey="totoroApp.treatmentProcedure.total">Total</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('nhiDeclared')}>
-                  <Translate contentKey="totoroApp.treatmentProcedure.nhiDeclared">Nhi Declared</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('note')}>
+                  <Translate contentKey="totoroApp.treatmentProcedure.note">Note</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th>
                   <Translate contentKey="totoroApp.treatmentProcedure.nhiProcedure">Nhi Procedure</Translate>{' '}
@@ -86,6 +86,15 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                 <th>
                   <Translate contentKey="totoroApp.treatmentProcedure.treatmentTask">Treatment Task</Translate>{' '}
                   <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.treatmentProcedure.procedure">Procedure</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.treatmentProcedure.appointment">Appointment</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.treatmentProcedure.registration">Registration</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -98,10 +107,12 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                       {treatmentProcedure.id}
                     </Button>
                   </td>
-                  <td>{treatmentProcedure.price}</td>
-                  <td>{treatmentProcedure.teeth}</td>
-                  <td>{treatmentProcedure.surfaces}</td>
-                  <td>{treatmentProcedure.nhiDeclared ? 'true' : 'false'}</td>
+                  <td>
+                    <Translate contentKey={`totoroApp.TreatmentProcedureStatus.${treatmentProcedure.status}`} />
+                  </td>
+                  <td>{treatmentProcedure.quantity}</td>
+                  <td>{treatmentProcedure.total}</td>
+                  <td>{treatmentProcedure.note}</td>
                   <td>
                     {treatmentProcedure.nhiProcedure ? (
                       <Link to={`nhi-procedure/${treatmentProcedure.nhiProcedure.id}`}>{treatmentProcedure.nhiProcedure.id}</Link>
@@ -112,6 +123,27 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                   <td>
                     {treatmentProcedure.treatmentTask ? (
                       <Link to={`treatment-task/${treatmentProcedure.treatmentTask.id}`}>{treatmentProcedure.treatmentTask.id}</Link>
+                    ) : (
+                      ''
+                    )}
+                  </td>
+                  <td>
+                    {treatmentProcedure.procedure ? (
+                      <Link to={`procedure/${treatmentProcedure.procedure.id}`}>{treatmentProcedure.procedure.id}</Link>
+                    ) : (
+                      ''
+                    )}
+                  </td>
+                  <td>
+                    {treatmentProcedure.appointment ? (
+                      <Link to={`appointment/${treatmentProcedure.appointment.id}`}>{treatmentProcedure.appointment.id}</Link>
+                    ) : (
+                      ''
+                    )}
+                  </td>
+                  <td>
+                    {treatmentProcedure.registration ? (
+                      <Link to={`registration/${treatmentProcedure.registration.id}`}>{treatmentProcedure.registration.id}</Link>
                     ) : (
                       ''
                     )}

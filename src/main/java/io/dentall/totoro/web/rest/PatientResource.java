@@ -7,6 +7,7 @@ import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
+import io.dentall.totoro.service.dto.NullGroup;
 import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.dto.PatientDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
@@ -96,7 +97,7 @@ public class PatientResource {
      */
     @PutMapping("/patients")
     @Timed
-    public ResponseEntity<Patient> updatePatient(@Validated(PatientDTO.NullGroup.class) @RequestBody PatientDTO patient) throws URISyntaxException {
+    public ResponseEntity<Patient> updatePatient(@Validated(NullGroup.class) @RequestBody PatientDTO patient) throws URISyntaxException {
         log.debug("REST request to update Patient : {}", patient);
         if (patient.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

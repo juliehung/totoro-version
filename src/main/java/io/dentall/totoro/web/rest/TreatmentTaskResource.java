@@ -1,8 +1,11 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentTask;
+import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 import io.dentall.totoro.repository.TreatmentTaskRepository;
+import io.dentall.totoro.service.TreatmentProcedureService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -12,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +37,11 @@ public class TreatmentTaskResource {
 
     private final TreatmentTaskRepository treatmentTaskRepository;
 
-    public TreatmentTaskResource(TreatmentTaskRepository treatmentTaskRepository) {
+    private final TreatmentProcedureService treatmentProcedureService;
+
+    public TreatmentTaskResource(TreatmentTaskRepository treatmentTaskRepository, TreatmentProcedureService treatmentProcedureService) {
         this.treatmentTaskRepository = treatmentTaskRepository;
+        this.treatmentProcedureService = treatmentProcedureService;
     }
 
     /**
@@ -53,7 +58,12 @@ public class TreatmentTaskResource {
         if (treatmentTask.getId() != null) {
             throw new BadRequestAlertException("A new treatmentTask cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
         TreatmentTask result = treatmentTaskRepository.save(treatmentTask);
+
+        // add default TreatmentProcedure of TreatmentTask
+        treatmentProcedureService.save(new TreatmentProcedure().status(TreatmentProcedureStatus.HIDE).treatmentTask(result));
+
         return ResponseEntity.created(new URI("/api/treatment-tasks/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -93,7 +103,7 @@ public class TreatmentTaskResource {
         log.debug("REST request to get a page of TreatmentTasks");
         Page<TreatmentTask> page = treatmentTaskRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/treatment-tasks");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**

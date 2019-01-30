@@ -1,9 +1,6 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.Accounting;
-import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.Patient;
-import io.dentall.totoro.domain.Registration;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +15,7 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service Implementation for managing Appointment.
@@ -40,13 +38,16 @@ public class AppointmentService {
 
     private final HospitalRepository hospitalRepository;
 
+    private final TreatmentProcedureRepository treatmentProcedureRepository;
+
     public AppointmentService(
         AppointmentRepository appointmentRepository,
         RegistrationRepository registrationRepository,
         ExtendUserRepository extendUserRepository,
         AccountingRepository accountingRepository,
         PatientRepository patientRepository,
-        HospitalRepository hospitalRepository
+        HospitalRepository hospitalRepository,
+        TreatmentProcedureRepository treatmentProcedureRepository
     ) {
         this.appointmentRepository = appointmentRepository;
         this.registrationRepository = registrationRepository;
@@ -54,6 +55,7 @@ public class AppointmentService {
         this.accountingRepository = accountingRepository;
         this.patientRepository = patientRepository;
         this.hospitalRepository = hospitalRepository;
+        this.treatmentProcedureRepository = treatmentProcedureRepository;
     }
 
     /**
@@ -90,6 +92,11 @@ public class AppointmentService {
                     registration.setAccounting(accountingRepository.save(accounting));
                 }
             }
+        }
+
+        // treatmentProcedures
+        if (appointment.getTreatmentProcedures() != null) {
+            setAppointmentOfTreatmentProcedure(appointment.getTreatmentProcedures(), appointment);
         }
 
         return appointmentRepository.save(appointment);
@@ -214,6 +221,15 @@ public class AppointmentService {
                 appointment.setDoctor(extendUserRepository.findById(updateAppointment.getDoctor().getId()).orElse(null));
             }
 
+            // treatmentProcedures
+            if (updateAppointment.getTreatmentProcedures() != null) {
+                // clear
+                setAppointmentOfTreatmentProcedure(appointment.getTreatmentProcedures(), null);
+                appointment.getTreatmentProcedures().clear();
+
+                setAppointmentOfTreatmentProcedure(updateAppointment.getTreatmentProcedures(), appointment);
+            }
+
             return appointment;
         });
     }
@@ -293,5 +309,16 @@ public class AppointmentService {
         }
 
         return accounting;
+    }
+
+    private void setAppointmentOfTreatmentProcedure(Set<TreatmentProcedure> treatmentProcedures, Appointment appointment) {
+        treatmentProcedures.stream().map(TreatmentProcedure::getId).forEach(id ->
+            treatmentProcedureRepository.findById(id).ifPresent(treatmentProcedure -> {
+                treatmentProcedure.setAppointment(appointment);
+                if (appointment != null) {
+                    appointment.getTreatmentProcedures().add(treatmentProcedure);
+                }
+            })
+        );
     }
 }

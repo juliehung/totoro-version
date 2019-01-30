@@ -2,20 +2,7 @@
     "name": "TreatmentTask",
     "fields": [
         {
-            "fieldName": "status",
-            "fieldType": "TreatmentTaskStatus",
-            "fieldValues": "PLANNED,IN_PROGRESS,COMPLETED,CANCEL"
-        },
-        {
-            "fieldName": "description",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "teeth",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "surfaces",
+            "fieldName": "name",
             "fieldType": "String"
         },
         {

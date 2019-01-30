@@ -1,11 +1,10 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
-import io.dentall.totoro.domain.ExtendUser;
+
 import io.dentall.totoro.domain.TreatmentTask;
-import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.TreatmentTaskRepository;
-import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.service.TreatmentProcedureService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -21,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -32,7 +32,6 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import io.dentall.totoro.domain.enumeration.TreatmentTaskStatus;
 /**
  * Test class for the TreatmentTaskResource REST controller.
  *
@@ -42,17 +41,8 @@ import io.dentall.totoro.domain.enumeration.TreatmentTaskStatus;
 @SpringBootTest(classes = TotoroApp.class)
 public class TreatmentTaskResourceIntTest {
 
-    private static final TreatmentTaskStatus DEFAULT_STATUS = TreatmentTaskStatus.PLANNED;
-    private static final TreatmentTaskStatus UPDATED_STATUS = TreatmentTaskStatus.IN_PROGRESS;
-
-    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
-    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
-
-    private static final String DEFAULT_TEETH = "AAAAAAAAAA";
-    private static final String UPDATED_TEETH = "BBBBBBBBBB";
-
-    private static final String DEFAULT_SURFACES = "AAAAAAAAAA";
-    private static final String UPDATED_SURFACES = "BBBBBBBBBB";
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
 
     private static final String DEFAULT_NOTE = "AAAAAAAAAA";
     private static final String UPDATED_NOTE = "BBBBBBBBBB";
@@ -73,23 +63,25 @@ public class TreatmentTaskResourceIntTest {
     private EntityManager em;
 
     @Autowired
-    private UserRepository userRepository;
+    private Validator validator;
+
+    @Autowired
+    private TreatmentProcedureService treatmentProcedureService;
 
     private MockMvc restTreatmentTaskMockMvc;
 
     private TreatmentTask treatmentTask;
 
-    private ExtendUser extendUser;
-
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TreatmentTaskResource treatmentTaskResource = new TreatmentTaskResource(treatmentTaskRepository);
+        final TreatmentTaskResource treatmentTaskResource = new TreatmentTaskResource(treatmentTaskRepository, treatmentProcedureService);
         this.restTreatmentTaskMockMvc = MockMvcBuilders.standaloneSetup(treatmentTaskResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**
@@ -100,21 +92,14 @@ public class TreatmentTaskResourceIntTest {
      */
     public static TreatmentTask createEntity(EntityManager em) {
         TreatmentTask treatmentTask = new TreatmentTask()
-            .status(DEFAULT_STATUS)
-            .description(DEFAULT_DESCRIPTION)
-            .teeth(DEFAULT_TEETH)
-            .surfaces(DEFAULT_SURFACES)
+            .name(DEFAULT_NAME)
             .note(DEFAULT_NOTE);
         return treatmentTask;
     }
 
     @Before
     public void initTest() {
-        User user = userRepository.save(UserResourceIntTest.createEntity(em));
-        extendUser = user.getExtendUser();
-
         treatmentTask = createEntity(em);
-        treatmentTask.setDoctor(extendUser);
     }
 
     @Test
@@ -132,12 +117,8 @@ public class TreatmentTaskResourceIntTest {
         List<TreatmentTask> treatmentTaskList = treatmentTaskRepository.findAll();
         assertThat(treatmentTaskList).hasSize(databaseSizeBeforeCreate + 1);
         TreatmentTask testTreatmentTask = treatmentTaskList.get(treatmentTaskList.size() - 1);
-        assertThat(testTreatmentTask.getStatus()).isEqualTo(DEFAULT_STATUS);
-        assertThat(testTreatmentTask.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testTreatmentTask.getTeeth()).isEqualTo(DEFAULT_TEETH);
-        assertThat(testTreatmentTask.getSurfaces()).isEqualTo(DEFAULT_SURFACES);
+        assertThat(testTreatmentTask.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testTreatmentTask.getNote()).isEqualTo(DEFAULT_NOTE);
-        assertThat(testTreatmentTask.getDoctor()).isEqualTo(extendUser);
     }
 
     @Test
@@ -170,10 +151,7 @@ public class TreatmentTaskResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(treatmentTask.getId().intValue())))
-            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].teeth").value(hasItem(DEFAULT_TEETH.toString())))
-            .andExpect(jsonPath("$.[*].surfaces").value(hasItem(DEFAULT_SURFACES.toString())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
     }
     
@@ -188,10 +166,7 @@ public class TreatmentTaskResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(treatmentTask.getId().intValue()))
-            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.teeth").value(DEFAULT_TEETH.toString()))
-            .andExpect(jsonPath("$.surfaces").value(DEFAULT_SURFACES.toString()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()));
     }
 
@@ -216,10 +191,7 @@ public class TreatmentTaskResourceIntTest {
         // Disconnect from session so that the updates on updatedTreatmentTask are not directly saved in db
         em.detach(updatedTreatmentTask);
         updatedTreatmentTask
-            .status(UPDATED_STATUS)
-            .description(UPDATED_DESCRIPTION)
-            .teeth(UPDATED_TEETH)
-            .surfaces(UPDATED_SURFACES)
+            .name(UPDATED_NAME)
             .note(UPDATED_NOTE);
 
         restTreatmentTaskMockMvc.perform(put("/api/treatment-tasks")
@@ -231,10 +203,7 @@ public class TreatmentTaskResourceIntTest {
         List<TreatmentTask> treatmentTaskList = treatmentTaskRepository.findAll();
         assertThat(treatmentTaskList).hasSize(databaseSizeBeforeUpdate);
         TreatmentTask testTreatmentTask = treatmentTaskList.get(treatmentTaskList.size() - 1);
-        assertThat(testTreatmentTask.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testTreatmentTask.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testTreatmentTask.getTeeth()).isEqualTo(UPDATED_TEETH);
-        assertThat(testTreatmentTask.getSurfaces()).isEqualTo(UPDATED_SURFACES);
+        assertThat(testTreatmentTask.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testTreatmentTask.getNote()).isEqualTo(UPDATED_NOTE);
     }
 

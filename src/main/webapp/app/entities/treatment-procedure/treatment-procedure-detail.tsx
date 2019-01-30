@@ -30,29 +30,29 @@ export class TreatmentProcedureDetail extends React.Component<ITreatmentProcedur
           </h2>
           <dl className="jh-entity-details">
             <dt>
-              <span id="price">
-                <Translate contentKey="totoroApp.treatmentProcedure.price">Price</Translate>
+              <span id="status">
+                <Translate contentKey="totoroApp.treatmentProcedure.status">Status</Translate>
               </span>
             </dt>
-            <dd>{treatmentProcedureEntity.price}</dd>
+            <dd>{treatmentProcedureEntity.status}</dd>
             <dt>
-              <span id="teeth">
-                <Translate contentKey="totoroApp.treatmentProcedure.teeth">Teeth</Translate>
+              <span id="quantity">
+                <Translate contentKey="totoroApp.treatmentProcedure.quantity">Quantity</Translate>
               </span>
             </dt>
-            <dd>{treatmentProcedureEntity.teeth}</dd>
+            <dd>{treatmentProcedureEntity.quantity}</dd>
             <dt>
-              <span id="surfaces">
-                <Translate contentKey="totoroApp.treatmentProcedure.surfaces">Surfaces</Translate>
+              <span id="total">
+                <Translate contentKey="totoroApp.treatmentProcedure.total">Total</Translate>
               </span>
             </dt>
-            <dd>{treatmentProcedureEntity.surfaces}</dd>
+            <dd>{treatmentProcedureEntity.total}</dd>
             <dt>
-              <span id="nhiDeclared">
-                <Translate contentKey="totoroApp.treatmentProcedure.nhiDeclared">Nhi Declared</Translate>
+              <span id="note">
+                <Translate contentKey="totoroApp.treatmentProcedure.note">Note</Translate>
               </span>
             </dt>
-            <dd>{treatmentProcedureEntity.nhiDeclared ? 'true' : 'false'}</dd>
+            <dd>{treatmentProcedureEntity.note}</dd>
             <dt>
               <Translate contentKey="totoroApp.treatmentProcedure.nhiProcedure">Nhi Procedure</Translate>
             </dt>
@@ -61,6 +61,18 @@ export class TreatmentProcedureDetail extends React.Component<ITreatmentProcedur
               <Translate contentKey="totoroApp.treatmentProcedure.treatmentTask">Treatment Task</Translate>
             </dt>
             <dd>{treatmentProcedureEntity.treatmentTask ? treatmentProcedureEntity.treatmentTask.id : ''}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.treatmentProcedure.procedure">Procedure</Translate>
+            </dt>
+            <dd>{treatmentProcedureEntity.procedure ? treatmentProcedureEntity.procedure.id : ''}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.treatmentProcedure.appointment">Appointment</Translate>
+            </dt>
+            <dd>{treatmentProcedureEntity.appointment ? treatmentProcedureEntity.appointment.id : ''}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.treatmentProcedure.registration">Registration</Translate>
+            </dt>
+            <dd>{treatmentProcedureEntity.registration ? treatmentProcedureEntity.registration.id : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/treatment-procedure" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

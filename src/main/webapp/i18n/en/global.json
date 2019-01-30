@@ -26,6 +26,8 @@
         "calendarSetting": "Calendar Setting",
         "tooth": "Tooth",
         "ledger": "Ledger",
+        "procedure": "Procedure",
+        "procedureType": "Procedure Type",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

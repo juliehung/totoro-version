@@ -20,5 +20,23 @@
                                  referencedColumnNames="id"
                                  referencedTableName="treatment_task"/>
 
+        <addForeignKeyConstraint baseColumnNames="procedure_id"
+                                 baseTableName="treatment_procedure"
+                                 constraintName="fk_treatment_procedure_procedure_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="procedure"/>
+
+        <addForeignKeyConstraint baseColumnNames="appointment_id"
+                                 baseTableName="treatment_procedure"
+                                 constraintName="fk_treatment_procedure_appointment_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="appointment"/>
+
+        <addForeignKeyConstraint baseColumnNames="registration_id"
+                                 baseTableName="treatment_procedure"
+                                 constraintName="fk_treatment_procedure_registration_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="registration"/>
+
     </changeSet>
 </databaseChangeLog>

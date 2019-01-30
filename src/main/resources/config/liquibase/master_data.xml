@@ -75,6 +75,18 @@
                   separator=";"
                   tableName="calendar">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/procedures.csv"
+                  separator=";"
+                  tableName="procedure">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/procedureTypes.csv"
+                  separator=";"
+                  tableName="procedure_type">
+        </loadData>
     </changeSet>
 
 </databaseChangeLog>

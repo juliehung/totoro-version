@@ -28,6 +28,12 @@ export class TreatmentTaskUpdate extends React.Component<ITreatmentTaskUpdatePro
     };
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
+      this.handleClose();
+    }
+  }
+
   componentDidMount() {
     if (this.state.isNew) {
       this.props.reset();
@@ -49,7 +55,6 @@ export class TreatmentTaskUpdate extends React.Component<ITreatmentTaskUpdatePro
       } else {
         this.props.updateEntity(entity);
       }
-      this.handleClose();
     }
   };
 
@@ -85,47 +90,10 @@ export class TreatmentTaskUpdate extends React.Component<ITreatmentTaskUpdatePro
                   </AvGroup>
                 ) : null}
                 <AvGroup>
-                  <Label id="statusLabel">
-                    <Translate contentKey="totoroApp.treatmentTask.status">Status</Translate>
+                  <Label id="nameLabel" for="name">
+                    <Translate contentKey="totoroApp.treatmentTask.name">Name</Translate>
                   </Label>
-                  <AvInput
-                    id="treatment-task-status"
-                    type="select"
-                    className="form-control"
-                    name="status"
-                    value={(!isNew && treatmentTaskEntity.status) || 'PLANNED'}
-                  >
-                    <option value="PLANNED">
-                      <Translate contentKey="totoroApp.TreatmentTaskStatus.PLANNED" />
-                    </option>
-                    <option value="IN_PROGRESS">
-                      <Translate contentKey="totoroApp.TreatmentTaskStatus.IN_PROGRESS" />
-                    </option>
-                    <option value="COMPLETED">
-                      <Translate contentKey="totoroApp.TreatmentTaskStatus.COMPLETED" />
-                    </option>
-                    <option value="CANCEL">
-                      <Translate contentKey="totoroApp.TreatmentTaskStatus.CANCEL" />
-                    </option>
-                  </AvInput>
-                </AvGroup>
-                <AvGroup>
-                  <Label id="descriptionLabel" for="description">
-                    <Translate contentKey="totoroApp.treatmentTask.description">Description</Translate>
-                  </Label>
-                  <AvField id="treatment-task-description" type="text" name="description" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="teethLabel" for="teeth">
-                    <Translate contentKey="totoroApp.treatmentTask.teeth">Teeth</Translate>
-                  </Label>
-                  <AvField id="treatment-task-teeth" type="text" name="teeth" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="surfacesLabel" for="surfaces">
-                    <Translate contentKey="totoroApp.treatmentTask.surfaces">Surfaces</Translate>
-                  </Label>
-                  <AvField id="treatment-task-surfaces" type="text" name="surfaces" />
+                  <AvField id="treatment-task-name" type="text" name="name" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="noteLabel" for="note">
@@ -158,7 +126,8 @@ export class TreatmentTaskUpdate extends React.Component<ITreatmentTaskUpdatePro
 const mapStateToProps = (storeState: IRootState) => ({
   treatmentTaskEntity: storeState.treatmentTask.entity,
   loading: storeState.treatmentTask.loading,
-  updating: storeState.treatmentTask.updating
+  updating: storeState.treatmentTask.updating,
+  updateSuccess: storeState.treatmentTask.updateSuccess
 });
 
 const mapDispatchToProps = {

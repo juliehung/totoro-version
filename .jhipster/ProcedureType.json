@@ -1,0 +1,22 @@
+{
+    "name": "ProcedureType",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required", "unique"
+            ]
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190125074803",
+    "entityTableName": "procedure_type",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

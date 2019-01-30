@@ -2,10 +2,12 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.TreatmentProcedure;
-import io.dentall.totoro.repository.TreatmentProcedureRepository;
+import io.dentall.totoro.service.TreatmentProcedureService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.service.dto.TreatmentProcedureCriteria;
+import io.dentall.totoro.service.TreatmentProcedureQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -33,10 +36,13 @@ public class TreatmentProcedureResource {
 
     private static final String ENTITY_NAME = "treatmentProcedure";
 
-    private final TreatmentProcedureRepository treatmentProcedureRepository;
+    private final TreatmentProcedureService treatmentProcedureService;
 
-    public TreatmentProcedureResource(TreatmentProcedureRepository treatmentProcedureRepository) {
-        this.treatmentProcedureRepository = treatmentProcedureRepository;
+    private final TreatmentProcedureQueryService treatmentProcedureQueryService;
+
+    public TreatmentProcedureResource(TreatmentProcedureService treatmentProcedureService, TreatmentProcedureQueryService treatmentProcedureQueryService) {
+        this.treatmentProcedureService = treatmentProcedureService;
+        this.treatmentProcedureQueryService = treatmentProcedureQueryService;
     }
 
     /**
@@ -48,12 +54,12 @@ public class TreatmentProcedureResource {
      */
     @PostMapping("/treatment-procedures")
     @Timed
-    public ResponseEntity<TreatmentProcedure> createTreatmentProcedure(@RequestBody TreatmentProcedure treatmentProcedure) throws URISyntaxException {
+    public ResponseEntity<TreatmentProcedure> createTreatmentProcedure(@Valid @RequestBody TreatmentProcedure treatmentProcedure) throws URISyntaxException {
         log.debug("REST request to save TreatmentProcedure : {}", treatmentProcedure);
         if (treatmentProcedure.getId() != null) {
             throw new BadRequestAlertException("A new treatmentProcedure cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        TreatmentProcedure result = treatmentProcedureRepository.save(treatmentProcedure);
+        TreatmentProcedure result = treatmentProcedureService.save(treatmentProcedure);
         return ResponseEntity.created(new URI("/api/treatment-procedures/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -70,12 +76,12 @@ public class TreatmentProcedureResource {
      */
     @PutMapping("/treatment-procedures")
     @Timed
-    public ResponseEntity<TreatmentProcedure> updateTreatmentProcedure(@RequestBody TreatmentProcedure treatmentProcedure) throws URISyntaxException {
+    public ResponseEntity<TreatmentProcedure> updateTreatmentProcedure(@Valid @RequestBody TreatmentProcedure treatmentProcedure) throws URISyntaxException {
         log.debug("REST request to update TreatmentProcedure : {}", treatmentProcedure);
         if (treatmentProcedure.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        TreatmentProcedure result = treatmentProcedureRepository.save(treatmentProcedure);
+        TreatmentProcedure result = treatmentProcedureService.save(treatmentProcedure);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatmentProcedure.getId().toString()))
             .body(result);
@@ -85,15 +91,29 @@ public class TreatmentProcedureResource {
      * GET  /treatment-procedures : get all the treatmentProcedures.
      *
      * @param pageable the pagination information
+     * @param criteria the criterias which the requested entities should match
      * @return the ResponseEntity with status 200 (OK) and the list of treatmentProcedures in body
      */
     @GetMapping("/treatment-procedures")
     @Timed
-    public ResponseEntity<List<TreatmentProcedure>> getAllTreatmentProcedures(Pageable pageable) {
-        log.debug("REST request to get a page of TreatmentProcedures");
-        Page<TreatmentProcedure> page = treatmentProcedureRepository.findAll(pageable);
+    public ResponseEntity<List<TreatmentProcedure>> getAllTreatmentProcedures(TreatmentProcedureCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get TreatmentProcedures by criteria: {}", criteria);
+        Page<TreatmentProcedure> page = treatmentProcedureQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/treatment-procedures");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+    * GET  /treatment-procedures/count : count all the treatmentProcedures.
+    *
+    * @param criteria the criterias which the requested entities should match
+    * @return the ResponseEntity with status 200 (OK) and the count in body
+    */
+    @GetMapping("/treatment-procedures/count")
+    @Timed
+    public ResponseEntity<Long> countTreatmentProcedures(TreatmentProcedureCriteria criteria) {
+        log.debug("REST request to count TreatmentProcedures by criteria: {}", criteria);
+        return ResponseEntity.ok().body(treatmentProcedureQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -106,7 +126,7 @@ public class TreatmentProcedureResource {
     @Timed
     public ResponseEntity<TreatmentProcedure> getTreatmentProcedure(@PathVariable Long id) {
         log.debug("REST request to get TreatmentProcedure : {}", id);
-        Optional<TreatmentProcedure> treatmentProcedure = treatmentProcedureRepository.findById(id);
+        Optional<TreatmentProcedure> treatmentProcedure = treatmentProcedureService.findOne(id);
         return ResponseUtil.wrapOrNotFound(treatmentProcedure);
     }
 
@@ -120,8 +140,7 @@ public class TreatmentProcedureResource {
     @Timed
     public ResponseEntity<Void> deleteTreatmentProcedure(@PathVariable Long id) {
         log.debug("REST request to delete TreatmentProcedure : {}", id);
-
-        treatmentProcedureRepository.deleteById(id);
+        treatmentProcedureService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

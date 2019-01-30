@@ -29,29 +29,11 @@ export class TreatmentTaskDetail extends React.Component<ITreatmentTaskDetailPro
           </h2>
           <dl className="jh-entity-details">
             <dt>
-              <span id="status">
-                <Translate contentKey="totoroApp.treatmentTask.status">Status</Translate>
+              <span id="name">
+                <Translate contentKey="totoroApp.treatmentTask.name">Name</Translate>
               </span>
             </dt>
-            <dd>{treatmentTaskEntity.status}</dd>
-            <dt>
-              <span id="description">
-                <Translate contentKey="totoroApp.treatmentTask.description">Description</Translate>
-              </span>
-            </dt>
-            <dd>{treatmentTaskEntity.description}</dd>
-            <dt>
-              <span id="teeth">
-                <Translate contentKey="totoroApp.treatmentTask.teeth">Teeth</Translate>
-              </span>
-            </dt>
-            <dd>{treatmentTaskEntity.teeth}</dd>
-            <dt>
-              <span id="surfaces">
-                <Translate contentKey="totoroApp.treatmentTask.surfaces">Surfaces</Translate>
-              </span>
-            </dt>
-            <dd>{treatmentTaskEntity.surfaces}</dd>
+            <dd>{treatmentTaskEntity.name}</dd>
             <dt>
               <span id="note">
                 <Translate contentKey="totoroApp.treatmentTask.note">Note</Translate>
