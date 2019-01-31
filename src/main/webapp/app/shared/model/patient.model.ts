@@ -4,6 +4,7 @@ import { IAppointment } from 'app/shared/model//appointment.model';
 import { IPatient } from 'app/shared/model//patient.model';
 import { ITag } from 'app/shared/model//tag.model';
 import { IPatientIdentity } from 'app/shared/model//patient-identity.model';
+import { ITreatment } from 'app/shared/model//treatment.model';
 
 export const enum Gender {
   OTHER = 'OTHER',
@@ -52,6 +53,7 @@ export interface IPatient {
   children?: IPatient[];
   spouse2S?: IPatient[];
   patientIdentity?: IPatientIdentity;
+  treatments?: ITreatment[];
 }
 
 export const defaultValue: Readonly<IPatient> = {};

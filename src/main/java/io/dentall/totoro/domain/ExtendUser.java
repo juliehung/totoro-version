@@ -66,6 +66,9 @@ public class ExtendUser implements Serializable, Avatar {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Procedure> procedures = new HashSet<>();
 
+    @OneToMany(mappedBy = "doctor")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Treatment> treatments = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -294,6 +297,31 @@ public class ExtendUser implements Serializable, Avatar {
 
     public void setProcedures(Set<Procedure> procedures) {
         this.procedures = procedures;
+    }
+
+    public Set<Treatment> getTreatments() {
+        return treatments;
+    }
+
+    public ExtendUser treatments(Set<Treatment> treatments) {
+        this.treatments = treatments;
+        return this;
+    }
+
+    public ExtendUser addTreatmentTask(Treatment treatment) {
+        this.treatments.add(treatment);
+        treatment.setDoctor(this);
+        return this;
+    }
+
+    public ExtendUser removeTreatment(Treatment treatment) {
+        this.treatments.remove(treatment);
+        treatment.setDoctor(null);
+        return this;
+    }
+
+    public void setTreatments(Set<Treatment> treatments) {
+        this.treatments = treatments;
     }
 
     @Override

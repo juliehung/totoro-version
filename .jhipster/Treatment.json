@@ -3,38 +3,42 @@
     "clientRootFolder": "",
     "relationships": [
         {
-            "relationshipName": "treatmentProcedure",
-            "otherEntityName": "treatmentProcedure",
+            "relationshipName": "patient",
+            "otherEntityName": "patient",
             "relationshipType": "many-to-one",
             "otherEntityField": "id"
         }
     ],
     "fields": [
         {
-            "fieldName": "position",
+            "fieldName": "name",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"
             ]
         },
         {
-            "fieldName": "before",
+            "fieldName": "chiefComplaint",
             "fieldType": "String"
         },
         {
-            "fieldName": "planned",
+            "fieldName": "goal",
             "fieldType": "String"
         },
         {
-            "fieldName": "after",
+            "fieldName": "note",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "finding",
             "fieldType": "String"
         }
     ],
-    "changelogDate": "20190124080823",
+    "changelogDate": "20190130151811",
     "dto": "no",
     "searchEngine": false,
     "service": "serviceClass",
-    "entityTableName": "tooth",
+    "entityTableName": "treatment",
     "jpaMetamodelFiltering": true,
     "pagination": "pagination"
 }

@@ -14,30 +14,34 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity Tooth.
+        Added the entity Treatment.
     -->
-    <changeSet id="20190124080823-1" author="jhipster">
-        <createTable tableName="tooth">
+    <changeSet id="20190130151811-1" author="jhipster">
+        <createTable tableName="treatment">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="position" type="varchar(255)">
+            <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
 
-            <column name="jhi_before" type="varchar(255)">
+            <column name="chief_complaint" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="planned" type="varchar(255)">
+            <column name="goal" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="jhi_after" type="varchar(255)">
+            <column name="note" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="treatment_procedure_id" type="bigint">
+            <column name="finding" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="patient_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 

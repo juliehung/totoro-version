@@ -65,6 +65,12 @@
             "otherEntityName": "patientIdentity",
             "relationshipType": "many-to-one",
             "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "treatment",
+            "otherEntityName": "treatment",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "patient"
         }
     ],
     "fields": [

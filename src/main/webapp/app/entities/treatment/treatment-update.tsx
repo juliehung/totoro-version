@@ -8,26 +8,26 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
-import { ITreatmentProcedure } from 'app/shared/model/treatment-procedure.model';
-import { getEntities as getTreatmentProcedures } from 'app/entities/treatment-procedure/treatment-procedure.reducer';
-import { getEntity, updateEntity, createEntity, reset } from './tooth.reducer';
-import { ITooth } from 'app/shared/model/tooth.model';
+import { IPatient } from 'app/shared/model/patient.model';
+import { getEntities as getPatients } from 'app/entities/patient/patient.reducer';
+import { getEntity, updateEntity, createEntity, reset } from './treatment.reducer';
+import { ITreatment } from 'app/shared/model/treatment.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
 
-export interface IToothUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface ITreatmentUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export interface IToothUpdateState {
+export interface ITreatmentUpdateState {
   isNew: boolean;
-  treatmentProcedureId: string;
+  patientId: string;
 }
 
-export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdateState> {
+export class TreatmentUpdate extends React.Component<ITreatmentUpdateProps, ITreatmentUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
-      treatmentProcedureId: '0',
+      patientId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -45,14 +45,14 @@ export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdate
       this.props.getEntity(this.props.match.params.id);
     }
 
-    this.props.getTreatmentProcedures();
+    this.props.getPatients();
   }
 
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
-      const { toothEntity } = this.props;
+      const { treatmentEntity } = this.props;
       const entity = {
-        ...toothEntity,
+        ...treatmentEntity,
         ...values
       };
 
@@ -65,19 +65,19 @@ export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdate
   };
 
   handleClose = () => {
-    this.props.history.push('/entity/tooth');
+    this.props.history.push('/entity/treatment');
   };
 
   render() {
-    const { toothEntity, treatmentProcedures, loading, updating } = this.props;
+    const { treatmentEntity, patients, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
       <div>
         <Row className="justify-content-center">
           <Col md="8">
-            <h2 id="totoroApp.tooth.home.createOrEditLabel">
-              <Translate contentKey="totoroApp.tooth.home.createOrEditLabel">Create or edit a Tooth</Translate>
+            <h2 id="totoroApp.treatment.home.createOrEditLabel">
+              <Translate contentKey="totoroApp.treatment.home.createOrEditLabel">Create or edit a Treatment</Translate>
             </h2>
           </Col>
         </Row>
@@ -86,54 +86,60 @@ export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdate
             {loading ? (
               <p>Loading...</p>
             ) : (
-              <AvForm model={isNew ? {} : toothEntity} onSubmit={this.saveEntity}>
+              <AvForm model={isNew ? {} : treatmentEntity} onSubmit={this.saveEntity}>
                 {!isNew ? (
                   <AvGroup>
                     <Label for="id">
                       <Translate contentKey="global.field.id">ID</Translate>
                     </Label>
-                    <AvInput id="tooth-id" type="text" className="form-control" name="id" required readOnly />
+                    <AvInput id="treatment-id" type="text" className="form-control" name="id" required readOnly />
                   </AvGroup>
                 ) : null}
                 <AvGroup>
-                  <Label id="positionLabel" for="position">
-                    <Translate contentKey="totoroApp.tooth.position">Position</Translate>
+                  <Label id="nameLabel" for="name">
+                    <Translate contentKey="totoroApp.treatment.name">Name</Translate>
                   </Label>
                   <AvField
-                    id="tooth-position"
+                    id="treatment-name"
                     type="text"
-                    name="position"
+                    name="name"
                     validate={{
                       required: { value: true, errorMessage: translate('entity.validation.required') }
                     }}
                   />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="beforeLabel" for="before">
-                    <Translate contentKey="totoroApp.tooth.before">Before</Translate>
+                  <Label id="chiefComplaintLabel" for="chiefComplaint">
+                    <Translate contentKey="totoroApp.treatment.chiefComplaint">Chief Complaint</Translate>
                   </Label>
-                  <AvField id="tooth-before" type="text" name="before" />
+                  <AvField id="treatment-chiefComplaint" type="text" name="chiefComplaint" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="plannedLabel" for="planned">
-                    <Translate contentKey="totoroApp.tooth.planned">Planned</Translate>
+                  <Label id="goalLabel" for="goal">
+                    <Translate contentKey="totoroApp.treatment.goal">Goal</Translate>
                   </Label>
-                  <AvField id="tooth-planned" type="text" name="planned" />
+                  <AvField id="treatment-goal" type="text" name="goal" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="afterLabel" for="after">
-                    <Translate contentKey="totoroApp.tooth.after">After</Translate>
+                  <Label id="noteLabel" for="note">
+                    <Translate contentKey="totoroApp.treatment.note">Note</Translate>
                   </Label>
-                  <AvField id="tooth-after" type="text" name="after" />
+                  <AvField id="treatment-note" type="text" name="note" />
                 </AvGroup>
                 <AvGroup>
-                  <Label for="treatmentProcedure.id">
-                    <Translate contentKey="totoroApp.tooth.treatmentProcedure">Treatment Procedure</Translate>
+                  <Label id="findingLabel" for="finding">
+                    <Translate contentKey="totoroApp.treatment.finding">Finding</Translate>
                   </Label>
-                  <AvInput id="tooth-treatmentProcedure" type="select" className="form-control" name="treatmentProcedure.id">
+                  <AvField id="treatment-finding" type="text" name="finding" />
+                </AvGroup>
+                <AvGroup>
+                  <Label for="patient.id">
+                    <Translate contentKey="totoroApp.treatment.patient">Patient</Translate>
+                  </Label>
+                  <AvInput id="treatment-patient" type="select" className="form-control" name="patient.id">
                     <option value="" key="0" />
-                    {treatmentProcedures
-                      ? treatmentProcedures.map(otherEntity => (
+                    {patients
+                      ? patients.map(otherEntity => (
                           <option value={otherEntity.id} key={otherEntity.id}>
                             {otherEntity.id}
                           </option>
@@ -141,7 +147,7 @@ export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdate
                       : null}
                   </AvInput>
                 </AvGroup>
-                <Button tag={Link} id="cancel-save" to="/entity/tooth" replace color="info">
+                <Button tag={Link} id="cancel-save" to="/entity/treatment" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
                   <span className="d-none d-md-inline">
@@ -164,15 +170,15 @@ export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdate
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
-  treatmentProcedures: storeState.treatmentProcedure.entities,
-  toothEntity: storeState.tooth.entity,
-  loading: storeState.tooth.loading,
-  updating: storeState.tooth.updating,
-  updateSuccess: storeState.tooth.updateSuccess
+  patients: storeState.patient.entities,
+  treatmentEntity: storeState.treatment.entity,
+  loading: storeState.treatment.loading,
+  updating: storeState.treatment.updating,
+  updateSuccess: storeState.treatment.updateSuccess
 });
 
 const mapDispatchToProps = {
-  getTreatmentProcedures,
+  getPatients,
   getEntity,
   updateEntity,
   createEntity,
@@ -185,4 +191,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ToothUpdate);
+)(TreatmentUpdate);

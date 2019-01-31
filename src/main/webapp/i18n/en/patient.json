@@ -44,7 +44,8 @@
       "tag": "Tag",
       "child": "Child",
       "spouse2": "Spouse 2",
-      "patientIdentity": "Patient Identity"
+      "patientIdentity": "Patient Identity",
+      "treatment": "Treatment"
     }
   }
 }

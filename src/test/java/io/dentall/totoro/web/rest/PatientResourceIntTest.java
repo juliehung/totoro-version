@@ -6,6 +6,7 @@ import io.dentall.totoro.domain.enumeration.TagName;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
+import io.dentall.totoro.service.TreatmentService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
 import org.apache.commons.io.FileUtils;
@@ -158,6 +159,9 @@ public class PatientResourceIntTest {
     @Autowired
     private PatientIdentityRepository patientIdentityRepository;
 
+    @Autowired
+    private TreatmentService treatmentService;
+
     private MockMvc restPatientMockMvc;
 
     private Patient patient;
@@ -173,7 +177,7 @@ public class PatientResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, patientService, imageService);
+        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, patientService, imageService, treatmentService);
         this.restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -277,6 +281,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getTags()).contains(tag);
         assertThat(testPatient.getQuestionnaire().getHepatitisType()).isEqualTo(patient.getQuestionnaire().getHepatitisType());
         assertThat(testPatient.getPatientIdentity()).isEqualTo(patientIdentity);
+        assertThat(testPatient.getTreatments().size()).isEqualTo(1);
 
         tagRepository.findById(TagName.Hypertension.getValue()).ifPresent(tag -> assertThat(testPatient.getTags()).contains(tag));
     }

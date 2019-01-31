@@ -95,10 +95,6 @@ public class ToothQueryService extends QueryService<Tooth> {
             if (criteria.getAfter() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getAfter(), Tooth_.after));
             }
-            if (criteria.getTreatmentTaskId() != null) {
-                specification = specification.and(buildSpecification(criteria.getTreatmentTaskId(),
-                    root -> root.join(Tooth_.treatmentTask, JoinType.LEFT).get(TreatmentTask_.id)));
-            }
             if (criteria.getTreatmentProcedureId() != null) {
                 specification = specification.and(buildSpecification(criteria.getTreatmentProcedureId(),
                     root -> root.join(Tooth_.treatmentProcedure, JoinType.LEFT).get(TreatmentProcedure_.id)));
