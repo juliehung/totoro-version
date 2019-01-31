@@ -19,22 +19,6 @@ services:
             - backend
         container_name: totoro-postgresql
 
-    totoro-data-simulator:
-        build:
-            context: ./data-simulator
-        image: totoro-data-simulator
-        command: ["./wait-for-it.sh", "totoro-postgresql:5432", "-s", "-t", "120", "--", "python", "./mock_data_dynamic.py"]
-        environment:
-            - HOST=totoro-postgresql
-            - PORT=5432
-            - DB=totoro
-        networks:
-            - backend
-        volumes:
-            - ./data-simulator/current_update_date.json:/usr/src/app/current_update_date.json
-            - ../resources/config/liquibase/:/usr/src/app/data/
-        container_name: totoro-data-simulator
-
 networks:
     backend:
         name: backend
