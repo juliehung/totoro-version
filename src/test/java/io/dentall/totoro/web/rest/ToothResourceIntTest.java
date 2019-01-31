@@ -3,11 +3,11 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 
 import io.dentall.totoro.domain.Tooth;
-import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.ToothRepository;
 import io.dentall.totoro.service.ToothService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
+import io.dentall.totoro.service.dto.ToothCriteria;
 import io.dentall.totoro.service.ToothQueryService;
 
 import org.junit.Before;
@@ -363,25 +363,6 @@ public class ToothResourceIntTest {
         // Get all the toothList where after is null
         defaultToothShouldNotBeFound("after.specified=false");
     }
-
-    @Test
-    @Transactional
-    public void getAllTeethByTreatmentTaskIsEqualToSomething() throws Exception {
-        // Initialize the database
-        TreatmentTask treatmentTask = TreatmentTaskResourceIntTest.createEntity(em);
-        em.persist(treatmentTask);
-        em.flush();
-        tooth.setTreatmentTask(treatmentTask);
-        toothRepository.saveAndFlush(tooth);
-        Long treatmentTaskId = treatmentTask.getId();
-
-        // Get all the toothList where treatmentTask equals to treatmentTaskId
-        defaultToothShouldBeFound("treatmentTaskId.equals=" + treatmentTaskId);
-
-        // Get all the toothList where treatmentTask equals to treatmentTaskId + 1
-        defaultToothShouldNotBeFound("treatmentTaskId.equals=" + (treatmentTaskId + 1));
-    }
-
 
     @Test
     @Transactional

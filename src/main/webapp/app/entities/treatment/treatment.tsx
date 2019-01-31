@@ -7,18 +7,18 @@ import { Translate, ICrudGetAllAction, getSortState, IPaginationBaseState, getPa
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
-import { getEntities } from './tooth.reducer';
-import { ITooth } from 'app/shared/model/tooth.model';
+import { getEntities } from './treatment.reducer';
+import { ITreatment } from 'app/shared/model/treatment.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
-export interface IToothProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+export interface ITreatmentProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
-export type IToothState = IPaginationBaseState;
+export type ITreatmentState = IPaginationBaseState;
 
-export class Tooth extends React.Component<IToothProps, IToothState> {
-  state: IToothState = {
+export class Treatment extends React.Component<ITreatmentProps, ITreatmentState> {
+  state: ITreatmentState = {
     ...getSortState(this.props.location, ITEMS_PER_PAGE)
   };
 
@@ -49,15 +49,15 @@ export class Tooth extends React.Component<IToothProps, IToothState> {
   };
 
   render() {
-    const { toothList, match, totalItems } = this.props;
+    const { treatmentList, match, totalItems } = this.props;
     return (
       <div>
-        <h2 id="tooth-heading">
-          <Translate contentKey="totoroApp.tooth.home.title">Teeth</Translate>
+        <h2 id="treatment-heading">
+          <Translate contentKey="totoroApp.treatment.home.title">Treatments</Translate>
           <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
             <FontAwesomeIcon icon="plus" />
             &nbsp;
-            <Translate contentKey="totoroApp.tooth.home.createLabel">Create new Tooth</Translate>
+            <Translate contentKey="totoroApp.treatment.home.createLabel">Create new Treatment</Translate>
           </Link>
         </h2>
         <div className="table-responsive">
@@ -67,58 +67,56 @@ export class Tooth extends React.Component<IToothProps, IToothState> {
                 <th className="hand" onClick={this.sort('id')}>
                   <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('position')}>
-                  <Translate contentKey="totoroApp.tooth.position">Position</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('name')}>
+                  <Translate contentKey="totoroApp.treatment.name">Name</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('before')}>
-                  <Translate contentKey="totoroApp.tooth.before">Before</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('chiefComplaint')}>
+                  <Translate contentKey="totoroApp.treatment.chiefComplaint">Chief Complaint</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('planned')}>
-                  <Translate contentKey="totoroApp.tooth.planned">Planned</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('goal')}>
+                  <Translate contentKey="totoroApp.treatment.goal">Goal</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('after')}>
-                  <Translate contentKey="totoroApp.tooth.after">After</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('note')}>
+                  <Translate contentKey="totoroApp.treatment.note">Note</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('finding')}>
+                  <Translate contentKey="totoroApp.treatment.finding">Finding</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.tooth.treatmentProcedure">Treatment Procedure</Translate> <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="totoroApp.treatment.patient">Patient</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {toothList.map((tooth, i) => (
+              {treatmentList.map((treatment, i) => (
                 <tr key={`entity-${i}`}>
                   <td>
-                    <Button tag={Link} to={`${match.url}/${tooth.id}`} color="link" size="sm">
-                      {tooth.id}
+                    <Button tag={Link} to={`${match.url}/${treatment.id}`} color="link" size="sm">
+                      {treatment.id}
                     </Button>
                   </td>
-                  <td>{tooth.position}</td>
-                  <td>{tooth.before}</td>
-                  <td>{tooth.planned}</td>
-                  <td>{tooth.after}</td>
-                  <td>
-                    {tooth.treatmentProcedure ? (
-                      <Link to={`treatment-procedure/${tooth.treatmentProcedure.id}`}>{tooth.treatmentProcedure.id}</Link>
-                    ) : (
-                      ''
-                    )}
-                  </td>
+                  <td>{treatment.name}</td>
+                  <td>{treatment.chiefComplaint}</td>
+                  <td>{treatment.goal}</td>
+                  <td>{treatment.note}</td>
+                  <td>{treatment.finding}</td>
+                  <td>{treatment.patient ? <Link to={`patient/${treatment.patient.id}`}>{treatment.patient.id}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${tooth.id}`} color="info" size="sm">
+                      <Button tag={Link} to={`${match.url}/${treatment.id}`} color="info" size="sm">
                         <FontAwesomeIcon icon="eye" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${tooth.id}/edit`} color="primary" size="sm">
+                      <Button tag={Link} to={`${match.url}/${treatment.id}/edit`} color="primary" size="sm">
                         <FontAwesomeIcon icon="pencil-alt" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.edit">Edit</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${tooth.id}/delete`} color="danger" size="sm">
+                      <Button tag={Link} to={`${match.url}/${treatment.id}/delete`} color="danger" size="sm">
                         <FontAwesomeIcon icon="trash" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -144,9 +142,9 @@ export class Tooth extends React.Component<IToothProps, IToothState> {
   }
 }
 
-const mapStateToProps = ({ tooth }: IRootState) => ({
-  toothList: tooth.entities,
-  totalItems: tooth.totalItems
+const mapStateToProps = ({ treatment }: IRootState) => ({
+  treatmentList: treatment.entities,
+  totalItems: treatment.totalItems
 });
 
 const mapDispatchToProps = {
@@ -159,4 +157,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Tooth);
+)(Treatment);

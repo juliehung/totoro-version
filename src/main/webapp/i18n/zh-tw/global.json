@@ -28,6 +28,7 @@
         "ledger": "Ledger",
         "procedure": "Procedure",
         "procedureType": "Procedure Type",
+        "treatment": "Treatment",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

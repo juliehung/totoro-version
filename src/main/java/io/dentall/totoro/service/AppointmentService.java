@@ -40,6 +40,8 @@ public class AppointmentService {
 
     private final TreatmentProcedureRepository treatmentProcedureRepository;
 
+    private final TreatmentService treatmentService;
+
     public AppointmentService(
         AppointmentRepository appointmentRepository,
         RegistrationRepository registrationRepository,
@@ -47,7 +49,8 @@ public class AppointmentService {
         AccountingRepository accountingRepository,
         PatientRepository patientRepository,
         HospitalRepository hospitalRepository,
-        TreatmentProcedureRepository treatmentProcedureRepository
+        TreatmentProcedureRepository treatmentProcedureRepository,
+        TreatmentService treatmentService
     ) {
         this.appointmentRepository = appointmentRepository;
         this.registrationRepository = registrationRepository;
@@ -56,6 +59,7 @@ public class AppointmentService {
         this.patientRepository = patientRepository;
         this.hospitalRepository = hospitalRepository;
         this.treatmentProcedureRepository = treatmentProcedureRepository;
+        this.treatmentService = treatmentService;
     }
 
     /**
@@ -73,6 +77,7 @@ public class AppointmentService {
             if (patient.getId() == null) {
                 log.debug("Save Patient({})", patient);
                 appointment.setPatient(patientRepository.save(patient));
+                treatmentService.save(new Treatment().name("General Treatment").patient(patient));
             }
         }
 

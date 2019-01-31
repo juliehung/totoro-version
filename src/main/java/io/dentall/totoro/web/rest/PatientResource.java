@@ -3,10 +3,12 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Tag;
+import io.dentall.totoro.domain.Treatment;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
+import io.dentall.totoro.service.TreatmentService;
 import io.dentall.totoro.service.dto.NullGroup;
 import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.dto.PatientDTO;
@@ -57,11 +59,14 @@ public class PatientResource {
 
     private final ImageService imageService;
 
-    public PatientResource(PatientRepository patientRepository, TagRepository tagRepository, PatientService patientService, ImageService imageService) {
+    private final TreatmentService treatmentService;
+
+    public PatientResource(PatientRepository patientRepository, TagRepository tagRepository, PatientService patientService, ImageService imageService, TreatmentService treatmentService) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
         this.patientService = patientService;
         this.imageService = imageService;
+        this.treatmentService = treatmentService;
     }
 
     /**
@@ -81,6 +86,7 @@ public class PatientResource {
 
         patientService.setTagsByQuestionnaire(patient.getTags(), patient.getQuestionnaire());
         Patient result = patientRepository.save(patient);
+        result.getTreatments().add(treatmentService.save(new Treatment().name("General Treatment").patient(result)));
         return ResponseEntity.created(new URI("/api/patients/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);

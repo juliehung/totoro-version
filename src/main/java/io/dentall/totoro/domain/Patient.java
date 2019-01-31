@@ -150,14 +150,17 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @JsonIgnoreProperties("")
     private PatientIdentity patientIdentity;
 
+    @OneToMany(mappedBy = "patient")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Treatment> treatments = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     @ManyToOne
-    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures"})
+    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments"})
     private ExtendUser dominantDoctor;
 
     @ManyToOne
-    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures"})
+    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments"})
     private ExtendUser firstDoctor;
 
     public Long getId() {
@@ -649,6 +652,30 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.patientIdentity = patientIdentity;
     }
 
+    public Set<Treatment> getTreatments() {
+        return treatments;
+    }
+
+    public Patient treatments(Set<Treatment> treatments) {
+        this.treatments = treatments;
+        return this;
+    }
+
+    public Patient addTreatment(Treatment treatment) {
+        this.treatments.add(treatment);
+        treatment.setPatient(this);
+        return this;
+    }
+
+    public Patient removeTreatmentProcedure(Treatment treatment) {
+        this.treatments.remove(treatment);
+        treatment.setPatient(null);
+        return this;
+    }
+
+    public void setTreatments(Set<Treatment> treatments) {
+        this.treatments = treatments;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     public ExtendUser getDominantDoctor() {

@@ -5,7 +5,6 @@ import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 import io.dentall.totoro.repository.TreatmentTaskRepository;
-import io.dentall.totoro.service.ToothService;
 import io.dentall.totoro.service.TreatmentProcedureService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
@@ -40,12 +39,9 @@ public class TreatmentTaskResource {
 
     private final TreatmentProcedureService treatmentProcedureService;
 
-    private final ToothService toothService;
-
-    public TreatmentTaskResource(TreatmentTaskRepository treatmentTaskRepository, TreatmentProcedureService treatmentProcedureService, ToothService toothService) {
+    public TreatmentTaskResource(TreatmentTaskRepository treatmentTaskRepository, TreatmentProcedureService treatmentProcedureService) {
         this.treatmentTaskRepository = treatmentTaskRepository;
         this.treatmentProcedureService = treatmentProcedureService;
-        this.toothService = toothService;
     }
 
     /**
@@ -67,9 +63,6 @@ public class TreatmentTaskResource {
 
         // add default TreatmentProcedure of TreatmentTask
         result.getTreatmentProcedures().add(treatmentProcedureService.save(new TreatmentProcedure().status(TreatmentProcedureStatus.HIDE).treatmentTask(result)));
-
-        // create Tooth object relationship with TreatmentTask
-        treatmentTask.getTeeth().forEach(tooth -> toothService.save(tooth.treatmentTask(result)));
 
         return ResponseEntity.created(new URI("/api/treatment-tasks/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -93,8 +86,6 @@ public class TreatmentTaskResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
 
-        // update Tooth object
-        treatmentTask.getTeeth().forEach(toothService::update);
         TreatmentTask result = treatmentTaskRepository.save(treatmentTask);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatmentTask.getId().toString()))

@@ -92,6 +92,10 @@ import procedure, {
 import procedureType, {
   ProcedureTypeState
 } from 'app/entities/procedure-type/procedure-type.reducer';
+// prettier-ignore
+import treatment, {
+  TreatmentState
+} from 'app/entities/treatment/treatment.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -125,6 +129,7 @@ export interface IRootState {
   readonly ledger: LedgerState;
   readonly procedure: ProcedureState;
   readonly procedureType: ProcedureTypeState;
+  readonly treatment: TreatmentState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -160,6 +165,7 @@ const rootReducer = combineReducers<IRootState>({
   ledger,
   procedure,
   procedureType,
+  treatment,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

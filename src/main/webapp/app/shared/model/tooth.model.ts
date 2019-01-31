@@ -1,4 +1,3 @@
-import { ITreatmentTask } from 'app/shared/model//treatment-task.model';
 import { ITreatmentProcedure } from 'app/shared/model//treatment-procedure.model';
 
 export interface ITooth {
@@ -7,7 +6,6 @@ export interface ITooth {
   before?: string;
   planned?: string;
   after?: string;
-  treatmentTask?: ITreatmentTask;
   treatmentProcedure?: ITreatmentProcedure;
 }
 

@@ -53,10 +53,6 @@ export class ToothDetail extends React.Component<IToothDetailProps> {
             </dt>
             <dd>{toothEntity.after}</dd>
             <dt>
-              <Translate contentKey="totoroApp.tooth.treatmentTask">Treatment Task</Translate>
-            </dt>
-            <dd>{toothEntity.treatmentTask ? toothEntity.treatmentTask.id : ''}</dd>
-            <dt>
               <Translate contentKey="totoroApp.tooth.treatmentProcedure">Treatment Procedure</Translate>
             </dt>
             <dd>{toothEntity.treatmentProcedure ? toothEntity.treatmentProcedure.id : ''}</dd>

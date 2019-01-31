@@ -39,10 +39,6 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
     private String after;
 
     @ManyToOne
-    @JsonIgnoreProperties({"treatmentProcedures", "teeth"})
-    private TreatmentTask treatmentTask;
-
-    @ManyToOne
     @JsonIgnoreProperties("teeth")
     private TreatmentProcedure treatmentProcedure;
 
@@ -105,19 +101,6 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
 
     public void setAfter(String after) {
         this.after = after;
-    }
-
-    public TreatmentTask getTreatmentTask() {
-        return treatmentTask;
-    }
-
-    public Tooth treatmentTask(TreatmentTask treatmentTask) {
-        this.treatmentTask = treatmentTask;
-        return this;
-    }
-
-    public void setTreatmentTask(TreatmentTask treatmentTask) {
-        this.treatmentTask = treatmentTask;
     }
 
     public TreatmentProcedure getTreatmentProcedure() {
