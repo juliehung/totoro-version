@@ -213,24 +213,6 @@ public class AppointmentResourceIntTest {
 
     @Test
     @Transactional
-    public void checkStatusIsRequired() throws Exception {
-        int databaseSizeBeforeTest = appointmentRepository.findAll().size();
-        // set the field null
-        appointment.setStatus(null);
-
-        // Create the Appointment, which fails.
-
-        restAppointmentMockMvc.perform(post("/api/appointments")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(appointment)))
-            .andExpect(status().isBadRequest());
-
-        List<Appointment> appointmentList = appointmentRepository.findAll();
-        assertThat(appointmentList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllAppointments() throws Exception {
         // Initialize the database
         appointmentRepository.saveAndFlush(appointment);

@@ -28,7 +28,7 @@
         {
             "fieldName": "status",
             "fieldType": "RegistrationStatus",
-            "fieldValues": "PENDING,FINISHED",
+            "fieldValues": "PENDING,FINISHED,IN_PROGRESS",
             "fieldValidateRules": [
                 "required"
             ]

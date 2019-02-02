@@ -73,6 +73,9 @@ export class TreatmentTask extends React.Component<ITreatmentTaskProps, ITreatme
                 <th className="hand" onClick={this.sort('note')}>
                   <Translate contentKey="totoroApp.treatmentTask.note">Note</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th>
+                  <Translate contentKey="totoroApp.treatmentTask.treatmentPlan">Treatment Plan</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -86,6 +89,13 @@ export class TreatmentTask extends React.Component<ITreatmentTaskProps, ITreatme
                   </td>
                   <td>{treatmentTask.name}</td>
                   <td>{treatmentTask.note}</td>
+                  <td>
+                    {treatmentTask.treatmentPlan ? (
+                      <Link to={`treatment-plan/${treatmentTask.treatmentPlan.id}`}>{treatmentTask.treatmentPlan.id}</Link>
+                    ) : (
+                      ''
+                    )}
+                  </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${treatmentTask.id}`} color="info" size="sm">

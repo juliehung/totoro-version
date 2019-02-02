@@ -59,6 +59,12 @@ export class TreatmentDetail extends React.Component<ITreatmentDetailProps> {
             </dt>
             <dd>{treatmentEntity.finding}</dd>
             <dt>
+              <span id="type">
+                <Translate contentKey="totoroApp.treatment.type">Type</Translate>
+              </span>
+            </dt>
+            <dd>{treatmentEntity.type}</dd>
+            <dt>
               <Translate contentKey="totoroApp.treatment.patient">Patient</Translate>
             </dt>
             <dd>{treatmentEntity.patient ? treatmentEntity.patient.id : ''}</dd>

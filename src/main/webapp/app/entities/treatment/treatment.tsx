@@ -82,6 +82,9 @@ export class Treatment extends React.Component<ITreatmentProps, ITreatmentState>
                 <th className="hand" onClick={this.sort('finding')}>
                   <Translate contentKey="totoroApp.treatment.finding">Finding</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('type')}>
+                  <Translate contentKey="totoroApp.treatment.type">Type</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.treatment.patient">Patient</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -101,6 +104,9 @@ export class Treatment extends React.Component<ITreatmentProps, ITreatmentState>
                   <td>{treatment.goal}</td>
                   <td>{treatment.note}</td>
                   <td>{treatment.finding}</td>
+                  <td>
+                    <Translate contentKey={`totoroApp.TreatmentType.${treatment.type}`} />
+                  </td>
                   <td>{treatment.patient ? <Link to={`patient/${treatment.patient.id}`}>{treatment.patient.id}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

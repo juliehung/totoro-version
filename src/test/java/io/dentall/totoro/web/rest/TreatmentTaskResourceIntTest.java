@@ -3,9 +3,15 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 
 import io.dentall.totoro.domain.TreatmentTask;
+import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.domain.TreatmentPlan;
+import io.dentall.totoro.repository.TreatmentPlanRepository;
 import io.dentall.totoro.repository.TreatmentTaskRepository;
 import io.dentall.totoro.service.TreatmentProcedureService;
+import io.dentall.totoro.service.TreatmentTaskService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
+import io.dentall.totoro.service.dto.TreatmentTaskCriteria;
+import io.dentall.totoro.service.TreatmentTaskQueryService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +57,12 @@ public class TreatmentTaskResourceIntTest {
     private TreatmentTaskRepository treatmentTaskRepository;
 
     @Autowired
+    private TreatmentTaskService treatmentTaskService;
+
+    @Autowired
+    private TreatmentTaskQueryService treatmentTaskQueryService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -68,6 +80,9 @@ public class TreatmentTaskResourceIntTest {
     @Autowired
     private TreatmentProcedureService treatmentProcedureService;
 
+    @Autowired
+    private TreatmentPlanRepository treatmentPlanRepository;
+
     private MockMvc restTreatmentTaskMockMvc;
 
     private TreatmentTask treatmentTask;
@@ -75,7 +90,7 @@ public class TreatmentTaskResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TreatmentTaskResource treatmentTaskResource = new TreatmentTaskResource(treatmentTaskRepository, treatmentProcedureService);
+        final TreatmentTaskResource treatmentTaskResource = new TreatmentTaskResource(treatmentTaskService, treatmentTaskQueryService, treatmentProcedureService);
         this.restTreatmentTaskMockMvc = MockMvcBuilders.standaloneSetup(treatmentTaskResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -106,6 +121,9 @@ public class TreatmentTaskResourceIntTest {
     @Transactional
     public void createTreatmentTask() throws Exception {
         int databaseSizeBeforeCreate = treatmentTaskRepository.findAll().size();
+        TreatmentPlan treatmentPlan = TreatmentPlanResourceIntTest.createEntity(em);
+        treatmentPlanRepository.save(treatmentPlan);
+        treatmentTask.setTreatmentPlan(treatmentPlan);
 
         // Create the TreatmentTask
         restTreatmentTaskMockMvc.perform(post("/api/treatment-tasks")
@@ -120,6 +138,7 @@ public class TreatmentTaskResourceIntTest {
         assertThat(testTreatmentTask.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testTreatmentTask.getNote()).isEqualTo(DEFAULT_NOTE);
         assertThat(testTreatmentTask.getTreatmentProcedures().size()).isEqualTo(1);
+        assertThat(testTreatmentTask.getTreatmentPlan()).isEqualTo(treatmentPlan);
     }
 
     @Test
@@ -173,6 +192,157 @@ public class TreatmentTaskResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllTreatmentTasksByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentTaskRepository.saveAndFlush(treatmentTask);
+
+        // Get all the treatmentTaskList where name equals to DEFAULT_NAME
+        defaultTreatmentTaskShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the treatmentTaskList where name equals to UPDATED_NAME
+        defaultTreatmentTaskShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentTasksByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentTaskRepository.saveAndFlush(treatmentTask);
+
+        // Get all the treatmentTaskList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultTreatmentTaskShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the treatmentTaskList where name equals to UPDATED_NAME
+        defaultTreatmentTaskShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentTasksByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentTaskRepository.saveAndFlush(treatmentTask);
+
+        // Get all the treatmentTaskList where name is not null
+        defaultTreatmentTaskShouldBeFound("name.specified=true");
+
+        // Get all the treatmentTaskList where name is null
+        defaultTreatmentTaskShouldNotBeFound("name.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentTasksByNoteIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentTaskRepository.saveAndFlush(treatmentTask);
+
+        // Get all the treatmentTaskList where note equals to DEFAULT_NOTE
+        defaultTreatmentTaskShouldBeFound("note.equals=" + DEFAULT_NOTE);
+
+        // Get all the treatmentTaskList where note equals to UPDATED_NOTE
+        defaultTreatmentTaskShouldNotBeFound("note.equals=" + UPDATED_NOTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentTasksByNoteIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentTaskRepository.saveAndFlush(treatmentTask);
+
+        // Get all the treatmentTaskList where note in DEFAULT_NOTE or UPDATED_NOTE
+        defaultTreatmentTaskShouldBeFound("note.in=" + DEFAULT_NOTE + "," + UPDATED_NOTE);
+
+        // Get all the treatmentTaskList where note equals to UPDATED_NOTE
+        defaultTreatmentTaskShouldNotBeFound("note.in=" + UPDATED_NOTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentTasksByNoteIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentTaskRepository.saveAndFlush(treatmentTask);
+
+        // Get all the treatmentTaskList where note is not null
+        defaultTreatmentTaskShouldBeFound("note.specified=true");
+
+        // Get all the treatmentTaskList where note is null
+        defaultTreatmentTaskShouldNotBeFound("note.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentTasksByTreatmentProcedureIsEqualToSomething() throws Exception {
+        // Initialize the database
+        TreatmentProcedure treatmentProcedure = TreatmentProcedureResourceIntTest.createEntity(em);
+        em.persist(treatmentProcedure);
+        em.flush();
+        treatmentTask.addTreatmentProcedure(treatmentProcedure);
+        treatmentTaskRepository.saveAndFlush(treatmentTask);
+        Long treatmentProcedureId = treatmentProcedure.getId();
+
+        // Get all the treatmentTaskList where treatmentProcedure equals to treatmentProcedureId
+        defaultTreatmentTaskShouldBeFound("treatmentProcedureId.equals=" + treatmentProcedureId);
+
+        // Get all the treatmentTaskList where treatmentProcedure equals to treatmentProcedureId + 1
+        defaultTreatmentTaskShouldNotBeFound("treatmentProcedureId.equals=" + (treatmentProcedureId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllTreatmentTasksByTreatmentPlanIsEqualToSomething() throws Exception {
+        // Initialize the database
+        TreatmentPlan treatmentPlan = TreatmentPlanResourceIntTest.createEntity(em);
+        em.persist(treatmentPlan);
+        em.flush();
+        treatmentTask.setTreatmentPlan(treatmentPlan);
+        treatmentTaskRepository.saveAndFlush(treatmentTask);
+        Long treatmentPlanId = treatmentPlan.getId();
+
+        // Get all the treatmentTaskList where treatmentPlan equals to treatmentPlanId
+        defaultTreatmentTaskShouldBeFound("treatmentPlanId.equals=" + treatmentPlanId);
+
+        // Get all the treatmentTaskList where treatmentPlan equals to treatmentPlanId + 1
+        defaultTreatmentTaskShouldNotBeFound("treatmentPlanId.equals=" + (treatmentPlanId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned
+     */
+    private void defaultTreatmentTaskShouldBeFound(String filter) throws Exception {
+        restTreatmentTaskMockMvc.perform(get("/api/treatment-tasks?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(treatmentTask.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
+
+        // Check, that the count call also returns 1
+        restTreatmentTaskMockMvc.perform(get("/api/treatment-tasks/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned
+     */
+    private void defaultTreatmentTaskShouldNotBeFound(String filter) throws Exception {
+        restTreatmentTaskMockMvc.perform(get("/api/treatment-tasks?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restTreatmentTaskMockMvc.perform(get("/api/treatment-tasks/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("0"));
+    }
+
+
+    @Test
+    @Transactional
     public void getNonExistingTreatmentTask() throws Exception {
         // Get the treatmentTask
         restTreatmentTaskMockMvc.perform(get("/api/treatment-tasks/{id}", Long.MAX_VALUE))
@@ -183,7 +353,7 @@ public class TreatmentTaskResourceIntTest {
     @Transactional
     public void updateTreatmentTask() throws Exception {
         // Initialize the database
-        treatmentTaskRepository.saveAndFlush(treatmentTask);
+        treatmentTaskService.save(treatmentTask);
 
         int databaseSizeBeforeUpdate = treatmentTaskRepository.findAll().size();
 
@@ -230,7 +400,7 @@ public class TreatmentTaskResourceIntTest {
     @Transactional
     public void deleteTreatmentTask() throws Exception {
         // Initialize the database
-        treatmentTaskRepository.saveAndFlush(treatmentTask);
+        treatmentTaskService.save(treatmentTask);
 
         int databaseSizeBeforeDelete = treatmentTaskRepository.findAll().size();
 

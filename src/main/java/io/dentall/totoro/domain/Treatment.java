@@ -8,7 +8,11 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
+
+import io.dentall.totoro.domain.enumeration.TreatmentType;
 
 /**
  * A Treatment.
@@ -41,10 +45,17 @@ public class Treatment extends AbstractDoctorAndAuditingEntity<Treatment> implem
     @Column(name = "finding")
     private String finding;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "jhi_type")
+    private TreatmentType type;
+
     @ManyToOne
     @JsonIgnoreProperties("treatments")
     private Patient patient;
 
+    @OneToMany(mappedBy = "treatment")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<TreatmentPlan> treatmentPlans = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -119,6 +130,19 @@ public class Treatment extends AbstractDoctorAndAuditingEntity<Treatment> implem
         this.finding = finding;
     }
 
+    public TreatmentType getType() {
+        return type;
+    }
+
+    public Treatment type(TreatmentType type) {
+        this.type = type;
+        return this;
+    }
+
+    public void setType(TreatmentType type) {
+        this.type = type;
+    }
+
     public Patient getPatient() {
         return patient;
     }
@@ -130,6 +154,31 @@ public class Treatment extends AbstractDoctorAndAuditingEntity<Treatment> implem
 
     public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    public Set<TreatmentPlan> getTreatmentPlans() {
+        return treatmentPlans;
+    }
+
+    public Treatment treatmentPlans(Set<TreatmentPlan> treatmentPlans) {
+        this.treatmentPlans = treatmentPlans;
+        return this;
+    }
+
+    public Treatment addTreatmentPlan(TreatmentPlan treatmentPlan) {
+        this.treatmentPlans.add(treatmentPlan);
+        treatmentPlan.setTreatment(this);
+        return this;
+    }
+
+    public Treatment removeTreatmentPlan(TreatmentPlan treatmentPlan) {
+        this.treatmentPlans.remove(treatmentPlan);
+        treatmentPlan.setTreatment(null);
+        return this;
+    }
+
+    public void setTreatmentPlans(Set<TreatmentPlan> treatmentPlans) {
+        this.treatmentPlans = treatmentPlans;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -162,6 +211,7 @@ public class Treatment extends AbstractDoctorAndAuditingEntity<Treatment> implem
             ", goal='" + getGoal() + "'" +
             ", note='" + getNote() + "'" +
             ", finding='" + getFinding() + "'" +
+            ", type='" + getType() + "'" +
             "}";
     }
 }

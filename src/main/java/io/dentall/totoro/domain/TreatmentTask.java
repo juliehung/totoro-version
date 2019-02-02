@@ -1,5 +1,7 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -34,6 +36,10 @@ public class TreatmentTask extends AbstractDoctorAndAuditingEntity<TreatmentTask
     @OneToMany(mappedBy = "treatmentTask")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
+    @ManyToOne
+    @JsonIgnoreProperties("treatmentTasks")
+    private TreatmentPlan treatmentPlan;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -92,6 +98,19 @@ public class TreatmentTask extends AbstractDoctorAndAuditingEntity<TreatmentTask
 
     public void setTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
         this.treatmentProcedures = treatmentProcedures;
+    }
+
+    public TreatmentPlan getTreatmentPlan() {
+        return treatmentPlan;
+    }
+
+    public TreatmentTask treatmentPlan(TreatmentPlan treatmentPlan) {
+        this.treatmentPlan = treatmentPlan;
+        return this;
+    }
+
+    public void setTreatmentPlan(TreatmentPlan treatmentPlan) {
+        this.treatmentPlan = treatmentPlan;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

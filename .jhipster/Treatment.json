@@ -7,6 +7,12 @@
             "otherEntityName": "patient",
             "relationshipType": "many-to-one",
             "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "treatmentPlan",
+            "otherEntityName": "treatmentPlan",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "treatment"
         }
     ],
     "fields": [
@@ -32,6 +38,11 @@
         {
             "fieldName": "finding",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "TreatmentType",
+            "fieldValues": "GENERAL,PROFESSIONAL"
         }
     ],
     "changelogDate": "20190130151811",

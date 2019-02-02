@@ -98,9 +98,16 @@ public class TreatmentQueryService extends QueryService<Treatment> {
             if (criteria.getFinding() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getFinding(), Treatment_.finding));
             }
+            if (criteria.getType() != null) {
+                specification = specification.and(buildSpecification(criteria.getType(), Treatment_.type));
+            }
             if (criteria.getPatientId() != null) {
                 specification = specification.and(buildSpecification(criteria.getPatientId(),
                     root -> root.join(Treatment_.patient, JoinType.LEFT).get(Patient_.id)));
+            }
+            if (criteria.getTreatmentPlanId() != null) {
+                specification = specification.and(buildSpecification(criteria.getTreatmentPlanId(),
+                    root -> root.join(Treatment_.treatmentPlans, JoinType.LEFT).get(TreatmentPlan_.id)));
             }
         }
         return specification;

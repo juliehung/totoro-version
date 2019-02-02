@@ -1,6 +1,7 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +78,7 @@ public class AppointmentService {
             if (patient.getId() == null) {
                 log.debug("Save Patient({})", patient);
                 appointment.setPatient(patientRepository.save(patient));
-                treatmentService.save(new Treatment().name("General Treatment").patient(patient));
+                treatmentService.save(new Treatment().name("General Treatment").type(TreatmentType.GENERAL).patient(patient));
             }
         }
 

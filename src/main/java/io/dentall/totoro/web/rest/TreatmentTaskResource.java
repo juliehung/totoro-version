@@ -4,17 +4,20 @@ import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
-import io.dentall.totoro.repository.TreatmentTaskRepository;
 import io.dentall.totoro.service.TreatmentProcedureService;
+import io.dentall.totoro.service.TreatmentTaskService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.service.dto.TreatmentTaskCriteria;
+import io.dentall.totoro.service.TreatmentTaskQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,12 +38,15 @@ public class TreatmentTaskResource {
 
     private static final String ENTITY_NAME = "treatmentTask";
 
-    private final TreatmentTaskRepository treatmentTaskRepository;
+    private final TreatmentTaskService treatmentTaskService;
+
+    private final TreatmentTaskQueryService treatmentTaskQueryService;
 
     private final TreatmentProcedureService treatmentProcedureService;
 
-    public TreatmentTaskResource(TreatmentTaskRepository treatmentTaskRepository, TreatmentProcedureService treatmentProcedureService) {
-        this.treatmentTaskRepository = treatmentTaskRepository;
+    public TreatmentTaskResource(TreatmentTaskService treatmentTaskService, TreatmentTaskQueryService treatmentTaskQueryService, TreatmentProcedureService treatmentProcedureService) {
+        this.treatmentTaskService = treatmentTaskService;
+        this.treatmentTaskQueryService = treatmentTaskQueryService;
         this.treatmentProcedureService = treatmentProcedureService;
     }
 
@@ -58,8 +64,7 @@ public class TreatmentTaskResource {
         if (treatmentTask.getId() != null) {
             throw new BadRequestAlertException("A new treatmentTask cannot already have an ID", ENTITY_NAME, "idexists");
         }
-
-        TreatmentTask result = treatmentTaskRepository.save(treatmentTask);
+        TreatmentTask result = treatmentTaskService.save(treatmentTask);
 
         // add default TreatmentProcedure of TreatmentTask
         result.getTreatmentProcedures().add(treatmentProcedureService.save(new TreatmentProcedure().status(TreatmentProcedureStatus.HIDE).treatmentTask(result)));
@@ -85,8 +90,7 @@ public class TreatmentTaskResource {
         if (treatmentTask.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-
-        TreatmentTask result = treatmentTaskRepository.save(treatmentTask);
+        TreatmentTask result = treatmentTaskService.save(treatmentTask);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatmentTask.getId().toString()))
             .body(result);
@@ -96,15 +100,29 @@ public class TreatmentTaskResource {
      * GET  /treatment-tasks : get all the treatmentTasks.
      *
      * @param pageable the pagination information
+     * @param criteria the criterias which the requested entities should match
      * @return the ResponseEntity with status 200 (OK) and the list of treatmentTasks in body
      */
     @GetMapping("/treatment-tasks")
     @Timed
-    public ResponseEntity<List<TreatmentTask>> getAllTreatmentTasks(Pageable pageable) {
-        log.debug("REST request to get a page of TreatmentTasks");
-        Page<TreatmentTask> page = treatmentTaskRepository.findAll(pageable);
+    public ResponseEntity<List<TreatmentTask>> getAllTreatmentTasks(TreatmentTaskCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get TreatmentTasks by criteria: {}", criteria);
+        Page<TreatmentTask> page = treatmentTaskQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/treatment-tasks");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+    * GET  /treatment-tasks/count : count all the treatmentTasks.
+    *
+    * @param criteria the criterias which the requested entities should match
+    * @return the ResponseEntity with status 200 (OK) and the count in body
+    */
+    @GetMapping("/treatment-tasks/count")
+    @Timed
+    public ResponseEntity<Long> countTreatmentTasks(TreatmentTaskCriteria criteria) {
+        log.debug("REST request to count TreatmentTasks by criteria: {}", criteria);
+        return ResponseEntity.ok().body(treatmentTaskQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -117,7 +135,7 @@ public class TreatmentTaskResource {
     @Timed
     public ResponseEntity<TreatmentTask> getTreatmentTask(@PathVariable Long id) {
         log.debug("REST request to get TreatmentTask : {}", id);
-        Optional<TreatmentTask> treatmentTask = treatmentTaskRepository.findById(id);
+        Optional<TreatmentTask> treatmentTask = treatmentTaskService.findOne(id);
         return ResponseUtil.wrapOrNotFound(treatmentTask);
     }
 
@@ -131,8 +149,7 @@ public class TreatmentTaskResource {
     @Timed
     public ResponseEntity<Void> deleteTreatmentTask(@PathVariable Long id) {
         log.debug("REST request to delete TreatmentTask : {}", id);
-
-        treatmentTaskRepository.deleteById(id);
+        treatmentTaskService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }
