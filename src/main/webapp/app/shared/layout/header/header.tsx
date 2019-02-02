@@ -77,8 +77,8 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
       const idxQuestionmark = window.location.href.lastIndexOf('?');
       const tmp =
         idxQuestionmark === -1 ? window.location.href.substring(idxSlash) : window.location.href.substring(idxSlash, idxQuestionmark);
-      if (tmp === '/') {
-        title = '就診列表';
+      if (tmp === '/list') {
+        title = '新病患列表';
       } else if (tmp === '/survey') {
         title = '門診病歷表';
       }

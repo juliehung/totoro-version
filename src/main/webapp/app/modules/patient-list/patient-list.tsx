@@ -3,19 +3,17 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import {
   CardColumns,
-  CardDeck,
-  CardGroup,
   Card,
   CardBody,
   CardTitle,
+  CardSubtitle,
   CardHeader,
   CardText,
   CardFooter,
   CardImg,
   Button,
   Col,
-  Row,
-  Table
+  Row
 } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
 import {
@@ -32,31 +30,24 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
-import { getEntities, reset } from './patient.reducer';
+import { getEntities } from './patient.reducer';
 import { IPatient } from 'app/shared/model/patient.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import './patient-list.css';
 
-interface IPatientListState extends IPaginationBaseState {
-  isAuthenticated: boolean;
-}
+export type IPatientListState = IPaginationBaseState;
 
 export interface IPatientListProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export class PatientList extends React.Component<IPatientListProps, IPatientListState> {
   state: IPatientListState = {
-    isAuthenticated: this.props.isAuthenticated,
     ...getSortState(this.props.location, ITEMS_PER_PAGE)
   };
 
   componentDidMount() {
-    if (this.state.isAuthenticated) {
-      this.getEntities();
-    } else {
-      this.props.reset();
-    }
+    this.getEntities();
   }
 
   sort = prop => () => {
@@ -81,18 +72,8 @@ export class PatientList extends React.Component<IPatientListProps, IPatientList
     this.props.getEntities(activePage - 1, itemsPerPage, `${sort},${order}`);
   };
 
-  checkAuthenticated = () => {
-    if (this.state.isAuthenticated !== this.props.isAuthenticated) {
-      this.setState({ isAuthenticated: this.props.isAuthenticated });
-      this.getEntities();
-    }
-  };
-
   render() {
     const { patientList, match, totalItems } = this.props;
-    {
-      this.checkAuthenticated();
-    }
     return (
       <div>
         <h2 id="patient-heading">
@@ -101,14 +82,15 @@ export class PatientList extends React.Component<IPatientListProps, IPatientList
 
         <CardColumns>
           {patientList.map((patient, i) => (
-            <Card key={`entity-${i}`} outline color="primary">
-              <CardHeader tag="h3">{patient.name}</CardHeader>
-              <CardBody>
-                <CardTitle>{patient.medicalId}</CardTitle>
-                <CardText>{patient.medicalId}</CardText>
-              </CardBody>
-              <CardFooter className="text-muted">{patient.questionnaire}</CardFooter>
-            </Card>
+            <Link to={'/survey?medicalId=' + patient.medicalId + '&name=' + patient.name} key={`entity-${i}`}>
+              <Card outline color="primary">
+                <CardBody>
+                  <CardTitle>{patient.name}</CardTitle>
+                  <CardSubtitle>{patient.medicalId}</CardSubtitle>
+                  <CardText>{patient.birth}</CardText>
+                </CardBody>
+              </Card>
+            </Link>
           ))}
         </CardColumns>
 
@@ -125,15 +107,13 @@ export class PatientList extends React.Component<IPatientListProps, IPatientList
   }
 }
 
-const mapStateToProps = ({ patient, authentication }: IRootState) => ({
+const mapStateToProps = ({ patient }: IRootState) => ({
   patientList: patient.entities,
-  totalItems: patient.totalItems,
-  isAuthenticated: authentication.isAuthenticated
+  totalItems: patient.totalItems
 });
 
 const mapDispatchToProps = {
-  getEntities,
-  reset
+  getEntities
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
