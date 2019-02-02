@@ -17,6 +17,9 @@ Survey page styles
   background-color: #48bde9;
 }
 
-.sv_main .sv_custom_header {
-  height: 0 !important;
+.btn-back {
+  position: fixed;
+  top: 10px;
+  left: 20px;
+  z-index: 99999;
 }
