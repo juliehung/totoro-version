@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import appConfig from 'app/config/constants';
 
 export const NavDropdown = props => (
-  <UncontrolledDropdown nav inNavbar id={props.id}>
+  <UncontrolledDropdown nav inNavbar id={props.id} direction="up">
     <DropdownToggle nav caret className="d-flex align-items-center">
       <FontAwesomeIcon icon={props.icon} />
       <span>{props.name}</span>
@@ -34,6 +34,13 @@ export const Brand = props => (
   </NavbarBrand>
 );
 
+export const DentallBrand = props => (
+  <NavbarBrand tag={Link} to="/" className="dentall-brand-logo">
+    <BrandIcon />
+    <span className="brand-title">{props.title}</span>
+  </NavbarBrand>
+);
+
 export const Version = () => <div className="navbar-version">{appConfig.VERSION}</div>;
 
 export const Home = props => (
@@ -42,17 +49,6 @@ export const Home = props => (
       <FontAwesomeIcon icon="home" />
       <span>
         <Translate contentKey="global.menu.home">Home</Translate>
-      </span>
-    </NavLink>
-  </NavItem>
-);
-
-export const Survey = props => (
-  <NavItem>
-    <NavLink tag={Link} to="/" className="d-flex align-items-center">
-      <FontAwesomeIcon icon="home" />
-      <span>
-        <Translate contentKey="survey.title">Survey</Translate>
       </span>
     </NavLink>
   </NavItem>
