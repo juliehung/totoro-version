@@ -31,7 +31,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntities } from './patient.reducer';
-import { IPatient } from 'app/shared/model/patient.model';
+import { Gender, IPatient } from 'app/shared/model/patient.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
@@ -74,20 +74,48 @@ export class PatientList extends React.Component<IPatientListProps, IPatientList
 
   render() {
     const { patientList, match, totalItems } = this.props;
+    const renderProfile = gender => {
+      if (gender === Gender.MALE) {
+        return <img src="content/images/man@2x.png" width={55} height={55} />;
+      } else if (gender === Gender.FEMALE) {
+        return <img src="content/images/woman@2x.png" width={55} height={55} />;
+      } else {
+        return (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: '36px',
+              width: '55px',
+              height: '55px',
+              backgroundColor: '#1768ac'
+            }}
+          >
+            <img src="content/images/logo.png" width={36} height={36} />
+          </div>
+        );
+      }
+    };
     return (
       <div>
-        <h2 id="patient-heading">
-          <Translate contentKey="totoroApp.patient.home.title">Patients</Translate>
-        </h2>
+        <h2 id="patient-heading">{/*<Translate contentKey="totoroApp.patient.home.title">Patients</Translate>*/}</h2>
 
         <CardColumns>
           {patientList.map((patient, i) => (
             <Link to={'/survey?medicalId=' + patient.medicalId + '&name=' + patient.name} key={`entity-${i}`}>
               <Card outline color="primary">
                 <CardBody>
-                  <CardTitle>{patient.name}</CardTitle>
-                  <CardSubtitle>{patient.medicalId}</CardSubtitle>
-                  <CardText>{patient.birth}</CardText>
+                  <div style={{ display: 'flex' }}>
+                    {renderProfile(patient.gender)}
+                    <div style={{ marginLeft: '5px' }}>
+                      <CardTitle>{patient.name}</CardTitle>
+                      <CardSubtitle>{patient.medicalId}</CardSubtitle>
+                    </div>
+                  </div>
+                  <CardText>
+                    <small>{patient.birth}</small>
+                  </CardText>
                 </CardBody>
               </Card>
             </Link>
