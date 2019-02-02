@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Treatment;
+import io.dentall.totoro.service.TreatmentPlanService;
 import io.dentall.totoro.service.TreatmentService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
@@ -14,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,9 +40,12 @@ public class TreatmentResource {
 
     private final TreatmentQueryService treatmentQueryService;
 
-    public TreatmentResource(TreatmentService treatmentService, TreatmentQueryService treatmentQueryService) {
+    private final TreatmentPlanService treatmentPlanService;
+
+    public TreatmentResource(TreatmentService treatmentService, TreatmentQueryService treatmentQueryService, TreatmentPlanService treatmentPlanService) {
         this.treatmentService = treatmentService;
         this.treatmentQueryService = treatmentQueryService;
+        this.treatmentPlanService = treatmentPlanService;
     }
 
     /**
@@ -81,6 +84,8 @@ public class TreatmentResource {
         if (treatment.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+
+        treatment.getTreatmentPlans().forEach(treatmentPlanService::update);
         Treatment result = treatmentService.save(treatment);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatment.getId().toString()))

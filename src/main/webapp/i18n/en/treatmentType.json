@@ -1,0 +1,9 @@
+{
+  "totoroApp": {
+    "TreatmentType": {
+      "null": "",
+      "GENERAL": "GENERAL",
+      "PROFESSIONAL": "PROFESSIONAL"
+    }
+  }
+}

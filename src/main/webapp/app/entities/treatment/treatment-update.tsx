@@ -133,6 +133,25 @@ export class TreatmentUpdate extends React.Component<ITreatmentUpdateProps, ITre
                   <AvField id="treatment-finding" type="text" name="finding" />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="typeLabel">
+                    <Translate contentKey="totoroApp.treatment.type">Type</Translate>
+                  </Label>
+                  <AvInput
+                    id="treatment-type"
+                    type="select"
+                    className="form-control"
+                    name="type"
+                    value={(!isNew && treatmentEntity.type) || 'GENERAL'}
+                  >
+                    <option value="GENERAL">
+                      <Translate contentKey="totoroApp.TreatmentType.GENERAL" />
+                    </option>
+                    <option value="PROFESSIONAL">
+                      <Translate contentKey="totoroApp.TreatmentType.PROFESSIONAL" />
+                    </option>
+                  </AvInput>
+                </AvGroup>
+                <AvGroup>
                   <Label for="patient.id">
                     <Translate contentKey="totoroApp.treatment.patient">Patient</Translate>
                   </Label>

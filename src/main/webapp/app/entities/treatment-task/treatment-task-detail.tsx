@@ -40,6 +40,10 @@ export class TreatmentTaskDetail extends React.Component<ITreatmentTaskDetailPro
               </span>
             </dt>
             <dd>{treatmentTaskEntity.note}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.treatmentTask.treatmentPlan">Treatment Plan</Translate>
+            </dt>
+            <dd>{treatmentTaskEntity.treatmentPlan ? treatmentTaskEntity.treatmentPlan.id : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/treatment-task" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

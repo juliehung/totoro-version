@@ -20,7 +20,9 @@
       "goal": "Goal",
       "note": "Note",
       "finding": "Finding",
-      "patient": "Patient"
+      "type": "Type",
+      "patient": "Patient",
+      "treatmentPlan": "Treatment Plan"
     }
   }
 }

@@ -10,7 +10,7 @@
     <changeSet id="20181024-AddDefaultValueAppointment" author="Jim">
 
         <addDefaultValue columnName="status"
-                         defaultValue="TO_BE_CONFIRMED"
+                         defaultValue="CONFIRMED"
                          tableName="appointment"/>
 
         <addDefaultValue columnName="new_patient"

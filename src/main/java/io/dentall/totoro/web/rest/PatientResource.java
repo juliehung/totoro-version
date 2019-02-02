@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.domain.Treatment;
+import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.service.ImageService;
@@ -86,7 +87,7 @@ public class PatientResource {
 
         patientService.setTagsByQuestionnaire(patient.getTags(), patient.getQuestionnaire());
         Patient result = patientRepository.save(patient);
-        result.getTreatments().add(treatmentService.save(new Treatment().name("General Treatment").patient(result)));
+        result.getTreatments().add(treatmentService.save(new Treatment().name("General Treatment").type(TreatmentType.GENERAL).patient(result)));
         return ResponseEntity.created(new URI("/api/patients/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);

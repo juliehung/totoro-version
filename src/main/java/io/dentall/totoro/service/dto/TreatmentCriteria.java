@@ -2,6 +2,7 @@ package io.dentall.totoro.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
@@ -19,6 +20,11 @@ import io.github.jhipster.service.filter.StringFilter;
  * fix type specific filters.
  */
 public class TreatmentCriteria implements Serializable {
+    /**
+     * Class for filtering TreatmentType
+     */
+    public static class TreatmentTypeFilter extends Filter<TreatmentType> {
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -34,7 +40,11 @@ public class TreatmentCriteria implements Serializable {
 
     private StringFilter finding;
 
+    private TreatmentTypeFilter type;
+
     private LongFilter patientId;
+
+    private LongFilter treatmentPlanId;
 
     public LongFilter getId() {
         return id;
@@ -84,12 +94,28 @@ public class TreatmentCriteria implements Serializable {
         this.finding = finding;
     }
 
+    public TreatmentTypeFilter getType() {
+        return type;
+    }
+
+    public void setType(TreatmentTypeFilter type) {
+        this.type = type;
+    }
+
     public LongFilter getPatientId() {
         return patientId;
     }
 
     public void setPatientId(LongFilter patientId) {
         this.patientId = patientId;
+    }
+
+    public LongFilter getTreatmentPlanId() {
+        return treatmentPlanId;
+    }
+
+    public void setTreatmentPlanId(LongFilter treatmentPlanId) {
+        this.treatmentPlanId = treatmentPlanId;
     }
 
 
@@ -109,7 +135,9 @@ public class TreatmentCriteria implements Serializable {
             Objects.equals(goal, that.goal) &&
             Objects.equals(note, that.note) &&
             Objects.equals(finding, that.finding) &&
-            Objects.equals(patientId, that.patientId);
+            Objects.equals(type, that.type) &&
+            Objects.equals(patientId, that.patientId) &&
+            Objects.equals(treatmentPlanId, that.treatmentPlanId);
     }
 
     @Override
@@ -121,7 +149,9 @@ public class TreatmentCriteria implements Serializable {
         goal,
         note,
         finding,
-        patientId
+        type,
+        patientId,
+        treatmentPlanId
         );
     }
 
@@ -134,7 +164,9 @@ public class TreatmentCriteria implements Serializable {
                 (goal != null ? "goal=" + goal + ", " : "") +
                 (note != null ? "note=" + note + ", " : "") +
                 (finding != null ? "finding=" + finding + ", " : "") +
+                (type != null ? "type=" + type + ", " : "") +
                 (patientId != null ? "patientId=" + patientId + ", " : "") +
+                (treatmentPlanId != null ? "treatmentPlanId=" + treatmentPlanId + ", " : "") +
             "}";
     }
 

@@ -3,8 +3,6 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Appointment;
 import io.dentall.totoro.service.AppointmentService;
-import io.dentall.totoro.service.dto.AppointmentDTO;
-import io.dentall.totoro.service.dto.NullGroup;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -19,10 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -61,7 +57,7 @@ public class AppointmentResource {
      */
     @PostMapping("/appointments")
     @Timed
-    public ResponseEntity<Appointment> createAppointment(@Valid @RequestBody Appointment appointment) throws URISyntaxException {
+    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment) throws URISyntaxException {
         log.debug("REST request to save Appointment : {}", appointment);
         if (appointment.getId() != null) {
             throw new BadRequestAlertException("A new appointment cannot already have an ID", ENTITY_NAME, "idexists");
@@ -83,7 +79,7 @@ public class AppointmentResource {
      */
     @PutMapping("/appointments")
     @Timed
-    public ResponseEntity<Appointment> updateAppointment(@Validated(NullGroup.class) @RequestBody AppointmentDTO appointment) throws URISyntaxException {
+    public ResponseEntity<Appointment> updateAppointment(@RequestBody Appointment appointment) throws URISyntaxException {
         log.debug("REST request to update Appointment : {}", appointment);
         if (appointment.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

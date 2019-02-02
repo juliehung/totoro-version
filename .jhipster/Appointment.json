@@ -27,10 +27,7 @@
         {
             "fieldName": "status",
             "fieldType": "AppointmentStatus",
-            "fieldValues": "TO_BE_CONFIRMED,CONFIRMED,CANCEL",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldValues": "CONFIRMED,CANCEL"
         },
         {
             "fieldName": "subject",

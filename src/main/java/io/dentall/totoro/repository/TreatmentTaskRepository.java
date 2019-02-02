@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface TreatmentTaskRepository extends JpaRepository<TreatmentTask, Long> {
+public interface TreatmentTaskRepository extends JpaRepository<TreatmentTask, Long>, JpaSpecificationExecutor<TreatmentTask> {
 
 }

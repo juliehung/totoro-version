@@ -29,6 +29,7 @@
         "procedure": "Procedure",
         "procedureType": "Procedure Type",
         "treatment": "Treatment",
+        "treatmentPlan": "Treatment Plan",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

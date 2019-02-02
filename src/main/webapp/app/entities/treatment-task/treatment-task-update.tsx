@@ -8,6 +8,8 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
+import { ITreatmentPlan } from 'app/shared/model/treatment-plan.model';
+import { getEntities as getTreatmentPlans } from 'app/entities/treatment-plan/treatment-plan.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './treatment-task.reducer';
 import { ITreatmentTask } from 'app/shared/model/treatment-task.model';
 // tslint:disable-next-line:no-unused-variable
@@ -18,12 +20,14 @@ export interface ITreatmentTaskUpdateProps extends StateProps, DispatchProps, Ro
 
 export interface ITreatmentTaskUpdateState {
   isNew: boolean;
+  treatmentPlanId: string;
 }
 
 export class TreatmentTaskUpdate extends React.Component<ITreatmentTaskUpdateProps, ITreatmentTaskUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
+      treatmentPlanId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -40,6 +44,8 @@ export class TreatmentTaskUpdate extends React.Component<ITreatmentTaskUpdatePro
     } else {
       this.props.getEntity(this.props.match.params.id);
     }
+
+    this.props.getTreatmentPlans();
   }
 
   saveEntity = (event, errors, values) => {
@@ -63,7 +69,7 @@ export class TreatmentTaskUpdate extends React.Component<ITreatmentTaskUpdatePro
   };
 
   render() {
-    const { treatmentTaskEntity, loading, updating } = this.props;
+    const { treatmentTaskEntity, treatmentPlans, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -101,6 +107,21 @@ export class TreatmentTaskUpdate extends React.Component<ITreatmentTaskUpdatePro
                   </Label>
                   <AvField id="treatment-task-note" type="text" name="note" />
                 </AvGroup>
+                <AvGroup>
+                  <Label for="treatmentPlan.id">
+                    <Translate contentKey="totoroApp.treatmentTask.treatmentPlan">Treatment Plan</Translate>
+                  </Label>
+                  <AvInput id="treatment-task-treatmentPlan" type="select" className="form-control" name="treatmentPlan.id">
+                    <option value="" key="0" />
+                    {treatmentPlans
+                      ? treatmentPlans.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/treatment-task" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
@@ -124,6 +145,7 @@ export class TreatmentTaskUpdate extends React.Component<ITreatmentTaskUpdatePro
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
+  treatmentPlans: storeState.treatmentPlan.entities,
   treatmentTaskEntity: storeState.treatmentTask.entity,
   loading: storeState.treatmentTask.loading,
   updating: storeState.treatmentTask.updating,
@@ -131,6 +153,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
+  getTreatmentPlans,
   getEntity,
   updateEntity,
   createEntity,
