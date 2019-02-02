@@ -125,3 +125,26 @@ Navbar styles
   top: 0px;
   z-index: 1031;
 }
+
+/* ==========================================================================
+Custom styles
+========================================================================== */
+
+.dentall-bg-blue {
+  background-color: #1768ac;
+}
+
+.dentall-brand-logo {
+  margin: auto;
+}
+
+.dentall-brand-logo .brand-icon {
+  height: 35px;
+  width: auto;
+  display: inline-block;
+}
+
+.dentall-brand-logo .brand-icon img {
+  height: 40px;
+  margin-top: -5px;
+}
