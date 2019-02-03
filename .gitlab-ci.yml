@@ -1,88 +1,17 @@
-cache:
-    key: "$CI_PIPELINE_ID"
-    paths:
-        - node_modules
-        - .gradle/wrapper
-        - .gradle/caches
-
-stages:
-    - build
-    - test
-    - package
-    - deploy
-
-before_script:
-    - export GRADLE_USER_HOME=`pwd`/.gradle
-    - chmod +x gradlew
-
-gradle-build:
-    stage: build
-    image: openjdk:8-jdk-stretch
+mock-data-generator:
+    image: python:3.7-stretch
     script:
-        - ./gradlew compileJava -x check -x webpackBuildDev --no-daemon
-
-gradle-test:
-    stage: test
-    image: openjdk:8-jdk-stretch
-    services:
-        - postgres:10.4
-    variables:
-        POSTGRES_DB: totoro
-        POSTGRES_USER: totoro
-        POSTGRES_PASSWORD: totoro
-    script:
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/totoro ./gradlew test -x webpackBuildDev --no-daemon
-    artifacts:
-        paths:
-            - build/reports/tests/*
-            - build/jacocoHtml/*
-# Uncomment following to expire the artifacts after defined period, https://docs.gitlab.com/ee/ci/yaml/README.html#artifacts-expire_in
-#       expire_in: 90 day
-gradle-front-test:
-    stage: test
-    image: openjdk:8-jre-stretch
-    script:
-        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - ./gradlew npm_install npm_test -PnodeInstall --no-daemon
-    artifacts:
-        paths:
-            - build/test-results/jest/*
-            - build/test-results/lcov-report/*
-#       expire_in: 90 day
-gradle-repackage:
-    stage: package
-    image: openjdk:8-jdk-stretch
-    script:
-        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - ./gradlew bootWar -Pdev -P4fe -x check -PnodeInstall --no-daemon
-    artifacts:
-        paths:
-            - build/*
-#       expire_in: 90 day
-
-depolyDockerImage:
-    stage: deploy
-    image: docker
-    services:
-        - docker:dind
-    dependencies:
-        - gradle-repackage
-    script:
-        - apk --update add openjdk8-jre
-        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-        - ./gradlew jib --image=registry.gitlab.com/dentall/totoro-admin/$CI_COMMIT_REF_SLUG:latest -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
-
-pages:
-    stage: deploy
-    image: alpine
-    dependencies:
-        - gradle-test
-        - gradle-front-test
-    script:
-        - mkdir public
-        - mv build/reports/tests/* public
-        - mv build/jacocoHtml public
-        - mv build/test-results/lcov-report public
-    artifacts:
-        paths:
-            - public
+        - pip install --no-cache-dir -r schedule/requirements.txt
+        - python schedule/mock_data_generator.py
+        - git remote set-url origin https://gitlab-ci-token:$CI_PUSH_TOKEN@gitlab.com/$CI_PROJECT_PATH.git
+        - git config --global user.email $GITLAB_USER_EMAIL
+        - git config --global user.name $GITLAB_USER_NAME
+        - git stash save
+        - git checkout master
+        - git checkout stash -- .
+        - git add src/main/resources/config/liquibase/appointments.csv
+        - git add src/main/resources/config/liquibase/registrations.csv
+        - git commit -m 'Modify mock data from CI runner'
+        - git push origin master
+    only:
+        - schedules
