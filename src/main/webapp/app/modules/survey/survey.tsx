@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Lottie from 'react-lottie';
 import './survey.css';
+import { Gender } from 'app/shared/model/patient.model';
 
 export interface ISurveyProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -156,6 +157,32 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     );
   };
 
+  renderProfile = gender => {
+    const wh = 88;
+    const profileWH = 55;
+    if (gender === Gender.MALE) {
+      return <img src="content/images/man@2x.png" width={wh} height={wh} />;
+    } else if (gender === Gender.FEMALE) {
+      return <img src="content/images/woman@2x.png" width={wh} height={wh} />;
+    } else {
+      return (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: profileWH + 'px',
+            width: wh + 'px',
+            height: wh + 'px',
+            backgroundColor: '#1768ac'
+          }}
+        >
+          <img src="content/images/logo.png" width={profileWH} height={profileWH} />
+        </div>
+      );
+    }
+  };
+
   render() {
     const { patientEntity } = this.props;
     const ColoredLine = () => (
@@ -191,10 +218,15 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
             <div className="time-rect-container">
               <div className="time-rect">最後更新: {dateTime}</div>
             </div>
-            <h2>{patientEntity.name}</h2>
-            <div>
-              <span>病歷編號: </span>
-              <span>{patientEntity.medicalId}</span>
+            <div style={{ display: 'flex' }}>
+              {this.renderProfile(patientEntity.gender)}
+              <div style={{ marginLeft: '5px' }}>
+                <h1>{patientEntity.name}</h1>
+                <div>
+                  <span>病歷編號: </span>
+                  <span>{patientEntity.medicalId}</span>
+                </div>
+              </div>
             </div>
             <ColoredLine />
           </Col>
