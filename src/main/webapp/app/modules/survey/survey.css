@@ -23,3 +23,23 @@ Survey page styles
   left: 20px;
   z-index: 99999;
 }
+
+.time-rect-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.time-rect {
+  width: 186px;
+  height: 22px;
+  border-radius: 3px;
+  background-color: rgba(77, 161, 255, 0.1);
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.88;
+  letter-spacing: -0.1px;
+  color: #828991;
+  text-align: center;
+}

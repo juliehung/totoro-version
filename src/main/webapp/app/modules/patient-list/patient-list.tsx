@@ -30,7 +30,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
-import { getEntities } from './patient.reducer';
+import { getEntities } from 'app/entities/patient/patient.reducer';
 import { Gender, IPatient } from 'app/shared/model/patient.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
@@ -103,7 +103,7 @@ export class PatientList extends React.Component<IPatientListProps, IPatientList
 
         <CardColumns>
           {patientList.map((patient, i) => (
-            <Link to={'/survey?medicalId=' + patient.medicalId + '&name=' + patient.name} key={`entity-${i}`}>
+            <Link to={'/survey?pid=' + patient.id} key={`p-${i}`}>
               <Card outline color="primary">
                 <CardBody>
                   <div style={{ display: 'flex' }}>
