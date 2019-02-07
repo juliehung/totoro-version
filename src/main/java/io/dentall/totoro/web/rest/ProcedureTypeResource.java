@@ -2,9 +2,11 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.ProcedureType;
-import io.dentall.totoro.repository.ProcedureTypeRepository;
+import io.dentall.totoro.service.ProcedureTypeService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
+import io.dentall.totoro.service.dto.ProcedureTypeCriteria;
+import io.dentall.totoro.service.ProcedureTypeQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +31,13 @@ public class ProcedureTypeResource {
 
     private static final String ENTITY_NAME = "procedureType";
 
-    private final ProcedureTypeRepository procedureTypeRepository;
+    private final ProcedureTypeService procedureTypeService;
 
-    public ProcedureTypeResource(ProcedureTypeRepository procedureTypeRepository) {
-        this.procedureTypeRepository = procedureTypeRepository;
+    private final ProcedureTypeQueryService procedureTypeQueryService;
+
+    public ProcedureTypeResource(ProcedureTypeService procedureTypeService, ProcedureTypeQueryService procedureTypeQueryService) {
+        this.procedureTypeService = procedureTypeService;
+        this.procedureTypeQueryService = procedureTypeQueryService;
     }
 
     /**
@@ -49,7 +54,7 @@ public class ProcedureTypeResource {
         if (procedureType.getId() != null) {
             throw new BadRequestAlertException("A new procedureType cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ProcedureType result = procedureTypeRepository.save(procedureType);
+        ProcedureType result = procedureTypeService.save(procedureType);
         return ResponseEntity.created(new URI("/api/procedure-types/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -71,7 +76,7 @@ public class ProcedureTypeResource {
         if (procedureType.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        ProcedureType result = procedureTypeRepository.save(procedureType);
+        ProcedureType result = procedureTypeService.save(procedureType);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, procedureType.getId().toString()))
             .body(result);
@@ -80,13 +85,28 @@ public class ProcedureTypeResource {
     /**
      * GET  /procedure-types : get all the procedureTypes.
      *
+     * @param criteria the criterias which the requested entities should match
      * @return the ResponseEntity with status 200 (OK) and the list of procedureTypes in body
      */
     @GetMapping("/procedure-types")
     @Timed
-    public List<ProcedureType> getAllProcedureTypes() {
-        log.debug("REST request to get all ProcedureTypes");
-        return procedureTypeRepository.findAll();
+    public ResponseEntity<List<ProcedureType>> getAllProcedureTypes(ProcedureTypeCriteria criteria) {
+        log.debug("REST request to get ProcedureTypes by criteria: {}", criteria);
+        List<ProcedureType> entityList = procedureTypeQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
+
+    /**
+    * GET  /procedure-types/count : count all the procedureTypes.
+    *
+    * @param criteria the criterias which the requested entities should match
+    * @return the ResponseEntity with status 200 (OK) and the count in body
+    */
+    @GetMapping("/procedure-types/count")
+    @Timed
+    public ResponseEntity<Long> countProcedureTypes(ProcedureTypeCriteria criteria) {
+        log.debug("REST request to count ProcedureTypes by criteria: {}", criteria);
+        return ResponseEntity.ok().body(procedureTypeQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -99,7 +119,7 @@ public class ProcedureTypeResource {
     @Timed
     public ResponseEntity<ProcedureType> getProcedureType(@PathVariable Long id) {
         log.debug("REST request to get ProcedureType : {}", id);
-        Optional<ProcedureType> procedureType = procedureTypeRepository.findById(id);
+        Optional<ProcedureType> procedureType = procedureTypeService.findOne(id);
         return ResponseUtil.wrapOrNotFound(procedureType);
     }
 
@@ -113,8 +133,7 @@ public class ProcedureTypeResource {
     @Timed
     public ResponseEntity<Void> deleteProcedureType(@PathVariable Long id) {
         log.debug("REST request to delete ProcedureType : {}", id);
-
-        procedureTypeRepository.deleteById(id);
+        procedureTypeService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

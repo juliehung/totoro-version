@@ -14,10 +14,10 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity ProcedureType.
+        Added the entity FindingType.
     -->
-    <changeSet id="20190125074803-1" author="jhipster">
-        <createTable tableName="procedure_type">
+    <changeSet id="20190203082322-1" author="jhipster">
+        <createTable tableName="finding_type">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

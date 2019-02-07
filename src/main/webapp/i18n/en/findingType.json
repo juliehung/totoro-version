@@ -1,0 +1,23 @@
+{
+  "totoroApp": {
+    "findingType": {
+      "home": {
+        "title": "Finding Types",
+        "createLabel": "Create a new Finding Type",
+        "createOrEditLabel": "Create or edit a Finding Type"
+      },
+      "created": "A new Finding Type is created with identifier {{ param }}",
+      "updated": "A Finding Type is updated with identifier {{ param }}",
+      "deleted": "A Finding Type is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Finding Type {{ id }}?"
+      },
+      "detail": {
+        "title": "Finding Type"
+      },
+      "major": "Major",
+      "minor": "Minor",
+      "display": "Display"
+    }
+  }
+}

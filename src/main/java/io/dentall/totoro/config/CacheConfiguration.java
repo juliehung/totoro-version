@@ -71,6 +71,7 @@ public class CacheConfiguration {
             cm.createCache(io.dentall.totoro.domain.TreatmentPlan.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.TreatmentPlan.class.getName() + ".treatmentTasks", jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.Treatment.class.getName() + ".treatmentPlans", jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.FindingType.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
 
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".dominantPatients", jcacheConfiguration);

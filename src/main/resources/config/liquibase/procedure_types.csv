@@ -1,0 +1,89 @@
+id;major;minor;display
+1;OD;NULL;false
+2;OD;OD;true
+3;OD;Diastema Closure;false
+4;OD;Resin Veneer;true
+5;Endo;NULL;false
+6;Endo;Endo;true
+7;Endo;Vital Pulp Therapy;true
+8;Endo;Apical Surgery;true
+9;Endo;Apexification;true
+10;Endo;Pulpotomy(pedo);true
+11;Extraction;NULL;true
+12;Implant;NULL;true
+13;BPR;NULL;false
+14;BPR;Inlay;true
+15;BPR;Onlay;true
+16;BPR;Overlay;true
+17;BPR;Veneer;true
+18;Fixed;NULL;true
+19;Fixed;Crown;true
+20;Fixed;Bridge;true
+21;Fixed;Post;true
+22;Fixed;Crown Removal;true
+23;Fixed;Temp;true
+24;Removable;NULL;false
+25;Removable;RPD;true
+26;Removable;CD;true
+27;Removable;Splint;true
+28;Removable;Denture repair;false
+29;Ortho;NULL;true
+30;Ortho;Ortho;true
+31;Ortho;Fixed Retainer;true
+32;Ortho;Removable Retainer;true
+33;Perio;NULL;false
+34;Perio;Scaling;false
+35;Perio;SC-Rp;false
+36;Perio;GBR;false
+37;Perio;GTR;false
+38;Perio;Sinus Lift;false
+39;Perio;Bone Split;false
+40;Perio;CLP;false
+41;Perio;FGG;false
+42;Perio;CTG;false
+43;Perio;Socket Preservation;false
+44;Perio;Gingivectomy;false
+45;Pedo;NULL;false
+46;Pedo;Flouride Application;false
+47;Pedo;Sealant;true
+48;Pedo;OD;true
+49;Pedo;Pulpotomy;true
+50;Pedo;Pulpectomy;true
+51;Pedo;Pulp Capping;true
+52;Pedo;Pedoform;true
+53;Pedo;Pedo-ZrO2;true
+54;Pedo;SSC;true
+55;Pedo;Kiddy Denture;true
+56;Pedo;Space Maintainer;true
+57;Pedo;Extraction;true
+58;Pedo;Plaque Removal;false
+59;Preventive;NULL;false
+60;Preventive;Fluoride Application;false
+61;Preventive;Dissensitivity;false
+62;Preventive;Sealant;true
+63;Cosmetic;NULL;false
+64;Cosmetic;Sand Blasting;false
+65;Cosmetic;Bleaching;false
+66;Cosmetic;Veneer;true
+67;Cosmetic;Diastema Closure;false
+68;Cosmetic;Resin Veneer;true
+69;OS;NULL;false
+70;OS;Extraction;true
+71;OS;Soft Tissue Examination;false
+72;OS;I&D;false
+73;OS;Tooth Re-implantation;false
+74;OS;Fixation;true
+75;OS;Biopsy;false
+76;OS;Operculectomy;false
+77;OS;Frenum Removal;false
+78;OS;Hemisection;true
+79;OS;Alveoloplasty;false
+80;OS;Cyst Nucleation;false
+81;Pending;NULL;true
+82;Set;NULL;false
+83;Set;Single Crown;true
+84;Set;SSC;true
+85;Set;Single Implant;true
+86;Others;NULL;false
+87;Others;Referral;false
+88;Others;Quit Smoking;false

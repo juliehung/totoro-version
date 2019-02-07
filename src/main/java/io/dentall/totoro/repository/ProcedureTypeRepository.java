@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ProcedureTypeRepository extends JpaRepository<ProcedureType, Long> {
+public interface ProcedureTypeRepository extends JpaRepository<ProcedureType, Long>, JpaSpecificationExecutor<ProcedureType> {
 
 }

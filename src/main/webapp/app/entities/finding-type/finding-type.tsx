@@ -7,28 +7,28 @@ import { Translate, ICrudGetAllAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
-import { getEntities } from './procedure-type.reducer';
-import { IProcedureType } from 'app/shared/model/procedure-type.model';
+import { getEntities } from './finding-type.reducer';
+import { IFindingType } from 'app/shared/model/finding-type.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
-export interface IProcedureTypeProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+export interface IFindingTypeProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
-export class ProcedureType extends React.Component<IProcedureTypeProps> {
+export class FindingType extends React.Component<IFindingTypeProps> {
   componentDidMount() {
     this.props.getEntities();
   }
 
   render() {
-    const { procedureTypeList, match } = this.props;
+    const { findingTypeList, match } = this.props;
     return (
       <div>
-        <h2 id="procedure-type-heading">
-          <Translate contentKey="totoroApp.procedureType.home.title">Procedure Types</Translate>
+        <h2 id="finding-type-heading">
+          <Translate contentKey="totoroApp.findingType.home.title">Finding Types</Translate>
           <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
             <FontAwesomeIcon icon="plus" />
             &nbsp;
-            <Translate contentKey="totoroApp.procedureType.home.createLabel">Create new Procedure Type</Translate>
+            <Translate contentKey="totoroApp.findingType.home.createLabel">Create new Finding Type</Translate>
           </Link>
         </h2>
         <div className="table-responsive">
@@ -39,43 +39,43 @@ export class ProcedureType extends React.Component<IProcedureTypeProps> {
                   <Translate contentKey="global.field.id">ID</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.procedureType.major">Major</Translate>
+                  <Translate contentKey="totoroApp.findingType.major">Major</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.procedureType.minor">Minor</Translate>
+                  <Translate contentKey="totoroApp.findingType.minor">Minor</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.procedureType.display">Display</Translate>
+                  <Translate contentKey="totoroApp.findingType.display">Display</Translate>
                 </th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {procedureTypeList.map((procedureType, i) => (
+              {findingTypeList.map((findingType, i) => (
                 <tr key={`entity-${i}`}>
                   <td>
-                    <Button tag={Link} to={`${match.url}/${procedureType.id}`} color="link" size="sm">
-                      {procedureType.id}
+                    <Button tag={Link} to={`${match.url}/${findingType.id}`} color="link" size="sm">
+                      {findingType.id}
                     </Button>
                   </td>
-                  <td>{procedureType.major}</td>
-                  <td>{procedureType.minor}</td>
-                  <td>{procedureType.display ? 'true' : 'false'}</td>
+                  <td>{findingType.major}</td>
+                  <td>{findingType.minor}</td>
+                  <td>{findingType.display ? 'true' : 'false'}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${procedureType.id}`} color="info" size="sm">
+                      <Button tag={Link} to={`${match.url}/${findingType.id}`} color="info" size="sm">
                         <FontAwesomeIcon icon="eye" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${procedureType.id}/edit`} color="primary" size="sm">
+                      <Button tag={Link} to={`${match.url}/${findingType.id}/edit`} color="primary" size="sm">
                         <FontAwesomeIcon icon="pencil-alt" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.edit">Edit</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${procedureType.id}/delete`} color="danger" size="sm">
+                      <Button tag={Link} to={`${match.url}/${findingType.id}/delete`} color="danger" size="sm">
                         <FontAwesomeIcon icon="trash" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -93,8 +93,8 @@ export class ProcedureType extends React.Component<IProcedureTypeProps> {
   }
 }
 
-const mapStateToProps = ({ procedureType }: IRootState) => ({
-  procedureTypeList: procedureType.entities
+const mapStateToProps = ({ findingType }: IRootState) => ({
+  findingTypeList: findingType.entities
 });
 
 const mapDispatchToProps = {
@@ -107,4 +107,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProcedureType);
+)(FindingType);

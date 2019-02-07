@@ -10,12 +10,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A ProcedureType.
+ * A FindingType.
  */
 @Entity
-@Table(name = "procedure_type")
+@Table(name = "finding_type")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ProcedureType implements Serializable {
+public class FindingType implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -48,7 +48,7 @@ public class ProcedureType implements Serializable {
         return major;
     }
 
-    public ProcedureType major(String major) {
+    public FindingType major(String major) {
         this.major = major;
         return this;
     }
@@ -61,7 +61,7 @@ public class ProcedureType implements Serializable {
         return minor;
     }
 
-    public ProcedureType minor(String minor) {
+    public FindingType minor(String minor) {
         this.minor = minor;
         return this;
     }
@@ -74,7 +74,7 @@ public class ProcedureType implements Serializable {
         return display;
     }
 
-    public ProcedureType display(Boolean display) {
+    public FindingType display(Boolean display) {
         this.display = display;
         return this;
     }
@@ -92,11 +92,11 @@ public class ProcedureType implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ProcedureType procedureType = (ProcedureType) o;
-        if (procedureType.getId() == null || getId() == null) {
+        FindingType findingType = (FindingType) o;
+        if (findingType.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), procedureType.getId());
+        return Objects.equals(getId(), findingType.getId());
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ProcedureType implements Serializable {
 
     @Override
     public String toString() {
-        return "ProcedureType{" +
+        return "FindingType{" +
             "id=" + getId() +
             ", major='" + getMajor() + "'" +
             ", minor='" + getMinor() + "'" +
