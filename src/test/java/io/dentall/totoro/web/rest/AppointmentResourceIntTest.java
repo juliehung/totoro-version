@@ -4,7 +4,6 @@ import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.AppointmentService;
-import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 import io.dentall.totoro.service.AppointmentQueryService;
 
@@ -107,9 +106,6 @@ public class AppointmentResourceIntTest {
 
     @Autowired
     private PatientRepository patientRepository;
-
-    @Autowired
-    private PatientService patientService;
 
     @Autowired
     private TreatmentProcedureRepository treatmentProcedureRepository;
@@ -899,7 +895,7 @@ public class AppointmentResourceIntTest {
     @Test
     @Transactional
     public void getAllPatientCards() throws Exception {
-        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository, patientService);
+        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
         patient.addAppointment(appointment);
 
         // Initialize the database
@@ -938,7 +934,7 @@ public class AppointmentResourceIntTest {
     @Test
     @Transactional
     public void getAllAppointmentsByRegistrationIsNullAndPatientId() throws Exception {
-        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository, patientService);
+        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
         patient.addAppointment(appointment);
 
         // Initialize the database

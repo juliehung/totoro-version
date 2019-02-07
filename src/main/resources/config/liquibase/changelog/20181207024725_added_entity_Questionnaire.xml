@@ -21,39 +21,11 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="hypertension" type="varchar(255)">
+            <column name="drug" type="boolean">
                 <constraints nullable="true" />
             </column>
 
-            <column name="heart_diseases" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="kidney_diseases" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="blood_diseases" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="liver_diseases" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="hepatitis_type" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="gastrointestinal_diseases" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="receiving_medication" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="any_allergy_sensitivity" type="varchar(255)">
+            <column name="drug_name" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
@@ -66,30 +38,6 @@
             </column>
 
             <column name="smoke_number_a_day" type="integer">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="production_year" type="integer">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="production_month" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="other" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="difficult_extraction_or_continuous_bleeding" type="boolean">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="nausea_or_dizziness" type="boolean">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="adverse_reactions_to_anesthetic_injections" type="boolean">
                 <constraints nullable="true" />
             </column>
 

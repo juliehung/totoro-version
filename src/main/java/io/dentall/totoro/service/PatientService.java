@@ -1,13 +1,11 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.domain.enumeration.TagName;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.util.FilterUtil;
 import io.github.jhipster.service.QueryService;
 import io.github.jhipster.service.filter.InstantFilter;
-import io.github.jhipster.service.filter.LongFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,8 +19,6 @@ import java.time.Instant;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 /**
  * Service class for managing patients.
@@ -56,21 +52,6 @@ public class PatientService extends QueryService<Patient> {
         this.patientIdentityRepository = patientIdentityRepository;
     }
 
-    public void setTagsByQuestionnaire(Set<Tag> tags, Questionnaire questionnaire) {
-        if (questionnaire != null) {
-            setTag(tags, TagName.Hypertension, () -> questionnaire.getHypertension() != null);
-            setTag(tags, TagName.LiverDiseases, () -> questionnaire.getLiverDiseases() != null || questionnaire.getHepatitisType() != null);
-            setTag(tags, TagName.Smoker, () -> questionnaire.getSmokeNumberADay() != null);
-            setTag(tags, TagName.Pregnancy, () -> questionnaire.getProductionYear() != null && questionnaire.getProductionMonth() != null);
-            setTag(tags, TagName.DifficultExtractionOrContinuousBleeding,
-                () -> questionnaire.isDifficultExtractionOrContinuousBleeding() != null && questionnaire.isDifficultExtractionOrContinuousBleeding());
-            setTag(tags, TagName.NauseaOrDizziness,
-                () -> questionnaire.isNauseaOrDizziness() != null && questionnaire.isNauseaOrDizziness());
-            setTag(tags, TagName.AdverseReactionsToAnestheticInjections,
-                () -> questionnaire.isAdverseReactionsToAnestheticInjections() != null && questionnaire.isAdverseReactionsToAnestheticInjections());
-        }
-    }
-
     /**
      * Return a {@link Page} of {@link Patient} which matches the criteria from the database
      * @param criteria The object which holds all the filters, which the entities should match.
@@ -93,7 +74,19 @@ public class PatientService extends QueryService<Patient> {
                 Questionnaire questionnaire = patient.getQuestionnaire();
                 Questionnaire updateQuestionnaire = updatePatient.getQuestionnaire();
                 patient.setQuestionnaire(questionnaire == null ? questionnaireRepository.save(updateQuestionnaire) : updateQuestionnaire(questionnaire, updateQuestionnaire));
-                setTagsByQuestionnaire(patient.getTags(), patient.getQuestionnaire());
+            }
+
+            // tags
+            if (updatePatient.getTags() != null) {
+                log.debug("Update tags({}) of Patient(id: {})", updatePatient.getTags(), updatePatient.getId());
+                patient.getTags().clear();
+                updatePatient
+                    .getTags()
+                    .stream()
+                    .map(tag -> tagRepository.findById(tag.getId()))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .forEach(patient.getTags()::add);
             }
 
             // basic info.
@@ -206,40 +199,12 @@ public class PatientService extends QueryService<Patient> {
     }
 
     private Questionnaire updateQuestionnaire(Questionnaire questionnaire, Questionnaire updateQuestionnaire) {
-        if (updateQuestionnaire.getHypertension() != null) {
-            questionnaire.setHypertension(updateQuestionnaire.getHypertension());
+        if (updateQuestionnaire.isDrug() != null) {
+            questionnaire.setDrug(updateQuestionnaire.isDrug());
         }
 
-        if (updateQuestionnaire.getHeartDiseases() != null) {
-            questionnaire.setHeartDiseases(updateQuestionnaire.getHeartDiseases());
-        }
-
-        if (updateQuestionnaire.getKidneyDiseases() != null) {
-            questionnaire.setKidneyDiseases(updateQuestionnaire.getKidneyDiseases());
-        }
-
-        if (updateQuestionnaire.getBloodDiseases() != null) {
-            questionnaire.setBloodDiseases(updateQuestionnaire.getBloodDiseases());
-        }
-
-        if (updateQuestionnaire.getLiverDiseases() != null) {
-            questionnaire.setLiverDiseases(updateQuestionnaire.getLiverDiseases());
-        }
-
-        if (updateQuestionnaire.getHepatitisType() != null) {
-            questionnaire.setHepatitisType(updateQuestionnaire.getHepatitisType());
-        }
-
-        if (updateQuestionnaire.getGastrointestinalDiseases() != null) {
-            questionnaire.setGastrointestinalDiseases(updateQuestionnaire.getGastrointestinalDiseases());
-        }
-
-        if (updateQuestionnaire.getReceivingMedication() != null) {
-            questionnaire.setReceivingMedication(updateQuestionnaire.getReceivingMedication());
-        }
-
-        if (updateQuestionnaire.getAnyAllergySensitivity() != null) {
-            questionnaire.setAnyAllergySensitivity(updateQuestionnaire.getAnyAllergySensitivity());
+        if (updateQuestionnaire.getDrugName() != null) {
+            questionnaire.setDrugName(updateQuestionnaire.getDrugName());
         }
 
         if (updateQuestionnaire.getGlycemicAC() != null) {
@@ -254,44 +219,11 @@ public class PatientService extends QueryService<Patient> {
             questionnaire.setSmokeNumberADay(updateQuestionnaire.getSmokeNumberADay());
         }
 
-        if (updateQuestionnaire.getProductionYear() != null) {
-            questionnaire.setProductionYear(updateQuestionnaire.getProductionYear());
-        }
-
-        if (updateQuestionnaire.getProductionMonth() != null) {
-            questionnaire.setProductionMonth(updateQuestionnaire.getProductionMonth());
-        }
-
-        if (updateQuestionnaire.getOther() != null) {
-            questionnaire.setOther(updateQuestionnaire.getOther());
-        }
-
-        if (updateQuestionnaire.isDifficultExtractionOrContinuousBleeding() != null) {
-            questionnaire.setDifficultExtractionOrContinuousBleeding(updateQuestionnaire.isDifficultExtractionOrContinuousBleeding());
-        }
-
-        if (updateQuestionnaire.isNauseaOrDizziness() != null) {
-            questionnaire.setNauseaOrDizziness(updateQuestionnaire.isNauseaOrDizziness());
-        }
-
-        if (updateQuestionnaire.isAdverseReactionsToAnestheticInjections() != null) {
-            questionnaire.setAdverseReactionsToAnestheticInjections(updateQuestionnaire.isAdverseReactionsToAnestheticInjections());
-        }
-
         if (updateQuestionnaire.getOtherInTreatment() != null) {
             questionnaire.setOtherInTreatment(updateQuestionnaire.getOtherInTreatment());
         }
 
         return questionnaire;
-    }
-
-    private void setTag(Set<Tag> tags, TagName tagName, Supplier<Boolean> condition) {
-        Optional<Tag> tag = tagRepository.findById(tagName.getValue());
-        if (condition.get()) {
-            tag.ifPresent(tags::add);
-        } else {
-            tag.ifPresent(tags::remove);
-        }
     }
 
     /**
@@ -335,6 +267,4 @@ public class PatientService extends QueryService<Patient> {
 
         return specification;
     }
-
-
 }

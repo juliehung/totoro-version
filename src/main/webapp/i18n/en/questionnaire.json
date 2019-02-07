@@ -1,40 +1,26 @@
-
 {
-    "totoroApp": {
-        "questionnaire" : {
-            "home": {
-                "title": "Questionnaires",
-                "createLabel": "Create a new Questionnaire",
-                "createOrEditLabel": "Create or edit a Questionnaire"
-            },
-            "created": "A new Questionnaire is created with identifier {{ param }}",
-            "updated": "A Questionnaire is updated with identifier {{ param }}",
-            "deleted": "A Questionnaire is deleted with identifier {{ param }}",
-            "delete": {
-                "question": "Are you sure you want to delete Questionnaire {{ id }}?"
-            },
-            "detail": {
-                "title": "Questionnaire"
-            },
-            "hypertension": "Hypertension",
-            "heartDiseases": "Heart Diseases",
-            "kidneyDiseases": "Kidney Diseases",
-            "bloodDiseases": "Blood Diseases",
-            "liverDiseases": "Liver Diseases",
-            "hepatitisType": "Hepatitis Type",
-            "gastrointestinalDiseases": "Gastrointestinal Diseases",
-            "receivingMedication": "Receiving Medication",
-            "anyAllergySensitivity": "Any Allergy Sensitivity",
-            "glycemicAC": "Glycemic AC",
-            "glycemicPC": "Glycemic PC",
-            "smokeNumberADay": "Smoke Number A Day",
-            "productionYear": "Production Year",
-            "productionMonth": "Production Month",
-            "other": "Other",
-            "difficultExtractionOrContinuousBleeding": "Difficult Extraction Or Continuous Bleeding",
-            "nauseaOrDizziness": "Nausea Or Dizziness",
-            "adverseReactionsToAnestheticInjections": "Adverse Reactions To Anesthetic Injections",
-            "otherInTreatment": "Other In Treatment"
-        }
+  "totoroApp": {
+    "questionnaire": {
+      "home": {
+        "title": "Questionnaires",
+        "createLabel": "Create a new Questionnaire",
+        "createOrEditLabel": "Create or edit a Questionnaire"
+      },
+      "created": "A new Questionnaire is created with identifier {{ param }}",
+      "updated": "A Questionnaire is updated with identifier {{ param }}",
+      "deleted": "A Questionnaire is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Questionnaire {{ id }}?"
+      },
+      "detail": {
+        "title": "Questionnaire"
+      },
+      "drug": "Drug",
+      "drugName": "Drug Name",
+      "glycemicAC": "Glycemic AC",
+      "glycemicPC": "Glycemic PC",
+      "smokeNumberADay": "Smoke Number A Day",
+      "otherInTreatment": "Other In Treatment"
     }
+  }
 }
