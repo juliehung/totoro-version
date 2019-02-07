@@ -8,19 +8,19 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
-import { getEntity, updateEntity, createEntity, reset } from './procedure-type.reducer';
-import { IProcedureType } from 'app/shared/model/procedure-type.model';
+import { getEntity, updateEntity, createEntity, reset } from './finding-type.reducer';
+import { IFindingType } from 'app/shared/model/finding-type.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
 
-export interface IProcedureTypeUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface IFindingTypeUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export interface IProcedureTypeUpdateState {
+export interface IFindingTypeUpdateState {
   isNew: boolean;
 }
 
-export class ProcedureTypeUpdate extends React.Component<IProcedureTypeUpdateProps, IProcedureTypeUpdateState> {
+export class FindingTypeUpdate extends React.Component<IFindingTypeUpdateProps, IFindingTypeUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,9 +44,9 @@ export class ProcedureTypeUpdate extends React.Component<IProcedureTypeUpdatePro
 
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
-      const { procedureTypeEntity } = this.props;
+      const { findingTypeEntity } = this.props;
       const entity = {
-        ...procedureTypeEntity,
+        ...findingTypeEntity,
         ...values
       };
 
@@ -59,19 +59,19 @@ export class ProcedureTypeUpdate extends React.Component<IProcedureTypeUpdatePro
   };
 
   handleClose = () => {
-    this.props.history.push('/entity/procedure-type');
+    this.props.history.push('/entity/finding-type');
   };
 
   render() {
-    const { procedureTypeEntity, loading, updating } = this.props;
+    const { findingTypeEntity, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
       <div>
         <Row className="justify-content-center">
           <Col md="8">
-            <h2 id="totoroApp.procedureType.home.createOrEditLabel">
-              <Translate contentKey="totoroApp.procedureType.home.createOrEditLabel">Create or edit a ProcedureType</Translate>
+            <h2 id="totoroApp.findingType.home.createOrEditLabel">
+              <Translate contentKey="totoroApp.findingType.home.createOrEditLabel">Create or edit a FindingType</Translate>
             </h2>
           </Col>
         </Row>
@@ -80,21 +80,21 @@ export class ProcedureTypeUpdate extends React.Component<IProcedureTypeUpdatePro
             {loading ? (
               <p>Loading...</p>
             ) : (
-              <AvForm model={isNew ? {} : procedureTypeEntity} onSubmit={this.saveEntity}>
+              <AvForm model={isNew ? {} : findingTypeEntity} onSubmit={this.saveEntity}>
                 {!isNew ? (
                   <AvGroup>
                     <Label for="id">
                       <Translate contentKey="global.field.id">ID</Translate>
                     </Label>
-                    <AvInput id="procedure-type-id" type="text" className="form-control" name="id" required readOnly />
+                    <AvInput id="finding-type-id" type="text" className="form-control" name="id" required readOnly />
                   </AvGroup>
                 ) : null}
                 <AvGroup>
                   <Label id="majorLabel" for="major">
-                    <Translate contentKey="totoroApp.procedureType.major">Major</Translate>
+                    <Translate contentKey="totoroApp.findingType.major">Major</Translate>
                   </Label>
                   <AvField
-                    id="procedure-type-major"
+                    id="finding-type-major"
                     type="text"
                     name="major"
                     validate={{
@@ -104,17 +104,17 @@ export class ProcedureTypeUpdate extends React.Component<IProcedureTypeUpdatePro
                 </AvGroup>
                 <AvGroup>
                   <Label id="minorLabel" for="minor">
-                    <Translate contentKey="totoroApp.procedureType.minor">Minor</Translate>
+                    <Translate contentKey="totoroApp.findingType.minor">Minor</Translate>
                   </Label>
-                  <AvField id="procedure-type-minor" type="text" name="minor" />
+                  <AvField id="finding-type-minor" type="text" name="minor" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="displayLabel" check>
-                    <AvInput id="procedure-type-display" type="checkbox" className="form-control" name="display" />
-                    <Translate contentKey="totoroApp.procedureType.display">Display</Translate>
+                    <AvInput id="finding-type-display" type="checkbox" className="form-control" name="display" />
+                    <Translate contentKey="totoroApp.findingType.display">Display</Translate>
                   </Label>
                 </AvGroup>
-                <Button tag={Link} id="cancel-save" to="/entity/procedure-type" replace color="info">
+                <Button tag={Link} id="cancel-save" to="/entity/finding-type" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
                   <span className="d-none d-md-inline">
@@ -137,10 +137,10 @@ export class ProcedureTypeUpdate extends React.Component<IProcedureTypeUpdatePro
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
-  procedureTypeEntity: storeState.procedureType.entity,
-  loading: storeState.procedureType.loading,
-  updating: storeState.procedureType.updating,
-  updateSuccess: storeState.procedureType.updateSuccess
+  findingTypeEntity: storeState.findingType.entity,
+  loading: storeState.findingType.loading,
+  updating: storeState.findingType.updating,
+  updateSuccess: storeState.findingType.updateSuccess
 });
 
 const mapDispatchToProps = {
@@ -156,4 +156,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProcedureTypeUpdate);
+)(FindingTypeUpdate);

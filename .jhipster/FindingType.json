@@ -1,5 +1,5 @@
 {
-    "name": "ProcedureType",
+    "name": "FindingType",
     "fields": [
         {
             "fieldName": "major",
@@ -21,8 +21,8 @@
         }
     ],
     "relationships": [],
-    "changelogDate": "20190125074803",
-    "entityTableName": "procedure_type",
+    "changelogDate": "20190203082322",
+    "entityTableName": "finding_type",
     "dto": "no",
     "pagination": "no",
     "service": "serviceClass",

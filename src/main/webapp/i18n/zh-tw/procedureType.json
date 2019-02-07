@@ -15,7 +15,9 @@
       "detail": {
         "title": "Procedure Type"
       },
-      "name": "Name"
+      "major": "Major",
+      "minor": "Minor",
+      "display": "Display"
     }
   }
 }

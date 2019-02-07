@@ -1,0 +1,23 @@
+{
+  "totoroApp": {
+    "findingType": {
+      "home": {
+        "title": "Finding Types",
+        "createLabel": "建立一筆新的 Finding Type",
+        "createOrEditLabel": "建立或編輯 Finding Type"
+      },
+      "created": "新的 Finding Type 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Finding Type 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Finding Type 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Finding Type {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Finding Type"
+      },
+      "major": "Major",
+      "minor": "Minor",
+      "display": "Display"
+    }
+  }
+}

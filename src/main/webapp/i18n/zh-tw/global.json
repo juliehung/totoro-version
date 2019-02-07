@@ -30,6 +30,7 @@
         "procedureType": "Procedure Type",
         "treatment": "Treatment",
         "treatmentPlan": "Treatment Plan",
+        "findingType": "Finding Type",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
