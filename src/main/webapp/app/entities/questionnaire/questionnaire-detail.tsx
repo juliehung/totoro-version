@@ -29,59 +29,17 @@ export class QuestionnaireDetail extends React.Component<IQuestionnaireDetailPro
           </h2>
           <dl className="jh-entity-details">
             <dt>
-              <span id="hypertension">
-                <Translate contentKey="totoroApp.questionnaire.hypertension">Hypertension</Translate>
+              <span id="drug">
+                <Translate contentKey="totoroApp.questionnaire.drug">Drug</Translate>
               </span>
             </dt>
-            <dd>{questionnaireEntity.hypertension}</dd>
+            <dd>{questionnaireEntity.drug ? 'true' : 'false'}</dd>
             <dt>
-              <span id="heartDiseases">
-                <Translate contentKey="totoroApp.questionnaire.heartDiseases">Heart Diseases</Translate>
+              <span id="drugName">
+                <Translate contentKey="totoroApp.questionnaire.drugName">Drug Name</Translate>
               </span>
             </dt>
-            <dd>{questionnaireEntity.heartDiseases}</dd>
-            <dt>
-              <span id="kidneyDiseases">
-                <Translate contentKey="totoroApp.questionnaire.kidneyDiseases">Kidney Diseases</Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.kidneyDiseases}</dd>
-            <dt>
-              <span id="bloodDiseases">
-                <Translate contentKey="totoroApp.questionnaire.bloodDiseases">Blood Diseases</Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.bloodDiseases}</dd>
-            <dt>
-              <span id="liverDiseases">
-                <Translate contentKey="totoroApp.questionnaire.liverDiseases">Liver Diseases</Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.liverDiseases}</dd>
-            <dt>
-              <span id="hepatitisType">
-                <Translate contentKey="totoroApp.questionnaire.hepatitisType">Hepatitis Type</Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.hepatitisType}</dd>
-            <dt>
-              <span id="gastrointestinalDiseases">
-                <Translate contentKey="totoroApp.questionnaire.gastrointestinalDiseases">Gastrointestinal Diseases</Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.gastrointestinalDiseases}</dd>
-            <dt>
-              <span id="receivingMedication">
-                <Translate contentKey="totoroApp.questionnaire.receivingMedication">Receiving Medication</Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.receivingMedication}</dd>
-            <dt>
-              <span id="anyAllergySensitivity">
-                <Translate contentKey="totoroApp.questionnaire.anyAllergySensitivity">Any Allergy Sensitivity</Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.anyAllergySensitivity}</dd>
+            <dd>{questionnaireEntity.drugName}</dd>
             <dt>
               <span id="glycemicAC">
                 <Translate contentKey="totoroApp.questionnaire.glycemicAC">Glycemic AC</Translate>
@@ -100,46 +58,6 @@ export class QuestionnaireDetail extends React.Component<IQuestionnaireDetailPro
               </span>
             </dt>
             <dd>{questionnaireEntity.smokeNumberADay}</dd>
-            <dt>
-              <span id="productionYear">
-                <Translate contentKey="totoroApp.questionnaire.productionYear">Production Year</Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.productionYear}</dd>
-            <dt>
-              <span id="productionMonth">
-                <Translate contentKey="totoroApp.questionnaire.productionMonth">Production Month</Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.productionMonth}</dd>
-            <dt>
-              <span id="other">
-                <Translate contentKey="totoroApp.questionnaire.other">Other</Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.other}</dd>
-            <dt>
-              <span id="difficultExtractionOrContinuousBleeding">
-                <Translate contentKey="totoroApp.questionnaire.difficultExtractionOrContinuousBleeding">
-                  Difficult Extraction Or Continuous Bleeding
-                </Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.difficultExtractionOrContinuousBleeding ? 'true' : 'false'}</dd>
-            <dt>
-              <span id="nauseaOrDizziness">
-                <Translate contentKey="totoroApp.questionnaire.nauseaOrDizziness">Nausea Or Dizziness</Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.nauseaOrDizziness ? 'true' : 'false'}</dd>
-            <dt>
-              <span id="adverseReactionsToAnestheticInjections">
-                <Translate contentKey="totoroApp.questionnaire.adverseReactionsToAnestheticInjections">
-                  Adverse Reactions To Anesthetic Injections
-                </Translate>
-              </span>
-            </dt>
-            <dd>{questionnaireEntity.adverseReactionsToAnestheticInjections ? 'true' : 'false'}</dd>
             <dt>
               <span id="otherInTreatment">
                 <Translate contentKey="totoroApp.questionnaire.otherInTreatment">Other In Treatment</Translate>

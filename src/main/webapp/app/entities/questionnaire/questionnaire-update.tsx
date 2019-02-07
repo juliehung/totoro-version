@@ -28,6 +28,12 @@ export class QuestionnaireUpdate extends React.Component<IQuestionnaireUpdatePro
     };
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
+      this.handleClose();
+    }
+  }
+
   componentDidMount() {
     if (this.state.isNew) {
       this.props.reset();
@@ -49,7 +55,6 @@ export class QuestionnaireUpdate extends React.Component<IQuestionnaireUpdatePro
       } else {
         this.props.updateEntity(entity);
       }
-      this.handleClose();
     }
   };
 
@@ -85,80 +90,16 @@ export class QuestionnaireUpdate extends React.Component<IQuestionnaireUpdatePro
                   </AvGroup>
                 ) : null}
                 <AvGroup>
-                  <Label id="hypertensionLabel" for="hypertension">
-                    <Translate contentKey="totoroApp.questionnaire.hypertension">Hypertension</Translate>
+                  <Label id="drugLabel" check>
+                    <AvInput id="questionnaire-drug" type="checkbox" className="form-control" name="drug" />
+                    <Translate contentKey="totoroApp.questionnaire.drug">Drug</Translate>
                   </Label>
-                  <AvField id="questionnaire-hypertension" type="text" name="hypertension" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="heartDiseasesLabel" for="heartDiseases">
-                    <Translate contentKey="totoroApp.questionnaire.heartDiseases">Heart Diseases</Translate>
+                  <Label id="drugNameLabel" for="drugName">
+                    <Translate contentKey="totoroApp.questionnaire.drugName">Drug Name</Translate>
                   </Label>
-                  <AvField id="questionnaire-heartDiseases" type="text" name="heartDiseases" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="kidneyDiseasesLabel" for="kidneyDiseases">
-                    <Translate contentKey="totoroApp.questionnaire.kidneyDiseases">Kidney Diseases</Translate>
-                  </Label>
-                  <AvField id="questionnaire-kidneyDiseases" type="text" name="kidneyDiseases" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="bloodDiseasesLabel" for="bloodDiseases">
-                    <Translate contentKey="totoroApp.questionnaire.bloodDiseases">Blood Diseases</Translate>
-                  </Label>
-                  <AvField id="questionnaire-bloodDiseases" type="text" name="bloodDiseases" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="liverDiseasesLabel" for="liverDiseases">
-                    <Translate contentKey="totoroApp.questionnaire.liverDiseases">Liver Diseases</Translate>
-                  </Label>
-                  <AvField id="questionnaire-liverDiseases" type="text" name="liverDiseases" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="hepatitisTypeLabel">
-                    <Translate contentKey="totoroApp.questionnaire.hepatitisType">Hepatitis Type</Translate>
-                  </Label>
-                  <AvInput
-                    id="questionnaire-hepatitisType"
-                    type="select"
-                    className="form-control"
-                    name="hepatitisType"
-                    value={(!isNew && questionnaireEntity.hepatitisType) || 'A'}
-                  >
-                    <option value="A">
-                      <Translate contentKey="totoroApp.Hepatitis.A" />
-                    </option>
-                    <option value="B">
-                      <Translate contentKey="totoroApp.Hepatitis.B" />
-                    </option>
-                    <option value="C">
-                      <Translate contentKey="totoroApp.Hepatitis.C" />
-                    </option>
-                    <option value="D">
-                      <Translate contentKey="totoroApp.Hepatitis.D" />
-                    </option>
-                    <option value="E">
-                      <Translate contentKey="totoroApp.Hepatitis.E" />
-                    </option>
-                  </AvInput>
-                </AvGroup>
-                <AvGroup>
-                  <Label id="gastrointestinalDiseasesLabel" for="gastrointestinalDiseases">
-                    <Translate contentKey="totoroApp.questionnaire.gastrointestinalDiseases">Gastrointestinal Diseases</Translate>
-                  </Label>
-                  <AvField id="questionnaire-gastrointestinalDiseases" type="text" name="gastrointestinalDiseases" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="receivingMedicationLabel" for="receivingMedication">
-                    <Translate contentKey="totoroApp.questionnaire.receivingMedication">Receiving Medication</Translate>
-                  </Label>
-                  <AvField id="questionnaire-receivingMedication" type="text" name="receivingMedication" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="anyAllergySensitivityLabel" for="anyAllergySensitivity">
-                    <Translate contentKey="totoroApp.questionnaire.anyAllergySensitivity">Any Allergy Sensitivity</Translate>
-                  </Label>
-                  <AvField id="questionnaire-anyAllergySensitivity" type="text" name="anyAllergySensitivity" />
+                  <AvField id="questionnaire-drugName" type="text" name="drugName" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="glycemicACLabel" for="glycemicAC">
@@ -177,99 +118,6 @@ export class QuestionnaireUpdate extends React.Component<IQuestionnaireUpdatePro
                     <Translate contentKey="totoroApp.questionnaire.smokeNumberADay">Smoke Number A Day</Translate>
                   </Label>
                   <AvField id="questionnaire-smokeNumberADay" type="string" className="form-control" name="smokeNumberADay" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="productionYearLabel" for="productionYear">
-                    <Translate contentKey="totoroApp.questionnaire.productionYear">Production Year</Translate>
-                  </Label>
-                  <AvField id="questionnaire-productionYear" type="string" className="form-control" name="productionYear" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="productionMonthLabel">
-                    <Translate contentKey="totoroApp.questionnaire.productionMonth">Production Month</Translate>
-                  </Label>
-                  <AvInput
-                    id="questionnaire-productionMonth"
-                    type="select"
-                    className="form-control"
-                    name="productionMonth"
-                    value={(!isNew && questionnaireEntity.productionMonth) || 'JAN'}
-                  >
-                    <option value="JAN">
-                      <Translate contentKey="totoroApp.Month.JAN" />
-                    </option>
-                    <option value="FEB">
-                      <Translate contentKey="totoroApp.Month.FEB" />
-                    </option>
-                    <option value="MAR">
-                      <Translate contentKey="totoroApp.Month.MAR" />
-                    </option>
-                    <option value="APR">
-                      <Translate contentKey="totoroApp.Month.APR" />
-                    </option>
-                    <option value="MAY">
-                      <Translate contentKey="totoroApp.Month.MAY" />
-                    </option>
-                    <option value="JUN">
-                      <Translate contentKey="totoroApp.Month.JUN" />
-                    </option>
-                    <option value="JUL">
-                      <Translate contentKey="totoroApp.Month.JUL" />
-                    </option>
-                    <option value="AUG">
-                      <Translate contentKey="totoroApp.Month.AUG" />
-                    </option>
-                    <option value="SEP">
-                      <Translate contentKey="totoroApp.Month.SEP" />
-                    </option>
-                    <option value="OCT">
-                      <Translate contentKey="totoroApp.Month.OCT" />
-                    </option>
-                    <option value="NOV">
-                      <Translate contentKey="totoroApp.Month.NOV" />
-                    </option>
-                    <option value="DEC">
-                      <Translate contentKey="totoroApp.Month.DEC" />
-                    </option>
-                  </AvInput>
-                </AvGroup>
-                <AvGroup>
-                  <Label id="otherLabel" for="other">
-                    <Translate contentKey="totoroApp.questionnaire.other">Other</Translate>
-                  </Label>
-                  <AvField id="questionnaire-other" type="text" name="other" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="difficultExtractionOrContinuousBleedingLabel" check>
-                    <AvInput
-                      id="questionnaire-difficultExtractionOrContinuousBleeding"
-                      type="checkbox"
-                      className="form-control"
-                      name="difficultExtractionOrContinuousBleeding"
-                    />
-                    <Translate contentKey="totoroApp.questionnaire.difficultExtractionOrContinuousBleeding">
-                      Difficult Extraction Or Continuous Bleeding
-                    </Translate>
-                  </Label>
-                </AvGroup>
-                <AvGroup>
-                  <Label id="nauseaOrDizzinessLabel" check>
-                    <AvInput id="questionnaire-nauseaOrDizziness" type="checkbox" className="form-control" name="nauseaOrDizziness" />
-                    <Translate contentKey="totoroApp.questionnaire.nauseaOrDizziness">Nausea Or Dizziness</Translate>
-                  </Label>
-                </AvGroup>
-                <AvGroup>
-                  <Label id="adverseReactionsToAnestheticInjectionsLabel" check>
-                    <AvInput
-                      id="questionnaire-adverseReactionsToAnestheticInjections"
-                      type="checkbox"
-                      className="form-control"
-                      name="adverseReactionsToAnestheticInjections"
-                    />
-                    <Translate contentKey="totoroApp.questionnaire.adverseReactionsToAnestheticInjections">
-                      Adverse Reactions To Anesthetic Injections
-                    </Translate>
-                  </Label>
                 </AvGroup>
                 <AvGroup>
                   <Label id="otherInTreatmentLabel" for="otherInTreatment">
@@ -302,7 +150,8 @@ export class QuestionnaireUpdate extends React.Component<IQuestionnaireUpdatePro
 const mapStateToProps = (storeState: IRootState) => ({
   questionnaireEntity: storeState.questionnaire.entity,
   loading: storeState.questionnaire.loading,
-  updating: storeState.questionnaire.updating
+  updating: storeState.questionnaire.updating,
+  updateSuccess: storeState.questionnaire.updateSuccess
 });
 
 const mapDispatchToProps = {

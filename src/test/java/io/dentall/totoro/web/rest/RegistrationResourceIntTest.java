@@ -3,7 +3,6 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
-import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -85,9 +84,6 @@ public class RegistrationResourceIntTest {
 
     @Autowired
     private TagRepository tagRepository;
-
-    @Autowired
-    private PatientService patientService;
 
     @Autowired
     private TreatmentProcedureRepository treatmentProcedureRepository;
@@ -315,7 +311,7 @@ public class RegistrationResourceIntTest {
     @Test
     @Transactional
     public void getAllPatientCards() throws Exception {
-        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository, patientService);
+        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
         Appointment appointment = createAppointment(patient);
 
         // Initialize the database

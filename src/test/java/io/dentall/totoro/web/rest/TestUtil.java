@@ -7,7 +7,6 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.repository.UserRepository;
-import io.dentall.totoro.service.PatientService;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
@@ -143,8 +142,7 @@ public class TestUtil {
         EntityManager em,
         UserRepository userRepository,
         TagRepository tagRepository,
-        PatientRepository patientRepository,
-        PatientService patientService) {
+        PatientRepository patientRepository) {
         Patient patient = PatientResourceIntTest.createEntity(em);
 
         User user = UserResourceIntTest.createEntity(em);
@@ -158,8 +156,6 @@ public class TestUtil {
         patient.addTag(tagRepository.save(tag));
 
         patient.setQuestionnaire(QuestionnaireResourceIntTest.createEntity(em));
-
-        patientService.setTagsByQuestionnaire(patient.getTags(), patient.getQuestionnaire());
 
         return patientRepository.save(patient);
     }

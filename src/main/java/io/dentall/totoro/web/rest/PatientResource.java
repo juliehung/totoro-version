@@ -85,7 +85,6 @@ public class PatientResource {
             throw new BadRequestAlertException("A new patient cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        patientService.setTagsByQuestionnaire(patient.getTags(), patient.getQuestionnaire());
         Patient result = patientRepository.save(patient);
         result.getTreatments().add(treatmentService.save(new Treatment().name("General Treatment").type(TreatmentType.GENERAL).patient(result)));
         return ResponseEntity.created(new URI("/api/patients/" + result.getId()))

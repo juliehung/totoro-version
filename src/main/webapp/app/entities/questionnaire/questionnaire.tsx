@@ -67,35 +67,11 @@ export class Questionnaire extends React.Component<IQuestionnaireProps, IQuestio
                 <th className="hand" onClick={this.sort('id')}>
                   <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('hypertension')}>
-                  <Translate contentKey="totoroApp.questionnaire.hypertension">Hypertension</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('drug')}>
+                  <Translate contentKey="totoroApp.questionnaire.drug">Drug</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('heartDiseases')}>
-                  <Translate contentKey="totoroApp.questionnaire.heartDiseases">Heart Diseases</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('kidneyDiseases')}>
-                  <Translate contentKey="totoroApp.questionnaire.kidneyDiseases">Kidney Diseases</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('bloodDiseases')}>
-                  <Translate contentKey="totoroApp.questionnaire.bloodDiseases">Blood Diseases</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('liverDiseases')}>
-                  <Translate contentKey="totoroApp.questionnaire.liverDiseases">Liver Diseases</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('hepatitisType')}>
-                  <Translate contentKey="totoroApp.questionnaire.hepatitisType">Hepatitis Type</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('gastrointestinalDiseases')}>
-                  <Translate contentKey="totoroApp.questionnaire.gastrointestinalDiseases">Gastrointestinal Diseases</Translate>{' '}
-                  <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('receivingMedication')}>
-                  <Translate contentKey="totoroApp.questionnaire.receivingMedication">Receiving Medication</Translate>{' '}
-                  <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('anyAllergySensitivity')}>
-                  <Translate contentKey="totoroApp.questionnaire.anyAllergySensitivity">Any Allergy Sensitivity</Translate>{' '}
-                  <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('drugName')}>
+                  <Translate contentKey="totoroApp.questionnaire.drugName">Drug Name</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('glycemicAC')}>
                   <Translate contentKey="totoroApp.questionnaire.glycemicAC">Glycemic AC</Translate> <FontAwesomeIcon icon="sort" />
@@ -105,32 +81,6 @@ export class Questionnaire extends React.Component<IQuestionnaireProps, IQuestio
                 </th>
                 <th className="hand" onClick={this.sort('smokeNumberADay')}>
                   <Translate contentKey="totoroApp.questionnaire.smokeNumberADay">Smoke Number A Day</Translate>{' '}
-                  <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('productionYear')}>
-                  <Translate contentKey="totoroApp.questionnaire.productionYear">Production Year</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('productionMonth')}>
-                  <Translate contentKey="totoroApp.questionnaire.productionMonth">Production Month</Translate>{' '}
-                  <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('other')}>
-                  <Translate contentKey="totoroApp.questionnaire.other">Other</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('difficultExtractionOrContinuousBleeding')}>
-                  <Translate contentKey="totoroApp.questionnaire.difficultExtractionOrContinuousBleeding">
-                    Difficult Extraction Or Continuous Bleeding
-                  </Translate>{' '}
-                  <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('nauseaOrDizziness')}>
-                  <Translate contentKey="totoroApp.questionnaire.nauseaOrDizziness">Nausea Or Dizziness</Translate>{' '}
-                  <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('adverseReactionsToAnestheticInjections')}>
-                  <Translate contentKey="totoroApp.questionnaire.adverseReactionsToAnestheticInjections">
-                    Adverse Reactions To Anesthetic Injections
-                  </Translate>{' '}
                   <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('otherInTreatment')}>
@@ -148,28 +98,11 @@ export class Questionnaire extends React.Component<IQuestionnaireProps, IQuestio
                       {questionnaire.id}
                     </Button>
                   </td>
-                  <td>{questionnaire.hypertension}</td>
-                  <td>{questionnaire.heartDiseases}</td>
-                  <td>{questionnaire.kidneyDiseases}</td>
-                  <td>{questionnaire.bloodDiseases}</td>
-                  <td>{questionnaire.liverDiseases}</td>
-                  <td>
-                    <Translate contentKey={`totoroApp.Hepatitis.${questionnaire.hepatitisType}`} />
-                  </td>
-                  <td>{questionnaire.gastrointestinalDiseases}</td>
-                  <td>{questionnaire.receivingMedication}</td>
-                  <td>{questionnaire.anyAllergySensitivity}</td>
+                  <td>{questionnaire.drug ? 'true' : 'false'}</td>
+                  <td>{questionnaire.drugName}</td>
                   <td>{questionnaire.glycemicAC}</td>
                   <td>{questionnaire.glycemicPC}</td>
                   <td>{questionnaire.smokeNumberADay}</td>
-                  <td>{questionnaire.productionYear}</td>
-                  <td>
-                    <Translate contentKey={`totoroApp.Month.${questionnaire.productionMonth}`} />
-                  </td>
-                  <td>{questionnaire.other}</td>
-                  <td>{questionnaire.difficultExtractionOrContinuousBleeding ? 'true' : 'false'}</td>
-                  <td>{questionnaire.nauseaOrDizziness ? 'true' : 'false'}</td>
-                  <td>{questionnaire.adverseReactionsToAnestheticInjections ? 'true' : 'false'}</td>
                   <td>{questionnaire.otherInTreatment}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

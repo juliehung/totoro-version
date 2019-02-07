@@ -13,7 +13,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -236,8 +235,6 @@ public class PatientResourceIntTest {
 
         patientIdentity = PatientIdentityResourceIntTest.createEntity(em);
         patient.setPatientIdentity(patientIdentityRepository.save(patientIdentity));
-
-        patientService.setTagsByQuestionnaire(patient.getTags(), patient.getQuestionnaire());
     }
 
     @Test
@@ -279,7 +276,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getIntroducer()).isEqualTo(null);
         assertThat(testPatient.getTags()).contains(tag);
-        assertThat(testPatient.getQuestionnaire().getHepatitisType()).isEqualTo(patient.getQuestionnaire().getHepatitisType());
+        assertThat(testPatient.getQuestionnaire().isDrug()).isEqualTo(patient.getQuestionnaire().isDrug());
         assertThat(testPatient.getPatientIdentity()).isEqualTo(patientIdentity);
         assertThat(testPatient.getTreatments().size()).isEqualTo(1);
 

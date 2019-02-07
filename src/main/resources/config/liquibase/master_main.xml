@@ -40,6 +40,7 @@
     <include file="config/liquibase/changelog/20190129_addColumn_Ledger.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190125_addColumn_Procedure.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190130_addColumn_Treatment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190207_addColumn_Questionnaire.xml" relativeToChangelogFile="false"/>
 
     <!-- add default value -->
     <include file="config/liquibase/changelog/20181024_addDefaultValue_Appointment.xml" relativeToChangelogFile="false"/>

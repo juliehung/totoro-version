@@ -2,40 +2,11 @@
     "name": "Questionnaire",
     "fields": [
         {
-            "fieldName": "hypertension",
-            "fieldType": "String"
+            "fieldName": "drug",
+            "fieldType": "Boolean"
         },
         {
-            "fieldName": "heartDiseases",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "kidneyDiseases",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "bloodDiseases",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "liverDiseases",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "hepatitisType",
-            "fieldType": "Hepatitis",
-            "fieldValues": "A,B,C,D,E"
-        },
-        {
-            "fieldName": "gastrointestinalDiseases",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "receivingMedication",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "anyAllergySensitivity",
+            "fieldName": "drugName",
             "fieldType": "String"
         },
         {
@@ -49,31 +20,6 @@
         {
             "fieldName": "smokeNumberADay",
             "fieldType": "Integer"
-        },
-        {
-            "fieldName": "productionYear",
-            "fieldType": "Integer"
-        },
-        {
-            "fieldName": "productionMonth",
-            "fieldType": "Month",
-            "fieldValues": "JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC"
-        },
-        {
-            "fieldName": "other",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "difficultExtractionOrContinuousBleeding",
-            "fieldType": "Boolean"
-        },
-        {
-            "fieldName": "nauseaOrDizziness",
-            "fieldType": "Boolean"
-        },
-        {
-            "fieldName": "adverseReactionsToAnestheticInjections",
-            "fieldType": "Boolean"
         },
         {
             "fieldName": "otherInTreatment",
