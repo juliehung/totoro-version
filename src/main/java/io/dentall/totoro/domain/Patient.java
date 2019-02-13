@@ -150,7 +150,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @JsonIgnoreProperties("")
     private PatientIdentity patientIdentity;
 
-    @OneToMany(mappedBy = "patient")
+    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Treatment> treatments = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
