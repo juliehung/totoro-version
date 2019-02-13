@@ -784,7 +784,7 @@ public class PatientResourceIntTest {
         tagRepository.save(tag1);
 
         Tag tag2 = TagResourceIntTest.createEntity(em);
-        tag1.setName("tag2");
+        tag2.setName("tag2");
         tagRepository.save(tag2);
 
         // Initialize the database
