@@ -93,6 +93,12 @@
                   separator=";"
                   tableName="finding_type">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/treatments.csv"
+                  separator=";"
+                  tableName="treatment">
+        </loadData>
     </changeSet>
 
 </databaseChangeLog>
