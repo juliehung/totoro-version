@@ -45,7 +45,8 @@
       "child": "Child",
       "spouse2": "Spouse 2",
       "patientIdentity": "Patient Identity",
-      "treatment": "Treatment"
+      "treatment": "Treatment",
+      "todo": "Todo"
     }
   }
 }

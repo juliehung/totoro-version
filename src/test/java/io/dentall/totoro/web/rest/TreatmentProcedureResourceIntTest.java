@@ -2,13 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 
-import io.dentall.totoro.domain.TreatmentProcedure;
-import io.dentall.totoro.domain.NHIProcedure;
-import io.dentall.totoro.domain.TreatmentTask;
-import io.dentall.totoro.domain.Procedure;
-import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.Registration;
-import io.dentall.totoro.domain.Tooth;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.ToothRepository;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.repository.UserRepository;
@@ -572,6 +566,24 @@ public class TreatmentProcedureResourceIntTest {
 
         // Get all the treatmentProcedureList where tooth equals to toothId + 1
         defaultTreatmentProcedureShouldNotBeFound("toothId.equals=" + (toothId + 1));
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByTodoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Todo todo = TodoResourceIntTest.createEntity(em);
+        em.persist(todo);
+        em.flush();
+        treatmentProcedure.setTodo(todo);
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+        Long todoId = todo.getId();
+
+        // Get all the treatmentProcedureList where todo equals to todoId
+        defaultTreatmentProcedureShouldBeFound("todoId.equals=" + todoId);
+
+        // Get all the treatmentProcedureList where todo equals to todoId + 1
+        defaultTreatmentProcedureShouldNotBeFound("todoId.equals=" + (todoId + 1));
     }
 
     /**

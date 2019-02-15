@@ -53,6 +53,8 @@ public class TreatmentProcedureCriteria implements Serializable {
 
     private LongFilter toothId;
 
+    private LongFilter todoId;
+
     public LongFilter getId() {
         return id;
     }
@@ -149,6 +151,14 @@ public class TreatmentProcedureCriteria implements Serializable {
         this.toothId = toothId;
     }
 
+    public LongFilter getTodoId() {
+        return todoId;
+    }
+
+    public void setTodoId(LongFilter todoId) {
+        this.todoId = todoId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -171,7 +181,8 @@ public class TreatmentProcedureCriteria implements Serializable {
             Objects.equals(procedureId, that.procedureId) &&
             Objects.equals(appointmentId, that.appointmentId) &&
             Objects.equals(registrationId, that.registrationId) &&
-            Objects.equals(toothId, that.toothId);
+            Objects.equals(toothId, that.toothId) &&
+            Objects.equals(todoId, that.todoId);
     }
 
     @Override
@@ -188,7 +199,8 @@ public class TreatmentProcedureCriteria implements Serializable {
         procedureId,
         appointmentId,
         registrationId,
-        toothId
+        toothId,
+        todoId
         );
     }
 
@@ -207,6 +219,7 @@ public class TreatmentProcedureCriteria implements Serializable {
                 (appointmentId != null ? "appointmentId=" + appointmentId + ", " : "") +
                 (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
                 (toothId != null ? "toothId=" + toothId + ", " : "") +
+                (todoId != null ? "todoId=" + todoId + ", " : "") +
             "}";
     }
 

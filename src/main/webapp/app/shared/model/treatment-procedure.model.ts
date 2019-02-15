@@ -5,6 +5,7 @@ import { IProcedure } from 'app/shared/model//procedure.model';
 import { IAppointment } from 'app/shared/model//appointment.model';
 import { IRegistration } from 'app/shared/model//registration.model';
 import { ITooth } from 'app/shared/model//tooth.model';
+import { ITodo } from 'app/shared/model//todo.model';
 
 export const enum TreatmentProcedureStatus {
   PLANNED = 'PLANNED',
@@ -27,6 +28,7 @@ export interface ITreatmentProcedure {
   appointment?: IAppointment;
   registration?: IRegistration;
   teeth?: ITooth[];
+  todo?: ITodo;
 }
 
 export const defaultValue: Readonly<ITreatmentProcedure> = {};

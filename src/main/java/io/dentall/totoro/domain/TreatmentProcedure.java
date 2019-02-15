@@ -70,6 +70,10 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @OneToMany(mappedBy = "treatmentProcedure", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Tooth> teeth = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnoreProperties("treatmentProcedures")
+    private Todo todo;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -232,6 +236,19 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
 
     public void setTeeth(Set<Tooth> teeth) {
         this.teeth = teeth;
+    }
+
+    public Todo getTodo() {
+        return todo;
+    }
+
+    public TreatmentProcedure todo(Todo todo) {
+        this.todo = todo;
+        return this;
+    }
+
+    public void setTodo(Todo todo) {
+        this.todo = todo;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

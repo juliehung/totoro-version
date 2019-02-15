@@ -1,0 +1,44 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "patient",
+            "otherEntityName": "patient",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "treatmentProcedure",
+            "otherEntityName": "treatmentProcedure",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "todo"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "ststus",
+            "fieldType": "TodoStatus",
+            "fieldValues": "PENDING,FINISHED"
+        },
+        {
+            "fieldName": "expectedDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "requiredTreatmentTime",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "note",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20190213075054",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "serviceClass",
+    "entityTableName": "todo",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

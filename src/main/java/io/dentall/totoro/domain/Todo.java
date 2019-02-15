@@ -1,0 +1,199 @@
+package io.dentall.totoro.domain;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+
+import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Objects;
+
+import io.dentall.totoro.domain.enumeration.TodoStatus;
+
+/**
+ * A Todo.
+ */
+@Entity
+@Table(name = "todo")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public class Todo extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ststus")
+    private TodoStatus ststus;
+
+    @Column(name = "expected_date")
+    private LocalDate expectedDate;
+
+    @Column(name = "required_treatment_time")
+    private Integer requiredTreatmentTime;
+
+    @Column(name = "note")
+    private String note;
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Patient patient;
+
+    @OneToMany(mappedBy = "todo", fetch = FetchType.EAGER)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public TodoStatus getStstus() {
+        return ststus;
+    }
+
+    public Todo ststus(TodoStatus ststus) {
+        this.ststus = ststus;
+        return this;
+    }
+
+    public void setStstus(TodoStatus ststus) {
+        this.ststus = ststus;
+    }
+
+    public LocalDate getExpectedDate() {
+        return expectedDate;
+    }
+
+    public Todo expectedDate(LocalDate expectedDate) {
+        this.expectedDate = expectedDate;
+        return this;
+    }
+
+    public void setExpectedDate(LocalDate expectedDate) {
+        this.expectedDate = expectedDate;
+    }
+
+    public Integer getRequiredTreatmentTime() {
+        return requiredTreatmentTime;
+    }
+
+    public Todo requiredTreatmentTime(Integer requiredTreatmentTime) {
+        this.requiredTreatmentTime = requiredTreatmentTime;
+        return this;
+    }
+
+    public void setRequiredTreatmentTime(Integer requiredTreatmentTime) {
+        this.requiredTreatmentTime = requiredTreatmentTime;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public Todo note(String note) {
+        this.note = note;
+        return this;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public Todo patient(Patient patient) {
+        this.patient = patient;
+        return this;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public Set<TreatmentProcedure> getTreatmentProcedures() {
+        return treatmentProcedures;
+    }
+
+    public Todo treatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
+        this.treatmentProcedures = treatmentProcedures;
+        return this;
+    }
+
+    public Todo addTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
+        this.treatmentProcedures.add(treatmentProcedure);
+        treatmentProcedure.setTodo(this);
+        return this;
+    }
+
+    public Todo removeTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
+        this.treatmentProcedures.remove(treatmentProcedure);
+        treatmentProcedure.setTodo(null);
+        return this;
+    }
+
+    public void setTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
+        this.treatmentProcedures = treatmentProcedures;
+    }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    @Override
+    @JsonIgnore(false)
+    @JsonProperty
+    public String getCreatedBy() {
+        return super.getCreatedBy();
+    }
+
+    @Override
+    @JsonIgnore(false)
+    @JsonProperty
+    public Instant getCreatedDate() {
+        return super.getCreatedDate();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Todo todo = (Todo) o;
+        if (todo.getId() == null || getId() == null) {
+            return false;
+        }
+        return Objects.equals(getId(), todo.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Todo{" +
+            "id=" + getId() +
+            ", ststus='" + getStstus() + "'" +
+            ", expectedDate='" + getExpectedDate() + "'" +
+            ", requiredTreatmentTime=" + getRequiredTreatmentTime() +
+            ", note='" + getNote() + "'" +
+            "}";
+    }
+}

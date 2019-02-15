@@ -37,6 +37,12 @@
             "otherEntityName": "tooth",
             "relationshipType": "one-to-many",
             "otherEntityRelationshipName": "treatmentProcedure"
+        },
+        {
+            "relationshipName": "todo",
+            "otherEntityName": "todo",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
         }
     ],
     "fields": [

@@ -71,6 +71,12 @@
             "otherEntityName": "treatment",
             "relationshipType": "one-to-many",
             "otherEntityRelationshipName": "patient"
+        },
+        {
+            "relationshipName": "todo",
+            "otherEntityName": "todo",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "patient"
         }
     ],
     "fields": [

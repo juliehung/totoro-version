@@ -31,6 +31,7 @@
     <include file="config/liquibase/changelog/20190131034634_added_entity_TreatmentPlan.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190203082322_added_entity_FindingType.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190214094023_added_entity_Drug.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190213075054_added_entity_Todo.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/20181024_addColumn_Patient.xml" relativeToChangelogFile="false"/>
@@ -42,6 +43,7 @@
     <include file="config/liquibase/changelog/20190125_addColumn_Procedure.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190130_addColumn_Treatment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190207_addColumn_Questionnaire.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190213_addColumn_Todo.xml" relativeToChangelogFile="false"/>
 
     <!-- add default value -->
     <include file="config/liquibase/changelog/20181024_addDefaultValue_Appointment.xml" relativeToChangelogFile="false"/>

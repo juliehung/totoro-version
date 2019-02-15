@@ -108,6 +108,9 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                 <th>
                   <Translate contentKey="totoroApp.treatmentProcedure.registration">Registration</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th>
+                  <Translate contentKey="totoroApp.treatmentProcedure.todo">Todo</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -162,6 +165,9 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                     ) : (
                       ''
                     )}
+                  </td>
+                  <td>
+                    {treatmentProcedure.todo ? <Link to={`todo/${treatmentProcedure.todo.id}`}>{treatmentProcedure.todo.id}</Link> : ''}
                   </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

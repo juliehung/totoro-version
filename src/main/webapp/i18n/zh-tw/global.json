@@ -32,6 +32,7 @@
         "treatmentPlan": "Treatment Plan",
         "findingType": "Finding Type",
         "drug": "Drug",
+        "todo": "Todo",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

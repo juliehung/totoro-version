@@ -25,7 +25,8 @@
       "procedure": "Procedure",
       "appointment": "Appointment",
       "registration": "Registration",
-      "tooth": "Tooth"
+      "tooth": "Tooth",
+      "todo": "Todo"
     }
   }
 }

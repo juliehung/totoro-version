@@ -81,6 +81,10 @@ export class TreatmentProcedureDetail extends React.Component<ITreatmentProcedur
               <Translate contentKey="totoroApp.treatmentProcedure.registration">Registration</Translate>
             </dt>
             <dd>{treatmentProcedureEntity.registration ? treatmentProcedureEntity.registration.id : ''}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.treatmentProcedure.todo">Todo</Translate>
+            </dt>
+            <dd>{treatmentProcedureEntity.todo ? treatmentProcedureEntity.todo.id : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/treatment-procedure" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}
