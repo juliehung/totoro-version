@@ -27,6 +27,7 @@ import ProcedureType from './procedure-type';
 import Treatment from './treatment';
 import TreatmentPlan from './treatment-plan';
 import FindingType from './finding-type';
+import Drug from './drug';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -56,6 +57,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/treatment`} component={Treatment} />
       <ErrorBoundaryRoute path={`${match.url}/treatment-plan`} component={TreatmentPlan} />
       <ErrorBoundaryRoute path={`${match.url}/finding-type`} component={FindingType} />
+      <ErrorBoundaryRoute path={`${match.url}/drug`} component={Drug} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>
