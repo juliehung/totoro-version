@@ -1,6 +1,5 @@
 package io.dentall.totoro.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -32,7 +31,7 @@ public class TreatmentPlan implements Serializable {
     @Column(name = "activated", nullable = false)
     private Boolean activated;
 
-    @OneToMany(mappedBy = "treatmentPlan")
+    @OneToMany(mappedBy = "treatmentPlan", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentTask> treatmentTasks = new HashSet<>();
     @ManyToOne
