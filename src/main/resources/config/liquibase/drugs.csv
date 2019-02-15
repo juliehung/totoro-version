@@ -1,0 +1,61 @@
+﻿id;name;chinese_name;jhi_type;valid_date;end_date;unit;price;quantity;frequency;way
+1;Amoxicillin-250mg;阿莫西林;抗生素;2006-11-01;1900-01-01;tab;1;1;QID;PO
+2;Erythromycin-250mg;红霉素;抗生素;1995-03-01;2011-04-30;mg;10;1;QID;PO
+3;Potarlon-500mg;保痛樂錠;NSAID;2010-06-01;1900-01-01;tab;1;1;QID;PO
+4;Clindamycin-150mg;克林霉素;抗生素;2009-10-01;1900-01-01;tab;1.24;1;QID;PO
+5;Acetaminophen-500mg;乙醯胺酚;止痛;2005-07-01;1900-01-01;tab;0;1;QID;PO
+6;Superzyme(Lysozyme)90mg;佑速朗錠;消炎 止血 化痰;2010-05-01;1900-01-01;mg;1;1;QID;PO
+7;Poro-80mg;伯樂錠80毫克;止痛;1995-03-01;1900-01-01;mg;0;1;QID;PO
+8;Doxymycin-100mg;去氧羥四環素;抗生素;2011-06-01;1900-01-01;mg;0;1;QID;PO
+9;Soma;舒肌痛膠囊;止痛;2010-05-01;1900-01-01;mg;0;1;QID;PO
+10;Vicomp;妙維糖衣錠;B群;2011-06-01;1900-01-01;mg;0;1;QID;PO
+11;Epilon;胃必朗錠;胃葯;1995-03-01;1900-01-01;mg;8;1;QID;PO
+12;Buprotin sustained release F.C. Tablets 150mg"Royal";"皇佳"慮舒妥持續性藥效膜衣錠150毫克;戒菸;2014-09-01;NULL;mg;20.7;1;QD;PO
+13;Funnix SR Tablets 150mg;輔寧持續性藥效錠150毫克;戒菸;2014-09-01;NULL;mg;20.7;1;QD;PO
+14;Prewell SR Tablets 150mg "Macro";"瑪科隆"複維藥持續性藥效錠150毫克;戒菸;2014-09-01;NULL;mg;22.5;1;QD;PO
+15;Nicotinell TTS 30;克菸貼片30;戒菸;2014-09-01;NULL;mg;78;1;QD;EXT
+16;Nicotinell TTS 20;克菸貼片20;戒菸;2014-09-01;NULL;mg;78;1;QD;EXT
+17;Nicotinell TTS 10;克菸貼片10;戒菸;2014-09-01;NULL;mg;78;1;QD;EXT
+18;Nicotinell Fruit 4mg Chewing Gum;克菸 咀嚼錠 (水果口味)4毫克;戒菸;2014-09-01;NULL;mg;8;1;QD;PO
+19;Nicotinell Mint 2mg Chewing Gum;克菸 咀嚼錠 (薄荷口味)2毫克;戒菸;2014-09-01;NULL;mg;6;1;QD;PO
+20;Nicotinell Fruit 2mg Chewing Gum;克菸 咀嚼錠 (水果口味)2毫克;戒菸;2014-09-01;NULL;mg;6;1;QD;PO
+21;Nicotinell Mint 4mg Chewing Gum;克菸 咀嚼錠 (薄荷口味)4毫克;戒菸;2014-09-01;NULL;mg;8;1;QD;PO
+22;Smokfree Nicotine TDDS 15;淨菸 經皮戒菸貼片15號;戒菸;2014-09-01;NULL;mg;56;1;QD;EXT
+23;Smokfree Nicotine TDDS 10;淨菸 經皮戒菸貼片10號;戒菸;2014-09-01;NULL;mg;56;1;QD;EXT
+24;Smokfree Nicotine TDDS 5;淨菸 經皮戒菸貼片5號;戒菸;2014-09-01;NULL;mg;56;1;QD;EXT
+25;Smokquit Mint Lozenges 2mg;"信東"停菸戒菸薄荷片口含錠2毫克;戒菸;2014-09-01;NULL;mg;6;1;QD;PO
+26;Smokquit Mint Lozenges 4mg;"信東"停菸戒菸薄荷片口含錠4毫克;戒菸;2014-09-01;NULL;mg;8;1;QD;PO
+27;Bupion SR Tablets 150mg;"信東"布憂平持續藥效錠150毫克;戒菸;2014-09-01;NULL;mg;23.6;1;QD;PO
+28;NiQuitin Mint Lozenges 2mg;力抗菸戒菸薄荷片口含錠2毫克;戒菸;2014-09-01;NULL;mg;6;1;QD;PO
+29;NiQuitin Mint Lozenges 4mg;力抗菸戒菸薄荷片口含錠4毫克;戒菸;2014-09-01;NULL;mg;8;1;QD;PO
+30;Wellbutrin Sustained-Release Tablets 150mg;威博雋持續性藥效錠;戒菸;2014-09-01;NULL;mg;29.5;1;QD;PO
+31;Nicorette Freshmint medicated chewing-gum 2mg;尼古清 薄荷咀嚼錠 2毫克;戒菸;2014-09-01;NULL;mg;6;1;QD;PO
+32;Nicorette Freshmint medicated chewing-gum 4mg;尼古清 薄荷咀嚼錠 4毫克;戒菸;2014-09-01;NULL;mg;8;1;QD;PO
+33;Champix film coated tablet 0.5mg;戒必適 0.5毫克;戒菸;2014-09-01;NULL;mg;60;1;QD;PO
+34;Champix film coated tablet 1mg;戒必適 1毫克;戒菸;2014-09-01;NULL;mg;60;1;QD;PO
+35;Amoxicillin-500mg;盤尼西林;抗生素;1900-01-01;1900-01-01;tab;0;1;QID;PO
+36;Ibuprofen-400mg;布洛芬;NSAID;1900-01-01;1900-01-01;tab;0;1;QID;PO
+37;口內膏;口內膏;類固醇;1900-01-01;1900-01-01;gm;0;1;PRN;TOPI
+38;ANTI-PHEN;安佳熱糖漿;止痛;1900-01-01;1900-01-01;ml;1;0.5;PRN;PO
+39;Cephalexin-500mg;頭孢氨苄;抗生素;1900-01-01;1900-01-01;tab;0;1;QID;PO
+40;IDOFEN;舒抑痛口服懸液;NSAID;1900-01-01;1900-01-01;ml;0;1;PRN;PO
+41;Lorazepam 0.5mg;樂耐平;抗焦慮劑;1900-01-01;1900-01-01;NULL;0;1;PRN;PO
+42;Voren-100mg;非炎;NSAID;1900-01-01;1900-01-01;NULL;0;1;QID;PO
+43;Diclofenac sodium 50mg;待克非那;NSAID;1900-01-01;1900-01-01;tab;0;1;QID;PO
+44;Solaxin-250mg;肌絡舒片;肌肉鬆弛劑;1900-01-01;1900-01-01;tab;0;1;QID;PO
+45;Augmentin 1g;安滅菌膜衣錠;抗生素;1900-01-01;1900-01-01;g;0;1;BID;PO
+46;Xyzal;驅異樂膜衣錠;抗組織胺;1900-01-01;1900-01-01;5mg;0;1;QD;PO
+47;PASSTON 250mg;保適當膠囊;NSAID;1900-01-01;1900-01-01;250;0;1;QID;PO
+48;Amolin Powder;安莫西林;抗生素;1900-01-01;1900-01-01;mg;31;1;QD;PO
+49;Diclofenac-25mg;待克菲那;NSAID;1900-01-01;1900-01-01;tab;0;1;QID;PO
+50;Deherp 5g;疱寧錠;抗皰疹病毒;1900-01-01;1900-01-01;NULL;0;1;PRN;TOPI
+51;Preconin;保康寧錠;類固醇;1900-01-01;1900-01-01;NULL;1;1;TID;PO
+52;ANZEN;安炎腸溶膜衣錠;消炎;1900-01-01;1900-01-01;NULL;0;1;TID;PO
+53;Tricogyl;脫帶淨膜衣錠;抗生素;1900-01-01;1900-01-01;250mg;0;1;QID;PO
+54;Flagyl;益膚康凝膠;抗生素;1900-01-01;1900-01-01;250mg;0;1;QID;PO
+55;Ponstan-500mg;不炎痛;NSAID;1900-01-01;1900-01-01;tab;0;1;QID;PO
+56;Xanax 0.5mg;贊安諾錠;抗焦慮;1900-01-01;1900-01-01;NULL;0;1;QD;PO
+57;Noflagma;祛痰劑痰液溶解劑;消炎 止血 化痰;1900-01-01;1900-01-01;tab;0;1;TID;PO
+58;sinwell 200mg;欣胃錠;胃葯;1900-01-01;1900-01-01;tab;0;1;TID;PO
+59;KEFLEX;適汎黴素;抗生素;1900-01-01;1900-01-01;NULL;0;1;QID;PO
+60;漱口水;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL

@@ -104,6 +104,10 @@ import treatmentPlan, {
 import findingType, {
   FindingTypeState
 } from 'app/entities/finding-type/finding-type.reducer';
+// prettier-ignore
+import drug, {
+  DrugState
+} from 'app/entities/drug/drug.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -140,6 +144,7 @@ export interface IRootState {
   readonly treatment: TreatmentState;
   readonly treatmentPlan: TreatmentPlanState;
   readonly findingType: FindingTypeState;
+  readonly drug: DrugState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -178,6 +183,7 @@ const rootReducer = combineReducers<IRootState>({
   treatment,
   treatmentPlan,
   findingType,
+  drug,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });
