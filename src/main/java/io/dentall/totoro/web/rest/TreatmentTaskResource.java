@@ -64,10 +64,12 @@ public class TreatmentTaskResource {
         if (treatmentTask.getId() != null) {
             throw new BadRequestAlertException("A new treatmentTask cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
         TreatmentTask result = treatmentTaskService.save(treatmentTask);
 
         // add default TreatmentProcedure of TreatmentTask
         result.getTreatmentProcedures().add(treatmentProcedureService.save(new TreatmentProcedure().status(TreatmentProcedureStatus.HIDE).treatmentTask(result)));
+        result.setTreatmentProcedures(result.getTreatmentProcedures());
 
         return ResponseEntity.created(new URI("/api/treatment-tasks/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

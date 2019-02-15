@@ -67,7 +67,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @JsonIgnoreProperties("treatmentProcedures")
     private Registration registration;
 
-    @OneToMany(mappedBy = "treatmentProcedure")
+    @OneToMany(mappedBy = "treatmentProcedure", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Tooth> teeth = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

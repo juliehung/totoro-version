@@ -2,7 +2,11 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.TreatmentPlan;
+import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.domain.TreatmentTask;
+import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 import io.dentall.totoro.service.TreatmentPlanService;
+import io.dentall.totoro.service.TreatmentProcedureService;
 import io.dentall.totoro.service.TreatmentTaskService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
@@ -20,6 +24,8 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing TreatmentPlan.
@@ -38,7 +44,11 @@ public class TreatmentPlanResource {
 
     private final TreatmentTaskService treatmentTaskService;
 
-    public TreatmentPlanResource(TreatmentPlanService treatmentPlanService, TreatmentPlanQueryService treatmentPlanQueryService, TreatmentTaskService treatmentTaskService) {
+    public TreatmentPlanResource(
+        TreatmentPlanService treatmentPlanService,
+        TreatmentPlanQueryService treatmentPlanQueryService,
+        TreatmentTaskService treatmentTaskService
+    ) {
         this.treatmentPlanService = treatmentPlanService;
         this.treatmentPlanQueryService = treatmentPlanQueryService;
         this.treatmentTaskService = treatmentTaskService;
@@ -58,7 +68,9 @@ public class TreatmentPlanResource {
         if (treatmentPlan.getId() != null) {
             throw new BadRequestAlertException("A new treatmentPlan cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
         TreatmentPlan result = treatmentPlanService.save(treatmentPlan);
+
         return ResponseEntity.created(new URI("/api/treatment-plans/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);

@@ -80,9 +80,6 @@ public class TreatmentTaskResourceIntTest {
     @Autowired
     private TreatmentProcedureService treatmentProcedureService;
 
-    @Autowired
-    private TreatmentPlanRepository treatmentPlanRepository;
-
     private MockMvc restTreatmentTaskMockMvc;
 
     private TreatmentTask treatmentTask;
@@ -121,9 +118,6 @@ public class TreatmentTaskResourceIntTest {
     @Transactional
     public void createTreatmentTask() throws Exception {
         int databaseSizeBeforeCreate = treatmentTaskRepository.findAll().size();
-        TreatmentPlan treatmentPlan = TreatmentPlanResourceIntTest.createEntity(em);
-        treatmentPlanRepository.save(treatmentPlan);
-        treatmentTask.setTreatmentPlan(treatmentPlan);
 
         // Create the TreatmentTask
         restTreatmentTaskMockMvc.perform(post("/api/treatment-tasks")
@@ -138,7 +132,6 @@ public class TreatmentTaskResourceIntTest {
         assertThat(testTreatmentTask.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testTreatmentTask.getNote()).isEqualTo(DEFAULT_NOTE);
         assertThat(testTreatmentTask.getTreatmentProcedures().size()).isEqualTo(1);
-        assertThat(testTreatmentTask.getTreatmentPlan()).isEqualTo(treatmentPlan);
     }
 
     @Test
