@@ -14,22 +14,22 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity TreatmentProcedure.
+        Added the entity Todo.
     -->
-    <changeSet id="20181224042541-1" author="jhipster">
-        <createTable tableName="treatment_procedure">
+    <changeSet id="20190213075054-1" author="jhipster">
+        <createTable tableName="todo">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="status" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-
-            <column name="quantity" type="integer">
+            <column name="ststus" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="total" type="double">
+            <column name="expected_date" type="date">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="required_treatment_time" type="integer">
                 <constraints nullable="true" />
             </column>
 
@@ -37,37 +37,12 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="completed_date" type="datetime">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="nhi_procedure_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="treatment_task_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="procedure_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="appointment_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="registration_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="todo_id" type="bigint">
+            <column name="patient_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        <dropDefaultValue tableName="treatment_procedure" columnName="completed_date" columnDataType="datetime"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

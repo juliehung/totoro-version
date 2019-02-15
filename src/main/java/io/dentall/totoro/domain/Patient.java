@@ -153,6 +153,10 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Treatment> treatments = new HashSet<>();
+
+    @OneToMany(mappedBy = "patient")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Todo> todos = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     @ManyToOne
@@ -667,7 +671,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         return this;
     }
 
-    public Patient removeTreatmentProcedure(Treatment treatment) {
+    public Patient removeTreatment(Treatment treatment) {
         this.treatments.remove(treatment);
         treatment.setPatient(null);
         return this;
@@ -675,6 +679,31 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
 
     public void setTreatments(Set<Treatment> treatments) {
         this.treatments = treatments;
+    }
+
+    public Set<Todo> getTodos() {
+        return todos;
+    }
+
+    public Patient todos(Set<Todo> todos) {
+        this.todos = todos;
+        return this;
+    }
+
+    public Patient addTodo(Todo todo) {
+        this.todos.add(todo);
+        todo.setPatient(this);
+        return this;
+    }
+
+    public Patient removeTodo(Todo todo) {
+        this.todos.remove(todo);
+        todo.setPatient(null);
+        return this;
+    }
+
+    public void setTodos(Set<Todo> todos) {
+        this.todos = todos;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

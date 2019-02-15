@@ -1,0 +1,9 @@
+{
+  "totoroApp": {
+    "TodoStatus": {
+      "null": "",
+      "PENDING": "PENDING",
+      "FINISHED": "FINISHED"
+    }
+  }
+}

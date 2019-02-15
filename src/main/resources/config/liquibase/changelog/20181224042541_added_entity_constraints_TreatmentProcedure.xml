@@ -38,5 +38,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="registration"/>
 
+        <addForeignKeyConstraint baseColumnNames="todo_id"
+                                 baseTableName="treatment_procedure"
+                                 constraintName="fk_treatment_procedure_todo_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="todo"/>
+
     </changeSet>
 </databaseChangeLog>
