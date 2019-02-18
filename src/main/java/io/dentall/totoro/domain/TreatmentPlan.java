@@ -31,11 +31,11 @@ public class TreatmentPlan implements Serializable {
     @Column(name = "activated", nullable = false)
     private Boolean activated;
 
-    @OneToMany(mappedBy = "treatmentPlan", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "treatmentPlan", cascade = CascadeType.PERSIST)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentTask> treatmentTasks = new HashSet<>();
     @ManyToOne
-    @JsonIgnoreProperties("treatmentPlans")
+    @JsonIgnoreProperties(value = "treatmentPlans", allowSetters = true)
     private Treatment treatment;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

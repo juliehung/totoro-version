@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -71,5 +72,29 @@ public class TreatmentService {
     public void delete(Long id) {
         log.debug("Request to delete Treatment : {}", id);
         treatmentRepository.deleteById(id);
+    }
+
+    /**
+     * Get all the treatments by patient id.
+     *
+     * @param id the id of the patient
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public List<Treatment> findAllWithEagerRelationshipsByPatientId(Long id) {
+        log.debug("Request to get all Treatments by patient id : {}", id);
+        return treatmentRepository.findAllWithEagerRelationshipsByPatientId(id);
+    }
+
+    /**
+     * Get one treatment by id.
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    @Transactional(readOnly = true)
+    public Optional<Treatment> findOneWithEagerRelationships(Long id) {
+        log.debug("Request to get Treatment : {}", id);
+        return treatmentRepository.findWithEagerRelationshipsById(id);
     }
 }
