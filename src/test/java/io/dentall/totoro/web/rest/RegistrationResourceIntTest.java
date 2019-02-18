@@ -116,6 +116,8 @@ public class RegistrationResourceIntTest {
             .arrivalTime(DEFAULT_ARRIVAL_TIME)
             .type(DEFAULT_TYPE)
             .onSite(DEFAULT_ON_SITE);
+        registration.setId(1L);
+
         return registration;
     }
 
@@ -147,13 +149,13 @@ public class RegistrationResourceIntTest {
 
     @Test
     @Transactional
-    public void createRegistrationWithExistingId() throws Exception {
+    public void createRegistrationWithNullId() throws Exception {
         int databaseSizeBeforeCreate = registrationRepository.findAll().size();
 
-        // Create the Registration with an existing ID
-        registration.setId(1L);
+        // Create the Registration with a null ID
+        registration.setId(null);
 
-        // An entity with an existing ID cannot be created, so this API call must fail
+        // An entity with a null ID cannot be created, so this API call must fail
         restRegistrationMockMvc.perform(post("/api/registrations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(registration)))
@@ -263,6 +265,7 @@ public class RegistrationResourceIntTest {
         int databaseSizeBeforeUpdate = registrationRepository.findAll().size();
 
         // Create the Registration
+        registration.setId(null);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restRegistrationMockMvc.perform(put("/api/registrations")
@@ -314,9 +317,6 @@ public class RegistrationResourceIntTest {
         Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
         Appointment appointment = createAppointment(patient);
 
-        // Initialize the database
-        registrationRepository.saveAndFlush(registration);
-
         restRegistrationMockMvc.perform(get("/api/registrations/patient-cards"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -365,11 +365,14 @@ public class RegistrationResourceIntTest {
     private Appointment createAppointment(Patient patient) {
         Appointment appointment = AppointmentResourceIntTest.createEntity(em);
         appointment.setPatient(patient);
+        appointment.setDoctor(userRepository.save(UserResourceIntTest.createEntity(em)).getExtendUser());
+
+        Registration registration = RegistrationResourceIntTest.createEntity(em);
+        em.persist(registration);
+        em.flush();
         appointment.setRegistration(registration);
         registration.setAppointment(appointment);
-        appointment.setDoctor(userRepository.save(UserResourceIntTest.createEntity(em)).getExtendUser());
-        appointmentRepository.save(appointment);
 
-        return appointment;
+        return appointmentRepository.saveAndFlush(appointment);
     }
 }

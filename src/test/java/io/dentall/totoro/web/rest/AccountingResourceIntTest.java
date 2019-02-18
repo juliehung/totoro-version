@@ -190,42 +190,6 @@ public class AccountingResourceIntTest {
 
     @Test
     @Transactional
-    public void checkPatientIdentityIsRequired() throws Exception {
-        int databaseSizeBeforeTest = accountingRepository.findAll().size();
-        // set the field null
-        accounting.setPatientIdentity(null);
-
-        // Create the Accounting, which fails.
-
-        restAccountingMockMvc.perform(post("/api/accountings")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(accounting)))
-            .andExpect(status().isBadRequest());
-
-        List<Accounting> accountingList = accountingRepository.findAll();
-        assertThat(accountingList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkDiscountReasonIsRequired() throws Exception {
-        int databaseSizeBeforeTest = accountingRepository.findAll().size();
-        // set the field null
-        accounting.setDiscountReason(null);
-
-        // Create the Accounting, which fails.
-
-        restAccountingMockMvc.perform(post("/api/accountings")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(accounting)))
-            .andExpect(status().isBadRequest());
-
-        List<Accounting> accountingList = accountingRepository.findAll();
-        assertThat(accountingList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllAccountings() throws Exception {
         // Initialize the database
         accountingRepository.saveAndFlush(accounting);

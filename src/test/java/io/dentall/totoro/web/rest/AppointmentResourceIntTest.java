@@ -110,6 +110,9 @@ public class AppointmentResourceIntTest {
     @Autowired
     private TreatmentProcedureRepository treatmentProcedureRepository;
 
+    @Autowired
+    private RegistrationRepository registrationRepository;
+
     private MockMvc restAppointmentMockMvc;
 
     private Appointment appointment;
@@ -158,7 +161,10 @@ public class AppointmentResourceIntTest {
     public void createAppointment() throws Exception {
         int databaseSizeBeforeCreate = appointmentRepository.findAll().size();
 
-        appointment.setRegistration(RegistrationResourceIntTest.createEntity(em).accounting(AccountingResourceIntTest.createEntity(em)));
+        Registration registration = RegistrationResourceIntTest.createEntity(em).accounting(AccountingResourceIntTest.createEntity(em));
+        registration.setId(null);
+        appointment.setRegistration(registration);
+
         TreatmentProcedure treatmentProcedure = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         appointment.getTreatmentProcedures().add(treatmentProcedure);
 
@@ -801,6 +807,7 @@ public class AppointmentResourceIntTest {
 
         User updateUser = userRepository.save(UserResourceIntTest.createEntity(em));
         Registration registration = RegistrationResourceIntTest.createEntity(em);
+        registration.setId(null);
         Accounting accounting = AccountingResourceIntTest.createEntity(em);
         registration.setAccounting(accounting);
         updatedAppointment
@@ -997,5 +1004,26 @@ public class AppointmentResourceIntTest {
 
         // Get all the appointmentList where doctor equals to
         defaultAppointmentShouldBeFound("doctorId.equals=" + appointment.getDoctor().getId());
+    }
+
+    @Test
+    @Transactional
+    public void deleteRegistration() throws Exception {
+        Registration registration = RegistrationResourceIntTest.createEntity(em);
+        em.persist(registration);
+        em.flush();
+        appointment.setRegistration(registration);
+        appointmentRepository.save(appointment);
+
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        appointment.getRegistration().setId(-1L);
+        restAppointmentMockMvc.perform(put("/api/appointments")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(appointment)))
+            .andExpect(status().isOk());
+
+        assertThat(registrationRepository.findById(appointment.getId() * -1L).get()).isNotNull();
     }
 }

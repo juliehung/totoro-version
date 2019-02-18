@@ -44,11 +44,13 @@
     <include file="config/liquibase/changelog/20190130_addColumn_Treatment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190207_addColumn_Questionnaire.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190213_addColumn_Todo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190215_addColumn_Registration.xml" relativeToChangelogFile="false"/>
 
     <!-- add default value -->
     <include file="config/liquibase/changelog/20181024_addDefaultValue_Appointment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181024_addDefaultValue_Registration.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181101_addDefaultValue_Patient.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190211_addDefaultValue_Treatment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190215_addDefaultValue_Registration.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

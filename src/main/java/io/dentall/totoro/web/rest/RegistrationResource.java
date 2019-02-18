@@ -56,15 +56,15 @@ public class RegistrationResource {
      * POST  /registrations : Create a new registration.
      *
      * @param registration the registration to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new registration, or with status 400 (Bad Request) if the registration has already an ID
+     * @return the ResponseEntity with status 201 (Created) and with body the new registration, or with status 400 (Bad Request) if the registration has not an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/registrations")
     @Timed
     public ResponseEntity<Registration> createRegistration(@Valid @RequestBody Registration registration) throws URISyntaxException {
         log.debug("REST request to save Registration : {}", registration);
-        if (registration.getId() != null) {
-            throw new BadRequestAlertException("A new registration cannot already have an ID", ENTITY_NAME, "idexists");
+        if (registration.getId() == null) {
+            throw new BadRequestAlertException("A new registration has not an ID", ENTITY_NAME, "idnull");
         }
         Registration result = registrationRepository.save(registration);
         return ResponseEntity.created(new URI("/api/registrations/" + result.getId()))
