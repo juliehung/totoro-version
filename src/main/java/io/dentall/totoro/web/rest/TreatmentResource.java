@@ -102,6 +102,12 @@ public class TreatmentResource {
     @GetMapping("/treatments")
     @Timed
     public ResponseEntity<List<Treatment>> getAllTreatments(TreatmentCriteria criteria, Pageable pageable) {
+        if (criteria.getPatientId() != null && criteria.getPatientId().getEquals() != null) {
+            log.debug("REST request to get all Treatments by patient id : {}", criteria.getPatientId().getEquals());
+
+            return ResponseEntity.ok().body(treatmentService.findAllWithEagerRelationshipsByPatientId(criteria.getPatientId().getEquals()));
+        }
+
         log.debug("REST request to get Treatments by criteria: {}", criteria);
         Page<Treatment> page = treatmentQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/treatments");
@@ -131,7 +137,7 @@ public class TreatmentResource {
     @Timed
     public ResponseEntity<Treatment> getTreatment(@PathVariable Long id) {
         log.debug("REST request to get Treatment : {}", id);
-        Optional<Treatment> treatment = treatmentService.findOne(id);
+        Optional<Treatment> treatment = treatmentService.findOneWithEagerRelationships(id);
         return ResponseUtil.wrapOrNotFound(treatment);
     }
 

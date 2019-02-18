@@ -33,7 +33,7 @@ public class TreatmentTask extends AbstractDoctorAndAuditingEntity<TreatmentTask
     @Column(name = "note")
     private String note;
 
-    @OneToMany(mappedBy = "treatmentTask", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "treatmentTask", cascade = CascadeType.PERSIST)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
     @ManyToOne
