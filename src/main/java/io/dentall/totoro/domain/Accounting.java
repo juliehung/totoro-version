@@ -45,12 +45,10 @@ public class Accounting implements Serializable {
     @Column(name = "other")
     private Double other;
 
-    @NotNull
-    @Column(name = "patient_identity", nullable = false)
+    @Column(name = "patient_identity")
     private String patientIdentity;
 
-    @NotNull
-    @Column(name = "discount_reason", nullable = false)
+    @Column(name = "discount_reason")
     private String discountReason;
 
     @Column(name = "discount")

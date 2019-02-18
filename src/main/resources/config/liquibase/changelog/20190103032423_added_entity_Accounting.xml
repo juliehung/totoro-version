@@ -46,11 +46,11 @@
             </column>
 
             <column name="patient_identity" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
 
             <column name="discount_reason" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
 
             <column name="discount" type="double">

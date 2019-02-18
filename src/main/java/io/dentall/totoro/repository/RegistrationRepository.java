@@ -4,6 +4,7 @@ import io.dentall.totoro.domain.Registration;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.util.List;
 
@@ -16,4 +17,8 @@ import java.util.List;
 public interface RegistrationRepository extends JpaRepository<Registration, Long> {
 
     List<Registration> findByArrivalTimeBetweenOrderByArrivalTimeAsc(Instant start, Instant end);
+
+    default void detach(EntityManager entityManager, Registration registration) {
+        entityManager.detach(registration);
+    }
 }

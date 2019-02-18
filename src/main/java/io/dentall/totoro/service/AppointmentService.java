@@ -11,12 +11,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing Appointment.
@@ -39,9 +42,12 @@ public class AppointmentService {
 
     private final HospitalRepository hospitalRepository;
 
-    private final TreatmentProcedureRepository treatmentProcedureRepository;
+    private final TreatmentProcedureService treatmentProcedureService;
 
     private final TreatmentService treatmentService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public AppointmentService(
         AppointmentRepository appointmentRepository,
@@ -50,7 +56,7 @@ public class AppointmentService {
         AccountingRepository accountingRepository,
         PatientRepository patientRepository,
         HospitalRepository hospitalRepository,
-        TreatmentProcedureRepository treatmentProcedureRepository,
+        TreatmentProcedureService treatmentProcedureService,
         TreatmentService treatmentService
     ) {
         this.appointmentRepository = appointmentRepository;
@@ -59,7 +65,7 @@ public class AppointmentService {
         this.accountingRepository = accountingRepository;
         this.patientRepository = patientRepository;
         this.hospitalRepository = hospitalRepository;
-        this.treatmentProcedureRepository = treatmentProcedureRepository;
+        this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentService = treatmentService;
     }
 
@@ -82,13 +88,16 @@ public class AppointmentService {
             }
         }
 
+        // treatmentProcedures
+        if (appointment.getTreatmentProcedures() != null) {
+            setAppointmentOfTreatmentProcedure(appointment.getTreatmentProcedures(), appointment);
+        }
+
+        appointmentRepository.save(appointment);
+
         // registration
         if (appointment.getRegistration() != null) {
             Registration registration = appointment.getRegistration();
-            if (registration.getId() == null) {
-                log.debug("Save Registration({})", registration);
-                appointment.setRegistration(registrationRepository.save(registration));
-            }
 
             // accounting
             if (registration.getAccounting() != null) {
@@ -98,14 +107,15 @@ public class AppointmentService {
                     registration.setAccounting(accountingRepository.save(accounting));
                 }
             }
+
+            if (registration.getId() == null) {
+                log.debug("Save Registration({})", registration);
+                registration.setId(appointment.getId());
+                appointment.setRegistration(registrationRepository.save(registration));
+            }
         }
 
-        // treatmentProcedures
-        if (appointment.getTreatmentProcedures() != null) {
-            setAppointmentOfTreatmentProcedure(appointment.getTreatmentProcedures(), appointment);
-        }
-
-        return appointmentRepository.save(appointment);
+        return appointment;
     }
 
     /**
@@ -160,7 +170,6 @@ public class AppointmentService {
         return null;
     }
 
-    @Transactional
     public Optional<Appointment> updateAppointment(Appointment updateAppointment) {
         return appointmentRepository.findById(updateAppointment.getId()).map(appointment -> {
             // registration
@@ -175,9 +184,26 @@ public class AppointmentService {
                         updateRegistration.accounting(accountingRepository.save(updateRegistration.getAccounting()));
                     }
 
-                    appointment.setRegistration(registrationRepository.save(updateRegistration));
+                    // create registration
+                    if (updateRegistration.getId() == null) {
+                        updateRegistration.setId(appointment.getId());
+                        appointment.setRegistration(registrationRepository.save(updateRegistration));
+                    }
                 } else {
-                    appointment.setRegistration(updateRegistration(registration, updateRegistration));
+                    // delete registration and create registration whose id is -appointmentId
+                    if (updateRegistration.getId() == -1) {
+                        Long deleteId = registration.getId();
+
+                        appointment.setRegistration(null);
+                        registrationRepository.detach(entityManager, registration);
+                        registration.setAppointment(null);
+                        registration.setId(appointment.getId() * -1L);
+                        registrationRepository.save(registration);
+
+                        registrationRepository.findById(deleteId).ifPresent(registrationRepository::delete);
+                    } else {
+                        appointment.setRegistration(updateRegistration(registration, updateRegistration));
+                    }
                 }
             }
 
@@ -318,13 +344,19 @@ public class AppointmentService {
     }
 
     private void setAppointmentOfTreatmentProcedure(Set<TreatmentProcedure> treatmentProcedures, Appointment appointment) {
-        treatmentProcedures.stream().map(TreatmentProcedure::getId).forEach(id ->
-            treatmentProcedureRepository.findById(id).ifPresent(treatmentProcedure -> {
-                treatmentProcedure.setAppointment(appointment);
-                if (appointment != null) {
-                    appointment.getTreatmentProcedures().add(treatmentProcedure);
-                }
-            })
-        );
+        if (treatmentProcedures != null) {
+            treatmentProcedures = treatmentProcedures
+                .stream()
+                .map(TreatmentProcedure::getId)
+                .map(treatmentProcedureService::findOne)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(treatmentProcedure -> treatmentProcedure.appointment(appointment))
+                .collect(Collectors.toSet());
+
+            if (appointment != null) {
+                appointment.setTreatmentProcedures(treatmentProcedures);
+            }
+        }
     }
 }

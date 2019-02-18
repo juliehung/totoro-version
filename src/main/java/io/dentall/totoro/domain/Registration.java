@@ -1,6 +1,7 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -23,13 +24,11 @@ import io.dentall.totoro.domain.enumeration.RegistrationType;
 @Entity
 @Table(name = "registration")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Registration implements Serializable {
+public class Registration extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @NotNull
@@ -169,6 +168,13 @@ public class Registration implements Serializable {
         this.treatmentProcedures = treatmentProcedures;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    @Override
+    @JsonIgnore(false)
+    @JsonProperty
+    public Instant getLastModifiedDate() {
+        return super.getLastModifiedDate();
+    }
 
     @Override
     public boolean equals(Object o) {
