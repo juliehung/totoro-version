@@ -19,7 +19,7 @@
         {
             "fieldName": "ststus",
             "fieldType": "TodoStatus",
-            "fieldValues": "PENDING,FINISHED"
+            "fieldValues": "TEMPORARY,PENDING,FINISHED"
         },
         {
             "fieldName": "expectedDate",
