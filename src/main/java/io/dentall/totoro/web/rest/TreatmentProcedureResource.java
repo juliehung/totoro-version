@@ -89,9 +89,7 @@ public class TreatmentProcedureResource {
         if (treatmentProcedure.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-
-        // update Tooth object
-        treatmentProcedure.getTeeth().forEach(toothService::update);
+        
         TreatmentProcedure result = treatmentProcedureService.save(treatmentProcedure);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatmentProcedure.getId().toString()))
