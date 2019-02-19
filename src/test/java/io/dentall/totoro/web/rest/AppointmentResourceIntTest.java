@@ -1011,14 +1011,17 @@ public class AppointmentResourceIntTest {
     public void deleteRegistration() throws Exception {
         Registration registration = RegistrationResourceIntTest.createEntity(em);
         em.persist(registration);
-        em.flush();
         appointment.setRegistration(registration);
-        appointmentRepository.save(appointment);
 
         // Initialize the database
         appointmentRepository.saveAndFlush(appointment);
 
-        appointment.getRegistration().setId(-1L);
+        // for updating
+        em.detach(registration);
+        registration.setId(-1L);
+        em.detach(appointment);
+        appointment.setRegistration(registration);
+
         restAppointmentMockMvc.perform(put("/api/appointments")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(appointment)))

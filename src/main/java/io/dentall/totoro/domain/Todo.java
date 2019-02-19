@@ -46,7 +46,7 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
     private String note;
 
     @ManyToOne
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties(value = "todos", allowSetters = true)
     private Patient patient;
 
     @OneToMany(mappedBy = "todo", fetch = FetchType.EAGER)
