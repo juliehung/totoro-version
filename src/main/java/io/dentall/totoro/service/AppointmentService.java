@@ -190,20 +190,7 @@ public class AppointmentService {
                         appointment.setRegistration(registrationRepository.save(updateRegistration));
                     }
                 } else {
-                    // delete registration and create registration whose id is -appointmentId
-                    if (updateRegistration.getId() == -1) {
-                        Long deleteId = registration.getId();
-
-                        appointment.setRegistration(null);
-                        registrationRepository.detach(entityManager, registration);
-                        registration.setAppointment(null);
-                        registration.setId(appointment.getId() * -1L);
-                        registrationRepository.save(registration);
-
-                        registrationRepository.findById(deleteId).ifPresent(registrationRepository::delete);
-                    } else {
-                        appointment.setRegistration(updateRegistration(registration, updateRegistration));
-                    }
+                    appointment.setRegistration(updateRegistration(registration, updateRegistration));
                 }
             }
 
@@ -294,7 +281,26 @@ public class AppointmentService {
             registration.setAccounting(accounting == null ? accountingRepository.save(updateAccounting) : updateAccounting(accounting, updateAccounting));
         }
 
-        return registration;
+        // delete registration and create registration whose id is -appointmentId
+        if (updateRegistration.getId() == -1) {
+            Long deleteId = registration.getId();
+            Accounting accounting = registration.getAccounting();
+
+            registrationRepository.save(registration.accounting(null));
+            entityManager.flush();
+
+            entityManager.detach(registration);
+            registration.setId(registration.getAppointment().getId() * -1L);
+            registration.setAppointment(null);
+            registration.setAccounting(accounting);
+            entityManager.persist(registration);
+
+            registrationRepository.findById(deleteId).ifPresent(registrationRepository::delete);
+
+            return null;
+        } else {
+            return registration;
+        }
     }
 
     private Accounting updateAccounting(Accounting accounting, Accounting updateAccounting) {
