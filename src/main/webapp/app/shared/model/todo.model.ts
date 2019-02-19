@@ -3,6 +3,7 @@ import { IPatient } from 'app/shared/model//patient.model';
 import { ITreatmentProcedure } from 'app/shared/model//treatment-procedure.model';
 
 export const enum TodoStatus {
+  TEMPORARY = 'TEMPORARY',
   PENDING = 'PENDING',
   FINISHED = 'FINISHED'
 }

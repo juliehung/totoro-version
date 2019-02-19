@@ -33,6 +33,8 @@
         "findingType": "Finding Type",
         "drug": "Drug",
         "todo": "Todo",
+        "prescription": "Prescription",
+        "treatmentDrug": "Treatment Drug",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

@@ -56,6 +56,10 @@ public class Registration extends AbstractAuditingEntity implements Serializable
     @OneToMany(mappedBy = "registration")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
+
+    @OneToOne(mappedBy = "registration")
+    @JsonIgnore
+    private Prescription prescription;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -166,6 +170,19 @@ public class Registration extends AbstractAuditingEntity implements Serializable
 
     public void setTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
         this.treatmentProcedures = treatmentProcedures;
+    }
+
+    public Prescription getPrescription() {
+        return prescription;
+    }
+
+    public Registration prescription(Prescription prescription) {
+        this.prescription = prescription;
+        return this;
+    }
+
+    public void setPrescription(Prescription prescription) {
+        this.prescription = prescription;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

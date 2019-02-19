@@ -22,6 +22,14 @@
             "otherEntityName": "treatmentProcedure",
             "relationshipType": "one-to-many",
             "otherEntityRelationshipName": "registration"
+        },
+        {
+            "relationshipName": "prescription",
+            "otherEntityName": "prescription",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "registration"
         }
     ],
     "fields": [

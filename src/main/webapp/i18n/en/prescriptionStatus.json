@@ -1,10 +1,9 @@
 {
   "totoroApp": {
-    "TodoStatus": {
+    "PrescriptionStatus": {
       "null": "",
       "TEMPORARY": "TEMPORARY",
-      "PENDING": "PENDING",
-      "FINISHED": "FINISHED"
+      "PERMANENT": "PERMANENT"
     }
   }
 }

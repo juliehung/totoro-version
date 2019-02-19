@@ -2,6 +2,7 @@
   "totoroApp": {
     "TodoStatus": {
       "null": "",
+      "TEMPORARY": "TEMPORARY",
       "PENDING": "PENDING",
       "FINISHED": "FINISHED"
     }

@@ -32,6 +32,8 @@
     <include file="config/liquibase/changelog/20190203082322_added_entity_FindingType.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190214094023_added_entity_Drug.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190213075054_added_entity_Todo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190218044228_added_entity_Prescription.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190218044229_added_entity_TreatmentDrug.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/20181024_addColumn_Patient.xml" relativeToChangelogFile="false"/>

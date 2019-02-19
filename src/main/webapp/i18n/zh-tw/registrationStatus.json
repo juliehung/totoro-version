@@ -3,7 +3,8 @@
     "RegistrationStatus": {
       "null": "",
       "PENDING": "PENDING",
-      "FINISHED": "FINISHED"
+      "FINISHED": "FINISHED",
+      "IN_PROGRESS": "IN_PROGRESS"
     }
   }
 }

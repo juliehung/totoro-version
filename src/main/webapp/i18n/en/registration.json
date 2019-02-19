@@ -21,7 +21,8 @@
       "onSite": "On Site",
       "appointment": "Appointment",
       "accounting": "Accounting",
-      "treatmentProcedure": "Treatment Procedure"
+      "treatmentProcedure": "Treatment Procedure",
+      "prescription": "Prescription"
     }
   }
 }
