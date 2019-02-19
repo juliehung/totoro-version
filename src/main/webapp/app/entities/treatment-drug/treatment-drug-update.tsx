@@ -8,26 +8,30 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
-import { IPatient } from 'app/shared/model/patient.model';
-import { getEntities as getPatients } from 'app/entities/patient/patient.reducer';
-import { getEntity, updateEntity, createEntity, reset } from './todo.reducer';
-import { ITodo } from 'app/shared/model/todo.model';
+import { IPrescription } from 'app/shared/model/prescription.model';
+import { getEntities as getPrescriptions } from 'app/entities/prescription/prescription.reducer';
+import { IDrug } from 'app/shared/model/drug.model';
+import { getEntities as getDrugs } from 'app/entities/drug/drug.reducer';
+import { getEntity, updateEntity, createEntity, reset } from './treatment-drug.reducer';
+import { ITreatmentDrug } from 'app/shared/model/treatment-drug.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
 
-export interface ITodoUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface ITreatmentDrugUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export interface ITodoUpdateState {
+export interface ITreatmentDrugUpdateState {
   isNew: boolean;
-  patientId: string;
+  prescriptionId: string;
+  drugId: string;
 }
 
-export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateState> {
+export class TreatmentDrugUpdate extends React.Component<ITreatmentDrugUpdateProps, ITreatmentDrugUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
-      patientId: '0',
+      prescriptionId: '0',
+      drugId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -45,14 +49,15 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
       this.props.getEntity(this.props.match.params.id);
     }
 
-    this.props.getPatients();
+    this.props.getPrescriptions();
+    this.props.getDrugs();
   }
 
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
-      const { todoEntity } = this.props;
+      const { treatmentDrugEntity } = this.props;
       const entity = {
-        ...todoEntity,
+        ...treatmentDrugEntity,
         ...values
       };
 
@@ -65,19 +70,19 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
   };
 
   handleClose = () => {
-    this.props.history.push('/entity/todo');
+    this.props.history.push('/entity/treatment-drug');
   };
 
   render() {
-    const { todoEntity, patients, loading, updating } = this.props;
+    const { treatmentDrugEntity, prescriptions, drugs, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
       <div>
         <Row className="justify-content-center">
           <Col md="8">
-            <h2 id="totoroApp.todo.home.createOrEditLabel">
-              <Translate contentKey="totoroApp.todo.home.createOrEditLabel">Create or edit a Todo</Translate>
+            <h2 id="totoroApp.treatmentDrug.home.createOrEditLabel">
+              <Translate contentKey="totoroApp.treatmentDrug.home.createOrEditLabel">Create or edit a TreatmentDrug</Translate>
             </h2>
           </Col>
         </Row>
@@ -86,63 +91,29 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
             {loading ? (
               <p>Loading...</p>
             ) : (
-              <AvForm model={isNew ? {} : todoEntity} onSubmit={this.saveEntity}>
+              <AvForm model={isNew ? {} : treatmentDrugEntity} onSubmit={this.saveEntity}>
                 {!isNew ? (
                   <AvGroup>
                     <Label for="id">
                       <Translate contentKey="global.field.id">ID</Translate>
                     </Label>
-                    <AvInput id="todo-id" type="text" className="form-control" name="id" required readOnly />
+                    <AvInput id="treatment-drug-id" type="text" className="form-control" name="id" required readOnly />
                   </AvGroup>
                 ) : null}
                 <AvGroup>
-                  <Label id="ststusLabel">
-                    <Translate contentKey="totoroApp.todo.ststus">Ststus</Translate>
+                  <Label id="dayLabel" for="day">
+                    <Translate contentKey="totoroApp.treatmentDrug.day">Day</Translate>
                   </Label>
-                  <AvInput
-                    id="todo-ststus"
-                    type="select"
-                    className="form-control"
-                    name="ststus"
-                    value={(!isNew && todoEntity.ststus) || 'PENDING'}
-                  >
-                    <option value="TEMPORARY">
-                      <Translate contentKey="totoroApp.TodoStatus.TEMPORARY" />
-                    </option>
-                    <option value="PENDING">
-                      <Translate contentKey="totoroApp.TodoStatus.PENDING" />
-                    </option>
-                    <option value="FINISHED">
-                      <Translate contentKey="totoroApp.TodoStatus.FINISHED" />
-                    </option>
-                  </AvInput>
+                  <AvField id="treatment-drug-day" type="string" className="form-control" name="day" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="expectedDateLabel" for="expectedDate">
-                    <Translate contentKey="totoroApp.todo.expectedDate">Expected Date</Translate>
+                  <Label for="prescription.id">
+                    <Translate contentKey="totoroApp.treatmentDrug.prescription">Prescription</Translate>
                   </Label>
-                  <AvField id="todo-expectedDate" type="date" className="form-control" name="expectedDate" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="requiredTreatmentTimeLabel" for="requiredTreatmentTime">
-                    <Translate contentKey="totoroApp.todo.requiredTreatmentTime">Required Treatment Time</Translate>
-                  </Label>
-                  <AvField id="todo-requiredTreatmentTime" type="string" className="form-control" name="requiredTreatmentTime" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="noteLabel" for="note">
-                    <Translate contentKey="totoroApp.todo.note">Note</Translate>
-                  </Label>
-                  <AvField id="todo-note" type="text" name="note" />
-                </AvGroup>
-                <AvGroup>
-                  <Label for="patient.id">
-                    <Translate contentKey="totoroApp.todo.patient">Patient</Translate>
-                  </Label>
-                  <AvInput id="todo-patient" type="select" className="form-control" name="patient.id">
+                  <AvInput id="treatment-drug-prescription" type="select" className="form-control" name="prescription.id">
                     <option value="" key="0" />
-                    {patients
-                      ? patients.map(otherEntity => (
+                    {prescriptions
+                      ? prescriptions.map(otherEntity => (
                           <option value={otherEntity.id} key={otherEntity.id}>
                             {otherEntity.id}
                           </option>
@@ -150,7 +121,22 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
                       : null}
                   </AvInput>
                 </AvGroup>
-                <Button tag={Link} id="cancel-save" to="/entity/todo" replace color="info">
+                <AvGroup>
+                  <Label for="drug.id">
+                    <Translate contentKey="totoroApp.treatmentDrug.drug">Drug</Translate>
+                  </Label>
+                  <AvInput id="treatment-drug-drug" type="select" className="form-control" name="drug.id">
+                    <option value="" key="0" />
+                    {drugs
+                      ? drugs.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
+                <Button tag={Link} id="cancel-save" to="/entity/treatment-drug" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
                   <span className="d-none d-md-inline">
@@ -173,15 +159,17 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
-  patients: storeState.patient.entities,
-  todoEntity: storeState.todo.entity,
-  loading: storeState.todo.loading,
-  updating: storeState.todo.updating,
-  updateSuccess: storeState.todo.updateSuccess
+  prescriptions: storeState.prescription.entities,
+  drugs: storeState.drug.entities,
+  treatmentDrugEntity: storeState.treatmentDrug.entity,
+  loading: storeState.treatmentDrug.loading,
+  updating: storeState.treatmentDrug.updating,
+  updateSuccess: storeState.treatmentDrug.updateSuccess
 });
 
 const mapDispatchToProps = {
-  getPatients,
+  getPrescriptions,
+  getDrugs,
   getEntity,
   updateEntity,
   createEntity,
@@ -194,4 +182,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TodoUpdate);
+)(TreatmentDrugUpdate);

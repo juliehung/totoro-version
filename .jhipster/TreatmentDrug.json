@@ -1,0 +1,31 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "prescription",
+            "otherEntityName": "prescription",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "drug",
+            "otherEntityName": "drug",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "day",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20190218044229",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "serviceClass",
+    "entityTableName": "treatment_drug",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

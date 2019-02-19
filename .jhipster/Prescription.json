@@ -1,0 +1,53 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "treatmentDrug",
+            "otherEntityName": "treatmentDrug",
+            "otherEntityRelationshipName": "prescription"
+        },
+        {
+            "relationshipName": "registration",
+            "otherEntityName": "registration",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "prescription"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "clinicAdministration",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "antiInflammatoryDrug",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "pain",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "takenAll",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "PrescriptionStatus",
+            "fieldValues": "TEMPORARY,PERMANENT",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20190218044228",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "serviceClass",
+    "entityTableName": "prescription",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

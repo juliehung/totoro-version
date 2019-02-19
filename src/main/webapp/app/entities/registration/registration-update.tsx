@@ -12,6 +12,8 @@ import { IAppointment } from 'app/shared/model/appointment.model';
 import { getEntities as getAppointments } from 'app/entities/appointment/appointment.reducer';
 import { IAccounting } from 'app/shared/model/accounting.model';
 import { getEntities as getAccountings } from 'app/entities/accounting/accounting.reducer';
+import { IPrescription } from 'app/shared/model/prescription.model';
+import { getEntities as getPrescriptions } from 'app/entities/prescription/prescription.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './registration.reducer';
 import { IRegistration } from 'app/shared/model/registration.model';
 // tslint:disable-next-line:no-unused-variable
@@ -24,6 +26,7 @@ export interface IRegistrationUpdateState {
   isNew: boolean;
   appointmentId: string;
   accountingId: string;
+  prescriptionId: string;
 }
 
 export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps, IRegistrationUpdateState> {
@@ -32,6 +35,7 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
     this.state = {
       appointmentId: '0',
       accountingId: '0',
+      prescriptionId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -51,6 +55,7 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
 
     this.props.getAppointments();
     this.props.getAccountings();
+    this.props.getPrescriptions();
   }
 
   saveEntity = (event, errors, values) => {
@@ -76,7 +81,7 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
   };
 
   render() {
-    const { registrationEntity, appointments, accountings, loading, updating } = this.props;
+    const { registrationEntity, appointments, accountings, prescriptions, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -118,6 +123,9 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
                     </option>
                     <option value="FINISHED">
                       <Translate contentKey="totoroApp.RegistrationStatus.FINISHED" />
+                    </option>
+                    <option value="IN_PROGRESS">
+                      <Translate contentKey="totoroApp.RegistrationStatus.IN_PROGRESS" />
                     </option>
                   </AvInput>
                 </AvGroup>
@@ -201,6 +209,7 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
 const mapStateToProps = (storeState: IRootState) => ({
   appointments: storeState.appointment.entities,
   accountings: storeState.accounting.entities,
+  prescriptions: storeState.prescription.entities,
   registrationEntity: storeState.registration.entity,
   loading: storeState.registration.loading,
   updating: storeState.registration.updating,
@@ -210,6 +219,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   getAppointments,
   getAccountings,
+  getPrescriptions,
   getEntity,
   updateEntity,
   createEntity,
