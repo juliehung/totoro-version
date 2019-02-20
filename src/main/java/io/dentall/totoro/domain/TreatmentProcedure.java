@@ -52,7 +52,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     private NHIProcedure nhiProcedure;
 
     @ManyToOne
-    @JsonIgnoreProperties("treatmentProcedures")
+    @JsonIgnoreProperties(value = "treatmentProcedures", allowSetters = true)
     private TreatmentTask treatmentTask;
 
     @ManyToOne
@@ -60,11 +60,11 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     private Procedure procedure;
 
     @ManyToOne
-    @JsonIgnoreProperties("treatmentProcedures")
+    @JsonIgnoreProperties(value = "treatmentProcedures", allowSetters = true)
     private Appointment appointment;
 
     @ManyToOne
-    @JsonIgnoreProperties("treatmentProcedures")
+    @JsonIgnoreProperties(value = "treatmentProcedures", allowSetters = true)
     private Registration registration;
 
     @OneToMany(mappedBy = "treatmentProcedure", cascade = CascadeType.PERSIST)
@@ -72,7 +72,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     private Set<Tooth> teeth = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties("treatmentProcedures")
+    @JsonIgnoreProperties(value = "treatmentProcedures", allowSetters = true)
     private Todo todo;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {

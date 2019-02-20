@@ -50,7 +50,7 @@ public class Treatment extends AbstractDoctorAndAuditingEntity<Treatment> implem
     private TreatmentType type;
 
     @ManyToOne
-    @JsonIgnoreProperties("treatments")
+    @JsonIgnoreProperties(value = "treatments", allowSetters = true)
     private Patient patient;
 
     @OneToMany(mappedBy = "treatment")

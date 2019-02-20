@@ -39,7 +39,7 @@ public class Procedure implements Serializable {
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     @ManyToOne
-    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments"})
+    @JsonIgnoreProperties(value = {"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments"}, allowSetters = true)
     private ExtendUser doctor;
 
     public Long getId() {

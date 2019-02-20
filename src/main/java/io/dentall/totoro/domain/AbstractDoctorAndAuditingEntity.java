@@ -13,7 +13,7 @@ import java.time.Instant;
 public abstract class AbstractDoctorAndAuditingEntity<ENTITY extends AbstractDoctorAndAuditingEntity<ENTITY>> extends AbstractAuditingEntity implements Serializable {
 
     @ManyToOne
-    @JsonIgnoreProperties({"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments"})
+    @JsonIgnoreProperties(value = {"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments"}, allowSetters = true)
     private ExtendUser doctor;
 
     public ExtendUser getDoctor() {
