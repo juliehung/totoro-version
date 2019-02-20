@@ -28,7 +28,7 @@ public class TreatmentDrug implements Serializable {
     private Integer day;
 
     @ManyToOne
-    @JsonIgnoreProperties("treatmentDrugs")
+    @JsonIgnoreProperties(value = "treatmentDrugs", allowSetters = true)
     private Prescription prescription;
 
     @ManyToOne

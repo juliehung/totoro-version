@@ -37,7 +37,7 @@ public class TreatmentTask extends AbstractDoctorAndAuditingEntity<TreatmentTask
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
     @ManyToOne
-    @JsonIgnoreProperties("treatmentTasks")
+    @JsonIgnoreProperties(value = "treatmentTasks", allowSetters = true)
     private TreatmentPlan treatmentPlan;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
