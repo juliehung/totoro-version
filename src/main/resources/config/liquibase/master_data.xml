@@ -105,6 +105,18 @@
                   separator=";"
                   tableName="drug">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/treatment_tasks.csv"
+                  separator=";"
+                  tableName="treatment_task">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/treatment_plans.csv"
+                  separator=";"
+                  tableName="treatment_plan">
+        </loadData>
     </changeSet>
 
 </databaseChangeLog>
