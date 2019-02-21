@@ -54,5 +54,6 @@
     <include file="config/liquibase/changelog/20181101_addDefaultValue_Patient.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190211_addDefaultValue_Treatment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190215_addDefaultValue_Registration.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190220_addDefaultValue_TreatmentTask.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
