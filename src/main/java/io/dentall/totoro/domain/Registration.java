@@ -59,7 +59,7 @@ public class Registration extends AbstractAuditingEntity implements Serializable
 
     @OneToOne(mappedBy = "registration")
     @JsonIgnore
-    private Prescription prescription;
+    private Disposal disposal;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -172,17 +172,17 @@ public class Registration extends AbstractAuditingEntity implements Serializable
         this.treatmentProcedures = treatmentProcedures;
     }
 
-    public Prescription getPrescription() {
-        return prescription;
+    public Disposal getDisposal() {
+        return disposal;
     }
 
-    public Registration prescription(Prescription prescription) {
-        this.prescription = prescription;
+    public Registration disposal(Disposal disposal) {
+        this.disposal = disposal;
         return this;
     }
 
-    public void setPrescription(Prescription prescription) {
-        this.prescription = prescription;
+    public void setDisposal(Disposal disposal) {
+        this.disposal = disposal;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

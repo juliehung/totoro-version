@@ -10,6 +10,8 @@ import { IRootState } from 'app/shared/reducers';
 
 import { IPatient } from 'app/shared/model/patient.model';
 import { getEntities as getPatients } from 'app/entities/patient/patient.reducer';
+import { IDisposal } from 'app/shared/model/disposal.model';
+import { getEntities as getDisposals } from 'app/entities/disposal/disposal.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './todo.reducer';
 import { ITodo } from 'app/shared/model/todo.model';
 // tslint:disable-next-line:no-unused-variable
@@ -21,6 +23,7 @@ export interface ITodoUpdateProps extends StateProps, DispatchProps, RouteCompon
 export interface ITodoUpdateState {
   isNew: boolean;
   patientId: string;
+  disposalId: string;
 }
 
 export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateState> {
@@ -28,6 +31,7 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
     super(props);
     this.state = {
       patientId: '0',
+      disposalId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -46,6 +50,7 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
     }
 
     this.props.getPatients();
+    this.props.getDisposals();
   }
 
   saveEntity = (event, errors, values) => {
@@ -69,7 +74,7 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
   };
 
   render() {
-    const { todoEntity, patients, loading, updating } = this.props;
+    const { todoEntity, patients, disposals, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -96,15 +101,15 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
                   </AvGroup>
                 ) : null}
                 <AvGroup>
-                  <Label id="ststusLabel">
-                    <Translate contentKey="totoroApp.todo.ststus">Ststus</Translate>
+                  <Label id="statusLabel">
+                    <Translate contentKey="totoroApp.todo.status">Status</Translate>
                   </Label>
                   <AvInput
-                    id="todo-ststus"
+                    id="todo-status"
                     type="select"
                     className="form-control"
-                    name="ststus"
-                    value={(!isNew && todoEntity.ststus) || 'PENDING'}
+                    name="status"
+                    value={(!isNew && todoEntity.status) || 'TEMPORARY'}
                   >
                     <option value="TEMPORARY">
                       <Translate contentKey="totoroApp.TodoStatus.TEMPORARY" />
@@ -174,6 +179,7 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
 
 const mapStateToProps = (storeState: IRootState) => ({
   patients: storeState.patient.entities,
+  disposals: storeState.disposal.entities,
   todoEntity: storeState.todo.entity,
   loading: storeState.todo.loading,
   updating: storeState.todo.updating,
@@ -182,6 +188,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 
 const mapDispatchToProps = {
   getPatients,
+  getDisposals,
   getEntity,
   updateEntity,
   createEntity,

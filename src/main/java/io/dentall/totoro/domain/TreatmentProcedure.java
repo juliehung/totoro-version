@@ -47,6 +47,9 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @Column(name = "completed_date")
     private Instant completedDate;
 
+    @Column(name = "price")
+    private Double price;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private NHIProcedure nhiProcedure;
@@ -67,13 +70,17 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @JsonIgnoreProperties(value = "treatmentProcedures", allowSetters = true)
     private Registration registration;
 
-    @OneToMany(mappedBy = "treatmentProcedure", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "treatmentProcedure")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Tooth> teeth = new HashSet<>();
 
     @ManyToOne
     @JsonIgnoreProperties(value = "treatmentProcedures", allowSetters = true)
     private Todo todo;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "treatmentProcedures", allowSetters = true)
+    private Disposal disposal;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -146,6 +153,19 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
 
     public void setCompletedDate(Instant completedDate) {
         this.completedDate = completedDate;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public TreatmentProcedure price(Double price) {
+        this.price = price;
+        return this;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public NHIProcedure getNhiProcedure() {
@@ -250,6 +270,19 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     public void setTodo(Todo todo) {
         this.todo = todo;
     }
+
+    public Disposal getDisposal() {
+        return disposal;
+    }
+
+    public TreatmentProcedure disposal(Disposal disposal) {
+        this.disposal = disposal;
+        return this;
+    }
+
+    public void setDisposal(Disposal disposal) {
+        this.disposal = disposal;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -281,6 +314,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
             ", total=" + getTotal() +
             ", note='" + getNote() + "'" +
             ", completedDate='" + getCompletedDate() + "'" +
+            ", price=" + getPrice() +
             "}";
     }
 }

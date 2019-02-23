@@ -20,13 +20,15 @@
       "total": "Total",
       "note": "Note",
       "completedDate": "Completed Date",
+      "price": "Price",
       "nhiProcedure": "Nhi Procedure",
       "treatmentTask": "Treatment Task",
       "procedure": "Procedure",
       "appointment": "Appointment",
       "registration": "Registration",
       "tooth": "Tooth",
-      "todo": "Todo"
+      "todo": "Todo",
+      "disposal": "Disposal"
     }
   }
 }

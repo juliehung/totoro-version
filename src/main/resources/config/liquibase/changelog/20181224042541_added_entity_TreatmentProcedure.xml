@@ -41,6 +41,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="price" type="double">
+                <constraints nullable="true" />
+            </column>
+
             <column name="nhi_procedure_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -62,6 +66,10 @@
             </column>
 
             <column name="todo_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="disposal_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 

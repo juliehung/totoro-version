@@ -31,7 +31,7 @@ public class TreatmentPlan implements Serializable {
     @Column(name = "activated", nullable = false)
     private Boolean activated;
 
-    @OneToMany(mappedBy = "treatmentPlan", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "treatmentPlan")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentTask> treatmentTasks = new HashSet<>();
     @ManyToOne

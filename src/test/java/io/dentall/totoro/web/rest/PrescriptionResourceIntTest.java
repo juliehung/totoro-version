@@ -4,7 +4,7 @@ import io.dentall.totoro.TotoroApp;
 
 import io.dentall.totoro.domain.Prescription;
 import io.dentall.totoro.domain.TreatmentDrug;
-import io.dentall.totoro.domain.Registration;
+import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.repository.PrescriptionRepository;
 import io.dentall.totoro.service.PrescriptionService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
@@ -433,20 +433,21 @@ public class PrescriptionResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllPrescriptionsByRegistrationIsEqualToSomething() throws Exception {
+    public void getAllPrescriptionsByDisposalIsEqualToSomething() throws Exception {
         // Initialize the database
-        Registration registration = RegistrationResourceIntTest.createEntity(em);
-        em.persist(registration);
+        Disposal disposal = DisposalResourceIntTest.createEntity(em);
+        em.persist(disposal);
         em.flush();
-        prescription.setRegistration(registration);
+        prescription.setDisposal(disposal);
+        disposal.setPrescription(prescription);
         prescriptionRepository.saveAndFlush(prescription);
-        Long registrationId = registration.getId();
+        Long disposalId = disposal.getId();
 
-        // Get all the prescriptionList where registration equals to registrationId
-        defaultPrescriptionShouldBeFound("registrationId.equals=" + registrationId);
+        // Get all the prescriptionList where disposal equals to disposalId
+        defaultPrescriptionShouldBeFound("disposalId.equals=" + disposalId);
 
-        // Get all the prescriptionList where registration equals to registrationId + 1
-        defaultPrescriptionShouldNotBeFound("registrationId.equals=" + (registrationId + 1));
+        // Get all the prescriptionList where disposal equals to disposalId + 1
+        defaultPrescriptionShouldNotBeFound("disposalId.equals=" + (disposalId + 1));
     }
 
     /**

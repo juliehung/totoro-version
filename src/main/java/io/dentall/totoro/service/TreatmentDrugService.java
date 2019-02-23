@@ -1,7 +1,7 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.TreatmentDrug;
-import io.dentall.totoro.repository.TreatmentDrugRepository;
+import io.dentall.totoro.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +23,18 @@ public class TreatmentDrugService {
 
     private final TreatmentDrugRepository treatmentDrugRepository;
 
-    public TreatmentDrugService(TreatmentDrugRepository treatmentDrugRepository) {
+    private final DrugRepository drugRepository;
+
+    private final PrescriptionRepository prescriptionRepository;
+
+    public TreatmentDrugService(
+        TreatmentDrugRepository treatmentDrugRepository,
+        DrugRepository drugRepository,
+        PrescriptionRepository prescriptionRepository
+    ) {
         this.treatmentDrugRepository = treatmentDrugRepository;
+        this.drugRepository = drugRepository;
+        this.prescriptionRepository = prescriptionRepository;
     }
 
     /**
@@ -71,5 +81,34 @@ public class TreatmentDrugService {
     public void delete(Long id) {
         log.debug("Request to delete TreatmentDrug : {}", id);
         treatmentDrugRepository.deleteById(id);
+    }
+
+    /**
+     * Update the treatmentDrug.
+     *
+     * @param updateTreatmentDrug the update entity
+     * @return the entity
+     */
+    public TreatmentDrug update(TreatmentDrug updateTreatmentDrug) {
+        log.debug("Request to update TreatmentDrug : {}", updateTreatmentDrug);
+
+        return treatmentDrugRepository
+            .findById(updateTreatmentDrug.getId())
+            .map(treatmentDrug -> {
+                if (updateTreatmentDrug.getDay() != null) {
+                    treatmentDrug.setDay((updateTreatmentDrug.getDay()));
+                }
+
+                if (updateTreatmentDrug.getDrug() != null && updateTreatmentDrug.getDrug().getId() != null) {
+                    drugRepository.findById(updateTreatmentDrug.getDrug().getId()).ifPresent(treatmentDrug::setDrug);
+                }
+
+                if (updateTreatmentDrug.getPrescription() != null && updateTreatmentDrug.getPrescription().getId() != null) {
+                    prescriptionRepository.findById(updateTreatmentDrug.getPrescription().getId()).ifPresent(treatmentDrug::setPrescription);
+                }
+
+                return treatmentDrug;
+            })
+            .get();
     }
 }

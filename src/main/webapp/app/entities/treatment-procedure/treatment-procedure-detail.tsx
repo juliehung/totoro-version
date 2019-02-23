@@ -62,6 +62,12 @@ export class TreatmentProcedureDetail extends React.Component<ITreatmentProcedur
               <TextFormat value={treatmentProcedureEntity.completedDate} type="date" format={APP_DATE_FORMAT} />
             </dd>
             <dt>
+              <span id="price">
+                <Translate contentKey="totoroApp.treatmentProcedure.price">Price</Translate>
+              </span>
+            </dt>
+            <dd>{treatmentProcedureEntity.price}</dd>
+            <dt>
               <Translate contentKey="totoroApp.treatmentProcedure.nhiProcedure">Nhi Procedure</Translate>
             </dt>
             <dd>{treatmentProcedureEntity.nhiProcedure ? treatmentProcedureEntity.nhiProcedure.id : ''}</dd>
@@ -85,6 +91,10 @@ export class TreatmentProcedureDetail extends React.Component<ITreatmentProcedur
               <Translate contentKey="totoroApp.treatmentProcedure.todo">Todo</Translate>
             </dt>
             <dd>{treatmentProcedureEntity.todo ? treatmentProcedureEntity.todo.id : ''}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.treatmentProcedure.disposal">Disposal</Translate>
+            </dt>
+            <dd>{treatmentProcedureEntity.disposal ? treatmentProcedureEntity.disposal.id : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/treatment-procedure" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

@@ -8,8 +8,8 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
-import { IRegistration } from 'app/shared/model/registration.model';
-import { getEntities as getRegistrations } from 'app/entities/registration/registration.reducer';
+import { IDisposal } from 'app/shared/model/disposal.model';
+import { getEntities as getDisposals } from 'app/entities/disposal/disposal.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './prescription.reducer';
 import { IPrescription } from 'app/shared/model/prescription.model';
 // tslint:disable-next-line:no-unused-variable
@@ -20,14 +20,14 @@ export interface IPrescriptionUpdateProps extends StateProps, DispatchProps, Rou
 
 export interface IPrescriptionUpdateState {
   isNew: boolean;
-  registrationId: string;
+  disposalId: string;
 }
 
 export class PrescriptionUpdate extends React.Component<IPrescriptionUpdateProps, IPrescriptionUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
-      registrationId: '0',
+      disposalId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -45,7 +45,7 @@ export class PrescriptionUpdate extends React.Component<IPrescriptionUpdateProps
       this.props.getEntity(this.props.match.params.id);
     }
 
-    this.props.getRegistrations();
+    this.props.getDisposals();
   }
 
   saveEntity = (event, errors, values) => {
@@ -69,7 +69,7 @@ export class PrescriptionUpdate extends React.Component<IPrescriptionUpdateProps
   };
 
   render() {
-    const { prescriptionEntity, registrations, loading, updating } = this.props;
+    const { prescriptionEntity, disposals, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -138,21 +138,6 @@ export class PrescriptionUpdate extends React.Component<IPrescriptionUpdateProps
                     </option>
                   </AvInput>
                 </AvGroup>
-                <AvGroup>
-                  <Label for="registration.id">
-                    <Translate contentKey="totoroApp.prescription.registration">Registration</Translate>
-                  </Label>
-                  <AvInput id="prescription-registration" type="select" className="form-control" name="registration.id">
-                    <option value="" key="0" />
-                    {registrations
-                      ? registrations.map(otherEntity => (
-                          <option value={otherEntity.id} key={otherEntity.id}>
-                            {otherEntity.id}
-                          </option>
-                        ))
-                      : null}
-                  </AvInput>
-                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/prescription" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
@@ -176,7 +161,7 @@ export class PrescriptionUpdate extends React.Component<IPrescriptionUpdateProps
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
-  registrations: storeState.registration.entities,
+  disposals: storeState.disposal.entities,
   prescriptionEntity: storeState.prescription.entity,
   loading: storeState.prescription.loading,
   updating: storeState.prescription.updating,
@@ -184,7 +169,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getRegistrations,
+  getDisposals,
   getEntity,
   updateEntity,
   createEntity,

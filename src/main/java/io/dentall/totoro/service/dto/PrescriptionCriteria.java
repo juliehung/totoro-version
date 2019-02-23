@@ -42,7 +42,7 @@ public class PrescriptionCriteria implements Serializable {
 
     private LongFilter treatmentDrugId;
 
-    private LongFilter registrationId;
+    private LongFilter disposalId;
 
     public LongFilter getId() {
         return id;
@@ -100,12 +100,12 @@ public class PrescriptionCriteria implements Serializable {
         this.treatmentDrugId = treatmentDrugId;
     }
 
-    public LongFilter getRegistrationId() {
-        return registrationId;
+    public LongFilter getDisposalId() {
+        return disposalId;
     }
 
-    public void setRegistrationId(LongFilter registrationId) {
-        this.registrationId = registrationId;
+    public void setDisposalId(LongFilter disposalId) {
+        this.disposalId = disposalId;
     }
 
 
@@ -126,7 +126,7 @@ public class PrescriptionCriteria implements Serializable {
             Objects.equals(takenAll, that.takenAll) &&
             Objects.equals(status, that.status) &&
             Objects.equals(treatmentDrugId, that.treatmentDrugId) &&
-            Objects.equals(registrationId, that.registrationId);
+            Objects.equals(disposalId, that.disposalId);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class PrescriptionCriteria implements Serializable {
         takenAll,
         status,
         treatmentDrugId,
-        registrationId
+        disposalId
         );
     }
 
@@ -153,7 +153,7 @@ public class PrescriptionCriteria implements Serializable {
                 (takenAll != null ? "takenAll=" + takenAll + ", " : "") +
                 (status != null ? "status=" + status + ", " : "") +
                 (treatmentDrugId != null ? "treatmentDrugId=" + treatmentDrugId + ", " : "") +
-                (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
+                (disposalId != null ? "disposalId=" + disposalId + ", " : "") +
             "}";
     }
 

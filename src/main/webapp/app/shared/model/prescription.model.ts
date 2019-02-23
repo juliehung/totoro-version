@@ -1,5 +1,5 @@
 import { ITreatmentDrug } from 'app/shared/model//treatment-drug.model';
-import { IRegistration } from 'app/shared/model//registration.model';
+import { IDisposal } from 'app/shared/model//disposal.model';
 
 export const enum PrescriptionStatus {
   TEMPORARY = 'TEMPORARY',
@@ -14,7 +14,7 @@ export interface IPrescription {
   takenAll?: boolean;
   status?: PrescriptionStatus;
   treatmentDrugs?: ITreatmentDrug[];
-  registration?: IRegistration;
+  disposal?: IDisposal;
 }
 
 export const defaultValue: Readonly<IPrescription> = {

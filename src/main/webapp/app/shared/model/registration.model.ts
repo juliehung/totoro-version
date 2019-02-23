@@ -2,7 +2,7 @@ import { Moment } from 'moment';
 import { IAppointment } from 'app/shared/model//appointment.model';
 import { IAccounting } from 'app/shared/model//accounting.model';
 import { ITreatmentProcedure } from 'app/shared/model//treatment-procedure.model';
-import { IPrescription } from 'app/shared/model//prescription.model';
+import { IDisposal } from 'app/shared/model//disposal.model';
 
 export const enum RegistrationStatus {
   PENDING = 'PENDING',
@@ -25,7 +25,7 @@ export interface IRegistration {
   appointment?: IAppointment;
   accounting?: IAccounting;
   treatmentProcedures?: ITreatmentProcedure[];
-  prescription?: IPrescription;
+  disposal?: IDisposal;
 }
 
 export const defaultValue: Readonly<IRegistration> = {

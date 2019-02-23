@@ -81,7 +81,7 @@ public class ToothResource {
         if (tooth.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Tooth result = toothService.save(tooth);
+        Tooth result = toothService.update(tooth);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, tooth.getId().toString()))
             .body(result);

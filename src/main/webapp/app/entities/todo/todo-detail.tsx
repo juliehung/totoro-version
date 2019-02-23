@@ -29,11 +29,11 @@ export class TodoDetail extends React.Component<ITodoDetailProps> {
           </h2>
           <dl className="jh-entity-details">
             <dt>
-              <span id="ststus">
-                <Translate contentKey="totoroApp.todo.ststus">Ststus</Translate>
+              <span id="status">
+                <Translate contentKey="totoroApp.todo.status">Status</Translate>
               </span>
             </dt>
-            <dd>{todoEntity.ststus}</dd>
+            <dd>{todoEntity.status}</dd>
             <dt>
               <span id="expectedDate">
                 <Translate contentKey="totoroApp.todo.expectedDate">Expected Date</Translate>

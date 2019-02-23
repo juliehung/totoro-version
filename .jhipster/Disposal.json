@@ -1,0 +1,55 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "treatmentProcedure",
+            "otherEntityName": "treatmentProcedure",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "disposal"
+        },
+        {
+            "relationshipName": "prescription",
+            "otherEntityName": "prescription",
+            "relationshipType": "one-to-one",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "disposal"
+        },
+        {
+            "relationshipName": "todo",
+            "otherEntityName": "todo",
+            "relationshipType": "one-to-one",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "disposal"
+        },
+        {
+            "relationshipName": "registration",
+            "otherEntityName": "registration",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "disposal"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "status",
+            "fieldType": "DisposalStatus",
+            "fieldValues": "TEMPORARY,PERMANENT",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "total",
+            "fieldType": "Double"
+        }
+    ],
+    "changelogDate": "20190220033723",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "serviceClass",
+    "entityTableName": "disposal",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

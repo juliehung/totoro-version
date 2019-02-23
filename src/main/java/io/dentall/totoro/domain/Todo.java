@@ -33,8 +33,8 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "ststus")
-    private TodoStatus ststus;
+    @Column(name = "status")
+    private TodoStatus status;
 
     @Column(name = "expected_date")
     private LocalDate expectedDate;
@@ -52,6 +52,10 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
     @OneToMany(mappedBy = "todo", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
+
+    @OneToOne(mappedBy = "todo")
+    @JsonIgnore
+    private Disposal disposal;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -61,17 +65,17 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
         this.id = id;
     }
 
-    public TodoStatus getStstus() {
-        return ststus;
+    public TodoStatus getStatus() {
+        return status;
     }
 
-    public Todo ststus(TodoStatus ststus) {
-        this.ststus = ststus;
+    public Todo status(TodoStatus status) {
+        this.status = status;
         return this;
     }
 
-    public void setStstus(TodoStatus ststus) {
-        this.ststus = ststus;
+    public void setStatus(TodoStatus status) {
+        this.status = status;
     }
 
     public LocalDate getExpectedDate() {
@@ -150,6 +154,19 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
     public void setTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
         this.treatmentProcedures = treatmentProcedures;
     }
+
+    public Disposal getDisposal() {
+        return disposal;
+    }
+
+    public Todo disposal(Disposal disposal) {
+        this.disposal = disposal;
+        return this;
+    }
+
+    public void setDisposal(Disposal disposal) {
+        this.disposal = disposal;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -190,7 +207,7 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
     public String toString() {
         return "Todo{" +
             "id=" + getId() +
-            ", ststus='" + getStstus() + "'" +
+            ", status='" + getStatus() + "'" +
             ", expectedDate='" + getExpectedDate() + "'" +
             ", requiredTreatmentTime=" + getRequiredTreatmentTime() +
             ", note='" + getNote() + "'" +

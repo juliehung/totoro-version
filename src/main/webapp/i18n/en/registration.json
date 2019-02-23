@@ -22,7 +22,7 @@
       "appointment": "Appointment",
       "accounting": "Accounting",
       "treatmentProcedure": "Treatment Procedure",
-      "prescription": "Prescription"
+      "disposal": "Disposal"
     }
   }
 }

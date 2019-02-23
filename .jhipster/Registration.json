@@ -24,8 +24,8 @@
             "otherEntityRelationshipName": "registration"
         },
         {
-            "relationshipName": "prescription",
-            "otherEntityName": "prescription",
+            "relationshipName": "disposal",
+            "otherEntityName": "disposal",
             "relationshipType": "one-to-one",
             "otherEntityField": "id",
             "ownerSide": false,

@@ -20,6 +20,8 @@ import { IRegistration } from 'app/shared/model/registration.model';
 import { getEntities as getRegistrations } from 'app/entities/registration/registration.reducer';
 import { ITodo } from 'app/shared/model/todo.model';
 import { getEntities as getTodos } from 'app/entities/todo/todo.reducer';
+import { IDisposal } from 'app/shared/model/disposal.model';
+import { getEntities as getDisposals } from 'app/entities/disposal/disposal.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './treatment-procedure.reducer';
 import { ITreatmentProcedure } from 'app/shared/model/treatment-procedure.model';
 // tslint:disable-next-line:no-unused-variable
@@ -36,6 +38,7 @@ export interface ITreatmentProcedureUpdateState {
   appointmentId: string;
   registrationId: string;
   todoId: string;
+  disposalId: string;
 }
 
 export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedureUpdateProps, ITreatmentProcedureUpdateState> {
@@ -48,6 +51,7 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
       appointmentId: '0',
       registrationId: '0',
       todoId: '0',
+      disposalId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -71,6 +75,7 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
     this.props.getAppointments();
     this.props.getRegistrations();
     this.props.getTodos();
+    this.props.getDisposals();
   }
 
   saveEntity = (event, errors, values) => {
@@ -104,6 +109,7 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
       appointments,
       registrations,
       todos,
+      disposals,
       loading,
       updating
     } = this.props;
@@ -158,6 +164,9 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                     <option value="HIDE">
                       <Translate contentKey="totoroApp.TreatmentProcedureStatus.HIDE" />
                     </option>
+                    <option value="TEMPORARY">
+                      <Translate contentKey="totoroApp.TreatmentProcedureStatus.TEMPORARY" />
+                    </option>
                   </AvInput>
                 </AvGroup>
                 <AvGroup>
@@ -189,6 +198,12 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                     name="completedDate"
                     value={isNew ? null : convertDateTimeFromServer(this.props.treatmentProcedureEntity.completedDate)}
                   />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="priceLabel" for="price">
+                    <Translate contentKey="totoroApp.treatmentProcedure.price">Price</Translate>
+                  </Label>
+                  <AvField id="treatment-procedure-price" type="string" className="form-control" name="price" />
                 </AvGroup>
                 <AvGroup>
                   <Label for="nhiProcedure.id">
@@ -280,6 +295,21 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                       : null}
                   </AvInput>
                 </AvGroup>
+                <AvGroup>
+                  <Label for="disposal.id">
+                    <Translate contentKey="totoroApp.treatmentProcedure.disposal">Disposal</Translate>
+                  </Label>
+                  <AvInput id="treatment-procedure-disposal" type="select" className="form-control" name="disposal.id">
+                    <option value="" key="0" />
+                    {disposals
+                      ? disposals.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/treatment-procedure" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
@@ -309,6 +339,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   appointments: storeState.appointment.entities,
   registrations: storeState.registration.entities,
   todos: storeState.todo.entities,
+  disposals: storeState.disposal.entities,
   treatmentProcedureEntity: storeState.treatmentProcedure.entity,
   loading: storeState.treatmentProcedure.loading,
   updating: storeState.treatmentProcedure.updating,
@@ -322,6 +353,7 @@ const mapDispatchToProps = {
   getAppointments,
   getRegistrations,
   getTodos,
+  getDisposals,
   getEntity,
   updateEntity,
   createEntity,

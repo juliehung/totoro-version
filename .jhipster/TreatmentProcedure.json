@@ -43,13 +43,19 @@
             "otherEntityName": "todo",
             "relationshipType": "many-to-one",
             "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "disposal",
+            "otherEntityName": "disposal",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
         }
     ],
     "fields": [
         {
             "fieldName": "status",
             "fieldType": "TreatmentProcedureStatus",
-            "fieldValues": "PLANNED,IN_PROGRESS,COMPLETED,CANCEL,HIDE",
+            "fieldValues": "PLANNED,IN_PROGRESS,COMPLETED,CANCEL,HIDE,TEMPORARY",
             "fieldValidateRules": [
                 "required"
             ]
@@ -69,6 +75,10 @@
         {
             "fieldName": "completedDate",
             "fieldType": "Instant"
+        },
+        {
+            "fieldName": "price",
+            "fieldType": "Double"
         }
     ],
     "changelogDate": "20181224042541",

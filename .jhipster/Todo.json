@@ -13,11 +13,19 @@
             "otherEntityName": "treatmentProcedure",
             "relationshipType": "one-to-many",
             "otherEntityRelationshipName": "todo"
+        },
+        {
+            "relationshipName": "disposal",
+            "otherEntityName": "disposal",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "todo"
         }
     ],
     "fields": [
         {
-            "fieldName": "ststus",
+            "fieldName": "status",
             "fieldType": "TodoStatus",
             "fieldValues": "TEMPORARY,PENDING,FINISHED"
         },

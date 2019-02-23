@@ -67,7 +67,7 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
     @OneToOne    @JoinColumn(unique = true)
     private Registration registration;
 
-    @OneToMany(mappedBy = "appointment")
+    @OneToMany(mappedBy = "appointment", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

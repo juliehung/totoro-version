@@ -2,6 +2,7 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.Tooth;
 import io.dentall.totoro.repository.ToothRepository;
+import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +24,11 @@ public class ToothService {
 
     private final ToothRepository toothRepository;
 
-    public ToothService(ToothRepository toothRepository) {
+    private final TreatmentProcedureRepository treatmentProcedureRepository;
+
+    public ToothService(ToothRepository toothRepository, TreatmentProcedureRepository treatmentProcedureRepository) {
         this.toothRepository = toothRepository;
+        this.treatmentProcedureRepository = treatmentProcedureRepository;
     }
 
     /**
@@ -78,20 +82,34 @@ public class ToothService {
      *
      * @param updateTooth the update entity
      */
-    public void update(Tooth updateTooth) {
+    public Tooth update(Tooth updateTooth) {
         log.debug("Request to update Tooth : {}", updateTooth);
-        toothRepository.findById(updateTooth.getId()).ifPresent(tooth -> {
-            if (updateTooth.getBefore() != null) {
-                tooth.setBefore((updateTooth.getBefore()));
-            }
 
-            if (updateTooth.getPlanned() != null) {
-                tooth.setPlanned((updateTooth.getPlanned()));
-            }
+        return toothRepository
+            .findById(updateTooth.getId())
+            .map(tooth -> {
+                if (updateTooth.getPosition() != null) {
+                    tooth.setPosition((updateTooth.getPosition()));
+                }
 
-            if (updateTooth.getAfter() != null) {
-                tooth.setAfter((updateTooth.getAfter()));
-            }
-        });
+                if (updateTooth.getBefore() != null) {
+                    tooth.setBefore((updateTooth.getBefore()));
+                }
+
+                if (updateTooth.getPlanned() != null) {
+                    tooth.setPlanned((updateTooth.getPlanned()));
+                }
+
+                if (updateTooth.getAfter() != null) {
+                    tooth.setAfter((updateTooth.getAfter()));
+                }
+
+                if (updateTooth.getTreatmentProcedure() != null && updateTooth.getTreatmentProcedure().getId() != null) {
+                    treatmentProcedureRepository.findById(updateTooth.getTreatmentProcedure().getId()).ifPresent(tooth::setTreatmentProcedure);
+                }
+
+                return tooth;
+            })
+            .get();
     }
 }

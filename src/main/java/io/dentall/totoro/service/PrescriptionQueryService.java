@@ -102,9 +102,9 @@ public class PrescriptionQueryService extends QueryService<Prescription> {
                 specification = specification.and(buildSpecification(criteria.getTreatmentDrugId(),
                     root -> root.join(Prescription_.treatmentDrugs, JoinType.LEFT).get(TreatmentDrug_.id)));
             }
-            if (criteria.getRegistrationId() != null) {
-                specification = specification.and(buildSpecification(criteria.getRegistrationId(),
-                    root -> root.join(Prescription_.registration, JoinType.LEFT).get(Registration_.id)));
+            if (criteria.getDisposalId() != null) {
+                specification = specification.and(buildSpecification(criteria.getDisposalId(),
+                    root -> root.join(Prescription_.disposal, JoinType.LEFT).get(Disposal_.id)));
             }
         }
         return specification;
