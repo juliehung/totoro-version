@@ -69,7 +69,11 @@ public class ExtendUser implements Serializable, Avatar {
     @OneToMany(mappedBy = "doctor")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Treatment> treatments = new HashSet<>();
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    @OneToMany(mappedBy = "doctor")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Calendar> calendars = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -94,7 +98,6 @@ public class ExtendUser implements Serializable, Avatar {
     public void setFirstLogin(Boolean firstLogin) {
         this.firstLogin = firstLogin;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     public String getCalendarId() {
         return calendarId;
@@ -308,7 +311,7 @@ public class ExtendUser implements Serializable, Avatar {
         return this;
     }
 
-    public ExtendUser addTreatmentTask(Treatment treatment) {
+    public ExtendUser addTreatment(Treatment treatment) {
         this.treatments.add(treatment);
         treatment.setDoctor(this);
         return this;
@@ -322,6 +325,31 @@ public class ExtendUser implements Serializable, Avatar {
 
     public void setTreatments(Set<Treatment> treatments) {
         this.treatments = treatments;
+    }
+
+    public Set<Calendar> getCalendars() {
+        return calendars;
+    }
+
+    public ExtendUser calendars(Set<Calendar> calendars) {
+        this.calendars = calendars;
+        return this;
+    }
+
+    public ExtendUser addCalendar(Calendar calendar) {
+        this.calendars.add(calendar);
+        calendar.setDoctor(this);
+        return this;
+    }
+
+    public ExtendUser removeCalendar(Calendar calendar) {
+        this.calendars.remove(calendar);
+        calendar.setDoctor(null);
+        return this;
+    }
+
+    public void setCalendars(Set<Calendar> calendars) {
+        this.calendars = calendars;
     }
 
     @Override

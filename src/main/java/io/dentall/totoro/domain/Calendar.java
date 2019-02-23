@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -52,6 +53,11 @@ public class Calendar implements Serializable {
     private String endTime;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = {"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments", "calendars"}, allowSetters = true)
+    private ExtendUser doctor;
+
     public Long getId() {
         return id;
     }
@@ -125,6 +131,19 @@ public class Calendar implements Serializable {
         this.endTime = endTime;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public ExtendUser getDoctor() {
+        return doctor;
+    }
+
+    public Calendar doctor(ExtendUser doctor) {
+        this.doctor = doctor;
+        return this;
+    }
+
+    public void setDoctor(ExtendUser doctor) {
+        this.doctor = doctor;
+    }
 
     @Override
     public boolean equals(Object o) {
