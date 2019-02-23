@@ -28,4 +28,5 @@
     <include file="config/liquibase/changelog/20190125_added_entity_constraints_Procedure.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190130_added_entity_constraints_Treatment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190207_added_entity_constraints_Tag.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190223_added_entity_constraints_Calendar.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

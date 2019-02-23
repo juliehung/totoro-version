@@ -90,6 +90,7 @@ public class CacheConfiguration {
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".treatmentTasks", jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".procedures", jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".treatments", jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".calendars", jcacheConfiguration);
         };
     }
 }
