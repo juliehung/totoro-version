@@ -3,6 +3,8 @@ package io.dentall.totoro.service;
 import io.dentall.totoro.domain.Tooth;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.dto.ToothCriteria;
+import io.github.jhipster.service.filter.LongFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +41,10 @@ public class TreatmentProcedureService {
 
     private final DisposalRepository disposalRepository;
 
+    private final ToothQueryService toothQueryService;
+
+    private final ToothRepository toothRepository;
+
     public TreatmentProcedureService(
         TreatmentProcedureRepository treatmentProcedureRepository,
         ProcedureRepository procedureRepository,
@@ -47,7 +53,9 @@ public class TreatmentProcedureService {
         RelationshipService relationshipService,
         TreatmentTaskRepository treatmentTaskRepository,
         TodoRepository todoRepository,
-        DisposalRepository disposalRepository
+        DisposalRepository disposalRepository,
+        ToothQueryService toothQueryService,
+        ToothRepository toothRepository
     ) {
         this.treatmentProcedureRepository = treatmentProcedureRepository;
         this.procedureRepository = procedureRepository;
@@ -57,6 +65,8 @@ public class TreatmentProcedureService {
         this.treatmentTaskRepository = treatmentTaskRepository;
         this.todoRepository = todoRepository;
         this.disposalRepository = disposalRepository;
+        this.toothQueryService = toothQueryService;
+        this.toothRepository = toothRepository;
     }
 
     /**
@@ -107,7 +117,21 @@ public class TreatmentProcedureService {
      */
     public void delete(Long id) {
         log.debug("Request to delete TreatmentProcedure : {}", id);
+
+        deleteTeethByTreatmentProcedureId(id);
         treatmentProcedureRepository.deleteById(id);
+    }
+
+    /**
+     * Get one treatmentProcedure by id.
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    @Transactional(readOnly = true)
+    public Optional<TreatmentProcedure> findOneWithEagerRelationships(Long id) {
+        log.debug("Request to get TreatmentProcedure : {}", id);
+        return treatmentProcedureRepository.findOneWithTeethById(id);
     }
 
     /**
@@ -177,5 +201,17 @@ public class TreatmentProcedureService {
                 return treatmentProcedure;
             })
             .get();
+    }
+
+    private void deleteTeethByTreatmentProcedureId(Long id) {
+        LongFilter filter = new LongFilter();
+        filter.setEquals(id);
+        ToothCriteria criteria = new ToothCriteria();
+        criteria.setTreatmentProcedureId(filter);
+        toothQueryService
+            .findByCriteria(criteria)
+            .stream()
+            .map(Tooth::getId)
+            .forEach(toothRepository::deleteById);
     }
 }
