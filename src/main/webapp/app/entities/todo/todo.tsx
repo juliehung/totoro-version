@@ -75,8 +75,8 @@ export class Todo extends React.Component<ITodoProps, ITodoState> {
                 <th className="hand" onClick={this.sort('id')}>
                   <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('ststus')}>
-                  <Translate contentKey="totoroApp.todo.ststus">Ststus</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('status')}>
+                  <Translate contentKey="totoroApp.todo.status">Status</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('expectedDate')}>
                   <Translate contentKey="totoroApp.todo.expectedDate">Expected Date</Translate> <FontAwesomeIcon icon="sort" />
@@ -103,7 +103,7 @@ export class Todo extends React.Component<ITodoProps, ITodoState> {
                     </Button>
                   </td>
                   <td>
-                    <Translate contentKey={`totoroApp.TodoStatus.${todo.ststus}`} />
+                    <Translate contentKey={`totoroApp.TodoStatus.${todo.status}`} />
                   </td>
                   <td>
                     <TextFormat type="date" value={todo.expectedDate} format={APP_LOCAL_DATE_FORMAT} />

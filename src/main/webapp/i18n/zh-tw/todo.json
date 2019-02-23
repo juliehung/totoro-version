@@ -15,12 +15,13 @@
       "detail": {
         "title": "Todo"
       },
-      "ststus": "Ststus",
+      "status": "Status",
       "expectedDate": "Expected Date",
       "requiredTreatmentTime": "Required Treatment Time",
       "note": "Note",
       "patient": "Patient",
-      "treatmentProcedure": "Treatment Procedure"
+      "treatmentProcedure": "Treatment Procedure",
+      "disposal": "Disposal"
     }
   }
 }

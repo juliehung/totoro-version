@@ -41,6 +41,8 @@ public class TreatmentProcedureCriteria implements Serializable {
 
     private InstantFilter completedDate;
 
+    private DoubleFilter price;
+
     private LongFilter nhiProcedureId;
 
     private LongFilter treatmentTaskId;
@@ -54,6 +56,8 @@ public class TreatmentProcedureCriteria implements Serializable {
     private LongFilter toothId;
 
     private LongFilter todoId;
+
+    private LongFilter disposalId;
 
     public LongFilter getId() {
         return id;
@@ -101,6 +105,14 @@ public class TreatmentProcedureCriteria implements Serializable {
 
     public void setCompletedDate(InstantFilter completedDate) {
         this.completedDate = completedDate;
+    }
+
+    public DoubleFilter getPrice() {
+        return price;
+    }
+
+    public void setPrice(DoubleFilter price) {
+        this.price = price;
     }
 
     public LongFilter getNhiProcedureId() {
@@ -159,6 +171,14 @@ public class TreatmentProcedureCriteria implements Serializable {
         this.todoId = todoId;
     }
 
+    public LongFilter getDisposalId() {
+        return disposalId;
+    }
+
+    public void setDisposalId(LongFilter disposalId) {
+        this.disposalId = disposalId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -176,13 +196,15 @@ public class TreatmentProcedureCriteria implements Serializable {
             Objects.equals(total, that.total) &&
             Objects.equals(note, that.note) &&
             Objects.equals(completedDate, that.completedDate) &&
+            Objects.equals(price, that.price) &&
             Objects.equals(nhiProcedureId, that.nhiProcedureId) &&
             Objects.equals(treatmentTaskId, that.treatmentTaskId) &&
             Objects.equals(procedureId, that.procedureId) &&
             Objects.equals(appointmentId, that.appointmentId) &&
             Objects.equals(registrationId, that.registrationId) &&
             Objects.equals(toothId, that.toothId) &&
-            Objects.equals(todoId, that.todoId);
+            Objects.equals(todoId, that.todoId) &&
+            Objects.equals(disposalId, that.disposalId);
     }
 
     @Override
@@ -194,13 +216,15 @@ public class TreatmentProcedureCriteria implements Serializable {
         total,
         note,
         completedDate,
+        price,
         nhiProcedureId,
         treatmentTaskId,
         procedureId,
         appointmentId,
         registrationId,
         toothId,
-        todoId
+        todoId,
+        disposalId
         );
     }
 
@@ -213,6 +237,7 @@ public class TreatmentProcedureCriteria implements Serializable {
                 (total != null ? "total=" + total + ", " : "") +
                 (note != null ? "note=" + note + ", " : "") +
                 (completedDate != null ? "completedDate=" + completedDate + ", " : "") +
+                (price != null ? "price=" + price + ", " : "") +
                 (nhiProcedureId != null ? "nhiProcedureId=" + nhiProcedureId + ", " : "") +
                 (treatmentTaskId != null ? "treatmentTaskId=" + treatmentTaskId + ", " : "") +
                 (procedureId != null ? "procedureId=" + procedureId + ", " : "") +
@@ -220,6 +245,7 @@ public class TreatmentProcedureCriteria implements Serializable {
                 (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
                 (toothId != null ? "toothId=" + toothId + ", " : "") +
                 (todoId != null ? "todoId=" + todoId + ", " : "") +
+                (disposalId != null ? "disposalId=" + disposalId + ", " : "") +
             "}";
     }
 

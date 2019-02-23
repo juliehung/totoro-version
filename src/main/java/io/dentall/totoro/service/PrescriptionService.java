@@ -1,6 +1,7 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.Prescription;
+import io.dentall.totoro.domain.TreatmentDrug;
 import io.dentall.totoro.repository.PrescriptionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Service Implementation for managing Prescription.
@@ -23,8 +28,11 @@ public class PrescriptionService {
 
     private final PrescriptionRepository prescriptionRepository;
 
-    public PrescriptionService(PrescriptionRepository prescriptionRepository) {
+    private final RelationshipService relationshipService;
+
+    public PrescriptionService(PrescriptionRepository prescriptionRepository, RelationshipService relationshipService) {
         this.prescriptionRepository = prescriptionRepository;
+        this.relationshipService = relationshipService;
     }
 
     /**
@@ -35,7 +43,12 @@ public class PrescriptionService {
      */
     public Prescription save(Prescription prescription) {
         log.debug("Request to save Prescription : {}", prescription);
-        return prescriptionRepository.save(prescription);
+
+        Set<TreatmentDrug> treatmentDrugs = prescription.getTreatmentDrugs();
+        prescription = prescriptionRepository.save(prescription.treatmentDrugs(null));
+        relationshipService.addRelationshipWithTreatmentDrugs(prescription.treatmentDrugs(treatmentDrugs));
+
+        return prescription;
     }
 
     /**
@@ -50,6 +63,20 @@ public class PrescriptionService {
         return prescriptionRepository.findAll(pageable);
     }
 
+
+
+    /**
+     *  get all the prescriptions where Disposal is null.
+     *  @return the list of entities
+     */
+    @Transactional(readOnly = true) 
+    public List<Prescription> findAllWhereDisposalIsNull() {
+        log.debug("Request to get all prescriptions where Disposal is null");
+        return StreamSupport
+            .stream(prescriptionRepository.findAll().spliterator(), false)
+            .filter(prescription -> prescription.getDisposal() == null)
+            .collect(Collectors.toList());
+    }
 
     /**
      * Get one prescription by id.
@@ -71,5 +98,46 @@ public class PrescriptionService {
     public void delete(Long id) {
         log.debug("Request to delete Prescription : {}", id);
         prescriptionRepository.deleteById(id);
+    }
+
+    /**
+     * Update the prescription.
+     *
+     * @param updatePrescription the update entity
+     * @return the entity
+     */
+    public Prescription update(Prescription updatePrescription) {
+        log.debug("Request to update Prescription : {}", updatePrescription);
+
+        return prescriptionRepository
+            .findById(updatePrescription.getId())
+            .map(prescription -> {
+                if (updatePrescription.isClinicAdministration() != null) {
+                    prescription.setClinicAdministration((updatePrescription.isClinicAdministration()));
+                }
+
+                if (updatePrescription.isAntiInflammatoryDrug() != null) {
+                    prescription.setAntiInflammatoryDrug((updatePrescription.isAntiInflammatoryDrug()));
+                }
+
+                if (updatePrescription.isPain() != null) {
+                    prescription.setPain((updatePrescription.isPain()));
+                }
+
+                if (updatePrescription.isTakenAll() != null) {
+                    prescription.setTakenAll((updatePrescription.isTakenAll()));
+                }
+
+                if (updatePrescription.getStatus() != null) {
+                    prescription.setStatus((updatePrescription.getStatus()));
+                }
+
+                if (updatePrescription.getTreatmentDrugs() != null) {
+                    relationshipService.addRelationshipWithTreatmentDrugs(prescription.treatmentDrugs(updatePrescription.getTreatmentDrugs()));
+                }
+
+                return prescription;
+            })
+            .get();
     }
 }

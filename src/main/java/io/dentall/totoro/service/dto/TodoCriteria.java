@@ -31,7 +31,7 @@ public class TodoCriteria implements Serializable {
 
     private LongFilter id;
 
-    private TodoStatusFilter ststus;
+    private TodoStatusFilter status;
 
     private LocalDateFilter expectedDate;
 
@@ -43,6 +43,8 @@ public class TodoCriteria implements Serializable {
 
     private LongFilter treatmentProcedureId;
 
+    private LongFilter disposalId;
+
     public LongFilter getId() {
         return id;
     }
@@ -51,12 +53,12 @@ public class TodoCriteria implements Serializable {
         this.id = id;
     }
 
-    public TodoStatusFilter getStstus() {
-        return ststus;
+    public TodoStatusFilter getStatus() {
+        return status;
     }
 
-    public void setStstus(TodoStatusFilter ststus) {
-        this.ststus = ststus;
+    public void setStatus(TodoStatusFilter status) {
+        this.status = status;
     }
 
     public LocalDateFilter getExpectedDate() {
@@ -99,6 +101,14 @@ public class TodoCriteria implements Serializable {
         this.treatmentProcedureId = treatmentProcedureId;
     }
 
+    public LongFilter getDisposalId() {
+        return disposalId;
+    }
+
+    public void setDisposalId(LongFilter disposalId) {
+        this.disposalId = disposalId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -111,24 +121,26 @@ public class TodoCriteria implements Serializable {
         final TodoCriteria that = (TodoCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(ststus, that.ststus) &&
+            Objects.equals(status, that.status) &&
             Objects.equals(expectedDate, that.expectedDate) &&
             Objects.equals(requiredTreatmentTime, that.requiredTreatmentTime) &&
             Objects.equals(note, that.note) &&
             Objects.equals(patientId, that.patientId) &&
-            Objects.equals(treatmentProcedureId, that.treatmentProcedureId);
+            Objects.equals(treatmentProcedureId, that.treatmentProcedureId) &&
+            Objects.equals(disposalId, that.disposalId);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
         id,
-        ststus,
+        status,
         expectedDate,
         requiredTreatmentTime,
         note,
         patientId,
-        treatmentProcedureId
+        treatmentProcedureId,
+        disposalId
         );
     }
 
@@ -136,12 +148,13 @@ public class TodoCriteria implements Serializable {
     public String toString() {
         return "TodoCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (ststus != null ? "ststus=" + ststus + ", " : "") +
+                (status != null ? "status=" + status + ", " : "") +
                 (expectedDate != null ? "expectedDate=" + expectedDate + ", " : "") +
                 (requiredTreatmentTime != null ? "requiredTreatmentTime=" + requiredTreatmentTime + ", " : "") +
                 (note != null ? "note=" + note + ", " : "") +
                 (patientId != null ? "patientId=" + patientId + ", " : "") +
                 (treatmentProcedureId != null ? "treatmentProcedureId=" + treatmentProcedureId + ", " : "") +
+                (disposalId != null ? "disposalId=" + disposalId + ", " : "") +
             "}";
     }
 

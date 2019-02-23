@@ -93,8 +93,7 @@ public class TreatmentPlanResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
 
-        treatmentPlan.getTreatmentTasks().forEach(treatmentTaskService::update);
-        TreatmentPlan result = treatmentPlanService.save(treatmentPlan);
+        TreatmentPlan result = treatmentPlanService.update(treatmentPlan);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatmentPlan.getId().toString()))
             .body(result);

@@ -9,11 +9,11 @@
             "otherEntityRelationshipName": "prescription"
         },
         {
-            "relationshipName": "registration",
-            "otherEntityName": "registration",
+            "relationshipName": "disposal",
+            "otherEntityName": "disposal",
             "relationshipType": "one-to-one",
             "otherEntityField": "id",
-            "ownerSide": true,
+            "ownerSide": false,
             "otherEntityRelationshipName": "prescription"
         }
     ],

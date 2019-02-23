@@ -6,7 +6,8 @@
       "IN_PROGRESS": "IN_PROGRESS",
       "COMPLETED": "COMPLETED",
       "CANCEL": "CANCEL",
-      "HIDE": "HIDE"
+      "HIDE": "HIDE",
+      "TEMPORARY": "TEMPORARY"
     }
   }
 }

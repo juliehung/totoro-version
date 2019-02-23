@@ -1,6 +1,8 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentTask;
+import io.dentall.totoro.repository.TreatmentPlanRepository;
 import io.dentall.totoro.repository.TreatmentTaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service Implementation for managing TreatmentTask.
@@ -23,8 +26,18 @@ public class TreatmentTaskService {
 
     private final TreatmentTaskRepository treatmentTaskRepository;
 
-    public TreatmentTaskService(TreatmentTaskRepository treatmentTaskRepository) {
+    private final RelationshipService relationshipService;
+
+    private final TreatmentPlanRepository treatmentPlanRepository;
+
+    public TreatmentTaskService(
+        TreatmentTaskRepository treatmentTaskRepository,
+        RelationshipService relationshipService,
+        TreatmentPlanRepository treatmentPlanRepository
+    ) {
         this.treatmentTaskRepository = treatmentTaskRepository;
+        this.relationshipService = relationshipService;
+        this.treatmentPlanRepository = treatmentPlanRepository;
     }
 
     /**
@@ -35,7 +48,12 @@ public class TreatmentTaskService {
      */
     public TreatmentTask save(TreatmentTask treatmentTask) {
         log.debug("Request to save TreatmentTask : {}", treatmentTask);
-        return treatmentTaskRepository.save(treatmentTask);
+
+        Set<TreatmentProcedure> treatmentProcedures = treatmentTask.getTreatmentProcedures();
+        treatmentTask = treatmentTaskRepository.save(treatmentTask.treatmentProcedures(null));
+        relationshipService.addRelationshipWithTreatmentProcedures(treatmentTask.treatmentProcedures(treatmentProcedures));
+
+        return treatmentTask;
     }
 
     /**
@@ -78,16 +96,30 @@ public class TreatmentTaskService {
      *
      * @param updateTreatmentTask the update entity
      */
-    public void update(TreatmentTask updateTreatmentTask) {
+    public TreatmentTask update(TreatmentTask updateTreatmentTask) {
         log.debug("Request to update TreatmentTask : {}", updateTreatmentTask);
-        treatmentTaskRepository.findById(updateTreatmentTask.getId()).ifPresent(treatmentTask -> {
-            if (updateTreatmentTask.getName() != null) {
-                treatmentTask.setName((updateTreatmentTask.getName()));
-            }
 
-            if (updateTreatmentTask.getNote() != null) {
-                treatmentTask.setNote((updateTreatmentTask.getNote()));
-            }
-        });
+        return treatmentTaskRepository
+            .findById(updateTreatmentTask.getId())
+            .map(treatmentTask -> {
+                if (updateTreatmentTask.getName() != null) {
+                    treatmentTask.setName((updateTreatmentTask.getName()));
+                }
+
+                if (updateTreatmentTask.getNote() != null) {
+                    treatmentTask.setNote((updateTreatmentTask.getNote()));
+                }
+
+                if (updateTreatmentTask.getTreatmentPlan() != null && updateTreatmentTask.getTreatmentPlan().getId() != null) {
+                    treatmentPlanRepository.findById(updateTreatmentTask.getTreatmentPlan().getId()).ifPresent(treatmentTask::setTreatmentPlan);
+                }
+
+                if (updateTreatmentTask.getTreatmentProcedures() != null) {
+                    relationshipService.addRelationshipWithTreatmentProcedures(treatmentTask.treatmentProcedures(updateTreatmentTask.getTreatmentProcedures()));
+                }
+
+                return treatmentTask;
+            })
+            .get();
     }
 }

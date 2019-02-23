@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 
+import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.domain.Todo;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.TreatmentProcedure;
@@ -10,7 +11,6 @@ import io.dentall.totoro.repository.TodoRepository;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.service.TodoService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
-import io.dentall.totoro.service.dto.TodoCriteria;
 import io.dentall.totoro.service.TodoQueryService;
 
 import org.junit.Before;
@@ -50,8 +50,8 @@ import io.dentall.totoro.domain.enumeration.TodoStatus;
 @SpringBootTest(classes = TotoroApp.class)
 public class TodoResourceIntTest {
 
-    private static final TodoStatus DEFAULT_STSTUS = TodoStatus.PENDING;
-    private static final TodoStatus UPDATED_STSTUS = TodoStatus.FINISHED;
+    private static final TodoStatus DEFAULT_STATUS = TodoStatus.TEMPORARY;
+    private static final TodoStatus UPDATED_STATUS = TodoStatus.PENDING;
 
     private static final LocalDate DEFAULT_EXPECTED_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_EXPECTED_DATE = LocalDate.now(ZoneId.systemDefault());
@@ -116,7 +116,7 @@ public class TodoResourceIntTest {
      */
     public static Todo createEntity(EntityManager em) {
         Todo todo = new Todo()
-            .ststus(DEFAULT_STSTUS)
+            .status(DEFAULT_STATUS)
             .expectedDate(DEFAULT_EXPECTED_DATE)
             .requiredTreatmentTime(DEFAULT_REQUIRED_TREATMENT_TIME)
             .note(DEFAULT_NOTE);
@@ -150,7 +150,7 @@ public class TodoResourceIntTest {
         List<Todo> todoList = todoRepository.findAll();
         assertThat(todoList).hasSize(databaseSizeBeforeCreate + 1);
         Todo testTodo = todoList.get(todoList.size() - 1);
-        assertThat(testTodo.getStstus()).isEqualTo(DEFAULT_STSTUS);
+        assertThat(testTodo.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testTodo.getExpectedDate()).isEqualTo(DEFAULT_EXPECTED_DATE);
         assertThat(testTodo.getRequiredTreatmentTime()).isEqualTo(DEFAULT_REQUIRED_TREATMENT_TIME);
         assertThat(testTodo.getNote()).isEqualTo(DEFAULT_NOTE);
@@ -188,7 +188,7 @@ public class TodoResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(todo.getId().intValue())))
-            .andExpect(jsonPath("$.[*].ststus").value(hasItem(DEFAULT_STSTUS.toString())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].expectedDate").value(hasItem(DEFAULT_EXPECTED_DATE.toString())))
             .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(hasItem(DEFAULT_REQUIRED_TREATMENT_TIME)))
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
@@ -205,7 +205,7 @@ public class TodoResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(todo.getId().intValue()))
-            .andExpect(jsonPath("$.ststus").value(DEFAULT_STSTUS.toString()))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.expectedDate").value(DEFAULT_EXPECTED_DATE.toString()))
             .andExpect(jsonPath("$.requiredTreatmentTime").value(DEFAULT_REQUIRED_TREATMENT_TIME))
             .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()));
@@ -213,41 +213,41 @@ public class TodoResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllTodosByStstusIsEqualToSomething() throws Exception {
+    public void getAllTodosByStatusIsEqualToSomething() throws Exception {
         // Initialize the database
         todoRepository.saveAndFlush(todo);
 
-        // Get all the todoList where ststus equals to DEFAULT_STSTUS
-        defaultTodoShouldBeFound("ststus.equals=" + DEFAULT_STSTUS);
+        // Get all the todoList where status equals to DEFAULT_STATUS
+        defaultTodoShouldBeFound("status.equals=" + DEFAULT_STATUS);
 
-        // Get all the todoList where ststus equals to UPDATED_STSTUS
-        defaultTodoShouldNotBeFound("ststus.equals=" + UPDATED_STSTUS);
+        // Get all the todoList where status equals to UPDATED_STATUS
+        defaultTodoShouldNotBeFound("status.equals=" + UPDATED_STATUS);
     }
 
     @Test
     @Transactional
-    public void getAllTodosByStstusIsInShouldWork() throws Exception {
+    public void getAllTodosByStatusIsInShouldWork() throws Exception {
         // Initialize the database
         todoRepository.saveAndFlush(todo);
 
-        // Get all the todoList where ststus in DEFAULT_STSTUS or UPDATED_STSTUS
-        defaultTodoShouldBeFound("ststus.in=" + DEFAULT_STSTUS + "," + UPDATED_STSTUS);
+        // Get all the todoList where status in DEFAULT_STATUS or UPDATED_STATUS
+        defaultTodoShouldBeFound("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS);
 
-        // Get all the todoList where ststus equals to UPDATED_STSTUS
-        defaultTodoShouldNotBeFound("ststus.in=" + UPDATED_STSTUS);
+        // Get all the todoList where status equals to UPDATED_STATUS
+        defaultTodoShouldNotBeFound("status.in=" + UPDATED_STATUS);
     }
 
     @Test
     @Transactional
-    public void getAllTodosByStstusIsNullOrNotNull() throws Exception {
+    public void getAllTodosByStatusIsNullOrNotNull() throws Exception {
         // Initialize the database
         todoRepository.saveAndFlush(todo);
 
-        // Get all the todoList where ststus is not null
-        defaultTodoShouldBeFound("ststus.specified=true");
+        // Get all the todoList where status is not null
+        defaultTodoShouldBeFound("status.specified=true");
 
-        // Get all the todoList where ststus is null
-        defaultTodoShouldNotBeFound("ststus.specified=false");
+        // Get all the todoList where status is null
+        defaultTodoShouldNotBeFound("status.specified=false");
     }
 
     @Test
@@ -458,6 +458,25 @@ public class TodoResourceIntTest {
         defaultTodoShouldNotBeFound("treatmentProcedureId.equals=" + (treatmentProcedureId + 1));
     }
 
+    @Test
+    @Transactional
+    public void getAllTodosByDisposalIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Disposal disposal = DisposalResourceIntTest.createEntity(em);
+        em.persist(disposal);
+        em.flush();
+        todo.setDisposal(disposal);
+        disposal.setTodo(todo);
+        todoRepository.saveAndFlush(todo);
+        Long disposalId = disposal.getId();
+
+        // Get all the todoList where disposal equals to disposalId
+        defaultTodoShouldBeFound("disposalId.equals=" + disposalId);
+
+        // Get all the todoList where disposal equals to disposalId + 1
+        defaultTodoShouldNotBeFound("disposalId.equals=" + (disposalId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -466,7 +485,7 @@ public class TodoResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(todo.getId().intValue())))
-            .andExpect(jsonPath("$.[*].ststus").value(hasItem(DEFAULT_STSTUS.toString())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].expectedDate").value(hasItem(DEFAULT_EXPECTED_DATE.toString())))
             .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(hasItem(DEFAULT_REQUIRED_TREATMENT_TIME)))
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
@@ -517,7 +536,7 @@ public class TodoResourceIntTest {
         // Disconnect from session so that the updates on updatedTodo are not directly saved in db
         em.detach(updatedTodo);
         updatedTodo
-            .ststus(UPDATED_STSTUS)
+            .status(UPDATED_STATUS)
             .expectedDate(UPDATED_EXPECTED_DATE)
             .requiredTreatmentTime(UPDATED_REQUIRED_TREATMENT_TIME)
             .note(UPDATED_NOTE);
@@ -531,7 +550,7 @@ public class TodoResourceIntTest {
         List<Todo> todoList = todoRepository.findAll();
         assertThat(todoList).hasSize(databaseSizeBeforeUpdate);
         Todo testTodo = todoList.get(todoList.size() - 1);
-        assertThat(testTodo.getStstus()).isEqualTo(UPDATED_STSTUS);
+        assertThat(testTodo.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testTodo.getExpectedDate()).isEqualTo(UPDATED_EXPECTED_DATE);
         assertThat(testTodo.getRequiredTreatmentTime()).isEqualTo(UPDATED_REQUIRED_TREATMENT_TIME);
         assertThat(testTodo.getNote()).isEqualTo(UPDATED_NOTE);

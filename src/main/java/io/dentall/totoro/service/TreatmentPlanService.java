@@ -1,10 +1,9 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.Tooth;
 import io.dentall.totoro.domain.TreatmentPlan;
-import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.repository.TreatmentPlanRepository;
+import io.dentall.totoro.repository.TreatmentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Service Implementation for managing TreatmentPlan.
@@ -29,22 +25,18 @@ public class TreatmentPlanService {
 
     private final TreatmentPlanRepository treatmentPlanRepository;
 
-    private final TreatmentTaskService treatmentTaskService;
+    private final RelationshipService relationshipService;
 
-    private final TreatmentProcedureService treatmentProcedureService;
-
-    private final ToothService toothService;
+    private final TreatmentRepository treatmentRepository;
 
     public TreatmentPlanService(
         TreatmentPlanRepository treatmentPlanRepository,
-        TreatmentTaskService treatmentTaskService,
-        TreatmentProcedureService treatmentProcedureService,
-        ToothService toothService
+        RelationshipService relationshipService,
+        TreatmentRepository treatmentRepository
     ) {
         this.treatmentPlanRepository = treatmentPlanRepository;
-        this.treatmentTaskService = treatmentTaskService;
-        this.treatmentProcedureService = treatmentProcedureService;
-        this.toothService = toothService;
+        this.relationshipService = relationshipService;
+        this.treatmentRepository = treatmentRepository;
     }
 
     /**
@@ -56,11 +48,11 @@ public class TreatmentPlanService {
     public TreatmentPlan save(TreatmentPlan treatmentPlan) {
         log.debug("Request to save TreatmentPlan : {}", treatmentPlan);
 
-        TreatmentPlan result = treatmentPlanRepository.save(treatmentPlan);
-        addRelationshipWithTreatmentTasks(result);
-        result.setTreatmentTasks(result.getTreatmentTasks());
+        Set<TreatmentTask> treatmentTasks = treatmentPlan.getTreatmentTasks();
+        treatmentPlan = treatmentPlanRepository.save(treatmentPlan.treatmentTasks(null));
+        relationshipService.addRelationshipWithTreatmentTasks(treatmentPlan.treatmentTasks(treatmentTasks));
 
-        return result;
+        return treatmentPlan;
     }
 
     /**
@@ -102,70 +94,26 @@ public class TreatmentPlanService {
      *
      * @param updateTreatmentPlan the update entity
      */
-    public void update(TreatmentPlan updateTreatmentPlan) {
+    public TreatmentPlan update(TreatmentPlan updateTreatmentPlan) {
         log.debug("Request to update TreatmentPlan : {}", updateTreatmentPlan);
-        treatmentPlanRepository.findById(updateTreatmentPlan.getId()).ifPresent(treatmentPlan -> {
-            if (updateTreatmentPlan.isActivated() != null) {
-                treatmentPlan.setActivated((updateTreatmentPlan.isActivated()));
-            }
-        });
-    }
 
-    private void addRelationshipWithTreatmentTasks(TreatmentPlan treatmentPlan) {
-        Set<TreatmentTask> treatmentTasks = treatmentPlan.getTreatmentTasks();
-        if (treatmentTasks != null) {
-            treatmentTasks = addRelationshipWithOwners(
-                treatmentTasks.stream().map(TreatmentTask::getId).map(treatmentTaskService::findOne),
-                treatmentTask -> {
-                    treatmentTask.setTreatmentPlan(treatmentPlan);
-                    addRelationshipWithTreatmentProcedures(treatmentTask);
-
-                    return treatmentTask;
+        return treatmentPlanRepository
+            .findById(updateTreatmentPlan.getId())
+            .map(treatmentPlan -> {
+                if (updateTreatmentPlan.isActivated() != null) {
+                    treatmentPlan.setActivated((updateTreatmentPlan.isActivated()));
                 }
-            );
-        }
 
-        treatmentPlan.setTreatmentTasks(treatmentTasks);
-    }
-
-    private void addRelationshipWithTreatmentProcedures(TreatmentTask treatmentTask) {
-        Set<TreatmentProcedure> treatmentProcedures = treatmentTask.getTreatmentProcedures();
-        if (treatmentProcedures != null) {
-            treatmentProcedures = addRelationshipWithOwners(
-                treatmentProcedures.stream().map(TreatmentProcedure::getId).map(treatmentProcedureService::findOne),
-                treatmentProcedure -> {
-                    treatmentProcedure.setTreatmentTask(treatmentTask);
-                    addRelationshipWithTeeth(treatmentProcedure);
-
-                    return treatmentProcedure;
+                if (updateTreatmentPlan.getTreatment() != null && updateTreatmentPlan.getTreatment().getId() != null) {
+                    treatmentRepository.findById(updateTreatmentPlan.getTreatment().getId()).ifPresent(treatmentPlan::setTreatment);
                 }
-            );
-        }
 
-        treatmentTask.setTreatmentProcedures(treatmentProcedures);
-    }
-
-    private void addRelationshipWithTeeth(TreatmentProcedure treatmentProcedure) {
-        Set<Tooth> teeth = treatmentProcedure.getTeeth();
-        if (teeth != null) {
-            teeth = addRelationshipWithOwners(
-                teeth.stream().map(Tooth::getId).map(toothService::findOne),
-                tooth -> {
-                    tooth.setTreatmentProcedure(treatmentProcedure);
-
-                    return tooth;
+                if (updateTreatmentPlan.getTreatmentTasks() != null) {
+                    relationshipService.addRelationshipWithTreatmentTasks(treatmentPlan.treatmentTasks(updateTreatmentPlan.getTreatmentTasks()));
                 }
-            );
-        }
 
-        treatmentProcedure.setTeeth(teeth);
-    }
-
-    private <Owner> Set<Owner> addRelationshipWithOwners(Stream<Optional<Owner>> owners, Function<Owner, Owner> mapper) {
-        return owners
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .map(mapper)
-            .collect(Collectors.toSet());
+                return treatmentPlan;
+            })
+            .get();
     }
 }

@@ -2,11 +2,17 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 
-import io.dentall.totoro.domain.*;
-import io.dentall.totoro.repository.ToothRepository;
+import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.domain.NHIProcedure;
+import io.dentall.totoro.domain.TreatmentTask;
+import io.dentall.totoro.domain.Procedure;
+import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.domain.Registration;
+import io.dentall.totoro.domain.Tooth;
+import io.dentall.totoro.domain.Todo;
+import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.repository.UserRepository;
-import io.dentall.totoro.service.ToothService;
 import io.dentall.totoro.service.TreatmentProcedureService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 import io.dentall.totoro.service.TreatmentProcedureQueryService;
@@ -29,8 +35,6 @@ import org.springframework.validation.Validator;
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -65,6 +69,9 @@ public class TreatmentProcedureResourceIntTest {
     private static final Instant DEFAULT_COMPLETED_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_COMPLETED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final Double DEFAULT_PRICE = 1D;
+    private static final Double UPDATED_PRICE = 2D;
+
     @Autowired
     private TreatmentProcedureRepository treatmentProcedureRepository;
 
@@ -92,12 +99,6 @@ public class TreatmentProcedureResourceIntTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ToothService toothService;
-
-    @Autowired
-    private ToothRepository toothRepository;
-
     private MockMvc restTreatmentProcedureMockMvc;
 
     private TreatmentProcedure treatmentProcedure;
@@ -105,7 +106,7 @@ public class TreatmentProcedureResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TreatmentProcedureResource treatmentProcedureResource = new TreatmentProcedureResource(treatmentProcedureService, treatmentProcedureQueryService, toothService);
+        final TreatmentProcedureResource treatmentProcedureResource = new TreatmentProcedureResource(treatmentProcedureService, treatmentProcedureQueryService);
         this.restTreatmentProcedureMockMvc = MockMvcBuilders.standaloneSetup(treatmentProcedureResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -126,7 +127,8 @@ public class TreatmentProcedureResourceIntTest {
             .quantity(DEFAULT_QUANTITY)
             .total(DEFAULT_TOTAL)
             .note(DEFAULT_NOTE)
-            .completedDate(DEFAULT_COMPLETED_DATE);
+            .completedDate(DEFAULT_COMPLETED_DATE)
+            .price(DEFAULT_PRICE);
         return treatmentProcedure;
     }
 
@@ -139,7 +141,6 @@ public class TreatmentProcedureResourceIntTest {
     @Transactional
     public void createTreatmentProcedure() throws Exception {
         int databaseSizeBeforeCreate = treatmentProcedureRepository.findAll().size();
-        treatmentProcedure.getTeeth().add(ToothResourceIntTest.createEntity(em));
 
         // Create the TreatmentProcedure
         restTreatmentProcedureMockMvc.perform(post("/api/treatment-procedures")
@@ -156,7 +157,7 @@ public class TreatmentProcedureResourceIntTest {
         assertThat(testTreatmentProcedure.getTotal()).isEqualTo(DEFAULT_TOTAL);
         assertThat(testTreatmentProcedure.getNote()).isEqualTo(DEFAULT_NOTE);
         assertThat(testTreatmentProcedure.getCompletedDate()).isEqualTo(DEFAULT_COMPLETED_DATE);
-        assertThat(testTreatmentProcedure.getTeeth().size()).isEqualTo(1);
+        assertThat(testTreatmentProcedure.getPrice()).isEqualTo(DEFAULT_PRICE);
     }
 
     @Test
@@ -211,7 +212,8 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)))
             .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())))
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
-            .andExpect(jsonPath("$.[*].completedDate").value(hasItem(DEFAULT_COMPLETED_DATE.toString())));
+            .andExpect(jsonPath("$.[*].completedDate").value(hasItem(DEFAULT_COMPLETED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())));
     }
     
     @Test
@@ -229,7 +231,8 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY))
             .andExpect(jsonPath("$.total").value(DEFAULT_TOTAL.doubleValue()))
             .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
-            .andExpect(jsonPath("$.completedDate").value(DEFAULT_COMPLETED_DATE.toString()));
+            .andExpect(jsonPath("$.completedDate").value(DEFAULT_COMPLETED_DATE.toString()))
+            .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()));
     }
 
     @Test
@@ -456,6 +459,45 @@ public class TreatmentProcedureResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllTreatmentProceduresByPriceIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where price equals to DEFAULT_PRICE
+        defaultTreatmentProcedureShouldBeFound("price.equals=" + DEFAULT_PRICE);
+
+        // Get all the treatmentProcedureList where price equals to UPDATED_PRICE
+        defaultTreatmentProcedureShouldNotBeFound("price.equals=" + UPDATED_PRICE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByPriceIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where price in DEFAULT_PRICE or UPDATED_PRICE
+        defaultTreatmentProcedureShouldBeFound("price.in=" + DEFAULT_PRICE + "," + UPDATED_PRICE);
+
+        // Get all the treatmentProcedureList where price equals to UPDATED_PRICE
+        defaultTreatmentProcedureShouldNotBeFound("price.in=" + UPDATED_PRICE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByPriceIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where price is not null
+        defaultTreatmentProcedureShouldBeFound("price.specified=true");
+
+        // Get all the treatmentProcedureList where price is null
+        defaultTreatmentProcedureShouldNotBeFound("price.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllTreatmentProceduresByNhiProcedureIsEqualToSomething() throws Exception {
         // Initialize the database
         NHIProcedure nhiProcedure = NHIProcedureResourceIntTest.createEntity(em);
@@ -568,6 +610,7 @@ public class TreatmentProcedureResourceIntTest {
         defaultTreatmentProcedureShouldNotBeFound("toothId.equals=" + (toothId + 1));
     }
 
+
     @Test
     @Transactional
     public void getAllTreatmentProceduresByTodoIsEqualToSomething() throws Exception {
@@ -586,6 +629,25 @@ public class TreatmentProcedureResourceIntTest {
         defaultTreatmentProcedureShouldNotBeFound("todoId.equals=" + (todoId + 1));
     }
 
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByDisposalIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Disposal disposal = DisposalResourceIntTest.createEntity(em);
+        em.persist(disposal);
+        em.flush();
+        treatmentProcedure.setDisposal(disposal);
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+        Long disposalId = disposal.getId();
+
+        // Get all the treatmentProcedureList where disposal equals to disposalId
+        defaultTreatmentProcedureShouldBeFound("disposalId.equals=" + disposalId);
+
+        // Get all the treatmentProcedureList where disposal equals to disposalId + 1
+        defaultTreatmentProcedureShouldNotBeFound("disposalId.equals=" + (disposalId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -598,7 +660,8 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)))
             .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())))
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
-            .andExpect(jsonPath("$.[*].completedDate").value(hasItem(DEFAULT_COMPLETED_DATE.toString())));
+            .andExpect(jsonPath("$.[*].completedDate").value(hasItem(DEFAULT_COMPLETED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())));
 
         // Check, that the count call also returns 1
         restTreatmentProcedureMockMvc.perform(get("/api/treatment-procedures/count?sort=id,desc&" + filter))
@@ -636,8 +699,6 @@ public class TreatmentProcedureResourceIntTest {
     @Test
     @Transactional
     public void updateTreatmentProcedure() throws Exception {
-        Tooth tooth = toothRepository.save(ToothResourceIntTest.createEntity(em).treatmentProcedure(treatmentProcedure));
-
         // Initialize the database
         treatmentProcedureService.save(treatmentProcedure);
 
@@ -645,18 +706,15 @@ public class TreatmentProcedureResourceIntTest {
 
         // Update the treatmentProcedure
         TreatmentProcedure updatedTreatmentProcedure = treatmentProcedureRepository.findById(treatmentProcedure.getId()).get();
-        Tooth updatedTooth = toothRepository.findById(tooth.getId()).get();
-
         // Disconnect from session so that the updates on updatedTreatmentProcedure are not directly saved in db
         em.detach(updatedTreatmentProcedure);
-        em.detach(updatedTooth.before("test").treatmentProcedure(null));
         updatedTreatmentProcedure
             .status(UPDATED_STATUS)
             .quantity(UPDATED_QUANTITY)
             .total(UPDATED_TOTAL)
             .note(UPDATED_NOTE)
-            .completedDate(UPDATED_COMPLETED_DATE);
-        updatedTreatmentProcedure.setTeeth(new HashSet<>(Collections.singletonList(updatedTooth)));
+            .completedDate(UPDATED_COMPLETED_DATE)
+            .price(UPDATED_PRICE);
 
         restTreatmentProcedureMockMvc.perform(put("/api/treatment-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -672,6 +730,7 @@ public class TreatmentProcedureResourceIntTest {
         assertThat(testTreatmentProcedure.getTotal()).isEqualTo(UPDATED_TOTAL);
         assertThat(testTreatmentProcedure.getNote()).isEqualTo(UPDATED_NOTE);
         assertThat(testTreatmentProcedure.getCompletedDate()).isEqualTo(UPDATED_COMPLETED_DATE);
+        assertThat(testTreatmentProcedure.getPrice()).isEqualTo(UPDATED_PRICE);
     }
 
     @Test

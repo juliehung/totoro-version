@@ -80,7 +80,7 @@ public class TreatmentDrugResource {
         if (treatmentDrug.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        TreatmentDrug result = treatmentDrugService.save(treatmentDrug);
+        TreatmentDrug result = treatmentDrugService.update(treatmentDrug);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatmentDrug.getId().toString()))
             .body(result);

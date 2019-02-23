@@ -1,0 +1,26 @@
+{
+  "totoroApp": {
+    "disposal": {
+      "home": {
+        "title": "Disposals",
+        "createLabel": "Create a new Disposal",
+        "createOrEditLabel": "Create or edit a Disposal"
+      },
+      "created": "A new Disposal is created with identifier {{ param }}",
+      "updated": "A Disposal is updated with identifier {{ param }}",
+      "deleted": "A Disposal is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Disposal {{ id }}?"
+      },
+      "detail": {
+        "title": "Disposal"
+      },
+      "status": "Status",
+      "total": "Total",
+      "treatmentProcedure": "Treatment Procedure",
+      "prescription": "Prescription",
+      "todo": "Todo",
+      "registration": "Registration"
+    }
+  }
+}

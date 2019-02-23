@@ -92,7 +92,7 @@ public class TreatmentTaskResource {
         if (treatmentTask.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        TreatmentTask result = treatmentTaskService.save(treatmentTask);
+        TreatmentTask result = treatmentTaskService.update(treatmentTask);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatmentTask.getId().toString()))
             .body(result);

@@ -81,7 +81,7 @@ public class PrescriptionResource {
         if (prescription.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Prescription result = prescriptionService.save(prescription);
+        Prescription result = prescriptionService.update(prescription);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, prescription.getId().toString()))
             .body(result);

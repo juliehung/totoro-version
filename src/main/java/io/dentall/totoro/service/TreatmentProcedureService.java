@@ -1,7 +1,8 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.domain.Tooth;
 import io.dentall.totoro.domain.TreatmentProcedure;
-import io.dentall.totoro.repository.TreatmentProcedureRepository;
+import io.dentall.totoro.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service Implementation for managing TreatmentProcedure.
@@ -23,8 +25,38 @@ public class TreatmentProcedureService {
 
     private final TreatmentProcedureRepository treatmentProcedureRepository;
 
-    public TreatmentProcedureService(TreatmentProcedureRepository treatmentProcedureRepository) {
+    private final ProcedureRepository procedureRepository;
+
+    private final AppointmentRepository appointmentRepository;
+
+    private final RegistrationRepository registrationRepository;
+
+    private final RelationshipService relationshipService;
+
+    private final TreatmentTaskRepository treatmentTaskRepository;
+
+    private final TodoRepository todoRepository;
+
+    private final DisposalRepository disposalRepository;
+
+    public TreatmentProcedureService(
+        TreatmentProcedureRepository treatmentProcedureRepository,
+        ProcedureRepository procedureRepository,
+        AppointmentRepository appointmentRepository,
+        RegistrationRepository registrationRepository,
+        RelationshipService relationshipService,
+        TreatmentTaskRepository treatmentTaskRepository,
+        TodoRepository todoRepository,
+        DisposalRepository disposalRepository
+    ) {
         this.treatmentProcedureRepository = treatmentProcedureRepository;
+        this.procedureRepository = procedureRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.registrationRepository = registrationRepository;
+        this.relationshipService = relationshipService;
+        this.treatmentTaskRepository = treatmentTaskRepository;
+        this.todoRepository = todoRepository;
+        this.disposalRepository = disposalRepository;
     }
 
     /**
@@ -35,7 +67,12 @@ public class TreatmentProcedureService {
      */
     public TreatmentProcedure save(TreatmentProcedure treatmentProcedure) {
         log.debug("Request to save TreatmentProcedure : {}", treatmentProcedure);
-        return treatmentProcedureRepository.save(treatmentProcedure);
+
+        Set<Tooth> teeth = treatmentProcedure.getTeeth();
+        treatmentProcedure = treatmentProcedureRepository.save(treatmentProcedure.teeth(null));
+        relationshipService.addRelationshipWithTeeth(treatmentProcedure.teeth(teeth));
+
+        return treatmentProcedure;
     }
 
     /**
@@ -71,5 +108,74 @@ public class TreatmentProcedureService {
     public void delete(Long id) {
         log.debug("Request to delete TreatmentProcedure : {}", id);
         treatmentProcedureRepository.deleteById(id);
+    }
+
+    /**
+     * Update the treatmentProcedure.
+     *
+     * @param updateTreatmentProcedure the update entity
+     * @return the entity
+     */
+    public TreatmentProcedure update(TreatmentProcedure updateTreatmentProcedure) {
+        log.debug("Request to update TreatmentProcedure : {}", updateTreatmentProcedure);
+
+        return treatmentProcedureRepository
+            .findById(updateTreatmentProcedure.getId())
+            .map(treatmentProcedure -> {
+                if (updateTreatmentProcedure.getStatus() != null) {
+                    treatmentProcedure.setStatus((updateTreatmentProcedure.getStatus()));
+                }
+
+                if (updateTreatmentProcedure.getQuantity() != null) {
+                    treatmentProcedure.setQuantity((updateTreatmentProcedure.getQuantity()));
+                }
+
+                if (updateTreatmentProcedure.getTotal() != null) {
+                    treatmentProcedure.setTotal((updateTreatmentProcedure.getTotal()));
+                }
+
+                if (updateTreatmentProcedure.getNote() != null) {
+                    treatmentProcedure.setNote((updateTreatmentProcedure.getNote()));
+                }
+
+                if (updateTreatmentProcedure.getCompletedDate() != null) {
+                    treatmentProcedure.setCompletedDate((updateTreatmentProcedure.getCompletedDate()));
+                }
+
+                if (updateTreatmentProcedure.getPrice() != null) {
+                    treatmentProcedure.setPrice((updateTreatmentProcedure.getPrice()));
+                }
+
+                if (updateTreatmentProcedure.getProcedure() != null && updateTreatmentProcedure.getProcedure().getId() != null) {
+                    procedureRepository.findById(updateTreatmentProcedure.getProcedure().getId()).ifPresent(treatmentProcedure::setProcedure);
+                }
+
+                if (updateTreatmentProcedure.getAppointment() != null && updateTreatmentProcedure.getAppointment().getId() != null) {
+                    appointmentRepository.findById(updateTreatmentProcedure.getAppointment().getId()).ifPresent(treatmentProcedure::setAppointment);
+                }
+
+                if (updateTreatmentProcedure.getRegistration() != null && updateTreatmentProcedure.getRegistration().getId() != null) {
+                    registrationRepository.findById(updateTreatmentProcedure.getRegistration().getId()).ifPresent(treatmentProcedure::setRegistration);
+                }
+
+                if (updateTreatmentProcedure.getTreatmentTask() != null && updateTreatmentProcedure.getTreatmentTask().getId() != null) {
+                    treatmentTaskRepository.findById(updateTreatmentProcedure.getTreatmentTask().getId()).ifPresent(treatmentProcedure::setTreatmentTask);
+                }
+
+                if (updateTreatmentProcedure.getTodo() != null && updateTreatmentProcedure.getTodo().getId() != null) {
+                    todoRepository.findById(updateTreatmentProcedure.getTodo().getId()).ifPresent(treatmentProcedure::setTodo);
+                }
+
+                if (updateTreatmentProcedure.getDisposal() != null && updateTreatmentProcedure.getDisposal().getId() != null) {
+                    disposalRepository.findById(updateTreatmentProcedure.getDisposal().getId()).ifPresent(treatmentProcedure::setDisposal);
+                }
+
+                if (updateTreatmentProcedure.getTeeth() != null) {
+                    relationshipService.addRelationshipWithTeeth(treatmentProcedure.teeth(updateTreatmentProcedure.getTeeth()));
+                }
+
+                return treatmentProcedure;
+            })
+            .get();
     }
 }

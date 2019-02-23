@@ -91,6 +91,9 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                   <Translate contentKey="totoroApp.treatmentProcedure.completedDate">Completed Date</Translate>{' '}
                   <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('price')}>
+                  <Translate contentKey="totoroApp.treatmentProcedure.price">Price</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.treatmentProcedure.nhiProcedure">Nhi Procedure</Translate>{' '}
                   <FontAwesomeIcon icon="sort" />
@@ -110,6 +113,9 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                 </th>
                 <th>
                   <Translate contentKey="totoroApp.treatmentProcedure.todo">Todo</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.treatmentProcedure.disposal">Disposal</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -131,6 +137,7 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                   <td>
                     <TextFormat type="date" value={treatmentProcedure.completedDate} format={APP_DATE_FORMAT} />
                   </td>
+                  <td>{treatmentProcedure.price}</td>
                   <td>
                     {treatmentProcedure.nhiProcedure ? (
                       <Link to={`nhi-procedure/${treatmentProcedure.nhiProcedure.id}`}>{treatmentProcedure.nhiProcedure.id}</Link>
@@ -168,6 +175,13 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                   </td>
                   <td>
                     {treatmentProcedure.todo ? <Link to={`todo/${treatmentProcedure.todo.id}`}>{treatmentProcedure.todo.id}</Link> : ''}
+                  </td>
+                  <td>
+                    {treatmentProcedure.disposal ? (
+                      <Link to={`disposal/${treatmentProcedure.disposal.id}`}>{treatmentProcedure.disposal.id}</Link>
+                    ) : (
+                      ''
+                    )}
                   </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

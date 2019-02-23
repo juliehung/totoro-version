@@ -2,6 +2,7 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.Todo;
 import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TodoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  * Service Implementation for managing Todo.
@@ -25,11 +26,18 @@ public class TodoService {
 
     private final TodoRepository todoRepository;
 
-    private final TreatmentProcedureService treatmentProcedureService;
+    private final RelationshipService relationshipService;
 
-    public TodoService(TodoRepository todoRepository, TreatmentProcedureService treatmentProcedureService) {
+    private final PatientRepository patientRepository;
+
+    public TodoService(
+        TodoRepository todoRepository,
+        RelationshipService relationshipService,
+        PatientRepository patientRepository
+    ) {
         this.todoRepository = todoRepository;
-        this.treatmentProcedureService = treatmentProcedureService;
+        this.relationshipService = relationshipService;
+        this.patientRepository = patientRepository;
     }
 
     /**
@@ -41,17 +49,11 @@ public class TodoService {
     public Todo save(Todo todo) {
         log.debug("Request to save Todo : {}", todo);
 
-        return todoRepository.save(todo).treatmentProcedures(
-            todo
-                .getTreatmentProcedures()
-                .stream()
-                .map(TreatmentProcedure::getId)
-                .map(treatmentProcedureService::findOne)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(treatmentProcedure -> treatmentProcedure.todo(todo))
-                .collect(Collectors.toSet())
-        );
+        Set<TreatmentProcedure> treatmentProcedures = todo.getTreatmentProcedures();
+        todo = todoRepository.save(todo.treatmentProcedures(null));
+        relationshipService.addRelationshipWithTreatmentProcedures(todo.treatmentProcedures(treatmentProcedures));
+
+        return todo;
     }
 
     /**
@@ -101,8 +103,8 @@ public class TodoService {
         return todoRepository
             .findById(updateTodo.getId())
             .map(todo -> {
-                if (updateTodo.getStstus() != null) {
-                    todo.setStstus((updateTodo.getStstus()));
+                if (updateTodo.getStatus() != null) {
+                    todo.setStatus((updateTodo.getStatus()));
                 }
 
                 if (updateTodo.getExpectedDate() != null) {
@@ -115,6 +117,14 @@ public class TodoService {
 
                 if (updateTodo.getNote() != null) {
                     todo.setNote((updateTodo.getNote()));
+                }
+
+                if (updateTodo.getPatient() != null && updateTodo.getPatient().getId() != null) {
+                    patientRepository.findById(updateTodo.getPatient().getId()).ifPresent(todo::setPatient);
+                }
+
+                if (updateTodo.getTreatmentProcedures() != null) {
+                    relationshipService.addRelationshipWithTreatmentProcedures(todo.treatmentProcedures(updateTodo.getTreatmentProcedures()));
                 }
 
                 return todo;

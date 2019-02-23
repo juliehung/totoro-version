@@ -1,0 +1,9 @@
+{
+  "totoroApp": {
+    "DisposalStatus": {
+      "null": "",
+      "TEMPORARY": "TEMPORARY",
+      "PERMANENT": "PERMANENT"
+    }
+  }
+}

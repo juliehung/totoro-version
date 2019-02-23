@@ -83,8 +83,8 @@ public class TodoQueryService extends QueryService<Todo> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), Todo_.id));
             }
-            if (criteria.getStstus() != null) {
-                specification = specification.and(buildSpecification(criteria.getStstus(), Todo_.ststus));
+            if (criteria.getStatus() != null) {
+                specification = specification.and(buildSpecification(criteria.getStatus(), Todo_.status));
             }
             if (criteria.getExpectedDate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getExpectedDate(), Todo_.expectedDate));
@@ -102,6 +102,10 @@ public class TodoQueryService extends QueryService<Todo> {
             if (criteria.getTreatmentProcedureId() != null) {
                 specification = specification.and(buildSpecification(criteria.getTreatmentProcedureId(),
                     root -> root.join(Todo_.treatmentProcedures, JoinType.LEFT).get(TreatmentProcedure_.id)));
+            }
+            if (criteria.getDisposalId() != null) {
+                specification = specification.and(buildSpecification(criteria.getDisposalId(),
+                    root -> root.join(Todo_.disposal, JoinType.LEFT).get(Disposal_.id)));
             }
         }
         return specification;

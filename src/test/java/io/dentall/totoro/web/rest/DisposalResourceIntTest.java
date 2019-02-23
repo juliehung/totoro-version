@@ -1,0 +1,476 @@
+package io.dentall.totoro.web.rest;
+
+import io.dentall.totoro.TotoroApp;
+
+import io.dentall.totoro.domain.Disposal;
+import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.domain.Prescription;
+import io.dentall.totoro.domain.Todo;
+import io.dentall.totoro.domain.Registration;
+import io.dentall.totoro.repository.DisposalRepository;
+import io.dentall.totoro.service.DisposalService;
+import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
+import io.dentall.totoro.service.DisposalQueryService;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
+
+import javax.persistence.EntityManager;
+import java.util.List;
+
+
+import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import io.dentall.totoro.domain.enumeration.DisposalStatus;
+/**
+ * Test class for the DisposalResource REST controller.
+ *
+ * @see DisposalResource
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = TotoroApp.class)
+public class DisposalResourceIntTest {
+
+    private static final DisposalStatus DEFAULT_STATUS = DisposalStatus.TEMPORARY;
+    private static final DisposalStatus UPDATED_STATUS = DisposalStatus.PERMANENT;
+
+    private static final Double DEFAULT_TOTAL = 1D;
+    private static final Double UPDATED_TOTAL = 2D;
+
+    @Autowired
+    private DisposalRepository disposalRepository;
+
+    @Autowired
+    private DisposalService disposalService;
+
+    @Autowired
+    private DisposalQueryService disposalQueryService;
+
+    @Autowired
+    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+    @Autowired
+    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
+    private EntityManager em;
+
+    @Autowired
+    private Validator validator;
+
+    private MockMvc restDisposalMockMvc;
+
+    private Disposal disposal;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        final DisposalResource disposalResource = new DisposalResource(disposalService, disposalQueryService);
+        this.restDisposalMockMvc = MockMvcBuilders.standaloneSetup(disposalResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
+    }
+
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Disposal createEntity(EntityManager em) {
+        Disposal disposal = new Disposal()
+            .status(DEFAULT_STATUS)
+            .total(DEFAULT_TOTAL);
+        return disposal;
+    }
+
+    @Before
+    public void initTest() {
+        disposal = createEntity(em);
+    }
+
+    @Test
+    @Transactional
+    public void createDisposal() throws Exception {
+        int databaseSizeBeforeCreate = disposalRepository.findAll().size();
+
+        // Create the Disposal
+        restDisposalMockMvc.perform(post("/api/disposals")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(disposal)))
+            .andExpect(status().isCreated());
+
+        // Validate the Disposal in the database
+        List<Disposal> disposalList = disposalRepository.findAll();
+        assertThat(disposalList).hasSize(databaseSizeBeforeCreate + 1);
+        Disposal testDisposal = disposalList.get(disposalList.size() - 1);
+        assertThat(testDisposal.getStatus()).isEqualTo(DEFAULT_STATUS);
+        assertThat(testDisposal.getTotal()).isEqualTo(DEFAULT_TOTAL);
+    }
+
+    @Test
+    @Transactional
+    public void createDisposalWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = disposalRepository.findAll().size();
+
+        // Create the Disposal with an existing ID
+        disposal.setId(1L);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restDisposalMockMvc.perform(post("/api/disposals")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(disposal)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Disposal in the database
+        List<Disposal> disposalList = disposalRepository.findAll();
+        assertThat(disposalList).hasSize(databaseSizeBeforeCreate);
+    }
+
+    @Test
+    @Transactional
+    public void checkStatusIsRequired() throws Exception {
+        int databaseSizeBeforeTest = disposalRepository.findAll().size();
+        // set the field null
+        disposal.setStatus(null);
+
+        // Create the Disposal, which fails.
+
+        restDisposalMockMvc.perform(post("/api/disposals")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(disposal)))
+            .andExpect(status().isBadRequest());
+
+        List<Disposal> disposalList = disposalRepository.findAll();
+        assertThat(disposalList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisposals() throws Exception {
+        // Initialize the database
+        disposalRepository.saveAndFlush(disposal);
+
+        // Get all the disposalList
+        restDisposalMockMvc.perform(get("/api/disposals?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(disposal.getId().intValue())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())));
+    }
+    
+    @Test
+    @Transactional
+    public void getDisposal() throws Exception {
+        // Initialize the database
+        disposalRepository.saveAndFlush(disposal);
+
+        // Get the disposal
+        restDisposalMockMvc.perform(get("/api/disposals/{id}", disposal.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.id").value(disposal.getId().intValue()))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
+            .andExpect(jsonPath("$.total").value(DEFAULT_TOTAL.doubleValue()));
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByStatusIsEqualToSomething() throws Exception {
+        // Initialize the database
+        disposalRepository.saveAndFlush(disposal);
+
+        // Get all the disposalList where status equals to DEFAULT_STATUS
+        defaultDisposalShouldBeFound("status.equals=" + DEFAULT_STATUS);
+
+        // Get all the disposalList where status equals to UPDATED_STATUS
+        defaultDisposalShouldNotBeFound("status.equals=" + UPDATED_STATUS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByStatusIsInShouldWork() throws Exception {
+        // Initialize the database
+        disposalRepository.saveAndFlush(disposal);
+
+        // Get all the disposalList where status in DEFAULT_STATUS or UPDATED_STATUS
+        defaultDisposalShouldBeFound("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS);
+
+        // Get all the disposalList where status equals to UPDATED_STATUS
+        defaultDisposalShouldNotBeFound("status.in=" + UPDATED_STATUS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByStatusIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        disposalRepository.saveAndFlush(disposal);
+
+        // Get all the disposalList where status is not null
+        defaultDisposalShouldBeFound("status.specified=true");
+
+        // Get all the disposalList where status is null
+        defaultDisposalShouldNotBeFound("status.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByTotalIsEqualToSomething() throws Exception {
+        // Initialize the database
+        disposalRepository.saveAndFlush(disposal);
+
+        // Get all the disposalList where total equals to DEFAULT_TOTAL
+        defaultDisposalShouldBeFound("total.equals=" + DEFAULT_TOTAL);
+
+        // Get all the disposalList where total equals to UPDATED_TOTAL
+        defaultDisposalShouldNotBeFound("total.equals=" + UPDATED_TOTAL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByTotalIsInShouldWork() throws Exception {
+        // Initialize the database
+        disposalRepository.saveAndFlush(disposal);
+
+        // Get all the disposalList where total in DEFAULT_TOTAL or UPDATED_TOTAL
+        defaultDisposalShouldBeFound("total.in=" + DEFAULT_TOTAL + "," + UPDATED_TOTAL);
+
+        // Get all the disposalList where total equals to UPDATED_TOTAL
+        defaultDisposalShouldNotBeFound("total.in=" + UPDATED_TOTAL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByTotalIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        disposalRepository.saveAndFlush(disposal);
+
+        // Get all the disposalList where total is not null
+        defaultDisposalShouldBeFound("total.specified=true");
+
+        // Get all the disposalList where total is null
+        defaultDisposalShouldNotBeFound("total.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByTreatmentProcedureIsEqualToSomething() throws Exception {
+        // Initialize the database
+        TreatmentProcedure treatmentProcedure = TreatmentProcedureResourceIntTest.createEntity(em);
+        em.persist(treatmentProcedure);
+        em.flush();
+        disposal.addTreatmentProcedure(treatmentProcedure);
+        disposalRepository.saveAndFlush(disposal);
+        Long treatmentProcedureId = treatmentProcedure.getId();
+
+        // Get all the disposalList where treatmentProcedure equals to treatmentProcedureId
+        defaultDisposalShouldBeFound("treatmentProcedureId.equals=" + treatmentProcedureId);
+
+        // Get all the disposalList where treatmentProcedure equals to treatmentProcedureId + 1
+        defaultDisposalShouldNotBeFound("treatmentProcedureId.equals=" + (treatmentProcedureId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByPrescriptionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Prescription prescription = PrescriptionResourceIntTest.createEntity(em);
+        em.persist(prescription);
+        em.flush();
+        disposal.setPrescription(prescription);
+        disposalRepository.saveAndFlush(disposal);
+        Long prescriptionId = prescription.getId();
+
+        // Get all the disposalList where prescription equals to prescriptionId
+        defaultDisposalShouldBeFound("prescriptionId.equals=" + prescriptionId);
+
+        // Get all the disposalList where prescription equals to prescriptionId + 1
+        defaultDisposalShouldNotBeFound("prescriptionId.equals=" + (prescriptionId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByTodoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Todo todo = TodoResourceIntTest.createEntity(em);
+        em.persist(todo);
+        em.flush();
+        disposal.setTodo(todo);
+        disposalRepository.saveAndFlush(disposal);
+        Long todoId = todo.getId();
+
+        // Get all the disposalList where todo equals to todoId
+        defaultDisposalShouldBeFound("todoId.equals=" + todoId);
+
+        // Get all the disposalList where todo equals to todoId + 1
+        defaultDisposalShouldNotBeFound("todoId.equals=" + (todoId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByRegistrationIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Registration registration = RegistrationResourceIntTest.createEntity(em);
+        em.persist(registration);
+        em.flush();
+        disposal.setRegistration(registration);
+        disposalRepository.saveAndFlush(disposal);
+        Long registrationId = registration.getId();
+
+        // Get all the disposalList where registration equals to registrationId
+        defaultDisposalShouldBeFound("registrationId.equals=" + registrationId);
+
+        // Get all the disposalList where registration equals to registrationId + 1
+        defaultDisposalShouldNotBeFound("registrationId.equals=" + (registrationId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned
+     */
+    private void defaultDisposalShouldBeFound(String filter) throws Exception {
+        restDisposalMockMvc.perform(get("/api/disposals?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(disposal.getId().intValue())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())));
+
+        // Check, that the count call also returns 1
+        restDisposalMockMvc.perform(get("/api/disposals/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned
+     */
+    private void defaultDisposalShouldNotBeFound(String filter) throws Exception {
+        restDisposalMockMvc.perform(get("/api/disposals?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restDisposalMockMvc.perform(get("/api/disposals/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("0"));
+    }
+
+
+    @Test
+    @Transactional
+    public void getNonExistingDisposal() throws Exception {
+        // Get the disposal
+        restDisposalMockMvc.perform(get("/api/disposals/{id}", Long.MAX_VALUE))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    public void updateDisposal() throws Exception {
+        // Initialize the database
+        disposalService.save(disposal);
+
+        int databaseSizeBeforeUpdate = disposalRepository.findAll().size();
+
+        // Update the disposal
+        Disposal updatedDisposal = disposalRepository.findById(disposal.getId()).get();
+        // Disconnect from session so that the updates on updatedDisposal are not directly saved in db
+        em.detach(updatedDisposal);
+        updatedDisposal
+            .status(UPDATED_STATUS)
+            .total(UPDATED_TOTAL);
+
+        restDisposalMockMvc.perform(put("/api/disposals")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedDisposal)))
+            .andExpect(status().isOk());
+
+        // Validate the Disposal in the database
+        List<Disposal> disposalList = disposalRepository.findAll();
+        assertThat(disposalList).hasSize(databaseSizeBeforeUpdate);
+        Disposal testDisposal = disposalList.get(disposalList.size() - 1);
+        assertThat(testDisposal.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testDisposal.getTotal()).isEqualTo(UPDATED_TOTAL);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingDisposal() throws Exception {
+        int databaseSizeBeforeUpdate = disposalRepository.findAll().size();
+
+        // Create the Disposal
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restDisposalMockMvc.perform(put("/api/disposals")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(disposal)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Disposal in the database
+        List<Disposal> disposalList = disposalRepository.findAll();
+        assertThat(disposalList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    public void deleteDisposal() throws Exception {
+        // Initialize the database
+        disposalService.save(disposal);
+
+        int databaseSizeBeforeDelete = disposalRepository.findAll().size();
+
+        // Get the disposal
+        restDisposalMockMvc.perform(delete("/api/disposals/{id}", disposal.getId())
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
+
+        // Validate the database is empty
+        List<Disposal> disposalList = disposalRepository.findAll();
+        assertThat(disposalList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(Disposal.class);
+        Disposal disposal1 = new Disposal();
+        disposal1.setId(1L);
+        Disposal disposal2 = new Disposal();
+        disposal2.setId(disposal1.getId());
+        assertThat(disposal1).isEqualTo(disposal2);
+        disposal2.setId(2L);
+        assertThat(disposal1).isNotEqualTo(disposal2);
+        disposal1.setId(null);
+        assertThat(disposal1).isNotEqualTo(disposal2);
+    }
+}

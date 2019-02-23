@@ -49,8 +49,10 @@ public class Prescription implements Serializable {
     @OneToMany(mappedBy = "prescription")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentDrug> treatmentDrugs = new HashSet<>();
-    @OneToOne    @JoinColumn(unique = true)
-    private Registration registration;
+
+    @OneToOne(mappedBy = "prescription")
+    @JsonIgnore
+    private Disposal disposal;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -151,17 +153,17 @@ public class Prescription implements Serializable {
         this.treatmentDrugs = treatmentDrugs;
     }
 
-    public Registration getRegistration() {
-        return registration;
+    public Disposal getDisposal() {
+        return disposal;
     }
 
-    public Prescription registration(Registration registration) {
-        this.registration = registration;
+    public Prescription disposal(Disposal disposal) {
+        this.disposal = disposal;
         return this;
     }
 
-    public void setRegistration(Registration registration) {
-        this.registration = registration;
+    public void setDisposal(Disposal disposal) {
+        this.disposal = disposal;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
