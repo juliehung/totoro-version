@@ -118,3 +118,7 @@ logging:
 calendar:
     secret:
         google: service-account.json
+
+scheduler:
+    initialDelay: 60000
+    fixedDelay: 30000

@@ -168,6 +168,8 @@ public class AppointmentResourceIntTest {
         TreatmentProcedure treatmentProcedure = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         appointment.getTreatmentProcedures().add(treatmentProcedure);
 
+        appointment.setPatient(patientRepository.save(PatientResourceIntTest.createEntity(em)));
+
         // Create the Appointment
         restAppointmentMockMvc.perform(post("/api/appointments")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -795,6 +797,8 @@ public class AppointmentResourceIntTest {
     @Test
     @Transactional
     public void updateAppointment() throws Exception {
+        appointment.setPatient(patientRepository.save(PatientResourceIntTest.createEntity(em)));
+
         // Initialize the database
         appointmentService.save(appointment);
 
@@ -1012,6 +1016,8 @@ public class AppointmentResourceIntTest {
         Registration registration = RegistrationResourceIntTest.createEntity(em);
         em.persist(registration);
         appointment.setRegistration(registration);
+        appointment.setPatient(patientRepository.save(PatientResourceIntTest.createEntity(em)));
+        appointmentRepository.save(appointment);
 
         // Initialize the database
         appointmentRepository.saveAndFlush(appointment);
