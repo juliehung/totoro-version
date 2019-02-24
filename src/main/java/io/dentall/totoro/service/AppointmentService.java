@@ -1,7 +1,9 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
+import io.dentall.totoro.handler.BroadcastWebSocket;
 import io.dentall.totoro.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +18,7 @@ import javax.persistence.PersistenceContext;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +27,10 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class AppointmentService {
+
+    private final String REGISTRATION_PENDING = " 已掛號";
+
+    private final String REGISTRATION_FINISHED = " 完成治療";
 
     private final Logger log = LoggerFactory.getLogger(AppointmentService.class);
 
@@ -46,6 +50,8 @@ public class AppointmentService {
 
     private final TreatmentService treatmentService;
 
+    private final BroadcastWebSocket webSocket;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -57,7 +63,8 @@ public class AppointmentService {
         PatientRepository patientRepository,
         HospitalRepository hospitalRepository,
         TreatmentProcedureService treatmentProcedureService,
-        TreatmentService treatmentService
+        TreatmentService treatmentService,
+        BroadcastWebSocket webSocket
     ) {
         this.appointmentRepository = appointmentRepository;
         this.registrationRepository = registrationRepository;
@@ -67,6 +74,7 @@ public class AppointmentService {
         this.hospitalRepository = hospitalRepository;
         this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentService = treatmentService;
+        this.webSocket = webSocket;
     }
 
     /**
@@ -85,6 +93,8 @@ public class AppointmentService {
                 log.debug("Save Patient({})", patient);
                 appointment.setPatient(patientRepository.save(patient));
                 treatmentService.save(new Treatment().name("General Treatment").type(TreatmentType.GENERAL).patient(patient));
+            } else {
+                patientRepository.findById(patient.getId()).ifPresent(appointment::setPatient);
             }
         }
 
@@ -112,6 +122,7 @@ public class AppointmentService {
                 log.debug("Save Registration({})", registration);
                 registration.setId(appointment.getId());
                 appointment.setRegistration(registrationRepository.save(registration));
+                broadcastRegistrationStatus(appointment.getPatient().getName(), appointment.getRegistration().getStatus());
             }
         }
 
@@ -188,6 +199,7 @@ public class AppointmentService {
                     if (updateRegistration.getId() == null) {
                         updateRegistration.setId(appointment.getId());
                         appointment.setRegistration(registrationRepository.save(updateRegistration));
+                        broadcastRegistrationStatus(appointment.getPatient().getName(), appointment.getRegistration().getStatus());
                     }
                 } else {
                     appointment.setRegistration(updateRegistration(registration, updateRegistration));
@@ -256,6 +268,9 @@ public class AppointmentService {
     private Registration updateRegistration(Registration registration, Registration updateRegistration) {
         if (updateRegistration.getStatus() != null) {
             registration.setStatus(updateRegistration.getStatus());
+            if (registration.getStatus() == RegistrationStatus.FINISHED) {
+                broadcastRegistrationStatus(registration.getAppointment().getPatient().getName(), RegistrationStatus.FINISHED);
+            }
         }
 
         if (updateRegistration.getArrivalTime() != null) {
@@ -363,6 +378,14 @@ public class AppointmentService {
             if (appointment != null) {
                 appointment.setTreatmentProcedures(treatmentProcedures);
             }
+        }
+    }
+
+    private void broadcastRegistrationStatus(String name, RegistrationStatus status) {
+        if (status == RegistrationStatus.PENDING) {
+            webSocket.broadcast(webSocket.payloadTemplate(BroadcastWebSocket.NOTIFICATION, name, REGISTRATION_PENDING));
+        } else if (status == RegistrationStatus.FINISHED) {
+            webSocket.broadcast(webSocket.payloadTemplate(BroadcastWebSocket.NOTIFICATION, name, REGISTRATION_FINISHED));
         }
     }
 }
