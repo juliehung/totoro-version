@@ -2,7 +2,6 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
-import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.handler.BroadcastWebSocket;
 import io.dentall.totoro.repository.*;
 import org.slf4j.Logger;
@@ -48,7 +47,7 @@ public class AppointmentService {
 
     private final TreatmentProcedureService treatmentProcedureService;
 
-    private final TreatmentService treatmentService;
+    private final RelationshipService relationshipService;
 
     private final BroadcastWebSocket webSocket;
 
@@ -63,7 +62,7 @@ public class AppointmentService {
         PatientRepository patientRepository,
         HospitalRepository hospitalRepository,
         TreatmentProcedureService treatmentProcedureService,
-        TreatmentService treatmentService,
+        RelationshipService relationshipService,
         BroadcastWebSocket webSocket
     ) {
         this.appointmentRepository = appointmentRepository;
@@ -73,7 +72,7 @@ public class AppointmentService {
         this.patientRepository = patientRepository;
         this.hospitalRepository = hospitalRepository;
         this.treatmentProcedureService = treatmentProcedureService;
-        this.treatmentService = treatmentService;
+        this.relationshipService = relationshipService;
         this.webSocket = webSocket;
     }
 
@@ -91,8 +90,9 @@ public class AppointmentService {
             Patient patient = appointment.getPatient();
             if (patient.getId() == null) {
                 log.debug("Save Patient({})", patient);
-                appointment.setPatient(patientRepository.save(patient));
-                treatmentService.save(new Treatment().name("General Treatment").type(TreatmentType.GENERAL).patient(patient));
+                patient = patientRepository.save(patient);
+                appointment.setPatient(patient);
+                patient.getTreatments().add(relationshipService.createGeneralTreatmentAndPlanAndTaskWithPatient(patient));
             } else {
                 patientRepository.findById(patient.getId()).ifPresent(appointment::setPatient);
             }
