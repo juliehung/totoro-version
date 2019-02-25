@@ -42,6 +42,9 @@ export class TreatmentPlan extends React.Component<ITreatmentPlanProps> {
                   <Translate contentKey="totoroApp.treatmentPlan.activated">Activated</Translate>
                 </th>
                 <th>
+                  <Translate contentKey="totoroApp.treatmentPlan.name">Name</Translate>
+                </th>
+                <th>
                   <Translate contentKey="totoroApp.treatmentPlan.treatment">Treatment</Translate>
                 </th>
                 <th />
@@ -56,6 +59,7 @@ export class TreatmentPlan extends React.Component<ITreatmentPlanProps> {
                     </Button>
                   </td>
                   <td>{treatmentPlan.activated ? 'true' : 'false'}</td>
+                  <td>{treatmentPlan.name}</td>
                   <td>
                     {treatmentPlan.treatment ? (
                       <Link to={`treatment/${treatmentPlan.treatment.id}`}>{treatmentPlan.treatment.id}</Link>

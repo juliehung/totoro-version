@@ -35,6 +35,12 @@ export class TreatmentPlanDetail extends React.Component<ITreatmentPlanDetailPro
             </dt>
             <dd>{treatmentPlanEntity.activated ? 'true' : 'false'}</dd>
             <dt>
+              <span id="name">
+                <Translate contentKey="totoroApp.treatmentPlan.name">Name</Translate>
+              </span>
+            </dt>
+            <dd>{treatmentPlanEntity.name}</dd>
+            <dt>
               <Translate contentKey="totoroApp.treatmentPlan.treatment">Treatment</Translate>
             </dt>
             <dd>{treatmentPlanEntity.treatment ? treatmentPlanEntity.treatment.id : ''}</dd>

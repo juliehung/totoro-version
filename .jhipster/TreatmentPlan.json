@@ -20,8 +20,12 @@
             "fieldName": "activated",
             "fieldType": "Boolean",
             "fieldValidateRules": [
-              "required"
+                "required"
             ]
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20190131034634",

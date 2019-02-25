@@ -7,9 +7,7 @@ import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.domain.Treatment;
 import io.dentall.totoro.repository.TreatmentPlanRepository;
 import io.dentall.totoro.service.TreatmentPlanService;
-import io.dentall.totoro.service.TreatmentTaskService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
-import io.dentall.totoro.service.dto.TreatmentPlanCriteria;
 import io.dentall.totoro.service.TreatmentPlanQueryService;
 
 import org.junit.Before;
@@ -49,6 +47,9 @@ public class TreatmentPlanResourceIntTest {
     private static final Boolean DEFAULT_ACTIVATED = false;
     private static final Boolean UPDATED_ACTIVATED = true;
 
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
     @Autowired
     private TreatmentPlanRepository treatmentPlanRepository;
 
@@ -73,9 +74,6 @@ public class TreatmentPlanResourceIntTest {
     @Autowired
     private Validator validator;
 
-    @Autowired
-    private TreatmentTaskService treatmentTaskervice;
-
     private MockMvc restTreatmentPlanMockMvc;
 
     private TreatmentPlan treatmentPlan;
@@ -83,7 +81,7 @@ public class TreatmentPlanResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TreatmentPlanResource treatmentPlanResource = new TreatmentPlanResource(treatmentPlanService, treatmentPlanQueryService, treatmentTaskervice);
+        final TreatmentPlanResource treatmentPlanResource = new TreatmentPlanResource(treatmentPlanService, treatmentPlanQueryService);
         this.restTreatmentPlanMockMvc = MockMvcBuilders.standaloneSetup(treatmentPlanResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -100,7 +98,8 @@ public class TreatmentPlanResourceIntTest {
      */
     public static TreatmentPlan createEntity(EntityManager em) {
         TreatmentPlan treatmentPlan = new TreatmentPlan()
-            .activated(DEFAULT_ACTIVATED);
+            .activated(DEFAULT_ACTIVATED)
+            .name(DEFAULT_NAME);
         return treatmentPlan;
     }
 
@@ -125,6 +124,7 @@ public class TreatmentPlanResourceIntTest {
         assertThat(treatmentPlanList).hasSize(databaseSizeBeforeCreate + 1);
         TreatmentPlan testTreatmentPlan = treatmentPlanList.get(treatmentPlanList.size() - 1);
         assertThat(testTreatmentPlan.isActivated()).isEqualTo(DEFAULT_ACTIVATED);
+        assertThat(testTreatmentPlan.getName()).isEqualTo(DEFAULT_NAME);
     }
 
     @Test
@@ -175,7 +175,8 @@ public class TreatmentPlanResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(treatmentPlan.getId().intValue())))
-            .andExpect(jsonPath("$.[*].activated").value(hasItem(DEFAULT_ACTIVATED.booleanValue())));
+            .andExpect(jsonPath("$.[*].activated").value(hasItem(DEFAULT_ACTIVATED.booleanValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
     }
     
     @Test
@@ -189,7 +190,8 @@ public class TreatmentPlanResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(treatmentPlan.getId().intValue()))
-            .andExpect(jsonPath("$.activated").value(DEFAULT_ACTIVATED.booleanValue()));
+            .andExpect(jsonPath("$.activated").value(DEFAULT_ACTIVATED.booleanValue()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
     }
 
     @Test
@@ -229,6 +231,45 @@ public class TreatmentPlanResourceIntTest {
 
         // Get all the treatmentPlanList where activated is null
         defaultTreatmentPlanShouldNotBeFound("activated.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentPlansByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentPlanRepository.saveAndFlush(treatmentPlan);
+
+        // Get all the treatmentPlanList where name equals to DEFAULT_NAME
+        defaultTreatmentPlanShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the treatmentPlanList where name equals to UPDATED_NAME
+        defaultTreatmentPlanShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentPlansByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentPlanRepository.saveAndFlush(treatmentPlan);
+
+        // Get all the treatmentPlanList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultTreatmentPlanShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the treatmentPlanList where name equals to UPDATED_NAME
+        defaultTreatmentPlanShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentPlansByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentPlanRepository.saveAndFlush(treatmentPlan);
+
+        // Get all the treatmentPlanList where name is not null
+        defaultTreatmentPlanShouldBeFound("name.specified=true");
+
+        // Get all the treatmentPlanList where name is null
+        defaultTreatmentPlanShouldNotBeFound("name.specified=false");
     }
 
     @Test
@@ -276,7 +317,8 @@ public class TreatmentPlanResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(treatmentPlan.getId().intValue())))
-            .andExpect(jsonPath("$.[*].activated").value(hasItem(DEFAULT_ACTIVATED.booleanValue())));
+            .andExpect(jsonPath("$.[*].activated").value(hasItem(DEFAULT_ACTIVATED.booleanValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
 
         // Check, that the count call also returns 1
         restTreatmentPlanMockMvc.perform(get("/api/treatment-plans/count?sort=id,desc&" + filter))
@@ -324,7 +366,8 @@ public class TreatmentPlanResourceIntTest {
         // Disconnect from session so that the updates on updatedTreatmentPlan are not directly saved in db
         em.detach(updatedTreatmentPlan);
         updatedTreatmentPlan
-            .activated(UPDATED_ACTIVATED);
+            .activated(UPDATED_ACTIVATED)
+            .name(UPDATED_NAME);
 
         restTreatmentPlanMockMvc.perform(put("/api/treatment-plans")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -336,6 +379,7 @@ public class TreatmentPlanResourceIntTest {
         assertThat(treatmentPlanList).hasSize(databaseSizeBeforeUpdate);
         TreatmentPlan testTreatmentPlan = treatmentPlanList.get(treatmentPlanList.size() - 1);
         assertThat(testTreatmentPlan.isActivated()).isEqualTo(UPDATED_ACTIVATED);
+        assertThat(testTreatmentPlan.getName()).isEqualTo(UPDATED_NAME);
     }
 
     @Test

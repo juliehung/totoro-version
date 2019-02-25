@@ -50,6 +50,7 @@
     <include file="config/liquibase/changelog/20190215_addColumn_Registration.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190220_addColumn_Disposal.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190223_addColumn_Calendar.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190224_addColumn_TreatmentPlan.xml" relativeToChangelogFile="false"/>
 
     <!-- add default value -->
     <include file="config/liquibase/changelog/20181024_addDefaultValue_Appointment.xml" relativeToChangelogFile="false"/>
@@ -58,5 +59,6 @@
     <include file="config/liquibase/changelog/20190211_addDefaultValue_Treatment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190215_addDefaultValue_Registration.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190220_addDefaultValue_TreatmentTask.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190224_addDefaultValue_TreatmentPlan.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

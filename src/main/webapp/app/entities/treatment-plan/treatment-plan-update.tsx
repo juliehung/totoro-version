@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col, Label } from 'reactstrap';
-import { AvForm, AvGroup, AvInput } from 'availity-reactstrap-validation';
+import { AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
 // tslint:disable-next-line:no-unused-variable
 import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -100,6 +100,12 @@ export class TreatmentPlanUpdate extends React.Component<ITreatmentPlanUpdatePro
                     <AvInput id="treatment-plan-activated" type="checkbox" className="form-control" name="activated" />
                     <Translate contentKey="totoroApp.treatmentPlan.activated">Activated</Translate>
                   </Label>
+                </AvGroup>
+                <AvGroup>
+                  <Label id="nameLabel" for="name">
+                    <Translate contentKey="totoroApp.treatmentPlan.name">Name</Translate>
+                  </Label>
+                  <AvField id="treatment-plan-name" type="text" name="name" />
                 </AvGroup>
                 <AvGroup>
                   <Label for="treatment.id">
