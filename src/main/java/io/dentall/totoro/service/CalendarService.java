@@ -2,6 +2,7 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.Calendar;
 import io.dentall.totoro.repository.CalendarRepository;
+import io.dentall.totoro.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +23,11 @@ public class CalendarService {
 
     private final CalendarRepository calendarRepository;
 
-    public CalendarService(CalendarRepository calendarRepository) {
+    private final UserRepository userRepository;
+
+    public CalendarService(CalendarRepository calendarRepository, UserRepository userRepository) {
         this.calendarRepository = calendarRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -69,5 +73,45 @@ public class CalendarService {
     public void delete(Long id) {
         log.debug("Request to delete Calendar : {}", id);
         calendarRepository.deleteById(id);
+    }
+
+    /**
+     * Update the calendar by id.
+     *
+     * @param updateCalendar the update entity
+     */
+    public Calendar update(Calendar updateCalendar) {
+        log.debug("Request to update Calendar : {}", updateCalendar);
+
+        return calendarRepository
+            .findById(updateCalendar.getId())
+            .map(calendar -> {
+                if (updateCalendar.getDate() != null) {
+                    calendar.setDate((updateCalendar.getDate()));
+                }
+
+                if (updateCalendar.getTimeInterval() != null) {
+                    calendar.setTimeInterval((updateCalendar.getTimeInterval()));
+                }
+
+                if (updateCalendar.getTimeType() != null) {
+                    calendar.setTimeType((updateCalendar.getTimeType()));
+                }
+
+                if (updateCalendar.getStartTime() != null) {
+                    calendar.setStartTime((updateCalendar.getStartTime()));
+                }
+
+                if (updateCalendar.getEndTime() != null) {
+                    calendar.setEndTime((updateCalendar.getEndTime()));
+                }
+
+                if (updateCalendar.getDoctor() != null && updateCalendar.getDoctor().getId() != null) {
+                    userRepository.findById(updateCalendar.getDoctor().getId()).ifPresent(user -> calendar.setDoctor(user.getExtendUser()));
+                }
+
+                return calendar;
+            })
+            .get();
     }
 }
