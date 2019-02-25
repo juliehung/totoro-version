@@ -76,7 +76,7 @@ public class CalendarResource {
         if (calendar.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Calendar result = calendarService.save(calendar);
+        Calendar result = calendarService.update(calendar);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, calendar.getId().toString()))
             .body(result);

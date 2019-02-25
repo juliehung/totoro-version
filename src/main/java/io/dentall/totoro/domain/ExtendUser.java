@@ -1,6 +1,6 @@
 package io.dentall.totoro.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -39,7 +39,7 @@ public class ExtendUser implements Serializable, Avatar {
 
     @OneToOne
     @MapsId
-    @JsonIgnore
+    @JsonIgnoreProperties("extendUser")
     private User user;
 
     @OneToMany(mappedBy = "dominantDoctor")
