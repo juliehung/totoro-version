@@ -6,7 +6,7 @@ import io.dentall.totoro.domain.enumeration.TagName;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
-import io.dentall.totoro.service.TreatmentService;
+import io.dentall.totoro.service.RelationshipService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
 import org.apache.commons.io.FileUtils;
@@ -159,7 +159,7 @@ public class PatientResourceIntTest {
     private PatientIdentityRepository patientIdentityRepository;
 
     @Autowired
-    private TreatmentService treatmentService;
+    private RelationshipService relationshipService;
 
     private MockMvc restPatientMockMvc;
 
@@ -176,7 +176,7 @@ public class PatientResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, patientService, imageService, treatmentService);
+        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, patientService, imageService, relationshipService);
         this.restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
