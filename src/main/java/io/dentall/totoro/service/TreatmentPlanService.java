@@ -104,6 +104,10 @@ public class TreatmentPlanService {
                     treatmentPlan.setActivated((updateTreatmentPlan.isActivated()));
                 }
 
+                if (updateTreatmentPlan.getName() != null) {
+                    treatmentPlan.setName((updateTreatmentPlan.getName()));
+                }
+
                 if (updateTreatmentPlan.getTreatment() != null && updateTreatmentPlan.getTreatment().getId() != null) {
                     treatmentRepository.findById(updateTreatmentPlan.getTreatment().getId()).ifPresent(treatmentPlan::setTreatment);
                 }

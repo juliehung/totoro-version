@@ -86,6 +86,9 @@ public class TreatmentPlanQueryService extends QueryService<TreatmentPlan> {
             if (criteria.getActivated() != null) {
                 specification = specification.and(buildSpecification(criteria.getActivated(), TreatmentPlan_.activated));
             }
+            if (criteria.getName() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getName(), TreatmentPlan_.name));
+            }
             if (criteria.getTreatmentTaskId() != null) {
                 specification = specification.and(buildSpecification(criteria.getTreatmentTaskId(),
                     root -> root.join(TreatmentPlan_.treatmentTasks, JoinType.LEFT).get(TreatmentTask_.id)));

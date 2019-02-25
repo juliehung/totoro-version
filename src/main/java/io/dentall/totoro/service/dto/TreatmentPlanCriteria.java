@@ -26,6 +26,8 @@ public class TreatmentPlanCriteria implements Serializable {
 
     private BooleanFilter activated;
 
+    private StringFilter name;
+
     private LongFilter treatmentTaskId;
 
     private LongFilter treatmentId;
@@ -44,6 +46,14 @@ public class TreatmentPlanCriteria implements Serializable {
 
     public void setActivated(BooleanFilter activated) {
         this.activated = activated;
+    }
+
+    public StringFilter getName() {
+        return name;
+    }
+
+    public void setName(StringFilter name) {
+        this.name = name;
     }
 
     public LongFilter getTreatmentTaskId() {
@@ -75,6 +85,7 @@ public class TreatmentPlanCriteria implements Serializable {
         return
             Objects.equals(id, that.id) &&
             Objects.equals(activated, that.activated) &&
+            Objects.equals(name, that.name) &&
             Objects.equals(treatmentTaskId, that.treatmentTaskId) &&
             Objects.equals(treatmentId, that.treatmentId);
     }
@@ -84,6 +95,7 @@ public class TreatmentPlanCriteria implements Serializable {
         return Objects.hash(
         id,
         activated,
+        name,
         treatmentTaskId,
         treatmentId
         );
@@ -94,6 +106,7 @@ public class TreatmentPlanCriteria implements Serializable {
         return "TreatmentPlanCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (activated != null ? "activated=" + activated + ", " : "") +
+                (name != null ? "name=" + name + ", " : "") +
                 (treatmentTaskId != null ? "treatmentTaskId=" + treatmentTaskId + ", " : "") +
                 (treatmentId != null ? "treatmentId=" + treatmentId + ", " : "") +
             "}";

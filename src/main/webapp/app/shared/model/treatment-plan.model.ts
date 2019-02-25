@@ -4,6 +4,7 @@ import { ITreatment } from 'app/shared/model//treatment.model';
 export interface ITreatmentPlan {
   id?: number;
   activated?: boolean;
+  name?: string;
   treatmentTasks?: ITreatmentTask[];
   treatment?: ITreatment;
 }

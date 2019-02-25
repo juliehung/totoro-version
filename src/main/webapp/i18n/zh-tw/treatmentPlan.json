@@ -16,6 +16,7 @@
         "title": "Treatment Plan"
       },
       "activated": "Activated",
+      "name": "Name",
       "treatmentTask": "Treatment Task",
       "treatment": "Treatment"
     }

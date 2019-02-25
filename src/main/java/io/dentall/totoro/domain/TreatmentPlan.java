@@ -1,6 +1,8 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -8,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -18,7 +21,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "treatment_plan")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class TreatmentPlan implements Serializable {
+public class TreatmentPlan extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,6 +33,9 @@ public class TreatmentPlan implements Serializable {
     @NotNull
     @Column(name = "activated", nullable = false)
     private Boolean activated;
+
+    @Column(name = "name")
+    private String name;
 
     @OneToMany(mappedBy = "treatmentPlan")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -58,6 +64,19 @@ public class TreatmentPlan implements Serializable {
 
     public void setActivated(Boolean activated) {
         this.activated = activated;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public TreatmentPlan name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Set<TreatmentTask> getTreatmentTasks() {
@@ -100,6 +119,20 @@ public class TreatmentPlan implements Serializable {
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
+    @JsonIgnore(false)
+    @JsonProperty
+    public String getCreatedBy() {
+        return super.getCreatedBy();
+    }
+
+    @Override
+    @JsonIgnore(false)
+    @JsonProperty
+    public Instant getCreatedDate() {
+        return super.getCreatedDate();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -124,6 +157,7 @@ public class TreatmentPlan implements Serializable {
         return "TreatmentPlan{" +
             "id=" + getId() +
             ", activated='" + isActivated() + "'" +
+            ", name='" + getName() + "'" +
             "}";
     }
 }
