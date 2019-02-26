@@ -122,3 +122,4 @@ calendar:
 scheduler:
     initialDelay: 60000
     fixedDelay: 30000
+    appointment.comingSoon: 15

@@ -1,8 +1,6 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.domain.enumeration.RegistrationStatus;
-import io.dentall.totoro.handler.BroadcastWebSocket;
 import io.dentall.totoro.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +22,6 @@ import java.util.*;
 @Transactional
 public class AppointmentService {
 
-    private final String REGISTRATION_PENDING = " 已掛號";
-
-    private final String REGISTRATION_FINISHED = " 完成治療";
-
     private final Logger log = LoggerFactory.getLogger(AppointmentService.class);
 
     private final AppointmentRepository appointmentRepository;
@@ -40,8 +34,7 @@ public class AppointmentService {
 
     private final RelationshipService relationshipService;
 
-    private final BroadcastWebSocket webSocket;
-
+    private final BroadcastService broadcastService;
 
     public AppointmentService(
         AppointmentRepository appointmentRepository,
@@ -49,14 +42,14 @@ public class AppointmentService {
         PatientService patientService,
         RegistrationService registrationService,
         RelationshipService relationshipService,
-        BroadcastWebSocket webSocket
+        BroadcastService broadcastService
     ) {
         this.appointmentRepository = appointmentRepository;
         this.extendUserRepository = extendUserRepository;
         this.patientService = patientService;
         this.registrationService = registrationService;
         this.relationshipService = relationshipService;
-        this.webSocket = webSocket;
+        this.broadcastService = broadcastService;
     }
 
     /**
@@ -229,17 +222,9 @@ public class AppointmentService {
                 registration = registrationService.update(registration);
             }
 
-            broadcastRegistrationStatus(appointment.getPatient().getName(), registration.getStatus());
+            broadcastService.broadcastRegistrationStatus(appointment.getPatient().getName(), registration.getStatus());
         }
 
         return registration;
-    }
-
-    private void broadcastRegistrationStatus(String name, RegistrationStatus status) {
-        if (status == RegistrationStatus.PENDING) {
-            webSocket.broadcast(webSocket.payloadTemplate(BroadcastWebSocket.NOTIFICATION, name, REGISTRATION_PENDING));
-        } else if (status == RegistrationStatus.FINISHED) {
-            webSocket.broadcast(webSocket.payloadTemplate(BroadcastWebSocket.NOTIFICATION, name, REGISTRATION_FINISHED));
-        }
     }
 }
