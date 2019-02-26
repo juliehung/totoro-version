@@ -12,13 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing Appointment.
@@ -35,43 +32,29 @@ public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
 
-    private final RegistrationRepository registrationRepository;
-
     private final ExtendUserRepository extendUserRepository;
 
-    private final AccountingRepository accountingRepository;
+    private final PatientService patientService;
 
-    private final PatientRepository patientRepository;
-
-    private final HospitalRepository hospitalRepository;
-
-    private final TreatmentProcedureService treatmentProcedureService;
+    private final RegistrationService registrationService;
 
     private final RelationshipService relationshipService;
 
     private final BroadcastWebSocket webSocket;
 
-    @PersistenceContext
-    private EntityManager entityManager;
 
     public AppointmentService(
         AppointmentRepository appointmentRepository,
-        RegistrationRepository registrationRepository,
         ExtendUserRepository extendUserRepository,
-        AccountingRepository accountingRepository,
-        PatientRepository patientRepository,
-        HospitalRepository hospitalRepository,
-        TreatmentProcedureService treatmentProcedureService,
+        PatientService patientService,
+        RegistrationService registrationService,
         RelationshipService relationshipService,
         BroadcastWebSocket webSocket
     ) {
         this.appointmentRepository = appointmentRepository;
-        this.registrationRepository = registrationRepository;
         this.extendUserRepository = extendUserRepository;
-        this.accountingRepository = accountingRepository;
-        this.patientRepository = patientRepository;
-        this.hospitalRepository = hospitalRepository;
-        this.treatmentProcedureService = treatmentProcedureService;
+        this.patientService = patientService;
+        this.registrationService = registrationService;
         this.relationshipService = relationshipService;
         this.webSocket = webSocket;
     }
@@ -85,46 +68,14 @@ public class AppointmentService {
     public Appointment save(Appointment appointment) {
         log.debug("Request to save Appointment : {}", appointment);
 
-        // patient
-        if (appointment.getPatient() != null) {
-            Patient patient = appointment.getPatient();
-            if (patient.getId() == null) {
-                log.debug("Save Patient({})", patient);
-                patient = patientRepository.save(patient);
-                appointment.setPatient(patient);
-                patient.getTreatments().add(relationshipService.createGeneralTreatmentAndPlanAndTaskWithPatient(patient));
-            } else {
-                patientRepository.findById(patient.getId()).ifPresent(appointment::setPatient);
-            }
-        }
+        Patient patient = getPatient(appointment);
 
-        // treatmentProcedures
-        if (appointment.getTreatmentProcedures() != null) {
-            setAppointmentOfTreatmentProcedure(appointment.getTreatmentProcedures(), appointment);
-        }
-
-        appointmentRepository.save(appointment);
-
-        // registration
-        if (appointment.getRegistration() != null) {
-            Registration registration = appointment.getRegistration();
-
-            // accounting
-            if (registration.getAccounting() != null) {
-                Accounting accounting = registration.getAccounting();
-                if (accounting.getId() == null) {
-                    log.debug("Save Accounting({})", accounting);
-                    registration.setAccounting(accountingRepository.save(accounting));
-                }
-            }
-
-            if (registration.getId() == null) {
-                log.debug("Save Registration({})", registration);
-                registration.setId(appointment.getId());
-                appointment.setRegistration(registrationRepository.save(registration));
-                broadcastRegistrationStatus(appointment.getPatient().getName(), appointment.getRegistration().getStatus());
-            }
-        }
+        Set<TreatmentProcedure> treatmentProcedures = appointment.getTreatmentProcedures();
+        appointment = appointmentRepository.save(appointment.treatmentProcedures(null));
+        relationshipService.addRelationshipWithTreatmentProcedures(appointment.treatmentProcedures(treatmentProcedures));
+        appointment.setPatient(patient);
+        Registration registration = getRegistration(appointment);
+        appointment.setRegistration(registration);
 
         return appointment;
     }
@@ -181,204 +132,107 @@ public class AppointmentService {
         return null;
     }
 
-    public Optional<Appointment> updateAppointment(Appointment updateAppointment) {
-        return appointmentRepository.findById(updateAppointment.getId()).map(appointment -> {
-            // registration
-            if (updateAppointment.getRegistration() != null) {
-                log.debug("Update Registration({}) of Appointment(id: {})", updateAppointment.getRegistration(), updateAppointment.getId());
-                Registration registration = appointment.getRegistration();
-                Registration updateRegistration = updateAppointment.getRegistration();
-
-                if (registration == null) {
-                    if (updateRegistration.getAccounting() != null) {
-                        log.debug("Save Accounting({})", updateRegistration.getAccounting());
-                        updateRegistration.accounting(accountingRepository.save(updateRegistration.getAccounting()));
-                    }
-
-                    // create registration
-                    if (updateRegistration.getId() == null) {
-                        updateRegistration.setId(appointment.getId());
-                        appointment.setRegistration(registrationRepository.save(updateRegistration));
-                        broadcastRegistrationStatus(appointment.getPatient().getName(), appointment.getRegistration().getStatus());
-                    }
-                } else {
-                    appointment.setRegistration(updateRegistration(registration, updateRegistration));
+    public Appointment update(Appointment updateAppointment) {
+        return appointmentRepository
+            .findById(updateAppointment.getId())
+            .map(appointment -> {
+                if (updateAppointment.getStatus() != null) {
+                    appointment.setStatus((updateAppointment.getStatus()));
                 }
-            }
 
-            if (updateAppointment.getStatus() != null) {
-                appointment.setStatus((updateAppointment.getStatus()));
-            }
+                if (updateAppointment.getSubject() != null) {
+                    appointment.setSubject((updateAppointment.getSubject()));
+                }
 
-            if (updateAppointment.getSubject() != null) {
-                appointment.setSubject((updateAppointment.getSubject()));
-            }
+                if (updateAppointment.getNote() != null) {
+                    appointment.setNote((updateAppointment.getNote()));
+                }
 
-            if (updateAppointment.getNote() != null) {
-                appointment.setNote((updateAppointment.getNote()));
-            }
+                if (updateAppointment.getExpectedArrivalTime() != null) {
+                    appointment.setExpectedArrivalTime((updateAppointment.getExpectedArrivalTime()));
+                }
 
-            if (updateAppointment.getExpectedArrivalTime() != null) {
-                appointment.setExpectedArrivalTime((updateAppointment.getExpectedArrivalTime()));
-            }
+                if (updateAppointment.getRequiredTreatmentTime() != null) {
+                    appointment.setRequiredTreatmentTime((updateAppointment.getRequiredTreatmentTime()));
+                }
 
-            if (updateAppointment.getRequiredTreatmentTime() != null) {
-                appointment.setRequiredTreatmentTime((updateAppointment.getRequiredTreatmentTime()));
-            }
+                if (updateAppointment.isMicroscope() != null) {
+                    appointment.setMicroscope((updateAppointment.isMicroscope()));
+                }
 
-            if (updateAppointment.isMicroscope() != null) {
-                appointment.setMicroscope((updateAppointment.isMicroscope()));
-            }
+                if (updateAppointment.isNewPatient() != null) {
+                    appointment.setNewPatient((updateAppointment.isNewPatient()));
+                }
 
-            if (updateAppointment.isNewPatient() != null) {
-                appointment.setNewPatient((updateAppointment.isNewPatient()));
-            }
+                if (updateAppointment.isBaseFloor() != null) {
+                    appointment.setBaseFloor((updateAppointment.isBaseFloor()));
+                }
 
-            if (updateAppointment.isBaseFloor() != null) {
-                appointment.setBaseFloor((updateAppointment.isBaseFloor()));
-            }
+                if (updateAppointment.getColorId() != null) {
+                    appointment.setColorId((updateAppointment.getColorId()));
+                }
 
-            if (updateAppointment.getColorId() != null) {
-                appointment.setColorId((updateAppointment.getColorId()));
-            }
+                if (updateAppointment.isArchived() != null) {
+                    appointment.setArchived((updateAppointment.isArchived()));
+                }
 
-            if (updateAppointment.isArchived() != null) {
-                appointment.setArchived((updateAppointment.isArchived()));
-            }
+                // doctor
+                if (updateAppointment.getDoctor() != null && updateAppointment.getDoctor().getId() != null) {
+                    log.debug("Update Doctor({}) of Appointment(id: {})", updateAppointment.getDoctor(), updateAppointment.getId());
+                    extendUserRepository.findById(updateAppointment.getDoctor().getId()).ifPresent(appointment::setDoctor);
+                }
 
-            // doctor
-            if (updateAppointment.getDoctor() != null && updateAppointment.getDoctor().getId() != null) {
-                log.debug("Update Doctor({}) of Appointment(id: {})", updateAppointment.getDoctor(), updateAppointment.getId());
-                appointment.setDoctor(extendUserRepository.findById(updateAppointment.getDoctor().getId()).orElse(null));
-            }
+                // patient
+                if (updateAppointment.getPatient() != null) {
+                    log.debug("Update Patient({}) of Appointment(id: {})", updateAppointment.getPatient(), updateAppointment.getId());
+                    appointment.setPatient(getPatient(updateAppointment));
+                }
 
-            // treatmentProcedures
-            if (updateAppointment.getTreatmentProcedures() != null) {
-                // clear
-                setAppointmentOfTreatmentProcedure(appointment.getTreatmentProcedures(), null);
-                appointment.getTreatmentProcedures().clear();
+                // registration
+                if (updateAppointment.getRegistration() != null) {
+                    // delete registration and create registration whose id is -appointmentId
+                    if (updateAppointment.getRegistration().getId() != null && updateAppointment.getRegistration().getId() == -1 && appointment.getRegistration() != null) {
+                        registrationService.setNegativeRegistrationId(appointment.getRegistration());
+                        appointment.setRegistration(null);
+                    } else {
+                        log.debug("Update Registration({}) of Appointment(id: {})", updateAppointment.getRegistration(), updateAppointment.getId());
+                        appointment.setRegistration(getRegistration(updateAppointment));
+                    }
+                }
 
-                setAppointmentOfTreatmentProcedure(updateAppointment.getTreatmentProcedures(), appointment);
-            }
+                // treatmentProcedures
+                if (updateAppointment.getTreatmentProcedures() != null) {
+                    relationshipService.addRelationshipWithTreatmentProcedures(appointment.treatmentProcedures(updateAppointment.getTreatmentProcedures()));
+                }
 
-            return appointment;
-        });
+                return appointment;
+            })
+            .get();
     }
 
-    private Registration updateRegistration(Registration registration, Registration updateRegistration) {
-        if (updateRegistration.getStatus() != null) {
-            registration.setStatus(updateRegistration.getStatus());
-            if (registration.getStatus() == RegistrationStatus.FINISHED) {
-                broadcastRegistrationStatus(registration.getAppointment().getPatient().getName(), RegistrationStatus.FINISHED);
-            }
+    private Patient getPatient(Appointment appointment) {
+        Patient patient = appointment.getPatient();
+        if (patient != null) {
+            patient = patient.getId() == null ? patientService.save(patient) : patientService.update(patient);
         }
 
-        if (updateRegistration.getArrivalTime() != null) {
-            registration.setArrivalTime(updateRegistration.getArrivalTime());
-        }
-
-        if (updateRegistration.getType() != null) {
-            registration.setType(updateRegistration.getType());
-        }
-
-        if (updateRegistration.getType() != null) {
-            registration.setType(updateRegistration.getType());
-        }
-
-        if (updateRegistration.isOnSite() != null) {
-            registration.setOnSite(updateRegistration.isOnSite());
-        }
-
-        if (updateRegistration.getAccounting() != null) {
-            log.debug("Update Accounting({}) of Registration(id: {})", updateRegistration.getAccounting(), updateRegistration.getId());
-            Accounting accounting = registration.getAccounting();
-            Accounting updateAccounting = updateRegistration.getAccounting();
-            registration.setAccounting(accounting == null ? accountingRepository.save(updateAccounting) : updateAccounting(accounting, updateAccounting));
-        }
-
-        // delete registration and create registration whose id is -appointmentId
-        if (updateRegistration.getId() == -1) {
-            Long deleteId = registration.getId();
-            Accounting accounting = registration.getAccounting();
-
-            registrationRepository.save(registration.accounting(null));
-            entityManager.flush();
-
-            entityManager.detach(registration);
-            registration.setId(registration.getAppointment().getId() * -1L);
-            registration.setAppointment(null);
-            registration.setAccounting(accounting);
-            entityManager.persist(registration);
-
-            registrationRepository.findById(deleteId).ifPresent(registrationRepository::delete);
-
-            return null;
-        } else {
-            return registration;
-        }
+        return patient;
     }
 
-    private Accounting updateAccounting(Accounting accounting, Accounting updateAccounting) {
-        if (updateAccounting.getRegistrationFee() != null) {
-            accounting.setRegistrationFee(updateAccounting.getRegistrationFee());
-        }
-
-        if (updateAccounting.getPartialBurden() != null) {
-            accounting.setPartialBurden(updateAccounting.getPartialBurden());
-        }
-
-        if (updateAccounting.getBurdenCost() != null) {
-            accounting.setBurdenCost(updateAccounting.getBurdenCost());
-        }
-
-        if (updateAccounting.getDeposit() != null) {
-            accounting.setDeposit(updateAccounting.getDeposit());
-        }
-
-        if (updateAccounting.getOwnExpense() != null) {
-            accounting.setOwnExpense(updateAccounting.getOwnExpense());
-        }
-
-        if (updateAccounting.getOther() != null) {
-            accounting.setOther(updateAccounting.getOther());
-        }
-
-        if (updateAccounting.getPatientIdentity() != null) {
-            accounting.setPatientIdentity(updateAccounting.getPatientIdentity());
-        }
-
-        if (updateAccounting.getDiscountReason() != null) {
-            accounting.setDiscountReason(updateAccounting.getDiscountReason());
-        }
-
-        if (updateAccounting.getDiscount() != null) {
-            accounting.setDiscount(updateAccounting.getDiscount());
-        }
-
-        // hospital
-        if (updateAccounting.getHospital() != null && updateAccounting.getHospital().getId() != null) {
-            log.debug("Update Hospital({}) of Accounting(id: {})", updateAccounting.getHospital(), updateAccounting.getId());
-            accounting.setHospital(hospitalRepository.findById(updateAccounting.getHospital().getId()).orElse(null));
-        }
-
-        return accounting;
-    }
-
-    private void setAppointmentOfTreatmentProcedure(Set<TreatmentProcedure> treatmentProcedures, Appointment appointment) {
-        if (treatmentProcedures != null) {
-            treatmentProcedures = treatmentProcedures
-                .stream()
-                .map(TreatmentProcedure::getId)
-                .map(treatmentProcedureService::findOne)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(treatmentProcedure -> treatmentProcedure.appointment(appointment))
-                .collect(Collectors.toSet());
-
-            if (appointment != null) {
-                appointment.setTreatmentProcedures(treatmentProcedures);
+    private Registration getRegistration(Appointment appointment) {
+        Registration registration = appointment.getRegistration();
+        if (registration != null) {
+            if (registration.getId() == null) {
+                registration.setId(appointment.getId());
+                registration = registrationService.save(registration);
+            } else {
+                registration = registrationService.update(registration);
             }
+
+            broadcastRegistrationStatus(appointment.getPatient().getName(), registration.getStatus());
         }
+
+        return registration;
     }
 
     private void broadcastRegistrationStatus(String name, RegistrationStatus status) {

@@ -150,16 +150,14 @@ public class PatientResourceIntTest {
     private TagRepository tagRepository;
 
     @Autowired
-    private PatientService patientService;
+    private ImageService imageService;
 
     @Autowired
-    private ImageService imageService;
+    private PatientService patientService;
 
     @Autowired
     private PatientIdentityRepository patientIdentityRepository;
 
-    @Autowired
-    private RelationshipService relationshipService;
 
     private MockMvc restPatientMockMvc;
 
@@ -176,7 +174,7 @@ public class PatientResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, patientService, imageService, relationshipService);
+        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, imageService, patientService);
         this.restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

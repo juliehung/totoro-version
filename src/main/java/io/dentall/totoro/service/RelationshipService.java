@@ -1,7 +1,6 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.domain.enumeration.TreatmentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -27,24 +26,16 @@ public class RelationshipService {
 
     private final TreatmentDrugService treatmentDrugService;
 
-    private final TreatmentService treatmentService;
-
-    private final TreatmentPlanService treatmentPlanService;
-
     public RelationshipService(
         @Lazy TreatmentProcedureService treatmentProcedureService,
         @Lazy TreatmentTaskService treatmentTaskService,
         ToothService toothService,
-        TreatmentDrugService treatmentDrugService,
-        TreatmentService treatmentService,
-        @Lazy TreatmentPlanService treatmentPlanService
+        TreatmentDrugService treatmentDrugService
     ) {
         this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentTaskService = treatmentTaskService;
         this.toothService = toothService;
         this.treatmentDrugService = treatmentDrugService;
-        this.treatmentService = treatmentService;
-        this.treatmentPlanService = treatmentPlanService;
     }
 
     void addRelationshipWithTreatmentTasks(TreatmentPlan treatmentPlan) {
@@ -123,6 +114,25 @@ public class RelationshipService {
         treatmentTask.setTreatmentProcedures(treatmentProcedures);
     }
 
+    void addRelationshipWithTreatmentProcedures(Appointment appointment) {
+        Set<TreatmentProcedure> treatmentProcedures = appointment.getTreatmentProcedures();
+        if (treatmentProcedures != null) {
+            treatmentProcedures = getRelationshipWithOwners(
+                treatmentProcedures
+                    .stream()
+                    .map(this::getTreatmentProcedure),
+                treatmentProcedure -> {
+                    treatmentProcedure.setAppointment(appointment);
+                    addRelationshipWithTeeth(treatmentProcedure);
+
+                    return treatmentProcedure;
+                }
+            );
+        }
+
+        appointment.setTreatmentProcedures(treatmentProcedures);
+    }
+
     void addRelationshipWithTreatmentDrugs(Prescription prescription) {
         Set<TreatmentDrug> treatmentDrugs = prescription.getTreatmentDrugs();
         if (treatmentDrugs != null) {
@@ -158,23 +168,6 @@ public class RelationshipService {
         }
 
         treatmentProcedure.setTeeth(teeth);
-    }
-
-    public Treatment createGeneralTreatmentAndPlanAndTaskWithPatient(Patient patient) {
-        log.debug("Request to create general Treatment");
-
-        Treatment treatment = new Treatment().name("General Treatment").type(TreatmentType.GENERAL).patient(patient);
-        treatment = treatmentService.save(treatment);
-
-        TreatmentPlan treatmentPlan = new TreatmentPlan().activated(true).name("General TreatmentPlan").treatment(treatment);
-        treatmentPlan = treatmentPlanService.save(treatmentPlan);
-        treatment.getTreatmentPlans().add(treatmentPlan);
-
-        TreatmentTask treatmentTask = new TreatmentTask().name("General TreatmentTask").treatmentPlan(treatmentPlan);
-        treatmentTask = treatmentTaskService.save(treatmentTask);
-        treatmentPlan.getTreatmentTasks().add(treatmentTask);
-
-        return treatment;
     }
 
     private <Owner> Set<Owner> getRelationshipWithOwners(Stream<Owner> owners, Function<Owner, Owner> mapper) {

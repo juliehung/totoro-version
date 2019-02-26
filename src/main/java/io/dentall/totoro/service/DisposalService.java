@@ -211,7 +211,6 @@ public class DisposalService {
             }
 
             prescription = prescription.getId() == null ? prescriptionService.save(prescription) : prescriptionService.update(prescription);
-            prescription.setDisposal(disposal);
         }
 
         return prescription;
@@ -221,7 +220,6 @@ public class DisposalService {
         Todo todo = disposal.getTodo();
         if (todo != null) {
             todo = todo.getId() == null ? todoService.save(todo) : todoService.update(todo);
-            todo.setDisposal(disposal);
         }
 
         return todo;

@@ -63,7 +63,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     private Procedure procedure;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "treatmentProcedures", allowSetters = true)
+    @JsonIgnoreProperties(value = {"treatmentProcedures", "patient"}, allowSetters = true)
     private Appointment appointment;
 
     @ManyToOne
