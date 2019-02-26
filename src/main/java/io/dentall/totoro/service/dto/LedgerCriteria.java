@@ -30,6 +30,8 @@ public class LedgerCriteria implements Serializable {
 
     private DoubleFilter arrears;
 
+    private LongFilter treatmentPlanId;
+
     public LongFilter getId() {
         return id;
     }
@@ -62,6 +64,14 @@ public class LedgerCriteria implements Serializable {
         this.arrears = arrears;
     }
 
+    public LongFilter getTreatmentPlanId() {
+        return treatmentPlanId;
+    }
+
+    public void setTreatmentPlanId(LongFilter treatmentPlanId) {
+        this.treatmentPlanId = treatmentPlanId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -76,7 +86,8 @@ public class LedgerCriteria implements Serializable {
             Objects.equals(id, that.id) &&
             Objects.equals(amount, that.amount) &&
             Objects.equals(charge, that.charge) &&
-            Objects.equals(arrears, that.arrears);
+            Objects.equals(arrears, that.arrears) &&
+            Objects.equals(treatmentPlanId, that.treatmentPlanId);
     }
 
     @Override
@@ -85,7 +96,8 @@ public class LedgerCriteria implements Serializable {
         id,
         amount,
         charge,
-        arrears
+        arrears,
+        treatmentPlanId
         );
     }
 
@@ -96,6 +108,7 @@ public class LedgerCriteria implements Serializable {
                 (amount != null ? "amount=" + amount + ", " : "") +
                 (charge != null ? "charge=" + charge + ", " : "") +
                 (arrears != null ? "arrears=" + arrears + ", " : "") +
+                (treatmentPlanId != null ? "treatmentPlanId=" + treatmentPlanId + ", " : "") +
             "}";
     }
 

@@ -17,7 +17,8 @@
       },
       "amount": "Amount",
       "charge": "Charge",
-      "arrears": "Arrears"
+      "arrears": "Arrears",
+      "treatmentPlan": "Treatment Plan"
     }
   }
 }

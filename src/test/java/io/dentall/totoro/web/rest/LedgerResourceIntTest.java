@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 
 import io.dentall.totoro.domain.Ledger;
+import io.dentall.totoro.domain.TreatmentPlan;
 import io.dentall.totoro.repository.LedgerRepository;
 import io.dentall.totoro.service.LedgerService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
@@ -352,6 +353,25 @@ public class LedgerResourceIntTest {
         // Get all the ledgerList where arrears is null
         defaultLedgerShouldNotBeFound("arrears.specified=false");
     }
+
+    @Test
+    @Transactional
+    public void getAllLedgersByTreatmentPlanIsEqualToSomething() throws Exception {
+        // Initialize the database
+        TreatmentPlan treatmentPlan = TreatmentPlanResourceIntTest.createEntity(em);
+        em.persist(treatmentPlan);
+        em.flush();
+        ledger.setTreatmentPlan(treatmentPlan);
+        ledgerRepository.saveAndFlush(ledger);
+        Long treatmentPlanId = treatmentPlan.getId();
+
+        // Get all the ledgerList where treatmentPlan equals to treatmentPlanId
+        defaultLedgerShouldBeFound("treatmentPlanId.equals=" + treatmentPlanId);
+
+        // Get all the ledgerList where treatmentPlan equals to treatmentPlanId + 1
+        defaultLedgerShouldNotBeFound("treatmentPlanId.equals=" + (treatmentPlanId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */

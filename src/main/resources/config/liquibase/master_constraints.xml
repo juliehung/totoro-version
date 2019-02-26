@@ -18,6 +18,7 @@
     <include file="config/liquibase/changelog/20190213075054_added_entity_constraints_Todo.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190218044229_added_entity_constraints_TreatmentDrug.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190220033723_added_entity_constraints_Disposal.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190129062337_added_entity_constraints_Ledger.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 
     <!-- add custom constraints -->

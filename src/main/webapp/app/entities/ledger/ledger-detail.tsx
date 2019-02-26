@@ -46,6 +46,10 @@ export class LedgerDetail extends React.Component<ILedgerDetailProps> {
               </span>
             </dt>
             <dd>{ledgerEntity.arrears}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.ledger.treatmentPlan">Treatment Plan</Translate>
+            </dt>
+            <dd>{ledgerEntity.treatmentPlan ? ledgerEntity.treatmentPlan.id : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/ledger" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}
