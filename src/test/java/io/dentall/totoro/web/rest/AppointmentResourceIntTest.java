@@ -165,7 +165,7 @@ public class AppointmentResourceIntTest {
         registration.setId(null);
         appointment.setRegistration(registration);
 
-        TreatmentProcedure treatmentProcedure = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
+        TreatmentProcedure treatmentProcedure = TreatmentProcedureResourceIntTest.createEntity(em);
         appointment.getTreatmentProcedures().add(treatmentProcedure);
 
         appointment.setPatient(patientRepository.save(PatientResourceIntTest.createEntity(em)));
@@ -193,7 +193,7 @@ public class AppointmentResourceIntTest {
         assertThat(testAppointment.getDoctor()).isEqualTo(appointment.getDoctor());
         assertThat(testAppointment.getRegistration().getType()).isEqualTo(appointment.getRegistration().getType());
         assertThat(testAppointment.getRegistration().getAccounting().getOwnExpense()).isEqualTo(appointment.getRegistration().getAccounting().getOwnExpense());
-        assertThat(treatmentProcedureRepository.findById(treatmentProcedure.getId()).get().getAppointment().getId()).isEqualTo(testAppointment.getId());
+        assertThat(testAppointment.getTreatmentProcedures().iterator().next().getAppointment().getId()).isEqualTo(testAppointment.getId());
     }
 
     @Test

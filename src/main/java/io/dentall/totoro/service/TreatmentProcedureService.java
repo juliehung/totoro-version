@@ -195,6 +195,7 @@ public class TreatmentProcedureService {
                 }
 
                 if (updateTreatmentProcedure.getTeeth() != null) {
+                    deleteTeethByTreatmentProcedureId(treatmentProcedure.getId());
                     relationshipService.addRelationshipWithTeeth(treatmentProcedure.teeth(updateTreatmentProcedure.getTeeth()));
                 }
 
