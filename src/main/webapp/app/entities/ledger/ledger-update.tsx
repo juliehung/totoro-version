@@ -8,6 +8,8 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
+import { ITreatmentPlan } from 'app/shared/model/treatment-plan.model';
+import { getEntities as getTreatmentPlans } from 'app/entities/treatment-plan/treatment-plan.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './ledger.reducer';
 import { ILedger } from 'app/shared/model/ledger.model';
 // tslint:disable-next-line:no-unused-variable
@@ -18,12 +20,14 @@ export interface ILedgerUpdateProps extends StateProps, DispatchProps, RouteComp
 
 export interface ILedgerUpdateState {
   isNew: boolean;
+  treatmentPlanId: string;
 }
 
 export class LedgerUpdate extends React.Component<ILedgerUpdateProps, ILedgerUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
+      treatmentPlanId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -40,6 +44,8 @@ export class LedgerUpdate extends React.Component<ILedgerUpdateProps, ILedgerUpd
     } else {
       this.props.getEntity(this.props.match.params.id);
     }
+
+    this.props.getTreatmentPlans();
   }
 
   saveEntity = (event, errors, values) => {
@@ -63,7 +69,7 @@ export class LedgerUpdate extends React.Component<ILedgerUpdateProps, ILedgerUpd
   };
 
   render() {
-    const { ledgerEntity, loading, updating } = this.props;
+    const { ledgerEntity, treatmentPlans, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -134,6 +140,21 @@ export class LedgerUpdate extends React.Component<ILedgerUpdateProps, ILedgerUpd
                     }}
                   />
                 </AvGroup>
+                <AvGroup>
+                  <Label for="treatmentPlan.id">
+                    <Translate contentKey="totoroApp.ledger.treatmentPlan">Treatment Plan</Translate>
+                  </Label>
+                  <AvInput id="ledger-treatmentPlan" type="select" className="form-control" name="treatmentPlan.id">
+                    <option value="" key="0" />
+                    {treatmentPlans
+                      ? treatmentPlans.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/ledger" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
@@ -157,6 +178,7 @@ export class LedgerUpdate extends React.Component<ILedgerUpdateProps, ILedgerUpd
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
+  treatmentPlans: storeState.treatmentPlan.entities,
   ledgerEntity: storeState.ledger.entity,
   loading: storeState.ledger.loading,
   updating: storeState.ledger.updating,
@@ -164,6 +186,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
+  getTreatmentPlans,
   getEntity,
   updateEntity,
   createEntity,

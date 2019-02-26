@@ -39,6 +39,8 @@ public class Ledger extends AbstractAuditingEntity implements Serializable {
     @Column(name = "arrears", nullable = false)
     private Double arrears;
 
+    @ManyToOne
+    private TreatmentPlan treatmentPlan;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -85,6 +87,19 @@ public class Ledger extends AbstractAuditingEntity implements Serializable {
 
     public void setArrears(Double arrears) {
         this.arrears = arrears;
+    }
+
+    public TreatmentPlan getTreatmentPlan() {
+        return treatmentPlan;
+    }
+
+    public Ledger treatmentPlan(TreatmentPlan treatmentPlan) {
+        this.treatmentPlan = treatmentPlan;
+        return this;
+    }
+
+    public void setTreatmentPlan(TreatmentPlan treatmentPlan) {
+        this.treatmentPlan = treatmentPlan;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
