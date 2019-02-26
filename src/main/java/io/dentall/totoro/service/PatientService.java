@@ -1,6 +1,7 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.util.FilterUtil;
@@ -24,6 +25,7 @@ import java.util.*;
  * Service class for managing patients.
  */
 @Service
+@Transactional
 public class PatientService extends QueryService<Patient> {
 
     private final Logger log = LoggerFactory.getLogger(PatientService.class);
@@ -38,18 +40,30 @@ public class PatientService extends QueryService<Patient> {
 
     private final PatientIdentityRepository patientIdentityRepository;
 
+    private final TreatmentRepository treatmentRepository;
+
+    private final TreatmentPlanRepository treatmentPlanRepository;
+
+    private final TreatmentTaskRepository treatmentTaskRepository;
+
     public PatientService(
         PatientRepository patientRepository,
         TagRepository tagRepository,
         QuestionnaireRepository questionnaireRepository,
         ExtendUserRepository extendUserRepository,
-        PatientIdentityRepository patientIdentityRepository
+        PatientIdentityRepository patientIdentityRepository,
+        TreatmentRepository treatmentRepository,
+        TreatmentPlanRepository treatmentPlanRepository,
+        TreatmentTaskRepository treatmentTaskRepository
     ) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
         this.questionnaireRepository = questionnaireRepository;
         this.extendUserRepository = extendUserRepository;
         this.patientIdentityRepository = patientIdentityRepository;
+        this.treatmentRepository = treatmentRepository;
+        this.treatmentPlanRepository = treatmentPlanRepository;
+        this.treatmentTaskRepository = treatmentTaskRepository;
     }
 
     /**
@@ -65,137 +79,154 @@ public class PatientService extends QueryService<Patient> {
         return patientRepository.findAll(specification, page);
     }
 
-    @Transactional
-    public Optional<Patient> updatePatient(Patient updatePatient) {
-        return patientRepository.findById(updatePatient.getId()).map(patient -> {
-            // questionnaire
-            if (updatePatient.getQuestionnaire() != null) {
-                log.debug("Update questionnaire({}) of Patient(id: {})", updatePatient.getQuestionnaire(), updatePatient.getId());
-                Questionnaire questionnaire = patient.getQuestionnaire();
-                Questionnaire updateQuestionnaire = updatePatient.getQuestionnaire();
-                patient.setQuestionnaire(questionnaire == null ? questionnaireRepository.save(updateQuestionnaire) : updateQuestionnaire(questionnaire, updateQuestionnaire));
-            }
+    /**
+     * Save a patient.
+     *
+     * @param patient the entity to save
+     * @return the persisted entity
+     */
+    public Patient save(Patient patient) {
+        log.debug("Request to save Patient : {}", patient);
 
-            // tags
-            if (updatePatient.getTags() != null) {
-                log.debug("Update tags({}) of Patient(id: {})", updatePatient.getTags(), updatePatient.getId());
-                patient.getTags().clear();
-                updatePatient
-                    .getTags()
-                    .stream()
-                    .map(tag -> tagRepository.findById(tag.getId()))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .forEach(patient.getTags()::add);
-            }
+        patient = patientRepository.save(patient);
+        patient.getTreatments().add(createGeneralTreatmentAndPlanAndTaskWithPatient(patient));
 
-            // basic info.
-            if (updatePatient.getName() != null) {
-                patient.setName(updatePatient.getName());
-            }
+        return patient;
+    }
 
-            if (updatePatient.getPhone() != null) {
-                patient.setPhone(updatePatient.getPhone());
-            }
+    public Patient update(Patient updatePatient) {
+        return patientRepository
+            .findById(updatePatient.getId())
+            .map(patient -> {
+                // questionnaire
+                if (updatePatient.getQuestionnaire() != null) {
+                    log.debug("Update questionnaire({}) of Patient(id: {})", updatePatient.getQuestionnaire(), updatePatient.getId());
+                    Questionnaire questionnaire = patient.getQuestionnaire();
+                    Questionnaire updateQuestionnaire = updatePatient.getQuestionnaire();
+                    patient.setQuestionnaire(questionnaire == null ? questionnaireRepository.save(updateQuestionnaire) : updateQuestionnaire(questionnaire, updateQuestionnaire));
+                }
 
-            if (updatePatient.getGender() != null) {
-                patient.setGender(updatePatient.getGender());
-            }
+                // tags
+                if (updatePatient.getTags() != null) {
+                    log.debug("Update tags({}) of Patient(id: {})", updatePatient.getTags(), updatePatient.getId());
+                    patient.getTags().clear();
+                    updatePatient
+                        .getTags()
+                        .stream()
+                        .map(tag -> tagRepository.findById(tag.getId()))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .forEach(patient.getTags()::add);
+                }
 
-            if (updatePatient.getBirth() != null) {
-                patient.setBirth(updatePatient.getBirth());
-            }
+                // basic info.
+                if (updatePatient.getName() != null) {
+                    patient.setName(updatePatient.getName());
+                }
 
-            if (updatePatient.getNationalId() != null) {
-                patient.setNationalId(updatePatient.getNationalId());
-            }
+                if (updatePatient.getPhone() != null) {
+                    patient.setPhone(updatePatient.getPhone());
+                }
 
-            if (updatePatient.getMedicalId() != null) {
-                patient.setMedicalId(updatePatient.getMedicalId());
-            }
+                if (updatePatient.getGender() != null) {
+                    patient.setGender(updatePatient.getGender());
+                }
 
-            if (updatePatient.getAddress() != null) {
-                patient.setAddress(updatePatient.getAddress());
-            }
+                if (updatePatient.getBirth() != null) {
+                    patient.setBirth(updatePatient.getBirth());
+                }
 
-            if (updatePatient.getEmail() != null) {
-                patient.setEmail(updatePatient.getEmail());
-            }
+                if (updatePatient.getNationalId() != null) {
+                    patient.setNationalId(updatePatient.getNationalId());
+                }
 
-            if (updatePatient.getBlood() != null) {
-                patient.setBlood(updatePatient.getBlood());
-            }
+                if (updatePatient.getMedicalId() != null) {
+                    patient.setMedicalId(updatePatient.getMedicalId());
+                }
 
-            if (updatePatient.getCardId() != null) {
-                patient.setCardId(updatePatient.getCardId());
-            }
+                if (updatePatient.getAddress() != null) {
+                    patient.setAddress(updatePatient.getAddress());
+                }
 
-            if (updatePatient.getVip() != null) {
-                patient.setVip(updatePatient.getVip());
-            }
+                if (updatePatient.getEmail() != null) {
+                    patient.setEmail(updatePatient.getEmail());
+                }
 
-            if (updatePatient.getEmergencyName() != null) {
-                patient.setEmergencyName(updatePatient.getEmergencyName());
-            }
+                if (updatePatient.getBlood() != null) {
+                    patient.setBlood(updatePatient.getBlood());
+                }
 
-            if (updatePatient.getEmergencyPhone() != null) {
-                patient.setEmergencyPhone(updatePatient.getEmergencyPhone());
-            }
+                if (updatePatient.getCardId() != null) {
+                    patient.setCardId(updatePatient.getCardId());
+                }
 
-            if (updatePatient.getDeleteDate() != null) {
-                patient.setDeleteDate(updatePatient.getDeleteDate());
-            }
+                if (updatePatient.getVip() != null) {
+                    patient.setVip(updatePatient.getVip());
+                }
 
-            if (updatePatient.getScaling() != null) {
-                patient.setScaling(updatePatient.getScaling());
-            }
+                if (updatePatient.getEmergencyName() != null) {
+                    patient.setEmergencyName(updatePatient.getEmergencyName());
+                }
 
-            if (updatePatient.getLineId() != null) {
-                patient.setLineId(updatePatient.getLineId());
-            }
+                if (updatePatient.getEmergencyPhone() != null) {
+                    patient.setEmergencyPhone(updatePatient.getEmergencyPhone());
+                }
 
-            if (updatePatient.getFbId() != null) {
-                patient.setFbId(updatePatient.getFbId());
-            }
+                if (updatePatient.getDeleteDate() != null) {
+                    patient.setDeleteDate(updatePatient.getDeleteDate());
+                }
 
-            if (updatePatient.getNote() != null) {
-                patient.setNote(updatePatient.getNote());
-            }
+                if (updatePatient.getScaling() != null) {
+                    patient.setScaling(updatePatient.getScaling());
+                }
 
-            if (updatePatient.getClinicNote() != null) {
-                patient.setClinicNote(updatePatient.getClinicNote());
-            }
+                if (updatePatient.getLineId() != null) {
+                    patient.setLineId(updatePatient.getLineId());
+                }
 
-            if (updatePatient.getWriteIcTime() != null) {
-                patient.setWriteIcTime(updatePatient.getWriteIcTime());
-            }
+                if (updatePatient.getFbId() != null) {
+                    patient.setFbId(updatePatient.getFbId());
+                }
 
-            // introducer
-            if (updatePatient.getIntroducer() != null) {
-                log.debug("Update introducer({}) of Patient(id: {})", updatePatient.getIntroducer(), updatePatient.getId());
-                patient.setIntroducer(patientRepository.findById(updatePatient.getIntroducer().getId()).orElse(null));
-            }
+                if (updatePatient.getNote() != null) {
+                    patient.setNote(updatePatient.getNote());
+                }
 
-            // dominantDoctor
-            if (updatePatient.getDominantDoctor() != null) {
-                log.debug("Update dominantDoctor({}) of Patient(id: {})", updatePatient.getDominantDoctor(), updatePatient.getId());
-                patient.setDominantDoctor(extendUserRepository.findById(updatePatient.getDominantDoctor().getId()).orElse(null));
-            }
+                if (updatePatient.getClinicNote() != null) {
+                    patient.setClinicNote(updatePatient.getClinicNote());
+                }
 
-            // firstDoctor
-            if (updatePatient.getFirstDoctor() != null) {
-                log.debug("Update firstDoctor({}) of Patient(id: {})", updatePatient.getFirstDoctor(), updatePatient.getId());
-                patient.setFirstDoctor(extendUserRepository.findById(updatePatient.getFirstDoctor().getId()).orElse(null));
-            }
+                if (updatePatient.getWriteIcTime() != null) {
+                    patient.setWriteIcTime(updatePatient.getWriteIcTime());
+                }
 
-            // patientIdentity
-            if (updatePatient.getPatientIdentity() != null) {
-                log.debug("Update patientIdentity({}) of Patient(id: {})", updatePatient.getPatientIdentity(), updatePatient.getId());
-                patient.setPatientIdentity(patientIdentityRepository.findById(updatePatient.getPatientIdentity().getId()).orElse(null));
-            }
+                // introducer
+                if (updatePatient.getIntroducer() != null) {
+                    log.debug("Update introducer({}) of Patient(id: {})", updatePatient.getIntroducer(), updatePatient.getId());
+                    patient.setIntroducer(patientRepository.findById(updatePatient.getIntroducer().getId()).orElse(null));
+                }
 
-            return patient;
-        });
+                // dominantDoctor
+                if (updatePatient.getDominantDoctor() != null) {
+                    log.debug("Update dominantDoctor({}) of Patient(id: {})", updatePatient.getDominantDoctor(), updatePatient.getId());
+                    patient.setDominantDoctor(extendUserRepository.findById(updatePatient.getDominantDoctor().getId()).orElse(null));
+                }
+
+                // firstDoctor
+                if (updatePatient.getFirstDoctor() != null) {
+                    log.debug("Update firstDoctor({}) of Patient(id: {})", updatePatient.getFirstDoctor(), updatePatient.getId());
+                    patient.setFirstDoctor(extendUserRepository.findById(updatePatient.getFirstDoctor().getId()).orElse(null));
+                }
+
+                // patientIdentity
+                if (updatePatient.getPatientIdentity() != null) {
+                    log.debug("Update patientIdentity({}) of Patient(id: {})", updatePatient.getPatientIdentity(), updatePatient.getId());
+                    patient.setPatientIdentity(patientIdentityRepository.findById(updatePatient.getPatientIdentity().getId()).orElse(null));
+                }
+
+                return patient;
+            })
+            .get();
     }
 
     private Questionnaire updateQuestionnaire(Questionnaire questionnaire, Questionnaire updateQuestionnaire) {
@@ -224,6 +255,23 @@ public class PatientService extends QueryService<Patient> {
         }
 
         return questionnaire;
+    }
+
+    private Treatment createGeneralTreatmentAndPlanAndTaskWithPatient(Patient patient) {
+        log.debug("Request to create general Treatment");
+
+        Treatment treatment = new Treatment().name("General Treatment").type(TreatmentType.GENERAL).patient(patient);
+        treatment = treatmentRepository.save(treatment);
+
+        TreatmentPlan treatmentPlan = new TreatmentPlan().activated(true).name("General TreatmentPlan").treatment(treatment);
+        treatmentPlan = treatmentPlanRepository.save(treatmentPlan);
+        treatment.getTreatmentPlans().add(treatmentPlan);
+
+        TreatmentTask treatmentTask = new TreatmentTask().name("General TreatmentTask").treatmentPlan(treatmentPlan);
+        treatmentTask = treatmentTaskRepository.save(treatmentTask);
+        treatmentPlan.getTreatmentTasks().add(treatmentTask);
+
+        return treatment;
     }
 
     /**

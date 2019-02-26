@@ -7,7 +7,6 @@ import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
-import io.dentall.totoro.service.RelationshipService;
 import io.dentall.totoro.service.dto.NullGroup;
 import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.dto.PatientDTO;
@@ -54,18 +53,15 @@ public class PatientResource {
 
     private final TagRepository tagRepository;
 
-    private final PatientService patientService;
-
     private final ImageService imageService;
 
-    private final RelationshipService relationshipService;
+    private final PatientService patientService;
 
-    public PatientResource(PatientRepository patientRepository, TagRepository tagRepository, PatientService patientService, ImageService imageService, RelationshipService relationshipService) {
+    public PatientResource(PatientRepository patientRepository, TagRepository tagRepository, ImageService imageService, PatientService patientService) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
-        this.patientService = patientService;
         this.imageService = imageService;
-        this.relationshipService = relationshipService;
+        this.patientService = patientService;
     }
 
     /**
@@ -83,8 +79,7 @@ public class PatientResource {
             throw new BadRequestAlertException("A new patient cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        Patient result = patientRepository.save(patient);
-        result.getTreatments().add(relationshipService.createGeneralTreatmentAndPlanAndTaskWithPatient(result));
+        Patient result = patientService.save(patient);
 
         return ResponseEntity.created(new URI("/api/patients/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -108,10 +103,11 @@ public class PatientResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
 
-        return ResponseUtil.wrapOrNotFound(
-            patientService.updatePatient(patient),
-            HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, patient.getId().toString())
-        );
+        Patient result = patientService.update(patient);
+
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
     /**

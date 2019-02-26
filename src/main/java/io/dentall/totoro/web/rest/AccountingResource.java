@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.repository.AccountingRepository;
+import io.dentall.totoro.service.AccountingService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -38,8 +39,11 @@ public class AccountingResource {
 
     private final AccountingRepository accountingRepository;
 
-    public AccountingResource(AccountingRepository accountingRepository) {
+    private final AccountingService accountingService;
+
+    public AccountingResource(AccountingRepository accountingRepository, AccountingService accountingService) {
         this.accountingRepository = accountingRepository;
+        this.accountingService = accountingService;
     }
 
     /**
@@ -56,7 +60,7 @@ public class AccountingResource {
         if (accounting.getId() != null) {
             throw new BadRequestAlertException("A new accounting cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Accounting result = accountingRepository.save(accounting);
+        Accounting result = accountingService.save(accounting);
         return ResponseEntity.created(new URI("/api/accountings/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -78,7 +82,7 @@ public class AccountingResource {
         if (accounting.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Accounting result = accountingRepository.save(accounting);
+        Accounting result = accountingService.update(accounting);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, accounting.getId().toString()))
             .body(result);

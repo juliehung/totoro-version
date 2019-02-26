@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.repository.AccountingRepository;
+import io.dentall.totoro.service.AccountingService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -84,6 +85,9 @@ public class AccountingResourceIntTest {
     @Autowired
     private Validator validator;
 
+    @Autowired
+    private AccountingService accountingService;
+
     private MockMvc restAccountingMockMvc;
 
     private Accounting accounting;
@@ -91,7 +95,7 @@ public class AccountingResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AccountingResource accountingResource = new AccountingResource(accountingRepository);
+        final AccountingResource accountingResource = new AccountingResource(accountingRepository, accountingService);
         this.restAccountingMockMvc = MockMvcBuilders.standaloneSetup(accountingResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

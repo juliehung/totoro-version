@@ -85,10 +85,11 @@ public class AppointmentResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
 
-        return ResponseUtil.wrapOrNotFound(
-            appointmentService.updateAppointment(appointment),
-            HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, appointment.getId().toString())
-        );
+        Appointment result = appointmentService.update(appointment);
+
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
     /**
