@@ -39,7 +39,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @Column(name = "total")
     private Double total;
 
-    @OneToMany(mappedBy = "disposal")
+    @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
 

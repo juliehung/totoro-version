@@ -17,8 +17,7 @@ import java.util.Optional;
 public interface TreatmentRepository extends JpaRepository<Treatment, Long>, JpaSpecificationExecutor<Treatment> {
 
     String eagerRelationships = "select treatment from Treatment treatment left join fetch treatment.treatmentPlans treatmentPlan " +
-        "left join fetch treatmentPlan.treatmentTasks treatmentTask left join fetch treatmentTask.treatmentProcedures treatmentProcedure " +
-        "left join fetch treatmentProcedure.teeth ";
+        "left join fetch treatmentPlan.treatmentTasks treatmentTask left join fetch treatmentTask.treatmentProcedures ";
 
     @Query(eagerRelationships + "where treatment.patient.id = :id")
     List<Treatment> findAllWithEagerRelationshipsByPatientId(@Param("id") Long id);
