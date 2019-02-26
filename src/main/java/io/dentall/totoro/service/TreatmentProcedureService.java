@@ -131,7 +131,7 @@ public class TreatmentProcedureService {
     @Transactional(readOnly = true)
     public Optional<TreatmentProcedure> findOneWithEagerRelationships(Long id) {
         log.debug("Request to get TreatmentProcedure : {}", id);
-        return treatmentProcedureRepository.findOneWithTeethById(id);
+        return treatmentProcedureRepository.findById(id);
     }
 
     /**

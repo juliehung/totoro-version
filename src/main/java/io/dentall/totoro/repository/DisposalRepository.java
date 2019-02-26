@@ -15,10 +15,8 @@ import java.util.Optional;
 @Repository
 public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSpecificationExecutor<Disposal> {
 
-    @Query("select disposal from Disposal disposal left join fetch disposal.treatmentProcedures treatmentProcedure " +
-        "left join fetch treatmentProcedure.teeth left join fetch disposal.prescription prescription " +
-        "left join fetch prescription.treatmentDrugs left join fetch disposal.todo todo " +
-        "left join fetch todo.treatmentProcedures todoTreatmentProcedure left join fetch todoTreatmentProcedure.teeth " +
+    @Query("select disposal from Disposal disposal left join fetch disposal.prescription prescription " +
+        "left join fetch prescription.treatmentDrugs left join fetch disposal.todo " +
         "where disposal.id = :id")
     Optional<Disposal> findWithEagerRelationshipsById(@Param("id") Long id);
 }
