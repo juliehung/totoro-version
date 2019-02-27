@@ -13,6 +13,10 @@ public final class AuthoritiesConstants {
 
     public static final String MANAGER = "ROLE_MANAGER";
 
+    public static final String DOCTOR = "ROLE_DOCTOR";
+
+    public static final String ASSISTANT = "ROLE_ASSISTANT";
+
     private AuthoritiesConstants() {
     }
 }
