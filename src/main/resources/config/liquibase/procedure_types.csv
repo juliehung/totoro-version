@@ -4,7 +4,7 @@ id;major;minor;display
 3;Vital Pulp Therapy;Endo;true
 4;Apical Surgery;Endo;true
 5;Apexification;Endo;true
-6;Extraction;Extraction,Pedo,OS;true
+6;Extraction;Extraction,Pedo;true
 7;Implant;Implant,Set;true
 8;Inlay;BPR;true
 9;Onlay;BPR;true
