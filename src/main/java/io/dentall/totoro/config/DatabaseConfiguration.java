@@ -49,6 +49,8 @@ public class DatabaseConfiguration {
             ));
         } else if (SystemUtils.IS_OS_MAC) {
             postgresConfig.getAdditionalInitDbParams().add("--locale=en_US.UTF-8");
+        } else if (SystemUtils.IS_OS_LINUX) {
+            postgresConfig.getAdditionalInitDbParams().add("--locale=en_US.utf8");
         }
 
         PostgresStarter<PostgresExecutable, PostgresProcess> runtime =
