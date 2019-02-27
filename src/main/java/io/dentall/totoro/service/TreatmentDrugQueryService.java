@@ -86,6 +86,9 @@ public class TreatmentDrugQueryService extends QueryService<TreatmentDrug> {
             if (criteria.getDay() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getDay(), TreatmentDrug_.day));
             }
+            if (criteria.getFrequency() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getFrequency(), TreatmentDrug_.frequency));
+            }
             if (criteria.getPrescriptionId() != null) {
                 specification = specification.and(buildSpecification(criteria.getPrescriptionId(),
                     root -> root.join(TreatmentDrug_.prescription, JoinType.LEFT).get(Prescription_.id)));

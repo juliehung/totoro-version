@@ -27,6 +27,9 @@ public class TreatmentDrug implements Serializable {
     @Column(name = "day")
     private Integer day;
 
+    @Column(name = "frequency")
+    private String frequency;
+
     @ManyToOne
     @JsonIgnoreProperties(value = "treatmentDrugs", allowSetters = true)
     private Prescription prescription;
@@ -55,6 +58,19 @@ public class TreatmentDrug implements Serializable {
 
     public void setDay(Integer day) {
         this.day = day;
+    }
+
+    public String getFrequency() {
+        return frequency;
+    }
+
+    public TreatmentDrug frequency(String frequency) {
+        this.frequency = frequency;
+        return this;
+    }
+
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
     }
 
     public Prescription getPrescription() {
@@ -109,6 +125,7 @@ public class TreatmentDrug implements Serializable {
         return "TreatmentDrug{" +
             "id=" + getId() +
             ", day=" + getDay() +
+            ", frequency='" + getFrequency() + "'" +
             "}";
     }
 }

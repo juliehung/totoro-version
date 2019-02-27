@@ -19,6 +19,10 @@
         {
             "fieldName": "day",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "frequency",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20190218044229",

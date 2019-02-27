@@ -70,6 +70,9 @@ export class TreatmentDrug extends React.Component<ITreatmentDrugProps, ITreatme
                 <th className="hand" onClick={this.sort('day')}>
                   <Translate contentKey="totoroApp.treatmentDrug.day">Day</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('frequency')}>
+                  <Translate contentKey="totoroApp.treatmentDrug.frequency">Frequency</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.treatmentDrug.prescription">Prescription</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -88,6 +91,7 @@ export class TreatmentDrug extends React.Component<ITreatmentDrugProps, ITreatme
                     </Button>
                   </td>
                   <td>{treatmentDrug.day}</td>
+                  <td>{treatmentDrug.frequency}</td>
                   <td>
                     {treatmentDrug.prescription ? (
                       <Link to={`prescription/${treatmentDrug.prescription.id}`}>{treatmentDrug.prescription.id}</Link>

@@ -26,6 +26,8 @@ public class TreatmentDrugCriteria implements Serializable {
 
     private IntegerFilter day;
 
+    private StringFilter frequency;
+
     private LongFilter prescriptionId;
 
     private LongFilter drugId;
@@ -44,6 +46,14 @@ public class TreatmentDrugCriteria implements Serializable {
 
     public void setDay(IntegerFilter day) {
         this.day = day;
+    }
+
+    public StringFilter getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(StringFilter frequency) {
+        this.frequency = frequency;
     }
 
     public LongFilter getPrescriptionId() {
@@ -75,6 +85,7 @@ public class TreatmentDrugCriteria implements Serializable {
         return
             Objects.equals(id, that.id) &&
             Objects.equals(day, that.day) &&
+            Objects.equals(frequency, that.frequency) &&
             Objects.equals(prescriptionId, that.prescriptionId) &&
             Objects.equals(drugId, that.drugId);
     }
@@ -84,6 +95,7 @@ public class TreatmentDrugCriteria implements Serializable {
         return Objects.hash(
         id,
         day,
+        frequency,
         prescriptionId,
         drugId
         );
@@ -94,6 +106,7 @@ public class TreatmentDrugCriteria implements Serializable {
         return "TreatmentDrugCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (day != null ? "day=" + day + ", " : "") +
+                (frequency != null ? "frequency=" + frequency + ", " : "") +
                 (prescriptionId != null ? "prescriptionId=" + prescriptionId + ", " : "") +
                 (drugId != null ? "drugId=" + drugId + ", " : "") +
             "}";
