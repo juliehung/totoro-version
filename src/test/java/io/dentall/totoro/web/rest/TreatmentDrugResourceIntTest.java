@@ -48,6 +48,9 @@ public class TreatmentDrugResourceIntTest {
     private static final Integer DEFAULT_DAY = 1;
     private static final Integer UPDATED_DAY = 2;
 
+    private static final String DEFAULT_FREQUENCY = "AAAAAAAAAA";
+    private static final String UPDATED_FREQUENCY = "BBBBBBBBBB";
+
     @Autowired
     private TreatmentDrugRepository treatmentDrugRepository;
 
@@ -96,7 +99,8 @@ public class TreatmentDrugResourceIntTest {
      */
     public static TreatmentDrug createEntity(EntityManager em) {
         TreatmentDrug treatmentDrug = new TreatmentDrug()
-            .day(DEFAULT_DAY);
+            .day(DEFAULT_DAY)
+            .frequency(DEFAULT_FREQUENCY);
         return treatmentDrug;
     }
 
@@ -121,6 +125,7 @@ public class TreatmentDrugResourceIntTest {
         assertThat(treatmentDrugList).hasSize(databaseSizeBeforeCreate + 1);
         TreatmentDrug testTreatmentDrug = treatmentDrugList.get(treatmentDrugList.size() - 1);
         assertThat(testTreatmentDrug.getDay()).isEqualTo(DEFAULT_DAY);
+        assertThat(testTreatmentDrug.getFrequency()).isEqualTo(DEFAULT_FREQUENCY);
     }
 
     @Test
@@ -153,7 +158,8 @@ public class TreatmentDrugResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(treatmentDrug.getId().intValue())))
-            .andExpect(jsonPath("$.[*].day").value(hasItem(DEFAULT_DAY)));
+            .andExpect(jsonPath("$.[*].day").value(hasItem(DEFAULT_DAY)))
+            .andExpect(jsonPath("$.[*].frequency").value(hasItem(DEFAULT_FREQUENCY.toString())));
     }
     
     @Test
@@ -167,7 +173,8 @@ public class TreatmentDrugResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(treatmentDrug.getId().intValue()))
-            .andExpect(jsonPath("$.day").value(DEFAULT_DAY));
+            .andExpect(jsonPath("$.day").value(DEFAULT_DAY))
+            .andExpect(jsonPath("$.frequency").value(DEFAULT_FREQUENCY.toString()));
     }
 
     @Test
@@ -238,6 +245,45 @@ public class TreatmentDrugResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllTreatmentDrugsByFrequencyIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentDrugRepository.saveAndFlush(treatmentDrug);
+
+        // Get all the treatmentDrugList where frequency equals to DEFAULT_FREQUENCY
+        defaultTreatmentDrugShouldBeFound("frequency.equals=" + DEFAULT_FREQUENCY);
+
+        // Get all the treatmentDrugList where frequency equals to UPDATED_FREQUENCY
+        defaultTreatmentDrugShouldNotBeFound("frequency.equals=" + UPDATED_FREQUENCY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentDrugsByFrequencyIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentDrugRepository.saveAndFlush(treatmentDrug);
+
+        // Get all the treatmentDrugList where frequency in DEFAULT_FREQUENCY or UPDATED_FREQUENCY
+        defaultTreatmentDrugShouldBeFound("frequency.in=" + DEFAULT_FREQUENCY + "," + UPDATED_FREQUENCY);
+
+        // Get all the treatmentDrugList where frequency equals to UPDATED_FREQUENCY
+        defaultTreatmentDrugShouldNotBeFound("frequency.in=" + UPDATED_FREQUENCY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentDrugsByFrequencyIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentDrugRepository.saveAndFlush(treatmentDrug);
+
+        // Get all the treatmentDrugList where frequency is not null
+        defaultTreatmentDrugShouldBeFound("frequency.specified=true");
+
+        // Get all the treatmentDrugList where frequency is null
+        defaultTreatmentDrugShouldNotBeFound("frequency.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllTreatmentDrugsByPrescriptionIsEqualToSomething() throws Exception {
         // Initialize the database
         Prescription prescription = PrescriptionResourceIntTest.createEntity(em);
@@ -281,7 +327,8 @@ public class TreatmentDrugResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(treatmentDrug.getId().intValue())))
-            .andExpect(jsonPath("$.[*].day").value(hasItem(DEFAULT_DAY)));
+            .andExpect(jsonPath("$.[*].day").value(hasItem(DEFAULT_DAY)))
+            .andExpect(jsonPath("$.[*].frequency").value(hasItem(DEFAULT_FREQUENCY.toString())));
 
         // Check, that the count call also returns 1
         restTreatmentDrugMockMvc.perform(get("/api/treatment-drugs/count?sort=id,desc&" + filter))
@@ -329,7 +376,8 @@ public class TreatmentDrugResourceIntTest {
         // Disconnect from session so that the updates on updatedTreatmentDrug are not directly saved in db
         em.detach(updatedTreatmentDrug);
         updatedTreatmentDrug
-            .day(UPDATED_DAY);
+            .day(UPDATED_DAY)
+            .frequency(UPDATED_FREQUENCY);
 
         restTreatmentDrugMockMvc.perform(put("/api/treatment-drugs")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -341,6 +389,7 @@ public class TreatmentDrugResourceIntTest {
         assertThat(treatmentDrugList).hasSize(databaseSizeBeforeUpdate);
         TreatmentDrug testTreatmentDrug = treatmentDrugList.get(treatmentDrugList.size() - 1);
         assertThat(testTreatmentDrug.getDay()).isEqualTo(UPDATED_DAY);
+        assertThat(testTreatmentDrug.getFrequency()).isEqualTo(UPDATED_FREQUENCY);
     }
 
     @Test

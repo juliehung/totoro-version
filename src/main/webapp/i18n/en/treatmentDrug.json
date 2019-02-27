@@ -16,6 +16,7 @@
         "title": "Treatment Drug"
       },
       "day": "Day",
+      "frequency": "Frequency",
       "prescription": "Prescription",
       "drug": "Drug"
     }

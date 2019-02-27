@@ -99,6 +99,10 @@ public class TreatmentDrugService {
                     treatmentDrug.setDay((updateTreatmentDrug.getDay()));
                 }
 
+                if (updateTreatmentDrug.getFrequency() != null) {
+                    treatmentDrug.setFrequency((updateTreatmentDrug.getFrequency()));
+                }
+
                 if (updateTreatmentDrug.getDrug() != null && updateTreatmentDrug.getDrug().getId() != null) {
                     drugRepository.findById(updateTreatmentDrug.getDrug().getId()).ifPresent(treatmentDrug::setDrug);
                 }
