@@ -227,6 +227,21 @@ $env:SPRING_PROFILES_ACTIVE="embedded-postgres"; $env:TZ="UTC"; .\gradlew.bat cl
 Powershell.exe -File .\embedded-postgres-cleanup.ps1
 ```
 
+## English version
+### Postgres with Docker
+```
+SPRING_PROFILES_ACTIVE=dev,en ./gradlew clean bootRun
+# or
+$env:SPRING_PROFILES_ACTIVE="dev,en"; .\gradlew.bat clean bootRun
+```
+
+### Embedded Postgres
+```
+SPRING_PROFILES_ACTIVE=dev,embedded-postgres,en TZ=UTC ./gradlew clean bootRun
+# or
+$env:SPRING_PROFILES_ACTIVE="dev,embedded-postgres,en"; $env:TZ="UTC"; .\gradlew.bat clean bootRun
+```
+
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0
