@@ -41,6 +41,8 @@ public class LiquibaseConfiguration {
         liquibase.setDataSource(dataSource);
         if (Arrays.asList(env.getActiveProfiles()).contains(JHipsterConstants.SPRING_PROFILE_TEST)) {
             liquibase.setChangeLog("classpath:config/liquibase/master_test.xml");
+        } else if (Arrays.asList(env.getActiveProfiles()).contains("en")) {
+            liquibase.setChangeLog("classpath:config/liquibase/master_en.xml");
         } else {
             liquibase.setChangeLog("classpath:config/liquibase/master.xml");
         }
