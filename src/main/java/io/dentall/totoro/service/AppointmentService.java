@@ -189,7 +189,7 @@ public class AppointmentService {
                         appointment.setRegistration(null);
                     } else {
                         log.debug("Update Registration({}) of Appointment(id: {})", updateAppointment.getRegistration(), updateAppointment.getId());
-                        appointment.setRegistration(getRegistration(updateAppointment));
+                        appointment.setRegistration(getRegistration(updateAppointment.patient(appointment.getPatient())));
                     }
                 }
 
