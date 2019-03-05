@@ -35,7 +35,7 @@
 34;Champix film coated tablet 1mg;戒必適 1毫克;戒菸;2014-09-01;NULL;mg;60;1;QD;PO
 35;Amoxicillin-500mg;盤尼西林;抗生素;1900-01-01;1900-01-01;tab;0;1;QID;PO
 36;Ibuprofen-400mg;布洛芬;NSAID;1900-01-01;1900-01-01;tab;0;1;QID;PO
-37;口內膏;口內膏;類固醇;1900-01-01;1900-01-01;gm;0;1;PRN;TOPI
+37;Orabase;口內膏;類固醇;1900-01-01;1900-01-01;gm;0;1;PRN;TOPI
 38;ANTI-PHEN;安佳熱糖漿;止痛;1900-01-01;1900-01-01;ml;1;0.5;PRN;PO
 39;Cephalexin-500mg;頭孢氨苄;抗生素;1900-01-01;1900-01-01;tab;0;1;QID;PO
 40;IDOFEN;舒抑痛口服懸液;NSAID;1900-01-01;1900-01-01;ml;0;1;PRN;PO
@@ -58,4 +58,4 @@
 57;Noflagma;祛痰劑痰液溶解劑;消炎 止血 化痰;1900-01-01;1900-01-01;tab;0;1;TID;PO
 58;sinwell 200mg;欣胃錠;胃葯;1900-01-01;1900-01-01;tab;0;1;TID;PO
 59;KEFLEX;適汎黴素;抗生素;1900-01-01;1900-01-01;NULL;0;1;QID;PO
-60;漱口水;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+60;Mouthwash;漱口水;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
