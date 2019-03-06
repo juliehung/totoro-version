@@ -3,10 +3,12 @@ package io.dentall.totoro.service;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.dto.DisposalCriteria;
 import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.util.FilterUtil;
 import io.github.jhipster.service.QueryService;
 import io.github.jhipster.service.filter.InstantFilter;
+import io.github.jhipster.service.filter.LongFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -46,6 +48,10 @@ public class PatientService extends QueryService<Patient> {
 
     private final TreatmentTaskRepository treatmentTaskRepository;
 
+    private final DisposalQueryService disposalQueryService;
+
+    private final UserRepository userRepository;
+
     public PatientService(
         PatientRepository patientRepository,
         TagRepository tagRepository,
@@ -54,7 +60,9 @@ public class PatientService extends QueryService<Patient> {
         PatientIdentityRepository patientIdentityRepository,
         TreatmentRepository treatmentRepository,
         TreatmentPlanRepository treatmentPlanRepository,
-        TreatmentTaskRepository treatmentTaskRepository
+        TreatmentTaskRepository treatmentTaskRepository,
+        DisposalQueryService disposalQueryService,
+        UserRepository userRepository
     ) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
@@ -64,6 +72,8 @@ public class PatientService extends QueryService<Patient> {
         this.treatmentRepository = treatmentRepository;
         this.treatmentPlanRepository = treatmentPlanRepository;
         this.treatmentTaskRepository = treatmentTaskRepository;
+        this.disposalQueryService = disposalQueryService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -227,6 +237,31 @@ public class PatientService extends QueryService<Patient> {
                 return patient;
             })
             .get();
+    }
+
+    void setDoctor(Patient patient) {
+        log.debug("Set doctor of Patient : {}", patient);
+
+        List<Disposal> disposals = getDisposalsByPatientId(patient.getId());
+        if (disposals != null && !disposals.isEmpty()) {
+            disposals.sort(Comparator.comparing(Disposal::getCreatedDate));
+
+            if (patient.getFirstDoctor() == null) {
+                userRepository.findOneByLogin(disposals.get(0).getCreatedBy()).ifPresent(user -> patient.setFirstDoctor(user.getExtendUser()));
+            }
+
+            userRepository.findOneByLogin(disposals.get(disposals.size() - 1).getCreatedBy()).ifPresent(user -> patient.setDominantDoctor(user.getExtendUser()));
+        }
+    }
+
+    private List<Disposal> getDisposalsByPatientId(Long id) {
+        LongFilter patientIdFilter = new LongFilter();
+        patientIdFilter.setEquals(id);
+
+        DisposalCriteria criteria = new DisposalCriteria();
+        criteria.setPatientId(patientIdFilter);
+
+        return disposalQueryService.findByCriteria(criteria);
     }
 
     private Questionnaire updateQuestionnaire(Questionnaire questionnaire, Questionnaire updateQuestionnaire) {

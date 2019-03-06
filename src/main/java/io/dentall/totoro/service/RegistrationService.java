@@ -23,12 +23,15 @@ public class RegistrationService {
 
     private final AccountingService accountingService;
 
+    private final BroadcastService broadcastService;
+
     @PersistenceContext
     private EntityManager entityManager;
 
-    public RegistrationService(RegistrationRepository registrationRepository, AccountingService accountingService) {
+    public RegistrationService(RegistrationRepository registrationRepository, AccountingService accountingService, BroadcastService broadcastService) {
         this.registrationRepository = registrationRepository;
         this.accountingService = accountingService;
+        this.broadcastService = broadcastService;
     }
 
     /**
@@ -48,6 +51,20 @@ public class RegistrationService {
     }
 
     /**
+     * Save a registration and broadcast patient status.
+     *
+     * @param registration the entity to save
+     * @param patientName the name of patient
+     * @return the persisted entity
+     */
+    public Registration save(Registration registration, String patientName) {
+        registration = save(registration);
+        broadcastService.broadcastRegistrationStatus(patientName, registration.getStatus());
+
+        return registration;
+    }
+
+    /**
      * Update the registration.
      *
      * @param updateRegistration the update entity
@@ -60,6 +77,7 @@ public class RegistrationService {
             .map(registration -> {
                 if (updateRegistration.getStatus() != null) {
                     registration.setStatus((updateRegistration.getStatus()));
+                    broadcastService.broadcastRegistrationStatus(registration.getAppointment().getPatient().getName(), registration.getStatus());
                 }
 
                 if (updateRegistration.getArrivalTime() != null) {
