@@ -92,9 +92,16 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getArrears() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getArrears(), Ledger_.arrears));
             }
+            if (criteria.getNote() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNote(), Ledger_.note));
+            }
             if (criteria.getTreatmentPlanId() != null) {
                 specification = specification.and(buildSpecification(criteria.getTreatmentPlanId(),
                     root -> root.join(Ledger_.treatmentPlan, JoinType.LEFT).get(TreatmentPlan_.id)));
+            }
+
+            if (criteria.getCreatedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Ledger_.createdDate));
             }
         }
         return specification;
