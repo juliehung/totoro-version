@@ -2,13 +2,8 @@ package io.dentall.totoro.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
-import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
-import io.github.jhipster.service.filter.IntegerFilter;
-import io.github.jhipster.service.filter.LongFilter;
-import io.github.jhipster.service.filter.StringFilter;
+
+import io.github.jhipster.service.filter.*;
 
 /**
  * Criteria class for the Ledger entity. This class is used in LedgerResource to
@@ -30,7 +25,11 @@ public class LedgerCriteria implements Serializable {
 
     private DoubleFilter arrears;
 
+    private StringFilter note;
+
     private LongFilter treatmentPlanId;
+
+    private InstantFilter createdDate;
 
     public LongFilter getId() {
         return id;
@@ -64,6 +63,14 @@ public class LedgerCriteria implements Serializable {
         this.arrears = arrears;
     }
 
+    public StringFilter getNote() {
+        return note;
+    }
+
+    public void setNote(StringFilter note) {
+        this.note = note;
+    }
+
     public LongFilter getTreatmentPlanId() {
         return treatmentPlanId;
     }
@@ -72,6 +79,13 @@ public class LedgerCriteria implements Serializable {
         this.treatmentPlanId = treatmentPlanId;
     }
 
+    public InstantFilter getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(InstantFilter createdDate) {
+        this.createdDate = createdDate;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -82,33 +96,38 @@ public class LedgerCriteria implements Serializable {
             return false;
         }
         final LedgerCriteria that = (LedgerCriteria) o;
-        return
-            Objects.equals(id, that.id) &&
+        return Objects.equals(id, that.id) &&
             Objects.equals(amount, that.amount) &&
             Objects.equals(charge, that.charge) &&
             Objects.equals(arrears, that.arrears) &&
-            Objects.equals(treatmentPlanId, that.treatmentPlanId);
+            Objects.equals(note, that.note) &&
+            Objects.equals(treatmentPlanId, that.treatmentPlanId) &&
+            Objects.equals(createdDate, that.createdDate);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-        id,
-        amount,
-        charge,
-        arrears,
-        treatmentPlanId
+            id,
+            amount,
+            charge,
+            arrears,
+            note,
+            treatmentPlanId,
+            createdDate
         );
     }
 
     @Override
     public String toString() {
         return "LedgerCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (amount != null ? "amount=" + amount + ", " : "") +
-                (charge != null ? "charge=" + charge + ", " : "") +
-                (arrears != null ? "arrears=" + arrears + ", " : "") +
-                (treatmentPlanId != null ? "treatmentPlanId=" + treatmentPlanId + ", " : "") +
+            (id != null ? "id=" + id + ", " : "") +
+            (amount != null ? "amount=" + amount + ", " : "") +
+            (charge != null ? "charge=" + charge + ", " : "") +
+            (arrears != null ? "arrears=" + arrears + ", " : "") +
+            (note != null ? "note=" + note + ", " : "") +
+            (treatmentPlanId != null ? "treatmentPlanId=" + treatmentPlanId + ", " : "") +
+            (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
             "}";
     }
 

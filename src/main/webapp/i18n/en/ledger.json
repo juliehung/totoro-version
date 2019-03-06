@@ -18,6 +18,7 @@
       "amount": "Amount",
       "charge": "Charge",
       "arrears": "Arrears",
+      "note": "Note",
       "treatmentPlan": "Treatment Plan"
     }
   }

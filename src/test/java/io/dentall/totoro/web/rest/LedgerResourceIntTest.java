@@ -53,6 +53,9 @@ public class LedgerResourceIntTest {
     private static final Double DEFAULT_ARREARS = 1D;
     private static final Double UPDATED_ARREARS = 2D;
 
+    private static final String DEFAULT_NOTE = "AAAAAAAAAA";
+    private static final String UPDATED_NOTE = "BBBBBBBBBB";
+
     @Autowired
     private LedgerRepository ledgerRepository;
 
@@ -103,7 +106,8 @@ public class LedgerResourceIntTest {
         Ledger ledger = new Ledger()
             .amount(DEFAULT_AMOUNT)
             .charge(DEFAULT_CHARGE)
-            .arrears(DEFAULT_ARREARS);
+            .arrears(DEFAULT_ARREARS)
+            .note(DEFAULT_NOTE);
         return ledger;
     }
 
@@ -130,6 +134,7 @@ public class LedgerResourceIntTest {
         assertThat(testLedger.getAmount()).isEqualTo(DEFAULT_AMOUNT);
         assertThat(testLedger.getCharge()).isEqualTo(DEFAULT_CHARGE);
         assertThat(testLedger.getArrears()).isEqualTo(DEFAULT_ARREARS);
+        assertThat(testLedger.getNote()).isEqualTo(DEFAULT_NOTE);
     }
 
     @Test
@@ -218,7 +223,8 @@ public class LedgerResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(ledger.getId().intValue())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].charge").value(hasItem(DEFAULT_CHARGE.doubleValue())))
-            .andExpect(jsonPath("$.[*].arrears").value(hasItem(DEFAULT_ARREARS.doubleValue())));
+            .andExpect(jsonPath("$.[*].arrears").value(hasItem(DEFAULT_ARREARS.doubleValue())))
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
     }
     
     @Test
@@ -234,7 +240,8 @@ public class LedgerResourceIntTest {
             .andExpect(jsonPath("$.id").value(ledger.getId().intValue()))
             .andExpect(jsonPath("$.amount").value(DEFAULT_AMOUNT.doubleValue()))
             .andExpect(jsonPath("$.charge").value(DEFAULT_CHARGE.doubleValue()))
-            .andExpect(jsonPath("$.arrears").value(DEFAULT_ARREARS.doubleValue()));
+            .andExpect(jsonPath("$.arrears").value(DEFAULT_ARREARS.doubleValue()))
+            .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()));
     }
 
     @Test
@@ -356,6 +363,45 @@ public class LedgerResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllLedgersByNoteIsEqualToSomething() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where note equals to DEFAULT_NOTE
+        defaultLedgerShouldBeFound("note.equals=" + DEFAULT_NOTE);
+
+        // Get all the ledgerList where note equals to UPDATED_NOTE
+        defaultLedgerShouldNotBeFound("note.equals=" + UPDATED_NOTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLedgersByNoteIsInShouldWork() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where note in DEFAULT_NOTE or UPDATED_NOTE
+        defaultLedgerShouldBeFound("note.in=" + DEFAULT_NOTE + "," + UPDATED_NOTE);
+
+        // Get all the ledgerList where note equals to UPDATED_NOTE
+        defaultLedgerShouldNotBeFound("note.in=" + UPDATED_NOTE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLedgersByNoteIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where note is not null
+        defaultLedgerShouldBeFound("note.specified=true");
+
+        // Get all the ledgerList where note is null
+        defaultLedgerShouldNotBeFound("note.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllLedgersByTreatmentPlanIsEqualToSomething() throws Exception {
         // Initialize the database
         TreatmentPlan treatmentPlan = TreatmentPlanResourceIntTest.createEntity(em);
@@ -382,7 +428,8 @@ public class LedgerResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(ledger.getId().intValue())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].charge").value(hasItem(DEFAULT_CHARGE.doubleValue())))
-            .andExpect(jsonPath("$.[*].arrears").value(hasItem(DEFAULT_ARREARS.doubleValue())));
+            .andExpect(jsonPath("$.[*].arrears").value(hasItem(DEFAULT_ARREARS.doubleValue())))
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
 
         // Check, that the count call also returns 1
         restLedgerMockMvc.perform(get("/api/ledgers/count?sort=id,desc&" + filter))
@@ -432,7 +479,8 @@ public class LedgerResourceIntTest {
         updatedLedger
             .amount(UPDATED_AMOUNT)
             .charge(UPDATED_CHARGE)
-            .arrears(UPDATED_ARREARS);
+            .arrears(UPDATED_ARREARS)
+            .note(UPDATED_NOTE);
 
         restLedgerMockMvc.perform(put("/api/ledgers")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -446,6 +494,7 @@ public class LedgerResourceIntTest {
         assertThat(testLedger.getAmount()).isEqualTo(UPDATED_AMOUNT);
         assertThat(testLedger.getCharge()).isEqualTo(UPDATED_CHARGE);
         assertThat(testLedger.getArrears()).isEqualTo(UPDATED_ARREARS);
+        assertThat(testLedger.getNote()).isEqualTo(UPDATED_NOTE);
     }
 
     @Test
