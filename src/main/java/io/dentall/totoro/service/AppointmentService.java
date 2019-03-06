@@ -34,22 +34,18 @@ public class AppointmentService {
 
     private final RelationshipService relationshipService;
 
-    private final BroadcastService broadcastService;
-
     public AppointmentService(
         AppointmentRepository appointmentRepository,
         ExtendUserRepository extendUserRepository,
         PatientService patientService,
         RegistrationService registrationService,
-        RelationshipService relationshipService,
-        BroadcastService broadcastService
+        RelationshipService relationshipService
     ) {
         this.appointmentRepository = appointmentRepository;
         this.extendUserRepository = extendUserRepository;
         this.patientService = patientService;
         this.registrationService = registrationService;
         this.relationshipService = relationshipService;
-        this.broadcastService = broadcastService;
     }
 
     /**
@@ -217,12 +213,10 @@ public class AppointmentService {
         if (registration != null) {
             if (registration.getId() == null) {
                 registration.setId(appointment.getId());
-                registration = registrationService.save(registration);
+                registration = registrationService.save(registration, appointment.getPatient().getName());
             } else {
                 registration = registrationService.update(registration);
             }
-
-            broadcastService.broadcastRegistrationStatus(appointment.getPatient().getName(), registration.getStatus());
         }
 
         return registration;

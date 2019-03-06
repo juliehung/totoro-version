@@ -1,8 +1,8 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.repository.DisposalRepository;
-import io.dentall.totoro.repository.RegistrationRepository;
 import io.dentall.totoro.service.dto.TreatmentDrugCriteria;
 import io.github.jhipster.service.filter.LongFilter;
 import org.slf4j.Logger;
@@ -40,7 +40,9 @@ public class DisposalService {
 
     private final RelationshipService relationshipService;
 
-    private final RegistrationRepository registrationRepository;
+    private final RegistrationService registrationService;
+
+    private final PatientService patientService;
 
     public DisposalService(
         DisposalRepository disposalRepository,
@@ -49,7 +51,8 @@ public class DisposalService {
         TreatmentDrugService treatmentDrugService,
         TreatmentDrugQueryService treatmentDrugQueryService,
         RelationshipService relationshipService,
-        RegistrationRepository registrationRepository
+        RegistrationService registrationService,
+        PatientService patientService
     ) {
         this.disposalRepository = disposalRepository;
         this.prescriptionService = prescriptionService;
@@ -57,7 +60,8 @@ public class DisposalService {
         this.treatmentDrugService = treatmentDrugService;
         this.treatmentDrugQueryService = treatmentDrugQueryService;
         this.relationshipService = relationshipService;
-        this.registrationRepository = registrationRepository;
+        this.registrationService = registrationService;
+        this.patientService = patientService;
     }
 
     /**
@@ -71,6 +75,9 @@ public class DisposalService {
 
         Prescription prescription = getPrescription(disposal);
         Todo todo = getTodo(disposal);
+        if (disposal.getRegistration() != null && disposal.getRegistration().getId() != null) {
+            disposal.setRegistration(registrationService.update(disposal.getRegistration()));
+        }
 
         Set<TreatmentProcedure> treatmentProcedures = disposal.getTreatmentProcedures();
         disposal =  disposalRepository.save(disposal.treatmentProcedures(null));
@@ -188,7 +195,11 @@ public class DisposalService {
                 }
 
                 if (updateDisposal.getRegistration() != null && updateDisposal.getRegistration().getId() != null) {
-                    registrationRepository.findById(updateDisposal.getRegistration().getId()).ifPresent(disposal::setRegistration);
+                    disposal.setRegistration(registrationService.update(updateDisposal.getRegistration()));
+
+                    if (disposal.getRegistration().getStatus() == RegistrationStatus.FINISHED) {
+                        patientService.setDoctor(disposal.getRegistration().getAppointment().getPatient());
+                    }
                 }
 
                 return disposal;

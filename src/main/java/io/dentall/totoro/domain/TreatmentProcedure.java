@@ -55,7 +55,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     private NHIProcedure nhiProcedure;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "treatmentProcedures", allowSetters = true)
+    @JsonIgnoreProperties(value = {"treatmentProcedures", "treatmentPlan"}, allowSetters = true)
     private TreatmentTask treatmentTask;
 
     @ManyToOne
