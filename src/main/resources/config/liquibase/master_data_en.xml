@@ -77,7 +77,7 @@
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/procedures.csv"
+                  file="config/liquibase/procedures_en.csv"
                   separator=";"
                   tableName="procedure">
         </loadData>

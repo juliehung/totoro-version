@@ -1,0 +1,131 @@
+procedure_type_id;content;price;doctor_user_id
+1;Operative dentistry;1770;NULL
+6;Extraction;1220;NULL
+2;Non-surgical Endodontic treatment;5000;12
+2;Non-surgical Endodontic treatment;7000;12
+2;Non-surgical Endodontic treatment;10000;12
+3;Non-surgical Endodontic treatment;5000;12
+3;Non-surgical Endodontic treatment;7000;12
+3;Non-surgical Endodontic treatment;10000;12
+5;Microscopic Apexification;5000;12
+6;Collagen-Small;3000;NULL
+6;Collagen-Large;5000;NULL
+8;Precious Metal Alloy Inlay/Onlay/Overlay;18000;NULL
+8;All Ceramic Inlay/Onlay/Overlay;18000;NULL
+9;Precious Metal Alloy Inlay/Onlay/Overlay;18000;NULL
+9;All Ceramic Inlay/Onlay/Overlay;18000;NULL
+10;Precious Metal Alloy Inlay/Onlay/Overlay;18000;NULL
+10;All Ceramic Inlay/Onlay/Overlay;18000;NULL
+11;All Ceramic Veneer;20000;NULL
+12;Semi-precious Metal Alloy Crown/Bridge-Pd;14000;NULL
+12;Precious Metal Alloy Crown/Bridge-Au 50%;20000;NULL
+12;Precious Metal Alloy Crown/Bridge-Au 78%;30000;NULL
+12;Precious Metal Alloy Crown/Bridge-Au 87%;35000;NULL
+12;Temporary Crown/Bridge-PMMA;2000;NULL
+12;All Ceramic Crown/Bridge-E-max;25000;NULL
+12;All Ceramic Crown/Bridge-Zirconia;25000;NULL
+12;All Ceramic Crown/Bridge-3M LAVA;30000;NULL
+13;Semi-precious Metal Alloy Crown/Bridge-Pd;14000;NULL
+13;Precious Metal Alloy Crown/Bridge-Au 50%;20000;NULL
+13;Precious Metal Alloy Crown/Bridge-Au 78%;30000;NULL
+13;Precious Metal Alloy Crown/Bridge-Au 87%;35000;NULL
+13;Temporary Crown/Bridge-PMMA;2000;NULL
+13;All Ceramic Crown/Bridge-E-max;25000;NULL
+13;All Ceramic Crown/Bridge-Zirconia;25000;NULL
+13;All Ceramic Crown/Bridge-3M LAVA;30000;NULL
+14;Fiber Post;3000;NULL
+14;Fiber Post;3500;NULL
+14;Precious Metal Alloy Post-Au 20%;3000;NULL
+15;Temporary Crown/Bridge-PMMA;2000;NULL
+16;Removable Partial Denture-Single Arch;35000;NULL
+16;Interim;15000;NULL
+17;Complete Denture;40000;NULL
+16;Flexible Denture-Single Arch;20000;NULL
+18;Splint;8000;NULL
+18;Splint;3000;NULL
+19;Denture Repair-Add Tooth;2000;NULL
+19;Denture Repair-Add Clasp;1000;NULL
+20;orthodontic;40000;13
+20;orthodontic;40000;13
+20;orthodontic;150000;NULL
+20;orthodontic;60000;NULL
+20;Aligner;200000;NULL
+21;Retainer;3000;NULL
+22;Retainer;3000;NULL
+23;Scaling;1000;NULL
+24;GBR/GTR (With Bone Graft/Membrane);30000;NULL
+25;GBR/GTR (With Bone Graft/Membrane);30000;NULL
+26;Sinus lifting;30000;NULL
+27;Bone Split/expansion;20000;NULL
+28;Crown lengthening procedure;12000;NULL
+31;Collagen-Small;3000;NULL
+31;Collagen-Large;5000;NULL
+32;Child Fluoride Application;800;NULL
+32;Adult Fluoride Application-Full Mouth;800;NULL
+33;Sealant Application-Single Tooth;800;NULL
+34;Strip crown;3500;13
+35;Zirconia crown;8000;13
+36;SSC;3500;NULL
+39;Sandblasting-A Quarter;1500;NULL
+39;Sandblasting-Single Arch;2500;NULL
+39;Sandblasting-Full Mouth;5000;NULL
+40;At-home Bleaching;12000;NULL
+40;Cold Light Bleaching;20000;NULL
+40;Laser Bleaching;25000;NULL
+40;At-home Bleaching Gel-Two Tubes;6000;NULL
+7;Semi-precious Metal Alloy Implant Crown/Bridge-Pd;0;NULL
+12;Semi-precious Metal Alloy Implant Crown/Bridge-Pd;0;NULL
+13;Semi-precious Metal Alloy Implant Crown/Bridge-Pd;0;NULL
+7;Precious Metal Alloy Implant Crown/Bridge-Au 50%;0;NULL
+12;Precious Metal Alloy Implant Crown/Bridge-Au 50%;0;NULL
+13;Precious Metal Alloy Implant Crown/Bridge-Au 50%;0;NULL
+7;Precious Metal Alloy Implant Crown/Bridge-Au 78%;0;NULL
+12;Precious Metal Alloy Implant Crown/Bridge-Au 78%;0;NULL
+13;Precious Metal Alloy Implant Crown/Bridge-Au 78%;0;NULL
+7;Precious Metal Alloy Implant Crown/Bridge-Au 87%;0;NULL
+12;Precious Metal Alloy Implant Crown/Bridge-Au 87%;0;NULL
+13;Precious Metal Alloy Implant Crown/Bridge-Au 87%;0;NULL
+7;Temporary Implant Crown/Bridge-PMMA;0;NULL
+12;Temporary Implant Crown/Bridge-PMMA;0;NULL
+13;Temporary Implant Crown/Bridge-PMMA;0;NULL
+15;Temporary Implant Crown/Bridge-PMMA;0;NULL
+7;All Ceramic Implant Crown/Bridge-E-max;0;NULL
+12;All Ceramic Implant Crown/Bridge-E-max;0;NULL
+13;All Ceramic Implant Crown/Bridge-E-max;0;NULL
+7;All Ceramic Implant Crown/Bridge-Zirconia;0;NULL
+12;All Ceramic Implant Crown/Bridge-Zirconia;0;NULL
+13;All Ceramic Implant Crown/Bridge-Zirconia;0;NULL
+7;All Ceramic Implant Crown/Bridge-3M LAVA;0;NULL
+12;All Ceramic Implant Crown/Bridge-3M LAVA;0;NULL
+13;All Ceramic Implant Crown/Bridge-3M LAVA;0;NULL
+16;Removable Partial Denture-A Pair;35000;NULL
+16;Flexible Denture;12000;NULL
+7;implant;75000;NULL
+12;implant;75000;NULL
+13;implant;75000;NULL
+7;implant;95000;NULL
+12;implant;95000;NULL
+13;implant;95000;NULL
+7;implant;125000;NULL
+12;implant;125000;NULL
+13;implant;125000;NULL
+4;Apicoectomy (With MTA);20000;NULL
+4;Microscopic Apical Surgery-Anterior teeth;15000;12
+4;Microscopic Apical Surgery-Premolar;18000;12
+4;Microscopic Apical Surgery-Premolar;20000;12
+4;Microscopic Apical Surgery-Molar;25000;12
+2;Microscopic post removal;5000;12
+2;Microscopic Separated Instrument Removal;8000;12
+2;Microscopic Perforation Repair;5000;12
+32;Child Fluoride Application (With Full Mouth Cleaning);1000;13
+33;Chlid Sealant Application-Single Tooth;1000;13
+38;Band and loop;5000;13
+38;Band and loop;10000;13
+38;Band and loop;3500;NULL
+37;Kiddy denture;10000;13
+7;Sedation;20000;13
+6;Sedation;20000;13
+7;Sedation;5000;13
+6;Sedation;5000;13
+36;SSC;4000;13
+36;SSC;3500;13
