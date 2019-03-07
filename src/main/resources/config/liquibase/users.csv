@@ -15,3 +15,9 @@ id;login;password_hash;first_name;last_name;email;image_url;activated;lang_key;c
 14;cdd21;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;楊涴淳;楊涴淳;doctor21@localhost;;true;en;system;system
 15;cdd22;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;柳喻騫;柳喻騫;doctor22@localhost;;true;en;system;system
 16;d9999;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;臨時醫師;臨時醫師;doctor9999@localhost;;true;en;system;system
+17;asst01;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;周宜臻;周宜臻;assistant01@localhost;;true;en;system;system
+18;asst02;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;林紫彤;林紫彤;assistant02@localhost;;true;en;system;system
+19;asst03;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;林逸然;林逸然;assistant03@localhost;;true;en;system;system
+20;asst04;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;盧姿穎;盧姿穎;assistant04@localhost;;true;en;system;system
+21;asst05;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;黃佳欣;黃佳欣;assistant05@localhost;;true;en;system;system
+22;asst06;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;蔣雨靜;蔣雨靜;assistant06@localhost;;true;en;system;system
