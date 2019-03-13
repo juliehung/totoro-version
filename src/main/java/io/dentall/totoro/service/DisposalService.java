@@ -1,7 +1,6 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.repository.DisposalRepository;
 import io.dentall.totoro.service.dto.TreatmentDrugCriteria;
 import io.github.jhipster.service.filter.LongFilter;
@@ -42,8 +41,6 @@ public class DisposalService {
 
     private final RegistrationService registrationService;
 
-    private final PatientService patientService;
-
     public DisposalService(
         DisposalRepository disposalRepository,
         PrescriptionService prescriptionService,
@@ -51,8 +48,7 @@ public class DisposalService {
         TreatmentDrugService treatmentDrugService,
         TreatmentDrugQueryService treatmentDrugQueryService,
         RelationshipService relationshipService,
-        RegistrationService registrationService,
-        PatientService patientService
+        RegistrationService registrationService
     ) {
         this.disposalRepository = disposalRepository;
         this.prescriptionService = prescriptionService;
@@ -61,7 +57,6 @@ public class DisposalService {
         this.treatmentDrugQueryService = treatmentDrugQueryService;
         this.relationshipService = relationshipService;
         this.registrationService = registrationService;
-        this.patientService = patientService;
     }
 
     /**
@@ -195,11 +190,7 @@ public class DisposalService {
                 }
 
                 if (updateDisposal.getRegistration() != null && updateDisposal.getRegistration().getId() != null) {
-                    disposal.setRegistration(registrationService.update(updateDisposal.getRegistration()));
-
-                    if (disposal.getRegistration().getStatus() == RegistrationStatus.FINISHED) {
-                        patientService.setDoctor(disposal.getRegistration().getAppointment().getPatient());
-                    }
+                    disposal.setRegistration(registrationService.update(updateDisposal.getRegistration(), disposal.getCreatedBy()));
                 }
 
                 return disposal;
