@@ -21,3 +21,4 @@ id;login;password_hash;first_name;last_name;email;image_url;activated;lang_key;c
 20;asst04;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;盧姿穎;盧姿穎;assistant04@localhost;;true;en;system;system
 21;asst05;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;黃佳欣;黃佳欣;assistant05@localhost;;true;en;system;system
 22;asst06;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;蔣雨靜;蔣雨靜;assistant06@localhost;;true;en;system;system
+23;cpadmin;$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC;CP_Admin;CP_Admin;cpadmin@localhost;;true;en;system;system
