@@ -1,6 +1,7 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +26,21 @@ public class RegistrationService {
 
     private final BroadcastService broadcastService;
 
+    private final UserRepository userRepository;
+
     @PersistenceContext
     private EntityManager entityManager;
 
-    public RegistrationService(RegistrationRepository registrationRepository, AccountingService accountingService, BroadcastService broadcastService) {
+    public RegistrationService(
+        RegistrationRepository registrationRepository,
+        AccountingService accountingService,
+        BroadcastService broadcastService,
+        UserRepository userRepository
+    ) {
         this.registrationRepository = registrationRepository;
         this.accountingService = accountingService;
         this.broadcastService = broadcastService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -99,6 +108,27 @@ public class RegistrationService {
                 return registration;
             })
             .get();
+    }
+
+    /**
+     * Update the registration.
+     *
+     * @param updateRegistration the update entity
+     * @param doctorName the name of doctor
+     */
+    public Registration update(Registration updateRegistration, String doctorName) {
+        Registration registration = update(updateRegistration);
+        if (registration.getStatus() == RegistrationStatus.FINISHED) {
+            Patient patient = registration.getAppointment().getPatient();
+            userRepository.findOneByLogin(doctorName).ifPresent(user -> {
+                patient.setDominantDoctor(user.getExtendUser());
+                if (patient.getFirstDoctor() == null) {
+                    patient.setFirstDoctor(user.getExtendUser());
+                }
+            });
+        }
+
+        return registration;
     }
 
     /**
