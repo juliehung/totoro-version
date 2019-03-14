@@ -52,6 +52,8 @@ public class AppointmentCriteria implements Serializable {
 
     private BooleanFilter archived;
 
+    private BooleanFilter contacted;
+
     private LongFilter patientId;
 
     private LongFilter registrationId;
@@ -154,6 +156,14 @@ public class AppointmentCriteria implements Serializable {
         this.archived = archived;
     }
 
+    public BooleanFilter getContacted() {
+        return contacted;
+    }
+
+    public void setContacted(BooleanFilter contacted) {
+        this.contacted = contacted;
+    }
+
     public LongFilter getPatientId() {
         return patientId;
     }
@@ -230,6 +240,7 @@ public class AppointmentCriteria implements Serializable {
             Objects.equals(baseFloor, that.baseFloor) &&
             Objects.equals(colorId, that.colorId) &&
             Objects.equals(archived, that.archived) &&
+            Objects.equals(contacted, that.contacted) &&
             Objects.equals(patientId, that.patientId) &&
             Objects.equals(registrationId, that.registrationId) &&
             Objects.equals(registrationType, that.registrationType) &&
@@ -253,6 +264,7 @@ public class AppointmentCriteria implements Serializable {
             baseFloor,
             colorId,
             archived,
+            contacted,
             patientId,
             registrationId,
             registrationType,
@@ -277,6 +289,7 @@ public class AppointmentCriteria implements Serializable {
             (baseFloor != null ? "baseFloor=" + baseFloor + ", " : "") +
             (colorId != null ? "colorId=" + colorId + ", " : "") +
             (archived != null ? "archived=" + archived + ", " : "") +
+            (contacted != null ? "contacted=" + contacted + ", " : "") +
             (patientId != null ? "patientId=" + patientId + ", " : "") +
             (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
             (registrationType != null ? "registrationType=" + registrationType + ", " : "") +

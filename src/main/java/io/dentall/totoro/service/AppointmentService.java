@@ -165,6 +165,10 @@ public class AppointmentService {
                     appointment.setArchived((updateAppointment.isArchived()));
                 }
 
+                if (updateAppointment.isContacted() != null) {
+                    appointment.setContacted((updateAppointment.isContacted()));
+                }
+
                 // doctor
                 if (updateAppointment.getDoctor() != null && updateAppointment.getDoctor().getId() != null) {
                     log.debug("Update Doctor({}) of Appointment(id: {})", updateAppointment.getDoctor(), updateAppointment.getId());

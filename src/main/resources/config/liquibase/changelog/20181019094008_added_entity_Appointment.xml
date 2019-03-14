@@ -61,6 +61,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="contacted" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
             <column name="patient_id" type="bigint">
                 <constraints nullable="true" />
             </column>

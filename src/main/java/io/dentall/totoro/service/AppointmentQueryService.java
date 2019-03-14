@@ -132,6 +132,9 @@ public class AppointmentQueryService extends QueryService<Appointment> {
             if (criteria.getArchived() != null) {
                 specification = specification.and(buildSpecification(criteria.getArchived(), Appointment_.archived));
             }
+            if (criteria.getContacted() != null) {
+                specification = specification.and(buildSpecification(criteria.getContacted(), Appointment_.contacted));
+            }
             if (criteria.getPatientId() != null) {
                 specification = specification.and(buildSpecification(criteria.getPatientId(),
                     root -> root.join(Appointment_.patient, JoinType.LEFT).get(Patient_.id)));

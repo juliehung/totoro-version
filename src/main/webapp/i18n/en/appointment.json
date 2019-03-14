@@ -25,6 +25,7 @@
       "baseFloor": "Base Floor",
       "colorId": "Color Id",
       "archived": "Archived",
+      "contacted": "Contacted",
       "patient": "Patient",
       "registration": "Registration",
       "treatmentProcedure": "Treatment Procedure"

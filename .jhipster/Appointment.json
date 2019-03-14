@@ -64,6 +64,10 @@
         {
             "fieldName": "archived",
             "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "contacted",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20181019094008",
