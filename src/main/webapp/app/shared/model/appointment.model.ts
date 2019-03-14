@@ -20,6 +20,7 @@ export interface IAppointment {
   baseFloor?: boolean;
   colorId?: number;
   archived?: boolean;
+  contacted?: boolean;
   patient?: IPatient;
   registration?: IRegistration;
   treatmentProcedures?: ITreatmentProcedure[];
@@ -29,5 +30,6 @@ export const defaultValue: Readonly<IAppointment> = {
   microscope: false,
   newPatient: false,
   baseFloor: false,
-  archived: false
+  archived: false,
+  contacted: false
 };

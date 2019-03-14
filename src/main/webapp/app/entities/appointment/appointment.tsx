@@ -107,6 +107,9 @@ export class Appointment extends React.Component<IAppointmentProps, IAppointment
                 <th className="hand" onClick={this.sort('archived')}>
                   <Translate contentKey="totoroApp.appointment.archived">Archived</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('contacted')}>
+                  <Translate contentKey="totoroApp.appointment.contacted">Contacted</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.appointment.patient">Patient</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -138,6 +141,7 @@ export class Appointment extends React.Component<IAppointmentProps, IAppointment
                   <td>{appointment.baseFloor ? 'true' : 'false'}</td>
                   <td>{appointment.colorId}</td>
                   <td>{appointment.archived ? 'true' : 'false'}</td>
+                  <td>{appointment.contacted ? 'true' : 'false'}</td>
                   <td>{appointment.patient ? <Link to={`patient/${appointment.patient.id}`}>{appointment.patient.id}</Link> : ''}</td>
                   <td>
                     {appointment.registration ? (

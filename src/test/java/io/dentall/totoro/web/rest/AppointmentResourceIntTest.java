@@ -74,6 +74,9 @@ public class AppointmentResourceIntTest {
     private static final Boolean DEFAULT_ARCHIVED = false;
     private static final Boolean UPDATED_ARCHIVED = true;
 
+    private static final Boolean DEFAULT_CONTACTED = false;
+    private static final Boolean UPDATED_CONTACTED = true;
+
     @Autowired
     private AppointmentRepository appointmentRepository;
 
@@ -146,7 +149,8 @@ public class AppointmentResourceIntTest {
             .newPatient(DEFAULT_NEW_PATIENT)
             .baseFloor(DEFAULT_BASE_FLOOR)
             .colorId(DEFAULT_COLOR_ID)
-            .archived(DEFAULT_ARCHIVED);
+            .archived(DEFAULT_ARCHIVED)
+            .contacted(DEFAULT_CONTACTED);
         return appointment;
     }
 
@@ -190,6 +194,7 @@ public class AppointmentResourceIntTest {
         assertThat(testAppointment.isBaseFloor()).isEqualTo(DEFAULT_BASE_FLOOR);
         assertThat(testAppointment.getColorId()).isEqualTo(DEFAULT_COLOR_ID);
         assertThat(testAppointment.isArchived()).isEqualTo(DEFAULT_ARCHIVED);
+        assertThat(testAppointment.isContacted()).isEqualTo(DEFAULT_CONTACTED);
         assertThat(testAppointment.getDoctor()).isEqualTo(appointment.getDoctor());
         assertThat(testAppointment.getRegistration().getType()).isEqualTo(appointment.getRegistration().getType());
         assertThat(testAppointment.getRegistration().getAccounting().getOwnExpense()).isEqualTo(appointment.getRegistration().getAccounting().getOwnExpense());
@@ -235,7 +240,8 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[*].newPatient").value(hasItem(DEFAULT_NEW_PATIENT.booleanValue())))
             .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR.booleanValue())))
             .andExpect(jsonPath("$.[*].colorId").value(hasItem(DEFAULT_COLOR_ID)))
-            .andExpect(jsonPath("$.[*].archived").value(hasItem(DEFAULT_ARCHIVED.booleanValue())));
+            .andExpect(jsonPath("$.[*].archived").value(hasItem(DEFAULT_ARCHIVED.booleanValue())))
+            .andExpect(jsonPath("$.[*].contacted").value(hasItem(DEFAULT_CONTACTED.booleanValue())));
     }
     
     @Test
@@ -258,7 +264,8 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.newPatient").value(DEFAULT_NEW_PATIENT.booleanValue()))
             .andExpect(jsonPath("$.baseFloor").value(DEFAULT_BASE_FLOOR.booleanValue()))
             .andExpect(jsonPath("$.colorId").value(DEFAULT_COLOR_ID))
-            .andExpect(jsonPath("$.archived").value(DEFAULT_ARCHIVED.booleanValue()));
+            .andExpect(jsonPath("$.archived").value(DEFAULT_ARCHIVED.booleanValue()))
+            .andExpect(jsonPath("$.contacted").value(DEFAULT_CONTACTED.booleanValue()));
     }
 
     @Test
@@ -707,6 +714,45 @@ public class AppointmentResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllAppointmentsByContactedIsEqualToSomething() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where contacted equals to DEFAULT_CONTACTED
+        defaultAppointmentShouldBeFound("contacted.equals=" + DEFAULT_CONTACTED);
+
+        // Get all the appointmentList where contacted equals to UPDATED_CONTACTED
+        defaultAppointmentShouldNotBeFound("contacted.equals=" + UPDATED_CONTACTED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByContactedIsInShouldWork() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where contacted in DEFAULT_CONTACTED or UPDATED_CONTACTED
+        defaultAppointmentShouldBeFound("contacted.in=" + DEFAULT_CONTACTED + "," + UPDATED_CONTACTED);
+
+        // Get all the appointmentList where contacted equals to UPDATED_CONTACTED
+        defaultAppointmentShouldNotBeFound("contacted.in=" + UPDATED_CONTACTED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllAppointmentsByContactedIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        appointmentRepository.saveAndFlush(appointment);
+
+        // Get all the appointmentList where contacted is not null
+        defaultAppointmentShouldBeFound("contacted.specified=true");
+
+        // Get all the appointmentList where contacted is null
+        defaultAppointmentShouldNotBeFound("contacted.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllAppointmentsByPatientIsEqualToSomething() throws Exception {
         // Initialize the database
         Patient patient = PatientResourceIntTest.createEntity(em);
@@ -742,6 +788,24 @@ public class AppointmentResourceIntTest {
         defaultAppointmentShouldNotBeFound("registrationId.equals=" + (registrationId + 1));
     }
 
+    @Test
+    @Transactional
+    public void getAllAppointmentsByTreatmentProcedureIsEqualToSomething() throws Exception {
+        // Initialize the database
+        TreatmentProcedure treatmentProcedure = TreatmentProcedureResourceIntTest.createEntity(em);
+        em.persist(treatmentProcedure);
+        em.flush();
+        appointment.addTreatmentProcedure(treatmentProcedure);
+        appointmentRepository.saveAndFlush(appointment);
+        Long treatmentProcedureId = treatmentProcedure.getId();
+
+        // Get all the appointmentList where treatmentProcedure equals to treatmentProcedureId
+        defaultAppointmentShouldBeFound("treatmentProcedureId.equals=" + treatmentProcedureId);
+
+        // Get all the appointmentList where treatmentProcedure equals to treatmentProcedureId + 1
+        defaultAppointmentShouldNotBeFound("treatmentProcedureId.equals=" + (treatmentProcedureId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -759,7 +823,8 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[*].newPatient").value(hasItem(DEFAULT_NEW_PATIENT.booleanValue())))
             .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR.booleanValue())))
             .andExpect(jsonPath("$.[*].colorId").value(hasItem(DEFAULT_COLOR_ID)))
-            .andExpect(jsonPath("$.[*].archived").value(hasItem(DEFAULT_ARCHIVED.booleanValue())));
+            .andExpect(jsonPath("$.[*].archived").value(hasItem(DEFAULT_ARCHIVED.booleanValue())))
+            .andExpect(jsonPath("$.[*].contacted").value(hasItem(DEFAULT_CONTACTED.booleanValue())));
 
         // Check, that the count call also returns 1
         restAppointmentMockMvc.perform(get("/api/appointments/count?sort=id,desc&" + filter))
@@ -825,6 +890,7 @@ public class AppointmentResourceIntTest {
             .baseFloor(null) // test unchanged with null
             .colorId(UPDATED_COLOR_ID)
             .archived(UPDATED_ARCHIVED)
+            .contacted(UPDATED_CONTACTED)
             .registration(registration)
             .doctor(updateUser.getExtendUser());
 
@@ -847,6 +913,7 @@ public class AppointmentResourceIntTest {
         assertThat(testAppointment.isBaseFloor()).isEqualTo(DEFAULT_BASE_FLOOR);
         assertThat(testAppointment.getColorId()).isEqualTo(UPDATED_COLOR_ID);
         assertThat(testAppointment.isArchived()).isEqualTo(UPDATED_ARCHIVED);
+        assertThat(testAppointment.isContacted()).isEqualTo(UPDATED_CONTACTED);
         assertThat(testAppointment.getRegistration().getStatus()).isEqualTo(registration.getStatus());
         assertThat(testAppointment.getDoctor().getId()).isEqualTo(updateUser.getId());
         assertThat(testAppointment.getRegistration().getAccounting().getOwnExpense()).isEqualTo(accounting.getOwnExpense());

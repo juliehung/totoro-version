@@ -91,6 +91,12 @@ export class AppointmentDetail extends React.Component<IAppointmentDetailProps> 
             </dt>
             <dd>{appointmentEntity.archived ? 'true' : 'false'}</dd>
             <dt>
+              <span id="contacted">
+                <Translate contentKey="totoroApp.appointment.contacted">Contacted</Translate>
+              </span>
+            </dt>
+            <dd>{appointmentEntity.contacted ? 'true' : 'false'}</dd>
+            <dt>
               <Translate contentKey="totoroApp.appointment.patient">Patient</Translate>
             </dt>
             <dd>{appointmentEntity.patient ? appointmentEntity.patient.id : ''}</dd>

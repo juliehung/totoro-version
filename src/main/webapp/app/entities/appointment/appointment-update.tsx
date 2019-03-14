@@ -182,6 +182,12 @@ export class AppointmentUpdate extends React.Component<IAppointmentUpdateProps, 
                   </Label>
                 </AvGroup>
                 <AvGroup>
+                  <Label id="contactedLabel" check>
+                    <AvInput id="appointment-contacted" type="checkbox" className="form-control" name="contacted" />
+                    <Translate contentKey="totoroApp.appointment.contacted">Contacted</Translate>
+                  </Label>
+                </AvGroup>
+                <AvGroup>
                   <Label for="patient.id">
                     <Translate contentKey="totoroApp.appointment.patient">Patient</Translate>
                   </Label>
