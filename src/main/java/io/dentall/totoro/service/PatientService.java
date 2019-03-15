@@ -107,7 +107,7 @@ public class PatientService extends QueryService<Patient> {
                 }
 
                 // tags
-                if (updatePatient.getTags() != null) {
+                if (updatePatient.getTags() != null && updatePatient.getTags().size() > 0) {
                     log.debug("Update tags({}) of Patient(id: {})", updatePatient.getTags(), updatePatient.getId());
                     patient.getTags().clear();
                     updatePatient
