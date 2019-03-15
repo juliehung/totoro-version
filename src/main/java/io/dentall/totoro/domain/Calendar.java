@@ -8,12 +8,12 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Objects;
 
-import io.dentall.totoro.domain.enumeration.TimeInterval;
-
 import io.dentall.totoro.domain.enumeration.TimeType;
+
+import io.dentall.totoro.domain.enumeration.TimeInterval;
 
 /**
  * A Calendar.
@@ -31,26 +31,24 @@ public class Calendar implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "jhi_date", nullable = false)
-    private LocalDate date;
+    @Column(name = "jhi_start", nullable = false)
+    private Instant start;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "time_interval", nullable = false)
-    private TimeInterval timeInterval;
+    @Column(name = "jhi_end", nullable = false)
+    private Instant end;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "time_type", nullable = false)
     private TimeType timeType;
 
-    @Pattern(regexp = "^([0-1][0-9]|2[0-3]):[0-5][0-9]$")
-    @Column(name = "start_time")
-    private String startTime;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "time_interval")
+    private TimeInterval timeInterval;
 
-    @Pattern(regexp = "^([0-1][0-9]|2[0-3]):[0-5][0-9]$")
-    @Column(name = "end_time")
-    private String endTime;
+    @Column(name = "note")
+    private String note;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
@@ -66,30 +64,30 @@ public class Calendar implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public Instant getStart() {
+        return start;
     }
 
-    public Calendar date(LocalDate date) {
-        this.date = date;
+    public Calendar start(Instant start) {
+        this.start = start;
         return this;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setStart(Instant start) {
+        this.start = start;
     }
 
-    public TimeInterval getTimeInterval() {
-        return timeInterval;
+    public Instant getEnd() {
+        return end;
     }
 
-    public Calendar timeInterval(TimeInterval timeInterval) {
-        this.timeInterval = timeInterval;
+    public Calendar end(Instant end) {
+        this.end = end;
         return this;
     }
 
-    public void setTimeInterval(TimeInterval timeInterval) {
-        this.timeInterval = timeInterval;
+    public void setEnd(Instant end) {
+        this.end = end;
     }
 
     public TimeType getTimeType() {
@@ -105,30 +103,30 @@ public class Calendar implements Serializable {
         this.timeType = timeType;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public TimeInterval getTimeInterval() {
+        return timeInterval;
     }
 
-    public Calendar startTime(String startTime) {
-        this.startTime = startTime;
+    public Calendar timeInterval(TimeInterval timeInterval) {
+        this.timeInterval = timeInterval;
         return this;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setTimeInterval(TimeInterval timeInterval) {
+        this.timeInterval = timeInterval;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getNote() {
+        return note;
     }
 
-    public Calendar endTime(String endTime) {
-        this.endTime = endTime;
+    public Calendar note(String note) {
+        this.note = note;
         return this;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setNote(String note) {
+        this.note = note;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -169,11 +167,11 @@ public class Calendar implements Serializable {
     public String toString() {
         return "Calendar{" +
             "id=" + getId() +
-            ", date='" + getDate() + "'" +
-            ", timeInterval='" + getTimeInterval() + "'" +
+            ", start='" + getStart() + "'" +
+            ", end='" + getEnd() + "'" +
             ", timeType='" + getTimeType() + "'" +
-            ", startTime='" + getStartTime() + "'" +
-            ", endTime='" + getEndTime() + "'" +
+            ", timeInterval='" + getTimeInterval() + "'" +
+            ", note='" + getNote() + "'" +
             "}";
     }
 }

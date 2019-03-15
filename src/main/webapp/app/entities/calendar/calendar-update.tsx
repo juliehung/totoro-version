@@ -43,6 +43,9 @@ export class CalendarUpdate extends React.Component<ICalendarUpdateProps, ICalen
   }
 
   saveEntity = (event, errors, values) => {
+    values.start = new Date(values.start);
+    values.end = new Date(values.end);
+
     if (errors.length === 0) {
       const { calendarEntity } = this.props;
       const entity = {
@@ -90,18 +93,59 @@ export class CalendarUpdate extends React.Component<ICalendarUpdateProps, ICalen
                   </AvGroup>
                 ) : null}
                 <AvGroup>
-                  <Label id="dateLabel" for="date">
-                    <Translate contentKey="totoroApp.calendar.date">Date</Translate>
+                  <Label id="startLabel" for="start">
+                    <Translate contentKey="totoroApp.calendar.start">Start</Translate>
                   </Label>
-                  <AvField
-                    id="calendar-date"
-                    type="date"
+                  <AvInput
+                    id="calendar-start"
+                    type="datetime-local"
                     className="form-control"
-                    name="date"
+                    name="start"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.calendarEntity.start)}
                     validate={{
                       required: { value: true, errorMessage: translate('entity.validation.required') }
                     }}
                   />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="endLabel" for="end">
+                    <Translate contentKey="totoroApp.calendar.end">End</Translate>
+                  </Label>
+                  <AvInput
+                    id="calendar-end"
+                    type="datetime-local"
+                    className="form-control"
+                    name="end"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.calendarEntity.end)}
+                    validate={{
+                      required: { value: true, errorMessage: translate('entity.validation.required') }
+                    }}
+                  />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="timeTypeLabel">
+                    <Translate contentKey="totoroApp.calendar.timeType">Time Type</Translate>
+                  </Label>
+                  <AvInput
+                    id="calendar-timeType"
+                    type="select"
+                    className="form-control"
+                    name="timeType"
+                    value={(!isNew && calendarEntity.timeType) || 'WORK_TIME'}
+                  >
+                    <option value="WORK_TIME">
+                      <Translate contentKey="totoroApp.TimeType.WORK_TIME" />
+                    </option>
+                    <option value="HOLIDAY">
+                      <Translate contentKey="totoroApp.TimeType.HOLIDAY" />
+                    </option>
+                    <option value="NHI_POINT_EXCLUDE">
+                      <Translate contentKey="totoroApp.TimeType.NHI_POINT_EXCLUDE" />
+                    </option>
+                    <option value="OTHER">
+                      <Translate contentKey="totoroApp.TimeType.OTHER" />
+                    </option>
+                  </AvInput>
                 </AvGroup>
                 <AvGroup>
                   <Label id="timeIntervalLabel">
@@ -132,61 +176,10 @@ export class CalendarUpdate extends React.Component<ICalendarUpdateProps, ICalen
                   </AvInput>
                 </AvGroup>
                 <AvGroup>
-                  <Label id="timeTypeLabel">
-                    <Translate contentKey="totoroApp.calendar.timeType">Time Type</Translate>
+                  <Label id="noteLabel" for="note">
+                    <Translate contentKey="totoroApp.calendar.note">Note</Translate>
                   </Label>
-                  <AvInput
-                    id="calendar-timeType"
-                    type="select"
-                    className="form-control"
-                    name="timeType"
-                    value={(!isNew && calendarEntity.timeType) || 'WORK_TIME'}
-                  >
-                    <option value="WORK_TIME">
-                      <Translate contentKey="totoroApp.TimeType.WORK_TIME" />
-                    </option>
-                    <option value="HOLIDAY">
-                      <Translate contentKey="totoroApp.TimeType.HOLIDAY" />
-                    </option>
-                    <option value="NHI_POINT_EXCLUDE">
-                      <Translate contentKey="totoroApp.TimeType.NHI_POINT_EXCLUDE" />
-                    </option>
-                    <option value="OTHER">
-                      <Translate contentKey="totoroApp.TimeType.OTHER" />
-                    </option>
-                  </AvInput>
-                </AvGroup>
-                <AvGroup>
-                  <Label id="startTimeLabel" for="startTime">
-                    <Translate contentKey="totoroApp.calendar.startTime">Start Time</Translate>
-                  </Label>
-                  <AvField
-                    id="calendar-startTime"
-                    type="text"
-                    name="startTime"
-                    validate={{
-                      pattern: {
-                        value: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$',
-                        errorMessage: translate('entity.validation.pattern', { pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$' })
-                      }
-                    }}
-                  />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="endTimeLabel" for="endTime">
-                    <Translate contentKey="totoroApp.calendar.endTime">End Time</Translate>
-                  </Label>
-                  <AvField
-                    id="calendar-endTime"
-                    type="text"
-                    name="endTime"
-                    validate={{
-                      pattern: {
-                        value: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$',
-                        errorMessage: translate('entity.validation.pattern', { pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$' })
-                      }
-                    }}
-                  />
+                  <AvField id="calendar-note" type="text" name="note" />
                 </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/calendar" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />

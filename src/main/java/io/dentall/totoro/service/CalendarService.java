@@ -86,8 +86,12 @@ public class CalendarService {
         return calendarRepository
             .findById(updateCalendar.getId())
             .map(calendar -> {
-                if (updateCalendar.getDate() != null) {
-                    calendar.setDate((updateCalendar.getDate()));
+                if (updateCalendar.getStart() != null) {
+                    calendar.setStart((updateCalendar.getStart()));
+                }
+
+                if (updateCalendar.getEnd() != null) {
+                    calendar.setEnd((updateCalendar.getEnd()));
                 }
 
                 if (updateCalendar.getTimeInterval() != null) {
@@ -98,12 +102,8 @@ public class CalendarService {
                     calendar.setTimeType((updateCalendar.getTimeType()));
                 }
 
-                if (updateCalendar.getStartTime() != null) {
-                    calendar.setStartTime((updateCalendar.getStartTime()));
-                }
-
-                if (updateCalendar.getEndTime() != null) {
-                    calendar.setEndTime((updateCalendar.getEndTime()));
+                if (updateCalendar.getNote() != null) {
+                    calendar.setNote((updateCalendar.getNote()));
                 }
 
                 if (updateCalendar.getDoctor() != null && updateCalendar.getDoctor().getId() != null) {

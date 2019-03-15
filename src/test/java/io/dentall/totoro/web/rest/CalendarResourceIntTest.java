@@ -25,8 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -36,8 +36,8 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import io.dentall.totoro.domain.enumeration.TimeInterval;
 import io.dentall.totoro.domain.enumeration.TimeType;
+import io.dentall.totoro.domain.enumeration.TimeInterval;
 /**
  * Test class for the CalendarResource REST controller.
  *
@@ -47,20 +47,20 @@ import io.dentall.totoro.domain.enumeration.TimeType;
 @SpringBootTest(classes = TotoroApp.class)
 public class CalendarResourceIntTest {
 
-    private static final LocalDate DEFAULT_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DATE = LocalDate.now(ZoneId.systemDefault());
+    private static final Instant DEFAULT_START = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_START = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final TimeInterval DEFAULT_TIME_INTERVAL = TimeInterval.MORNING;
-    private static final TimeInterval UPDATED_TIME_INTERVAL = TimeInterval.NOON;
+    private static final Instant DEFAULT_END = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_END = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final TimeType DEFAULT_TIME_TYPE = TimeType.WORK_TIME;
     private static final TimeType UPDATED_TIME_TYPE = TimeType.HOLIDAY;
 
-    private static final String DEFAULT_START_TIME = "23:36";
-    private static final String UPDATED_START_TIME = "03:47";
+    private static final TimeInterval DEFAULT_TIME_INTERVAL = TimeInterval.MORNING;
+    private static final TimeInterval UPDATED_TIME_INTERVAL = TimeInterval.NOON;
 
-    private static final String DEFAULT_END_TIME = "14:09";
-    private static final String UPDATED_END_TIME = "04:18";
+    private static final String DEFAULT_NOTE = "AAAAAAAAAA";
+    private static final String UPDATED_NOTE = "BBBBBBBBBB";
 
     @Autowired
     private CalendarRepository calendarRepository;
@@ -110,11 +110,11 @@ public class CalendarResourceIntTest {
      */
     public static Calendar createEntity(EntityManager em) {
         Calendar calendar = new Calendar()
-            .date(DEFAULT_DATE)
-            .timeInterval(DEFAULT_TIME_INTERVAL)
+            .start(DEFAULT_START)
+            .end(DEFAULT_END)
             .timeType(DEFAULT_TIME_TYPE)
-            .startTime(DEFAULT_START_TIME)
-            .endTime(DEFAULT_END_TIME);
+            .timeInterval(DEFAULT_TIME_INTERVAL)
+            .note(DEFAULT_NOTE);
         return calendar;
     }
 
@@ -138,11 +138,11 @@ public class CalendarResourceIntTest {
         List<Calendar> calendarList = calendarRepository.findAll();
         assertThat(calendarList).hasSize(databaseSizeBeforeCreate + 1);
         Calendar testCalendar = calendarList.get(calendarList.size() - 1);
-        assertThat(testCalendar.getDate()).isEqualTo(DEFAULT_DATE);
-        assertThat(testCalendar.getTimeInterval()).isEqualTo(DEFAULT_TIME_INTERVAL);
+        assertThat(testCalendar.getStart()).isEqualTo(DEFAULT_START);
+        assertThat(testCalendar.getEnd()).isEqualTo(DEFAULT_END);
         assertThat(testCalendar.getTimeType()).isEqualTo(DEFAULT_TIME_TYPE);
-        assertThat(testCalendar.getStartTime()).isEqualTo(DEFAULT_START_TIME);
-        assertThat(testCalendar.getEndTime()).isEqualTo(DEFAULT_END_TIME);
+        assertThat(testCalendar.getTimeInterval()).isEqualTo(DEFAULT_TIME_INTERVAL);
+        assertThat(testCalendar.getNote()).isEqualTo(DEFAULT_NOTE);
     }
 
     @Test
@@ -166,10 +166,10 @@ public class CalendarResourceIntTest {
 
     @Test
     @Transactional
-    public void checkDateIsRequired() throws Exception {
+    public void checkStartIsRequired() throws Exception {
         int databaseSizeBeforeTest = calendarRepository.findAll().size();
         // set the field null
-        calendar.setDate(null);
+        calendar.setStart(null);
 
         // Create the Calendar, which fails.
 
@@ -184,10 +184,10 @@ public class CalendarResourceIntTest {
 
     @Test
     @Transactional
-    public void checkTimeIntervalIsRequired() throws Exception {
+    public void checkEndIsRequired() throws Exception {
         int databaseSizeBeforeTest = calendarRepository.findAll().size();
         // set the field null
-        calendar.setTimeInterval(null);
+        calendar.setEnd(null);
 
         // Create the Calendar, which fails.
 
@@ -229,11 +229,11 @@ public class CalendarResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(calendar.getId().intValue())))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
-            .andExpect(jsonPath("$.[*].timeInterval").value(hasItem(DEFAULT_TIME_INTERVAL.toString())))
+            .andExpect(jsonPath("$.[*].start").value(hasItem(DEFAULT_START.toString())))
+            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.toString())))
             .andExpect(jsonPath("$.[*].timeType").value(hasItem(DEFAULT_TIME_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].startTime").value(hasItem(DEFAULT_START_TIME.toString())))
-            .andExpect(jsonPath("$.[*].endTime").value(hasItem(DEFAULT_END_TIME.toString())));
+            .andExpect(jsonPath("$.[*].timeInterval").value(hasItem(DEFAULT_TIME_INTERVAL.toString())))
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
     }
     
     @Test
@@ -247,116 +247,89 @@ public class CalendarResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(calendar.getId().intValue()))
-            .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()))
-            .andExpect(jsonPath("$.timeInterval").value(DEFAULT_TIME_INTERVAL.toString()))
+            .andExpect(jsonPath("$.start").value(DEFAULT_START.toString()))
+            .andExpect(jsonPath("$.end").value(DEFAULT_END.toString()))
             .andExpect(jsonPath("$.timeType").value(DEFAULT_TIME_TYPE.toString()))
-            .andExpect(jsonPath("$.startTime").value(DEFAULT_START_TIME.toString()))
-            .andExpect(jsonPath("$.endTime").value(DEFAULT_END_TIME.toString()));
+            .andExpect(jsonPath("$.timeInterval").value(DEFAULT_TIME_INTERVAL.toString()))
+            .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()));
     }
 
     @Test
     @Transactional
-    public void getAllCalendarsByDateIsEqualToSomething() throws Exception {
+    public void getAllCalendarsByStartIsEqualToSomething() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where date equals to DEFAULT_DATE
-        defaultCalendarShouldBeFound("date.equals=" + DEFAULT_DATE);
+        // Get all the calendarList where start equals to DEFAULT_START
+        defaultCalendarShouldBeFound("start.equals=" + DEFAULT_START);
 
-        // Get all the calendarList where date equals to UPDATED_DATE
-        defaultCalendarShouldNotBeFound("date.equals=" + UPDATED_DATE);
+        // Get all the calendarList where start equals to UPDATED_START
+        defaultCalendarShouldNotBeFound("start.equals=" + UPDATED_START);
     }
 
     @Test
     @Transactional
-    public void getAllCalendarsByDateIsInShouldWork() throws Exception {
+    public void getAllCalendarsByStartIsInShouldWork() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where date in DEFAULT_DATE or UPDATED_DATE
-        defaultCalendarShouldBeFound("date.in=" + DEFAULT_DATE + "," + UPDATED_DATE);
+        // Get all the calendarList where start in DEFAULT_START or UPDATED_START
+        defaultCalendarShouldBeFound("start.in=" + DEFAULT_START + "," + UPDATED_START);
 
-        // Get all the calendarList where date equals to UPDATED_DATE
-        defaultCalendarShouldNotBeFound("date.in=" + UPDATED_DATE);
+        // Get all the calendarList where start equals to UPDATED_START
+        defaultCalendarShouldNotBeFound("start.in=" + UPDATED_START);
     }
 
     @Test
     @Transactional
-    public void getAllCalendarsByDateIsNullOrNotNull() throws Exception {
+    public void getAllCalendarsByStartIsNullOrNotNull() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where date is not null
-        defaultCalendarShouldBeFound("date.specified=true");
+        // Get all the calendarList where start is not null
+        defaultCalendarShouldBeFound("start.specified=true");
 
-        // Get all the calendarList where date is null
-        defaultCalendarShouldNotBeFound("date.specified=false");
+        // Get all the calendarList where start is null
+        defaultCalendarShouldNotBeFound("start.specified=false");
     }
 
     @Test
     @Transactional
-    public void getAllCalendarsByDateIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllCalendarsByEndIsEqualToSomething() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where date greater than or equals to DEFAULT_DATE
-        defaultCalendarShouldBeFound("date.greaterOrEqualThan=" + DEFAULT_DATE);
+        // Get all the calendarList where end equals to DEFAULT_END
+        defaultCalendarShouldBeFound("end.equals=" + DEFAULT_END);
 
-        // Get all the calendarList where date greater than or equals to UPDATED_DATE
-        defaultCalendarShouldNotBeFound("date.greaterOrEqualThan=" + UPDATED_DATE);
+        // Get all the calendarList where end equals to UPDATED_END
+        defaultCalendarShouldNotBeFound("end.equals=" + UPDATED_END);
     }
 
     @Test
     @Transactional
-    public void getAllCalendarsByDateIsLessThanSomething() throws Exception {
+    public void getAllCalendarsByEndIsInShouldWork() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where date less than or equals to DEFAULT_DATE
-        defaultCalendarShouldNotBeFound("date.lessThan=" + DEFAULT_DATE);
+        // Get all the calendarList where end in DEFAULT_END or UPDATED_END
+        defaultCalendarShouldBeFound("end.in=" + DEFAULT_END + "," + UPDATED_END);
 
-        // Get all the calendarList where date less than or equals to UPDATED_DATE
-        defaultCalendarShouldBeFound("date.lessThan=" + UPDATED_DATE);
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllCalendarsByTimeIntervalIsEqualToSomething() throws Exception {
-        // Initialize the database
-        calendarRepository.saveAndFlush(calendar);
-
-        // Get all the calendarList where timeInterval equals to DEFAULT_TIME_INTERVAL
-        defaultCalendarShouldBeFound("timeInterval.equals=" + DEFAULT_TIME_INTERVAL);
-
-        // Get all the calendarList where timeInterval equals to UPDATED_TIME_INTERVAL
-        defaultCalendarShouldNotBeFound("timeInterval.equals=" + UPDATED_TIME_INTERVAL);
+        // Get all the calendarList where end equals to UPDATED_END
+        defaultCalendarShouldNotBeFound("end.in=" + UPDATED_END);
     }
 
     @Test
     @Transactional
-    public void getAllCalendarsByTimeIntervalIsInShouldWork() throws Exception {
+    public void getAllCalendarsByEndIsNullOrNotNull() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where timeInterval in DEFAULT_TIME_INTERVAL or UPDATED_TIME_INTERVAL
-        defaultCalendarShouldBeFound("timeInterval.in=" + DEFAULT_TIME_INTERVAL + "," + UPDATED_TIME_INTERVAL);
+        // Get all the calendarList where end is not null
+        defaultCalendarShouldBeFound("end.specified=true");
 
-        // Get all the calendarList where timeInterval equals to UPDATED_TIME_INTERVAL
-        defaultCalendarShouldNotBeFound("timeInterval.in=" + UPDATED_TIME_INTERVAL);
-    }
-
-    @Test
-    @Transactional
-    public void getAllCalendarsByTimeIntervalIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        calendarRepository.saveAndFlush(calendar);
-
-        // Get all the calendarList where timeInterval is not null
-        defaultCalendarShouldBeFound("timeInterval.specified=true");
-
-        // Get all the calendarList where timeInterval is null
-        defaultCalendarShouldNotBeFound("timeInterval.specified=false");
+        // Get all the calendarList where end is null
+        defaultCalendarShouldNotBeFound("end.specified=false");
     }
 
     @Test
@@ -400,80 +373,80 @@ public class CalendarResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllCalendarsByStartTimeIsEqualToSomething() throws Exception {
+    public void getAllCalendarsByTimeIntervalIsEqualToSomething() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where startTime equals to DEFAULT_START_TIME
-        defaultCalendarShouldBeFound("startTime.equals=" + DEFAULT_START_TIME);
+        // Get all the calendarList where timeInterval equals to DEFAULT_TIME_INTERVAL
+        defaultCalendarShouldBeFound("timeInterval.equals=" + DEFAULT_TIME_INTERVAL);
 
-        // Get all the calendarList where startTime equals to UPDATED_START_TIME
-        defaultCalendarShouldNotBeFound("startTime.equals=" + UPDATED_START_TIME);
+        // Get all the calendarList where timeInterval equals to UPDATED_TIME_INTERVAL
+        defaultCalendarShouldNotBeFound("timeInterval.equals=" + UPDATED_TIME_INTERVAL);
     }
 
     @Test
     @Transactional
-    public void getAllCalendarsByStartTimeIsInShouldWork() throws Exception {
+    public void getAllCalendarsByTimeIntervalIsInShouldWork() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where startTime in DEFAULT_START_TIME or UPDATED_START_TIME
-        defaultCalendarShouldBeFound("startTime.in=" + DEFAULT_START_TIME + "," + UPDATED_START_TIME);
+        // Get all the calendarList where timeInterval in DEFAULT_TIME_INTERVAL or UPDATED_TIME_INTERVAL
+        defaultCalendarShouldBeFound("timeInterval.in=" + DEFAULT_TIME_INTERVAL + "," + UPDATED_TIME_INTERVAL);
 
-        // Get all the calendarList where startTime equals to UPDATED_START_TIME
-        defaultCalendarShouldNotBeFound("startTime.in=" + UPDATED_START_TIME);
+        // Get all the calendarList where timeInterval equals to UPDATED_TIME_INTERVAL
+        defaultCalendarShouldNotBeFound("timeInterval.in=" + UPDATED_TIME_INTERVAL);
     }
 
     @Test
     @Transactional
-    public void getAllCalendarsByStartTimeIsNullOrNotNull() throws Exception {
+    public void getAllCalendarsByTimeIntervalIsNullOrNotNull() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where startTime is not null
-        defaultCalendarShouldBeFound("startTime.specified=true");
+        // Get all the calendarList where timeInterval is not null
+        defaultCalendarShouldBeFound("timeInterval.specified=true");
 
-        // Get all the calendarList where startTime is null
-        defaultCalendarShouldNotBeFound("startTime.specified=false");
+        // Get all the calendarList where timeInterval is null
+        defaultCalendarShouldNotBeFound("timeInterval.specified=false");
     }
 
     @Test
     @Transactional
-    public void getAllCalendarsByEndTimeIsEqualToSomething() throws Exception {
+    public void getAllCalendarsByNoteIsEqualToSomething() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where endTime equals to DEFAULT_END_TIME
-        defaultCalendarShouldBeFound("endTime.equals=" + DEFAULT_END_TIME);
+        // Get all the calendarList where note equals to DEFAULT_NOTE
+        defaultCalendarShouldBeFound("note.equals=" + DEFAULT_NOTE);
 
-        // Get all the calendarList where endTime equals to UPDATED_END_TIME
-        defaultCalendarShouldNotBeFound("endTime.equals=" + UPDATED_END_TIME);
+        // Get all the calendarList where note equals to UPDATED_NOTE
+        defaultCalendarShouldNotBeFound("note.equals=" + UPDATED_NOTE);
     }
 
     @Test
     @Transactional
-    public void getAllCalendarsByEndTimeIsInShouldWork() throws Exception {
+    public void getAllCalendarsByNoteIsInShouldWork() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where endTime in DEFAULT_END_TIME or UPDATED_END_TIME
-        defaultCalendarShouldBeFound("endTime.in=" + DEFAULT_END_TIME + "," + UPDATED_END_TIME);
+        // Get all the calendarList where note in DEFAULT_NOTE or UPDATED_NOTE
+        defaultCalendarShouldBeFound("note.in=" + DEFAULT_NOTE + "," + UPDATED_NOTE);
 
-        // Get all the calendarList where endTime equals to UPDATED_END_TIME
-        defaultCalendarShouldNotBeFound("endTime.in=" + UPDATED_END_TIME);
+        // Get all the calendarList where note equals to UPDATED_NOTE
+        defaultCalendarShouldNotBeFound("note.in=" + UPDATED_NOTE);
     }
 
     @Test
     @Transactional
-    public void getAllCalendarsByEndTimeIsNullOrNotNull() throws Exception {
+    public void getAllCalendarsByNoteIsNullOrNotNull() throws Exception {
         // Initialize the database
         calendarRepository.saveAndFlush(calendar);
 
-        // Get all the calendarList where endTime is not null
-        defaultCalendarShouldBeFound("endTime.specified=true");
+        // Get all the calendarList where note is not null
+        defaultCalendarShouldBeFound("note.specified=true");
 
-        // Get all the calendarList where endTime is null
-        defaultCalendarShouldNotBeFound("endTime.specified=false");
+        // Get all the calendarList where note is null
+        defaultCalendarShouldNotBeFound("note.specified=false");
     }
     /**
      * Executes the search, and checks that the default entity is returned
@@ -483,11 +456,11 @@ public class CalendarResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(calendar.getId().intValue())))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
-            .andExpect(jsonPath("$.[*].timeInterval").value(hasItem(DEFAULT_TIME_INTERVAL.toString())))
+            .andExpect(jsonPath("$.[*].start").value(hasItem(DEFAULT_START.toString())))
+            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.toString())))
             .andExpect(jsonPath("$.[*].timeType").value(hasItem(DEFAULT_TIME_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].startTime").value(hasItem(DEFAULT_START_TIME.toString())))
-            .andExpect(jsonPath("$.[*].endTime").value(hasItem(DEFAULT_END_TIME.toString())));
+            .andExpect(jsonPath("$.[*].timeInterval").value(hasItem(DEFAULT_TIME_INTERVAL.toString())))
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
 
         // Check, that the count call also returns 1
         restCalendarMockMvc.perform(get("/api/calendars/count?sort=id,desc&" + filter))
@@ -535,11 +508,11 @@ public class CalendarResourceIntTest {
         // Disconnect from session so that the updates on updatedCalendar are not directly saved in db
         em.detach(updatedCalendar);
         updatedCalendar
-            .date(UPDATED_DATE)
-            .timeInterval(UPDATED_TIME_INTERVAL)
+            .start(UPDATED_START)
+            .end(UPDATED_END)
             .timeType(UPDATED_TIME_TYPE)
-            .startTime(UPDATED_START_TIME)
-            .endTime(UPDATED_END_TIME);
+            .timeInterval(UPDATED_TIME_INTERVAL)
+            .note(UPDATED_NOTE);
 
         restCalendarMockMvc.perform(put("/api/calendars")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -550,11 +523,11 @@ public class CalendarResourceIntTest {
         List<Calendar> calendarList = calendarRepository.findAll();
         assertThat(calendarList).hasSize(databaseSizeBeforeUpdate);
         Calendar testCalendar = calendarList.get(calendarList.size() - 1);
-        assertThat(testCalendar.getDate()).isEqualTo(UPDATED_DATE);
-        assertThat(testCalendar.getTimeInterval()).isEqualTo(UPDATED_TIME_INTERVAL);
+        assertThat(testCalendar.getStart()).isEqualTo(UPDATED_START);
+        assertThat(testCalendar.getEnd()).isEqualTo(UPDATED_END);
         assertThat(testCalendar.getTimeType()).isEqualTo(UPDATED_TIME_TYPE);
-        assertThat(testCalendar.getStartTime()).isEqualTo(UPDATED_START_TIME);
-        assertThat(testCalendar.getEndTime()).isEqualTo(UPDATED_END_TIME);
+        assertThat(testCalendar.getTimeInterval()).isEqualTo(UPDATED_TIME_INTERVAL);
+        assertThat(testCalendar.getNote()).isEqualTo(UPDATED_NOTE);
     }
 
     @Test
@@ -606,25 +579,5 @@ public class CalendarResourceIntTest {
         assertThat(calendar1).isNotEqualTo(calendar2);
         calendar1.setId(null);
         assertThat(calendar1).isNotEqualTo(calendar2);
-    }
-
-    @Test
-    @Transactional
-    public void getCalendarSpecialTimeTypes() throws Exception {
-        calendar.date(LocalDate.now());
-
-        // Initialize the database
-        calendarRepository.saveAndFlush(calendar);
-
-        // Get all -3 ~ 3 days calendarList
-        restCalendarMockMvc.perform(get("/api/calendars?date.lessOrEqualThan={plus3Days}&date.greaterOrEqualThan={minus3Days}", LocalDate.now().plusDays(3), LocalDate.now().minusDays(3)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(calendar.getId().intValue())))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(LocalDate.now().toString())))
-            .andExpect(jsonPath("$.[*].timeInterval").value(hasItem(DEFAULT_TIME_INTERVAL.toString())))
-            .andExpect(jsonPath("$.[*].timeType").value(hasItem(DEFAULT_TIME_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].startTime").value(hasItem(DEFAULT_START_TIME.toString())))
-            .andExpect(jsonPath("$.[*].endTime").value(hasItem(DEFAULT_END_TIME.toString())));
     }
 }

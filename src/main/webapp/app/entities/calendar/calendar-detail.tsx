@@ -29,19 +29,21 @@ export class CalendarDetail extends React.Component<ICalendarDetailProps> {
           </h2>
           <dl className="jh-entity-details">
             <dt>
-              <span id="date">
-                <Translate contentKey="totoroApp.calendar.date">Date</Translate>
+              <span id="start">
+                <Translate contentKey="totoroApp.calendar.start">Start</Translate>
               </span>
             </dt>
             <dd>
-              <TextFormat value={calendarEntity.date} type="date" format={APP_LOCAL_DATE_FORMAT} />
+              <TextFormat value={calendarEntity.start} type="date" format={APP_DATE_FORMAT} />
             </dd>
             <dt>
-              <span id="timeInterval">
-                <Translate contentKey="totoroApp.calendar.timeInterval">Time Interval</Translate>
+              <span id="end">
+                <Translate contentKey="totoroApp.calendar.end">End</Translate>
               </span>
             </dt>
-            <dd>{calendarEntity.timeInterval}</dd>
+            <dd>
+              <TextFormat value={calendarEntity.end} type="date" format={APP_DATE_FORMAT} />
+            </dd>
             <dt>
               <span id="timeType">
                 <Translate contentKey="totoroApp.calendar.timeType">Time Type</Translate>
@@ -49,17 +51,17 @@ export class CalendarDetail extends React.Component<ICalendarDetailProps> {
             </dt>
             <dd>{calendarEntity.timeType}</dd>
             <dt>
-              <span id="startTime">
-                <Translate contentKey="totoroApp.calendar.startTime">Start Time</Translate>
+              <span id="timeInterval">
+                <Translate contentKey="totoroApp.calendar.timeInterval">Time Interval</Translate>
               </span>
             </dt>
-            <dd>{calendarEntity.startTime}</dd>
+            <dd>{calendarEntity.timeInterval}</dd>
             <dt>
-              <span id="endTime">
-                <Translate contentKey="totoroApp.calendar.endTime">End Time</Translate>
+              <span id="note">
+                <Translate contentKey="totoroApp.calendar.note">Note</Translate>
               </span>
             </dt>
-            <dd>{calendarEntity.endTime}</dd>
+            <dd>{calendarEntity.note}</dd>
           </dl>
           <Button tag={Link} to="/entity/calendar" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}
