@@ -2,16 +2,12 @@ package io.dentall.totoro.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
-import io.dentall.totoro.domain.enumeration.TimeInterval;
 import io.dentall.totoro.domain.enumeration.TimeType;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
+import io.dentall.totoro.domain.enumeration.TimeInterval;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
-import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.LocalDateFilter;
+import io.github.jhipster.service.filter.InstantFilter;
 
 /**
  * Criteria class for the Calendar entity. This class is used in CalendarResource to
@@ -23,29 +19,31 @@ import io.github.jhipster.service.filter.LocalDateFilter;
  */
 public class CalendarCriteria implements Serializable {
     /**
-     * Class for filtering TimeInterval
-     */
-    public static class TimeIntervalFilter extends Filter<TimeInterval> {
-    }
-    /**
      * Class for filtering TimeType
      */
     public static class TimeTypeFilter extends Filter<TimeType> {
+    }
+    /**
+     * Class for filtering TimeInterval
+     */
+    public static class TimeIntervalFilter extends Filter<TimeInterval> {
     }
 
     private static final long serialVersionUID = 1L;
 
     private LongFilter id;
 
-    private LocalDateFilter date;
+    private InstantFilter start;
 
-    private TimeIntervalFilter timeInterval;
+    private InstantFilter end;
 
     private TimeTypeFilter timeType;
 
-    private StringFilter startTime;
+    private TimeIntervalFilter timeInterval;
 
-    private StringFilter endTime;
+    private StringFilter note;
+
+    private LongFilter doctorId;
 
     public LongFilter getId() {
         return id;
@@ -55,20 +53,20 @@ public class CalendarCriteria implements Serializable {
         this.id = id;
     }
 
-    public LocalDateFilter getDate() {
-        return date;
+    public InstantFilter getStart() {
+        return start;
     }
 
-    public void setDate(LocalDateFilter date) {
-        this.date = date;
+    public void setStart(InstantFilter start) {
+        this.start = start;
     }
 
-    public TimeIntervalFilter getTimeInterval() {
-        return timeInterval;
+    public InstantFilter getEnd() {
+        return end;
     }
 
-    public void setTimeInterval(TimeIntervalFilter timeInterval) {
-        this.timeInterval = timeInterval;
+    public void setEnd(InstantFilter end) {
+        this.end = end;
     }
 
     public TimeTypeFilter getTimeType() {
@@ -79,22 +77,29 @@ public class CalendarCriteria implements Serializable {
         this.timeType = timeType;
     }
 
-    public StringFilter getStartTime() {
-        return startTime;
+    public TimeIntervalFilter getTimeInterval() {
+        return timeInterval;
     }
 
-    public void setStartTime(StringFilter startTime) {
-        this.startTime = startTime;
+    public void setTimeInterval(TimeIntervalFilter timeInterval) {
+        this.timeInterval = timeInterval;
     }
 
-    public StringFilter getEndTime() {
-        return endTime;
+    public StringFilter getNote() {
+        return note;
     }
 
-    public void setEndTime(StringFilter endTime) {
-        this.endTime = endTime;
+    public void setNote(StringFilter note) {
+        this.note = note;
     }
 
+    public LongFilter getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(LongFilter doctorId) {
+        this.doctorId = doctorId;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -107,34 +112,37 @@ public class CalendarCriteria implements Serializable {
         final CalendarCriteria that = (CalendarCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(date, that.date) &&
-            Objects.equals(timeInterval, that.timeInterval) &&
+            Objects.equals(start, that.start) &&
+            Objects.equals(end, that.end) &&
             Objects.equals(timeType, that.timeType) &&
-            Objects.equals(startTime, that.startTime) &&
-            Objects.equals(endTime, that.endTime);
+            Objects.equals(timeInterval, that.timeInterval) &&
+            Objects.equals(note, that.note) &&
+            Objects.equals(doctorId, that.doctorId);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-        id,
-        date,
-        timeInterval,
-        timeType,
-        startTime,
-        endTime
+            id,
+            start,
+            end,
+            timeType,
+            timeInterval,
+            note,
+            doctorId
         );
     }
 
     @Override
     public String toString() {
         return "CalendarCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (date != null ? "date=" + date + ", " : "") +
-                (timeInterval != null ? "timeInterval=" + timeInterval + ", " : "") +
-                (timeType != null ? "timeType=" + timeType + ", " : "") +
-                (startTime != null ? "startTime=" + startTime + ", " : "") +
-                (endTime != null ? "endTime=" + endTime + ", " : "") +
+            (id != null ? "id=" + id + ", " : "") +
+            (start != null ? "start=" + start + ", " : "") +
+            (end != null ? "end=" + end + ", " : "") +
+            (timeType != null ? "timeType=" + timeType + ", " : "") +
+            (timeInterval != null ? "timeInterval=" + timeInterval + ", " : "") +
+            (note != null ? "note=" + note + ", " : "") +
+            (doctorId != null ? "note=" + doctorId + ", " : "") +
             "}";
     }
 

@@ -83,20 +83,25 @@ public class CalendarQueryService extends QueryService<Calendar> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), Calendar_.id));
             }
-            if (criteria.getDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getDate(), Calendar_.date));
+            if (criteria.getStart() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getStart(), Calendar_.start));
             }
-            if (criteria.getTimeInterval() != null) {
-                specification = specification.and(buildSpecification(criteria.getTimeInterval(), Calendar_.timeInterval));
+            if (criteria.getEnd() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getEnd(), Calendar_.end));
             }
             if (criteria.getTimeType() != null) {
                 specification = specification.and(buildSpecification(criteria.getTimeType(), Calendar_.timeType));
             }
-            if (criteria.getStartTime() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getStartTime(), Calendar_.startTime));
+            if (criteria.getTimeInterval() != null) {
+                specification = specification.and(buildSpecification(criteria.getTimeInterval(), Calendar_.timeInterval));
             }
-            if (criteria.getEndTime() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getEndTime(), Calendar_.endTime));
+            if (criteria.getNote() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNote(), Calendar_.note));
+            }
+
+            if (criteria.getDoctorId() != null) {
+                specification = specification.and(buildSpecification(criteria.getDoctorId(),
+                    root -> root.join(Calendar_.doctor, JoinType.LEFT).get(ExtendUser_.id)));
             }
         }
         return specification;

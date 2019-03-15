@@ -39,19 +39,19 @@ export class Calendar extends React.Component<ICalendarProps> {
                   <Translate contentKey="global.field.id">ID</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.calendar.date">Date</Translate>
+                  <Translate contentKey="totoroApp.calendar.start">Start</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.calendar.timeInterval">Time Interval</Translate>
+                  <Translate contentKey="totoroApp.calendar.end">End</Translate>
                 </th>
                 <th>
                   <Translate contentKey="totoroApp.calendar.timeType">Time Type</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.calendar.startTime">Start Time</Translate>
+                  <Translate contentKey="totoroApp.calendar.timeInterval">Time Interval</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.calendar.endTime">End Time</Translate>
+                  <Translate contentKey="totoroApp.calendar.note">Note</Translate>
                 </th>
                 <th />
               </tr>
@@ -65,16 +65,18 @@ export class Calendar extends React.Component<ICalendarProps> {
                     </Button>
                   </td>
                   <td>
-                    <TextFormat type="date" value={calendar.date} format={APP_LOCAL_DATE_FORMAT} />
+                    <TextFormat type="date" value={calendar.start} format={APP_DATE_FORMAT} />
                   </td>
                   <td>
-                    <Translate contentKey={`totoroApp.TimeInterval.${calendar.timeInterval}`} />
+                    <TextFormat type="date" value={calendar.end} format={APP_DATE_FORMAT} />
                   </td>
                   <td>
                     <Translate contentKey={`totoroApp.TimeType.${calendar.timeType}`} />
                   </td>
-                  <td>{calendar.startTime}</td>
-                  <td>{calendar.endTime}</td>
+                  <td>
+                    <Translate contentKey={`totoroApp.TimeInterval.${calendar.timeInterval}`} />
+                  </td>
+                  <td>{calendar.note}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${calendar.id}`} color="info" size="sm">
