@@ -68,7 +68,7 @@ depolyDockerImage:
     dependencies:
         - gradle-repackage
     script:
-        - apk --update add openjdk8-jre
+        - apk update && apk add nss && apk add openjdk8-jre
         - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
         - ./gradlew jib --image=registry.gitlab.com/dentall/totoro-admin/$CI_COMMIT_REF_SLUG:latest -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
 
