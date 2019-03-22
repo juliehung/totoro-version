@@ -36,6 +36,7 @@
         "prescription": "Prescription",
         "treatmentDrug": "Treatment Drug",
         "disposal": "Disposal",
+        "registrationDel": "Registration Del",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

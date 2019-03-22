@@ -1,0 +1,26 @@
+{
+  "totoroApp": {
+    "registrationDel": {
+      "home": {
+        "title": "Registration Dels",
+        "createLabel": "建立一筆新的 Registration Del",
+        "createOrEditLabel": "建立或編輯 Registration Del"
+      },
+      "created": "新的 Registration Del 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Registration Del 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Registration Del 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Registration Del {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Registration Del"
+      },
+      "status": "Status",
+      "arrivalTime": "Arrival Time",
+      "type": "Type",
+      "onSite": "On Site",
+      "appointmentId": "Appointment Id",
+      "accountingId": "Accounting Id"
+    }
+  }
+}

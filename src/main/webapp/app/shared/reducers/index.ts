@@ -124,6 +124,10 @@ import treatmentDrug, {
 import disposal, {
   DisposalState
 } from 'app/entities/disposal/disposal.reducer';
+// prettier-ignore
+import registrationDel, {
+  RegistrationDelState
+} from 'app/entities/registration-del/registration-del.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -165,6 +169,7 @@ export interface IRootState {
   readonly prescription: PrescriptionState;
   readonly treatmentDrug: TreatmentDrugState;
   readonly disposal: DisposalState;
+  readonly registrationDel: RegistrationDelState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -208,6 +213,7 @@ const rootReducer = combineReducers<IRootState>({
   prescription,
   treatmentDrug,
   disposal,
+  registrationDel,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

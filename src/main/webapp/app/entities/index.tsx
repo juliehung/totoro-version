@@ -32,6 +32,7 @@ import Todo from './todo';
 import Prescription from './prescription';
 import TreatmentDrug from './treatment-drug';
 import Disposal from './disposal';
+import RegistrationDel from './registration-del';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -66,6 +67,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/prescription`} component={Prescription} />
       <ErrorBoundaryRoute path={`${match.url}/treatment-drug`} component={TreatmentDrug} />
       <ErrorBoundaryRoute path={`${match.url}/disposal`} component={Disposal} />
+      <ErrorBoundaryRoute path={`${match.url}/registration-del`} component={RegistrationDel} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>

@@ -1,0 +1,44 @@
+{
+    "name": "RegistrationDel",
+    "fields": [
+        {
+            "fieldName": "status",
+            "fieldType": "RegistrationStatus",
+            "fieldValues": "PENDING,FINISHED,IN_PROGRESS",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "arrivalTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "RegistrationType",
+            "fieldValues": "OWN_EXPENSE,NHI,NHI_NO_CARD"
+        },
+        {
+            "fieldName": "onSite",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "appointmentId",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "accountingId",
+            "fieldType": "Long"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190322032120",
+    "entityTableName": "registration_del",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}
