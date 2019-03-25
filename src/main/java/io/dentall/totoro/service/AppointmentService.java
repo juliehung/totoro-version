@@ -183,14 +183,8 @@ public class AppointmentService {
 
                 // registration
                 if (updateAppointment.getRegistration() != null) {
-                    // delete registration and create registration whose id is -appointmentId
-                    if (updateAppointment.getRegistration().getId() != null && updateAppointment.getRegistration().getId() == -1 && appointment.getRegistration() != null) {
-                        registrationService.setNegativeRegistrationId(appointment.getRegistration());
-                        appointment.setRegistration(null);
-                    } else {
-                        log.debug("Update Registration({}) of Appointment(id: {})", updateAppointment.getRegistration(), updateAppointment.getId());
-                        appointment.setRegistration(getRegistration(updateAppointment.patient(appointment.getPatient())));
-                    }
+                    log.debug("Update Registration({}) of Appointment(id: {})", updateAppointment.getRegistration(), updateAppointment.getId());
+                    appointment.setRegistration(getRegistration(updateAppointment.patient(appointment.getPatient())));
                 }
 
                 // treatmentProcedures
@@ -215,12 +209,7 @@ public class AppointmentService {
     private Registration getRegistration(Appointment appointment) {
         Registration registration = appointment.getRegistration();
         if (registration != null) {
-            if (registration.getId() == null) {
-                registration.setId(appointment.getId());
-                registration = registrationService.save(registration, appointment.getPatient().getName());
-            } else {
-                registration = registrationService.update(registration);
-            }
+            registration = registration.getId() == null ? registrationService.save(registration, appointment.getPatient().getName()) : registrationService.update(registration);
         }
 
         return registration;

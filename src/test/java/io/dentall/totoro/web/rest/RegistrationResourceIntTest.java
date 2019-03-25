@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.RegistrationService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -88,6 +89,12 @@ public class RegistrationResourceIntTest {
     @Autowired
     private TreatmentProcedureRepository treatmentProcedureRepository;
 
+    @Autowired
+    private RegistrationService registrationService;
+
+    @Autowired
+    private RegistrationDelRepository registrationDelRepository;
+
     private MockMvc restRegistrationMockMvc;
 
     private Registration registration;
@@ -95,7 +102,7 @@ public class RegistrationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final RegistrationResource registrationResource = new RegistrationResource(registrationRepository, treatmentProcedureRepository);
+        final RegistrationResource registrationResource = new RegistrationResource(registrationRepository, treatmentProcedureRepository, registrationService);
         this.restRegistrationMockMvc = MockMvcBuilders.standaloneSetup(registrationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -116,7 +123,6 @@ public class RegistrationResourceIntTest {
             .arrivalTime(DEFAULT_ARRIVAL_TIME)
             .type(DEFAULT_TYPE)
             .onSite(DEFAULT_ON_SITE);
-        registration.setId(1L);
 
         return registration;
     }
@@ -149,13 +155,13 @@ public class RegistrationResourceIntTest {
 
     @Test
     @Transactional
-    public void createRegistrationWithNullId() throws Exception {
+    public void createRegistrationWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = registrationRepository.findAll().size();
 
-        // Create the Registration with a null ID
-        registration.setId(null);
+        // Create the Registration with an existing ID
+        registration.setId(1L);
 
-        // An entity with a null ID cannot be created, so this API call must fail
+        // An entity with an existing ID cannot be created, so this API call must fail
         restRegistrationMockMvc.perform(post("/api/registrations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(registration)))
@@ -281,8 +287,8 @@ public class RegistrationResourceIntTest {
     @Test
     @Transactional
     public void deleteRegistration() throws Exception {
-        // Initialize the database
-        registrationRepository.saveAndFlush(registration);
+        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
+        Appointment appointment = createAppointment(patient);
 
         int databaseSizeBeforeDelete = registrationRepository.findAll().size();
 
@@ -294,6 +300,13 @@ public class RegistrationResourceIntTest {
         // Validate the database is empty
         List<Registration> registrationList = registrationRepository.findAll();
         assertThat(registrationList).hasSize(databaseSizeBeforeDelete - 1);
+
+        RegistrationDel registrationDel = registrationDelRepository.findAll().get(0);
+        assertThat(registrationDel.getStatus()).isEqualTo(DEFAULT_STATUS);
+        assertThat(registrationDel.getArrivalTime()).isEqualTo(DEFAULT_ARRIVAL_TIME);
+        assertThat(registrationDel.getType()).isEqualTo(DEFAULT_TYPE);
+        assertThat(registrationDel.isOnSite()).isEqualTo(DEFAULT_ON_SITE);
+        assertThat(registrationDel.getAppointmentId()).isEqualTo(appointment.getId());
     }
 
     @Test
@@ -367,9 +380,7 @@ public class RegistrationResourceIntTest {
         appointment.setPatient(patient);
         appointment.setDoctor(userRepository.save(UserResourceIntTest.createEntity(em)).getExtendUser());
 
-        Registration registration = RegistrationResourceIntTest.createEntity(em);
-        em.persist(registration);
-        em.flush();
+        registration = registrationRepository.save(registration);
         appointment.setRegistration(registration);
         registration.setAppointment(appointment);
 

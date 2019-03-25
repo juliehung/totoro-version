@@ -1076,30 +1076,4 @@ public class AppointmentResourceIntTest {
         // Get all the appointmentList where doctor equals to
         defaultAppointmentShouldBeFound("doctorId.equals=" + appointment.getDoctor().getId());
     }
-
-    @Test
-    @Transactional
-    public void deleteRegistration() throws Exception {
-        Registration registration = RegistrationResourceIntTest.createEntity(em);
-        em.persist(registration);
-        appointment.setRegistration(registration);
-        appointment.setPatient(patientRepository.save(PatientResourceIntTest.createEntity(em)));
-        appointmentRepository.save(appointment);
-
-        // Initialize the database
-        appointmentRepository.saveAndFlush(appointment);
-
-        // for updating
-        em.detach(registration);
-        registration.setId(-1L);
-        em.detach(appointment);
-        appointment.setRegistration(registration);
-
-        restAppointmentMockMvc.perform(put("/api/appointments")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(appointment)))
-            .andExpect(status().isOk());
-
-        assertThat(registrationRepository.findById(appointment.getId() * -1L).get()).isNotNull();
-    }
 }
