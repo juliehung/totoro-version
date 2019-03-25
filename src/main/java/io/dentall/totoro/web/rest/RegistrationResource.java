@@ -5,6 +5,7 @@ import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.RegistrationRepository;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
+import io.dentall.totoro.service.RegistrationService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -47,9 +48,16 @@ public class RegistrationResource {
 
     private final TreatmentProcedureRepository treatmentProcedureRepository;
 
-    public RegistrationResource(RegistrationRepository registrationRepository, TreatmentProcedureRepository treatmentProcedureRepository) {
+    private final RegistrationService registrationService;
+
+    public RegistrationResource(
+        RegistrationRepository registrationRepository,
+        TreatmentProcedureRepository treatmentProcedureRepository,
+        RegistrationService registrationService
+    ) {
         this.registrationRepository = registrationRepository;
         this.treatmentProcedureRepository = treatmentProcedureRepository;
+        this.registrationService = registrationService;
     }
 
     /**
@@ -63,8 +71,8 @@ public class RegistrationResource {
     @Timed
     public ResponseEntity<Registration> createRegistration(@Valid @RequestBody Registration registration) throws URISyntaxException {
         log.debug("REST request to save Registration : {}", registration);
-        if (registration.getId() == null) {
-            throw new BadRequestAlertException("A new registration has not an ID", ENTITY_NAME, "idnull");
+        if (registration.getId() != null) {
+            throw new BadRequestAlertException("A new registration cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Registration result = registrationRepository.save(registration);
         return ResponseEntity.created(new URI("/api/registrations/" + result.getId()))
@@ -142,7 +150,8 @@ public class RegistrationResource {
     public ResponseEntity<Void> deleteRegistration(@PathVariable Long id) {
         log.debug("REST request to delete Registration : {}", id);
 
-        registrationRepository.deleteById(id);
+        registrationService.delete(id);
+
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

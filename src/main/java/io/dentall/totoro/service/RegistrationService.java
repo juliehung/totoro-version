@@ -1,14 +1,13 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  * Service class for managing registrations.
@@ -25,17 +24,18 @@ public class RegistrationService {
 
     private final BroadcastService broadcastService;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final RegistrationDelRepository registrationDelRepository;
 
     public RegistrationService(
         RegistrationRepository registrationRepository,
         AccountingService accountingService,
-        BroadcastService broadcastService
+        BroadcastService broadcastService,
+        RegistrationDelRepository registrationDelRepository
     ) {
         this.registrationRepository = registrationRepository;
         this.accountingService = accountingService;
         this.broadcastService = broadcastService;
+        this.registrationDelRepository = registrationDelRepository;
     }
 
     /**
@@ -106,26 +106,39 @@ public class RegistrationService {
     }
 
     /**
-     * Set the registration id with -1 * appointment id.
+     * Delete the registration and save registrationDel
      *
-     * @param registration the -id entity
+     * @param id the id of the registration to delete
      */
-    public void setNegativeRegistrationId(Registration registration) {
-        log.debug("Request to set -id Registration: {}", registration);
+    public void delete(Long id) {
+        log.debug("Request to delete Registration({})", id);
 
-        Long deleteId = registration.getId();
-        Accounting accounting = registration.getAccounting();
+        registrationRepository
+            .findById(id)
+            .ifPresent(registration ->  {
+                if (registration.getDisposal() != null) {
+                    throw new BadRequestAlertException("A registration which has disposal cannot delete", "registration", "registration_has_disposal");
+                }
 
-        registrationRepository.save(registration.accounting(null));
-        entityManager.flush();
+                if (registration.getStatus() == RegistrationStatus.FINISHED) {
+                    throw new BadRequestAlertException("A registration which was finished cannot delete", "registration", "registration_was_finished");
+                }
 
-        entityManager.detach(registration);
-        registration.setId(registration.getAppointment().getId() * -1L);
-        registration.setAppointment(null);
-        registration.setAccounting(accounting);
-        entityManager.persist(registration);
+                Appointment appointment = registration.getAppointment();
+                appointment.setRegistration(null);
+                Accounting accounting = registration.getAccounting();
 
-        registrationRepository.findById(deleteId).ifPresent(registrationRepository::delete);
+                registrationDelRepository.save(new RegistrationDel()
+                    .status(registration.getStatus())
+                    .arrivalTime(registration.getArrivalTime())
+                    .type(registration.getType())
+                    .onSite(registration.isOnSite())
+                    .appointmentId(appointment.getId())
+                    .accountingId(accounting == null ? null : accounting.registration(null).getId())
+                );
+
+                registrationRepository.deleteById(id);
+            });
     }
 
     private Accounting getAccounting(Registration registration) {
