@@ -35,7 +35,7 @@
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/tags.csv"
+                  file="config/liquibase/tags_en.csv"
                   separator=";"
                   tableName="tag">
         </loadData>
