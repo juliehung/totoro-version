@@ -5,7 +5,8 @@ import { IRegistration } from 'app/shared/model//registration.model';
 
 export const enum DisposalStatus {
   TEMPORARY = 'TEMPORARY',
-  PERMANENT = 'PERMANENT'
+  PERMANENT = 'PERMANENT',
+  MADE_APPT = 'MADE_APPT'
 }
 
 export interface IDisposal {

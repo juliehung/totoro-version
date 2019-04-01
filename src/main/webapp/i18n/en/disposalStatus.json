@@ -3,7 +3,8 @@
     "DisposalStatus": {
       "null": "",
       "TEMPORARY": "TEMPORARY",
-      "PERMANENT": "PERMANENT"
+      "PERMANENT": "PERMANENT",
+      "MADE_APPT": "MADE_APPT"
     }
   }
 }

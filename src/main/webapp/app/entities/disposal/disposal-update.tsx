@@ -122,6 +122,9 @@ export class DisposalUpdate extends React.Component<IDisposalUpdateProps, IDispo
                     <option value="PERMANENT">
                       <Translate contentKey="totoroApp.DisposalStatus.PERMANENT" />
                     </option>
+                    <option value="MADE_APPT">
+                      <Translate contentKey="totoroApp.DisposalStatus.MADE_APPT" />
+                    </option>
                   </AvInput>
                 </AvGroup>
                 <AvGroup>

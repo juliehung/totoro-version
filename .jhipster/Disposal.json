@@ -35,7 +35,7 @@
         {
             "fieldName": "status",
             "fieldType": "DisposalStatus",
-            "fieldValues": "TEMPORARY,PERMANENT",
+            "fieldValues": "TEMPORARY,PERMANENT,MADE_APPT",
             "fieldValidateRules": [
                 "required"
             ]
