@@ -1,5 +1,6 @@
-version: '3.5'
+version: '2.4'
 services:
+
     totoro-postgresql:
         image: postgres:10.4
         # volumes:
@@ -10,3 +11,4 @@ services:
             - POSTGRES_INITDB_ARGS="--locale=en_US.utf8"
         ports:
             - 5432:5432
+        container_name: totoro-postgresql

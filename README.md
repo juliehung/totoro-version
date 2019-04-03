@@ -242,6 +242,15 @@ SPRING_PROFILES_ACTIVE=dev,embedded-postgres,en TZ=UTC ./gradlew clean bootRun
 $env:SPRING_PROFILES_ACTIVE="dev,embedded-postgres,en"; $env:TZ="UTC"; .\gradlew.bat clean bootRun
 ```
 
+## CP test server
+```
+# start
+docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml -f src/main/docker/app-cp.yml up -d
+
+# cleanup
+docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml -f src/main/docker/app-cp.yml down --rmi all
+```
+
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0

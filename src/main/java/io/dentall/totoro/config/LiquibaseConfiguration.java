@@ -43,6 +43,8 @@ public class LiquibaseConfiguration {
             liquibase.setChangeLog("classpath:config/liquibase/master_test.xml");
         } else if (Arrays.asList(env.getActiveProfiles()).contains("en")) {
             liquibase.setChangeLog("classpath:config/liquibase/master_en.xml");
+        } else if (Arrays.asList(env.getActiveProfiles()).contains("cp")) {
+            liquibase.setChangeLog("classpath:config/liquibase/master_cp.xml");
         } else {
             liquibase.setChangeLog("classpath:config/liquibase/master.xml");
         }
