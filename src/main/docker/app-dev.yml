@@ -1,23 +1,26 @@
-version: '3.5'
+version: '2.4'
 services:
+
     totoro-app:
         image: registry.gitlab.com/dentall/totoro-admin/master
         environment:
-            # - _JAVA_OPTIONS=-Xmx512m -Xms256m
+            - _JAVA_OPTIONS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
             - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
             - SPRING_DATASOURCE_URL=jdbc:postgresql://totoro-postgresql:5432/totoro
+        mem_limit: 2048m
         ports:
             - 8080:8080
         networks:
             - backend
         volumes:
             - ../resources/.h2.server.properties:/src/main/resources/.h2.server.properties
+        depends_on:
+            - totoro-postgresql
         container_name: totoro-admin
 
     totoro-postgresql:
         networks:
             - backend
-        container_name: totoro-postgresql
 
 networks:
     backend:

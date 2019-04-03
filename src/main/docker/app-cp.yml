@@ -1,0 +1,17 @@
+version: '2.4'
+services:
+
+    totoro-app:
+        environment:
+            - SPRING_PROFILES_ACTIVE=dev,cp
+
+    totoro-postgresql:
+        volumes:
+            - postgresql-data:/var/lib/postgresql/data
+            - C:\volumes\totoro\postgresql\backups:/var/backups
+        ports:
+            - 54321:5432
+
+volumes:
+    postgresql-data:
+        name: postgresql-data
