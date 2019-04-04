@@ -120,9 +120,6 @@ public class AppointmentQueryService extends QueryService<Appointment> {
             if (criteria.getMicroscope() != null) {
                 specification = specification.and(buildSpecification(criteria.getMicroscope(), Appointment_.microscope));
             }
-            if (criteria.getNewPatient() != null) {
-                specification = specification.and(buildSpecification(criteria.getNewPatient(), Appointment_.newPatient));
-            }
             if (criteria.getBaseFloor() != null) {
                 specification = specification.and(buildSpecification(criteria.getBaseFloor(), Appointment_.baseFloor));
             }

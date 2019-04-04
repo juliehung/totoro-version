@@ -149,10 +149,6 @@ public class AppointmentService {
                     appointment.setMicroscope((updateAppointment.isMicroscope()));
                 }
 
-                if (updateAppointment.isNewPatient() != null) {
-                    appointment.setNewPatient((updateAppointment.isNewPatient()));
-                }
-
                 if (updateAppointment.isBaseFloor() != null) {
                     appointment.setBaseFloor((updateAppointment.isBaseFloor()));
                 }

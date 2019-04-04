@@ -16,7 +16,6 @@ export interface IAppointment {
   expectedArrivalTime?: Moment;
   requiredTreatmentTime?: number;
   microscope?: boolean;
-  newPatient?: boolean;
   baseFloor?: boolean;
   colorId?: number;
   archived?: boolean;
@@ -28,7 +27,6 @@ export interface IAppointment {
 
 export const defaultValue: Readonly<IAppointment> = {
   microscope: false,
-  newPatient: false,
   baseFloor: false,
   archived: false,
   contacted: false

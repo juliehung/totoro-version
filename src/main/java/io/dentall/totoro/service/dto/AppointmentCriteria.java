@@ -44,8 +44,6 @@ public class AppointmentCriteria implements Serializable {
 
     private BooleanFilter microscope;
 
-    private BooleanFilter newPatient;
-
     private BooleanFilter baseFloor;
 
     private IntegerFilter colorId;
@@ -122,14 +120,6 @@ public class AppointmentCriteria implements Serializable {
 
     public void setMicroscope(BooleanFilter microscope) {
         this.microscope = microscope;
-    }
-
-    public BooleanFilter getNewPatient() {
-        return newPatient;
-    }
-
-    public void setNewPatient(BooleanFilter newPatient) {
-        this.newPatient = newPatient;
     }
 
     public BooleanFilter getBaseFloor() {
@@ -236,7 +226,6 @@ public class AppointmentCriteria implements Serializable {
             Objects.equals(expectedArrivalTime, that.expectedArrivalTime) &&
             Objects.equals(requiredTreatmentTime, that.requiredTreatmentTime) &&
             Objects.equals(microscope, that.microscope) &&
-            Objects.equals(newPatient, that.newPatient) &&
             Objects.equals(baseFloor, that.baseFloor) &&
             Objects.equals(colorId, that.colorId) &&
             Objects.equals(archived, that.archived) &&
@@ -260,7 +249,6 @@ public class AppointmentCriteria implements Serializable {
             expectedArrivalTime,
             requiredTreatmentTime,
             microscope,
-            newPatient,
             baseFloor,
             colorId,
             archived,
@@ -285,7 +273,6 @@ public class AppointmentCriteria implements Serializable {
             (expectedArrivalTime != null ? "expectedArrivalTime=" + expectedArrivalTime + ", " : "") +
             (requiredTreatmentTime != null ? "requiredTreatmentTime=" + requiredTreatmentTime + ", " : "") +
             (microscope != null ? "microscope=" + microscope + ", " : "") +
-            (newPatient != null ? "newPatient=" + newPatient + ", " : "") +
             (baseFloor != null ? "baseFloor=" + baseFloor + ", " : "") +
             (colorId != null ? "colorId=" + colorId + ", " : "") +
             (archived != null ? "archived=" + archived + ", " : "") +

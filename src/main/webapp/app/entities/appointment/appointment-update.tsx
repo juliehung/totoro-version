@@ -158,12 +158,6 @@ export class AppointmentUpdate extends React.Component<IAppointmentUpdateProps, 
                   </Label>
                 </AvGroup>
                 <AvGroup>
-                  <Label id="newPatientLabel" check>
-                    <AvInput id="appointment-newPatient" type="checkbox" className="form-control" name="newPatient" />
-                    <Translate contentKey="totoroApp.appointment.newPatient">New Patient</Translate>
-                  </Label>
-                </AvGroup>
-                <AvGroup>
                   <Label id="baseFloorLabel" check>
                     <AvInput id="appointment-baseFloor" type="checkbox" className="form-control" name="baseFloor" />
                     <Translate contentKey="totoroApp.appointment.baseFloor">Base Floor</Translate>
