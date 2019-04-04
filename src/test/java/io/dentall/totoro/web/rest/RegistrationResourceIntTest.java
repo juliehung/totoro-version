@@ -326,41 +326,6 @@ public class RegistrationResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllPatientCards() throws Exception {
-        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
-        Appointment appointment = createAppointment(patient);
-
-        restRegistrationMockMvc.perform(get("/api/registrations/patient-cards"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(patient.getName())))
-            .andExpect(jsonPath("$.[*].gender").value(hasItem(patient.getGender().getValue())))
-            .andExpect(jsonPath("$.[*].medicalId").value(hasItem(patient.getMedicalId())))
-            .andExpect(jsonPath("$.[*].birthday").value(hasItem(patient.getBirth().toString())))
-            .andExpect(jsonPath("$.[*].expectedArrivalTime").value(hasItem(appointment.getExpectedArrivalTime().toString())))
-            .andExpect(jsonPath("$.[*].arrivalTime").value(hasItem(DEFAULT_ARRIVAL_TIME.toString())))
-            .andExpect(jsonPath("$.[*].registrationType").value(hasItem(DEFAULT_TYPE.getValue())))
-            .andExpect(jsonPath("$.[*].subject").value(hasItem(appointment.getSubject())))
-            .andExpect(jsonPath("$.[*].dominantDoctor").value(hasItem(patient.getDominantDoctor().getUser().getLogin())))
-            .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(hasItem(appointment.getRequiredTreatmentTime())))
-            .andExpect(jsonPath("$.[*].newPatient").value(hasItem(appointment.isNewPatient())))
-            .andExpect(jsonPath("$.[*].registrationStatus").value(hasItem(DEFAULT_STATUS.getValue())))
-            .andExpect(jsonPath("$.[*].firstDoctor").value(hasItem(patient.getFirstDoctor().getUser().getLogin())))
-            .andExpect(jsonPath("$.[*].patientNote").value(hasItem(patient.getNote())))
-            .andExpect(jsonPath("$.[*].patientClinicNote").value(hasItem(patient.getClinicNote())))
-            .andExpect(jsonPath("$.[*].appointmentNote").value(hasItem(appointment.getNote())))
-            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(patient.getLastModifiedDate().toString())))
-            .andExpect(jsonPath("$.[*].writeIcTime").exists())
-            .andExpect(jsonPath("$.[*].lineId").value(hasItem(patient.getLineId())))
-            .andExpect(jsonPath("$.[*].fbId").value(hasItem(patient.getFbId())))
-            .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(appointment.isBaseFloor())))
-            .andExpect(jsonPath("$.[*].microscope").value(hasItem(appointment.isMicroscope())))
-            .andExpect(jsonPath("$.[*].tags.[*].name").value(hasItem(patient.getTags().iterator().next().getName())))
-            .andExpect(jsonPath("$.[*].doctor.id").value(hasItem(appointment.getDoctor().getUser().getId().intValue())));
-    }
-
-    @Test
-    @Transactional
     public void updateTreatmentProceduresList() throws Exception {
         // Initialize the database
         registrationRepository.saveAndFlush(registration);

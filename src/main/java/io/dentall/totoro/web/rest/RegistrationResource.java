@@ -9,7 +9,6 @@ import io.dentall.totoro.service.RegistrationService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.dentall.totoro.web.rest.vm.PatientCardVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +24,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.time.Instant;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -153,27 +149,6 @@ public class RegistrationResource {
         registrationService.delete(id);
 
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    /**
-     * GET  /patient-cards : get all -2 ~ 0 dates arrival patients.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of PatientCardVM in body
-     */
-    @GetMapping("/registrations/patient-cards")
-    @Timed
-    public ResponseEntity<List<PatientCardVM>> getAllPatientCards() {
-        Instant start = OffsetDateTime.now().minusDays(2).toZonedDateTime().with(LocalTime.MIN).toInstant();
-        Instant end = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MAX).toInstant();
-        log.debug("REST request to get registration patient cards between {} and {}", start, end);
-        List<Registration> registrations = registrationRepository.findByArrivalTimeBetweenOrderByArrivalTimeAsc(start, end);
-
-        List<PatientCardVM> patientCardVMS = registrations
-            .stream()
-            .map(registration -> new PatientCardVM(registration.getAppointment().getPatient(), registration.getAppointment(), registration))
-            .collect(Collectors.toList());
-
-        return new ResponseEntity<>(patientCardVMS, HttpStatus.OK);
     }
 
     /**

@@ -524,19 +524,6 @@ public class AppointmentResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllAppointmentsByNewPatientIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        appointmentRepository.saveAndFlush(appointment);
-
-        // Get all the appointmentList where newPatient is not null
-        defaultAppointmentShouldBeFound("newPatient.specified=true");
-
-        // Get all the appointmentList where newPatient is null
-        defaultAppointmentShouldNotBeFound("newPatient.specified=false");
-    }
-
-    @Test
-    @Transactional
     public void getAllAppointmentsByBaseFloorIsEqualToSomething() throws Exception {
         // Initialize the database
         appointmentRepository.saveAndFlush(appointment);
@@ -904,8 +891,10 @@ public class AppointmentResourceIntTest {
     @Test
     @Transactional
     public void deleteAppointment() throws Exception {
+        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
+
         // Initialize the database
-        appointmentService.save(appointment);
+        appointmentService.save(appointment.patient(patient));
 
         int databaseSizeBeforeDelete = appointmentRepository.findAll().size();
 
@@ -932,44 +921,6 @@ public class AppointmentResourceIntTest {
         assertThat(appointment1).isNotEqualTo(appointment2);
         appointment1.setId(null);
         assertThat(appointment1).isNotEqualTo(appointment2);
-    }
-
-    @Test
-    @Transactional
-    public void getAllPatientCards() throws Exception {
-        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
-        patient.addAppointment(appointment);
-
-        // Initialize the database
-        appointmentRepository.saveAndFlush(appointment);
-
-        Object jsonNull = null;
-        restAppointmentMockMvc.perform(get("/api/appointments/patient-cards"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(patient.getName())))
-            .andExpect(jsonPath("$.[*].gender").value(hasItem(patient.getGender().getValue())))
-            .andExpect(jsonPath("$.[*].medicalId").value(hasItem(patient.getMedicalId())))
-            .andExpect(jsonPath("$.[*].birthday").value(hasItem(patient.getBirth().toString())))
-            .andExpect(jsonPath("$.[*].expectedArrivalTime").value(hasItem(DEFAULT_EXPECTED_ARRIVAL_TIME.toString())))
-            .andExpect(jsonPath("$.[*].arrivalTime").value(hasItem(jsonNull)))
-            .andExpect(jsonPath("$.[*].registrationType").value(hasItem(jsonNull)))
-            .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT)))
-            .andExpect(jsonPath("$.[*].dominantDoctor").value(hasItem(patient.getDominantDoctor().getUser().getLogin())))
-            .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(hasItem(DEFAULT_REQUIRED_TREATMENT_TIME)))
-            .andExpect(jsonPath("$.[*].registrationStatus").value(hasItem(jsonNull)))
-            .andExpect(jsonPath("$.[*].firstDoctor").value(hasItem(patient.getFirstDoctor().getUser().getLogin())))
-            .andExpect(jsonPath("$.[*].patientNote").value(hasItem(patient.getNote())))
-            .andExpect(jsonPath("$.[*].patientClinicNote").value(hasItem(patient.getClinicNote())))
-            .andExpect(jsonPath("$.[*].appointmentNote").value(hasItem(DEFAULT_NOTE)))
-            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(patient.getLastModifiedDate().toString())))
-            .andExpect(jsonPath("$.[*].writeIcTime").exists())
-            .andExpect(jsonPath("$.[*].lineId").value(hasItem(patient.getLineId())))
-            .andExpect(jsonPath("$.[*].fbId").value(hasItem(patient.getFbId())))
-            .andExpect(jsonPath("$.[*].baseFloor").value(hasItem(DEFAULT_BASE_FLOOR)))
-            .andExpect(jsonPath("$.[*].microscope").value(hasItem(DEFAULT_MICROSCOPE)))
-            .andExpect(jsonPath("$.[*].tags.[*].name").value(hasItem(patient.getTags().iterator().next().getName())))
-            .andExpect(jsonPath("$.[*].doctor.id").value(hasItem(appointment.getDoctor().getUser().getId().intValue())));
     }
 
     @Test
