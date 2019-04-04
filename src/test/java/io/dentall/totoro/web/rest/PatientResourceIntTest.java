@@ -125,6 +125,9 @@ public class PatientResourceIntTest {
     private static final String UPLOAD_FILENAME = "chrome.png";
     private static final String UPLOAD_CONTENT_TYPE = "image/png";
 
+    private static final Boolean DEFAULT_NEW_PATIENT = false;
+    private static final Boolean UPDATED_NEW_PATIENT = true;
+
     @Autowired
     private PatientRepository patientRepository;
 
@@ -212,7 +215,8 @@ public class PatientResourceIntTest {
             .clinicNote(DEFAULT_CLINIC_NOTE)
             .writeIcTime(DEFAULT_WRITE_IC_TIME)
             .avatar(DEFAULT_AVATAR)
-            .avatarContentType(DEFAULT_AVATAR_CONTENT_TYPE);
+            .avatarContentType(DEFAULT_AVATAR_CONTENT_TYPE)
+            .newPatient(DEFAULT_NEW_PATIENT);
         return patient;
     }
 
@@ -270,6 +274,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getNote()).isEqualTo(DEFAULT_NOTE);
         assertThat(testPatient.getClinicNote()).isEqualTo(DEFAULT_CLINIC_NOTE);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(DEFAULT_WRITE_IC_TIME);
+        assertThat(testPatient.isNewPatient()).isEqualTo(DEFAULT_NEW_PATIENT);
         assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getIntroducer()).isEqualTo(null);
@@ -366,7 +371,8 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.[*].fbId").value(hasItem(DEFAULT_FB_ID.toString())))
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].clinicNote").value(hasItem(DEFAULT_CLINIC_NOTE.toString())))
-            .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem(DEFAULT_WRITE_IC_TIME.toString())));
+            .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem(DEFAULT_WRITE_IC_TIME.toString())))
+            .andExpect(jsonPath("$.[*].newPatient").value(hasItem(DEFAULT_NEW_PATIENT.booleanValue())));
     }
 
     @Test
@@ -399,7 +405,8 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.fbId").value(DEFAULT_FB_ID.toString()))
             .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
             .andExpect(jsonPath("$.clinicNote").value(DEFAULT_CLINIC_NOTE.toString()))
-            .andExpect(jsonPath("$.writeIcTime").value(DEFAULT_WRITE_IC_TIME.toString()));
+            .andExpect(jsonPath("$.writeIcTime").value(DEFAULT_WRITE_IC_TIME.toString()))
+            .andExpect(jsonPath("$.newPatient").value(DEFAULT_NEW_PATIENT.booleanValue()));
     }
 
     @Test
@@ -446,7 +453,8 @@ public class PatientResourceIntTest {
             .fbId(UPDATED_FB_ID)
             .note(UPDATED_NOTE)
             .clinicNote(UPDATED_CLINIC_NOTE)
-            .writeIcTime(UPDATED_WRITE_IC_TIME);
+            .writeIcTime(UPDATED_WRITE_IC_TIME)
+            .newPatient(UPDATED_NEW_PATIENT);
         updatedPatient.setPatientIdentity(updatePatientIdentity);
 
         restPatientMockMvc.perform(put("/api/patients")
@@ -479,6 +487,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getClinicNote()).isEqualTo(UPDATED_CLINIC_NOTE);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(UPDATED_WRITE_IC_TIME);
         assertThat(testPatient.getPatientIdentity().getCode()).isEqualTo(updatePatientIdentity.getCode());
+        assertThat(testPatient.isNewPatient()).isEqualTo(UPDATED_NEW_PATIENT);
     }
 
     @Test

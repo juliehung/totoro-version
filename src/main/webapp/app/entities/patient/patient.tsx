@@ -140,6 +140,9 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('avatar')}>
                   <Translate contentKey="totoroApp.patient.avatar">Avatar</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('newPatient')}>
+                  <Translate contentKey="totoroApp.patient.newPatient">New Patient</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -205,6 +208,7 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                       </div>
                     ) : null}
                   </td>
+                  <td>{patient.newPatient ? 'true' : 'false'}</td>
                   <td>
                     {patient.questionnaire ? <Link to={`questionnaire/${patient.questionnaire.id}`}>{patient.questionnaire.id}</Link> : ''}
                   </td>

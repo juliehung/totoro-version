@@ -174,6 +174,12 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
               ) : null}
             </dd>
             <dt>
+              <span id="newPatient">
+                <Translate contentKey="totoroApp.patient.newPatient">New Patient</Translate>
+              </span>
+            </dt>
+            <dd>{patientEntity.newPatient ? 'true' : 'false'}</dd>
+            <dt>
               <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate>
             </dt>
             <dd>{patientEntity.questionnaire ? patientEntity.questionnaire.id : ''}</dd>

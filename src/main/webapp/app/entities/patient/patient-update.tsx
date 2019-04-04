@@ -297,7 +297,14 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   <Label id="noteLabel" for="note">
                     <Translate contentKey="totoroApp.patient.note">Note</Translate>
                   </Label>
-                  <AvField id="patient-note" type="text" name="note" />
+                  <AvField
+                    id="patient-note"
+                    type="text"
+                    name="note"
+                    validate={{
+                      maxLength: { value: 25500, errorMessage: translate('entity.validation.maxlength', { max: 25500 }) }
+                    }}
+                  />
                 </AvGroup>
                 <AvGroup>
                   <Label id="clinicNoteLabel" for="clinicNote">
@@ -346,6 +353,12 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                     <input id="file_avatar" type="file" onChange={this.onBlobChange(true, 'avatar')} accept="image/*" />
                     <AvInput type="hidden" name="avatar" value={avatar} validate={{}} />
                   </AvGroup>
+                </AvGroup>
+                <AvGroup>
+                  <Label id="newPatientLabel" check>
+                    <AvInput id="patient-newPatient" type="checkbox" className="form-control" name="newPatient" />
+                    <Translate contentKey="totoroApp.patient.newPatient">New Patient</Translate>
+                  </Label>
                 </AvGroup>
                 <AvGroup>
                   <Label for="questionnaire.id">
