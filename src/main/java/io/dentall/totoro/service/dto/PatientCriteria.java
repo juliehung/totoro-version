@@ -11,7 +11,7 @@ public class PatientCriteria implements Serializable {
 
     private LongFilter questionnaireId;
 
-    private LongFilter firstDoctorId;
+    private BooleanFilter newPatient;
 
     private InstantFilter deleteDate;
 
@@ -27,12 +27,12 @@ public class PatientCriteria implements Serializable {
         this.questionnaireId = questionnaireId;
     }
 
-    public LongFilter getFirstDoctorId() {
-        return firstDoctorId;
+    public BooleanFilter getNewPatient() {
+        return newPatient;
     }
 
-    public void setFirstDoctorId(LongFilter firstDoctorId) {
-        this.firstDoctorId = firstDoctorId;
+    public void setNewPatient(BooleanFilter newPatient) {
+        this.newPatient = newPatient;
     }
 
     public InstantFilter getDeleteDate() {
@@ -69,7 +69,7 @@ public class PatientCriteria implements Serializable {
         }
         final PatientCriteria that = (PatientCriteria) o;
         return Objects.equals(questionnaireId, that.questionnaireId) &&
-            Objects.equals(firstDoctorId, that.firstDoctorId) &&
+            Objects.equals(newPatient, that.newPatient) &&
             Objects.equals(deleteDate, that.deleteDate) &&
             Objects.equals(createdDate, that.createdDate) &&
             Objects.equals(search, that.search);
@@ -79,7 +79,7 @@ public class PatientCriteria implements Serializable {
     public int hashCode() {
         return Objects.hash(
             questionnaireId,
-            firstDoctorId,
+            newPatient,
             deleteDate,
             createdDate,
             search
@@ -90,7 +90,7 @@ public class PatientCriteria implements Serializable {
     public String toString() {
         return "PatientCriteria{" +
             (questionnaireId != null ? "questionnaireId=" + questionnaireId + ", " : "") +
-            (firstDoctorId != null ? "firstDoctorId=" + firstDoctorId + ", " : "") +
+            (newPatient != null ? "firstDoctorId=" + newPatient + ", " : "") +
             (deleteDate != null ? "deleteDate=" + deleteDate + ", " : "") +
             (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
             (search != null ? "search=" + search + ", " : "") +

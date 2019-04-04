@@ -285,9 +285,8 @@ public class PatientService extends QueryService<Patient> {
                     root -> root.join(Patient_.questionnaire, JoinType.LEFT).get(Questionnaire_.id)));
             }
 
-            if (criteria.getFirstDoctorId() != null) {
-                specification = specification.and(buildSpecification(criteria.getFirstDoctorId(),
-                    root -> root.join(Patient_.firstDoctor, JoinType.LEFT).get(ExtendUser_.id)));
+            if (criteria.getNewPatient() != null) {
+                specification = specification.and(buildSpecification(criteria.getNewPatient(), Patient_.newPatient));
             }
 
             if (criteria.getDeleteDate() != null) {
