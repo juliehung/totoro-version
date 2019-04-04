@@ -3,10 +3,8 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <!--
-        Added the constraints for entity Tag.
-    -->
-    <changeSet id="20190207-addedEntityConstraintsTag" author="Jim">
+
+    <changeSet id="20190404-AddUniqueConstraint" author="Jim">
 
         <addUniqueConstraint columnNames="jhi_type, name"
                              constraintName="ux_tag_jhi_type_name"
