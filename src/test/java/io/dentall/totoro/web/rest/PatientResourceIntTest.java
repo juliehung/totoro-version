@@ -453,8 +453,7 @@ public class PatientResourceIntTest {
             .fbId(UPDATED_FB_ID)
             .note(UPDATED_NOTE)
             .clinicNote(UPDATED_CLINIC_NOTE)
-            .writeIcTime(UPDATED_WRITE_IC_TIME)
-            .newPatient(UPDATED_NEW_PATIENT);
+            .writeIcTime(UPDATED_WRITE_IC_TIME);
         updatedPatient.setPatientIdentity(updatePatientIdentity);
 
         restPatientMockMvc.perform(put("/api/patients")
@@ -487,7 +486,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getClinicNote()).isEqualTo(UPDATED_CLINIC_NOTE);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(UPDATED_WRITE_IC_TIME);
         assertThat(testPatient.getPatientIdentity().getCode()).isEqualTo(updatePatientIdentity.getCode());
-        assertThat(testPatient.isNewPatient()).isEqualTo(UPDATED_NEW_PATIENT);
     }
 
     @Test
