@@ -26,16 +26,20 @@ public class RegistrationService {
 
     private final RegistrationDelRepository registrationDelRepository;
 
+    private final PatientService patientService;
+
     public RegistrationService(
         RegistrationRepository registrationRepository,
         AccountingService accountingService,
         BroadcastService broadcastService,
-        RegistrationDelRepository registrationDelRepository
+        RegistrationDelRepository registrationDelRepository,
+        PatientService patientService
     ) {
         this.registrationRepository = registrationRepository;
         this.accountingService = accountingService;
         this.broadcastService = broadcastService;
         this.registrationDelRepository = registrationDelRepository;
+        this.patientService = patientService;
     }
 
     /**
@@ -138,6 +142,8 @@ public class RegistrationService {
                 );
 
                 registrationRepository.deleteById(id);
+
+                patientService.setNewPatient(appointment.getPatient());
             });
     }
 
