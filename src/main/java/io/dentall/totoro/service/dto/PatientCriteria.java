@@ -90,7 +90,7 @@ public class PatientCriteria implements Serializable {
     public String toString() {
         return "PatientCriteria{" +
             (questionnaireId != null ? "questionnaireId=" + questionnaireId + ", " : "") +
-            (newPatient != null ? "firstDoctorId=" + newPatient + ", " : "") +
+            (newPatient != null ? "newPatient=" + newPatient + ", " : "") +
             (deleteDate != null ? "deleteDate=" + deleteDate + ", " : "") +
             (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
             (search != null ? "search=" + search + ", " : "") +
