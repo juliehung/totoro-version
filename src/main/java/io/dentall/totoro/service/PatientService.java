@@ -88,7 +88,7 @@ public class PatientService extends QueryService<Patient> {
     public Patient save(Patient patient) {
         log.debug("Request to save Patient : {}", patient);
 
-        patient = patientRepository.save(patient);
+        patient = patientRepository.save(patient.newPatient(true));
         patient.getTreatments().add(createGeneralTreatmentAndPlanAndTaskWithPatient(patient));
 
         return patient;
