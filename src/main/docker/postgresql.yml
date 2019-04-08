@@ -3,6 +3,7 @@ services:
 
     totoro-postgresql:
         image: postgres:10.4
+        command: postgres -c shared_buffers=512MB
         # volumes:
         #     - ~/volumes/jhipster/totoro/postgresql/:/var/lib/postgresql/data/
         environment:
