@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <changeSet id="20190404-AddDefaultValue" author="Jim">
+
+        <addDefaultValue columnName="status"
+                         defaultValue="CONFIRMED"
+                         tableName="appointment"/>
+
+        <addDefaultValue columnName="created_date"
+                         defaultValueDate="${now}"
+                         tableName="appointment"/>
+
+        <addDefaultValue columnName="status"
+                         defaultValue="PENDING"
+                         tableName="registration"/>
+
+        <addDefaultValue columnName="on_site"
+                         defaultValueBoolean="true"
+                         tableName="registration"/>
+
+        <addDefaultValue columnName="created_by"
+                         defaultValue="system"
+                         tableName="registration"/>
+
+        <addDefaultValue columnName="created_date"
+                         defaultValueDate="${now}"
+                         tableName="patient"/>
+
+        <addDefaultValue columnName="created_date"
+                         defaultValueDate="${now}"
+                         tableName="treatment"/>
+
+        <addDefaultValue columnName="created_date"
+                         defaultValueDate="${now}"
+                         tableName="registration"/>
+
+        <addDefaultValue columnName="created_date"
+                         defaultValueDate="${now}"
+                         tableName="treatment_task"/>
+
+        <addDefaultValue columnName="created_date"
+                         defaultValueDate="${now}"
+                         tableName="treatment_plan"/>
+
+    </changeSet>
+</databaseChangeLog>

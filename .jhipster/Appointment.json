@@ -50,10 +50,6 @@
             "fieldType": "Boolean"
         },
         {
-            "fieldName": "newPatient",
-            "fieldType": "Boolean"
-        },
-        {
             "fieldName": "baseFloor",
             "fieldType": "Boolean"
         },

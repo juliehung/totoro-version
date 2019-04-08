@@ -10,9 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
 import java.util.*;
 
 /**
@@ -63,8 +60,11 @@ public class AppointmentService {
         appointment = appointmentRepository.save(appointment.treatmentProcedures(null));
         relationshipService.addRelationshipWithTreatmentProcedures(appointment.treatmentProcedures(treatmentProcedures));
         appointment.setPatient(patient);
+        patient.getAppointments().add(appointment);
         Registration registration = getRegistration(appointment);
         appointment.setRegistration(registration);
+
+        patientService.setNewPatient(appointment.getPatient());
 
         return appointment;
     }
@@ -104,23 +104,6 @@ public class AppointmentService {
         appointmentRepository.deleteById(id);
     }
 
-    public List<Appointment> getAppointmentsForPatientCard(Instant start, Instant end) {
-        if (start == null && end == null) {
-            // default expectedArrivalTime is today
-            start = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MIN).toInstant();
-            end = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MAX).toInstant();
-            log.debug("REST request to get appointment patient cards between {} and {}", start, end);
-            return appointmentRepository.findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end);
-        }
-
-        if (start != null && end != null) {
-            log.debug("REST request to get appointment patient cards between {} and {}", start, end);
-            return appointmentRepository.findByExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end);
-        }
-
-        return null;
-    }
-
     public Appointment update(Appointment updateAppointment) {
         return appointmentRepository
             .findById(updateAppointment.getId())
@@ -147,10 +130,6 @@ public class AppointmentService {
 
                 if (updateAppointment.isMicroscope() != null) {
                     appointment.setMicroscope((updateAppointment.isMicroscope()));
-                }
-
-                if (updateAppointment.isNewPatient() != null) {
-                    appointment.setNewPatient((updateAppointment.isNewPatient()));
                 }
 
                 if (updateAppointment.isBaseFloor() != null) {
@@ -191,6 +170,8 @@ public class AppointmentService {
                 if (updateAppointment.getTreatmentProcedures() != null) {
                     relationshipService.addRelationshipWithTreatmentProcedures(appointment.treatmentProcedures(updateAppointment.getTreatmentProcedures()));
                 }
+
+                patientService.setNewPatient(appointment.getPatient());
 
                 return appointment;
             })

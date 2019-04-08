@@ -45,6 +45,7 @@ export interface IPatient {
   writeIcTime?: Moment;
   avatarContentType?: string;
   avatar?: any;
+  newPatient?: boolean;
   questionnaire?: IQuestionnaire;
   appointments?: IAppointment[];
   introducer?: IPatient;
@@ -58,4 +59,6 @@ export interface IPatient {
   todos?: ITodo[];
 }
 
-export const defaultValue: Readonly<IPatient> = {};
+export const defaultValue: Readonly<IPatient> = {
+  newPatient: false
+};

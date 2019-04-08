@@ -91,7 +91,8 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @Column(name = "fb_id")
     private String fbId;
 
-    @Column(name = "note")
+    @Size(max = 25500)
+    @Column(name = "note", length = 25500)
     private String note;
 
     @Column(name = "clinic_note")
@@ -108,6 +109,9 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @JsonIgnore
     @Column(name = "avatar_content_type")
     private String avatarContentType;
+
+    @Column(name = "new_patient")
+    private Boolean newPatient;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
@@ -467,6 +471,19 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.avatarContentType = avatarContentType;
     }
 
+    public Boolean isNewPatient() {
+        return newPatient;
+    }
+
+    public Patient newPatient(Boolean newPatient) {
+        this.newPatient = newPatient;
+        return this;
+    }
+
+    public void setNewPatient(Boolean newPatient) {
+        this.newPatient = newPatient;
+    }
+
     public Questionnaire getQuestionnaire() {
         return questionnaire;
     }
@@ -793,6 +810,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
             ", writeIcTime='" + getWriteIcTime() + "'" +
             ", avatar='" + getAvatar() + "'" +
             ", avatarContentType='" + getAvatarContentType() + "'" +
+            ", newPatient='" + isNewPatient() + "'" +
             "}";
     }
 }

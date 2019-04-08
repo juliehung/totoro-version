@@ -67,12 +67,6 @@ export class AppointmentDetail extends React.Component<IAppointmentDetailProps> 
             </dt>
             <dd>{appointmentEntity.microscope ? 'true' : 'false'}</dd>
             <dt>
-              <span id="newPatient">
-                <Translate contentKey="totoroApp.appointment.newPatient">New Patient</Translate>
-              </span>
-            </dt>
-            <dd>{appointmentEntity.newPatient ? 'true' : 'false'}</dd>
-            <dt>
               <span id="baseFloor">
                 <Translate contentKey="totoroApp.appointment.baseFloor">Base Floor</Translate>
               </span>

@@ -107,6 +107,10 @@
             <column name="avatar_content_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+
+            <column name="new_patient" type="boolean">
+                <constraints nullable="true" />
+            </column>
             <column name="questionnaire_id" type="bigint">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_patient_questionnaire_id" />
             </column>

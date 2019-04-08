@@ -270,6 +270,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getNote()).isEqualTo(DEFAULT_NOTE);
         assertThat(testPatient.getClinicNote()).isEqualTo(DEFAULT_CLINIC_NOTE);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(DEFAULT_WRITE_IC_TIME);
+        assertThat(testPatient.isNewPatient()).isEqualTo(true);
         assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getIntroducer()).isEqualTo(null);

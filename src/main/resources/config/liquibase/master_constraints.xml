@@ -21,13 +21,10 @@
     <include file="config/liquibase/changelog/20190129062337_added_entity_constraints_Ledger.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 
-    <!-- add custom constraints -->
-    <include file="config/liquibase/changelog/20181023_added_entity_constraints_Patient.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181217_added_entity_constraints_Appointment.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181226_added_entity_constraints_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181226_added_entity_constraints_TreatmentTask.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190125_added_entity_constraints_Procedure.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190130_added_entity_constraints_Treatment.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190207_added_entity_constraints_Tag.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190223_added_entity_constraints_Calendar.xml" relativeToChangelogFile="false"/>
+    <!-- add custom foreign key constraints -->
+    <include file="config/liquibase/changelog/20190404_addForeignKeyConstraint.xml" relativeToChangelogFile="false"/>
+
+    <!-- add custom unique constraints -->
+    <include file="config/liquibase/changelog/20190404_addUniqueConstraint.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>

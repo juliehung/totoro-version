@@ -4,13 +4,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="20190130-AddColumnCalendar" author="Jim">
+    <changeSet id="20190404-AddUniqueConstraint" author="Jim">
 
-        <addColumn tableName="calendar">
-            <column name="doctor_user_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-        </addColumn>
+        <addUniqueConstraint columnNames="jhi_type, name"
+                             constraintName="ux_tag_jhi_type_name"
+                             tableName="tag"/>
 
     </changeSet>
 </databaseChangeLog>

@@ -8,25 +8,20 @@ import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.service.dto.AppointmentCriteria;
 import io.dentall.totoro.service.AppointmentQueryService;
-import io.dentall.totoro.web.rest.vm.PatientCardVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Appointment.
@@ -147,36 +142,5 @@ public class AppointmentResource {
         log.debug("REST request to delete Appointment : {}", id);
         appointmentService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    /**
-     * GET  /appointments/patient-cards : get all patient cards between start and end time interval
-     *
-     * @param start the start time
-     * @param end the end time
-     * @param doctorId the doctor id of the appointment
-     * @return the ResponseEntity with status 200 (OK) and the list of PatientCardVM in body
-     */
-    @GetMapping("/appointments/patient-cards")
-    @Timed
-    public ResponseEntity<List<PatientCardVM>> getAllPatientCards(@RequestParam(required = false) Instant start, @RequestParam(required = false) Instant end, @RequestParam(required = false) Long doctorId) {
-        List<Appointment> appointments = appointmentService.getAppointmentsForPatientCard(start, end);
-        if (appointments == null) {
-            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
-        } else {
-            List<PatientCardVM> patientCardVMS = appointments
-                .stream()
-                .filter(appointment -> {
-                    if (doctorId == null) {
-                        return true;
-                    } else {
-                        return appointment.getDoctor().getId().equals(doctorId);
-                    }
-                })
-                .map(appointment -> new PatientCardVM(appointment.getPatient(), appointment, appointment.getRegistration()))
-                .collect(Collectors.toList());
-
-            return new ResponseEntity<>(patientCardVMS, HttpStatus.OK);
-        }
     }
 }

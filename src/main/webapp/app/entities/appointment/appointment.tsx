@@ -95,9 +95,6 @@ export class Appointment extends React.Component<IAppointmentProps, IAppointment
                 <th className="hand" onClick={this.sort('microscope')}>
                   <Translate contentKey="totoroApp.appointment.microscope">Microscope</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('newPatient')}>
-                  <Translate contentKey="totoroApp.appointment.newPatient">New Patient</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
                 <th className="hand" onClick={this.sort('baseFloor')}>
                   <Translate contentKey="totoroApp.appointment.baseFloor">Base Floor</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -137,7 +134,6 @@ export class Appointment extends React.Component<IAppointmentProps, IAppointment
                   </td>
                   <td>{appointment.requiredTreatmentTime}</td>
                   <td>{appointment.microscope ? 'true' : 'false'}</td>
-                  <td>{appointment.newPatient ? 'true' : 'false'}</td>
                   <td>{appointment.baseFloor ? 'true' : 'false'}</td>
                   <td>{appointment.colorId}</td>
                   <td>{appointment.archived ? 'true' : 'false'}</td>

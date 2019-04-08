@@ -88,7 +88,7 @@ public class PatientService extends QueryService<Patient> {
     public Patient save(Patient patient) {
         log.debug("Request to save Patient : {}", patient);
 
-        patient = patientRepository.save(patient);
+        patient = patientRepository.save(patient.newPatient(true));
         patient.getTreatments().add(createGeneralTreatmentAndPlanAndTaskWithPatient(patient));
 
         return patient;
@@ -229,6 +229,16 @@ public class PatientService extends QueryService<Patient> {
             .get();
     }
 
+    void setNewPatient(Patient patient) {
+        patient.setNewPatient(
+            patient
+                .getAppointments()
+                .stream()
+                .filter(appointment -> appointment.getRegistration() != null)
+                .count() <= 1
+        );
+    }
+
     private Questionnaire updateQuestionnaire(Questionnaire questionnaire, Questionnaire updateQuestionnaire) {
         if (updateQuestionnaire.isDrug() != null) {
             questionnaire.setDrug(updateQuestionnaire.isDrug());
@@ -285,9 +295,8 @@ public class PatientService extends QueryService<Patient> {
                     root -> root.join(Patient_.questionnaire, JoinType.LEFT).get(Questionnaire_.id)));
             }
 
-            if (criteria.getFirstDoctorId() != null) {
-                specification = specification.and(buildSpecification(criteria.getFirstDoctorId(),
-                    root -> root.join(Patient_.firstDoctor, JoinType.LEFT).get(ExtendUser_.id)));
+            if (criteria.getNewPatient() != null) {
+                specification = specification.and(buildSpecification(criteria.getNewPatient(), Patient_.newPatient));
             }
 
             if (criteria.getDeleteDate() != null) {

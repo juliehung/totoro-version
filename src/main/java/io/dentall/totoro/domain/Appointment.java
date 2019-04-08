@@ -48,9 +48,6 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
     @Column(name = "microscope")
     private Boolean microscope;
 
-    @Column(name = "new_patient")
-    private Boolean newPatient;
-
     @Column(name = "base_floor")
     private Boolean baseFloor;
 
@@ -159,19 +156,6 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
 
     public void setMicroscope(Boolean microscope) {
         this.microscope = microscope;
-    }
-
-    public Boolean isNewPatient() {
-        return newPatient;
-    }
-
-    public Appointment newPatient(Boolean newPatient) {
-        this.newPatient = newPatient;
-        return this;
-    }
-
-    public void setNewPatient(Boolean newPatient) {
-        this.newPatient = newPatient;
     }
 
     public Boolean isBaseFloor() {
@@ -308,7 +292,6 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
             ", expectedArrivalTime='" + getExpectedArrivalTime() + "'" +
             ", requiredTreatmentTime=" + getRequiredTreatmentTime() +
             ", microscope='" + isMicroscope() + "'" +
-            ", newPatient='" + isNewPatient() + "'" +
             ", baseFloor='" + isBaseFloor() + "'" +
             ", colorId=" + getColorId() +
             ", archived='" + isArchived() + "'" +

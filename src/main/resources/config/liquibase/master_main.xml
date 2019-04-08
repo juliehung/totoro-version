@@ -38,29 +38,9 @@
     <include file="config/liquibase/changelog/20190322032120_added_entity_RegistrationDel.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
-    <include file="config/liquibase/changelog/20181024_addColumn_Patient.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181217_addColumn_Appointment.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181226_addColumn_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181226_addColumn_TreatmentTask.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190124_addColumn_Tooth.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190129_addColumn_Ledger.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190125_addColumn_Procedure.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190130_addColumn_Treatment.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190207_addColumn_Questionnaire.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190213_addColumn_Todo.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190215_addColumn_Registration.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190220_addColumn_Disposal.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190223_addColumn_Calendar.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190224_addColumn_TreatmentPlan.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190322_addColumn_RegistrationDel.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190404_addColumn.xml" relativeToChangelogFile="false"/>
 
-    <!-- add default value -->
-    <include file="config/liquibase/changelog/20181024_addDefaultValue_Appointment.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181024_addDefaultValue_Registration.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181101_addDefaultValue_Patient.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190211_addDefaultValue_Treatment.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190215_addDefaultValue_Registration.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190220_addDefaultValue_TreatmentTask.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190224_addDefaultValue_TreatmentPlan.xml" relativeToChangelogFile="false"/>
+    <!-- add default values -->
+    <include file="config/liquibase/changelog/20190404_addDefaultValue.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
