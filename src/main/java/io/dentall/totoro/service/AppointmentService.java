@@ -64,7 +64,7 @@ public class AppointmentService {
         Registration registration = getRegistration(appointment);
         appointment.setRegistration(registration);
 
-        patientService.setNewPatient(appointment.getPatient());
+        patientService.setNewPatient(patient);
 
         return appointment;
     }
