@@ -2,12 +2,8 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 
-import io.dentall.totoro.domain.Disposal;
-import io.dentall.totoro.domain.TreatmentProcedure;
-import io.dentall.totoro.domain.Prescription;
-import io.dentall.totoro.domain.Todo;
-import io.dentall.totoro.domain.Registration;
-import io.dentall.totoro.repository.DisposalRepository;
+import io.dentall.totoro.domain.*;
+import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 import io.dentall.totoro.service.DisposalQueryService;
@@ -77,6 +73,21 @@ public class DisposalResourceIntTest {
     @Autowired
     private Validator validator;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private RegistrationRepository registrationRepository;
+
     private MockMvc restDisposalMockMvc;
 
     private Disposal disposal;
@@ -114,6 +125,10 @@ public class DisposalResourceIntTest {
     @Test
     @Transactional
     public void createDisposal() throws Exception {
+        Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
+        Appointment appointment = createAppointment(patient);
+        disposal.setRegistration(appointment.getRegistration());
+
         int databaseSizeBeforeCreate = disposalRepository.findAll().size();
 
         // Create the Disposal
@@ -128,6 +143,7 @@ public class DisposalResourceIntTest {
         Disposal testDisposal = disposalList.get(disposalList.size() - 1);
         assertThat(testDisposal.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testDisposal.getTotal()).isEqualTo(DEFAULT_TOTAL);
+        assertThat(testDisposal.getCreatedBy()).isEqualTo(appointment.getDoctor().getUser().getLogin());
     }
 
     @Test
@@ -472,5 +488,17 @@ public class DisposalResourceIntTest {
         assertThat(disposal1).isNotEqualTo(disposal2);
         disposal1.setId(null);
         assertThat(disposal1).isNotEqualTo(disposal2);
+    }
+
+    private Appointment createAppointment(Patient patient) {
+        Appointment appointment = AppointmentResourceIntTest.createEntity(em);
+        appointment.setPatient(patient);
+        appointment.setDoctor(userRepository.save(UserResourceIntTest.createEntity(em)).getExtendUser());
+
+        Registration registration = registrationRepository.save(RegistrationResourceIntTest.createEntity(em));
+        appointment.setRegistration(registration);
+        registration.setAppointment(appointment);
+
+        return appointmentRepository.saveAndFlush(appointment);
     }
 }
