@@ -84,14 +84,15 @@ public class DisposalService {
         disposal.setTodo(todo);
         if (disposal.getRegistration() != null && disposal.getRegistration().getId() != null) {
             disposal.setRegistration(registrationService.update(disposal.getRegistration()));
-
+            
             Patient patient = disposal.getRegistration().getAppointment().getPatient();
-            userRepository.findOneByLogin(disposal.getCreatedBy()).ifPresent(user -> {
-                patient.setDominantDoctor(user.getExtendUser());
-                if (patient.getFirstDoctor() == null) {
-                    patient.setFirstDoctor(user.getExtendUser());
-                }
-            });
+            ExtendUser doctor = disposal.getRegistration().getAppointment().getDoctor();
+
+            disposal.setCreatedBy(doctor.getUser().getLogin());
+            patient.setDominantDoctor(doctor);
+            if (patient.getFirstDoctor() == null) {
+                patient.setFirstDoctor(doctor);
+            }
         }
 
         return disposal;

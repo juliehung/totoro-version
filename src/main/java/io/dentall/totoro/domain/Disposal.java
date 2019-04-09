@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
+import org.springframework.data.annotation.CreatedBy;
 
 /**
  * A Disposal.
@@ -22,6 +23,7 @@ import io.dentall.totoro.domain.enumeration.DisposalStatus;
 @Entity
 @Table(name = "disposal")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@AttributeOverride(name="createdBy", column=@Column(name="createdBy"))
 public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,6 +57,12 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     private Registration registration;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    @CreatedBy
+    @Column(name = "created_by", nullable = false, length = 50)
+    @JsonIgnore
+    private String createdBy;
+
     public Long getId() {
         return id;
     }
@@ -158,7 +166,11 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore(false)
     @JsonProperty
     public String getCreatedBy() {
-        return super.getCreatedBy();
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override
