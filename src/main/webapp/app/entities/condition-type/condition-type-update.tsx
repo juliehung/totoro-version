@@ -8,19 +8,19 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
-import { getEntity, updateEntity, createEntity, reset } from './finding-type.reducer';
-import { IFindingType } from 'app/shared/model/finding-type.model';
+import { getEntity, updateEntity, createEntity, reset } from './condition-type.reducer';
+import { IConditionType } from 'app/shared/model/condition-type.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
 
-export interface IFindingTypeUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface IConditionTypeUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export interface IFindingTypeUpdateState {
+export interface IConditionTypeUpdateState {
   isNew: boolean;
 }
 
-export class FindingTypeUpdate extends React.Component<IFindingTypeUpdateProps, IFindingTypeUpdateState> {
+export class ConditionTypeUpdate extends React.Component<IConditionTypeUpdateProps, IConditionTypeUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,9 +44,9 @@ export class FindingTypeUpdate extends React.Component<IFindingTypeUpdateProps, 
 
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
-      const { findingTypeEntity } = this.props;
+      const { conditionTypeEntity } = this.props;
       const entity = {
-        ...findingTypeEntity,
+        ...conditionTypeEntity,
         ...values
       };
 
@@ -59,19 +59,19 @@ export class FindingTypeUpdate extends React.Component<IFindingTypeUpdateProps, 
   };
 
   handleClose = () => {
-    this.props.history.push('/entity/finding-type');
+    this.props.history.push('/entity/condition-type');
   };
 
   render() {
-    const { findingTypeEntity, loading, updating } = this.props;
+    const { conditionTypeEntity, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
       <div>
         <Row className="justify-content-center">
           <Col md="8">
-            <h2 id="totoroApp.findingType.home.createOrEditLabel">
-              <Translate contentKey="totoroApp.findingType.home.createOrEditLabel">Create or edit a FindingType</Translate>
+            <h2 id="totoroApp.conditionType.home.createOrEditLabel">
+              <Translate contentKey="totoroApp.conditionType.home.createOrEditLabel">Create or edit a ConditionType</Translate>
             </h2>
           </Col>
         </Row>
@@ -80,21 +80,21 @@ export class FindingTypeUpdate extends React.Component<IFindingTypeUpdateProps, 
             {loading ? (
               <p>Loading...</p>
             ) : (
-              <AvForm model={isNew ? {} : findingTypeEntity} onSubmit={this.saveEntity}>
+              <AvForm model={isNew ? {} : conditionTypeEntity} onSubmit={this.saveEntity}>
                 {!isNew ? (
                   <AvGroup>
                     <Label for="id">
                       <Translate contentKey="global.field.id">ID</Translate>
                     </Label>
-                    <AvInput id="finding-type-id" type="text" className="form-control" name="id" required readOnly />
+                    <AvInput id="condition-type-id" type="text" className="form-control" name="id" required readOnly />
                   </AvGroup>
                 ) : null}
                 <AvGroup>
                   <Label id="majorLabel" for="major">
-                    <Translate contentKey="totoroApp.findingType.major">Major</Translate>
+                    <Translate contentKey="totoroApp.conditionType.major">Major</Translate>
                   </Label>
                   <AvField
-                    id="finding-type-major"
+                    id="condition-type-major"
                     type="text"
                     name="major"
                     validate={{
@@ -104,17 +104,17 @@ export class FindingTypeUpdate extends React.Component<IFindingTypeUpdateProps, 
                 </AvGroup>
                 <AvGroup>
                   <Label id="minorLabel" for="minor">
-                    <Translate contentKey="totoroApp.findingType.minor">Minor</Translate>
+                    <Translate contentKey="totoroApp.conditionType.minor">Minor</Translate>
                   </Label>
-                  <AvField id="finding-type-minor" type="text" name="minor" />
+                  <AvField id="condition-type-minor" type="text" name="minor" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="displayLabel" check>
-                    <AvInput id="finding-type-display" type="checkbox" className="form-control" name="display" />
-                    <Translate contentKey="totoroApp.findingType.display">Display</Translate>
+                    <AvInput id="condition-type-display" type="checkbox" className="form-control" name="display" />
+                    <Translate contentKey="totoroApp.conditionType.display">Display</Translate>
                   </Label>
                 </AvGroup>
-                <Button tag={Link} id="cancel-save" to="/entity/finding-type" replace color="info">
+                <Button tag={Link} id="cancel-save" to="/entity/condition-type" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
                   <span className="d-none d-md-inline">
@@ -137,10 +137,10 @@ export class FindingTypeUpdate extends React.Component<IFindingTypeUpdateProps, 
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
-  findingTypeEntity: storeState.findingType.entity,
-  loading: storeState.findingType.loading,
-  updating: storeState.findingType.updating,
-  updateSuccess: storeState.findingType.updateSuccess
+  conditionTypeEntity: storeState.conditionType.entity,
+  loading: storeState.conditionType.loading,
+  updating: storeState.conditionType.updating,
+  updateSuccess: storeState.conditionType.updateSuccess
 });
 
 const mapDispatchToProps = {
@@ -156,4 +156,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FindingTypeUpdate);
+)(ConditionTypeUpdate);

@@ -11,14 +11,14 @@ import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 
 /**
- * Criteria class for the FindingType entity. This class is used in FindingTypeResource to
+ * Criteria class for the ConditionType entity. This class is used in ConditionTypeResource to
  * receive all the possible filtering options from the Http GET request parameters.
  * For example the following could be a valid requests:
- * <code> /finding-types?id.greaterThan=5&amp;attr1.contains=something&amp;attr2.specified=false</code>
+ * <code> /condition-types?id.greaterThan=5&amp;attr1.contains=something&amp;attr2.specified=false</code>
  * As Spring is unable to properly convert the types, unless specific {@link Filter} class are used, we need to use
  * fix type specific filters.
  */
-public class FindingTypeCriteria implements Serializable {
+public class ConditionTypeCriteria implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -71,7 +71,7 @@ public class FindingTypeCriteria implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final FindingTypeCriteria that = (FindingTypeCriteria) o;
+        final ConditionTypeCriteria that = (ConditionTypeCriteria) o;
         return
             Objects.equals(id, that.id) &&
             Objects.equals(major, that.major) &&
@@ -91,7 +91,7 @@ public class FindingTypeCriteria implements Serializable {
 
     @Override
     public String toString() {
-        return "FindingTypeCriteria{" +
+        return "ConditionTypeCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (major != null ? "major=" + major + ", " : "") +
                 (minor != null ? "minor=" + minor + ", " : "") +

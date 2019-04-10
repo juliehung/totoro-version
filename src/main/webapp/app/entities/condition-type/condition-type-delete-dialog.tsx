@@ -5,19 +5,19 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IFindingType } from 'app/shared/model/finding-type.model';
+import { IConditionType } from 'app/shared/model/condition-type.model';
 import { IRootState } from 'app/shared/reducers';
-import { getEntity, deleteEntity } from './finding-type.reducer';
+import { getEntity, deleteEntity } from './condition-type.reducer';
 
-export interface IFindingTypeDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface IConditionTypeDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export class FindingTypeDeleteDialog extends React.Component<IFindingTypeDeleteDialogProps> {
+export class ConditionTypeDeleteDialog extends React.Component<IConditionTypeDeleteDialogProps> {
   componentDidMount() {
     this.props.getEntity(this.props.match.params.id);
   }
 
   confirmDelete = event => {
-    this.props.deleteEntity(this.props.findingTypeEntity.id);
+    this.props.deleteEntity(this.props.conditionTypeEntity.id);
     this.handleClose(event);
   };
 
@@ -27,15 +27,15 @@ export class FindingTypeDeleteDialog extends React.Component<IFindingTypeDeleteD
   };
 
   render() {
-    const { findingTypeEntity } = this.props;
+    const { conditionTypeEntity } = this.props;
     return (
       <Modal isOpen toggle={this.handleClose}>
         <ModalHeader toggle={this.handleClose}>
           <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
         </ModalHeader>
-        <ModalBody id="totoroApp.findingType.delete.question">
-          <Translate contentKey="totoroApp.findingType.delete.question" interpolate={{ id: findingTypeEntity.id }}>
-            Are you sure you want to delete this FindingType?
+        <ModalBody id="totoroApp.conditionType.delete.question">
+          <Translate contentKey="totoroApp.conditionType.delete.question" interpolate={{ id: conditionTypeEntity.id }}>
+            Are you sure you want to delete this ConditionType?
           </Translate>
         </ModalBody>
         <ModalFooter>
@@ -44,7 +44,7 @@ export class FindingTypeDeleteDialog extends React.Component<IFindingTypeDeleteD
             &nbsp;
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button id="jhi-confirm-delete-findingType" color="danger" onClick={this.confirmDelete}>
+          <Button id="jhi-confirm-delete-conditionType" color="danger" onClick={this.confirmDelete}>
             <FontAwesomeIcon icon="trash" />
             &nbsp;
             <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -55,8 +55,8 @@ export class FindingTypeDeleteDialog extends React.Component<IFindingTypeDeleteD
   }
 }
 
-const mapStateToProps = ({ findingType }: IRootState) => ({
-  findingTypeEntity: findingType.entity
+const mapStateToProps = ({ conditionType }: IRootState) => ({
+  conditionTypeEntity: conditionType.entity
 });
 
 const mapDispatchToProps = { getEntity, deleteEntity };
@@ -67,4 +67,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FindingTypeDeleteDialog);
+)(ConditionTypeDeleteDialog);

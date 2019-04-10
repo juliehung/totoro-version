@@ -26,13 +26,13 @@ import Procedure from './procedure';
 import ProcedureType from './procedure-type';
 import Treatment from './treatment';
 import TreatmentPlan from './treatment-plan';
-import FindingType from './finding-type';
 import Drug from './drug';
 import Todo from './todo';
 import Prescription from './prescription';
 import TreatmentDrug from './treatment-drug';
 import Disposal from './disposal';
 import RegistrationDel from './registration-del';
+import ConditionType from './condition-type';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -61,13 +61,13 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/procedure-type`} component={ProcedureType} />
       <ErrorBoundaryRoute path={`${match.url}/treatment`} component={Treatment} />
       <ErrorBoundaryRoute path={`${match.url}/treatment-plan`} component={TreatmentPlan} />
-      <ErrorBoundaryRoute path={`${match.url}/finding-type`} component={FindingType} />
       <ErrorBoundaryRoute path={`${match.url}/drug`} component={Drug} />
       <ErrorBoundaryRoute path={`${match.url}/todo`} component={Todo} />
       <ErrorBoundaryRoute path={`${match.url}/prescription`} component={Prescription} />
       <ErrorBoundaryRoute path={`${match.url}/treatment-drug`} component={TreatmentDrug} />
       <ErrorBoundaryRoute path={`${match.url}/disposal`} component={Disposal} />
       <ErrorBoundaryRoute path={`${match.url}/registration-del`} component={RegistrationDel} />
+      <ErrorBoundaryRoute path={`${match.url}/condition-type`} component={ConditionType} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>

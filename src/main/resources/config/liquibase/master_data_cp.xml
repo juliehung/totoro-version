@@ -65,12 +65,6 @@
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/finding_types.csv"
-                  separator=";"
-                  tableName="finding_type">
-        </loadData>
-
-        <loadData encoding="UTF-8"
                   file="config/liquibase/treatments_cp.csv"
                   separator=";"
                   tableName="treatment">
@@ -92,6 +86,12 @@
                   file="config/liquibase/treatment_plans_cp.csv"
                   separator=";"
                   tableName="treatment_plan">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/condition_types.csv"
+                  separator=";"
+                  tableName="condition_type">
         </loadData>
     </changeSet>
 

@@ -1,0 +1,54 @@
+id;major;minor;display
+1;Missing;Missing,Pano;true
+2;Impaction;Impaction,Pano;true
+3;Retained root;Retained root;true
+4;Periapical Lesion;Lesion,Endo;true
+5;Peri-endo Combined Lesion;Lesion,Endo,Peri;true
+6;Abscess;Lesion;false
+7;Sinus Tract;Lesion;false
+8;OD;OD,Pedo;true
+9;Caries;Caries,Pano,Pedo;true
+10;Crown;Pano,Fixed;true
+11;Bridge;Pano,Fixed;true
+12;Implant;Pano,Implant;true
+13;Endo;Endo,Pedo;true
+14;Vital Pulp Therapy;Endo;true
+15;Apical Surgery;Endo;true
+16;Pedo-Pulpotomy;Endo,Pedo;true
+17;Pedo-Pulp Capping;Endo,Pedo;true
+18;Root Resorption;Endo;true
+19;Separated Instrument;Endo;true
+20;Inlay;BPR;true
+21;Onlay;BPR;true
+22;Overlay;BPR;true
+23;Veneer;BPR,Cosmetic;true
+24;Post;Fixed;true
+25;Temp;Fixed;true
+26;RPD;Removable;true
+27;CD;Removable;true
+28;Splint;Removable;true
+29;Ortho-No Retainer;Ortho;true
+30;Fixed Retainer;Ortho;true
+31;Removable Retainer;Ortho;true
+32;Shedding Tooth;Pedo;true
+33;Sealant;Pedo,Preventive;true
+34;Pedoform;Pedo;true
+35;Pedo-ZrO2;Pedo;true
+36;SSC;Pedo;true
+37;Kiddy Denture;Pedo;true
+38;Space Maintainer;Pedo;true
+39;Resin Veneer;Cosmetic;true
+40;Gingival Recession;Peri;false
+41;Probing>5;Peri;true
+42;Furcation Involvement;Peri;true
+43;Mobility;Peri;false
+44;Bleeding On Probing;Peri;false
+45;Angular Bony Defect;Peri;true
+46;Avalsion;Trauma;false
+47;Tooth Fracture;Trauma;true
+48;Alveolar Fracture;Trauma;false
+49;Intrusion;Trauma;false
+50;Luxation;Trauma;false
+51;Extrusion;Trauma;false
+52;Concussion;Trauma;false
+53;Infraction;Trauma;false
