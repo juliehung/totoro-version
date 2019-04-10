@@ -6,7 +6,6 @@ import io.dentall.totoro.domain.enumeration.TagName;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
-import io.dentall.totoro.service.RelationshipService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
 import org.apache.commons.io.FileUtils;
@@ -71,9 +70,6 @@ public class PatientResourceIntTest {
 
     private static final String DEFAULT_NATIONAL_ID = "AAAAAAAAAA";
     private static final String UPDATED_NATIONAL_ID = "BBBBBBBBBB";
-
-    private static final String DEFAULT_MEDICAL_ID = DEFAULT_BIRTH.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-    private static final String UPDATED_MEDICAL_ID = UPDATED_BIRTH.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
     private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
@@ -196,7 +192,6 @@ public class PatientResourceIntTest {
             .gender(DEFAULT_GENDER)
             .birth(DEFAULT_BIRTH)
             .nationalId(DEFAULT_NATIONAL_ID)
-            .medicalId(DEFAULT_MEDICAL_ID)
             .address(DEFAULT_ADDRESS)
             .email(DEFAULT_EMAIL)
             .blood(DEFAULT_BLOOD)
@@ -255,7 +250,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getGender()).isEqualTo(DEFAULT_GENDER);
         assertThat(testPatient.getBirth()).isEqualTo(DEFAULT_BIRTH);
         assertThat(testPatient.getNationalId()).isEqualTo(DEFAULT_NATIONAL_ID);
-        assertThat(testPatient.getMedicalId()).isEqualTo(DEFAULT_MEDICAL_ID);
+        assertThat(testPatient.getMedicalId()).isEqualTo(String.format("%05d", testPatient.getId()));
         assertThat(testPatient.getAddress()).isEqualTo(DEFAULT_ADDRESS);
         assertThat(testPatient.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testPatient.getBlood()).isEqualTo(DEFAULT_BLOOD);
@@ -353,7 +348,6 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.[*].gender").value(hasItem(DEFAULT_GENDER.toString())))
             .andExpect(jsonPath("$.[*].birth").value(hasItem(DEFAULT_BIRTH.toString())))
             .andExpect(jsonPath("$.[*].nationalId").value(hasItem(DEFAULT_NATIONAL_ID.toString())))
-            .andExpect(jsonPath("$.[*].medicalId").value(hasItem(DEFAULT_MEDICAL_ID.toString())))
             .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS.toString())))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())))
             .andExpect(jsonPath("$.[*].blood").value(hasItem(DEFAULT_BLOOD.toString())))
@@ -386,7 +380,6 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.gender").value(DEFAULT_GENDER.toString()))
             .andExpect(jsonPath("$.birth").value(DEFAULT_BIRTH.toString()))
             .andExpect(jsonPath("$.nationalId").value(DEFAULT_NATIONAL_ID.toString()))
-            .andExpect(jsonPath("$.medicalId").value(DEFAULT_MEDICAL_ID.toString()))
             .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS.toString()))
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()))
             .andExpect(jsonPath("$.blood").value(DEFAULT_BLOOD.toString()))
@@ -433,7 +426,6 @@ public class PatientResourceIntTest {
             .gender(UPDATED_GENDER)
             .birth(UPDATED_BIRTH)
             .nationalId(UPDATED_NATIONAL_ID)
-            .medicalId(UPDATED_MEDICAL_ID)
             .address(UPDATED_ADDRESS)
             .email(UPDATED_EMAIL)
             .blood(UPDATED_BLOOD)
@@ -464,7 +456,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getGender()).isEqualTo(UPDATED_GENDER);
         assertThat(testPatient.getBirth()).isEqualTo(UPDATED_BIRTH);
         assertThat(testPatient.getNationalId()).isEqualTo(UPDATED_NATIONAL_ID);
-        assertThat(testPatient.getMedicalId()).isEqualTo(UPDATED_MEDICAL_ID);
         assertThat(testPatient.getAddress()).isEqualTo(UPDATED_ADDRESS);
         assertThat(testPatient.getEmail()).isEqualTo(UPDATED_EMAIL);
         assertThat(testPatient.getBlood()).isEqualTo(UPDATED_BLOOD);

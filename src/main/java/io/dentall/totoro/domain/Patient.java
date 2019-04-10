@@ -91,8 +91,8 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @Column(name = "fb_id")
     private String fbId;
 
-    @Size(max = 25500)
-    @Column(name = "note", length = 25500)
+    @Size(max = 5100)
+    @Column(name = "note", length = 5100)
     private String note;
 
     @Column(name = "clinic_note")
@@ -245,10 +245,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     }
 
     public String getMedicalId() {
-        if (medicalId == null) {
-            return birth == null ? null : birth.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        }
-
         return medicalId;
     }
 

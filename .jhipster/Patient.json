@@ -162,7 +162,7 @@
             "fieldValidateRules": [
               "maxlength"
             ],
-            "fieldValidateRulesMaxlength": 25500
+            "fieldValidateRulesMaxlength": 5100
         },
         {
             "fieldName": "clinicNote",
