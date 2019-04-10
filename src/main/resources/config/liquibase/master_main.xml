@@ -29,7 +29,7 @@
     <include file="config/liquibase/changelog/20190125074803_added_entity_ProcedureType.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190130151811_added_entity_Treatment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190131034634_added_entity_TreatmentPlan.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190203082322_added_entity_FindingType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190203082322_added_entity_ConditionType.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190214094023_added_entity_Drug.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190213075054_added_entity_Todo.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190218044228_added_entity_Prescription.xml" relativeToChangelogFile="false"/>

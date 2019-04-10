@@ -101,10 +101,6 @@ import treatmentPlan, {
   TreatmentPlanState
 } from 'app/entities/treatment-plan/treatment-plan.reducer';
 // prettier-ignore
-import findingType, {
-  FindingTypeState
-} from 'app/entities/finding-type/finding-type.reducer';
-// prettier-ignore
 import drug, {
   DrugState
 } from 'app/entities/drug/drug.reducer';
@@ -128,6 +124,10 @@ import disposal, {
 import registrationDel, {
   RegistrationDelState
 } from 'app/entities/registration-del/registration-del.reducer';
+// prettier-ignore
+import conditionType, {
+  ConditionTypeState
+} from 'app/entities/condition-type/condition-type.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -163,13 +163,13 @@ export interface IRootState {
   readonly procedureType: ProcedureTypeState;
   readonly treatment: TreatmentState;
   readonly treatmentPlan: TreatmentPlanState;
-  readonly findingType: FindingTypeState;
   readonly drug: DrugState;
   readonly todo: TodoState;
   readonly prescription: PrescriptionState;
   readonly treatmentDrug: TreatmentDrugState;
   readonly disposal: DisposalState;
   readonly registrationDel: RegistrationDelState;
+  readonly conditionType: ConditionTypeState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -207,13 +207,13 @@ const rootReducer = combineReducers<IRootState>({
   procedureType,
   treatment,
   treatmentPlan,
-  findingType,
   drug,
   todo,
   prescription,
   treatmentDrug,
   disposal,
   registrationDel,
+  conditionType,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

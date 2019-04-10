@@ -1,5 +1,5 @@
 {
-    "name": "FindingType",
+    "name": "ConditionType",
     "fields": [
         {
             "fieldName": "major",
@@ -22,7 +22,7 @@
     ],
     "relationships": [],
     "changelogDate": "20190203082322",
-    "entityTableName": "finding_type",
+    "entityTableName": "condition_type",
     "dto": "no",
     "pagination": "no",
     "service": "serviceClass",

@@ -13,9 +13,9 @@ import reducer, {
   getEntity,
   updateEntity,
   reset
-} from 'app/entities/finding-type/finding-type.reducer';
+} from 'app/entities/condition-type/condition-type.reducer';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-import { IFindingType, defaultValue } from 'app/shared/model/finding-type.model';
+import { IConditionType, defaultValue } from 'app/shared/model/condition-type.model';
 
 // tslint:disable no-invalid-template-strings
 describe('Entities reducer tests', () => {
@@ -30,7 +30,7 @@ describe('Entities reducer tests', () => {
   const initialState = {
     loading: false,
     errorMessage: null,
-    entities: [] as ReadonlyArray<IFindingType>,
+    entities: [] as ReadonlyArray<IConditionType>,
     entity: defaultValue,
     updating: false,
     updateSuccess: false
@@ -61,7 +61,7 @@ describe('Entities reducer tests', () => {
 
   describe('Requests', () => {
     it('should set state to loading', () => {
-      testMultipleTypes([REQUEST(ACTION_TYPES.FETCH_FINDINGTYPE_LIST), REQUEST(ACTION_TYPES.FETCH_FINDINGTYPE)], {}, state => {
+      testMultipleTypes([REQUEST(ACTION_TYPES.FETCH_CONDITIONTYPE_LIST), REQUEST(ACTION_TYPES.FETCH_CONDITIONTYPE)], {}, state => {
         expect(state).toMatchObject({
           errorMessage: null,
           updateSuccess: false,
@@ -72,7 +72,11 @@ describe('Entities reducer tests', () => {
 
     it('should set state to updating', () => {
       testMultipleTypes(
-        [REQUEST(ACTION_TYPES.CREATE_FINDINGTYPE), REQUEST(ACTION_TYPES.UPDATE_FINDINGTYPE), REQUEST(ACTION_TYPES.DELETE_FINDINGTYPE)],
+        [
+          REQUEST(ACTION_TYPES.CREATE_CONDITIONTYPE),
+          REQUEST(ACTION_TYPES.UPDATE_CONDITIONTYPE),
+          REQUEST(ACTION_TYPES.DELETE_CONDITIONTYPE)
+        ],
         {},
         state => {
           expect(state).toMatchObject({
@@ -102,11 +106,11 @@ describe('Entities reducer tests', () => {
     it('should set a message in errorMessage', () => {
       testMultipleTypes(
         [
-          FAILURE(ACTION_TYPES.FETCH_FINDINGTYPE_LIST),
-          FAILURE(ACTION_TYPES.FETCH_FINDINGTYPE),
-          FAILURE(ACTION_TYPES.CREATE_FINDINGTYPE),
-          FAILURE(ACTION_TYPES.UPDATE_FINDINGTYPE),
-          FAILURE(ACTION_TYPES.DELETE_FINDINGTYPE)
+          FAILURE(ACTION_TYPES.FETCH_CONDITIONTYPE_LIST),
+          FAILURE(ACTION_TYPES.FETCH_CONDITIONTYPE),
+          FAILURE(ACTION_TYPES.CREATE_CONDITIONTYPE),
+          FAILURE(ACTION_TYPES.UPDATE_CONDITIONTYPE),
+          FAILURE(ACTION_TYPES.DELETE_CONDITIONTYPE)
         ],
         'error message',
         state => {
@@ -125,7 +129,7 @@ describe('Entities reducer tests', () => {
       const payload = { data: [{ 1: 'fake1' }, { 2: 'fake2' }] };
       expect(
         reducer(undefined, {
-          type: SUCCESS(ACTION_TYPES.FETCH_FINDINGTYPE_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_CONDITIONTYPE_LIST),
           payload
         })
       ).toEqual({
@@ -139,7 +143,7 @@ describe('Entities reducer tests', () => {
       const payload = { data: { 1: 'fake1' } };
       expect(
         reducer(undefined, {
-          type: SUCCESS(ACTION_TYPES.FETCH_FINDINGTYPE),
+          type: SUCCESS(ACTION_TYPES.FETCH_CONDITIONTYPE),
           payload
         })
       ).toEqual({
@@ -153,7 +157,7 @@ describe('Entities reducer tests', () => {
       const payload = { data: 'fake payload' };
       expect(
         reducer(undefined, {
-          type: SUCCESS(ACTION_TYPES.CREATE_FINDINGTYPE),
+          type: SUCCESS(ACTION_TYPES.CREATE_CONDITIONTYPE),
           payload
         })
       ).toEqual({
@@ -167,7 +171,7 @@ describe('Entities reducer tests', () => {
     it('should delete entity', () => {
       const payload = 'fake payload';
       const toTest = reducer(undefined, {
-        type: SUCCESS(ACTION_TYPES.DELETE_FINDINGTYPE),
+        type: SUCCESS(ACTION_TYPES.DELETE_CONDITIONTYPE),
         payload
       });
       expect(toTest).toMatchObject({
@@ -190,86 +194,86 @@ describe('Entities reducer tests', () => {
       axios.delete = sinon.stub().returns(Promise.resolve(resolvedObject));
     });
 
-    it('dispatches ACTION_TYPES.FETCH_FINDINGTYPE_LIST actions', async () => {
+    it('dispatches ACTION_TYPES.FETCH_CONDITIONTYPE_LIST actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.FETCH_FINDINGTYPE_LIST)
+          type: REQUEST(ACTION_TYPES.FETCH_CONDITIONTYPE_LIST)
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_FINDINGTYPE_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_CONDITIONTYPE_LIST),
           payload: resolvedObject
         }
       ];
       await store.dispatch(getEntities()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.FETCH_FINDINGTYPE actions', async () => {
+    it('dispatches ACTION_TYPES.FETCH_CONDITIONTYPE actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.FETCH_FINDINGTYPE)
+          type: REQUEST(ACTION_TYPES.FETCH_CONDITIONTYPE)
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_FINDINGTYPE),
+          type: SUCCESS(ACTION_TYPES.FETCH_CONDITIONTYPE),
           payload: resolvedObject
         }
       ];
       await store.dispatch(getEntity(42666)).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.CREATE_FINDINGTYPE actions', async () => {
+    it('dispatches ACTION_TYPES.CREATE_CONDITIONTYPE actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.CREATE_FINDINGTYPE)
+          type: REQUEST(ACTION_TYPES.CREATE_CONDITIONTYPE)
         },
         {
-          type: SUCCESS(ACTION_TYPES.CREATE_FINDINGTYPE),
+          type: SUCCESS(ACTION_TYPES.CREATE_CONDITIONTYPE),
           payload: resolvedObject
         },
         {
-          type: REQUEST(ACTION_TYPES.FETCH_FINDINGTYPE_LIST)
+          type: REQUEST(ACTION_TYPES.FETCH_CONDITIONTYPE_LIST)
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_FINDINGTYPE_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_CONDITIONTYPE_LIST),
           payload: resolvedObject
         }
       ];
       await store.dispatch(createEntity({ id: 1 })).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.UPDATE_FINDINGTYPE actions', async () => {
+    it('dispatches ACTION_TYPES.UPDATE_CONDITIONTYPE actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.UPDATE_FINDINGTYPE)
+          type: REQUEST(ACTION_TYPES.UPDATE_CONDITIONTYPE)
         },
         {
-          type: SUCCESS(ACTION_TYPES.UPDATE_FINDINGTYPE),
+          type: SUCCESS(ACTION_TYPES.UPDATE_CONDITIONTYPE),
           payload: resolvedObject
         },
         {
-          type: REQUEST(ACTION_TYPES.FETCH_FINDINGTYPE_LIST)
+          type: REQUEST(ACTION_TYPES.FETCH_CONDITIONTYPE_LIST)
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_FINDINGTYPE_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_CONDITIONTYPE_LIST),
           payload: resolvedObject
         }
       ];
       await store.dispatch(updateEntity({ id: 1 })).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.DELETE_FINDINGTYPE actions', async () => {
+    it('dispatches ACTION_TYPES.DELETE_CONDITIONTYPE actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.DELETE_FINDINGTYPE)
+          type: REQUEST(ACTION_TYPES.DELETE_CONDITIONTYPE)
         },
         {
-          type: SUCCESS(ACTION_TYPES.DELETE_FINDINGTYPE),
+          type: SUCCESS(ACTION_TYPES.DELETE_CONDITIONTYPE),
           payload: resolvedObject
         },
         {
-          type: REQUEST(ACTION_TYPES.FETCH_FINDINGTYPE_LIST)
+          type: REQUEST(ACTION_TYPES.FETCH_CONDITIONTYPE_LIST)
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_FINDINGTYPE_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_CONDITIONTYPE_LIST),
           payload: resolvedObject
         }
       ];

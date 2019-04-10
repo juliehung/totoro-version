@@ -10,12 +10,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A FindingType.
+ * A ConditionType.
  */
 @Entity
-@Table(name = "finding_type")
+@Table(name = "condition_type")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class FindingType implements Serializable {
+public class ConditionType implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -48,7 +48,7 @@ public class FindingType implements Serializable {
         return major;
     }
 
-    public FindingType major(String major) {
+    public ConditionType major(String major) {
         this.major = major;
         return this;
     }
@@ -61,7 +61,7 @@ public class FindingType implements Serializable {
         return minor;
     }
 
-    public FindingType minor(String minor) {
+    public ConditionType minor(String minor) {
         this.minor = minor;
         return this;
     }
@@ -74,7 +74,7 @@ public class FindingType implements Serializable {
         return display;
     }
 
-    public FindingType display(Boolean display) {
+    public ConditionType display(Boolean display) {
         this.display = display;
         return this;
     }
@@ -92,11 +92,11 @@ public class FindingType implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        FindingType findingType = (FindingType) o;
-        if (findingType.getId() == null || getId() == null) {
+        ConditionType conditionType = (ConditionType) o;
+        if (conditionType.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), findingType.getId());
+        return Objects.equals(getId(), conditionType.getId());
     }
 
     @Override
@@ -106,7 +106,7 @@ public class FindingType implements Serializable {
 
     @Override
     public String toString() {
-        return "FindingType{" +
+        return "ConditionType{" +
             "id=" + getId() +
             ", major='" + getMajor() + "'" +
             ", minor='" + getMinor() + "'" +
