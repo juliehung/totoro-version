@@ -89,6 +89,7 @@ public class PatientService extends QueryService<Patient> {
         log.debug("Request to save Patient : {}", patient);
 
         patient = patientRepository.save(patient.newPatient(true));
+        patient.setMedicalId(String.format("%05d", patient.getId()));
         patient.getTreatments().add(createGeneralTreatmentAndPlanAndTaskWithPatient(patient));
 
         return patient;
@@ -138,10 +139,6 @@ public class PatientService extends QueryService<Patient> {
 
                 if (updatePatient.getNationalId() != null) {
                     patient.setNationalId(updatePatient.getNationalId());
-                }
-
-                if (updatePatient.getMedicalId() != null) {
-                    patient.setMedicalId(updatePatient.getMedicalId());
                 }
 
                 if (updatePatient.getAddress() != null) {

@@ -302,7 +302,7 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                     type="text"
                     name="note"
                     validate={{
-                      maxLength: { value: 25500, errorMessage: translate('entity.validation.maxlength', { max: 25500 }) }
+                      maxLength: { value: 5100, errorMessage: translate('entity.validation.maxlength', { max: 5100 }) }
                     }}
                   />
                 </AvGroup>
