@@ -5,6 +5,7 @@ import java.util.Objects;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
+import io.github.jhipster.service.filter.InstantFilter;
 import io.github.jhipster.service.filter.LongFilter;
 
 /**
@@ -39,6 +40,8 @@ public class DisposalCriteria implements Serializable {
     private LongFilter registrationId;
 
     private LongFilter patientId;
+
+    private InstantFilter createdDate;
 
     public LongFilter getId() {
         return id;
@@ -104,6 +107,14 @@ public class DisposalCriteria implements Serializable {
         this.patientId = patientId;
     }
 
+    public InstantFilter getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(InstantFilter createdDate) {
+        this.createdDate = createdDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -120,7 +131,8 @@ public class DisposalCriteria implements Serializable {
             Objects.equals(prescriptionId, that.prescriptionId) &&
             Objects.equals(todoId, that.todoId) &&
             Objects.equals(registrationId, that.registrationId) &&
-            Objects.equals(patientId, that.patientId);
+            Objects.equals(patientId, that.patientId) &&
+            Objects.equals(createdDate, that.createdDate);
     }
 
     @Override
@@ -133,7 +145,8 @@ public class DisposalCriteria implements Serializable {
             prescriptionId,
             todoId,
             registrationId,
-            patientId
+            patientId,
+            createdDate
         );
     }
 
@@ -148,6 +161,7 @@ public class DisposalCriteria implements Serializable {
             (todoId != null ? "todoId=" + todoId + ", " : "") +
             (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
             (patientId != null ? "patientId=" + patientId + ", " : "") +
+            (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
             "}";
     }
 

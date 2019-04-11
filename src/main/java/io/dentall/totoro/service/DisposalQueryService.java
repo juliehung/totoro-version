@@ -114,6 +114,10 @@ public class DisposalQueryService extends QueryService<Disposal> {
                         .join(Appointment_.patient, JoinType.LEFT).get(Patient_.id)
                 ));
             }
+
+            if (criteria.getCreatedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Disposal_.createdDate));
+            }
         }
         return specification;
     }
