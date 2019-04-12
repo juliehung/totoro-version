@@ -18,11 +18,15 @@
             ]
         },
         {
-            "fieldName": "surface",
+            "fieldName": "before",
             "fieldType": "String"
         },
         {
-            "fieldName": "status",
+            "fieldName": "planned",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "after",
             "fieldType": "String"
         }
     ],
