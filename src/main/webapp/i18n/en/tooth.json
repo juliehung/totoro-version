@@ -16,8 +16,10 @@
         "title": "Tooth"
       },
       "position": "Position",
-      "surface": "Surface",
-      "status": "Status",
+      "before": "Before",
+      "planned": "Planned",
+      "after": "After",
+      "treatmentTask": "Treatment Task",
       "treatmentProcedure": "Treatment Procedure"
     }
   }
