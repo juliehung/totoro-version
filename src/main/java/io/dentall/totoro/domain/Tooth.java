@@ -29,11 +29,14 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
     @Column(name = "position", nullable = false)
     private String position;
 
-    @Column(name = "surface")
-    private String surface;
+    @Column(name = "jhi_before")
+    private String before;
 
-    @Column(name = "status")
-    private String status;
+    @Column(name = "planned")
+    private String planned;
+
+    @Column(name = "jhi_after")
+    private String after;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "teeth", allowSetters = true)
@@ -61,30 +64,43 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
         this.position = position;
     }
 
-    public String getSurface() {
-        return surface;
+    public String getBefore() {
+        return before;
     }
 
-    public Tooth surface(String surface) {
-        this.surface = surface;
+    public Tooth before(String before) {
+        this.before = before;
         return this;
     }
 
-    public void setSurface(String surface) {
-        this.surface = surface;
+    public void setBefore(String before) {
+        this.before = before;
     }
 
-    public String getStatus() {
-        return status;
+    public String getPlanned() {
+        return planned;
     }
 
-    public Tooth status(String status) {
-        this.status = status;
+    public Tooth planned(String planned) {
+        this.planned = planned;
         return this;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setPlanned(String planned) {
+        this.planned = planned;
+    }
+
+    public String getAfter() {
+        return after;
+    }
+
+    public Tooth after(String after) {
+        this.after = after;
+        return this;
+    }
+
+    public void setAfter(String after) {
+        this.after = after;
     }
 
     public TreatmentProcedure getTreatmentProcedure() {
@@ -126,8 +142,9 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
         return "Tooth{" +
             "id=" + getId() +
             ", position='" + getPosition() + "'" +
-            ", surface='" + getSurface() + "'" +
-            ", status='" + getStatus() + "'" +
+            ", before='" + getBefore() + "'" +
+            ", planned='" + getPlanned() + "'" +
+            ", after='" + getAfter() + "'" +
             "}";
     }
 }

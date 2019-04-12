@@ -92,12 +92,16 @@ public class ToothService {
                     tooth.setPosition((updateTooth.getPosition()));
                 }
 
-                if (updateTooth.getSurface() != null) {
-                    tooth.setSurface((updateTooth.getSurface()));
+                if (updateTooth.getBefore() != null) {
+                    tooth.setBefore((updateTooth.getBefore()));
                 }
 
-                if (updateTooth.getStatus() != null) {
-                    tooth.setStatus((updateTooth.getStatus()));
+                if (updateTooth.getPlanned() != null) {
+                    tooth.setPlanned((updateTooth.getPlanned()));
+                }
+
+                if (updateTooth.getAfter() != null) {
+                    tooth.setAfter((updateTooth.getAfter()));
                 }
 
                 if (updateTooth.getTreatmentProcedure() != null && updateTooth.getTreatmentProcedure().getId() != null) {
