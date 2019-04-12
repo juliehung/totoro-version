@@ -35,23 +35,17 @@ export class ToothDetail extends React.Component<IToothDetailProps> {
             </dt>
             <dd>{toothEntity.position}</dd>
             <dt>
-              <span id="before">
-                <Translate contentKey="totoroApp.tooth.before">Before</Translate>
+              <span id="surface">
+                <Translate contentKey="totoroApp.tooth.surface">Surface</Translate>
               </span>
             </dt>
-            <dd>{toothEntity.before}</dd>
+            <dd>{toothEntity.surface}</dd>
             <dt>
-              <span id="planned">
-                <Translate contentKey="totoroApp.tooth.planned">Planned</Translate>
+              <span id="status">
+                <Translate contentKey="totoroApp.tooth.status">Status</Translate>
               </span>
             </dt>
-            <dd>{toothEntity.planned}</dd>
-            <dt>
-              <span id="after">
-                <Translate contentKey="totoroApp.tooth.after">After</Translate>
-              </span>
-            </dt>
-            <dd>{toothEntity.after}</dd>
+            <dd>{toothEntity.status}</dd>
             <dt>
               <Translate contentKey="totoroApp.tooth.treatmentProcedure">Treatment Procedure</Translate>
             </dt>
