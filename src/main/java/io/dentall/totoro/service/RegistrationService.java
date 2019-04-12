@@ -3,11 +3,13 @@ package io.dentall.totoro.service;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.repository.*;
-import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.errors.ErrorConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zalando.problem.AbstractThrowableProblem;
+import org.zalando.problem.Status;
 
 /**
  * Service class for managing registrations.
@@ -121,11 +123,11 @@ public class RegistrationService {
             .findById(id)
             .ifPresent(registration ->  {
                 if (registration.getDisposal() != null) {
-                    throw new BadRequestAlertException("A registration which has disposal cannot delete", "registration", "registration_has_disposal");
+                    throw new DeleteRegistrationException("A registration which has disposal cannot delete");
                 }
 
                 if (registration.getStatus() == RegistrationStatus.FINISHED) {
-                    throw new BadRequestAlertException("A registration which was finished cannot delete", "registration", "registration_was_finished");
+                    throw new DeleteRegistrationException("A registration which was finished cannot delete");
                 }
 
                 Appointment appointment = registration.getAppointment();
@@ -154,5 +156,14 @@ public class RegistrationService {
         }
 
         return accounting;
+    }
+
+    private class DeleteRegistrationException extends AbstractThrowableProblem {
+
+        private static final long serialVersionUID = 1L;
+
+        DeleteRegistrationException(String message) {
+            super(ErrorConstants.DEFAULT_TYPE, message, Status.UNPROCESSABLE_ENTITY);
+        }
     }
 }
