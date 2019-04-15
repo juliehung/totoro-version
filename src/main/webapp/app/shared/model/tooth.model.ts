@@ -3,9 +3,8 @@ import { ITreatmentProcedure } from 'app/shared/model//treatment-procedure.model
 export interface ITooth {
   id?: number;
   position?: string;
-  before?: string;
-  planned?: string;
-  after?: string;
+  surface?: string;
+  status?: string;
   treatmentProcedure?: ITreatmentProcedure;
 }
 

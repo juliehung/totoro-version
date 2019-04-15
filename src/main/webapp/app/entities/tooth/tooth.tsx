@@ -70,14 +70,11 @@ export class Tooth extends React.Component<IToothProps, IToothState> {
                 <th className="hand" onClick={this.sort('position')}>
                   <Translate contentKey="totoroApp.tooth.position">Position</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('before')}>
-                  <Translate contentKey="totoroApp.tooth.before">Before</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('surface')}>
+                  <Translate contentKey="totoroApp.tooth.surface">Surface</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('planned')}>
-                  <Translate contentKey="totoroApp.tooth.planned">Planned</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('after')}>
-                  <Translate contentKey="totoroApp.tooth.after">After</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={this.sort('status')}>
+                  <Translate contentKey="totoroApp.tooth.status">Status</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th>
                   <Translate contentKey="totoroApp.tooth.treatmentProcedure">Treatment Procedure</Translate> <FontAwesomeIcon icon="sort" />
@@ -94,9 +91,8 @@ export class Tooth extends React.Component<IToothProps, IToothState> {
                     </Button>
                   </td>
                   <td>{tooth.position}</td>
-                  <td>{tooth.before}</td>
-                  <td>{tooth.planned}</td>
-                  <td>{tooth.after}</td>
+                  <td>{tooth.surface}</td>
+                  <td>{tooth.status}</td>
                   <td>
                     {tooth.treatmentProcedure ? (
                       <Link to={`treatment-procedure/${tooth.treatmentProcedure.id}`}>{tooth.treatmentProcedure.id}</Link>
