@@ -25,15 +25,11 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="jhi_before" type="varchar(255)">
+            <column name="surface" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="planned" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="jhi_after" type="varchar(255)">
+            <column name="status" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 

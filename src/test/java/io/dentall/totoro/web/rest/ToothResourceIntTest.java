@@ -47,14 +47,11 @@ public class ToothResourceIntTest {
     private static final String DEFAULT_POSITION = "AAAAAAAAAA";
     private static final String UPDATED_POSITION = "BBBBBBBBBB";
 
-    private static final String DEFAULT_BEFORE = "AAAAAAAAAA";
-    private static final String UPDATED_BEFORE = "BBBBBBBBBB";
+    private static final String DEFAULT_SURFACE = "AAAAAAAAAA";
+    private static final String UPDATED_SURFACE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_PLANNED = "AAAAAAAAAA";
-    private static final String UPDATED_PLANNED = "BBBBBBBBBB";
-
-    private static final String DEFAULT_AFTER = "AAAAAAAAAA";
-    private static final String UPDATED_AFTER = "BBBBBBBBBB";
+    private static final String DEFAULT_STATUS = "AAAAAAAAAA";
+    private static final String UPDATED_STATUS = "BBBBBBBBBB";
 
     @Autowired
     private ToothRepository toothRepository;
@@ -105,9 +102,8 @@ public class ToothResourceIntTest {
     public static Tooth createEntity(EntityManager em) {
         Tooth tooth = new Tooth()
             .position(DEFAULT_POSITION)
-            .before(DEFAULT_BEFORE)
-            .planned(DEFAULT_PLANNED)
-            .after(DEFAULT_AFTER);
+            .surface(DEFAULT_SURFACE)
+            .status(DEFAULT_STATUS);
         return tooth;
     }
 
@@ -132,9 +128,8 @@ public class ToothResourceIntTest {
         assertThat(toothList).hasSize(databaseSizeBeforeCreate + 1);
         Tooth testTooth = toothList.get(toothList.size() - 1);
         assertThat(testTooth.getPosition()).isEqualTo(DEFAULT_POSITION);
-        assertThat(testTooth.getBefore()).isEqualTo(DEFAULT_BEFORE);
-        assertThat(testTooth.getPlanned()).isEqualTo(DEFAULT_PLANNED);
-        assertThat(testTooth.getAfter()).isEqualTo(DEFAULT_AFTER);
+        assertThat(testTooth.getSurface()).isEqualTo(DEFAULT_SURFACE);
+        assertThat(testTooth.getStatus()).isEqualTo(DEFAULT_STATUS);
     }
 
     @Test
@@ -186,9 +181,8 @@ public class ToothResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(tooth.getId().intValue())))
             .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.toString())))
-            .andExpect(jsonPath("$.[*].before").value(hasItem(DEFAULT_BEFORE.toString())))
-            .andExpect(jsonPath("$.[*].planned").value(hasItem(DEFAULT_PLANNED.toString())))
-            .andExpect(jsonPath("$.[*].after").value(hasItem(DEFAULT_AFTER.toString())));
+            .andExpect(jsonPath("$.[*].surface").value(hasItem(DEFAULT_SURFACE.toString())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
     }
     
     @Test
@@ -203,9 +197,8 @@ public class ToothResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(tooth.getId().intValue()))
             .andExpect(jsonPath("$.position").value(DEFAULT_POSITION.toString()))
-            .andExpect(jsonPath("$.before").value(DEFAULT_BEFORE.toString()))
-            .andExpect(jsonPath("$.planned").value(DEFAULT_PLANNED.toString()))
-            .andExpect(jsonPath("$.after").value(DEFAULT_AFTER.toString()));
+            .andExpect(jsonPath("$.surface").value(DEFAULT_SURFACE.toString()))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
     }
 
     @Test
@@ -249,119 +242,80 @@ public class ToothResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllTeethByBeforeIsEqualToSomething() throws Exception {
+    public void getAllTeethBySurfaceIsEqualToSomething() throws Exception {
         // Initialize the database
         toothRepository.saveAndFlush(tooth);
 
-        // Get all the toothList where before equals to DEFAULT_BEFORE
-        defaultToothShouldBeFound("before.equals=" + DEFAULT_BEFORE);
+        // Get all the toothList where surface equals to DEFAULT_SURFACE
+        defaultToothShouldBeFound("surface.equals=" + DEFAULT_SURFACE);
 
-        // Get all the toothList where before equals to UPDATED_BEFORE
-        defaultToothShouldNotBeFound("before.equals=" + UPDATED_BEFORE);
+        // Get all the toothList where surface equals to UPDATED_SURFACE
+        defaultToothShouldNotBeFound("surface.equals=" + UPDATED_SURFACE);
     }
 
     @Test
     @Transactional
-    public void getAllTeethByBeforeIsInShouldWork() throws Exception {
+    public void getAllTeethBySurfaceIsInShouldWork() throws Exception {
         // Initialize the database
         toothRepository.saveAndFlush(tooth);
 
-        // Get all the toothList where before in DEFAULT_BEFORE or UPDATED_BEFORE
-        defaultToothShouldBeFound("before.in=" + DEFAULT_BEFORE + "," + UPDATED_BEFORE);
+        // Get all the toothList where surface in DEFAULT_SURFACE or UPDATED_SURFACE
+        defaultToothShouldBeFound("surface.in=" + DEFAULT_SURFACE + "," + UPDATED_SURFACE);
 
-        // Get all the toothList where before equals to UPDATED_BEFORE
-        defaultToothShouldNotBeFound("before.in=" + UPDATED_BEFORE);
+        // Get all the toothList where surface equals to UPDATED_SURFACE
+        defaultToothShouldNotBeFound("surface.in=" + UPDATED_SURFACE);
     }
 
     @Test
     @Transactional
-    public void getAllTeethByBeforeIsNullOrNotNull() throws Exception {
+    public void getAllTeethBySurfaceIsNullOrNotNull() throws Exception {
         // Initialize the database
         toothRepository.saveAndFlush(tooth);
 
-        // Get all the toothList where before is not null
-        defaultToothShouldBeFound("before.specified=true");
+        // Get all the toothList where surface is not null
+        defaultToothShouldBeFound("surface.specified=true");
 
-        // Get all the toothList where before is null
-        defaultToothShouldNotBeFound("before.specified=false");
+        // Get all the toothList where surface is null
+        defaultToothShouldNotBeFound("surface.specified=false");
     }
 
     @Test
     @Transactional
-    public void getAllTeethByPlannedIsEqualToSomething() throws Exception {
+    public void getAllTeethByStatusIsEqualToSomething() throws Exception {
         // Initialize the database
         toothRepository.saveAndFlush(tooth);
 
-        // Get all the toothList where planned equals to DEFAULT_PLANNED
-        defaultToothShouldBeFound("planned.equals=" + DEFAULT_PLANNED);
+        // Get all the toothList where status equals to DEFAULT_STATUS
+        defaultToothShouldBeFound("status.equals=" + DEFAULT_STATUS);
 
-        // Get all the toothList where planned equals to UPDATED_PLANNED
-        defaultToothShouldNotBeFound("planned.equals=" + UPDATED_PLANNED);
+        // Get all the toothList where status equals to UPDATED_STATUS
+        defaultToothShouldNotBeFound("status.equals=" + UPDATED_STATUS);
     }
 
     @Test
     @Transactional
-    public void getAllTeethByPlannedIsInShouldWork() throws Exception {
+    public void getAllTeethByStatusIsInShouldWork() throws Exception {
         // Initialize the database
         toothRepository.saveAndFlush(tooth);
 
-        // Get all the toothList where planned in DEFAULT_PLANNED or UPDATED_PLANNED
-        defaultToothShouldBeFound("planned.in=" + DEFAULT_PLANNED + "," + UPDATED_PLANNED);
+        // Get all the toothList where status in DEFAULT_STATUS or UPDATED_STATUS
+        defaultToothShouldBeFound("status.in=" + DEFAULT_STATUS + "," + UPDATED_STATUS);
 
-        // Get all the toothList where planned equals to UPDATED_PLANNED
-        defaultToothShouldNotBeFound("planned.in=" + UPDATED_PLANNED);
+        // Get all the toothList where status equals to UPDATED_STATUS
+        defaultToothShouldNotBeFound("status.in=" + UPDATED_STATUS);
     }
 
     @Test
     @Transactional
-    public void getAllTeethByPlannedIsNullOrNotNull() throws Exception {
+    public void getAllTeethByStatusIsNullOrNotNull() throws Exception {
         // Initialize the database
         toothRepository.saveAndFlush(tooth);
 
-        // Get all the toothList where planned is not null
-        defaultToothShouldBeFound("planned.specified=true");
+        // Get all the toothList where status is not null
+        defaultToothShouldBeFound("status.specified=true");
 
-        // Get all the toothList where planned is null
-        defaultToothShouldNotBeFound("planned.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllTeethByAfterIsEqualToSomething() throws Exception {
-        // Initialize the database
-        toothRepository.saveAndFlush(tooth);
-
-        // Get all the toothList where after equals to DEFAULT_AFTER
-        defaultToothShouldBeFound("after.equals=" + DEFAULT_AFTER);
-
-        // Get all the toothList where after equals to UPDATED_AFTER
-        defaultToothShouldNotBeFound("after.equals=" + UPDATED_AFTER);
-    }
-
-    @Test
-    @Transactional
-    public void getAllTeethByAfterIsInShouldWork() throws Exception {
-        // Initialize the database
-        toothRepository.saveAndFlush(tooth);
-
-        // Get all the toothList where after in DEFAULT_AFTER or UPDATED_AFTER
-        defaultToothShouldBeFound("after.in=" + DEFAULT_AFTER + "," + UPDATED_AFTER);
-
-        // Get all the toothList where after equals to UPDATED_AFTER
-        defaultToothShouldNotBeFound("after.in=" + UPDATED_AFTER);
-    }
-
-    @Test
-    @Transactional
-    public void getAllTeethByAfterIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        toothRepository.saveAndFlush(tooth);
-
-        // Get all the toothList where after is not null
-        defaultToothShouldBeFound("after.specified=true");
-
-        // Get all the toothList where after is null
-        defaultToothShouldNotBeFound("after.specified=false");
+        // Get all the toothList where status is null
+        defaultToothShouldNotBeFound("status.specified=false");
     }
 
     @Test
@@ -391,9 +345,8 @@ public class ToothResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(tooth.getId().intValue())))
             .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION.toString())))
-            .andExpect(jsonPath("$.[*].before").value(hasItem(DEFAULT_BEFORE.toString())))
-            .andExpect(jsonPath("$.[*].planned").value(hasItem(DEFAULT_PLANNED.toString())))
-            .andExpect(jsonPath("$.[*].after").value(hasItem(DEFAULT_AFTER.toString())));
+            .andExpect(jsonPath("$.[*].surface").value(hasItem(DEFAULT_SURFACE.toString())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
 
         // Check, that the count call also returns 1
         restToothMockMvc.perform(get("/api/teeth/count?sort=id,desc&" + filter))
@@ -442,9 +395,8 @@ public class ToothResourceIntTest {
         em.detach(updatedTooth);
         updatedTooth
             .position(UPDATED_POSITION)
-            .before(UPDATED_BEFORE)
-            .planned(UPDATED_PLANNED)
-            .after(UPDATED_AFTER);
+            .surface(UPDATED_SURFACE)
+            .status(UPDATED_STATUS);
 
         restToothMockMvc.perform(put("/api/teeth")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -456,9 +408,8 @@ public class ToothResourceIntTest {
         assertThat(toothList).hasSize(databaseSizeBeforeUpdate);
         Tooth testTooth = toothList.get(toothList.size() - 1);
         assertThat(testTooth.getPosition()).isEqualTo(UPDATED_POSITION);
-        assertThat(testTooth.getBefore()).isEqualTo(UPDATED_BEFORE);
-        assertThat(testTooth.getPlanned()).isEqualTo(UPDATED_PLANNED);
-        assertThat(testTooth.getAfter()).isEqualTo(UPDATED_AFTER);
+        assertThat(testTooth.getSurface()).isEqualTo(UPDATED_SURFACE);
+        assertThat(testTooth.getStatus()).isEqualTo(UPDATED_STATUS);
     }
 
     @Test

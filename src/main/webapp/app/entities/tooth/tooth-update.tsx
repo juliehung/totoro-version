@@ -109,22 +109,16 @@ export class ToothUpdate extends React.Component<IToothUpdateProps, IToothUpdate
                   />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="beforeLabel" for="before">
-                    <Translate contentKey="totoroApp.tooth.before">Before</Translate>
+                  <Label id="surfaceLabel" for="surface">
+                    <Translate contentKey="totoroApp.tooth.surface">Surface</Translate>
                   </Label>
-                  <AvField id="tooth-before" type="text" name="before" />
+                  <AvField id="tooth-surface" type="text" name="surface" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="plannedLabel" for="planned">
-                    <Translate contentKey="totoroApp.tooth.planned">Planned</Translate>
+                  <Label id="statusLabel" for="status">
+                    <Translate contentKey="totoroApp.tooth.status">Status</Translate>
                   </Label>
-                  <AvField id="tooth-planned" type="text" name="planned" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="afterLabel" for="after">
-                    <Translate contentKey="totoroApp.tooth.after">After</Translate>
-                  </Label>
-                  <AvField id="tooth-after" type="text" name="after" />
+                  <AvField id="tooth-status" type="text" name="status" />
                 </AvGroup>
                 <AvGroup>
                   <Label for="treatmentProcedure.id">

@@ -86,14 +86,11 @@ public class ToothQueryService extends QueryService<Tooth> {
             if (criteria.getPosition() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getPosition(), Tooth_.position));
             }
-            if (criteria.getBefore() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getBefore(), Tooth_.before));
+            if (criteria.getSurface() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getSurface(), Tooth_.surface));
             }
-            if (criteria.getPlanned() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getPlanned(), Tooth_.planned));
-            }
-            if (criteria.getAfter() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getAfter(), Tooth_.after));
+            if (criteria.getStatus() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getStatus(), Tooth_.status));
             }
             if (criteria.getTreatmentProcedureId() != null) {
                 specification = specification.and(buildSpecification(criteria.getTreatmentProcedureId(),

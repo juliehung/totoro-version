@@ -26,11 +26,9 @@ public class ToothCriteria implements Serializable {
 
     private StringFilter position;
 
-    private StringFilter before;
+    private StringFilter surface;
 
-    private StringFilter planned;
-
-    private StringFilter after;
+    private StringFilter status;
 
     private LongFilter treatmentProcedureId;
 
@@ -50,28 +48,20 @@ public class ToothCriteria implements Serializable {
         this.position = position;
     }
 
-    public StringFilter getBefore() {
-        return before;
+    public StringFilter getSurface() {
+        return surface;
     }
 
-    public void setBefore(StringFilter before) {
-        this.before = before;
+    public void setSurface(StringFilter surface) {
+        this.surface = surface;
     }
 
-    public StringFilter getPlanned() {
-        return planned;
+    public StringFilter getStatus() {
+        return status;
     }
 
-    public void setPlanned(StringFilter planned) {
-        this.planned = planned;
-    }
-
-    public StringFilter getAfter() {
-        return after;
-    }
-
-    public void setAfter(StringFilter after) {
-        this.after = after;
+    public void setStatus(StringFilter status) {
+        this.status = status;
     }
 
     public LongFilter getTreatmentProcedureId() {
@@ -95,9 +85,8 @@ public class ToothCriteria implements Serializable {
         return
             Objects.equals(id, that.id) &&
             Objects.equals(position, that.position) &&
-            Objects.equals(before, that.before) &&
-            Objects.equals(planned, that.planned) &&
-            Objects.equals(after, that.after) &&
+            Objects.equals(surface, that.surface) &&
+            Objects.equals(status, that.status) &&
             Objects.equals(treatmentProcedureId, that.treatmentProcedureId);
     }
 
@@ -106,9 +95,8 @@ public class ToothCriteria implements Serializable {
         return Objects.hash(
         id,
         position,
-        before,
-        planned,
-        after,
+        surface,
+        status,
         treatmentProcedureId
         );
     }
@@ -118,9 +106,8 @@ public class ToothCriteria implements Serializable {
         return "ToothCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (position != null ? "position=" + position + ", " : "") +
-                (before != null ? "before=" + before + ", " : "") +
-                (planned != null ? "planned=" + planned + ", " : "") +
-                (after != null ? "after=" + after + ", " : "") +
+                (surface != null ? "surface=" + surface + ", " : "") +
+                (status != null ? "status=" + status + ", " : "") +
                 (treatmentProcedureId != null ? "treatmentProcedureId=" + treatmentProcedureId + ", " : "") +
             "}";
     }
