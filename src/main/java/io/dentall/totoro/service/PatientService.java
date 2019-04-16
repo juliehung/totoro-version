@@ -46,6 +46,8 @@ public class PatientService extends QueryService<Patient> {
 
     private final TreatmentTaskRepository treatmentTaskRepository;
 
+    private final RelationshipService relationshipService;
+
     public PatientService(
         PatientRepository patientRepository,
         TagRepository tagRepository,
@@ -54,7 +56,8 @@ public class PatientService extends QueryService<Patient> {
         PatientIdentityRepository patientIdentityRepository,
         TreatmentRepository treatmentRepository,
         TreatmentPlanRepository treatmentPlanRepository,
-        TreatmentTaskRepository treatmentTaskRepository
+        TreatmentTaskRepository treatmentTaskRepository,
+        RelationshipService relationshipService
     ) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
@@ -64,6 +67,7 @@ public class PatientService extends QueryService<Patient> {
         this.treatmentRepository = treatmentRepository;
         this.treatmentPlanRepository = treatmentPlanRepository;
         this.treatmentTaskRepository = treatmentTaskRepository;
+        this.relationshipService = relationshipService;
     }
 
     /**
@@ -88,9 +92,12 @@ public class PatientService extends QueryService<Patient> {
     public Patient save(Patient patient) {
         log.debug("Request to save Patient : {}", patient);
 
-        patient = patientRepository.save(patient.newPatient(true));
+        Set<Tooth> teeth = patient.getTeeth();
+
+        patient = patientRepository.save(patient.newPatient(true).teeth(null));
         patient.setMedicalId(String.format("%05d", patient.getId()));
         patient.getTreatments().add(createGeneralTreatmentAndPlanAndTaskWithPatient(patient));
+        relationshipService.addRelationshipWithTeeth(patient.teeth(teeth));
 
         return patient;
     }
@@ -219,6 +226,12 @@ public class PatientService extends QueryService<Patient> {
                 if (updatePatient.getPatientIdentity() != null) {
                     log.debug("Update patientIdentity({}) of Patient(id: {})", updatePatient.getPatientIdentity(), updatePatient.getId());
                     patient.setPatientIdentity(patientIdentityRepository.findById(updatePatient.getPatientIdentity().getId()).orElse(null));
+                }
+
+                // teeth
+                if (updatePatient.getTeeth() != null) {
+                    log.debug("Update teeth({}) of Patient(id: {})", updatePatient.getTeeth(), updatePatient.getId());
+                    relationshipService.addRelationshipWithTeeth(patient.teeth(updatePatient.getTeeth()));
                 }
 
                 return patient;

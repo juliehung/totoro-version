@@ -56,6 +56,9 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @OneToOne    @JoinColumn(unique = true)
     private Registration registration;
 
+    @OneToMany(mappedBy = "disposal")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Tooth> teeth = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     @CreatedBy
@@ -159,6 +162,31 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     public void setRegistration(Registration registration) {
         this.registration = registration;
+    }
+
+    public Set<Tooth> getTeeth() {
+        return teeth;
+    }
+
+    public Disposal teeth(Set<Tooth> teeth) {
+        this.teeth = teeth;
+        return this;
+    }
+
+    public Disposal addTooth(Tooth tooth) {
+        this.teeth.add(tooth);
+        tooth.setDisposal(this);
+        return this;
+    }
+
+    public Disposal removeTooth(Tooth tooth) {
+        this.teeth.remove(tooth);
+        tooth.setDisposal(null);
+        return this;
+    }
+
+    public void setTeeth(Set<Tooth> teeth) {
+        this.teeth = teeth;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

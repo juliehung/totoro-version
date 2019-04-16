@@ -12,7 +12,6 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -161,6 +160,10 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @OneToMany(mappedBy = "patient")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Todo> todos = new HashSet<>();
+
+    @OneToMany(mappedBy = "patient")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Tooth> teeth = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     @ManyToOne
@@ -717,6 +720,31 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
 
     public void setTodos(Set<Todo> todos) {
         this.todos = todos;
+    }
+
+    public Set<Tooth> getTeeth() {
+        return teeth;
+    }
+
+    public Patient teeth(Set<Tooth> teeth) {
+        this.teeth = teeth;
+        return this;
+    }
+
+    public Patient addTooth(Tooth tooth) {
+        this.teeth.add(tooth);
+        tooth.setPatient(this);
+        return this;
+    }
+
+    public Patient removeTooth(Tooth tooth) {
+        this.teeth.remove(tooth);
+        tooth.setPatient(null);
+        return this;
+    }
+
+    public void setTeeth(Set<Tooth> teeth) {
+        this.teeth = teeth;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

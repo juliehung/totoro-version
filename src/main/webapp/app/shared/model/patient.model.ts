@@ -6,6 +6,7 @@ import { ITag } from 'app/shared/model//tag.model';
 import { IPatientIdentity } from 'app/shared/model//patient-identity.model';
 import { ITreatment } from 'app/shared/model//treatment.model';
 import { ITodo } from 'app/shared/model//todo.model';
+import { ITooth } from 'app/shared/model//tooth.model';
 
 export const enum Gender {
   OTHER = 'OTHER',
@@ -57,6 +58,7 @@ export interface IPatient {
   patientIdentity?: IPatientIdentity;
   treatments?: ITreatment[];
   todos?: ITodo[];
+  teeth?: ITooth[];
 }
 
 export const defaultValue: Readonly<IPatient> = {

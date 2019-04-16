@@ -1,6 +1,8 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.Tooth;
+import io.dentall.totoro.repository.DisposalRepository;
+import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.ToothRepository;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import org.slf4j.Logger;
@@ -26,9 +28,20 @@ public class ToothService {
 
     private final TreatmentProcedureRepository treatmentProcedureRepository;
 
-    public ToothService(ToothRepository toothRepository, TreatmentProcedureRepository treatmentProcedureRepository) {
+    private final DisposalRepository disposalRepository;
+
+    private final PatientRepository patientRepository;
+
+    public ToothService(
+        ToothRepository toothRepository,
+        TreatmentProcedureRepository treatmentProcedureRepository,
+        DisposalRepository disposalRepository,
+        PatientRepository patientRepository
+    ) {
         this.toothRepository = toothRepository;
         this.treatmentProcedureRepository = treatmentProcedureRepository;
+        this.disposalRepository = disposalRepository;
+        this.patientRepository = patientRepository;
     }
 
     /**
@@ -102,6 +115,14 @@ public class ToothService {
 
                 if (updateTooth.getTreatmentProcedure() != null && updateTooth.getTreatmentProcedure().getId() != null) {
                     treatmentProcedureRepository.findById(updateTooth.getTreatmentProcedure().getId()).ifPresent(tooth::setTreatmentProcedure);
+                }
+
+                if (updateTooth.getDisposal() != null && updateTooth.getDisposal().getId() != null) {
+                    disposalRepository.findById(updateTooth.getDisposal().getId()).ifPresent(tooth::setDisposal);
+                }
+
+                if (updateTooth.getPatient() != null && updateTooth.getPatient().getId() != null) {
+                    patientRepository.findById(updateTooth.getPatient().getId()).ifPresent(tooth::setPatient);
                 }
 
                 return tooth;

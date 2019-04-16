@@ -79,6 +79,12 @@ export class Tooth extends React.Component<IToothProps, IToothState> {
                 <th>
                   <Translate contentKey="totoroApp.tooth.treatmentProcedure">Treatment Procedure</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th>
+                  <Translate contentKey="totoroApp.tooth.disposal">Disposal</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.tooth.patient">Patient</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -100,6 +106,8 @@ export class Tooth extends React.Component<IToothProps, IToothState> {
                       ''
                     )}
                   </td>
+                  <td>{tooth.disposal ? <Link to={`disposal/${tooth.disposal.id}`}>{tooth.disposal.id}</Link> : ''}</td>
+                  <td>{tooth.patient ? <Link to={`patient/${tooth.patient.id}`}>{tooth.patient.id}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${tooth.id}`} color="info" size="sm">

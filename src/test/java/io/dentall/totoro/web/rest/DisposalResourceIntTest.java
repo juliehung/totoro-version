@@ -366,6 +366,24 @@ public class DisposalResourceIntTest {
         defaultDisposalShouldNotBeFound("registrationId.equals=" + (registrationId + 1));
     }
 
+    @Test
+    @Transactional
+    public void getAllDisposalsByToothIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Tooth tooth = ToothResourceIntTest.createEntity(em);
+        em.persist(tooth);
+        em.flush();
+        disposal.addTooth(tooth);
+        disposalRepository.saveAndFlush(disposal);
+        Long toothId = tooth.getId();
+
+        // Get all the disposalList where tooth equals to toothId
+        defaultDisposalShouldBeFound("toothId.equals=" + toothId);
+
+        // Get all the disposalList where tooth equals to toothId + 1
+        defaultDisposalShouldNotBeFound("toothId.equals=" + (toothId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */

@@ -2,6 +2,7 @@ import { ITreatmentProcedure } from 'app/shared/model//treatment-procedure.model
 import { IPrescription } from 'app/shared/model//prescription.model';
 import { ITodo } from 'app/shared/model//todo.model';
 import { IRegistration } from 'app/shared/model//registration.model';
+import { ITooth } from 'app/shared/model//tooth.model';
 
 export const enum DisposalStatus {
   TEMPORARY = 'TEMPORARY',
@@ -17,6 +18,7 @@ export interface IDisposal {
   prescription?: IPrescription;
   todo?: ITodo;
   registration?: IRegistration;
+  teeth?: ITooth[];
 }
 
 export const defaultValue: Readonly<IDisposal> = {};

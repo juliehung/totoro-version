@@ -14,5 +14,17 @@
                                  referencedColumnNames="id"
                                  referencedTableName="treatment_procedure"/>
 
+        <addForeignKeyConstraint baseColumnNames="disposal_id"
+                                 baseTableName="tooth"
+                                 constraintName="fk_tooth_disposal_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="disposal"/>
+
+        <addForeignKeyConstraint baseColumnNames="patient_id"
+                                 baseTableName="tooth"
+                                 constraintName="fk_tooth_patient_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="patient"/>
+
     </changeSet>
 </databaseChangeLog>

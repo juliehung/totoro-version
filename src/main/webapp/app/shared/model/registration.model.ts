@@ -1,7 +1,6 @@
 import { Moment } from 'moment';
 import { IAppointment } from 'app/shared/model//appointment.model';
 import { IAccounting } from 'app/shared/model//accounting.model';
-import { ITreatmentProcedure } from 'app/shared/model//treatment-procedure.model';
 import { IDisposal } from 'app/shared/model//disposal.model';
 
 export const enum RegistrationStatus {
@@ -24,7 +23,6 @@ export interface IRegistration {
   onSite?: boolean;
   appointment?: IAppointment;
   accounting?: IAccounting;
-  treatmentProcedures?: ITreatmentProcedure[];
   disposal?: IDisposal;
 }
 

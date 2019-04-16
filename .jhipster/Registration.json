@@ -18,12 +18,6 @@
             "otherEntityRelationshipName": "registration"
         },
         {
-            "relationshipName": "treatmentProcedure",
-            "otherEntityName": "treatmentProcedure",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "registration"
-        },
-        {
             "relationshipName": "disposal",
             "otherEntityName": "disposal",
             "relationshipType": "one-to-one",
