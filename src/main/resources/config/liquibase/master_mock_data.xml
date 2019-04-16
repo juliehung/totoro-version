@@ -6,63 +6,56 @@
 
     <changeSet id="data" author="Jim">
         <loadData encoding="UTF-8"
-                  file="config/liquibase/tags.csv"
+                  file="config/liquibase/extend_users.csv"
                   separator=";"
-                  tableName="tag">
+                  tableName="extend_user"/>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/patients.csv"
+                  separator=";"
+                  tableName="patient">
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/nhi_procedures.csv"
+                  file="config/liquibase/appointments.csv"
                   separator=";"
-                  tableName="nhi_procedure">
+                  tableName="appointment">
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/nhi_categories.csv"
+                  file="config/liquibase/registrations.csv"
                   separator=";"
-                  tableName="nhi_category">
+                  tableName="registration">
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/hospitals.csv"
+                  file="config/liquibase/patients_parents.csv"
                   separator=";"
-                  tableName="hospital">
+                  tableName="patient_parent">
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/patient_identities.csv"
+                  file="config/liquibase/patients_tags.csv"
                   separator=";"
-                  tableName="patient_identity">
+                  tableName="patient_tag">
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/calendars.csv"
+                  file="config/liquibase/treatments.csv"
                   separator=";"
-                  tableName="calendar">
+                  tableName="treatment">
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/procedures.csv"
+                  file="config/liquibase/treatment_tasks.csv"
                   separator=";"
-                  tableName="procedure">
+                  tableName="treatment_task">
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/procedure_types.csv"
+                  file="config/liquibase/treatment_plans.csv"
                   separator=";"
-                  tableName="procedure_type">
-        </loadData>
-
-        <loadData encoding="UTF-8"
-                  file="config/liquibase/drugs.csv"
-                  separator=";"
-                  tableName="drug">
-        </loadData>
-
-        <loadData encoding="UTF-8"
-                  file="config/liquibase/condition_types.csv"
-                  separator=";"
-                  tableName="condition_type">
+                  tableName="treatment_plan">
         </loadData>
     </changeSet>
 

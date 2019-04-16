@@ -9,6 +9,9 @@
     <!-- data -->
     <include file="config/liquibase/master_data_en.xml" relativeToChangelogFile="false"/>
 
+    <!-- mock data -->
+    <include file="config/liquibase/master_mock_data_en.xml" relativeToChangelogFile="false"/>
+
     <!-- constraints -->
     <include file="config/liquibase/master_constraints.xml" relativeToChangelogFile="false"/>
 
