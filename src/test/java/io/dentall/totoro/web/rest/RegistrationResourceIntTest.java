@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.*;
-import java.util.Arrays;
 import java.util.List;
 
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
@@ -87,9 +86,6 @@ public class RegistrationResourceIntTest {
     private TagRepository tagRepository;
 
     @Autowired
-    private TreatmentProcedureRepository treatmentProcedureRepository;
-
-    @Autowired
     private RegistrationService registrationService;
 
     @Autowired
@@ -102,7 +98,7 @@ public class RegistrationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final RegistrationResource registrationResource = new RegistrationResource(registrationRepository, treatmentProcedureRepository, registrationService);
+        final RegistrationResource registrationResource = new RegistrationResource(registrationRepository, registrationService);
         this.restRegistrationMockMvc = MockMvcBuilders.standaloneSetup(registrationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -322,22 +318,6 @@ public class RegistrationResourceIntTest {
         assertThat(registration1).isNotEqualTo(registration2);
         registration1.setId(null);
         assertThat(registration1).isNotEqualTo(registration2);
-    }
-
-    @Test
-    @Transactional
-    public void updateTreatmentProceduresList() throws Exception {
-        // Initialize the database
-        registrationRepository.saveAndFlush(registration);
-
-        TreatmentProcedure treatmentProcedure = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
-        // Update the TreatmentProcedures list
-        restRegistrationMockMvc.perform(put("/api/registrations/{id}/treatmentProcedures/list", registration.getId())
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(Arrays.asList(treatmentProcedure))))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.treatmentProcedures.[*].note").value(hasItem(treatmentProcedure.getNote())));
     }
 
     private Appointment createAppointment(Patient patient) {

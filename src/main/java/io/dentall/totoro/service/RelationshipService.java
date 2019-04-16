@@ -170,6 +170,42 @@ public class RelationshipService {
         treatmentProcedure.setTeeth(teeth);
     }
 
+    void addRelationshipWithTeeth(Disposal disposal) {
+        Set<Tooth> teeth = disposal.getTeeth();
+        if (teeth != null) {
+            teeth = getRelationshipWithOwners(
+                teeth
+                    .stream()
+                    .map(this::getTooth),
+                tooth -> {
+                    tooth.setDisposal(disposal);
+
+                    return tooth;
+                }
+            );
+        }
+
+        disposal.setTeeth(teeth);
+    }
+
+    void addRelationshipWithTeeth(Patient patient) {
+        Set<Tooth> teeth = patient.getTeeth();
+        if (teeth != null) {
+            teeth = getRelationshipWithOwners(
+                teeth
+                    .stream()
+                    .map(this::getTooth),
+                tooth -> {
+                    tooth.setPatient(patient);
+
+                    return tooth;
+                }
+            );
+        }
+
+        patient.setTeeth(teeth);
+    }
+
     private <Owner> Set<Owner> getRelationshipWithOwners(Stream<Owner> owners, Function<Owner, Owner> mapper) {
         return owners
             .map(mapper)

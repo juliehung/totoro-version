@@ -18,7 +18,9 @@
       "position": "Position",
       "surface": "Surface",
       "status": "Status",
-      "treatmentProcedure": "Treatment Procedure"
+      "treatmentProcedure": "Treatment Procedure",
+      "disposal": "Disposal",
+      "patient": "Patient"
     }
   }
 }

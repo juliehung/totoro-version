@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.RegistrationRepository;
-import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.service.RegistrationService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
@@ -42,17 +41,10 @@ public class RegistrationResource {
 
     private final RegistrationRepository registrationRepository;
 
-    private final TreatmentProcedureRepository treatmentProcedureRepository;
-
     private final RegistrationService registrationService;
 
-    public RegistrationResource(
-        RegistrationRepository registrationRepository,
-        TreatmentProcedureRepository treatmentProcedureRepository,
-        RegistrationService registrationService
-    ) {
+    public RegistrationResource(RegistrationRepository registrationRepository, RegistrationService registrationService) {
         this.registrationRepository = registrationRepository;
-        this.treatmentProcedureRepository = treatmentProcedureRepository;
         this.registrationService = registrationService;
     }
 
@@ -60,7 +52,7 @@ public class RegistrationResource {
      * POST  /registrations : Create a new registration.
      *
      * @param registration the registration to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new registration, or with status 400 (Bad Request) if the registration has not an ID
+     * @return the ResponseEntity with status 201 (Created) and with body the new registration, or with status 400 (Bad Request) if the registration has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/registrations")
@@ -115,6 +107,13 @@ public class RegistrationResource {
                 .filter(registration -> registration.getAppointment() == null)
                 .collect(Collectors.toList()), HttpStatus.OK);
         }
+        if ("disposal-is-null".equals(filter)) {
+            log.debug("REST request to get all Registrations where disposal is null");
+            return new ResponseEntity<>(StreamSupport
+                .stream(registrationRepository.findAll().spliterator(), false)
+                .filter(registration -> registration.getDisposal() == null)
+                .collect(Collectors.toList()), HttpStatus.OK);
+        }
         log.debug("REST request to get a page of Registrations");
         Page<Registration> page = registrationRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/registrations");
@@ -149,34 +148,5 @@ public class RegistrationResource {
         registrationService.delete(id);
 
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    /**
-     * PUT  /registrations/:id/treatmentProcedures/list : Update a treatmentProcedures list of registration.
-     *
-     * @param id the id of the registration
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @PutMapping("/registrations/{id}/treatmentProcedures/list")
-    @Timed
-    @Transactional
-    public ResponseEntity<Registration> updateRegistrationTreatmentProcedures(@PathVariable Long id, @RequestBody List<TreatmentProcedure> treatmentProcedures) {
-        log.debug("REST request to save TreatmentProcedures({}) of Registration(id: {})", treatmentProcedures, id);
-
-        Optional<Registration> optionalRegistration = registrationRepository.findById(id);
-        if (optionalRegistration.isPresent()) {
-            Registration registration = optionalRegistration.get();
-            registration.getTreatmentProcedures().clear();
-            treatmentProcedures.stream().map(TreatmentProcedure::getId).forEach(treatmentProcedureId ->
-                treatmentProcedureRepository.findById(treatmentProcedureId).ifPresent(treatmentProcedure -> {
-                    treatmentProcedure.setRegistration(registration);
-                    registration.getTreatmentProcedures().add(treatmentProcedure);
-                })
-            );
-
-            return ResponseEntity.ok().body(registration);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 }

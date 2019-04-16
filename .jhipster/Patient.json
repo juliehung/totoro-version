@@ -77,6 +77,12 @@
             "otherEntityName": "todo",
             "relationshipType": "one-to-many",
             "otherEntityRelationshipName": "patient"
+        },
+        {
+            "relationshipName": "tooth",
+            "otherEntityName": "tooth",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "patient"
         }
     ],
     "fields": [
@@ -160,7 +166,7 @@
             "fieldName": "note",
             "fieldType": "String",
             "fieldValidateRules": [
-              "maxlength"
+                "maxlength"
             ],
             "fieldValidateRulesMaxlength": 5100
         },

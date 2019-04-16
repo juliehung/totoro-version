@@ -2,7 +2,6 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.DisposalRepository;
-import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.dto.TreatmentDrugCriteria;
 import io.github.jhipster.service.filter.LongFilter;
 import org.slf4j.Logger;
@@ -42,8 +41,6 @@ public class DisposalService {
 
     private final RegistrationService registrationService;
 
-    private final UserRepository userRepository;
-
     public DisposalService(
         DisposalRepository disposalRepository,
         PrescriptionService prescriptionService,
@@ -51,8 +48,7 @@ public class DisposalService {
         TreatmentDrugService treatmentDrugService,
         TreatmentDrugQueryService treatmentDrugQueryService,
         RelationshipService relationshipService,
-        RegistrationService registrationService,
-        UserRepository userRepository
+        RegistrationService registrationService
     ) {
         this.disposalRepository = disposalRepository;
         this.prescriptionService = prescriptionService;
@@ -61,7 +57,6 @@ public class DisposalService {
         this.treatmentDrugQueryService = treatmentDrugQueryService;
         this.relationshipService = relationshipService;
         this.registrationService = registrationService;
-        this.userRepository = userRepository;
     }
 
     /**
@@ -76,10 +71,12 @@ public class DisposalService {
         Prescription prescription = getPrescription(disposal);
         Todo todo = getTodo(disposal);
         Set<TreatmentProcedure> treatmentProcedures = disposal.getTreatmentProcedures();
+        Set<Tooth> teeth = disposal.getTeeth();
 
-        disposal = disposalRepository.save(disposal.treatmentProcedures(null));
+        disposal = disposalRepository.save(disposal.treatmentProcedures(null).teeth(null));
 
         relationshipService.addRelationshipWithTreatmentProcedures(disposal.treatmentProcedures(treatmentProcedures));
+        relationshipService.addRelationshipWithTeeth(disposal.teeth(teeth));
         disposal.setPrescription(prescription);
         disposal.setTodo(todo);
         if (disposal.getRegistration() != null && disposal.getRegistration().getId() != null) {
@@ -202,6 +199,10 @@ public class DisposalService {
 
                 if (updateDisposal.getTreatmentProcedures() != null) {
                     relationshipService.addRelationshipWithTreatmentProcedures(disposal.treatmentProcedures(updateDisposal.getTreatmentProcedures()));
+                }
+
+                if (updateDisposal.getTeeth() != null) {
+                    relationshipService.addRelationshipWithTeeth(disposal.teeth(updateDisposal.getTeeth()));
                 }
 
                 if (updateDisposal.getRegistration() != null && updateDisposal.getRegistration().getId() != null) {

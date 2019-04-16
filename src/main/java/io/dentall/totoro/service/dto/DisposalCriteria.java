@@ -43,6 +43,8 @@ public class DisposalCriteria implements Serializable {
 
     private InstantFilter createdDate;
 
+    private LongFilter toothId;
+
     public LongFilter getId() {
         return id;
     }
@@ -115,6 +117,14 @@ public class DisposalCriteria implements Serializable {
         this.createdDate = createdDate;
     }
 
+    public LongFilter getToothId() {
+        return toothId;
+    }
+
+    public void setToothId(LongFilter toothId) {
+        this.toothId = toothId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -132,7 +142,8 @@ public class DisposalCriteria implements Serializable {
             Objects.equals(todoId, that.todoId) &&
             Objects.equals(registrationId, that.registrationId) &&
             Objects.equals(patientId, that.patientId) &&
-            Objects.equals(createdDate, that.createdDate);
+            Objects.equals(createdDate, that.createdDate) &&
+            Objects.equals(toothId, that.toothId);
     }
 
     @Override
@@ -146,7 +157,8 @@ public class DisposalCriteria implements Serializable {
             todoId,
             registrationId,
             patientId,
-            createdDate
+            createdDate,
+            toothId
         );
     }
 
@@ -162,6 +174,7 @@ public class DisposalCriteria implements Serializable {
             (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
             (patientId != null ? "patientId=" + patientId + ", " : "") +
             (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
+            (toothId != null ? "toothId=" + toothId + ", " : "") +
             "}";
     }
 

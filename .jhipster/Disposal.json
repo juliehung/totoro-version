@@ -13,14 +13,16 @@
             "otherEntityName": "prescription",
             "relationshipType": "one-to-one",
             "ownerSide": true,
-            "otherEntityRelationshipName": "disposal"
+            "otherEntityRelationshipName": "disposal",
+            "otherEntityField": "id"
         },
         {
             "relationshipName": "todo",
             "otherEntityName": "todo",
             "relationshipType": "one-to-one",
             "ownerSide": true,
-            "otherEntityRelationshipName": "disposal"
+            "otherEntityRelationshipName": "disposal",
+            "otherEntityField": "id"
         },
         {
             "relationshipName": "registration",
@@ -28,6 +30,12 @@
             "relationshipType": "one-to-one",
             "otherEntityField": "id",
             "ownerSide": true,
+            "otherEntityRelationshipName": "disposal"
+        },
+        {
+            "relationshipName": "tooth",
+            "otherEntityName": "tooth",
+            "relationshipType": "one-to-many",
             "otherEntityRelationshipName": "disposal"
         }
     ],

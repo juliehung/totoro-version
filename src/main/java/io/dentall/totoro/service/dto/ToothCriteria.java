@@ -32,6 +32,10 @@ public class ToothCriteria implements Serializable {
 
     private LongFilter treatmentProcedureId;
 
+    private LongFilter disposalId;
+
+    private LongFilter patientId;
+
     public LongFilter getId() {
         return id;
     }
@@ -72,6 +76,22 @@ public class ToothCriteria implements Serializable {
         this.treatmentProcedureId = treatmentProcedureId;
     }
 
+    public LongFilter getDisposalId() {
+        return disposalId;
+    }
+
+    public void setDisposalId(LongFilter disposalId) {
+        this.disposalId = disposalId;
+    }
+
+    public LongFilter getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(LongFilter patientId) {
+        this.patientId = patientId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -87,7 +107,9 @@ public class ToothCriteria implements Serializable {
             Objects.equals(position, that.position) &&
             Objects.equals(surface, that.surface) &&
             Objects.equals(status, that.status) &&
-            Objects.equals(treatmentProcedureId, that.treatmentProcedureId);
+            Objects.equals(treatmentProcedureId, that.treatmentProcedureId) &&
+            Objects.equals(disposalId, that.disposalId) &&
+            Objects.equals(patientId, that.patientId);
     }
 
     @Override
@@ -97,7 +119,9 @@ public class ToothCriteria implements Serializable {
         position,
         surface,
         status,
-        treatmentProcedureId
+        treatmentProcedureId,
+        disposalId,
+        patientId
         );
     }
 
@@ -109,6 +133,8 @@ public class ToothCriteria implements Serializable {
                 (surface != null ? "surface=" + surface + ", " : "") +
                 (status != null ? "status=" + status + ", " : "") +
                 (treatmentProcedureId != null ? "treatmentProcedureId=" + treatmentProcedureId + ", " : "") +
+                (disposalId != null ? "disposalId=" + disposalId + ", " : "") +
+                (patientId != null ? "patientId=" + patientId + ", " : "") +
             "}";
     }
 

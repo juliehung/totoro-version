@@ -4,6 +4,8 @@ import io.dentall.totoro.TotoroApp;
 
 import io.dentall.totoro.domain.Tooth;
 import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.domain.Disposal;
+import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.ToothRepository;
 import io.dentall.totoro.service.ToothService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
@@ -334,6 +336,44 @@ public class ToothResourceIntTest {
 
         // Get all the toothList where treatmentProcedure equals to treatmentProcedureId + 1
         defaultToothShouldNotBeFound("treatmentProcedureId.equals=" + (treatmentProcedureId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllTeethByDisposalIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Disposal disposal = DisposalResourceIntTest.createEntity(em);
+        em.persist(disposal);
+        em.flush();
+        tooth.setDisposal(disposal);
+        toothRepository.saveAndFlush(tooth);
+        Long disposalId = disposal.getId();
+
+        // Get all the toothList where disposal equals to disposalId
+        defaultToothShouldBeFound("disposalId.equals=" + disposalId);
+
+        // Get all the toothList where disposal equals to disposalId + 1
+        defaultToothShouldNotBeFound("disposalId.equals=" + (disposalId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllTeethByPatientIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Patient patient = PatientResourceIntTest.createEntity(em);
+        em.persist(patient);
+        em.flush();
+        tooth.setPatient(patient);
+        toothRepository.saveAndFlush(tooth);
+        Long patientId = patient.getId();
+
+        // Get all the toothList where patient equals to patientId
+        defaultToothShouldBeFound("patientId.equals=" + patientId);
+
+        // Get all the toothList where patient equals to patientId + 1
+        defaultToothShouldNotBeFound("patientId.equals=" + (patientId + 1));
     }
 
     /**

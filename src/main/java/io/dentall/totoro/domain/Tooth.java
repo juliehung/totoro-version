@@ -39,6 +39,14 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
     @JsonIgnoreProperties(value = "teeth", allowSetters = true)
     private TreatmentProcedure treatmentProcedure;
 
+    @ManyToOne
+    @JsonIgnoreProperties(value = "teeth", allowSetters = true)
+    private Disposal disposal;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "teeth", allowSetters = true)
+    private Patient patient;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -98,6 +106,32 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
 
     public void setTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
         this.treatmentProcedure = treatmentProcedure;
+    }
+
+    public Disposal getDisposal() {
+        return disposal;
+    }
+
+    public Tooth disposal(Disposal disposal) {
+        this.disposal = disposal;
+        return this;
+    }
+
+    public void setDisposal(Disposal disposal) {
+        this.disposal = disposal;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public Tooth patient(Patient patient) {
+        this.patient = patient;
+        return this;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

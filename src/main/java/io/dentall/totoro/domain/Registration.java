@@ -56,10 +56,6 @@ public class Registration extends AbstractAuditingEntity implements Serializable
     @OneToOne    @JoinColumn(unique = true)
     private Accounting accounting;
 
-    @OneToMany(mappedBy = "registration")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
-
     @OneToOne(mappedBy = "registration")
     @JsonIgnoreProperties("registration")
     private Disposal disposal;
@@ -148,31 +144,6 @@ public class Registration extends AbstractAuditingEntity implements Serializable
 
     public void setAccounting(Accounting accounting) {
         this.accounting = accounting;
-    }
-
-    public Set<TreatmentProcedure> getTreatmentProcedures() {
-        return treatmentProcedures;
-    }
-
-    public Registration treatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
-        this.treatmentProcedures = treatmentProcedures;
-        return this;
-    }
-
-    public Registration addTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
-        this.treatmentProcedures.add(treatmentProcedure);
-        treatmentProcedure.setRegistration(this);
-        return this;
-    }
-
-    public Registration removeTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
-        this.treatmentProcedures.remove(treatmentProcedure);
-        treatmentProcedure.setRegistration(null);
-        return this;
-    }
-
-    public void setTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
-        this.treatmentProcedures = treatmentProcedures;
     }
 
     public Disposal getDisposal() {
