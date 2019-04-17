@@ -61,7 +61,7 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
     private Boolean contacted;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = {"appointments", "treatments", "todos"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"appointments", "treatments", "todos", "teeth"}, allowSetters = true)
     private Patient patient;
 
     @OneToOne    @JoinColumn(unique = true)
