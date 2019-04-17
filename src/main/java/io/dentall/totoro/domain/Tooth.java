@@ -44,7 +44,7 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
     private Disposal disposal;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "teeth", allowSetters = true)
+    @JsonIgnoreProperties(value = {"appointments", "treatments", "todos", "teeth"}, allowSetters = true)
     private Patient patient;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

@@ -48,6 +48,8 @@ public class PatientService extends QueryService<Patient> {
 
     private final RelationshipService relationshipService;
 
+    private final ToothRepository toothRepository;
+
     public PatientService(
         PatientRepository patientRepository,
         TagRepository tagRepository,
@@ -57,7 +59,8 @@ public class PatientService extends QueryService<Patient> {
         TreatmentRepository treatmentRepository,
         TreatmentPlanRepository treatmentPlanRepository,
         TreatmentTaskRepository treatmentTaskRepository,
-        RelationshipService relationshipService
+        RelationshipService relationshipService,
+        ToothRepository toothRepository
     ) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
@@ -68,6 +71,7 @@ public class PatientService extends QueryService<Patient> {
         this.treatmentPlanRepository = treatmentPlanRepository;
         this.treatmentTaskRepository = treatmentTaskRepository;
         this.relationshipService = relationshipService;
+        this.toothRepository = toothRepository;
     }
 
     /**
@@ -92,12 +96,10 @@ public class PatientService extends QueryService<Patient> {
     public Patient save(Patient patient) {
         log.debug("Request to save Patient : {}", patient);
 
-        Set<Tooth> teeth = patient.getTeeth();
-
         patient = patientRepository.save(patient.newPatient(true).teeth(null));
         patient.setMedicalId(String.format("%05d", patient.getId()));
         patient.getTreatments().add(createGeneralTreatmentAndPlanAndTaskWithPatient(patient));
-        relationshipService.addRelationshipWithTeeth(patient.teeth(teeth));
+        createTeeth(patient);
 
         return patient;
     }
@@ -333,5 +335,23 @@ public class PatientService extends QueryService<Patient> {
         }
 
         return specification;
+    }
+
+    private void createTeeth(Patient patient) {
+        patient.setTeeth(new HashSet<>());
+
+        // permanent teeth
+        for (int i = 1; i <= 4; i++) {
+            for (int j = 1; j <= 8; j++) {
+                patient.getTeeth().add(toothRepository.save(new Tooth().patient(patient).position(String.valueOf(i * 10 + j))));
+            }
+        }
+
+        // baby teeth
+        for (int i = 5; i <= 8; i++) {
+            for (int j = 1; j <= 5; j++) {
+                patient.getTeeth().add(toothRepository.save(new Tooth().patient(patient).position(String.valueOf(i * 10 + j))));
+            }
+        }
     }
 }

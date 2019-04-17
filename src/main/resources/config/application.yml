@@ -57,7 +57,7 @@ spring:
     thymeleaf:
         mode: HTML
     jackson:
-        default-property-inclusion: non_empty
+        default-property-inclusion: non_null
 
 server:
     servlet:
