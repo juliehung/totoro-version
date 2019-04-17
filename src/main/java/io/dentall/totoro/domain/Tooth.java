@@ -1,13 +1,19 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -16,6 +22,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "tooth")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class Tooth extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,14 +47,19 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
     private TreatmentProcedure treatmentProcedure;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "teeth", allowSetters = true)
+    @JsonIgnoreProperties(value = {"treatmentProcedures", "prescription", "todo", "registration", "teeth"}, allowSetters = true)
     private Disposal disposal;
 
     @ManyToOne
     @JsonIgnoreProperties(value = {"appointments", "treatments", "todos", "teeth"}, allowSetters = true)
     private Patient patient;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    @NotNull
+    @Column(name = "metadata", nullable = false, columnDefinition = "jsonb")
+    @Type(type = "jsonb")
+    private Map<String, Object> metadata = new LinkedHashMap<>();
+
     public Long getId() {
         return id;
     }
@@ -134,6 +146,20 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
         this.patient = patient;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public Map<String, Object> getMetadata() {
+        return metadata;
+    }
+
+    public Tooth metadata(Map<String, Object> metadata) {
+        this.metadata = metadata;
+        return this;
+    }
+
+    @JsonAnySetter
+    public void setMetadata(String key, Object value) {
+        metadata.put(key, value);
+    }
 
     @Override
     public boolean equals(Object o) {
