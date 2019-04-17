@@ -39,6 +39,7 @@
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/20190404_addColumn.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190417_addColumn.xml" relativeToChangelogFile="false"/>
 
     <!-- add default values -->
     <include file="config/liquibase/changelog/20190404_addDefaultValue.xml" relativeToChangelogFile="false"/>
