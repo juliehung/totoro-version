@@ -31,8 +31,6 @@ public class TreatmentProcedureService {
 
     private final AppointmentRepository appointmentRepository;
 
-    private final RegistrationRepository registrationRepository;
-
     private final RelationshipService relationshipService;
 
     private final TreatmentTaskRepository treatmentTaskRepository;
@@ -49,7 +47,6 @@ public class TreatmentProcedureService {
         TreatmentProcedureRepository treatmentProcedureRepository,
         ProcedureRepository procedureRepository,
         AppointmentRepository appointmentRepository,
-        RegistrationRepository registrationRepository,
         RelationshipService relationshipService,
         TreatmentTaskRepository treatmentTaskRepository,
         TodoRepository todoRepository,
@@ -60,7 +57,6 @@ public class TreatmentProcedureService {
         this.treatmentProcedureRepository = treatmentProcedureRepository;
         this.procedureRepository = procedureRepository;
         this.appointmentRepository = appointmentRepository;
-        this.registrationRepository = registrationRepository;
         this.relationshipService = relationshipService;
         this.treatmentTaskRepository = treatmentTaskRepository;
         this.todoRepository = todoRepository;
@@ -176,10 +172,6 @@ public class TreatmentProcedureService {
 
                 if (updateTreatmentProcedure.getAppointment() != null && updateTreatmentProcedure.getAppointment().getId() != null) {
                     appointmentRepository.findById(updateTreatmentProcedure.getAppointment().getId()).ifPresent(treatmentProcedure::setAppointment);
-                }
-
-                if (updateTreatmentProcedure.getRegistration() != null && updateTreatmentProcedure.getRegistration().getId() != null) {
-                    registrationRepository.findById(updateTreatmentProcedure.getRegistration().getId()).ifPresent(treatmentProcedure::setRegistration);
                 }
 
                 if (updateTreatmentProcedure.getTreatmentTask() != null && updateTreatmentProcedure.getTreatmentTask().getId() != null) {

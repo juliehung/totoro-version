@@ -32,12 +32,6 @@
                                  referencedColumnNames="id"
                                  referencedTableName="appointment"/>
 
-        <addForeignKeyConstraint baseColumnNames="registration_id"
-                                 baseTableName="treatment_procedure"
-                                 constraintName="fk_treatment_procedure_registration_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="registration"/>
-
         <addForeignKeyConstraint baseColumnNames="todo_id"
                                  baseTableName="treatment_procedure"
                                  constraintName="fk_treatment_procedure_todo_id"

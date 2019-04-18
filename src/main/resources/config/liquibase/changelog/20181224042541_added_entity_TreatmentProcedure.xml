@@ -61,10 +61,6 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="registration_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
             <column name="todo_id" type="bigint">
                 <constraints nullable="true" />
             </column>

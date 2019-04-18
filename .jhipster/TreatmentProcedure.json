@@ -27,12 +27,6 @@
             "otherEntityField": "id"
         },
         {
-            "relationshipName": "registration",
-            "otherEntityName": "registration",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id"
-        },
-        {
             "relationshipName": "tooth",
             "otherEntityName": "tooth",
             "relationshipType": "one-to-many",

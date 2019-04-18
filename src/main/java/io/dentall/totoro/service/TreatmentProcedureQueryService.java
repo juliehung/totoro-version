@@ -117,10 +117,6 @@ public class TreatmentProcedureQueryService extends QueryService<TreatmentProced
                 specification = specification.and(buildSpecification(criteria.getAppointmentId(),
                     root -> root.join(TreatmentProcedure_.appointment, JoinType.LEFT).get(Appointment_.id)));
             }
-            if (criteria.getRegistrationId() != null) {
-                specification = specification.and(buildSpecification(criteria.getRegistrationId(),
-                    root -> root.join(TreatmentProcedure_.registration, JoinType.LEFT).get(Registration_.id)));
-            }
             if (criteria.getToothId() != null) {
                 specification = specification.and(buildSpecification(criteria.getToothId(),
                     root -> root.join(TreatmentProcedure_.teeth, JoinType.LEFT).get(Tooth_.id)));

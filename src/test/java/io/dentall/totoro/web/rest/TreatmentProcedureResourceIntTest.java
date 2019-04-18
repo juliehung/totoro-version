@@ -572,26 +572,6 @@ public class TreatmentProcedureResourceIntTest {
         defaultTreatmentProcedureShouldNotBeFound("appointmentId.equals=" + (appointmentId + 1));
     }
 
-
-    @Test
-    @Transactional
-    public void getAllTreatmentProceduresByRegistrationIsEqualToSomething() throws Exception {
-        // Initialize the database
-        Registration registration = RegistrationResourceIntTest.createEntity(em);
-        em.persist(registration);
-        em.flush();
-        treatmentProcedure.setRegistration(registration);
-        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
-        Long registrationId = registration.getId();
-
-        // Get all the treatmentProcedureList where registration equals to registrationId
-        defaultTreatmentProcedureShouldBeFound("registrationId.equals=" + registrationId);
-
-        // Get all the treatmentProcedureList where registration equals to registrationId + 1
-        defaultTreatmentProcedureShouldNotBeFound("registrationId.equals=" + (registrationId + 1));
-    }
-
-
     @Test
     @Transactional
     public void getAllTreatmentProceduresByToothIsEqualToSomething() throws Exception {
