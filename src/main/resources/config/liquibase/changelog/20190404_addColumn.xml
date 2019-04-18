@@ -7,7 +7,7 @@
     <changeSet id="20190404-AddColumn" author="Jim">
 
         <addColumn tableName="patient">
-            <column name="dominant_doctor_user_id" type="bigint">
+            <column name="last_doctor_user_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 

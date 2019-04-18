@@ -42,9 +42,9 @@ public class ExtendUser implements Serializable, Avatar {
     @JsonIgnoreProperties("extendUser")
     private User user;
 
-    @OneToMany(mappedBy = "dominantDoctor")
+    @OneToMany(mappedBy = "lastDoctor")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Patient> dominantPatients = new HashSet<>();
+    private Set<Patient> lastPatients = new HashSet<>();
 
     @OneToMany(mappedBy = "firstDoctor")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -152,29 +152,29 @@ public class ExtendUser implements Serializable, Avatar {
         this.user = user;
     }
 
-    public Set<Patient> getDominantPatients() {
-        return dominantPatients;
+    public Set<Patient> getLastPatients() {
+        return lastPatients;
     }
 
-    public ExtendUser dominantPatients(Set<Patient> dominantPatients) {
-        this.dominantPatients = dominantPatients;
+    public ExtendUser lastPatients(Set<Patient> lastPatients) {
+        this.lastPatients = lastPatients;
         return this;
     }
 
-    public ExtendUser addDominantPatient(Patient dominantPatient) {
-        this.dominantPatients.add(dominantPatient);
-        dominantPatient.setDominantDoctor(this);
+    public ExtendUser addlastPatient(Patient lastPatient) {
+        this.lastPatients.add(lastPatient);
+        lastPatient.setLastDoctor(this);
         return this;
     }
 
-    public ExtendUser removeAppointment(Patient dominantPatient) {
-        this.dominantPatients.remove(dominantPatient);
-        dominantPatient.setDominantDoctor(null);
+    public ExtendUser removeLastPatient(Patient lastPatient) {
+        this.lastPatients.remove(lastPatient);
+        lastPatient.setLastDoctor(null);
         return this;
     }
 
-    public void setDominantPatients(Set<Patient> dominantPatients) {
-        this.dominantPatients = dominantPatients;
+    public void setLastPatients(Set<Patient> lastPatients) {
+        this.lastPatients = lastPatients;
     }
 
     public Set<Patient> getFirstPatients() {

@@ -6,9 +6,9 @@
 
     <changeSet id="20190404-AddForeignKeyConstraint" author="Jim">
 
-        <addForeignKeyConstraint baseColumnNames="dominant_doctor_user_id"
+        <addForeignKeyConstraint baseColumnNames="last_doctor_user_id"
                                  baseTableName="patient"
-                                 constraintName="fk_patient_dominant_doctor_user_id"
+                                 constraintName="fk_patient_last_doctor_user_id"
                                  referencedColumnNames="user_id"
                                  referencedTableName="extend_user"/>
 

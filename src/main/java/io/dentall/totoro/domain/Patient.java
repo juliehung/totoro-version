@@ -167,11 +167,11 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     @ManyToOne
-    @JsonIgnoreProperties(value = {"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments", "calendars"}, allowSetters = true)
-    private ExtendUser dominantDoctor;
+    @JsonIgnoreProperties(value = {"lastPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments", "calendars"}, allowSetters = true)
+    private ExtendUser lastDoctor;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = {"dominantPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments", "calendars"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"lastPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments", "calendars"}, allowSetters = true)
     private ExtendUser firstDoctor;
 
     public Long getId() {
@@ -748,17 +748,17 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    public ExtendUser getDominantDoctor() {
-        return dominantDoctor;
+    public ExtendUser getLastDoctor() {
+        return lastDoctor;
     }
 
-    public Patient dominantDoctor(ExtendUser dominantDoctor) {
-        this.dominantDoctor = dominantDoctor;
+    public Patient lastDoctor(ExtendUser lastDoctor) {
+        this.lastDoctor = lastDoctor;
         return this;
     }
 
-    public void setDominantDoctor(ExtendUser dominantDoctor) {
-        this.dominantDoctor = dominantDoctor;
+    public void setLastDoctor(ExtendUser lastDoctor) {
+        this.lastDoctor = lastDoctor;
     }
 
     public ExtendUser getFirstDoctor() {
