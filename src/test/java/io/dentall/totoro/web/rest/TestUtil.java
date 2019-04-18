@@ -149,7 +149,7 @@ public class TestUtil {
         userRepository.save(user);
 
         ExtendUser extendUser = user.getExtendUser();
-        patient.setDominantDoctor(extendUser);
+        patient.setLastDoctor(extendUser);
         patient.setFirstDoctor(extendUser);
 
         Tag tag = TagResourceIntTest.createEntity(em);

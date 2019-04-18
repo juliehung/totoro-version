@@ -217,7 +217,7 @@ public class PatientResourceIntTest {
         extendUser = user.getExtendUser();
 
         patient = createEntity(em);
-        patient.setDominantDoctor(extendUser);
+        patient.setLastDoctor(extendUser);
         patient.setFirstDoctor(extendUser);
 
         tag = TagResourceIntTest.createEntity(em);
@@ -266,7 +266,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getClinicNote()).isEqualTo(DEFAULT_CLINIC_NOTE);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(DEFAULT_WRITE_IC_TIME);
         assertThat(testPatient.isNewPatient()).isEqualTo(true);
-        assertThat(testPatient.getDominantDoctor()).isEqualTo(extendUser);
+        assertThat(testPatient.getLastDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getFirstDoctor()).isEqualTo(extendUser);
         assertThat(testPatient.getIntroducer()).isEqualTo(null);
         assertThat(testPatient.getTags()).contains(tag);

@@ -96,10 +96,10 @@ public class PatientService extends QueryService<Patient> {
     public Patient save(Patient patient) {
         log.debug("Request to save Patient : {}", patient);
 
-        patient = patientRepository.save(patient.newPatient(true).teeth(null));
+        patient = patientRepository.save(patient.newPatient(true));
         patient.setMedicalId(String.format("%05d", patient.getId()));
-        patient.getTreatments().add(createGeneralTreatmentAndPlanAndTaskWithPatient(patient));
-        createTeeth(patient);
+        patient.getTreatments().add(createGeneralTreatmentAndPlanAndTask(patient));
+        patient.setTeeth(createTeeth(patient));
 
         return patient;
     }
@@ -212,10 +212,10 @@ public class PatientService extends QueryService<Patient> {
                     patient.setIntroducer(patientRepository.findById(updatePatient.getIntroducer().getId()).orElse(null));
                 }
 
-                // dominantDoctor
-                if (updatePatient.getDominantDoctor() != null) {
-                    log.debug("Update dominantDoctor({}) of Patient(id: {})", updatePatient.getDominantDoctor(), updatePatient.getId());
-                    patient.setDominantDoctor(extendUserRepository.findById(updatePatient.getDominantDoctor().getId()).orElse(null));
+                // lastDoctor
+                if (updatePatient.getLastDoctor() != null) {
+                    log.debug("Update lastDoctor({}) of Patient(id: {})", updatePatient.getLastDoctor(), updatePatient.getId());
+                    patient.setLastDoctor(extendUserRepository.findById(updatePatient.getLastDoctor().getId()).orElse(null));
                 }
 
                 // firstDoctor
@@ -279,7 +279,7 @@ public class PatientService extends QueryService<Patient> {
         return questionnaire;
     }
 
-    private Treatment createGeneralTreatmentAndPlanAndTaskWithPatient(Patient patient) {
+    private Treatment createGeneralTreatmentAndPlanAndTask(Patient patient) {
         log.debug("Request to create general Treatment");
 
         Treatment treatment = new Treatment().name("General Treatment").type(TreatmentType.GENERAL).patient(patient);
@@ -337,21 +337,23 @@ public class PatientService extends QueryService<Patient> {
         return specification;
     }
 
-    private void createTeeth(Patient patient) {
-        patient.setTeeth(new HashSet<>());
+    private Set<Tooth> createTeeth(Patient patient) {
+        Set<Tooth> teeth = new HashSet<>();
 
-        // permanent teeth
-        for (int i = 1; i <= 4; i++) {
-            for (int j = 1; j <= 8; j++) {
-                patient.getTeeth().add(toothRepository.save(new Tooth().patient(patient).position(String.valueOf(i * 10 + j))));
+        for (int i = 1; i <= 8; i++) {
+            if (i < 5) {
+                // permanent teeth
+                for (int j = 1; j <= 8; j++) {
+                    teeth.add(toothRepository.save(new Tooth().patient(patient).position(String.valueOf(i * 10 + j))));
+                }
+            } else {
+                // baby teeth
+                for (int j = 1; j <= 5; j++) {
+                    teeth.add(toothRepository.save(new Tooth().patient(patient).position(String.valueOf(i * 10 + j))));
+                }
             }
         }
 
-        // baby teeth
-        for (int i = 5; i <= 8; i++) {
-            for (int j = 1; j <= 5; j++) {
-                patient.getTeeth().add(toothRepository.save(new Tooth().patient(patient).position(String.valueOf(i * 10 + j))));
-            }
-        }
+        return teeth;
     }
 }

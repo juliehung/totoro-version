@@ -1,4 +1,4 @@
-id;name;phone;birth;national_id;gender;medical_id;address;email;note;emergency_name;emergency_phone;first_doctor_user_id;dominant_doctor_user_id;created_by
+id;name;phone;birth;national_id;gender;medical_id;address;email;note;emergency_name;emergency_phone;first_doctor_user_id;last_doctor_user_id;created_by
 1;Test; ;1989-05-17;AS11225651;MALE;00001;NULL;NULL;NULL;NULL;NULL;16;16;system
 2;末麻衣子; ;1900-01-01;NULL;FEMALE;00002;NULL;NULL;NULL;戴佑伶;0921995667;5;5;system
 3;馬驊;0920760030;1921-12-25;F202471176;FEMALE;00003;新北市永和區永寧街54號3樓;NULL;4/15 孫子手機 0920760030;NULL;NULL;6;6;system

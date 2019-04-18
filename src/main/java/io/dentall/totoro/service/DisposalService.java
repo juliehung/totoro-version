@@ -86,7 +86,7 @@ public class DisposalService {
             ExtendUser doctor = disposal.getRegistration().getAppointment().getDoctor();
 
             disposal.setCreatedBy(doctor.getUser().getLogin());
-            patient.setDominantDoctor(doctor);
+            patient.setLastDoctor(doctor);
             if (patient.getFirstDoctor() == null) {
                 patient.setFirstDoctor(doctor);
             }
