@@ -51,8 +51,6 @@ public class TreatmentProcedureCriteria implements Serializable {
 
     private LongFilter appointmentId;
 
-    private LongFilter registrationId;
-
     private LongFilter toothId;
 
     private LongFilter todoId;
@@ -147,14 +145,6 @@ public class TreatmentProcedureCriteria implements Serializable {
         this.appointmentId = appointmentId;
     }
 
-    public LongFilter getRegistrationId() {
-        return registrationId;
-    }
-
-    public void setRegistrationId(LongFilter registrationId) {
-        this.registrationId = registrationId;
-    }
-
     public LongFilter getToothId() {
         return toothId;
     }
@@ -201,7 +191,6 @@ public class TreatmentProcedureCriteria implements Serializable {
             Objects.equals(treatmentTaskId, that.treatmentTaskId) &&
             Objects.equals(procedureId, that.procedureId) &&
             Objects.equals(appointmentId, that.appointmentId) &&
-            Objects.equals(registrationId, that.registrationId) &&
             Objects.equals(toothId, that.toothId) &&
             Objects.equals(todoId, that.todoId) &&
             Objects.equals(disposalId, that.disposalId);
@@ -221,7 +210,6 @@ public class TreatmentProcedureCriteria implements Serializable {
         treatmentTaskId,
         procedureId,
         appointmentId,
-        registrationId,
         toothId,
         todoId,
         disposalId
@@ -242,7 +230,6 @@ public class TreatmentProcedureCriteria implements Serializable {
                 (treatmentTaskId != null ? "treatmentTaskId=" + treatmentTaskId + ", " : "") +
                 (procedureId != null ? "procedureId=" + procedureId + ", " : "") +
                 (appointmentId != null ? "appointmentId=" + appointmentId + ", " : "") +
-                (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
                 (toothId != null ? "toothId=" + toothId + ", " : "") +
                 (todoId != null ? "todoId=" + todoId + ", " : "") +
                 (disposalId != null ? "disposalId=" + disposalId + ", " : "") +

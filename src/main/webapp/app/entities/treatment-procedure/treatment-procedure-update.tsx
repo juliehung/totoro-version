@@ -16,8 +16,6 @@ import { IProcedure } from 'app/shared/model/procedure.model';
 import { getEntities as getProcedures } from 'app/entities/procedure/procedure.reducer';
 import { IAppointment } from 'app/shared/model/appointment.model';
 import { getEntities as getAppointments } from 'app/entities/appointment/appointment.reducer';
-import { IRegistration } from 'app/shared/model/registration.model';
-import { getEntities as getRegistrations } from 'app/entities/registration/registration.reducer';
 import { ITodo } from 'app/shared/model/todo.model';
 import { getEntities as getTodos } from 'app/entities/todo/todo.reducer';
 import { IDisposal } from 'app/shared/model/disposal.model';
@@ -36,7 +34,6 @@ export interface ITreatmentProcedureUpdateState {
   treatmentTaskId: string;
   procedureId: string;
   appointmentId: string;
-  registrationId: string;
   todoId: string;
   disposalId: string;
 }
@@ -49,7 +46,6 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
       treatmentTaskId: '0',
       procedureId: '0',
       appointmentId: '0',
-      registrationId: '0',
       todoId: '0',
       disposalId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
@@ -73,7 +69,6 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
     this.props.getTreatmentTasks();
     this.props.getProcedures();
     this.props.getAppointments();
-    this.props.getRegistrations();
     this.props.getTodos();
     this.props.getDisposals();
   }
@@ -107,7 +102,6 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
       treatmentTasks,
       procedures,
       appointments,
-      registrations,
       todos,
       disposals,
       loading,
@@ -266,21 +260,6 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                   </AvInput>
                 </AvGroup>
                 <AvGroup>
-                  <Label for="registration.id">
-                    <Translate contentKey="totoroApp.treatmentProcedure.registration">Registration</Translate>
-                  </Label>
-                  <AvInput id="treatment-procedure-registration" type="select" className="form-control" name="registration.id">
-                    <option value="" key="0" />
-                    {registrations
-                      ? registrations.map(otherEntity => (
-                          <option value={otherEntity.id} key={otherEntity.id}>
-                            {otherEntity.id}
-                          </option>
-                        ))
-                      : null}
-                  </AvInput>
-                </AvGroup>
-                <AvGroup>
                   <Label for="todo.id">
                     <Translate contentKey="totoroApp.treatmentProcedure.todo">Todo</Translate>
                   </Label>
@@ -337,7 +316,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   treatmentTasks: storeState.treatmentTask.entities,
   procedures: storeState.procedure.entities,
   appointments: storeState.appointment.entities,
-  registrations: storeState.registration.entities,
   todos: storeState.todo.entities,
   disposals: storeState.disposal.entities,
   treatmentProcedureEntity: storeState.treatmentProcedure.entity,
@@ -351,7 +329,6 @@ const mapDispatchToProps = {
   getTreatmentTasks,
   getProcedures,
   getAppointments,
-  getRegistrations,
   getTodos,
   getDisposals,
   getEntity,

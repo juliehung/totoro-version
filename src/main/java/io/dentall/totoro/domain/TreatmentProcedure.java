@@ -1,6 +1,7 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -14,6 +15,8 @@ import java.util.Set;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
+
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
  * A TreatmentProcedure.
@@ -55,7 +58,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     private NHIProcedure nhiProcedure;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = {"treatmentProcedures", "treatmentPlan"}, allowSetters = true)
+    @JsonProperty(access = WRITE_ONLY)
     private TreatmentTask treatmentTask;
 
     @ManyToOne
@@ -63,23 +66,19 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     private Procedure procedure;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = {"treatmentProcedures", "patient"}, allowSetters = true)
+    @JsonProperty(access = WRITE_ONLY)
     private Appointment appointment;
-
-    @ManyToOne
-    @JsonIgnoreProperties(value = "treatmentProcedures", allowSetters = true)
-    private Registration registration;
 
     @OneToMany(mappedBy = "treatmentProcedure", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Tooth> teeth = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "treatmentProcedures", allowSetters = true)
+    @JsonProperty(access = WRITE_ONLY)
     private Todo todo;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = {"treatmentProcedures", "registration"}, allowSetters = true)
+    @JsonProperty(access = WRITE_ONLY)
     private Disposal disposal;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -218,19 +217,6 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
 
     public void setAppointment(Appointment appointment) {
         this.appointment = appointment;
-    }
-
-    public Registration getRegistration() {
-        return registration;
-    }
-
-    public TreatmentProcedure registration(Registration registration) {
-        this.registration = registration;
-        return this;
-    }
-
-    public void setRegistration(Registration registration) {
-        this.registration = registration;
     }
 
     public Set<Tooth> getTeeth() {
