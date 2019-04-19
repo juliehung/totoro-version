@@ -36,6 +36,7 @@
     <include file="config/liquibase/changelog/20190218044229_added_entity_TreatmentDrug.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190220033723_added_entity_Disposal.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190322032120_added_entity_RegistrationDel.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190418_added_entity_ExtendDisposalNHI.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/20190404_addColumn.xml" relativeToChangelogFile="false"/>

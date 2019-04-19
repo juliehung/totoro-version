@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity ExtendDisposalNHI.
+    -->
+    <changeSet id="20190418" author="Jim">
+        <createTable tableName="extend_disposal_nhi">
+            <column name="disposal_id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="a11" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a12" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a13" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a14" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a15" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a16" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a17" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a18" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a19" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a22" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a23" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a25" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a26" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a27" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a31" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a32" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a41" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a42" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a43" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a44" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="a54" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
