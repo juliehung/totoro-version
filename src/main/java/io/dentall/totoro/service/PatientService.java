@@ -99,7 +99,6 @@ public class PatientService extends QueryService<Patient> {
         patient = patientRepository.save(patient.newPatient(true));
         patient.setMedicalId(String.format("%05d", patient.getId()));
         patient.getTreatments().add(createGeneralTreatmentAndPlanAndTask(patient));
-        patient.setTeeth(createTeeth(patient));
 
         return patient;
     }
@@ -335,25 +334,5 @@ public class PatientService extends QueryService<Patient> {
         }
 
         return specification;
-    }
-
-    private Set<Tooth> createTeeth(Patient patient) {
-        Set<Tooth> teeth = new HashSet<>();
-
-        for (int i = 1; i <= 8; i++) {
-            if (i < 5) {
-                // permanent teeth
-                for (int j = 1; j <= 8; j++) {
-                    teeth.add(toothRepository.save(new Tooth().patient(patient).position(String.valueOf(i * 10 + j))));
-                }
-            } else {
-                // baby teeth
-                for (int j = 1; j <= 5; j++) {
-                    teeth.add(toothRepository.save(new Tooth().patient(patient).position(String.valueOf(i * 10 + j))));
-                }
-            }
-        }
-
-        return teeth;
     }
 }
