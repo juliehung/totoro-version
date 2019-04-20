@@ -168,6 +168,7 @@ public class AppointmentService {
 
                 // treatmentProcedures
                 if (updateAppointment.getTreatmentProcedures() != null) {
+                    relationshipService.deleteRelationshipWithTreatmentProcedures(appointment, updateAppointment);
                     relationshipService.addRelationshipWithTreatmentProcedures(appointment.treatmentProcedures(updateAppointment.getTreatmentProcedures()));
                 }
 
