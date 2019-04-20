@@ -206,6 +206,16 @@ public class RelationshipService {
         patient.setTeeth(teeth);
     }
 
+    void deleteRelationshipWithTreatmentProcedures(Appointment appointment, Appointment updateAppointment) {
+        Set<Long> updateIds = updateAppointment.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet());
+        appointment
+            .getTreatmentProcedures()
+            .stream()
+            .map(TreatmentProcedure::getId)
+            .filter(id -> !updateIds.contains(id))
+            .forEach(treatmentProcedureService::delete);
+    }
+
     private <Owner> Set<Owner> getRelationshipWithOwners(Stream<Owner> owners, Function<Owner, Owner> mapper) {
         return owners
             .map(mapper)
