@@ -44,7 +44,7 @@ id;major;minor;display
 43;Mobility;Peri;false
 44;Bleeding On Probing;Peri;false
 45;Angular Bony Defect;Peri;true
-46;Avalsion;Trauma;false
+46;Avulsion;Trauma;false
 47;Tooth Fracture;Trauma;true
 48;Alveolar Fracture;Trauma;false
 49;Intrusion;Trauma;false

@@ -1,10 +1,7 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentTask;
-import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
-import io.dentall.totoro.service.TreatmentProcedureService;
 import io.dentall.totoro.service.TreatmentTaskService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
@@ -17,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,12 +38,9 @@ public class TreatmentTaskResource {
 
     private final TreatmentTaskQueryService treatmentTaskQueryService;
 
-    private final TreatmentProcedureService treatmentProcedureService;
-
-    public TreatmentTaskResource(TreatmentTaskService treatmentTaskService, TreatmentTaskQueryService treatmentTaskQueryService, TreatmentProcedureService treatmentProcedureService) {
+    public TreatmentTaskResource(TreatmentTaskService treatmentTaskService, TreatmentTaskQueryService treatmentTaskQueryService) {
         this.treatmentTaskService = treatmentTaskService;
         this.treatmentTaskQueryService = treatmentTaskQueryService;
-        this.treatmentProcedureService = treatmentProcedureService;
     }
 
     /**
@@ -66,10 +59,6 @@ public class TreatmentTaskResource {
         }
 
         TreatmentTask result = treatmentTaskService.save(treatmentTask);
-
-        // add default TreatmentProcedure of TreatmentTask
-        result.getTreatmentProcedures().add(treatmentProcedureService.save(new TreatmentProcedure().status(TreatmentProcedureStatus.HIDE).treatmentTask(result)));
-        result.setTreatmentProcedures(result.getTreatmentProcedures());
 
         return ResponseEntity.created(new URI("/api/treatment-tasks/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

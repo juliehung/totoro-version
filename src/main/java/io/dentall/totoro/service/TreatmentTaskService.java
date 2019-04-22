@@ -2,6 +2,7 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentTask;
+import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 import io.dentall.totoro.repository.TreatmentPlanRepository;
 import io.dentall.totoro.repository.TreatmentTaskRepository;
 import org.slf4j.Logger;
@@ -50,6 +51,9 @@ public class TreatmentTaskService {
         log.debug("Request to save TreatmentTask : {}", treatmentTask);
 
         Set<TreatmentProcedure> treatmentProcedures = treatmentTask.getTreatmentProcedures();
+        // add default TreatmentProcedure of TreatmentTask
+        treatmentProcedures.add(new TreatmentProcedure().status(TreatmentProcedureStatus.HIDE));
+
         treatmentTask = treatmentTaskRepository.save(treatmentTask.treatmentProcedures(null));
         relationshipService.addRelationshipWithTreatmentProcedures(treatmentTask.treatmentProcedures(treatmentProcedures));
 
@@ -88,6 +92,8 @@ public class TreatmentTaskService {
      */
     public void delete(Long id) {
         log.debug("Request to delete TreatmentTask : {}", id);
+
+        relationshipService.deleteRelationshipWithTreatmentProceduresByTreatmentTaskId(id);
         treatmentTaskRepository.deleteById(id);
     }
 
