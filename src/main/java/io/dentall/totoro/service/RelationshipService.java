@@ -1,6 +1,9 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.service.dto.ToothCriteria;
+import io.dentall.totoro.service.dto.TreatmentProcedureCriteria;
+import io.github.jhipster.service.filter.LongFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -26,31 +29,32 @@ public class RelationshipService {
 
     private final TreatmentDrugService treatmentDrugService;
 
+    private final ToothQueryService toothQueryService;
+
+    private final TreatmentProcedureQueryService treatmentProcedureQueryService;
+
     public RelationshipService(
         @Lazy TreatmentProcedureService treatmentProcedureService,
         @Lazy TreatmentTaskService treatmentTaskService,
         ToothService toothService,
-        TreatmentDrugService treatmentDrugService
+        TreatmentDrugService treatmentDrugService,
+        ToothQueryService toothQueryService,
+        TreatmentProcedureQueryService treatmentProcedureQueryService
     ) {
         this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentTaskService = treatmentTaskService;
         this.toothService = toothService;
         this.treatmentDrugService = treatmentDrugService;
+        this.toothQueryService = toothQueryService;
+        this.treatmentProcedureQueryService = treatmentProcedureQueryService;
     }
 
     void addRelationshipWithTreatmentTasks(TreatmentPlan treatmentPlan) {
         Set<TreatmentTask> treatmentTasks = treatmentPlan.getTreatmentTasks();
         if (treatmentTasks != null) {
             treatmentTasks = getRelationshipWithOwners(
-                treatmentTasks
-                    .stream()
-                    .map(this::getTreatmentTask),
-                treatmentTask -> {
-                    treatmentTask.setTreatmentPlan(treatmentPlan);
-                    addRelationshipWithTreatmentProcedures(treatmentTask);
-
-                    return treatmentTask;
-                }
+                treatmentTasks.stream().map(this::getTreatmentTask),
+                treatmentTask -> treatmentTask.treatmentPlan(treatmentPlan)
             );
         }
 
@@ -61,15 +65,8 @@ public class RelationshipService {
         Set<TreatmentProcedure> treatmentProcedures = disposal.getTreatmentProcedures();
         if (treatmentProcedures != null) {
             treatmentProcedures = getRelationshipWithOwners(
-                treatmentProcedures
-                    .stream()
-                    .map(this::getTreatmentProcedure),
-                treatmentProcedure -> {
-                    treatmentProcedure.setDisposal(disposal);
-                    addRelationshipWithTeeth(treatmentProcedure);
-
-                    return treatmentProcedure;
-                }
+                treatmentProcedures.stream().map(this::getTreatmentProcedure),
+                treatmentProcedure -> treatmentProcedure.disposal(disposal)
             );
         }
 
@@ -80,15 +77,8 @@ public class RelationshipService {
         Set<TreatmentProcedure> treatmentProcedures = todo.getTreatmentProcedures();
         if (treatmentProcedures != null) {
             treatmentProcedures = getRelationshipWithOwners(
-                treatmentProcedures
-                    .stream()
-                    .map(this::getTreatmentProcedure),
-                treatmentProcedure -> {
-                    treatmentProcedure.setTodo(todo);
-                    addRelationshipWithTeeth(treatmentProcedure);
-
-                    return treatmentProcedure;
-                }
+                treatmentProcedures.stream().map(this::getTreatmentProcedure),
+                treatmentProcedure -> treatmentProcedure.todo(todo)
             );
         }
 
@@ -99,15 +89,8 @@ public class RelationshipService {
         Set<TreatmentProcedure> treatmentProcedures = treatmentTask.getTreatmentProcedures();
         if (treatmentProcedures != null) {
             treatmentProcedures = getRelationshipWithOwners(
-                treatmentProcedures
-                    .stream()
-                    .map(this::getTreatmentProcedure),
-                treatmentProcedure -> {
-                    treatmentProcedure.setTreatmentTask(treatmentTask);
-                    addRelationshipWithTeeth(treatmentProcedure);
-
-                    return treatmentProcedure;
-                }
+                treatmentProcedures.stream().map(this::getTreatmentProcedure),
+                treatmentProcedure -> treatmentProcedure.treatmentTask(treatmentTask)
             );
         }
 
@@ -118,15 +101,8 @@ public class RelationshipService {
         Set<TreatmentProcedure> treatmentProcedures = appointment.getTreatmentProcedures();
         if (treatmentProcedures != null) {
             treatmentProcedures = getRelationshipWithOwners(
-                treatmentProcedures
-                    .stream()
-                    .map(this::getTreatmentProcedure),
-                treatmentProcedure -> {
-                    treatmentProcedure.setAppointment(appointment);
-                    addRelationshipWithTeeth(treatmentProcedure);
-
-                    return treatmentProcedure;
-                }
+                treatmentProcedures.stream().map(this::getTreatmentProcedure),
+                treatmentProcedure -> treatmentProcedure.appointment(appointment)
             );
         }
 
@@ -137,15 +113,8 @@ public class RelationshipService {
         Set<TreatmentDrug> treatmentDrugs = prescription.getTreatmentDrugs();
         if (treatmentDrugs != null) {
             treatmentDrugs = getRelationshipWithOwners(
-                treatmentDrugs
-                    .stream()
-                    .map(this::getTreatmentDrug),
-                treatmentDrug -> {
-                    treatmentDrug.setPrescription(prescription);
-                    treatmentDrug.setDrug(treatmentDrug.getDrug());
-
-                    return treatmentDrug;
-                }
+                treatmentDrugs.stream().map(this::getTreatmentDrug),
+                treatmentDrug -> treatmentDrug.prescription(prescription).drug(treatmentDrug.getDrug())
             );
         }
 
@@ -156,14 +125,8 @@ public class RelationshipService {
         Set<Tooth> teeth = treatmentProcedure.getTeeth();
         if (teeth != null) {
             teeth = getRelationshipWithOwners(
-                teeth
-                    .stream()
-                    .map(this::getTooth),
-                tooth -> {
-                    tooth.setTreatmentProcedure(treatmentProcedure);
-
-                    return tooth;
-                }
+                teeth.stream().map(this::getTooth),
+                tooth -> tooth.treatmentProcedure(treatmentProcedure)
             );
         }
 
@@ -174,14 +137,8 @@ public class RelationshipService {
         Set<Tooth> teeth = disposal.getTeeth();
         if (teeth != null) {
             teeth = getRelationshipWithOwners(
-                teeth
-                    .stream()
-                    .map(this::getTooth),
-                tooth -> {
-                    tooth.setDisposal(disposal);
-
-                    return tooth;
-                }
+                teeth.stream().map(this::getTooth),
+                tooth -> tooth.disposal(disposal)
             );
         }
 
@@ -192,14 +149,8 @@ public class RelationshipService {
         Set<Tooth> teeth = patient.getTeeth();
         if (teeth != null) {
             teeth = getRelationshipWithOwners(
-                teeth
-                    .stream()
-                    .map(this::getTooth),
-                tooth -> {
-                    tooth.setPatient(patient);
-
-                    return tooth;
-                }
+                teeth.stream().map(this::getTooth),
+                tooth -> tooth.patient(patient)
             );
         }
 
@@ -213,6 +164,40 @@ public class RelationshipService {
             .stream()
             .map(TreatmentProcedure::getId)
             .filter(id -> !updateIds.contains(id))
+            .forEach(treatmentProcedureService::delete);
+    }
+
+    void deleteRelationshipWithTeeth(TreatmentProcedure treatmentProcedure, TreatmentProcedure updateTreatmentProcedure) {
+        Set<Long> updateIds = updateTreatmentProcedure.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet());
+        treatmentProcedure
+            .getTeeth()
+            .stream()
+            .map(Tooth::getId)
+            .filter(id -> !updateIds.contains(id))
+            .forEach(toothService::delete);
+    }
+
+    void deleteRelationshipWithTeethByTreatmentProcedureId(Long id) {
+        LongFilter filter = new LongFilter();
+        filter.setEquals(id);
+        ToothCriteria criteria = new ToothCriteria();
+        criteria.setTreatmentProcedureId(filter);
+        toothQueryService
+            .findByCriteria(criteria)
+            .stream()
+            .map(Tooth::getId)
+            .forEach(toothService::delete);
+    }
+
+    void deleteRelationshipWithTreatmentProceduresByTreatmentTaskId(Long id) {
+        LongFilter filter = new LongFilter();
+        filter.setEquals(id);
+        TreatmentProcedureCriteria criteria = new TreatmentProcedureCriteria();
+        criteria.setTreatmentTaskId(filter);
+        treatmentProcedureQueryService
+            .findByCriteria(criteria)
+            .stream()
+            .map(TreatmentProcedure::getId)
             .forEach(treatmentProcedureService::delete);
     }
 

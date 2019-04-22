@@ -125,6 +125,10 @@ public class ToothService {
                     patientRepository.findById(updateTooth.getPatient().getId()).ifPresent(tooth::setPatient);
                 }
 
+                if (updateTooth.getMetadata() != null) {
+                    tooth.metadata(updateTooth.getMetadata());
+                }
+
                 return tooth;
             })
             .get();

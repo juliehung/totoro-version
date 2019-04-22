@@ -5,12 +5,9 @@ import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentPlan;
-import io.dentall.totoro.repository.TreatmentPlanRepository;
 import io.dentall.totoro.repository.TreatmentTaskRepository;
-import io.dentall.totoro.service.TreatmentProcedureService;
 import io.dentall.totoro.service.TreatmentTaskService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
-import io.dentall.totoro.service.dto.TreatmentTaskCriteria;
 import io.dentall.totoro.service.TreatmentTaskQueryService;
 
 import org.junit.Before;
@@ -77,9 +74,6 @@ public class TreatmentTaskResourceIntTest {
     @Autowired
     private Validator validator;
 
-    @Autowired
-    private TreatmentProcedureService treatmentProcedureService;
-
     private MockMvc restTreatmentTaskMockMvc;
 
     private TreatmentTask treatmentTask;
@@ -87,7 +81,7 @@ public class TreatmentTaskResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TreatmentTaskResource treatmentTaskResource = new TreatmentTaskResource(treatmentTaskService, treatmentTaskQueryService, treatmentProcedureService);
+        final TreatmentTaskResource treatmentTaskResource = new TreatmentTaskResource(treatmentTaskService, treatmentTaskQueryService);
         this.restTreatmentTaskMockMvc = MockMvcBuilders.standaloneSetup(treatmentTaskResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
