@@ -46,8 +46,8 @@ public class PatientIdentityResourceIntTest {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final Double DEFAULT_FREE_BURDEN = 1D;
-    private static final Double UPDATED_FREE_BURDEN = 2D;
+    private static final Boolean DEFAULT_FREE_BURDEN = false;
+    private static final Boolean UPDATED_FREE_BURDEN = true;
 
     @Autowired
     private PatientIdentityRepository patientIdentityRepository;
@@ -119,7 +119,7 @@ public class PatientIdentityResourceIntTest {
         PatientIdentity testPatientIdentity = patientIdentityList.get(patientIdentityList.size() - 1);
         assertThat(testPatientIdentity.getCode()).isEqualTo(DEFAULT_CODE);
         assertThat(testPatientIdentity.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testPatientIdentity.getFreeBurden()).isEqualTo(DEFAULT_FREE_BURDEN);
+        assertThat(testPatientIdentity.isFreeBurden()).isEqualTo(DEFAULT_FREE_BURDEN);
     }
 
     @Test
@@ -208,7 +208,7 @@ public class PatientIdentityResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(patientIdentity.getId().intValue())))
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE.toString())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].freeBurden").value(hasItem(DEFAULT_FREE_BURDEN.doubleValue())));
+            .andExpect(jsonPath("$.[*].freeBurden").value(hasItem(DEFAULT_FREE_BURDEN.booleanValue())));
     }
     
     @Test
@@ -224,7 +224,7 @@ public class PatientIdentityResourceIntTest {
             .andExpect(jsonPath("$.id").value(patientIdentity.getId().intValue()))
             .andExpect(jsonPath("$.code").value(DEFAULT_CODE.toString()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.freeBurden").value(DEFAULT_FREE_BURDEN.doubleValue()));
+            .andExpect(jsonPath("$.freeBurden").value(DEFAULT_FREE_BURDEN.booleanValue()));
     }
 
     @Test
@@ -263,7 +263,7 @@ public class PatientIdentityResourceIntTest {
         PatientIdentity testPatientIdentity = patientIdentityList.get(patientIdentityList.size() - 1);
         assertThat(testPatientIdentity.getCode()).isEqualTo(UPDATED_CODE);
         assertThat(testPatientIdentity.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testPatientIdentity.getFreeBurden()).isEqualTo(UPDATED_FREE_BURDEN);
+        assertThat(testPatientIdentity.isFreeBurden()).isEqualTo(UPDATED_FREE_BURDEN);
     }
 
     @Test

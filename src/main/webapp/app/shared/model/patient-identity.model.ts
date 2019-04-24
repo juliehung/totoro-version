@@ -2,7 +2,9 @@ export interface IPatientIdentity {
   id?: number;
   code?: string;
   name?: string;
-  freeBurden?: number;
+  freeBurden?: boolean;
 }
 
-export const defaultValue: Readonly<IPatientIdentity> = {};
+export const defaultValue: Readonly<IPatientIdentity> = {
+  freeBurden: false
+};

@@ -33,9 +33,6 @@ public class Accounting implements Serializable {
     @Column(name = "partial_burden")
     private Double partialBurden;
 
-    @Column(name = "burden_cost")
-    private Double burdenCost;
-
     @Column(name = "deposit")
     private Double deposit;
 
@@ -95,19 +92,6 @@ public class Accounting implements Serializable {
 
     public void setPartialBurden(Double partialBurden) {
         this.partialBurden = partialBurden;
-    }
-
-    public Double getBurdenCost() {
-        return burdenCost;
-    }
-
-    public Accounting burdenCost(Double burdenCost) {
-        this.burdenCost = burdenCost;
-        return this;
-    }
-
-    public void setBurdenCost(Double burdenCost) {
-        this.burdenCost = burdenCost;
     }
 
     public Double getDeposit() {
@@ -241,7 +225,6 @@ public class Accounting implements Serializable {
             "id=" + getId() +
             ", registrationFee=" + getRegistrationFee() +
             ", partialBurden=" + getPartialBurden() +
-            ", burdenCost=" + getBurdenCost() +
             ", deposit=" + getDeposit() +
             ", ownExpense=" + getOwnExpense() +
             ", other=" + getOther() +

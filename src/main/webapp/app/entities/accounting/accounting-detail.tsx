@@ -41,12 +41,6 @@ export class AccountingDetail extends React.Component<IAccountingDetailProps> {
             </dt>
             <dd>{accountingEntity.partialBurden}</dd>
             <dt>
-              <span id="burdenCost">
-                <Translate contentKey="totoroApp.accounting.burdenCost">Burden Cost</Translate>
-              </span>
-            </dt>
-            <dd>{accountingEntity.burdenCost}</dd>
-            <dt>
               <span id="deposit">
                 <Translate contentKey="totoroApp.accounting.deposit">Deposit</Translate>
               </span>

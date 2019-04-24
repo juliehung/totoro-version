@@ -45,7 +45,7 @@ export class PatientIdentityDetail extends React.Component<IPatientIdentityDetai
                 <Translate contentKey="totoroApp.patientIdentity.freeBurden">Free Burden</Translate>
               </span>
             </dt>
-            <dd>{patientIdentityEntity.freeBurden}</dd>
+            <dd>{patientIdentityEntity.freeBurden ? 'true' : 'false'}</dd>
           </dl>
           <Button tag={Link} to="/entity/patient-identity" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

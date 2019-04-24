@@ -34,7 +34,7 @@ public class PatientIdentity implements Serializable {
 
     @NotNull
     @Column(name = "free_burden", nullable = false)
-    private Double freeBurden;
+    private Boolean freeBurden;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -71,16 +71,16 @@ public class PatientIdentity implements Serializable {
         this.name = name;
     }
 
-    public Double getFreeBurden() {
+    public Boolean isFreeBurden() {
         return freeBurden;
     }
 
-    public PatientIdentity freeBurden(Double freeBurden) {
+    public PatientIdentity freeBurden(Boolean freeBurden) {
         this.freeBurden = freeBurden;
         return this;
     }
 
-    public void setFreeBurden(Double freeBurden) {
+    public void setFreeBurden(Boolean freeBurden) {
         this.freeBurden = freeBurden;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
@@ -111,7 +111,7 @@ public class PatientIdentity implements Serializable {
             "id=" + getId() +
             ", code='" + getCode() + "'" +
             ", name='" + getName() + "'" +
-            ", freeBurden=" + getFreeBurden() +
+            ", freeBurden='" + isFreeBurden() + "'" +
             "}";
     }
 }

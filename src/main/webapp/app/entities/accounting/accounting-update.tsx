@@ -122,12 +122,6 @@ export class AccountingUpdate extends React.Component<IAccountingUpdateProps, IA
                   <AvField id="accounting-partialBurden" type="string" className="form-control" name="partialBurden" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="burdenCostLabel" for="burdenCost">
-                    <Translate contentKey="totoroApp.accounting.burdenCost">Burden Cost</Translate>
-                  </Label>
-                  <AvField id="accounting-burdenCost" type="string" className="form-control" name="burdenCost" />
-                </AvGroup>
-                <AvGroup>
                   <Label id="depositLabel" for="deposit">
                     <Translate contentKey="totoroApp.accounting.deposit">Deposit</Translate>
                   </Label>
@@ -149,27 +143,13 @@ export class AccountingUpdate extends React.Component<IAccountingUpdateProps, IA
                   <Label id="patientIdentityLabel" for="patientIdentity">
                     <Translate contentKey="totoroApp.accounting.patientIdentity">Patient Identity</Translate>
                   </Label>
-                  <AvField
-                    id="accounting-patientIdentity"
-                    type="text"
-                    name="patientIdentity"
-                    validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') }
-                    }}
-                  />
+                  <AvField id="accounting-patientIdentity" type="text" name="patientIdentity" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="discountReasonLabel" for="discountReason">
                     <Translate contentKey="totoroApp.accounting.discountReason">Discount Reason</Translate>
                   </Label>
-                  <AvField
-                    id="accounting-discountReason"
-                    type="text"
-                    name="discountReason"
-                    validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') }
-                    }}
-                  />
+                  <AvField id="accounting-discountReason" type="text" name="discountReason" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="discountLabel" for="discount">

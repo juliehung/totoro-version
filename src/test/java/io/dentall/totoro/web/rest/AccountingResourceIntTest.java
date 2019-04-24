@@ -46,9 +46,6 @@ public class AccountingResourceIntTest {
     private static final Double DEFAULT_PARTIAL_BURDEN = 1D;
     private static final Double UPDATED_PARTIAL_BURDEN = 2D;
 
-    private static final Double DEFAULT_BURDEN_COST = 1D;
-    private static final Double UPDATED_BURDEN_COST = 2D;
-
     private static final Double DEFAULT_DEPOSIT = 1D;
     private static final Double UPDATED_DEPOSIT = 2D;
 
@@ -114,7 +111,6 @@ public class AccountingResourceIntTest {
         Accounting accounting = new Accounting()
             .registrationFee(DEFAULT_REGISTRATION_FEE)
             .partialBurden(DEFAULT_PARTIAL_BURDEN)
-            .burdenCost(DEFAULT_BURDEN_COST)
             .deposit(DEFAULT_DEPOSIT)
             .ownExpense(DEFAULT_OWN_EXPENSE)
             .other(DEFAULT_OTHER)
@@ -146,7 +142,6 @@ public class AccountingResourceIntTest {
         Accounting testAccounting = accountingList.get(accountingList.size() - 1);
         assertThat(testAccounting.getRegistrationFee()).isEqualTo(DEFAULT_REGISTRATION_FEE);
         assertThat(testAccounting.getPartialBurden()).isEqualTo(DEFAULT_PARTIAL_BURDEN);
-        assertThat(testAccounting.getBurdenCost()).isEqualTo(DEFAULT_BURDEN_COST);
         assertThat(testAccounting.getDeposit()).isEqualTo(DEFAULT_DEPOSIT);
         assertThat(testAccounting.getOwnExpense()).isEqualTo(DEFAULT_OWN_EXPENSE);
         assertThat(testAccounting.getOther()).isEqualTo(DEFAULT_OTHER);
@@ -205,7 +200,6 @@ public class AccountingResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(accounting.getId().intValue())))
             .andExpect(jsonPath("$.[*].registrationFee").value(hasItem(DEFAULT_REGISTRATION_FEE.doubleValue())))
             .andExpect(jsonPath("$.[*].partialBurden").value(hasItem(DEFAULT_PARTIAL_BURDEN.doubleValue())))
-            .andExpect(jsonPath("$.[*].burdenCost").value(hasItem(DEFAULT_BURDEN_COST.doubleValue())))
             .andExpect(jsonPath("$.[*].deposit").value(hasItem(DEFAULT_DEPOSIT.doubleValue())))
             .andExpect(jsonPath("$.[*].ownExpense").value(hasItem(DEFAULT_OWN_EXPENSE.doubleValue())))
             .andExpect(jsonPath("$.[*].other").value(hasItem(DEFAULT_OTHER.doubleValue())))
@@ -227,7 +221,6 @@ public class AccountingResourceIntTest {
             .andExpect(jsonPath("$.id").value(accounting.getId().intValue()))
             .andExpect(jsonPath("$.registrationFee").value(DEFAULT_REGISTRATION_FEE.doubleValue()))
             .andExpect(jsonPath("$.partialBurden").value(DEFAULT_PARTIAL_BURDEN.doubleValue()))
-            .andExpect(jsonPath("$.burdenCost").value(DEFAULT_BURDEN_COST.doubleValue()))
             .andExpect(jsonPath("$.deposit").value(DEFAULT_DEPOSIT.doubleValue()))
             .andExpect(jsonPath("$.ownExpense").value(DEFAULT_OWN_EXPENSE.doubleValue()))
             .andExpect(jsonPath("$.other").value(DEFAULT_OTHER.doubleValue()))
@@ -259,7 +252,6 @@ public class AccountingResourceIntTest {
         updatedAccounting
             .registrationFee(UPDATED_REGISTRATION_FEE)
             .partialBurden(UPDATED_PARTIAL_BURDEN)
-            .burdenCost(UPDATED_BURDEN_COST)
             .deposit(UPDATED_DEPOSIT)
             .ownExpense(UPDATED_OWN_EXPENSE)
             .other(UPDATED_OTHER)
@@ -278,7 +270,6 @@ public class AccountingResourceIntTest {
         Accounting testAccounting = accountingList.get(accountingList.size() - 1);
         assertThat(testAccounting.getRegistrationFee()).isEqualTo(UPDATED_REGISTRATION_FEE);
         assertThat(testAccounting.getPartialBurden()).isEqualTo(UPDATED_PARTIAL_BURDEN);
-        assertThat(testAccounting.getBurdenCost()).isEqualTo(UPDATED_BURDEN_COST);
         assertThat(testAccounting.getDeposit()).isEqualTo(UPDATED_DEPOSIT);
         assertThat(testAccounting.getOwnExpense()).isEqualTo(UPDATED_OWN_EXPENSE);
         assertThat(testAccounting.getOther()).isEqualTo(UPDATED_OTHER);

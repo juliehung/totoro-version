@@ -29,7 +29,7 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="free_burden" type="double">
+            <column name="free_burden" type="boolean">
                 <constraints nullable="false" />
             </column>
 

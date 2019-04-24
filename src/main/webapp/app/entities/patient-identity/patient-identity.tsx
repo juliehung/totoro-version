@@ -60,7 +60,7 @@ export class PatientIdentity extends React.Component<IPatientIdentityProps> {
                   </td>
                   <td>{patientIdentity.code}</td>
                   <td>{patientIdentity.name}</td>
-                  <td>{patientIdentity.freeBurden}</td>
+                  <td>{patientIdentity.freeBurden ? 'true' : 'false'}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${patientIdentity.id}`} color="info" size="sm">
