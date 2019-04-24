@@ -73,9 +73,6 @@ export class Accounting extends React.Component<IAccountingProps, IAccountingSta
                 <th className="hand" onClick={this.sort('partialBurden')}>
                   <Translate contentKey="totoroApp.accounting.partialBurden">Partial Burden</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('burdenCost')}>
-                  <Translate contentKey="totoroApp.accounting.burdenCost">Burden Cost</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
                 <th className="hand" onClick={this.sort('deposit')}>
                   <Translate contentKey="totoroApp.accounting.deposit">Deposit</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -110,7 +107,6 @@ export class Accounting extends React.Component<IAccountingProps, IAccountingSta
                   </td>
                   <td>{accounting.registrationFee}</td>
                   <td>{accounting.partialBurden}</td>
-                  <td>{accounting.burdenCost}</td>
                   <td>{accounting.deposit}</td>
                   <td>{accounting.ownExpense}</td>
                   <td>{accounting.other}</td>

@@ -116,19 +116,10 @@ export class PatientIdentityUpdate extends React.Component<IPatientIdentityUpdat
                   />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="freeBurdenLabel" for="freeBurden">
+                  <Label id="freeBurdenLabel" check>
+                    <AvInput id="patient-identity-freeBurden" type="checkbox" className="form-control" name="freeBurden" />
                     <Translate contentKey="totoroApp.patientIdentity.freeBurden">Free Burden</Translate>
                   </Label>
-                  <AvField
-                    id="patient-identity-freeBurden"
-                    type="string"
-                    className="form-control"
-                    name="freeBurden"
-                    validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') },
-                      number: { value: true, errorMessage: translate('entity.validation.number') }
-                    }}
-                  />
                 </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/patient-identity" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />

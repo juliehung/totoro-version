@@ -57,10 +57,6 @@ public class AccountingService {
                     accounting.setPartialBurden((updateAccounting.getPartialBurden()));
                 }
 
-                if (updateAccounting.getBurdenCost() != null) {
-                    accounting.setBurdenCost((updateAccounting.getBurdenCost()));
-                }
-
                 if (updateAccounting.getDeposit() != null) {
                     accounting.setDeposit((updateAccounting.getDeposit()));
                 }

@@ -29,10 +29,6 @@
             "fieldType": "Double"
         },
         {
-            "fieldName": "burdenCost",
-            "fieldType": "Double"
-        },
-        {
             "fieldName": "deposit",
             "fieldType": "Double"
         },

@@ -17,7 +17,7 @@
         },
         {
             "fieldName": "freeBurden",
-            "fieldType": "Double",
+            "fieldType": "Boolean",
             "fieldValidateRules": [
                 "required"
             ]

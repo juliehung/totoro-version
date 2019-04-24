@@ -29,10 +29,6 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="burden_cost" type="double">
-                <constraints nullable="true" />
-            </column>
-
             <column name="deposit" type="double">
                 <constraints nullable="true" />
             </column>

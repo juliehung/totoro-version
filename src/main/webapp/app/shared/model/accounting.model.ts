@@ -5,7 +5,6 @@ export interface IAccounting {
   id?: number;
   registrationFee?: number;
   partialBurden?: number;
-  burdenCost?: number;
   deposit?: number;
   ownExpense?: number;
   other?: number;
