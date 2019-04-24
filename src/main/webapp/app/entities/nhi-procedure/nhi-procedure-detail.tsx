@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Translate, ICrudGetAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -47,27 +47,15 @@ export class NHIProcedureDetail extends React.Component<INHIProcedureDetailProps
             </dt>
             <dd>{nHIProcedureEntity.point}</dd>
             <dt>
-              <span id="start">
-                <Translate contentKey="totoroApp.nHIProcedure.start">Start</Translate>
-              </span>
-            </dt>
-            <dd>
-              <TextFormat value={nHIProcedureEntity.start} type="date" format={APP_LOCAL_DATE_FORMAT} />
-            </dd>
-            <dt>
-              <span id="end">
-                <Translate contentKey="totoroApp.nHIProcedure.end">End</Translate>
-              </span>
-            </dt>
-            <dd>
-              <TextFormat value={nHIProcedureEntity.end} type="date" format={APP_LOCAL_DATE_FORMAT} />
-            </dd>
-            <dt>
               <span id="englishName">
                 <Translate contentKey="totoroApp.nHIProcedure.englishName">English Name</Translate>
               </span>
             </dt>
             <dd>{nHIProcedureEntity.englishName}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.nHIProcedure.nHIProcedureType">N HI Procedure Type</Translate>
+            </dt>
+            <dd>{nHIProcedureEntity.nHIProcedureType ? nHIProcedureEntity.nHIProcedureType.id : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/nhi-procedure" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

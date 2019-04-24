@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -7,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -37,15 +37,12 @@ public class NHIProcedure implements Serializable {
     @Column(name = "point", nullable = false)
     private Integer point;
 
-    @NotNull
-    @Column(name = "jhi_start", nullable = false)
-    private LocalDate start;
-
-    @Column(name = "jhi_end")
-    private LocalDate end;
-
     @Column(name = "english_name")
     private String englishName;
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private NHIProcedureType nHIProcedureType;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -95,32 +92,6 @@ public class NHIProcedure implements Serializable {
         this.point = point;
     }
 
-    public LocalDate getStart() {
-        return start;
-    }
-
-    public NHIProcedure start(LocalDate start) {
-        this.start = start;
-        return this;
-    }
-
-    public void setStart(LocalDate start) {
-        this.start = start;
-    }
-
-    public LocalDate getEnd() {
-        return end;
-    }
-
-    public NHIProcedure end(LocalDate end) {
-        this.end = end;
-        return this;
-    }
-
-    public void setEnd(LocalDate end) {
-        this.end = end;
-    }
-
     public String getEnglishName() {
         return englishName;
     }
@@ -132,6 +103,19 @@ public class NHIProcedure implements Serializable {
 
     public void setEnglishName(String englishName) {
         this.englishName = englishName;
+    }
+
+    public NHIProcedureType getNHIProcedureType() {
+        return nHIProcedureType;
+    }
+
+    public NHIProcedure nHIProcedureType(NHIProcedureType nHIProcedureType) {
+        this.nHIProcedureType = nHIProcedureType;
+        return this;
+    }
+
+    public void setNHIProcedureType(NHIProcedureType nHIProcedureType) {
+        this.nHIProcedureType = nHIProcedureType;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -162,8 +146,6 @@ public class NHIProcedure implements Serializable {
             ", code='" + getCode() + "'" +
             ", name='" + getName() + "'" +
             ", point=" + getPoint() +
-            ", start='" + getStart() + "'" +
-            ", end='" + getEnd() + "'" +
             ", englishName='" + getEnglishName() + "'" +
             "}";
     }

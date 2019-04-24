@@ -1,27 +1,25 @@
-
 {
-    "totoroApp": {
-        "nHIProcedure" : {
-            "home": {
-                "title": "NHI Procedures",
-                "createLabel": "Create a new NHI Procedure",
-                "createOrEditLabel": "Create or edit a NHI Procedure"
-            },
-            "created": "A new NHI Procedure is created with identifier {{ param }}",
-            "updated": "A NHI Procedure is updated with identifier {{ param }}",
-            "deleted": "A NHI Procedure is deleted with identifier {{ param }}",
-            "delete": {
-                "question": "Are you sure you want to delete NHI Procedure {{ id }}?"
-            },
-            "detail": {
-                "title": "NHI Procedure"
-            },
-            "code": "Code",
-            "name": "Name",
-            "point": "Point",
-            "start": "Start",
-            "end": "End",
-            "englishName": "English Name"
-        }
+  "totoroApp": {
+    "nHIProcedure": {
+      "home": {
+        "title": "NHI Procedures",
+        "createLabel": "Create a new NHI Procedure",
+        "createOrEditLabel": "Create or edit a NHI Procedure"
+      },
+      "created": "A new NHI Procedure is created with identifier {{ param }}",
+      "updated": "A NHI Procedure is updated with identifier {{ param }}",
+      "deleted": "A NHI Procedure is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete NHI Procedure {{ id }}?"
+      },
+      "detail": {
+        "title": "NHI Procedure"
+      },
+      "code": "Code",
+      "name": "Name",
+      "point": "Point",
+      "englishName": "English Name",
+      "nHIProcedureType": "N HI Procedure Type"
     }
+  }
 }

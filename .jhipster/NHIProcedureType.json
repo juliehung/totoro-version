@@ -1,0 +1,22 @@
+{
+    "name": "NHIProcedureType",
+    "fields": [
+        {
+            "fieldName": "major",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required", "unique"
+            ]
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190419140703",
+    "entityTableName": "nhi_procedure_type",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

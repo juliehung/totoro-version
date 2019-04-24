@@ -62,7 +62,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     @OneToOne(mappedBy = "disposal", cascade = CascadeType.ALL)
-    private ExtendDisposalNHI extendDisposalNHI;
+    private NHIExtendDisposal nhiExtendDisposal;
 
     @CreatedBy
     @Column(name = "created_by", nullable = false, length = 50)
@@ -193,12 +193,12 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    public ExtendDisposalNHI getExtendDisposalNHI() {
-        return extendDisposalNHI;
+    public NHIExtendDisposal getNHIExtendDisposal() {
+        return nhiExtendDisposal;
     }
 
-    public void setExtendDisposalNHI(ExtendDisposalNHI extendDisposalNHI) {
-        this.extendDisposalNHI = extendDisposalNHI;
+    public void setNHIExtendDisposal(NHIExtendDisposal nhiExtendDisposal) {
+        this.nhiExtendDisposal = nhiExtendDisposal;
     }
 
     @Override

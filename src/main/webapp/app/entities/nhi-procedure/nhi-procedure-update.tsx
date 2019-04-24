@@ -8,6 +8,8 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
+import { INHIProcedureType } from 'app/shared/model/nhi-procedure-type.model';
+import { getEntities as getNHiProcedureTypes } from 'app/entities/nhi-procedure-type/nhi-procedure-type.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './nhi-procedure.reducer';
 import { INHIProcedure } from 'app/shared/model/nhi-procedure.model';
 // tslint:disable-next-line:no-unused-variable
@@ -18,14 +20,22 @@ export interface INHIProcedureUpdateProps extends StateProps, DispatchProps, Rou
 
 export interface INHIProcedureUpdateState {
   isNew: boolean;
+  nHIProcedureTypeId: string;
 }
 
 export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps, INHIProcedureUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
+      nHIProcedureTypeId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
+      this.handleClose();
+    }
   }
 
   componentDidMount() {
@@ -34,6 +44,8 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
     } else {
       this.props.getEntity(this.props.match.params.id);
     }
+
+    this.props.getNHiProcedureTypes();
   }
 
   saveEntity = (event, errors, values) => {
@@ -49,7 +61,6 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
       } else {
         this.props.updateEntity(entity);
       }
-      this.handleClose();
     }
   };
 
@@ -58,7 +69,7 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
   };
 
   render() {
-    const { nHIProcedureEntity, loading, updating } = this.props;
+    const { nHIProcedureEntity, nHIProcedureTypes, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -126,30 +137,25 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
                   />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="startLabel" for="start">
-                    <Translate contentKey="totoroApp.nHIProcedure.start">Start</Translate>
-                  </Label>
-                  <AvField
-                    id="nhi-procedure-start"
-                    type="date"
-                    className="form-control"
-                    name="start"
-                    validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') }
-                    }}
-                  />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="endLabel" for="end">
-                    <Translate contentKey="totoroApp.nHIProcedure.end">End</Translate>
-                  </Label>
-                  <AvField id="nhi-procedure-end" type="date" className="form-control" name="end" />
-                </AvGroup>
-                <AvGroup>
                   <Label id="englishNameLabel" for="englishName">
                     <Translate contentKey="totoroApp.nHIProcedure.englishName">English Name</Translate>
                   </Label>
                   <AvField id="nhi-procedure-englishName" type="text" name="englishName" />
+                </AvGroup>
+                <AvGroup>
+                  <Label for="nHIProcedureType.id">
+                    <Translate contentKey="totoroApp.nHIProcedure.nHIProcedureType">N HI Procedure Type</Translate>
+                  </Label>
+                  <AvInput id="nhi-procedure-nHIProcedureType" type="select" className="form-control" name="nHIProcedureType.id">
+                    <option value="" key="0" />
+                    {nHIProcedureTypes
+                      ? nHIProcedureTypes.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
                 </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/nhi-procedure" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
@@ -174,12 +180,15 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
+  nHIProcedureTypes: storeState.nHIProcedureType.entities,
   nHIProcedureEntity: storeState.nHIProcedure.entity,
   loading: storeState.nHIProcedure.loading,
-  updating: storeState.nHIProcedure.updating
+  updating: storeState.nHIProcedure.updating,
+  updateSuccess: storeState.nHIProcedure.updateSuccess
 });
 
 const mapDispatchToProps = {
+  getNHiProcedureTypes,
   getEntity,
   updateEntity,
   createEntity,

@@ -1,27 +1,25 @@
-
 {
-    "totoroApp": {
-        "nHIProcedure" : {
-            "home": {
-                "title": "NHI Procedures",
-                "createLabel": "建立一筆新的 NHI Procedure",
-                "createOrEditLabel": "建立或編輯 NHI Procedure"
-            },
-            "created": "新的 NHI Procedure 建立成功，識別碼為 {{ param }}",
-            "updated": "識別碼為 {{ param }} 的 NHI Procedure 更新成功",
-            "deleted": "識別碼為 {{ param }} 的 NHI Procedure 刪除成功",
-            "delete": {
-                "question": "您確定要刪除 NHI Procedure {{ id }} 嗎?"
-            },
-            "detail": {
-                "title": "NHI Procedure"
-            },
-            "code": "Code",
-            "name": "Name",
-            "point": "Point",
-            "start": "Start",
-            "end": "End",
-            "englishName": "English Name"
-        }
+  "totoroApp": {
+    "nHIProcedure": {
+      "home": {
+        "title": "NHI Procedures",
+        "createLabel": "建立一筆新的 NHI Procedure",
+        "createOrEditLabel": "建立或編輯 NHI Procedure"
+      },
+      "created": "新的 NHI Procedure 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 NHI Procedure 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 NHI Procedure 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 NHI Procedure {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "NHI Procedure"
+      },
+      "code": "Code",
+      "name": "Name",
+      "point": "Point",
+      "englishName": "English Name",
+      "nHIProcedureType": "N HI Procedure Type"
     }
+  }
 }

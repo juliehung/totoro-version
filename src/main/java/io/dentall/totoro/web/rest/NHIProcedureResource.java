@@ -2,7 +2,6 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.NHIProcedure;
-import io.dentall.totoro.repository.NHICategoryRepository;
 import io.dentall.totoro.repository.NHIProcedureRepository;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
@@ -21,11 +20,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing NHIProcedure.
@@ -40,11 +36,8 @@ public class NHIProcedureResource {
 
     private final NHIProcedureRepository nHIProcedureRepository;
 
-    private final NHICategoryRepository nHICategoryRepository;
-
-    public NHIProcedureResource(NHIProcedureRepository nHIProcedureRepository, NHICategoryRepository nHICategoryRepository) {
+    public NHIProcedureResource(NHIProcedureRepository nHIProcedureRepository) {
         this.nHIProcedureRepository = nHIProcedureRepository;
-        this.nHICategoryRepository = nHICategoryRepository;
     }
 
     /**
@@ -93,21 +86,15 @@ public class NHIProcedureResource {
      * GET  /nhi-procedures : get all the nHIProcedures.
      *
      * @param pageable the pagination information
-     * @param categories retrieve nHIProcedures by categories
      * @return the ResponseEntity with status 200 (OK) and the list of nHIProcedures in body
      */
     @GetMapping("/nhi-procedures")
     @Timed
-    public ResponseEntity<List<NHIProcedure>> getAllNHIProcedures(Pageable pageable, @RequestParam(required = false) String categories) {
-        if (categories != null) {
-            log.debug("REST request to get list of NHIProcedures by categories({})", categories);
-            return new ResponseEntity<>(getAllNHIProceduresByCategories(categories), HttpStatus.OK);
-        }
-
+    public ResponseEntity<List<NHIProcedure>> getAllNHIProcedures(Pageable pageable) {
         log.debug("REST request to get a page of NHIProcedures");
         Page<NHIProcedure> page = nHIProcedureRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/nhi-procedures");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -137,19 +124,5 @@ public class NHIProcedureResource {
 
         nHIProcedureRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    private List<NHIProcedure> getAllNHIProceduresByCategories(String categories) {
-        return Arrays.stream(categories.split(","))
-            .map(nHICategoryRepository::findByNameIgnoreCase)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .flatMap(category -> Arrays.stream(category.getCodes().split(",")))
-            .distinct()
-            .map(nHIProcedureRepository::findByEndIsNullAndCodeEquals)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .sorted(Comparator.comparing(NHIProcedure::getCode))
-            .collect(Collectors.toList());
     }
 }

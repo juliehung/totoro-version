@@ -3,15 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import {
-  Translate,
-  ICrudGetAllAction,
-  TextFormat,
-  getSortState,
-  IPaginationBaseState,
-  getPaginationItemsNumber,
-  JhiPagination
-} from 'react-jhipster';
+import { Translate, ICrudGetAllAction, getSortState, IPaginationBaseState, getPaginationItemsNumber, JhiPagination } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -84,14 +76,12 @@ export class NHIProcedure extends React.Component<INHIProcedureProps, INHIProced
                 <th className="hand" onClick={this.sort('point')}>
                   <Translate contentKey="totoroApp.nHIProcedure.point">Point</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={this.sort('start')}>
-                  <Translate contentKey="totoroApp.nHIProcedure.start">Start</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('end')}>
-                  <Translate contentKey="totoroApp.nHIProcedure.end">End</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
                 <th className="hand" onClick={this.sort('englishName')}>
                   <Translate contentKey="totoroApp.nHIProcedure.englishName">English Name</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.nHIProcedure.nHIProcedureType">N HI Procedure Type</Translate>{' '}
+                  <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -107,13 +97,14 @@ export class NHIProcedure extends React.Component<INHIProcedureProps, INHIProced
                   <td>{nHIProcedure.code}</td>
                   <td>{nHIProcedure.name}</td>
                   <td>{nHIProcedure.point}</td>
-                  <td>
-                    <TextFormat type="date" value={nHIProcedure.start} format={APP_LOCAL_DATE_FORMAT} />
-                  </td>
-                  <td>
-                    <TextFormat type="date" value={nHIProcedure.end} format={APP_LOCAL_DATE_FORMAT} />
-                  </td>
                   <td>{nHIProcedure.englishName}</td>
+                  <td>
+                    {nHIProcedure.nHIProcedureType ? (
+                      <Link to={`nhi-procedure-type/${nHIProcedure.nHIProcedureType.id}`}>{nHIProcedure.nHIProcedureType.id}</Link>
+                    ) : (
+                      ''
+                    )}
+                  </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${nHIProcedure.id}`} color="info" size="sm">

@@ -1,13 +1,12 @@
-import { Moment } from 'moment';
+import { INHIProcedureType } from 'app/shared/model//nhi-procedure-type.model';
 
 export interface INHIProcedure {
   id?: number;
   code?: string;
   name?: string;
   point?: number;
-  start?: Moment;
-  end?: Moment;
   englishName?: string;
+  nHIProcedureType?: INHIProcedureType;
 }
 
 export const defaultValue: Readonly<INHIProcedure> = {};

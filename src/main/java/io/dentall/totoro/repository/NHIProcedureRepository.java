@@ -15,5 +15,4 @@ import java.util.Optional;
 @Repository
 public interface NHIProcedureRepository extends JpaRepository<NHIProcedure, Long> {
 
-    Optional<NHIProcedure> findByEndIsNullAndCodeEquals(String code);
 }

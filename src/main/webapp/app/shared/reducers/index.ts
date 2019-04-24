@@ -128,6 +128,10 @@ import registrationDel, {
 import conditionType, {
   ConditionTypeState
 } from 'app/entities/condition-type/condition-type.reducer';
+// prettier-ignore
+import nHIProcedureType, {
+  NHIProcedureTypeState
+} from 'app/entities/nhi-procedure-type/nhi-procedure-type.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -170,6 +174,7 @@ export interface IRootState {
   readonly disposal: DisposalState;
   readonly registrationDel: RegistrationDelState;
   readonly conditionType: ConditionTypeState;
+  readonly nHIProcedureType: NHIProcedureTypeState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -214,6 +219,7 @@ const rootReducer = combineReducers<IRootState>({
   disposal,
   registrationDel,
   conditionType,
+  nHIProcedureType,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });
