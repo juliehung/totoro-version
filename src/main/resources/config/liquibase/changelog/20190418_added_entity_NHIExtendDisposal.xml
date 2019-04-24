@@ -7,10 +7,10 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <!--
-        Added the entity ExtendDisposalNHI.
+        Added the entity NHIExtendDisposal.
     -->
     <changeSet id="20190418" author="Jim">
-        <createTable tableName="extend_disposal_nhi">
+        <createTable tableName="nhi_extend_disposal">
             <column name="disposal_id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

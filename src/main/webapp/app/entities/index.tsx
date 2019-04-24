@@ -33,6 +33,7 @@ import TreatmentDrug from './treatment-drug';
 import Disposal from './disposal';
 import RegistrationDel from './registration-del';
 import ConditionType from './condition-type';
+import NHIProcedureType from './nhi-procedure-type';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -68,6 +69,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/disposal`} component={Disposal} />
       <ErrorBoundaryRoute path={`${match.url}/registration-del`} component={RegistrationDel} />
       <ErrorBoundaryRoute path={`${match.url}/condition-type`} component={ConditionType} />
+      <ErrorBoundaryRoute path={`${match.url}/nhi-procedure-type`} component={NHIProcedureType} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>

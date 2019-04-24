@@ -1,5 +1,14 @@
 {
-    "name": "NHIProcedure",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "nHIProcedureType",
+            "otherEntityName": "nHIProcedureType",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
     "fields": [
         {
             "fieldName": "code",
@@ -23,29 +32,15 @@
             ]
         },
         {
-            "fieldName": "start",
-            "fieldType": "LocalDate",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "end",
-            "fieldType": "LocalDate"
-        },
-        {
             "fieldName": "englishName",
             "fieldType": "String"
         }
     ],
-    "relationships": [],
     "changelogDate": "20181224042542",
-    "entityTableName": "nhi_procedure",
     "dto": "no",
-    "pagination": "pagination",
+    "searchEngine": false,
     "service": "no",
+    "entityTableName": "nhi_procedure",
     "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "pagination"
 }

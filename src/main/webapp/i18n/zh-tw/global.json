@@ -37,6 +37,7 @@
         "disposal": "Disposal",
         "registrationDel": "Registration Del",
         "conditionType": "Condition Type",
+        "nhiProcedureType": "NHI Procedure Type",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
