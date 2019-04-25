@@ -99,6 +99,18 @@
                   separator=";"
                   tableName="nhi_procedure_type">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/appointments_cp.csv"
+                  separator=";"
+                  tableName="appointment">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/registrations_cp.csv"
+                  separator=";"
+                  tableName="registration">
+        </loadData>
     </changeSet>
 
 </databaseChangeLog>
