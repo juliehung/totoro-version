@@ -193,7 +193,7 @@ docker-compose -f src/main/docker/postgresql.yml up -d
 
 #### stop
 ```
-docker-compose -f src/main/docker/postgresql.yml rm -s
+docker-compose -f src/main/docker/postgresql.yml down
 ```
 
 ### with Embedded Postgres
