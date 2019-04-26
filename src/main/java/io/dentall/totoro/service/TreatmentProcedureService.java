@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing TreatmentProcedure.
@@ -177,7 +178,11 @@ public class TreatmentProcedureService {
                 }
 
                 if (updateTreatmentProcedure.getTeeth() != null) {
-                    relationshipService.deleteRelationshipWithTeeth(treatmentProcedure, updateTreatmentProcedure);
+                    log.debug("Update teeth({}) of TreatmentProcedure(id: {})", updateTreatmentProcedure.getTeeth(), updateTreatmentProcedure.getId());
+                    relationshipService.deleteRelationshipWithTeeth(
+                        treatmentProcedure.getTeeth(),
+                        updateTreatmentProcedure.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet())
+                    );
                     relationshipService.addRelationshipWithTeeth(treatmentProcedure.teeth(updateTreatmentProcedure.getTeeth()));
                 }
 

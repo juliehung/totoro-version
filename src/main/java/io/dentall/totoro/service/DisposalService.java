@@ -202,6 +202,11 @@ public class DisposalService {
                 }
 
                 if (updateDisposal.getTeeth() != null) {
+                    log.debug("Update teeth({}) of Disposal(id: {})", updateDisposal.getTeeth(), updateDisposal.getId());
+                    relationshipService.deleteRelationshipWithTeeth(
+                        disposal.getTeeth(),
+                        updateDisposal.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet())
+                    );
                     relationshipService.addRelationshipWithTeeth(disposal.teeth(updateDisposal.getTeeth()));
                 }
 

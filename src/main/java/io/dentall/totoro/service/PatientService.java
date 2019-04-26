@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service class for managing patients.
@@ -232,6 +233,10 @@ public class PatientService extends QueryService<Patient> {
                 // teeth
                 if (updatePatient.getTeeth() != null) {
                     log.debug("Update teeth({}) of Patient(id: {})", updatePatient.getTeeth(), updatePatient.getId());
+                    relationshipService.deleteRelationshipWithTeeth(
+                        patient.getTeeth(),
+                        updatePatient.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet())
+                    );
                     relationshipService.addRelationshipWithTeeth(patient.teeth(updatePatient.getTeeth()));
                 }
 
