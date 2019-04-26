@@ -15,4 +15,7 @@
     <!-- constraints -->
     <include file="config/liquibase/master_constraints.xml" relativeToChangelogFile="false"/>
 
+    <!-- sequence -->
+    <include file="config/liquibase/master_sequence_mock.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>
