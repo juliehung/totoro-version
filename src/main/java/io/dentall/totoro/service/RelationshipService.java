@@ -167,10 +167,8 @@ public class RelationshipService {
             .forEach(treatmentProcedureService::delete);
     }
 
-    void deleteRelationshipWithTeeth(TreatmentProcedure treatmentProcedure, TreatmentProcedure updateTreatmentProcedure) {
-        Set<Long> updateIds = updateTreatmentProcedure.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet());
-        treatmentProcedure
-            .getTeeth()
+    void deleteRelationshipWithTeeth(Set<Tooth> teeth, Set<Long> updateIds) {
+        teeth
             .stream()
             .map(Tooth::getId)
             .filter(id -> !updateIds.contains(id))
