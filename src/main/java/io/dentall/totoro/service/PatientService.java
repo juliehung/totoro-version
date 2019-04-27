@@ -332,6 +332,7 @@ public class PatientService extends QueryService<Patient> {
 
             if (criteria.getSearch() != null && criteria.getSearch().getContains() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getSearch(), Patient_.name)
+                    .or(buildStringSpecification(criteria.getSearch(), Patient_.medicalId))
                     .or(buildStringSpecification(criteria.getSearch(), Patient_.phone))
                     .or((root, query, builder) -> builder.like(builder.function("TO_CHAR", String.class, root.get(Patient_.birth), builder.literal("yyyyMMdd")), wrapLikeQuery(criteria.getSearch().getContains())))
                 );
