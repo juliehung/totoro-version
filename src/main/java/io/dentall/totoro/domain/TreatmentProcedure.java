@@ -81,6 +81,10 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @JsonProperty(access = WRITE_ONLY)
     private Disposal disposal;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    @OneToOne(mappedBy = "treatmentProcedure", cascade = CascadeType.ALL)
+    private NHIExtendTreatmentProcedure nhiExtendTreatmentProcedure;
+
     public Long getId() {
         return id;
     }
@@ -270,6 +274,14 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
         this.disposal = disposal;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public NHIExtendTreatmentProcedure getNHIExtendTreatmentProcedure() {
+        return nhiExtendTreatmentProcedure;
+    }
+
+    public void setNHIExtendTreatmentProcedure(NHIExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+        this.nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedure;
+    }
 
     @Override
     public boolean equals(Object o) {
