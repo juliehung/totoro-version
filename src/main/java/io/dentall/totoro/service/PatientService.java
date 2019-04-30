@@ -15,8 +15,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.*;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -49,8 +50,6 @@ public class PatientService extends QueryService<Patient> {
 
     private final RelationshipService relationshipService;
 
-    private final ToothRepository toothRepository;
-
     public PatientService(
         PatientRepository patientRepository,
         TagRepository tagRepository,
@@ -60,8 +59,7 @@ public class PatientService extends QueryService<Patient> {
         TreatmentRepository treatmentRepository,
         TreatmentPlanRepository treatmentPlanRepository,
         TreatmentTaskRepository treatmentTaskRepository,
-        RelationshipService relationshipService,
-        ToothRepository toothRepository
+        RelationshipService relationshipService
     ) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
@@ -72,7 +70,6 @@ public class PatientService extends QueryService<Patient> {
         this.treatmentPlanRepository = treatmentPlanRepository;
         this.treatmentTaskRepository = treatmentTaskRepository;
         this.relationshipService = relationshipService;
-        this.toothRepository = toothRepository;
     }
 
     /**
@@ -331,14 +328,55 @@ public class PatientService extends QueryService<Patient> {
             }
 
             if (criteria.getSearch() != null && criteria.getSearch().getContains() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getSearch(), Patient_.name)
-                    .or(buildStringSpecification(criteria.getSearch(), Patient_.medicalId))
-                    .or(buildStringSpecification(criteria.getSearch(), Patient_.phone))
-                    .or((root, query, builder) -> builder.like(builder.function("TO_CHAR", String.class, root.get(Patient_.birth), builder.literal("yyyyMMdd")), wrapLikeQuery(criteria.getSearch().getContains())))
-                );
+                String like = criteria.getSearch().getContains();
+                specification = specification.and(
+                    ((Specification<Patient>) (root, query, builder) -> builder.like(getFormatBirthExpression(builder, root.get(Patient_.birth)), wrapLikeQuery(like)))
+                        .or(buildStringSpecification(criteria.getSearch(), Patient_.phone))
+                        .or(buildStringSpecification(criteria.getSearch(), Patient_.name))
+                        .or(buildStringSpecification(criteria.getSearch(), Patient_.medicalId))
+                ).and(searchOrderSpecification(like));
             }
         }
 
         return specification;
+    }
+
+    private Specification<Patient> searchOrderSpecification(String like) {
+        return new Specification<Patient>() {
+
+            @Override
+            public Predicate toPredicate(Root<Patient> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                query.orderBy(criteriaBuilder.asc(searchOrder(root, criteriaBuilder, like)));
+                return criteriaBuilder.and();
+            }
+        };
+    }
+
+    private Expression searchOrder(Root<Patient> root, CriteriaBuilder builder, String like) {
+        return builder.selectCase()
+            // equal
+            .when(builder.equal(getFormatBirthExpression(builder, root.get(Patient_.birth)), like), 1)
+            .when(builder.equal(root.get(Patient_.phone), like), 1)
+            .when(builder.equal(root.get(Patient_.name), like), 1)
+            .when(builder.equal(root.get(Patient_.medicalId), like), 1)
+            // like%
+            .when(builder.like(getFormatBirthExpression(builder, root.get(Patient_.birth)), wrapPostfixLikeQuery(like)), 2)
+            .when(builder.like(root.get(Patient_.phone), wrapPostfixLikeQuery(like)), 2)
+            .when(builder.like(root.get(Patient_.name), wrapPostfixLikeQuery(like)), 2)
+            .when(builder.like(root.get(Patient_.medicalId), wrapPostfixLikeQuery(like)), 2)
+            // %like%
+            .when(builder.like(getFormatBirthExpression(builder, root.get(Patient_.birth)), wrapLikeQuery(like)), 3)
+            .when(builder.like(root.get(Patient_.phone), wrapLikeQuery(like)), 3)
+            .when(builder.like(root.get(Patient_.name), wrapLikeQuery(like)), 3)
+            .when(builder.like(root.get(Patient_.medicalId), wrapLikeQuery(like)), 3)
+            .otherwise(4);
+    }
+
+    private Expression<String> getFormatBirthExpression(CriteriaBuilder builder, Path<LocalDate> expression) {
+        return builder.function("TO_CHAR", String.class, expression, builder.literal("yyyyMMdd"));
+    }
+
+    private String wrapPostfixLikeQuery(String txt) {
+        return txt.toUpperCase() + '%';
     }
 }
