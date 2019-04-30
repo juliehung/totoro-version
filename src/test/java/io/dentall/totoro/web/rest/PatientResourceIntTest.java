@@ -36,6 +36,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -207,7 +208,8 @@ public class PatientResourceIntTest {
             .clinicNote(DEFAULT_CLINIC_NOTE)
             .writeIcTime(DEFAULT_WRITE_IC_TIME)
             .avatar(DEFAULT_AVATAR)
-            .avatarContentType(DEFAULT_AVATAR_CONTENT_TYPE);
+            .avatarContentType(DEFAULT_AVATAR_CONTENT_TYPE)
+            .tags(new HashSet<>());
         return patient;
     }
 
