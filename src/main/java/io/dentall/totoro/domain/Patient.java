@@ -139,7 +139,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @JoinTable(name = "patient_tag",
                joinColumns = @JoinColumn(name = "patients_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
-    private Set<Tag> tags = new HashSet<>();
+    private Set<Tag> tags = null;
 
     @ManyToMany(mappedBy = "parents", fetch = FetchType.EAGER)
     @JsonIgnore
