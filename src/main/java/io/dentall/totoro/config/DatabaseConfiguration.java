@@ -53,6 +53,7 @@ public class DatabaseConfiguration {
             postgresConfig.getAdditionalInitDbParams().add("--locale=en_US.utf8");
         }
 
+        postgresConfig.getAdditionalPostgresParams().addAll(Arrays.asList("-c", "shared_buffers=512MB"));
         PostgresStarter<PostgresExecutable, PostgresProcess> runtime =
             PostgresStarter.getInstance(EmbeddedPostgres.defaultRuntimeConfig());
 
