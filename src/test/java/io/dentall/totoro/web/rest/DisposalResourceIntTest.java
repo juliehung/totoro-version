@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -373,7 +374,7 @@ public class DisposalResourceIntTest {
         Tooth tooth = ToothResourceIntTest.createEntity(em);
         em.persist(tooth);
         em.flush();
-        disposal.addTooth(tooth);
+        disposal.teeth(new HashSet<>()).addTooth(tooth);
         disposalRepository.saveAndFlush(disposal);
         Long toothId = tooth.getId();
 

@@ -58,7 +58,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     @OneToMany(mappedBy = "disposal")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Tooth> teeth = new HashSet<>();
+    private Set<Tooth> teeth = null;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     @OneToOne(mappedBy = "disposal", cascade = CascadeType.ALL)
@@ -193,11 +193,11 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    public NHIExtendDisposal getNHIExtendDisposal() {
+    public NHIExtendDisposal getNhiExtendDisposal() {
         return nhiExtendDisposal;
     }
 
-    public void setNHIExtendDisposal(NHIExtendDisposal nhiExtendDisposal) {
+    public void setNhiExtendDisposal(NHIExtendDisposal nhiExtendDisposal) {
         this.nhiExtendDisposal = nhiExtendDisposal;
     }
 

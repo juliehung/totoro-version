@@ -48,7 +48,7 @@ public class NHIExtendDisposalService {
         }
 
         disposal = disposalRepository.findById(disposal.getId()).orElseThrow(this::disposalNotFoundException);
-        if (disposal.getNHIExtendDisposal() != null) {
+        if (disposal.getNhiExtendDisposal() != null) {
             throw new ProblemUtil("A disposal already has nhiExtendDisposal", Status.BAD_REQUEST);
         }
 
