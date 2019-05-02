@@ -103,11 +103,11 @@ public class TreatmentDrug implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    public NHIExtendTreatmentDrug getNHIExtendTreatmentDrug() {
+    public NHIExtendTreatmentDrug getNhiExtendTreatmentDrug() {
         return nhiExtendTreatmentDrug;
     }
 
-    public void setNHIExtendTreatmentDrug(NHIExtendTreatmentDrug nhiExtendTreatmentDrug) {
+    public void setNhiExtendTreatmentDrug(NHIExtendTreatmentDrug nhiExtendTreatmentDrug) {
         this.nhiExtendTreatmentDrug = nhiExtendTreatmentDrug;
     }
 

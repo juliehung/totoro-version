@@ -275,11 +275,11 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    public NHIExtendTreatmentProcedure getNHIExtendTreatmentProcedure() {
+    public NHIExtendTreatmentProcedure getNhiExtendTreatmentProcedure() {
         return nhiExtendTreatmentProcedure;
     }
 
-    public void setNHIExtendTreatmentProcedure(NHIExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+    public void setNhiExtendTreatmentProcedure(NHIExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         this.nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedure;
     }
 
