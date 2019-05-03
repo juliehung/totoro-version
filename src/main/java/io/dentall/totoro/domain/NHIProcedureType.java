@@ -59,11 +59,11 @@ public class NHIProcedureType implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NHIProcedureType nHIProcedureType = (NHIProcedureType) o;
-        if (nHIProcedureType.getId() == null || getId() == null) {
+        NHIProcedureType nhiProcedureType = (NHIProcedureType) o;
+        if (nhiProcedureType.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), nHIProcedureType.getId());
+        return Objects.equals(getId(), nhiProcedureType.getId());
     }
 
     @Override

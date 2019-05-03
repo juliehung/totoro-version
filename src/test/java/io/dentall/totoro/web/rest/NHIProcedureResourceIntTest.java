@@ -53,7 +53,7 @@ public class NHIProcedureResourceIntTest {
     private static final String UPDATED_ENGLISH_NAME = "BBBBBBBBBB";
 
     @Autowired
-    private NHIProcedureRepository nHIProcedureRepository;
+    private NHIProcedureRepository nhiProcedureRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -72,13 +72,13 @@ public class NHIProcedureResourceIntTest {
 
     private MockMvc restNHIProcedureMockMvc;
 
-    private NHIProcedure nHIProcedure;
+    private NHIProcedure nhiProcedure;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NHIProcedureResource nHIProcedureResource = new NHIProcedureResource(nHIProcedureRepository);
-        this.restNHIProcedureMockMvc = MockMvcBuilders.standaloneSetup(nHIProcedureResource)
+        final NHIProcedureResource nhiProcedureResource = new NHIProcedureResource(nhiProcedureRepository);
+        this.restNHIProcedureMockMvc = MockMvcBuilders.standaloneSetup(nhiProcedureResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
@@ -93,34 +93,34 @@ public class NHIProcedureResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static NHIProcedure createEntity(EntityManager em) {
-        NHIProcedure nHIProcedure = new NHIProcedure()
+        NHIProcedure nhiProcedure = new NHIProcedure()
             .code(DEFAULT_CODE)
             .name(DEFAULT_NAME)
             .point(DEFAULT_POINT)
             .englishName(DEFAULT_ENGLISH_NAME);
-        return nHIProcedure;
+        return nhiProcedure;
     }
 
     @Before
     public void initTest() {
-        nHIProcedure = createEntity(em);
+        nhiProcedure = createEntity(em);
     }
 
     @Test
     @Transactional
     public void createNHIProcedure() throws Exception {
-        int databaseSizeBeforeCreate = nHIProcedureRepository.findAll().size();
+        int databaseSizeBeforeCreate = nhiProcedureRepository.findAll().size();
 
         // Create the NHIProcedure
         restNHIProcedureMockMvc.perform(post("/api/nhi-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIProcedure)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiProcedure)))
             .andExpect(status().isCreated());
 
         // Validate the NHIProcedure in the database
-        List<NHIProcedure> nHIProcedureList = nHIProcedureRepository.findAll();
-        assertThat(nHIProcedureList).hasSize(databaseSizeBeforeCreate + 1);
-        NHIProcedure testNHIProcedure = nHIProcedureList.get(nHIProcedureList.size() - 1);
+        List<NHIProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
+        assertThat(nhiProcedureList).hasSize(databaseSizeBeforeCreate + 1);
+        NHIProcedure testNHIProcedure = nhiProcedureList.get(nhiProcedureList.size() - 1);
         assertThat(testNHIProcedure.getCode()).isEqualTo(DEFAULT_CODE);
         assertThat(testNHIProcedure.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testNHIProcedure.getPoint()).isEqualTo(DEFAULT_POINT);
@@ -130,87 +130,87 @@ public class NHIProcedureResourceIntTest {
     @Test
     @Transactional
     public void createNHIProcedureWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = nHIProcedureRepository.findAll().size();
+        int databaseSizeBeforeCreate = nhiProcedureRepository.findAll().size();
 
         // Create the NHIProcedure with an existing ID
-        nHIProcedure.setId(1L);
+        nhiProcedure.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restNHIProcedureMockMvc.perform(post("/api/nhi-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIProcedure)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiProcedure)))
             .andExpect(status().isBadRequest());
 
         // Validate the NHIProcedure in the database
-        List<NHIProcedure> nHIProcedureList = nHIProcedureRepository.findAll();
-        assertThat(nHIProcedureList).hasSize(databaseSizeBeforeCreate);
+        List<NHIProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
+        assertThat(nhiProcedureList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void checkCodeIsRequired() throws Exception {
-        int databaseSizeBeforeTest = nHIProcedureRepository.findAll().size();
+        int databaseSizeBeforeTest = nhiProcedureRepository.findAll().size();
         // set the field null
-        nHIProcedure.setCode(null);
+        nhiProcedure.setCode(null);
 
         // Create the NHIProcedure, which fails.
 
         restNHIProcedureMockMvc.perform(post("/api/nhi-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIProcedure)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiProcedure)))
             .andExpect(status().isBadRequest());
 
-        List<NHIProcedure> nHIProcedureList = nHIProcedureRepository.findAll();
-        assertThat(nHIProcedureList).hasSize(databaseSizeBeforeTest);
+        List<NHIProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
+        assertThat(nhiProcedureList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkNameIsRequired() throws Exception {
-        int databaseSizeBeforeTest = nHIProcedureRepository.findAll().size();
+        int databaseSizeBeforeTest = nhiProcedureRepository.findAll().size();
         // set the field null
-        nHIProcedure.setName(null);
+        nhiProcedure.setName(null);
 
         // Create the NHIProcedure, which fails.
 
         restNHIProcedureMockMvc.perform(post("/api/nhi-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIProcedure)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiProcedure)))
             .andExpect(status().isBadRequest());
 
-        List<NHIProcedure> nHIProcedureList = nHIProcedureRepository.findAll();
-        assertThat(nHIProcedureList).hasSize(databaseSizeBeforeTest);
+        List<NHIProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
+        assertThat(nhiProcedureList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkPointIsRequired() throws Exception {
-        int databaseSizeBeforeTest = nHIProcedureRepository.findAll().size();
+        int databaseSizeBeforeTest = nhiProcedureRepository.findAll().size();
         // set the field null
-        nHIProcedure.setPoint(null);
+        nhiProcedure.setPoint(null);
 
         // Create the NHIProcedure, which fails.
 
         restNHIProcedureMockMvc.perform(post("/api/nhi-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIProcedure)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiProcedure)))
             .andExpect(status().isBadRequest());
 
-        List<NHIProcedure> nHIProcedureList = nHIProcedureRepository.findAll();
-        assertThat(nHIProcedureList).hasSize(databaseSizeBeforeTest);
+        List<NHIProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
+        assertThat(nhiProcedureList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void getAllNHIProcedures() throws Exception {
         // Initialize the database
-        nHIProcedureRepository.saveAndFlush(nHIProcedure);
+        nhiProcedureRepository.saveAndFlush(nhiProcedure);
 
-        // Get all the nHIProcedureList
+        // Get all the nhiProcedureList
         restNHIProcedureMockMvc.perform(get("/api/nhi-procedures?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(nHIProcedure.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(nhiProcedure.getId().intValue())))
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE.toString())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].point").value(hasItem(DEFAULT_POINT)))
@@ -221,13 +221,13 @@ public class NHIProcedureResourceIntTest {
     @Transactional
     public void getNHIProcedure() throws Exception {
         // Initialize the database
-        nHIProcedureRepository.saveAndFlush(nHIProcedure);
+        nhiProcedureRepository.saveAndFlush(nhiProcedure);
 
-        // Get the nHIProcedure
-        restNHIProcedureMockMvc.perform(get("/api/nhi-procedures/{id}", nHIProcedure.getId()))
+        // Get the nhiProcedure
+        restNHIProcedureMockMvc.perform(get("/api/nhi-procedures/{id}", nhiProcedure.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(nHIProcedure.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(nhiProcedure.getId().intValue()))
             .andExpect(jsonPath("$.code").value(DEFAULT_CODE.toString()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.point").value(DEFAULT_POINT))
@@ -237,7 +237,7 @@ public class NHIProcedureResourceIntTest {
     @Test
     @Transactional
     public void getNonExistingNHIProcedure() throws Exception {
-        // Get the nHIProcedure
+        // Get the nhiProcedure
         restNHIProcedureMockMvc.perform(get("/api/nhi-procedures/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
@@ -246,12 +246,12 @@ public class NHIProcedureResourceIntTest {
     @Transactional
     public void updateNHIProcedure() throws Exception {
         // Initialize the database
-        nHIProcedureRepository.saveAndFlush(nHIProcedure);
+        nhiProcedureRepository.saveAndFlush(nhiProcedure);
 
-        int databaseSizeBeforeUpdate = nHIProcedureRepository.findAll().size();
+        int databaseSizeBeforeUpdate = nhiProcedureRepository.findAll().size();
 
-        // Update the nHIProcedure
-        NHIProcedure updatedNHIProcedure = nHIProcedureRepository.findById(nHIProcedure.getId()).get();
+        // Update the nhiProcedure
+        NHIProcedure updatedNHIProcedure = nhiProcedureRepository.findById(nhiProcedure.getId()).get();
         // Disconnect from session so that the updates on updatedNHIProcedure are not directly saved in db
         em.detach(updatedNHIProcedure);
         updatedNHIProcedure
@@ -266,9 +266,9 @@ public class NHIProcedureResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the NHIProcedure in the database
-        List<NHIProcedure> nHIProcedureList = nHIProcedureRepository.findAll();
-        assertThat(nHIProcedureList).hasSize(databaseSizeBeforeUpdate);
-        NHIProcedure testNHIProcedure = nHIProcedureList.get(nHIProcedureList.size() - 1);
+        List<NHIProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
+        assertThat(nhiProcedureList).hasSize(databaseSizeBeforeUpdate);
+        NHIProcedure testNHIProcedure = nhiProcedureList.get(nhiProcedureList.size() - 1);
         assertThat(testNHIProcedure.getCode()).isEqualTo(UPDATED_CODE);
         assertThat(testNHIProcedure.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testNHIProcedure.getPoint()).isEqualTo(UPDATED_POINT);
@@ -278,51 +278,51 @@ public class NHIProcedureResourceIntTest {
     @Test
     @Transactional
     public void updateNonExistingNHIProcedure() throws Exception {
-        int databaseSizeBeforeUpdate = nHIProcedureRepository.findAll().size();
+        int databaseSizeBeforeUpdate = nhiProcedureRepository.findAll().size();
 
         // Create the NHIProcedure
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restNHIProcedureMockMvc.perform(put("/api/nhi-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIProcedure)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiProcedure)))
             .andExpect(status().isBadRequest());
 
         // Validate the NHIProcedure in the database
-        List<NHIProcedure> nHIProcedureList = nHIProcedureRepository.findAll();
-        assertThat(nHIProcedureList).hasSize(databaseSizeBeforeUpdate);
+        List<NHIProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
+        assertThat(nhiProcedureList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     public void deleteNHIProcedure() throws Exception {
         // Initialize the database
-        nHIProcedureRepository.saveAndFlush(nHIProcedure);
+        nhiProcedureRepository.saveAndFlush(nhiProcedure);
 
-        int databaseSizeBeforeDelete = nHIProcedureRepository.findAll().size();
+        int databaseSizeBeforeDelete = nhiProcedureRepository.findAll().size();
 
-        // Get the nHIProcedure
-        restNHIProcedureMockMvc.perform(delete("/api/nhi-procedures/{id}", nHIProcedure.getId())
+        // Get the nhiProcedure
+        restNHIProcedureMockMvc.perform(delete("/api/nhi-procedures/{id}", nhiProcedure.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<NHIProcedure> nHIProcedureList = nHIProcedureRepository.findAll();
-        assertThat(nHIProcedureList).hasSize(databaseSizeBeforeDelete - 1);
+        List<NHIProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
+        assertThat(nhiProcedureList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test
     @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(NHIProcedure.class);
-        NHIProcedure nHIProcedure1 = new NHIProcedure();
-        nHIProcedure1.setId(1L);
-        NHIProcedure nHIProcedure2 = new NHIProcedure();
-        nHIProcedure2.setId(nHIProcedure1.getId());
-        assertThat(nHIProcedure1).isEqualTo(nHIProcedure2);
-        nHIProcedure2.setId(2L);
-        assertThat(nHIProcedure1).isNotEqualTo(nHIProcedure2);
-        nHIProcedure1.setId(null);
-        assertThat(nHIProcedure1).isNotEqualTo(nHIProcedure2);
+        NHIProcedure nhiProcedure1 = new NHIProcedure();
+        nhiProcedure1.setId(1L);
+        NHIProcedure nhiProcedure2 = new NHIProcedure();
+        nhiProcedure2.setId(nhiProcedure1.getId());
+        assertThat(nhiProcedure1).isEqualTo(nhiProcedure2);
+        nhiProcedure2.setId(2L);
+        assertThat(nhiProcedure1).isNotEqualTo(nhiProcedure2);
+        nhiProcedure1.setId(null);
+        assertThat(nhiProcedure1).isNotEqualTo(nhiProcedure2);
     }
 }

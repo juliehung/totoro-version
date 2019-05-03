@@ -50,7 +50,7 @@ public class NHIUnusalContentResourceIntTest {
     private static final String UPDATED_GOT_SEQ_NUMBER = "BBBBBBBBBB";
 
     @Autowired
-    private NHIUnusalContentRepository nHIUnusalContentRepository;
+    private NHIUnusalContentRepository nhiUnusalContentRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -69,13 +69,13 @@ public class NHIUnusalContentResourceIntTest {
 
     private MockMvc restNHIUnusalContentMockMvc;
 
-    private NHIUnusalContent nHIUnusalContent;
+    private NHIUnusalContent nhiUnusalContent;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NHIUnusalContentResource nHIUnusalContentResource = new NHIUnusalContentResource(nHIUnusalContentRepository);
-        this.restNHIUnusalContentMockMvc = MockMvcBuilders.standaloneSetup(nHIUnusalContentResource)
+        final NHIUnusalContentResource nhiUnusalContentResource = new NHIUnusalContentResource(nhiUnusalContentRepository);
+        this.restNHIUnusalContentMockMvc = MockMvcBuilders.standaloneSetup(nhiUnusalContentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
@@ -90,33 +90,33 @@ public class NHIUnusalContentResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static NHIUnusalContent createEntity(EntityManager em) {
-        NHIUnusalContent nHIUnusalContent = new NHIUnusalContent()
+        NHIUnusalContent nhiUnusalContent = new NHIUnusalContent()
             .content(DEFAULT_CONTENT)
             .noSeqNumber(DEFAULT_NO_SEQ_NUMBER)
             .gotSeqNumber(DEFAULT_GOT_SEQ_NUMBER);
-        return nHIUnusalContent;
+        return nhiUnusalContent;
     }
 
     @Before
     public void initTest() {
-        nHIUnusalContent = createEntity(em);
+        nhiUnusalContent = createEntity(em);
     }
 
     @Test
     @Transactional
     public void createNHIUnusalContent() throws Exception {
-        int databaseSizeBeforeCreate = nHIUnusalContentRepository.findAll().size();
+        int databaseSizeBeforeCreate = nhiUnusalContentRepository.findAll().size();
 
         // Create the NHIUnusalContent
         restNHIUnusalContentMockMvc.perform(post("/api/nhi-unusal-contents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIUnusalContent)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiUnusalContent)))
             .andExpect(status().isCreated());
 
         // Validate the NHIUnusalContent in the database
-        List<NHIUnusalContent> nHIUnusalContentList = nHIUnusalContentRepository.findAll();
-        assertThat(nHIUnusalContentList).hasSize(databaseSizeBeforeCreate + 1);
-        NHIUnusalContent testNHIUnusalContent = nHIUnusalContentList.get(nHIUnusalContentList.size() - 1);
+        List<NHIUnusalContent> nhiUnusalContentList = nhiUnusalContentRepository.findAll();
+        assertThat(nhiUnusalContentList).hasSize(databaseSizeBeforeCreate + 1);
+        NHIUnusalContent testNHIUnusalContent = nhiUnusalContentList.get(nhiUnusalContentList.size() - 1);
         assertThat(testNHIUnusalContent.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testNHIUnusalContent.getNoSeqNumber()).isEqualTo(DEFAULT_NO_SEQ_NUMBER);
         assertThat(testNHIUnusalContent.getGotSeqNumber()).isEqualTo(DEFAULT_GOT_SEQ_NUMBER);
@@ -125,51 +125,51 @@ public class NHIUnusalContentResourceIntTest {
     @Test
     @Transactional
     public void createNHIUnusalContentWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = nHIUnusalContentRepository.findAll().size();
+        int databaseSizeBeforeCreate = nhiUnusalContentRepository.findAll().size();
 
         // Create the NHIUnusalContent with an existing ID
-        nHIUnusalContent.setId(1L);
+        nhiUnusalContent.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restNHIUnusalContentMockMvc.perform(post("/api/nhi-unusal-contents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIUnusalContent)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiUnusalContent)))
             .andExpect(status().isBadRequest());
 
         // Validate the NHIUnusalContent in the database
-        List<NHIUnusalContent> nHIUnusalContentList = nHIUnusalContentRepository.findAll();
-        assertThat(nHIUnusalContentList).hasSize(databaseSizeBeforeCreate);
+        List<NHIUnusalContent> nhiUnusalContentList = nhiUnusalContentRepository.findAll();
+        assertThat(nhiUnusalContentList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void checkContentIsRequired() throws Exception {
-        int databaseSizeBeforeTest = nHIUnusalContentRepository.findAll().size();
+        int databaseSizeBeforeTest = nhiUnusalContentRepository.findAll().size();
         // set the field null
-        nHIUnusalContent.setContent(null);
+        nhiUnusalContent.setContent(null);
 
         // Create the NHIUnusalContent, which fails.
 
         restNHIUnusalContentMockMvc.perform(post("/api/nhi-unusal-contents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIUnusalContent)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiUnusalContent)))
             .andExpect(status().isBadRequest());
 
-        List<NHIUnusalContent> nHIUnusalContentList = nHIUnusalContentRepository.findAll();
-        assertThat(nHIUnusalContentList).hasSize(databaseSizeBeforeTest);
+        List<NHIUnusalContent> nhiUnusalContentList = nhiUnusalContentRepository.findAll();
+        assertThat(nhiUnusalContentList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void getAllNHIUnusalContents() throws Exception {
         // Initialize the database
-        nHIUnusalContentRepository.saveAndFlush(nHIUnusalContent);
+        nhiUnusalContentRepository.saveAndFlush(nhiUnusalContent);
 
-        // Get all the nHIUnusalContentList
+        // Get all the nhiUnusalContentList
         restNHIUnusalContentMockMvc.perform(get("/api/nhi-unusal-contents?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(nHIUnusalContent.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(nhiUnusalContent.getId().intValue())))
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].noSeqNumber").value(hasItem(DEFAULT_NO_SEQ_NUMBER.toString())))
             .andExpect(jsonPath("$.[*].gotSeqNumber").value(hasItem(DEFAULT_GOT_SEQ_NUMBER.toString())));
@@ -179,13 +179,13 @@ public class NHIUnusalContentResourceIntTest {
     @Transactional
     public void getNHIUnusalContent() throws Exception {
         // Initialize the database
-        nHIUnusalContentRepository.saveAndFlush(nHIUnusalContent);
+        nhiUnusalContentRepository.saveAndFlush(nhiUnusalContent);
 
-        // Get the nHIUnusalContent
-        restNHIUnusalContentMockMvc.perform(get("/api/nhi-unusal-contents/{id}", nHIUnusalContent.getId()))
+        // Get the nhiUnusalContent
+        restNHIUnusalContentMockMvc.perform(get("/api/nhi-unusal-contents/{id}", nhiUnusalContent.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(nHIUnusalContent.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(nhiUnusalContent.getId().intValue()))
             .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
             .andExpect(jsonPath("$.noSeqNumber").value(DEFAULT_NO_SEQ_NUMBER.toString()))
             .andExpect(jsonPath("$.gotSeqNumber").value(DEFAULT_GOT_SEQ_NUMBER.toString()));
@@ -194,7 +194,7 @@ public class NHIUnusalContentResourceIntTest {
     @Test
     @Transactional
     public void getNonExistingNHIUnusalContent() throws Exception {
-        // Get the nHIUnusalContent
+        // Get the nhiUnusalContent
         restNHIUnusalContentMockMvc.perform(get("/api/nhi-unusal-contents/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
@@ -203,12 +203,12 @@ public class NHIUnusalContentResourceIntTest {
     @Transactional
     public void updateNHIUnusalContent() throws Exception {
         // Initialize the database
-        nHIUnusalContentRepository.saveAndFlush(nHIUnusalContent);
+        nhiUnusalContentRepository.saveAndFlush(nhiUnusalContent);
 
-        int databaseSizeBeforeUpdate = nHIUnusalContentRepository.findAll().size();
+        int databaseSizeBeforeUpdate = nhiUnusalContentRepository.findAll().size();
 
-        // Update the nHIUnusalContent
-        NHIUnusalContent updatedNHIUnusalContent = nHIUnusalContentRepository.findById(nHIUnusalContent.getId()).get();
+        // Update the nhiUnusalContent
+        NHIUnusalContent updatedNHIUnusalContent = nhiUnusalContentRepository.findById(nhiUnusalContent.getId()).get();
         // Disconnect from session so that the updates on updatedNHIUnusalContent are not directly saved in db
         em.detach(updatedNHIUnusalContent);
         updatedNHIUnusalContent
@@ -222,9 +222,9 @@ public class NHIUnusalContentResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the NHIUnusalContent in the database
-        List<NHIUnusalContent> nHIUnusalContentList = nHIUnusalContentRepository.findAll();
-        assertThat(nHIUnusalContentList).hasSize(databaseSizeBeforeUpdate);
-        NHIUnusalContent testNHIUnusalContent = nHIUnusalContentList.get(nHIUnusalContentList.size() - 1);
+        List<NHIUnusalContent> nhiUnusalContentList = nhiUnusalContentRepository.findAll();
+        assertThat(nhiUnusalContentList).hasSize(databaseSizeBeforeUpdate);
+        NHIUnusalContent testNHIUnusalContent = nhiUnusalContentList.get(nhiUnusalContentList.size() - 1);
         assertThat(testNHIUnusalContent.getContent()).isEqualTo(UPDATED_CONTENT);
         assertThat(testNHIUnusalContent.getNoSeqNumber()).isEqualTo(UPDATED_NO_SEQ_NUMBER);
         assertThat(testNHIUnusalContent.getGotSeqNumber()).isEqualTo(UPDATED_GOT_SEQ_NUMBER);
@@ -233,51 +233,51 @@ public class NHIUnusalContentResourceIntTest {
     @Test
     @Transactional
     public void updateNonExistingNHIUnusalContent() throws Exception {
-        int databaseSizeBeforeUpdate = nHIUnusalContentRepository.findAll().size();
+        int databaseSizeBeforeUpdate = nhiUnusalContentRepository.findAll().size();
 
         // Create the NHIUnusalContent
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restNHIUnusalContentMockMvc.perform(put("/api/nhi-unusal-contents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIUnusalContent)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiUnusalContent)))
             .andExpect(status().isBadRequest());
 
         // Validate the NHIUnusalContent in the database
-        List<NHIUnusalContent> nHIUnusalContentList = nHIUnusalContentRepository.findAll();
-        assertThat(nHIUnusalContentList).hasSize(databaseSizeBeforeUpdate);
+        List<NHIUnusalContent> nhiUnusalContentList = nhiUnusalContentRepository.findAll();
+        assertThat(nhiUnusalContentList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     public void deleteNHIUnusalContent() throws Exception {
         // Initialize the database
-        nHIUnusalContentRepository.saveAndFlush(nHIUnusalContent);
+        nhiUnusalContentRepository.saveAndFlush(nhiUnusalContent);
 
-        int databaseSizeBeforeDelete = nHIUnusalContentRepository.findAll().size();
+        int databaseSizeBeforeDelete = nhiUnusalContentRepository.findAll().size();
 
-        // Get the nHIUnusalContent
-        restNHIUnusalContentMockMvc.perform(delete("/api/nhi-unusal-contents/{id}", nHIUnusalContent.getId())
+        // Get the nhiUnusalContent
+        restNHIUnusalContentMockMvc.perform(delete("/api/nhi-unusal-contents/{id}", nhiUnusalContent.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<NHIUnusalContent> nHIUnusalContentList = nHIUnusalContentRepository.findAll();
-        assertThat(nHIUnusalContentList).hasSize(databaseSizeBeforeDelete - 1);
+        List<NHIUnusalContent> nhiUnusalContentList = nhiUnusalContentRepository.findAll();
+        assertThat(nhiUnusalContentList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test
     @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(NHIUnusalContent.class);
-        NHIUnusalContent nHIUnusalContent1 = new NHIUnusalContent();
-        nHIUnusalContent1.setId(1L);
-        NHIUnusalContent nHIUnusalContent2 = new NHIUnusalContent();
-        nHIUnusalContent2.setId(nHIUnusalContent1.getId());
-        assertThat(nHIUnusalContent1).isEqualTo(nHIUnusalContent2);
-        nHIUnusalContent2.setId(2L);
-        assertThat(nHIUnusalContent1).isNotEqualTo(nHIUnusalContent2);
-        nHIUnusalContent1.setId(null);
-        assertThat(nHIUnusalContent1).isNotEqualTo(nHIUnusalContent2);
+        NHIUnusalContent nhiUnusalContent1 = new NHIUnusalContent();
+        nhiUnusalContent1.setId(1L);
+        NHIUnusalContent nhiUnusalContent2 = new NHIUnusalContent();
+        nhiUnusalContent2.setId(nhiUnusalContent1.getId());
+        assertThat(nhiUnusalContent1).isEqualTo(nhiUnusalContent2);
+        nhiUnusalContent2.setId(2L);
+        assertThat(nhiUnusalContent1).isNotEqualTo(nhiUnusalContent2);
+        nhiUnusalContent1.setId(null);
+        assertThat(nhiUnusalContent1).isNotEqualTo(nhiUnusalContent2);
     }
 }

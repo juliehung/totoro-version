@@ -91,11 +91,11 @@ public class NHIUnusalContent implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NHIUnusalContent nHIUnusalContent = (NHIUnusalContent) o;
-        if (nHIUnusalContent.getId() == null || getId() == null) {
+        NHIUnusalContent nhiUnusalContent = (NHIUnusalContent) o;
+        if (nhiUnusalContent.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), nHIUnusalContent.getId());
+        return Objects.equals(getId(), nhiUnusalContent.getId());
     }
 
     @Override

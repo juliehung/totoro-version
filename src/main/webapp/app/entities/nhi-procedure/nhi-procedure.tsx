@@ -80,7 +80,7 @@ export class NHIProcedure extends React.Component<INHIProcedureProps, INHIProced
                   <Translate contentKey="totoroApp.nHIProcedure.englishName">English Name</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.nHIProcedure.nHIProcedureType">N HI Procedure Type</Translate>{' '}
+                  <Translate contentKey="totoroApp.nHIProcedure.nhiProcedureType">Nhi Procedure Type</Translate>{' '}
                   <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
@@ -99,8 +99,8 @@ export class NHIProcedure extends React.Component<INHIProcedureProps, INHIProced
                   <td>{nHIProcedure.point}</td>
                   <td>{nHIProcedure.englishName}</td>
                   <td>
-                    {nHIProcedure.nHIProcedureType ? (
-                      <Link to={`nhi-procedure-type/${nHIProcedure.nHIProcedureType.id}`}>{nHIProcedure.nHIProcedureType.id}</Link>
+                    {nHIProcedure.nhiProcedureType ? (
+                      <Link to={`nhi-procedure-type/${nHIProcedure.nhiProcedureType.id}`}>{nHIProcedure.nhiProcedureType.id}</Link>
                     ) : (
                       ''
                     )}

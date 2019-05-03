@@ -27,86 +27,86 @@ public class NHIUnusalContentResource {
 
     private final Logger log = LoggerFactory.getLogger(NHIUnusalContentResource.class);
 
-    private static final String ENTITY_NAME = "nHIUnusalContent";
+    private static final String ENTITY_NAME = "nhiUnusalContent";
 
-    private final NHIUnusalContentRepository nHIUnusalContentRepository;
+    private final NHIUnusalContentRepository nhiUnusalContentRepository;
 
-    public NHIUnusalContentResource(NHIUnusalContentRepository nHIUnusalContentRepository) {
-        this.nHIUnusalContentRepository = nHIUnusalContentRepository;
+    public NHIUnusalContentResource(NHIUnusalContentRepository nhiUnusalContentRepository) {
+        this.nhiUnusalContentRepository = nhiUnusalContentRepository;
     }
 
     /**
-     * POST  /nhi-unusal-contents : Create a new nHIUnusalContent.
+     * POST  /nhi-unusal-contents : Create a new nhiUnusalContent.
      *
-     * @param nHIUnusalContent the nHIUnusalContent to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new nHIUnusalContent, or with status 400 (Bad Request) if the nHIUnusalContent has already an ID
+     * @param nhiUnusalContent the nhiUnusalContent to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new nhiUnusalContent, or with status 400 (Bad Request) if the nhiUnusalContent has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/nhi-unusal-contents")
     @Timed
-    public ResponseEntity<NHIUnusalContent> createNHIUnusalContent(@Valid @RequestBody NHIUnusalContent nHIUnusalContent) throws URISyntaxException {
-        log.debug("REST request to save NHIUnusalContent : {}", nHIUnusalContent);
-        if (nHIUnusalContent.getId() != null) {
-            throw new BadRequestAlertException("A new nHIUnusalContent cannot already have an ID", ENTITY_NAME, "idexists");
+    public ResponseEntity<NHIUnusalContent> createNHIUnusalContent(@Valid @RequestBody NHIUnusalContent nhiUnusalContent) throws URISyntaxException {
+        log.debug("REST request to save NHIUnusalContent : {}", nhiUnusalContent);
+        if (nhiUnusalContent.getId() != null) {
+            throw new BadRequestAlertException("A new nhiUnusalContent cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        NHIUnusalContent result = nHIUnusalContentRepository.save(nHIUnusalContent);
+        NHIUnusalContent result = nhiUnusalContentRepository.save(nhiUnusalContent);
         return ResponseEntity.created(new URI("/api/nhi-unusal-contents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /nhi-unusal-contents : Updates an existing nHIUnusalContent.
+     * PUT  /nhi-unusal-contents : Updates an existing nhiUnusalContent.
      *
-     * @param nHIUnusalContent the nHIUnusalContent to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated nHIUnusalContent,
-     * or with status 400 (Bad Request) if the nHIUnusalContent is not valid,
-     * or with status 500 (Internal Server Error) if the nHIUnusalContent couldn't be updated
+     * @param nhiUnusalContent the nhiUnusalContent to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated nhiUnusalContent,
+     * or with status 400 (Bad Request) if the nhiUnusalContent is not valid,
+     * or with status 500 (Internal Server Error) if the nhiUnusalContent couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/nhi-unusal-contents")
     @Timed
-    public ResponseEntity<NHIUnusalContent> updateNHIUnusalContent(@Valid @RequestBody NHIUnusalContent nHIUnusalContent) throws URISyntaxException {
-        log.debug("REST request to update NHIUnusalContent : {}", nHIUnusalContent);
-        if (nHIUnusalContent.getId() == null) {
+    public ResponseEntity<NHIUnusalContent> updateNHIUnusalContent(@Valid @RequestBody NHIUnusalContent nhiUnusalContent) throws URISyntaxException {
+        log.debug("REST request to update NHIUnusalContent : {}", nhiUnusalContent);
+        if (nhiUnusalContent.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        NHIUnusalContent result = nHIUnusalContentRepository.save(nHIUnusalContent);
+        NHIUnusalContent result = nhiUnusalContentRepository.save(nhiUnusalContent);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nHIUnusalContent.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nhiUnusalContent.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /nhi-unusal-contents : get all the nHIUnusalContents.
+     * GET  /nhi-unusal-contents : get all the nhiUnusalContents.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of nHIUnusalContents in body
+     * @return the ResponseEntity with status 200 (OK) and the list of nhiUnusalContents in body
      */
     @GetMapping("/nhi-unusal-contents")
     @Timed
     public List<NHIUnusalContent> getAllNHIUnusalContents() {
         log.debug("REST request to get all NHIUnusalContents");
-        return nHIUnusalContentRepository.findAll();
+        return nhiUnusalContentRepository.findAll();
     }
 
     /**
-     * GET  /nhi-unusal-contents/:id : get the "id" nHIUnusalContent.
+     * GET  /nhi-unusal-contents/:id : get the "id" nhiUnusalContent.
      *
-     * @param id the id of the nHIUnusalContent to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the nHIUnusalContent, or with status 404 (Not Found)
+     * @param id the id of the nhiUnusalContent to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the nhiUnusalContent, or with status 404 (Not Found)
      */
     @GetMapping("/nhi-unusal-contents/{id}")
     @Timed
     public ResponseEntity<NHIUnusalContent> getNHIUnusalContent(@PathVariable Long id) {
         log.debug("REST request to get NHIUnusalContent : {}", id);
-        Optional<NHIUnusalContent> nHIUnusalContent = nHIUnusalContentRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(nHIUnusalContent);
+        Optional<NHIUnusalContent> nhiUnusalContent = nhiUnusalContentRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(nhiUnusalContent);
     }
 
     /**
-     * DELETE  /nhi-unusal-contents/:id : delete the "id" nHIUnusalContent.
+     * DELETE  /nhi-unusal-contents/:id : delete the "id" nhiUnusalContent.
      *
-     * @param id the id of the nHIUnusalContent to delete
+     * @param id the id of the nhiUnusalContent to delete
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/nhi-unusal-contents/{id}")
@@ -114,7 +114,7 @@ public class NHIUnusalContentResource {
     public ResponseEntity<Void> deleteNHIUnusalContent(@PathVariable Long id) {
         log.debug("REST request to delete NHIUnusalContent : {}", id);
 
-        nHIUnusalContentRepository.deleteById(id);
+        nhiUnusalContentRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

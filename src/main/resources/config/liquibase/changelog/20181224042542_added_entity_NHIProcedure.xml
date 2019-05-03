@@ -37,7 +37,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="nhiprocedure_type_id" type="bigint">
+            <column name="nhi_procedure_type_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 

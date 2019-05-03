@@ -1,4 +1,4 @@
-nhiprocedure_type_id;code;name;point;english_name
+nhi_procedure_type_id;code;name;point;english_name
 1;00121C;牙科門診診察費1.每位醫師每日門診量在二十人次以下部分(≦20) 1)處方交付特約藥局調劑;230;NULL
 1;00122C;牙科門診診察費1.每位醫師每日門診量在二十人次以下部分(≦20) 2)未開處方或處方由本院所自行調劑;230;NULL
 1;00123C;牙科門診診察費2.每位醫師每日門診量超過二○人次部分(>20) 1)處方交付特約藥局調劑;120;NULL

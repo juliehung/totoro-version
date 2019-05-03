@@ -20,14 +20,14 @@ export interface INHIProcedureUpdateProps extends StateProps, DispatchProps, Rou
 
 export interface INHIProcedureUpdateState {
   isNew: boolean;
-  nHIProcedureTypeId: string;
+  nhiProcedureTypeId: string;
 }
 
 export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps, INHIProcedureUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
-      nHIProcedureTypeId: '0',
+      nhiProcedureTypeId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -143,10 +143,10 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
                   <AvField id="nhi-procedure-englishName" type="text" name="englishName" />
                 </AvGroup>
                 <AvGroup>
-                  <Label for="nHIProcedureType.id">
-                    <Translate contentKey="totoroApp.nHIProcedure.nHIProcedureType">N HI Procedure Type</Translate>
+                  <Label for="nhiProcedureType.id">
+                    <Translate contentKey="totoroApp.nHIProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
                   </Label>
-                  <AvInput id="nhi-procedure-nHIProcedureType" type="select" className="form-control" name="nHIProcedureType.id">
+                  <AvInput id="nhi-procedure-nhiProcedureType" type="select" className="form-control" name="nhiProcedureType.id">
                     <option value="" key="0" />
                     {nHIProcedureTypes
                       ? nHIProcedureTypes.map(otherEntity => (

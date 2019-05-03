@@ -175,13 +175,13 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
         return nhiProcedure;
     }
 
-    public TreatmentProcedure nhiProcedure(NHIProcedure nHIProcedure) {
-        this.nhiProcedure = nHIProcedure;
+    public TreatmentProcedure nhiProcedure(NHIProcedure nhiProcedure) {
+        this.nhiProcedure = nhiProcedure;
         return this;
     }
 
-    public void setNhiProcedure(NHIProcedure nHIProcedure) {
-        this.nhiProcedure = nHIProcedure;
+    public void setNhiProcedure(NHIProcedure nhiProcedure) {
+        this.nhiProcedure = nhiProcedure;
     }
 
     public TreatmentTask getTreatmentTask() {

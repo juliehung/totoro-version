@@ -46,7 +46,7 @@ public class NHICategoryResourceIntTest {
     private static final String UPDATED_CODES = "BBBBBBBBBB";
 
     @Autowired
-    private NHICategoryRepository nHICategoryRepository;
+    private NHICategoryRepository nhiCategoryRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -65,13 +65,13 @@ public class NHICategoryResourceIntTest {
 
     private MockMvc restNHICategoryMockMvc;
 
-    private NHICategory nHICategory;
+    private NHICategory nhiCategory;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NHICategoryResource nHICategoryResource = new NHICategoryResource(nHICategoryRepository);
-        this.restNHICategoryMockMvc = MockMvcBuilders.standaloneSetup(nHICategoryResource)
+        final NHICategoryResource nhiCategoryResource = new NHICategoryResource(nhiCategoryRepository);
+        this.restNHICategoryMockMvc = MockMvcBuilders.standaloneSetup(nhiCategoryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
@@ -86,32 +86,32 @@ public class NHICategoryResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static NHICategory createEntity(EntityManager em) {
-        NHICategory nHICategory = new NHICategory()
+        NHICategory nhiCategory = new NHICategory()
             .name(DEFAULT_NAME)
             .codes(DEFAULT_CODES);
-        return nHICategory;
+        return nhiCategory;
     }
 
     @Before
     public void initTest() {
-        nHICategory = createEntity(em);
+        nhiCategory = createEntity(em);
     }
 
     @Test
     @Transactional
     public void createNHICategory() throws Exception {
-        int databaseSizeBeforeCreate = nHICategoryRepository.findAll().size();
+        int databaseSizeBeforeCreate = nhiCategoryRepository.findAll().size();
 
         // Create the NHICategory
         restNHICategoryMockMvc.perform(post("/api/nhi-categories")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHICategory)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiCategory)))
             .andExpect(status().isCreated());
 
         // Validate the NHICategory in the database
-        List<NHICategory> nHICategoryList = nHICategoryRepository.findAll();
-        assertThat(nHICategoryList).hasSize(databaseSizeBeforeCreate + 1);
-        NHICategory testNHICategory = nHICategoryList.get(nHICategoryList.size() - 1);
+        List<NHICategory> nhiCategoryList = nhiCategoryRepository.findAll();
+        assertThat(nhiCategoryList).hasSize(databaseSizeBeforeCreate + 1);
+        NHICategory testNHICategory = nhiCategoryList.get(nhiCategoryList.size() - 1);
         assertThat(testNHICategory.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testNHICategory.getCodes()).isEqualTo(DEFAULT_CODES);
     }
@@ -119,33 +119,33 @@ public class NHICategoryResourceIntTest {
     @Test
     @Transactional
     public void createNHICategoryWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = nHICategoryRepository.findAll().size();
+        int databaseSizeBeforeCreate = nhiCategoryRepository.findAll().size();
 
         // Create the NHICategory with an existing ID
-        nHICategory.setId(1L);
+        nhiCategory.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restNHICategoryMockMvc.perform(post("/api/nhi-categories")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHICategory)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiCategory)))
             .andExpect(status().isBadRequest());
 
         // Validate the NHICategory in the database
-        List<NHICategory> nHICategoryList = nHICategoryRepository.findAll();
-        assertThat(nHICategoryList).hasSize(databaseSizeBeforeCreate);
+        List<NHICategory> nhiCategoryList = nhiCategoryRepository.findAll();
+        assertThat(nhiCategoryList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void getAllNHICategories() throws Exception {
         // Initialize the database
-        nHICategoryRepository.saveAndFlush(nHICategory);
+        nhiCategoryRepository.saveAndFlush(nhiCategory);
 
-        // Get all the nHICategoryList
+        // Get all the nhiCategoryList
         restNHICategoryMockMvc.perform(get("/api/nhi-categories?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(nHICategory.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(nhiCategory.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].codes").value(hasItem(DEFAULT_CODES.toString())));
     }
@@ -154,13 +154,13 @@ public class NHICategoryResourceIntTest {
     @Transactional
     public void getNHICategory() throws Exception {
         // Initialize the database
-        nHICategoryRepository.saveAndFlush(nHICategory);
+        nhiCategoryRepository.saveAndFlush(nhiCategory);
 
-        // Get the nHICategory
-        restNHICategoryMockMvc.perform(get("/api/nhi-categories/{id}", nHICategory.getId()))
+        // Get the nhiCategory
+        restNHICategoryMockMvc.perform(get("/api/nhi-categories/{id}", nhiCategory.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(nHICategory.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(nhiCategory.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.codes").value(DEFAULT_CODES.toString()));
     }
@@ -168,7 +168,7 @@ public class NHICategoryResourceIntTest {
     @Test
     @Transactional
     public void getNonExistingNHICategory() throws Exception {
-        // Get the nHICategory
+        // Get the nhiCategory
         restNHICategoryMockMvc.perform(get("/api/nhi-categories/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
@@ -177,12 +177,12 @@ public class NHICategoryResourceIntTest {
     @Transactional
     public void updateNHICategory() throws Exception {
         // Initialize the database
-        nHICategoryRepository.saveAndFlush(nHICategory);
+        nhiCategoryRepository.saveAndFlush(nhiCategory);
 
-        int databaseSizeBeforeUpdate = nHICategoryRepository.findAll().size();
+        int databaseSizeBeforeUpdate = nhiCategoryRepository.findAll().size();
 
-        // Update the nHICategory
-        NHICategory updatedNHICategory = nHICategoryRepository.findById(nHICategory.getId()).get();
+        // Update the nhiCategory
+        NHICategory updatedNHICategory = nhiCategoryRepository.findById(nhiCategory.getId()).get();
         // Disconnect from session so that the updates on updatedNHICategory are not directly saved in db
         em.detach(updatedNHICategory);
         updatedNHICategory
@@ -195,9 +195,9 @@ public class NHICategoryResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the NHICategory in the database
-        List<NHICategory> nHICategoryList = nHICategoryRepository.findAll();
-        assertThat(nHICategoryList).hasSize(databaseSizeBeforeUpdate);
-        NHICategory testNHICategory = nHICategoryList.get(nHICategoryList.size() - 1);
+        List<NHICategory> nhiCategoryList = nhiCategoryRepository.findAll();
+        assertThat(nhiCategoryList).hasSize(databaseSizeBeforeUpdate);
+        NHICategory testNHICategory = nhiCategoryList.get(nhiCategoryList.size() - 1);
         assertThat(testNHICategory.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testNHICategory.getCodes()).isEqualTo(UPDATED_CODES);
     }
@@ -205,51 +205,51 @@ public class NHICategoryResourceIntTest {
     @Test
     @Transactional
     public void updateNonExistingNHICategory() throws Exception {
-        int databaseSizeBeforeUpdate = nHICategoryRepository.findAll().size();
+        int databaseSizeBeforeUpdate = nhiCategoryRepository.findAll().size();
 
         // Create the NHICategory
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restNHICategoryMockMvc.perform(put("/api/nhi-categories")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHICategory)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiCategory)))
             .andExpect(status().isBadRequest());
 
         // Validate the NHICategory in the database
-        List<NHICategory> nHICategoryList = nHICategoryRepository.findAll();
-        assertThat(nHICategoryList).hasSize(databaseSizeBeforeUpdate);
+        List<NHICategory> nhiCategoryList = nhiCategoryRepository.findAll();
+        assertThat(nhiCategoryList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     public void deleteNHICategory() throws Exception {
         // Initialize the database
-        nHICategoryRepository.saveAndFlush(nHICategory);
+        nhiCategoryRepository.saveAndFlush(nhiCategory);
 
-        int databaseSizeBeforeDelete = nHICategoryRepository.findAll().size();
+        int databaseSizeBeforeDelete = nhiCategoryRepository.findAll().size();
 
-        // Get the nHICategory
-        restNHICategoryMockMvc.perform(delete("/api/nhi-categories/{id}", nHICategory.getId())
+        // Get the nhiCategory
+        restNHICategoryMockMvc.perform(delete("/api/nhi-categories/{id}", nhiCategory.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<NHICategory> nHICategoryList = nHICategoryRepository.findAll();
-        assertThat(nHICategoryList).hasSize(databaseSizeBeforeDelete - 1);
+        List<NHICategory> nhiCategoryList = nhiCategoryRepository.findAll();
+        assertThat(nhiCategoryList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test
     @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(NHICategory.class);
-        NHICategory nHICategory1 = new NHICategory();
-        nHICategory1.setId(1L);
-        NHICategory nHICategory2 = new NHICategory();
-        nHICategory2.setId(nHICategory1.getId());
-        assertThat(nHICategory1).isEqualTo(nHICategory2);
-        nHICategory2.setId(2L);
-        assertThat(nHICategory1).isNotEqualTo(nHICategory2);
-        nHICategory1.setId(null);
-        assertThat(nHICategory1).isNotEqualTo(nHICategory2);
+        NHICategory nhiCategory1 = new NHICategory();
+        nhiCategory1.setId(1L);
+        NHICategory nhiCategory2 = new NHICategory();
+        nhiCategory2.setId(nhiCategory1.getId());
+        assertThat(nhiCategory1).isEqualTo(nhiCategory2);
+        nhiCategory2.setId(2L);
+        assertThat(nhiCategory1).isNotEqualTo(nhiCategory2);
+        nhiCategory1.setId(null);
+        assertThat(nhiCategory1).isNotEqualTo(nhiCategory2);
     }
 }

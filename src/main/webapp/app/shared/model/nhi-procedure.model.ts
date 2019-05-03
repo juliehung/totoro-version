@@ -6,7 +6,7 @@ export interface INHIProcedure {
   name?: string;
   point?: number;
   englishName?: string;
-  nHIProcedureType?: INHIProcedureType;
+  nhiProcedureType?: INHIProcedureType;
 }
 
 export const defaultValue: Readonly<INHIProcedure> = {};
