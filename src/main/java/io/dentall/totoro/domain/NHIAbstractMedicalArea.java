@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 // 醫療專區
 @MappedSuperclass
-public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalArea<ENTITY>> implements Serializable {
+public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalArea<ENTITY>> implements Serializable, NHIMedicalArea {
 
     private static final long serialVersionUID = 1L;
 
@@ -46,6 +46,7 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
     @Column(name = "a79")
     private String a79;
 
+    @Override
     public String getA71() {
         return a71;
     }
@@ -55,10 +56,12 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
         return (ENTITY) this;
     }
 
+    @Override
     public void setA71(String a71) {
         this.a71 = a71;
     }
 
+    @Override
     public String getA72() {
         return a72;
     }
@@ -68,10 +71,12 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
         return (ENTITY) this;
     }
 
+    @Override
     public void setA72(String a72) {
         this.a72 = a72;
     }
 
+    @Override
     public String getA73() {
         return a73;
     }
@@ -81,10 +86,12 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
         return (ENTITY) this;
     }
 
+    @Override
     public void setA73(String a73) {
         this.a73 = a73;
     }
 
+    @Override
     public String getA74() {
         return a74;
     }
@@ -94,10 +101,12 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
         return (ENTITY) this;
     }
 
+    @Override
     public void setA74(String a74) {
         this.a74 = a74;
     }
 
+    @Override
     public String getA75() {
         return a75;
     }
@@ -107,10 +116,12 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
         return (ENTITY) this;
     }
 
+    @Override
     public void setA75(String a75) {
         this.a75 = a75;
     }
 
+    @Override
     public String getA76() {
         return a76;
     }
@@ -120,10 +131,12 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
         return (ENTITY) this;
     }
 
+    @Override
     public void setA76(String a76) {
         this.a76 = a76;
     }
 
+    @Override
     public String getA77() {
         return a77;
     }
@@ -133,10 +146,12 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
         return (ENTITY) this;
     }
 
+    @Override
     public void setA77(String a77) {
         this.a77 = a77;
     }
 
+    @Override
     public String getA78() {
         return a78;
     }
@@ -146,10 +161,12 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
         return (ENTITY) this;
     }
 
+    @Override
     public void setA78(String a78) {
         this.a78 = a78;
     }
 
+    @Override
     public String getA79() {
         return a79;
     }
@@ -159,6 +176,7 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
         return (ENTITY) this;
     }
 
+    @Override
     public void setA79(String a79) {
         this.a79 = a79;
     }

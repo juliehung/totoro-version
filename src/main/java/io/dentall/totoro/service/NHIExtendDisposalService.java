@@ -44,10 +44,10 @@ public class NHIExtendDisposalService {
 
         Disposal disposal = nhiExtendDisposal.getDisposal();
         if (disposal == null || disposal.getId() == null) {
-            throw disposalNotFoundException();
+            throw ProblemUtil.notFoundException("disposal");
         }
 
-        disposal = disposalRepository.findById(disposal.getId()).orElseThrow(this::disposalNotFoundException);
+        disposal = disposalRepository.findById(disposal.getId()).orElseThrow(() -> ProblemUtil.notFoundException("disposal"));
         if (disposal.getNhiExtendDisposal() != null) {
             throw new ProblemUtil("A disposal already has nhiExtendDisposal", Status.BAD_REQUEST);
         }
@@ -188,9 +188,5 @@ public class NHIExtendDisposalService {
                 return nhiExtendDisposal;
             })
             .get();
-    }
-
-    private ProblemUtil disposalNotFoundException() {
-        return new ProblemUtil("A disposal could not found", Status.BAD_REQUEST);
     }
 }
