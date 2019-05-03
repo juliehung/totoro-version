@@ -1,12 +1,14 @@
 package io.dentall.totoro.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
  * A NHIExtendTreatmentProcedure.
@@ -23,7 +25,7 @@ public class NHIExtendTreatmentProcedure extends NHIAbstractMedicalArea<NHIExten
 
     @OneToOne
     @MapsId
-    @JsonIgnore
+    @JsonProperty(access = WRITE_ONLY)
     private TreatmentProcedure treatmentProcedure;
 
     public Long getId() {
