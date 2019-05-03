@@ -3,7 +3,7 @@
     "clientRootFolder": "",
     "relationships": [
         {
-            "relationshipName": "nHIProcedureType",
+            "relationshipName": "nhiProcedureType",
             "otherEntityName": "nHIProcedureType",
             "relationshipType": "many-to-one",
             "otherEntityField": "id"

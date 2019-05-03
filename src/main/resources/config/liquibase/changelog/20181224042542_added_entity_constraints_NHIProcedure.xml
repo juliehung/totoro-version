@@ -8,9 +8,9 @@
     -->
     <changeSet id="20181224042542-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="nhiprocedure_type_id"
+        <addForeignKeyConstraint baseColumnNames="nhi_procedure_type_id"
                                  baseTableName="nhi_procedure"
-                                 constraintName="fk_nhiprocedure_nhiprocedure_type_id"
+                                 constraintName="fk_nhi_procedure_nhi_procedure_type_id"
                                  referencedColumnNames="id"
                                  referencedTableName="nhi_procedure_type"/>
 

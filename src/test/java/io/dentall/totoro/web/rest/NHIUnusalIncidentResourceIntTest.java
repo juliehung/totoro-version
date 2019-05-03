@@ -49,7 +49,7 @@ public class NHIUnusalIncidentResourceIntTest {
     private static final Instant UPDATED_END = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     @Autowired
-    private NHIUnusalIncidentRepository nHIUnusalIncidentRepository;
+    private NHIUnusalIncidentRepository nhiUnusalIncidentRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -68,13 +68,13 @@ public class NHIUnusalIncidentResourceIntTest {
 
     private MockMvc restNHIUnusalIncidentMockMvc;
 
-    private NHIUnusalIncident nHIUnusalIncident;
+    private NHIUnusalIncident nhiUnusalIncident;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NHIUnusalIncidentResource nHIUnusalIncidentResource = new NHIUnusalIncidentResource(nHIUnusalIncidentRepository);
-        this.restNHIUnusalIncidentMockMvc = MockMvcBuilders.standaloneSetup(nHIUnusalIncidentResource)
+        final NHIUnusalIncidentResource nhiUnusalIncidentResource = new NHIUnusalIncidentResource(nhiUnusalIncidentRepository);
+        this.restNHIUnusalIncidentMockMvc = MockMvcBuilders.standaloneSetup(nhiUnusalIncidentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
@@ -89,32 +89,32 @@ public class NHIUnusalIncidentResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static NHIUnusalIncident createEntity(EntityManager em) {
-        NHIUnusalIncident nHIUnusalIncident = new NHIUnusalIncident()
+        NHIUnusalIncident nhiUnusalIncident = new NHIUnusalIncident()
             .start(DEFAULT_START)
             .end(DEFAULT_END);
-        return nHIUnusalIncident;
+        return nhiUnusalIncident;
     }
 
     @Before
     public void initTest() {
-        nHIUnusalIncident = createEntity(em);
+        nhiUnusalIncident = createEntity(em);
     }
 
     @Test
     @Transactional
     public void createNHIUnusalIncident() throws Exception {
-        int databaseSizeBeforeCreate = nHIUnusalIncidentRepository.findAll().size();
+        int databaseSizeBeforeCreate = nhiUnusalIncidentRepository.findAll().size();
 
         // Create the NHIUnusalIncident
         restNHIUnusalIncidentMockMvc.perform(post("/api/nhi-unusal-incidents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIUnusalIncident)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiUnusalIncident)))
             .andExpect(status().isCreated());
 
         // Validate the NHIUnusalIncident in the database
-        List<NHIUnusalIncident> nHIUnusalIncidentList = nHIUnusalIncidentRepository.findAll();
-        assertThat(nHIUnusalIncidentList).hasSize(databaseSizeBeforeCreate + 1);
-        NHIUnusalIncident testNHIUnusalIncident = nHIUnusalIncidentList.get(nHIUnusalIncidentList.size() - 1);
+        List<NHIUnusalIncident> nhiUnusalIncidentList = nhiUnusalIncidentRepository.findAll();
+        assertThat(nhiUnusalIncidentList).hasSize(databaseSizeBeforeCreate + 1);
+        NHIUnusalIncident testNHIUnusalIncident = nhiUnusalIncidentList.get(nhiUnusalIncidentList.size() - 1);
         assertThat(testNHIUnusalIncident.getStart()).isEqualTo(DEFAULT_START);
         assertThat(testNHIUnusalIncident.getEnd()).isEqualTo(DEFAULT_END);
     }
@@ -122,51 +122,51 @@ public class NHIUnusalIncidentResourceIntTest {
     @Test
     @Transactional
     public void createNHIUnusalIncidentWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = nHIUnusalIncidentRepository.findAll().size();
+        int databaseSizeBeforeCreate = nhiUnusalIncidentRepository.findAll().size();
 
         // Create the NHIUnusalIncident with an existing ID
-        nHIUnusalIncident.setId(1L);
+        nhiUnusalIncident.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restNHIUnusalIncidentMockMvc.perform(post("/api/nhi-unusal-incidents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIUnusalIncident)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiUnusalIncident)))
             .andExpect(status().isBadRequest());
 
         // Validate the NHIUnusalIncident in the database
-        List<NHIUnusalIncident> nHIUnusalIncidentList = nHIUnusalIncidentRepository.findAll();
-        assertThat(nHIUnusalIncidentList).hasSize(databaseSizeBeforeCreate);
+        List<NHIUnusalIncident> nhiUnusalIncidentList = nhiUnusalIncidentRepository.findAll();
+        assertThat(nhiUnusalIncidentList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void checkStartIsRequired() throws Exception {
-        int databaseSizeBeforeTest = nHIUnusalIncidentRepository.findAll().size();
+        int databaseSizeBeforeTest = nhiUnusalIncidentRepository.findAll().size();
         // set the field null
-        nHIUnusalIncident.setStart(null);
+        nhiUnusalIncident.setStart(null);
 
         // Create the NHIUnusalIncident, which fails.
 
         restNHIUnusalIncidentMockMvc.perform(post("/api/nhi-unusal-incidents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIUnusalIncident)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiUnusalIncident)))
             .andExpect(status().isBadRequest());
 
-        List<NHIUnusalIncident> nHIUnusalIncidentList = nHIUnusalIncidentRepository.findAll();
-        assertThat(nHIUnusalIncidentList).hasSize(databaseSizeBeforeTest);
+        List<NHIUnusalIncident> nhiUnusalIncidentList = nhiUnusalIncidentRepository.findAll();
+        assertThat(nhiUnusalIncidentList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void getAllNHIUnusalIncidents() throws Exception {
         // Initialize the database
-        nHIUnusalIncidentRepository.saveAndFlush(nHIUnusalIncident);
+        nhiUnusalIncidentRepository.saveAndFlush(nhiUnusalIncident);
 
-        // Get all the nHIUnusalIncidentList
+        // Get all the nhiUnusalIncidentList
         restNHIUnusalIncidentMockMvc.perform(get("/api/nhi-unusal-incidents?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(nHIUnusalIncident.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(nhiUnusalIncident.getId().intValue())))
             .andExpect(jsonPath("$.[*].start").value(hasItem(DEFAULT_START.toString())))
             .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.toString())));
     }
@@ -175,13 +175,13 @@ public class NHIUnusalIncidentResourceIntTest {
     @Transactional
     public void getNHIUnusalIncident() throws Exception {
         // Initialize the database
-        nHIUnusalIncidentRepository.saveAndFlush(nHIUnusalIncident);
+        nhiUnusalIncidentRepository.saveAndFlush(nhiUnusalIncident);
 
-        // Get the nHIUnusalIncident
-        restNHIUnusalIncidentMockMvc.perform(get("/api/nhi-unusal-incidents/{id}", nHIUnusalIncident.getId()))
+        // Get the nhiUnusalIncident
+        restNHIUnusalIncidentMockMvc.perform(get("/api/nhi-unusal-incidents/{id}", nhiUnusalIncident.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(nHIUnusalIncident.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(nhiUnusalIncident.getId().intValue()))
             .andExpect(jsonPath("$.start").value(DEFAULT_START.toString()))
             .andExpect(jsonPath("$.end").value(DEFAULT_END.toString()));
     }
@@ -189,7 +189,7 @@ public class NHIUnusalIncidentResourceIntTest {
     @Test
     @Transactional
     public void getNonExistingNHIUnusalIncident() throws Exception {
-        // Get the nHIUnusalIncident
+        // Get the nhiUnusalIncident
         restNHIUnusalIncidentMockMvc.perform(get("/api/nhi-unusal-incidents/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
@@ -198,12 +198,12 @@ public class NHIUnusalIncidentResourceIntTest {
     @Transactional
     public void updateNHIUnusalIncident() throws Exception {
         // Initialize the database
-        nHIUnusalIncidentRepository.saveAndFlush(nHIUnusalIncident);
+        nhiUnusalIncidentRepository.saveAndFlush(nhiUnusalIncident);
 
-        int databaseSizeBeforeUpdate = nHIUnusalIncidentRepository.findAll().size();
+        int databaseSizeBeforeUpdate = nhiUnusalIncidentRepository.findAll().size();
 
-        // Update the nHIUnusalIncident
-        NHIUnusalIncident updatedNHIUnusalIncident = nHIUnusalIncidentRepository.findById(nHIUnusalIncident.getId()).get();
+        // Update the nhiUnusalIncident
+        NHIUnusalIncident updatedNHIUnusalIncident = nhiUnusalIncidentRepository.findById(nhiUnusalIncident.getId()).get();
         // Disconnect from session so that the updates on updatedNHIUnusalIncident are not directly saved in db
         em.detach(updatedNHIUnusalIncident);
         updatedNHIUnusalIncident
@@ -216,9 +216,9 @@ public class NHIUnusalIncidentResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the NHIUnusalIncident in the database
-        List<NHIUnusalIncident> nHIUnusalIncidentList = nHIUnusalIncidentRepository.findAll();
-        assertThat(nHIUnusalIncidentList).hasSize(databaseSizeBeforeUpdate);
-        NHIUnusalIncident testNHIUnusalIncident = nHIUnusalIncidentList.get(nHIUnusalIncidentList.size() - 1);
+        List<NHIUnusalIncident> nhiUnusalIncidentList = nhiUnusalIncidentRepository.findAll();
+        assertThat(nhiUnusalIncidentList).hasSize(databaseSizeBeforeUpdate);
+        NHIUnusalIncident testNHIUnusalIncident = nhiUnusalIncidentList.get(nhiUnusalIncidentList.size() - 1);
         assertThat(testNHIUnusalIncident.getStart()).isEqualTo(UPDATED_START);
         assertThat(testNHIUnusalIncident.getEnd()).isEqualTo(UPDATED_END);
     }
@@ -226,51 +226,51 @@ public class NHIUnusalIncidentResourceIntTest {
     @Test
     @Transactional
     public void updateNonExistingNHIUnusalIncident() throws Exception {
-        int databaseSizeBeforeUpdate = nHIUnusalIncidentRepository.findAll().size();
+        int databaseSizeBeforeUpdate = nhiUnusalIncidentRepository.findAll().size();
 
         // Create the NHIUnusalIncident
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restNHIUnusalIncidentMockMvc.perform(put("/api/nhi-unusal-incidents")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nHIUnusalIncident)))
+            .content(TestUtil.convertObjectToJsonBytes(nhiUnusalIncident)))
             .andExpect(status().isBadRequest());
 
         // Validate the NHIUnusalIncident in the database
-        List<NHIUnusalIncident> nHIUnusalIncidentList = nHIUnusalIncidentRepository.findAll();
-        assertThat(nHIUnusalIncidentList).hasSize(databaseSizeBeforeUpdate);
+        List<NHIUnusalIncident> nhiUnusalIncidentList = nhiUnusalIncidentRepository.findAll();
+        assertThat(nhiUnusalIncidentList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     public void deleteNHIUnusalIncident() throws Exception {
         // Initialize the database
-        nHIUnusalIncidentRepository.saveAndFlush(nHIUnusalIncident);
+        nhiUnusalIncidentRepository.saveAndFlush(nhiUnusalIncident);
 
-        int databaseSizeBeforeDelete = nHIUnusalIncidentRepository.findAll().size();
+        int databaseSizeBeforeDelete = nhiUnusalIncidentRepository.findAll().size();
 
-        // Get the nHIUnusalIncident
-        restNHIUnusalIncidentMockMvc.perform(delete("/api/nhi-unusal-incidents/{id}", nHIUnusalIncident.getId())
+        // Get the nhiUnusalIncident
+        restNHIUnusalIncidentMockMvc.perform(delete("/api/nhi-unusal-incidents/{id}", nhiUnusalIncident.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<NHIUnusalIncident> nHIUnusalIncidentList = nHIUnusalIncidentRepository.findAll();
-        assertThat(nHIUnusalIncidentList).hasSize(databaseSizeBeforeDelete - 1);
+        List<NHIUnusalIncident> nhiUnusalIncidentList = nhiUnusalIncidentRepository.findAll();
+        assertThat(nhiUnusalIncidentList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test
     @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(NHIUnusalIncident.class);
-        NHIUnusalIncident nHIUnusalIncident1 = new NHIUnusalIncident();
-        nHIUnusalIncident1.setId(1L);
-        NHIUnusalIncident nHIUnusalIncident2 = new NHIUnusalIncident();
-        nHIUnusalIncident2.setId(nHIUnusalIncident1.getId());
-        assertThat(nHIUnusalIncident1).isEqualTo(nHIUnusalIncident2);
-        nHIUnusalIncident2.setId(2L);
-        assertThat(nHIUnusalIncident1).isNotEqualTo(nHIUnusalIncident2);
-        nHIUnusalIncident1.setId(null);
-        assertThat(nHIUnusalIncident1).isNotEqualTo(nHIUnusalIncident2);
+        NHIUnusalIncident nhiUnusalIncident1 = new NHIUnusalIncident();
+        nhiUnusalIncident1.setId(1L);
+        NHIUnusalIncident nhiUnusalIncident2 = new NHIUnusalIncident();
+        nhiUnusalIncident2.setId(nhiUnusalIncident1.getId());
+        assertThat(nhiUnusalIncident1).isEqualTo(nhiUnusalIncident2);
+        nhiUnusalIncident2.setId(2L);
+        assertThat(nhiUnusalIncident1).isNotEqualTo(nhiUnusalIncident2);
+        nhiUnusalIncident1.setId(null);
+        assertThat(nhiUnusalIncident1).isNotEqualTo(nhiUnusalIncident2);
     }
 }

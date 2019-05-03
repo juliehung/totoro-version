@@ -42,7 +42,7 @@ public class NHIProcedure implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties("")
-    private NHIProcedureType nHIProcedureType;
+    private NHIProcedureType nhiProcedureType;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -105,17 +105,17 @@ public class NHIProcedure implements Serializable {
         this.englishName = englishName;
     }
 
-    public NHIProcedureType getNHIProcedureType() {
-        return nHIProcedureType;
+    public NHIProcedureType getNhiProcedureType() {
+        return nhiProcedureType;
     }
 
-    public NHIProcedure nHIProcedureType(NHIProcedureType nHIProcedureType) {
-        this.nHIProcedureType = nHIProcedureType;
+    public NHIProcedure nhiProcedureType(NHIProcedureType nhiProcedureType) {
+        this.nhiProcedureType = nhiProcedureType;
         return this;
     }
 
-    public void setNHIProcedureType(NHIProcedureType nHIProcedureType) {
-        this.nHIProcedureType = nHIProcedureType;
+    public void setNhiProcedureType(NHIProcedureType nhiProcedureType) {
+        this.nhiProcedureType = nhiProcedureType;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -127,11 +127,11 @@ public class NHIProcedure implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NHIProcedure nHIProcedure = (NHIProcedure) o;
-        if (nHIProcedure.getId() == null || getId() == null) {
+        NHIProcedure nhiProcedure = (NHIProcedure) o;
+        if (nhiProcedure.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), nHIProcedure.getId());
+        return Objects.equals(getId(), nhiProcedure.getId());
     }
 
     @Override

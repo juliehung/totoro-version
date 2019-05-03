@@ -76,13 +76,13 @@ public class NHIUnusalIncident implements Serializable {
         return nhiUnusalContent;
     }
 
-    public NHIUnusalIncident nhiUnusalContent(NHIUnusalContent nHIUnusalContent) {
-        this.nhiUnusalContent = nHIUnusalContent;
+    public NHIUnusalIncident nhiUnusalContent(NHIUnusalContent nhiUnusalContent) {
+        this.nhiUnusalContent = nhiUnusalContent;
         return this;
     }
 
-    public void setNhiUnusalContent(NHIUnusalContent nHIUnusalContent) {
-        this.nhiUnusalContent = nHIUnusalContent;
+    public void setNhiUnusalContent(NHIUnusalContent nhiUnusalContent) {
+        this.nhiUnusalContent = nhiUnusalContent;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -94,11 +94,11 @@ public class NHIUnusalIncident implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NHIUnusalIncident nHIUnusalIncident = (NHIUnusalIncident) o;
-        if (nHIUnusalIncident.getId() == null || getId() == null) {
+        NHIUnusalIncident nhiUnusalIncident = (NHIUnusalIncident) o;
+        if (nhiUnusalIncident.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), nHIUnusalIncident.getId());
+        return Objects.equals(getId(), nhiUnusalIncident.getId());
     }
 
     @Override

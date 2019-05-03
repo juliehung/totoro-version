@@ -75,11 +75,11 @@ public class NHICategory implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NHICategory nHICategory = (NHICategory) o;
-        if (nHICategory.getId() == null || getId() == null) {
+        NHICategory nhiCategory = (NHICategory) o;
+        if (nhiCategory.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), nHICategory.getId());
+        return Objects.equals(getId(), nhiCategory.getId());
     }
 
     @Override

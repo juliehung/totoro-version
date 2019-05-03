@@ -27,86 +27,86 @@ public class NHIProcedureTypeResource {
 
     private final Logger log = LoggerFactory.getLogger(NHIProcedureTypeResource.class);
 
-    private static final String ENTITY_NAME = "nHIProcedureType";
+    private static final String ENTITY_NAME = "nhiProcedureType";
 
-    private final NHIProcedureTypeRepository nHIProcedureTypeRepository;
+    private final NHIProcedureTypeRepository nhiProcedureTypeRepository;
 
-    public NHIProcedureTypeResource(NHIProcedureTypeRepository nHIProcedureTypeRepository) {
-        this.nHIProcedureTypeRepository = nHIProcedureTypeRepository;
+    public NHIProcedureTypeResource(NHIProcedureTypeRepository nhiProcedureTypeRepository) {
+        this.nhiProcedureTypeRepository = nhiProcedureTypeRepository;
     }
 
     /**
-     * POST  /nhi-procedure-types : Create a new nHIProcedureType.
+     * POST  /nhi-procedure-types : Create a new nhiProcedureType.
      *
-     * @param nHIProcedureType the nHIProcedureType to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new nHIProcedureType, or with status 400 (Bad Request) if the nHIProcedureType has already an ID
+     * @param nhiProcedureType the nhiProcedureType to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new nhiProcedureType, or with status 400 (Bad Request) if the nhiProcedureType has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/nhi-procedure-types")
     @Timed
-    public ResponseEntity<NHIProcedureType> createNHIProcedureType(@Valid @RequestBody NHIProcedureType nHIProcedureType) throws URISyntaxException {
-        log.debug("REST request to save NHIProcedureType : {}", nHIProcedureType);
-        if (nHIProcedureType.getId() != null) {
-            throw new BadRequestAlertException("A new nHIProcedureType cannot already have an ID", ENTITY_NAME, "idexists");
+    public ResponseEntity<NHIProcedureType> createNHIProcedureType(@Valid @RequestBody NHIProcedureType nhiProcedureType) throws URISyntaxException {
+        log.debug("REST request to save NHIProcedureType : {}", nhiProcedureType);
+        if (nhiProcedureType.getId() != null) {
+            throw new BadRequestAlertException("A new nhiProcedureType cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        NHIProcedureType result = nHIProcedureTypeRepository.save(nHIProcedureType);
+        NHIProcedureType result = nhiProcedureTypeRepository.save(nhiProcedureType);
         return ResponseEntity.created(new URI("/api/nhi-procedure-types/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /nhi-procedure-types : Updates an existing nHIProcedureType.
+     * PUT  /nhi-procedure-types : Updates an existing nhiProcedureType.
      *
-     * @param nHIProcedureType the nHIProcedureType to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated nHIProcedureType,
-     * or with status 400 (Bad Request) if the nHIProcedureType is not valid,
-     * or with status 500 (Internal Server Error) if the nHIProcedureType couldn't be updated
+     * @param nhiProcedureType the nhiProcedureType to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated nhiProcedureType,
+     * or with status 400 (Bad Request) if the nhiProcedureType is not valid,
+     * or with status 500 (Internal Server Error) if the nhiProcedureType couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/nhi-procedure-types")
     @Timed
-    public ResponseEntity<NHIProcedureType> updateNHIProcedureType(@Valid @RequestBody NHIProcedureType nHIProcedureType) throws URISyntaxException {
-        log.debug("REST request to update NHIProcedureType : {}", nHIProcedureType);
-        if (nHIProcedureType.getId() == null) {
+    public ResponseEntity<NHIProcedureType> updateNHIProcedureType(@Valid @RequestBody NHIProcedureType nhiProcedureType) throws URISyntaxException {
+        log.debug("REST request to update NHIProcedureType : {}", nhiProcedureType);
+        if (nhiProcedureType.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        NHIProcedureType result = nHIProcedureTypeRepository.save(nHIProcedureType);
+        NHIProcedureType result = nhiProcedureTypeRepository.save(nhiProcedureType);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nHIProcedureType.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nhiProcedureType.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /nhi-procedure-types : get all the nHIProcedureTypes.
+     * GET  /nhi-procedure-types : get all the nhiProcedureTypes.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of nHIProcedureTypes in body
+     * @return the ResponseEntity with status 200 (OK) and the list of nhiProcedureTypes in body
      */
     @GetMapping("/nhi-procedure-types")
     @Timed
     public List<NHIProcedureType> getAllNHIProcedureTypes() {
         log.debug("REST request to get all NHIProcedureTypes");
-        return nHIProcedureTypeRepository.findAll();
+        return nhiProcedureTypeRepository.findAll();
     }
 
     /**
-     * GET  /nhi-procedure-types/:id : get the "id" nHIProcedureType.
+     * GET  /nhi-procedure-types/:id : get the "id" nhiProcedureType.
      *
-     * @param id the id of the nHIProcedureType to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the nHIProcedureType, or with status 404 (Not Found)
+     * @param id the id of the nhiProcedureType to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the nhiProcedureType, or with status 404 (Not Found)
      */
     @GetMapping("/nhi-procedure-types/{id}")
     @Timed
     public ResponseEntity<NHIProcedureType> getNHIProcedureType(@PathVariable Long id) {
         log.debug("REST request to get NHIProcedureType : {}", id);
-        Optional<NHIProcedureType> nHIProcedureType = nHIProcedureTypeRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(nHIProcedureType);
+        Optional<NHIProcedureType> nhiProcedureType = nhiProcedureTypeRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(nhiProcedureType);
     }
 
     /**
-     * DELETE  /nhi-procedure-types/:id : delete the "id" nHIProcedureType.
+     * DELETE  /nhi-procedure-types/:id : delete the "id" nhiProcedureType.
      *
-     * @param id the id of the nHIProcedureType to delete
+     * @param id the id of the nhiProcedureType to delete
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/nhi-procedure-types/{id}")
@@ -114,7 +114,7 @@ public class NHIProcedureTypeResource {
     public ResponseEntity<Void> deleteNHIProcedureType(@PathVariable Long id) {
         log.debug("REST request to delete NHIProcedureType : {}", id);
 
-        nHIProcedureTypeRepository.deleteById(id);
+        nhiProcedureTypeRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }
