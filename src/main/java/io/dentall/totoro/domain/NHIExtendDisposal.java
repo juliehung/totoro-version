@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -65,7 +66,8 @@ public class NHIExtendDisposal implements Serializable {
     private String a19;
 
     // 安全簽章
-    @Column(name = "a22")
+    @Size(max = 765)
+    @Column(name = "a22", length = 765)
     private String a22;
 
     // 就醫類別
