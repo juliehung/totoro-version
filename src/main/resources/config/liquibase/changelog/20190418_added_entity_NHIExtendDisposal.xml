@@ -51,7 +51,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="a22" type="varchar(255)">
+            <column name="a22" type="varchar(765)">
                 <constraints nullable="true" />
             </column>
 
