@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing Appointment.
@@ -168,7 +169,10 @@ public class AppointmentService {
 
                 // treatmentProcedures
                 if (updateAppointment.getTreatmentProcedures() != null) {
-                    relationshipService.deleteRelationshipWithTreatmentProcedures(appointment, updateAppointment);
+                    relationshipService.deleteTreatmentProcedures(
+                        appointment,
+                        updateAppointment.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet())
+                    );
                     relationshipService.addRelationshipWithTreatmentProcedures(appointment.treatmentProcedures(updateAppointment.getTreatmentProcedures()));
                 }
 

@@ -105,7 +105,7 @@ public class TreatmentProcedureService {
     public void delete(Long id) {
         log.debug("Request to delete TreatmentProcedure : {}", id);
 
-        relationshipService.deleteRelationshipWithTeethByTreatmentProcedureId(id);
+        relationshipService.deleteTeethByTreatmentProcedureId(id);
         treatmentProcedureRepository.deleteById(id);
     }
 
@@ -179,7 +179,7 @@ public class TreatmentProcedureService {
 
                 if (updateTreatmentProcedure.getTeeth() != null) {
                     log.debug("Update teeth({}) of TreatmentProcedure(id: {})", updateTreatmentProcedure.getTeeth(), updateTreatmentProcedure.getId());
-                    relationshipService.deleteRelationshipWithTeeth(
+                    relationshipService.deleteTeeth(
                         treatmentProcedure.getTeeth(),
                         updateTreatmentProcedure.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet())
                     );

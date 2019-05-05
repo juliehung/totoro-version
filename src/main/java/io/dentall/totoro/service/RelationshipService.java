@@ -157,8 +157,7 @@ public class RelationshipService {
         patient.setTeeth(teeth);
     }
 
-    void deleteRelationshipWithTreatmentProcedures(Appointment appointment, Appointment updateAppointment) {
-        Set<Long> updateIds = updateAppointment.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet());
+    void deleteTreatmentProcedures(Appointment appointment, Set<Long> updateIds) {
         appointment
             .getTreatmentProcedures()
             .stream()
@@ -167,7 +166,7 @@ public class RelationshipService {
             .forEach(treatmentProcedureService::delete);
     }
 
-    void deleteRelationshipWithTeeth(Set<Tooth> teeth, Set<Long> updateIds) {
+    void deleteTeeth(Set<Tooth> teeth, Set<Long> updateIds) {
         teeth
             .stream()
             .map(Tooth::getId)
@@ -175,7 +174,7 @@ public class RelationshipService {
             .forEach(toothService::delete);
     }
 
-    void deleteRelationshipWithTeethByTreatmentProcedureId(Long id) {
+    void deleteTeethByTreatmentProcedureId(Long id) {
         LongFilter filter = new LongFilter();
         filter.setEquals(id);
         ToothCriteria criteria = new ToothCriteria();
@@ -197,6 +196,16 @@ public class RelationshipService {
             .stream()
             .map(TreatmentProcedure::getId)
             .forEach(treatmentProcedureService::delete);
+    }
+
+    void deleteRelationshipWithTreatmentProcedures(Disposal disposal, Set<Long> updateIds) {
+        disposal
+            .getTreatmentProcedures()
+            .forEach(treatmentProcedure -> {
+                if (!updateIds.contains(treatmentProcedure.getId())) {
+                    treatmentProcedure.setDisposal(null);
+                }
+            });
     }
 
     private <Owner> Set<Owner> getRelationshipWithOwners(Stream<Owner> owners, Function<Owner, Owner> mapper) {

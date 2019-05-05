@@ -230,7 +230,7 @@ public class PatientService extends QueryService<Patient> {
                 // teeth
                 if (updatePatient.getTeeth() != null) {
                     log.debug("Update teeth({}) of Patient(id: {})", updatePatient.getTeeth(), updatePatient.getId());
-                    relationshipService.deleteRelationshipWithTeeth(
+                    relationshipService.deleteTeeth(
                         patient.getTeeth(),
                         updatePatient.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet())
                     );

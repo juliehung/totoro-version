@@ -198,12 +198,16 @@ public class DisposalService {
                 }
 
                 if (updateDisposal.getTreatmentProcedures() != null) {
+                    relationshipService.deleteRelationshipWithTreatmentProcedures(
+                        disposal,
+                        updateDisposal.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet())
+                    );
                     relationshipService.addRelationshipWithTreatmentProcedures(disposal.treatmentProcedures(updateDisposal.getTreatmentProcedures()));
                 }
 
                 if (updateDisposal.getTeeth() != null) {
                     log.debug("Update teeth({}) of Disposal(id: {})", updateDisposal.getTeeth(), updateDisposal.getId());
-                    relationshipService.deleteRelationshipWithTeeth(
+                    relationshipService.deleteTeeth(
                         disposal.getTeeth(),
                         updateDisposal.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet())
                     );
