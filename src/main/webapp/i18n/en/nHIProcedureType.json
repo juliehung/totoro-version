@@ -15,7 +15,8 @@
       "detail": {
         "title": "NHI Procedure Type"
       },
-      "major": "Major"
+      "major": "Major",
+      "name": "Name"
     }
   }
 }

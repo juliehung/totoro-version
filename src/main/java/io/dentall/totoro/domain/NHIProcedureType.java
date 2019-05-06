@@ -28,6 +28,9 @@ public class NHIProcedureType implements Serializable {
     @Column(name = "major", nullable = false, unique = true)
     private String major;
 
+    @Column(name = "name")
+    private String name;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -48,6 +51,19 @@ public class NHIProcedureType implements Serializable {
 
     public void setMajor(String major) {
         this.major = major;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public NHIProcedureType name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -76,6 +92,7 @@ public class NHIProcedureType implements Serializable {
         return "NHIProcedureType{" +
             "id=" + getId() +
             ", major='" + getMajor() + "'" +
+            ", name='" + getName() + "'" +
             "}";
     }
 }

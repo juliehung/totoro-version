@@ -43,6 +43,9 @@ public class NHIProcedureTypeResourceIntTest {
     private static final String DEFAULT_MAJOR = "AAAAAAAAAA";
     private static final String UPDATED_MAJOR = "BBBBBBBBBB";
 
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
     @Autowired
     private NHIProcedureTypeRepository nhiProcedureTypeRepository;
 
@@ -85,7 +88,8 @@ public class NHIProcedureTypeResourceIntTest {
      */
     public static NHIProcedureType createEntity(EntityManager em) {
         NHIProcedureType nhiProcedureType = new NHIProcedureType()
-            .major(DEFAULT_MAJOR);
+            .major(DEFAULT_MAJOR)
+            .name(DEFAULT_NAME);
         return nhiProcedureType;
     }
 
@@ -110,6 +114,7 @@ public class NHIProcedureTypeResourceIntTest {
         assertThat(nhiProcedureTypeList).hasSize(databaseSizeBeforeCreate + 1);
         NHIProcedureType testNHIProcedureType = nhiProcedureTypeList.get(nhiProcedureTypeList.size() - 1);
         assertThat(testNHIProcedureType.getMajor()).isEqualTo(DEFAULT_MAJOR);
+        assertThat(testNHIProcedureType.getName()).isEqualTo(DEFAULT_NAME);
     }
 
     @Test
@@ -160,7 +165,8 @@ public class NHIProcedureTypeResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(nhiProcedureType.getId().intValue())))
-            .andExpect(jsonPath("$.[*].major").value(hasItem(DEFAULT_MAJOR.toString())));
+            .andExpect(jsonPath("$.[*].major").value(hasItem(DEFAULT_MAJOR.toString())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
     }
     
     @Test
@@ -174,7 +180,8 @@ public class NHIProcedureTypeResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(nhiProcedureType.getId().intValue()))
-            .andExpect(jsonPath("$.major").value(DEFAULT_MAJOR.toString()));
+            .andExpect(jsonPath("$.major").value(DEFAULT_MAJOR.toString()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
     }
 
     @Test
@@ -198,7 +205,8 @@ public class NHIProcedureTypeResourceIntTest {
         // Disconnect from session so that the updates on updatedNHIProcedureType are not directly saved in db
         em.detach(updatedNHIProcedureType);
         updatedNHIProcedureType
-            .major(UPDATED_MAJOR);
+            .major(UPDATED_MAJOR)
+            .name(UPDATED_NAME);
 
         restNHIProcedureTypeMockMvc.perform(put("/api/nhi-procedure-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -210,6 +218,7 @@ public class NHIProcedureTypeResourceIntTest {
         assertThat(nhiProcedureTypeList).hasSize(databaseSizeBeforeUpdate);
         NHIProcedureType testNHIProcedureType = nhiProcedureTypeList.get(nhiProcedureTypeList.size() - 1);
         assertThat(testNHIProcedureType.getMajor()).isEqualTo(UPDATED_MAJOR);
+        assertThat(testNHIProcedureType.getName()).isEqualTo(UPDATED_NAME);
     }
 
     @Test
