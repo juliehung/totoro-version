@@ -41,6 +41,9 @@ export class NHIProcedureType extends React.Component<INHIProcedureTypeProps> {
                 <th>
                   <Translate contentKey="totoroApp.nHIProcedureType.major">Major</Translate>
                 </th>
+                <th>
+                  <Translate contentKey="totoroApp.nHIProcedureType.name">Name</Translate>
+                </th>
                 <th />
               </tr>
             </thead>
@@ -53,6 +56,7 @@ export class NHIProcedureType extends React.Component<INHIProcedureTypeProps> {
                     </Button>
                   </td>
                   <td>{nHIProcedureType.major}</td>
+                  <td>{nHIProcedureType.name}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${nHIProcedureType.id}`} color="info" size="sm">

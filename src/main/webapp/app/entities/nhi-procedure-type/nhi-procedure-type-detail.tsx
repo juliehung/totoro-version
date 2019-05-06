@@ -35,6 +35,12 @@ export class NHIProcedureTypeDetail extends React.Component<INHIProcedureTypeDet
               </span>
             </dt>
             <dd>{nHIProcedureTypeEntity.major}</dd>
+            <dt>
+              <span id="name">
+                <Translate contentKey="totoroApp.nHIProcedureType.name">Name</Translate>
+              </span>
+            </dt>
+            <dd>{nHIProcedureTypeEntity.name}</dd>
           </dl>
           <Button tag={Link} to="/entity/nhi-procedure-type" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

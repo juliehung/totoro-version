@@ -1,22 +1,26 @@
 {
-    "name": "NHIProcedureType",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
     "fields": [
         {
             "fieldName": "major",
             "fieldType": "String",
             "fieldValidateRules": [
-                "required", "unique"
+                "required",
+                "unique"
             ]
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String"
         }
     ],
-    "relationships": [],
     "changelogDate": "20190419140703",
-    "entityTableName": "nhi_procedure_type",
     "dto": "no",
-    "pagination": "no",
+    "searchEngine": false,
     "service": "no",
+    "entityTableName": "nhi_procedure_type",
     "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "no"
 }

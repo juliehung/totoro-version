@@ -102,6 +102,12 @@ export class NHIProcedureTypeUpdate extends React.Component<INHIProcedureTypeUpd
                     }}
                   />
                 </AvGroup>
+                <AvGroup>
+                  <Label id="nameLabel" for="name">
+                    <Translate contentKey="totoroApp.nHIProcedureType.name">Name</Translate>
+                  </Label>
+                  <AvField id="nhi-procedure-type-name" type="text" name="name" />
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/nhi-procedure-type" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;
