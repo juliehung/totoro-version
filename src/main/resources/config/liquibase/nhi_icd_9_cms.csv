@@ -1,0 +1,22 @@
+id;code;english_name;name
+1;5210;Dental caries;齲齒
+2;5220;Pulpitis;齒髓炎
+3;5233;Acute periodontitis;急性牙周炎
+4;5235;Periodontosis;牙周病
+5;5231;Chronic gingivitis;慢性齒齦炎
+6;5260;Developmental odontogenic cysts;發育性齒囊腫
+7;5239;Unspecified gingival and periodontal disease;齒齦與牙周疾病
+8;5289;Other and unspecified diseases of the oral soft tissues;其他口腔軟組織疾病
+9;5202;Abnormalities of size and form;牙齒大小及形狀異常
+10;5252;Atrophy of edentulous alveolar ridge;無齒性齒槽骨萎縮
+11;5208;Other specified disorders of tooth development and eruption;牙齒發育及萌發之其他特定疾病
+12;5253;Retained dental root;殘留齒根
+13;5229;Other and unspecified diseases of pulp and periapical tissues;其他齒髓及根尖周圍組織疾病
+14;5206;Disturbances in tooth eruption;牙齒萌發障礙
+15;5259;Unspecified disorder of the teeth and supporting structures;牙齒及其支持組織之疾患
+16;5282;Oral aphthae;口瘡
+17;5284;Cysts of oral soft tissues;口腔軟組織囊腫
+18;2920;Nicotine dependence, unspecified, uncomplicated;NULL
+19;5226;Chronic apical periodontitis;慢性根尖牙周組織炎
+20;5243;Anomalies of tooth position;牙齒位置異常
+21;5234;Chronic periodontitis;慢性牙周炎

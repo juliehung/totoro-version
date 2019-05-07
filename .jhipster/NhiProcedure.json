@@ -4,7 +4,13 @@
     "relationships": [
         {
             "relationshipName": "nhiProcedureType",
-            "otherEntityName": "nHIProcedureType",
+            "otherEntityName": "nhiProcedureType",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "nhiIcd9Cm",
+            "otherEntityName": "nhiIcd9Cm",
             "relationshipType": "many-to-one",
             "otherEntityField": "id"
         }
@@ -34,6 +40,10 @@
         {
             "fieldName": "englishName",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "defaultIcd10CmId",
+            "fieldType": "Long"
         }
     ],
     "changelogDate": "20181224042542",

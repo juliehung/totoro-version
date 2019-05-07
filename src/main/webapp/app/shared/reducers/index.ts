@@ -41,10 +41,6 @@ import treatmentProcedure, {
   TreatmentProcedureState
 } from 'app/entities/treatment-procedure/treatment-procedure.reducer';
 // prettier-ignore
-import nHIProcedure, {
-  NHIProcedureState
-} from 'app/entities/nhi-procedure/nhi-procedure.reducer';
-// prettier-ignore
 import nHICategory, {
   NHICategoryState
 } from 'app/entities/nhi-category/nhi-category.reducer';
@@ -129,8 +125,20 @@ import conditionType, {
   ConditionTypeState
 } from 'app/entities/condition-type/condition-type.reducer';
 // prettier-ignore
-import nHIProcedureType, {
-  NHIProcedureTypeState
+import nhiIcd9Cm, {
+  NhiIcd9CmState
+} from 'app/entities/nhi-icd-9-cm/nhi-icd-9-cm.reducer';
+// prettier-ignore
+import nhiIcd10Cm, {
+  NhiIcd10CmState
+} from 'app/entities/nhi-icd-10-cm/nhi-icd-10-cm.reducer';
+// prettier-ignore
+import nhiProcedure, {
+  NhiProcedureState
+} from 'app/entities/nhi-procedure/nhi-procedure.reducer';
+// prettier-ignore
+import nhiProcedureType, {
+  NhiProcedureTypeState
 } from 'app/entities/nhi-procedure-type/nhi-procedure-type.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
@@ -152,7 +160,6 @@ export interface IRootState {
   readonly questionnaire: QuestionnaireState;
   readonly treatmentTask: TreatmentTaskState;
   readonly treatmentProcedure: TreatmentProcedureState;
-  readonly nHIProcedure: NHIProcedureState;
   readonly nHICategory: NHICategoryState;
   readonly hospital: HospitalState;
   readonly accounting: AccountingState;
@@ -174,7 +181,10 @@ export interface IRootState {
   readonly disposal: DisposalState;
   readonly registrationDel: RegistrationDelState;
   readonly conditionType: ConditionTypeState;
-  readonly nHIProcedureType: NHIProcedureTypeState;
+  readonly nhiIcd9Cm: NhiIcd9CmState;
+  readonly nhiIcd10Cm: NhiIcd10CmState;
+  readonly nhiProcedure: NhiProcedureState;
+  readonly nhiProcedureType: NhiProcedureTypeState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -197,7 +207,6 @@ const rootReducer = combineReducers<IRootState>({
   questionnaire,
   treatmentTask,
   treatmentProcedure,
-  nHIProcedure,
   nHICategory,
   hospital,
   accounting,
@@ -219,7 +228,10 @@ const rootReducer = combineReducers<IRootState>({
   disposal,
   registrationDel,
   conditionType,
-  nHIProcedureType,
+  nhiIcd9Cm,
+  nhiIcd10Cm,
+  nhiProcedure,
+  nhiProcedureType,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

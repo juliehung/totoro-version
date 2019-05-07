@@ -19,7 +19,8 @@
     <include file="config/liquibase/changelog/20190218044229_added_entity_constraints_TreatmentDrug.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190220033723_added_entity_constraints_Disposal.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190129062337_added_entity_constraints_Ledger.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181224042542_added_entity_constraints_NHIProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181224042542_added_entity_constraints_NhiProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190506104833_added_entity_constraints_NhiIcd10Cm.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 
     <!-- add custom foreign key constraints -->

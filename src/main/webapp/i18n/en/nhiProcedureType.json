@@ -1,0 +1,22 @@
+{
+  "totoroApp": {
+    "nhiProcedureType": {
+      "home": {
+        "title": "Nhi Procedure Types",
+        "createLabel": "Create a new Nhi Procedure Type",
+        "createOrEditLabel": "Create or edit a Nhi Procedure Type"
+      },
+      "created": "A new Nhi Procedure Type is created with identifier {{ param }}",
+      "updated": "A Nhi Procedure Type is updated with identifier {{ param }}",
+      "deleted": "A Nhi Procedure Type is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Nhi Procedure Type {{ id }}?"
+      },
+      "detail": {
+        "title": "Nhi Procedure Type"
+      },
+      "major": "Major",
+      "name": "Name"
+    }
+  }
+}

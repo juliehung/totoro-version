@@ -103,7 +103,7 @@ public class TreatmentProcedureQueryService extends QueryService<TreatmentProced
             }
             if (criteria.getNhiProcedureId() != null) {
                 specification = specification.and(buildSpecification(criteria.getNhiProcedureId(),
-                    root -> root.join(TreatmentProcedure_.nhiProcedure, JoinType.LEFT).get(NHIProcedure_.id)));
+                    root -> root.join(TreatmentProcedure_.nhiProcedure, JoinType.LEFT).get(NhiProcedure_.id)));
             }
             if (criteria.getTreatmentTaskId() != null) {
                 specification = specification.and(buildSpecification(criteria.getTreatmentTaskId(),

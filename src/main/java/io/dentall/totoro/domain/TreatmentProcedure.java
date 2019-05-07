@@ -55,7 +55,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
 
     @ManyToOne
     @JsonIgnoreProperties("")
-    private NHIProcedure nhiProcedure;
+    private NhiProcedure nhiProcedure;
 
     @ManyToOne
     @JsonProperty(access = WRITE_ONLY)
@@ -171,16 +171,16 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
         this.price = price;
     }
 
-    public NHIProcedure getNhiProcedure() {
+    public NhiProcedure getNhiProcedure() {
         return nhiProcedure;
     }
 
-    public TreatmentProcedure nhiProcedure(NHIProcedure nhiProcedure) {
+    public TreatmentProcedure nhiProcedure(NhiProcedure nhiProcedure) {
         this.nhiProcedure = nhiProcedure;
         return this;
     }
 
-    public void setNhiProcedure(NHIProcedure nhiProcedure) {
+    public void setNhiProcedure(NhiProcedure nhiProcedure) {
         this.nhiProcedure = nhiProcedure;
     }
 

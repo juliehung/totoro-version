@@ -11,12 +11,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A NHIProcedure.
+ * A NhiIcd10Cm.
  */
 @Entity
-@Table(name = "nhi_procedure")
+@Table(name = "nhi_icd_10_cm")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class NHIProcedure implements Serializable {
+public class NhiIcd10Cm implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,20 +29,15 @@ public class NHIProcedure implements Serializable {
     @Column(name = "code", nullable = false)
     private String code;
 
-    @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
-
-    @NotNull
-    @Column(name = "point", nullable = false)
-    private Integer point;
 
     @Column(name = "english_name")
     private String englishName;
 
     @ManyToOne
-    @JsonIgnoreProperties("")
-    private NHIProcedureType nhiProcedureType;
+    @JsonIgnoreProperties("nhiIcd10Cms")
+    private NhiIcd9Cm nhiIcd9Cm;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -57,7 +52,7 @@ public class NHIProcedure implements Serializable {
         return code;
     }
 
-    public NHIProcedure code(String code) {
+    public NhiIcd10Cm code(String code) {
         this.code = code;
         return this;
     }
@@ -70,7 +65,7 @@ public class NHIProcedure implements Serializable {
         return name;
     }
 
-    public NHIProcedure name(String name) {
+    public NhiIcd10Cm name(String name) {
         this.name = name;
         return this;
     }
@@ -79,24 +74,11 @@ public class NHIProcedure implements Serializable {
         this.name = name;
     }
 
-    public Integer getPoint() {
-        return point;
-    }
-
-    public NHIProcedure point(Integer point) {
-        this.point = point;
-        return this;
-    }
-
-    public void setPoint(Integer point) {
-        this.point = point;
-    }
-
     public String getEnglishName() {
         return englishName;
     }
 
-    public NHIProcedure englishName(String englishName) {
+    public NhiIcd10Cm englishName(String englishName) {
         this.englishName = englishName;
         return this;
     }
@@ -105,17 +87,17 @@ public class NHIProcedure implements Serializable {
         this.englishName = englishName;
     }
 
-    public NHIProcedureType getNhiProcedureType() {
-        return nhiProcedureType;
+    public NhiIcd9Cm getNhiIcd9Cm() {
+        return nhiIcd9Cm;
     }
 
-    public NHIProcedure nhiProcedureType(NHIProcedureType nhiProcedureType) {
-        this.nhiProcedureType = nhiProcedureType;
+    public NhiIcd10Cm nhiIcd9Cm(NhiIcd9Cm nhiIcd9Cm) {
+        this.nhiIcd9Cm = nhiIcd9Cm;
         return this;
     }
 
-    public void setNhiProcedureType(NHIProcedureType nhiProcedureType) {
-        this.nhiProcedureType = nhiProcedureType;
+    public void setNhiIcd9Cm(NhiIcd9Cm nhiIcd9Cm) {
+        this.nhiIcd9Cm = nhiIcd9Cm;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -127,11 +109,11 @@ public class NHIProcedure implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NHIProcedure nhiProcedure = (NHIProcedure) o;
-        if (nhiProcedure.getId() == null || getId() == null) {
+        NhiIcd10Cm nhiIcd10Cm = (NhiIcd10Cm) o;
+        if (nhiIcd10Cm.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), nhiProcedure.getId());
+        return Objects.equals(getId(), nhiIcd10Cm.getId());
     }
 
     @Override
@@ -141,11 +123,10 @@ public class NHIProcedure implements Serializable {
 
     @Override
     public String toString() {
-        return "NHIProcedure{" +
+        return "NhiIcd10Cm{" +
             "id=" + getId() +
             ", code='" + getCode() + "'" +
             ", name='" + getName() + "'" +
-            ", point=" + getPoint() +
             ", englishName='" + getEnglishName() + "'" +
             "}";
     }

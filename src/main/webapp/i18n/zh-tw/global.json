@@ -15,7 +15,6 @@
         "questionnaire": "Questionnaire",
         "treatmentTask": "Treatment Task",
         "treatmentProcedure": "Treatment Procedure",
-        "nhiProcedure": "NHI Procedure",
         "nhiCategory": "NHI Category",
         "hospital": "Hospital",
         "accounting": "Accounting",
@@ -37,7 +36,10 @@
         "disposal": "Disposal",
         "registrationDel": "Registration Del",
         "conditionType": "Condition Type",
-        "nhiProcedureType": "NHI Procedure Type",
+        "nhiIcd9Cm": "Nhi Icd 9 Cm",
+        "nhiIcd10Cm": "Nhi Icd 10 Cm",
+        "nhiProcedure": "Nhi Procedure",
+        "nhiProcedureType": "Nhi Procedure Type",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

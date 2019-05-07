@@ -1,15 +1,15 @@
 package io.dentall.totoro.repository;
 
-import io.dentall.totoro.domain.NHIProcedure;
+import io.dentall.totoro.domain.NhiIcd9Cm;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 
 /**
- * Spring Data  repository for the NHIProcedure entity.
+ * Spring Data  repository for the NhiIcd9Cm entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface NHIProcedureRepository extends JpaRepository<NHIProcedure, Long> {
+public interface NhiIcd9CmRepository extends JpaRepository<NhiIcd9Cm, Long> {
 
 }

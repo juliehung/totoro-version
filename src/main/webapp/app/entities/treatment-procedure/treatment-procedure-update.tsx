@@ -8,7 +8,7 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
-import { INHIProcedure } from 'app/shared/model/nhi-procedure.model';
+import { INhiProcedure } from 'app/shared/model/nhi-procedure.model';
 import { getEntities as getNHiProcedures } from 'app/entities/nhi-procedure/nhi-procedure.reducer';
 import { ITreatmentTask } from 'app/shared/model/treatment-task.model';
 import { getEntities as getTreatmentTasks } from 'app/entities/treatment-task/treatment-task.reducer';
@@ -98,7 +98,7 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
   render() {
     const {
       treatmentProcedureEntity,
-      nHIProcedures,
+      nhiProcedures,
       treatmentTasks,
       procedures,
       appointments,
@@ -205,8 +205,8 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                   </Label>
                   <AvInput id="treatment-procedure-nhiProcedure" type="select" className="form-control" name="nhiProcedure.id">
                     <option value="" key="0" />
-                    {nHIProcedures
-                      ? nHIProcedures.map(otherEntity => (
+                    {nhiProcedures
+                      ? nhiProcedures.map(otherEntity => (
                           <option value={otherEntity.id} key={otherEntity.id}>
                             {otherEntity.id}
                           </option>
@@ -312,7 +312,7 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
-  nHIProcedures: storeState.nHIProcedure.entities,
+  nhiProcedures: storeState.nhiProcedure.entities,
   treatmentTasks: storeState.treatmentTask.entities,
   procedures: storeState.procedure.entities,
   appointments: storeState.appointment.entities,

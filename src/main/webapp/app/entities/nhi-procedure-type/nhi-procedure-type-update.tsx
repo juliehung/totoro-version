@@ -9,18 +9,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
 import { getEntity, updateEntity, createEntity, reset } from './nhi-procedure-type.reducer';
-import { INHIProcedureType } from 'app/shared/model/nhi-procedure-type.model';
+import { INhiProcedureType } from 'app/shared/model/nhi-procedure-type.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
 
-export interface INHIProcedureTypeUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface INhiProcedureTypeUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export interface INHIProcedureTypeUpdateState {
+export interface INhiProcedureTypeUpdateState {
   isNew: boolean;
 }
 
-export class NHIProcedureTypeUpdate extends React.Component<INHIProcedureTypeUpdateProps, INHIProcedureTypeUpdateState> {
+export class NhiProcedureTypeUpdate extends React.Component<INhiProcedureTypeUpdateProps, INhiProcedureTypeUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,9 +44,9 @@ export class NHIProcedureTypeUpdate extends React.Component<INHIProcedureTypeUpd
 
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
-      const { nHIProcedureTypeEntity } = this.props;
+      const { nhiProcedureTypeEntity } = this.props;
       const entity = {
-        ...nHIProcedureTypeEntity,
+        ...nhiProcedureTypeEntity,
         ...values
       };
 
@@ -63,15 +63,15 @@ export class NHIProcedureTypeUpdate extends React.Component<INHIProcedureTypeUpd
   };
 
   render() {
-    const { nHIProcedureTypeEntity, loading, updating } = this.props;
+    const { nhiProcedureTypeEntity, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
       <div>
         <Row className="justify-content-center">
           <Col md="8">
-            <h2 id="totoroApp.nHIProcedureType.home.createOrEditLabel">
-              <Translate contentKey="totoroApp.nHIProcedureType.home.createOrEditLabel">Create or edit a NHIProcedureType</Translate>
+            <h2 id="totoroApp.nhiProcedureType.home.createOrEditLabel">
+              <Translate contentKey="totoroApp.nhiProcedureType.home.createOrEditLabel">Create or edit a NhiProcedureType</Translate>
             </h2>
           </Col>
         </Row>
@@ -80,7 +80,7 @@ export class NHIProcedureTypeUpdate extends React.Component<INHIProcedureTypeUpd
             {loading ? (
               <p>Loading...</p>
             ) : (
-              <AvForm model={isNew ? {} : nHIProcedureTypeEntity} onSubmit={this.saveEntity}>
+              <AvForm model={isNew ? {} : nhiProcedureTypeEntity} onSubmit={this.saveEntity}>
                 {!isNew ? (
                   <AvGroup>
                     <Label for="id">
@@ -91,7 +91,7 @@ export class NHIProcedureTypeUpdate extends React.Component<INHIProcedureTypeUpd
                 ) : null}
                 <AvGroup>
                   <Label id="majorLabel" for="major">
-                    <Translate contentKey="totoroApp.nHIProcedureType.major">Major</Translate>
+                    <Translate contentKey="totoroApp.nhiProcedureType.major">Major</Translate>
                   </Label>
                   <AvField
                     id="nhi-procedure-type-major"
@@ -104,7 +104,7 @@ export class NHIProcedureTypeUpdate extends React.Component<INHIProcedureTypeUpd
                 </AvGroup>
                 <AvGroup>
                   <Label id="nameLabel" for="name">
-                    <Translate contentKey="totoroApp.nHIProcedureType.name">Name</Translate>
+                    <Translate contentKey="totoroApp.nhiProcedureType.name">Name</Translate>
                   </Label>
                   <AvField id="nhi-procedure-type-name" type="text" name="name" />
                 </AvGroup>
@@ -131,10 +131,10 @@ export class NHIProcedureTypeUpdate extends React.Component<INHIProcedureTypeUpd
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
-  nHIProcedureTypeEntity: storeState.nHIProcedureType.entity,
-  loading: storeState.nHIProcedureType.loading,
-  updating: storeState.nHIProcedureType.updating,
-  updateSuccess: storeState.nHIProcedureType.updateSuccess
+  nhiProcedureTypeEntity: storeState.nhiProcedureType.entity,
+  loading: storeState.nhiProcedureType.loading,
+  updating: storeState.nhiProcedureType.updating,
+  updateSuccess: storeState.nhiProcedureType.updateSuccess
 });
 
 const mapDispatchToProps = {
@@ -150,4 +150,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(NHIProcedureTypeUpdate);
+)(NhiProcedureTypeUpdate);

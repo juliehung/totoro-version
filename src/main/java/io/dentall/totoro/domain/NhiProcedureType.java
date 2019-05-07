@@ -10,12 +10,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A NHIProcedureType.
+ * A NhiProcedureType.
  */
 @Entity
 @Table(name = "nhi_procedure_type")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class NHIProcedureType implements Serializable {
+public class NhiProcedureType implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -44,7 +44,7 @@ public class NHIProcedureType implements Serializable {
         return major;
     }
 
-    public NHIProcedureType major(String major) {
+    public NhiProcedureType major(String major) {
         this.major = major;
         return this;
     }
@@ -57,7 +57,7 @@ public class NHIProcedureType implements Serializable {
         return name;
     }
 
-    public NHIProcedureType name(String name) {
+    public NhiProcedureType name(String name) {
         this.name = name;
         return this;
     }
@@ -75,7 +75,7 @@ public class NHIProcedureType implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NHIProcedureType nhiProcedureType = (NHIProcedureType) o;
+        NhiProcedureType nhiProcedureType = (NhiProcedureType) o;
         if (nhiProcedureType.getId() == null || getId() == null) {
             return false;
         }
@@ -89,7 +89,7 @@ public class NHIProcedureType implements Serializable {
 
     @Override
     public String toString() {
-        return "NHIProcedureType{" +
+        return "NhiProcedureType{" +
             "id=" + getId() +
             ", major='" + getMajor() + "'" +
             ", name='" + getName() + "'" +

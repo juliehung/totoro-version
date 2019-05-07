@@ -1,0 +1,37 @@
+{
+    "name": "NhiIcd10Cm",
+    "fields": [
+        {
+            "fieldName": "code",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "englishName",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "nhiIcd9Cm",
+            "otherEntityName": "nhiIcd9Cm",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190506104833",
+    "entityTableName": "nhi_icd_10_cm",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

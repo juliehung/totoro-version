@@ -8,17 +8,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntities } from './nhi-procedure.reducer';
-import { INHIProcedure } from 'app/shared/model/nhi-procedure.model';
+import { INhiProcedure } from 'app/shared/model/nhi-procedure.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
-export interface INHIProcedureProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+export interface INhiProcedureProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
-export type INHIProcedureState = IPaginationBaseState;
+export type INhiProcedureState = IPaginationBaseState;
 
-export class NHIProcedure extends React.Component<INHIProcedureProps, INHIProcedureState> {
-  state: INHIProcedureState = {
+export class NhiProcedure extends React.Component<INhiProcedureProps, INhiProcedureState> {
+  state: INhiProcedureState = {
     ...getSortState(this.props.location, ITEMS_PER_PAGE)
   };
 
@@ -49,15 +49,15 @@ export class NHIProcedure extends React.Component<INHIProcedureProps, INHIProced
   };
 
   render() {
-    const { nHIProcedureList, match, totalItems } = this.props;
+    const { nhiProcedureList, match, totalItems } = this.props;
     return (
       <div>
         <h2 id="nhi-procedure-heading">
-          <Translate contentKey="totoroApp.nHIProcedure.home.title">NHI Procedures</Translate>
+          <Translate contentKey="totoroApp.nhiProcedure.home.title">Nhi Procedures</Translate>
           <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
             <FontAwesomeIcon icon="plus" />
             &nbsp;
-            <Translate contentKey="totoroApp.nHIProcedure.home.createLabel">Create new NHI Procedure</Translate>
+            <Translate contentKey="totoroApp.nhiProcedure.home.createLabel">Create new Nhi Procedure</Translate>
           </Link>
         </h2>
         <div className="table-responsive">
@@ -68,58 +68,73 @@ export class NHIProcedure extends React.Component<INHIProcedureProps, INHIProced
                   <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('code')}>
-                  <Translate contentKey="totoroApp.nHIProcedure.code">Code</Translate> <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="totoroApp.nhiProcedure.code">Code</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('name')}>
-                  <Translate contentKey="totoroApp.nHIProcedure.name">Name</Translate> <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="totoroApp.nhiProcedure.name">Name</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('point')}>
-                  <Translate contentKey="totoroApp.nHIProcedure.point">Point</Translate> <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="totoroApp.nhiProcedure.point">Point</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={this.sort('englishName')}>
-                  <Translate contentKey="totoroApp.nHIProcedure.englishName">English Name</Translate> <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="totoroApp.nhiProcedure.englishName">English Name</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('defaultIcd10CmId')}>
+                  <Translate contentKey="totoroApp.nhiProcedure.defaultIcd10CmId">Default Icd 10 Cm Id</Translate>{' '}
+                  <FontAwesomeIcon icon="sort" />
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.nHIProcedure.nhiProcedureType">Nhi Procedure Type</Translate>{' '}
+                  <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>{' '}
                   <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.nhiProcedure.nhiIcd9Cm">Nhi Icd 9 Cm</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {nHIProcedureList.map((nHIProcedure, i) => (
+              {nhiProcedureList.map((nhiProcedure, i) => (
                 <tr key={`entity-${i}`}>
                   <td>
-                    <Button tag={Link} to={`${match.url}/${nHIProcedure.id}`} color="link" size="sm">
-                      {nHIProcedure.id}
+                    <Button tag={Link} to={`${match.url}/${nhiProcedure.id}`} color="link" size="sm">
+                      {nhiProcedure.id}
                     </Button>
                   </td>
-                  <td>{nHIProcedure.code}</td>
-                  <td>{nHIProcedure.name}</td>
-                  <td>{nHIProcedure.point}</td>
-                  <td>{nHIProcedure.englishName}</td>
+                  <td>{nhiProcedure.code}</td>
+                  <td>{nhiProcedure.name}</td>
+                  <td>{nhiProcedure.point}</td>
+                  <td>{nhiProcedure.englishName}</td>
+                  <td>{nhiProcedure.defaultIcd10CmId}</td>
                   <td>
-                    {nHIProcedure.nhiProcedureType ? (
-                      <Link to={`nhi-procedure-type/${nHIProcedure.nhiProcedureType.id}`}>{nHIProcedure.nhiProcedureType.id}</Link>
+                    {nhiProcedure.nhiProcedureType ? (
+                      <Link to={`nhi-procedure-type/${nhiProcedure.nhiProcedureType.id}`}>{nhiProcedure.nhiProcedureType.id}</Link>
+                    ) : (
+                      ''
+                    )}
+                  </td>
+                  <td>
+                    {nhiProcedure.nhiIcd9Cm ? (
+                      <Link to={`nhi-icd-9-cm/${nhiProcedure.nhiIcd9Cm.id}`}>{nhiProcedure.nhiIcd9Cm.id}</Link>
                     ) : (
                       ''
                     )}
                   </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${nHIProcedure.id}`} color="info" size="sm">
+                      <Button tag={Link} to={`${match.url}/${nhiProcedure.id}`} color="info" size="sm">
                         <FontAwesomeIcon icon="eye" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${nHIProcedure.id}/edit`} color="primary" size="sm">
+                      <Button tag={Link} to={`${match.url}/${nhiProcedure.id}/edit`} color="primary" size="sm">
                         <FontAwesomeIcon icon="pencil-alt" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.edit">Edit</Translate>
                         </span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${nHIProcedure.id}/delete`} color="danger" size="sm">
+                      <Button tag={Link} to={`${match.url}/${nhiProcedure.id}/delete`} color="danger" size="sm">
                         <FontAwesomeIcon icon="trash" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -145,9 +160,9 @@ export class NHIProcedure extends React.Component<INHIProcedureProps, INHIProced
   }
 }
 
-const mapStateToProps = ({ nHIProcedure }: IRootState) => ({
-  nHIProcedureList: nHIProcedure.entities,
-  totalItems: nHIProcedure.totalItems
+const mapStateToProps = ({ nhiProcedure }: IRootState) => ({
+  nhiProcedureList: nhiProcedure.entities,
+  totalItems: nhiProcedure.totalItems
 });
 
 const mapDispatchToProps = {
@@ -160,4 +175,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(NHIProcedure);
+)(NhiProcedure);

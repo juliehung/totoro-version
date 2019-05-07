@@ -8,26 +8,30 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
-import { INHIProcedureType } from 'app/shared/model/nhi-procedure-type.model';
-import { getEntities as getNHiProcedureTypes } from 'app/entities/nhi-procedure-type/nhi-procedure-type.reducer';
+import { INhiProcedureType } from 'app/shared/model/nhi-procedure-type.model';
+import { getEntities as getNhiProcedureTypes } from 'app/entities/nhi-procedure-type/nhi-procedure-type.reducer';
+import { INhiIcd9Cm } from 'app/shared/model/nhi-icd-9-cm.model';
+import { getEntities as getNhiIcd9Cms } from 'app/entities/nhi-icd-9-cm/nhi-icd-9-cm.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './nhi-procedure.reducer';
-import { INHIProcedure } from 'app/shared/model/nhi-procedure.model';
+import { INhiProcedure } from 'app/shared/model/nhi-procedure.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
 
-export interface INHIProcedureUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface INhiProcedureUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export interface INHIProcedureUpdateState {
+export interface INhiProcedureUpdateState {
   isNew: boolean;
   nhiProcedureTypeId: string;
+  nhiIcd9CmId: string;
 }
 
-export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps, INHIProcedureUpdateState> {
+export class NhiProcedureUpdate extends React.Component<INhiProcedureUpdateProps, INhiProcedureUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
       nhiProcedureTypeId: '0',
+      nhiIcd9CmId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -45,14 +49,15 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
       this.props.getEntity(this.props.match.params.id);
     }
 
-    this.props.getNHiProcedureTypes();
+    this.props.getNhiProcedureTypes();
+    this.props.getNhiIcd9Cms();
   }
 
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
-      const { nHIProcedureEntity } = this.props;
+      const { nhiProcedureEntity } = this.props;
       const entity = {
-        ...nHIProcedureEntity,
+        ...nhiProcedureEntity,
         ...values
       };
 
@@ -69,15 +74,15 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
   };
 
   render() {
-    const { nHIProcedureEntity, nHIProcedureTypes, loading, updating } = this.props;
+    const { nhiProcedureEntity, nhiProcedureTypes, nhiIcd9Cms, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
       <div>
         <Row className="justify-content-center">
           <Col md="8">
-            <h2 id="totoroApp.nHIProcedure.home.createOrEditLabel">
-              <Translate contentKey="totoroApp.nHIProcedure.home.createOrEditLabel">Create or edit a NHIProcedure</Translate>
+            <h2 id="totoroApp.nhiProcedure.home.createOrEditLabel">
+              <Translate contentKey="totoroApp.nhiProcedure.home.createOrEditLabel">Create or edit a NhiProcedure</Translate>
             </h2>
           </Col>
         </Row>
@@ -86,7 +91,7 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
             {loading ? (
               <p>Loading...</p>
             ) : (
-              <AvForm model={isNew ? {} : nHIProcedureEntity} onSubmit={this.saveEntity}>
+              <AvForm model={isNew ? {} : nhiProcedureEntity} onSubmit={this.saveEntity}>
                 {!isNew ? (
                   <AvGroup>
                     <Label for="id">
@@ -97,7 +102,7 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
                 ) : null}
                 <AvGroup>
                   <Label id="codeLabel" for="code">
-                    <Translate contentKey="totoroApp.nHIProcedure.code">Code</Translate>
+                    <Translate contentKey="totoroApp.nhiProcedure.code">Code</Translate>
                   </Label>
                   <AvField
                     id="nhi-procedure-code"
@@ -110,7 +115,7 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
                 </AvGroup>
                 <AvGroup>
                   <Label id="nameLabel" for="name">
-                    <Translate contentKey="totoroApp.nHIProcedure.name">Name</Translate>
+                    <Translate contentKey="totoroApp.nhiProcedure.name">Name</Translate>
                   </Label>
                   <AvField
                     id="nhi-procedure-name"
@@ -123,7 +128,7 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
                 </AvGroup>
                 <AvGroup>
                   <Label id="pointLabel" for="point">
-                    <Translate contentKey="totoroApp.nHIProcedure.point">Point</Translate>
+                    <Translate contentKey="totoroApp.nhiProcedure.point">Point</Translate>
                   </Label>
                   <AvField
                     id="nhi-procedure-point"
@@ -138,18 +143,39 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
                 </AvGroup>
                 <AvGroup>
                   <Label id="englishNameLabel" for="englishName">
-                    <Translate contentKey="totoroApp.nHIProcedure.englishName">English Name</Translate>
+                    <Translate contentKey="totoroApp.nhiProcedure.englishName">English Name</Translate>
                   </Label>
                   <AvField id="nhi-procedure-englishName" type="text" name="englishName" />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="defaultIcd10CmIdLabel" for="defaultIcd10CmId">
+                    <Translate contentKey="totoroApp.nhiProcedure.defaultIcd10CmId">Default Icd 10 Cm Id</Translate>
+                  </Label>
+                  <AvField id="nhi-procedure-defaultIcd10CmId" type="string" className="form-control" name="defaultIcd10CmId" />
+                </AvGroup>
+                <AvGroup>
                   <Label for="nhiProcedureType.id">
-                    <Translate contentKey="totoroApp.nHIProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
+                    <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
                   </Label>
                   <AvInput id="nhi-procedure-nhiProcedureType" type="select" className="form-control" name="nhiProcedureType.id">
                     <option value="" key="0" />
-                    {nHIProcedureTypes
-                      ? nHIProcedureTypes.map(otherEntity => (
+                    {nhiProcedureTypes
+                      ? nhiProcedureTypes.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
+                <AvGroup>
+                  <Label for="nhiIcd9Cm.id">
+                    <Translate contentKey="totoroApp.nhiProcedure.nhiIcd9Cm">Nhi Icd 9 Cm</Translate>
+                  </Label>
+                  <AvInput id="nhi-procedure-nhiIcd9Cm" type="select" className="form-control" name="nhiIcd9Cm.id">
+                    <option value="" key="0" />
+                    {nhiIcd9Cms
+                      ? nhiIcd9Cms.map(otherEntity => (
                           <option value={otherEntity.id} key={otherEntity.id}>
                             {otherEntity.id}
                           </option>
@@ -180,15 +206,17 @@ export class NHIProcedureUpdate extends React.Component<INHIProcedureUpdateProps
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
-  nHIProcedureTypes: storeState.nHIProcedureType.entities,
-  nHIProcedureEntity: storeState.nHIProcedure.entity,
-  loading: storeState.nHIProcedure.loading,
-  updating: storeState.nHIProcedure.updating,
-  updateSuccess: storeState.nHIProcedure.updateSuccess
+  nhiProcedureTypes: storeState.nhiProcedureType.entities,
+  nhiIcd9Cms: storeState.nhiIcd9Cm.entities,
+  nhiProcedureEntity: storeState.nhiProcedure.entity,
+  loading: storeState.nhiProcedure.loading,
+  updating: storeState.nhiProcedure.updating,
+  updateSuccess: storeState.nhiProcedure.updateSuccess
 });
 
 const mapDispatchToProps = {
-  getNHiProcedureTypes,
+  getNhiProcedureTypes,
+  getNhiIcd9Cms,
   getEntity,
   updateEntity,
   createEntity,
@@ -201,4 +229,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(NHIProcedureUpdate);
+)(NhiProcedureUpdate);

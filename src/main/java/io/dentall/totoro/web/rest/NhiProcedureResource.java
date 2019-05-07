@@ -1,8 +1,8 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.domain.NHIProcedure;
-import io.dentall.totoro.repository.NHIProcedureRepository;
+import io.dentall.totoro.domain.NhiProcedure;
+import io.dentall.totoro.repository.NhiProcedureRepository;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -24,19 +24,19 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing NHIProcedure.
+ * REST controller for managing NhiProcedure.
  */
 @RestController
 @RequestMapping("/api")
-public class NHIProcedureResource {
+public class NhiProcedureResource {
 
-    private final Logger log = LoggerFactory.getLogger(NHIProcedureResource.class);
+    private final Logger log = LoggerFactory.getLogger(NhiProcedureResource.class);
 
     private static final String ENTITY_NAME = "nhiProcedure";
 
-    private final NHIProcedureRepository nhiProcedureRepository;
+    private final NhiProcedureRepository nhiProcedureRepository;
 
-    public NHIProcedureResource(NHIProcedureRepository nhiProcedureRepository) {
+    public NhiProcedureResource(NhiProcedureRepository nhiProcedureRepository) {
         this.nhiProcedureRepository = nhiProcedureRepository;
     }
 
@@ -49,12 +49,12 @@ public class NHIProcedureResource {
      */
     @PostMapping("/nhi-procedures")
     @Timed
-    public ResponseEntity<NHIProcedure> createNHIProcedure(@Valid @RequestBody NHIProcedure nhiProcedure) throws URISyntaxException {
-        log.debug("REST request to save NHIProcedure : {}", nhiProcedure);
+    public ResponseEntity<NhiProcedure> createNhiProcedure(@Valid @RequestBody NhiProcedure nhiProcedure) throws URISyntaxException {
+        log.debug("REST request to save NhiProcedure : {}", nhiProcedure);
         if (nhiProcedure.getId() != null) {
             throw new BadRequestAlertException("A new nhiProcedure cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        NHIProcedure result = nhiProcedureRepository.save(nhiProcedure);
+        NhiProcedure result = nhiProcedureRepository.save(nhiProcedure);
         return ResponseEntity.created(new URI("/api/nhi-procedures/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -71,12 +71,12 @@ public class NHIProcedureResource {
      */
     @PutMapping("/nhi-procedures")
     @Timed
-    public ResponseEntity<NHIProcedure> updateNHIProcedure(@Valid @RequestBody NHIProcedure nhiProcedure) throws URISyntaxException {
-        log.debug("REST request to update NHIProcedure : {}", nhiProcedure);
+    public ResponseEntity<NhiProcedure> updateNhiProcedure(@Valid @RequestBody NhiProcedure nhiProcedure) throws URISyntaxException {
+        log.debug("REST request to update NhiProcedure : {}", nhiProcedure);
         if (nhiProcedure.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        NHIProcedure result = nhiProcedureRepository.save(nhiProcedure);
+        NhiProcedure result = nhiProcedureRepository.save(nhiProcedure);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nhiProcedure.getId().toString()))
             .body(result);
@@ -90,9 +90,9 @@ public class NHIProcedureResource {
      */
     @GetMapping("/nhi-procedures")
     @Timed
-    public ResponseEntity<List<NHIProcedure>> getAllNHIProcedures(Pageable pageable) {
-        log.debug("REST request to get a page of NHIProcedures");
-        Page<NHIProcedure> page = nhiProcedureRepository.findAll(pageable);
+    public ResponseEntity<List<NhiProcedure>> getAllNhiProcedures(Pageable pageable) {
+        log.debug("REST request to get a page of NhiProcedures");
+        Page<NhiProcedure> page = nhiProcedureRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/nhi-procedures");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -105,9 +105,9 @@ public class NHIProcedureResource {
      */
     @GetMapping("/nhi-procedures/{id}")
     @Timed
-    public ResponseEntity<NHIProcedure> getNHIProcedure(@PathVariable Long id) {
-        log.debug("REST request to get NHIProcedure : {}", id);
-        Optional<NHIProcedure> nhiProcedure = nhiProcedureRepository.findById(id);
+    public ResponseEntity<NhiProcedure> getNhiProcedure(@PathVariable Long id) {
+        log.debug("REST request to get NhiProcedure : {}", id);
+        Optional<NhiProcedure> nhiProcedure = nhiProcedureRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(nhiProcedure);
     }
 
@@ -119,8 +119,8 @@ public class NHIProcedureResource {
      */
     @DeleteMapping("/nhi-procedures/{id}")
     @Timed
-    public ResponseEntity<Void> deleteNHIProcedure(@PathVariable Long id) {
-        log.debug("REST request to delete NHIProcedure : {}", id);
+    public ResponseEntity<Void> deleteNhiProcedure(@PathVariable Long id) {
+        log.debug("REST request to delete NhiProcedure : {}", id);
 
         nhiProcedureRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();

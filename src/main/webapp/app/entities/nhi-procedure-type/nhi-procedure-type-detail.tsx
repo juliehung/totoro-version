@@ -8,39 +8,39 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './nhi-procedure-type.reducer';
-import { INHIProcedureType } from 'app/shared/model/nhi-procedure-type.model';
+import { INhiProcedureType } from 'app/shared/model/nhi-procedure-type.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
-export interface INHIProcedureTypeDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface INhiProcedureTypeDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export class NHIProcedureTypeDetail extends React.Component<INHIProcedureTypeDetailProps> {
+export class NhiProcedureTypeDetail extends React.Component<INhiProcedureTypeDetailProps> {
   componentDidMount() {
     this.props.getEntity(this.props.match.params.id);
   }
 
   render() {
-    const { nHIProcedureTypeEntity } = this.props;
+    const { nhiProcedureTypeEntity } = this.props;
     return (
       <Row>
         <Col md="8">
           <h2>
-            <Translate contentKey="totoroApp.nHIProcedureType.detail.title">NHIProcedureType</Translate> [<b>{nHIProcedureTypeEntity.id}</b>
+            <Translate contentKey="totoroApp.nhiProcedureType.detail.title">NhiProcedureType</Translate> [<b>{nhiProcedureTypeEntity.id}</b>
             ]
           </h2>
           <dl className="jh-entity-details">
             <dt>
               <span id="major">
-                <Translate contentKey="totoroApp.nHIProcedureType.major">Major</Translate>
+                <Translate contentKey="totoroApp.nhiProcedureType.major">Major</Translate>
               </span>
             </dt>
-            <dd>{nHIProcedureTypeEntity.major}</dd>
+            <dd>{nhiProcedureTypeEntity.major}</dd>
             <dt>
               <span id="name">
-                <Translate contentKey="totoroApp.nHIProcedureType.name">Name</Translate>
+                <Translate contentKey="totoroApp.nhiProcedureType.name">Name</Translate>
               </span>
             </dt>
-            <dd>{nHIProcedureTypeEntity.name}</dd>
+            <dd>{nhiProcedureTypeEntity.name}</dd>
           </dl>
           <Button tag={Link} to="/entity/nhi-procedure-type" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}
@@ -49,7 +49,7 @@ export class NHIProcedureTypeDetail extends React.Component<INHIProcedureTypeDet
             </span>
           </Button>
           &nbsp;
-          <Button tag={Link} to={`/entity/nhi-procedure-type/${nHIProcedureTypeEntity.id}/edit`} replace color="primary">
+          <Button tag={Link} to={`/entity/nhi-procedure-type/${nhiProcedureTypeEntity.id}/edit`} replace color="primary">
             <FontAwesomeIcon icon="pencil-alt" />{' '}
             <span className="d-none d-md-inline">
               <Translate contentKey="entity.action.edit">Edit</Translate>
@@ -61,8 +61,8 @@ export class NHIProcedureTypeDetail extends React.Component<INHIProcedureTypeDet
   }
 }
 
-const mapStateToProps = ({ nHIProcedureType }: IRootState) => ({
-  nHIProcedureTypeEntity: nHIProcedureType.entity
+const mapStateToProps = ({ nhiProcedureType }: IRootState) => ({
+  nhiProcedureTypeEntity: nhiProcedureType.entity
 });
 
 const mapDispatchToProps = { getEntity };
@@ -73,4 +73,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(NHIProcedureTypeDetail);
+)(NhiProcedureTypeDetail);
