@@ -8,54 +8,64 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './nhi-procedure.reducer';
-import { INHIProcedure } from 'app/shared/model/nhi-procedure.model';
+import { INhiProcedure } from 'app/shared/model/nhi-procedure.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
-export interface INHIProcedureDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface INhiProcedureDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export class NHIProcedureDetail extends React.Component<INHIProcedureDetailProps> {
+export class NhiProcedureDetail extends React.Component<INhiProcedureDetailProps> {
   componentDidMount() {
     this.props.getEntity(this.props.match.params.id);
   }
 
   render() {
-    const { nHIProcedureEntity } = this.props;
+    const { nhiProcedureEntity } = this.props;
     return (
       <Row>
         <Col md="8">
           <h2>
-            <Translate contentKey="totoroApp.nHIProcedure.detail.title">NHIProcedure</Translate> [<b>{nHIProcedureEntity.id}</b>]
+            <Translate contentKey="totoroApp.nhiProcedure.detail.title">NhiProcedure</Translate> [<b>{nhiProcedureEntity.id}</b>]
           </h2>
           <dl className="jh-entity-details">
             <dt>
               <span id="code">
-                <Translate contentKey="totoroApp.nHIProcedure.code">Code</Translate>
+                <Translate contentKey="totoroApp.nhiProcedure.code">Code</Translate>
               </span>
             </dt>
-            <dd>{nHIProcedureEntity.code}</dd>
+            <dd>{nhiProcedureEntity.code}</dd>
             <dt>
               <span id="name">
-                <Translate contentKey="totoroApp.nHIProcedure.name">Name</Translate>
+                <Translate contentKey="totoroApp.nhiProcedure.name">Name</Translate>
               </span>
             </dt>
-            <dd>{nHIProcedureEntity.name}</dd>
+            <dd>{nhiProcedureEntity.name}</dd>
             <dt>
               <span id="point">
-                <Translate contentKey="totoroApp.nHIProcedure.point">Point</Translate>
+                <Translate contentKey="totoroApp.nhiProcedure.point">Point</Translate>
               </span>
             </dt>
-            <dd>{nHIProcedureEntity.point}</dd>
+            <dd>{nhiProcedureEntity.point}</dd>
             <dt>
               <span id="englishName">
-                <Translate contentKey="totoroApp.nHIProcedure.englishName">English Name</Translate>
+                <Translate contentKey="totoroApp.nhiProcedure.englishName">English Name</Translate>
               </span>
             </dt>
-            <dd>{nHIProcedureEntity.englishName}</dd>
+            <dd>{nhiProcedureEntity.englishName}</dd>
             <dt>
-              <Translate contentKey="totoroApp.nHIProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
+              <span id="defaultIcd10CmId">
+                <Translate contentKey="totoroApp.nhiProcedure.defaultIcd10CmId">Default Icd 10 Cm Id</Translate>
+              </span>
             </dt>
-            <dd>{nHIProcedureEntity.nhiProcedureType ? nHIProcedureEntity.nhiProcedureType.id : ''}</dd>
+            <dd>{nhiProcedureEntity.defaultIcd10CmId}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
+            </dt>
+            <dd>{nhiProcedureEntity.nhiProcedureType ? nhiProcedureEntity.nhiProcedureType.id : ''}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.nhiProcedure.nhiIcd9Cm">Nhi Icd 9 Cm</Translate>
+            </dt>
+            <dd>{nhiProcedureEntity.nhiIcd9Cm ? nhiProcedureEntity.nhiIcd9Cm.id : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/nhi-procedure" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}
@@ -64,7 +74,7 @@ export class NHIProcedureDetail extends React.Component<INHIProcedureDetailProps
             </span>
           </Button>
           &nbsp;
-          <Button tag={Link} to={`/entity/nhi-procedure/${nHIProcedureEntity.id}/edit`} replace color="primary">
+          <Button tag={Link} to={`/entity/nhi-procedure/${nhiProcedureEntity.id}/edit`} replace color="primary">
             <FontAwesomeIcon icon="pencil-alt" />{' '}
             <span className="d-none d-md-inline">
               <Translate contentKey="entity.action.edit">Edit</Translate>
@@ -76,8 +86,8 @@ export class NHIProcedureDetail extends React.Component<INHIProcedureDetailProps
   }
 }
 
-const mapStateToProps = ({ nHIProcedure }: IRootState) => ({
-  nHIProcedureEntity: nHIProcedure.entity
+const mapStateToProps = ({ nhiProcedure }: IRootState) => ({
+  nhiProcedureEntity: nhiProcedure.entity
 });
 
 const mapDispatchToProps = { getEntity };
@@ -88,4 +98,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(NHIProcedureDetail);
+)(NhiProcedureDetail);

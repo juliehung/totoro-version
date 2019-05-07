@@ -15,7 +15,7 @@ import reducer, {
   reset
 } from 'app/entities/nhi-procedure-type/nhi-procedure-type.reducer';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-import { INHIProcedureType, defaultValue } from 'app/shared/model/nhi-procedure-type.model';
+import { INhiProcedureType, defaultValue } from 'app/shared/model/nhi-procedure-type.model';
 
 // tslint:disable no-invalid-template-strings
 describe('Entities reducer tests', () => {
@@ -30,7 +30,7 @@ describe('Entities reducer tests', () => {
   const initialState = {
     loading: false,
     errorMessage: null,
-    entities: [] as ReadonlyArray<INHIProcedureType>,
+    entities: [] as ReadonlyArray<INhiProcedureType>,
     entity: defaultValue,
     updating: false,
     updateSuccess: false

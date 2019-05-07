@@ -1,0 +1,58 @@
+id;nhi_icd9cm_id;code;english_name;name
+1;1;K023;Arrested dental caries;靜止性齲齒
+2;1;K027;Dental root caries;牙根齲齒
+3;1;K0251;Dental caries on pit and fissure surface limited to enamel;齲齒在凹陷及裂縫表面侷限於牙釉質
+4;1;K0252;Dental caries on pit and fissure surface penetrating into dentin;齲齒在凹陷及裂縫表面穿入牙本質
+5;1;K0253;Dental caries on pit and fissure surface penetrating into pulp;齲齒在凹陷及裂縫表面穿入牙髓
+6;1;K0261;Dental caries on smooth surface limited to enamel;齲齒在平滑表面上侷限於牙釉質
+7;1;K0262;Dental caries on smooth surface penetrating into dentin;齲齒在平滑表面上穿入牙本質
+8;1;K0263;Dental caries on smooth surface penetrating into pulp;齲齒在平滑表面上穿入牙髓
+9;1;K029;Dental caries, unspecified;齲齒
+10;2;K040;Pulpitis;齒髓炎
+11;3;K0521;Aggressive periodontitis, localized;侵襲性牙周炎，局部
+12;3;K0522;Aggressive periodontitis, generalized;侵襲性牙周炎，一般性
+13;3;K0520;Aggressive periodontitis, unspecified;侵襲性牙周炎
+14;4;K054;Periodontosis;牙周病
+15;5;K0510;Chronic gingivitis, plaque induced;慢性齒齦炎，牙菌斑導致之
+16;5;K0511;Chronic gingivitis, non-plaque induced;慢性齒齦炎，非牙菌斑導致之
+17;6;K090;Developmental odontogenic cysts;發育性齒囊腫
+18;7;K056;Periodontal disease, unspecified;牙周疾病
+19;7;K069;Disorder of gingiva and edentulous alveolar ridge, unspecified;牙齦及無齒性齒槽骨的疾患
+20;8;K131;Cheek and lip biting;咬頰及咬唇
+21;8;K134;Granuloma and granuloma-like lesions of oral mucosa;口腔黏膜肉芽腫及類肉芽腫病灶
+22;8;K136;Irritative hyperplasia of oral mucosa;口腔黏膜刺激性增生
+23;8;K1370;Unspecified lesions of oral mucosa;口腔黏膜的病灶
+24;8;K1379;Other lesions of oral mucosa;其他口腔黏膜病灶
+25;9;K002;Abnormalities of size and form of teeth;牙齒大小及形狀異常
+26;10;K0820;Unspecified atrophy of edentulous alveolar ridge;無齒性齒槽骨萎縮
+27;10;K0821;Minimal atrophy of the mandible;極微萎縮的下頷骨
+28;10;K0822;Moderate atrophy of the mandible;中度萎縮的下頷骨
+29;10;K0823;Severe atrophy of the mandible;重度萎縮的下頷骨
+30;10;K0824;Minimal atrophy of maxilla;極微萎縮的上頜骨
+31;10;K0825;Moderate atrophy of the maxilla;中度萎縮的上頜骨
+32;10;K0826;Severe atrophy of the maxilla;重度萎縮的上頜骨
+33;11;K008;Other disorders of tooth development;牙齒發育之其他疾患
+34;12;K083;Retained dental root;殘留齒根
+35;13;K0490;Unspecified diseases of pulp and periapical tissues;齒髓及根尖周圍組織疾病
+36;13;K0499;Other diseases of pulp and periapical tissues;其他齒髓及根尖周圍組織疾病
+37;14;K006;Disturbances in tooth eruption;牙齒萌發障礙
+38;14;K010;Embedded teeth;埋伏牙
+39;14;K011;Impacted teeth;阻生齒
+40;15;K089;Disorder of teeth and supporting structures, unspecified;牙齒及其支持組織之疾患
+41;16;K120;Recurrent oral aphthae;復發性口瘡
+42;17;K098;Other cysts of oral region, not elsewhere classified;其他口腔部位囊腫，他處未歸類者
+43;17;K099;Cyst of oral region, unspecified;口腔部位囊腫
+44;18;F17200;Nicotine dependence, unspecified, uncomplicated;NULL
+45;19;K045;Chronic apical periodontitis;慢性根尖牙周組織炎
+46;20;M2630;Unspecified anomaly of tooth position of fully erupted tooth or teeth;牙齒完全萌發位置異常
+47;20;M2631;Crowding of fully erupted teeth;牙齒完全萌發位置擁擠
+48;20;M2632;Excessive spacing of fully erupted teeth;牙齒完全萌發位置過度間隙
+49;20;M2633;Horizontal displacement of fully erupted tooth or teeth;牙齒完全萌發位置水平位移
+50;20;M2634;Vertical displacement of fully erupted tooth or teeth;牙齒完全萌發位置垂直位移
+51;20;M2635;Rotation of fully erupted tooth or teeth;牙齒完全萌發位置旋轉
+52;20;M2636;Insufficient interocclusal distance of fully erupted teeth (ridge);牙齒(齒齦)完全萌發，上下牙間咬合距離不足
+53;20;M2637;Excessive interocclusal distance of fully erupted teeth;牙齒完全萌發，上下牙間咬合距離過度
+54;20;M2639;Other anomalies of tooth position of fully erupted tooth or teeth;其他牙齒完全萌發位置異常
+55;21;K0530;Chronic periodontitis, unspecified;慢性牙周炎
+56;21;K0531;Chronic periodontitis, localized;慢性牙周炎，局部性
+57;21;K0532;Chronic periodontitis, generalized;慢性牙周炎，一般性

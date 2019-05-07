@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     <!--
-        Added the constraints for entity NHIProcedure.
+        Added the constraints for entity NhiProcedure.
     -->
     <changeSet id="20181224042542-2" author="jhipster">
         
@@ -13,6 +13,12 @@
                                  constraintName="fk_nhi_procedure_nhi_procedure_type_id"
                                  referencedColumnNames="id"
                                  referencedTableName="nhi_procedure_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="nhi_icd9cm_id"
+                                 baseTableName="nhi_procedure"
+                                 constraintName="fk_nhi_procedure_nhi_icd9cm_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="nhi_icd_9_cm"/>
 
     </changeSet>
 </databaseChangeLog>

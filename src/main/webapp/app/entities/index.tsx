@@ -11,7 +11,6 @@ import Tag from './tag';
 import Questionnaire from './questionnaire';
 import TreatmentTask from './treatment-task';
 import TreatmentProcedure from './treatment-procedure';
-import NHIProcedure from './nhi-procedure';
 import NHICategory from './nhi-category';
 import Hospital from './hospital';
 import Accounting from './accounting';
@@ -33,7 +32,10 @@ import TreatmentDrug from './treatment-drug';
 import Disposal from './disposal';
 import RegistrationDel from './registration-del';
 import ConditionType from './condition-type';
-import NHIProcedureType from './nhi-procedure-type';
+import NhiIcd9Cm from './nhi-icd-9-cm';
+import NhiIcd10Cm from './nhi-icd-10-cm';
+import NhiProcedure from './nhi-procedure';
+import NhiProcedureType from './nhi-procedure-type';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -47,7 +49,6 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/questionnaire`} component={Questionnaire} />
       <ErrorBoundaryRoute path={`${match.url}/treatment-task`} component={TreatmentTask} />
       <ErrorBoundaryRoute path={`${match.url}/treatment-procedure`} component={TreatmentProcedure} />
-      <ErrorBoundaryRoute path={`${match.url}/nhi-procedure`} component={NHIProcedure} />
       <ErrorBoundaryRoute path={`${match.url}/nhi-category`} component={NHICategory} />
       <ErrorBoundaryRoute path={`${match.url}/hospital`} component={Hospital} />
       <ErrorBoundaryRoute path={`${match.url}/accounting`} component={Accounting} />
@@ -69,7 +70,10 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/disposal`} component={Disposal} />
       <ErrorBoundaryRoute path={`${match.url}/registration-del`} component={RegistrationDel} />
       <ErrorBoundaryRoute path={`${match.url}/condition-type`} component={ConditionType} />
-      <ErrorBoundaryRoute path={`${match.url}/nhi-procedure-type`} component={NHIProcedureType} />
+      <ErrorBoundaryRoute path={`${match.url}/nhi-icd-9-cm`} component={NhiIcd9Cm} />
+      <ErrorBoundaryRoute path={`${match.url}/nhi-icd-10-cm`} component={NhiIcd10Cm} />
+      <ErrorBoundaryRoute path={`${match.url}/nhi-procedure`} component={NhiProcedure} />
+      <ErrorBoundaryRoute path={`${match.url}/nhi-procedure-type`} component={NhiProcedureType} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>

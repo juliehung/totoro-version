@@ -2,15 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 
-import io.dentall.totoro.domain.TreatmentProcedure;
-import io.dentall.totoro.domain.NHIProcedure;
-import io.dentall.totoro.domain.TreatmentTask;
-import io.dentall.totoro.domain.Procedure;
-import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.Registration;
-import io.dentall.totoro.domain.Tooth;
-import io.dentall.totoro.domain.Todo;
-import io.dentall.totoro.domain.Disposal;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.TreatmentProcedureService;
@@ -500,7 +492,7 @@ public class TreatmentProcedureResourceIntTest {
     @Transactional
     public void getAllTreatmentProceduresByNhiProcedureIsEqualToSomething() throws Exception {
         // Initialize the database
-        NHIProcedure nhiProcedure = NHIProcedureResourceIntTest.createEntity(em);
+        NhiProcedure nhiProcedure = NhiProcedureResourceIntTest.createEntity(em);
         em.persist(nhiProcedure);
         em.flush();
         treatmentProcedure.setNhiProcedure(nhiProcedure);

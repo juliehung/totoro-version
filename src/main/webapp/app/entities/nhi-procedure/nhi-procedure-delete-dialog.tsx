@@ -5,19 +5,19 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { INHIProcedure } from 'app/shared/model/nhi-procedure.model';
+import { INhiProcedure } from 'app/shared/model/nhi-procedure.model';
 import { IRootState } from 'app/shared/reducers';
 import { getEntity, deleteEntity } from './nhi-procedure.reducer';
 
-export interface INHIProcedureDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface INhiProcedureDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export class NHIProcedureDeleteDialog extends React.Component<INHIProcedureDeleteDialogProps> {
+export class NhiProcedureDeleteDialog extends React.Component<INhiProcedureDeleteDialogProps> {
   componentDidMount() {
     this.props.getEntity(this.props.match.params.id);
   }
 
   confirmDelete = event => {
-    this.props.deleteEntity(this.props.nHIProcedureEntity.id);
+    this.props.deleteEntity(this.props.nhiProcedureEntity.id);
     this.handleClose(event);
   };
 
@@ -27,15 +27,15 @@ export class NHIProcedureDeleteDialog extends React.Component<INHIProcedureDelet
   };
 
   render() {
-    const { nHIProcedureEntity } = this.props;
+    const { nhiProcedureEntity } = this.props;
     return (
       <Modal isOpen toggle={this.handleClose}>
         <ModalHeader toggle={this.handleClose}>
           <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
         </ModalHeader>
-        <ModalBody id="totoroApp.nHIProcedure.delete.question">
-          <Translate contentKey="totoroApp.nHIProcedure.delete.question" interpolate={{ id: nHIProcedureEntity.id }}>
-            Are you sure you want to delete this NHIProcedure?
+        <ModalBody id="totoroApp.nhiProcedure.delete.question">
+          <Translate contentKey="totoroApp.nhiProcedure.delete.question" interpolate={{ id: nhiProcedureEntity.id }}>
+            Are you sure you want to delete this NhiProcedure?
           </Translate>
         </ModalBody>
         <ModalFooter>
@@ -44,7 +44,7 @@ export class NHIProcedureDeleteDialog extends React.Component<INHIProcedureDelet
             &nbsp;
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button id="jhi-confirm-delete-nHIProcedure" color="danger" onClick={this.confirmDelete}>
+          <Button id="jhi-confirm-delete-nhiProcedure" color="danger" onClick={this.confirmDelete}>
             <FontAwesomeIcon icon="trash" />
             &nbsp;
             <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -55,8 +55,8 @@ export class NHIProcedureDeleteDialog extends React.Component<INHIProcedureDelet
   }
 }
 
-const mapStateToProps = ({ nHIProcedure }: IRootState) => ({
-  nHIProcedureEntity: nHIProcedure.entity
+const mapStateToProps = ({ nhiProcedure }: IRootState) => ({
+  nhiProcedureEntity: nhiProcedure.entity
 });
 
 const mapDispatchToProps = { getEntity, deleteEntity };
@@ -67,4 +67,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(NHIProcedureDeleteDialog);
+)(NhiProcedureDeleteDialog);

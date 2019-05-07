@@ -111,6 +111,18 @@
                   separator=";"
                   tableName="registration">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_icd_9_cms.csv"
+                  separator=";"
+                  tableName="nhi_icd_9_cm">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_icd_10_cms.csv"
+                  separator=";"
+                  tableName="nhi_icd_10_cm">
+        </loadData>
     </changeSet>
 
 </databaseChangeLog>

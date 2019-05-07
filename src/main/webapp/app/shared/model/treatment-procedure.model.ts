@@ -1,5 +1,5 @@
 import { Moment } from 'moment';
-import { INHIProcedure } from 'app/shared/model//nhi-procedure.model';
+import { INhiProcedure } from 'app/shared/model//nhi-procedure.model';
 import { ITreatmentTask } from 'app/shared/model//treatment-task.model';
 import { IProcedure } from 'app/shared/model//procedure.model';
 import { IAppointment } from 'app/shared/model//appointment.model';
@@ -24,7 +24,7 @@ export interface ITreatmentProcedure {
   note?: string;
   completedDate?: Moment;
   price?: number;
-  nhiProcedure?: INHIProcedure;
+  nhiProcedure?: INhiProcedure;
   treatmentTask?: ITreatmentTask;
   procedure?: IProcedure;
   appointment?: IAppointment;

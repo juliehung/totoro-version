@@ -4,32 +4,32 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 
-import { INHIProcedure, defaultValue } from 'app/shared/model/nhi-procedure.model';
+import { INhiProcedure, defaultValue } from 'app/shared/model/nhi-procedure.model';
 
 export const ACTION_TYPES = {
-  FETCH_NHIPROCEDURE_LIST: 'nHIProcedure/FETCH_NHIPROCEDURE_LIST',
-  FETCH_NHIPROCEDURE: 'nHIProcedure/FETCH_NHIPROCEDURE',
-  CREATE_NHIPROCEDURE: 'nHIProcedure/CREATE_NHIPROCEDURE',
-  UPDATE_NHIPROCEDURE: 'nHIProcedure/UPDATE_NHIPROCEDURE',
-  DELETE_NHIPROCEDURE: 'nHIProcedure/DELETE_NHIPROCEDURE',
-  RESET: 'nHIProcedure/RESET'
+  FETCH_NHIPROCEDURE_LIST: 'nhiProcedure/FETCH_NHIPROCEDURE_LIST',
+  FETCH_NHIPROCEDURE: 'nhiProcedure/FETCH_NHIPROCEDURE',
+  CREATE_NHIPROCEDURE: 'nhiProcedure/CREATE_NHIPROCEDURE',
+  UPDATE_NHIPROCEDURE: 'nhiProcedure/UPDATE_NHIPROCEDURE',
+  DELETE_NHIPROCEDURE: 'nhiProcedure/DELETE_NHIPROCEDURE',
+  RESET: 'nhiProcedure/RESET'
 };
 
 const initialState = {
   loading: false,
   errorMessage: null,
-  entities: [] as ReadonlyArray<INHIProcedure>,
+  entities: [] as ReadonlyArray<INhiProcedure>,
   entity: defaultValue,
   updating: false,
   totalItems: 0,
   updateSuccess: false
 };
 
-export type NHIProcedureState = Readonly<typeof initialState>;
+export type NhiProcedureState = Readonly<typeof initialState>;
 
 // Reducer
 
-export default (state: NHIProcedureState = initialState, action): NHIProcedureState => {
+export default (state: NhiProcedureState = initialState, action): NhiProcedureState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_NHIPROCEDURE_LIST):
     case REQUEST(ACTION_TYPES.FETCH_NHIPROCEDURE):
@@ -101,23 +101,23 @@ const apiUrl = 'api/nhi-procedures';
 
 // Actions
 
-export const getEntities: ICrudGetAllAction<INHIProcedure> = (page, size, sort) => {
+export const getEntities: ICrudGetAllAction<INhiProcedure> = (page, size, sort) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_NHIPROCEDURE_LIST,
-    payload: axios.get<INHIProcedure>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)
+    payload: axios.get<INhiProcedure>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)
   };
 };
 
-export const getEntity: ICrudGetAction<INHIProcedure> = id => {
+export const getEntity: ICrudGetAction<INhiProcedure> = id => {
   const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_NHIPROCEDURE,
-    payload: axios.get<INHIProcedure>(requestUrl)
+    payload: axios.get<INhiProcedure>(requestUrl)
   };
 };
 
-export const createEntity: ICrudPutAction<INHIProcedure> = entity => async dispatch => {
+export const createEntity: ICrudPutAction<INhiProcedure> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_NHIPROCEDURE,
     payload: axios.post(apiUrl, cleanEntity(entity))
@@ -126,7 +126,7 @@ export const createEntity: ICrudPutAction<INHIProcedure> = entity => async dispa
   return result;
 };
 
-export const updateEntity: ICrudPutAction<INHIProcedure> = entity => async dispatch => {
+export const updateEntity: ICrudPutAction<INhiProcedure> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_NHIPROCEDURE,
     payload: axios.put(apiUrl, cleanEntity(entity))
@@ -135,7 +135,7 @@ export const updateEntity: ICrudPutAction<INHIProcedure> = entity => async dispa
   return result;
 };
 
-export const deleteEntity: ICrudDeleteAction<INHIProcedure> = id => async dispatch => {
+export const deleteEntity: ICrudDeleteAction<INhiProcedure> = id => async dispatch => {
   const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_NHIPROCEDURE,

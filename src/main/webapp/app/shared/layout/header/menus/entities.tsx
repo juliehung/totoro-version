@@ -33,11 +33,6 @@ export const EntitiesMenu = props => (
       &nbsp;
       <Translate contentKey="global.menu.entities.questionnaire" />
     </DropdownItem>
-    <DropdownItem tag={Link} to="/entity/nhi-procedure">
-      <FontAwesomeIcon icon="asterisk" fixedWidth />
-      &nbsp;
-      <Translate contentKey="global.menu.entities.nhiProcedure" />
-    </DropdownItem>
     <DropdownItem tag={Link} to="/entity/nhi-category">
       <FontAwesomeIcon icon="asterisk" fixedWidth />
       &nbsp;
@@ -162,6 +157,21 @@ export const EntitiesMenu = props => (
       <FontAwesomeIcon icon="asterisk" fixedWidth />
       &nbsp;
       <Translate contentKey="global.menu.entities.conditionType" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/nhi-icd-9-cm">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.nhiIcd9Cm" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/nhi-icd-10-cm">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.nhiIcd10Cm" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/nhi-procedure">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.nhiProcedure" />
     </DropdownItem>
     <DropdownItem tag={Link} to="/entity/nhi-procedure-type">
       <FontAwesomeIcon icon="asterisk" fixedWidth />

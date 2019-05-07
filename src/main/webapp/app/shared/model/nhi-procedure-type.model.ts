@@ -1,7 +1,7 @@
-export interface INHIProcedureType {
+export interface INhiProcedureType {
   id?: number;
   major?: string;
   name?: string;
 }
 
-export const defaultValue: Readonly<INHIProcedureType> = {};
+export const defaultValue: Readonly<INhiProcedureType> = {};
