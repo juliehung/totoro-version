@@ -89,15 +89,6 @@ public class DrugQueryService extends QueryService<Drug> {
             if (criteria.getChineseName() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getChineseName(), Drug_.chineseName));
             }
-            if (criteria.getType() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getType(), Drug_.type));
-            }
-            if (criteria.getValidDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getValidDate(), Drug_.validDate));
-            }
-            if (criteria.getEndDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getEndDate(), Drug_.endDate));
-            }
             if (criteria.getUnit() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getUnit(), Drug_.unit));
             }
@@ -112,6 +103,12 @@ public class DrugQueryService extends QueryService<Drug> {
             }
             if (criteria.getWay() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getWay(), Drug_.way));
+            }
+            if (criteria.getNhiCode() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNhiCode(), Drug_.nhiCode));
+            }
+            if (criteria.getWarning() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getWarning(), Drug_.warning));
             }
         }
         return specification;

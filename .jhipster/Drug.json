@@ -13,18 +13,6 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "type",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "validDate",
-            "fieldType": "LocalDate"
-        },
-        {
-            "fieldName": "endDate",
-            "fieldType": "LocalDate"
-        },
-        {
             "fieldName": "unit",
             "fieldType": "String"
         },
@@ -42,6 +30,14 @@
         },
         {
             "fieldName": "way",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nhiCode",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "warning",
             "fieldType": "String"
         }
     ],

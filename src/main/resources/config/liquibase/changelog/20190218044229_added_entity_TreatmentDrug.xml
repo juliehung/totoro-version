@@ -29,6 +29,14 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="way" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="quantity" type="double">
+                <constraints nullable="true" />
+            </column>
+
             <column name="prescription_id" type="bigint">
                 <constraints nullable="true" />
             </column>

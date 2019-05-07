@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Translate, ICrudGetAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -41,28 +41,6 @@ export class DrugDetail extends React.Component<IDrugDetailProps> {
             </dt>
             <dd>{drugEntity.chineseName}</dd>
             <dt>
-              <span id="type">
-                <Translate contentKey="totoroApp.drug.type">Type</Translate>
-              </span>
-            </dt>
-            <dd>{drugEntity.type}</dd>
-            <dt>
-              <span id="validDate">
-                <Translate contentKey="totoroApp.drug.validDate">Valid Date</Translate>
-              </span>
-            </dt>
-            <dd>
-              <TextFormat value={drugEntity.validDate} type="date" format={APP_LOCAL_DATE_FORMAT} />
-            </dd>
-            <dt>
-              <span id="endDate">
-                <Translate contentKey="totoroApp.drug.endDate">End Date</Translate>
-              </span>
-            </dt>
-            <dd>
-              <TextFormat value={drugEntity.endDate} type="date" format={APP_LOCAL_DATE_FORMAT} />
-            </dd>
-            <dt>
               <span id="unit">
                 <Translate contentKey="totoroApp.drug.unit">Unit</Translate>
               </span>
@@ -92,6 +70,18 @@ export class DrugDetail extends React.Component<IDrugDetailProps> {
               </span>
             </dt>
             <dd>{drugEntity.way}</dd>
+            <dt>
+              <span id="nhiCode">
+                <Translate contentKey="totoroApp.drug.nhiCode">Nhi Code</Translate>
+              </span>
+            </dt>
+            <dd>{drugEntity.nhiCode}</dd>
+            <dt>
+              <span id="warning">
+                <Translate contentKey="totoroApp.drug.warning">Warning</Translate>
+              </span>
+            </dt>
+            <dd>{drugEntity.warning}</dd>
           </dl>
           <Button tag={Link} to="/entity/drug" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

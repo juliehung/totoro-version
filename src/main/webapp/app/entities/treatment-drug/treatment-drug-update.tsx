@@ -113,6 +113,18 @@ export class TreatmentDrugUpdate extends React.Component<ITreatmentDrugUpdatePro
                   <AvField id="treatment-drug-frequency" type="text" name="frequency" />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="wayLabel" for="way">
+                    <Translate contentKey="totoroApp.treatmentDrug.way">Way</Translate>
+                  </Label>
+                  <AvField id="treatment-drug-way" type="text" name="way" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="quantityLabel" for="quantity">
+                    <Translate contentKey="totoroApp.treatmentDrug.quantity">Quantity</Translate>
+                  </Label>
+                  <AvField id="treatment-drug-quantity" type="string" className="form-control" name="quantity" />
+                </AvGroup>
+                <AvGroup>
                   <Label for="prescription.id">
                     <Translate contentKey="totoroApp.treatmentDrug.prescription">Prescription</Translate>
                   </Label>

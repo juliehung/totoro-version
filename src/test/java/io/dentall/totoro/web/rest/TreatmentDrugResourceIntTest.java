@@ -51,6 +51,12 @@ public class TreatmentDrugResourceIntTest {
     private static final String DEFAULT_FREQUENCY = "AAAAAAAAAA";
     private static final String UPDATED_FREQUENCY = "BBBBBBBBBB";
 
+    private static final String DEFAULT_WAY = "AAAAAAAAAA";
+    private static final String UPDATED_WAY = "BBBBBBBBBB";
+
+    private static final Double DEFAULT_QUANTITY = 1D;
+    private static final Double UPDATED_QUANTITY = 2D;
+
     @Autowired
     private TreatmentDrugRepository treatmentDrugRepository;
 
@@ -100,7 +106,9 @@ public class TreatmentDrugResourceIntTest {
     public static TreatmentDrug createEntity(EntityManager em) {
         TreatmentDrug treatmentDrug = new TreatmentDrug()
             .day(DEFAULT_DAY)
-            .frequency(DEFAULT_FREQUENCY);
+            .frequency(DEFAULT_FREQUENCY)
+            .way(DEFAULT_WAY)
+            .quantity(DEFAULT_QUANTITY);
         return treatmentDrug;
     }
 
@@ -126,6 +134,8 @@ public class TreatmentDrugResourceIntTest {
         TreatmentDrug testTreatmentDrug = treatmentDrugList.get(treatmentDrugList.size() - 1);
         assertThat(testTreatmentDrug.getDay()).isEqualTo(DEFAULT_DAY);
         assertThat(testTreatmentDrug.getFrequency()).isEqualTo(DEFAULT_FREQUENCY);
+        assertThat(testTreatmentDrug.getWay()).isEqualTo(DEFAULT_WAY);
+        assertThat(testTreatmentDrug.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
     }
 
     @Test
@@ -159,7 +169,9 @@ public class TreatmentDrugResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(treatmentDrug.getId().intValue())))
             .andExpect(jsonPath("$.[*].day").value(hasItem(DEFAULT_DAY)))
-            .andExpect(jsonPath("$.[*].frequency").value(hasItem(DEFAULT_FREQUENCY.toString())));
+            .andExpect(jsonPath("$.[*].frequency").value(hasItem(DEFAULT_FREQUENCY.toString())))
+            .andExpect(jsonPath("$.[*].way").value(hasItem(DEFAULT_WAY.toString())))
+            .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY.doubleValue())));
     }
     
     @Test
@@ -174,7 +186,9 @@ public class TreatmentDrugResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(treatmentDrug.getId().intValue()))
             .andExpect(jsonPath("$.day").value(DEFAULT_DAY))
-            .andExpect(jsonPath("$.frequency").value(DEFAULT_FREQUENCY.toString()));
+            .andExpect(jsonPath("$.frequency").value(DEFAULT_FREQUENCY.toString()))
+            .andExpect(jsonPath("$.way").value(DEFAULT_WAY.toString()))
+            .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY.doubleValue()));
     }
 
     @Test
@@ -284,6 +298,84 @@ public class TreatmentDrugResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllTreatmentDrugsByWayIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentDrugRepository.saveAndFlush(treatmentDrug);
+
+        // Get all the treatmentDrugList where way equals to DEFAULT_WAY
+        defaultTreatmentDrugShouldBeFound("way.equals=" + DEFAULT_WAY);
+
+        // Get all the treatmentDrugList where way equals to UPDATED_WAY
+        defaultTreatmentDrugShouldNotBeFound("way.equals=" + UPDATED_WAY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentDrugsByWayIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentDrugRepository.saveAndFlush(treatmentDrug);
+
+        // Get all the treatmentDrugList where way in DEFAULT_WAY or UPDATED_WAY
+        defaultTreatmentDrugShouldBeFound("way.in=" + DEFAULT_WAY + "," + UPDATED_WAY);
+
+        // Get all the treatmentDrugList where way equals to UPDATED_WAY
+        defaultTreatmentDrugShouldNotBeFound("way.in=" + UPDATED_WAY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentDrugsByWayIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentDrugRepository.saveAndFlush(treatmentDrug);
+
+        // Get all the treatmentDrugList where way is not null
+        defaultTreatmentDrugShouldBeFound("way.specified=true");
+
+        // Get all the treatmentDrugList where way is null
+        defaultTreatmentDrugShouldNotBeFound("way.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentDrugsByQuantityIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentDrugRepository.saveAndFlush(treatmentDrug);
+
+        // Get all the treatmentDrugList where quantity equals to DEFAULT_QUANTITY
+        defaultTreatmentDrugShouldBeFound("quantity.equals=" + DEFAULT_QUANTITY);
+
+        // Get all the treatmentDrugList where quantity equals to UPDATED_QUANTITY
+        defaultTreatmentDrugShouldNotBeFound("quantity.equals=" + UPDATED_QUANTITY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentDrugsByQuantityIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentDrugRepository.saveAndFlush(treatmentDrug);
+
+        // Get all the treatmentDrugList where quantity in DEFAULT_QUANTITY or UPDATED_QUANTITY
+        defaultTreatmentDrugShouldBeFound("quantity.in=" + DEFAULT_QUANTITY + "," + UPDATED_QUANTITY);
+
+        // Get all the treatmentDrugList where quantity equals to UPDATED_QUANTITY
+        defaultTreatmentDrugShouldNotBeFound("quantity.in=" + UPDATED_QUANTITY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentDrugsByQuantityIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentDrugRepository.saveAndFlush(treatmentDrug);
+
+        // Get all the treatmentDrugList where quantity is not null
+        defaultTreatmentDrugShouldBeFound("quantity.specified=true");
+
+        // Get all the treatmentDrugList where quantity is null
+        defaultTreatmentDrugShouldNotBeFound("quantity.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllTreatmentDrugsByPrescriptionIsEqualToSomething() throws Exception {
         // Initialize the database
         Prescription prescription = PrescriptionResourceIntTest.createEntity(em);
@@ -328,7 +420,9 @@ public class TreatmentDrugResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(treatmentDrug.getId().intValue())))
             .andExpect(jsonPath("$.[*].day").value(hasItem(DEFAULT_DAY)))
-            .andExpect(jsonPath("$.[*].frequency").value(hasItem(DEFAULT_FREQUENCY.toString())));
+            .andExpect(jsonPath("$.[*].frequency").value(hasItem(DEFAULT_FREQUENCY.toString())))
+            .andExpect(jsonPath("$.[*].way").value(hasItem(DEFAULT_WAY.toString())))
+            .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY.doubleValue())));
 
         // Check, that the count call also returns 1
         restTreatmentDrugMockMvc.perform(get("/api/treatment-drugs/count?sort=id,desc&" + filter))
@@ -377,7 +471,9 @@ public class TreatmentDrugResourceIntTest {
         em.detach(updatedTreatmentDrug);
         updatedTreatmentDrug
             .day(UPDATED_DAY)
-            .frequency(UPDATED_FREQUENCY);
+            .frequency(UPDATED_FREQUENCY)
+            .way(UPDATED_WAY)
+            .quantity(UPDATED_QUANTITY);
 
         restTreatmentDrugMockMvc.perform(put("/api/treatment-drugs")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -390,6 +486,8 @@ public class TreatmentDrugResourceIntTest {
         TreatmentDrug testTreatmentDrug = treatmentDrugList.get(treatmentDrugList.size() - 1);
         assertThat(testTreatmentDrug.getDay()).isEqualTo(UPDATED_DAY);
         assertThat(testTreatmentDrug.getFrequency()).isEqualTo(UPDATED_FREQUENCY);
+        assertThat(testTreatmentDrug.getWay()).isEqualTo(UPDATED_WAY);
+        assertThat(testTreatmentDrug.getQuantity()).isEqualTo(UPDATED_QUANTITY);
     }
 
     @Test

@@ -58,6 +58,12 @@ export class PrescriptionDetail extends React.Component<IPrescriptionDetailProps
               </span>
             </dt>
             <dd>{prescriptionEntity.status}</dd>
+            <dt>
+              <span id="mode">
+                <Translate contentKey="totoroApp.prescription.mode">Mode</Translate>
+              </span>
+            </dt>
+            <dd>{prescriptionEntity.mode}</dd>
           </dl>
           <Button tag={Link} to="/entity/prescription" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

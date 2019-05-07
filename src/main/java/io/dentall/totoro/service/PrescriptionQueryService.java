@@ -98,6 +98,9 @@ public class PrescriptionQueryService extends QueryService<Prescription> {
             if (criteria.getStatus() != null) {
                 specification = specification.and(buildSpecification(criteria.getStatus(), Prescription_.status));
             }
+            if (criteria.getMode() != null) {
+                specification = specification.and(buildSpecification(criteria.getMode(), Prescription_.mode));
+            }
             if (criteria.getTreatmentDrugId() != null) {
                 specification = specification.and(buildSpecification(criteria.getTreatmentDrugId(),
                     root -> root.join(Prescription_.treatmentDrugs, JoinType.LEFT).get(TreatmentDrug_.id)));

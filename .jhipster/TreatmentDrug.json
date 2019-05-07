@@ -23,6 +23,14 @@
         {
             "fieldName": "frequency",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "way",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "quantity",
+            "fieldType": "Double"
         }
     ],
     "changelogDate": "20190218044229",

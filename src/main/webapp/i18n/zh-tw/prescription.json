@@ -20,6 +20,7 @@
       "pain": "Pain",
       "takenAll": "Taken All",
       "status": "Status",
+      "mode": "Mode",
       "treatmentDrug": "Treatment Drug",
       "disposal": "Disposal"
     }

@@ -84,6 +84,9 @@ export class Prescription extends React.Component<IPrescriptionProps, IPrescript
                 <th className="hand" onClick={this.sort('status')}>
                   <Translate contentKey="totoroApp.prescription.status">Status</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('mode')}>
+                  <Translate contentKey="totoroApp.prescription.mode">Mode</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -101,6 +104,9 @@ export class Prescription extends React.Component<IPrescriptionProps, IPrescript
                   <td>{prescription.takenAll ? 'true' : 'false'}</td>
                   <td>
                     <Translate contentKey={`totoroApp.PrescriptionStatus.${prescription.status}`} />
+                  </td>
+                  <td>
+                    <Translate contentKey={`totoroApp.PrescriptionMode.${prescription.mode}`} />
                   </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
