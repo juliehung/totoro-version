@@ -37,6 +37,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import io.dentall.totoro.domain.enumeration.PrescriptionStatus;
+import io.dentall.totoro.domain.enumeration.PrescriptionMode;
 /**
  * Test class for the PrescriptionResource REST controller.
  *
@@ -60,6 +61,9 @@ public class PrescriptionResourceIntTest {
 
     private static final PrescriptionStatus DEFAULT_STATUS = PrescriptionStatus.TEMPORARY;
     private static final PrescriptionStatus UPDATED_STATUS = PrescriptionStatus.PERMANENT;
+
+    private static final PrescriptionMode DEFAULT_MODE = PrescriptionMode.SELF;
+    private static final PrescriptionMode UPDATED_MODE = PrescriptionMode.DELIVERY;
 
     @Autowired
     private PrescriptionRepository prescriptionRepository;
@@ -113,7 +117,8 @@ public class PrescriptionResourceIntTest {
             .antiInflammatoryDrug(DEFAULT_ANTI_INFLAMMATORY_DRUG)
             .pain(DEFAULT_PAIN)
             .takenAll(DEFAULT_TAKEN_ALL)
-            .status(DEFAULT_STATUS);
+            .status(DEFAULT_STATUS)
+            .mode(DEFAULT_MODE);
         return prescription;
     }
 
@@ -142,6 +147,7 @@ public class PrescriptionResourceIntTest {
         assertThat(testPrescription.isPain()).isEqualTo(DEFAULT_PAIN);
         assertThat(testPrescription.isTakenAll()).isEqualTo(DEFAULT_TAKEN_ALL);
         assertThat(testPrescription.getStatus()).isEqualTo(DEFAULT_STATUS);
+        assertThat(testPrescription.getMode()).isEqualTo(DEFAULT_MODE);
     }
 
     @Test
@@ -183,6 +189,24 @@ public class PrescriptionResourceIntTest {
 
     @Test
     @Transactional
+    public void checkModeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = prescriptionRepository.findAll().size();
+        // set the field null
+        prescription.setMode(null);
+
+        // Create the Prescription, which fails.
+
+        restPrescriptionMockMvc.perform(post("/api/prescriptions")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(prescription)))
+            .andExpect(status().isBadRequest());
+
+        List<Prescription> prescriptionList = prescriptionRepository.findAll();
+        assertThat(prescriptionList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllPrescriptions() throws Exception {
         // Initialize the database
         prescriptionRepository.saveAndFlush(prescription);
@@ -196,7 +220,8 @@ public class PrescriptionResourceIntTest {
             .andExpect(jsonPath("$.[*].antiInflammatoryDrug").value(hasItem(DEFAULT_ANTI_INFLAMMATORY_DRUG.booleanValue())))
             .andExpect(jsonPath("$.[*].pain").value(hasItem(DEFAULT_PAIN.booleanValue())))
             .andExpect(jsonPath("$.[*].takenAll").value(hasItem(DEFAULT_TAKEN_ALL.booleanValue())))
-            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].mode").value(hasItem(DEFAULT_MODE.toString())));
     }
     
     @Test
@@ -214,7 +239,8 @@ public class PrescriptionResourceIntTest {
             .andExpect(jsonPath("$.antiInflammatoryDrug").value(DEFAULT_ANTI_INFLAMMATORY_DRUG.booleanValue()))
             .andExpect(jsonPath("$.pain").value(DEFAULT_PAIN.booleanValue()))
             .andExpect(jsonPath("$.takenAll").value(DEFAULT_TAKEN_ALL.booleanValue()))
-            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
+            .andExpect(jsonPath("$.mode").value(DEFAULT_MODE.toString()));
     }
 
     @Test
@@ -414,6 +440,45 @@ public class PrescriptionResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllPrescriptionsByModeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        prescriptionRepository.saveAndFlush(prescription);
+
+        // Get all the prescriptionList where mode equals to DEFAULT_MODE
+        defaultPrescriptionShouldBeFound("mode.equals=" + DEFAULT_MODE);
+
+        // Get all the prescriptionList where mode equals to UPDATED_MODE
+        defaultPrescriptionShouldNotBeFound("mode.equals=" + UPDATED_MODE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPrescriptionsByModeIsInShouldWork() throws Exception {
+        // Initialize the database
+        prescriptionRepository.saveAndFlush(prescription);
+
+        // Get all the prescriptionList where mode in DEFAULT_MODE or UPDATED_MODE
+        defaultPrescriptionShouldBeFound("mode.in=" + DEFAULT_MODE + "," + UPDATED_MODE);
+
+        // Get all the prescriptionList where mode equals to UPDATED_MODE
+        defaultPrescriptionShouldNotBeFound("mode.in=" + UPDATED_MODE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllPrescriptionsByModeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        prescriptionRepository.saveAndFlush(prescription);
+
+        // Get all the prescriptionList where mode is not null
+        defaultPrescriptionShouldBeFound("mode.specified=true");
+
+        // Get all the prescriptionList where mode is null
+        defaultPrescriptionShouldNotBeFound("mode.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllPrescriptionsByTreatmentDrugIsEqualToSomething() throws Exception {
         // Initialize the database
         TreatmentDrug treatmentDrug = TreatmentDrugResourceIntTest.createEntity(em);
@@ -462,7 +527,8 @@ public class PrescriptionResourceIntTest {
             .andExpect(jsonPath("$.[*].antiInflammatoryDrug").value(hasItem(DEFAULT_ANTI_INFLAMMATORY_DRUG.booleanValue())))
             .andExpect(jsonPath("$.[*].pain").value(hasItem(DEFAULT_PAIN.booleanValue())))
             .andExpect(jsonPath("$.[*].takenAll").value(hasItem(DEFAULT_TAKEN_ALL.booleanValue())))
-            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].mode").value(hasItem(DEFAULT_MODE.toString())));
 
         // Check, that the count call also returns 1
         restPrescriptionMockMvc.perform(get("/api/prescriptions/count?sort=id,desc&" + filter))
@@ -514,7 +580,8 @@ public class PrescriptionResourceIntTest {
             .antiInflammatoryDrug(UPDATED_ANTI_INFLAMMATORY_DRUG)
             .pain(UPDATED_PAIN)
             .takenAll(UPDATED_TAKEN_ALL)
-            .status(UPDATED_STATUS);
+            .status(UPDATED_STATUS)
+            .mode(UPDATED_MODE);
 
         restPrescriptionMockMvc.perform(put("/api/prescriptions")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -530,6 +597,7 @@ public class PrescriptionResourceIntTest {
         assertThat(testPrescription.isPain()).isEqualTo(UPDATED_PAIN);
         assertThat(testPrescription.isTakenAll()).isEqualTo(UPDATED_TAKEN_ALL);
         assertThat(testPrescription.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testPrescription.getMode()).isEqualTo(UPDATED_MODE);
     }
 
     @Test

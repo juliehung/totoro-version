@@ -138,6 +138,28 @@ export class PrescriptionUpdate extends React.Component<IPrescriptionUpdateProps
                     </option>
                   </AvInput>
                 </AvGroup>
+                <AvGroup>
+                  <Label id="modeLabel">
+                    <Translate contentKey="totoroApp.prescription.mode">Mode</Translate>
+                  </Label>
+                  <AvInput
+                    id="prescription-mode"
+                    type="select"
+                    className="form-control"
+                    name="mode"
+                    value={(!isNew && prescriptionEntity.mode) || 'SELF'}
+                  >
+                    <option value="SELF">
+                      <Translate contentKey="totoroApp.PrescriptionMode.SELF" />
+                    </option>
+                    <option value="DELIVERY">
+                      <Translate contentKey="totoroApp.PrescriptionMode.DELIVERY" />
+                    </option>
+                    <option value="NONE">
+                      <Translate contentKey="totoroApp.PrescriptionMode.NONE" />
+                    </option>
+                  </AvInput>
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/prescription" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;

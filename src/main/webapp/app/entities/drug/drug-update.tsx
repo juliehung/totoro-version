@@ -109,24 +109,6 @@ export class DrugUpdate extends React.Component<IDrugUpdateProps, IDrugUpdateSta
                   <AvField id="drug-chineseName" type="text" name="chineseName" />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="typeLabel" for="type">
-                    <Translate contentKey="totoroApp.drug.type">Type</Translate>
-                  </Label>
-                  <AvField id="drug-type" type="text" name="type" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="validDateLabel" for="validDate">
-                    <Translate contentKey="totoroApp.drug.validDate">Valid Date</Translate>
-                  </Label>
-                  <AvField id="drug-validDate" type="date" className="form-control" name="validDate" />
-                </AvGroup>
-                <AvGroup>
-                  <Label id="endDateLabel" for="endDate">
-                    <Translate contentKey="totoroApp.drug.endDate">End Date</Translate>
-                  </Label>
-                  <AvField id="drug-endDate" type="date" className="form-control" name="endDate" />
-                </AvGroup>
-                <AvGroup>
                   <Label id="unitLabel" for="unit">
                     <Translate contentKey="totoroApp.drug.unit">Unit</Translate>
                   </Label>
@@ -155,6 +137,18 @@ export class DrugUpdate extends React.Component<IDrugUpdateProps, IDrugUpdateSta
                     <Translate contentKey="totoroApp.drug.way">Way</Translate>
                   </Label>
                   <AvField id="drug-way" type="text" name="way" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="nhiCodeLabel" for="nhiCode">
+                    <Translate contentKey="totoroApp.drug.nhiCode">Nhi Code</Translate>
+                  </Label>
+                  <AvField id="drug-nhiCode" type="text" name="nhiCode" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="warningLabel" for="warning">
+                    <Translate contentKey="totoroApp.drug.warning">Warning</Translate>
+                  </Label>
+                  <AvField id="drug-warning" type="text" name="warning" />
                 </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/drug" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />

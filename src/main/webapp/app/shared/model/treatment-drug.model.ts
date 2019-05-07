@@ -5,6 +5,8 @@ export interface ITreatmentDrug {
   id?: number;
   day?: number;
   frequency?: string;
+  way?: string;
+  quantity?: number;
   prescription?: IPrescription;
   drug?: IDrug;
 }

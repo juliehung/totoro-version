@@ -9,7 +9,6 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.LocalDateFilter;
 
 /**
  * Criteria class for the Drug entity. This class is used in DrugResource to
@@ -29,12 +28,6 @@ public class DrugCriteria implements Serializable {
 
     private StringFilter chineseName;
 
-    private StringFilter type;
-
-    private LocalDateFilter validDate;
-
-    private LocalDateFilter endDate;
-
     private StringFilter unit;
 
     private DoubleFilter price;
@@ -44,6 +37,10 @@ public class DrugCriteria implements Serializable {
     private StringFilter frequency;
 
     private StringFilter way;
+
+    private StringFilter nhiCode;
+
+    private StringFilter warning;
 
     public LongFilter getId() {
         return id;
@@ -67,30 +64,6 @@ public class DrugCriteria implements Serializable {
 
     public void setChineseName(StringFilter chineseName) {
         this.chineseName = chineseName;
-    }
-
-    public StringFilter getType() {
-        return type;
-    }
-
-    public void setType(StringFilter type) {
-        this.type = type;
-    }
-
-    public LocalDateFilter getValidDate() {
-        return validDate;
-    }
-
-    public void setValidDate(LocalDateFilter validDate) {
-        this.validDate = validDate;
-    }
-
-    public LocalDateFilter getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateFilter endDate) {
-        this.endDate = endDate;
     }
 
     public StringFilter getUnit() {
@@ -133,6 +106,22 @@ public class DrugCriteria implements Serializable {
         this.way = way;
     }
 
+    public StringFilter getNhiCode() {
+        return nhiCode;
+    }
+
+    public void setNhiCode(StringFilter nhiCode) {
+        this.nhiCode = nhiCode;
+    }
+
+    public StringFilter getWarning() {
+        return warning;
+    }
+
+    public void setWarning(StringFilter warning) {
+        this.warning = warning;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -147,14 +136,13 @@ public class DrugCriteria implements Serializable {
             Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&
             Objects.equals(chineseName, that.chineseName) &&
-            Objects.equals(type, that.type) &&
-            Objects.equals(validDate, that.validDate) &&
-            Objects.equals(endDate, that.endDate) &&
             Objects.equals(unit, that.unit) &&
             Objects.equals(price, that.price) &&
             Objects.equals(quantity, that.quantity) &&
             Objects.equals(frequency, that.frequency) &&
-            Objects.equals(way, that.way);
+            Objects.equals(way, that.way) &&
+            Objects.equals(nhiCode, that.nhiCode) &&
+            Objects.equals(warning, that.warning);
     }
 
     @Override
@@ -163,14 +151,13 @@ public class DrugCriteria implements Serializable {
         id,
         name,
         chineseName,
-        type,
-        validDate,
-        endDate,
         unit,
         price,
         quantity,
         frequency,
-        way
+        way,
+        nhiCode,
+        warning
         );
     }
 
@@ -180,14 +167,13 @@ public class DrugCriteria implements Serializable {
                 (id != null ? "id=" + id + ", " : "") +
                 (name != null ? "name=" + name + ", " : "") +
                 (chineseName != null ? "chineseName=" + chineseName + ", " : "") +
-                (type != null ? "type=" + type + ", " : "") +
-                (validDate != null ? "validDate=" + validDate + ", " : "") +
-                (endDate != null ? "endDate=" + endDate + ", " : "") +
                 (unit != null ? "unit=" + unit + ", " : "") +
                 (price != null ? "price=" + price + ", " : "") +
                 (quantity != null ? "quantity=" + quantity + ", " : "") +
                 (frequency != null ? "frequency=" + frequency + ", " : "") +
                 (way != null ? "way=" + way + ", " : "") +
+                (nhiCode != null ? "nhiCode=" + nhiCode + ", " : "") +
+                (warning != null ? "warning=" + warning + ", " : "") +
             "}";
     }
 

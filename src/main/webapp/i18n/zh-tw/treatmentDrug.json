@@ -17,6 +17,8 @@
       },
       "day": "Day",
       "frequency": "Frequency",
+      "way": "Way",
+      "quantity": "Quantity",
       "prescription": "Prescription",
       "drug": "Drug"
     }

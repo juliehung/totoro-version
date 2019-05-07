@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAllAction, TextFormat } from 'react-jhipster';
+import { Translate, ICrudGetAllAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -45,15 +45,6 @@ export class Drug extends React.Component<IDrugProps> {
                   <Translate contentKey="totoroApp.drug.chineseName">Chinese Name</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.drug.type">Type</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="totoroApp.drug.validDate">Valid Date</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="totoroApp.drug.endDate">End Date</Translate>
-                </th>
-                <th>
                   <Translate contentKey="totoroApp.drug.unit">Unit</Translate>
                 </th>
                 <th>
@@ -68,6 +59,12 @@ export class Drug extends React.Component<IDrugProps> {
                 <th>
                   <Translate contentKey="totoroApp.drug.way">Way</Translate>
                 </th>
+                <th>
+                  <Translate contentKey="totoroApp.drug.nhiCode">Nhi Code</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.drug.warning">Warning</Translate>
+                </th>
                 <th />
               </tr>
             </thead>
@@ -81,18 +78,13 @@ export class Drug extends React.Component<IDrugProps> {
                   </td>
                   <td>{drug.name}</td>
                   <td>{drug.chineseName}</td>
-                  <td>{drug.type}</td>
-                  <td>
-                    <TextFormat type="date" value={drug.validDate} format={APP_LOCAL_DATE_FORMAT} />
-                  </td>
-                  <td>
-                    <TextFormat type="date" value={drug.endDate} format={APP_LOCAL_DATE_FORMAT} />
-                  </td>
                   <td>{drug.unit}</td>
                   <td>{drug.price}</td>
                   <td>{drug.quantity}</td>
                   <td>{drug.frequency}</td>
                   <td>{drug.way}</td>
+                  <td>{drug.nhiCode}</td>
+                  <td>{drug.warning}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${drug.id}`} color="info" size="sm">

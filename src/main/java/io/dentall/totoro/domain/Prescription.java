@@ -14,6 +14,8 @@ import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.PrescriptionStatus;
 
+import io.dentall.totoro.domain.enumeration.PrescriptionMode;
+
 /**
  * A Prescription.
  */
@@ -46,10 +48,14 @@ public class Prescription implements Serializable {
     @Column(name = "status", nullable = false)
     private PrescriptionStatus status;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "jhi_mode", nullable = false)
+    private PrescriptionMode mode;
+
     @OneToMany(mappedBy = "prescription")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentDrug> treatmentDrugs = new HashSet<>();
-
     @OneToOne(mappedBy = "prescription")
     @JsonIgnore
     private Disposal disposal;
@@ -128,6 +134,19 @@ public class Prescription implements Serializable {
         this.status = status;
     }
 
+    public PrescriptionMode getMode() {
+        return mode;
+    }
+
+    public Prescription mode(PrescriptionMode mode) {
+        this.mode = mode;
+        return this;
+    }
+
+    public void setMode(PrescriptionMode mode) {
+        this.mode = mode;
+    }
+
     public Set<TreatmentDrug> getTreatmentDrugs() {
         return treatmentDrugs;
     }
@@ -196,6 +215,7 @@ public class Prescription implements Serializable {
             ", pain='" + isPain() + "'" +
             ", takenAll='" + isTakenAll() + "'" +
             ", status='" + getStatus() + "'" +
+            ", mode='" + getMode() + "'" +
             "}";
     }
 }

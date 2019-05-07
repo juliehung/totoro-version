@@ -103,6 +103,14 @@ public class TreatmentDrugService {
                     treatmentDrug.setFrequency((updateTreatmentDrug.getFrequency()));
                 }
 
+                if (updateTreatmentDrug.getWay() != null) {
+                    treatmentDrug.setWay(updateTreatmentDrug.getWay());
+                }
+
+                if (updateTreatmentDrug.getQuantity() != null) {
+                    treatmentDrug.setQuantity(updateTreatmentDrug.getQuantity());
+                }
+
                 if (updateTreatmentDrug.getDrug() != null && updateTreatmentDrug.getDrug().getId() != null) {
                     drugRepository.findById(updateTreatmentDrug.getDrug().getId()).ifPresent(treatmentDrug::setDrug);
                 }

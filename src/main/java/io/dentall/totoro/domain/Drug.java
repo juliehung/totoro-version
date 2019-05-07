@@ -7,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -32,15 +31,6 @@ public class Drug implements Serializable {
     @Column(name = "chinese_name")
     private String chineseName;
 
-    @Column(name = "jhi_type")
-    private String type;
-
-    @Column(name = "valid_date")
-    private LocalDate validDate;
-
-    @Column(name = "end_date")
-    private LocalDate endDate;
-
     @Column(name = "unit")
     private String unit;
 
@@ -55,6 +45,12 @@ public class Drug implements Serializable {
 
     @Column(name = "way")
     private String way;
+
+    @Column(name = "nhi_code")
+    private String nhiCode;
+
+    @Column(name = "warning")
+    private String warning;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -89,45 +85,6 @@ public class Drug implements Serializable {
 
     public void setChineseName(String chineseName) {
         this.chineseName = chineseName;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public Drug type(String type) {
-        this.type = type;
-        return this;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public LocalDate getValidDate() {
-        return validDate;
-    }
-
-    public Drug validDate(LocalDate validDate) {
-        this.validDate = validDate;
-        return this;
-    }
-
-    public void setValidDate(LocalDate validDate) {
-        this.validDate = validDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public Drug endDate(LocalDate endDate) {
-        this.endDate = endDate;
-        return this;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
     }
 
     public String getUnit() {
@@ -194,6 +151,32 @@ public class Drug implements Serializable {
     public void setWay(String way) {
         this.way = way;
     }
+
+    public String getNhiCode() {
+        return nhiCode;
+    }
+
+    public Drug nhiCode(String nhiCode) {
+        this.nhiCode = nhiCode;
+        return this;
+    }
+
+    public void setNhiCode(String nhiCode) {
+        this.nhiCode = nhiCode;
+    }
+
+    public String getWarning() {
+        return warning;
+    }
+
+    public Drug warning(String warning) {
+        this.warning = warning;
+        return this;
+    }
+
+    public void setWarning(String warning) {
+        this.warning = warning;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -222,14 +205,13 @@ public class Drug implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", chineseName='" + getChineseName() + "'" +
-            ", type='" + getType() + "'" +
-            ", validDate='" + getValidDate() + "'" +
-            ", endDate='" + getEndDate() + "'" +
             ", unit='" + getUnit() + "'" +
             ", price=" + getPrice() +
             ", quantity=" + getQuantity() +
             ", frequency='" + getFrequency() + "'" +
             ", way='" + getWay() + "'" +
+            ", nhiCode='" + getNhiCode() + "'" +
+            ", warning='" + getWarning() + "'" +
             "}";
     }
 }

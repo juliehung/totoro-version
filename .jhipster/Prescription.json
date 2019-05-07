@@ -41,6 +41,14 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "mode",
+            "fieldType": "PrescriptionMode",
+            "fieldValues": "SELF,DELIVERY,NONE",
+            "fieldValidateRules": [
+              "required"
+            ]
         }
     ],
     "changelogDate": "20190218044228",

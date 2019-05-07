@@ -25,8 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 
@@ -51,15 +49,6 @@ public class DrugResourceIntTest {
     private static final String DEFAULT_CHINESE_NAME = "AAAAAAAAAA";
     private static final String UPDATED_CHINESE_NAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_TYPE = "AAAAAAAAAA";
-    private static final String UPDATED_TYPE = "BBBBBBBBBB";
-
-    private static final LocalDate DEFAULT_VALID_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_VALID_DATE = LocalDate.now(ZoneId.systemDefault());
-
-    private static final LocalDate DEFAULT_END_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_END_DATE = LocalDate.now(ZoneId.systemDefault());
-
     private static final String DEFAULT_UNIT = "AAAAAAAAAA";
     private static final String UPDATED_UNIT = "BBBBBBBBBB";
 
@@ -74,6 +63,12 @@ public class DrugResourceIntTest {
 
     private static final String DEFAULT_WAY = "AAAAAAAAAA";
     private static final String UPDATED_WAY = "BBBBBBBBBB";
+
+    private static final String DEFAULT_NHI_CODE = "AAAAAAAAAA";
+    private static final String UPDATED_NHI_CODE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_WARNING = "AAAAAAAAAA";
+    private static final String UPDATED_WARNING = "BBBBBBBBBB";
 
     @Autowired
     private DrugRepository drugRepository;
@@ -125,14 +120,13 @@ public class DrugResourceIntTest {
         Drug drug = new Drug()
             .name(DEFAULT_NAME)
             .chineseName(DEFAULT_CHINESE_NAME)
-            .type(DEFAULT_TYPE)
-            .validDate(DEFAULT_VALID_DATE)
-            .endDate(DEFAULT_END_DATE)
             .unit(DEFAULT_UNIT)
             .price(DEFAULT_PRICE)
             .quantity(DEFAULT_QUANTITY)
             .frequency(DEFAULT_FREQUENCY)
-            .way(DEFAULT_WAY);
+            .way(DEFAULT_WAY)
+            .nhiCode(DEFAULT_NHI_CODE)
+            .warning(DEFAULT_WARNING);
         return drug;
     }
 
@@ -158,14 +152,13 @@ public class DrugResourceIntTest {
         Drug testDrug = drugList.get(drugList.size() - 1);
         assertThat(testDrug.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testDrug.getChineseName()).isEqualTo(DEFAULT_CHINESE_NAME);
-        assertThat(testDrug.getType()).isEqualTo(DEFAULT_TYPE);
-        assertThat(testDrug.getValidDate()).isEqualTo(DEFAULT_VALID_DATE);
-        assertThat(testDrug.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testDrug.getUnit()).isEqualTo(DEFAULT_UNIT);
         assertThat(testDrug.getPrice()).isEqualTo(DEFAULT_PRICE);
         assertThat(testDrug.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
         assertThat(testDrug.getFrequency()).isEqualTo(DEFAULT_FREQUENCY);
         assertThat(testDrug.getWay()).isEqualTo(DEFAULT_WAY);
+        assertThat(testDrug.getNhiCode()).isEqualTo(DEFAULT_NHI_CODE);
+        assertThat(testDrug.getWarning()).isEqualTo(DEFAULT_WARNING);
     }
 
     @Test
@@ -218,14 +211,13 @@ public class DrugResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(drug.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].chineseName").value(hasItem(DEFAULT_CHINESE_NAME.toString())))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].validDate").value(hasItem(DEFAULT_VALID_DATE.toString())))
-            .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].unit").value(hasItem(DEFAULT_UNIT.toString())))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
             .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY.doubleValue())))
             .andExpect(jsonPath("$.[*].frequency").value(hasItem(DEFAULT_FREQUENCY.toString())))
-            .andExpect(jsonPath("$.[*].way").value(hasItem(DEFAULT_WAY.toString())));
+            .andExpect(jsonPath("$.[*].way").value(hasItem(DEFAULT_WAY.toString())))
+            .andExpect(jsonPath("$.[*].nhiCode").value(hasItem(DEFAULT_NHI_CODE.toString())))
+            .andExpect(jsonPath("$.[*].warning").value(hasItem(DEFAULT_WARNING.toString())));
     }
     
     @Test
@@ -241,14 +233,13 @@ public class DrugResourceIntTest {
             .andExpect(jsonPath("$.id").value(drug.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.chineseName").value(DEFAULT_CHINESE_NAME.toString()))
-            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
-            .andExpect(jsonPath("$.validDate").value(DEFAULT_VALID_DATE.toString()))
-            .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
             .andExpect(jsonPath("$.unit").value(DEFAULT_UNIT.toString()))
             .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()))
             .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY.doubleValue()))
             .andExpect(jsonPath("$.frequency").value(DEFAULT_FREQUENCY.toString()))
-            .andExpect(jsonPath("$.way").value(DEFAULT_WAY.toString()));
+            .andExpect(jsonPath("$.way").value(DEFAULT_WAY.toString()))
+            .andExpect(jsonPath("$.nhiCode").value(DEFAULT_NHI_CODE.toString()))
+            .andExpect(jsonPath("$.warning").value(DEFAULT_WARNING.toString()));
     }
 
     @Test
@@ -328,177 +319,6 @@ public class DrugResourceIntTest {
         // Get all the drugList where chineseName is null
         defaultDrugShouldNotBeFound("chineseName.specified=false");
     }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByTypeIsEqualToSomething() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where type equals to DEFAULT_TYPE
-        defaultDrugShouldBeFound("type.equals=" + DEFAULT_TYPE);
-
-        // Get all the drugList where type equals to UPDATED_TYPE
-        defaultDrugShouldNotBeFound("type.equals=" + UPDATED_TYPE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByTypeIsInShouldWork() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where type in DEFAULT_TYPE or UPDATED_TYPE
-        defaultDrugShouldBeFound("type.in=" + DEFAULT_TYPE + "," + UPDATED_TYPE);
-
-        // Get all the drugList where type equals to UPDATED_TYPE
-        defaultDrugShouldNotBeFound("type.in=" + UPDATED_TYPE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByTypeIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where type is not null
-        defaultDrugShouldBeFound("type.specified=true");
-
-        // Get all the drugList where type is null
-        defaultDrugShouldNotBeFound("type.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByValidDateIsEqualToSomething() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where validDate equals to DEFAULT_VALID_DATE
-        defaultDrugShouldBeFound("validDate.equals=" + DEFAULT_VALID_DATE);
-
-        // Get all the drugList where validDate equals to UPDATED_VALID_DATE
-        defaultDrugShouldNotBeFound("validDate.equals=" + UPDATED_VALID_DATE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByValidDateIsInShouldWork() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where validDate in DEFAULT_VALID_DATE or UPDATED_VALID_DATE
-        defaultDrugShouldBeFound("validDate.in=" + DEFAULT_VALID_DATE + "," + UPDATED_VALID_DATE);
-
-        // Get all the drugList where validDate equals to UPDATED_VALID_DATE
-        defaultDrugShouldNotBeFound("validDate.in=" + UPDATED_VALID_DATE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByValidDateIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where validDate is not null
-        defaultDrugShouldBeFound("validDate.specified=true");
-
-        // Get all the drugList where validDate is null
-        defaultDrugShouldNotBeFound("validDate.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByValidDateIsGreaterThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where validDate greater than or equals to DEFAULT_VALID_DATE
-        defaultDrugShouldBeFound("validDate.greaterOrEqualThan=" + DEFAULT_VALID_DATE);
-
-        // Get all the drugList where validDate greater than or equals to UPDATED_VALID_DATE
-        defaultDrugShouldNotBeFound("validDate.greaterOrEqualThan=" + UPDATED_VALID_DATE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByValidDateIsLessThanSomething() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where validDate less than or equals to DEFAULT_VALID_DATE
-        defaultDrugShouldNotBeFound("validDate.lessThan=" + DEFAULT_VALID_DATE);
-
-        // Get all the drugList where validDate less than or equals to UPDATED_VALID_DATE
-        defaultDrugShouldBeFound("validDate.lessThan=" + UPDATED_VALID_DATE);
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllDrugsByEndDateIsEqualToSomething() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where endDate equals to DEFAULT_END_DATE
-        defaultDrugShouldBeFound("endDate.equals=" + DEFAULT_END_DATE);
-
-        // Get all the drugList where endDate equals to UPDATED_END_DATE
-        defaultDrugShouldNotBeFound("endDate.equals=" + UPDATED_END_DATE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByEndDateIsInShouldWork() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where endDate in DEFAULT_END_DATE or UPDATED_END_DATE
-        defaultDrugShouldBeFound("endDate.in=" + DEFAULT_END_DATE + "," + UPDATED_END_DATE);
-
-        // Get all the drugList where endDate equals to UPDATED_END_DATE
-        defaultDrugShouldNotBeFound("endDate.in=" + UPDATED_END_DATE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByEndDateIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where endDate is not null
-        defaultDrugShouldBeFound("endDate.specified=true");
-
-        // Get all the drugList where endDate is null
-        defaultDrugShouldNotBeFound("endDate.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByEndDateIsGreaterThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where endDate greater than or equals to DEFAULT_END_DATE
-        defaultDrugShouldBeFound("endDate.greaterOrEqualThan=" + DEFAULT_END_DATE);
-
-        // Get all the drugList where endDate greater than or equals to UPDATED_END_DATE
-        defaultDrugShouldNotBeFound("endDate.greaterOrEqualThan=" + UPDATED_END_DATE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllDrugsByEndDateIsLessThanSomething() throws Exception {
-        // Initialize the database
-        drugRepository.saveAndFlush(drug);
-
-        // Get all the drugList where endDate less than or equals to DEFAULT_END_DATE
-        defaultDrugShouldNotBeFound("endDate.lessThan=" + DEFAULT_END_DATE);
-
-        // Get all the drugList where endDate less than or equals to UPDATED_END_DATE
-        defaultDrugShouldBeFound("endDate.lessThan=" + UPDATED_END_DATE);
-    }
-
 
     @Test
     @Transactional
@@ -694,6 +514,84 @@ public class DrugResourceIntTest {
         // Get all the drugList where way is null
         defaultDrugShouldNotBeFound("way.specified=false");
     }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByNhiCodeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where nhiCode equals to DEFAULT_NHI_CODE
+        defaultDrugShouldBeFound("nhiCode.equals=" + DEFAULT_NHI_CODE);
+
+        // Get all the drugList where nhiCode equals to UPDATED_NHI_CODE
+        defaultDrugShouldNotBeFound("nhiCode.equals=" + UPDATED_NHI_CODE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByNhiCodeIsInShouldWork() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where nhiCode in DEFAULT_NHI_CODE or UPDATED_NHI_CODE
+        defaultDrugShouldBeFound("nhiCode.in=" + DEFAULT_NHI_CODE + "," + UPDATED_NHI_CODE);
+
+        // Get all the drugList where nhiCode equals to UPDATED_NHI_CODE
+        defaultDrugShouldNotBeFound("nhiCode.in=" + UPDATED_NHI_CODE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByNhiCodeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where nhiCode is not null
+        defaultDrugShouldBeFound("nhiCode.specified=true");
+
+        // Get all the drugList where nhiCode is null
+        defaultDrugShouldNotBeFound("nhiCode.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByWarningIsEqualToSomething() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where warning equals to DEFAULT_WARNING
+        defaultDrugShouldBeFound("warning.equals=" + DEFAULT_WARNING);
+
+        // Get all the drugList where warning equals to UPDATED_WARNING
+        defaultDrugShouldNotBeFound("warning.equals=" + UPDATED_WARNING);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByWarningIsInShouldWork() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where warning in DEFAULT_WARNING or UPDATED_WARNING
+        defaultDrugShouldBeFound("warning.in=" + DEFAULT_WARNING + "," + UPDATED_WARNING);
+
+        // Get all the drugList where warning equals to UPDATED_WARNING
+        defaultDrugShouldNotBeFound("warning.in=" + UPDATED_WARNING);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByWarningIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where warning is not null
+        defaultDrugShouldBeFound("warning.specified=true");
+
+        // Get all the drugList where warning is null
+        defaultDrugShouldNotBeFound("warning.specified=false");
+    }
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -704,14 +602,13 @@ public class DrugResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(drug.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].chineseName").value(hasItem(DEFAULT_CHINESE_NAME.toString())))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].validDate").value(hasItem(DEFAULT_VALID_DATE.toString())))
-            .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].unit").value(hasItem(DEFAULT_UNIT.toString())))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
             .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY.doubleValue())))
             .andExpect(jsonPath("$.[*].frequency").value(hasItem(DEFAULT_FREQUENCY.toString())))
-            .andExpect(jsonPath("$.[*].way").value(hasItem(DEFAULT_WAY.toString())));
+            .andExpect(jsonPath("$.[*].way").value(hasItem(DEFAULT_WAY.toString())))
+            .andExpect(jsonPath("$.[*].nhiCode").value(hasItem(DEFAULT_NHI_CODE.toString())))
+            .andExpect(jsonPath("$.[*].warning").value(hasItem(DEFAULT_WARNING.toString())));
 
         // Check, that the count call also returns 1
         restDrugMockMvc.perform(get("/api/drugs/count?sort=id,desc&" + filter))
@@ -761,14 +658,13 @@ public class DrugResourceIntTest {
         updatedDrug
             .name(UPDATED_NAME)
             .chineseName(UPDATED_CHINESE_NAME)
-            .type(UPDATED_TYPE)
-            .validDate(UPDATED_VALID_DATE)
-            .endDate(UPDATED_END_DATE)
             .unit(UPDATED_UNIT)
             .price(UPDATED_PRICE)
             .quantity(UPDATED_QUANTITY)
             .frequency(UPDATED_FREQUENCY)
-            .way(UPDATED_WAY);
+            .way(UPDATED_WAY)
+            .nhiCode(UPDATED_NHI_CODE)
+            .warning(UPDATED_WARNING);
 
         restDrugMockMvc.perform(put("/api/drugs")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -781,14 +677,13 @@ public class DrugResourceIntTest {
         Drug testDrug = drugList.get(drugList.size() - 1);
         assertThat(testDrug.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testDrug.getChineseName()).isEqualTo(UPDATED_CHINESE_NAME);
-        assertThat(testDrug.getType()).isEqualTo(UPDATED_TYPE);
-        assertThat(testDrug.getValidDate()).isEqualTo(UPDATED_VALID_DATE);
-        assertThat(testDrug.getEndDate()).isEqualTo(UPDATED_END_DATE);
         assertThat(testDrug.getUnit()).isEqualTo(UPDATED_UNIT);
         assertThat(testDrug.getPrice()).isEqualTo(UPDATED_PRICE);
         assertThat(testDrug.getQuantity()).isEqualTo(UPDATED_QUANTITY);
         assertThat(testDrug.getFrequency()).isEqualTo(UPDATED_FREQUENCY);
         assertThat(testDrug.getWay()).isEqualTo(UPDATED_WAY);
+        assertThat(testDrug.getNhiCode()).isEqualTo(UPDATED_NHI_CODE);
+        assertThat(testDrug.getWarning()).isEqualTo(UPDATED_WARNING);
     }
 
     @Test

@@ -3,6 +3,7 @@ package io.dentall.totoro.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 import io.dentall.totoro.domain.enumeration.PrescriptionStatus;
+import io.dentall.totoro.domain.enumeration.PrescriptionMode;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
@@ -25,6 +26,11 @@ public class PrescriptionCriteria implements Serializable {
      */
     public static class PrescriptionStatusFilter extends Filter<PrescriptionStatus> {
     }
+    /**
+     * Class for filtering PrescriptionMode
+     */
+    public static class PrescriptionModeFilter extends Filter<PrescriptionMode> {
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -39,6 +45,8 @@ public class PrescriptionCriteria implements Serializable {
     private BooleanFilter takenAll;
 
     private PrescriptionStatusFilter status;
+
+    private PrescriptionModeFilter mode;
 
     private LongFilter treatmentDrugId;
 
@@ -92,6 +100,14 @@ public class PrescriptionCriteria implements Serializable {
         this.status = status;
     }
 
+    public PrescriptionModeFilter getMode() {
+        return mode;
+    }
+
+    public void setMode(PrescriptionModeFilter mode) {
+        this.mode = mode;
+    }
+
     public LongFilter getTreatmentDrugId() {
         return treatmentDrugId;
     }
@@ -125,6 +141,7 @@ public class PrescriptionCriteria implements Serializable {
             Objects.equals(pain, that.pain) &&
             Objects.equals(takenAll, that.takenAll) &&
             Objects.equals(status, that.status) &&
+            Objects.equals(mode, that.mode) &&
             Objects.equals(treatmentDrugId, that.treatmentDrugId) &&
             Objects.equals(disposalId, that.disposalId);
     }
@@ -138,6 +155,7 @@ public class PrescriptionCriteria implements Serializable {
         pain,
         takenAll,
         status,
+        mode,
         treatmentDrugId,
         disposalId
         );
@@ -152,6 +170,7 @@ public class PrescriptionCriteria implements Serializable {
                 (pain != null ? "pain=" + pain + ", " : "") +
                 (takenAll != null ? "takenAll=" + takenAll + ", " : "") +
                 (status != null ? "status=" + status + ", " : "") +
+                (mode != null ? "mode=" + mode + ", " : "") +
                 (treatmentDrugId != null ? "treatmentDrugId=" + treatmentDrugId + ", " : "") +
                 (disposalId != null ? "disposalId=" + disposalId + ", " : "") +
             "}";

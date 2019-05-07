@@ -6,6 +6,12 @@ export const enum PrescriptionStatus {
   PERMANENT = 'PERMANENT'
 }
 
+export const enum PrescriptionMode {
+  SELF = 'SELF',
+  DELIVERY = 'DELIVERY',
+  NONE = 'NONE'
+}
+
 export interface IPrescription {
   id?: number;
   clinicAdministration?: boolean;
@@ -13,6 +19,7 @@ export interface IPrescription {
   pain?: boolean;
   takenAll?: boolean;
   status?: PrescriptionStatus;
+  mode?: PrescriptionMode;
   treatmentDrugs?: ITreatmentDrug[];
   disposal?: IDisposal;
 }

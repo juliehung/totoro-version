@@ -17,14 +17,13 @@
       },
       "name": "Name",
       "chineseName": "Chinese Name",
-      "type": "Type",
-      "validDate": "Valid Date",
-      "endDate": "End Date",
       "unit": "Unit",
       "price": "Price",
       "quantity": "Quantity",
       "frequency": "Frequency",
-      "way": "Way"
+      "way": "Way",
+      "nhiCode": "Nhi Code",
+      "warning": "Warning"
     }
   }
 }

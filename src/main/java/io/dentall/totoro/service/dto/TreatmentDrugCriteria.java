@@ -28,6 +28,10 @@ public class TreatmentDrugCriteria implements Serializable {
 
     private StringFilter frequency;
 
+    private StringFilter way;
+
+    private DoubleFilter quantity;
+
     private LongFilter prescriptionId;
 
     private LongFilter drugId;
@@ -54,6 +58,22 @@ public class TreatmentDrugCriteria implements Serializable {
 
     public void setFrequency(StringFilter frequency) {
         this.frequency = frequency;
+    }
+
+    public StringFilter getWay() {
+        return way;
+    }
+
+    public void setWay(StringFilter way) {
+        this.way = way;
+    }
+
+    public DoubleFilter getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(DoubleFilter quantity) {
+        this.quantity = quantity;
     }
 
     public LongFilter getPrescriptionId() {
@@ -86,6 +106,8 @@ public class TreatmentDrugCriteria implements Serializable {
             Objects.equals(id, that.id) &&
             Objects.equals(day, that.day) &&
             Objects.equals(frequency, that.frequency) &&
+            Objects.equals(way, that.way) &&
+            Objects.equals(quantity, that.quantity) &&
             Objects.equals(prescriptionId, that.prescriptionId) &&
             Objects.equals(drugId, that.drugId);
     }
@@ -96,6 +118,8 @@ public class TreatmentDrugCriteria implements Serializable {
         id,
         day,
         frequency,
+        way,
+        quantity,
         prescriptionId,
         drugId
         );
@@ -107,6 +131,8 @@ public class TreatmentDrugCriteria implements Serializable {
                 (id != null ? "id=" + id + ", " : "") +
                 (day != null ? "day=" + day + ", " : "") +
                 (frequency != null ? "frequency=" + frequency + ", " : "") +
+                (way != null ? "way=" + way + ", " : "") +
+                (quantity != null ? "quantity=" + quantity + ", " : "") +
                 (prescriptionId != null ? "prescriptionId=" + prescriptionId + ", " : "") +
                 (drugId != null ? "drugId=" + drugId + ", " : "") +
             "}";

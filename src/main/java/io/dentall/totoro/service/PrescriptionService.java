@@ -132,6 +132,10 @@ public class PrescriptionService {
                     prescription.setStatus((updatePrescription.getStatus()));
                 }
 
+                if (updatePrescription.getMode() != null) {
+                    prescription.setMode((updatePrescription.getMode()));
+                }
+
                 if (updatePrescription.getTreatmentDrugs() != null) {
                     relationshipService.addRelationshipWithTreatmentDrugs(prescription.treatmentDrugs(updatePrescription.getTreatmentDrugs()));
                 }

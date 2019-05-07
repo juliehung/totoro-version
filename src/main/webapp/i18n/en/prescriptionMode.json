@@ -1,0 +1,10 @@
+{
+  "totoroApp": {
+    "PrescriptionMode": {
+      "null": "",
+      "SELF": "SELF",
+      "DELIVERY": "DELIVERY",
+      "NONE": "NONE"
+    }
+  }
+}

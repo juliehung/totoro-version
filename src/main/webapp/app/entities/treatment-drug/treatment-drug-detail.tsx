@@ -41,6 +41,18 @@ export class TreatmentDrugDetail extends React.Component<ITreatmentDrugDetailPro
             </dt>
             <dd>{treatmentDrugEntity.frequency}</dd>
             <dt>
+              <span id="way">
+                <Translate contentKey="totoroApp.treatmentDrug.way">Way</Translate>
+              </span>
+            </dt>
+            <dd>{treatmentDrugEntity.way}</dd>
+            <dt>
+              <span id="quantity">
+                <Translate contentKey="totoroApp.treatmentDrug.quantity">Quantity</Translate>
+              </span>
+            </dt>
+            <dd>{treatmentDrugEntity.quantity}</dd>
+            <dt>
               <Translate contentKey="totoroApp.treatmentDrug.prescription">Prescription</Translate>
             </dt>
             <dd>{treatmentDrugEntity.prescription ? treatmentDrugEntity.prescription.id : ''}</dd>
