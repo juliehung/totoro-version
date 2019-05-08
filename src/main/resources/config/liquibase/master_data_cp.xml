@@ -123,6 +123,12 @@
                   separator=";"
                   tableName="nhi_icd_10_cm">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_icd_10_pcs.csv"
+                  separator=";"
+                  tableName="nhi_icd_10_pcs">
+        </loadData>
     </changeSet>
 
 </databaseChangeLog>

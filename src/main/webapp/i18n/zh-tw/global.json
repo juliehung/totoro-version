@@ -40,6 +40,7 @@
         "nhiIcd10Cm": "Nhi Icd 10 Cm",
         "nhiProcedure": "Nhi Procedure",
         "nhiProcedureType": "Nhi Procedure Type",
+        "nhiIcd10Pcs": "Nhi Icd 10 Pcs",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

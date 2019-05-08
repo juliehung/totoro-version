@@ -1,0 +1,40 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "nhiProcedure",
+            "otherEntityName": "nhiProcedure",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "code",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "nhiName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "englishName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "chineseName",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20190507100256",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "nhi_icd_10_pcs",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

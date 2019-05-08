@@ -53,7 +53,7 @@ public class Prescription implements Serializable {
     @Column(name = "jhi_mode", nullable = false)
     private PrescriptionMode mode;
 
-    @OneToMany(mappedBy = "prescription")
+    @OneToMany(mappedBy = "prescription", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentDrug> treatmentDrugs = new HashSet<>();
     @OneToOne(mappedBy = "prescription")

@@ -13,6 +13,12 @@
             "otherEntityName": "nhiIcd9Cm",
             "relationshipType": "many-to-one",
             "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "nhiIcd10Pcs",
+            "otherEntityName": "nhiIcd10Pcs",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "nhiProcedure"
         }
     ],
     "fields": [

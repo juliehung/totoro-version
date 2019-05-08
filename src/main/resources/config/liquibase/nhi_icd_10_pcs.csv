@@ -1,0 +1,370 @@
+nhi_procedure_id;nhi_name;code;english_name;chinese_name
+23;上顎單顆牙單面銀粉充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+23;下顎單顆牙單面銀粉充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+24;上顎單顆牙雙面銀粉充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+24;下顎單顆牙雙面銀粉充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+25;上顎單顆牙三面銀粉充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+25;下顎單顆牙三面銀粉充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+26;上顎單顆前牙單面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+26;下顎單顆前牙單面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+27;上顎單顆前牙雙面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+27;下顎單顆前牙雙面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+28;上顎單顆牙覆髓;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+28;下顎單顆牙覆髓;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+29;上顎單顆牙釘強化術;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+29;下顎單顆牙釘強化術;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+30;上顎單顆後牙單面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+30;下顎單顆後牙單面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+31;上顎單顆後牙雙面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+31;下顎單顆後牙雙面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+32;上顎單顆後牙三面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+32;下顎單顆後牙三面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+33;上顎單顆牙玻璃離子體充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+33;下顎單顆牙玻璃離子體充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+34;上顎單顆前牙三面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+34;下顎單顆前牙三面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+35;上顎單顆牙複合體充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+35;下顎單顆牙複合體充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+36;前牙雙鄰接面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+36;前牙雙鄰接面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+37;後牙雙鄰接面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+37;後牙雙鄰接面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+39;特殊狀況之上顎單顆牙單面銀粉充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+39;特殊狀況之下顎單顆牙單面銀粉充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+40;特殊狀況之上顎單顆牙雙面銀粉充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+40;特殊狀況之下顎單顆牙雙面銀粉充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+41;特殊狀況之上顎單顆牙三面銀粉充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+41;特殊狀況之下顎單顆牙三面銀粉充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+42;特殊狀況之上顎單顆前牙單面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+42;特殊狀況之下顎單顆前牙單面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+43;特殊狀況之上顎單顆前牙雙面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+43;特殊狀況之下顎單顆前牙雙面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+44;特殊狀況之上顎單顆後牙單面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+44;特殊狀況之下顎單顆後牙單面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+45;特殊狀況之上顎單顆後牙雙面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+45;特殊狀況之下顎單顆後牙雙面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+46;特殊狀況之上顎單顆後牙三面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+46;特殊狀況之下顎單顆後牙三面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+47;特殊狀況之上顎單顆牙玻璃離子體充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+47;特殊狀況之下顎單顆牙玻璃離子體充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+48;特殊狀況之上顎單顆前牙三面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+48;特殊狀況之下顎單顆前牙三面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+49;特殊狀況之上顎單顆牙複合體充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+49;特殊狀況之下顎單顆牙複合體充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+50;特殊狀況之前牙雙鄰接面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+50;特殊狀況之前牙雙鄰接面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+51;特殊狀況之後牙雙鄰接面複合樹脂充填;0CRWXJ0;Replacement of Upper Tooth, Single, with Synthetic Substitute, External Approach;經由外部上部牙齒單一式置換術，使用合成替代物
+51;特殊狀況之後牙雙鄰接面複合樹脂充填;0CRXXJ0;Replacement of Lower Tooth, Single, with Synthetic Substitute, External Approach;經由外部下齒單一式置換術，使用合成替代物
+52;上顎單顆恆牙斷髓處理;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+52;下顎單顆恆牙斷髓處理;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+53;上顎單顆乳牙多根管治療;0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+53;下顎單顆乳牙多根管治療;0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+54;上顎單顆恆牙根管治療(四根);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+54;下顎單顆恆牙根管治療(四根);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+55;上顎單顆恆牙根管治療(五根含以上);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+55;下顎單顆恆牙根管治療(五根含以上);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+58;上顎單顆大臼齒(C-shaped)根管難症特別處理;0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+58;下顎單顆大臼齒(C-shaped)根管難症特別處理;0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+59;上顎單顆牙有額外根管者難症特別處理;0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+59;下顎單顆牙有額外根管者難症特別處理;0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+60;上顎單顆牙根管特別彎曲、鈣化、器械斷折難症特別處理;0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+60;下顎單顆牙根管特別彎曲、鈣化、器械斷折難症特別處理;0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+61;上顎單顆牙根管重新治療之難症特別處理;0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+61;下顎單顆牙根管重新治療之難症特別處理;0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+62;上顎單顆牙符合附表3.3.1之多根管治療(雙根管);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+62;下顎單顆牙符合附表3.3.1之多根管治療(雙根管);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+63;上顎單顆牙符合附表3.3.1之多根管治療(三根管);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+63;下顎單顆牙符合附表3.3.1之多根管治療(三根管);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+64;上顎單顆牙符合附表3.3.1之多根管治療(四根管);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+64;下顎單顆牙符合附表3.3.1之多根管治療(四根管);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+65;上顎單顆牙符合附表3.3.1之多根管治療(五根含以上);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+65;下顎單顆牙符合附表3.3.1之多根管治療(五根含以上);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+67;牙周病緊急處置;0CCXXZ0;Extirpation of Matter from Lower Tooth, Single, External Approach;經由外部下齒單一式摘除術
+67;牙周病緊急處置;0CCWXZ0;Extirpation of Matter from Upper Tooth, Single, External Approach;經由外部上部牙齒單一式摘除術
+68;牙周敷料;0CU5XJZ;Supplement Upper Gingiva with Synthetic Substitute, External Approach;經由外部上牙齦強化術，使用合成替代物
+68;牙周敷料;0CU6XJZ;Supplement Lower Gingiva with Synthetic Substitute, External Approach;經由外部下牙齦強化術，使用合成替代物
+69;牙結石清除－局部;0CCWXZ1;Extirpation of Matter from Upper Tooth, Multiple, External Approach;經由外部上部牙齒複合式摘除術
+69;牙結石清除－局部;0CCXXZ1;Extirpation of Matter from Lower Tooth, Multiple, External Approach;經由外部下齒複合式摘除術
+70;牙結石清除－全口;0CCXXZ2;Extirpation of Matter from Lower Tooth, All, External Approach;經由外部下齒所有摘除術
+70;牙結石清除－全口;0CCWXZ2;Extirpation of Matter from Upper Tooth, All, External Approach;經由外部上部牙齒所有摘除術
+71;口乾症牙結石清除-全口;0CCXXZ2;Extirpation of Matter from Lower Tooth, All, External Approach;經由外部下齒所有摘除術
+71;口乾症牙結石清除-全口;0CCWXZ2;Extirpation of Matter from Upper Tooth, All, External Approach;經由外部上部牙齒所有摘除術
+72;齒齦下括除術(含牙根整平術)-全口;0CC53ZZ;Extirpation of Matter from Upper Gingiva, Percutaneous Approach;經皮上牙齦摘除術
+72;齒齦下括除術(含牙根整平術)-全口;0CC63ZZ;Extirpation of Matter from Lower Gingiva, Percutaneous Approach;經皮下牙齦摘除術
+73;齒齦下括除術(含牙根整平術)-1/2 顎;0CC53ZZ;Extirpation of Matter from Upper Gingiva, Percutaneous Approach;經皮上牙齦摘除術
+73;齒齦下括除術(含牙根整平術)-1/2 顎;0CC63ZZ;Extirpation of Matter from Lower Gingiva, Percutaneous Approach;經皮下牙齦摘除術
+74;齒齦下括除術(含牙根整平術)-局部(3齒以內);0CC53ZZ;Extirpation of Matter from Upper Gingiva, Percutaneous Approach;經皮上牙齦摘除術
+74;齒齦下括除術(含牙根整平術)-局部(3齒以內);0CC63ZZ;Extirpation of Matter from Lower Gingiva, Percutaneous Approach;經皮下牙齦摘除術
+75;牙齦切除術-局部（3齒以內）;0CB5XZZ;Excision of Upper Gingiva, External Approach;經由外部上牙齦部分切除術
+75;牙齦切除術-局部（3齒以內）;0CB6XZZ;Excision of Lower Gingiva, External Approach;經由外部下牙齦部分切除術
+76;牙齦切除術 － 1/3 顎;0CB5XZZ;Excision of Upper Gingiva, External Approach;經由外部上牙齦部分切除術
+76;牙齦切除術 － 1/3 顎;0CB6XZZ;Excision of Lower Gingiva, External Approach;經由外部下牙齦部分切除術
+77;牙齦切除術-施行根管治療或牙體復形時，所需之牙齦切除術;0CB5XZZ;Excision of Upper Gingiva, External Approach;經由外部上牙齦部分切除術
+77;牙齦切除術-施行根管治療或牙體復形時，所需之牙齦切除術;0CB6XZZ;Excision of Lower Gingiva, External Approach;經由外部下牙齦部分切除術
+79;特定牙周保存治療-全口總齒數9-15顆;0CCXXZ0;Extirpation of Matter from Lower Tooth, Single, External Approach;經由外部下齒單一式摘除術
+79;特定牙周保存治療-全口總齒數9-15顆;0CCWXZ0;Extirpation of Matter from Upper Tooth, Single, External Approach;經由外部上部牙齒單一式摘除術
+79;特定牙周保存治療-全口總齒數9-15顆;0CCXXZ2;Extirpation of Matter from Lower Tooth, All, External Approach;經由外部下齒所有摘除術
+79;特定牙周保存治療-全口總齒數9-15顆;0CCWXZ2;Extirpation of Matter from Upper Tooth, All, External Approach;經由外部上部牙齒所有摘除術
+79;特定牙周保存治療-全口總齒數9-15顆;0CC53ZZ;Extirpation of Matter from Upper Gingiva, Percutaneous Approach;經皮上牙齦摘除術
+79;特定牙周保存治療-全口總齒數9-15顆;0CC63ZZ;Extirpation of Matter from Lower Gingiva, Percutaneous Approach;經皮下牙齦摘除術
+79;特定牙周保存治療-全口總齒數9-15顆;0CC50ZZ;Extirpation of Matter from Upper Gingiva, Open Approach;開放性上牙齦摘除術
+79;特定牙周保存治療-全口總齒數9-15顆;0CC60ZZ;Extirpation of Matter from Lower Gingiva, Open Approach;開放性下牙齦摘除術
+79;特定牙周保存治療-全口總齒數9-15顆;0WJ3XZZ;Inspection of Oral Cavity and Throat, External Approach;經由外部口腔及咽喉視查術
+79;特定牙周保存治療-全口總齒數9-15顆;BN0JZZZ;Plain Radiography of All Teeth;全部牙齒之一般放射線攝影
+80;特定牙周保存治療-全口總齒數4-8顆;0CCXXZ0;Extirpation of Matter from Lower Tooth, Single, External Approach;經由外部下齒單一式摘除術
+80;特定牙周保存治療-全口總齒數4-8顆;0CCWXZ0;Extirpation of Matter from Upper Tooth, Single, External Approach;經由外部上部牙齒單一式摘除術
+80;特定牙周保存治療-全口總齒數4-8顆;0CCXXZ2;Extirpation of Matter from Lower Tooth, All, External Approach;經由外部下齒所有摘除術
+80;特定牙周保存治療-全口總齒數4-8顆;0CCWXZ2;Extirpation of Matter from Upper Tooth, All, External Approach;經由外部上部牙齒所有摘除術
+80;特定牙周保存治療-全口總齒數4-8顆;0CC53ZZ;Extirpation of Matter from Upper Gingiva, Percutaneous Approach;經皮上牙齦摘除術
+80;特定牙周保存治療-全口總齒數4-8顆;0CC63ZZ;Extirpation of Matter from Lower Gingiva, Percutaneous Approach;經皮下牙齦摘除術
+80;特定牙周保存治療-全口總齒數4-8顆;0CC50ZZ;Extirpation of Matter from Upper Gingiva, Open Approach;開放性上牙齦摘除術
+80;特定牙周保存治療-全口總齒數4-8顆;0CC60ZZ;Extirpation of Matter from Lower Gingiva, Open Approach;開放性下牙齦摘除術
+80;特定牙周保存治療-全口總齒數4-8顆;0WJ3XZZ;Inspection of Oral Cavity and Throat, External Approach;經由外部口腔及咽喉視查術
+80;特定牙周保存治療-全口總齒數4-8顆;BN0JZZZ;Plain Radiography of All Teeth;全部牙齒之一般放射線攝影
+81;懷孕婦女牙結石清除-全口;0CCXXZ2;Extirpation of Matter from Lower Tooth, All, External Approach;經由外部下齒所有摘除術
+81;懷孕婦女牙結石清除-全口;0CCWXZ2;Extirpation of Matter from Upper Tooth, All, External Approach;經由外部上部牙齒所有摘除術
+82;牙周病支持性治療;0CC53ZZ;Extirpation of Matter from Upper Gingiva, Percutaneous Approach;經皮上牙齦摘除術
+82;牙周病支持性治療;0CC63ZZ;Extirpation of Matter from Lower Gingiva, Percutaneous Approach;經皮下牙齦摘除術
+82;牙周病支持性治療;0CC53ZZ;Extirpation of Matter from Upper Gingiva, Percutaneous Approach;經皮上牙齦摘除術
+82;牙周病支持性治療;0CC63ZZ;Extirpation of Matter from Lower Gingiva, Percutaneous Approach;經皮下牙齦摘除術
+82;牙周病支持性治療;0CCXXZ2;Extirpation of Matter from Lower Tooth, All, External Approach;經由外部下齒所有摘除術
+82;牙周病支持性治療;0CCWXZ2;Extirpation of Matter from Upper Tooth, All, External Approach;經由外部上部牙齒所有摘除術
+82;牙周病支持性治療;0WJ3XZZ;Inspection of Oral Cavity and Throat, External Approach;經由外部口腔及咽喉視查術
+82;牙周病支持性治療;BN0JZZZ;Plain Radiography of All Teeth;全部牙齒之一般放射線攝影
+83;懷孕婦女牙周緊急處置;0CCXXZ0;Extirpation of Matter from Lower Tooth, Single, External Approach;經由外部下齒單一式摘除術
+83;懷孕婦女牙周緊急處置;0CCWXZ0;Extirpation of Matter from Upper Tooth, Single, External Approach;經由外部上部牙齒單一式摘除術
+84;牙菌斑去除照護;0CCXXZ2;Extirpation of Matter from Lower Tooth, All, External Approach;經由外部下齒所有摘除術
+84;牙菌斑去除照護;0CCWXZ2;Extirpation of Matter from Upper Tooth, All, External Approach;經由外部上部牙齒所有摘除術
+86;特殊狀況牙結石清除-局部;0CCXXZ1;Extirpation of Matter from Lower Tooth, Multiple, External Approach;經由外部下齒複合式摘除術
+86;特殊狀況牙結石清除-局部;0CCWXZ1;Extirpation of Matter from Upper Tooth, Multiple, External Approach;經由外部上部牙齒複合式摘除術
+87;特殊狀況牙結石清除-全口;0CCXXZ2;Extirpation of Matter from Lower Tooth, All, External Approach;經由外部下齒所有摘除術
+87;特殊狀況牙結石清除-全口;0CCWXZ2;Extirpation of Matter from Upper Tooth, All, External Approach;經由外部上部牙齒所有摘除術
+89;拔牙後特別處理;0CJYXZZ;Inspection of Mouth and Throat, External Approach;經由外部口腔及喉嚨視查術
+90;簡單性拔牙;0CDWXZ0;Extraction of Upper Tooth, Single, External Approach;經由外部上部牙齒單一齒拔除術
+90;簡單性拔牙;0CDXXZ0;Extraction of Lower Tooth, Single, External Approach;經由外部下齒單一齒拔除術
+91;複雜性拔牙;0CDWXZ0;Extraction of Upper Tooth, Single, External Approach;經由外部上部牙齒單一齒拔除術
+91;複雜性拔牙;0CDXXZ0;Extraction of Lower Tooth, Single, External Approach;經由外部下齒單一齒拔除術
+92;單純齒切除術;0CTW0Z0;Resection of Upper Tooth, Single, Open Approach;開放性上部牙齒單一齒全部切除術
+92;單純齒切除術;0CTX0Z0;Resection of Lower Tooth, Single, Open Approach;開放性下齒單一齒全部切除術
+93;複雜齒切除術;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+93;複雜齒切除術;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+94;囊腫摘除術小 small < 2cm;09BQ0ZZ;Excision of Right Maxillary Sinus, Open Approach;開放性右側上頜竇部分切除術
+94;囊腫摘除術小 small < 2cm;09BR0ZZ;Excision of Left Maxillary Sinus, Open Approach;開放性左側上頜竇部分切除術
+94;囊腫摘除術小 small < 2cm;0CB00ZZ;Excision of Upper Lip, Open Approach;開放性上唇部分切除術
+94;囊腫摘除術小 small < 2cm;0CB10ZZ;Excision of Lower Lip, Open Approach;開放性下唇部分切除術
+94;囊腫摘除術小 small < 2cm;0CB20ZZ;Excision of Hard Palate, Open Approach;開放性硬腭部分切除術
+94;囊腫摘除術小 small < 2cm;0CB30ZZ;Excision of Soft Palate, Open Approach;開放性軟腭部分切除術
+94;囊腫摘除術小 small < 2cm;0CB40ZZ;Excision of Buccal Mucosa, Open Approach;開放性頰黏膜部分切除術
+94;囊腫摘除術小 small < 2cm;0CB50ZZ;Excision of Upper Gingiva, Open Approach;開放性上牙齦部分切除術
+94;囊腫摘除術小 small < 2cm;0CB60ZZ;Excision of Lower Gingiva, Open Approach;開放性下牙齦部分切除術
+94;囊腫摘除術小 small < 2cm;0CB70ZZ;Excision of Tongue, Open Approach;開放性舌頭部分切除術
+94;囊腫摘除術小 small < 2cm;0CB80ZZ;Excision of Right Parotid Gland, Open Approach;開放性右側腮腺部分切除術
+94;囊腫摘除術小 small < 2cm;0CB90ZZ;Excision of Left Parotid Gland, Open Approach;開放性左側腮腺部分切除術
+94;囊腫摘除術小 small < 2cm;0CBB0ZZ;Excision of Right Parotid Duct, Open Approach;開放性右側腮腺管部分切除術
+94;囊腫摘除術小 small < 2cm;0CBC0ZZ;Excision of Left Parotid Duct, Open Approach;開放性左側腮腺管部分切除術
+94;囊腫摘除術小 small < 2cm;0CBD0ZZ;Excision of Right Sublingual Gland, Open Approach;開放性右舌下腺部分切除術
+94;囊腫摘除術小 small < 2cm;0CBF0ZZ;Excision of Left Sublingual Gland, Open Approach;開放性左舌下腺部分切除術
+94;囊腫摘除術小 small < 2cm;0CBG0ZZ;Excision of Right Submaxillary Gland, Open Approach;開放性右頜下腺部分切除術
+94;囊腫摘除術小 small < 2cm;0CBH0ZZ;Excision of Left Submaxillary Gland, Open Approach;開放性左頜下腺部分切除術
+94;囊腫摘除術小 small < 2cm;0CBJ0ZZ;Excision of Minor Salivary Gland, Open Approach;開放性小唾液腺部分切除術
+94;囊腫摘除術小 small < 2cm;0CBM0ZZ;Excision of Pharynx, Open Approach;開放性咽部分切除術
+94;囊腫摘除術小 small < 2cm;0CBN0ZZ;Excision of Uvula, Open Approach;開放性懸雍垂部分切除術
+94;囊腫摘除術小 small < 2cm;0CBP0ZZ;Excision of Tonsils, Open Approach;開放性扁桃腺部分切除術
+94;囊腫摘除術小 small < 2cm;0CBQ0ZZ;Excision of Adenoids, Open Approach;開放性增殖腺部分切除術
+94;囊腫摘除術小 small < 2cm;0CBR0ZZ;Excision of Epiglottis, Open Approach;開放性會厭部分切除術
+94;囊腫摘除術小 small < 2cm;0CBS0ZZ;Excision of Larynx, Open Approach;開放性喉部分切除術
+94;囊腫摘除術小 small < 2cm;0CBT0ZZ;Excision of Right Vocal Cord, Open Approach;開放性右聲帶部分切除術
+94;囊腫摘除術小 small < 2cm;0CBV0ZZ;Excision of Left Vocal Cord, Open Approach;開放性左聲帶部分切除術
+94;囊腫摘除術小 small < 2cm;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+94;囊腫摘除術小 small < 2cm;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+94;囊腫摘除術小 small < 2cm;0NBK0ZZ;Excision of Right Palatine Bone, Open Approach;開放性右側腭骨部分切除術
+94;囊腫摘除術小 small < 2cm;0NBL0ZZ;Excision of Left Palatine Bone, Open Approach;開放性左側腭骨部分切除術
+94;囊腫摘除術小 small < 2cm;0NBM0ZZ;Excision of Right Zygomatic Bone, Open Approach;開放性右側顴骨部分切除術
+94;囊腫摘除術小 small < 2cm;0NBN0ZZ;Excision of Left Zygomatic Bone, Open Approach;開放性左側顴骨部分切除術
+94;囊腫摘除術小 small < 2cm;0NBR0ZZ;Excision of Right Maxilla, Open Approach;開放性右側上頜骨部分切除術
+94;囊腫摘除術小 small < 2cm;0NBS0ZZ;Excision of Left Maxilla, Open Approach;開放性左側上頜骨部分切除術
+94;囊腫摘除術小 small < 2cm;0NBT0ZZ;Excision of Right Mandible, Open Approach;開放性右側下頜骨部分切除術
+94;囊腫摘除術小 small < 2cm;0NBV0ZZ;Excision of Left Mandible, Open Approach;開放性左側下頜骨部分切除術
+95;齦蓋切除術;0CB5XZZ;Excision of Upper Gingiva, External Approach;經由外部上牙齦部分切除術
+95;齦蓋切除術;0CB6XZZ;Excision of Lower Gingiva, External Approach;經由外部下牙齦部分切除術
+96;繫帶切除術－ 簡單法;0CB5XZZ;Excision of Upper Gingiva, External Approach;經由外部上牙齦部分切除術
+96;繫帶切除術－ 簡單法;0CB6XZZ;Excision of Lower Gingiva, External Approach;經由外部下牙齦部分切除術
+97;繫帶切除術－ Ｚ字法;0CB5XZZ;Excision of Upper Gingiva, External Approach;經由外部上牙齦部分切除術
+97;繫帶切除術－ Ｚ字法;0CB6XZZ;Excision of Lower Gingiva, External Approach;經由外部下牙齦部分切除術
+98;前齒根尖切除術;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+98;前齒根尖切除術;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+99;小臼齒根尖切除術;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+99;小臼齒根尖切除術;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+100;大臼齒根尖切除術;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+100;大臼齒根尖切除術;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+101;牙齒切半術或牙根切斷術;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+101;牙齒切半術或牙根切斷術;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+102;齒槽骨成形術(1/2顎以內) ;0NBR0ZZ;Excision of Right Maxilla, Open Approach;開放性右側上頜骨部分切除術
+102;齒槽骨成形術(1/2顎以內) ;0NBS0ZZ;Excision of Left Maxilla, Open Approach;開放性左側上頜骨部分切除術
+102;齒槽骨成形術(1/2顎以內) ;0NBT0ZZ;Excision of Right Mandible, Open Approach;開放性右側下頜骨部分切除術
+102;齒槽骨成形術(1/2顎以內) ;0NBV0ZZ;Excision of Left Mandible, Open Approach;開放性左側下頜骨部分切除術
+103;齒槽骨成形術(1/2顎以上);0NBR0ZZ;Excision of Right Maxilla, Open Approach;開放性右側上頜骨部分切除術
+103;齒槽骨成形術(1/2顎以上);0NBS0ZZ;Excision of Left Maxilla, Open Approach;開放性左側上頜骨部分切除術
+103;齒槽骨成形術(1/2顎以上);0NBT0ZZ;Excision of Right Mandible, Open Approach;開放性右側下頜骨部分切除術
+103;齒槽骨成形術(1/2顎以上);0NBV0ZZ;Excision of Left Mandible, Open Approach;開放性左側下頜骨部分切除術
+104;顳顎關節脫臼整復－ 無固定;0RSCXZZ;Reposition Right Temporomandibular Joint, External Approach;經由外部右側顳顎關節復位術
+104;顳顎關節脫臼整復－ 無固定;0RSDXZZ;Reposition Left Temporomandibular Joint, External Approach;經由外部左側顳顎關節復位術
+105;埋伏齒露出手術;0CB5XZZ;Excision of Upper Gingiva, External Approach;經由外部上牙齦部分切除術
+105;埋伏齒露出手術;0CB6XZZ;Excision of Lower Gingiva, External Approach;經由外部下牙齦部分切除術
+106;乳牙拔除;0CDWXZ0;Extraction of Upper Tooth, Single, External Approach;經由外部上部牙齒單一齒拔除術
+106;乳牙拔除;0CDXXZ0;Extraction of Lower Tooth, Single, External Approach;經由外部下齒單一齒拔除術
+107;骨瘤切除術＜ 1 cm;0NBK0ZZ;Excision of Right Palatine Bone, Open Approach;開放性右側腭骨部分切除術
+107;骨瘤切除術＜ 1 cm;0NBL0ZZ;Excision of Left Palatine Bone, Open Approach;開放性左側腭骨部分切除術
+107;骨瘤切除術＜ 1 cm;0NBM0ZZ;Excision of Right Zygomatic Bone, Open Approach;開放性右側顴骨部分切除術
+107;骨瘤切除術＜ 1 cm;0NBN0ZZ;Excision of Left Zygomatic Bone, Open Approach;開放性左側顴骨部分切除術
+107;骨瘤切除術＜ 1 cm;0NBR0ZZ;Excision of Right Maxilla, Open Approach;開放性右側上頜骨部分切除術
+107;骨瘤切除術＜ 1 cm;0NBS0ZZ;Excision of Left Maxilla, Open Approach;開放性左側上頜骨部分切除術
+107;骨瘤切除術＜ 1 cm;0NBT0ZZ;Excision of Right Mandible, Open Approach;開放性右側下頜骨部分切除術
+107;骨瘤切除術＜ 1 cm;0NBV0ZZ;Excision of Left Mandible, Open Approach;開放性左側下頜骨部分切除術
+108;骨瘤切除術1 cm ≦ Bone tumor ≦ 2 cm;0NBK0ZZ;Excision of Right Palatine Bone, Open Approach;開放性右側腭骨部分切除術
+108;骨瘤切除術1 cm ≦ Bone tumor ≦ 2 cm;0NBL0ZZ;Excision of Left Palatine Bone, Open Approach;開放性左側腭骨部分切除術
+108;骨瘤切除術1 cm ≦ Bone tumor ≦ 2 cm;0NBM0ZZ;Excision of Right Zygomatic Bone, Open Approach;開放性右側顴骨部分切除術
+108;骨瘤切除術1 cm ≦ Bone tumor ≦ 2 cm;0NBN0ZZ;Excision of Left Zygomatic Bone, Open Approach;開放性左側顴骨部分切除術
+108;骨瘤切除術1 cm ≦ Bone tumor ≦ 2 cm;0NBR0ZZ;Excision of Right Maxilla, Open Approach;開放性右側上頜骨部分切除術
+108;骨瘤切除術1 cm ≦ Bone tumor ≦ 2 cm;0NBS0ZZ;Excision of Left Maxilla, Open Approach;開放性左側上頜骨部分切除術
+108;骨瘤切除術1 cm ≦ Bone tumor ≦ 2 cm;0NBT0ZZ;Excision of Right Mandible, Open Approach;開放性右側下頜骨部分切除術
+108;骨瘤切除術1 cm ≦ Bone tumor ≦ 2 cm;0NBV0ZZ;Excision of Left Mandible, Open Approach;開放性左側下頜骨部分切除術
+109;骨瘤切除術＞ 2 cm;0NBK0ZZ;Excision of Right Palatine Bone, Open Approach;開放性右側腭骨部分切除術
+109;骨瘤切除術＞ 2 cm;0NBL0ZZ;Excision of Left Palatine Bone, Open Approach;開放性左側腭骨部分切除術
+109;骨瘤切除術＞ 2 cm;0NBM0ZZ;Excision of Right Zygomatic Bone, Open Approach;開放性右側顴骨部分切除術
+109;骨瘤切除術＞ 2 cm;0NBN0ZZ;Excision of Left Zygomatic Bone, Open Approach;開放性左側顴骨部分切除術
+109;骨瘤切除術＞ 2 cm;0NBR0ZZ;Excision of Right Maxilla, Open Approach;開放性右側上頜骨部分切除術
+109;骨瘤切除術＞ 2 cm;0NBS0ZZ;Excision of Left Maxilla, Open Approach;開放性左側上頜骨部分切除術
+109;骨瘤切除術＞ 2 cm;0NBT0ZZ;Excision of Right Mandible, Open Approach;開放性右側下頜骨部分切除術
+109;骨瘤切除術＞ 2 cm;0NBV0ZZ;Excision of Left Mandible, Open Approach;開放性左側下頜骨部分切除術
+110;手術去除陷入上顎竇內牙齒或異物;09CQ0ZZ;Extirpation of Matter from Right Maxillary Sinus, Open Approach;開放性右上頜竇物質摘除術
+110;手術去除陷入上顎竇內牙齒或異物;09CR0ZZ;Extirpation of Matter from Left Maxillary Sinus, Open Approach;開放性左上頜竇物質摘除術
+111;唾液腺管沖洗;0C9830Z;Drainage of Right Parotid Gland with Drainage Device, Percutaneous Approach;經皮右側腮腺引流術，使用引流裝置物
+111;唾液腺管沖洗;0C9930Z;Drainage of Left Parotid Gland with Drainage Device, Percutaneous Approach;經皮左側腮腺引流術，使用引流裝置物
+111;唾液腺管沖洗;0C9B30Z;Drainage of Right Parotid Duct with Drainage Device, Percutaneous Approach;經皮右側腮腺管引流術，使用引流裝置物
+111;唾液腺管沖洗;0C9C30Z;Drainage of Left Parotid Duct with Drainage Device, Percutaneous Approach;經皮左側腮腺管引流術，使用引流裝置物
+111;唾液腺管沖洗;0C9D30Z;Drainage of Right Sublingual Gland with Drainage Device, Percutaneous Approach;經皮右舌下腺引流術，使用引流裝置物
+111;唾液腺管沖洗;0C9F30Z;Drainage of Left Sublingual Gland with Drainage Device, Percutaneous Approach;經皮左舌下腺引流術，使用引流裝置物
+111;唾液腺管沖洗;0C9G30Z;Drainage of Right Submaxillary Gland with Drainage Device, Percutaneous Approach;經皮右頜下腺引流術，使用引流裝置物
+111;唾液腺管沖洗;0C9H30Z;Drainage of Left Submaxillary Gland with Drainage Device, Percutaneous Approach;經皮左頜下腺引流術，使用引流裝置物
+112;手術拔除深部阻生齒;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+112;手術拔除深部阻生齒;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+114;特定局部治療;0CJYXZZ;Inspection of Mouth and Throat, External Approach;經由外部口腔及喉嚨視查術
+115;簡單性口內切開排膿;0C90XZZ;Drainage of Upper Lip, External Approach;經由外部上唇引流術
+115;簡單性口內切開排膿;0C91XZZ;Drainage of Lower Lip, External Approach;經由外部下唇引流術
+115;簡單性口內切開排膿;0C92XZZ;Drainage of Hard Palate, External Approach;經由外部硬腭引流術
+115;簡單性口內切開排膿;0C93XZZ;Drainage of Soft Palate, External Approach;經由外部軟腭引流術
+115;簡單性口內切開排膿;0C94XZZ;Drainage of Buccal Mucosa, External Approach;經由外部頰黏膜引流術
+115;簡單性口內切開排膿;0C95XZZ;Drainage of Upper Gingiva, External Approach;經由外部上牙齦引流術
+115;簡單性口內切開排膿;0C96XZZ;Drainage of Lower Gingiva, External Approach;經由外部下牙齦引流術
+115;簡單性口內切開排膿;0C97XZZ;Drainage of Tongue, External Approach;經由外部舌頭引流術
+116;口乾症塗氟;0CQWXZ2;Repair of Upper Tooth, All, External Approach;經由外部上部牙齒所有修補術
+116;口乾症塗氟;0CQXXZ2;Repair of Lower Tooth, All, External Approach;經由外部下齒所有修補術
+117;口腔黏膜難症特別處置;0CJYXZZ;Inspection of Mouth and Throat, External Approach;經由外部口腔及喉嚨視查術
+119;定期性口腔癌與癌前病變追蹤治療;0CJYXZZ;Inspection of Mouth and Throat, External Approach;經由外部口腔及喉嚨視查術
+120;非定期性口腔癌與癌前病變追蹤治療;0CJYXZZ;Inspection of Mouth and Throat, External Approach;經由外部口腔及喉嚨視查術
+121;乳牙複雜性拔牙;0CDWXZ0;Extraction of Upper Tooth, Single, External Approach;經由外部上部牙齒單一齒拔除術
+121;乳牙複雜性拔牙;0CDXXZ0;Extraction of Lower Tooth, Single, External Approach;經由外部下齒單一齒拔除術
+123;顎顏面骨壞死術後傷口照護;0CJYXZZ;Inspection of Mouth and Throat, External Approach;經由外部口腔及喉嚨視查術
+154;上顎單顆乳牙斷髓處理;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+154;下顎單顆乳牙斷髓處理;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+155;上顎單顆乳牙根管治療;0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+155;下顎單顆乳牙根管治療;0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+156;上顎單顆乳牙多根管治療;0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+156;下顎單顆乳牙多根管治療;0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+157;乳牙拔除;0CDWXZ0;Extraction of Upper Tooth, Single, External Approach;經由外部上部牙齒單一齒拔除術
+157;乳牙拔除;0CDXXZ0;Extraction of Lower Tooth, Single, External Approach;經由外部下齒單一齒拔除術
+158;乳牙複雜性拔牙;0CDWXZ0;Extraction of Upper Tooth, Single, External Approach;經由外部上部牙齒單一齒拔除術
+158;乳牙複雜性拔牙;0CDXXZ0;Extraction of Lower Tooth, Single, External Approach;經由外部下齒單一齒拔除術
+159;上顎單顆恆牙根管治療(單根);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+159;下顎單顆恆牙根管治療(單根);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+160;上顎單顆恆牙根管治療(雙根);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+160;下顎單顆恆牙根管治療(雙根);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+161;上顎單顆恆牙根管治療(三根);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+161;下顎單顆恆牙根管治療(三根);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+162;上顎單顆牙齒內治療緊急處理;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+162;下顎單顆牙齒內治療緊急處理;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+163;上顎單顆乳牙斷髓處理;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+163;下顎單顆乳牙斷髓處理;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+164;單顆牙去除縫成牙冠;0CPYXJZ;Removal of Synthetic Substitute from Mouth and Throat, External Approach;經由外部移除口腔及喉嚨合成替代物
+165;單顆牙去除鑄造牙冠;0CPYXJZ;Removal of Synthetic Substitute from Mouth and Throat, External Approach;經由外部移除口腔及喉嚨合成替代物
+166;單顆牙去除釘柱;0CPYXJZ;Removal of Synthetic Substitute from Mouth and Throat, External Approach;經由外部移除口腔及喉嚨合成替代物
+167;上顎單顆牙齒再植術;0CMW0Z0;Reattachment of Upper Tooth, Single, Open Approach;開放性上部牙齒單一式重接術
+167;下顎單顆牙齒再植術;0CMX0Z0;Reattachment of Lower Tooth, Single, Open Approach;開放性下齒單一式重接術
+168;上顎單顆牙根尖逆充填術;0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+168;下顎單顆牙根尖逆充填術;0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+170;上顎單顆牙根尖成形術或根尖生成術(前牙);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+170;下顎單顆牙根尖成形術或根尖生成術(前牙);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+171;上顎單顆牙根尖成形術或根尖生成術(後牙);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+171;下顎單顆牙根尖成形術或根尖生成術(後牙);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+172;上顎單顆牙根管開擴及清創;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
+172;下顎單顆牙根管開擴及清創;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
+173;上顎單顆乳牙根管治療;0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
+173;下顎單顆乳牙根管治療;0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
+174;非特定局部治療;0CJYXZZ;Inspection of Mouth and Throat, External Approach;經由外部口腔及喉嚨視查術
+175;齒間暫時固定術，每齒;0CMWXZ0;Reattachment of Upper Tooth, Single, External Approach;經由外部上部牙齒單一式重接術
+175;齒間暫時固定術，每齒;0CMXXZ0;Reattachment of Lower Tooth, Single, External Approach;經由外部下齒單一式重接術
+176;口內切開排膿;0C900ZZ;Drainage of Upper Lip, Open Approach;開放性上唇引流術
+176;口內切開排膿;0C910ZZ;Drainage of Lower Lip, Open Approach;開放性下唇引流術
+176;口內切開排膿;0C920ZZ;Drainage of Hard Palate, Open Approach;開放性硬腭引流術
+176;口內切開排膿;0C930ZZ;Drainage of Soft Palate, Open Approach;開放性軟腭引流術
+176;口內切開排膿;0C940ZZ;Drainage of Buccal Mucosa, Open Approach;開放性頰黏膜引流術
+176;口內切開排膿;0C950ZZ;Drainage of Upper Gingiva, Open Approach;開放性上牙齦引流術
+176;口內切開排膿;0C960ZZ;Drainage of Lower Gingiva, Open Approach;開放性下牙齦引流術
+176;口內切開排膿;0C970ZZ;Drainage of Tongue, Open Approach;開放性舌頭引流術
+176;口內切開排膿;0C980ZZ;Drainage of Right Parotid Gland, Open Approach;開放性右側腮腺引流術
+176;口內切開排膿;0C990ZZ;Drainage of Left Parotid Gland, Open Approach;開放性左側腮腺引流術
+176;口內切開排膿;0C9B0ZZ;Drainage of Right Parotid Duct, Open Approach;開放性右側腮腺管引流術
+176;口內切開排膿;0C9C0ZZ;Drainage of Left Parotid Duct, Open Approach;開放性左側腮腺管引流術
+176;口內切開排膿;0C9D0ZZ;Drainage of Right Sublingual Gland, Open Approach;開放性右舌下腺引流術
+176;口內切開排膿;0C9F0ZZ;Drainage of Left Sublingual Gland, Open Approach;開放性左舌下腺引流術
+176;口內切開排膿;0C9G0ZZ;Drainage of Right Submaxillary Gland, Open Approach;開放性右頜下腺引流術
+176;口內切開排膿;0C9H0ZZ;Drainage of Left Submaxillary Gland, Open Approach;開放性左頜下腺引流術
+176;口內切開排膿;0C9J0ZZ;Drainage of Minor Salivary Gland, Open Approach;開放性小唾液腺引流術
+176;口內切開排膿;0C9M0ZZ;Drainage of Pharynx, Open Approach;開放性咽引流術
+176;口內切開排膿;0C9N0ZZ;Drainage of Uvula, Open Approach;開放性懸雍垂引流術
+176;口內切開排膿;0C9P0ZZ;Drainage of Tonsils, Open Approach;開放性扁桃腺引流術
+176;口內切開排膿;0C9Q0ZZ;Drainage of Adenoids, Open Approach;開放性增殖腺引流術
+176;口內切開排膿;0C903ZZ;Drainage of Upper Lip, Percutaneous Approach;經皮上唇引流術
+176;口內切開排膿;0C913ZZ;Drainage of Lower Lip, Percutaneous Approach;經皮下唇引流術
+176;口內切開排膿;0C923ZZ;Drainage of Hard Palate, Percutaneous Approach;經皮硬腭引流術
+176;口內切開排膿;0C933ZZ;Drainage of Soft Palate, Percutaneous Approach;經皮軟腭引流術
+176;口內切開排膿;0C943ZZ;Drainage of Buccal Mucosa, Percutaneous Approach;經皮頰黏膜引流術
+176;口內切開排膿;0C953ZZ;Drainage of Upper Gingiva, Percutaneous Approach;經皮上牙齦引流術
+176;口內切開排膿;0C963ZZ;Drainage of Lower Gingiva, Percutaneous Approach;經皮下牙齦引流術
+176;口內切開排膿;0C973ZZ;Drainage of Tongue, Percutaneous Approach;經皮舌頭引流術
+176;口內切開排膿;0C983ZZ;Drainage of Right Parotid Gland, Percutaneous Approach;經皮右側腮腺引流術
+176;口內切開排膿;0C993ZZ;Drainage of Left Parotid Gland, Percutaneous Approach;經皮左側腮腺引流術
+176;口內切開排膿;0C9B3ZZ;Drainage of Right Parotid Duct, Percutaneous Approach;經皮右側腮腺管引流術
+176;口內切開排膿;0C9C3ZZ;Drainage of Left Parotid Duct, Percutaneous Approach;經皮左側腮腺管引流術
+176;口內切開排膿;0C9D3ZZ;Drainage of Right Sublingual Gland, Percutaneous Approach;經皮右舌下腺引流術
+176;口內切開排膿;0C9F3ZZ;Drainage of Left Sublingual Gland, Percutaneous Approach;經皮左舌下腺引流術
+176;口內切開排膿;0C9G3ZZ;Drainage of Right Submaxillary Gland, Percutaneous Approach;經皮右頜下腺引流術
+176;口內切開排膿;0C9H3ZZ;Drainage of Left Submaxillary Gland, Percutaneous Approach;經皮左頜下腺引流術
+176;口內切開排膿;0C9J3ZZ;Drainage of Minor Salivary Gland, Percutaneous Approach;經皮小唾液腺引流術
+176;口內切開排膿;0C9M3ZZ;Drainage of Pharynx, Percutaneous Approach;經皮咽引流術
+176;口內切開排膿;0C9N3ZZ;Drainage of Uvula, Percutaneous Approach;經皮懸雍垂引流術
+176;口內切開排膿;0C9P3ZZ;Drainage of Tonsils, Percutaneous Approach;經皮扁桃腺引流術
+176;口內切開排膿;0C9Q3ZZ;Drainage of Adenoids, Percutaneous Approach;經皮增殖腺引流術
+176;口內切開排膿;0C90XZZ;Drainage of Upper Lip, External Approach;經由外部上唇引流術
+176;口內切開排膿;0C91XZZ;Drainage of Lower Lip, External Approach;經由外部下唇引流術
+176;口內切開排膿;0C92XZZ;Drainage of Hard Palate, External Approach;經由外部硬腭引流術
+176;口內切開排膿;0C93XZZ;Drainage of Soft Palate, External Approach;經由外部軟腭引流術
+176;口內切開排膿;0C94XZZ;Drainage of Buccal Mucosa, External Approach;經由外部頰黏膜引流術
+176;口內切開排膿;0C95XZZ;Drainage of Upper Gingiva, External Approach;經由外部上牙齦引流術
+176;口內切開排膿;0C96XZZ;Drainage of Lower Gingiva, External Approach;經由外部下牙齦引流術
+176;口內切開排膿;0C97XZZ;Drainage of Tongue, External Approach;經由外部舌頭引流術
+176;口內切開排膿;0C9NXZZ;Drainage of Uvula, External Approach;經由外部懸雍垂引流術
+176;口內切開排膿;0C9PXZZ;Drainage of Tonsils, External Approach;經由外部扁桃腺引流術
+176;口內切開排膿;0C9QXZZ;Drainage of Adenoids, External Approach;經由外部增殖腺引流術
+177;口外切開排膿;0J910ZZ;Drainage of Face Subcutaneous Tissue and Fascia, Open Approach;開放性臉部皮下組織及筋膜引流術
+177;口外切開排膿;0J940ZZ;Drainage of Anterior Neck Subcutaneous Tissue and Fascia, Open Approach;開放性前頸部皮下組織及筋膜引流術
+177;口外切開排膿;0J950ZZ;Drainage of Posterior Neck Subcutaneous Tissue and Fascia, Open Approach;開放性後頸部皮下組織及筋膜引流術
+177;口外切開排膿;0J913ZZ;Drainage of Face Subcutaneous Tissue and Fascia, Percutaneous Approach;經皮臉部皮下組織及筋膜引流術
+177;口外切開排膿;0J943ZZ;Drainage of Anterior Neck Subcutaneous Tissue and Fascia, Percutaneous Approach;經皮前頸部皮下組織及筋膜引流術
+177;口外切開排膿;0J953ZZ;Drainage of Posterior Neck Subcutaneous Tissue and Fascia, Percutaneous Approach;經皮後頸部皮下組織及筋膜引流術
+177;口外切開排膿;0H91XZZ;Drainage of Face Skin, External Approach;經由外部臉部皮膚引流術
+177;口外切開排膿;0H94XZZ;Drainage of Neck Skin, External Approach;經由外部頸部皮膚引流術
+178;拆線;0CPYXJZ;Removal of Synthetic Substitute from Mouth and Throat, External Approach;經由外部移除口腔及喉嚨合成替代物
+179;固定鋼線移除;0CPYXJZ;Removal of Synthetic Substitute from Mouth and Throat, External Approach;經由外部移除口腔及喉嚨合成替代物
+180;去除齒列夾板;0CPYXJZ;Removal of Synthetic Substitute from Mouth and Throat, External Approach;經由外部移除口腔及喉嚨合成替代物
