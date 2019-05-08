@@ -1,187 +1,187 @@
-nhi_procedure_type_id;code;name;point;english_name;nhi_icd9cm_id;default_icd_10_cm_id
-1;00121C;牙科門診診察費1.每位醫師每日門診量在二十人次以下部分(≦20) 1)處方交付特約藥局調劑;230;NULL;NULL;NULL
-1;00122C;牙科門診診察費1.每位醫師每日門診量在二十人次以下部分(≦20) 2)未開處方或處方由本院所自行調劑;230;NULL;NULL;NULL
-1;00123C;牙科門診診察費2.每位醫師每日門診量超過二○人次部分(>20) 1)處方交付特約藥局調劑;120;NULL;NULL;NULL
-1;00124C;牙科門診診察費2.每位醫師每日門診量超過二○人次部分(>20) 2)未開處方或處方由本院所自行調劑;120;NULL;NULL;NULL
-1;00125C;牙科門診診察費3.山地離島地區 1)處方交付特約藥局調劑;260;NULL;NULL;NULL
-1;00126C;牙科門診診察費3.山地離島地區 2)未開處方或處方由本院所自行調劑;260;NULL;NULL;NULL
-1;00128C;重度以上特定身心障礙(非精神疾病)者診察費;520;NULL;NULL;NULL
-1;00129C;符合加強感染管制之牙科門診診察費1.每位醫師每日門診量在二十人次以下部份（≦20）－ 處方交付特約藥局調劑;320;NULL;NULL;NULL
-1;00130C;符合加強感染管制之牙科門診診察費1.每位醫師每日門診量在二十人次以下部份（≦20）－ 未開處方或處方由本院所自行調劑;320;NULL;NULL;NULL
-1;00133C;符合加強感染管制之牙科門診診察費2.山地離島地區 － 處方交付特約藥局調劑;350;NULL;NULL;NULL
-1;00134C;符合加強感染管制之牙科門診診察費2.山地離島地區 － 未開處方或處方由本院所自行調劑;350;NULL;NULL;NULL
-1;00301C;中度特定身心障礙(非精神疾病)者診察費;420;NULL;NULL;NULL
-1;00302C;中度以上精神疾病患者診察費;320;NULL;NULL;NULL
-1;00303C;輕度特定身心障礙者(非精神疾病)及失能老人診察費;320;NULL;NULL;NULL
-1;00304C;身心障礙者轉出醫療院所至特殊醫療服務計畫院所之轉診費用;200;NULL;NULL;NULL
-1;01271C;環口全景X光初診診察;600;NULL;NULL;NULL
-1;01272C;年度初診X光檢查;600;NULL;NULL;NULL
-1;01273C;高齲齒罹患率族群年度初診X光片檢查;600;NULL;NULL;NULL
-2;34001C;根尖周 X光攝影;80;Periapical radiography;1;1
-2;34002C;咬翼式 X光攝影;100;Bite-Wing radiography;1;1
-2;34003C;咬合片 X光攝影;120;Occlusal radiography;1;1
-2;34004C;齒顎全景 X光片攝影;600;Panoramic radiography;1;1
-3;89001C;銀粉充填 － 單面;450;Amalgam restoration-single surface;1;1
-3;89002C;銀粉充填 － 雙面;600;Amalgam restoration - two surfaces;1;1
-3;89003C;銀粉充填 － 三面;750;Amalgam restoration - three surfaces;1;1
-3;89004C;前牙複合樹脂充填-單面;500;Composite resin restoration in anterior teeth-single surface;1;9
-3;89005C;前牙複合樹脂充填-雙面;650;Composite resin restoration in anterior teeth-two surfaces;1;9
-3;89006C;覆髓;140;Pulp capping;1;1
-3;89007C;釘強化術（每支）;500;Use of pin, each;1;1
-3;89008C;後牙複合樹脂充填-單面;600;Composite resin restoration in posterior teeth-single surface;1;1
-3;89009C;後牙複合樹脂充填-雙面;800;Composite resin restoration in posterior teeth-two surfaces;1;1
-3;89010C;後牙複合樹脂充填-三面;1000;Composite resin restoration in posterior teeth-three surfaces;1;1
-3;89011C;玻璃離子體充填;400;Glass ionomer cement restoration;1;1
-3;89012C;前牙三面複合樹脂充填;1050;Three-surface composite resin restoration in anterior teeth;1;1
-3;89013C;複合體充填;1000;Compomer restoration;1;1
-3;89014C;前牙雙鄰接面複合樹脂充填;1200;Composite resin restoration for two proximal (mesial and distal) surfaces in anterior teeth;1;1
-3;89015C;後牙雙鄰接面複合樹脂充填;1450;Composite resin restoration for two proximal (mesial and distal) surfaces in posterior teeth;1;1
-3;89088C;牙體復形轉出醫療院所之轉診費用;200;Referral fee for dental restoration;NULL;NULL
-3;89101C;特殊狀況之銀粉充填 -單面;450;Amalgam restoration for patients with special needs-single surface;1;1
-3;89102C;特殊狀況之銀粉充填 -雙面;600;Amalgam restoration for patients with special needs-two surfaces;1;1
-3;89103C;特殊狀況之銀粉充填 -三面;750;Amalgam restoration for patients with special needs-three surfaces;1;1
-3;89104C;特殊狀況之前牙複合樹脂充填-單面;500;Composite resin restoration in anterior teeth for patients with special needs-single surface;1;9
-3;89105C;特殊狀況之前牙複合樹脂充填-雙面;650;Composite resin restoration in anterior teeth for patients with special needs-two surfaces;1;9
-3;89108C;特殊狀況之後牙複合樹脂充填-單面;600;Composite resin restoration in posterior teeth for patients with special needs-single surface;1;1
-3;89109C;特殊狀況之後牙複合樹脂充填-雙面;800;Composite resin restoration in posterior teeth for patients with special needs-two surfaces;1;1
-3;89110C;特殊狀況之後牙複合樹脂充填-三面;1000;Composite resin restoration in posterior teeth for patients with special needs-three surfaces;1;1
-3;89111C;特殊狀況之玻璃離子體充填;400;Glass ionomer cement restoration for patients with special needs;1;1
-3;89112C;特殊狀況之前牙三面複合樹脂充填;1050;Three-surface composite resin restoration in anterior teeth for patients with special needs;1;1
-3;89113C;特殊狀況之複合體充填;1000;Compomer restoration for patients with special needs;1;1
-3;89114C;特殊狀況之前牙雙鄰接面複合樹脂充填;1200;Composite resin restoration for two proximal (mesial and distal) surfaces in anterior teeth for patients with special needs;1;9
-3;89115C;特殊狀況之後牙雙鄰接面複合樹脂充填;1450;Composite resin restoration for two proximal (mesial and distal) surfaces in posterior teeth for patients with special needs;1;9
-4;90017C;恆牙斷髓處理;600;Pulpotomy of permanent tooth;2;10
-4;90018C;乳牙多根管治療;1410;Endodontic treatment of a primary tooth with multiple canals;2;10
-4;90019C;恆牙根管治療（四根）;4010;Endodontic treatment of a permanent tooth with four root canals;2;10
-4;90020C;恆牙根管治療（五根以上）;5010;Endodontic treatment of a permanent tooth with five(and above) root canals;2;10
-4;90021C;特殊狀況—保護性肢體制約;300;Protective physical restraint for patients with special needs;NULL;NULL
-4;90088C;根管治療轉出醫療院所之轉診費用;200;Referral fee for Endodontic treatment;NULL;NULL
-4;90091C;難症特別處理-大臼齒(C－Shaped)根管;1000;Management of endodontic difficult case;1;1
-4;90092C;難症特別處理－有額外根管者(1)前牙及下顎小臼齒有超過一根管者。(2)上顎小臼齒有超過二根管者。(3)大臼齒有超過三根管者。(4)以實際超過根管數計算。;1000;Management of endodontic difficult case;1;1
-4;90093C;難症特別處理-根管特別彎曲、根管鈣化，器械斷折（非同一醫療院所)，以根管數計算;1000;Management of endodontic difficult case;2;10
-4;90094C;難症特別處理-根管重新治療在Ｘ光片上root canal內顯現出radioopaque等有obstruction之根管等個案，以根管數計算;1500;Management of endodontic difficult case;1;1
-4;90095C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(雙根管);1600;Management of endodontic difficult case;2;10
-4;90096C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(三根管);2400;Management of endodontic difficult case;2;10
-4;90097C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(四根管);3200;Management of endodontic difficult case;2;10
-4;90098C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(五根及五根以上根管);4000;Management of endodontic difficult case;2;10
-4;90112C;特殊狀況橡皮障防濕裝置;250;Rubber dam isolation for patients with special needs;1;1
-5;91001C;牙周病緊急處置;150;Management of periodontal disease emergences;3;11
-5;91002C;牙周敷料 每次;120;Periodontal packing;4;14
-5;91003C;牙結石清除－局部;150;Scaling-Localized;4;14
-5;91004C;牙結石清除－全口;600;Scaling-Full mouth;5;15
-5;91005C;口乾症牙結石清除-全口;600;Full mouth scaling for xerostomia patients;5;15
-5;91006C;齒齦下括除術(含牙根整平術)-全口;3200;Subgingival curettage (including Root planing)－Full mouth;4;14
-5;91007C;齒齦下括除術(含牙根整平術)-1/2 顎;800;Subgingival curettage (Root planing)-1/2 arch;4;14
-5;91008C;齒齦下括除術(含牙根整平術)-局部(3齒以內);400;Subgingival curettage (including Root planing)-Localized;4;14
-5;91011C;牙齦切除術-局部（3齒以內）;910;Gingivectomy-Localized;5;15
-5;91012C;牙齦切除術 － 1/3 顎;1510;Gingivectomy-1/3 arch;5;15
-5;91013C;牙齦切除術-施行根管治療或牙體復形時，所需之牙齦切除術;330;Gingivectomy for endodontic or restorative purposes;5;15
-5;91014C;牙周暨齲齒控制基本處置;100;Plaque control;4;14
-5;91015C;特定牙周保存治療-全口總齒數9-15顆;2000;Comprehensive periodontal treatment for patients with special needs─9<= no. of teeth<=15;4;14
-5;91016C;特定牙周保存治療-全口總齒數4-8顆;1000;Comprehensive periodontal treatment for patients with special needs─4<= no. of teeth<=8;4;14
-5;91017C;懷孕婦女牙結石清除-全口;800;Full mouth scaling for pregnant women;4;14
-5;91018C;牙周病支持性治療;1000;Supportive periodontal treatment;4;14
-5;91019C;懷孕婦女牙周緊急處置;500;Management of periodontal disease emergences for pregnant women;3;11
-5;91020C;牙菌斑去除照護;200;Dental plaque removal;5;15
-5;91088C;牙周病轉出醫療院所之轉診費用;200;Referral fee for Periodontal treatments;NULL;NULL
-5;91103C;特殊狀況牙結石清除-局部;150;Scaling for patients with special needs-Localized;1;1
-5;91104C;特殊狀況牙結石清除-全口;600;Scaling for patients with special needs-Full mouth;1;1
-5;91114C;特殊牙周暨齲齒控制基本處置;250;Plaque control for patients with special needs;5;15
-6;92012C;拔牙後特別處理;160;Post-operative care of extraction wound;1;1
-6;92013C;簡單性拔牙;510;Simple extraction;1;1
-6;92014C;複雜性拔牙;900;Complex extraction;1;1
-6;92015C;單純齒切除術;2730;Simple odontectomy;1;1
-6;92016C;複雜齒切除術;4300;Complex odontectomy;1;1
-6;92017C;囊腫摘除術-小< 2cm;3000;Cystic enucleation-Small < 2cm;6;17
-6;92027C;齦蓋切除術;510;Operculectomy;7;18
-6;92028C;繫帶切除術－ 簡單法;410;Frenectomy-Simple;8;20
-6;92029C;繫帶切除術－ Ｚ字法;570;Frenectomy-Z-plasty;8;20
-6;92030C;前齒根尖切除術;1800;Apicoectomy：incisors and canines;9;25
-6;92031C;小臼齒根尖切除術;2800;Apicoectomy：premolars;9;25
-6;92032C;大臼齒根尖切除術;4000;Apicoectomy：molars;9;25
-6;92033C;牙齒切半術或牙根切斷術;1500;Hemisection or root amputation;9;25
-6;92041C;齒槽骨成形術(1/2顎以內);570;Alveoloplasty, involving less than 1/2 arch;10;26
-6;92042C;齒槽骨成形術(1/2顎以上);1070;Alveoloplasty, involving more than 1/2 arch;10;26
-6;92043C;顳顎關節脫臼整復－ 無固定;310;Closed reduction of TMJ dislocation-Without fixation;1;1
-6;92050C;埋伏齒露出手術;970;Surgical exposure of impacted tooth;11;33
-6;92055C;乳牙拔除;260;Primary tooth extration;12;34
-6;92056C;骨瘤切除術＜ 1 cm;5010;Excision of Bone tumor, ＜1 cm;NULL;NULL
-6;92057C;骨瘤切除術;10010;Excision of Bone tumor, 1 cm≦Bone tumor≦2 cm;NULL;NULL
-6;92058C;骨瘤切除術＞ 2 cm;15010;Excision of Bone tumor, ＞2 cm;NULL;NULL
-6;92059C;手術去除陷入上顎竇內牙齒或異物;6010;Surgical removal of tooth or foreign body within the maxillary sinus;13;35
-6;92062C;唾液腺管沖洗;150;Salivary duct irrigation;NULL;NULL
-6;92063C;手術拔除深部阻生齒;8010;Surgical removal of a deeply impacted tooth in jaw bone;14;37
-6;92064C;手術去除解剖間隙內異物或牙齒;10510;Surgical removal of a tooth or foreign body within fascial spaces;15;40
-6;92066C;特定局部治療;50;Specified local treatment;16;41
-6;92071C;簡單性口內切開排膿;210;Simple intraoral incision & drainage;17;42
-6;92072C;口乾症塗氟;500;Topical fluoride application in xerostomia patients;2;10
-6;92073C;口腔黏膜難症特別處置;600;Management of difficult oral mucosal disease;NULL;NULL
-6;92088C;口腔顎面外科轉出醫療院所之轉診費用;200;Referral fee for oral maxillofacial surgery;NULL;NULL
-6;92090C;定期性口腔癌與癌前病變追蹤治療;600;Periodic care for oral potentially malignant disorder (PMD);NULL;NULL
-6;92091C;非定期性口腔癌與癌前病變追蹤治療;400;Occasional care for oral potentially malignant disorder (PMD);NULL;NULL
-6;92092C;乳牙複雜性拔牙;560;Complex extraction of primary tooth;1;9
-6;92094C;週六、日及國定假日牙醫門診急症處置;800;Management of dental emergencies on Saturdays, Sundays or in the national holidays;NULL;NULL
-6;92095C;顎顏面骨壞死術後傷口照護;600;Wound care for osteonecrosis of jaws;NULL;NULL
-7;96001C;牙科局部麻醉;90;Dental localized anesthesia;1;1
-8;81;氟化防齲處理(包括牙醫師專業塗氟處理、一般性口腔檢查、衛生教育);500;NULL;NULL;NULL
-8;87;氟化防齲處理(包括牙醫師專業塗氟處理、一般性口腔檢查、衛生教育);500;NULL;NULL;NULL
-8;88;社區巡迴服務氟化防齲處理(服務項目詳附註);500;NULL;NULL;NULL
-8;89;社區巡迴服務氟化防齲處理(服務項目詳附註);500;NULL;NULL;NULL
-8;8A;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL
-8;8B;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL
-8;8C;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL
-8;8D;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL
-8;8E;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL
-8;8F;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL
-8;8G;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL
-8;8H;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL
-8;8I;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL
-8;8J;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL
-8;8K;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL
-8;8L;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL
-8;8M;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL
-8;8N;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL
-8;8O;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL
-8;95;口腔黏膜檢查;130;NULL;NULL;NULL
-8;97;口腔黏膜檢查;130;NULL;NULL;NULL
-8;E1006C;戒菸治療服務費(藥物治療+簡短諮詢+個案追蹤管理)-藥品自行調劑;250;NULL;18;44
-8;E1007C;戒菸治療服務費(藥物治療+簡短諮詢+個案追蹤管理)-藥品交付調劑;270;NULL;18;44
-8;E1008C;吸菸孕婦轉介費(轉介至戒菸專線)-該次懷孕;100;NULL;18;44
-8;E1022C;戒菸衛教暨個案管理費;100;NULL;18;44
-8;E1023C;用藥治療3個月追蹤費;50;NULL;18;44
-8;E1024C;用藥治療6個月追蹤費;50;NULL;18;44
-8;E1025C;衛教服務3個月追蹤費;50;NULL;18;44
-8;E1026C;衛教服務6個月追蹤費;50;NULL;18;44
-9;90005C;乳牙斷髓處理;800;Pulpotomy of primary tooth;1;1
-9;90016C;乳牙根管治療;1010;Endodontic treatment of primary tooth;2;10
-9;90018C;乳牙多根管治療;1410;Endodontic treatment of a primary tooth with multiple canals;2;10
-9;92055C;乳牙拔除;260;Primary tooth extration;12;34
-9;92092C;乳牙複雜性拔牙;560;Complex extraction of primary tooth;1;9
-4;90001C;恆牙根管治療（單根）;1010;Endodontic treatment of a permanent tooth with single root canal;1;1
-4;90002C;恆牙根管治療（雙根）;2010;Endodontic treatment of a permanent tooth with two root canals;1;1
-4;90003C;恆牙根管治療（三根以上）;3010;Endodontics treatment of a permanent tooth with three root canals;1;1
-4;90004C;齒內治療緊急處理;150;Management of endodontic emergencies;1;1
-4;90005C;乳牙斷髓處理;800;Pulpotomy of primary tooth;1;1
-4;90006C;去除縫成牙冠;240;Removal of s-p crown;2;10
-4;90007C;去除鑄造牙冠;500;Removal of casting crown;4;14
-4;90008C;去除釘柱;1235;Removal of post;4;14
-4;90011C;牙齒再植術;1000;Intentional tooth replantation;1;1
-4;90010C;根尖逆充填術;900;Root-end filling;1;1
-4;90012C;橡皮障防濕裝置;150;Rubber dam isolation;2;10
-4;90013C;根尖成形術或根尖生成術-前牙;500;Apexification or Apexogenesis-Anterior tooth;19;45
-4;90014C;根尖成形術或根尖生成術-後牙;1000;Apexification or Apexogenesis-Posterior tooth;19;45
-4;90015C;根管開擴及清創;600;Access cavity preparation, cleaning and shaping of the root canal system;2;10
-4;90016C;乳牙根管治療;1010;Endodontic treatment of primary tooth;2;10
-6;92001C;非特定局部治療;50;Unspecified local treatment;16;41
-6;92002C;齒間暫時固定術，每齒;100;Temporary splinting for one tooth;20;46
-6;92003C;口內切開排膿;510;Intraoral incision & drainage with drains;17;42
-6;92004C;口外切開排膿;2000;Extraoral incision & drainage;17;42
-6;92005C;拆線 每次;50;Removal of stitches;1;1
-6;92006C;固定鋼線移除;160;Removal of splinting wire;20;46
-6;92009C;去除齒列夾板;360;Removal of splint;20;46
-6;92096C;牙齒外傷急症處理;4976;NULL;NULL;NULL
-6;92097C;顱顎關節障礙特殊檢查費-初診;1000;Special evaluation for craniomandibular disorders-first visit;NULL;NULL
-6;92098C;顱顎關節障礙特殊檢查費-複診;500;Special evaluation for craniomandibular disorders-return visit;NULL;NULL
-10;P30002;牙醫特殊服務試辦計畫身心障礙牙醫服務-氟化物防齲處理;500;NULL;1;1
-10;P30005;到宅牙醫服務(每乙案)論次費用;5700;NULL;21;57
-10;P30006;牙醫特殊醫療服務計畫到宅訪視費;1553;NULL;21;57
+id;nhi_procedure_type_id;code;name;point;english_name;nhi_icd9cm_id;default_icd_10_cm_id
+1;1;00121C;牙科門診診察費1.每位醫師每日門診量在二十人次以下部分(≦20) 1)處方交付特約藥局調劑;230;NULL;NULL;NULL
+2;1;00122C;牙科門診診察費1.每位醫師每日門診量在二十人次以下部分(≦20) 2)未開處方或處方由本院所自行調劑;230;NULL;NULL;NULL
+3;1;00123C;牙科門診診察費2.每位醫師每日門診量超過二○人次部分(>20) 1)處方交付特約藥局調劑;120;NULL;NULL;NULL
+4;1;00124C;牙科門診診察費2.每位醫師每日門診量超過二○人次部分(>20) 2)未開處方或處方由本院所自行調劑;120;NULL;NULL;NULL
+5;1;00125C;牙科門診診察費3.山地離島地區 1)處方交付特約藥局調劑;260;NULL;NULL;NULL
+6;1;00126C;牙科門診診察費3.山地離島地區 2)未開處方或處方由本院所自行調劑;260;NULL;NULL;NULL
+7;1;00128C;重度以上特定身心障礙(非精神疾病)者診察費;520;NULL;NULL;NULL
+8;1;00129C;符合加強感染管制之牙科門診診察費1.每位醫師每日門診量在二十人次以下部份（≦20）－ 處方交付特約藥局調劑;320;NULL;NULL;NULL
+9;1;00130C;符合加強感染管制之牙科門診診察費1.每位醫師每日門診量在二十人次以下部份（≦20）－ 未開處方或處方由本院所自行調劑;320;NULL;NULL;NULL
+10;1;00133C;符合加強感染管制之牙科門診診察費2.山地離島地區 － 處方交付特約藥局調劑;350;NULL;NULL;NULL
+11;1;00134C;符合加強感染管制之牙科門診診察費2.山地離島地區 － 未開處方或處方由本院所自行調劑;350;NULL;NULL;NULL
+12;1;00301C;中度特定身心障礙(非精神疾病)者診察費;420;NULL;NULL;NULL
+13;1;00302C;中度以上精神疾病患者診察費;320;NULL;NULL;NULL
+14;1;00303C;輕度特定身心障礙者(非精神疾病)及失能老人診察費;320;NULL;NULL;NULL
+15;1;00304C;身心障礙者轉出醫療院所至特殊醫療服務計畫院所之轉診費用;200;NULL;NULL;NULL
+16;1;01271C;環口全景X光初診診察;600;NULL;NULL;NULL
+17;1;01272C;年度初診X光檢查;600;NULL;NULL;NULL
+18;1;01273C;高齲齒罹患率族群年度初診X光片檢查;600;NULL;NULL;NULL
+19;2;34001C;根尖周 X光攝影;80;Periapical radiography;1;1
+20;2;34002C;咬翼式 X光攝影;100;Bite-Wing radiography;1;1
+21;2;34003C;咬合片 X光攝影;120;Occlusal radiography;1;1
+22;2;34004C;齒顎全景 X光片攝影;600;Panoramic radiography;1;1
+23;3;89001C;銀粉充填 － 單面;450;Amalgam restoration-single surface;1;1
+24;3;89002C;銀粉充填 － 雙面;600;Amalgam restoration - two surfaces;1;1
+25;3;89003C;銀粉充填 － 三面;750;Amalgam restoration - three surfaces;1;1
+26;3;89004C;前牙複合樹脂充填-單面;500;Composite resin restoration in anterior teeth-single surface;1;9
+27;3;89005C;前牙複合樹脂充填-雙面;650;Composite resin restoration in anterior teeth-two surfaces;1;9
+28;3;89006C;覆髓;140;Pulp capping;1;1
+29;3;89007C;釘強化術（每支）;500;Use of pin, each;1;1
+30;3;89008C;後牙複合樹脂充填-單面;600;Composite resin restoration in posterior teeth-single surface;1;1
+31;3;89009C;後牙複合樹脂充填-雙面;800;Composite resin restoration in posterior teeth-two surfaces;1;1
+32;3;89010C;後牙複合樹脂充填-三面;1000;Composite resin restoration in posterior teeth-three surfaces;1;1
+33;3;89011C;玻璃離子體充填;400;Glass ionomer cement restoration;1;1
+34;3;89012C;前牙三面複合樹脂充填;1050;Three-surface composite resin restoration in anterior teeth;1;1
+35;3;89013C;複合體充填;1000;Compomer restoration;1;1
+36;3;89014C;前牙雙鄰接面複合樹脂充填;1200;Composite resin restoration for two proximal (mesial and distal) surfaces in anterior teeth;1;1
+37;3;89015C;後牙雙鄰接面複合樹脂充填;1450;Composite resin restoration for two proximal (mesial and distal) surfaces in posterior teeth;1;1
+38;3;89088C;牙體復形轉出醫療院所之轉診費用;200;Referral fee for dental restoration;NULL;NULL
+39;3;89101C;特殊狀況之銀粉充填 -單面;450;Amalgam restoration for patients with special needs-single surface;1;1
+40;3;89102C;特殊狀況之銀粉充填 -雙面;600;Amalgam restoration for patients with special needs-two surfaces;1;1
+41;3;89103C;特殊狀況之銀粉充填 -三面;750;Amalgam restoration for patients with special needs-three surfaces;1;1
+42;3;89104C;特殊狀況之前牙複合樹脂充填-單面;500;Composite resin restoration in anterior teeth for patients with special needs-single surface;1;9
+43;3;89105C;特殊狀況之前牙複合樹脂充填-雙面;650;Composite resin restoration in anterior teeth for patients with special needs-two surfaces;1;9
+44;3;89108C;特殊狀況之後牙複合樹脂充填-單面;600;Composite resin restoration in posterior teeth for patients with special needs-single surface;1;1
+45;3;89109C;特殊狀況之後牙複合樹脂充填-雙面;800;Composite resin restoration in posterior teeth for patients with special needs-two surfaces;1;1
+46;3;89110C;特殊狀況之後牙複合樹脂充填-三面;1000;Composite resin restoration in posterior teeth for patients with special needs-three surfaces;1;1
+47;3;89111C;特殊狀況之玻璃離子體充填;400;Glass ionomer cement restoration for patients with special needs;1;1
+48;3;89112C;特殊狀況之前牙三面複合樹脂充填;1050;Three-surface composite resin restoration in anterior teeth for patients with special needs;1;1
+49;3;89113C;特殊狀況之複合體充填;1000;Compomer restoration for patients with special needs;1;1
+50;3;89114C;特殊狀況之前牙雙鄰接面複合樹脂充填;1200;Composite resin restoration for two proximal (mesial and distal) surfaces in anterior teeth for patients with special needs;1;9
+51;3;89115C;特殊狀況之後牙雙鄰接面複合樹脂充填;1450;Composite resin restoration for two proximal (mesial and distal) surfaces in posterior teeth for patients with special needs;1;9
+52;4;90017C;恆牙斷髓處理;600;Pulpotomy of permanent tooth;2;10
+53;4;90018C;乳牙多根管治療;1410;Endodontic treatment of a primary tooth with multiple canals;2;10
+54;4;90019C;恆牙根管治療（四根）;4010;Endodontic treatment of a permanent tooth with four root canals;2;10
+55;4;90020C;恆牙根管治療（五根以上）;5010;Endodontic treatment of a permanent tooth with five(and above) root canals;2;10
+56;4;90021C;特殊狀況—保護性肢體制約;300;Protective physical restraint for patients with special needs;NULL;NULL
+57;4;90088C;根管治療轉出醫療院所之轉診費用;200;Referral fee for Endodontic treatment;NULL;NULL
+58;4;90091C;難症特別處理-大臼齒(C－Shaped)根管;1000;Management of endodontic difficult case;1;1
+59;4;90092C;難症特別處理－有額外根管者(1)前牙及下顎小臼齒有超過一根管者。(2)上顎小臼齒有超過二根管者。(3)大臼齒有超過三根管者。(4)以實際超過根管數計算。;1000;Management of endodontic difficult case;1;1
+60;4;90093C;難症特別處理-根管特別彎曲、根管鈣化，器械斷折（非同一醫療院所)，以根管數計算;1000;Management of endodontic difficult case;2;10
+61;4;90094C;難症特別處理-根管重新治療在Ｘ光片上root canal內顯現出radioopaque等有obstruction之根管等個案，以根管數計算;1500;Management of endodontic difficult case;1;1
+62;4;90095C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(雙根管);1600;Management of endodontic difficult case;2;10
+63;4;90096C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(三根管);2400;Management of endodontic difficult case;2;10
+64;4;90097C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(四根管);3200;Management of endodontic difficult case;2;10
+65;4;90098C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(五根及五根以上根管);4000;Management of endodontic difficult case;2;10
+66;4;90112C;特殊狀況橡皮障防濕裝置;250;Rubber dam isolation for patients with special needs;1;1
+67;5;91001C;牙周病緊急處置;150;Management of periodontal disease emergences;3;11
+68;5;91002C;牙周敷料 每次;120;Periodontal packing;4;14
+69;5;91003C;牙結石清除－局部;150;Scaling-Localized;4;14
+70;5;91004C;牙結石清除－全口;600;Scaling-Full mouth;5;15
+71;5;91005C;口乾症牙結石清除-全口;600;Full mouth scaling for xerostomia patients;5;15
+72;5;91006C;齒齦下括除術(含牙根整平術)-全口;3200;Subgingival curettage (including Root planing)－Full mouth;4;14
+73;5;91007C;齒齦下括除術(含牙根整平術)-1/2 顎;800;Subgingival curettage (Root planing)-1/2 arch;4;14
+74;5;91008C;齒齦下括除術(含牙根整平術)-局部(3齒以內);400;Subgingival curettage (including Root planing)-Localized;4;14
+75;5;91011C;牙齦切除術-局部（3齒以內）;910;Gingivectomy-Localized;5;15
+76;5;91012C;牙齦切除術 － 1/3 顎;1510;Gingivectomy-1/3 arch;5;15
+77;5;91013C;牙齦切除術-施行根管治療或牙體復形時，所需之牙齦切除術;330;Gingivectomy for endodontic or restorative purposes;5;15
+78;5;91014C;牙周暨齲齒控制基本處置;100;Plaque control;4;14
+79;5;91015C;特定牙周保存治療-全口總齒數9-15顆;2000;Comprehensive periodontal treatment for patients with special needs─9<= no. of teeth<=15;4;14
+80;5;91016C;特定牙周保存治療-全口總齒數4-8顆;1000;Comprehensive periodontal treatment for patients with special needs─4<= no. of teeth<=8;4;14
+81;5;91017C;懷孕婦女牙結石清除-全口;800;Full mouth scaling for pregnant women;4;14
+82;5;91018C;牙周病支持性治療;1000;Supportive periodontal treatment;4;14
+83;5;91019C;懷孕婦女牙周緊急處置;500;Management of periodontal disease emergences for pregnant women;3;11
+84;5;91020C;牙菌斑去除照護;200;Dental plaque removal;5;15
+85;5;91088C;牙周病轉出醫療院所之轉診費用;200;Referral fee for Periodontal treatments;NULL;NULL
+86;5;91103C;特殊狀況牙結石清除-局部;150;Scaling for patients with special needs-Localized;1;1
+87;5;91104C;特殊狀況牙結石清除-全口;600;Scaling for patients with special needs-Full mouth;1;1
+88;5;91114C;特殊牙周暨齲齒控制基本處置;250;Plaque control for patients with special needs;5;15
+89;6;92012C;拔牙後特別處理;160;Post-operative care of extraction wound;1;1
+90;6;92013C;簡單性拔牙;510;Simple extraction;1;1
+91;6;92014C;複雜性拔牙;900;Complex extraction;1;1
+92;6;92015C;單純齒切除術;2730;Simple odontectomy;1;1
+93;6;92016C;複雜齒切除術;4300;Complex odontectomy;1;1
+94;6;92017C;囊腫摘除術-小< 2cm;3000;Cystic enucleation-Small < 2cm;6;17
+95;6;92027C;齦蓋切除術;510;Operculectomy;7;18
+96;6;92028C;繫帶切除術－ 簡單法;410;Frenectomy-Simple;8;20
+97;6;92029C;繫帶切除術－ Ｚ字法;570;Frenectomy-Z-plasty;8;20
+98;6;92030C;前齒根尖切除術;1800;Apicoectomy：incisors and canines;9;25
+99;6;92031C;小臼齒根尖切除術;2800;Apicoectomy：premolars;9;25
+100;6;92032C;大臼齒根尖切除術;4000;Apicoectomy：molars;9;25
+101;6;92033C;牙齒切半術或牙根切斷術;1500;Hemisection or root amputation;9;25
+102;6;92041C;齒槽骨成形術(1/2顎以內);570;Alveoloplasty, involving less than 1/2 arch;10;26
+103;6;92042C;齒槽骨成形術(1/2顎以上);1070;Alveoloplasty, involving more than 1/2 arch;10;26
+104;6;92043C;顳顎關節脫臼整復－ 無固定;310;Closed reduction of TMJ dislocation-Without fixation;1;1
+105;6;92050C;埋伏齒露出手術;970;Surgical exposure of impacted tooth;11;33
+106;6;92055C;乳牙拔除;260;Primary tooth extration;12;34
+107;6;92056C;骨瘤切除術＜ 1 cm;5010;Excision of Bone tumor, ＜1 cm;NULL;NULL
+108;6;92057C;骨瘤切除術;10010;Excision of Bone tumor, 1 cm≦Bone tumor≦2 cm;NULL;NULL
+109;6;92058C;骨瘤切除術＞ 2 cm;15010;Excision of Bone tumor, ＞2 cm;NULL;NULL
+110;6;92059C;手術去除陷入上顎竇內牙齒或異物;6010;Surgical removal of tooth or foreign body within the maxillary sinus;13;35
+111;6;92062C;唾液腺管沖洗;150;Salivary duct irrigation;NULL;NULL
+112;6;92063C;手術拔除深部阻生齒;8010;Surgical removal of a deeply impacted tooth in jaw bone;14;37
+113;6;92064C;手術去除解剖間隙內異物或牙齒;10510;Surgical removal of a tooth or foreign body within fascial spaces;15;40
+114;6;92066C;特定局部治療;50;Specified local treatment;16;41
+115;6;92071C;簡單性口內切開排膿;210;Simple intraoral incision & drainage;17;42
+116;6;92072C;口乾症塗氟;500;Topical fluoride application in xerostomia patients;2;10
+117;6;92073C;口腔黏膜難症特別處置;600;Management of difficult oral mucosal disease;NULL;NULL
+118;6;92088C;口腔顎面外科轉出醫療院所之轉診費用;200;Referral fee for oral maxillofacial surgery;NULL;NULL
+119;6;92090C;定期性口腔癌與癌前病變追蹤治療;600;Periodic care for oral potentially malignant disorder (PMD);NULL;NULL
+120;6;92091C;非定期性口腔癌與癌前病變追蹤治療;400;Occasional care for oral potentially malignant disorder (PMD);NULL;NULL
+121;6;92092C;乳牙複雜性拔牙;560;Complex extraction of primary tooth;1;9
+122;6;92094C;週六、日及國定假日牙醫門診急症處置;800;Management of dental emergencies on Saturdays, Sundays or in the national holidays;NULL;NULL
+123;6;92095C;顎顏面骨壞死術後傷口照護;600;Wound care for osteonecrosis of jaws;NULL;NULL
+124;7;96001C;牙科局部麻醉;90;Dental localized anesthesia;1;1
+125;8;81;氟化防齲處理(包括牙醫師專業塗氟處理、一般性口腔檢查、衛生教育);500;NULL;NULL;NULL
+126;8;87;氟化防齲處理(包括牙醫師專業塗氟處理、一般性口腔檢查、衛生教育);500;NULL;NULL;NULL
+127;8;88;社區巡迴服務氟化防齲處理(服務項目詳附註);500;NULL;NULL;NULL
+128;8;89;社區巡迴服務氟化防齲處理(服務項目詳附註);500;NULL;NULL;NULL
+129;8;8A;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL
+130;8;8B;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL
+131;8;8C;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL
+132;8;8D;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL
+133;8;8E;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL
+134;8;8F;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL
+135;8;8G;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL
+136;8;8H;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL
+137;8;8I;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL
+138;8;8J;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL
+139;8;8K;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL
+140;8;8L;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL
+141;8;8M;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL
+142;8;8N;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL
+143;8;8O;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL
+144;8;95;口腔黏膜檢查;130;NULL;NULL;NULL
+145;8;97;口腔黏膜檢查;130;NULL;NULL;NULL
+146;8;E1006C;戒菸治療服務費(藥物治療+簡短諮詢+個案追蹤管理)-藥品自行調劑;250;NULL;18;44
+147;8;E1007C;戒菸治療服務費(藥物治療+簡短諮詢+個案追蹤管理)-藥品交付調劑;270;NULL;18;44
+148;8;E1008C;吸菸孕婦轉介費(轉介至戒菸專線)-該次懷孕;100;NULL;18;44
+149;8;E1022C;戒菸衛教暨個案管理費;100;NULL;18;44
+150;8;E1023C;用藥治療3個月追蹤費;50;NULL;18;44
+151;8;E1024C;用藥治療6個月追蹤費;50;NULL;18;44
+152;8;E1025C;衛教服務3個月追蹤費;50;NULL;18;44
+153;8;E1026C;衛教服務6個月追蹤費;50;NULL;18;44
+154;9;90005C;乳牙斷髓處理;800;Pulpotomy of primary tooth;1;1
+155;9;90016C;乳牙根管治療;1010;Endodontic treatment of primary tooth;2;10
+156;9;90018C;乳牙多根管治療;1410;Endodontic treatment of a primary tooth with multiple canals;2;10
+157;9;92055C;乳牙拔除;260;Primary tooth extration;12;34
+158;9;92092C;乳牙複雜性拔牙;560;Complex extraction of primary tooth;1;9
+159;4;90001C;恆牙根管治療（單根）;1010;Endodontic treatment of a permanent tooth with single root canal;1;1
+160;4;90002C;恆牙根管治療（雙根）;2010;Endodontic treatment of a permanent tooth with two root canals;1;1
+161;4;90003C;恆牙根管治療（三根以上）;3010;Endodontics treatment of a permanent tooth with three root canals;1;1
+162;4;90004C;齒內治療緊急處理;150;Management of endodontic emergencies;1;1
+163;4;90005C;乳牙斷髓處理;800;Pulpotomy of primary tooth;1;1
+164;4;90006C;去除縫成牙冠;240;Removal of s-p crown;2;10
+165;4;90007C;去除鑄造牙冠;500;Removal of casting crown;4;14
+166;4;90008C;去除釘柱;1235;Removal of post;4;14
+167;4;90011C;牙齒再植術;1000;Intentional tooth replantation;1;1
+168;4;90010C;根尖逆充填術;900;Root-end filling;1;1
+169;4;90012C;橡皮障防濕裝置;150;Rubber dam isolation;2;10
+170;4;90013C;根尖成形術或根尖生成術-前牙;500;Apexification or Apexogenesis-Anterior tooth;19;45
+171;4;90014C;根尖成形術或根尖生成術-後牙;1000;Apexification or Apexogenesis-Posterior tooth;19;45
+172;4;90015C;根管開擴及清創;600;Access cavity preparation, cleaning and shaping of the root canal system;2;10
+173;4;90016C;乳牙根管治療;1010;Endodontic treatment of primary tooth;2;10
+174;6;92001C;非特定局部治療;50;Unspecified local treatment;16;41
+175;6;92002C;齒間暫時固定術，每齒;100;Temporary splinting for one tooth;20;46
+176;6;92003C;口內切開排膿;510;Intraoral incision & drainage with drains;17;42
+177;6;92004C;口外切開排膿;2000;Extraoral incision & drainage;17;42
+178;6;92005C;拆線 每次;50;Removal of stitches;1;1
+179;6;92006C;固定鋼線移除;160;Removal of splinting wire;20;46
+180;6;92009C;去除齒列夾板;360;Removal of splint;20;46
+181;6;92096C;牙齒外傷急症處理;4976;NULL;NULL;NULL
+182;6;92097C;顱顎關節障礙特殊檢查費-初診;1000;Special evaluation for craniomandibular disorders-first visit;NULL;NULL
+183;6;92098C;顱顎關節障礙特殊檢查費-複診;500;Special evaluation for craniomandibular disorders-return visit;NULL;NULL
+184;10;P30002;牙醫特殊服務試辦計畫身心障礙牙醫服務-氟化物防齲處理;500;NULL;1;1
+185;10;P30005;到宅牙醫服務(每乙案)論次費用;5700;NULL;21;57
+186;10;P30006;牙醫特殊醫療服務計畫到宅訪視費;1553;NULL;21;57

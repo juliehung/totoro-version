@@ -140,6 +140,10 @@ import nhiProcedure, {
 import nhiProcedureType, {
   NhiProcedureTypeState
 } from 'app/entities/nhi-procedure-type/nhi-procedure-type.reducer';
+// prettier-ignore
+import nhiIcd10Pcs, {
+  NhiIcd10PcsState
+} from 'app/entities/nhi-icd-10-pcs/nhi-icd-10-pcs.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -185,6 +189,7 @@ export interface IRootState {
   readonly nhiIcd10Cm: NhiIcd10CmState;
   readonly nhiProcedure: NhiProcedureState;
   readonly nhiProcedureType: NhiProcedureTypeState;
+  readonly nhiIcd10Pcs: NhiIcd10PcsState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -232,6 +237,7 @@ const rootReducer = combineReducers<IRootState>({
   nhiIcd10Cm,
   nhiProcedure,
   nhiProcedureType,
+  nhiIcd10Pcs,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

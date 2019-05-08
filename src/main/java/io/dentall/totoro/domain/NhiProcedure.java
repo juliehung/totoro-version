@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -8,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -51,6 +54,9 @@ public class NhiProcedure implements Serializable {
     @JsonIgnoreProperties("")
     private NhiIcd9Cm nhiIcd9Cm;
 
+    @OneToMany(mappedBy = "nhiProcedure", fetch = FetchType.EAGER)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<NhiIcd10Pcs> nhiIcd10Pcs = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -149,6 +155,31 @@ public class NhiProcedure implements Serializable {
 
     public void setNhiIcd9Cm(NhiIcd9Cm nhiIcd9Cm) {
         this.nhiIcd9Cm = nhiIcd9Cm;
+    }
+
+    public Set<NhiIcd10Pcs> getNhiIcd10Pcs() {
+        return nhiIcd10Pcs;
+    }
+
+    public NhiProcedure nhiIcd10Pcs(Set<NhiIcd10Pcs> nhiIcd10Pcs) {
+        this.nhiIcd10Pcs = nhiIcd10Pcs;
+        return this;
+    }
+
+    public NhiProcedure addNhiIcd10Pcs(NhiIcd10Pcs nhiIcd10Pcs) {
+        this.nhiIcd10Pcs.add(nhiIcd10Pcs);
+        nhiIcd10Pcs.setNhiProcedure(this);
+        return this;
+    }
+
+    public NhiProcedure removeNhiIcd10Pcs(NhiIcd10Pcs nhiIcd10Pcs) {
+        this.nhiIcd10Pcs.remove(nhiIcd10Pcs);
+        nhiIcd10Pcs.setNhiProcedure(null);
+        return this;
+    }
+
+    public void setNhiIcd10Pcs(Set<NhiIcd10Pcs> nhiIcd10Pcs) {
+        this.nhiIcd10Pcs = nhiIcd10Pcs;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

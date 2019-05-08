@@ -1,6 +1,7 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -8,6 +9,8 @@ import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
+
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
  * A TreatmentDrug.
@@ -37,7 +40,7 @@ public class TreatmentDrug implements Serializable {
     private Double quantity;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "treatmentDrugs", allowSetters = true)
+    @JsonProperty(access = WRITE_ONLY)
     private Prescription prescription;
 
     @ManyToOne
