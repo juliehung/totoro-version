@@ -68,6 +68,12 @@ export class TreatmentProcedureDetail extends React.Component<ITreatmentProcedur
             </dt>
             <dd>{treatmentProcedureEntity.price}</dd>
             <dt>
+              <span id="nhiCategory">
+                <Translate contentKey="totoroApp.treatmentProcedure.nhiCategory">Nhi Category</Translate>
+              </span>
+            </dt>
+            <dd>{treatmentProcedureEntity.nhiCategory}</dd>
+            <dt>
               <Translate contentKey="totoroApp.treatmentProcedure.nhiProcedure">Nhi Procedure</Translate>
             </dt>
             <dd>{treatmentProcedureEntity.nhiProcedure ? treatmentProcedureEntity.nhiProcedure.id : ''}</dd>

@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
 import { INhiProcedure } from 'app/shared/model/nhi-procedure.model';
-import { getEntities as getNHiProcedures } from 'app/entities/nhi-procedure/nhi-procedure.reducer';
+import { getEntities as getNhiProcedures } from 'app/entities/nhi-procedure/nhi-procedure.reducer';
 import { ITreatmentTask } from 'app/shared/model/treatment-task.model';
 import { getEntities as getTreatmentTasks } from 'app/entities/treatment-task/treatment-task.reducer';
 import { IProcedure } from 'app/shared/model/procedure.model';
@@ -65,7 +65,7 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
       this.props.getEntity(this.props.match.params.id);
     }
 
-    this.props.getNHiProcedures();
+    this.props.getNhiProcedures();
     this.props.getTreatmentTasks();
     this.props.getProcedures();
     this.props.getAppointments();
@@ -200,6 +200,12 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                   <AvField id="treatment-procedure-price" type="string" className="form-control" name="price" />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="nhiCategoryLabel" for="nhiCategory">
+                    <Translate contentKey="totoroApp.treatmentProcedure.nhiCategory">Nhi Category</Translate>
+                  </Label>
+                  <AvField id="treatment-procedure-nhiCategory" type="text" name="nhiCategory" />
+                </AvGroup>
+                <AvGroup>
                   <Label for="nhiProcedure.id">
                     <Translate contentKey="totoroApp.treatmentProcedure.nhiProcedure">Nhi Procedure</Translate>
                   </Label>
@@ -325,7 +331,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getNHiProcedures,
+  getNhiProcedures,
   getTreatmentTasks,
   getProcedures,
   getAppointments,

@@ -72,11 +72,13 @@ public class DisposalService {
         Todo todo = getTodo(disposal);
         Set<TreatmentProcedure> treatmentProcedures = disposal.getTreatmentProcedures();
         Set<Tooth> teeth = disposal.getTeeth();
+        Set<NhiExtendDisposal> nhiExtendDisposals = disposal.getNhiExtendDisposals();
 
-        disposal = disposalRepository.save(disposal.treatmentProcedures(null).teeth(null));
+        disposal = disposalRepository.save(disposal.treatmentProcedures(null).teeth(null).nhiExtendDisposals(null));
 
         relationshipService.addRelationshipWithTreatmentProcedures(disposal.treatmentProcedures(treatmentProcedures));
         relationshipService.addRelationshipWithTeeth(disposal.teeth(teeth));
+        relationshipService.addRelationshipWithNhiExtendDisposals(disposal.nhiExtendDisposals(nhiExtendDisposals));
         disposal.setPrescription(prescription);
         disposal.setTodo(todo);
         if (disposal.getRegistration() != null && disposal.getRegistration().getId() != null) {
@@ -212,6 +214,11 @@ public class DisposalService {
                         updateDisposal.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet())
                     );
                     relationshipService.addRelationshipWithTeeth(disposal.teeth(updateDisposal.getTeeth()));
+                }
+
+                if (updateDisposal.getNhiExtendDisposals() != null) {
+                    log.debug("Update nhiExtendDisposals({}) of Disposal(id: {})", updateDisposal.getNhiExtendDisposals(), updateDisposal.getId());
+                    relationshipService.addRelationshipWithNhiExtendDisposals(disposal.nhiExtendDisposals(updateDisposal.getNhiExtendDisposals()));
                 }
 
                 if (updateDisposal.getRegistration() != null && updateDisposal.getRegistration().getId() != null) {

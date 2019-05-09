@@ -26,6 +26,7 @@
 
     <!-- add custom foreign key constraints -->
     <include file="config/liquibase/changelog/20190404_addForeignKeyConstraint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190418_added_entity_constraints_NhiExtendDisposal.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom unique constraints -->
     <include file="config/liquibase/changelog/20190404_addUniqueConstraint.xml" relativeToChangelogFile="false"/>

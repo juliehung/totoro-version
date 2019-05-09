@@ -53,6 +53,9 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @Column(name = "price")
     private Double price;
 
+    @Column(name = "nhi_category")
+    private String nhiCategory;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private NhiProcedure nhiProcedure;
@@ -169,6 +172,19 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getNhiCategory() {
+        return nhiCategory;
+    }
+
+    public TreatmentProcedure nhiCategory(String nhiCategory) {
+        this.nhiCategory = nhiCategory;
+        return this;
+    }
+
+    public void setNhiCategory(String nhiCategory) {
+        this.nhiCategory = nhiCategory;
     }
 
     public NhiProcedure getNhiProcedure() {
@@ -313,6 +329,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
             ", note='" + getNote() + "'" +
             ", completedDate='" + getCompletedDate() + "'" +
             ", price=" + getPrice() +
+            ", nhiCategory='" + getNhiCategory() + "'" +
             "}";
     }
 }

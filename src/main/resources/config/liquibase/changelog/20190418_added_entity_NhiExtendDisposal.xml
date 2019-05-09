@@ -7,12 +7,16 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <!--
-        Added the entity NHIExtendDisposal.
+        Added the entity NhiExtendDisposal.
     -->
-    <changeSet id="20190418" author="Jim">
+    <changeSet id="20190418-1" author="Jim">
         <createTable tableName="nhi_extend_disposal">
-            <column name="disposal_id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="disposal_id" type="bigint">
+                <constraints nullable="true" />
             </column>
 
             <column name="a11" type="varchar(255)">

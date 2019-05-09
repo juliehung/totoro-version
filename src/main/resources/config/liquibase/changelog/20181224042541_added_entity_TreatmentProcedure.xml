@@ -45,6 +45,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="nhi_category" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="nhi_procedure_id" type="bigint">
                 <constraints nullable="true" />
             </column>

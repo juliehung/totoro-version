@@ -61,8 +61,8 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     private Set<Tooth> teeth = null;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
-    @OneToOne(mappedBy = "disposal", cascade = CascadeType.ALL)
-    private NHIExtendDisposal nhiExtendDisposal;
+    @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
+    private Set<NhiExtendDisposal> nhiExtendDisposals = null;
 
     @CreatedBy
     @Column(name = "created_by", nullable = false, length = 50)
@@ -193,12 +193,29 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    public NHIExtendDisposal getNhiExtendDisposal() {
-        return nhiExtendDisposal;
+    public Set<NhiExtendDisposal> getNhiExtendDisposals() {
+        return nhiExtendDisposals;
     }
 
-    public void setNhiExtendDisposal(NHIExtendDisposal nhiExtendDisposal) {
-        this.nhiExtendDisposal = nhiExtendDisposal;
+    public Disposal nhiExtendDisposals(Set<NhiExtendDisposal> nhiExtendDisposals) {
+        this.nhiExtendDisposals = nhiExtendDisposals;
+        return this;
+    }
+
+    public Disposal addNhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal) {
+        this.nhiExtendDisposals.add(nhiExtendDisposal);
+        nhiExtendDisposal.setDisposal(this);
+        return this;
+    }
+
+    public Disposal removeNhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal) {
+        this.nhiExtendDisposals.remove(nhiExtendDisposal);
+        nhiExtendDisposal.setDisposal(null);
+        return this;
+    }
+
+    public void setNhiExtendDisposals(Set<NhiExtendDisposal> nhiExtendDisposals) {
+        this.nhiExtendDisposals = nhiExtendDisposals;
     }
 
     @Override

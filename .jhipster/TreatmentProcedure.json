@@ -5,7 +5,7 @@
         {
             "relationshipType": "many-to-one",
             "relationshipName": "nhiProcedure",
-            "otherEntityName": "nHIProcedure",
+            "otherEntityName": "nhiProcedure",
             "otherEntityField": "id"
         },
         {
@@ -73,6 +73,10 @@
         {
             "fieldName": "price",
             "fieldType": "Double"
+        },
+        {
+            "fieldName": "nhiCategory",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20181224042541",
