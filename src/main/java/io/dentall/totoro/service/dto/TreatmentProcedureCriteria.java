@@ -43,6 +43,8 @@ public class TreatmentProcedureCriteria implements Serializable {
 
     private DoubleFilter price;
 
+    private StringFilter nhiCategory;
+
     private LongFilter nhiProcedureId;
 
     private LongFilter treatmentTaskId;
@@ -111,6 +113,14 @@ public class TreatmentProcedureCriteria implements Serializable {
 
     public void setPrice(DoubleFilter price) {
         this.price = price;
+    }
+
+    public StringFilter getNhiCategory() {
+        return nhiCategory;
+    }
+
+    public void setNhiCategory(StringFilter nhiCategory) {
+        this.nhiCategory = nhiCategory;
     }
 
     public LongFilter getNhiProcedureId() {
@@ -187,6 +197,7 @@ public class TreatmentProcedureCriteria implements Serializable {
             Objects.equals(note, that.note) &&
             Objects.equals(completedDate, that.completedDate) &&
             Objects.equals(price, that.price) &&
+            Objects.equals(nhiCategory, that.nhiCategory) &&
             Objects.equals(nhiProcedureId, that.nhiProcedureId) &&
             Objects.equals(treatmentTaskId, that.treatmentTaskId) &&
             Objects.equals(procedureId, that.procedureId) &&
@@ -206,6 +217,7 @@ public class TreatmentProcedureCriteria implements Serializable {
         note,
         completedDate,
         price,
+        nhiCategory,
         nhiProcedureId,
         treatmentTaskId,
         procedureId,
@@ -226,6 +238,7 @@ public class TreatmentProcedureCriteria implements Serializable {
                 (note != null ? "note=" + note + ", " : "") +
                 (completedDate != null ? "completedDate=" + completedDate + ", " : "") +
                 (price != null ? "price=" + price + ", " : "") +
+                (nhiCategory != null ? "nhiCategory=" + nhiCategory + ", " : "") +
                 (nhiProcedureId != null ? "nhiProcedureId=" + nhiProcedureId + ", " : "") +
                 (treatmentTaskId != null ? "treatmentTaskId=" + treatmentTaskId + ", " : "") +
                 (procedureId != null ? "procedureId=" + procedureId + ", " : "") +

@@ -21,6 +21,7 @@
       "note": "Note",
       "completedDate": "Completed Date",
       "price": "Price",
+      "nhiCategory": "Nhi Category",
       "nhiProcedure": "Nhi Procedure",
       "treatmentTask": "Treatment Task",
       "procedure": "Procedure",

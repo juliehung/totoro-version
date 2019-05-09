@@ -157,6 +157,10 @@ public class TreatmentProcedureService {
                     treatmentProcedure.setPrice((updateTreatmentProcedure.getPrice()));
                 }
 
+                if (updateTreatmentProcedure.getNhiCategory() != null) {
+                    treatmentProcedure.setNhiCategory(updateTreatmentProcedure.getNhiCategory());
+                }
+
                 if (updateTreatmentProcedure.getProcedure() != null && updateTreatmentProcedure.getProcedure().getId() != null) {
                     procedureRepository.findById(updateTreatmentProcedure.getProcedure().getId()).ifPresent(treatmentProcedure::setProcedure);
                 }

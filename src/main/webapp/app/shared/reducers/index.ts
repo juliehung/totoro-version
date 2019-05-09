@@ -41,10 +41,6 @@ import treatmentProcedure, {
   TreatmentProcedureState
 } from 'app/entities/treatment-procedure/treatment-procedure.reducer';
 // prettier-ignore
-import nHICategory, {
-  NHICategoryState
-} from 'app/entities/nhi-category/nhi-category.reducer';
-// prettier-ignore
 import hospital, {
   HospitalState
 } from 'app/entities/hospital/hospital.reducer';
@@ -164,7 +160,6 @@ export interface IRootState {
   readonly questionnaire: QuestionnaireState;
   readonly treatmentTask: TreatmentTaskState;
   readonly treatmentProcedure: TreatmentProcedureState;
-  readonly nHICategory: NHICategoryState;
   readonly hospital: HospitalState;
   readonly accounting: AccountingState;
   readonly calendar: CalendarState;
@@ -212,7 +207,6 @@ const rootReducer = combineReducers<IRootState>({
   questionnaire,
   treatmentTask,
   treatmentProcedure,
-  nHICategory,
   hospital,
   accounting,
   calendar,

@@ -33,13 +33,16 @@ public class RelationshipService {
 
     private final TreatmentProcedureQueryService treatmentProcedureQueryService;
 
+    private final NhiExtendDisposalService nhiExtendDisposalService;
+
     public RelationshipService(
         @Lazy TreatmentProcedureService treatmentProcedureService,
         @Lazy TreatmentTaskService treatmentTaskService,
         ToothService toothService,
         TreatmentDrugService treatmentDrugService,
         ToothQueryService toothQueryService,
-        TreatmentProcedureQueryService treatmentProcedureQueryService
+        TreatmentProcedureQueryService treatmentProcedureQueryService,
+        NhiExtendDisposalService nhiExtendDisposalService
     ) {
         this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentTaskService = treatmentTaskService;
@@ -47,6 +50,7 @@ public class RelationshipService {
         this.treatmentDrugService = treatmentDrugService;
         this.toothQueryService = toothQueryService;
         this.treatmentProcedureQueryService = treatmentProcedureQueryService;
+        this.nhiExtendDisposalService = nhiExtendDisposalService;
     }
 
     void addRelationshipWithTreatmentTasks(TreatmentPlan treatmentPlan) {
@@ -157,6 +161,18 @@ public class RelationshipService {
         patient.setTeeth(teeth);
     }
 
+    void addRelationshipWithNhiExtendDisposals(Disposal disposal) {
+        Set<NhiExtendDisposal> nhiExtendDisposals = disposal.getNhiExtendDisposals();
+        if (nhiExtendDisposals != null) {
+            nhiExtendDisposals = getRelationshipWithOwners(
+                nhiExtendDisposals.stream().map(this::getNhiExtendDisposal),
+                nhiExtendDisposal -> nhiExtendDisposal.disposal(disposal)
+            );
+        }
+
+        disposal.setNhiExtendDisposals(nhiExtendDisposals);
+    }
+
     void deleteTreatmentProcedures(Appointment appointment, Set<Long> updateIds) {
         appointment
             .getTreatmentProcedures()
@@ -228,5 +244,9 @@ public class RelationshipService {
 
     private TreatmentTask getTreatmentTask(TreatmentTask treatmentTask) {
         return treatmentTask.getId() == null ? treatmentTaskService.save(treatmentTask) : treatmentTaskService.update(treatmentTask);
+    }
+
+    private NhiExtendDisposal getNhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal) {
+        return nhiExtendDisposal.getId() == null ? nhiExtendDisposalService.save(nhiExtendDisposal) : nhiExtendDisposalService.update(nhiExtendDisposal);
     }
 }

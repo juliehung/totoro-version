@@ -14,7 +14,6 @@
     <include file="config/liquibase/changelog/20181224042540_added_entity_TreatmentTask.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181224042541_added_entity_TreatmentProcedure.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181224042542_added_entity_NhiProcedure.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20181224071116_added_entity_NHICategory.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190102095503_added_entity_Hospital.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190103032423_added_entity_Accounting.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190110_added_entity_Setting.xml" relativeToChangelogFile="false"/>
@@ -36,7 +35,7 @@
     <include file="config/liquibase/changelog/20190218044229_added_entity_TreatmentDrug.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190220033723_added_entity_Disposal.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190322032120_added_entity_RegistrationDel.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190418_added_entity_NHIExtendDisposal.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190418_added_entity_NhiExtendDisposal.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190419140703_added_entity_NhiProcedureType.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190426_added_entity_NHIExtendTreatmentProcedure.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190427_added_entity_NHIExtendTreatmentDrug.xml" relativeToChangelogFile="false"/>

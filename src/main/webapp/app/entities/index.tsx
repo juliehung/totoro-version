@@ -11,7 +11,6 @@ import Tag from './tag';
 import Questionnaire from './questionnaire';
 import TreatmentTask from './treatment-task';
 import TreatmentProcedure from './treatment-procedure';
-import NHICategory from './nhi-category';
 import Hospital from './hospital';
 import Accounting from './accounting';
 import Calendar from './calendar';
@@ -50,7 +49,6 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/questionnaire`} component={Questionnaire} />
       <ErrorBoundaryRoute path={`${match.url}/treatment-task`} component={TreatmentTask} />
       <ErrorBoundaryRoute path={`${match.url}/treatment-procedure`} component={TreatmentProcedure} />
-      <ErrorBoundaryRoute path={`${match.url}/nhi-category`} component={NHICategory} />
       <ErrorBoundaryRoute path={`${match.url}/hospital`} component={Hospital} />
       <ErrorBoundaryRoute path={`${match.url}/accounting`} component={Accounting} />
       <ErrorBoundaryRoute path={`${match.url}/calendar`} component={Calendar} />

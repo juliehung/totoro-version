@@ -12,20 +12,21 @@ import java.util.Objects;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
- * A NHIExtendDisposal.
+ * A NhiExtendDisposal.
  */
 @Entity
 @Table(name = "nhi_extend_disposal")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class NHIExtendDisposal implements Serializable {
+public class NhiExtendDisposal implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @OneToOne
-    @MapsId
+    @ManyToOne
     @JsonProperty(access = WRITE_ONLY)
     private Disposal disposal;
 
@@ -126,7 +127,7 @@ public class NHIExtendDisposal implements Serializable {
         return disposal;
     }
 
-    public NHIExtendDisposal disposal(Disposal disposal) {
+    public NhiExtendDisposal disposal(Disposal disposal) {
         this.disposal = disposal;
         return this;
     }
@@ -139,7 +140,7 @@ public class NHIExtendDisposal implements Serializable {
         return a11;
     }
 
-    public NHIExtendDisposal a11(String a11) {
+    public NhiExtendDisposal a11(String a11) {
         this.a11 = a11;
         return this;
     }
@@ -152,7 +153,7 @@ public class NHIExtendDisposal implements Serializable {
         return a12;
     }
 
-    public NHIExtendDisposal a12(String a12) {
+    public NhiExtendDisposal a12(String a12) {
         this.a12 = a12;
         return this;
     }
@@ -165,7 +166,7 @@ public class NHIExtendDisposal implements Serializable {
         return a13;
     }
 
-    public NHIExtendDisposal a13(String a13) {
+    public NhiExtendDisposal a13(String a13) {
         this.a13 = a13;
         return this;
     }
@@ -178,7 +179,7 @@ public class NHIExtendDisposal implements Serializable {
         return a14;
     }
 
-    public NHIExtendDisposal a14(String a14) {
+    public NhiExtendDisposal a14(String a14) {
         this.a14 = a14;
         return this;
     }
@@ -191,7 +192,7 @@ public class NHIExtendDisposal implements Serializable {
         return a15;
     }
 
-    public NHIExtendDisposal a15(String a15) {
+    public NhiExtendDisposal a15(String a15) {
         this.a15 = a15;
         return this;
     }
@@ -204,7 +205,7 @@ public class NHIExtendDisposal implements Serializable {
         return a16;
     }
 
-    public NHIExtendDisposal a16(String a16) {
+    public NhiExtendDisposal a16(String a16) {
         this.a16 = a16;
         return this;
     }
@@ -217,7 +218,7 @@ public class NHIExtendDisposal implements Serializable {
         return a17;
     }
 
-    public NHIExtendDisposal a17(String a17) {
+    public NhiExtendDisposal a17(String a17) {
         this.a17 = a17;
         return this;
     }
@@ -230,7 +231,7 @@ public class NHIExtendDisposal implements Serializable {
         return a18;
     }
 
-    public NHIExtendDisposal a18(String a18) {
+    public NhiExtendDisposal a18(String a18) {
         this.a18 = a18;
         return this;
     }
@@ -243,7 +244,7 @@ public class NHIExtendDisposal implements Serializable {
         return a19;
     }
 
-    public NHIExtendDisposal a19(String a19) {
+    public NhiExtendDisposal a19(String a19) {
         this.a19 = a19;
         return this;
     }
@@ -256,7 +257,7 @@ public class NHIExtendDisposal implements Serializable {
         return a22;
     }
 
-    public NHIExtendDisposal a22(String a22) {
+    public NhiExtendDisposal a22(String a22) {
         this.a22 = a22;
         return this;
     }
@@ -269,7 +270,7 @@ public class NHIExtendDisposal implements Serializable {
         return a23;
     }
 
-    public NHIExtendDisposal a23(String a23) {
+    public NhiExtendDisposal a23(String a23) {
         this.a23 = a23;
         return this;
     }
@@ -282,7 +283,7 @@ public class NHIExtendDisposal implements Serializable {
         return a25;
     }
 
-    public NHIExtendDisposal a25(String a25) {
+    public NhiExtendDisposal a25(String a25) {
         this.a25 = a25;
         return this;
     }
@@ -295,7 +296,7 @@ public class NHIExtendDisposal implements Serializable {
         return a26;
     }
 
-    public NHIExtendDisposal a26(String a26) {
+    public NhiExtendDisposal a26(String a26) {
         this.a26 = a26;
         return this;
     }
@@ -308,7 +309,7 @@ public class NHIExtendDisposal implements Serializable {
         return a27;
     }
 
-    public NHIExtendDisposal a27(String a27) {
+    public NhiExtendDisposal a27(String a27) {
         this.a27 = a27;
         return this;
     }
@@ -321,7 +322,7 @@ public class NHIExtendDisposal implements Serializable {
         return a31;
     }
 
-    public NHIExtendDisposal a31(String a31) {
+    public NhiExtendDisposal a31(String a31) {
         this.a31 = a31;
         return this;
     }
@@ -334,7 +335,7 @@ public class NHIExtendDisposal implements Serializable {
         return a32;
     }
 
-    public NHIExtendDisposal a32(String a32) {
+    public NhiExtendDisposal a32(String a32) {
         this.a32 = a32;
         return this;
     }
@@ -347,7 +348,7 @@ public class NHIExtendDisposal implements Serializable {
         return a41;
     }
 
-    public NHIExtendDisposal a41(String a41) {
+    public NhiExtendDisposal a41(String a41) {
         this.a41 = a41;
         return this;
     }
@@ -360,7 +361,7 @@ public class NHIExtendDisposal implements Serializable {
         return a42;
     }
 
-    public NHIExtendDisposal a42(String a42) {
+    public NhiExtendDisposal a42(String a42) {
         this.a42 = a42;
         return this;
     }
@@ -373,7 +374,7 @@ public class NHIExtendDisposal implements Serializable {
         return a43;
     }
 
-    public NHIExtendDisposal a43(String a43) {
+    public NhiExtendDisposal a43(String a43) {
         this.a43 = a43;
         return this;
     }
@@ -386,7 +387,7 @@ public class NHIExtendDisposal implements Serializable {
         return a44;
     }
 
-    public NHIExtendDisposal a44(String a44) {
+    public NhiExtendDisposal a44(String a44) {
         this.a44 = a44;
         return this;
     }
@@ -399,7 +400,7 @@ public class NHIExtendDisposal implements Serializable {
         return a54;
     }
 
-    public NHIExtendDisposal a54(String a54) {
+    public NhiExtendDisposal a54(String a54) {
         this.a54 = a54;
         return this;
     }
@@ -416,11 +417,11 @@ public class NHIExtendDisposal implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NHIExtendDisposal extendUser = (NHIExtendDisposal) o;
-        if (extendUser.getId() == null || getId() == null) {
+        NhiExtendDisposal nhiExtendDisposal = (NhiExtendDisposal) o;
+        if (nhiExtendDisposal.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), extendUser.getId());
+        return Objects.equals(getId(), nhiExtendDisposal.getId());
     }
 
     @Override
@@ -430,7 +431,7 @@ public class NHIExtendDisposal implements Serializable {
 
     @Override
     public String toString() {
-        return "NHIExtendDisposal{" +
+        return "NhiExtendDisposal{" +
             "id=" + getId() +
             ", a11='" + getA11() + "'" +
             ", a12='" + getA12() + "'" +
