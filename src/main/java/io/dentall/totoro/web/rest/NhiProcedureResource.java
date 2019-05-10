@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -49,7 +48,7 @@ public class NhiProcedureResource {
      */
     @PostMapping("/nhi-procedures")
     @Timed
-    public ResponseEntity<NhiProcedure> createNhiProcedure(@Valid @RequestBody NhiProcedure nhiProcedure) throws URISyntaxException {
+    public ResponseEntity<NhiProcedure> createNhiProcedure(@RequestBody NhiProcedure nhiProcedure) throws URISyntaxException {
         log.debug("REST request to save NhiProcedure : {}", nhiProcedure);
         if (nhiProcedure.getId() != null) {
             throw new BadRequestAlertException("A new nhiProcedure cannot already have an ID", ENTITY_NAME, "idexists");
@@ -71,7 +70,7 @@ public class NhiProcedureResource {
      */
     @PutMapping("/nhi-procedures")
     @Timed
-    public ResponseEntity<NhiProcedure> updateNhiProcedure(@Valid @RequestBody NhiProcedure nhiProcedure) throws URISyntaxException {
+    public ResponseEntity<NhiProcedure> updateNhiProcedure(@RequestBody NhiProcedure nhiProcedure) throws URISyntaxException {
         log.debug("REST request to update NhiProcedure : {}", nhiProcedure);
         if (nhiProcedure.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

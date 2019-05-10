@@ -153,60 +153,6 @@ public class NhiProcedureResourceIntTest {
 
     @Test
     @Transactional
-    public void checkCodeIsRequired() throws Exception {
-        int databaseSizeBeforeTest = nhiProcedureRepository.findAll().size();
-        // set the field null
-        nhiProcedure.setCode(null);
-
-        // Create the NhiProcedure, which fails.
-
-        restNhiProcedureMockMvc.perform(post("/api/nhi-procedures")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nhiProcedure)))
-            .andExpect(status().isBadRequest());
-
-        List<NhiProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
-        assertThat(nhiProcedureList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkNameIsRequired() throws Exception {
-        int databaseSizeBeforeTest = nhiProcedureRepository.findAll().size();
-        // set the field null
-        nhiProcedure.setName(null);
-
-        // Create the NhiProcedure, which fails.
-
-        restNhiProcedureMockMvc.perform(post("/api/nhi-procedures")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nhiProcedure)))
-            .andExpect(status().isBadRequest());
-
-        List<NhiProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
-        assertThat(nhiProcedureList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkPointIsRequired() throws Exception {
-        int databaseSizeBeforeTest = nhiProcedureRepository.findAll().size();
-        // set the field null
-        nhiProcedure.setPoint(null);
-
-        // Create the NhiProcedure, which fails.
-
-        restNhiProcedureMockMvc.perform(post("/api/nhi-procedures")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nhiProcedure)))
-            .andExpect(status().isBadRequest());
-
-        List<NhiProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
-        assertThat(nhiProcedureList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllNhiProcedures() throws Exception {
         // Initialize the database
         nhiProcedureRepository.saveAndFlush(nhiProcedure);

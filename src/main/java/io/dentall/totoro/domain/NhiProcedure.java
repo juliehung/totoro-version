@@ -6,7 +6,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -28,16 +27,13 @@ public class NhiProcedure implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
-    @Column(name = "code", nullable = false)
+    @Column(name = "code")
     private String code;
 
-    @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
-    @NotNull
-    @Column(name = "point", nullable = false)
+    @Column(name = "point")
     private Integer point;
 
     @Column(name = "english_name")

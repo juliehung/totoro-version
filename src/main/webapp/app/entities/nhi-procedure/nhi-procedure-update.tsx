@@ -104,42 +104,19 @@ export class NhiProcedureUpdate extends React.Component<INhiProcedureUpdateProps
                   <Label id="codeLabel" for="code">
                     <Translate contentKey="totoroApp.nhiProcedure.code">Code</Translate>
                   </Label>
-                  <AvField
-                    id="nhi-procedure-code"
-                    type="text"
-                    name="code"
-                    validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') }
-                    }}
-                  />
+                  <AvField id="nhi-procedure-code" type="text" name="code" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="nameLabel" for="name">
                     <Translate contentKey="totoroApp.nhiProcedure.name">Name</Translate>
                   </Label>
-                  <AvField
-                    id="nhi-procedure-name"
-                    type="text"
-                    name="name"
-                    validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') }
-                    }}
-                  />
+                  <AvField id="nhi-procedure-name" type="text" name="name" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="pointLabel" for="point">
                     <Translate contentKey="totoroApp.nhiProcedure.point">Point</Translate>
                   </Label>
-                  <AvField
-                    id="nhi-procedure-point"
-                    type="string"
-                    className="form-control"
-                    name="point"
-                    validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') },
-                      number: { value: true, errorMessage: translate('entity.validation.number') }
-                    }}
-                  />
+                  <AvField id="nhi-procedure-point" type="string" className="form-control" name="point" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="englishNameLabel" for="englishName">
