@@ -76,6 +76,12 @@
                   separator=";"
                   tableName="nhi_icd_10_pcs">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_procedure_types.csv"
+                  separator=";"
+                  tableName="nhi_procedure_type">
+        </loadData>
     </changeSet>
 
 </databaseChangeLog>
