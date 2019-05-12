@@ -38,6 +38,8 @@ public class TreatmentProcedureService {
 
     private final DisposalRepository disposalRepository;
 
+    private final NhiProcedureRepository nhiProcedureRepository;
+
     public TreatmentProcedureService(
         TreatmentProcedureRepository treatmentProcedureRepository,
         ProcedureRepository procedureRepository,
@@ -45,7 +47,8 @@ public class TreatmentProcedureService {
         RelationshipService relationshipService,
         TreatmentTaskRepository treatmentTaskRepository,
         TodoRepository todoRepository,
-        DisposalRepository disposalRepository
+        DisposalRepository disposalRepository,
+        NhiProcedureRepository nhiProcedureRepository
     ) {
         this.treatmentProcedureRepository = treatmentProcedureRepository;
         this.procedureRepository = procedureRepository;
@@ -54,6 +57,7 @@ public class TreatmentProcedureService {
         this.treatmentTaskRepository = treatmentTaskRepository;
         this.todoRepository = todoRepository;
         this.disposalRepository = disposalRepository;
+        this.nhiProcedureRepository = nhiProcedureRepository;
     }
 
     /**
@@ -163,6 +167,10 @@ public class TreatmentProcedureService {
 
                 if (updateTreatmentProcedure.getProcedure() != null && updateTreatmentProcedure.getProcedure().getId() != null) {
                     procedureRepository.findById(updateTreatmentProcedure.getProcedure().getId()).ifPresent(treatmentProcedure::setProcedure);
+                }
+
+                if (updateTreatmentProcedure.getNhiProcedure() != null && updateTreatmentProcedure.getNhiProcedure().getId() != null) {
+                    nhiProcedureRepository.findById(updateTreatmentProcedure.getNhiProcedure().getId()).ifPresent(treatmentProcedure::setNhiProcedure);
                 }
 
                 if (updateTreatmentProcedure.getAppointment() != null && updateTreatmentProcedure.getAppointment().getId() != null) {
