@@ -1,13 +1,6 @@
 procedure_type_id;content;price;doctor_user_id
 1;Operative dentistry;1770;NULL
 6;Extraction;1220;NULL
-2;Non-surgical Endodontic treatment;5000;12
-2;Non-surgical Endodontic treatment;7000;12
-2;Non-surgical Endodontic treatment;10000;12
-3;Non-surgical Endodontic treatment;5000;12
-3;Non-surgical Endodontic treatment;7000;12
-3;Non-surgical Endodontic treatment;10000;12
-5;Microscopic Apexification;5000;12
 6;Collagen-Small;3000;NULL
 6;Collagen-Large;5000;NULL
 8;Precious Metal Alloy Inlay/Onlay/Overlay;18000;NULL
@@ -45,8 +38,6 @@ procedure_type_id;content;price;doctor_user_id
 18;Splint;3000;NULL
 19;Denture Repair-Add Tooth;2000;NULL
 19;Denture Repair-Add Clasp;1000;NULL
-20;orthodontic;40000;13
-20;orthodontic;40000;13
 20;orthodontic;150000;NULL
 20;orthodontic;60000;NULL
 20;Aligner;200000;NULL
@@ -63,8 +54,6 @@ procedure_type_id;content;price;doctor_user_id
 32;Child Fluoride Application;800;NULL
 32;Adult Fluoride Application-Full Mouth;800;NULL
 33;Sealant Application-Single Tooth;800;NULL
-34;Strip crown;3500;13
-35;Zirconia crown;8000;13
 36;SSC;3500;NULL
 39;Sandblasting-A Quarter;1500;NULL
 39;Sandblasting-Single Arch;2500;NULL
@@ -110,22 +99,4 @@ procedure_type_id;content;price;doctor_user_id
 12;implant;125000;NULL
 13;implant;125000;NULL
 4;Apicoectomy (With MTA);20000;NULL
-4;Microscopic Apical Surgery-Anterior teeth;15000;12
-4;Microscopic Apical Surgery-Premolar;18000;12
-4;Microscopic Apical Surgery-Premolar;20000;12
-4;Microscopic Apical Surgery-Molar;25000;12
-2;Microscopic post removal;5000;12
-2;Microscopic Separated Instrument Removal;8000;12
-2;Microscopic Perforation Repair;5000;12
-32;Child Fluoride Application (With Full Mouth Cleaning);1000;13
-33;Chlid Sealant Application-Single Tooth;1000;13
-38;Band and loop;5000;13
-38;Band and loop;10000;13
 38;Band and loop;3500;NULL
-37;Kiddy denture;10000;13
-7;Sedation;20000;13
-6;Sedation;20000;13
-7;Sedation;5000;13
-6;Sedation;5000;13
-36;SSC;4000;13
-36;SSC;3500;13
