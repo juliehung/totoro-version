@@ -6,6 +6,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -41,6 +42,10 @@ public class NhiProcedure implements Serializable {
 
     @Column(name = "default_icd_10_cm_id")
     private Long defaultIcd10CmId;
+
+    @Size(max = 5100)
+    @Column(name = "description", length = 5100)
+    private String description;
 
     @ManyToOne
     @JsonIgnoreProperties("")
@@ -127,6 +132,19 @@ public class NhiProcedure implements Serializable {
         this.defaultIcd10CmId = defaultIcd10CmId;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public NhiProcedure description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public NhiProcedureType getNhiProcedureType() {
         return nhiProcedureType;
     }
@@ -208,6 +226,7 @@ public class NhiProcedure implements Serializable {
             ", point=" + getPoint() +
             ", englishName='" + getEnglishName() + "'" +
             ", defaultIcd10CmId=" + getDefaultIcd10CmId() +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }

@@ -4,6 +4,7 @@ import io.dentall.totoro.TotoroApp;
 
 import io.dentall.totoro.domain.NhiProcedure;
 import io.dentall.totoro.repository.NhiProcedureRepository;
+import io.dentall.totoro.service.NhiProcedureService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -55,8 +56,14 @@ public class NhiProcedureResourceIntTest {
     private static final Long DEFAULT_DEFAULT_ICD_10_CM_ID = 1L;
     private static final Long UPDATED_DEFAULT_ICD_10_CM_ID = 2L;
 
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
     @Autowired
     private NhiProcedureRepository nhiProcedureRepository;
+
+    @Autowired
+    private NhiProcedureService nhiProcedureService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -80,7 +87,7 @@ public class NhiProcedureResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NhiProcedureResource nhiProcedureResource = new NhiProcedureResource(nhiProcedureRepository);
+        final NhiProcedureResource nhiProcedureResource = new NhiProcedureResource(nhiProcedureService);
         this.restNhiProcedureMockMvc = MockMvcBuilders.standaloneSetup(nhiProcedureResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -101,7 +108,8 @@ public class NhiProcedureResourceIntTest {
             .name(DEFAULT_NAME)
             .point(DEFAULT_POINT)
             .englishName(DEFAULT_ENGLISH_NAME)
-            .defaultIcd10CmId(DEFAULT_DEFAULT_ICD_10_CM_ID);
+            .defaultIcd10CmId(DEFAULT_DEFAULT_ICD_10_CM_ID)
+            .description(DEFAULT_DESCRIPTION);
         return nhiProcedure;
     }
 
@@ -130,6 +138,7 @@ public class NhiProcedureResourceIntTest {
         assertThat(testNhiProcedure.getPoint()).isEqualTo(DEFAULT_POINT);
         assertThat(testNhiProcedure.getEnglishName()).isEqualTo(DEFAULT_ENGLISH_NAME);
         assertThat(testNhiProcedure.getDefaultIcd10CmId()).isEqualTo(DEFAULT_DEFAULT_ICD_10_CM_ID);
+        assertThat(testNhiProcedure.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
     @Test
@@ -166,7 +175,8 @@ public class NhiProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].point").value(hasItem(DEFAULT_POINT)))
             .andExpect(jsonPath("$.[*].englishName").value(hasItem(DEFAULT_ENGLISH_NAME.toString())))
-            .andExpect(jsonPath("$.[*].defaultIcd10CmId").value(hasItem(DEFAULT_DEFAULT_ICD_10_CM_ID.intValue())));
+            .andExpect(jsonPath("$.[*].defaultIcd10CmId").value(hasItem(DEFAULT_DEFAULT_ICD_10_CM_ID.intValue())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
     
     @Test
@@ -184,7 +194,8 @@ public class NhiProcedureResourceIntTest {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.point").value(DEFAULT_POINT))
             .andExpect(jsonPath("$.englishName").value(DEFAULT_ENGLISH_NAME.toString()))
-            .andExpect(jsonPath("$.defaultIcd10CmId").value(DEFAULT_DEFAULT_ICD_10_CM_ID.intValue()));
+            .andExpect(jsonPath("$.defaultIcd10CmId").value(DEFAULT_DEFAULT_ICD_10_CM_ID.intValue()))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
     }
 
     @Test
@@ -199,7 +210,7 @@ public class NhiProcedureResourceIntTest {
     @Transactional
     public void updateNhiProcedure() throws Exception {
         // Initialize the database
-        nhiProcedureRepository.saveAndFlush(nhiProcedure);
+        nhiProcedureService.save(nhiProcedure);
 
         int databaseSizeBeforeUpdate = nhiProcedureRepository.findAll().size();
 
@@ -208,11 +219,11 @@ public class NhiProcedureResourceIntTest {
         // Disconnect from session so that the updates on updatedNhiProcedure are not directly saved in db
         em.detach(updatedNhiProcedure);
         updatedNhiProcedure
-            .code(UPDATED_CODE)
             .name(UPDATED_NAME)
             .point(UPDATED_POINT)
             .englishName(UPDATED_ENGLISH_NAME)
-            .defaultIcd10CmId(UPDATED_DEFAULT_ICD_10_CM_ID);
+            .defaultIcd10CmId(UPDATED_DEFAULT_ICD_10_CM_ID)
+            .description(UPDATED_DESCRIPTION);
 
         restNhiProcedureMockMvc.perform(put("/api/nhi-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -223,11 +234,11 @@ public class NhiProcedureResourceIntTest {
         List<NhiProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
         assertThat(nhiProcedureList).hasSize(databaseSizeBeforeUpdate);
         NhiProcedure testNhiProcedure = nhiProcedureList.get(nhiProcedureList.size() - 1);
-        assertThat(testNhiProcedure.getCode()).isEqualTo(UPDATED_CODE);
         assertThat(testNhiProcedure.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testNhiProcedure.getPoint()).isEqualTo(UPDATED_POINT);
         assertThat(testNhiProcedure.getEnglishName()).isEqualTo(UPDATED_ENGLISH_NAME);
         assertThat(testNhiProcedure.getDefaultIcd10CmId()).isEqualTo(UPDATED_DEFAULT_ICD_10_CM_ID);
+        assertThat(testNhiProcedure.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test
@@ -252,7 +263,7 @@ public class NhiProcedureResourceIntTest {
     @Transactional
     public void deleteNhiProcedure() throws Exception {
         // Initialize the database
-        nhiProcedureRepository.saveAndFlush(nhiProcedure);
+        nhiProcedureService.save(nhiProcedure);
 
         int databaseSizeBeforeDelete = nhiProcedureRepository.findAll().size();
 

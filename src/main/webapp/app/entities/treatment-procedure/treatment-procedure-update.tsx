@@ -206,6 +206,19 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                   <AvField id="treatment-procedure-nhiCategory" type="text" name="nhiCategory" />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="nhiDescriptionLabel" for="nhiDescription">
+                    <Translate contentKey="totoroApp.treatmentProcedure.nhiDescription">Nhi Description</Translate>
+                  </Label>
+                  <AvField
+                    id="treatment-procedure-nhiDescription"
+                    type="text"
+                    name="nhiDescription"
+                    validate={{
+                      maxLength: { value: 5100, errorMessage: translate('entity.validation.maxlength', { max: 5100 }) }
+                    }}
+                  />
+                </AvGroup>
+                <AvGroup>
                   <Label for="nhiProcedure.id">
                     <Translate contentKey="totoroApp.treatmentProcedure.nhiProcedure">Nhi Procedure</Translate>
                   </Label>

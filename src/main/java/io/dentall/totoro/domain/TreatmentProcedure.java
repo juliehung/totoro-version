@@ -56,6 +56,10 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @Column(name = "nhi_category")
     private String nhiCategory;
 
+    @Size(max = 5100)
+    @Column(name = "nhi_description", length = 5100)
+    private String nhiDescription;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private NhiProcedure nhiProcedure;
@@ -185,6 +189,19 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
 
     public void setNhiCategory(String nhiCategory) {
         this.nhiCategory = nhiCategory;
+    }
+
+    public String getNhiDescription() {
+        return nhiDescription;
+    }
+
+    public TreatmentProcedure nhiDescription(String nhiDescription) {
+        this.nhiDescription = nhiDescription;
+        return this;
+    }
+
+    public void setNhiDescription(String nhiDescription) {
+        this.nhiDescription = nhiDescription;
     }
 
     public NhiProcedure getNhiProcedure() {
@@ -330,6 +347,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
             ", completedDate='" + getCompletedDate() + "'" +
             ", price=" + getPrice() +
             ", nhiCategory='" + getNhiCategory() + "'" +
+            ", nhiDescription='" + getNhiDescription() + "'" +
             "}";
     }
 }

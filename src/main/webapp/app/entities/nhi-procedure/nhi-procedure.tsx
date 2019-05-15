@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAllAction, getSortState, IPaginationBaseState, getPaginationItemsNumber, JhiPagination } from 'react-jhipster';
+import { Translate, ICrudGetAllAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -11,45 +11,16 @@ import { getEntities } from './nhi-procedure.reducer';
 import { INhiProcedure } from 'app/shared/model/nhi-procedure.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 export interface INhiProcedureProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
-export type INhiProcedureState = IPaginationBaseState;
-
-export class NhiProcedure extends React.Component<INhiProcedureProps, INhiProcedureState> {
-  state: INhiProcedureState = {
-    ...getSortState(this.props.location, ITEMS_PER_PAGE)
-  };
-
+export class NhiProcedure extends React.Component<INhiProcedureProps> {
   componentDidMount() {
-    this.getEntities();
+    this.props.getEntities();
   }
-
-  sort = prop => () => {
-    this.setState(
-      {
-        order: this.state.order === 'asc' ? 'desc' : 'asc',
-        sort: prop
-      },
-      () => this.sortEntities()
-    );
-  };
-
-  sortEntities() {
-    this.getEntities();
-    this.props.history.push(`${this.props.location.pathname}?page=${this.state.activePage}&sort=${this.state.sort},${this.state.order}`);
-  }
-
-  handlePagination = activePage => this.setState({ activePage }, () => this.sortEntities());
-
-  getEntities = () => {
-    const { activePage, itemsPerPage, sort, order } = this.state;
-    this.props.getEntities(activePage - 1, itemsPerPage, `${sort},${order}`);
-  };
 
   render() {
-    const { nhiProcedureList, match, totalItems } = this.props;
+    const { nhiProcedureList, match } = this.props;
     return (
       <div>
         <h2 id="nhi-procedure-heading">
@@ -64,31 +35,32 @@ export class NhiProcedure extends React.Component<INhiProcedureProps, INhiProced
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={this.sort('id')}>
-                  <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('code')}>
-                  <Translate contentKey="totoroApp.nhiProcedure.code">Code</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('name')}>
-                  <Translate contentKey="totoroApp.nhiProcedure.name">Name</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('point')}>
-                  <Translate contentKey="totoroApp.nhiProcedure.point">Point</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('englishName')}>
-                  <Translate contentKey="totoroApp.nhiProcedure.englishName">English Name</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={this.sort('defaultIcd10CmId')}>
-                  <Translate contentKey="totoroApp.nhiProcedure.defaultIcd10CmId">Default Icd 10 Cm Id</Translate>{' '}
-                  <FontAwesomeIcon icon="sort" />
+                <th>
+                  <Translate contentKey="global.field.id">ID</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>{' '}
-                  <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="totoroApp.nhiProcedure.code">Code</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.nhiProcedure.nhiIcd9Cm">Nhi Icd 9 Cm</Translate> <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="totoroApp.nhiProcedure.name">Name</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.nhiProcedure.point">Point</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.nhiProcedure.englishName">English Name</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.nhiProcedure.defaultIcd10CmId">Default Icd 10 Cm Id</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.nhiProcedure.description">Description</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.nhiProcedure.nhiIcd9Cm">Nhi Icd 9 Cm</Translate>
                 </th>
                 <th />
               </tr>
@@ -106,6 +78,7 @@ export class NhiProcedure extends React.Component<INhiProcedureProps, INhiProced
                   <td>{nhiProcedure.point}</td>
                   <td>{nhiProcedure.englishName}</td>
                   <td>{nhiProcedure.defaultIcd10CmId}</td>
+                  <td>{nhiProcedure.description}</td>
                   <td>
                     {nhiProcedure.nhiProcedureType ? (
                       <Link to={`nhi-procedure-type/${nhiProcedure.nhiProcedureType.id}`}>{nhiProcedure.nhiProcedureType.id}</Link>
@@ -147,22 +120,13 @@ export class NhiProcedure extends React.Component<INhiProcedureProps, INhiProced
             </tbody>
           </Table>
         </div>
-        <Row className="justify-content-center">
-          <JhiPagination
-            items={getPaginationItemsNumber(totalItems, this.state.itemsPerPage)}
-            activePage={this.state.activePage}
-            onSelect={this.handlePagination}
-            maxButtons={5}
-          />
-        </Row>
       </div>
     );
   }
 }
 
 const mapStateToProps = ({ nhiProcedure }: IRootState) => ({
-  nhiProcedureList: nhiProcedure.entities,
-  totalItems: nhiProcedure.totalItems
+  nhiProcedureList: nhiProcedure.entities
 });
 
 const mapDispatchToProps = {

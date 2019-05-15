@@ -45,6 +45,8 @@ public class TreatmentProcedureCriteria implements Serializable {
 
     private StringFilter nhiCategory;
 
+    private StringFilter nhiDescription;
+
     private LongFilter nhiProcedureId;
 
     private LongFilter treatmentTaskId;
@@ -123,6 +125,14 @@ public class TreatmentProcedureCriteria implements Serializable {
         this.nhiCategory = nhiCategory;
     }
 
+    public StringFilter getNhiDescription() {
+        return nhiDescription;
+    }
+
+    public void setNhiDescription(StringFilter nhiDescription) {
+        this.nhiDescription = nhiDescription;
+    }
+
     public LongFilter getNhiProcedureId() {
         return nhiProcedureId;
     }
@@ -198,6 +208,7 @@ public class TreatmentProcedureCriteria implements Serializable {
             Objects.equals(completedDate, that.completedDate) &&
             Objects.equals(price, that.price) &&
             Objects.equals(nhiCategory, that.nhiCategory) &&
+            Objects.equals(nhiDescription, that.nhiDescription) &&
             Objects.equals(nhiProcedureId, that.nhiProcedureId) &&
             Objects.equals(treatmentTaskId, that.treatmentTaskId) &&
             Objects.equals(procedureId, that.procedureId) &&
@@ -218,6 +229,7 @@ public class TreatmentProcedureCriteria implements Serializable {
         completedDate,
         price,
         nhiCategory,
+        nhiDescription,
         nhiProcedureId,
         treatmentTaskId,
         procedureId,
@@ -239,6 +251,7 @@ public class TreatmentProcedureCriteria implements Serializable {
                 (completedDate != null ? "completedDate=" + completedDate + ", " : "") +
                 (price != null ? "price=" + price + ", " : "") +
                 (nhiCategory != null ? "nhiCategory=" + nhiCategory + ", " : "") +
+                (nhiDescription != null ? "nhiDescription=" + nhiDescription + ", " : "") +
                 (nhiProcedureId != null ? "nhiProcedureId=" + nhiProcedureId + ", " : "") +
                 (treatmentTaskId != null ? "treatmentTaskId=" + treatmentTaskId + ", " : "") +
                 (procedureId != null ? "procedureId=" + procedureId + ", " : "") +

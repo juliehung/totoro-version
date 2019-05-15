@@ -20,6 +20,7 @@
       "point": "Point",
       "englishName": "English Name",
       "defaultIcd10CmId": "Default Icd 10 Cm Id",
+      "description": "Description",
       "nhiProcedureType": "Nhi Procedure Type",
       "nhiIcd9Cm": "Nhi Icd 9 Cm",
       "nhiIcd10Pcs": "Nhi Icd 10 Pcs"

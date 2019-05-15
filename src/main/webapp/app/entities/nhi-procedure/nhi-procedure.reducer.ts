@@ -21,7 +21,6 @@ const initialState = {
   entities: [] as ReadonlyArray<INhiProcedure>,
   entity: defaultValue,
   updating: false,
-  totalItems: 0,
   updateSuccess: false
 };
 
@@ -64,7 +63,6 @@ export default (state: NhiProcedureState = initialState, action): NhiProcedureSt
       return {
         ...state,
         loading: false,
-        totalItems: action.payload.headers['x-total-count'],
         entities: action.payload.data
       };
     case SUCCESS(ACTION_TYPES.FETCH_NHIPROCEDURE):
@@ -101,13 +99,10 @@ const apiUrl = 'api/nhi-procedures';
 
 // Actions
 
-export const getEntities: ICrudGetAllAction<INhiProcedure> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
-  return {
-    type: ACTION_TYPES.FETCH_NHIPROCEDURE_LIST,
-    payload: axios.get<INhiProcedure>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)
-  };
-};
+export const getEntities: ICrudGetAllAction<INhiProcedure> = (page, size, sort) => ({
+  type: ACTION_TYPES.FETCH_NHIPROCEDURE_LIST,
+  payload: axios.get<INhiProcedure>(`${apiUrl}?cacheBuster=${new Date().getTime()}`)
+});
 
 export const getEntity: ICrudGetAction<INhiProcedure> = id => {
   const requestUrl = `${apiUrl}/${id}`;
