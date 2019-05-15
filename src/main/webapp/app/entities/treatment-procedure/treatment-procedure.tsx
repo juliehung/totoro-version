@@ -97,6 +97,10 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                 <th className="hand" onClick={this.sort('nhiCategory')}>
                   <Translate contentKey="totoroApp.treatmentProcedure.nhiCategory">Nhi Category</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('nhiDescription')}>
+                  <Translate contentKey="totoroApp.treatmentProcedure.nhiDescription">Nhi Description</Translate>{' '}
+                  <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.treatmentProcedure.nhiProcedure">Nhi Procedure</Translate>{' '}
                   <FontAwesomeIcon icon="sort" />
@@ -139,6 +143,7 @@ export class TreatmentProcedure extends React.Component<ITreatmentProcedureProps
                   </td>
                   <td>{treatmentProcedure.price}</td>
                   <td>{treatmentProcedure.nhiCategory}</td>
+                  <td>{treatmentProcedure.nhiDescription}</td>
                   <td>
                     {treatmentProcedure.nhiProcedure ? (
                       <Link to={`nhi-procedure/${treatmentProcedure.nhiProcedure.id}`}>{treatmentProcedure.nhiProcedure.id}</Link>

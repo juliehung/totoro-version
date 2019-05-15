@@ -67,6 +67,9 @@ public class TreatmentProcedureResourceIntTest {
     private static final String DEFAULT_NHI_CATEGORY = "AAAAAAAAAA";
     private static final String UPDATED_NHI_CATEGORY = "BBBBBBBBBB";
 
+    private static final String DEFAULT_NHI_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_NHI_DESCRIPTION = "BBBBBBBBBB";
+
     @Autowired
     private TreatmentProcedureRepository treatmentProcedureRepository;
 
@@ -124,7 +127,8 @@ public class TreatmentProcedureResourceIntTest {
             .note(DEFAULT_NOTE)
             .completedDate(DEFAULT_COMPLETED_DATE)
             .price(DEFAULT_PRICE)
-            .nhiCategory(DEFAULT_NHI_CATEGORY);
+            .nhiCategory(DEFAULT_NHI_CATEGORY)
+            .nhiDescription(DEFAULT_NHI_DESCRIPTION);
         return treatmentProcedure;
     }
 
@@ -155,6 +159,7 @@ public class TreatmentProcedureResourceIntTest {
         assertThat(testTreatmentProcedure.getCompletedDate()).isEqualTo(DEFAULT_COMPLETED_DATE);
         assertThat(testTreatmentProcedure.getPrice()).isEqualTo(DEFAULT_PRICE);
         assertThat(testTreatmentProcedure.getNhiCategory()).isEqualTo(DEFAULT_NHI_CATEGORY);
+        assertThat(testTreatmentProcedure.getNhiDescription()).isEqualTo(DEFAULT_NHI_DESCRIPTION);
     }
 
     @Test
@@ -211,7 +216,8 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].completedDate").value(hasItem(DEFAULT_COMPLETED_DATE.toString())))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
-            .andExpect(jsonPath("$.[*].nhiCategory").value(hasItem(DEFAULT_NHI_CATEGORY.toString())));
+            .andExpect(jsonPath("$.[*].nhiCategory").value(hasItem(DEFAULT_NHI_CATEGORY.toString())))
+            .andExpect(jsonPath("$.[*].nhiDescription").value(hasItem(DEFAULT_NHI_DESCRIPTION.toString())));
     }
     
     @Test
@@ -231,7 +237,8 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
             .andExpect(jsonPath("$.completedDate").value(DEFAULT_COMPLETED_DATE.toString()))
             .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()))
-            .andExpect(jsonPath("$.nhiCategory").value(DEFAULT_NHI_CATEGORY.toString()));
+            .andExpect(jsonPath("$.nhiCategory").value(DEFAULT_NHI_CATEGORY.toString()))
+            .andExpect(jsonPath("$.nhiDescription").value(DEFAULT_NHI_DESCRIPTION.toString()));
     }
 
     @Test
@@ -536,6 +543,45 @@ public class TreatmentProcedureResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllTreatmentProceduresByNhiDescriptionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where nhiDescription equals to DEFAULT_NHI_DESCRIPTION
+        defaultTreatmentProcedureShouldBeFound("nhiDescription.equals=" + DEFAULT_NHI_DESCRIPTION);
+
+        // Get all the treatmentProcedureList where nhiDescription equals to UPDATED_NHI_DESCRIPTION
+        defaultTreatmentProcedureShouldNotBeFound("nhiDescription.equals=" + UPDATED_NHI_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByNhiDescriptionIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where nhiDescription in DEFAULT_NHI_DESCRIPTION or UPDATED_NHI_DESCRIPTION
+        defaultTreatmentProcedureShouldBeFound("nhiDescription.in=" + DEFAULT_NHI_DESCRIPTION + "," + UPDATED_NHI_DESCRIPTION);
+
+        // Get all the treatmentProcedureList where nhiDescription equals to UPDATED_NHI_DESCRIPTION
+        defaultTreatmentProcedureShouldNotBeFound("nhiDescription.in=" + UPDATED_NHI_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByNhiDescriptionIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where nhiDescription is not null
+        defaultTreatmentProcedureShouldBeFound("nhiDescription.specified=true");
+
+        // Get all the treatmentProcedureList where nhiDescription is null
+        defaultTreatmentProcedureShouldNotBeFound("nhiDescription.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllTreatmentProceduresByNhiProcedureIsEqualToSomething() throws Exception {
         // Initialize the database
         NhiProcedure nhiProcedure = NhiProcedureResourceIntTest.createEntity(em);
@@ -680,7 +726,8 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].completedDate").value(hasItem(DEFAULT_COMPLETED_DATE.toString())))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
-            .andExpect(jsonPath("$.[*].nhiCategory").value(hasItem(DEFAULT_NHI_CATEGORY.toString())));
+            .andExpect(jsonPath("$.[*].nhiCategory").value(hasItem(DEFAULT_NHI_CATEGORY.toString())))
+            .andExpect(jsonPath("$.[*].nhiDescription").value(hasItem(DEFAULT_NHI_DESCRIPTION.toString())));
 
         // Check, that the count call also returns 1
         restTreatmentProcedureMockMvc.perform(get("/api/treatment-procedures/count?sort=id,desc&" + filter))
@@ -734,7 +781,8 @@ public class TreatmentProcedureResourceIntTest {
             .note(UPDATED_NOTE)
             .completedDate(UPDATED_COMPLETED_DATE)
             .price(UPDATED_PRICE)
-            .nhiCategory(UPDATED_NHI_CATEGORY);
+            .nhiCategory(UPDATED_NHI_CATEGORY)
+            .nhiDescription(UPDATED_NHI_DESCRIPTION);
 
         restTreatmentProcedureMockMvc.perform(put("/api/treatment-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -752,6 +800,7 @@ public class TreatmentProcedureResourceIntTest {
         assertThat(testTreatmentProcedure.getCompletedDate()).isEqualTo(UPDATED_COMPLETED_DATE);
         assertThat(testTreatmentProcedure.getPrice()).isEqualTo(UPDATED_PRICE);
         assertThat(testTreatmentProcedure.getNhiCategory()).isEqualTo(UPDATED_NHI_CATEGORY);
+        assertThat(testTreatmentProcedure.getNhiDescription()).isEqualTo(UPDATED_NHI_DESCRIPTION);
     }
 
     @Test

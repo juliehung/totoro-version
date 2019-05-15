@@ -131,6 +131,19 @@ export class NhiProcedureUpdate extends React.Component<INhiProcedureUpdateProps
                   <AvField id="nhi-procedure-defaultIcd10CmId" type="string" className="form-control" name="defaultIcd10CmId" />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="descriptionLabel" for="description">
+                    <Translate contentKey="totoroApp.nhiProcedure.description">Description</Translate>
+                  </Label>
+                  <AvField
+                    id="nhi-procedure-description"
+                    type="text"
+                    name="description"
+                    validate={{
+                      maxLength: { value: 5100, errorMessage: translate('entity.validation.maxlength', { max: 5100 }) }
+                    }}
+                  />
+                </AvGroup>
+                <AvGroup>
                   <Label for="nhiProcedureType.id">
                     <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
                   </Label>

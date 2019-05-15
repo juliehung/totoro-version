@@ -165,6 +165,10 @@ public class TreatmentProcedureService {
                     treatmentProcedure.setNhiCategory(updateTreatmentProcedure.getNhiCategory());
                 }
 
+                if (updateTreatmentProcedure.getNhiDescription() != null) {
+                    treatmentProcedure.setNhiDescription(updateTreatmentProcedure.getNhiDescription());
+                }
+
                 if (updateTreatmentProcedure.getProcedure() != null && updateTreatmentProcedure.getProcedure().getId() != null) {
                     procedureRepository.findById(updateTreatmentProcedure.getProcedure().getId()).ifPresent(treatmentProcedure::setProcedure);
                 }

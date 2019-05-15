@@ -25,6 +25,7 @@ export interface ITreatmentProcedure {
   completedDate?: Moment;
   price?: number;
   nhiCategory?: string;
+  nhiDescription?: string;
   nhiProcedure?: INhiProcedure;
   treatmentTask?: ITreatmentTask;
   procedure?: IProcedure;
