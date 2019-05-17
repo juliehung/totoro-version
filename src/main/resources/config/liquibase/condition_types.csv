@@ -39,7 +39,7 @@ id;major;minor;display
 38;Space Maintainer;Pedo;true
 39;Resin Veneer;Cosmetic;true
 40;Gingival Recession;Peri;false
-41;Probing>5;Peri;true
+41;Probing>=5;Peri;true
 42;Furcation Involvement;Peri;true
 43;Mobility;Peri;false
 44;Bleeding On Probing;Peri;false
