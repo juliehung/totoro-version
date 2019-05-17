@@ -42,6 +42,10 @@ public class DrugCriteria implements Serializable {
 
     private StringFilter warning;
 
+    private IntegerFilter days;
+
+    private IntegerFilter order;
+
     public LongFilter getId() {
         return id;
     }
@@ -122,6 +126,22 @@ public class DrugCriteria implements Serializable {
         this.warning = warning;
     }
 
+    public IntegerFilter getDays() {
+        return days;
+    }
+
+    public void setDays(IntegerFilter days) {
+        this.days = days;
+    }
+
+    public IntegerFilter getOrder() {
+        return order;
+    }
+
+    public void setOrder(IntegerFilter order) {
+        this.order = order;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -142,7 +162,9 @@ public class DrugCriteria implements Serializable {
             Objects.equals(frequency, that.frequency) &&
             Objects.equals(way, that.way) &&
             Objects.equals(nhiCode, that.nhiCode) &&
-            Objects.equals(warning, that.warning);
+            Objects.equals(warning, that.warning) &&
+            Objects.equals(days, that.days) &&
+            Objects.equals(order, that.order);
     }
 
     @Override
@@ -157,7 +179,9 @@ public class DrugCriteria implements Serializable {
         frequency,
         way,
         nhiCode,
-        warning
+        warning,
+        days,
+        order
         );
     }
 
@@ -174,6 +198,8 @@ public class DrugCriteria implements Serializable {
                 (way != null ? "way=" + way + ", " : "") +
                 (nhiCode != null ? "nhiCode=" + nhiCode + ", " : "") +
                 (warning != null ? "warning=" + warning + ", " : "") +
+                (days != null ? "days=" + days + ", " : "") +
+                (order != null ? "order=" + order + ", " : "") +
             "}";
     }
 

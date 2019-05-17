@@ -65,6 +65,12 @@ export class Drug extends React.Component<IDrugProps> {
                 <th>
                   <Translate contentKey="totoroApp.drug.warning">Warning</Translate>
                 </th>
+                <th>
+                  <Translate contentKey="totoroApp.drug.days">Days</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.drug.order">Order</Translate>
+                </th>
                 <th />
               </tr>
             </thead>
@@ -85,6 +91,8 @@ export class Drug extends React.Component<IDrugProps> {
                   <td>{drug.way}</td>
                   <td>{drug.nhiCode}</td>
                   <td>{drug.warning}</td>
+                  <td>{drug.days}</td>
+                  <td>{drug.order}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${drug.id}`} color="info" size="sm">

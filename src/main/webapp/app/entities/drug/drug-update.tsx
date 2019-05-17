@@ -150,6 +150,18 @@ export class DrugUpdate extends React.Component<IDrugUpdateProps, IDrugUpdateSta
                   </Label>
                   <AvField id="drug-warning" type="text" name="warning" />
                 </AvGroup>
+                <AvGroup>
+                  <Label id="daysLabel" for="days">
+                    <Translate contentKey="totoroApp.drug.days">Days</Translate>
+                  </Label>
+                  <AvField id="drug-days" type="string" className="form-control" name="days" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="orderLabel" for="order">
+                    <Translate contentKey="totoroApp.drug.order">Order</Translate>
+                  </Label>
+                  <AvField id="drug-order" type="string" className="form-control" name="order" />
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/drug" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;

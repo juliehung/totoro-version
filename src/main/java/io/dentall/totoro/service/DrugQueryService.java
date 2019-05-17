@@ -110,6 +110,12 @@ public class DrugQueryService extends QueryService<Drug> {
             if (criteria.getWarning() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getWarning(), Drug_.warning));
             }
+            if (criteria.getDays() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getDays(), Drug_.days));
+            }
+            if (criteria.getOrder() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getOrder(), Drug_.order));
+            }
         }
         return specification;
     }

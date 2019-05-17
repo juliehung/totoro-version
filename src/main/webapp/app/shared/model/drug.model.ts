@@ -9,6 +9,8 @@ export interface IDrug {
   way?: string;
   nhiCode?: string;
   warning?: string;
+  days?: number;
+  order?: number;
 }
 
 export const defaultValue: Readonly<IDrug> = {};

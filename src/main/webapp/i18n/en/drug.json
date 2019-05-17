@@ -23,7 +23,9 @@
       "frequency": "Frequency",
       "way": "Way",
       "nhiCode": "Nhi Code",
-      "warning": "Warning"
+      "warning": "Warning",
+      "days": "Days",
+      "order": "Order"
     }
   }
 }
