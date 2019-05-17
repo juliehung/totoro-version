@@ -82,6 +82,18 @@ export class DrugDetail extends React.Component<IDrugDetailProps> {
               </span>
             </dt>
             <dd>{drugEntity.warning}</dd>
+            <dt>
+              <span id="days">
+                <Translate contentKey="totoroApp.drug.days">Days</Translate>
+              </span>
+            </dt>
+            <dd>{drugEntity.days}</dd>
+            <dt>
+              <span id="order">
+                <Translate contentKey="totoroApp.drug.order">Order</Translate>
+              </span>
+            </dt>
+            <dd>{drugEntity.order}</dd>
           </dl>
           <Button tag={Link} to="/entity/drug" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

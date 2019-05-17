@@ -70,6 +70,12 @@ public class DrugResourceIntTest {
     private static final String DEFAULT_WARNING = "AAAAAAAAAA";
     private static final String UPDATED_WARNING = "BBBBBBBBBB";
 
+    private static final Integer DEFAULT_DAYS = 1;
+    private static final Integer UPDATED_DAYS = 2;
+
+    private static final Integer DEFAULT_ORDER = 1;
+    private static final Integer UPDATED_ORDER = 2;
+
     @Autowired
     private DrugRepository drugRepository;
 
@@ -126,7 +132,9 @@ public class DrugResourceIntTest {
             .frequency(DEFAULT_FREQUENCY)
             .way(DEFAULT_WAY)
             .nhiCode(DEFAULT_NHI_CODE)
-            .warning(DEFAULT_WARNING);
+            .warning(DEFAULT_WARNING)
+            .days(DEFAULT_DAYS)
+            .order(DEFAULT_ORDER);
         return drug;
     }
 
@@ -159,6 +167,8 @@ public class DrugResourceIntTest {
         assertThat(testDrug.getWay()).isEqualTo(DEFAULT_WAY);
         assertThat(testDrug.getNhiCode()).isEqualTo(DEFAULT_NHI_CODE);
         assertThat(testDrug.getWarning()).isEqualTo(DEFAULT_WARNING);
+        assertThat(testDrug.getDays()).isEqualTo(DEFAULT_DAYS);
+        assertThat(testDrug.getOrder()).isEqualTo(DEFAULT_ORDER);
     }
 
     @Test
@@ -217,7 +227,9 @@ public class DrugResourceIntTest {
             .andExpect(jsonPath("$.[*].frequency").value(hasItem(DEFAULT_FREQUENCY.toString())))
             .andExpect(jsonPath("$.[*].way").value(hasItem(DEFAULT_WAY.toString())))
             .andExpect(jsonPath("$.[*].nhiCode").value(hasItem(DEFAULT_NHI_CODE.toString())))
-            .andExpect(jsonPath("$.[*].warning").value(hasItem(DEFAULT_WARNING.toString())));
+            .andExpect(jsonPath("$.[*].warning").value(hasItem(DEFAULT_WARNING.toString())))
+            .andExpect(jsonPath("$.[*].days").value(hasItem(DEFAULT_DAYS)))
+            .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)));
     }
     
     @Test
@@ -239,7 +251,9 @@ public class DrugResourceIntTest {
             .andExpect(jsonPath("$.frequency").value(DEFAULT_FREQUENCY.toString()))
             .andExpect(jsonPath("$.way").value(DEFAULT_WAY.toString()))
             .andExpect(jsonPath("$.nhiCode").value(DEFAULT_NHI_CODE.toString()))
-            .andExpect(jsonPath("$.warning").value(DEFAULT_WARNING.toString()));
+            .andExpect(jsonPath("$.warning").value(DEFAULT_WARNING.toString()))
+            .andExpect(jsonPath("$.days").value(DEFAULT_DAYS))
+            .andExpect(jsonPath("$.order").value(DEFAULT_ORDER));
     }
 
     @Test
@@ -592,6 +606,138 @@ public class DrugResourceIntTest {
         // Get all the drugList where warning is null
         defaultDrugShouldNotBeFound("warning.specified=false");
     }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByDaysIsEqualToSomething() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where days equals to DEFAULT_DAYS
+        defaultDrugShouldBeFound("days.equals=" + DEFAULT_DAYS);
+
+        // Get all the drugList where days equals to UPDATED_DAYS
+        defaultDrugShouldNotBeFound("days.equals=" + UPDATED_DAYS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByDaysIsInShouldWork() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where days in DEFAULT_DAYS or UPDATED_DAYS
+        defaultDrugShouldBeFound("days.in=" + DEFAULT_DAYS + "," + UPDATED_DAYS);
+
+        // Get all the drugList where days equals to UPDATED_DAYS
+        defaultDrugShouldNotBeFound("days.in=" + UPDATED_DAYS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByDaysIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where days is not null
+        defaultDrugShouldBeFound("days.specified=true");
+
+        // Get all the drugList where days is null
+        defaultDrugShouldNotBeFound("days.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByDaysIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where days greater than or equals to DEFAULT_DAYS
+        defaultDrugShouldBeFound("days.greaterOrEqualThan=" + DEFAULT_DAYS);
+
+        // Get all the drugList where days greater than or equals to UPDATED_DAYS
+        defaultDrugShouldNotBeFound("days.greaterOrEqualThan=" + UPDATED_DAYS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByDaysIsLessThanSomething() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where days less than or equals to DEFAULT_DAYS
+        defaultDrugShouldNotBeFound("days.lessThan=" + DEFAULT_DAYS);
+
+        // Get all the drugList where days less than or equals to UPDATED_DAYS
+        defaultDrugShouldBeFound("days.lessThan=" + UPDATED_DAYS);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllDrugsByOrderIsEqualToSomething() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where order equals to DEFAULT_ORDER
+        defaultDrugShouldBeFound("order.equals=" + DEFAULT_ORDER);
+
+        // Get all the drugList where order equals to UPDATED_ORDER
+        defaultDrugShouldNotBeFound("order.equals=" + UPDATED_ORDER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByOrderIsInShouldWork() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where order in DEFAULT_ORDER or UPDATED_ORDER
+        defaultDrugShouldBeFound("order.in=" + DEFAULT_ORDER + "," + UPDATED_ORDER);
+
+        // Get all the drugList where order equals to UPDATED_ORDER
+        defaultDrugShouldNotBeFound("order.in=" + UPDATED_ORDER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByOrderIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where order is not null
+        defaultDrugShouldBeFound("order.specified=true");
+
+        // Get all the drugList where order is null
+        defaultDrugShouldNotBeFound("order.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByOrderIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where order greater than or equals to DEFAULT_ORDER
+        defaultDrugShouldBeFound("order.greaterOrEqualThan=" + DEFAULT_ORDER);
+
+        // Get all the drugList where order greater than or equals to UPDATED_ORDER
+        defaultDrugShouldNotBeFound("order.greaterOrEqualThan=" + UPDATED_ORDER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDrugsByOrderIsLessThanSomething() throws Exception {
+        // Initialize the database
+        drugRepository.saveAndFlush(drug);
+
+        // Get all the drugList where order less than or equals to DEFAULT_ORDER
+        defaultDrugShouldNotBeFound("order.lessThan=" + DEFAULT_ORDER);
+
+        // Get all the drugList where order less than or equals to UPDATED_ORDER
+        defaultDrugShouldBeFound("order.lessThan=" + UPDATED_ORDER);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -608,7 +754,9 @@ public class DrugResourceIntTest {
             .andExpect(jsonPath("$.[*].frequency").value(hasItem(DEFAULT_FREQUENCY.toString())))
             .andExpect(jsonPath("$.[*].way").value(hasItem(DEFAULT_WAY.toString())))
             .andExpect(jsonPath("$.[*].nhiCode").value(hasItem(DEFAULT_NHI_CODE.toString())))
-            .andExpect(jsonPath("$.[*].warning").value(hasItem(DEFAULT_WARNING.toString())));
+            .andExpect(jsonPath("$.[*].warning").value(hasItem(DEFAULT_WARNING.toString())))
+            .andExpect(jsonPath("$.[*].days").value(hasItem(DEFAULT_DAYS)))
+            .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)));
 
         // Check, that the count call also returns 1
         restDrugMockMvc.perform(get("/api/drugs/count?sort=id,desc&" + filter))
@@ -664,7 +812,9 @@ public class DrugResourceIntTest {
             .frequency(UPDATED_FREQUENCY)
             .way(UPDATED_WAY)
             .nhiCode(UPDATED_NHI_CODE)
-            .warning(UPDATED_WARNING);
+            .warning(UPDATED_WARNING)
+            .days(UPDATED_DAYS)
+            .order(UPDATED_ORDER);
 
         restDrugMockMvc.perform(put("/api/drugs")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -684,6 +834,8 @@ public class DrugResourceIntTest {
         assertThat(testDrug.getWay()).isEqualTo(UPDATED_WAY);
         assertThat(testDrug.getNhiCode()).isEqualTo(UPDATED_NHI_CODE);
         assertThat(testDrug.getWarning()).isEqualTo(UPDATED_WARNING);
+        assertThat(testDrug.getDays()).isEqualTo(UPDATED_DAYS);
+        assertThat(testDrug.getOrder()).isEqualTo(UPDATED_ORDER);
     }
 
     @Test

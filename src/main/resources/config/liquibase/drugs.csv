@@ -1,61 +1,61 @@
-﻿id;nhi_code;name;unit;price;quantity;frequency;way;warning;chinese_name
-1;AC13229100;Amoxicillin-250mg;tab;1;1;QID;PO;NULL;阿莫西林
-2;A000106100;Erythromycin-250mg;mg;10;1;QID;PO;NULL;红霉素
-3;AB08774100;Potarlon-500mg;tab;1;1;QID;PO;NULL;保痛樂錠
-4;AC56643100;Clindamycin-150mg;tab;1.24;1;QID;PO;NULL;克林霉素
-5;A022122100;Acetaminophen-500mg;tab;0;1;QID;PO;NULL;乙醯胺酚
-6;AC25279100;Superzyme(Lysozyme)90mg;mg;1;1;QID;PO;NULL;佑速朗錠
-7;A031837100;Poro-80mg;mg;0;1;QID;PO;NULL;伯樂錠80毫克
-8;AC09654100;Doxymycin-100mg;mg;0;1;QID;PO;NULL;去氧羥四環素
-9;AC36749100;Soma;mg;0;1;QID;PO;NULL;舒肌痛膠囊
-10;AC09275100;Vicomp;mg;0;1;QID;PO;NULL;妙維糖衣錠
-11;A003703100;Epilon;mg;8;1;QID;PO;NULL;胃必朗錠
-12;A0493221T0;Buprotin sustained release F.C. Tablets 150mg""Royal"";mg;20.7;1;QD;PO;NULL;""皇佳""慮舒妥持續性藥效膜衣錠150毫克
-13;A0490111T0;Funnix SR Tablets 150mg;mg;20.7;1;QD;PO;NULL;輔寧持續性藥效錠150毫克
-14;A0550051T0;Prewell SR Tablets 150mg ""Macro"";mg;22.5;1;QD;PO;NULL;""瑪科隆""複維藥持續性藥效錠150毫克
-15;B0220903EF;Nicotinell TTS 30;mg;78;1;QD;EXT;NULL;克菸貼片30
-16;B022089396;Nicotinell TTS 20;mg;78;1;QD;EXT;NULL;克菸貼片20
-17;B0220883EG;Nicotinell TTS 10;mg;78;1;QD;EXT;NULL;克菸貼片10
-18;B024431100;Nicotinell Fruit 4mg Chewing Gum;mg;8;1;QD;PO;NULL;克菸 咀嚼錠 (水果口味)4毫克
-19;B024457100;Nicotinell Mint 2mg Chewing Gum;mg;6;1;QD;PO;NULL;克菸 咀嚼錠 (薄荷口味)2毫克
-20;B024458100;Nicotinell Fruit 2mg Chewing Gum;mg;6;1;QD;PO;NULL;克菸 咀嚼錠 (水果口味)2毫克
-21;B024499100;Nicotinell Mint 4mg Chewing Gum;mg;8;1;QD;PO;NULL;克菸 咀嚼錠 (薄荷口味)4毫克
-22;A0386463EH;Smokfree Nicotine TDDS 15;mg;56;1;QD;EXT;NULL;淨菸 經皮戒菸貼片15號
-23;A0386463EJ;Smokfree Nicotine TDDS 10;mg;56;1;QD;EXT;NULL;淨菸 經皮戒菸貼片10號
-24;A0386463EK;Smokfree Nicotine TDDS 5;mg;56;1;QD;EXT;NULL;淨菸 經皮戒菸貼片5號
-25;A058046100;Smokquit Mint Lozenges 2mg;mg;6;1;QD;PO;NULL;""信東""停菸戒菸薄荷片口含錠2毫克
-26;A058047100;Smokquit Mint Lozenges 4mg;mg;8;1;QD;PO;NULL;""信東""停菸戒菸薄荷片口含錠4毫克
-27;A0567821T0;Bupion SR Tablets 150mg;mg;23.6;1;QD;PO;NULL;""信東""布憂平持續藥效錠150毫克
-28;B024574100;NiQuitin Mint Lozenges 2mg;mg;6;1;QD;PO;NULL;力抗菸戒菸薄荷片口含錠2毫克
-29;B024575100;NiQuitin Mint Lozenges 4mg;mg;8;1;QD;PO;NULL;力抗菸戒菸薄荷片口含錠4毫克
-30;B0234281T0;Wellbutrin Sustained-Release Tablets 150mg;mg;29.5;1;QD;PO;NULL;威博雋持續性藥效錠
-31;B024740100;Nicorette Freshmint medicated chewing-gum 2mg;mg;6;1;QD;PO;NULL;尼古清 薄荷咀嚼錠 2毫克
-32;B024741100;Nicorette Freshmint medicated chewing-gum 4mg;mg;8;1;QD;PO;NULL;尼古清 薄荷咀嚼錠 4毫克
-33;B024649100;Champix film coated tablet 0.5mg;mg;60;1;QD;PO;NULL;戒必適 0.5毫克
-34;B024648100;Champix film coated tablet 1mg;mg;60;1;QD;PO;NULL;戒必適 1毫克
-35;AC23239100;Amoxicillin-500mg;tab;0;1;QID;PO;NULL;盤尼西林
-36;AC52357100;Ibuprofen-400mg;tab;0;1;QID;PO;NULL;布洛芬
-37;AC46259421;口內膏;gm;0;1;PRN;TOPI;NULL;口內膏
-38;A040164151;ANTI-PHEN;ml;1;0.5;PRN;PO;NULL;安佳熱糖漿
-39;AC29172100;Cephalexin-500mg;tab;0;1;QID;PO;NULL;頭孢氨苄
-40;AB45438151;IDOFEN;ml;0;1;PRN;PO;NULL;舒抑痛口服懸液
-41;AC278491G0;Lorazepam 0.5mg;NULL;0;1;PRN;PO;四級管制藥品;樂耐平
-42;AB38019100;Voren-100mg;NULL;0;1;QID;PO;NULL;非炎
-43;AC37603100;Diclofenac sodium 50mg;tab;0;1;QID;PO;NULL;待克非那
-44;AC058131G0;Solaxin-250mg;tab;0;1;QID;PO;NULL;肌絡舒片
-45;BC22612100;Augmentin 1g;g;0;1;BID;PO;NULL;安滅菌膜衣錠
-46;BC23792100;Xyzal-5mg;mg;0;1;QD;PO;NULL;驅異樂膜衣錠
-47;AC03206100;PASSTON 250mg;mg;0;1;QID;PO;NULL;保適當膠囊
-48;AC36160110;Amolin Powder;mg;31;1;QD;PO;NULL;安莫西林
-49;AB26653100;Diclofenac-25mg;tab;0;1;QID;PO;NULL;待克菲那
-50;AB38288321;Deherp 5g;NULL;0;1;PRN;TOPI;NULL;疱寧錠
-51;AC41378100;Preconin;NULL;1;1;TID;PO;NULL;保康寧錠
-52;AC39867100;ANZEN;NULL;0;1;TID;PO;NULL;安炎腸溶膜衣錠
-53;AC20112100;Tricogyl-250mg;mg;0;1;QID;PO;NULL;脫帶淨膜衣錠
-54;AC293451G0;Flagyl-250mg;mg;0;1;QID;PO;NULL;益膚康凝膠
-55;AB08774100;Ponstan-500mg;tab;0;1;QID;PO;NULL;不炎痛
-56;BC211401G0;Xanax 0.5mg;NULL;0;1;QD;PO;NULL;贊安諾錠
-57;AC25279100;Noflagma;tab;0;1;TID;PO;NULL;祛痰劑痰液溶解劑
-58;A032499100;sinwell 200mg;tab;0;1;TID;PO;NULL;欣胃錠
-59;AC29172100;KEFLEX;NULL;0;1;QID;PO;NULL;抗生素
-60;NULL;Mouthwash;NULL;NULL;NULL;NULL;NULL;NULL;漱口水
+﻿id;nhi_code;name;unit;price;quantity;frequency;way;warning;chinese_name;days;jhi_order
+1;AC13229100;Amoxicillin-250mg;tab;1;1;QID;PO;NULL;阿莫西林;2;NULL
+2;A000106100;Erythromycin-250mg;mg;10;1;QID;PO;NULL;红霉素;3;NULL
+4;AC56643100;Clindamycin-150mg;tab;1.24;1;QID;PO;NULL;克林霉素;3;NULL
+5;A022122100;Acetaminophen(Paran) 500mg;tab;0;1;QID;PO;NULL;乙醯胺酚;3;1
+6;AC25279100;Superzyml 90mg;mg;1;1;QID;PO;NULL;佑速朗錠;3;NULL
+7;A031837100;Poro-80mg;mg;0;1;QID;PO;NULL;伯樂錠80毫克;3;NULL
+8;AC09654100;Doxymycin-100mg;mg;0;1;QID;PO;NULL;去氧羥四環素;3;NULL
+9;AC36749100;Soma;mg;0;1;QID;PO;NULL;舒肌痛膠囊;3;NULL
+10;AC09275100;Vicomp;mg;0;1;QID;PO;NULL;妙維糖衣錠;3;NULL
+11;A003703100;Epilon;mg;8;1;QID;PO;NULL;胃必朗錠;3;NULL
+12;A0493221T0;Buprotin sustained release F.C. Tablets 150mg""Royal"";mg;20.7;1;QD;PO;NULL;""皇佳""慮舒妥持續性藥效膜衣錠150毫克;3;NULL
+13;A0490111T0;Funnix SR Tablets 150mg;mg;20.7;1;QD;PO;NULL;輔寧持續性藥效錠150毫克;3;NULL
+14;A0550051T0;Prewell SR Tablets 150mg ""Macro"";mg;22.5;1;QD;PO;NULL;""瑪科隆""複維藥持續性藥效錠150毫克;3;NULL
+15;B0220903EF;Nicotinell TTS 30;mg;78;1;QD;EXT;NULL;克菸貼片30;7;NULL
+16;B022089396;Nicotinell TTS 20;mg;78;1;QD;EXT;NULL;克菸貼片20;7;NULL
+17;B0220883EG;Nicotinell TTS 10;mg;78;1;QD;EXT;NULL;克菸貼片10;7;NULL
+18;B024431100;Nicotinell Fruit 4mg Chewing Gum;mg;8;1;QD;PO;NULL;克菸 咀嚼錠 (水果口味)4毫克;7;NULL
+19;B024457100;Nicotinell Mint 2mg Chewing Gum;mg;6;1;QD;PO;NULL;克菸 咀嚼錠 (薄荷口味)2毫克;7;NULL
+20;B024458100;Nicotinell Fruit 2mg Chewing Gum;mg;6;1;QD;PO;NULL;克菸 咀嚼錠 (水果口味)2毫克;7;NULL
+21;B024499100;Nicotinell Mint 4mg Chewing Gum;mg;8;1;QD;PO;NULL;克菸 咀嚼錠 (薄荷口味)4毫克;7;NULL
+22;A0386463EH;Smokfree Nicotine TDDS 15;mg;56;1;QD;EXT;NULL;淨菸 經皮戒菸貼片15號;7;NULL
+23;A0386463EJ;Smokfree Nicotine TDDS 10;mg;56;1;QD;EXT;NULL;淨菸 經皮戒菸貼片10號;7;NULL
+24;A0386463EK;Smokfree Nicotine TDDS 5;mg;56;1;QD;EXT;NULL;淨菸 經皮戒菸貼片5號;7;NULL
+25;A058046100;Smokquit Mint Lozenges 2mg;mg;6;1;QD;PO;NULL;""信東""停菸戒菸薄荷片口含錠2毫克;7;NULL
+26;A058047100;Smokquit Mint Lozenges 4mg;mg;8;1;QD;PO;NULL;""信東""停菸戒菸薄荷片口含錠4毫克;7;NULL
+27;A0567821T0;Bupion SR Tablets 150mg;mg;23.6;1;QD;PO;NULL;""信東""布憂平持續藥效錠150毫克;3;NULL
+28;B024574100;NiQuitin Mint Lozenges 2mg;mg;6;1;QD;PO;NULL;力抗菸戒菸薄荷片口含錠2毫克;7;NULL
+29;B024575100;NiQuitin Mint Lozenges 4mg;mg;8;1;QD;PO;NULL;力抗菸戒菸薄荷片口含錠4毫克;7;NULL
+30;B0234281T0;Wellbutrin Sustained-Release Tablets 150mg;mg;29.5;1;QD;PO;NULL;威博雋持續性藥效錠;3;NULL
+31;B024740100;Nicorette Freshmint medicated chewing-gum 2mg;mg;6;1;QD;PO;NULL;尼古清 薄荷咀嚼錠 2毫克;7;NULL
+32;B024741100;Nicorette Freshmint medicated chewing-gum 4mg;mg;8;1;QD;PO;NULL;尼古清 薄荷咀嚼錠 4毫克;7;NULL
+33;B024649100;Champix film coated tablet 0.5mg;mg;60;1;QD;PO;NULL;戒必適 0.5毫克;3;NULL
+34;B024648100;Champix film coated tablet 1mg;mg;60;1;QD;PO;NULL;戒必適 1毫克;3;NULL
+35;AC23239100;Amoxicillin-500mg;tab;0;1;QID;PO;NULL;盤尼西林;3;NULL
+36;AC52357100;Ibuprofen-400mg;tab;0;1;QID;PO;NULL;布洛芬;3;2
+38;A040164151;ANTI-PHEN;ml;1;0.5;PRN;PO;NULL;安佳熱糖漿;3;NULL
+39;AC29172100;Cephalexin-500mg;tab;0;1;QID;PO;NULL;頭孢氨苄;3;NULL
+40;AB45438151;IDOFEN;ml;0;1;PRN;PO;NULL;舒抑痛口服懸液;5;NULL
+41;AC278491G0;Lorazepam 0.5mg;NULL;0;1;PRN;PO;四級管制藥品;樂耐平;7;NULL
+42;AB38019100;Voren-100mg;NULL;0;1;QID;PO;NULL;非炎;3;NULL
+43;AC37603100;Diclofenac sodium 50mg;tab;0;1;QID;PO;NULL;待克非那;3;NULL
+44;AC058131G0;Solaxin-250mg;tab;0;1;QID;PO;NULL;肌絡舒片;3;8
+45;BC22612100;Augmentin 1g;g;0;1;BID;PO;NULL;安滅菌膜衣錠;5;NULL
+46;BC23792100;Xyzal-5mg;mg;0;1;QD;PO;NULL;驅異樂膜衣錠;3;NULL
+47;AC03206100;PASSTON 250mg;mg;0;1;QID;PO;NULL;保適當膠囊;3;NULL
+48;AC36160110;Amolin Powder;mg;31;1;QD;PO;NULL;安莫西林;3;NULL
+49;AB26653100;Diclofenac-25mg;tab;0;1;QID;PO;NULL;待克菲那;3;NULL
+50;AB38288321;Deherp 5g;NULL;0;1;PRN;TOPI;NULL;疱寧錠;1;NULL
+51;AC41378100;Preconin;NULL;1;1;TID;PO;NULL;保康寧錠;3;NULL
+52;AC39867100;ANZEN;NULL;0;1;TID;PO;NULL;安炎腸溶膜衣錠;3;NULL
+53;AC20112100;Tricogyl-250mg;mg;0;1;QID;PO;NULL;脫帶淨膜衣錠;3;NULL
+54;AC293451G0;Flagyl-250mg;mg;0;1;QID;PO;NULL;益膚康凝膠;3;NULL
+55;AB08774100;Ponstan-500mg;tab;0;1;QID;PO;NULL;不炎痛;3;6
+56;BC211401G0;Xanax 0.5mg;NULL;0;1;QD;PO;NULL;贊安諾錠;3;9
+57;A026007100;Noflagma;tab;0;1;TID;PO;NULL;祛痰劑痰液溶解劑;3;4
+58;A032499100;sinwell 200mg;tab;0;1;TID;PO;NULL;欣胃錠;3;NULL
+59;AC29172100;KEFLEX;NULL;0;1;QID;PO;NULL;抗生素;3;NULL
+60;NULL;Mouthwash;NULL;NULL;NULL;NULL;NULL;NULL;漱口水;NULL;NULL
+61;AC21981423;NINCORT;gm;0;1;PRN;TOPI;NULL;口內膏;3;3
+62;AB33541423;Oralog;gm;0;1;PRN;TOPI;NULL;口內膏;3;5

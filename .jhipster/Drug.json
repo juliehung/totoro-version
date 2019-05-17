@@ -1,5 +1,7 @@
 {
-    "name": "Drug",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
     "fields": [
         {
             "fieldName": "name",
@@ -39,16 +41,21 @@
         {
             "fieldName": "warning",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "days",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "order",
+            "fieldType": "Integer"
         }
     ],
-    "relationships": [],
     "changelogDate": "20190214094023",
-    "entityTableName": "drug",
     "dto": "no",
-    "pagination": "no",
+    "searchEngine": false,
     "service": "serviceClass",
+    "entityTableName": "drug",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "no"
 }

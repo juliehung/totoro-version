@@ -52,6 +52,12 @@ public class Drug implements Serializable {
     @Column(name = "warning")
     private String warning;
 
+    @Column(name = "days")
+    private Integer days;
+
+    @Column(name = "jhi_order")
+    private Integer order;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -177,6 +183,32 @@ public class Drug implements Serializable {
     public void setWarning(String warning) {
         this.warning = warning;
     }
+
+    public Integer getDays() {
+        return days;
+    }
+
+    public Drug days(Integer days) {
+        this.days = days;
+        return this;
+    }
+
+    public void setDays(Integer days) {
+        this.days = days;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public Drug order(Integer order) {
+        this.order = order;
+        return this;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -212,6 +244,8 @@ public class Drug implements Serializable {
             ", way='" + getWay() + "'" +
             ", nhiCode='" + getNhiCode() + "'" +
             ", warning='" + getWarning() + "'" +
+            ", days=" + getDays() +
+            ", order=" + getOrder() +
             "}";
     }
 }
