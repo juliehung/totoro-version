@@ -1,6 +1,6 @@
 package io.dentall.totoro.domain;
 
-public interface NHIMedicalArea {
+public interface NhiMedicalArea {
 
     String getA71();
 
@@ -37,4 +37,8 @@ public interface NHIMedicalArea {
     String getA79();
 
     void setA79(String a79);
+
+    String getCheck();
+
+    void setCheck(String check);
 }

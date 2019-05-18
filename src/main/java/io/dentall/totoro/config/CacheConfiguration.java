@@ -3,6 +3,8 @@ package io.dentall.totoro.config;
 import java.time.Duration;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import org.ehcache.config.builders.*;
 import org.ehcache.jsr107.Eh107Configuration;
 
@@ -83,8 +85,8 @@ public class CacheConfiguration {
             cm.createCache(io.dentall.totoro.domain.Disposal.class.getName() + ".teeth", jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.Patient.class.getName() + ".teeth", jcacheConfiguration);
             cm.createCache(NhiExtendDisposal.class.getName(), jcacheConfiguration);
-            cm.createCache(io.dentall.totoro.domain.NHIExtendTreatmentProcedure.class.getName(), jcacheConfiguration);
-            cm.createCache(io.dentall.totoro.domain.NHIExtendTreatmentDrug.class.getName(), jcacheConfiguration);
+            cm.createCache(NhiExtendTreatmentProcedure.class.getName(), jcacheConfiguration);
+            cm.createCache(NhiExtendTreatmentDrug.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.NhiIcd9Cm.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.NhiIcd9Cm.class.getName() + ".nhiIcd10Cms", jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.NhiIcd10Cm.class.getName(), jcacheConfiguration);

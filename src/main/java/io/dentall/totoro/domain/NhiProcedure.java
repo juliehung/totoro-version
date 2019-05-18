@@ -47,6 +47,10 @@ public class NhiProcedure implements Serializable {
     @Column(name = "description", length = 5100)
     private String description;
 
+    @Size(max = 510)
+    @Column(name = "exclude", length = 510)
+    private String exclude;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private NhiProcedureType nhiProcedureType;
@@ -145,6 +149,19 @@ public class NhiProcedure implements Serializable {
         this.description = description;
     }
 
+    public String getExclude() {
+        return exclude;
+    }
+
+    public NhiProcedure exclude(String exclude) {
+        this.exclude = exclude;
+        return this;
+    }
+
+    public void setExclude(String exclude) {
+        this.exclude = exclude;
+    }
+
     public NhiProcedureType getNhiProcedureType() {
         return nhiProcedureType;
     }
@@ -227,6 +244,7 @@ public class NhiProcedure implements Serializable {
             ", englishName='" + getEnglishName() + "'" +
             ", defaultIcd10CmId=" + getDefaultIcd10CmId() +
             ", description='" + getDescription() + "'" +
+            ", exclude='" + getExclude() + "'" +
             "}";
     }
 }

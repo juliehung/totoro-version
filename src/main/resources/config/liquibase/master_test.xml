@@ -6,6 +6,9 @@
 
     <include file="config/liquibase/master_main.xml" relativeToChangelogFile="false"/>
 
+    <!-- data -->
+    <include file="config/liquibase/master_data_test.xml" relativeToChangelogFile="false"/>
+
     <!-- constraints -->
     <include file="config/liquibase/master_constraints.xml" relativeToChangelogFile="false"/>
 

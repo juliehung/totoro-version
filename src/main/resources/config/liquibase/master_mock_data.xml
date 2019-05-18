@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="data" author="Jim">
+    <changeSet id="mock_data" author="Jim">
         <loadData encoding="UTF-8"
                   file="config/liquibase/extend_users.csv"
                   separator=";"

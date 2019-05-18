@@ -7,7 +7,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <!--
-        Added the entity NHIExtendTreatmentProcedure.
+        Added the entity NhiExtendTreatmentProcedure.
     -->
     <changeSet id="20190426-CreateTable" author="Jim">
         <createTable tableName="nhi_extend_treatment_procedure">
@@ -48,6 +48,10 @@
             </column>
 
             <column name="a79" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="check" type="varchar(510)">
                 <constraints nullable="true" />
             </column>
         </createTable>

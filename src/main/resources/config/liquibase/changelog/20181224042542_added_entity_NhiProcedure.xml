@@ -45,6 +45,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="exclude" type="varchar(510)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="nhi_procedure_type_id" type="bigint">
                 <constraints nullable="true" />
             </column>

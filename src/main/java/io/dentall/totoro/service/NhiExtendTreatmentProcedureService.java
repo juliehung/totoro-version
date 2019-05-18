@@ -1,8 +1,8 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.NHIExtendTreatmentProcedure;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentProcedure;
-import io.dentall.totoro.repository.NHIExtendTreatmentProcedureRepository;
+import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.service.util.MedicalAreaUtil;
 import io.dentall.totoro.service.util.ProblemUtil;
@@ -17,19 +17,19 @@ import org.zalando.problem.Status;
 import java.util.Optional;
 
 /**
- * Service Implementation for managing NHIExtendTreatmentProcedure.
+ * Service Implementation for managing NhiExtendTreatmentProcedure.
  */
 @Service
 @Transactional
-public class NHIExtendTreatmentProcedureService {
+public class NhiExtendTreatmentProcedureService {
 
-    private final Logger log = LoggerFactory.getLogger(NHIExtendTreatmentProcedureService.class);
+    private final Logger log = LoggerFactory.getLogger(NhiExtendTreatmentProcedureService.class);
 
-    private final NHIExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
+    private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
 
     private final TreatmentProcedureRepository treatmentProcedureRepository;
 
-    public NHIExtendTreatmentProcedureService(NHIExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository, TreatmentProcedureRepository treatmentProcedureRepository) {
+    public NhiExtendTreatmentProcedureService(NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository, TreatmentProcedureRepository treatmentProcedureRepository) {
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
         this.treatmentProcedureRepository = treatmentProcedureRepository;
     }
@@ -40,8 +40,8 @@ public class NHIExtendTreatmentProcedureService {
      * @param nhiExtendTreatmentProcedure the entity to save
      * @return the persisted entity
      */
-    public NHIExtendTreatmentProcedure save(NHIExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
-        log.debug("Request to save NHIExtendTreatmentProcedure : {}", nhiExtendTreatmentProcedure);
+    public NhiExtendTreatmentProcedure save(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+        log.debug("Request to save NhiExtendTreatmentProcedure : {}", nhiExtendTreatmentProcedure);
 
         TreatmentProcedure treatmentProcedure = nhiExtendTreatmentProcedure.getTreatmentProcedure();
         if (treatmentProcedure == null || treatmentProcedure.getId() == null) {
@@ -63,8 +63,8 @@ public class NHIExtendTreatmentProcedureService {
      * @return the list of entities
      */
     @Transactional(readOnly = true)
-    public Page<NHIExtendTreatmentProcedure> findAll(Pageable pageable) {
-        log.debug("Request to get all NHIExtendTreatmentProcedures");
+    public Page<NhiExtendTreatmentProcedure> findAll(Pageable pageable) {
+        log.debug("Request to get all NhiExtendTreatmentProcedure");
         return nhiExtendTreatmentProcedureRepository.findAll(pageable);
     }
 
@@ -76,8 +76,8 @@ public class NHIExtendTreatmentProcedureService {
      * @return the entity
      */
     @Transactional(readOnly = true)
-    public Optional<NHIExtendTreatmentProcedure> findOne(Long id) {
-        log.debug("Request to get NHIExtendTreatmentProcedure : {}", id);
+    public Optional<NhiExtendTreatmentProcedure> findOne(Long id) {
+        log.debug("Request to get NhiExtendTreatmentProcedure : {}", id);
         return nhiExtendTreatmentProcedureRepository.findById(id);
     }
 
@@ -87,22 +87,22 @@ public class NHIExtendTreatmentProcedureService {
      * @param id the id of the entity
      */
     public void delete(Long id) {
-        log.debug("Request to delete NHIExtendTreatmentProcedure : {}", id);
+        log.debug("Request to delete NhiExtendTreatmentProcedure : {}", id);
         nhiExtendTreatmentProcedureRepository.deleteById(id);
     }
 
     /**
      * Update the nhiExtendTreatmentProcedure.
      *
-     * @param updateNHIExtendTreatmentProcedure the update entity
+     * @param updateNhiExtendTreatmentProcedure the update entity
      */
-    public NHIExtendTreatmentProcedure update(NHIExtendTreatmentProcedure updateNHIExtendTreatmentProcedure) {
-        log.debug("Request to update NHIExtendTreatmentProcedure : {}", updateNHIExtendTreatmentProcedure);
+    public NhiExtendTreatmentProcedure update(NhiExtendTreatmentProcedure updateNhiExtendTreatmentProcedure) {
+        log.debug("Request to update NhiExtendTreatmentProcedure : {}", updateNhiExtendTreatmentProcedure);
 
         return nhiExtendTreatmentProcedureRepository
-            .findById(updateNHIExtendTreatmentProcedure.getId())
+            .findById(updateNhiExtendTreatmentProcedure.getId())
             .map(nhiExtendTreatmentProcedure -> {
-                MedicalAreaUtil.update(nhiExtendTreatmentProcedure, updateNHIExtendTreatmentProcedure);
+                MedicalAreaUtil.update(nhiExtendTreatmentProcedure, updateNhiExtendTreatmentProcedure);
 
                 return nhiExtendTreatmentProcedure;
             })

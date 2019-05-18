@@ -10,6 +10,7 @@ export interface INhiProcedure {
   englishName?: string;
   defaultIcd10CmId?: number;
   description?: string;
+  exclude?: string;
   nhiProcedureType?: INhiProcedureType;
   nhiIcd9Cm?: INhiIcd9Cm;
   nhiIcd10Pcs?: INhiIcd10Pcs[];

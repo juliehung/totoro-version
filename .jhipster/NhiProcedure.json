@@ -49,6 +49,14 @@
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": 5100
+        },
+        {
+            "fieldName": "exclude",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 510
         }
     ],
     "changelogDate": "20181224042542",

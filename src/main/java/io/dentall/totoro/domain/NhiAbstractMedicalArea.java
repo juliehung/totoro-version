@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 // 醫療專區
 @MappedSuperclass
-public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalArea<ENTITY>> implements Serializable, NHIMedicalArea {
+public abstract class NhiAbstractMedicalArea<ENTITY extends NhiAbstractMedicalArea<ENTITY>> implements Serializable, NhiMedicalArea {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,6 +45,9 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
     // 處方簽章
     @Column(name = "a79")
     private String a79;
+
+    @Column(name = "check")
+    private String check;
 
     @Override
     public String getA71() {
@@ -179,5 +182,20 @@ public abstract class NHIAbstractMedicalArea<ENTITY extends NHIAbstractMedicalAr
     @Override
     public void setA79(String a79) {
         this.a79 = a79;
+    }
+
+    @Override
+    public String getCheck() {
+        return check;
+    }
+
+    public ENTITY check(String check) {
+        this.check = check;
+        return (ENTITY) this;
+    }
+
+    @Override
+    public void setCheck(String check) {
+        this.check = check;
     }
 }

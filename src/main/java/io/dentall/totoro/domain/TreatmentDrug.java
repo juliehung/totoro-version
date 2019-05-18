@@ -49,7 +49,7 @@ public class TreatmentDrug implements Serializable {
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     @OneToOne(mappedBy = "treatmentDrug", cascade = CascadeType.ALL)
-    private NHIExtendTreatmentDrug nhiExtendTreatmentDrug;
+    private NhiExtendTreatmentDrug nhiExtendTreatmentDrug;
 
     public Long getId() {
         return id;
@@ -138,11 +138,11 @@ public class TreatmentDrug implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    public NHIExtendTreatmentDrug getNhiExtendTreatmentDrug() {
+    public NhiExtendTreatmentDrug getNhiExtendTreatmentDrug() {
         return nhiExtendTreatmentDrug;
     }
 
-    public void setNhiExtendTreatmentDrug(NHIExtendTreatmentDrug nhiExtendTreatmentDrug) {
+    public void setNhiExtendTreatmentDrug(NhiExtendTreatmentDrug nhiExtendTreatmentDrug) {
         this.nhiExtendTreatmentDrug = nhiExtendTreatmentDrug;
     }
 
