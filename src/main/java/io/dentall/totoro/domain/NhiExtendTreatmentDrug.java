@@ -11,12 +11,12 @@ import java.util.Objects;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
- * A NHIExtendTreatmentProcedure.
+ * A NhiExtendTreatmentDrug.
  */
 @Entity
-@Table(name = "nhi_extend_treatment_procedure")
+@Table(name = "nhi_extend_treatment_drug")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class NHIExtendTreatmentProcedure extends NHIAbstractMedicalArea<NHIExtendTreatmentProcedure> implements Serializable {
+public class NhiExtendTreatmentDrug extends NhiAbstractMedicalArea<NhiExtendTreatmentDrug> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class NHIExtendTreatmentProcedure extends NHIAbstractMedicalArea<NHIExten
     @OneToOne
     @MapsId
     @JsonProperty(access = WRITE_ONLY)
-    private TreatmentProcedure treatmentProcedure;
+    private TreatmentDrug treatmentDrug;
 
     public Long getId() {
         return id;
@@ -36,17 +36,17 @@ public class NHIExtendTreatmentProcedure extends NHIAbstractMedicalArea<NHIExten
         this.id = id;
     }
 
-    public TreatmentProcedure getTreatmentProcedure() {
-        return treatmentProcedure;
+    public TreatmentDrug getTreatmentDrug() {
+        return treatmentDrug;
     }
 
-    public NHIExtendTreatmentProcedure treatmentProcedure(TreatmentProcedure treatmentProcedure) {
-        this.treatmentProcedure = treatmentProcedure;
+    public NhiExtendTreatmentDrug treatmentDrug(TreatmentDrug treatmentDrug) {
+        this.treatmentDrug = treatmentDrug;
         return this;
     }
 
-    public void setTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
-        this.treatmentProcedure = treatmentProcedure;
+    public void setTreatmentDrug(TreatmentDrug treatmentDrug) {
+        this.treatmentDrug = treatmentDrug;
     }
 
     @Override
@@ -57,11 +57,11 @@ public class NHIExtendTreatmentProcedure extends NHIAbstractMedicalArea<NHIExten
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NHIExtendTreatmentProcedure extendUser = (NHIExtendTreatmentProcedure) o;
-        if (extendUser.getId() == null || getId() == null) {
+        NhiExtendTreatmentDrug nhiExtendTreatmentDrug = (NhiExtendTreatmentDrug) o;
+        if (nhiExtendTreatmentDrug.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), extendUser.getId());
+        return Objects.equals(getId(), nhiExtendTreatmentDrug.getId());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class NHIExtendTreatmentProcedure extends NHIAbstractMedicalArea<NHIExten
 
     @Override
     public String toString() {
-        return "NHIExtendTreatmentProcedure{" +
+        return "NhiExtendTreatmentDrug{" +
             "id=" + getId() +
             ", a71='" + getA71() + "'" +
             ", a72='" + getA72() + "'" +
@@ -82,6 +82,7 @@ public class NHIExtendTreatmentProcedure extends NHIAbstractMedicalArea<NHIExten
             ", a77='" + getA77() + "'" +
             ", a78='" + getA78() + "'" +
             ", a79='" + getA79() + "'" +
+            ", check='" + getCheck() + "'" +
             "}";
     }
 }

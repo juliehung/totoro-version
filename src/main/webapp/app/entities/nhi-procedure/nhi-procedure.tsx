@@ -57,6 +57,9 @@ export class NhiProcedure extends React.Component<INhiProcedureProps> {
                   <Translate contentKey="totoroApp.nhiProcedure.description">Description</Translate>
                 </th>
                 <th>
+                  <Translate contentKey="totoroApp.nhiProcedure.exclude">Exclude</Translate>
+                </th>
+                <th>
                   <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
                 </th>
                 <th>
@@ -79,6 +82,7 @@ export class NhiProcedure extends React.Component<INhiProcedureProps> {
                   <td>{nhiProcedure.englishName}</td>
                   <td>{nhiProcedure.defaultIcd10CmId}</td>
                   <td>{nhiProcedure.description}</td>
+                  <td>{nhiProcedure.exclude}</td>
                   <td>
                     {nhiProcedure.nhiProcedureType ? (
                       <Link to={`nhi-procedure-type/${nhiProcedure.nhiProcedureType.id}`}>{nhiProcedure.nhiProcedureType.id}</Link>

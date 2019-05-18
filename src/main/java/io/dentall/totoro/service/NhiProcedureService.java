@@ -102,6 +102,10 @@ public class NhiProcedureService {
                     nhiProcedure.setDescription(updateNhiProcedure.getDescription());
                 }
 
+                if (updateNhiProcedure.getExclude() != null) {
+                    nhiProcedure.setExclude(updateNhiProcedure.getExclude());
+                }
+
                 return nhiProcedure;
             })
             .get();

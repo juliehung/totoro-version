@@ -1,8 +1,8 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.NHIExtendTreatmentDrug;
+import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
 import io.dentall.totoro.domain.TreatmentDrug;
-import io.dentall.totoro.repository.NHIExtendTreatmentDrugRepository;
+import io.dentall.totoro.repository.NhiExtendTreatmentDrugRepository;
 import io.dentall.totoro.repository.TreatmentDrugRepository;
 import io.dentall.totoro.service.util.MedicalAreaUtil;
 import io.dentall.totoro.service.util.ProblemUtil;
@@ -17,19 +17,19 @@ import org.zalando.problem.Status;
 import java.util.Optional;
 
 /**
- * Service Implementation for managing NHIExtendTreatmentDrug.
+ * Service Implementation for managing NhiExtendTreatmentDrug.
  */
 @Service
 @Transactional
-public class NHIExtendTreatmentDrugService {
+public class NhiExtendTreatmentDrugService {
 
-    private final Logger log = LoggerFactory.getLogger(NHIExtendTreatmentDrugService.class);
+    private final Logger log = LoggerFactory.getLogger(NhiExtendTreatmentDrugService.class);
 
-    private final NHIExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository;
+    private final NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository;
 
     private final TreatmentDrugRepository treatmentDrugRepository;
 
-    public NHIExtendTreatmentDrugService(NHIExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository, TreatmentDrugRepository treatmentDrugRepository) {
+    public NhiExtendTreatmentDrugService(NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository, TreatmentDrugRepository treatmentDrugRepository) {
         this.nhiExtendTreatmentDrugRepository = nhiExtendTreatmentDrugRepository;
         this.treatmentDrugRepository = treatmentDrugRepository;
     }
@@ -40,8 +40,8 @@ public class NHIExtendTreatmentDrugService {
      * @param nhiExtendTreatmentDrug the entity to save
      * @return the persisted entity
      */
-    public NHIExtendTreatmentDrug save(NHIExtendTreatmentDrug nhiExtendTreatmentDrug) {
-        log.debug("Request to save NHIExtendTreatmentDrug : {}", nhiExtendTreatmentDrug);
+    public NhiExtendTreatmentDrug save(NhiExtendTreatmentDrug nhiExtendTreatmentDrug) {
+        log.debug("Request to save NhiExtendTreatmentDrug : {}", nhiExtendTreatmentDrug);
 
         TreatmentDrug treatmentDrug = nhiExtendTreatmentDrug.getTreatmentDrug();
         if (treatmentDrug == null || treatmentDrug.getId() == null) {
@@ -63,8 +63,8 @@ public class NHIExtendTreatmentDrugService {
      * @return the list of entities
      */
     @Transactional(readOnly = true)
-    public Page<NHIExtendTreatmentDrug> findAll(Pageable pageable) {
-        log.debug("Request to get all NHIExtendTreatmentDrugs");
+    public Page<NhiExtendTreatmentDrug> findAll(Pageable pageable) {
+        log.debug("Request to get all NhiExtendTreatmentDrug");
         return nhiExtendTreatmentDrugRepository.findAll(pageable);
     }
 
@@ -76,8 +76,8 @@ public class NHIExtendTreatmentDrugService {
      * @return the entity
      */
     @Transactional(readOnly = true)
-    public Optional<NHIExtendTreatmentDrug> findOne(Long id) {
-        log.debug("Request to get NHIExtendTreatmentDrug : {}", id);
+    public Optional<NhiExtendTreatmentDrug> findOne(Long id) {
+        log.debug("Request to get NhiExtendTreatmentDrug : {}", id);
         return nhiExtendTreatmentDrugRepository.findById(id);
     }
 
@@ -87,22 +87,22 @@ public class NHIExtendTreatmentDrugService {
      * @param id the id of the entity
      */
     public void delete(Long id) {
-        log.debug("Request to delete NHIExtendTreatmentDrug : {}", id);
+        log.debug("Request to delete NhiExtendTreatmentDrug : {}", id);
         nhiExtendTreatmentDrugRepository.deleteById(id);
     }
 
     /**
      * Update the nhiExtendTreatmentDrug.
      *
-     * @param updateNHIExtendTreatmentDrug the update entity
+     * @param updateNhiExtendTreatmentDrug the update entity
      */
-    public NHIExtendTreatmentDrug update(NHIExtendTreatmentDrug updateNHIExtendTreatmentDrug) {
-        log.debug("Request to update NHIExtendTreatmentDrug : {}", updateNHIExtendTreatmentDrug);
+    public NhiExtendTreatmentDrug update(NhiExtendTreatmentDrug updateNhiExtendTreatmentDrug) {
+        log.debug("Request to update NhiExtendTreatmentDrug : {}", updateNhiExtendTreatmentDrug);
 
         return nhiExtendTreatmentDrugRepository
-            .findById(updateNHIExtendTreatmentDrug.getId())
+            .findById(updateNhiExtendTreatmentDrug.getId())
             .map(nhiExtendTreatmentDrug -> {
-                MedicalAreaUtil.update(nhiExtendTreatmentDrug, updateNHIExtendTreatmentDrug);
+                MedicalAreaUtil.update(nhiExtendTreatmentDrug, updateNhiExtendTreatmentDrug);
 
                 return nhiExtendTreatmentDrug;
             })

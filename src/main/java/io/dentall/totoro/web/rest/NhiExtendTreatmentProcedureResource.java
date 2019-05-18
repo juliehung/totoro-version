@@ -1,8 +1,8 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.domain.NHIExtendTreatmentProcedure;
-import io.dentall.totoro.service.NHIExtendTreatmentProcedureService;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.service.NhiExtendTreatmentProcedureService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -22,19 +22,19 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing NHIExtendTreatmentProcedure.
+ * REST controller for managing NhiExtendTreatmentProcedure.
  */
 @RestController
 @RequestMapping("/api")
-public class NHIExtendTreatmentProcedureResource {
+public class NhiExtendTreatmentProcedureResource {
 
-    private final Logger log = LoggerFactory.getLogger(NHIExtendTreatmentProcedureResource.class);
+    private final Logger log = LoggerFactory.getLogger(NhiExtendTreatmentProcedureResource.class);
 
     private static final String ENTITY_NAME = "nhiExtendTreatmentProcedure";
 
-    private final NHIExtendTreatmentProcedureService nhiExtendTreatmentProcedureService;
+    private final NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService;
 
-    public NHIExtendTreatmentProcedureResource(NHIExtendTreatmentProcedureService nhiExtendTreatmentProcedureService) {
+    public NhiExtendTreatmentProcedureResource(NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService) {
         this.nhiExtendTreatmentProcedureService = nhiExtendTreatmentProcedureService;
     }
 
@@ -47,12 +47,12 @@ public class NHIExtendTreatmentProcedureResource {
      */
     @PostMapping("/nhi-extend-treatment-procedures")
     @Timed
-    public ResponseEntity<NHIExtendTreatmentProcedure> createNHIExtendTreatmentProcedure(@Valid @RequestBody NHIExtendTreatmentProcedure nhiExtendTreatmentProcedure) throws URISyntaxException {
-        log.debug("REST request to save NHIExtendTreatmentProcedure : {}", nhiExtendTreatmentProcedure);
+    public ResponseEntity<NhiExtendTreatmentProcedure> createNhiExtendTreatmentProcedure(@Valid @RequestBody NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) throws URISyntaxException {
+        log.debug("REST request to save NhiExtendTreatmentProcedure : {}", nhiExtendTreatmentProcedure);
         if (nhiExtendTreatmentProcedure.getId() != null) {
             throw new BadRequestAlertException("A new nhiExtendTreatmentProcedure cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        NHIExtendTreatmentProcedure result = nhiExtendTreatmentProcedureService.save(nhiExtendTreatmentProcedure);
+        NhiExtendTreatmentProcedure result = nhiExtendTreatmentProcedureService.save(nhiExtendTreatmentProcedure);
         return ResponseEntity.created(new URI("/api/nhi-extend-treatment-procedures/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -69,12 +69,12 @@ public class NHIExtendTreatmentProcedureResource {
      */
     @PutMapping("/nhi-extend-treatment-procedures")
     @Timed
-    public ResponseEntity<NHIExtendTreatmentProcedure> updateNHIExtendTreatmentProcedure(@Valid @RequestBody NHIExtendTreatmentProcedure nhiExtendTreatmentProcedure) throws URISyntaxException {
-        log.debug("REST request to update NHIExtendTreatmentProcedure : {}", nhiExtendTreatmentProcedure);
+    public ResponseEntity<NhiExtendTreatmentProcedure> updateNhiExtendTreatmentProcedure(@Valid @RequestBody NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) throws URISyntaxException {
+        log.debug("REST request to update NhiExtendTreatmentProcedure : {}", nhiExtendTreatmentProcedure);
         if (nhiExtendTreatmentProcedure.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        NHIExtendTreatmentProcedure result = nhiExtendTreatmentProcedureService.update(nhiExtendTreatmentProcedure);
+        NhiExtendTreatmentProcedure result = nhiExtendTreatmentProcedureService.update(nhiExtendTreatmentProcedure);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nhiExtendTreatmentProcedure.getId().toString()))
             .body(result);
@@ -88,9 +88,9 @@ public class NHIExtendTreatmentProcedureResource {
      */
     @GetMapping("/nhi-extend-treatment-procedures")
     @Timed
-    public ResponseEntity<List<NHIExtendTreatmentProcedure>> getAllNHIExtendTreatmentProcedures(Pageable pageable) {
-        log.debug("REST request to get a page of NHIExtendTreatmentProcedure");
-        Page<NHIExtendTreatmentProcedure> page = nhiExtendTreatmentProcedureService.findAll(pageable);
+    public ResponseEntity<List<NhiExtendTreatmentProcedure>> getAllNhiExtendTreatmentProcedures(Pageable pageable) {
+        log.debug("REST request to get a page of NhiExtendTreatmentProcedure");
+        Page<NhiExtendTreatmentProcedure> page = nhiExtendTreatmentProcedureService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/nhi-extend-treatment-procedures");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -103,9 +103,9 @@ public class NHIExtendTreatmentProcedureResource {
      */
     @GetMapping("/nhi-extend-treatment-procedures/{id}")
     @Timed
-    public ResponseEntity<NHIExtendTreatmentProcedure> getNHIExtendTreatmentProcedure(@PathVariable Long id) {
-        log.debug("REST request to get NHIExtendTreatmentProcedure : {}", id);
-        Optional<NHIExtendTreatmentProcedure> nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedureService.findOne(id);
+    public ResponseEntity<NhiExtendTreatmentProcedure> getNhiExtendTreatmentProcedure(@PathVariable Long id) {
+        log.debug("REST request to get NhiExtendTreatmentProcedure : {}", id);
+        Optional<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedureService.findOne(id);
         return ResponseUtil.wrapOrNotFound(nhiExtendTreatmentProcedure);
     }
 
@@ -117,8 +117,8 @@ public class NHIExtendTreatmentProcedureResource {
      */
     @DeleteMapping("/nhi-extend-treatment-procedures/{id}")
     @Timed
-    public ResponseEntity<Void> deleteNHIExtendTreatmentProcedure(@PathVariable Long id) {
-        log.debug("REST request to delete NHIExtendTreatmentProcedure : {}", id);
+    public ResponseEntity<Void> deleteNhiExtendTreatmentProcedure(@PathVariable Long id) {
+        log.debug("REST request to delete NhiExtendTreatmentProcedure : {}", id);
 
         nhiExtendTreatmentProcedureService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();

@@ -59,6 +59,9 @@ public class NhiProcedureResourceIntTest {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final String DEFAULT_EXCLUDE = "AAAAAAAAAA";
+    private static final String UPDATED_EXCLUDE = "BBBBBBBBBB";
+
     @Autowired
     private NhiProcedureRepository nhiProcedureRepository;
 
@@ -109,7 +112,8 @@ public class NhiProcedureResourceIntTest {
             .point(DEFAULT_POINT)
             .englishName(DEFAULT_ENGLISH_NAME)
             .defaultIcd10CmId(DEFAULT_DEFAULT_ICD_10_CM_ID)
-            .description(DEFAULT_DESCRIPTION);
+            .description(DEFAULT_DESCRIPTION)
+            .exclude(DEFAULT_EXCLUDE);
         return nhiProcedure;
     }
 
@@ -139,6 +143,7 @@ public class NhiProcedureResourceIntTest {
         assertThat(testNhiProcedure.getEnglishName()).isEqualTo(DEFAULT_ENGLISH_NAME);
         assertThat(testNhiProcedure.getDefaultIcd10CmId()).isEqualTo(DEFAULT_DEFAULT_ICD_10_CM_ID);
         assertThat(testNhiProcedure.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testNhiProcedure.getExclude()).isEqualTo(DEFAULT_EXCLUDE);
     }
 
     @Test
@@ -176,7 +181,8 @@ public class NhiProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].point").value(hasItem(DEFAULT_POINT)))
             .andExpect(jsonPath("$.[*].englishName").value(hasItem(DEFAULT_ENGLISH_NAME.toString())))
             .andExpect(jsonPath("$.[*].defaultIcd10CmId").value(hasItem(DEFAULT_DEFAULT_ICD_10_CM_ID.intValue())))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].exclude").value(hasItem(DEFAULT_EXCLUDE.toString())));
     }
     
     @Test
@@ -195,7 +201,8 @@ public class NhiProcedureResourceIntTest {
             .andExpect(jsonPath("$.point").value(DEFAULT_POINT))
             .andExpect(jsonPath("$.englishName").value(DEFAULT_ENGLISH_NAME.toString()))
             .andExpect(jsonPath("$.defaultIcd10CmId").value(DEFAULT_DEFAULT_ICD_10_CM_ID.intValue()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.exclude").value(DEFAULT_EXCLUDE.toString()));
     }
 
     @Test
@@ -223,7 +230,8 @@ public class NhiProcedureResourceIntTest {
             .point(UPDATED_POINT)
             .englishName(UPDATED_ENGLISH_NAME)
             .defaultIcd10CmId(UPDATED_DEFAULT_ICD_10_CM_ID)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .exclude(UPDATED_EXCLUDE);
 
         restNhiProcedureMockMvc.perform(put("/api/nhi-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -239,6 +247,7 @@ public class NhiProcedureResourceIntTest {
         assertThat(testNhiProcedure.getEnglishName()).isEqualTo(UPDATED_ENGLISH_NAME);
         assertThat(testNhiProcedure.getDefaultIcd10CmId()).isEqualTo(UPDATED_DEFAULT_ICD_10_CM_ID);
         assertThat(testNhiProcedure.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testNhiProcedure.getExclude()).isEqualTo(UPDATED_EXCLUDE);
     }
 
     @Test

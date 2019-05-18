@@ -144,6 +144,19 @@ export class NhiProcedureUpdate extends React.Component<INhiProcedureUpdateProps
                   />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="excludeLabel" for="exclude">
+                    <Translate contentKey="totoroApp.nhiProcedure.exclude">Exclude</Translate>
+                  </Label>
+                  <AvField
+                    id="nhi-procedure-exclude"
+                    type="text"
+                    name="exclude"
+                    validate={{
+                      maxLength: { value: 510, errorMessage: translate('entity.validation.maxlength', { max: 510 }) }
+                    }}
+                  />
+                </AvGroup>
+                <AvGroup>
                   <Label for="nhiProcedureType.id">
                     <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
                   </Label>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="data_test" author="Jim">
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_procedures.csv"
+                  separator=";"
+                  tableName="nhi_procedure">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_icd_9_cms.csv"
+                  separator=";"
+                  tableName="nhi_icd_9_cm">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_icd_10_cms.csv"
+                  separator=";"
+                  tableName="nhi_icd_10_cm">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_icd_10_pcs.csv"
+                  separator=";"
+                  tableName="nhi_icd_10_pcs">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_procedure_types.csv"
+                  separator=";"
+                  tableName="nhi_procedure_type">
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,6 +1,6 @@
 package io.dentall.totoro.service.util;
 
-import io.dentall.totoro.domain.NHIMedicalArea;
+import io.dentall.totoro.domain.NhiMedicalArea;
 
 public final class MedicalAreaUtil {
 
@@ -10,7 +10,7 @@ public final class MedicalAreaUtil {
      * @param medicalArea the update entity
      * @param updateMedicalArea the update entity
      */
-    public static void update(NHIMedicalArea medicalArea, NHIMedicalArea updateMedicalArea) {
+    public static void update(NhiMedicalArea medicalArea, NhiMedicalArea updateMedicalArea) {
         if (updateMedicalArea.getA71() != null) {
             medicalArea.setA71((updateMedicalArea.getA71()));
         }
