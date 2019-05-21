@@ -1,5 +1,6 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
 import io.dentall.totoro.domain.TreatmentDrug;
 import io.dentall.totoro.repository.*;
 import org.slf4j.Logger;
@@ -27,14 +28,18 @@ public class TreatmentDrugService {
 
     private final PrescriptionRepository prescriptionRepository;
 
+    private final NhiExtendTreatmentDrugService nhiExtendTreatmentDrugService;
+
     public TreatmentDrugService(
         TreatmentDrugRepository treatmentDrugRepository,
         DrugRepository drugRepository,
-        PrescriptionRepository prescriptionRepository
+        PrescriptionRepository prescriptionRepository,
+        NhiExtendTreatmentDrugService nhiExtendTreatmentDrugService
     ) {
         this.treatmentDrugRepository = treatmentDrugRepository;
         this.drugRepository = drugRepository;
         this.prescriptionRepository = prescriptionRepository;
+        this.nhiExtendTreatmentDrugService = nhiExtendTreatmentDrugService;
     }
 
     /**
@@ -45,7 +50,15 @@ public class TreatmentDrugService {
      */
     public TreatmentDrug save(TreatmentDrug treatmentDrug) {
         log.debug("Request to save TreatmentDrug : {}", treatmentDrug);
-        return treatmentDrugRepository.save(treatmentDrug);
+
+        NhiExtendTreatmentDrug nhiExtendTreatmentDrug = treatmentDrug.getNhiExtendTreatmentDrug();
+        treatmentDrugRepository.save(treatmentDrug.nhiExtendTreatmentDrug(null));
+
+        if (nhiExtendTreatmentDrug != null) {
+            treatmentDrug.setNhiExtendTreatmentDrug(getNhiExtendTreatmentDrug(nhiExtendTreatmentDrug.treatmentDrug(treatmentDrug)));
+        }
+
+        return treatmentDrug;
     }
 
     /**
@@ -119,8 +132,17 @@ public class TreatmentDrugService {
                     prescriptionRepository.findById(updateTreatmentDrug.getPrescription().getId()).ifPresent(treatmentDrug::setPrescription);
                 }
 
+                if (updateTreatmentDrug.getNhiExtendTreatmentDrug() != null) {
+                    NhiExtendTreatmentDrug nhiExtendTreatmentDrug = updateTreatmentDrug.getNhiExtendTreatmentDrug();
+                    treatmentDrug.setNhiExtendTreatmentDrug(getNhiExtendTreatmentDrug(nhiExtendTreatmentDrug.treatmentDrug(treatmentDrug)));
+                }
+
                 return treatmentDrug;
             })
             .get();
+    }
+
+    private NhiExtendTreatmentDrug getNhiExtendTreatmentDrug(NhiExtendTreatmentDrug nhiExtendTreatmentDrug) {
+        return nhiExtendTreatmentDrug.getId() == null ? nhiExtendTreatmentDrugService.save(nhiExtendTreatmentDrug) : nhiExtendTreatmentDrugService.update(nhiExtendTreatmentDrug);
     }
 }

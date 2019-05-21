@@ -51,7 +51,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="check" type="varchar(510)">
+            <column name="jhi_check" type="varchar(510)">
                 <constraints nullable="true" />
             </column>
         </createTable>

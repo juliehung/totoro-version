@@ -46,7 +46,7 @@ public abstract class NhiAbstractMedicalArea<ENTITY extends NhiAbstractMedicalAr
     @Column(name = "a79")
     private String a79;
 
-    @Column(name = "check")
+    @Column(name = "jhi_check")
     private String check;
 
     @Override
