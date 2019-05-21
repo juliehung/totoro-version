@@ -147,6 +147,12 @@ export class LedgerUpdate extends React.Component<ILedgerUpdateProps, ILedgerUpd
                   <AvField id="ledger-note" type="text" name="note" />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="doctorLabel" for="doctor">
+                    <Translate contentKey="totoroApp.ledger.doctor">Doctor</Translate>
+                  </Label>
+                  <AvField id="ledger-doctor" type="text" name="doctor" />
+                </AvGroup>
+                <AvGroup>
                   <Label for="treatmentPlan.id">
                     <Translate contentKey="totoroApp.ledger.treatmentPlan">Treatment Plan</Translate>
                   </Label>

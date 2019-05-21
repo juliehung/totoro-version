@@ -79,6 +79,9 @@ export class Ledger extends React.Component<ILedgerProps, ILedgerState> {
                 <th className="hand" onClick={this.sort('note')}>
                   <Translate contentKey="totoroApp.ledger.note">Note</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('doctor')}>
+                  <Translate contentKey="totoroApp.ledger.doctor">Doctor</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.ledger.treatmentPlan">Treatment Plan</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -97,6 +100,7 @@ export class Ledger extends React.Component<ILedgerProps, ILedgerState> {
                   <td>{ledger.charge}</td>
                   <td>{ledger.arrears}</td>
                   <td>{ledger.note}</td>
+                  <td>{ledger.doctor}</td>
                   <td>
                     {ledger.treatmentPlan ? <Link to={`treatment-plan/${ledger.treatmentPlan.id}`}>{ledger.treatmentPlan.id}</Link> : ''}
                   </td>

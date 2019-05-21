@@ -95,6 +95,9 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getNote() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNote(), Ledger_.note));
             }
+            if (criteria.getDoctor() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getDoctor(), Ledger_.doctor));
+            }
             if (criteria.getTreatmentPlanId() != null) {
                 specification = specification.and(buildSpecification(criteria.getTreatmentPlanId(),
                     root -> root.join(Ledger_.treatmentPlan, JoinType.LEFT).get(TreatmentPlan_.id)));
