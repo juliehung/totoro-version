@@ -81,7 +81,7 @@ public class LedgerResource {
         if (ledger.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Ledger result = ledgerService.save(ledger);
+        Ledger result = ledgerService.update(ledger);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, ledger.getId().toString()))
             .body(result);

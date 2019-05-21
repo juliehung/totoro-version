@@ -42,6 +42,9 @@ public class Ledger extends AbstractAuditingEntity implements Serializable {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "doctor")
+    private String doctor;
+
     @ManyToOne
     private TreatmentPlan treatmentPlan;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -105,6 +108,19 @@ public class Ledger extends AbstractAuditingEntity implements Serializable {
         this.note = note;
     }
 
+    public String getDoctor() {
+        return doctor;
+    }
+
+    public Ledger doctor(String doctor) {
+        this.doctor = doctor;
+        return this;
+    }
+
+    public void setDoctor(String doctor) {
+        this.doctor = doctor;
+    }
+
     public TreatmentPlan getTreatmentPlan() {
         return treatmentPlan;
     }
@@ -154,6 +170,7 @@ public class Ledger extends AbstractAuditingEntity implements Serializable {
             ", charge=" + getCharge() +
             ", arrears=" + getArrears() +
             ", note='" + getNote() + "'" +
+            ", doctor='" + getDoctor() + "'" +
             "}";
     }
 }

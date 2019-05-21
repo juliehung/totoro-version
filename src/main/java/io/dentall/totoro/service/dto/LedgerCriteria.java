@@ -27,6 +27,8 @@ public class LedgerCriteria implements Serializable {
 
     private StringFilter note;
 
+    private StringFilter doctor;
+
     private LongFilter treatmentPlanId;
 
     private InstantFilter createdDate;
@@ -71,6 +73,14 @@ public class LedgerCriteria implements Serializable {
         this.note = note;
     }
 
+    public StringFilter getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(StringFilter doctor) {
+        this.doctor = doctor;
+    }
+
     public LongFilter getTreatmentPlanId() {
         return treatmentPlanId;
     }
@@ -101,6 +111,7 @@ public class LedgerCriteria implements Serializable {
             Objects.equals(charge, that.charge) &&
             Objects.equals(arrears, that.arrears) &&
             Objects.equals(note, that.note) &&
+            Objects.equals(doctor, that.doctor) &&
             Objects.equals(treatmentPlanId, that.treatmentPlanId) &&
             Objects.equals(createdDate, that.createdDate);
     }
@@ -113,6 +124,7 @@ public class LedgerCriteria implements Serializable {
             charge,
             arrears,
             note,
+            doctor,
             treatmentPlanId,
             createdDate
         );
@@ -126,6 +138,7 @@ public class LedgerCriteria implements Serializable {
             (charge != null ? "charge=" + charge + ", " : "") +
             (arrears != null ? "arrears=" + arrears + ", " : "") +
             (note != null ? "note=" + note + ", " : "") +
+            (doctor != null ? "doctor=" + doctor + ", " : "") +
             (treatmentPlanId != null ? "treatmentPlanId=" + treatmentPlanId + ", " : "") +
             (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
             "}";

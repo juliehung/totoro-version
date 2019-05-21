@@ -6,6 +6,7 @@ export interface ILedger {
   charge?: number;
   arrears?: number;
   note?: string;
+  doctor?: string;
   treatmentPlan?: ITreatmentPlan;
 }
 

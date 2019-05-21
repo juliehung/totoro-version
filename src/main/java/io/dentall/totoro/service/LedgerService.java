@@ -2,6 +2,7 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.repository.LedgerRepository;
+import io.dentall.totoro.repository.TreatmentPlanRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +24,11 @@ public class LedgerService {
 
     private final LedgerRepository ledgerRepository;
 
-    public LedgerService(LedgerRepository ledgerRepository) {
+    private final TreatmentPlanRepository treatmentPlanRepository;
+
+    public LedgerService(LedgerRepository ledgerRepository, TreatmentPlanRepository treatmentPlanRepository) {
         this.ledgerRepository = ledgerRepository;
+        this.treatmentPlanRepository = treatmentPlanRepository;
     }
 
     /**
@@ -71,5 +75,46 @@ public class LedgerService {
     public void delete(Long id) {
         log.debug("Request to delete Ledger : {}", id);
         ledgerRepository.deleteById(id);
+    }
+
+    /**
+     * Update the ledger.
+     *
+     * @param updateLedger the update entity
+     * @return the entity
+     */
+    public Ledger update(Ledger updateLedger) {
+        log.debug("Request to update Ledger : {}", updateLedger);
+
+        return ledgerRepository
+            .findById(updateLedger.getId())
+            .map(ledger -> {
+                if (updateLedger.getAmount() != null) {
+                    ledger.setAmount(updateLedger.getAmount());
+                }
+
+                if (updateLedger.getCharge() != null) {
+                    ledger.setCharge(updateLedger.getCharge());
+                }
+
+                if (updateLedger.getArrears() != null) {
+                    ledger.setArrears(updateLedger.getArrears());
+                }
+
+                if (updateLedger.getNote() != null) {
+                    ledger.setNote(updateLedger.getNote());
+                }
+
+                if (updateLedger.getDoctor() != null) {
+                    ledger.setDoctor(updateLedger.getDoctor());
+                }
+
+                if (updateLedger.getTreatmentPlan() != null && updateLedger.getTreatmentPlan().getId() != null) {
+                    treatmentPlanRepository.findById(updateLedger.getTreatmentPlan().getId()).ifPresent(ledger::setTreatmentPlan);
+                }
+
+                return ledger;
+            })
+            .get();
     }
 }

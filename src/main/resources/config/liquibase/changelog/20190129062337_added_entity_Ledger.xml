@@ -37,6 +37,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="doctor" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="treatment_plan_id" type="bigint">
                 <constraints nullable="true" />
             </column>

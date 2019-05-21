@@ -53,6 +53,12 @@ export class LedgerDetail extends React.Component<ILedgerDetailProps> {
             </dt>
             <dd>{ledgerEntity.note}</dd>
             <dt>
+              <span id="doctor">
+                <Translate contentKey="totoroApp.ledger.doctor">Doctor</Translate>
+              </span>
+            </dt>
+            <dd>{ledgerEntity.doctor}</dd>
+            <dt>
               <Translate contentKey="totoroApp.ledger.treatmentPlan">Treatment Plan</Translate>
             </dt>
             <dd>{ledgerEntity.treatmentPlan ? ledgerEntity.treatmentPlan.id : ''}</dd>
