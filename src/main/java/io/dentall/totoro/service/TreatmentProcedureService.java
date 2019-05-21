@@ -1,5 +1,6 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.Tooth;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.*;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -40,7 +42,7 @@ public class TreatmentProcedureService {
 
     private final NhiProcedureRepository nhiProcedureRepository;
 
-    private final ToothService toothService;
+    private final NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService;
 
     public TreatmentProcedureService(
         TreatmentProcedureRepository treatmentProcedureRepository,
@@ -51,7 +53,7 @@ public class TreatmentProcedureService {
         TodoRepository todoRepository,
         DisposalRepository disposalRepository,
         NhiProcedureRepository nhiProcedureRepository,
-        ToothService toothService
+        NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService
     ) {
         this.treatmentProcedureRepository = treatmentProcedureRepository;
         this.procedureRepository = procedureRepository;
@@ -61,7 +63,7 @@ public class TreatmentProcedureService {
         this.todoRepository = todoRepository;
         this.disposalRepository = disposalRepository;
         this.nhiProcedureRepository = nhiProcedureRepository;
-        this.toothService = toothService;
+        this.nhiExtendTreatmentProcedureService = nhiExtendTreatmentProcedureService;
     }
 
     /**
@@ -73,9 +75,14 @@ public class TreatmentProcedureService {
     public TreatmentProcedure save(TreatmentProcedure treatmentProcedure) {
         log.debug("Request to save TreatmentProcedure : {}", treatmentProcedure);
 
+        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = treatmentProcedure.getNhiExtendTreatmentProcedure();
         Set<Tooth> teeth = treatmentProcedure.getTeeth();
-        treatmentProcedure = treatmentProcedureRepository.save(treatmentProcedure.teeth(null));
+        treatmentProcedure = treatmentProcedureRepository.save(treatmentProcedure.teeth(null).nhiExtendTreatmentProcedure(null));
         relationshipService.addRelationshipWithTeeth(treatmentProcedure.teeth(teeth));
+
+        if (nhiExtendTreatmentProcedure != null) {
+            treatmentProcedure.setNhiExtendTreatmentProcedure(getNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure.treatmentProcedure(treatmentProcedure)));
+        }
 
         return treatmentProcedure;
     }
@@ -206,8 +213,17 @@ public class TreatmentProcedureService {
                     relationshipService.addRelationshipWithTeeth(treatmentProcedure.teeth(updateTreatmentProcedure.getTeeth()));
                 }
 
+                if (updateTreatmentProcedure.getNhiExtendTreatmentProcedure() != null) {
+                    NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = updateTreatmentProcedure.getNhiExtendTreatmentProcedure();
+                    treatmentProcedure.setNhiExtendTreatmentProcedure(getNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure.treatmentProcedure(treatmentProcedure)));
+                }
+
                 return treatmentProcedure;
             })
             .get();
+    }
+
+    private NhiExtendTreatmentProcedure getNhiExtendTreatmentProcedure(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+        return nhiExtendTreatmentProcedure.getId() == null ? nhiExtendTreatmentProcedureService.save(nhiExtendTreatmentProcedure) : nhiExtendTreatmentProcedureService.update(nhiExtendTreatmentProcedure);
     }
 }

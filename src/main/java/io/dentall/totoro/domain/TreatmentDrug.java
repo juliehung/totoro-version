@@ -142,6 +142,11 @@ public class TreatmentDrug implements Serializable {
         return nhiExtendTreatmentDrug;
     }
 
+    public TreatmentDrug nhiExtendTreatmentDrug(NhiExtendTreatmentDrug nhiExtendTreatmentDrug) {
+        this.nhiExtendTreatmentDrug = nhiExtendTreatmentDrug;
+        return this;
+    }
+
     public void setNhiExtendTreatmentDrug(NhiExtendTreatmentDrug nhiExtendTreatmentDrug) {
         this.nhiExtendTreatmentDrug = nhiExtendTreatmentDrug;
     }
