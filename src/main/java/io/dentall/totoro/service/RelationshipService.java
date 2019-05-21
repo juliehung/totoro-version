@@ -29,10 +29,6 @@ public class RelationshipService {
 
     private final TreatmentDrugService treatmentDrugService;
 
-    private final ToothQueryService toothQueryService;
-
-    private final TreatmentProcedureQueryService treatmentProcedureQueryService;
-
     private final NhiExtendDisposalService nhiExtendDisposalService;
 
     public RelationshipService(
@@ -40,16 +36,12 @@ public class RelationshipService {
         @Lazy TreatmentTaskService treatmentTaskService,
         ToothService toothService,
         TreatmentDrugService treatmentDrugService,
-        ToothQueryService toothQueryService,
-        TreatmentProcedureQueryService treatmentProcedureQueryService,
         NhiExtendDisposalService nhiExtendDisposalService
     ) {
         this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentTaskService = treatmentTaskService;
         this.toothService = toothService;
         this.treatmentDrugService = treatmentDrugService;
-        this.toothQueryService = toothQueryService;
-        this.treatmentProcedureQueryService = treatmentProcedureQueryService;
         this.nhiExtendDisposalService = nhiExtendDisposalService;
     }
 
@@ -173,42 +165,24 @@ public class RelationshipService {
         disposal.setNhiExtendDisposals(nhiExtendDisposals);
     }
 
-    void deleteTreatmentProcedures(Appointment appointment, Set<Long> updateIds) {
-        appointment
-            .getTreatmentProcedures()
-            .stream()
-            .map(TreatmentProcedure::getId)
-            .filter(id -> !updateIds.contains(id))
-            .forEach(treatmentProcedureService::delete);
+    void deleteTeeth(Set<Tooth> teeth, Set<Long> updateIds) {
+        deleteTeeth(
+            teeth
+                .stream()
+                .filter(tooth -> !updateIds.contains(tooth.getId()))
+                .collect(Collectors.toSet())
+        );
     }
 
-    void deleteTeeth(Set<Tooth> teeth, Set<Long> updateIds) {
+    void deleteTeeth(Set<Tooth> teeth) {
         teeth
             .stream()
             .map(Tooth::getId)
-            .filter(id -> !updateIds.contains(id))
             .forEach(toothService::delete);
     }
 
-    void deleteTeethByTreatmentProcedureId(Long id) {
-        LongFilter filter = new LongFilter();
-        filter.setEquals(id);
-        ToothCriteria criteria = new ToothCriteria();
-        criteria.setTreatmentProcedureId(filter);
-        toothQueryService
-            .findByCriteria(criteria)
-            .stream()
-            .map(Tooth::getId)
-            .forEach(toothService::delete);
-    }
-
-    void deleteRelationshipWithTreatmentProceduresByTreatmentTaskId(Long id) {
-        LongFilter filter = new LongFilter();
-        filter.setEquals(id);
-        TreatmentProcedureCriteria criteria = new TreatmentProcedureCriteria();
-        criteria.setTreatmentTaskId(filter);
-        treatmentProcedureQueryService
-            .findByCriteria(criteria)
+    void deleteTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
+        treatmentProcedures
             .stream()
             .map(TreatmentProcedure::getId)
             .forEach(treatmentProcedureService::delete);

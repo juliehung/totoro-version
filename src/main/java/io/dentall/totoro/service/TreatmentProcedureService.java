@@ -40,6 +40,8 @@ public class TreatmentProcedureService {
 
     private final NhiProcedureRepository nhiProcedureRepository;
 
+    private final ToothService toothService;
+
     public TreatmentProcedureService(
         TreatmentProcedureRepository treatmentProcedureRepository,
         ProcedureRepository procedureRepository,
@@ -48,7 +50,8 @@ public class TreatmentProcedureService {
         TreatmentTaskRepository treatmentTaskRepository,
         TodoRepository todoRepository,
         DisposalRepository disposalRepository,
-        NhiProcedureRepository nhiProcedureRepository
+        NhiProcedureRepository nhiProcedureRepository,
+        ToothService toothService
     ) {
         this.treatmentProcedureRepository = treatmentProcedureRepository;
         this.procedureRepository = procedureRepository;
@@ -58,6 +61,7 @@ public class TreatmentProcedureService {
         this.todoRepository = todoRepository;
         this.disposalRepository = disposalRepository;
         this.nhiProcedureRepository = nhiProcedureRepository;
+        this.toothService = toothService;
     }
 
     /**
@@ -109,7 +113,7 @@ public class TreatmentProcedureService {
     public void delete(Long id) {
         log.debug("Request to delete TreatmentProcedure : {}", id);
 
-        relationshipService.deleteTeethByTreatmentProcedureId(id);
+        treatmentProcedureRepository.findById(id).ifPresent(treatmentProcedure -> relationshipService.deleteTeeth(treatmentProcedure.getTeeth()));
         treatmentProcedureRepository.deleteById(id);
     }
 
