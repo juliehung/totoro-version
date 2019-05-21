@@ -93,7 +93,7 @@ public class TreatmentTaskService {
     public void delete(Long id) {
         log.debug("Request to delete TreatmentTask : {}", id);
 
-        relationshipService.deleteRelationshipWithTreatmentProceduresByTreatmentTaskId(id);
+        treatmentTaskRepository.findById(id).ifPresent(treatmentTask -> relationshipService.deleteTreatmentProcedures(treatmentTask.getTreatmentProcedures()));
         treatmentTaskRepository.deleteById(id);
     }
 

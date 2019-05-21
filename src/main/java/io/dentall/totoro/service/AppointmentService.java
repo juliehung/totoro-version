@@ -102,6 +102,8 @@ public class AppointmentService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Appointment : {}", id);
+
+        appointmentRepository.findById(id).ifPresent(appointment -> relationshipService.deleteTreatmentProcedures(appointment.getTreatmentProcedures()));
         appointmentRepository.deleteById(id);
     }
 
@@ -169,9 +171,13 @@ public class AppointmentService {
 
                 // treatmentProcedures
                 if (updateAppointment.getTreatmentProcedures() != null) {
+                    Set<Long> updateIds = updateAppointment.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet());
                     relationshipService.deleteTreatmentProcedures(
-                        appointment,
-                        updateAppointment.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet())
+                        appointment
+                            .getTreatmentProcedures()
+                            .stream()
+                            .filter(treatmentProcedure -> !updateIds.contains(treatmentProcedure.getId()))
+                            .collect(Collectors.toSet())
                     );
                     relationshipService.addRelationshipWithTreatmentProcedures(appointment.treatmentProcedures(updateAppointment.getTreatmentProcedures()));
                 }
