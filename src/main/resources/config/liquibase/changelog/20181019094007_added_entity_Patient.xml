@@ -93,7 +93,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="clinic_note" type="varchar(255)">
+            <column name="clinic_note" type="varchar(5100)">
                 <constraints nullable="true" />
             </column>
 

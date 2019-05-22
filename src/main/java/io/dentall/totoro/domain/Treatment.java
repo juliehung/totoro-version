@@ -39,7 +39,8 @@ public class Treatment extends AbstractDoctorAndAuditingEntity<Treatment> implem
     @Column(name = "goal")
     private String goal;
 
-    @Column(name = "note")
+    @Size(max = 5100)
+    @Column(name = "note", length = 5100)
     private String note;
 
     @Column(name = "finding")

@@ -64,7 +64,11 @@
         },
         {
             "fieldName": "note",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 5100
         },
         {
             "fieldName": "completedDate",

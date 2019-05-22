@@ -22,7 +22,11 @@
         },
         {
             "fieldName": "note",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 5100
         }
     ],
     "changelogDate": "20181224042540",

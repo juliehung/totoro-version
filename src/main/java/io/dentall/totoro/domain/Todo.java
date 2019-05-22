@@ -7,6 +7,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -42,7 +43,8 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
     @Column(name = "required_treatment_time")
     private Integer requiredTreatmentTime;
 
-    @Column(name = "note")
+    @Size(max = 5100)
+    @Column(name = "note", length = 5100)
     private String note;
 
     @ManyToOne
