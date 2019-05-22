@@ -6,6 +6,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -30,7 +31,8 @@ public class TreatmentTask extends AbstractDoctorAndAuditingEntity<TreatmentTask
     @Column(name = "name")
     private String name;
 
-    @Column(name = "note")
+    @Size(max = 5100)
+    @Column(name = "note", length = 5100)
     private String note;
 
     @OneToMany(mappedBy = "treatmentTask")

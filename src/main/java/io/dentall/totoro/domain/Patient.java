@@ -94,7 +94,8 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @Column(name = "note", length = 5100)
     private String note;
 
-    @Column(name = "clinic_note")
+    @Size(max = 5100)
+    @Column(name = "clinic_note", length = 5100)
     private String clinicNote;
 
     @Column(name = "write_ic_time")

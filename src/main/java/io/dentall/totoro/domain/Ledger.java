@@ -39,7 +39,8 @@ public class Ledger extends AbstractAuditingEntity implements Serializable {
     @Column(name = "arrears", nullable = false)
     private Double arrears;
 
-    @Column(name = "note")
+    @Size(max = 5100)
+    @Column(name = "note", length = 5100)
     private String note;
 
     @Column(name = "doctor")

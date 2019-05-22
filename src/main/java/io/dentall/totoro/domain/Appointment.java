@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -36,7 +37,8 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
     @Column(name = "subject")
     private String subject;
 
-    @Column(name = "note")
+    @Size(max = 5100)
+    @Column(name = "note", length = 5100)
     private String note;
 
     @Column(name = "expected_arrival_time")
