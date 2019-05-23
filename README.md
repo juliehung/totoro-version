@@ -185,6 +185,9 @@ docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml 
 ```
 
 ## Launch totoro-admin on local env. for developer
+### with data
+please add **mock** profile
+
 ### with Docker (recommend)
 #### start
 ```
@@ -227,7 +230,7 @@ $env:SPRING_PROFILES_ACTIVE="embedded-postgres"; $env:TZ="UTC"; .\gradlew.bat cl
 Powershell.exe -File .\embedded-postgres-cleanup.ps1
 ```
 
-## English version
+## English version (with data)
 ### Postgres with Docker
 ```
 SPRING_PROFILES_ACTIVE=dev,en ./gradlew clean bootRun
@@ -242,7 +245,7 @@ SPRING_PROFILES_ACTIVE=dev,embedded-postgres,en TZ=UTC ./gradlew clean bootRun
 $env:SPRING_PROFILES_ACTIVE="dev,embedded-postgres,en"; $env:TZ="UTC"; .\gradlew.bat clean bootRun
 ```
 
-## CP test server
+## CP test server (with data)
 ```
 # start
 docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml -f src/main/docker/app-cp.yml up -d
