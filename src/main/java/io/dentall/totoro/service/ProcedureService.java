@@ -2,6 +2,7 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.Procedure;
 import io.dentall.totoro.repository.ProcedureRepository;
+import io.dentall.totoro.service.util.ProblemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zalando.problem.Status;
 
 import java.util.Optional;
 
@@ -70,6 +72,11 @@ public class ProcedureService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Procedure : {}", id);
-        procedureRepository.deleteById(id);
+
+        if (procedureRepository.findAnyTreatmentProcedureByProcedureId(id) == null) {
+            procedureRepository.deleteById(id);
+        } else {
+            throw new ProblemUtil("A procedure already has treatmentProcedure", Status.BAD_REQUEST);
+        }
     }
 }
