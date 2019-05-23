@@ -6,11 +6,6 @@
 
     <changeSet id="mock_data" author="Jim">
         <loadData encoding="UTF-8"
-                  file="config/liquibase/extend_users.csv"
-                  separator=";"
-                  tableName="extend_user"/>
-
-        <loadData encoding="UTF-8"
                   file="config/liquibase/patients.csv"
                   separator=";"
                   tableName="patient">

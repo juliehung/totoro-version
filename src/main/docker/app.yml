@@ -1,15 +1,24 @@
-version: '2'
+version: '2.4'
 services:
+
     totoro-app:
-        image: totoro
         environment:
-            # - _JAVA_OPTIONS=-Xmx512m -Xms256m
-            - SPRING_PROFILES_ACTIVE=prod,swagger
-            - SPRING_DATASOURCE_URL=jdbc:postgresql://totoro-postgresql:5432/totoro
+            - _JAVA_OPTIONS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
             - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://totoro-postgresql:5432/totoro
+        mem_limit: 2048m
         ports:
             - 8080:8080
+        networks:
+            - backend
+        depends_on:
+            - totoro-postgresql
+        container_name: totoro-admin
+
     totoro-postgresql:
-        extends:
-            file: postgresql.yml
-            service: totoro-postgresql
+        networks:
+            - backend
+
+networks:
+    backend:
+        name: backend
