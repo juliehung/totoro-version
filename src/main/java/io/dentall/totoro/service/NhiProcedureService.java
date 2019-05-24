@@ -106,6 +106,10 @@ public class NhiProcedureService {
                     nhiProcedure.setExclude(updateNhiProcedure.getExclude());
                 }
 
+                if (updateNhiProcedure.getFdi() != null) {
+                    nhiProcedure.setFdi(updateNhiProcedure.getFdi());
+                }
+
                 return nhiProcedure;
             })
             .get();

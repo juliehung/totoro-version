@@ -157,6 +157,12 @@ export class NhiProcedureUpdate extends React.Component<INhiProcedureUpdateProps
                   />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="fdiLabel" for="fdi">
+                    <Translate contentKey="totoroApp.nhiProcedure.fdi">Fdi</Translate>
+                  </Label>
+                  <AvField id="nhi-procedure-fdi" type="text" name="fdi" />
+                </AvGroup>
+                <AvGroup>
                   <Label for="nhiProcedureType.id">
                     <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
                   </Label>

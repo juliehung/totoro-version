@@ -57,6 +57,10 @@
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": 510
+        },
+        {
+            "fieldName": "fdi",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20181224042542",
