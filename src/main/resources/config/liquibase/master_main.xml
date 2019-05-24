@@ -44,8 +44,9 @@
     <include file="config/liquibase/changelog/20190507100256_added_entity_NhiIcd10Pcs.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
-    <include file="config/liquibase/changelog/20190404_addColumn.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190417_addColumn.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/addColumn/20190404.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/addColumn/20190417.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/addColumn/20190524.xml" relativeToChangelogFile="false"/>
 
     <!-- add default values -->
     <include file="config/liquibase/changelog/20190404_addDefaultValue.xml" relativeToChangelogFile="false"/>

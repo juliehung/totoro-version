@@ -51,6 +51,10 @@
         {
             "fieldName": "total",
             "fieldType": "Double"
+        },
+        {
+            "fieldName": "dateTime",
+            "fieldType": "Instant"
         }
     ],
     "changelogDate": "20190220033723",

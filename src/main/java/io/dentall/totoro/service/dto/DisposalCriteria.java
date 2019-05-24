@@ -37,6 +37,8 @@ public class DisposalCriteria implements Serializable {
 
     private LongFilter todoId;
 
+    private InstantFilter dateTime;
+
     private LongFilter registrationId;
 
     private LongFilter patientId;
@@ -67,6 +69,14 @@ public class DisposalCriteria implements Serializable {
 
     public void setTotal(DoubleFilter total) {
         this.total = total;
+    }
+
+    public InstantFilter getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(InstantFilter dateTime) {
+        this.dateTime = dateTime;
     }
 
     public LongFilter getTreatmentProcedureId() {
@@ -137,6 +147,7 @@ public class DisposalCriteria implements Serializable {
         return Objects.equals(id, that.id) &&
             Objects.equals(status, that.status) &&
             Objects.equals(total, that.total) &&
+            Objects.equals(dateTime, that.dateTime) &&
             Objects.equals(treatmentProcedureId, that.treatmentProcedureId) &&
             Objects.equals(prescriptionId, that.prescriptionId) &&
             Objects.equals(todoId, that.todoId) &&
@@ -152,6 +163,7 @@ public class DisposalCriteria implements Serializable {
             id,
             status,
             total,
+            dateTime,
             treatmentProcedureId,
             prescriptionId,
             todoId,
@@ -168,6 +180,7 @@ public class DisposalCriteria implements Serializable {
             (id != null ? "id=" + id + ", " : "") +
             (status != null ? "status=" + status + ", " : "") +
             (total != null ? "total=" + total + ", " : "") +
+            (dateTime != null ? "dateTime=" + dateTime + ", " : "") +
             (treatmentProcedureId != null ? "treatmentProcedureId=" + treatmentProcedureId + ", " : "") +
             (prescriptionId != null ? "prescriptionId=" + prescriptionId + ", " : "") +
             (todoId != null ? "todoId=" + todoId + ", " : "") +

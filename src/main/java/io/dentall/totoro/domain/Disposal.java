@@ -41,6 +41,9 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @Column(name = "total")
     private Double total;
 
+    @Column(name = "date_time")
+    private Instant dateTime;
+
     @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
@@ -101,6 +104,19 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public Instant getDateTime() {
+        return dateTime;
+    }
+
+    public Disposal dateTime(Instant dateTime) {
+        this.dateTime = dateTime;
+        return this;
+    }
+
+    public void setDateTime(Instant dateTime) {
+        this.dateTime = dateTime;
     }
 
     public Set<TreatmentProcedure> getTreatmentProcedures() {
@@ -276,6 +292,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
             "id=" + getId() +
             ", status='" + getStatus() + "'" +
             ", total=" + getTotal() +
+            ", dateTime='" + getDateTime() + "'" +
             "}";
     }
 }

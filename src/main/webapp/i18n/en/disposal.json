@@ -17,6 +17,7 @@
       },
       "status": "Status",
       "total": "Total",
+      "dateTime": "Date Time",
       "treatmentProcedure": "Treatment Procedure",
       "prescription": "Prescription",
       "todo": "Todo",

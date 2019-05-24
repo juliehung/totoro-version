@@ -59,6 +59,8 @@ export class DisposalUpdate extends React.Component<IDisposalUpdateProps, IDispo
   }
 
   saveEntity = (event, errors, values) => {
+    values.dateTime = new Date(values.dateTime);
+
     if (errors.length === 0) {
       const { disposalEntity } = this.props;
       const entity = {
@@ -132,6 +134,18 @@ export class DisposalUpdate extends React.Component<IDisposalUpdateProps, IDispo
                     <Translate contentKey="totoroApp.disposal.total">Total</Translate>
                   </Label>
                   <AvField id="disposal-total" type="string" className="form-control" name="total" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="dateTimeLabel" for="dateTime">
+                    <Translate contentKey="totoroApp.disposal.dateTime">Date Time</Translate>
+                  </Label>
+                  <AvInput
+                    id="disposal-dateTime"
+                    type="datetime-local"
+                    className="form-control"
+                    name="dateTime"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.disposalEntity.dateTime)}
+                  />
                 </AvGroup>
                 <AvGroup>
                   <Label for="prescription.id">

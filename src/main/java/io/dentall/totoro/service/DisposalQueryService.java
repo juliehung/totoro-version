@@ -89,6 +89,9 @@ public class DisposalQueryService extends QueryService<Disposal> {
             if (criteria.getTotal() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getTotal(), Disposal_.total));
             }
+            if (criteria.getDateTime() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getDateTime(), Disposal_.dateTime));
+            }
             if (criteria.getTreatmentProcedureId() != null) {
                 specification = specification.and(buildSpecification(criteria.getTreatmentProcedureId(),
                     root -> root.join(Disposal_.treatmentProcedures, JoinType.LEFT).get(TreatmentProcedure_.id)));

@@ -3,7 +3,15 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAllAction, getSortState, IPaginationBaseState, getPaginationItemsNumber, JhiPagination } from 'react-jhipster';
+import {
+  Translate,
+  ICrudGetAllAction,
+  TextFormat,
+  getSortState,
+  IPaginationBaseState,
+  getPaginationItemsNumber,
+  JhiPagination
+} from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -73,6 +81,9 @@ export class Disposal extends React.Component<IDisposalProps, IDisposalState> {
                 <th className="hand" onClick={this.sort('total')}>
                   <Translate contentKey="totoroApp.disposal.total">Total</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('dateTime')}>
+                  <Translate contentKey="totoroApp.disposal.dateTime">Date Time</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.disposal.prescription">Prescription</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -97,6 +108,9 @@ export class Disposal extends React.Component<IDisposalProps, IDisposalState> {
                     <Translate contentKey={`totoroApp.DisposalStatus.${disposal.status}`} />
                   </td>
                   <td>{disposal.total}</td>
+                  <td>
+                    <TextFormat type="date" value={disposal.dateTime} format={APP_DATE_FORMAT} />
+                  </td>
                   <td>
                     {disposal.prescription ? <Link to={`prescription/${disposal.prescription.id}`}>{disposal.prescription.id}</Link> : ''}
                   </td>
