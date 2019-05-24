@@ -191,6 +191,10 @@ public class DisposalService {
                     disposal.setTotal((updateDisposal.getTotal()));
                 }
 
+                if (updateDisposal.getDateTime() != null) {
+                    disposal.setDateTime(updateDisposal.getDateTime());
+                }
+
                 if (updateDisposal.getPrescription() != null) {
                     disposal.setPrescription(getPrescription(updateDisposal));
                 }

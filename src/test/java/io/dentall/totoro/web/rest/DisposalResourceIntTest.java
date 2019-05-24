@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 
@@ -49,6 +51,9 @@ public class DisposalResourceIntTest {
 
     private static final Double DEFAULT_TOTAL = 1D;
     private static final Double UPDATED_TOTAL = 2D;
+
+    private static final Instant DEFAULT_DATE_TIME = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_DATE_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     @Autowired
     private DisposalRepository disposalRepository;
@@ -114,7 +119,8 @@ public class DisposalResourceIntTest {
     public static Disposal createEntity(EntityManager em) {
         Disposal disposal = new Disposal()
             .status(DEFAULT_STATUS)
-            .total(DEFAULT_TOTAL);
+            .total(DEFAULT_TOTAL)
+            .dateTime(DEFAULT_DATE_TIME);
         return disposal;
     }
 
@@ -145,6 +151,7 @@ public class DisposalResourceIntTest {
         assertThat(testDisposal.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testDisposal.getTotal()).isEqualTo(DEFAULT_TOTAL);
         assertThat(testDisposal.getCreatedBy()).isEqualTo(appointment.getDoctor().getUser().getLogin());
+        assertThat(testDisposal.getDateTime()).isEqualTo(DEFAULT_DATE_TIME);
     }
 
     @Test
@@ -196,7 +203,8 @@ public class DisposalResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(disposal.getId().intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())));
+            .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())))
+            .andExpect(jsonPath("$.[*].dateTime").value(hasItem(DEFAULT_DATE_TIME.toString())));
     }
     
     @Test
@@ -211,7 +219,8 @@ public class DisposalResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(disposal.getId().intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
-            .andExpect(jsonPath("$.total").value(DEFAULT_TOTAL.doubleValue()));
+            .andExpect(jsonPath("$.total").value(DEFAULT_TOTAL.doubleValue()))
+            .andExpect(jsonPath("$.dateTime").value(DEFAULT_DATE_TIME.toString()));
     }
 
     @Test
@@ -290,6 +299,45 @@ public class DisposalResourceIntTest {
 
         // Get all the disposalList where total is null
         defaultDisposalShouldNotBeFound("total.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByDateTimeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        disposalRepository.saveAndFlush(disposal);
+
+        // Get all the disposalList where dateTime equals to DEFAULT_DATE_TIME
+        defaultDisposalShouldBeFound("dateTime.equals=" + DEFAULT_DATE_TIME);
+
+        // Get all the disposalList where dateTime equals to UPDATED_DATE_TIME
+        defaultDisposalShouldNotBeFound("dateTime.equals=" + UPDATED_DATE_TIME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByDateTimeIsInShouldWork() throws Exception {
+        // Initialize the database
+        disposalRepository.saveAndFlush(disposal);
+
+        // Get all the disposalList where dateTime in DEFAULT_DATE_TIME or UPDATED_DATE_TIME
+        defaultDisposalShouldBeFound("dateTime.in=" + DEFAULT_DATE_TIME + "," + UPDATED_DATE_TIME);
+
+        // Get all the disposalList where dateTime equals to UPDATED_DATE_TIME
+        defaultDisposalShouldNotBeFound("dateTime.in=" + UPDATED_DATE_TIME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDisposalsByDateTimeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        disposalRepository.saveAndFlush(disposal);
+
+        // Get all the disposalList where dateTime is not null
+        defaultDisposalShouldBeFound("dateTime.specified=true");
+
+        // Get all the disposalList where dateTime is null
+        defaultDisposalShouldNotBeFound("dateTime.specified=false");
     }
 
     @Test
@@ -394,7 +442,8 @@ public class DisposalResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(disposal.getId().intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())));
+            .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())))
+            .andExpect(jsonPath("$.[*].dateTime").value(hasItem(DEFAULT_DATE_TIME.toString())));
 
         // Check, that the count call also returns 1
         restDisposalMockMvc.perform(get("/api/disposals/count?sort=id,desc&" + filter))
@@ -443,7 +492,8 @@ public class DisposalResourceIntTest {
         em.detach(updatedDisposal);
         updatedDisposal
             .status(UPDATED_STATUS)
-            .total(UPDATED_TOTAL);
+            .total(UPDATED_TOTAL)
+            .dateTime(UPDATED_DATE_TIME);
 
         restDisposalMockMvc.perform(put("/api/disposals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -456,6 +506,7 @@ public class DisposalResourceIntTest {
         Disposal testDisposal = disposalList.get(disposalList.size() - 1);
         assertThat(testDisposal.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testDisposal.getTotal()).isEqualTo(UPDATED_TOTAL);
+        assertThat(testDisposal.getDateTime()).isEqualTo(UPDATED_DATE_TIME);
     }
 
     @Test

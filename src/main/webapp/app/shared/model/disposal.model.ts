@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 import { ITreatmentProcedure } from 'app/shared/model//treatment-procedure.model';
 import { IPrescription } from 'app/shared/model//prescription.model';
 import { ITodo } from 'app/shared/model//todo.model';
@@ -14,6 +15,7 @@ export interface IDisposal {
   id?: number;
   status?: DisposalStatus;
   total?: number;
+  dateTime?: Moment;
   treatmentProcedures?: ITreatmentProcedure[];
   prescription?: IPrescription;
   todo?: ITodo;

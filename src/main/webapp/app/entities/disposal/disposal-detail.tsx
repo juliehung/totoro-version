@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -40,6 +40,14 @@ export class DisposalDetail extends React.Component<IDisposalDetailProps> {
               </span>
             </dt>
             <dd>{disposalEntity.total}</dd>
+            <dt>
+              <span id="dateTime">
+                <Translate contentKey="totoroApp.disposal.dateTime">Date Time</Translate>
+              </span>
+            </dt>
+            <dd>
+              <TextFormat value={disposalEntity.dateTime} type="date" format={APP_DATE_FORMAT} />
+            </dd>
             <dt>
               <Translate contentKey="totoroApp.disposal.prescription">Prescription</Translate>
             </dt>
