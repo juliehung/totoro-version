@@ -22,6 +22,7 @@
       "defaultIcd10CmId": "Default Icd 10 Cm Id",
       "description": "Description",
       "exclude": "Exclude",
+      "fdi": "Fdi",
       "nhiProcedureType": "Nhi Procedure Type",
       "nhiIcd9Cm": "Nhi Icd 9 Cm",
       "nhiIcd10Pcs": "Nhi Icd 10 Pcs"
