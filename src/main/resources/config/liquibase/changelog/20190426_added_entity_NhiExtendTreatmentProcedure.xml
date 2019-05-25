@@ -54,6 +54,10 @@
             <column name="jhi_check" type="varchar(510)">
                 <constraints nullable="true" />
             </column>
+
+            <column name="nhi_extend_disposal_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity NhiExtendTreatmentDrug.
+    -->
+    <changeSet id="20190522-AddForeignKeyConstraint-2" author="Jim">
+
+        <addForeignKeyConstraint baseColumnNames="nhi_extend_disposal_id"
+                                 baseTableName="nhi_extend_treatment_drug"
+                                 constraintName="fk_nhi_extend_treatment_drug_nhi_extend_disposal_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="nhi_extend_disposal"/>
+
+    </changeSet>
+</databaseChangeLog>

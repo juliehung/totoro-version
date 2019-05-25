@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190522-AddForeignKeyConstraint-3" author="Jim">
+
+        <addForeignKeyConstraint baseColumnNames="nhi_day_upload_details_id"
+                                 baseTableName="nhi_day_upload_details_nhi_extend_disposal"
+                                 constraintName="fk_nhi_day_upload_details_nhi_extend_disposal_nhi_day_upload_details_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="nhi_day_upload_details"/>
+
+        <addForeignKeyConstraint baseColumnNames="nhi_extend_disposals_id"
+                                 baseTableName="nhi_day_upload_details_nhi_extend_disposal"
+                                 constraintName="fk_nhi_day_upload_details_nhi_extend_disposal_nhi_extend_disposals_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="nhi_extend_disposal"/>
+
+    </changeSet>
+</databaseChangeLog>

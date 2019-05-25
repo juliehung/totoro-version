@@ -1,0 +1,30 @@
+{
+    "name": "NhiDayUploadDetails",
+    "fields": [
+        {
+            "fieldName": "type",
+            "fieldType": "NhiDayUploadDetailType",
+            "fieldValues": "NORMAL,CORRECTION",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "nhiDayUpload",
+            "otherEntityName": "nhiDayUpload",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190522092741",
+    "entityTableName": "nhi_day_upload_details",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

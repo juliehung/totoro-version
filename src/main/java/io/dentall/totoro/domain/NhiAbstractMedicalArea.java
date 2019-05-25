@@ -1,8 +1,13 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Column;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
+
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 // 醫療專區
 @MappedSuperclass
@@ -48,6 +53,10 @@ public abstract class NhiAbstractMedicalArea<ENTITY extends NhiAbstractMedicalAr
 
     @Column(name = "jhi_check")
     private String check;
+
+    @ManyToOne
+    @JsonProperty(access = WRITE_ONLY)
+    private NhiExtendDisposal nhiExtendDisposal;
 
     @Override
     public String getA71() {
@@ -197,5 +206,20 @@ public abstract class NhiAbstractMedicalArea<ENTITY extends NhiAbstractMedicalAr
     @Override
     public void setCheck(String check) {
         this.check = check;
+    }
+
+    @Override
+    public NhiExtendDisposal getNhiExtendDisposal() {
+        return nhiExtendDisposal;
+    }
+
+    public ENTITY nhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal) {
+        this.nhiExtendDisposal = nhiExtendDisposal;
+        return (ENTITY) this;
+    }
+
+    @Override
+    public void setNhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal) {
+        this.nhiExtendDisposal = nhiExtendDisposal;
     }
 }

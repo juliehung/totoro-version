@@ -1,0 +1,22 @@
+{
+  "totoroApp": {
+    "nhiDayUploadDetails": {
+      "home": {
+        "title": "Nhi Day Upload Details",
+        "createLabel": "建立一筆新的 Nhi Day Upload Details",
+        "createOrEditLabel": "建立或編輯 Nhi Day Upload Details"
+      },
+      "created": "新的 Nhi Day Upload Details 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Nhi Day Upload Details 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Nhi Day Upload Details 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Nhi Day Upload Details {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Nhi Day Upload Details"
+      },
+      "type": "Type",
+      "nhiDayUpload": "Nhi Day Upload"
+    }
+  }
+}

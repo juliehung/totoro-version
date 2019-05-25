@@ -102,6 +102,14 @@
             <column name="a54" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+
+            <column name="jhi_date" type="date">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="upload_status" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>

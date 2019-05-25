@@ -41,4 +41,8 @@ public interface NhiMedicalArea {
     String getCheck();
 
     void setCheck(String check);
+
+    NhiExtendDisposal getNhiExtendDisposal();
+
+    void setNhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal);
 }

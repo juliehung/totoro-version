@@ -29,7 +29,10 @@ public class NhiExtendTreatmentDrugService {
 
     private final TreatmentDrugRepository treatmentDrugRepository;
 
-    public NhiExtendTreatmentDrugService(NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository, TreatmentDrugRepository treatmentDrugRepository) {
+    public NhiExtendTreatmentDrugService(
+        NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository,
+        TreatmentDrugRepository treatmentDrugRepository
+    ) {
         this.nhiExtendTreatmentDrugRepository = nhiExtendTreatmentDrugRepository;
         this.treatmentDrugRepository = treatmentDrugRepository;
     }

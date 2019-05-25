@@ -1,9 +1,6 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.service.dto.ToothCriteria;
-import io.dentall.totoro.service.dto.TreatmentProcedureCriteria;
-import io.github.jhipster.service.filter.LongFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -31,18 +28,30 @@ public class RelationshipService {
 
     private final NhiExtendDisposalService nhiExtendDisposalService;
 
+    private final NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService;
+
+    private final NhiExtendTreatmentDrugService nhiExtendTreatmentDrugService;
+
+    private final NhiDayUploadDetailsService nhiDayUploadDetailsService;
+
     public RelationshipService(
         @Lazy TreatmentProcedureService treatmentProcedureService,
         @Lazy TreatmentTaskService treatmentTaskService,
         ToothService toothService,
         TreatmentDrugService treatmentDrugService,
-        NhiExtendDisposalService nhiExtendDisposalService
+        @Lazy NhiExtendDisposalService nhiExtendDisposalService,
+        NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService,
+        NhiExtendTreatmentDrugService nhiExtendTreatmentDrugService,
+        NhiDayUploadDetailsService nhiDayUploadDetailsService
     ) {
         this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentTaskService = treatmentTaskService;
         this.toothService = toothService;
         this.treatmentDrugService = treatmentDrugService;
         this.nhiExtendDisposalService = nhiExtendDisposalService;
+        this.nhiExtendTreatmentProcedureService = nhiExtendTreatmentProcedureService;
+        this.nhiExtendTreatmentDrugService = nhiExtendTreatmentDrugService;
+        this.nhiDayUploadDetailsService = nhiDayUploadDetailsService;
     }
 
     void addRelationshipWithTreatmentTasks(TreatmentPlan treatmentPlan) {
@@ -165,6 +174,39 @@ public class RelationshipService {
         disposal.setNhiExtendDisposals(nhiExtendDisposals);
     }
 
+    void addRelationshipWithNhiExtendTreatmentProcedures(NhiExtendDisposal nhiExtendDisposal, Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures) {
+        if (nhiExtendTreatmentProcedures != null) {
+            nhiExtendTreatmentProcedures = getRelationshipWithOwners(
+                nhiExtendTreatmentProcedures.stream().map(this::getNhiExtendTreatmentProcedure),
+                nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.nhiExtendDisposal(nhiExtendDisposal)
+            );
+
+            nhiExtendDisposal.setNhiExtendTreatmentProcedures(nhiExtendTreatmentProcedures);
+        }
+    }
+
+    void addRelationshipWithNhiExtendTreatmentDrugs(NhiExtendDisposal nhiExtendDisposal, Set<NhiExtendTreatmentDrug> nhiExtendTreatmentDrugs) {
+        if (nhiExtendTreatmentDrugs != null) {
+            nhiExtendTreatmentDrugs = getRelationshipWithOwners(
+                nhiExtendTreatmentDrugs.stream().map(this::getNhiExtendTreatmentDrug),
+                nhiExtendTreatmentDrug -> nhiExtendTreatmentDrug.nhiExtendDisposal(nhiExtendDisposal)
+            );
+
+            nhiExtendDisposal.setNhiExtendTreatmentDrugs(nhiExtendTreatmentDrugs);
+        }
+    }
+
+    void addRelationshipWithNhiDayUploadDetails(NhiDayUpload nhiDayUpload, Set<NhiDayUploadDetails> nhiDayUploadDetails) {
+        if (nhiDayUploadDetails != null) {
+            nhiDayUploadDetails = getRelationshipWithOwners(
+                nhiDayUploadDetails.stream().map(this::getNhiDayUploadDetails),
+                nhiDayUploadDetail -> nhiDayUploadDetail.nhiDayUpload(nhiDayUpload)
+            );
+
+            nhiDayUpload.setNhiDayUploadDetails(nhiDayUploadDetails);
+        }
+    }
+
     void deleteTeeth(Set<Tooth> teeth, Set<Long> updateIds) {
         deleteTeeth(
             teeth
@@ -222,5 +264,17 @@ public class RelationshipService {
 
     private NhiExtendDisposal getNhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal) {
         return nhiExtendDisposal.getId() == null ? nhiExtendDisposalService.save(nhiExtendDisposal) : nhiExtendDisposalService.update(nhiExtendDisposal);
+    }
+
+    private NhiExtendTreatmentProcedure getNhiExtendTreatmentProcedure(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+        return nhiExtendTreatmentProcedure.getId() == null ? nhiExtendTreatmentProcedureService.save(nhiExtendTreatmentProcedure) : nhiExtendTreatmentProcedureService.update(nhiExtendTreatmentProcedure);
+    }
+
+    private NhiExtendTreatmentDrug getNhiExtendTreatmentDrug(NhiExtendTreatmentDrug nhiExtendTreatmentDrug) {
+        return nhiExtendTreatmentDrug.getId() == null ? nhiExtendTreatmentDrugService.save(nhiExtendTreatmentDrug) : nhiExtendTreatmentDrugService.update(nhiExtendTreatmentDrug);
+    }
+
+    private NhiDayUploadDetails getNhiDayUploadDetails(NhiDayUploadDetails nhiDayUploadDetails) {
+        return nhiDayUploadDetails.getId() == null ? nhiDayUploadDetailsService.save(nhiDayUploadDetails) : nhiDayUploadDetailsService.update(nhiDayUploadDetails);
     }
 }

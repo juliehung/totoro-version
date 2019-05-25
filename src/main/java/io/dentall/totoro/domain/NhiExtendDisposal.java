@@ -1,14 +1,19 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Set;
 
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
@@ -114,6 +119,25 @@ public class NhiExtendDisposal implements Serializable {
     // 實際就醫(調劑或檢查)日期
     @Column(name = "a54")
     private String a54;
+
+    @JsonProperty(access = READ_ONLY)
+    @Column(name = "jhi_date", nullable = false)
+    private LocalDate date;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "upload_status", nullable = false)
+    private NhiExtendDisposalUploadStatus uploadStatus;
+
+    @OneToMany(mappedBy = "nhiExtendDisposal", fetch = FetchType.EAGER)
+    private Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = null;
+
+    @OneToMany(mappedBy = "nhiExtendDisposal", fetch = FetchType.EAGER)
+    private Set<NhiExtendTreatmentDrug> nhiExtendTreatmentDrugs = null;
+
+    @ManyToMany(mappedBy = "nhiExtendDisposals")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JsonIgnore
+    private Set<NhiDayUploadDetails> nhiDayUploadDetails = null;
 
     public Long getId() {
         return id;
@@ -225,6 +249,10 @@ public class NhiExtendDisposal implements Serializable {
 
     public void setA17(String a17) {
         this.a17 = a17;
+
+        if (a17 != null) {
+            date = LocalDate.of(Integer.valueOf(a17.substring(0, 3)) + 1911, Integer.valueOf(a17.substring(3, 5)), Integer.valueOf(a17.substring(5, 7)));
+        }
     }
 
     public String getA18() {
@@ -409,6 +437,86 @@ public class NhiExtendDisposal implements Serializable {
         this.a54 = a54;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public NhiExtendDisposalUploadStatus getUploadStatus() {
+        return uploadStatus;
+    }
+
+    public NhiExtendDisposal uploadStatus(NhiExtendDisposalUploadStatus uploadStatus) {
+        this.uploadStatus = uploadStatus;
+        return this;
+    }
+
+    public void setUploadStatus(NhiExtendDisposalUploadStatus uploadStatus) {
+        this.uploadStatus = uploadStatus;
+    }
+
+    public Set<NhiExtendTreatmentProcedure> getNhiExtendTreatmentProcedures() {
+        return nhiExtendTreatmentProcedures;
+    }
+
+    public NhiExtendDisposal nhiExtendTreatmentProcedures(Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures) {
+        this.nhiExtendTreatmentProcedures = nhiExtendTreatmentProcedures;
+        return this;
+    }
+
+    public NhiExtendDisposal addNhiExtendTreatmentProcedure(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+        this.nhiExtendTreatmentProcedures.add(nhiExtendTreatmentProcedure);
+        nhiExtendTreatmentProcedure.setNhiExtendDisposal(this);
+        return this;
+    }
+
+    public NhiExtendDisposal removeNhiExtendTreatmentProcedure(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+        this.nhiExtendTreatmentProcedures.remove(nhiExtendTreatmentProcedure);
+        nhiExtendTreatmentProcedure.setNhiExtendDisposal(null);
+        return this;
+    }
+
+    public void setNhiExtendTreatmentProcedures(Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures) {
+        this.nhiExtendTreatmentProcedures = nhiExtendTreatmentProcedures;
+    }
+
+    public Set<NhiExtendTreatmentDrug> getNhiExtendTreatmentDrugs() {
+        return nhiExtendTreatmentDrugs;
+    }
+
+    public NhiExtendDisposal nhiExtendTreatmentDrugs(Set<NhiExtendTreatmentDrug> nhiExtendTreatmentDrugs) {
+        this.nhiExtendTreatmentDrugs = nhiExtendTreatmentDrugs;
+        return this;
+    }
+
+    public NhiExtendDisposal addNhiExtendTreatmentDrug(NhiExtendTreatmentDrug nhiExtendTreatmentDrug) {
+        this.nhiExtendTreatmentDrugs.add(nhiExtendTreatmentDrug);
+        nhiExtendTreatmentDrug.setNhiExtendDisposal(this);
+        return this;
+    }
+
+    public NhiExtendDisposal removeNhiExtendTreatmentDrug(NhiExtendTreatmentDrug nhiExtendTreatmentDrug) {
+        this.nhiExtendTreatmentDrugs.remove(nhiExtendTreatmentDrug);
+        nhiExtendTreatmentDrug.setNhiExtendDisposal(null);
+        return this;
+    }
+
+    public void setNhiExtendTreatmentDrugs(Set<NhiExtendTreatmentDrug> nhiExtendTreatmentDrugs) {
+        this.nhiExtendTreatmentDrugs = nhiExtendTreatmentDrugs;
+    }
+
+    public Set<NhiDayUploadDetails> getNhiDayUploadDetails() {
+        return nhiDayUploadDetails;
+    }
+
+    public NhiExtendDisposal nhiDayUploadDetails(Set<NhiDayUploadDetails> nhiDayUploadDetails) {
+        this.nhiDayUploadDetails = nhiDayUploadDetails;
+        return this;
+    }
+
+    public void setNhiDayUploadDetails(Set<NhiDayUploadDetails> nhiDayUploadDetails) {
+        this.nhiDayUploadDetails = nhiDayUploadDetails;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -454,6 +562,8 @@ public class NhiExtendDisposal implements Serializable {
             ", a43='" + getA43() + "'" +
             ", a44='" + getA44() + "'" +
             ", a54='" + getA54() + "'" +
+            ", date='" + getDate() + "'" +
+            ", uploadStatus='" + getUploadStatus() + "'" +
             "}";
     }
 }
