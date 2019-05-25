@@ -22,11 +22,15 @@
     <include file="config/liquibase/changelog/20181224042542_added_entity_constraints_NhiProcedure.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190506104833_added_entity_constraints_NhiIcd10Cm.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190507100256_added_entity_constraints_NhiIcd10Pcs.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190522092741_added_entity_constraints_NhiDayUploadDetails.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 
     <!-- add custom foreign key constraints -->
     <include file="config/liquibase/changelog/20190404_addForeignKeyConstraint.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190418_added_entity_constraints_NhiExtendDisposal.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190522_added_entity_constraints_NhiExtendTreatmentProcedure.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190522_added_entity_constraints_NhiExtendTreatmentDrug.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190522_added_entity_constraints_NhiDayUploadDetailsNhiExtendDisposal.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom unique constraints -->
     <include file="config/liquibase/changelog/20190404_addUniqueConstraint.xml" relativeToChangelogFile="false"/>

@@ -94,6 +94,10 @@ public class CacheConfiguration {
             cm.createCache(io.dentall.totoro.domain.NhiProcedureType.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.NhiIcd10Pcs.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.NhiProcedure.class.getName() + ".nhiIcd10Pcs", jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.NhiDayUpload.class.getName(), jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.NhiDayUpload.class.getName() + ".nhiDayUploadDetails", jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.NhiDayUploadDetails.class.getName(), jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.domain.NhiExtendDisposal.class.getName() + ".nhiDayUploadDetails", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
 
             cm.createCache(io.dentall.totoro.domain.ExtendUser.class.getName() + ".lastPatients", jcacheConfiguration);

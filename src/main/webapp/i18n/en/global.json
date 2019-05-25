@@ -40,6 +40,8 @@
         "nhiProcedure": "Nhi Procedure",
         "nhiProcedureType": "Nhi Procedure Type",
         "nhiIcd10Pcs": "Nhi Icd 10 Pcs",
+        "nhiDayUpload": "Nhi Day Upload",
+        "nhiDayUploadDetails": "Nhi Day Upload Details",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

@@ -1,15 +1,19 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service Implementation for managing NhiExtendDisposal.
@@ -22,8 +26,11 @@ public class NhiExtendDisposalService {
 
     private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
 
-    public NhiExtendDisposalService(NhiExtendDisposalRepository nhiExtendDisposalRepository) {
+    private final RelationshipService relationshipService;
+
+    public NhiExtendDisposalService(NhiExtendDisposalRepository nhiExtendDisposalRepository, RelationshipService relationshipService) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
+        this.relationshipService = relationshipService;
     }
 
     /**
@@ -34,19 +41,41 @@ public class NhiExtendDisposalService {
      */
     public NhiExtendDisposal save(NhiExtendDisposal nhiExtendDisposal) {
         log.debug("Request to save NhiExtendDisposal : {}", nhiExtendDisposal);
-        return nhiExtendDisposalRepository.save(nhiExtendDisposal);
+
+        Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = nhiExtendDisposal.getNhiExtendTreatmentProcedures();
+        Set<NhiExtendTreatmentDrug> nhiExtendTreatmentDrugs = nhiExtendDisposal.getNhiExtendTreatmentDrugs();
+        if (nhiExtendDisposal.getUploadStatus() == null) {
+            nhiExtendDisposal.setUploadStatus(NhiExtendDisposalUploadStatus.NONE);
+        }
+
+        nhiExtendDisposal = nhiExtendDisposalRepository.save(nhiExtendDisposal.nhiExtendTreatmentProcedures(null).nhiExtendTreatmentDrugs(null));
+
+        relationshipService.addRelationshipWithNhiExtendTreatmentProcedures(nhiExtendDisposal, nhiExtendTreatmentProcedures);
+        relationshipService.addRelationshipWithNhiExtendTreatmentDrugs(nhiExtendDisposal, nhiExtendTreatmentDrugs);
+
+        return nhiExtendDisposal;
     }
 
     /**
      * Get all the nhiExtendDisposals.
      *
-     * @param pageable the pagination information
      * @return the list of entities
      */
     @Transactional(readOnly = true)
-    public Page<NhiExtendDisposal> findAll(Pageable pageable) {
+    public List<NhiExtendDisposal> findAll() {
         log.debug("Request to get all NhiExtendDisposals");
-        return nhiExtendDisposalRepository.findAll(pageable);
+        return nhiExtendDisposalRepository.findAll();
+    }
+
+    /**
+     * Get the nhiExtendDisposals by date.
+     *
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public List<NhiExtendDisposal> findByDate(LocalDate date) {
+        log.debug("Request to get all NhiExtendDisposals by date({})", date);
+        return nhiExtendDisposalRepository.findByDate(date);
     }
 
 
@@ -166,6 +195,16 @@ public class NhiExtendDisposalService {
                 if (updateNhiExtendDisposal.getA54() != null) {
                     nhiExtendDisposal.setA54((updateNhiExtendDisposal.getA54()));
                 }
+
+                if (updateNhiExtendDisposal.getUploadStatus() != null) {
+                    nhiExtendDisposal.setUploadStatus(updateNhiExtendDisposal.getUploadStatus());
+                }
+
+                log.debug("Update nhiExtendTreatmentProcedures({}) of NhiExtendDisposal(id: {})", updateNhiExtendDisposal.getNhiExtendTreatmentProcedures(), updateNhiExtendDisposal.getId());
+                relationshipService.addRelationshipWithNhiExtendTreatmentProcedures(nhiExtendDisposal, updateNhiExtendDisposal.getNhiExtendTreatmentProcedures());
+
+                log.debug("Update nhiExtendTreatmentDrugs({}) of NhiExtendDisposal(id: {})", updateNhiExtendDisposal.getNhiExtendTreatmentDrugs(), updateNhiExtendDisposal.getId());
+                relationshipService.addRelationshipWithNhiExtendTreatmentDrugs(nhiExtendDisposal, updateNhiExtendDisposal.getNhiExtendTreatmentDrugs());
 
                 return nhiExtendDisposal;
             })

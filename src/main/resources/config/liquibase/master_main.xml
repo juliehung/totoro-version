@@ -42,10 +42,16 @@
     <include file="config/liquibase/changelog/20190506104832_added_entity_NhiIcd9Cm.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190506104833_added_entity_NhiIcd10Cm.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190507100256_added_entity_NhiIcd10Pcs.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190522092740_added_entity_NhiDayUpload.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190522092741_added_entity_NhiDayUploadDetails.xml" relativeToChangelogFile="false"/>
+
+    <!-- add custom tables -->
+    <include file="config/liquibase/changelog/20190522_createTable.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/addColumn/20190404.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/addColumn/20190417.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/addColumn/20190522.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/addColumn/20190524.xml" relativeToChangelogFile="false"/>
 
     <!-- add default values -->

@@ -1,0 +1,29 @@
+{
+    "name": "NhiDayUpload",
+    "fields": [
+        {
+            "fieldName": "date",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "dayUploadDetails",
+            "otherEntityName": "nhiDayUploadDetails",
+            "otherEntityRelationshipName": "nhiDayUpload"
+        }
+    ],
+    "changelogDate": "20190522092740",
+    "entityTableName": "nhi_day_upload",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

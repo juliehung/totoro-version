@@ -178,6 +178,16 @@ export const EntitiesMenu = props => (
       &nbsp;
       <Translate contentKey="global.menu.entities.nhiIcd10Pcs" />
     </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/nhi-day-upload">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.nhiDayUpload" />
+    </DropdownItem>
+    <DropdownItem tag={Link} to="/entity/nhi-day-upload-details">
+      <FontAwesomeIcon icon="asterisk" fixedWidth />
+      &nbsp;
+      <Translate contentKey="global.menu.entities.nhiDayUploadDetails" />
+    </DropdownItem>
     {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
   </NavDropdown>
 );
