@@ -11,12 +11,9 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
-
 import io.dentall.totoro.domain.enumeration.RegistrationType;
 
 /**
@@ -50,14 +47,14 @@ public class Registration extends AbstractAuditingEntity implements Serializable
     private Boolean onSite;
 
     @OneToOne(mappedBy = "registration")
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"registration", "treatmentProcedures"}, allowSetters = true)
     private Appointment appointment;
 
     @OneToOne    @JoinColumn(unique = true)
     private Accounting accounting;
 
     @OneToOne(mappedBy = "registration")
-    @JsonIgnoreProperties("registration")
+    @JsonIgnoreProperties(value = {"registration", "nhiExtendDisposals"}, allowSetters = true)
     private Disposal disposal;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
