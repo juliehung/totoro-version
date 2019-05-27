@@ -1,6 +1,7 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import org.hibernate.annotations.Cache;
@@ -14,7 +15,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
-import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
  * A NhiExtendDisposal.
@@ -32,7 +32,7 @@ public class NhiExtendDisposal implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JsonProperty(access = WRITE_ONLY)
+    @JsonIgnoreProperties(value = {"total", "dateTime", "prescription", "todo", "treatmentProcedures", "teeth", "nhiExtendDisposals"}, allowSetters = true)
     private Disposal disposal;
 
     // 卡片號碼
