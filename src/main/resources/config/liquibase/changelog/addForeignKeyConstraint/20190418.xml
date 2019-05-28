@@ -6,7 +6,7 @@
     <!--
         Added the constraints for entity NhiExtendDisposal.
     -->
-    <changeSet id="20190418-2" author="Jim">
+    <changeSet id="20190418-AddForeignKeyConstraint" author="Jim">
 
         <addForeignKeyConstraint baseColumnNames="disposal_id"
                                  baseTableName="nhi_extend_disposal"

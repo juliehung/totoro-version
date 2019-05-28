@@ -46,18 +46,20 @@
     <include file="config/liquibase/changelog/20190522092741_added_entity_NhiDayUploadDetails.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom tables -->
-    <include file="config/liquibase/changelog/20190522_createTable.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/createTable/20190522.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/addColumn/20190404.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/addColumn/20190417.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/addColumn/20190522.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/addColumn/20190524.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/addColumn/20190528.xml" relativeToChangelogFile="false"/>
 
     <!-- add default values -->
-    <include file="config/liquibase/changelog/20190404_addDefaultValue.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/addDefaultValue/20190404.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom indexes -->
-    <include file="config/liquibase/changelog/20190408_createIndex.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/createIndex/20190408.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/createIndex/20190524.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

@@ -70,6 +70,9 @@ public class TreatmentProcedureResourceIntTest {
     private static final String DEFAULT_NHI_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_NHI_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final String DEFAULT_NHI_ICD_10_CM = "AAAAAAAAAA";
+    private static final String UPDATED_NHI_ICD_10_CM = "BBBBBBBBBB";
+
     @Autowired
     private TreatmentProcedureRepository treatmentProcedureRepository;
 
@@ -128,7 +131,8 @@ public class TreatmentProcedureResourceIntTest {
             .completedDate(DEFAULT_COMPLETED_DATE)
             .price(DEFAULT_PRICE)
             .nhiCategory(DEFAULT_NHI_CATEGORY)
-            .nhiDescription(DEFAULT_NHI_DESCRIPTION);
+            .nhiDescription(DEFAULT_NHI_DESCRIPTION)
+            .nhiIcd10Cm(DEFAULT_NHI_ICD_10_CM);
         return treatmentProcedure;
     }
 
@@ -160,6 +164,7 @@ public class TreatmentProcedureResourceIntTest {
         assertThat(testTreatmentProcedure.getPrice()).isEqualTo(DEFAULT_PRICE);
         assertThat(testTreatmentProcedure.getNhiCategory()).isEqualTo(DEFAULT_NHI_CATEGORY);
         assertThat(testTreatmentProcedure.getNhiDescription()).isEqualTo(DEFAULT_NHI_DESCRIPTION);
+        assertThat(testTreatmentProcedure.getNhiIcd10Cm()).isEqualTo(DEFAULT_NHI_ICD_10_CM);
     }
 
     @Test
@@ -217,7 +222,8 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].completedDate").value(hasItem(DEFAULT_COMPLETED_DATE.toString())))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
             .andExpect(jsonPath("$.[*].nhiCategory").value(hasItem(DEFAULT_NHI_CATEGORY.toString())))
-            .andExpect(jsonPath("$.[*].nhiDescription").value(hasItem(DEFAULT_NHI_DESCRIPTION.toString())));
+            .andExpect(jsonPath("$.[*].nhiDescription").value(hasItem(DEFAULT_NHI_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].nhiIcd10Cm").value(hasItem(DEFAULT_NHI_ICD_10_CM.toString())));
     }
     
     @Test
@@ -238,7 +244,8 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(jsonPath("$.completedDate").value(DEFAULT_COMPLETED_DATE.toString()))
             .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()))
             .andExpect(jsonPath("$.nhiCategory").value(DEFAULT_NHI_CATEGORY.toString()))
-            .andExpect(jsonPath("$.nhiDescription").value(DEFAULT_NHI_DESCRIPTION.toString()));
+            .andExpect(jsonPath("$.nhiDescription").value(DEFAULT_NHI_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.nhiIcd10Cm").value(DEFAULT_NHI_ICD_10_CM.toString()));
     }
 
     @Test
@@ -582,6 +589,45 @@ public class TreatmentProcedureResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllTreatmentProceduresByNhiIcd10CmIsEqualToSomething() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where nhiIcd10Cm equals to DEFAULT_NHI_ICD_10_CM
+        defaultTreatmentProcedureShouldBeFound("nhiIcd10Cm.equals=" + DEFAULT_NHI_ICD_10_CM);
+
+        // Get all the treatmentProcedureList where nhiIcd10Cm equals to UPDATED_NHI_ICD_10_CM
+        defaultTreatmentProcedureShouldNotBeFound("nhiIcd10Cm.equals=" + UPDATED_NHI_ICD_10_CM);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByNhiIcd10CmIsInShouldWork() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where nhiIcd10Cm in DEFAULT_NHI_ICD_10_CM or UPDATED_NHI_ICD_10_CM
+        defaultTreatmentProcedureShouldBeFound("nhiIcd10Cm.in=" + DEFAULT_NHI_ICD_10_CM + "," + UPDATED_NHI_ICD_10_CM);
+
+        // Get all the treatmentProcedureList where nhiIcd10Cm equals to UPDATED_NHI_ICD_10_CM
+        defaultTreatmentProcedureShouldNotBeFound("nhiIcd10Cm.in=" + UPDATED_NHI_ICD_10_CM);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTreatmentProceduresByNhiIcd10CmIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        // Get all the treatmentProcedureList where nhiIcd10Cm is not null
+        defaultTreatmentProcedureShouldBeFound("nhiIcd10Cm.specified=true");
+
+        // Get all the treatmentProcedureList where nhiIcd10Cm is null
+        defaultTreatmentProcedureShouldNotBeFound("nhiIcd10Cm.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllTreatmentProceduresByNhiProcedureIsEqualToSomething() throws Exception {
         // Initialize the database
         NhiProcedure nhiProcedure = NhiProcedureResourceIntTest.createEntity(em);
@@ -727,7 +773,8 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].completedDate").value(hasItem(DEFAULT_COMPLETED_DATE.toString())))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
             .andExpect(jsonPath("$.[*].nhiCategory").value(hasItem(DEFAULT_NHI_CATEGORY.toString())))
-            .andExpect(jsonPath("$.[*].nhiDescription").value(hasItem(DEFAULT_NHI_DESCRIPTION.toString())));
+            .andExpect(jsonPath("$.[*].nhiDescription").value(hasItem(DEFAULT_NHI_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].nhiIcd10Cm").value(hasItem(DEFAULT_NHI_ICD_10_CM.toString())));
 
         // Check, that the count call also returns 1
         restTreatmentProcedureMockMvc.perform(get("/api/treatment-procedures/count?sort=id,desc&" + filter))
@@ -782,7 +829,8 @@ public class TreatmentProcedureResourceIntTest {
             .completedDate(UPDATED_COMPLETED_DATE)
             .price(UPDATED_PRICE)
             .nhiCategory(UPDATED_NHI_CATEGORY)
-            .nhiDescription(UPDATED_NHI_DESCRIPTION);
+            .nhiDescription(UPDATED_NHI_DESCRIPTION)
+            .nhiIcd10Cm(UPDATED_NHI_ICD_10_CM);
 
         restTreatmentProcedureMockMvc.perform(put("/api/treatment-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -801,6 +849,7 @@ public class TreatmentProcedureResourceIntTest {
         assertThat(testTreatmentProcedure.getPrice()).isEqualTo(UPDATED_PRICE);
         assertThat(testTreatmentProcedure.getNhiCategory()).isEqualTo(UPDATED_NHI_CATEGORY);
         assertThat(testTreatmentProcedure.getNhiDescription()).isEqualTo(UPDATED_NHI_DESCRIPTION);
+        assertThat(testTreatmentProcedure.getNhiIcd10Cm()).isEqualTo(UPDATED_NHI_ICD_10_CM);
     }
 
     @Test

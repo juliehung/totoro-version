@@ -47,6 +47,8 @@ public class TreatmentProcedureCriteria implements Serializable {
 
     private StringFilter nhiDescription;
 
+    private StringFilter nhiIcd10Cm;
+
     private LongFilter nhiProcedureId;
 
     private LongFilter treatmentTaskId;
@@ -133,6 +135,14 @@ public class TreatmentProcedureCriteria implements Serializable {
         this.nhiDescription = nhiDescription;
     }
 
+    public StringFilter getNhiIcd10Cm() {
+        return nhiIcd10Cm;
+    }
+
+    public void setNhiIcd10Cm(StringFilter nhiIcd10Cm) {
+        this.nhiIcd10Cm = nhiIcd10Cm;
+    }
+
     public LongFilter getNhiProcedureId() {
         return nhiProcedureId;
     }
@@ -209,6 +219,7 @@ public class TreatmentProcedureCriteria implements Serializable {
             Objects.equals(price, that.price) &&
             Objects.equals(nhiCategory, that.nhiCategory) &&
             Objects.equals(nhiDescription, that.nhiDescription) &&
+            Objects.equals(nhiIcd10Cm, that.nhiIcd10Cm) &&
             Objects.equals(nhiProcedureId, that.nhiProcedureId) &&
             Objects.equals(treatmentTaskId, that.treatmentTaskId) &&
             Objects.equals(procedureId, that.procedureId) &&
@@ -230,6 +241,7 @@ public class TreatmentProcedureCriteria implements Serializable {
         price,
         nhiCategory,
         nhiDescription,
+        nhiIcd10Cm,
         nhiProcedureId,
         treatmentTaskId,
         procedureId,
@@ -252,6 +264,7 @@ public class TreatmentProcedureCriteria implements Serializable {
                 (price != null ? "price=" + price + ", " : "") +
                 (nhiCategory != null ? "nhiCategory=" + nhiCategory + ", " : "") +
                 (nhiDescription != null ? "nhiDescription=" + nhiDescription + ", " : "") +
+                (nhiIcd10Cm != null ? "nhiIcd10Cm=" + nhiIcd10Cm + ", " : "") +
                 (nhiProcedureId != null ? "nhiProcedureId=" + nhiProcedureId + ", " : "") +
                 (treatmentTaskId != null ? "treatmentTaskId=" + treatmentTaskId + ", " : "") +
                 (procedureId != null ? "procedureId=" + procedureId + ", " : "") +

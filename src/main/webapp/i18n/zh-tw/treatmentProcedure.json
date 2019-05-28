@@ -23,6 +23,7 @@
       "price": "Price",
       "nhiCategory": "Nhi Category",
       "nhiDescription": "Nhi Description",
+      "nhiIcd10Cm": "Nhi Icd 10 Cm",
       "nhiProcedure": "Nhi Procedure",
       "treatmentTask": "Treatment Task",
       "procedure": "Procedure",
