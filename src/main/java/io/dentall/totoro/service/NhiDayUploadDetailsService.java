@@ -1,9 +1,7 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.NhiDayUploadDetails;
-import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.NhiDayUploadDetailsRepository;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing NhiDayUploadDetails.
@@ -27,11 +22,11 @@ public class NhiDayUploadDetailsService {
 
     private final NhiDayUploadDetailsRepository nhiDayUploadDetailsRepository;
 
-    private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
+    private final RelationshipService relationshipService;
 
-    public NhiDayUploadDetailsService(NhiDayUploadDetailsRepository nhiDayUploadDetailsRepository, NhiExtendDisposalRepository nhiExtendDisposalRepository) {
+    public NhiDayUploadDetailsService(NhiDayUploadDetailsRepository nhiDayUploadDetailsRepository, RelationshipService relationshipService) {
         this.nhiDayUploadDetailsRepository = nhiDayUploadDetailsRepository;
-        this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
+        this.relationshipService = relationshipService;
     }
 
     /**
@@ -43,7 +38,7 @@ public class NhiDayUploadDetailsService {
     public NhiDayUploadDetails save(NhiDayUploadDetails nhiDayUploadDetails) {
         log.debug("Request to save NhiDayUploadDetails : {}", nhiDayUploadDetails);
 
-        setNhiExtendDisposals(nhiDayUploadDetails, nhiDayUploadDetails.getNhiExtendDisposals());
+        relationshipService.addRelationshipWithNhiExtendDisposals(nhiDayUploadDetails, nhiDayUploadDetails.getNhiExtendDisposals());
 
         return nhiDayUploadDetailsRepository.save(nhiDayUploadDetails);
     }
@@ -98,22 +93,10 @@ public class NhiDayUploadDetailsService {
                     nhiDayUploadDetails.setType(updateNhiDayUploadDetails.getType());
                 }
 
-                setNhiExtendDisposals(nhiDayUploadDetails, updateNhiDayUploadDetails.getNhiExtendDisposals());
+                relationshipService.addRelationshipWithNhiExtendDisposals(nhiDayUploadDetails, updateNhiDayUploadDetails.getNhiExtendDisposals());
 
                 return nhiDayUploadDetails;
             })
             .get();
-    }
-
-    private void setNhiExtendDisposals(NhiDayUploadDetails nhiDayUploadDetails, Set<NhiExtendDisposal> nhiExtendDisposals) {
-        if (nhiExtendDisposals != null) {
-            nhiExtendDisposals = nhiExtendDisposals
-                .stream()
-                .map(nhiExtendDisposal -> nhiExtendDisposalRepository.findById(nhiExtendDisposal.getId()).orElse(null))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
-
-            nhiDayUploadDetails.setNhiExtendDisposals(nhiExtendDisposals);
-        }
     }
 }

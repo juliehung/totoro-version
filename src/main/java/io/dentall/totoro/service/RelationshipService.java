@@ -42,7 +42,7 @@ public class RelationshipService {
         @Lazy NhiExtendDisposalService nhiExtendDisposalService,
         NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService,
         NhiExtendTreatmentDrugService nhiExtendTreatmentDrugService,
-        NhiDayUploadDetailsService nhiDayUploadDetailsService
+        @Lazy NhiDayUploadDetailsService nhiDayUploadDetailsService
     ) {
         this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentTaskService = treatmentTaskService;
@@ -204,6 +204,17 @@ public class RelationshipService {
             );
 
             nhiDayUpload.setNhiDayUploadDetails(nhiDayUploadDetails);
+        }
+    }
+
+    void addRelationshipWithNhiExtendDisposals(NhiDayUploadDetails nhiDayUploadDetail, Set<NhiExtendDisposal> nhiExtendDisposals) {
+        if (nhiExtendDisposals != null) {
+            nhiExtendDisposals = nhiExtendDisposals
+                .stream()
+                .map(this::getNhiExtendDisposal)
+                .collect(Collectors.toSet());
+
+            nhiDayUploadDetail.setNhiExtendDisposals(nhiExtendDisposals);
         }
     }
 
