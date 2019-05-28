@@ -26,6 +26,7 @@ export interface ITreatmentProcedure {
   price?: number;
   nhiCategory?: string;
   nhiDescription?: string;
+  nhiIcd10Cm?: string;
   nhiProcedure?: INhiProcedure;
   treatmentTask?: ITreatmentTask;
   procedure?: IProcedure;

@@ -107,6 +107,9 @@ public class TreatmentProcedureQueryService extends QueryService<TreatmentProced
             if (criteria.getNhiDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNhiDescription(), TreatmentProcedure_.nhiDescription));
             }
+            if (criteria.getNhiIcd10Cm() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNhiIcd10Cm(), TreatmentProcedure_.nhiIcd10Cm));
+            }
             if (criteria.getNhiProcedureId() != null) {
                 specification = specification.and(buildSpecification(criteria.getNhiProcedureId(),
                     root -> root.join(TreatmentProcedure_.nhiProcedure, JoinType.LEFT).get(NhiProcedure_.id)));

@@ -89,6 +89,10 @@
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": 5100
+        },
+        {
+            "fieldName": "nhiIcd10Cm",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20181224042541",

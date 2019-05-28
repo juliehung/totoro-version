@@ -61,6 +61,9 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @Column(name = "nhi_description", length = 5100)
     private String nhiDescription;
 
+    @Column(name = "nhi_icd_10_cm")
+    private String nhiIcd10Cm;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private NhiProcedure nhiProcedure;
@@ -203,6 +206,19 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
 
     public void setNhiDescription(String nhiDescription) {
         this.nhiDescription = nhiDescription;
+    }
+
+    public String getNhiIcd10Cm() {
+        return nhiIcd10Cm;
+    }
+
+    public TreatmentProcedure nhiIcd10Cm(String nhiIcd10Cm) {
+        this.nhiIcd10Cm = nhiIcd10Cm;
+        return this;
+    }
+
+    public void setNhiIcd10Cm(String nhiIcd10Cm) {
+        this.nhiIcd10Cm = nhiIcd10Cm;
     }
 
     public NhiProcedure getNhiProcedure() {
@@ -354,6 +370,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
             ", price=" + getPrice() +
             ", nhiCategory='" + getNhiCategory() + "'" +
             ", nhiDescription='" + getNhiDescription() + "'" +
+            ", nhiIcd10Cm='" + getNhiIcd10Cm() + "'" +
             "}";
     }
 }

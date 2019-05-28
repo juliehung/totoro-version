@@ -180,6 +180,10 @@ public class TreatmentProcedureService {
                     treatmentProcedure.setNhiDescription(updateTreatmentProcedure.getNhiDescription());
                 }
 
+                if (updateTreatmentProcedure.getNhiIcd10Cm() != null) {
+                    treatmentProcedure.setNhiIcd10Cm(updateTreatmentProcedure.getNhiIcd10Cm());
+                }
+
                 if (updateTreatmentProcedure.getProcedure() != null && updateTreatmentProcedure.getProcedure().getId() != null) {
                     procedureRepository.findById(updateTreatmentProcedure.getProcedure().getId()).ifPresent(treatmentProcedure::setProcedure);
                 }

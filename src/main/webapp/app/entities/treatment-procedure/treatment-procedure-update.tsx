@@ -179,7 +179,14 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                   <Label id="noteLabel" for="note">
                     <Translate contentKey="totoroApp.treatmentProcedure.note">Note</Translate>
                   </Label>
-                  <AvField id="treatment-procedure-note" type="text" name="note" />
+                  <AvField
+                    id="treatment-procedure-note"
+                    type="text"
+                    name="note"
+                    validate={{
+                      maxLength: { value: 5100, errorMessage: translate('entity.validation.maxlength', { max: 5100 }) }
+                    }}
+                  />
                 </AvGroup>
                 <AvGroup>
                   <Label id="completedDateLabel" for="completedDate">
@@ -217,6 +224,12 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                       maxLength: { value: 5100, errorMessage: translate('entity.validation.maxlength', { max: 5100 }) }
                     }}
                   />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="nhiIcd10CmLabel" for="nhiIcd10Cm">
+                    <Translate contentKey="totoroApp.treatmentProcedure.nhiIcd10Cm">Nhi Icd 10 Cm</Translate>
+                  </Label>
+                  <AvField id="treatment-procedure-nhiIcd10Cm" type="text" name="nhiIcd10Cm" />
                 </AvGroup>
                 <AvGroup>
                   <Label for="nhiProcedure.id">
