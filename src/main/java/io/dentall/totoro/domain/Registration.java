@@ -54,7 +54,7 @@ public class Registration extends AbstractAuditingEntity implements Serializable
     private Accounting accounting;
 
     @OneToOne(mappedBy = "registration")
-    @JsonIgnoreProperties(value = {"registration", "nhiExtendDisposals"}, allowSetters = true)
+    @JsonIgnoreProperties(value = "registration", allowSetters = true)
     private Disposal disposal;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
