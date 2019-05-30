@@ -1,9 +1,8 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
-import io.dentall.totoro.domain.Tooth;
-import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.util.ProblemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +10,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zalando.problem.Status;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -120,7 +119,38 @@ public class TreatmentProcedureService {
     public void delete(Long id) {
         log.debug("Request to delete TreatmentProcedure : {}", id);
 
-        treatmentProcedureRepository.findById(id).ifPresent(treatmentProcedure -> relationshipService.deleteTeeth(treatmentProcedure.getTeeth()));
+        treatmentProcedureRepository.findById(id).ifPresent(treatmentProcedure -> {
+            if (treatmentProcedure.getDisposal() != null) {
+                throw new ProblemUtil("A treatmentProcedure which has disposal cannot delete", Status.BAD_REQUEST);
+            }
+
+            if (treatmentProcedure.getTreatmentTask() != null) {
+                TreatmentTask treatmentTask = treatmentProcedure.getTreatmentTask();
+                treatmentTask.getTreatmentProcedures().remove(treatmentProcedure);
+            }
+
+            if (treatmentProcedure.getTodo() != null) {
+                Todo todo = treatmentProcedure.getTodo();
+                todo.getTreatmentProcedures().remove(treatmentProcedure);
+            }
+
+            if (treatmentProcedure.getAppointment() != null) {
+                Appointment appointment = treatmentProcedure.getAppointment();
+                if (treatmentProcedure.getProcedure() != null) {
+                    ProcedureType procedureType = treatmentProcedure.getProcedure().getProcedureType();
+                    appointment.setNote(procedureType.getMajor() + " " + appointment.getNote());
+                }
+
+                if (treatmentProcedure.getNhiProcedure() != null) {
+                    NhiProcedureType nhiProcedureType = treatmentProcedure.getNhiProcedure().getNhiProcedureType();
+                    appointment.setNote(nhiProcedureType.getName() + " " + appointment.getNote());
+                }
+
+                appointment.getTreatmentProcedures().remove(treatmentProcedure);
+            }
+
+            relationshipService.deleteTeeth(treatmentProcedure.getTeeth());
+        });
         treatmentProcedureRepository.deleteById(id);
     }
 
