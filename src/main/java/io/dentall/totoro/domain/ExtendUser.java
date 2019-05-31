@@ -43,35 +43,27 @@ public class ExtendUser implements Serializable, Avatar {
     private User user;
 
     @OneToMany(mappedBy = "lastDoctor")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Patient> lastPatients = new HashSet<>();
 
     @OneToMany(mappedBy = "firstDoctor")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Patient> firstPatients = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Appointment> appointments = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentTask> treatmentTasks = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Procedure> procedures = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Treatment> treatments = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Calendar> calendars = new HashSet<>();
 
     public Long getId() {
