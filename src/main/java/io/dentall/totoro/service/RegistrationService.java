@@ -29,18 +29,22 @@ public class RegistrationService {
 
     private final PatientService patientService;
 
+    private final AppointmentService appointmentService;
+
     public RegistrationService(
         RegistrationRepository registrationRepository,
         AccountingService accountingService,
         BroadcastService broadcastService,
         RegistrationDelRepository registrationDelRepository,
-        PatientService patientService
+        PatientService patientService,
+        AppointmentService appointmentService
     ) {
         this.registrationRepository = registrationRepository;
         this.accountingService = accountingService;
         this.broadcastService = broadcastService;
         this.registrationDelRepository = registrationDelRepository;
         this.patientService = patientService;
+        this.appointmentService = appointmentService;
     }
 
     /**
@@ -141,8 +145,12 @@ public class RegistrationService {
                     .appointmentId(appointment.getId())
                     .accountingId(accounting == null ? null : accounting.registration(null).getId())
                 );
-
                 registrationRepository.deleteById(id);
+
+                // On-site registration
+                if (appointment.getExpectedArrivalTime().equals(registration.getArrivalTime())) {
+                    appointmentService.delete(appointment.getId());
+                }
 
                 patientService.setNewPatient(appointment.getPatient());
             });
