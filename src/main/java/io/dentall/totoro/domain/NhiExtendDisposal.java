@@ -128,6 +128,14 @@ public class NhiExtendDisposal implements Serializable {
     @Column(name = "upload_status", nullable = false)
     private NhiExtendDisposalUploadStatus uploadStatus;
 
+    // 診察費項目代號
+    @Column(name = "examination_code")
+    private String examinationCode;
+
+    // 診察費點數
+    @Column(name = "examination_point")
+    private Integer examinationPoint;
+
     @OneToMany(mappedBy = "nhiExtendDisposal", fetch = FetchType.EAGER)
     private Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = null;
 
@@ -454,6 +462,32 @@ public class NhiExtendDisposal implements Serializable {
         this.uploadStatus = uploadStatus;
     }
 
+    public String getExaminationCode() {
+        return examinationCode;
+    }
+
+    public NhiExtendDisposal examinationCode(String examinationCode) {
+        this.examinationCode = examinationCode;
+        return this;
+    }
+
+    public void setExaminationCode(String examinationCode) {
+        this.examinationCode = examinationCode;
+    }
+
+    public Integer getExaminationPoint() {
+        return examinationPoint;
+    }
+
+    public NhiExtendDisposal examinationPoint(Integer examinationPoint) {
+        this.examinationPoint = examinationPoint;
+        return this;
+    }
+
+    public void setExaminationPoint(Integer examinationPoint) {
+        this.examinationPoint = examinationPoint;
+    }
+
     public Set<NhiExtendTreatmentProcedure> getNhiExtendTreatmentProcedures() {
         return nhiExtendTreatmentProcedures;
     }
@@ -564,6 +598,8 @@ public class NhiExtendDisposal implements Serializable {
             ", a54='" + getA54() + "'" +
             ", date='" + getDate() + "'" +
             ", uploadStatus='" + getUploadStatus() + "'" +
+            ", examinationCode='" + getExaminationCode() + "'" +
+            ", examinationPoint='" + getExaminationPoint() + "'" +
             "}";
     }
 }
