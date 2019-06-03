@@ -12,4 +12,7 @@
     <!-- constraints -->
     <include file="config/liquibase/master_constraints.xml" relativeToChangelogFile="false"/>
 
+    <!-- sequence -->
+    <include file="config/liquibase/master_sequence.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>
