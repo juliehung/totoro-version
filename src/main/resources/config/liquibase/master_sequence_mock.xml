@@ -7,9 +7,9 @@
     <changeSet id="sequence-mock" author="Jim">
         <dropSequence sequenceName="hibernate_sequence"/>
 
-        <createSequence sequenceName="hibernate_sequence" startValue="10100" incrementBy="50"/>
+        <createSequence sequenceName="hibernate_sequence" incrementBy="50"/>
 
-        <createSequence sequenceName="id_sequence" startValue="2001"/>
+        <sql dbms="postgresql">select setval('hibernate_sequence', (select coalesce(max(id), 0)+100 from appointment), false)</sql>
     </changeSet>
 
 </databaseChangeLog>
