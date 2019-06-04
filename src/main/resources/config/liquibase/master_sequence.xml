@@ -5,7 +5,9 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <changeSet id="sequence" author="Jim">
-        <createSequence sequenceName="id_sequence" startValue="1"/>
+        <createSequence sequenceName="seq_patient"/>
+
+        <sql dbms="postgresql">select setval('seq_patient', (select coalesce(max(id), 0)+1 from patient), false)</sql>
     </changeSet>
 
 </databaseChangeLog>
