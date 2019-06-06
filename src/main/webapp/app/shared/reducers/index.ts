@@ -148,6 +148,10 @@ import nhiDayUpload, {
 import nhiDayUploadDetails, {
   NhiDayUploadDetailsState
 } from 'app/entities/nhi-day-upload-details/nhi-day-upload-details.reducer';
+// prettier-ignore
+import nhiExtendPatient, {
+  NhiExtendPatientState
+} from 'app/entities/nhi-extend-patient/nhi-extend-patient.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -195,6 +199,7 @@ export interface IRootState {
   readonly nhiIcd10Pcs: NhiIcd10PcsState;
   readonly nhiDayUpload: NhiDayUploadState;
   readonly nhiDayUploadDetails: NhiDayUploadDetailsState;
+  readonly nhiExtendPatient: NhiExtendPatientState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -244,6 +249,7 @@ const rootReducer = combineReducers<IRootState>({
   nhiIcd10Pcs,
   nhiDayUpload,
   nhiDayUploadDetails,
+  nhiExtendPatient,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

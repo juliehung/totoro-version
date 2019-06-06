@@ -1,0 +1,39 @@
+{
+    "name": "NhiExtendPatient",
+    "fields": [
+        {
+            "fieldName": "cardNumber",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "cardAnnotation",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "cardValidDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "cardIssueDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "nhiIdentity",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "availableTimes",
+            "fieldType": "Integer"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190604084435",
+    "entityTableName": "nhi_extend_patient",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

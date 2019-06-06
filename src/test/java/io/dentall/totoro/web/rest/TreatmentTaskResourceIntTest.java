@@ -350,7 +350,8 @@ public class TreatmentTaskResourceIntTest {
         em.detach(updatedTreatmentTask);
         updatedTreatmentTask
             .name(UPDATED_NAME)
-            .note(UPDATED_NOTE);
+            .note(UPDATED_NOTE)
+            .treatmentProcedures(null);
 
         restTreatmentTaskMockMvc.perform(put("/api/treatment-tasks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)

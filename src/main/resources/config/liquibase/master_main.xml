@@ -44,6 +44,7 @@
     <include file="config/liquibase/changelog/20190507100256_added_entity_NhiIcd10Pcs.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190522092740_added_entity_NhiDayUpload.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190522092741_added_entity_NhiDayUploadDetails.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190604084435_added_entity_NhiExtendPatient.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom tables -->
     <include file="config/liquibase/changelog/createTable/20190522.xml" relativeToChangelogFile="false"/>
