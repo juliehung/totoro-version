@@ -24,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 
@@ -50,11 +48,11 @@ public class NhiExtendPatientResourceIntTest {
     private static final String DEFAULT_CARD_ANNOTATION = "AAAAAAAAAA";
     private static final String UPDATED_CARD_ANNOTATION = "BBBBBBBBBB";
 
-    private static final LocalDate DEFAULT_CARD_VALID_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_CARD_VALID_DATE = LocalDate.now(ZoneId.systemDefault());
+    private static final String DEFAULT_CARD_VALID_DATE = "AAAAAAAAAA";
+    private static final String UPDATED_CARD_VALID_DATE = "BBBBBBBBBB";
 
-    private static final LocalDate DEFAULT_CARD_ISSUE_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_CARD_ISSUE_DATE = LocalDate.now(ZoneId.systemDefault());
+    private static final String DEFAULT_CARD_ISSUE_DATE = "AAAAAAAAAA";
+    private static final String UPDATED_CARD_ISSUE_DATE = "BBBBBBBBBB";
 
     private static final String DEFAULT_NHI_IDENTITY = "AAAAAAAAAA";
     private static final String UPDATED_NHI_IDENTITY = "BBBBBBBBBB";

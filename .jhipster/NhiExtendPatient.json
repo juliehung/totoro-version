@@ -11,11 +11,11 @@
         },
         {
             "fieldName": "cardValidDate",
-            "fieldType": "LocalDate"
+            "fieldType": "String"
         },
         {
             "fieldName": "cardIssueDate",
-            "fieldType": "LocalDate"
+            "fieldType": "String"
         },
         {
             "fieldName": "nhiIdentity",

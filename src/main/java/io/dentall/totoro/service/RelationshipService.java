@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,6 +35,8 @@ public class RelationshipService {
 
     private final NhiDayUploadDetailsService nhiDayUploadDetailsService;
 
+    private final NhiMedicalRecordService nhiMedicalRecordService;
+
     public RelationshipService(
         @Lazy TreatmentProcedureService treatmentProcedureService,
         @Lazy TreatmentTaskService treatmentTaskService,
@@ -42,7 +45,8 @@ public class RelationshipService {
         @Lazy NhiExtendDisposalService nhiExtendDisposalService,
         NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService,
         NhiExtendTreatmentDrugService nhiExtendTreatmentDrugService,
-        @Lazy NhiDayUploadDetailsService nhiDayUploadDetailsService
+        @Lazy NhiDayUploadDetailsService nhiDayUploadDetailsService,
+        NhiMedicalRecordService nhiMedicalRecordService
     ) {
         this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentTaskService = treatmentTaskService;
@@ -52,6 +56,7 @@ public class RelationshipService {
         this.nhiExtendTreatmentProcedureService = nhiExtendTreatmentProcedureService;
         this.nhiExtendTreatmentDrugService = nhiExtendTreatmentDrugService;
         this.nhiDayUploadDetailsService = nhiDayUploadDetailsService;
+        this.nhiMedicalRecordService = nhiMedicalRecordService;
     }
 
     void addRelationshipWithTreatmentTasks(TreatmentPlan treatmentPlan) {
@@ -218,6 +223,22 @@ public class RelationshipService {
         }
     }
 
+    void addRelationshipWithNhiMedicalRecords(NhiExtendPatient nhiExtendPatient, Set<NhiMedicalRecord> nhiMedicalRecords) {
+        if (nhiMedicalRecords != null) {
+            nhiMedicalRecords = getRelationshipWithOwners(
+                nhiMedicalRecords.stream().map(this::getNhiMedicalRecord),
+                nhiMedicalRecord -> nhiMedicalRecord.nhiExtendPatient(nhiExtendPatient)
+            );
+
+            nhiExtendPatient.setNhiMedicalRecords(
+                Stream
+                    .of(nhiExtendPatient.getNhiMedicalRecords(), nhiMedicalRecords)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toSet())
+            );
+        }
+    }
+
     void deleteTeeth(Set<Tooth> teeth, Set<Long> updateIds) {
         deleteTeeth(
             teeth
@@ -287,5 +308,9 @@ public class RelationshipService {
 
     private NhiDayUploadDetails getNhiDayUploadDetails(NhiDayUploadDetails nhiDayUploadDetails) {
         return nhiDayUploadDetails.getId() == null ? nhiDayUploadDetailsService.save(nhiDayUploadDetails) : nhiDayUploadDetailsService.update(nhiDayUploadDetails);
+    }
+
+    private NhiMedicalRecord getNhiMedicalRecord(NhiMedicalRecord nhiMedicalRecord) {
+        return nhiMedicalRecord.getId() == null ? nhiMedicalRecordService.save(nhiMedicalRecord) : nhiMedicalRecordService.update(nhiMedicalRecord);
     }
 }

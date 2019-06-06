@@ -1,11 +1,9 @@
-import { Moment } from 'moment';
-
 export interface INhiExtendPatient {
   id?: number;
   cardNumber?: string;
   cardAnnotation?: string;
-  cardValidDate?: Moment;
-  cardIssueDate?: Moment;
+  cardValidDate?: string;
+  cardIssueDate?: string;
   nhiIdentity?: string;
   availableTimes?: number;
 }

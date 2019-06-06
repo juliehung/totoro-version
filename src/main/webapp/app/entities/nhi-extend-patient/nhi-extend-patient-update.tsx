@@ -105,13 +105,13 @@ export class NhiExtendPatientUpdate extends React.Component<INhiExtendPatientUpd
                   <Label id="cardValidDateLabel" for="cardValidDate">
                     <Translate contentKey="totoroApp.nhiExtendPatient.cardValidDate">Card Valid Date</Translate>
                   </Label>
-                  <AvField id="nhi-extend-patient-cardValidDate" type="date" className="form-control" name="cardValidDate" />
+                  <AvField id="nhi-extend-patient-cardValidDate" type="text" name="cardValidDate" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="cardIssueDateLabel" for="cardIssueDate">
                     <Translate contentKey="totoroApp.nhiExtendPatient.cardIssueDate">Card Issue Date</Translate>
                   </Label>
-                  <AvField id="nhi-extend-patient-cardIssueDate" type="date" className="form-control" name="cardIssueDate" />
+                  <AvField id="nhi-extend-patient-cardIssueDate" type="text" name="cardIssueDate" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="nhiIdentityLabel" for="nhiIdentity">

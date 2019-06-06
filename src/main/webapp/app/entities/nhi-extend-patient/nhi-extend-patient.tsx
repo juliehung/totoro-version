@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAllAction, TextFormat } from 'react-jhipster';
+import { Translate, ICrudGetAllAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -69,12 +69,8 @@ export class NhiExtendPatient extends React.Component<INhiExtendPatientProps> {
                   </td>
                   <td>{nhiExtendPatient.cardNumber}</td>
                   <td>{nhiExtendPatient.cardAnnotation}</td>
-                  <td>
-                    <TextFormat type="date" value={nhiExtendPatient.cardValidDate} format={APP_LOCAL_DATE_FORMAT} />
-                  </td>
-                  <td>
-                    <TextFormat type="date" value={nhiExtendPatient.cardIssueDate} format={APP_LOCAL_DATE_FORMAT} />
-                  </td>
+                  <td>{nhiExtendPatient.cardValidDate}</td>
+                  <td>{nhiExtendPatient.cardIssueDate}</td>
                   <td>{nhiExtendPatient.nhiIdentity}</td>
                   <td>{nhiExtendPatient.availableTimes}</td>
                   <td className="text-right">

@@ -849,7 +849,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
             ", note='" + getNote() + "'" +
             ", clinicNote='" + getClinicNote() + "'" +
             ", writeIcTime='" + getWriteIcTime() + "'" +
-            ", avatar='" + getAvatar() + "'" +
             ", avatarContentType='" + getAvatarContentType() + "'" +
             ", newPatient='" + isNewPatient() + "'" +
             "}";
