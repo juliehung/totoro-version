@@ -175,6 +175,9 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @JsonIgnoreProperties(value = {"lastPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments", "calendars"}, allowSetters = true)
     private ExtendUser firstDoctor;
 
+    @OneToOne(mappedBy = "patient")
+    private NhiExtendPatient nhiExtendPatient;
+
     public Long getId() {
         return id;
     }
@@ -773,6 +776,19 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
 
     public void setFirstDoctor(ExtendUser firstDoctor) {
         this.firstDoctor = firstDoctor;
+    }
+
+    public NhiExtendPatient getNhiExtendPatient() {
+        return nhiExtendPatient;
+    }
+
+    public Patient nhiExtendPatient(NhiExtendPatient nhiExtendPatient) {
+        this.nhiExtendPatient = nhiExtendPatient;
+        return this;
+    }
+
+    public void setNhiExtendPatient(NhiExtendPatient nhiExtendPatient) {
+        this.nhiExtendPatient = nhiExtendPatient;
     }
 
     @Override

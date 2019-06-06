@@ -38,6 +38,7 @@ import NhiProcedureType from './nhi-procedure-type';
 import NhiIcd10Pcs from './nhi-icd-10-pcs';
 import NhiDayUpload from './nhi-day-upload';
 import NhiDayUploadDetails from './nhi-day-upload-details';
+import NhiExtendPatient from './nhi-extend-patient';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -78,6 +79,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/nhi-icd-10-pcs`} component={NhiIcd10Pcs} />
       <ErrorBoundaryRoute path={`${match.url}/nhi-day-upload`} component={NhiDayUpload} />
       <ErrorBoundaryRoute path={`${match.url}/nhi-day-upload-details`} component={NhiDayUploadDetails} />
+      <ErrorBoundaryRoute path={`${match.url}/nhi-extend-patient`} component={NhiExtendPatient} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>

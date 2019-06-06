@@ -52,6 +52,12 @@
                   separator=";"
                   tableName="treatment_plan">
         </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/nhi_extend_patients.csv"
+                  separator=";"
+                  tableName="nhi_extend_patient">
+        </loadData>
     </changeSet>
 
 </databaseChangeLog>

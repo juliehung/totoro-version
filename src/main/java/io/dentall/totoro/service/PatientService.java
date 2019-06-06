@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.*;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
+import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,6 +47,8 @@ public class PatientService extends QueryService<Patient> {
 
     private final RelationshipService relationshipService;
 
+    private final NhiExtendPatientRepository nhiExtendPatientRepository;
+
     public PatientService(
         PatientRepository patientRepository,
         TagRepository tagRepository,
@@ -59,7 +58,8 @@ public class PatientService extends QueryService<Patient> {
         TreatmentRepository treatmentRepository,
         TreatmentPlanRepository treatmentPlanRepository,
         TreatmentTaskRepository treatmentTaskRepository,
-        RelationshipService relationshipService
+        RelationshipService relationshipService,
+        NhiExtendPatientRepository nhiExtendPatientRepository
     ) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
@@ -70,6 +70,7 @@ public class PatientService extends QueryService<Patient> {
         this.treatmentPlanRepository = treatmentPlanRepository;
         this.treatmentTaskRepository = treatmentTaskRepository;
         this.relationshipService = relationshipService;
+        this.nhiExtendPatientRepository = nhiExtendPatientRepository;
     }
 
     /**
@@ -95,6 +96,7 @@ public class PatientService extends QueryService<Patient> {
         log.debug("Request to save Patient : {}", patient);
 
         patient = patientRepository.save(patient.newPatient(true));
+        patient.setNhiExtendPatient(nhiExtendPatientRepository.save(new NhiExtendPatient().patient(patient)));
         patient.setMedicalId(String.format("%05d", patient.getId()));
         patient.getTreatments().add(createGeneralTreatmentAndPlanAndTask(patient));
 

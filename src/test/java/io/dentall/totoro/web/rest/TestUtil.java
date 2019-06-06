@@ -1,7 +1,10 @@
 package io.dentall.totoro.web.rest;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.Annotated;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.PatientRepository;
@@ -44,6 +47,7 @@ public class TestUtil {
             throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        mapper.setAnnotationIntrospector(new IgnoreJacksonWriteOnlyAccess());
 
         JavaTimeModule module = new JavaTimeModule();
         mapper.registerModule(module);
@@ -158,5 +162,18 @@ public class TestUtil {
         patient.setQuestionnaire(QuestionnaireResourceIntTest.createEntity(em));
 
         return patientRepository.save(patient);
+    }
+
+    // https://stackoverflow.com/a/55064740
+    private static class IgnoreJacksonWriteOnlyAccess extends JacksonAnnotationIntrospector {
+
+        @Override
+        public JsonProperty.Access findPropertyAccess(Annotated m) {
+            JsonProperty.Access access = super.findPropertyAccess(m);
+            if (access == JsonProperty.Access.WRITE_ONLY) {
+                return JsonProperty.Access.AUTO;
+            }
+            return access;
+        }
     }
 }

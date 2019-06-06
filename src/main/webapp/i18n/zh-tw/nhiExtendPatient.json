@@ -1,0 +1,26 @@
+{
+  "totoroApp": {
+    "nhiExtendPatient": {
+      "home": {
+        "title": "Nhi Extend Patients",
+        "createLabel": "建立一筆新的 Nhi Extend Patient",
+        "createOrEditLabel": "建立或編輯 Nhi Extend Patient"
+      },
+      "created": "新的 Nhi Extend Patient 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Nhi Extend Patient 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Nhi Extend Patient 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Nhi Extend Patient {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Nhi Extend Patient"
+      },
+      "cardNumber": "Card Number",
+      "cardAnnotation": "Card Annotation",
+      "cardValidDate": "Card Valid Date",
+      "cardIssueDate": "Card Issue Date",
+      "nhiIdentity": "Nhi Identity",
+      "availableTimes": "Available Times"
+    }
+  }
+}
