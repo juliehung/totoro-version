@@ -5,6 +5,7 @@ import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.service.NhiExtendDisposalService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
+import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +84,7 @@ public class NhiExtendDisposalResource {
      */
     @GetMapping("/nhi-extend-disposals")
     @Timed
-    public List<NhiExtendDisposal> getAllNhiExtendDisposals(@RequestParam(required = false) LocalDate date) {
+    public List<NhiExtendDisposalVM> getAllNhiExtendDisposals(@RequestParam(required = false) LocalDate date) {
         log.debug("REST request to get all NhiExtendDisposals");
 
         if (date == null) {

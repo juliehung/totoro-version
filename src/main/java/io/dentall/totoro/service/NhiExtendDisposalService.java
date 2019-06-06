@@ -5,6 +5,7 @@ import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
+import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing NhiExtendDisposal.
@@ -57,25 +59,35 @@ public class NhiExtendDisposalService {
     }
 
     /**
-     * Get all the nhiExtendDisposals.
+     * Get all the nhiExtendDisposalVMs.
      *
      * @return the list of entities
      */
     @Transactional(readOnly = true)
-    public List<NhiExtendDisposal> findAll() {
-        log.debug("Request to get all NhiExtendDisposals");
-        return nhiExtendDisposalRepository.findAll();
+    public List<NhiExtendDisposalVM> findAll() {
+        log.debug("Request to get all NhiExtendDisposalVMs");
+
+        return nhiExtendDisposalRepository
+            .findAll()
+            .stream()
+            .map(NhiExtendDisposalVM::new)
+            .collect(Collectors.toList());
     }
 
     /**
-     * Get the nhiExtendDisposals by date.
+     * Get the nhiExtendDisposalVMs by date.
      *
      * @return the list of entities
      */
     @Transactional(readOnly = true)
-    public List<NhiExtendDisposal> findByDate(LocalDate date) {
-        log.debug("Request to get all NhiExtendDisposals by date({})", date);
-        return nhiExtendDisposalRepository.findByDate(date);
+    public List<NhiExtendDisposalVM> findByDate(LocalDate date) {
+        log.debug("Request to get all NhiExtendDisposalVMs by date({})", date);
+
+        return nhiExtendDisposalRepository
+            .findByDate(date)
+            .stream()
+            .map(NhiExtendDisposalVM::new)
+            .collect(Collectors.toList());
     }
 
 
