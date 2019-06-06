@@ -7,8 +7,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
@@ -37,10 +37,10 @@ public class NhiExtendPatient implements Serializable {
     private String cardAnnotation;
 
     @Column(name = "card_valid_date")
-    private LocalDate cardValidDate;
+    private String cardValidDate;
 
     @Column(name = "card_issue_date")
-    private LocalDate cardIssueDate;
+    private String cardIssueDate;
 
     @Column(name = "nhi_identity")
     private String nhiIdentity;
@@ -48,6 +48,11 @@ public class NhiExtendPatient implements Serializable {
     @Column(name = "available_times")
     private Integer availableTimes;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    @OneToMany(mappedBy = "nhiExtendPatient", fetch = FetchType.EAGER)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<NhiMedicalRecord> nhiMedicalRecords = null;
+
     public Long getId() {
         return id;
     }
@@ -95,29 +100,29 @@ public class NhiExtendPatient implements Serializable {
         this.cardAnnotation = cardAnnotation;
     }
 
-    public LocalDate getCardValidDate() {
+    public String getCardValidDate() {
         return cardValidDate;
     }
 
-    public NhiExtendPatient cardValidDate(LocalDate cardValidDate) {
+    public NhiExtendPatient cardValidDate(String cardValidDate) {
         this.cardValidDate = cardValidDate;
         return this;
     }
 
-    public void setCardValidDate(LocalDate cardValidDate) {
+    public void setCardValidDate(String cardValidDate) {
         this.cardValidDate = cardValidDate;
     }
 
-    public LocalDate getCardIssueDate() {
+    public String getCardIssueDate() {
         return cardIssueDate;
     }
 
-    public NhiExtendPatient cardIssueDate(LocalDate cardIssueDate) {
+    public NhiExtendPatient cardIssueDate(String cardIssueDate) {
         this.cardIssueDate = cardIssueDate;
         return this;
     }
 
-    public void setCardIssueDate(LocalDate cardIssueDate) {
+    public void setCardIssueDate(String cardIssueDate) {
         this.cardIssueDate = cardIssueDate;
     }
 
@@ -147,6 +152,31 @@ public class NhiExtendPatient implements Serializable {
         this.availableTimes = availableTimes;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public Set<NhiMedicalRecord> getNhiMedicalRecords() {
+        return nhiMedicalRecords;
+    }
+
+    public NhiExtendPatient nhiMedicalRecords(Set<NhiMedicalRecord> nhiMedicalRecords) {
+        this.nhiMedicalRecords = nhiMedicalRecords;
+        return this;
+    }
+
+    public NhiExtendPatient addNhiMedicalRecord(NhiMedicalRecord nhiMedicalRecord) {
+        this.nhiMedicalRecords.add(nhiMedicalRecord);
+        nhiMedicalRecord.setNhiExtendPatient(this);
+        return this;
+    }
+
+    public NhiExtendPatient removeNhiMedicalRecord(NhiMedicalRecord nhiMedicalRecord) {
+        this.nhiMedicalRecords.remove(nhiMedicalRecord);
+        nhiMedicalRecord.setNhiExtendPatient(null);
+        return this;
+    }
+
+    public void setNhiMedicalRecords(Set<NhiMedicalRecord> nhiMedicalRecords) {
+        this.nhiMedicalRecords = nhiMedicalRecords;
+    }
 
     @Override
     public boolean equals(Object o) {

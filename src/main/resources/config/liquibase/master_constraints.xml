@@ -23,6 +23,7 @@
     <include file="config/liquibase/changelog/20190506104833_added_entity_constraints_NhiIcd10Cm.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190507100256_added_entity_constraints_NhiIcd10Pcs.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190522092741_added_entity_constraints_NhiDayUploadDetails.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190606033824_added_entity_constraints_NhiMedicalRecord.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 
     <!-- add custom foreign key constraints -->

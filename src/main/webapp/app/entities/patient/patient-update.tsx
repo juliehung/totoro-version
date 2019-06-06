@@ -310,7 +310,14 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   <Label id="clinicNoteLabel" for="clinicNote">
                     <Translate contentKey="totoroApp.patient.clinicNote">Clinic Note</Translate>
                   </Label>
-                  <AvField id="patient-clinicNote" type="text" name="clinicNote" />
+                  <AvField
+                    id="patient-clinicNote"
+                    type="text"
+                    name="clinicNote"
+                    validate={{
+                      maxLength: { value: 5100, errorMessage: translate('entity.validation.maxlength', { max: 5100 }) }
+                    }}
+                  />
                 </AvGroup>
                 <AvGroup>
                   <Label id="writeIcTimeLabel" for="writeIcTime">

@@ -28,9 +28,16 @@ public class NhiExtendPatientService {
 
     private final PatientRepository patientRepository;
 
-    public NhiExtendPatientService(NhiExtendPatientRepository nhiExtendPatientRepository, PatientRepository patientRepository) {
+    private final RelationshipService relationshipService;
+
+    public NhiExtendPatientService(
+        NhiExtendPatientRepository nhiExtendPatientRepository,
+        PatientRepository patientRepository,
+        RelationshipService relationshipService
+    ) {
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
         this.patientRepository = patientRepository;
+        this.relationshipService = relationshipService;
     }
 
     /**
@@ -123,6 +130,8 @@ public class NhiExtendPatientService {
                 if (updateNhiExtendPatient.getAvailableTimes() != null) {
                     nhiExtendPatient.setAvailableTimes(updateNhiExtendPatient.getAvailableTimes());
                 }
+
+                relationshipService.addRelationshipWithNhiMedicalRecords(nhiExtendPatient, updateNhiExtendPatient.getNhiMedicalRecords());
 
                 return nhiExtendPatient;
             })

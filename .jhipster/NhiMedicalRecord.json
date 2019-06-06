@@ -1,0 +1,49 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "nhiExtendPatient",
+            "otherEntityName": "nhiExtendPatient",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "date",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nhiCategory",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nhiCode",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "part",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "usage",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "total",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "note",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20190606033824",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "serviceClass",
+    "entityTableName": "nhi_medical_record",
+    "jpaMetamodelFiltering": true,
+    "pagination": "no"
+}

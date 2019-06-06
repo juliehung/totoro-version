@@ -14,37 +14,45 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity NhiExtendPatient.
+        Added the entity NhiMedicalRecord.
     -->
-    <changeSet id="20190604084435-1" author="jhipster">
-        <createTable tableName="nhi_extend_patient">
-            <column name="patient_id" type="bigint">
+    <changeSet id="20190606033824-1" author="jhipster">
+        <createTable tableName="nhi_medical_record">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-
-            <column name="card_number" type="varchar(255)">
+            <column name="jhi_date" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="card_annotation" type="varchar(255)">
+            <column name="nhi_category" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="card_valid_date" type="varchar(255)">
+            <column name="nhi_code" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="card_issue_date" type="varchar(255)">
+            <column name="part" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="nhi_identity" type="varchar(255)">
+            <column name="jhi_usage" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="available_times" type="integer">
+            <column name="total" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+
+            <column name="note" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="nhi_extend_patient_patient_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         

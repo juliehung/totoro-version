@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Translate, ICrudGetAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -46,17 +46,13 @@ export class NhiExtendPatientDetail extends React.Component<INhiExtendPatientDet
                 <Translate contentKey="totoroApp.nhiExtendPatient.cardValidDate">Card Valid Date</Translate>
               </span>
             </dt>
-            <dd>
-              <TextFormat value={nhiExtendPatientEntity.cardValidDate} type="date" format={APP_LOCAL_DATE_FORMAT} />
-            </dd>
+            <dd>{nhiExtendPatientEntity.cardValidDate}</dd>
             <dt>
               <span id="cardIssueDate">
                 <Translate contentKey="totoroApp.nhiExtendPatient.cardIssueDate">Card Issue Date</Translate>
               </span>
             </dt>
-            <dd>
-              <TextFormat value={nhiExtendPatientEntity.cardIssueDate} type="date" format={APP_LOCAL_DATE_FORMAT} />
-            </dd>
+            <dd>{nhiExtendPatientEntity.cardIssueDate}</dd>
             <dt>
               <span id="nhiIdentity">
                 <Translate contentKey="totoroApp.nhiExtendPatient.nhiIdentity">Nhi Identity</Translate>

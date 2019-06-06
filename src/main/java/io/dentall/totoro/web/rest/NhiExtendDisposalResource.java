@@ -78,14 +78,14 @@ public class NhiExtendDisposalResource {
     }
 
     /**
-     * GET  /nhi-extend-disposals : get all the nhiExtendDisposals.
+     * GET  /nhi-extend-disposals : get all the nhiExtendDisposalVMs.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of nhiExtendDisposals in body
+     * @return the ResponseEntity with status 200 (OK) and the list of nhiExtendDisposalVMs in body
      */
     @GetMapping("/nhi-extend-disposals")
     @Timed
     public List<NhiExtendDisposalVM> getAllNhiExtendDisposals(@RequestParam(required = false) LocalDate date) {
-        log.debug("REST request to get all NhiExtendDisposals");
+        log.debug("REST request to get all NhiExtendDisposalVMs");
 
         if (date == null) {
             return nhiExtendDisposalService.findAll();

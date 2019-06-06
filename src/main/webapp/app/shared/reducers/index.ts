@@ -152,6 +152,10 @@ import nhiDayUploadDetails, {
 import nhiExtendPatient, {
   NhiExtendPatientState
 } from 'app/entities/nhi-extend-patient/nhi-extend-patient.reducer';
+// prettier-ignore
+import nhiMedicalRecord, {
+  NhiMedicalRecordState
+} from 'app/entities/nhi-medical-record/nhi-medical-record.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -200,6 +204,7 @@ export interface IRootState {
   readonly nhiDayUpload: NhiDayUploadState;
   readonly nhiDayUploadDetails: NhiDayUploadDetailsState;
   readonly nhiExtendPatient: NhiExtendPatientState;
+  readonly nhiMedicalRecord: NhiMedicalRecordState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -250,6 +255,7 @@ const rootReducer = combineReducers<IRootState>({
   nhiDayUpload,
   nhiDayUploadDetails,
   nhiExtendPatient,
+  nhiMedicalRecord,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });
