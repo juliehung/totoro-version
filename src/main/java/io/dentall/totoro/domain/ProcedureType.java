@@ -25,15 +25,11 @@ public class ProcedureType implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "major", nullable = false)
+    @Column(name = "major", nullable = false, unique = true)
     private String major;
 
     @Column(name = "minor")
     private String minor;
-
-    @NotNull
-    @Column(name = "display", nullable = false)
-    private Boolean display;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -69,19 +65,6 @@ public class ProcedureType implements Serializable {
     public void setMinor(String minor) {
         this.minor = minor;
     }
-
-    public Boolean isDisplay() {
-        return display;
-    }
-
-    public ProcedureType display(Boolean display) {
-        this.display = display;
-        return this;
-    }
-
-    public void setDisplay(Boolean display) {
-        this.display = display;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -110,7 +93,6 @@ public class ProcedureType implements Serializable {
             "id=" + getId() +
             ", major='" + getMajor() + "'" +
             ", minor='" + getMinor() + "'" +
-            ", display='" + isDisplay() + "'" +
             "}";
     }
 }

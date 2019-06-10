@@ -108,12 +108,6 @@ export class ProcedureTypeUpdate extends React.Component<IProcedureTypeUpdatePro
                   </Label>
                   <AvField id="procedure-type-minor" type="text" name="minor" />
                 </AvGroup>
-                <AvGroup>
-                  <Label id="displayLabel" check>
-                    <AvInput id="procedure-type-display" type="checkbox" className="form-control" name="display" />
-                    <Translate contentKey="totoroApp.procedureType.display">Display</Translate>
-                  </Label>
-                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/procedure-type" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;

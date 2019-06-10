@@ -42,6 +42,9 @@ export class NhiProcedureType extends React.Component<INhiProcedureTypeProps> {
                   <Translate contentKey="totoroApp.nhiProcedureType.major">Major</Translate>
                 </th>
                 <th>
+                  <Translate contentKey="totoroApp.nhiProcedureType.minor">Minor</Translate>
+                </th>
+                <th>
                   <Translate contentKey="totoroApp.nhiProcedureType.name">Name</Translate>
                 </th>
                 <th />
@@ -56,6 +59,7 @@ export class NhiProcedureType extends React.Component<INhiProcedureTypeProps> {
                     </Button>
                   </td>
                   <td>{nhiProcedureType.major}</td>
+                  <td>{nhiProcedureType.minor}</td>
                   <td>{nhiProcedureType.name}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

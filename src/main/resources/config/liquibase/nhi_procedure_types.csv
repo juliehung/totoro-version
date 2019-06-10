@@ -1,11 +1,12 @@
-id;major;name
-1;Examination;門診診察
-2;X-Ray;放射線診療
-3;OD;復形
-4;Endo;根管
-5;Perio;牙周
-6;OS;處置與門診手術
-7;Anesthesia;麻醉
-8;PreventiveHealthCare;預防保健
-9;Pedo;兒童
-10;Other;其它
+id;major;minor
+1;None;Examination,X-Ray,OD,Endo,Perio,OS,Anesthetic,Preventive,Others,Ortho
+2;OD;OD
+3;Pulp Capping;OD
+4;Vital Pulp Therapy;Endo
+5;Endo;Endo,Pedo
+6;Pedo-Pulpotomy;Endo,Pedo
+7;Crown removal;Endo
+8;Extraction;OS
+9;Apical Surgery;OS
+10;Fixation;OS
+11;Sealant;Preventive

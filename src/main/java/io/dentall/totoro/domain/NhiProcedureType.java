@@ -28,6 +28,9 @@ public class NhiProcedureType implements Serializable {
     @Column(name = "major", nullable = false, unique = true)
     private String major;
 
+    @Column(name = "minor")
+    private String minor;
+
     @Column(name = "name")
     private String name;
 
@@ -51,6 +54,19 @@ public class NhiProcedureType implements Serializable {
 
     public void setMajor(String major) {
         this.major = major;
+    }
+
+    public String getMinor() {
+        return minor;
+    }
+
+    public NhiProcedureType minor(String minor) {
+        this.minor = minor;
+        return this;
+    }
+
+    public void setMinor(String minor) {
+        this.minor = minor;
     }
 
     public String getName() {
@@ -92,6 +108,7 @@ public class NhiProcedureType implements Serializable {
         return "NhiProcedureType{" +
             "id=" + getId() +
             ", major='" + getMajor() + "'" +
+            ", minor='" + getMinor() + "'" +
             ", name='" + getName() + "'" +
             "}";
     }

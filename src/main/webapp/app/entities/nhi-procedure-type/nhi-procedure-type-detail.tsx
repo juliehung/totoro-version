@@ -36,6 +36,12 @@ export class NhiProcedureTypeDetail extends React.Component<INhiProcedureTypeDet
             </dt>
             <dd>{nhiProcedureTypeEntity.major}</dd>
             <dt>
+              <span id="minor">
+                <Translate contentKey="totoroApp.nhiProcedureType.minor">Minor</Translate>
+              </span>
+            </dt>
+            <dd>{nhiProcedureTypeEntity.minor}</dd>
+            <dt>
               <span id="name">
                 <Translate contentKey="totoroApp.nhiProcedureType.name">Name</Translate>
               </span>

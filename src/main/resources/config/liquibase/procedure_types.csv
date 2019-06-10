@@ -1,41 +1,31 @@
-id;major;minor;display
-1;OD;OD,Pedo;true
-2;Endo;Endo;true
-3;Vital Pulp Therapy;Endo;true
-4;Apical Surgery;Endo;true
-5;Apexification;Endo;true
-6;Extraction;Extraction,Pedo;true
-7;Implant;Implant,Set;true
-8;Inlay;BPR;true
-9;Onlay;BPR;true
-10;Overlay;BPR;true
-11;Veneer;BPR;true
-12;Crown;Fixed,Set;true
-13;Bridge;Fixed;true
-14;Post;Fixed;true
-15;Temp;Fixed;true
-16;RPD;Removable;true
-17;CD;Removable;true
-18;Splint;Removable;true
-19;Denture repair;Removable;false
-20;Ortho;Ortho;true
-21;Fixed Retainer;Ortho;true
-22;Removable Retainer;Ortho;true
-23;Scaling;Perio;false
-24;GBR;Perio;false
-25;GTR;Perio;false
-26;Sinus Lift;Perio;false
-27;Bone Split;Perio;false
-28;CLP;Perio;false
-29;FGG;Perio;false
-30;CTG;Perio;false
-31;Socket Preservation;Perio;false
-32;Fluoride Application;Pedo,Preventive;false
-33;Sealant;Pedo,Preventive;true
-34;Pedoform;Pedo;true
-35;Pedo-ZrO2;Pedo;true
-36;SSC;Pedo,Set;true
-37;Kiddy Denture;Pedo;true
-38;Space Maintainer;Pedo;true
-39;Sand Blasting;Cosmetic;false
-40;Bleaching;Cosmetic;false
+id;major;minor
+1;None;Endo,Ortho,Perio,Cosmetic,X-Ray,Others,Anesthetic
+2;OD;OD
+3;Pulp Capping;Endo
+4;Vital Pulp Therapy;Endo
+5;Endo;Endo
+6;Pedo-Pulpotomy;Endo,Pedo
+7;Crown removal;Endo
+8;Extraction;OS
+9;Apical Surgery;Endo
+10;Fixation;OS
+11;Sealant;Pedo,Preventive
+12;Resin Veneer;OD,Cosmetic
+13;Implant;Implant
+14;Implant Removal;Implant
+15;Inlay;BPR
+16;Onlay;BPR
+17;Overlay;BPR
+18;Veneer;BPR,Cosmetic
+19;Crown;Fixed,Pedo
+20;Bridge;Fixed
+21;Post;Fixed
+22;Temp;Fixed
+23;RPD;Removable
+24;CD;Removable
+25;Splint;Removable
+26;Ortho;Ortho
+27;Fixed Retainer;Ortho
+28;Removable Retainer;Ortho
+29;Kiddy Denture;Pedo
+30;Space Maintainer;Pedo
