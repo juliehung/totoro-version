@@ -5,19 +5,13 @@
             "fieldName": "major",
             "fieldType": "String",
             "fieldValidateRules": [
-                "required"
+                "required",
+                "unique"
             ]
         },
         {
             "fieldName": "minor",
             "fieldType": "String"
-        },
-        {
-            "fieldName": "display",
-            "fieldType": "Boolean",
-            "fieldValidateRules": [
-                "required"
-            ]
         }
     ],
     "relationships": [],

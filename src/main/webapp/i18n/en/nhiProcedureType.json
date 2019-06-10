@@ -16,6 +16,7 @@
         "title": "Nhi Procedure Type"
       },
       "major": "Major",
+      "minor": "Minor",
       "name": "Name"
     }
   }

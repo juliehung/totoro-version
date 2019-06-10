@@ -12,6 +12,10 @@
             ]
         },
         {
+            "fieldName": "minor",
+            "fieldType": "String"
+        },
+        {
             "fieldName": "name",
             "fieldType": "String"
         }

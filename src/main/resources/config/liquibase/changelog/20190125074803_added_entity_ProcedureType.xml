@@ -22,15 +22,11 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="major" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="false" unique="true" uniqueConstraintName="ux_procedure_type_major" />
             </column>
 
             <column name="minor" type="varchar(255)">
                 <constraints nullable="true" />
-            </column>
-
-            <column name="display" type="boolean">
-                <constraints nullable="false" />
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->

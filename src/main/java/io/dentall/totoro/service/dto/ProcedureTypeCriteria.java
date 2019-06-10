@@ -28,8 +28,6 @@ public class ProcedureTypeCriteria implements Serializable {
 
     private StringFilter minor;
 
-    private BooleanFilter display;
-
     public LongFilter getId() {
         return id;
     }
@@ -54,14 +52,6 @@ public class ProcedureTypeCriteria implements Serializable {
         this.minor = minor;
     }
 
-    public BooleanFilter getDisplay() {
-        return display;
-    }
-
-    public void setDisplay(BooleanFilter display) {
-        this.display = display;
-    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -75,8 +65,7 @@ public class ProcedureTypeCriteria implements Serializable {
         return
             Objects.equals(id, that.id) &&
             Objects.equals(major, that.major) &&
-            Objects.equals(minor, that.minor) &&
-            Objects.equals(display, that.display);
+            Objects.equals(minor, that.minor);
     }
 
     @Override
@@ -84,8 +73,7 @@ public class ProcedureTypeCriteria implements Serializable {
         return Objects.hash(
         id,
         major,
-        minor,
-        display
+        minor
         );
     }
 
@@ -95,7 +83,6 @@ public class ProcedureTypeCriteria implements Serializable {
                 (id != null ? "id=" + id + ", " : "") +
                 (major != null ? "major=" + major + ", " : "") +
                 (minor != null ? "minor=" + minor + ", " : "") +
-                (display != null ? "display=" + display + ", " : "") +
             "}";
     }
 

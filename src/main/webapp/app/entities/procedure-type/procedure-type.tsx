@@ -44,9 +44,6 @@ export class ProcedureType extends React.Component<IProcedureTypeProps> {
                 <th>
                   <Translate contentKey="totoroApp.procedureType.minor">Minor</Translate>
                 </th>
-                <th>
-                  <Translate contentKey="totoroApp.procedureType.display">Display</Translate>
-                </th>
                 <th />
               </tr>
             </thead>
@@ -60,7 +57,6 @@ export class ProcedureType extends React.Component<IProcedureTypeProps> {
                   </td>
                   <td>{procedureType.major}</td>
                   <td>{procedureType.minor}</td>
-                  <td>{procedureType.display ? 'true' : 'false'}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${procedureType.id}`} color="info" size="sm">

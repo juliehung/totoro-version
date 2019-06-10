@@ -49,9 +49,6 @@ public class ProcedureTypeResourceIntTest {
     private static final String DEFAULT_MINOR = "AAAAAAAAAA";
     private static final String UPDATED_MINOR = "BBBBBBBBBB";
 
-    private static final Boolean DEFAULT_DISPLAY = false;
-    private static final Boolean UPDATED_DISPLAY = true;
-
     @Autowired
     private ProcedureTypeRepository procedureTypeRepository;
 
@@ -101,8 +98,7 @@ public class ProcedureTypeResourceIntTest {
     public static ProcedureType createEntity(EntityManager em) {
         ProcedureType procedureType = new ProcedureType()
             .major(DEFAULT_MAJOR)
-            .minor(DEFAULT_MINOR)
-            .display(DEFAULT_DISPLAY);
+            .minor(DEFAULT_MINOR);
         return procedureType;
     }
 
@@ -128,7 +124,6 @@ public class ProcedureTypeResourceIntTest {
         ProcedureType testProcedureType = procedureTypeList.get(procedureTypeList.size() - 1);
         assertThat(testProcedureType.getMajor()).isEqualTo(DEFAULT_MAJOR);
         assertThat(testProcedureType.getMinor()).isEqualTo(DEFAULT_MINOR);
-        assertThat(testProcedureType.isDisplay()).isEqualTo(DEFAULT_DISPLAY);
     }
 
     @Test
@@ -170,24 +165,6 @@ public class ProcedureTypeResourceIntTest {
 
     @Test
     @Transactional
-    public void checkDisplayIsRequired() throws Exception {
-        int databaseSizeBeforeTest = procedureTypeRepository.findAll().size();
-        // set the field null
-        procedureType.setDisplay(null);
-
-        // Create the ProcedureType, which fails.
-
-        restProcedureTypeMockMvc.perform(post("/api/procedure-types")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(procedureType)))
-            .andExpect(status().isBadRequest());
-
-        List<ProcedureType> procedureTypeList = procedureTypeRepository.findAll();
-        assertThat(procedureTypeList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllProcedureTypes() throws Exception {
         // Initialize the database
         procedureTypeRepository.saveAndFlush(procedureType);
@@ -198,8 +175,7 @@ public class ProcedureTypeResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(procedureType.getId().intValue())))
             .andExpect(jsonPath("$.[*].major").value(hasItem(DEFAULT_MAJOR.toString())))
-            .andExpect(jsonPath("$.[*].minor").value(hasItem(DEFAULT_MINOR.toString())))
-            .andExpect(jsonPath("$.[*].display").value(hasItem(DEFAULT_DISPLAY.booleanValue())));
+            .andExpect(jsonPath("$.[*].minor").value(hasItem(DEFAULT_MINOR.toString())));
     }
     
     @Test
@@ -214,8 +190,7 @@ public class ProcedureTypeResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(procedureType.getId().intValue()))
             .andExpect(jsonPath("$.major").value(DEFAULT_MAJOR.toString()))
-            .andExpect(jsonPath("$.minor").value(DEFAULT_MINOR.toString()))
-            .andExpect(jsonPath("$.display").value(DEFAULT_DISPLAY.booleanValue()));
+            .andExpect(jsonPath("$.minor").value(DEFAULT_MINOR.toString()));
     }
 
     @Test
@@ -295,45 +270,6 @@ public class ProcedureTypeResourceIntTest {
         // Get all the procedureTypeList where minor is null
         defaultProcedureTypeShouldNotBeFound("minor.specified=false");
     }
-
-    @Test
-    @Transactional
-    public void getAllProcedureTypesByDisplayIsEqualToSomething() throws Exception {
-        // Initialize the database
-        procedureTypeRepository.saveAndFlush(procedureType);
-
-        // Get all the procedureTypeList where display equals to DEFAULT_DISPLAY
-        defaultProcedureTypeShouldBeFound("display.equals=" + DEFAULT_DISPLAY);
-
-        // Get all the procedureTypeList where display equals to UPDATED_DISPLAY
-        defaultProcedureTypeShouldNotBeFound("display.equals=" + UPDATED_DISPLAY);
-    }
-
-    @Test
-    @Transactional
-    public void getAllProcedureTypesByDisplayIsInShouldWork() throws Exception {
-        // Initialize the database
-        procedureTypeRepository.saveAndFlush(procedureType);
-
-        // Get all the procedureTypeList where display in DEFAULT_DISPLAY or UPDATED_DISPLAY
-        defaultProcedureTypeShouldBeFound("display.in=" + DEFAULT_DISPLAY + "," + UPDATED_DISPLAY);
-
-        // Get all the procedureTypeList where display equals to UPDATED_DISPLAY
-        defaultProcedureTypeShouldNotBeFound("display.in=" + UPDATED_DISPLAY);
-    }
-
-    @Test
-    @Transactional
-    public void getAllProcedureTypesByDisplayIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        procedureTypeRepository.saveAndFlush(procedureType);
-
-        // Get all the procedureTypeList where display is not null
-        defaultProcedureTypeShouldBeFound("display.specified=true");
-
-        // Get all the procedureTypeList where display is null
-        defaultProcedureTypeShouldNotBeFound("display.specified=false");
-    }
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -343,8 +279,7 @@ public class ProcedureTypeResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(procedureType.getId().intValue())))
             .andExpect(jsonPath("$.[*].major").value(hasItem(DEFAULT_MAJOR.toString())))
-            .andExpect(jsonPath("$.[*].minor").value(hasItem(DEFAULT_MINOR.toString())))
-            .andExpect(jsonPath("$.[*].display").value(hasItem(DEFAULT_DISPLAY.booleanValue())));
+            .andExpect(jsonPath("$.[*].minor").value(hasItem(DEFAULT_MINOR.toString())));
 
         // Check, that the count call also returns 1
         restProcedureTypeMockMvc.perform(get("/api/procedure-types/count?sort=id,desc&" + filter))
@@ -393,8 +328,7 @@ public class ProcedureTypeResourceIntTest {
         em.detach(updatedProcedureType);
         updatedProcedureType
             .major(UPDATED_MAJOR)
-            .minor(UPDATED_MINOR)
-            .display(UPDATED_DISPLAY);
+            .minor(UPDATED_MINOR);
 
         restProcedureTypeMockMvc.perform(put("/api/procedure-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -407,7 +341,6 @@ public class ProcedureTypeResourceIntTest {
         ProcedureType testProcedureType = procedureTypeList.get(procedureTypeList.size() - 1);
         assertThat(testProcedureType.getMajor()).isEqualTo(UPDATED_MAJOR);
         assertThat(testProcedureType.getMinor()).isEqualTo(UPDATED_MINOR);
-        assertThat(testProcedureType.isDisplay()).isEqualTo(UPDATED_DISPLAY);
     }
 
     @Test

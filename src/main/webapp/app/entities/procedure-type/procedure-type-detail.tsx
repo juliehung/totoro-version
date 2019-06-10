@@ -40,12 +40,6 @@ export class ProcedureTypeDetail extends React.Component<IProcedureTypeDetailPro
               </span>
             </dt>
             <dd>{procedureTypeEntity.minor}</dd>
-            <dt>
-              <span id="display">
-                <Translate contentKey="totoroApp.procedureType.display">Display</Translate>
-              </span>
-            </dt>
-            <dd>{procedureTypeEntity.display ? 'true' : 'false'}</dd>
           </dl>
           <Button tag={Link} to="/entity/procedure-type" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

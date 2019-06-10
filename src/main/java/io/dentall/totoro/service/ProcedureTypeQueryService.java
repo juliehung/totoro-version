@@ -89,9 +89,6 @@ public class ProcedureTypeQueryService extends QueryService<ProcedureType> {
             if (criteria.getMinor() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getMinor(), ProcedureType_.minor));
             }
-            if (criteria.getDisplay() != null) {
-                specification = specification.and(buildSpecification(criteria.getDisplay(), ProcedureType_.display));
-            }
         }
         return specification;
     }

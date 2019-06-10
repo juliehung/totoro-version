@@ -103,6 +103,12 @@ export class NhiProcedureTypeUpdate extends React.Component<INhiProcedureTypeUpd
                   />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="minorLabel" for="minor">
+                    <Translate contentKey="totoroApp.nhiProcedureType.minor">Minor</Translate>
+                  </Label>
+                  <AvField id="nhi-procedure-type-minor" type="text" name="minor" />
+                </AvGroup>
+                <AvGroup>
                   <Label id="nameLabel" for="name">
                     <Translate contentKey="totoroApp.nhiProcedureType.name">Name</Translate>
                   </Label>

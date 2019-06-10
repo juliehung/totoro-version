@@ -43,6 +43,9 @@ public class NhiProcedureTypeResourceIntTest {
     private static final String DEFAULT_MAJOR = "AAAAAAAAAA";
     private static final String UPDATED_MAJOR = "BBBBBBBBBB";
 
+    private static final String DEFAULT_MINOR = "AAAAAAAAAA";
+    private static final String UPDATED_MINOR = "BBBBBBBBBB";
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -89,6 +92,7 @@ public class NhiProcedureTypeResourceIntTest {
     public static NhiProcedureType createEntity(EntityManager em) {
         NhiProcedureType nhiProcedureType = new NhiProcedureType()
             .major(DEFAULT_MAJOR)
+            .minor(DEFAULT_MINOR)
             .name(DEFAULT_NAME);
         return nhiProcedureType;
     }
@@ -114,6 +118,7 @@ public class NhiProcedureTypeResourceIntTest {
         assertThat(nhiProcedureTypeList).hasSize(databaseSizeBeforeCreate + 1);
         NhiProcedureType testNhiProcedureType = nhiProcedureTypeList.get(nhiProcedureTypeList.size() - 1);
         assertThat(testNhiProcedureType.getMajor()).isEqualTo(DEFAULT_MAJOR);
+        assertThat(testNhiProcedureType.getMinor()).isEqualTo(DEFAULT_MINOR);
         assertThat(testNhiProcedureType.getName()).isEqualTo(DEFAULT_NAME);
     }
 
@@ -166,6 +171,7 @@ public class NhiProcedureTypeResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(nhiProcedureType.getId().intValue())))
             .andExpect(jsonPath("$.[*].major").value(hasItem(DEFAULT_MAJOR.toString())))
+            .andExpect(jsonPath("$.[*].minor").value(hasItem(DEFAULT_MINOR.toString())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
     }
     
@@ -181,6 +187,7 @@ public class NhiProcedureTypeResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(nhiProcedureType.getId().intValue()))
             .andExpect(jsonPath("$.major").value(DEFAULT_MAJOR.toString()))
+            .andExpect(jsonPath("$.minor").value(DEFAULT_MINOR.toString()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
     }
 
@@ -206,6 +213,7 @@ public class NhiProcedureTypeResourceIntTest {
         em.detach(updatedNhiProcedureType);
         updatedNhiProcedureType
             .major(UPDATED_MAJOR)
+            .minor(UPDATED_MINOR)
             .name(UPDATED_NAME);
 
         restNhiProcedureTypeMockMvc.perform(put("/api/nhi-procedure-types")
@@ -218,6 +226,7 @@ public class NhiProcedureTypeResourceIntTest {
         assertThat(nhiProcedureTypeList).hasSize(databaseSizeBeforeUpdate);
         NhiProcedureType testNhiProcedureType = nhiProcedureTypeList.get(nhiProcedureTypeList.size() - 1);
         assertThat(testNhiProcedureType.getMajor()).isEqualTo(UPDATED_MAJOR);
+        assertThat(testNhiProcedureType.getMinor()).isEqualTo(UPDATED_MINOR);
         assertThat(testNhiProcedureType.getName()).isEqualTo(UPDATED_NAME);
     }
 
