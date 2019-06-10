@@ -105,12 +105,12 @@ public class AppointmentService {
         log.debug("Request to delete Appointment : {}", id);
 
         appointmentRepository.findById(id).ifPresent(appointment -> {
+            relationshipService.deleteTreatmentProcedures(appointment.getTreatmentProcedures());
+
             if (appointment.getPatient() != null) {
                 Patient patient = appointment.getPatient();
                 patient.getAppointments().remove(appointment);
             }
-
-            relationshipService.deleteTreatmentProcedures(appointment.getTreatmentProcedures());
         });
         appointmentRepository.deleteById(id);
     }

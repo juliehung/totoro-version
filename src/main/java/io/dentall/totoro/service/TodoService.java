@@ -1,5 +1,6 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Todo;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.PatientRepository;
@@ -88,6 +89,13 @@ public class TodoService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Todo : {}", id);
+
+        todoRepository.findById(id).ifPresent(todo -> {
+            if (todo.getPatient() != null) {
+                Patient patient = todo.getPatient();
+                patient.getTodos().remove(todo);
+            }
+        });
         todoRepository.deleteById(id);
     }
 
