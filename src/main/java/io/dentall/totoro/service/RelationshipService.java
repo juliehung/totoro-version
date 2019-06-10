@@ -37,6 +37,8 @@ public class RelationshipService {
 
     private final NhiMedicalRecordService nhiMedicalRecordService;
 
+    private final TreatmentPlanService treatmentPlanService;
+
     public RelationshipService(
         @Lazy TreatmentProcedureService treatmentProcedureService,
         @Lazy TreatmentTaskService treatmentTaskService,
@@ -46,7 +48,8 @@ public class RelationshipService {
         NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService,
         NhiExtendTreatmentDrugService nhiExtendTreatmentDrugService,
         @Lazy NhiDayUploadDetailsService nhiDayUploadDetailsService,
-        NhiMedicalRecordService nhiMedicalRecordService
+        NhiMedicalRecordService nhiMedicalRecordService,
+        @Lazy TreatmentPlanService treatmentPlanService
     ) {
         this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentTaskService = treatmentTaskService;
@@ -57,6 +60,7 @@ public class RelationshipService {
         this.nhiExtendTreatmentDrugService = nhiExtendTreatmentDrugService;
         this.nhiDayUploadDetailsService = nhiDayUploadDetailsService;
         this.nhiMedicalRecordService = nhiMedicalRecordService;
+        this.treatmentPlanService = treatmentPlanService;
     }
 
     void addRelationshipWithTreatmentTasks(TreatmentPlan treatmentPlan) {
@@ -260,6 +264,20 @@ public class RelationshipService {
             .stream()
             .map(TreatmentProcedure::getId)
             .forEach(treatmentProcedureService::delete);
+    }
+
+    void deleteTreatmentPlans(Set<TreatmentPlan> treatmentPlans) {
+        treatmentPlans
+            .stream()
+            .map(TreatmentPlan::getId)
+            .forEach(treatmentPlanService::delete);
+    }
+
+    void deleteTreatmentTasks(Set<TreatmentTask> treatmentTasks) {
+        treatmentTasks
+            .stream()
+            .map(TreatmentTask::getId)
+            .forEach(treatmentTaskService::delete);
     }
 
     void deleteRelationshipWithTreatmentProcedures(Disposal disposal, Set<Long> updateIds) {

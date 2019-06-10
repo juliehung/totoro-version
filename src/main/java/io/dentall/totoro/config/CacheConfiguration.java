@@ -64,7 +64,6 @@ public class CacheConfiguration {
             cm.createCache(io.dentall.totoro.domain.Procedure.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.ProcedureType.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.Appointment.class.getName() + ".treatmentProcedures", jcacheConfiguration);
-            cm.createCache(io.dentall.totoro.domain.TreatmentTask.class.getName() + ".teeth", jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.TreatmentProcedure.class.getName() + ".teeth", jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.Treatment.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.Patient.class.getName() + ".treatments", jcacheConfiguration);

@@ -1,10 +1,13 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Tooth;
+import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.DisposalRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.ToothRepository;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
+import io.dentall.totoro.service.util.ProblemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zalando.problem.Status;
 
 import java.util.Optional;
 
@@ -87,6 +91,22 @@ public class ToothService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Tooth : {}", id);
+
+        toothRepository.findById(id).ifPresent(tooth -> {
+            if (tooth.getDisposal() != null) {
+                throw new ProblemUtil("A tooth which has disposal cannot delete", Status.BAD_REQUEST);
+            }
+
+            if (tooth.getPatient() != null) {
+                Patient patient = tooth.getPatient();
+                patient.getTeeth().remove(tooth);
+            }
+
+            if (tooth.getTreatmentProcedure() != null) {
+                TreatmentProcedure treatmentProcedure = tooth.getTreatmentProcedure();
+                treatmentProcedure.getTeeth().remove(tooth);
+            }
+        });
         toothRepository.deleteById(id);
     }
 

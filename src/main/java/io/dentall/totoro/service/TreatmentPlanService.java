@@ -4,11 +4,13 @@ import io.dentall.totoro.domain.TreatmentPlan;
 import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.repository.TreatmentPlanRepository;
 import io.dentall.totoro.repository.TreatmentRepository;
+import io.dentall.totoro.service.util.ProblemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zalando.problem.Status;
 
 import java.util.List;
 import java.util.Optional;
@@ -86,6 +88,14 @@ public class TreatmentPlanService {
      */
     public void delete(Long id) {
         log.debug("Request to delete TreatmentPlan : {}", id);
+
+        treatmentPlanRepository.findById(id).ifPresent(treatmentPlan -> {
+            if (treatmentPlan.isActivated()) {
+                throw new ProblemUtil("An activated treatmentPlan cannot delete", Status.BAD_REQUEST);
+            }
+
+            relationshipService.deleteTreatmentTasks(treatmentPlan.getTreatmentTasks());
+        });
         treatmentPlanRepository.deleteById(id);
     }
 

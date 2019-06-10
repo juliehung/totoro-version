@@ -1,5 +1,6 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.domain.TreatmentPlan;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
@@ -93,7 +94,14 @@ public class TreatmentTaskService {
     public void delete(Long id) {
         log.debug("Request to delete TreatmentTask : {}", id);
 
-        treatmentTaskRepository.findById(id).ifPresent(treatmentTask -> relationshipService.deleteTreatmentProcedures(treatmentTask.getTreatmentProcedures()));
+        treatmentTaskRepository.findById(id).ifPresent(treatmentTask -> {
+            relationshipService.deleteTreatmentProcedures(treatmentTask.getTreatmentProcedures());
+
+            if (treatmentTask.getTreatmentPlan() != null) {
+                TreatmentPlan treatmentPlan = treatmentTask.getTreatmentPlan();
+                treatmentPlan.getTreatmentTasks().remove(treatmentTask);
+            }
+        });
         treatmentTaskRepository.deleteById(id);
     }
 

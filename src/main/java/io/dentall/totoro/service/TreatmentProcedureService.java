@@ -124,6 +124,8 @@ public class TreatmentProcedureService {
                 throw new ProblemUtil("A treatmentProcedure which has disposal cannot delete", Status.BAD_REQUEST);
             }
 
+            relationshipService.deleteTeeth(treatmentProcedure.getTeeth());
+
             if (treatmentProcedure.getTreatmentTask() != null) {
                 TreatmentTask treatmentTask = treatmentProcedure.getTreatmentTask();
                 treatmentTask.getTreatmentProcedures().remove(treatmentProcedure);
@@ -148,8 +150,6 @@ public class TreatmentProcedureService {
 
                 appointment.getTreatmentProcedures().remove(treatmentProcedure);
             }
-
-            relationshipService.deleteTeeth(treatmentProcedure.getTeeth());
         });
         treatmentProcedureRepository.deleteById(id);
     }
