@@ -41,11 +41,14 @@
         },
         {
             "fieldName": "type",
-            "fieldType": "RegistrationType",
-            "fieldValues": "OWN_EXPENSE,NHI,NHI_NO_CARD"
+            "fieldType": "String"
         },
         {
             "fieldName": "onSite",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "noCard",
             "fieldType": "Boolean"
         }
     ],

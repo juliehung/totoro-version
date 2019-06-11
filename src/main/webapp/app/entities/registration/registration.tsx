@@ -87,6 +87,9 @@ export class Registration extends React.Component<IRegistrationProps, IRegistrat
                 <th className="hand" onClick={this.sort('onSite')}>
                   <Translate contentKey="totoroApp.registration.onSite">On Site</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('noCard')}>
+                  <Translate contentKey="totoroApp.registration.noCard">No Card</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.registration.accounting">Accounting</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -107,10 +110,9 @@ export class Registration extends React.Component<IRegistrationProps, IRegistrat
                   <td>
                     <TextFormat type="date" value={registration.arrivalTime} format={APP_DATE_FORMAT} />
                   </td>
-                  <td>
-                    <Translate contentKey={`totoroApp.RegistrationType.${registration.type}`} />
-                  </td>
+                  <td>{registration.type}</td>
                   <td>{registration.onSite ? 'true' : 'false'}</td>
+                  <td>{registration.noCard ? 'true' : 'false'}</td>
                   <td>
                     {registration.accounting ? (
                       <Link to={`accounting/${registration.accounting.id}`}>{registration.accounting.id}</Link>

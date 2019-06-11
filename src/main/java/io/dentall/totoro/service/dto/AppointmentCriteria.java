@@ -3,11 +3,8 @@ package io.dentall.totoro.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 import io.dentall.totoro.domain.enumeration.AppointmentStatus;
-import io.dentall.totoro.service.filter.RegistrationTypeFilter;
 import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
@@ -56,9 +53,7 @@ public class AppointmentCriteria implements Serializable {
 
     private LongFilter registrationId;
 
-    private RegistrationTypeFilter registrationType;
-
-    private IntegerFilter registrationTypeValue;
+    private StringFilter registrationType;
 
     private LongFilter doctorId;
 
@@ -170,20 +165,12 @@ public class AppointmentCriteria implements Serializable {
         this.registrationId = registrationId;
     }
 
-    public RegistrationTypeFilter getRegistrationType() {
+    public StringFilter getRegistrationType() {
         return registrationType;
     }
 
-    public void setRegistrationType(RegistrationTypeFilter registrationType) {
+    public void setRegistrationType(StringFilter registrationType) {
         this.registrationType = registrationType;
-    }
-
-    public IntegerFilter getRegistrationTypeValue() {
-        return registrationTypeValue;
-    }
-
-    public void setRegistrationTypeValue(IntegerFilter registrationTypeValue) {
-        this.registrationTypeValue = registrationTypeValue;
     }
 
     public LongFilter getDoctorId() {
@@ -233,7 +220,6 @@ public class AppointmentCriteria implements Serializable {
             Objects.equals(patientId, that.patientId) &&
             Objects.equals(registrationId, that.registrationId) &&
             Objects.equals(registrationType, that.registrationType) &&
-            Objects.equals(registrationTypeValue, that.registrationTypeValue) &&
             Objects.equals(doctorId, that.doctorId) &&
             Objects.equals(treatmentProcedureId, that.treatmentProcedureId) &&
             Objects.equals(disposalId, that.disposalId);
@@ -256,7 +242,6 @@ public class AppointmentCriteria implements Serializable {
             patientId,
             registrationId,
             registrationType,
-            registrationTypeValue,
             doctorId,
             treatmentProcedureId,
             disposalId
@@ -280,7 +265,6 @@ public class AppointmentCriteria implements Serializable {
             (patientId != null ? "patientId=" + patientId + ", " : "") +
             (registrationId != null ? "registrationId=" + registrationId + ", " : "") +
             (registrationType != null ? "registrationType=" + registrationType + ", " : "") +
-            (registrationTypeValue != null ? "registrationTypeValue=" + registrationTypeValue + ", " : "") +
             (doctorId != null ? "doctorId=" + doctorId + ", " : "") +
             (treatmentProcedureId != null ? "treatmentProcedureId=" + treatmentProcedureId + ", " : "") +
             (disposalId != null ? "disposalId=" + disposalId + ", " : "") +

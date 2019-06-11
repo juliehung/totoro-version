@@ -87,6 +87,9 @@ export class RegistrationDel extends React.Component<IRegistrationDelProps, IReg
                 <th className="hand" onClick={this.sort('onSite')}>
                   <Translate contentKey="totoroApp.registrationDel.onSite">On Site</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('noCard')}>
+                  <Translate contentKey="totoroApp.registrationDel.noCard">No Card</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th className="hand" onClick={this.sort('appointmentId')}>
                   <Translate contentKey="totoroApp.registrationDel.appointmentId">Appointment Id</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -110,10 +113,9 @@ export class RegistrationDel extends React.Component<IRegistrationDelProps, IReg
                   <td>
                     <TextFormat type="date" value={registrationDel.arrivalTime} format={APP_DATE_FORMAT} />
                   </td>
-                  <td>
-                    <Translate contentKey={`totoroApp.RegistrationType.${registrationDel.type}`} />
-                  </td>
+                  <td>{registrationDel.type}</td>
                   <td>{registrationDel.onSite ? 'true' : 'false'}</td>
+                  <td>{registrationDel.noCard ? 'true' : 'false'}</td>
                   <td>{registrationDel.appointmentId}</td>
                   <td>{registrationDel.accountingId}</td>
                   <td className="text-right">

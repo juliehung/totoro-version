@@ -953,36 +953,6 @@ public class AppointmentResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllAppointmentsByRegistrationTypeValue() throws Exception {
-        Registration registration = RegistrationResourceIntTest.createEntity(em);
-        em.persist(registration);
-        em.flush();
-        appointment.setRegistration(registration);
-
-        // Initialize the database
-        appointmentRepository.saveAndFlush(appointment);
-
-        // Get all the appointmentList where registration type equals to
-        defaultAppointmentShouldBeFound("registrationTypeValue.equals=" + registration.getType().getValue());
-    }
-
-    @Test
-    @Transactional
-    public void getAllAppointmentsByRegistrationTypeValueNotFound() throws Exception {
-        Registration registration = RegistrationResourceIntTest.createEntity(em);
-        em.persist(registration);
-        em.flush();
-        appointment.setRegistration(registration);
-
-        // Initialize the database
-        appointmentRepository.saveAndFlush(appointment);
-
-        // Get all the appointmentList where registration type equals to
-        defaultAppointmentShouldNotBeFound("registrationTypeValue.equals=" + -1);
-    }
-
-    @Test
-    @Transactional
     public void getAllAppointmentsByDoctorId() throws Exception {
         // Initialize the database
         appointmentRepository.saveAndFlush(appointment);

@@ -31,7 +31,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
-import io.dentall.totoro.domain.enumeration.RegistrationType;
 import org.springframework.validation.Validator;
 
 /**
@@ -49,11 +48,14 @@ public class RegistrationResourceIntTest {
     private static final Instant DEFAULT_ARRIVAL_TIME = OffsetDateTime.now().withHour(22).plusMinutes(10).withNano(0).toInstant();
     private static final Instant UPDATED_ARRIVAL_TIME = OffsetDateTime.now().withHour(22).plusHours(1).plusMinutes(10).withNano(0).toInstant();
 
-    private static final RegistrationType DEFAULT_TYPE = RegistrationType.OWN_EXPENSE;
-    private static final RegistrationType UPDATED_TYPE = RegistrationType.NHI;
+    private static final String DEFAULT_TYPE = "AAAAAAAAAA";
+    private static final String UPDATED_TYPE = "BBBBBBBBBB";
 
     private static final Boolean DEFAULT_ON_SITE = false;
     private static final Boolean UPDATED_ON_SITE = true;
+
+    private static final Boolean DEFAULT_NO_CARD = false;
+    private static final Boolean UPDATED_NO_CARD = true;
 
     @Autowired
     private RegistrationRepository registrationRepository;
@@ -118,7 +120,8 @@ public class RegistrationResourceIntTest {
             .status(DEFAULT_STATUS)
             .arrivalTime(DEFAULT_ARRIVAL_TIME)
             .type(DEFAULT_TYPE)
-            .onSite(DEFAULT_ON_SITE);
+            .onSite(DEFAULT_ON_SITE)
+            .noCard(DEFAULT_NO_CARD);
 
         return registration;
     }
@@ -147,6 +150,7 @@ public class RegistrationResourceIntTest {
         assertThat(testRegistration.getArrivalTime()).isEqualTo(DEFAULT_ARRIVAL_TIME);
         assertThat(testRegistration.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testRegistration.isOnSite()).isEqualTo(DEFAULT_ON_SITE);
+        assertThat(testRegistration.isNoCard()).isEqualTo(DEFAULT_NO_CARD);
     }
 
     @Test
@@ -200,7 +204,8 @@ public class RegistrationResourceIntTest {
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].arrivalTime").value(hasItem(DEFAULT_ARRIVAL_TIME.toString())))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].onSite").value(hasItem(DEFAULT_ON_SITE.booleanValue())));
+            .andExpect(jsonPath("$.[*].onSite").value(hasItem(DEFAULT_ON_SITE.booleanValue())))
+            .andExpect(jsonPath("$.[*].noCard").value(hasItem(DEFAULT_NO_CARD.booleanValue())));
     }
     
     @Test
@@ -215,9 +220,10 @@ public class RegistrationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(registration.getId().intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
-            .andExpect(jsonPath("$.arrivalTime").value((DEFAULT_ARRIVAL_TIME.toString())))
+            .andExpect(jsonPath("$.arrivalTime").value(DEFAULT_ARRIVAL_TIME.toString()))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
-            .andExpect(jsonPath("$.onSite").value(DEFAULT_ON_SITE));
+            .andExpect(jsonPath("$.onSite").value(DEFAULT_ON_SITE))
+            .andExpect(jsonPath("$.noCard").value(DEFAULT_NO_CARD.booleanValue()));
     }
 
     @Test
@@ -244,7 +250,8 @@ public class RegistrationResourceIntTest {
             .status(UPDATED_STATUS)
             .arrivalTime(UPDATED_ARRIVAL_TIME)
             .type(UPDATED_TYPE)
-            .onSite(UPDATED_ON_SITE);
+            .onSite(UPDATED_ON_SITE)
+            .noCard(UPDATED_NO_CARD);
 
         restRegistrationMockMvc.perform(put("/api/registrations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -259,6 +266,7 @@ public class RegistrationResourceIntTest {
         assertThat(testRegistration.getArrivalTime()).isEqualTo(UPDATED_ARRIVAL_TIME);
         assertThat(testRegistration.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testRegistration.isOnSite()).isEqualTo(UPDATED_ON_SITE);
+        assertThat(testRegistration.isNoCard()).isEqualTo(UPDATED_NO_CARD);
     }
 
     @Test

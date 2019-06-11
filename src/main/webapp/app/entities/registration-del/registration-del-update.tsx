@@ -126,31 +126,21 @@ export class RegistrationDelUpdate extends React.Component<IRegistrationDelUpdat
                   />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="typeLabel">
+                  <Label id="typeLabel" for="type">
                     <Translate contentKey="totoroApp.registrationDel.type">Type</Translate>
                   </Label>
-                  <AvInput
-                    id="registration-del-type"
-                    type="select"
-                    className="form-control"
-                    name="type"
-                    value={(!isNew && registrationDelEntity.type) || 'OWN_EXPENSE'}
-                  >
-                    <option value="OWN_EXPENSE">
-                      <Translate contentKey="totoroApp.RegistrationType.OWN_EXPENSE" />
-                    </option>
-                    <option value="NHI">
-                      <Translate contentKey="totoroApp.RegistrationType.NHI" />
-                    </option>
-                    <option value="NHI_NO_CARD">
-                      <Translate contentKey="totoroApp.RegistrationType.NHI_NO_CARD" />
-                    </option>
-                  </AvInput>
+                  <AvField id="registration-del-type" type="text" name="type" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="onSiteLabel" check>
                     <AvInput id="registration-del-onSite" type="checkbox" className="form-control" name="onSite" />
                     <Translate contentKey="totoroApp.registrationDel.onSite">On Site</Translate>
+                  </Label>
+                </AvGroup>
+                <AvGroup>
+                  <Label id="noCardLabel" check>
+                    <AvInput id="registration-del-noCard" type="checkbox" className="form-control" name="noCard" />
+                    <Translate contentKey="totoroApp.registrationDel.noCard">No Card</Translate>
                   </Label>
                 </AvGroup>
                 <AvGroup>

@@ -37,7 +37,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
-import io.dentall.totoro.domain.enumeration.RegistrationType;
 /**
  * Test class for the RegistrationDelResource REST controller.
  *
@@ -53,11 +52,14 @@ public class RegistrationDelResourceIntTest {
     private static final Instant DEFAULT_ARRIVAL_TIME = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_ARRIVAL_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final RegistrationType DEFAULT_TYPE = RegistrationType.OWN_EXPENSE;
-    private static final RegistrationType UPDATED_TYPE = RegistrationType.NHI;
+    private static final String DEFAULT_TYPE = "AAAAAAAAAA";
+    private static final String UPDATED_TYPE = "BBBBBBBBBB";
 
     private static final Boolean DEFAULT_ON_SITE = false;
     private static final Boolean UPDATED_ON_SITE = true;
+
+    private static final Boolean DEFAULT_NO_CARD = false;
+    private static final Boolean UPDATED_NO_CARD = true;
 
     private static final Long DEFAULT_APPOINTMENT_ID = 1L;
     private static final Long UPDATED_APPOINTMENT_ID = 2L;
@@ -117,6 +119,7 @@ public class RegistrationDelResourceIntTest {
             .arrivalTime(DEFAULT_ARRIVAL_TIME)
             .type(DEFAULT_TYPE)
             .onSite(DEFAULT_ON_SITE)
+            .noCard(DEFAULT_NO_CARD)
             .appointmentId(DEFAULT_APPOINTMENT_ID)
             .accountingId(DEFAULT_ACCOUNTING_ID);
         return registrationDel;
@@ -146,6 +149,7 @@ public class RegistrationDelResourceIntTest {
         assertThat(testRegistrationDel.getArrivalTime()).isEqualTo(DEFAULT_ARRIVAL_TIME);
         assertThat(testRegistrationDel.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testRegistrationDel.isOnSite()).isEqualTo(DEFAULT_ON_SITE);
+        assertThat(testRegistrationDel.isNoCard()).isEqualTo(DEFAULT_NO_CARD);
         assertThat(testRegistrationDel.getAppointmentId()).isEqualTo(DEFAULT_APPOINTMENT_ID);
         assertThat(testRegistrationDel.getAccountingId()).isEqualTo(DEFAULT_ACCOUNTING_ID);
     }
@@ -202,6 +206,7 @@ public class RegistrationDelResourceIntTest {
             .andExpect(jsonPath("$.[*].arrivalTime").value(hasItem(DEFAULT_ARRIVAL_TIME.toString())))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].onSite").value(hasItem(DEFAULT_ON_SITE.booleanValue())))
+            .andExpect(jsonPath("$.[*].noCard").value(hasItem(DEFAULT_NO_CARD.booleanValue())))
             .andExpect(jsonPath("$.[*].appointmentId").value(hasItem(DEFAULT_APPOINTMENT_ID.intValue())))
             .andExpect(jsonPath("$.[*].accountingId").value(hasItem(DEFAULT_ACCOUNTING_ID.intValue())));
     }
@@ -221,6 +226,7 @@ public class RegistrationDelResourceIntTest {
             .andExpect(jsonPath("$.arrivalTime").value(DEFAULT_ARRIVAL_TIME.toString()))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
             .andExpect(jsonPath("$.onSite").value(DEFAULT_ON_SITE.booleanValue()))
+            .andExpect(jsonPath("$.noCard").value(DEFAULT_NO_CARD.booleanValue()))
             .andExpect(jsonPath("$.appointmentId").value(DEFAULT_APPOINTMENT_ID.intValue()))
             .andExpect(jsonPath("$.accountingId").value(DEFAULT_ACCOUNTING_ID.intValue()));
     }
@@ -383,6 +389,45 @@ public class RegistrationDelResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllRegistrationDelsByNoCardIsEqualToSomething() throws Exception {
+        // Initialize the database
+        registrationDelRepository.saveAndFlush(registrationDel);
+
+        // Get all the registrationDelList where noCard equals to DEFAULT_NO_CARD
+        defaultRegistrationDelShouldBeFound("noCard.equals=" + DEFAULT_NO_CARD);
+
+        // Get all the registrationDelList where noCard equals to UPDATED_NO_CARD
+        defaultRegistrationDelShouldNotBeFound("noCard.equals=" + UPDATED_NO_CARD);
+    }
+
+    @Test
+    @Transactional
+    public void getAllRegistrationDelsByNoCardIsInShouldWork() throws Exception {
+        // Initialize the database
+        registrationDelRepository.saveAndFlush(registrationDel);
+
+        // Get all the registrationDelList where noCard in DEFAULT_NO_CARD or UPDATED_NO_CARD
+        defaultRegistrationDelShouldBeFound("noCard.in=" + DEFAULT_NO_CARD + "," + UPDATED_NO_CARD);
+
+        // Get all the registrationDelList where noCard equals to UPDATED_NO_CARD
+        defaultRegistrationDelShouldNotBeFound("noCard.in=" + UPDATED_NO_CARD);
+    }
+
+    @Test
+    @Transactional
+    public void getAllRegistrationDelsByNoCardIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        registrationDelRepository.saveAndFlush(registrationDel);
+
+        // Get all the registrationDelList where noCard is not null
+        defaultRegistrationDelShouldBeFound("noCard.specified=true");
+
+        // Get all the registrationDelList where noCard is null
+        defaultRegistrationDelShouldNotBeFound("noCard.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllRegistrationDelsByAppointmentIdIsEqualToSomething() throws Exception {
         // Initialize the database
         registrationDelRepository.saveAndFlush(registrationDel);
@@ -524,6 +569,7 @@ public class RegistrationDelResourceIntTest {
             .andExpect(jsonPath("$.[*].arrivalTime").value(hasItem(DEFAULT_ARRIVAL_TIME.toString())))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].onSite").value(hasItem(DEFAULT_ON_SITE.booleanValue())))
+            .andExpect(jsonPath("$.[*].noCard").value(hasItem(DEFAULT_NO_CARD.booleanValue())))
             .andExpect(jsonPath("$.[*].appointmentId").value(hasItem(DEFAULT_APPOINTMENT_ID.intValue())))
             .andExpect(jsonPath("$.[*].accountingId").value(hasItem(DEFAULT_ACCOUNTING_ID.intValue())));
 
@@ -577,6 +623,7 @@ public class RegistrationDelResourceIntTest {
             .arrivalTime(UPDATED_ARRIVAL_TIME)
             .type(UPDATED_TYPE)
             .onSite(UPDATED_ON_SITE)
+            .noCard(UPDATED_NO_CARD)
             .appointmentId(UPDATED_APPOINTMENT_ID)
             .accountingId(UPDATED_ACCOUNTING_ID);
 
@@ -593,6 +640,7 @@ public class RegistrationDelResourceIntTest {
         assertThat(testRegistrationDel.getArrivalTime()).isEqualTo(UPDATED_ARRIVAL_TIME);
         assertThat(testRegistrationDel.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testRegistrationDel.isOnSite()).isEqualTo(UPDATED_ON_SITE);
+        assertThat(testRegistrationDel.isNoCard()).isEqualTo(UPDATED_NO_CARD);
         assertThat(testRegistrationDel.getAppointmentId()).isEqualTo(UPDATED_APPOINTMENT_ID);
         assertThat(testRegistrationDel.getAccountingId()).isEqualTo(UPDATED_ACCOUNTING_ID);
     }

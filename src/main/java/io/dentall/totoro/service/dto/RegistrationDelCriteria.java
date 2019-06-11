@@ -3,7 +3,6 @@ package io.dentall.totoro.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
-import io.dentall.totoro.domain.enumeration.RegistrationType;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
@@ -27,11 +26,6 @@ public class RegistrationDelCriteria implements Serializable {
      */
     public static class RegistrationStatusFilter extends Filter<RegistrationStatus> {
     }
-    /**
-     * Class for filtering RegistrationType
-     */
-    public static class RegistrationTypeFilter extends Filter<RegistrationType> {
-    }
 
     private static final long serialVersionUID = 1L;
 
@@ -41,9 +35,11 @@ public class RegistrationDelCriteria implements Serializable {
 
     private InstantFilter arrivalTime;
 
-    private RegistrationTypeFilter type;
+    private StringFilter type;
 
     private BooleanFilter onSite;
+
+    private BooleanFilter noCard;
 
     private LongFilter appointmentId;
 
@@ -73,11 +69,11 @@ public class RegistrationDelCriteria implements Serializable {
         this.arrivalTime = arrivalTime;
     }
 
-    public RegistrationTypeFilter getType() {
+    public StringFilter getType() {
         return type;
     }
 
-    public void setType(RegistrationTypeFilter type) {
+    public void setType(StringFilter type) {
         this.type = type;
     }
 
@@ -87,6 +83,14 @@ public class RegistrationDelCriteria implements Serializable {
 
     public void setOnSite(BooleanFilter onSite) {
         this.onSite = onSite;
+    }
+
+    public BooleanFilter getNoCard() {
+        return noCard;
+    }
+
+    public void setNoCard(BooleanFilter noCard) {
+        this.noCard = noCard;
     }
 
     public LongFilter getAppointmentId() {
@@ -121,6 +125,7 @@ public class RegistrationDelCriteria implements Serializable {
             Objects.equals(arrivalTime, that.arrivalTime) &&
             Objects.equals(type, that.type) &&
             Objects.equals(onSite, that.onSite) &&
+            Objects.equals(noCard, that.noCard) &&
             Objects.equals(appointmentId, that.appointmentId) &&
             Objects.equals(accountingId, that.accountingId);
     }
@@ -133,6 +138,7 @@ public class RegistrationDelCriteria implements Serializable {
         arrivalTime,
         type,
         onSite,
+        noCard,
         appointmentId,
         accountingId
         );
@@ -146,6 +152,7 @@ public class RegistrationDelCriteria implements Serializable {
                 (arrivalTime != null ? "arrivalTime=" + arrivalTime + ", " : "") +
                 (type != null ? "type=" + type + ", " : "") +
                 (onSite != null ? "onSite=" + onSite + ", " : "") +
+                (noCard != null ? "noCard=" + noCard + ", " : "") +
                 (appointmentId != null ? "appointmentId=" + appointmentId + ", " : "") +
                 (accountingId != null ? "accountingId=" + accountingId + ", " : "") +
             "}";

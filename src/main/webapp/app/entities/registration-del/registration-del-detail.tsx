@@ -55,6 +55,12 @@ export class RegistrationDelDetail extends React.Component<IRegistrationDelDetai
             </dt>
             <dd>{registrationDelEntity.onSite ? 'true' : 'false'}</dd>
             <dt>
+              <span id="noCard">
+                <Translate contentKey="totoroApp.registrationDel.noCard">No Card</Translate>
+              </span>
+            </dt>
+            <dd>{registrationDelEntity.noCard ? 'true' : 'false'}</dd>
+            <dt>
               <span id="appointmentId">
                 <Translate contentKey="totoroApp.registrationDel.appointmentId">Appointment Id</Translate>
               </span>

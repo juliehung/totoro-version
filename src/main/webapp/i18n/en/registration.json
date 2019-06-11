@@ -19,6 +19,7 @@
       "arrivalTime": "Arrival Time",
       "type": "Type",
       "onSite": "On Site",
+      "noCard": "No Card",
       "appointment": "Appointment",
       "accounting": "Accounting",
       "disposal": "Disposal"
