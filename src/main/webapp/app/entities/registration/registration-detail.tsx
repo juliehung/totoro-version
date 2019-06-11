@@ -55,6 +55,12 @@ export class RegistrationDetail extends React.Component<IRegistrationDetailProps
             </dt>
             <dd>{registrationEntity.onSite ? 'true' : 'false'}</dd>
             <dt>
+              <span id="noCard">
+                <Translate contentKey="totoroApp.registration.noCard">No Card</Translate>
+              </span>
+            </dt>
+            <dd>{registrationEntity.noCard ? 'true' : 'false'}</dd>
+            <dt>
               <Translate contentKey="totoroApp.registration.accounting">Accounting</Translate>
             </dt>
             <dd>{registrationEntity.accounting ? registrationEntity.accounting.id : ''}</dd>

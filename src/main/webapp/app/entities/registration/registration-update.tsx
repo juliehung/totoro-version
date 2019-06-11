@@ -142,31 +142,21 @@ export class RegistrationUpdate extends React.Component<IRegistrationUpdateProps
                   />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="typeLabel">
+                  <Label id="typeLabel" for="type">
                     <Translate contentKey="totoroApp.registration.type">Type</Translate>
                   </Label>
-                  <AvInput
-                    id="registration-type"
-                    type="select"
-                    className="form-control"
-                    name="type"
-                    value={(!isNew && registrationEntity.type) || 'OWN_EXPENSE'}
-                  >
-                    <option value="OWN_EXPENSE">
-                      <Translate contentKey="totoroApp.RegistrationType.OWN_EXPENSE" />
-                    </option>
-                    <option value="NHI">
-                      <Translate contentKey="totoroApp.RegistrationType.NHI" />
-                    </option>
-                    <option value="NHI_NO_CARD">
-                      <Translate contentKey="totoroApp.RegistrationType.NHI_NO_CARD" />
-                    </option>
-                  </AvInput>
+                  <AvField id="registration-type" type="text" name="type" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="onSiteLabel" check>
                     <AvInput id="registration-onSite" type="checkbox" className="form-control" name="onSite" />
                     <Translate contentKey="totoroApp.registration.onSite">On Site</Translate>
+                  </Label>
+                </AvGroup>
+                <AvGroup>
+                  <Label id="noCardLabel" check>
+                    <AvInput id="registration-noCard" type="checkbox" className="form-control" name="noCard" />
+                    <Translate contentKey="totoroApp.registration.noCard">No Card</Translate>
                   </Label>
                 </AvGroup>
                 <AvGroup>

@@ -14,7 +14,6 @@ import java.time.Instant;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
-import io.dentall.totoro.domain.enumeration.RegistrationType;
 
 /**
  * A Registration.
@@ -39,12 +38,14 @@ public class Registration extends AbstractAuditingEntity implements Serializable
     @Column(name = "arrival_time")
     private Instant arrivalTime;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "jhi_type")
-    private RegistrationType type;
+    private String type;
 
     @Column(name = "on_site")
     private Boolean onSite;
+
+    @Column(name = "no_card")
+    private Boolean noCard;
 
     @OneToOne(mappedBy = "registration")
     @JsonIgnoreProperties(value = {"registration", "treatmentProcedures"}, allowSetters = true)
@@ -91,16 +92,16 @@ public class Registration extends AbstractAuditingEntity implements Serializable
         this.arrivalTime = arrivalTime;
     }
 
-    public RegistrationType getType() {
+    public String getType() {
         return type;
     }
 
-    public Registration type(RegistrationType type) {
+    public Registration type(String type) {
         this.type = type;
         return this;
     }
 
-    public void setType(RegistrationType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -115,6 +116,19 @@ public class Registration extends AbstractAuditingEntity implements Serializable
 
     public void setOnSite(Boolean onSite) {
         this.onSite = onSite;
+    }
+
+    public Boolean isNoCard() {
+        return noCard;
+    }
+
+    public Registration noCard(Boolean noCard) {
+        this.noCard = noCard;
+        return this;
+    }
+
+    public void setNoCard(Boolean noCard) {
+        this.noCard = noCard;
     }
 
     public Appointment getAppointment() {
@@ -192,6 +206,7 @@ public class Registration extends AbstractAuditingEntity implements Serializable
             ", arrivalTime='" + getArrivalTime() + "'" +
             ", type='" + getType() + "'" +
             ", onSite='" + isOnSite() + "'" +
+            ", noCard='" + isNoCard() + "'" +
             "}";
     }
 }

@@ -14,8 +14,6 @@ import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 
-import io.dentall.totoro.domain.enumeration.RegistrationType;
-
 /**
  * A RegistrationDel.
  */
@@ -39,12 +37,14 @@ public class RegistrationDel extends AbstractAuditingEntity implements Serializa
     @Column(name = "arrival_time")
     private Instant arrivalTime;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "jhi_type")
-    private RegistrationType type;
+    private String type;
 
     @Column(name = "on_site")
     private Boolean onSite;
+
+    @Column(name = "no_card")
+    private Boolean noCard;
 
     @Column(name = "appointment_id")
     private Long appointmentId;
@@ -87,16 +87,16 @@ public class RegistrationDel extends AbstractAuditingEntity implements Serializa
         this.arrivalTime = arrivalTime;
     }
 
-    public RegistrationType getType() {
+    public String getType() {
         return type;
     }
 
-    public RegistrationDel type(RegistrationType type) {
+    public RegistrationDel type(String type) {
         this.type = type;
         return this;
     }
 
-    public void setType(RegistrationType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -111,6 +111,19 @@ public class RegistrationDel extends AbstractAuditingEntity implements Serializa
 
     public void setOnSite(Boolean onSite) {
         this.onSite = onSite;
+    }
+
+    public Boolean isNoCard() {
+        return noCard;
+    }
+
+    public RegistrationDel noCard(Boolean noCard) {
+        this.noCard = noCard;
+        return this;
+    }
+
+    public void setNoCard(Boolean noCard) {
+        this.noCard = noCard;
     }
 
     public Long getAppointmentId() {
@@ -182,6 +195,7 @@ public class RegistrationDel extends AbstractAuditingEntity implements Serializa
             ", arrivalTime='" + getArrivalTime() + "'" +
             ", type='" + getType() + "'" +
             ", onSite='" + isOnSite() + "'" +
+            ", noCard='" + isNoCard() + "'" +
             ", appointmentId=" + getAppointmentId() +
             ", accountingId=" + getAccountingId() +
             "}";

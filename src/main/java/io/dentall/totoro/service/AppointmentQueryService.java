@@ -8,12 +8,9 @@ import java.util.function.Predicate;
 
 import javax.persistence.criteria.JoinType;
 
-import io.dentall.totoro.domain.enumeration.RegistrationType;
-import io.dentall.totoro.service.filter.RegistrationTypeFilter;
 import io.dentall.totoro.service.util.FilterUtil;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.InstantFilter;
-import io.github.jhipster.service.filter.LongFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -106,8 +103,7 @@ public class AppointmentQueryService extends QueryService<Appointment> {
                 specification = specification.and(buildRangeSpecification(criteria.getExpectedArrivalTime(), Appointment_.expectedArrivalTime));
             } else {
                 if ((FilterUtil.predicateIsNull.test(criteria.getRegistrationId()) && predicateFilterEquals.test(criteria.getPatientId())) ||
-                    predicateFilterEquals.test(criteria.getRegistrationType()) ||
-                    predicateFilterEquals.test(criteria.getRegistrationTypeValue())) {
+                    predicateFilterEquals.test(criteria.getRegistrationType())) {
                     // default expectedArrivalTime is today
                     Instant start = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MIN).toInstant();
                     Instant end = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MAX).toInstant();
@@ -142,16 +138,6 @@ public class AppointmentQueryService extends QueryService<Appointment> {
             }
             if (criteria.getRegistrationType() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getRegistrationType(), Appointment_.registration, Registration_.type));
-            }
-            if (criteria.getRegistrationTypeValue() != null) {
-                RegistrationType type = RegistrationType.intToTypeMap.get(criteria.getRegistrationTypeValue().getEquals());
-                if (type == null) {
-                    return alwaysFalse;
-                } else {
-                    RegistrationTypeFilter filter = new RegistrationTypeFilter();
-                    filter.setEquals(type);
-                    specification = specification.and(buildReferringEntitySpecification(filter, Appointment_.registration, Registration_.type));
-                }
             }
             if (criteria.getDoctorId() != null) {
                 specification = specification.and(buildSpecification(criteria.getDoctorId(),

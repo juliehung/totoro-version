@@ -90,10 +90,13 @@ public class RegistrationDelQueryService extends QueryService<RegistrationDel> {
                 specification = specification.and(buildRangeSpecification(criteria.getArrivalTime(), RegistrationDel_.arrivalTime));
             }
             if (criteria.getType() != null) {
-                specification = specification.and(buildSpecification(criteria.getType(), RegistrationDel_.type));
+                specification = specification.and(buildStringSpecification(criteria.getType(), RegistrationDel_.type));
             }
             if (criteria.getOnSite() != null) {
                 specification = specification.and(buildSpecification(criteria.getOnSite(), RegistrationDel_.onSite));
+            }
+            if (criteria.getNoCard() != null) {
+                specification = specification.and(buildSpecification(criteria.getNoCard(), RegistrationDel_.noCard));
             }
             if (criteria.getAppointmentId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getAppointmentId(), RegistrationDel_.appointmentId));

@@ -36,6 +36,10 @@
             <column name="on_site" type="boolean">
                 <constraints nullable="true" />
             </column>
+
+            <column name="no_card" type="boolean">
+                <constraints nullable="true" />
+            </column>
             <column name="accounting_id" type="bigint">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_registration_accounting_id" />
             </column>

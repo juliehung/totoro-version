@@ -89,20 +89,24 @@ public class RegistrationService {
             .findById(updateRegistration.getId())
             .map(registration -> {
                 if (updateRegistration.getStatus() != null) {
-                    registration.setStatus((updateRegistration.getStatus()));
+                    registration.setStatus(updateRegistration.getStatus());
                     broadcastService.broadcastRegistrationStatus(registration.getAppointment().getPatient().getName(), registration.getStatus());
                 }
 
                 if (updateRegistration.getArrivalTime() != null) {
-                    registration.setArrivalTime((updateRegistration.getArrivalTime()));
+                    registration.setArrivalTime(updateRegistration.getArrivalTime());
                 }
 
                 if (updateRegistration.getType() != null) {
-                    registration.setType((updateRegistration.getType()));
+                    registration.setType(updateRegistration.getType());
                 }
 
                 if (updateRegistration.isOnSite() != null) {
-                    registration.setOnSite((updateRegistration.isOnSite()));
+                    registration.setOnSite(updateRegistration.isOnSite());
+                }
+
+                if (updateRegistration.isNoCard() != null) {
+                    registration.setNoCard(updateRegistration.isNoCard());
                 }
 
                 if (updateRegistration.getAccounting() != null) {
@@ -142,6 +146,7 @@ public class RegistrationService {
                     .arrivalTime(registration.getArrivalTime())
                     .type(registration.getType())
                     .onSite(registration.isOnSite())
+                    .noCard(registration.isNoCard())
                     .appointmentId(appointment.getId())
                     .accountingId(accounting == null ? null : accounting.registration(null).getId())
                 );

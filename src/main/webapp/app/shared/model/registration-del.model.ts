@@ -6,22 +6,18 @@ export const enum RegistrationStatus {
   IN_PROGRESS = 'IN_PROGRESS'
 }
 
-export const enum RegistrationType {
-  OWN_EXPENSE = 'OWN_EXPENSE',
-  NHI = 'NHI',
-  NHI_NO_CARD = 'NHI_NO_CARD'
-}
-
 export interface IRegistrationDel {
   id?: number;
   status?: RegistrationStatus;
   arrivalTime?: Moment;
-  type?: RegistrationType;
+  type?: string;
   onSite?: boolean;
+  noCard?: boolean;
   appointmentId?: number;
   accountingId?: number;
 }
 
 export const defaultValue: Readonly<IRegistrationDel> = {
-  onSite: false
+  onSite: false,
+  noCard: false
 };
