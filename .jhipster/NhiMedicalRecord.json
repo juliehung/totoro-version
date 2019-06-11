@@ -37,6 +37,10 @@
         {
             "fieldName": "note",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "days",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20190606033824",

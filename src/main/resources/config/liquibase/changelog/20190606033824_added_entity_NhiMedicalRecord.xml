@@ -49,6 +49,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="days" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="nhi_extend_patient_patient_id" type="bigint">
                 <constraints nullable="true" />
             </column>

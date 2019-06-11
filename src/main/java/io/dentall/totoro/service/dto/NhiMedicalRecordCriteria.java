@@ -38,6 +38,8 @@ public class NhiMedicalRecordCriteria implements Serializable {
 
     private StringFilter note;
 
+    private StringFilter days;
+
     private LongFilter nhiExtendPatientId;
 
     public LongFilter getId() {
@@ -104,6 +106,14 @@ public class NhiMedicalRecordCriteria implements Serializable {
         this.note = note;
     }
 
+    public StringFilter getDays() {
+        return days;
+    }
+
+    public void setDays(StringFilter days) {
+        this.days = days;
+    }
+
     public LongFilter getNhiExtendPatientId() {
         return nhiExtendPatientId;
     }
@@ -131,6 +141,7 @@ public class NhiMedicalRecordCriteria implements Serializable {
             Objects.equals(usage, that.usage) &&
             Objects.equals(total, that.total) &&
             Objects.equals(note, that.note) &&
+            Objects.equals(days, that.days) &&
             Objects.equals(nhiExtendPatientId, that.nhiExtendPatientId);
     }
 
@@ -145,6 +156,7 @@ public class NhiMedicalRecordCriteria implements Serializable {
         usage,
         total,
         note,
+        days,
         nhiExtendPatientId
         );
     }
@@ -160,6 +172,7 @@ public class NhiMedicalRecordCriteria implements Serializable {
                 (usage != null ? "usage=" + usage + ", " : "") +
                 (total != null ? "total=" + total + ", " : "") +
                 (note != null ? "note=" + note + ", " : "") +
+                (days != null ? "days=" + days + ", " : "") +
                 (nhiExtendPatientId != null ? "nhiExtendPatientId=" + nhiExtendPatientId + ", " : "") +
             "}";
     }

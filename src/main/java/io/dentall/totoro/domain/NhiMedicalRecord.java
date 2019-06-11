@@ -47,6 +47,9 @@ public class NhiMedicalRecord implements Serializable {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "days")
+    private String days;
+
     @ManyToOne
     @JsonProperty(access = WRITE_ONLY)
     private NhiExtendPatient nhiExtendPatient;
@@ -151,6 +154,19 @@ public class NhiMedicalRecord implements Serializable {
         this.note = note;
     }
 
+    public String getDays() {
+        return days;
+    }
+
+    public NhiMedicalRecord days(String days) {
+        this.days = days;
+        return this;
+    }
+
+    public void setDays(String days) {
+        this.days = days;
+    }
+
     public NhiExtendPatient getNhiExtendPatient() {
         return nhiExtendPatient;
     }
@@ -196,6 +212,7 @@ public class NhiMedicalRecord implements Serializable {
             ", usage='" + getUsage() + "'" +
             ", total='" + getTotal() + "'" +
             ", note='" + getNote() + "'" +
+            ", days='" + getDays() + "'" +
             "}";
     }
 }

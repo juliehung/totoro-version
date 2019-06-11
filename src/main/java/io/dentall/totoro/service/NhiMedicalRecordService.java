@@ -117,6 +117,10 @@ public class NhiMedicalRecordService {
                     nhiMedicalRecord.setNote(updateNhiMedicalRecord.getNote());
                 }
 
+                if (updateNhiMedicalRecord.getDays() != null) {
+                    nhiMedicalRecord.setDays(updateNhiMedicalRecord.getDays());
+                }
+
                 return nhiMedicalRecord;
             })
             .get();

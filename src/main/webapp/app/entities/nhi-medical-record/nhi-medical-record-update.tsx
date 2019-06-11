@@ -138,6 +138,12 @@ export class NhiMedicalRecordUpdate extends React.Component<INhiMedicalRecordUpd
                   <AvField id="nhi-medical-record-note" type="text" name="note" />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="daysLabel" for="days">
+                    <Translate contentKey="totoroApp.nhiMedicalRecord.days">Days</Translate>
+                  </Label>
+                  <AvField id="nhi-medical-record-days" type="text" name="days" />
+                </AvGroup>
+                <AvGroup>
                   <Label for="nhiExtendPatient.id">
                     <Translate contentKey="totoroApp.nhiMedicalRecord.nhiExtendPatient">Nhi Extend Patient</Translate>
                   </Label>
