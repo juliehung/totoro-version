@@ -9,6 +9,7 @@ export interface INhiMedicalRecord {
   usage?: string;
   total?: string;
   note?: string;
+  days?: string;
   nhiExtendPatient?: INhiExtendPatient;
 }
 

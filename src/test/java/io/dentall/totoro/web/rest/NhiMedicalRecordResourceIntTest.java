@@ -65,6 +65,9 @@ public class NhiMedicalRecordResourceIntTest {
     private static final String DEFAULT_NOTE = "AAAAAAAAAA";
     private static final String UPDATED_NOTE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_DAYS = "AAAAAAAAAA";
+    private static final String UPDATED_DAYS = "BBBBBBBBBB";
+
     @Autowired
     private NhiMedicalRecordRepository nhiMedicalRecordRepository;
 
@@ -122,7 +125,8 @@ public class NhiMedicalRecordResourceIntTest {
             .part(DEFAULT_PART)
             .usage(DEFAULT_USAGE)
             .total(DEFAULT_TOTAL)
-            .note(DEFAULT_NOTE);
+            .note(DEFAULT_NOTE)
+            .days(DEFAULT_DAYS);
         return nhiMedicalRecord;
     }
 
@@ -153,6 +157,7 @@ public class NhiMedicalRecordResourceIntTest {
         assertThat(testNhiMedicalRecord.getUsage()).isEqualTo(DEFAULT_USAGE);
         assertThat(testNhiMedicalRecord.getTotal()).isEqualTo(DEFAULT_TOTAL);
         assertThat(testNhiMedicalRecord.getNote()).isEqualTo(DEFAULT_NOTE);
+        assertThat(testNhiMedicalRecord.getDays()).isEqualTo(DEFAULT_DAYS);
     }
 
     @Test
@@ -191,7 +196,8 @@ public class NhiMedicalRecordResourceIntTest {
             .andExpect(jsonPath("$.[*].part").value(hasItem(DEFAULT_PART.toString())))
             .andExpect(jsonPath("$.[*].usage").value(hasItem(DEFAULT_USAGE.toString())))
             .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.toString())))
-            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
+            .andExpect(jsonPath("$.[*].days").value(hasItem(DEFAULT_DAYS.toString())));
     }
     
     @Test
@@ -211,7 +217,8 @@ public class NhiMedicalRecordResourceIntTest {
             .andExpect(jsonPath("$.part").value(DEFAULT_PART.toString()))
             .andExpect(jsonPath("$.usage").value(DEFAULT_USAGE.toString()))
             .andExpect(jsonPath("$.total").value(DEFAULT_TOTAL.toString()))
-            .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()));
+            .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
+            .andExpect(jsonPath("$.days").value(DEFAULT_DAYS.toString()));
     }
 
     @Test
@@ -489,6 +496,45 @@ public class NhiMedicalRecordResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllNhiMedicalRecordsByDaysIsEqualToSomething() throws Exception {
+        // Initialize the database
+        nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
+
+        // Get all the nhiMedicalRecordList where days equals to DEFAULT_DAYS
+        defaultNhiMedicalRecordShouldBeFound("days.equals=" + DEFAULT_DAYS);
+
+        // Get all the nhiMedicalRecordList where days equals to UPDATED_DAYS
+        defaultNhiMedicalRecordShouldNotBeFound("days.equals=" + UPDATED_DAYS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiMedicalRecordsByDaysIsInShouldWork() throws Exception {
+        // Initialize the database
+        nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
+
+        // Get all the nhiMedicalRecordList where days in DEFAULT_DAYS or UPDATED_DAYS
+        defaultNhiMedicalRecordShouldBeFound("days.in=" + DEFAULT_DAYS + "," + UPDATED_DAYS);
+
+        // Get all the nhiMedicalRecordList where days equals to UPDATED_DAYS
+        defaultNhiMedicalRecordShouldNotBeFound("days.in=" + UPDATED_DAYS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiMedicalRecordsByDaysIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
+
+        // Get all the nhiMedicalRecordList where days is not null
+        defaultNhiMedicalRecordShouldBeFound("days.specified=true");
+
+        // Get all the nhiMedicalRecordList where days is null
+        defaultNhiMedicalRecordShouldNotBeFound("days.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllNhiMedicalRecordsByNhiExtendPatientIsEqualToSomething() throws Exception {
         // Initialize the database
         NhiExtendPatient nhiExtendPatient = NhiExtendPatientResourceIntTest.createEntity(em);
@@ -520,7 +566,8 @@ public class NhiMedicalRecordResourceIntTest {
             .andExpect(jsonPath("$.[*].part").value(hasItem(DEFAULT_PART.toString())))
             .andExpect(jsonPath("$.[*].usage").value(hasItem(DEFAULT_USAGE.toString())))
             .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.toString())))
-            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
+            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
+            .andExpect(jsonPath("$.[*].days").value(hasItem(DEFAULT_DAYS.toString())));
 
         // Check, that the count call also returns 1
         restNhiMedicalRecordMockMvc.perform(get("/api/nhi-medical-records/count?sort=id,desc&" + filter))
@@ -574,7 +621,8 @@ public class NhiMedicalRecordResourceIntTest {
             .part(UPDATED_PART)
             .usage(UPDATED_USAGE)
             .total(UPDATED_TOTAL)
-            .note(UPDATED_NOTE);
+            .note(UPDATED_NOTE)
+            .days(UPDATED_DAYS);
 
         restNhiMedicalRecordMockMvc.perform(put("/api/nhi-medical-records")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -592,6 +640,7 @@ public class NhiMedicalRecordResourceIntTest {
         assertThat(testNhiMedicalRecord.getUsage()).isEqualTo(UPDATED_USAGE);
         assertThat(testNhiMedicalRecord.getTotal()).isEqualTo(UPDATED_TOTAL);
         assertThat(testNhiMedicalRecord.getNote()).isEqualTo(UPDATED_NOTE);
+        assertThat(testNhiMedicalRecord.getDays()).isEqualTo(UPDATED_DAYS);
     }
 
     @Test

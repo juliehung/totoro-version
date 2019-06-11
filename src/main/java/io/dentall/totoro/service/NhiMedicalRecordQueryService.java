@@ -104,6 +104,9 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
             if (criteria.getNote() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNote(), NhiMedicalRecord_.note));
             }
+            if (criteria.getDays() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getDays(), NhiMedicalRecord_.days));
+            }
             if (criteria.getNhiExtendPatientId() != null) {
                 specification = specification.and(buildSpecification(criteria.getNhiExtendPatientId(),
                     root -> root.join(NhiMedicalRecord_.nhiExtendPatient, JoinType.LEFT).get(NhiExtendPatient_.id)));

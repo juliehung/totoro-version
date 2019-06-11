@@ -60,6 +60,9 @@ export class NhiMedicalRecord extends React.Component<INhiMedicalRecordProps> {
                   <Translate contentKey="totoroApp.nhiMedicalRecord.note">Note</Translate>
                 </th>
                 <th>
+                  <Translate contentKey="totoroApp.nhiMedicalRecord.days">Days</Translate>
+                </th>
+                <th>
                   <Translate contentKey="totoroApp.nhiMedicalRecord.nhiExtendPatient">Nhi Extend Patient</Translate>
                 </th>
                 <th />
@@ -80,6 +83,7 @@ export class NhiMedicalRecord extends React.Component<INhiMedicalRecordProps> {
                   <td>{nhiMedicalRecord.usage}</td>
                   <td>{nhiMedicalRecord.total}</td>
                   <td>{nhiMedicalRecord.note}</td>
+                  <td>{nhiMedicalRecord.days}</td>
                   <td>
                     {nhiMedicalRecord.nhiExtendPatient ? (
                       <Link to={`nhi-extend-patient/${nhiMedicalRecord.nhiExtendPatient.id}`}>{nhiMedicalRecord.nhiExtendPatient.id}</Link>

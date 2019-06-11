@@ -72,6 +72,12 @@ export class NhiMedicalRecordDetail extends React.Component<INhiMedicalRecordDet
             </dt>
             <dd>{nhiMedicalRecordEntity.note}</dd>
             <dt>
+              <span id="days">
+                <Translate contentKey="totoroApp.nhiMedicalRecord.days">Days</Translate>
+              </span>
+            </dt>
+            <dd>{nhiMedicalRecordEntity.days}</dd>
+            <dt>
               <Translate contentKey="totoroApp.nhiMedicalRecord.nhiExtendPatient">Nhi Extend Patient</Translate>
             </dt>
             <dd>{nhiMedicalRecordEntity.nhiExtendPatient ? nhiMedicalRecordEntity.nhiExtendPatient.id : ''}</dd>
