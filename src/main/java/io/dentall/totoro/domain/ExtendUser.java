@@ -37,6 +37,9 @@ public class ExtendUser implements Serializable, Avatar {
     @Column(name = "avatar_content_type")
     private String avatarContentType;
 
+    @Column(name = "national_id")
+    private String nationalId;
+
     @OneToOne
     @MapsId
     @JsonIgnoreProperties("extendUser")
@@ -133,6 +136,19 @@ public class ExtendUser implements Serializable, Avatar {
 
     public void setAvatarContentType(String avatarContentType) {
         this.avatarContentType = avatarContentType;
+    }
+
+    public String getNationalId() {
+        return nationalId;
+    }
+
+    public ExtendUser nationalId(String nationalId) {
+        this.nationalId = nationalId;
+        return this;
+    }
+
+    public void setNationalId(String nationalId) {
+        this.nationalId = nationalId;
     }
 
     public ExtendUser user(User user) {
@@ -371,6 +387,7 @@ public class ExtendUser implements Serializable, Avatar {
             ", firstLogin='" + isFirstLogin() + "'" +
             ", avatar='" + getAvatar() + "'" +
             ", avatarContentType='" + getAvatarContentType() + "'" +
+            ", nationalId='" + getNationalId() + "'" +
             "}";
     }
 }
