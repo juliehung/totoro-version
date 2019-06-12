@@ -156,6 +156,12 @@ public class AppointmentQueryService extends QueryService<Appointment> {
                         .join(Registration_.disposal, JoinType.LEFT).get(Disposal_.id)
                 ));
             }
+
+            if (criteria.getNoCard() != null) {
+                specification = specification.and(buildSpecification(criteria.getNoCard(),
+                    root -> root.join(Appointment_.registration, JoinType.LEFT).get(Registration_.noCard)
+                ));
+            }
         }
         return specification;
     }
