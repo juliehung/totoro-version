@@ -130,7 +130,7 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
-        newUser.setExtendUser(new ExtendUser().user(newUser));
+        newUser.setExtendUser(createExtendUser(newUser, userDTO.getExtendUser()));
         userRepository.save(newUser);
         this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
@@ -175,7 +175,7 @@ public class UserService {
             user.setAuthorities(authorities);
         }
 
-        user.setExtendUser(new ExtendUser().user(user));
+        user.setExtendUser(createExtendUser(user, userDTO.getExtendUser()));
         userRepository.save(user);
         this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);
@@ -271,7 +271,10 @@ public class UserService {
      * @param userDTO user to update
      */
     public void updateExtendUser(String login, UserDTO userDTO) {
-        userRepository.findOneByLogin(login).ifPresent(user -> updateExtendUser(user.getExtendUser(), userDTO.getExtendUser()));
+        userRepository.findOneByLogin(login).ifPresent(user -> {
+            updateExtendUser(user.getExtendUser(), userDTO.getExtendUser());
+            this.clearUserCaches(user);
+        });
     }
 
     /**
@@ -358,6 +361,13 @@ public class UserService {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
     }
 
+    private ExtendUser createExtendUser(User user, ExtendUser ExtendUserDTO) {
+        ExtendUser extendUser = new ExtendUser().user(user);
+        updateExtendUser(extendUser, ExtendUserDTO);
+
+        return extendUser;
+    }
+
     private void updateExtendUser(ExtendUser extendUser, ExtendUser updateExtendUser) {
         if (updateExtendUser != null) {
             if (updateExtendUser.isFirstLogin() != null) {
@@ -369,10 +379,13 @@ public class UserService {
             }
 
             if (updateExtendUser.getCalendarId() != null) {
-                extendUser.setCalendarId(updateExtendUser.getCalendarId() );
+                extendUser.setCalendarId(updateExtendUser.getCalendarId());
             }
 
-            this.clearUserCaches(extendUser.getUser());
+            if (updateExtendUser.getNationalId() != null) {
+                extendUser.setNationalId(updateExtendUser.getNationalId());
+            }
+
             log.debug("Changed Information for ExtendUser: {}", extendUser);
         }
     }
