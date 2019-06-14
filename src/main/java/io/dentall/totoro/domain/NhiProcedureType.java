@@ -25,7 +25,7 @@ public class NhiProcedureType implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "major", nullable = false, unique = true)
+    @Column(name = "major", nullable = false)
     private String major;
 
     @Column(name = "minor")

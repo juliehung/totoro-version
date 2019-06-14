@@ -1,31 +1,44 @@
 id;major;minor
-1;None;Endo,Ortho,Perio,Cosmetic,X-Ray,Others,Anesthetic
-2;OD;OD
-3;Pulp Capping;Endo
-4;Vital Pulp Therapy;Endo
-5;Endo;Endo
-6;Pedo-Pulpotomy;Endo,Pedo
-7;Crown removal;Endo
-8;Extraction;OS
-9;Apical Surgery;Endo
-10;Fixation;OS
-11;Sealant;Pedo,Preventive
-12;Resin Veneer;OD,Cosmetic
-13;Implant;Implant
-14;Implant Removal;Implant
-15;Inlay;BPR
-16;Onlay;BPR
-17;Overlay;BPR
-18;Veneer;BPR,Cosmetic
-19;Crown;Fixed,Pedo
-20;Bridge;Fixed
-21;Post;Fixed
-22;Temp;Fixed
-23;RPD;Removable
-24;CD;Removable
-25;Splint;Removable
-26;Ortho;Ortho
-27;Fixed Retainer;Ortho
-28;Removable Retainer;Ortho
-29;Kiddy Denture;Pedo
-30;Space Maintainer;Pedo
+16;OD;OD
+17;Veneer;Cosmetic
+18;Endo;Endo
+19;Vital Pulp Therapy;Endo
+20;Apical Surgery;Endo
+21;Pulp Capping;Endo
+22;Pedo-Pulpotomy;Endo,Pedo
+23;Crown removal;Endo
+24;Extraction;OS
+25;Implant;Implant
+26;Implant Removal;Implant
+27;Inlay;BPR
+28;Onlay;BPR
+29;Overlay;BPR
+30;Crown;Fixed,Pedo
+31;Bridge;Fixed
+32;Post;Fixed
+33;Temp;Fixed
+34;RPD;Removable
+35;CD;Removable
+36;Splint;Removable
+37;Ortho;Ortho
+38;Fixed Retainer;Ortho
+39;Removable Retainer;Ortho
+40;Sealant;Pedo,Preventive
+41;Kiddy Denture;Pedo
+42;Space Maintainer;Pedo
+43;Fixation;OS
+110;None;OD
+120;None;Endo
+130;None;Perio
+140;None;OS
+150;None;Pedo
+160;None;Ortho
+170;None;Fixed
+180;None;Removable
+190;None;Implant
+200;None;BPR
+210;None;Cosmetic
+220;None;Preventive
+230;None;X-Ray
+240;None;Anesthetic
+250;None;Others

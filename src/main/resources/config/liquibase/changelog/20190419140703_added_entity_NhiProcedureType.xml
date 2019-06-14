@@ -22,7 +22,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="major" type="varchar(255)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="ux_nhi_procedure_type_major" />
+                <constraints nullable="false" />
             </column>
 
             <column name="minor" type="varchar(255)">
