@@ -42,7 +42,7 @@ gradle-front-test:
     stage: test
     image: openjdk:8-jre-stretch
     script:
-        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
+        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev git
         - ./gradlew npm_install npm_test -PnodeInstall --no-daemon
     artifacts:
         paths:
@@ -65,12 +65,18 @@ depolyDockerImage:
     image: docker
     services:
         - docker:dind
-    dependencies:
-        - gradle-repackage
+    variables:
+        MAJOR: 0
+        MINOR: 0
+        MINOR_RENEW_DATE: "2019-05-27"
     script:
-        - apk update && apk add nss && apk add openjdk8-jre
+        - apk update && apk add nss && apk add git && apk add openjdk8-jre
         - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-        - ./gradlew jib --image=registry.gitlab.com/dentall/totoro-admin/$CI_COMMIT_REF_SLUG:latest -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
+        - git remote set-url origin https://gitlab-ci-token:$CI_PUSH_TOKEN@gitlab.com/$CI_PROJECT_PATH.git
+        - git checkout $CI_COMMIT_REF_SLUG
+        - COUNT=$(git rev-list $CI_COMMIT_REF_SLUG --count --since=$MINOR_RENEW_DATE)
+        - ./gradlew -Pprod jib --image=registry.gitlab.com/dentall/totoro-admin/$CI_COMMIT_REF_SLUG:$MAJOR.$MINOR.$COUNT -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
+        - ./gradlew -Pprod jib --image=registry.gitlab.com/dentall/totoro-admin/$CI_COMMIT_REF_SLUG -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
 
 pages:
     stage: deploy
