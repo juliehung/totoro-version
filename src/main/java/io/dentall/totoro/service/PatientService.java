@@ -5,6 +5,7 @@ import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.util.FilterUtil;
+import io.dentall.totoro.service.util.StreamUtil;
 import io.github.jhipster.service.QueryService;
 import io.github.jhipster.service.filter.InstantFilter;
 import org.slf4j.Logger;
@@ -232,9 +233,12 @@ public class PatientService extends QueryService<Patient> {
                 // teeth
                 if (updatePatient.getTeeth() != null) {
                     log.debug("Update teeth({}) of Patient(id: {})", updatePatient.getTeeth(), updatePatient.getId());
+                    Set<Long> updateIds = updatePatient.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet());
                     relationshipService.deleteTeeth(
-                        patient.getTeeth(),
-                        updatePatient.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet())
+                        StreamUtil.asStream(patient.getTeeth())
+                            .filter(tooth -> !updateIds.contains(tooth.getId()))
+                            .map(tooth -> tooth.patient(null))
+                            .collect(Collectors.toSet())
                     );
                     relationshipService.addRelationshipWithTeeth(patient.teeth(updatePatient.getTeeth()));
                 }

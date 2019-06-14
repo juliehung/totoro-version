@@ -3,6 +3,7 @@ package io.dentall.totoro.service;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.util.ProblemUtil;
+import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,20 +121,25 @@ public class TreatmentProcedureService {
         log.debug("Request to delete TreatmentProcedure : {}", id);
 
         treatmentProcedureRepository.findById(id).ifPresent(treatmentProcedure -> {
-            if (treatmentProcedure.getDisposal() != null) {
-                throw new ProblemUtil("A treatmentProcedure which has disposal cannot delete", Status.BAD_REQUEST);
+            if (treatmentProcedure.getNhiExtendTreatmentProcedure() != null) {
+                throw new ProblemUtil("A treatmentProcedure which has nhiExtendTreatmentProcedure cannot delete", Status.BAD_REQUEST);
             }
 
+            if (treatmentProcedure.getAppointment() != null && treatmentProcedure.getDisposal() != null && treatmentProcedure.getTodo() != null) {
+                treatmentProcedure.setTodo(null);
+                return;
+            }
+
+            if (treatmentProcedure.getDisposal() != null) {
+                return;
+            }
+
+            StreamUtil.asStream(treatmentProcedure.getTeeth()).forEach(tooth -> tooth.setTreatmentProcedure(null));
             relationshipService.deleteTeeth(treatmentProcedure.getTeeth());
 
             if (treatmentProcedure.getTreatmentTask() != null) {
                 TreatmentTask treatmentTask = treatmentProcedure.getTreatmentTask();
                 treatmentTask.getTreatmentProcedures().remove(treatmentProcedure);
-            }
-
-            if (treatmentProcedure.getTodo() != null) {
-                Todo todo = treatmentProcedure.getTodo();
-                todo.getTreatmentProcedures().remove(treatmentProcedure);
             }
 
             if (treatmentProcedure.getAppointment() != null) {
@@ -150,8 +156,9 @@ public class TreatmentProcedureService {
 
                 appointment.getTreatmentProcedures().remove(treatmentProcedure);
             }
+
+            treatmentProcedureRepository.deleteById(id);
         });
-        treatmentProcedureRepository.deleteById(id);
     }
 
     /**
@@ -240,9 +247,14 @@ public class TreatmentProcedureService {
 
                 if (updateTreatmentProcedure.getTeeth() != null) {
                     log.debug("Update teeth({}) of TreatmentProcedure(id: {})", updateTreatmentProcedure.getTeeth(), updateTreatmentProcedure.getId());
+                    Set<Long> updateIds = updateTreatmentProcedure.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet());
                     relationshipService.deleteTeeth(
-                        treatmentProcedure.getTeeth(),
-                        updateTreatmentProcedure.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet())
+                        treatmentProcedure
+                            .getTeeth()
+                            .stream()
+                            .filter(tooth -> !updateIds.contains(tooth.getId()))
+                            .map(tooth -> tooth.treatmentProcedure(null))
+                            .collect(Collectors.toSet())
                     );
                     relationshipService.addRelationshipWithTeeth(treatmentProcedure.teeth(updateTreatmentProcedure.getTeeth()));
                 }

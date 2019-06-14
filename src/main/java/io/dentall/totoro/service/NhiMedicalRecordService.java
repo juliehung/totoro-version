@@ -74,8 +74,9 @@ public class NhiMedicalRecordService {
                 NhiExtendPatient nhiExtendPatient = nhiMedicalRecord.getNhiExtendPatient();
                 nhiExtendPatient.getNhiMedicalRecords().remove(nhiMedicalRecord);
             }
+
+            nhiMedicalRecordRepository.deleteById(id);
         });
-        nhiMedicalRecordRepository.deleteById(id);
     }
 
     /**

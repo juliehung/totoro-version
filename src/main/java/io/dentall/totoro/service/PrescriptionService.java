@@ -2,7 +2,10 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.Prescription;
 import io.dentall.totoro.domain.TreatmentDrug;
+import io.dentall.totoro.domain.enumeration.PrescriptionStatus;
 import io.dentall.totoro.repository.PrescriptionRepository;
+import io.dentall.totoro.service.util.ProblemUtil;
+import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zalando.problem.Status;
 
 import java.util.List;
 import java.util.Optional;
@@ -97,7 +101,17 @@ public class PrescriptionService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Prescription : {}", id);
-        prescriptionRepository.deleteById(id);
+
+        prescriptionRepository.findById(id).ifPresent(prescription -> {
+            if (prescription.getStatus() == PrescriptionStatus.PERMANENT) {
+                throw new ProblemUtil("A permanent prescription cannot delete", Status.BAD_REQUEST);
+            }
+
+            StreamUtil.asStream(prescription.getTreatmentDrugs()).forEach(treatmentDrug -> treatmentDrug.setPrescription(null));
+            relationshipService.deleteTreatmentDrugs(prescription.getTreatmentDrugs());
+
+            prescriptionRepository.deleteById(id);
+        });
     }
 
     /**
@@ -137,6 +151,13 @@ public class PrescriptionService {
                 }
 
                 if (updatePrescription.getTreatmentDrugs() != null) {
+                    Set<Long> updateIds = updatePrescription.getTreatmentDrugs().stream().map(TreatmentDrug::getId).collect(Collectors.toSet());
+                    relationshipService.deleteTreatmentDrugs(
+                        StreamUtil.asStream(prescription.getTreatmentDrugs())
+                            .filter(treatmentDrug -> !updateIds.contains(treatmentDrug.getId()))
+                            .map(treatmentDrug -> treatmentDrug.prescription(null))
+                            .collect(Collectors.toSet())
+                    );
                     relationshipService.addRelationshipWithTreatmentDrugs(prescription.treatmentDrugs(updatePrescription.getTreatmentDrugs()));
                 }
 
