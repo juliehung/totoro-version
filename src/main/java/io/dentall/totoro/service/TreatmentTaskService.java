@@ -6,6 +6,7 @@ import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 import io.dentall.totoro.repository.TreatmentPlanRepository;
 import io.dentall.totoro.repository.TreatmentTaskRepository;
+import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,14 +96,16 @@ public class TreatmentTaskService {
         log.debug("Request to delete TreatmentTask : {}", id);
 
         treatmentTaskRepository.findById(id).ifPresent(treatmentTask -> {
+            StreamUtil.asStream(treatmentTask.getTreatmentProcedures()).forEach(treatmentProcedure -> treatmentProcedure.setTreatmentTask(null));
             relationshipService.deleteTreatmentProcedures(treatmentTask.getTreatmentProcedures());
 
             if (treatmentTask.getTreatmentPlan() != null) {
                 TreatmentPlan treatmentPlan = treatmentTask.getTreatmentPlan();
                 treatmentPlan.getTreatmentTasks().remove(treatmentTask);
             }
+
+            treatmentTaskRepository.deleteById(id);
         });
-        treatmentTaskRepository.deleteById(id);
     }
 
     /**

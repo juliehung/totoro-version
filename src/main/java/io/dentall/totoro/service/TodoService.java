@@ -3,8 +3,11 @@ package io.dentall.totoro.service;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Todo;
 import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.domain.enumeration.TodoStatus;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TodoRepository;
+import io.dentall.totoro.service.util.ProblemUtil;
+import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zalando.problem.Status;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing Todo.
@@ -91,12 +96,19 @@ public class TodoService {
         log.debug("Request to delete Todo : {}", id);
 
         todoRepository.findById(id).ifPresent(todo -> {
+            if (todo.getStatus() != TodoStatus.TEMPORARY) {
+                throw new ProblemUtil("A non-temporary todo cannot delete", Status.BAD_REQUEST);
+            }
+
+            relationshipService.deleteTreatmentProcedures(todo.getTreatmentProcedures());
+
             if (todo.getPatient() != null) {
                 Patient patient = todo.getPatient();
                 patient.getTodos().remove(todo);
             }
+
+            todoRepository.deleteById(id);
         });
-        todoRepository.deleteById(id);
     }
 
     /**
@@ -132,6 +144,14 @@ public class TodoService {
                 }
 
                 if (updateTodo.getTreatmentProcedures() != null) {
+                    Set<Long> updateIds = updateTodo.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet());
+                    relationshipService.deleteTreatmentProcedures(
+                        StreamUtil.asStream(todo.getTreatmentProcedures())
+                            .filter(treatmentProcedure -> !updateIds.contains(treatmentProcedure.getId()))
+                            // lazy check treatmentProcedure with appointment and disposal
+                            // .map(treatmentProcedure -> treatmentProcedure.todo(null))
+                            .collect(Collectors.toSet())
+                    );
                     relationshipService.addRelationshipWithTreatmentProcedures(todo.treatmentProcedures(updateTodo.getTreatmentProcedures()));
                 }
 

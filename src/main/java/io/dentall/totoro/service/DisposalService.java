@@ -1,9 +1,10 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import io.dentall.totoro.repository.DisposalRepository;
-import io.dentall.totoro.service.dto.TreatmentDrugCriteria;
-import io.github.jhipster.service.filter.LongFilter;
+import io.dentall.totoro.service.util.ProblemUtil;
+import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zalando.problem.Status;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +35,6 @@ public class DisposalService {
 
     private final TodoService todoService;
 
-    private final TreatmentDrugService treatmentDrugService;
-
-    private final TreatmentDrugQueryService treatmentDrugQueryService;
-
     private final RelationshipService relationshipService;
 
     private final RegistrationService registrationService;
@@ -45,16 +43,12 @@ public class DisposalService {
         DisposalRepository disposalRepository,
         PrescriptionService prescriptionService,
         TodoService todoService,
-        TreatmentDrugService treatmentDrugService,
-        TreatmentDrugQueryService treatmentDrugQueryService,
         RelationshipService relationshipService,
         RegistrationService registrationService
     ) {
         this.disposalRepository = disposalRepository;
         this.prescriptionService = prescriptionService;
         this.todoService = todoService;
-        this.treatmentDrugService = treatmentDrugService;
-        this.treatmentDrugQueryService = treatmentDrugQueryService;
         this.relationshipService = relationshipService;
         this.registrationService = registrationService;
     }
@@ -157,7 +151,32 @@ public class DisposalService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Disposal : {}", id);
-        disposalRepository.deleteById(id);
+
+        disposalRepository.findById(id).ifPresent(disposal -> {
+            if (disposal.getStatus() != DisposalStatus.TEMPORARY) {
+                throw new ProblemUtil("A non-temporary disposal cannot delete", Status.BAD_REQUEST);
+            }
+
+            if (disposal.getNhiExtendDisposals() != null && disposal.getNhiExtendDisposals().size() > 0) {
+                throw new ProblemUtil("A disposal which has nhiExtendDisposals cannot delete", Status.BAD_REQUEST);
+            }
+
+            StreamUtil.asStream(disposal.getTreatmentProcedures()).forEach(treatmentProcedure -> treatmentProcedure.setDisposal(null));
+            relationshipService.deleteTreatmentProcedures(disposal.getTreatmentProcedures());
+
+            StreamUtil.asStream(disposal.getTeeth()).forEach(tooth -> tooth.setDisposal(null));
+            relationshipService.deleteTeeth(disposal.getTeeth());
+
+            if (disposal.getPrescription() != null && disposal.getPrescription().getId() != null) {
+                prescriptionService.delete(disposal.getPrescription().getId());
+            }
+
+            if (disposal.getTodo() != null && disposal.getTodo().getId() != null) {
+                todoService.delete(disposal.getTodo().getId());
+            }
+
+            disposalRepository.deleteById(id);
+        });
     }
 
     /**
@@ -204,18 +223,24 @@ public class DisposalService {
                 }
 
                 if (updateDisposal.getTreatmentProcedures() != null) {
-                    relationshipService.deleteRelationshipWithTreatmentProcedures(
-                        disposal,
-                        updateDisposal.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet())
+                    Set<Long> updateIds = updateDisposal.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet());
+                    relationshipService.deleteTreatmentProcedures(
+                        StreamUtil.asStream(disposal.getTreatmentProcedures())
+                            .filter(treatmentProcedure -> !updateIds.contains(treatmentProcedure.getId()))
+                            .map(treatmentProcedure -> treatmentProcedure.disposal(null))
+                            .collect(Collectors.toSet())
                     );
                     relationshipService.addRelationshipWithTreatmentProcedures(disposal.treatmentProcedures(updateDisposal.getTreatmentProcedures()));
                 }
 
                 if (updateDisposal.getTeeth() != null) {
                     log.debug("Update teeth({}) of Disposal(id: {})", updateDisposal.getTeeth(), updateDisposal.getId());
+                    Set<Long> updateIds = updateDisposal.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet());
                     relationshipService.deleteTeeth(
-                        disposal.getTeeth(),
-                        updateDisposal.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet())
+                        StreamUtil.asStream(disposal.getTeeth())
+                            .filter(tooth -> !updateIds.contains(tooth.getId()))
+                            .map(tooth -> tooth.disposal(null))
+                            .collect(Collectors.toSet())
                     );
                     relationshipService.addRelationshipWithTeeth(disposal.teeth(updateDisposal.getTeeth()));
                 }
@@ -237,17 +262,6 @@ public class DisposalService {
     private Prescription getPrescription(Disposal disposal) {
         Prescription prescription = disposal.getPrescription();
         if (prescription != null) {
-            // delete treatmentDrug when updating
-            if (prescription.getId() != null && prescription.getTreatmentDrugs() != null) {
-                LongFilter filter = new LongFilter();
-                filter.setEquals(prescription.getId());
-                TreatmentDrugCriteria criteria = new TreatmentDrugCriteria();
-                criteria.setPrescriptionId(filter);
-                List<TreatmentDrug> list = treatmentDrugQueryService.findByCriteria(criteria);
-                list.removeAll(prescription.getTreatmentDrugs());
-                list.forEach(treatmentDrug -> treatmentDrugService.delete(treatmentDrug.getId()));
-            }
-
             prescription = prescription.getId() == null ? prescriptionService.save(prescription) : prescriptionService.update(prescription);
         }
 

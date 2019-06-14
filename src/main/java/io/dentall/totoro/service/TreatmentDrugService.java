@@ -3,6 +3,7 @@ package io.dentall.totoro.service;
 import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
 import io.dentall.totoro.domain.TreatmentDrug;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.util.ProblemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zalando.problem.Status;
 
 import java.util.Optional;
 
@@ -93,7 +95,18 @@ public class TreatmentDrugService {
      */
     public void delete(Long id) {
         log.debug("Request to delete TreatmentDrug : {}", id);
-        treatmentDrugRepository.deleteById(id);
+
+        treatmentDrugRepository.findById(id).ifPresent(treatmentDrug -> {
+            if (treatmentDrug.getNhiExtendTreatmentDrug() != null) {
+                throw new ProblemUtil("A treatmentDrug which has nhiExtendTreatmentDrug cannot delete", Status.BAD_REQUEST);
+            }
+
+            if (treatmentDrug.getPrescription() != null) {
+                throw new ProblemUtil("A treatmentDrug which has prescription cannot delete", Status.BAD_REQUEST);
+            }
+
+            treatmentDrugRepository.deleteById(id);
+        });
     }
 
     /**

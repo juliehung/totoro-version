@@ -5,6 +5,7 @@ import io.dentall.totoro.domain.Treatment;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.TreatmentRepository;
 import io.dentall.totoro.service.util.ProblemUtil;
+import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,14 +85,16 @@ public class TreatmentService {
                 throw new ProblemUtil("A general treatment cannot delete", Status.BAD_REQUEST);
             }
 
+            StreamUtil.asStream(treatment.getTreatmentPlans()).forEach(treatmentPlan -> treatmentPlan.setTreatment(null));
             relationshipService.deleteTreatmentPlans(treatment.getTreatmentPlans());
 
             if (treatment.getPatient() != null) {
                 Patient patient = treatment.getPatient();
                 patient.getTreatments().remove(treatment);
             }
+
+            treatmentRepository.deleteById(id);
         });
-        treatmentRepository.deleteById(id);
     }
 
     /**

@@ -1,6 +1,7 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -235,59 +237,42 @@ public class RelationshipService {
             );
 
             nhiExtendPatient.setNhiMedicalRecords(
+                // https://www.techempower.com/blog/2016/10/19/efficient-multiple-stream-concatenation-in-java/
                 Stream
-                    .of(nhiExtendPatient.getNhiMedicalRecords(), nhiMedicalRecords)
-                    .flatMap(Collection::stream)
+                    .concat(StreamUtil.asStream(nhiExtendPatient.getNhiMedicalRecords()), StreamUtil.asStream(nhiMedicalRecords))
                     .collect(Collectors.toSet())
             );
         }
     }
 
-    void deleteTeeth(Set<Tooth> teeth, Set<Long> updateIds) {
-        deleteTeeth(
-            teeth
-                .stream()
-                .filter(tooth -> !updateIds.contains(tooth.getId()))
-                .collect(Collectors.toSet())
-        );
-    }
-
     void deleteTeeth(Set<Tooth> teeth) {
-        teeth
-            .stream()
+        StreamUtil.asStream(teeth)
             .map(Tooth::getId)
             .forEach(toothService::delete);
     }
 
     void deleteTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
-        treatmentProcedures
-            .stream()
+        StreamUtil.asStream(treatmentProcedures)
             .map(TreatmentProcedure::getId)
             .forEach(treatmentProcedureService::delete);
     }
 
     void deleteTreatmentPlans(Set<TreatmentPlan> treatmentPlans) {
-        treatmentPlans
-            .stream()
+        StreamUtil.asStream(treatmentPlans)
             .map(TreatmentPlan::getId)
             .forEach(treatmentPlanService::delete);
     }
 
     void deleteTreatmentTasks(Set<TreatmentTask> treatmentTasks) {
-        treatmentTasks
-            .stream()
+        StreamUtil.asStream(treatmentTasks)
             .map(TreatmentTask::getId)
             .forEach(treatmentTaskService::delete);
     }
 
-    void deleteRelationshipWithTreatmentProcedures(Disposal disposal, Set<Long> updateIds) {
-        disposal
-            .getTreatmentProcedures()
-            .forEach(treatmentProcedure -> {
-                if (!updateIds.contains(treatmentProcedure.getId())) {
-                    treatmentProcedure.setDisposal(null);
-                }
-            });
+    void deleteTreatmentDrugs(Set<TreatmentDrug> treatmentDrugs) {
+        StreamUtil.asStream(treatmentDrugs)
+            .map(TreatmentDrug::getId)
+            .forEach(treatmentDrugService::delete);
     }
 
     private <Owner> Set<Owner> getRelationshipWithOwners(Stream<Owner> owners, Function<Owner, Owner> mapper) {

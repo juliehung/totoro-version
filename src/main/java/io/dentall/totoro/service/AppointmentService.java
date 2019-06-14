@@ -2,6 +2,7 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,14 +106,16 @@ public class AppointmentService {
         log.debug("Request to delete Appointment : {}", id);
 
         appointmentRepository.findById(id).ifPresent(appointment -> {
+            StreamUtil.asStream(appointment.getTreatmentProcedures()).forEach(treatmentProcedure -> treatmentProcedure.setAppointment(null));
             relationshipService.deleteTreatmentProcedures(appointment.getTreatmentProcedures());
 
             if (appointment.getPatient() != null) {
                 Patient patient = appointment.getPatient();
                 patient.getAppointments().remove(appointment);
             }
+
+            appointmentRepository.deleteById(id);
         });
-        appointmentRepository.deleteById(id);
     }
 
     public Appointment update(Appointment updateAppointment) {
@@ -181,10 +184,9 @@ public class AppointmentService {
                 if (updateAppointment.getTreatmentProcedures() != null) {
                     Set<Long> updateIds = updateAppointment.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet());
                     relationshipService.deleteTreatmentProcedures(
-                        appointment
-                            .getTreatmentProcedures()
-                            .stream()
+                        StreamUtil.asStream(appointment.getTreatmentProcedures())
                             .filter(treatmentProcedure -> !updateIds.contains(treatmentProcedure.getId()))
+                            .map(treatmentProcedure -> treatmentProcedure.appointment(null))
                             .collect(Collectors.toSet())
                     );
                     relationshipService.addRelationshipWithTreatmentProcedures(appointment.treatmentProcedures(updateAppointment.getTreatmentProcedures()));

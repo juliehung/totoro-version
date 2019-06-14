@@ -1,10 +1,12 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.domain.Treatment;
 import io.dentall.totoro.domain.TreatmentPlan;
 import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.repository.TreatmentPlanRepository;
 import io.dentall.totoro.repository.TreatmentRepository;
 import io.dentall.totoro.service.util.ProblemUtil;
+import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,9 +96,16 @@ public class TreatmentPlanService {
                 throw new ProblemUtil("An activated treatmentPlan cannot delete", Status.BAD_REQUEST);
             }
 
+            StreamUtil.asStream(treatmentPlan.getTreatmentTasks()).forEach(treatmentTask -> treatmentTask.setTreatmentPlan(null));
             relationshipService.deleteTreatmentTasks(treatmentPlan.getTreatmentTasks());
+
+            if (treatmentPlan.getTreatment() != null) {
+                Treatment treatment = treatmentPlan.getTreatment();
+                treatment.getTreatmentPlans().remove(treatmentPlan);
+            }
+
+            treatmentPlanRepository.deleteById(id);
         });
-        treatmentPlanRepository.deleteById(id);
     }
 
     /**
