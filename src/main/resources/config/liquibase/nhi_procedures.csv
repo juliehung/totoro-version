@@ -1,198 +1,208 @@
 id;nhi_procedure_type_id;code;name;point;english_name;nhi_icd9cm_id;default_icd_10_cm_id;description;exclude;fdi
-1;1;00121C;牙科門診診察費1.每位醫師每日門診量在二十人次以下部分(≦20) 1)處方交付特約藥局調劑;230;NULL;NULL;NULL;NULL;NULL;NULL
-2;1;00122C;牙科門診診察費1.每位醫師每日門診量在二十人次以下部分(≦20) 2)未開處方或處方由本院所自行調劑;230;NULL;NULL;NULL;NULL;NULL;NULL
-3;1;00123C;牙科門診診察費2.每位醫師每日門診量超過二○人次部分(>20) 1)處方交付特約藥局調劑;120;NULL;NULL;NULL;NULL;NULL;NULL
-4;1;00124C;牙科門診診察費2.每位醫師每日門診量超過二○人次部分(>20) 2)未開處方或處方由本院所自行調劑;120;NULL;NULL;NULL;NULL;NULL;NULL
-5;1;00125C;牙科門診診察費3.山地離島地區 1)處方交付特約藥局調劑;260;NULL;NULL;NULL;NULL;NULL;NULL
-6;1;00126C;牙科門診診察費3.山地離島地區 2)未開處方或處方由本院所自行調劑;260;NULL;NULL;NULL;NULL;NULL;NULL
-7;1;00128C;重度以上特定身心障礙(非精神疾病)者診察費;520;NULL;NULL;NULL;NULL;NULL;NULL
-8;1;00129C;符合加強感染管制之牙科門診診察費1.每位醫師每日門診量在二十人次以下部份（≦20）－ 處方交付特約藥局調劑;320;NULL;NULL;NULL;NULL;NULL;NULL
-9;1;00130C;符合加強感染管制之牙科門診診察費1.每位醫師每日門診量在二十人次以下部份（≦20）－ 未開處方或處方由本院所自行調劑;320;NULL;NULL;NULL;NULL;NULL;NULL
-10;1;00133C;符合加強感染管制之牙科門診診察費2.山地離島地區 － 處方交付特約藥局調劑;350;NULL;NULL;NULL;NULL;NULL;NULL
-11;1;00134C;符合加強感染管制之牙科門診診察費2.山地離島地區 － 未開處方或處方由本院所自行調劑;350;NULL;NULL;NULL;NULL;NULL;NULL
-12;1;00301C;中度特定身心障礙(非精神疾病)者診察費;420;NULL;NULL;NULL;NULL;NULL;NULL
-13;1;00302C;中度以上精神疾病患者診察費;320;NULL;NULL;NULL;NULL;NULL;NULL
-14;1;00303C;輕度特定身心障礙者(非精神疾病)及失能老人診察費;320;NULL;NULL;NULL;NULL;NULL;NULL
-15;1;00304C;身心障礙者轉出醫療院所至特殊醫療服務計畫院所之轉診費用;200;NULL;NULL;NULL;NULL;NULL;NULL
-16;1;01271C;環口全景X光初診診察;600;NULL;NULL;NULL;說明：Dx&Tx plan: Panoramic Finding (01271)\\n1.Caries:Nil\\n2.Periodontal status: (Normal,Gingivitis,Periodontitis)\\n3.Missing:Nil\\n4.Crown/bridge/implant:Nil\\n5.Impaction:Nil"";NULL;NULL
-17;1;01272C;年度初診X光檢查;600;NULL;NULL;NULL;Dx&Tx plan: Panoramic Finding (01272)\\n1.Caries:Nil\\n2.Periodontal status: (Normal,Gingivitis,Periodontitis)\\n3.Missing:Nil\\n4.Crown/bridge/implant:Nil\\n5.Impaction:Nil"";NULL;NULL
-18;1;01273C;高齲齒罹患率族群年度初診X光片檢查;600;NULL;NULL;NULL;Dx&Tx plan: Panoramic Finding (01273)\\n1.Caries:Nil\\n2.Periodontal status: (Normal,Gingivitis,Periodontitis)\\n3.Missing:Nil\\n4.Crown/bridge/implant:Nil\\n5.Impaction:Nil"";NULL;NULL
-19;1;34001C;根尖周 X光攝影;80;Periapical radiography;1;1;CC:Asking for dental check up.Visual & Radiographic examination.;90001C~90003C,90005C~90008C,90010C,90011C,90015C,90016C,90018C~90020C,90091C~90097C,90112C,92014C~92016C,92027C,92030C~92033C,92041C,92042C,92050C,92056C~92059C,92063C,92064C,92065B;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99,UR,UL,LR,LL,UA,LA,FM
-20;1;34002C;咬翼式 X光攝影;100;Bite-Wing radiography;1;1;CC:Asking for dental check up.Visual & Radiographic examination.;90001C~90003C,90005C~90008C,90010C,90011C,90015C,90016C,90018C~90020C,90091C~90097C,90112C,92014C~92016C,92027C,92030C~92033C,92041C,92042C,92050C,92056C~92059C,92063C,92064C,92065B;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99,UR,UL,LR,LL,UA,LA,FM
-21;1;34003C;咬合片 X光攝影;120;Occlusal radiography;1;1;CC:Asking for dental check up.Visual & Radiographic examination.;90001C~90003C,90005C~90008C,90010C,90011C,90015C,90016C,90018C~90020C,90091C~90097C,90112C,92014C~92016C,92027C,92030C~92033C,92041C,92042C,92050C,92056C~92059C,92063C,92064C,92065B;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-22;1;34004C;齒顎全景 X光片攝影;600;Panoramic radiography;1;1;CC:Asking for dental check up.Visual & Radiographic examination.\\nDx&Tx plan: Panoramic Finding (34004)\\n1.Caries:Nil\\n2.Periodontal status: (Normal,Gingivitis,Periodontitis)\\n3.Missing:Nil\\n4.Crown/bridge/implant:Nil\\n5.Impaction:Nil;90001C~90003C,90005C~90008C,90010C,90011C,90015C,90016C,90018C~90020C,90091C~90097C,90112C,92014C~92016C,92027C,92030C~92033C,92041C,92042C,92050C,92056C~92059C,92063C,92064C,92065B;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99,FM
-23;2;89001C;銀粉充填 － 單面;450;Amalgam restoration-single surface;1;1;Remove caries,cavity preparation, AF & Occ.adj;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-24;2;89002C;銀粉充填 － 雙面;600;Amalgam restoration - two surfaces;1;1;Remove caries,cavity preparation, AF & Occ.adj;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-25;2;89003C;銀粉充填 － 三面;750;Amalgam restoration - three surfaces;1;1;Remove caries,cavity preparation,AF & Occ.adj;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-26;2;89004C;前牙複合樹脂充填-單面;500;Composite resin restoration in anterior teeth-single surface;1;9;Remove caries,cavity preparation,CRF & Occ.adj;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
-27;2;89005C;前牙複合樹脂充填-雙面;650;Composite resin restoration in anterior teeth-two surfaces;1;9;Remove caries,cavity preparation,CRF & Occ.adj;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
-28;3;89006C;覆髓;140;Pulp capping;1;1;Remove caries,Ca(OH)2 lining & IRM capping.;96001C;11~19,21~29,31~39,41~49,99
-29;1;89007C;釘強化術（每支）;500;Use of pin, each;1;1;NULL;96001C;11~19,21~29,31~39,41~49,99
-30;2;89008C;後牙複合樹脂充填-單面;600;Composite resin restoration in posterior teeth-single surface;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
-31;2;89009C;後牙複合樹脂充填-雙面;800;Composite resin restoration in posterior teeth-two surfaces;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
-32;2;89010C;後牙複合樹脂充填-三面;1000;Composite resin restoration in posterior teeth-three surfaces;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
-33;2;89011C;玻璃離子體充填;400;Glass ionomer cement restoration;1;1;Remove caries,cavity preparation,GIF & polymerization.;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-34;2;89012C;前牙三面複合樹脂充填;1050;Three-surface composite resin restoration in anterior teeth;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
-35;2;89013C;複合體充填;1000;Compomer restoration;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;11~19,21~29,31~39,41~49,99
-36;2;89014C;前牙雙鄰接面複合樹脂充填;1200;Composite resin restoration for two proximal (mesial and distal) surfaces in anterior teeth;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
-37;2;89015C;後牙雙鄰接面複合樹脂充填;1450;Composite resin restoration for two proximal (mesial and distal) surfaces in posterior teeth;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
-38;1;89088C;牙體復形轉出醫療院所之轉診費用;200;Referral fee for dental restoration;NULL;NULL;NULL;96001C;NULL
-39;2;89101C;特殊狀況之銀粉充填 -單面;450;Amalgam restoration for patients with special needs-single surface;1;1;NULL;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-40;2;89102C;特殊狀況之銀粉充填 -雙面;600;Amalgam restoration for patients with special needs-two surfaces;1;1;NULL;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-41;2;89103C;特殊狀況之銀粉充填 -三面;750;Amalgam restoration for patients with special needs-three surfaces;1;1;NULL;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-42;2;89104C;特殊狀況之前牙複合樹脂充填-單面;500;Composite resin restoration in anterior teeth for patients with special needs-single surface;1;9;NULL;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
-43;2;89105C;特殊狀況之前牙複合樹脂充填-雙面;650;Composite resin restoration in anterior teeth for patients with special needs-two surfaces;1;9;NULL;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
-44;2;89108C;特殊狀況之後牙複合樹脂充填-單面;600;Composite resin restoration in posterior teeth for patients with special needs-single surface;1;1;NULL;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
-45;2;89109C;特殊狀況之後牙複合樹脂充填-雙面;800;Composite resin restoration in posterior teeth for patients with special needs-two surfaces;1;1;NULL;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
-46;2;89110C;特殊狀況之後牙複合樹脂充填-三面;1000;Composite resin restoration in posterior teeth for patients with special needs-three surfaces;1;1;NULL;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
-47;2;89111C;特殊狀況之玻璃離子體充填;400;Glass ionomer cement restoration for patients with special needs;1;1;NULL;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-48;2;89112C;特殊狀況之前牙三面複合樹脂充填;1050;Three-surface composite resin restoration in anterior teeth for patients with special needs;1;1;NULL;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
-49;2;89113C;特殊狀況之複合體充填;1000;Compomer restoration for patients with special needs;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;NULL;NULL
-50;2;89114C;特殊狀況之前牙雙鄰接面複合樹脂充填;1200;Composite resin restoration for two proximal (mesial and distal) surfaces in anterior teeth for patients with special needs;1;9;NULL;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
-51;2;89115C;特殊狀況之後牙雙鄰接面複合樹脂充填;1450;Composite resin restoration for two proximal (mesial and distal) surfaces in posterior teeth for patients with special needs;1;9;NULL;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
-52;4;90017C;恆牙斷髓處理;600;Pulpotomy of permanent tooth;2;10;NULL;NULL;11~19,21~29,31~39,41~49,99
-53;5;90018C;乳牙多根管治療;1410;Endodontic treatment of a primary tooth with multiple canals;2;10;Canal debride and enlarge with NaOCl irrigation,vitapex pulpectomy and IRM filling.;34001C~34004C,96001C;54~55,64~65,74~75,84~85,99
-54;5;90019C;恆牙根管治療（四根）;4010;Endodontic treatment of a permanent tooth with four root canals;2;10;RD isolation,access opening,WL/MAF:                (4個數值),\\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions.;90001C,90002C,90003C,90020C,34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
-55;5;90020C;恆牙根管治療（五根以上）;5010;Endodontic treatment of a permanent tooth with five(and above) root canals;2;10;RD isolation,access opening,WL/MAF:                (至少5個數值),\\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions.;90001C,90002C,90003C,90019C,34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
-56;1;90021C;特殊狀況—保護性肢體制約;300;Protective physical restraint for patients with special needs;NULL;NULL;NULL;NULL;NULL
-57;1;90088C;根管治療轉出醫療院所之轉診費用;200;Referral fee for Endodontic treatment;NULL;NULL;NULL;NULL;NULL
-58;1;90091C;難症特別處理-大臼齒(C－Shaped)根管;1000;Management of endodontic difficult case;1;1;C shaped canal was noted.;34001C~34004C;11~19,21~29,31~39,41~49,99
-59;1;90092C;難症特別處理－有額外根管者(1)前牙及下顎小臼齒有超過一根管者。(2)上顎小臼齒有超過二根管者。(3)大臼齒有超過三根管者。(4)以實際超過根管數計算。;1000;Management of endodontic difficult case;1;1;Diff. case special treament- extra canal;34001C~34004C;11~19,21~29,31~39,41~49,99
-60;1;90093C;難症特別處理-根管特別彎曲、根管鈣化，器械斷折（非同一醫療院所)，以根管數計算;1000;Management of endodontic difficult case;2;10;NULL;34001C~34004C;11~19,21~29,31~39,41~49,99
-61;1;90094C;難症特別處理-根管重新治療在Ｘ光片上root canal內顯現出radioopaque等有obstruction之根管等個案，以根管數計算;1500;Management of endodontic difficult case;1;1;Diff. case special treament-re-endo Tx.;34001C~34004C;11~19,21~29,31~39,41~49,99
-62;1;90095C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(雙根管);1600;Management of endodontic difficult case;2;10;緻密充填至根尖2mm符合健保3.3.1給予給付;34001C~34004C,90096C,90097C;11~19,21~29,31~39,41~49,99
-63;1;90096C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(三根管);2400;Management of endodontic difficult case;2;10;緻密充填至根尖2mm符合健保3.3.1給予給付;34001C~34004C,90095C,90097C;11~19,21~29,31~39,41~49,99
-64;1;90097C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(四根管);3200;Management of endodontic difficult case;2;10;緻密充填至根尖2mm符合健保3.3.1給予給付;34001C~34004C,90096C,90097C;11~19,21~29,31~39,41~49,99
-65;1;90098C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(五根及五根以上根管);4000;Management of endodontic difficult case;2;10;緻密充填至根尖2mm符合健保3.3.1給予給付;NULL;NULL
-66;1;90112C;特殊狀況橡皮障防濕裝置;250;Rubber dam isolation for patients with special needs;1;1;NULL;34001C~34004C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-67;1;91001C;牙周病緊急處置;150;Management of periodontal disease emergences;3;11;NULL;91003C,91004C,91005C,91017C,91019C,91103C,91104C;
-68;1;91002C;牙周敷料 每次;120;Periodontal packing;4;14;NULL;NULL;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99,UR,UL,LR,LL,UA,LA,FM
-69;1;91003C;牙結石清除－局部;150;Scaling-Localized;4;14;FM ultrasonic scaling & OHI.;91001C;UR,UL,LL,LR
-70;1;91004C;牙結石清除－全口;600;Scaling-Full mouth;5;15;FM ultrasonic scaling & OHI.;91001C;FM
-71;1;91005C;口乾症牙結石清除-全口;600;Full mouth scaling for xerostomia patients;5;15;NULL;NULL;NULL
-72;1;91006C;齒齦下括除術(含牙根整平術)-全口;3200;Subgingival curettage (including Root planing)－Full mouth;4;14;Radiographic examination,probing & subgingival curettage under L.ANES.\\nProbing depth:         (至少一面≧5mm);NULL;FM
-73;1;91007C;齒齦下括除術(含牙根整平術)-1/2 顎;800;Subgingival curettage (Root planing)-1/2 arch;4;14;Radiographic examination,probing & subgingival curettage under L.ANES.\\nProbing depth:         (至少一面≧5mm);NULL;
-74;1;91008C;齒齦下括除術(含牙根整平術)-局部(3齒以內);400;Subgingival curettage (including Root planing)-Localized;4;14;Radiographic examination,probing & subgingival curettage under L.ANES.\\nProbing depth:         (至少一面≧5mm);NULL;
-75;1;91011C;牙齦切除術-局部（3齒以內）;910;Gingivectomy-Localized;5;15;NULL;91013C,91013C,96001C;
-76;1;91012C;牙齦切除術 － 1/3 顎;1510;Gingivectomy-1/3 arch;5;15;NULL;91013C,96001C;
-77;1;91013C;牙齦切除術-施行根管治療或牙體復形時，所需之牙齦切除術;330;Gingivectomy for endodontic or restorative purposes;5;15;NULL;91011C,91012C;
-78;1;91014C;牙周暨齲齒控制基本處置;100;Plaque control;4;14;NULL;NULL;FM
-79;1;91015C;特定牙周保存治療-全口總齒數9-15顆;2000;Comprehensive periodontal treatment for patients with special needs─9<= no. of teeth<=15;4;14;present dentition: ＿＿顆 FM ultrasonic scaling & OHI.\\nDental disclosing solution application & OHI. 執行牙結石清除,牙菌斑偵測及去除維護教導;NULL;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-80;1;91016C;特定牙周保存治療-全口總齒數4-8顆;1000;Comprehensive periodontal treatment for patients with special needs─4<= no. of teeth<=8;4;14;NULL;NULL;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-81;1;91017C;懷孕婦女牙結石清除-全口;800;Full mouth scaling for pregnant women;4;14;NULL;91003C,91004C,91005C,91103C,91104C;FM
-82;1;91018C;牙周病支持性治療;1000;Supportive periodontal treatment;4;14;NULL;NULL;FM
-83;1;91019C;懷孕婦女牙周緊急處置;500;Management of periodontal disease emergences for pregnant women;3;11;NULL;91001C,91003C,91004C,91017C,91103C,91104C;NULL
-84;1;91020C;牙菌斑去除照護;200;Dental plaque removal;5;15;NULL;NULL;NULL
-85;1;91088C;牙周病轉出醫療院所之轉診費用;200;Referral fee for Periodontal treatments;NULL;NULL;NULL;NULL;NULL
-86;1;91103C;特殊狀況牙結石清除-局部;150;Scaling for patients with special needs-Localized;1;1;NULL;NULL;UR,UL,LR,LL,UA,LA
-87;1;91104C;特殊狀況牙結石清除-全口;600;Scaling for patients with special needs-Full mouth;1;1;NULL;91001C;FM
-88;1;91114C;特殊牙周暨齲齒控制基本處置;250;Plaque control for patients with special needs;5;15;NULL;NULL;
-89;1;92012C;拔牙後特別處理;160;Post-operative care of extraction wound;1;1;NULL;96001C;
-90;8;92013C;簡單性拔牙;510;Simple extraction;1;1;NULL;96001C;11~19,21~29,31~39,41~49,99
-91;8;92014C;複雜性拔牙;900;Complex extraction;1;1;Flap reflection,EXT.with elevator & forcep,then wound sutured under L.ANES.;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
-92;8;92015C;單純齒切除術;2730;Simple odontectomy;1;1;S: Pain and discomfort of 3rd molar region.O: 3rd molar impacted teeth. Soft tissue coverage with partial bony coverage of crown. Food impaction  over distal side of second  molar, with mild inflammation.. A: impacted 3rd molar.P: Surgical extraction of3rd molar   under anesthesia, mucoperiosteal flap reflection, bur method removal of buccal bone, chiesel method tooth splitting and removal of the tooth piece by piece. Wound curretage and irrigation. Sutured with 3 stitches. Medication and for infection control and pain control.;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
-93;8;92016C;複雜齒切除術;4300;Complex odontectomy;1;1;說 明 ：S: Pain and discomfort of 3rd molar region.O: 3rd molar impacted teeth. Soft tissue coverage with partial bony coverage of crown. Food impaction  over distal side of second  molar, with mild inflammation.. A: impacted 3rd molar.P: Surgical extraction of3rd molar   under anesthesia, mucoperiosteal flap reflection, bur method removal of buccal bone, chiesel method tooth splitting and removal of the tooth piece by piece. Wound curretage and irrigation. Sutured with 3 stitches. Medication and for infection control and pain control.;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
-94;1;92017C;囊腫摘除術-小< 2cm;3000;Cystic enucleation-Small < 2cm;6;17;NULL;NULL;
-95;1;92027C;齦蓋切除術;510;Operculectomy;7;18;NULL;34001C~34004C,96001C;
-96;1;92028C;繫帶切除術－ 簡單法;410;Frenectomy-Simple;8;20;NULL;96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-97;1;92029C;繫帶切除術－ Ｚ字法;570;Frenectomy-Z-plasty;8;20;NULL;96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-98;9;92030C;前齒根尖切除術;1800;Apicoectomy：incisors and canines;9;25;NULL;34001C~34004C,96001C;11~13,21~23,31~33,41~43,99,19,29,39,49
-99;9;92031C;小臼齒根尖切除術;2800;Apicoectomy：premolars;9;25;NULL;34001C~34004C,96001C;14~15,24~25,34~35,44~45,99,19,29,39,49
-100;9;92032C;大臼齒根尖切除術;4000;Apicoectomy：molars;9;25;NULL;34001C~34004C,96001C;16~19,26~29,36~39,46~49,99
-101;1;92033C;牙齒切半術或牙根切斷術;1500;Hemisection or root amputation;9;25;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
-102;1;92041C;齒槽骨成形術(1/2顎以內);570;Alveoloplasty, involving less than 1/2 arch;10;26;NULL;34001C~34004C,96001C;
-103;1;92042C;齒槽骨成形術(1/2顎以上);1070;Alveoloplasty, involving more than 1/2 arch;10;26;NULL;34001C~34004C,96001C;
-104;1;92043C;顳顎關節脫臼整復－ 無固定;310;Closed reduction of TMJ dislocation-Without fixation;1;1;NULL;96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-105;1;92050C;埋伏齒露出手術;970;Surgical exposure of impacted tooth;11;33;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
-106;8;92055C;乳牙拔除;260;Primary tooth extration;12;34;NULL;96001C;51~55,61~65,71~75,81~85,99
-107;1;92056C;骨瘤切除術＜ 1 cm;5010;Excision of Bone tumor, ＜1 cm;NULL;NULL;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-108;1;92057C;骨瘤切除術;10010;Excision of Bone tumor, 1 cm≦Bone tumor≦2 cm;NULL;NULL;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-109;1;92058C;骨瘤切除術＞ 2 cm;15010;Excision of Bone tumor, ＞2 cm;NULL;NULL;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-110;1;92059C;手術去除陷入上顎竇內牙齒或異物;6010;Surgical removal of tooth or foreign body within the maxillary sinus;13;35;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-111;1;92062C;唾液腺管沖洗;150;Salivary duct irrigation;NULL;NULL;NULL;NULL;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-112;8;92063C;手術拔除深部阻生齒;8010;Surgical removal of a deeply impacted tooth in jaw bone;14;37;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-113;1;92064C;手術去除解剖間隙內異物或牙齒;10510;Surgical removal of a tooth or foreign body within fascial spaces;15;40;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-114;1;92066C;特定局部治療;50;Specified local treatment;16;41;NULL;92065B;
-115;1;92071C;簡單性口內切開排膿;210;Simple intraoral incision & drainage;17;42;NULL;96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-116;1;92072C;口乾症塗氟;500;Topical fluoride application in xerostomia patients;2;10;NULL;NULL;FM
-117;1;92073C;口腔黏膜難症特別處置;600;Management of difficult oral mucosal disease;NULL;NULL;NULL;NULL;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-118;1;92088C;口腔顎面外科轉出醫療院所之轉診費用;200;Referral fee for oral maxillofacial surgery;NULL;NULL;NULL;NULL;NULL
-119;1;92090C;定期性口腔癌與癌前病變追蹤治療;600;Periodic care for oral potentially malignant disorder (PMD);NULL;NULL;NULL;92091C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-120;1;92091C;非定期性口腔癌與癌前病變追蹤治療;400;Occasional care for oral potentially malignant disorder (PMD);NULL;NULL;NULL;92090C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-121;8;92092C;乳牙複雜性拔牙;560;Complex extraction of primary tooth;1;9;Flap reflection,EXT.with elevator & forcep,then wound sutured under L.ANES.;92090C;51~55,61~65,71~75,81~85,99
-122;1;92094C;週六、日及國定假日牙醫門診急症處置;800;Management of dental emergencies on Saturdays, Sundays or in the national holidays;NULL;NULL;NULL;34001C~34002C,90004C,91001C,92001C,92012C,92043C,92066C,92071C;NULL
-123;1;92095C;顎顏面骨壞死術後傷口照護;600;Wound care for osteonecrosis of jaws;NULL;NULL;NULL;NULL;NULL
-124;1;96001C;牙科局部麻醉;90;Dental localized anesthesia;1;1;Tx:UR/UA/UL/LR/LA/LL dental localized anesthesia."";89001C~89013C,89088C,89101C~89105C,89108C~89112C,90001C~90003C,90005C,90015C,90016C,90018C~90020C,91011C,91012C,92003C,92004C,92007B,92008B,92010B,92012C~92016C,92018B~92023B,92025B,92026B,92027C~92033C,92034B,92037B,92041C~92043C,92044B,92045A,92050C,92055C~92059C,92063C,92064C,92065B,92067B,92068B,92071C;UR,UA,UL,LR,LA,LL
-125;1;81;氟化防齲處理(包括牙醫師專業塗氟處理、一般性口腔檢查、衛生教育);500;NULL;NULL;NULL;Fluoride Varnish: 2.4% Sodium fluoride application.;NULL;FM
-126;1;87;氟化防齲處理(包括牙醫師專業塗氟處理、一般性口腔檢查、衛生教育);500;NULL;NULL;NULL;Fluoride Varnish: 2.4% Sodium fluoride application.;NULL;FM
-127;1;88;社區巡迴服務氟化防齲處理(服務項目詳附註);500;NULL;NULL;NULL;Full mouth fluoride with 22600 ppm NaF varnish application.OHI.;NULL;FM
-128;1;89;社區巡迴服務氟化防齲處理(服務項目詳附註);500;NULL;NULL;NULL;Full mouth fluoride with 22600 ppm NaF varnish application.OHI.;NULL;FM
-129;11;8A;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;16
-130;11;8B;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;26
-131;11;8C;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;36
-132;11;8D;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;46
-133;11;8E;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;16
-134;11;8F;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;26
-135;11;8G;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;36
-136;11;8H;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;46
-137;11;8I;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;16
-138;11;8J;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;26
-139;11;8K;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;36
-140;11;8L;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;46
-141;11;8M;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;16
-142;11;8N;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;26
-143;11;8O;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;36
-144;1;95;口腔黏膜檢查;130;NULL;NULL;NULL;Dx:\\nTx:Check FM oral mucosa:Local finding: .;NULL;NULL
-145;1;97;口腔黏膜檢查;130;NULL;NULL;NULL;NULL;NULL;FM
-146;1;E1006C;戒菸治療服務費(藥物治療+簡短諮詢+個案追蹤管理)-藥品自行調劑;250;NULL;18;44;NULL;NULL;NULL
-147;1;E1007C;戒菸治療服務費(藥物治療+簡短諮詢+個案追蹤管理)-藥品交付調劑;270;NULL;18;44;NULL;NULL;NULL
-148;1;E1008C;吸菸孕婦轉介費(轉介至戒菸專線)-該次懷孕;100;NULL;18;44;NULL;NULL;NULL
-149;1;E1022C;戒菸衛教暨個案管理費;100;NULL;18;44;NULL;NULL;NULL
-150;1;E1023C;用藥治療3個月追蹤費;50;NULL;18;44;NULL;NULL;NULL
-151;1;E1024C;用藥治療6個月追蹤費;50;NULL;18;44;NULL;NULL;NULL
-152;1;E1025C;衛教服務3個月追蹤費;50;NULL;18;44;NULL;NULL;NULL
-153;1;E1026C;衛教服務6個月追蹤費;50;NULL;18;44;NULL;NULL;NULL
-154;6;90005C;乳牙斷髓處理;800;Pulpotomy of primary tooth;1;1;NULL;34001C~34004C,96001C;51~55,61~65,71~75,81~85,99
-155;5;90016C;乳牙根管治療;1010;Endodontic treatment of primary tooth;2;10;NULL;34001C~34004C,96001C;51~55,61~65,71~75,81~85,99
-156;5;90018C;乳牙多根管治療;1410;Endodontic treatment of a primary tooth with multiple canals;2;10;NULL;34001C~34004C,96001C;54~55,64~65,74~75,84~85,99
-157;8;92055C;乳牙拔除;260;Primary tooth extration;12;34;NULL;96001C;51~55,61~65,71~75,81~85,99
-158;8;92092C;乳牙複雜性拔牙;560;Complex extraction of primary tooth;1;9;NULL;34001C~34004C,96001C;51~55,61~65,71~75,81~85,99
-159;5;90001C;恆牙根管治療（單根）;1010;Endodontic treatment of a permanent tooth with single root canal;1;1;RD isolation,access opening,WL/MAF:                (1個數值),\\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions.;90002C,90003C,90019C,90020C,34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
-160;5;90002C;恆牙根管治療（雙根）;2010;Endodontic treatment of a permanent tooth with two root canals;1;1;RD isolation,access opening,WL/MAF:                (2個數值),\\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions.;90001C,90003C,90019C,90020C,34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
-161;5;90003C;恆牙根管治療（三根以上）;3010;Endodontics treatment of a permanent tooth with three root canals;1;1;RD isolation,access opening,WL/MAF:                (3個數值),\\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp.\\nfilling,post procedure instructions.;90001C,90002C,90019C,90020C,34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
-162;1;90004C;齒內治療緊急處理;150;Management of endodontic emergencies;1;1;NULL;NULL;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-163;6;90005C;乳牙斷髓處理;800;Pulpotomy of primary tooth;1;1;NaOCl pulpotomy under L.ANES.;34001C~34004C,96001C;51~55,61~65,71~75,81~85,99
-164;7;90006C;去除縫成牙冠;240;Removal of s-p crown;2;10;Remove ill-fitted prosthesis under L.ANES;34001C~34004C;11~19,21~29,31~39,41~49,99
-165;7;90007C;去除鑄造牙冠;500;Removal of casting crown;4;14;Remove ill-fitted prosthesis under L.ANES;34001C~34004C;11~19,21~29,31~39,41~49,99
-166;1;90008C;去除釘柱;1235;Removal of post;4;14;Remove post by bur method & take X-ray film.;34001C~34004C;11~19,21~29,31~39,41~49,99
-167;1;90011C;牙齒再植術;1000;Intentional tooth replantation;1;1;NULL;34001C~34004C;11~19,21~29,31~39,41~49,99
-168;1;90010C;根尖逆充填術;900;Root-end filling;1;1;NULL;34001C~34004C;11~19,21~29,31~39,41~49,99
-169;1;90012C;橡皮障防濕裝置;150;Rubber dam isolation;2;10;Dental Tx.under RD application.;34001C~34004C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-170;1;90013C;根尖成形術或根尖生成術-前牙;500;Apexification or Apexogenesis-Anterior tooth;19;45;NULL;NULL;11~13,21~23,31~33,41~43,99,19,29,39,49
-171;1;90014C;根尖成形術或根尖生成術-後牙;1000;Apexification or Apexogenesis-Posterior tooth;19;45;NULL;NULL;14~19,24~29,34~39,44~49,99
-172;1;90015C;根管開擴及清創;600;Access cavity preparation, cleaning and shaping of the root canal system;2;10;RD isolation,access opening,RCT with copious NaOCl irrigation,cotton pellet and caviton temp. filling under L.ANES.;34001C~34004C,96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-173;5;90016C;乳牙根管治療;1010;Endodontic treatment of primary tooth;2;10;Canal debride and enlarge with NaOCl irrigation,vitapex pulpectomy and IRM filling.;34001C~34004C,96001C;51~55,61~65,71~75,81~85,99
-174;1;92001C;非特定局部治療;50;Unspecified local treatment;16;41;NULL;92065B;
-175;10;92002C;齒間暫時固定術，每齒;100;Temporary splinting for one tooth;20;46;NULL;NULL;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
-176;1;92003C;口內切開排膿;510;Intraoral incision & drainage with drains;17;42;NULL;96001C;
-177;1;92004C;口外切開排膿;2000;Extraoral incision & drainage;17;42;NULL;96001C;
-178;1;92005C;拆線 每次;50;Removal of stitches;1;1;NULL;92018B~92023B,92025B,92026B,92034B,92037B,92067B,92068B;
-179;1;92006C;固定鋼線移除;160;Removal of splinting wire;20;46;NULL;NULL;
-180;1;92009C;去除齒列夾板;360;Removal of splint;20;46;NULL;NULL;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
-181;1;92096C;牙齒外傷急症處理;4976;NULL;NULL;NULL;NULL;NULL;NULL
-182;1;92097C;顱顎關節障礙特殊檢查費-初診;1000;Special evaluation for craniomandibular disorders-first visit;NULL;NULL;NULL;NULL;NULL
-183;1;92098C;顱顎關節障礙特殊檢查費-複診;500;Special evaluation for craniomandibular disorders-return visit;NULL;NULL;NULL;NULL;NULL
-184;1;P30002;牙醫特殊服務試辦計畫身心障礙牙醫服務-氟化物防齲處理;500;NULL;1;1;NULL;NULL;FM
-185;1;P30005;到宅牙醫服務(每乙案)論次費用;5700;NULL;21;57;NULL;NULL;NULL
-186;1;P30006;牙醫特殊醫療服務計畫到宅訪視費;1553;NULL;21;57;NULL;NULL;NULL
-187;1;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
-188;2;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
-189;3;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
-190;4;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
-191;5;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
-192;6;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
-193;7;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
-194;8;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
-195;9;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
-196;10;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
-197;11;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+1;200;00121C;牙科門診診察費1.每位醫師每日門診量在二十人次以下部分(≦20) 1)處方交付特約藥局調劑;230;NULL;NULL;NULL;NULL;NULL;NULL
+2;200;00122C;牙科門診診察費1.每位醫師每日門診量在二十人次以下部分(≦20) 2)未開處方或處方由本院所自行調劑;230;NULL;NULL;NULL;NULL;NULL;NULL
+3;200;00123C;牙科門診診察費2.每位醫師每日門診量超過二○人次部分(>20) 1)處方交付特約藥局調劑;120;NULL;NULL;NULL;NULL;NULL;NULL
+4;200;00124C;牙科門診診察費2.每位醫師每日門診量超過二○人次部分(>20) 2)未開處方或處方由本院所自行調劑;120;NULL;NULL;NULL;NULL;NULL;NULL
+5;200;00125C;牙科門診診察費3.山地離島地區 1)處方交付特約藥局調劑;260;NULL;NULL;NULL;NULL;NULL;NULL
+6;200;00126C;牙科門診診察費3.山地離島地區 2)未開處方或處方由本院所自行調劑;260;NULL;NULL;NULL;NULL;NULL;NULL
+7;200;00128C;重度以上特定身心障礙(非精神疾病)者診察費;520;NULL;NULL;NULL;NULL;NULL;NULL
+8;200;00129C;符合加強感染管制之牙科門診診察費1.每位醫師每日門診量在二十人次以下部份（≦20）－ 處方交付特約藥局調劑;320;NULL;NULL;NULL;NULL;NULL;NULL
+9;200;00130C;符合加強感染管制之牙科門診診察費1.每位醫師每日門診量在二十人次以下部份（≦20）－ 未開處方或處方由本院所自行調劑;320;NULL;NULL;NULL;NULL;NULL;NULL
+10;200;00133C;符合加強感染管制之牙科門診診察費2.山地離島地區 － 處方交付特約藥局調劑;350;NULL;NULL;NULL;NULL;NULL;NULL
+11;200;00134C;符合加強感染管制之牙科門診診察費2.山地離島地區 － 未開處方或處方由本院所自行調劑;350;NULL;NULL;NULL;NULL;NULL;NULL
+12;200;00301C;中度特定身心障礙(非精神疾病)者診察費;420;NULL;NULL;NULL;NULL;NULL;NULL
+13;200;00302C;中度以上精神疾病患者診察費;320;NULL;NULL;NULL;NULL;NULL;NULL
+14;200;00303C;輕度特定身心障礙者(非精神疾病)及失能老人診察費;320;NULL;NULL;NULL;NULL;NULL;NULL
+15;200;00304C;身心障礙者轉出醫療院所至特殊醫療服務計畫院所之轉診費用;200;NULL;NULL;NULL;NULL;NULL;NULL
+16;200;01271C;環口全景X光初診診察;600;NULL;NULL;NULL;說明：Dx&Tx plan: Panoramic Finding (01271)\\n1.Caries:Nil\\n2.Periodontal status: (Normal,Gingivitis,Periodontitis)\\n3.Missing:Nil\\n4.Crown/bridge/implant:Nil\\n5.Impaction:Nil"";NULL;NULL
+17;200;01272C;年度初診X光檢查;600;NULL;NULL;NULL;Dx&Tx plan: Panoramic Finding (01272)\\n1.Caries:Nil\\n2.Periodontal status: (Normal,Gingivitis,Periodontitis)\\n3.Missing:Nil\\n4.Crown/bridge/implant:Nil\\n5.Impaction:Nil"";NULL;NULL
+18;200;01273C;高齲齒罹患率族群年度初診X光片檢查;600;NULL;NULL;NULL;Dx&Tx plan: Panoramic Finding (01273)\\n1.Caries:Nil\\n2.Periodontal status: (Normal,Gingivitis,Periodontitis)\\n3.Missing:Nil\\n4.Crown/bridge/implant:Nil\\n5.Impaction:Nil"";NULL;NULL
+19;170;34001C;根尖周 X光攝影;80;Periapical radiography;1;1;CC:Asking for dental check up.Visual & Radiographic examination.;90001C~90003C,90005C~90008C,90010C,90011C,90015C,90016C,90018C~90020C,90091C~90097C,90112C,92014C~92016C,92027C,92030C~92033C,92041C,92042C,92050C,92056C~92059C,92063C,92064C,92065B;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99,UR,UL,LR,LL,UA,LA,FM
+20;170;34002C;咬翼式 X光攝影;100;Bite-Wing radiography;1;1;CC:Asking for dental check up.Visual & Radiographic examination.;90001C~90003C,90005C~90008C,90010C,90011C,90015C,90016C,90018C~90020C,90091C~90097C,90112C,92014C~92016C,92027C,92030C~92033C,92041C,92042C,92050C,92056C~92059C,92063C,92064C,92065B;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99,UR,UL,LR,LL,UA,LA,FM
+21;170;34003C;咬合片 X光攝影;120;Occlusal radiography;1;1;CC:Asking for dental check up.Visual & Radiographic examination.;90001C~90003C,90005C~90008C,90010C,90011C,90015C,90016C,90018C~90020C,90091C~90097C,90112C,92014C~92016C,92027C,92030C~92033C,92041C,92042C,92050C,92056C~92059C,92063C,92064C,92065B;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+22;170;34004C;齒顎全景 X光片攝影;600;Panoramic radiography;1;1;CC:Asking for dental check up.Visual & Radiographic examination.\\nDx&Tx plan: Panoramic Finding (34004)\\n1.Caries:Nil\\n2.Periodontal status: (Normal,Gingivitis,Periodontitis)\\n3.Missing:Nil\\n4.Crown/bridge/implant:Nil\\n5.Impaction:Nil;90001C~90003C,90005C~90008C,90010C,90011C,90015C,90016C,90018C~90020C,90091C~90097C,90112C,92014C~92016C,92027C,92030C~92033C,92041C,92042C,92050C,92056C~92059C,92063C,92064C,92065B;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99,FM
+23;11;89001C;銀粉充填 － 單面;450;Amalgam restoration-single surface;1;1;Remove caries,cavity preparation, AF & Occ.adj;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+24;11;89002C;銀粉充填 － 雙面;600;Amalgam restoration - two surfaces;1;1;Remove caries,cavity preparation, AF & Occ.adj;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+25;11;89003C;銀粉充填 － 三面;750;Amalgam restoration - three surfaces;1;1;Remove caries,cavity preparation,AF & Occ.adj;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+26;11;89004C;前牙複合樹脂充填-單面;500;Composite resin restoration in anterior teeth-single surface;1;9;Remove caries,cavity preparation,CRF & Occ.adj;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
+27;11;89005C;前牙複合樹脂充填-雙面;650;Composite resin restoration in anterior teeth-two surfaces;1;9;Remove caries,cavity preparation,CRF & Occ.adj;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
+28;12;89006C;覆髓;140;Pulp capping;1;1;Remove caries,Ca(OH)2 lining & IRM capping.;96001C;11~19,21~29,31~39,41~49,99
+29;110;89007C;釘強化術（每支）;500;Use of pin, each;1;1;NULL;96001C;11~19,21~29,31~39,41~49,99
+30;11;89008C;後牙複合樹脂充填-單面;600;Composite resin restoration in posterior teeth-single surface;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
+31;11;89009C;後牙複合樹脂充填-雙面;800;Composite resin restoration in posterior teeth-two surfaces;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
+32;11;89010C;後牙複合樹脂充填-三面;1000;Composite resin restoration in posterior teeth-three surfaces;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
+33;11;89011C;玻璃離子體充填;400;Glass ionomer cement restoration;1;1;Remove caries,cavity preparation,GIF & polymerization.;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+34;11;89012C;前牙三面複合樹脂充填;1050;Three-surface composite resin restoration in anterior teeth;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
+35;11;89013C;複合體充填;1000;Compomer restoration;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;11~19,21~29,31~39,41~49,99
+36;11;89014C;前牙雙鄰接面複合樹脂充填;1200;Composite resin restoration for two proximal (mesial and distal) surfaces in anterior teeth;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
+37;11;89015C;後牙雙鄰接面複合樹脂充填;1450;Composite resin restoration for two proximal (mesial and distal) surfaces in posterior teeth;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
+38;110;89088C;牙體復形轉出醫療院所之轉診費用;200;Referral fee for dental restoration;NULL;NULL;NULL;96001C;NULL
+39;11;89101C;特殊狀況之銀粉充填 -單面;450;Amalgam restoration for patients with special needs-single surface;1;1;NULL;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+40;11;89102C;特殊狀況之銀粉充填 -雙面;600;Amalgam restoration for patients with special needs-two surfaces;1;1;NULL;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+41;11;89103C;特殊狀況之銀粉充填 -三面;750;Amalgam restoration for patients with special needs-three surfaces;1;1;NULL;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+42;11;89104C;特殊狀況之前牙複合樹脂充填-單面;500;Composite resin restoration in anterior teeth for patients with special needs-single surface;1;9;NULL;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
+43;11;89105C;特殊狀況之前牙複合樹脂充填-雙面;650;Composite resin restoration in anterior teeth for patients with special needs-two surfaces;1;9;NULL;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
+44;11;89108C;特殊狀況之後牙複合樹脂充填-單面;600;Composite resin restoration in posterior teeth for patients with special needs-single surface;1;1;NULL;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
+45;11;89109C;特殊狀況之後牙複合樹脂充填-雙面;800;Composite resin restoration in posterior teeth for patients with special needs-two surfaces;1;1;NULL;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
+46;11;89110C;特殊狀況之後牙複合樹脂充填-三面;1000;Composite resin restoration in posterior teeth for patients with special needs-three surfaces;1;1;NULL;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
+47;11;89111C;特殊狀況之玻璃離子體充填;400;Glass ionomer cement restoration for patients with special needs;1;1;NULL;96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+48;11;89112C;特殊狀況之前牙三面複合樹脂充填;1050;Three-surface composite resin restoration in anterior teeth for patients with special needs;1;1;NULL;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
+49;11;89113C;特殊狀況之複合體充填;1000;Compomer restoration for patients with special needs;1;1;Remove caries,cavity preparation,CRF & Occ.adj.;NULL;NULL
+50;11;89114C;特殊狀況之前牙雙鄰接面複合樹脂充填;1200;Composite resin restoration for two proximal (mesial and distal) surfaces in anterior teeth for patients with special needs;1;9;NULL;96001C;11~13,21~23,31~33,41~43,51~53,61~63,71~73,81~83,99,19,29,39,49
+51;11;89115C;特殊狀況之後牙雙鄰接面複合樹脂充填;1450;Composite resin restoration for two proximal (mesial and distal) surfaces in posterior teeth for patients with special needs;1;9;NULL;96001C;14~19,24~29,34~39,44~49,54~55,64~65,74~75,84~85,99
+52;13;90017C;恆牙斷髓處理;600;Pulpotomy of permanent tooth;2;10;NULL;NULL;11~19,21~29,31~39,41~49,99
+53;14;90018C;乳牙多根管治療;1410;Endodontic treatment of a primary tooth with multiple canals;2;10;Canal debride and enlarge with NaOCl irrigation,vitapex pulpectomy and IRM filling.;34001C~34004C,96001C;54~55,64~65,74~75,84~85,99
+54;15;90019C;恆牙根管治療（四根）;4010;Endodontic treatment of a permanent tooth with four root canals;2;10;RD isolation,access opening,WL/MAF:                (4個數值),\\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions.;90001C,90002C,90003C,90020C,34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
+55;15;90020C;恆牙根管治療（五根以上）;5010;Endodontic treatment of a permanent tooth with five(and above) root canals;2;10;RD isolation,access opening,WL/MAF:                (至少5個數值),\\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions.;90001C,90002C,90003C,90019C,34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
+56;120;90021C;特殊狀況—保護性肢體制約;300;Protective physical restraint for patients with special needs;NULL;NULL;NULL;NULL;NULL
+57;120;90088C;根管治療轉出醫療院所之轉診費用;200;Referral fee for Endodontic treatment;NULL;NULL;NULL;NULL;NULL
+58;120;90091C;難症特別處理-大臼齒(C－Shaped)根管;1000;Management of endodontic difficult case;1;1;C shaped canal was noted.;34001C~34004C;11~19,21~29,31~39,41~49,99
+59;120;90092C;難症特別處理－有額外根管者(1)前牙及下顎小臼齒有超過一根管者。(2)上顎小臼齒有超過二根管者。(3)大臼齒有超過三根管者。(4)以實際超過根管數計算。;1000;Management of endodontic difficult case;1;1;Diff. case special treament- extra canal;34001C~34004C;11~19,21~29,31~39,41~49,99
+60;120;90093C;難症特別處理-根管特別彎曲、根管鈣化，器械斷折（非同一醫療院所)，以根管數計算;1000;Management of endodontic difficult case;2;10;NULL;34001C~34004C;11~19,21~29,31~39,41~49,99
+61;120;90094C;難症特別處理-根管重新治療在Ｘ光片上root canal內顯現出radioopaque等有obstruction之根管等個案，以根管數計算;1500;Management of endodontic difficult case;1;1;Diff. case special treament-re-endo Tx.;34001C~34004C;11~19,21~29,31~39,41~49,99
+62;120;90095C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(雙根管);1600;Management of endodontic difficult case;2;10;緻密充填至根尖2mm符合健保3.3.1給予給付;34001C~34004C,90096C,90097C;11~19,21~29,31~39,41~49,99
+63;120;90096C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(三根管);2400;Management of endodontic difficult case;2;10;緻密充填至根尖2mm符合健保3.3.1給予給付;34001C~34004C,90095C,90097C;11~19,21~29,31~39,41~49,99
+64;120;90097C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(四根管);3200;Management of endodontic difficult case;2;10;緻密充填至根尖2mm符合健保3.3.1給予給付;34001C~34004C,90096C,90097C;11~19,21~29,31~39,41~49,99
+65;120;90098C;難症特別處理-符合附表3.3.1標準之多根管根管治療。(五根及五根以上根管);4000;Management of endodontic difficult case;2;10;緻密充填至根尖2mm符合健保3.3.1給予給付;NULL;NULL
+66;120;90112C;特殊狀況橡皮障防濕裝置;250;Rubber dam isolation for patients with special needs;1;1;NULL;34001C~34004C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+67;130;91001C;牙周病緊急處置;150;Management of periodontal disease emergences;3;11;NULL;91003C,91004C,91005C,91017C,91019C,91103C,91104C;
+68;130;91002C;牙周敷料 每次;120;Periodontal packing;4;14;NULL;NULL;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99,UR,UL,LR,LL,UA,LA,FM
+69;130;91003C;牙結石清除－局部;150;Scaling-Localized;4;14;FM ultrasonic scaling & OHI.;91001C;UR,UL,LL,LR
+70;130;91004C;牙結石清除－全口;600;Scaling-Full mouth;5;15;FM ultrasonic scaling & OHI.;91001C;FM
+71;130;91005C;口乾症牙結石清除-全口;600;Full mouth scaling for xerostomia patients;5;15;NULL;NULL;NULL
+72;130;91006C;齒齦下括除術(含牙根整平術)-全口;3200;Subgingival curettage (including Root planing)－Full mouth;4;14;Radiographic examination,probing & subgingival curettage under L.ANES.\\nProbing depth:         (至少一面≧5mm);NULL;FM
+73;130;91007C;齒齦下括除術(含牙根整平術)-1/2 顎;800;Subgingival curettage (Root planing)-1/2 arch;4;14;Radiographic examination,probing & subgingival curettage under L.ANES.\\nProbing depth:         (至少一面≧5mm);NULL;
+74;130;91008C;齒齦下括除術(含牙根整平術)-局部(3齒以內);400;Subgingival curettage (including Root planing)-Localized;4;14;Radiographic examination,probing & subgingival curettage under L.ANES.\\nProbing depth:         (至少一面≧5mm);NULL;
+75;130;91011C;牙齦切除術-局部（3齒以內）;910;Gingivectomy-Localized;5;15;NULL;91013C,91013C,96001C;
+76;130;91012C;牙齦切除術 － 1/3 顎;1510;Gingivectomy-1/3 arch;5;15;NULL;91013C,96001C;
+77;130;91013C;牙齦切除術-施行根管治療或牙體復形時，所需之牙齦切除術;330;Gingivectomy for endodontic or restorative purposes;5;15;NULL;91011C,91012C;
+78;130;91014C;牙周暨齲齒控制基本處置;100;Plaque control;4;14;NULL;NULL;FM
+79;130;91015C;特定牙周保存治療-全口總齒數9-15顆;2000;Comprehensive periodontal treatment for patients with special needs─9<= no. of teeth<=15;4;14;present dentition: ＿＿顆 FM ultrasonic scaling & OHI.\\nDental disclosing solution application & OHI. 執行牙結石清除,牙菌斑偵測及去除維護教導;NULL;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+80;130;91016C;特定牙周保存治療-全口總齒數4-8顆;1000;Comprehensive periodontal treatment for patients with special needs─4<= no. of teeth<=8;4;14;NULL;NULL;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+81;130;91017C;懷孕婦女牙結石清除-全口;800;Full mouth scaling for pregnant women;4;14;NULL;91003C,91004C,91005C,91103C,91104C;FM
+82;130;91018C;牙周病支持性治療;1000;Supportive periodontal treatment;4;14;NULL;NULL;FM
+83;130;91019C;懷孕婦女牙周緊急處置;500;Management of periodontal disease emergences for pregnant women;3;11;NULL;91001C,91003C,91004C,91017C,91103C,91104C;NULL
+84;130;91020C;牙菌斑去除照護;200;Dental plaque removal;5;15;NULL;NULL;NULL
+85;130;91088C;牙周病轉出醫療院所之轉診費用;200;Referral fee for Periodontal treatments;NULL;NULL;NULL;NULL;NULL
+86;130;91103C;特殊狀況牙結石清除-局部;150;Scaling for patients with special needs-Localized;1;1;NULL;NULL;UR,UL,LR,LL,UA,LA
+87;130;91104C;特殊狀況牙結石清除-全口;600;Scaling for patients with special needs-Full mouth;1;1;NULL;91001C;FM
+88;130;91114C;特殊牙周暨齲齒控制基本處置;250;Plaque control for patients with special needs;5;15;NULL;NULL;
+89;140;92012C;拔牙後特別處理;160;Post-operative care of extraction wound;1;1;NULL;96001C;
+90;18;92013C;簡單性拔牙;510;Simple extraction;1;1;NULL;96001C;11~19,21~29,31~39,41~49,99
+91;18;92014C;複雜性拔牙;900;Complex extraction;1;1;Flap reflection,EXT.with elevator & forcep,then wound sutured under L.ANES.;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
+92;18;92015C;單純齒切除術;2730;Simple odontectomy;1;1;S: Pain and discomfort of 3rd molar region.O: 3rd molar impacted teeth. Soft tissue coverage with partial bony coverage of crown. Food impaction  over distal side of second  molar, with mild inflammation.. A: impacted 3rd molar.P: Surgical extraction of3rd molar   under anesthesia, mucoperiosteal flap reflection, bur method removal of buccal bone, chiesel method tooth splitting and removal of the tooth piece by piece. Wound curretage and irrigation. Sutured with 3 stitches. Medication and for infection control and pain control.;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
+93;18;92016C;複雜齒切除術;4300;Complex odontectomy;1;1;說 明 ：S: Pain and discomfort of 3rd molar region.O: 3rd molar impacted teeth. Soft tissue coverage with partial bony coverage of crown. Food impaction  over distal side of second  molar, with mild inflammation.. A: impacted 3rd molar.P: Surgical extraction of3rd molar   under anesthesia, mucoperiosteal flap reflection, bur method removal of buccal bone, chiesel method tooth splitting and removal of the tooth piece by piece. Wound curretage and irrigation. Sutured with 3 stitches. Medication and for infection control and pain control.;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
+94;140;92017C;囊腫摘除術-小< 2cm;3000;Cystic enucleation-Small < 2cm;6;17;NULL;NULL;
+95;140;92027C;齦蓋切除術;510;Operculectomy;7;18;NULL;34001C~34004C,96001C;
+96;140;92028C;繫帶切除術－ 簡單法;410;Frenectomy-Simple;8;20;NULL;96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+97;140;92029C;繫帶切除術－ Ｚ字法;570;Frenectomy-Z-plasty;8;20;NULL;96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+98;19;92030C;前齒根尖切除術;1800;Apicoectomy：incisors and canines;9;25;NULL;34001C~34004C,96001C;11~13,21~23,31~33,41~43,99,19,29,39,49
+99;19;92031C;小臼齒根尖切除術;2800;Apicoectomy：premolars;9;25;NULL;34001C~34004C,96001C;14~15,24~25,34~35,44~45,99,19,29,39,49
+100;19;92032C;大臼齒根尖切除術;4000;Apicoectomy：molars;9;25;NULL;34001C~34004C,96001C;16~19,26~29,36~39,46~49,99
+101;140;92033C;牙齒切半術或牙根切斷術;1500;Hemisection or root amputation;9;25;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
+102;140;92041C;齒槽骨成形術(1/2顎以內);570;Alveoloplasty, involving less than 1/2 arch;10;26;NULL;34001C~34004C,96001C;
+103;140;92042C;齒槽骨成形術(1/2顎以上);1070;Alveoloplasty, involving more than 1/2 arch;10;26;NULL;34001C~34004C,96001C;
+104;140;92043C;顳顎關節脫臼整復－ 無固定;310;Closed reduction of TMJ dislocation-Without fixation;1;1;NULL;96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+105;140;92050C;埋伏齒露出手術;970;Surgical exposure of impacted tooth;11;33;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
+106;18;92055C;乳牙拔除;260;Primary tooth extration;12;34;NULL;96001C;51~55,61~65,71~75,81~85,99
+107;140;92056C;骨瘤切除術＜ 1 cm;5010;Excision of Bone tumor, ＜1 cm;NULL;NULL;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+108;140;92057C;骨瘤切除術;10010;Excision of Bone tumor, 1 cm≦Bone tumor≦2 cm;NULL;NULL;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+109;140;92058C;骨瘤切除術＞ 2 cm;15010;Excision of Bone tumor, ＞2 cm;NULL;NULL;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+110;140;92059C;手術去除陷入上顎竇內牙齒或異物;6010;Surgical removal of tooth or foreign body within the maxillary sinus;13;35;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+111;140;92062C;唾液腺管沖洗;150;Salivary duct irrigation;NULL;NULL;NULL;NULL;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+112;18;92063C;手術拔除深部阻生齒;8010;Surgical removal of a deeply impacted tooth in jaw bone;14;37;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+113;140;92064C;手術去除解剖間隙內異物或牙齒;10510;Surgical removal of a tooth or foreign body within fascial spaces;15;40;NULL;34001C~34004C,96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+114;140;92066C;特定局部治療;50;Specified local treatment;16;41;NULL;92065B;
+115;140;92071C;簡單性口內切開排膿;210;Simple intraoral incision & drainage;17;42;NULL;96001C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+116;140;92072C;口乾症塗氟;500;Topical fluoride application in xerostomia patients;2;10;NULL;NULL;FM
+117;140;92073C;口腔黏膜難症特別處置;600;Management of difficult oral mucosal disease;NULL;NULL;NULL;NULL;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+118;140;92088C;口腔顎面外科轉出醫療院所之轉診費用;200;Referral fee for oral maxillofacial surgery;NULL;NULL;NULL;NULL;NULL
+119;140;92090C;定期性口腔癌與癌前病變追蹤治療;600;Periodic care for oral potentially malignant disorder (PMD);NULL;NULL;NULL;92091C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+120;140;92091C;非定期性口腔癌與癌前病變追蹤治療;400;Occasional care for oral potentially malignant disorder (PMD);NULL;NULL;NULL;92090C;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+121;18;92092C;乳牙複雜性拔牙;560;Complex extraction of primary tooth;1;9;Flap reflection,EXT.with elevator & forcep,then wound sutured under L.ANES.;92090C;51~55,61~65,71~75,81~85,99
+122;140;92094C;週六、日及國定假日牙醫門診急症處置;800;Management of dental emergencies on Saturdays, Sundays or in the national holidays;NULL;NULL;NULL;34001C~34002C,90004C,91001C,92001C,92012C,92043C,92066C,92071C;NULL
+123;140;92095C;顎顏面骨壞死術後傷口照護;600;Wound care for osteonecrosis of jaws;NULL;NULL;NULL;NULL;NULL
+124;180;96001C;牙科局部麻醉;90;Dental localized anesthesia;1;1;Tx:UR/UA/UL/LR/LA/LL dental localized anesthesia."";89001C~89013C,89088C,89101C~89105C,89108C~89112C,90001C~90003C,90005C,90015C,90016C,90018C~90020C,91011C,91012C,92003C,92004C,92007B,92008B,92010B,92012C~92016C,92018B~92023B,92025B,92026B,92027C~92033C,92034B,92037B,92041C~92043C,92044B,92045A,92050C,92055C~92059C,92063C,92064C,92065B,92067B,92068B,92071C;UR,UA,UL,LR,LA,LL
+125;160;81;氟化防齲處理(包括牙醫師專業塗氟處理、一般性口腔檢查、衛生教育);500;NULL;NULL;NULL;Fluoride Varnish: 2.4% Sodium fluoride application.;NULL;FM
+126;160;87;氟化防齲處理(包括牙醫師專業塗氟處理、一般性口腔檢查、衛生教育);500;NULL;NULL;NULL;Fluoride Varnish: 2.4% Sodium fluoride application.;NULL;FM
+127;160;88;社區巡迴服務氟化防齲處理(服務項目詳附註);500;NULL;NULL;NULL;Full mouth fluoride with 22600 ppm NaF varnish application.OHI.;NULL;FM
+128;160;89;社區巡迴服務氟化防齲處理(服務項目詳附註);500;NULL;NULL;NULL;Full mouth fluoride with 22600 ppm NaF varnish application.OHI.;NULL;FM
+129;21;8A;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;16
+130;21;8B;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;26
+131;21;8C;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;36
+132;21;8D;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.103年入學國小一年級學童（出生日期為96年9月2日至97年9月1日(含)）2.低收入戶及中低收入戶之國小二年級學童3.不含山地原住民鄉、離島地區及身心障礙國小一、二年級;400;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;46
+133;21;8E;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;16
+134;21;8F;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;26
+135;21;8G;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;36
+136;21;8H;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填2.一般口腔檢查、衛教指導三、補助對象1.山地原住民鄉及離島地區之國小一、二年級學童補助條件：依兒童戶籍資料之所在地或學校所在地認定2.身心障礙之國小一、二年級補助條件：持有社政主管機關核發之身心障礙手冊或身心障礙證明;470;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;46
+137;21;8I;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;16
+138;21;8J;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;26
+139;21;8K;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;36
+140;21;8L;一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;46
+141;21;8M;一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;16
+142;21;8N;一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;26
+143;21;8O;一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第二次評估檢查（同一牙位窩溝封填施作間隔12個月(含)以上，且與第一次評估檢查間隔6個月(含)以上）;100;NULL;NULL;NULL;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;NULL;36
+144;160;95;口腔黏膜檢查;130;NULL;NULL;NULL;Dx:\\nTx:Check FM oral mucosa:Local finding: .;NULL;NULL
+145;160;97;口腔黏膜檢查;130;NULL;NULL;NULL;NULL;NULL;FM
+146;160;E1006C;戒菸治療服務費(藥物治療+簡短諮詢+個案追蹤管理)-藥品自行調劑;250;NULL;18;44;NULL;NULL;NULL
+147;160;E1007C;戒菸治療服務費(藥物治療+簡短諮詢+個案追蹤管理)-藥品交付調劑;270;NULL;18;44;NULL;NULL;NULL
+148;160;E1008C;吸菸孕婦轉介費(轉介至戒菸專線)-該次懷孕;100;NULL;18;44;NULL;NULL;NULL
+149;160;E1022C;戒菸衛教暨個案管理費;100;NULL;18;44;NULL;NULL;NULL
+150;160;E1023C;用藥治療3個月追蹤費;50;NULL;18;44;NULL;NULL;NULL
+151;160;E1024C;用藥治療6個月追蹤費;50;NULL;18;44;NULL;NULL;NULL
+152;160;E1025C;衛教服務3個月追蹤費;50;NULL;18;44;NULL;NULL;NULL
+153;160;E1026C;衛教服務6個月追蹤費;50;NULL;18;44;NULL;NULL;NULL
+154;16;90005C;乳牙斷髓處理;800;Pulpotomy of primary tooth;1;1;NULL;34001C~34004C,96001C;51~55,61~65,71~75,81~85,99
+155;14;90016C;乳牙根管治療;1010;Endodontic treatment of primary tooth;2;10;NULL;34001C~34004C,96001C;51~55,61~65,71~75,81~85,99
+156;14;90018C;乳牙多根管治療;1410;Endodontic treatment of a primary tooth with multiple canals;2;10;NULL;34001C~34004C,96001C;54~55,64~65,74~75,84~85,99
+157;18;92055C;乳牙拔除;260;Primary tooth extration;12;34;NULL;96001C;51~55,61~65,71~75,81~85,99
+158;18;92092C;乳牙複雜性拔牙;560;Complex extraction of primary tooth;1;9;NULL;34001C~34004C,96001C;51~55,61~65,71~75,81~85,99
+159;15;90001C;恆牙根管治療（單根）;1010;Endodontic treatment of a permanent tooth with single root canal;1;1;RD isolation,access opening,WL/MAF:                (1個數值),\\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions.;90002C,90003C,90019C,90020C,34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
+160;15;90002C;恆牙根管治療（雙根）;2010;Endodontic treatment of a permanent tooth with two root canals;1;1;RD isolation,access opening,WL/MAF:                (2個數值),\\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions.;90001C,90003C,90019C,90020C,34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
+161;15;90003C;恆牙根管治療（三根以上）;3010;Endodontics treatment of a permanent tooth with three root canals;1;1;RD isolation,access opening,WL/MAF:                (3個數值),\\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp.\\nfilling,post procedure instructions.;90001C,90002C,90019C,90020C,34001C~34004C,96001C;11~19,21~29,31~39,41~49,99
+162;120;90004C;齒內治療緊急處理;150;Management of endodontic emergencies;1;1;NULL;NULL;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+163;16;90005C;乳牙斷髓處理;800;Pulpotomy of primary tooth;1;1;NaOCl pulpotomy under L.ANES.;34001C~34004C,96001C;51~55,61~65,71~75,81~85,99
+164;17;90006C;去除縫成牙冠;240;Removal of s-p crown;2;10;Remove ill-fitted prosthesis under L.ANES;34001C~34004C;11~19,21~29,31~39,41~49,99
+165;17;90007C;去除鑄造牙冠;500;Removal of casting crown;4;14;Remove ill-fitted prosthesis under L.ANES;34001C~34004C;11~19,21~29,31~39,41~49,99
+166;120;90008C;去除釘柱;1235;Removal of post;4;14;Remove post by bur method & take X-ray film.;34001C~34004C;11~19,21~29,31~39,41~49,99
+167;120;90011C;牙齒再植術;1000;Intentional tooth replantation;1;1;NULL;34001C~34004C;11~19,21~29,31~39,41~49,99
+168;120;90010C;根尖逆充填術;900;Root-end filling;1;1;NULL;34001C~34004C;11~19,21~29,31~39,41~49,99
+169;120;90012C;橡皮障防濕裝置;150;Rubber dam isolation;2;10;Dental Tx.under RD application.;34001C~34004C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+170;120;90013C;根尖成形術或根尖生成術-前牙;500;Apexification or Apexogenesis-Anterior tooth;19;45;NULL;NULL;11~13,21~23,31~33,41~43,99,19,29,39,49
+171;120;90014C;根尖成形術或根尖生成術-後牙;1000;Apexification or Apexogenesis-Posterior tooth;19;45;NULL;NULL;14~19,24~29,34~39,44~49,99
+172;120;90015C;根管開擴及清創;600;Access cavity preparation, cleaning and shaping of the root canal system;2;10;RD isolation,access opening,RCT with copious NaOCl irrigation,cotton pellet and caviton temp. filling under L.ANES.;34001C~34004C,96001C;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+173;14;90016C;乳牙根管治療;1010;Endodontic treatment of primary tooth;2;10;Canal debride and enlarge with NaOCl irrigation,vitapex pulpectomy and IRM filling.;34001C~34004C,96001C;51~55,61~65,71~75,81~85,99
+174;140;92001C;非特定局部治療;50;Unspecified local treatment;16;41;NULL;92065B;
+175;120;92002C;齒間暫時固定術，每齒;100;Temporary splinting for one tooth;20;46;NULL;NULL;11~19,21~29,31~39,41~49,51~55,61~65,71~75,81~85,99
+176;140;92003C;口內切開排膿;510;Intraoral incision & drainage with drains;17;42;NULL;96001C;
+177;140;92004C;口外切開排膿;2000;Extraoral incision & drainage;17;42;NULL;96001C;
+178;140;92005C;拆線 每次;50;Removal of stitches;1;1;NULL;92018B~92023B,92025B,92026B,92034B,92037B,92067B,92068B;
+179;140;92006C;固定鋼線移除;160;Removal of splinting wire;20;46;NULL;NULL;
+180;140;92009C;去除齒列夾板;360;Removal of splint;20;46;NULL;NULL;11~19,21~29,31~39,41~49,99,UR,UL,LR,LL,UA,LA,UB,LB,FM
+181;140;92096C;牙齒外傷急症處理;4976;NULL;NULL;NULL;NULL;NULL;NULL
+182;140;92097C;顱顎關節障礙特殊檢查費-初診;1000;Special evaluation for craniomandibular disorders-first visit;NULL;NULL;NULL;NULL;NULL
+183;140;92098C;顱顎關節障礙特殊檢查費-複診;500;Special evaluation for craniomandibular disorders-return visit;NULL;NULL;NULL;NULL;NULL
+184;160;P30002;牙醫特殊服務試辦計畫身心障礙牙醫服務-氟化物防齲處理;500;NULL;1;1;NULL;NULL;FM
+185;190;P30005;到宅牙醫服務(每乙案)論次費用;5700;NULL;21;57;NULL;NULL;NULL
+186;190;P30006;牙醫特殊醫療服務計畫到宅訪視費;1553;NULL;21;57;NULL;NULL;NULL
+187;11;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+188;12;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+189;13;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+190;14;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+191;15;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+192;16;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+193;17;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+194;18;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+195;19;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+196;20;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+197;21;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+198;110;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+199;120;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+200;130;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+201;140;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+202;150;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+203;160;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+204;170;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+205;180;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+206;190;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+207;200;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL

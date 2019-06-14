@@ -5,8 +5,7 @@
             "fieldName": "major",
             "fieldType": "String",
             "fieldValidateRules": [
-                "required",
-                "unique"
+                "required"
             ]
         },
         {
