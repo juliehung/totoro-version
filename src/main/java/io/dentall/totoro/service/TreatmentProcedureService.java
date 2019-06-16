@@ -125,12 +125,7 @@ public class TreatmentProcedureService {
                 throw new ProblemUtil("A treatmentProcedure which has nhiExtendTreatmentProcedure cannot delete", Status.BAD_REQUEST);
             }
 
-            if (treatmentProcedure.getAppointment() != null && treatmentProcedure.getDisposal() != null && treatmentProcedure.getTodo() != null) {
-                treatmentProcedure.setTodo(null);
-                return;
-            }
-
-            if (treatmentProcedure.getDisposal() != null) {
+            if (treatmentProcedure.getDisposal() != null || treatmentProcedure.getTodo() != null) {
                 return;
             }
 
@@ -144,16 +139,6 @@ public class TreatmentProcedureService {
 
             if (treatmentProcedure.getAppointment() != null) {
                 Appointment appointment = treatmentProcedure.getAppointment();
-                if (treatmentProcedure.getProcedure() != null) {
-                    ProcedureType procedureType = treatmentProcedure.getProcedure().getProcedureType();
-                    appointment.setNote(procedureType.getMajor() + " " + appointment.getNote());
-                }
-
-                if (treatmentProcedure.getNhiProcedure() != null) {
-                    NhiProcedureType nhiProcedureType = treatmentProcedure.getNhiProcedure().getNhiProcedureType();
-                    appointment.setNote(nhiProcedureType.getName() + " " + appointment.getNote());
-                }
-
                 appointment.getTreatmentProcedures().remove(treatmentProcedure);
             }
 

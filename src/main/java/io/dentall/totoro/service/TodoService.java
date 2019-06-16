@@ -100,6 +100,13 @@ public class TodoService {
                 throw new ProblemUtil("A non-temporary todo cannot delete", Status.BAD_REQUEST);
             }
 
+            StreamUtil.asStream(todo.getTreatmentProcedures()).forEach(treatmentProcedure -> {
+                if (treatmentProcedure.getAppointment() != null) {
+                    treatmentProcedure.setDisposal(todo.getDisposal());
+                }
+
+                treatmentProcedure.setTodo(null);
+            });
             relationshipService.deleteTreatmentProcedures(todo.getTreatmentProcedures());
 
             if (todo.getPatient() != null) {
@@ -148,8 +155,13 @@ public class TodoService {
                     relationshipService.deleteTreatmentProcedures(
                         StreamUtil.asStream(todo.getTreatmentProcedures())
                             .filter(treatmentProcedure -> !updateIds.contains(treatmentProcedure.getId()))
-                            // lazy check treatmentProcedure with appointment and disposal
-                            // .map(treatmentProcedure -> treatmentProcedure.todo(null))
+                             .map(treatmentProcedure -> {
+                                 if (treatmentProcedure.getAppointment() != null) {
+                                     treatmentProcedure.setDisposal(todo.getDisposal());
+                                 }
+
+                                 return treatmentProcedure.todo(null);
+                             })
                             .collect(Collectors.toSet())
                     );
                     relationshipService.addRelationshipWithTreatmentProcedures(todo.treatmentProcedures(updateTodo.getTreatmentProcedures()));
