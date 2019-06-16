@@ -95,17 +95,17 @@ public class NhiExtendDisposalResource {
     }
 
     /**
-     * GET  /nhi-extend-disposals/:id : get the "id" nhiExtendDisposal.
+     * GET  /nhi-extend-disposals/:id : get the "id" nhiExtendDisposalVM.
      *
      * @param id the id of the nhiExtendDisposal to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the nhiExtendDisposal, or with status 404 (Not Found)
+     * @return the ResponseEntity with status 200 (OK) and with body the nhiExtendDisposalVM, or with status 404 (Not Found)
      */
     @GetMapping("/nhi-extend-disposals/{id}")
     @Timed
-    public ResponseEntity<NhiExtendDisposal> getNhiExtendDisposal(@PathVariable Long id) {
+    public ResponseEntity<NhiExtendDisposalVM> getNhiExtendDisposal(@PathVariable Long id) {
         log.debug("REST request to get NhiExtendDisposal : {}", id);
         Optional<NhiExtendDisposal> nhiExtendDisposal = nhiExtendDisposalService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(nhiExtendDisposal);
+        return ResponseUtil.wrapOrNotFound(nhiExtendDisposal.map(NhiExtendDisposalVM::new));
     }
 
     /**
