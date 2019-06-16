@@ -17,6 +17,8 @@ public class NhiExtendDisposalVM extends NhiExtendDisposal implements Serializab
         name = nhiExtendDisposal.getDisposal().getRegistration().getAppointment().getPatient().getName();
         doctor = nhiExtendDisposal.getDisposal().getCreatedBy();
 
+        setId(nhiExtendDisposal.getId());
+        setDisposal(nhiExtendDisposal.getDisposal());
         setA11(nhiExtendDisposal.getA11());
         setA12(nhiExtendDisposal.getA12());
         setA13(nhiExtendDisposal.getA13());
