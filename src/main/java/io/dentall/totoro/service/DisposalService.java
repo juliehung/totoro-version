@@ -218,10 +218,6 @@ public class DisposalService {
                     disposal.setPrescription(getPrescription(updateDisposal));
                 }
 
-                if (updateDisposal.getTodo() != null) {
-                    disposal.setTodo(getTodo(updateDisposal));
-                }
-
                 if (updateDisposal.getTreatmentProcedures() != null) {
                     Set<Long> updateIds = updateDisposal.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet());
                     relationshipService.deleteTreatmentProcedures(
@@ -231,6 +227,11 @@ public class DisposalService {
                             .collect(Collectors.toSet())
                     );
                     relationshipService.addRelationshipWithTreatmentProcedures(disposal.treatmentProcedures(updateDisposal.getTreatmentProcedures()));
+                }
+
+                if (updateDisposal.getTodo() != null) {
+                    disposal.setTodo(getTodo(updateDisposal));
+                    disposal.setTreatmentProcedures(disposal.getTreatmentProcedures());
                 }
 
                 if (updateDisposal.getTeeth() != null) {
