@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
@@ -218,20 +219,26 @@ public class DisposalService {
                     disposal.setPrescription(getPrescription(updateDisposal));
                 }
 
-                if (updateDisposal.getTreatmentProcedures() != null) {
-                    Set<Long> updateIds = updateDisposal.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet());
+                if (updateDisposal.getTreatmentProcedures() != null || updateDisposal.getTodo() != null) {
+                    Set<TreatmentProcedure> originTxPs = null;
+                    if (updateDisposal.getTreatmentProcedures() != null) {
+                        originTxPs = disposal.getTreatmentProcedures();
+                        relationshipService.addRelationshipWithTreatmentProcedures(disposal.treatmentProcedures(updateDisposal.getTreatmentProcedures()));
+                        Set<Long> ids = StreamUtil.asStream(disposal.getTreatmentProcedures()).map(TreatmentProcedure::getId).collect(Collectors.toSet());
+                        StreamUtil.asStream(originTxPs)
+                            .filter(treatmentProcedure -> !ids.contains(treatmentProcedure.getId()))
+                            .forEach(treatmentProcedure -> treatmentProcedure.setDisposal(null));
+                    }
+
+                    if (updateDisposal.getTodo() != null) {
+                        disposal.setTodo(getTodo(updateDisposal));
+                    }
+
                     relationshipService.deleteTreatmentProcedures(
-                        StreamUtil.asStream(disposal.getTreatmentProcedures())
-                            .filter(treatmentProcedure -> !updateIds.contains(treatmentProcedure.getId()))
-                            .map(treatmentProcedure -> treatmentProcedure.disposal(null))
+                        StreamUtil.asStream(originTxPs)
+                            .filter(RelationshipService.isDeletable)
                             .collect(Collectors.toSet())
                     );
-                    relationshipService.addRelationshipWithTreatmentProcedures(disposal.treatmentProcedures(updateDisposal.getTreatmentProcedures()));
-                }
-
-                if (updateDisposal.getTodo() != null) {
-                    disposal.setTodo(getTodo(updateDisposal));
-                    disposal.setTreatmentProcedures(disposal.getTreatmentProcedures());
                 }
 
                 if (updateDisposal.getTeeth() != null) {

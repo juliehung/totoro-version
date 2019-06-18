@@ -2,6 +2,7 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.service.util.StreamUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -9,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,6 +40,22 @@ public class RelationshipService {
     private final NhiMedicalRecordService nhiMedicalRecordService;
 
     private final TreatmentPlanService treatmentPlanService;
+
+    static Predicate<TreatmentProcedure> isDeletable = treatmentProcedure -> {
+        if (treatmentProcedure.getProcedure() == null && treatmentProcedure.getNhiProcedure() == null) {
+            return true;
+        }
+
+        if (treatmentProcedure.getProcedure() != null && StringUtils.isBlank(treatmentProcedure.getProcedure().getContent())) {
+            return true;
+        }
+
+        if (treatmentProcedure.getNhiProcedure() != null && StringUtils.isBlank(treatmentProcedure.getNhiProcedure().getCode())) {
+            return true;
+        }
+
+        return false;
+    };
 
     public RelationshipService(
         @Lazy TreatmentProcedureService treatmentProcedureService,
