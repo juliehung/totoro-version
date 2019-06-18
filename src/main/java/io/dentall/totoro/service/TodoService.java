@@ -100,13 +100,7 @@ public class TodoService {
                 throw new ProblemUtil("A non-temporary todo cannot delete", Status.BAD_REQUEST);
             }
 
-            StreamUtil.asStream(todo.getTreatmentProcedures()).forEach(treatmentProcedure -> {
-                if (treatmentProcedure.getAppointment() != null) {
-                    treatmentProcedure.setDisposal(todo.getDisposal());
-                }
-
-                treatmentProcedure.setTodo(null);
-            });
+            StreamUtil.asStream(todo.getTreatmentProcedures()).forEach(treatmentProcedure -> treatmentProcedure.setTodo(null));
             relationshipService.deleteTreatmentProcedures(todo.getTreatmentProcedures());
 
             if (todo.getPatient() != null) {
@@ -151,20 +145,16 @@ public class TodoService {
                 }
 
                 if (updateTodo.getTreatmentProcedures() != null) {
-                    Set<Long> updateIds = updateTodo.getTreatmentProcedures().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet());
+                    Set<TreatmentProcedure> originTxPs = todo.getTreatmentProcedures();
+                    relationshipService.addRelationshipWithTreatmentProcedures(todo.treatmentProcedures(updateTodo.getTreatmentProcedures()));
+                    Set<Long> ids = StreamUtil.asStream(todo.getTreatmentProcedures()).map(TreatmentProcedure::getId).collect(Collectors.toSet());
                     relationshipService.deleteTreatmentProcedures(
-                        StreamUtil.asStream(todo.getTreatmentProcedures())
-                            .filter(treatmentProcedure -> !updateIds.contains(treatmentProcedure.getId()))
-                             .map(treatmentProcedure -> {
-                                 if (treatmentProcedure.getAppointment() != null) {
-                                     treatmentProcedure.setDisposal(todo.getDisposal());
-                                 }
-
-                                 return treatmentProcedure.todo(null);
-                             })
+                        StreamUtil.asStream(originTxPs)
+                            .filter(treatmentProcedure -> !ids.contains(treatmentProcedure.getId()))
+                            .map(treatmentProcedure -> treatmentProcedure.todo(null))
+                            .filter(RelationshipService.isDeletable)
                             .collect(Collectors.toSet())
                     );
-                    relationshipService.addRelationshipWithTreatmentProcedures(todo.treatmentProcedures(updateTodo.getTreatmentProcedures()));
                 }
 
                 return todo;
