@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -50,6 +51,15 @@ public class Accounting implements Serializable {
 
     @Column(name = "discount")
     private Double discount;
+
+    @Column(name = "withdrawal")
+    private Double withdrawal;
+
+    @Column(name = "transaction_time")
+    private Instant transactionTime;
+
+    @Column(name = "staff")
+    private String staff;
 
     @ManyToOne
     @JsonIgnoreProperties("")
@@ -172,6 +182,45 @@ public class Accounting implements Serializable {
         this.discount = discount;
     }
 
+    public Double getWithdrawal() {
+        return withdrawal;
+    }
+
+    public Accounting withdrawal(Double withdrawal) {
+        this.withdrawal = withdrawal;
+        return this;
+    }
+
+    public void setWithdrawal(Double withdrawal) {
+        this.withdrawal = withdrawal;
+    }
+
+    public Instant getTransactionTime() {
+        return transactionTime;
+    }
+
+    public Accounting transactionTime(Instant transactionTime) {
+        this.transactionTime = transactionTime;
+        return this;
+    }
+
+    public void setTransactionTime(Instant transactionTime) {
+        this.transactionTime = transactionTime;
+    }
+
+    public String getStaff() {
+        return staff;
+    }
+
+    public Accounting staff(String staff) {
+        this.staff = staff;
+        return this;
+    }
+
+    public void setStaff(String staff) {
+        this.staff = staff;
+    }
+
     public Hospital getHospital() {
         return hospital;
     }
@@ -231,6 +280,9 @@ public class Accounting implements Serializable {
             ", patientIdentity='" + getPatientIdentity() + "'" +
             ", discountReason='" + getDiscountReason() + "'" +
             ", discount=" + getDiscount() +
+            ", withdrawal=" + getWithdrawal() +
+            ", transactionTime='" + getTransactionTime() + "'" +
+            ", staff='" + getStaff() + "'" +
             "}";
     }
 }

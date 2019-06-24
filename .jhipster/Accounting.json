@@ -51,6 +51,18 @@
         {
             "fieldName": "discount",
             "fieldType": "Double"
+        },
+        {
+            "fieldName": "withdrawal",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "transactionTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "staff",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20190103032423",

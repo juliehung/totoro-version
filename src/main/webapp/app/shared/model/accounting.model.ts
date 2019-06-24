@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 import { IHospital } from 'app/shared/model//hospital.model';
 import { IRegistration } from 'app/shared/model//registration.model';
 
@@ -11,6 +12,9 @@ export interface IAccounting {
   patientIdentity?: string;
   discountReason?: string;
   discount?: number;
+  withdrawal?: number;
+  transactionTime?: Moment;
+  staff?: string;
   hospital?: IHospital;
   registration?: IRegistration;
 }

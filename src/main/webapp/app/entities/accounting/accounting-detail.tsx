@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -76,6 +76,26 @@ export class AccountingDetail extends React.Component<IAccountingDetailProps> {
               </span>
             </dt>
             <dd>{accountingEntity.discount}</dd>
+            <dt>
+              <span id="withdrawal">
+                <Translate contentKey="totoroApp.accounting.withdrawal">Withdrawal</Translate>
+              </span>
+            </dt>
+            <dd>{accountingEntity.withdrawal}</dd>
+            <dt>
+              <span id="transactionTime">
+                <Translate contentKey="totoroApp.accounting.transactionTime">Transaction Time</Translate>
+              </span>
+            </dt>
+            <dd>
+              <TextFormat value={accountingEntity.transactionTime} type="date" format={APP_DATE_FORMAT} />
+            </dd>
+            <dt>
+              <span id="staff">
+                <Translate contentKey="totoroApp.accounting.staff">Staff</Translate>
+              </span>
+            </dt>
+            <dd>{accountingEntity.staff}</dd>
             <dt>
               <Translate contentKey="totoroApp.accounting.hospital">Hospital</Translate>
             </dt>

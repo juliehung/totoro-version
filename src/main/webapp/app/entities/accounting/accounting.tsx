@@ -3,7 +3,15 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAllAction, getSortState, IPaginationBaseState, getPaginationItemsNumber, JhiPagination } from 'react-jhipster';
+import {
+  Translate,
+  ICrudGetAllAction,
+  TextFormat,
+  getSortState,
+  IPaginationBaseState,
+  getPaginationItemsNumber,
+  JhiPagination
+} from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -91,6 +99,15 @@ export class Accounting extends React.Component<IAccountingProps, IAccountingSta
                 <th className="hand" onClick={this.sort('discount')}>
                   <Translate contentKey="totoroApp.accounting.discount">Discount</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('withdrawal')}>
+                  <Translate contentKey="totoroApp.accounting.withdrawal">Withdrawal</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('transactionTime')}>
+                  <Translate contentKey="totoroApp.accounting.transactionTime">Transaction Time</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('staff')}>
+                  <Translate contentKey="totoroApp.accounting.staff">Staff</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.accounting.hospital">Hospital</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -113,6 +130,11 @@ export class Accounting extends React.Component<IAccountingProps, IAccountingSta
                   <td>{accounting.patientIdentity}</td>
                   <td>{accounting.discountReason}</td>
                   <td>{accounting.discount}</td>
+                  <td>{accounting.withdrawal}</td>
+                  <td>
+                    <TextFormat type="date" value={accounting.transactionTime} format={APP_DATE_FORMAT} />
+                  </td>
+                  <td>{accounting.staff}</td>
                   <td>{accounting.hospital ? <Link to={`hospital/${accounting.hospital.id}`}>{accounting.hospital.id}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

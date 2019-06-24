@@ -54,6 +54,8 @@ export class AccountingUpdate extends React.Component<IAccountingUpdateProps, IA
   }
 
   saveEntity = (event, errors, values) => {
+    values.transactionTime = new Date(values.transactionTime);
+
     if (errors.length === 0) {
       const { accountingEntity } = this.props;
       const entity = {
@@ -156,6 +158,30 @@ export class AccountingUpdate extends React.Component<IAccountingUpdateProps, IA
                     <Translate contentKey="totoroApp.accounting.discount">Discount</Translate>
                   </Label>
                   <AvField id="accounting-discount" type="string" className="form-control" name="discount" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="withdrawalLabel" for="withdrawal">
+                    <Translate contentKey="totoroApp.accounting.withdrawal">Withdrawal</Translate>
+                  </Label>
+                  <AvField id="accounting-withdrawal" type="string" className="form-control" name="withdrawal" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="transactionTimeLabel" for="transactionTime">
+                    <Translate contentKey="totoroApp.accounting.transactionTime">Transaction Time</Translate>
+                  </Label>
+                  <AvInput
+                    id="accounting-transactionTime"
+                    type="datetime-local"
+                    className="form-control"
+                    name="transactionTime"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.accountingEntity.transactionTime)}
+                  />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="staffLabel" for="staff">
+                    <Translate contentKey="totoroApp.accounting.staff">Staff</Translate>
+                  </Label>
+                  <AvField id="accounting-staff" type="text" name="staff" />
                 </AvGroup>
                 <AvGroup>
                   <Label for="hospital.id">

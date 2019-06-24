@@ -23,6 +23,9 @@
       "patientIdentity": "Patient Identity",
       "discountReason": "Discount Reason",
       "discount": "Discount",
+      "withdrawal": "Withdrawal",
+      "transactionTime": "Transaction Time",
+      "staff": "Staff",
       "hospital": "Hospital",
       "registration": "Registration"
     }
