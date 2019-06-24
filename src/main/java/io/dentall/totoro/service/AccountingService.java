@@ -81,6 +81,18 @@ public class AccountingService {
                     accounting.setDiscount((updateAccounting.getDiscount()));
                 }
 
+                if (updateAccounting.getWithdrawal() != null) {
+                    accounting.setWithdrawal(updateAccounting.getWithdrawal());
+                }
+
+                if (updateAccounting.getTransactionTime() != null) {
+                    accounting.setTransactionTime(updateAccounting.getTransactionTime());
+                }
+
+                if (updateAccounting.getStaff() != null) {
+                    accounting.setStaff(updateAccounting.getStaff());
+                }
+
                 if (updateAccounting.getHospital() != null && updateAccounting.getHospital().getId() != null) {
                     hospitalRepository.findById(updateAccounting.getHospital().getId()).ifPresent(accounting::setHospital);
                 }

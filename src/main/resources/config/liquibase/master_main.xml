@@ -57,6 +57,7 @@
     <include file="config/liquibase/changelog/addColumn/20190524.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/addColumn/20190528.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/addColumn/20190603.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/addColumn/20190624.xml" relativeToChangelogFile="false"/>
 
     <!-- add default values -->
     <include file="config/liquibase/changelog/addDefaultValue/20190404.xml" relativeToChangelogFile="false"/>

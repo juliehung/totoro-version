@@ -1,6 +1,7 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
+
 import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.repository.AccountingRepository;
 import io.dentall.totoro.service.AccountingService;
@@ -22,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -63,6 +66,15 @@ public class AccountingResourceIntTest {
 
     private static final Double DEFAULT_DISCOUNT = 1D;
     private static final Double UPDATED_DISCOUNT = 2D;
+
+    private static final Double DEFAULT_WITHDRAWAL = 1D;
+    private static final Double UPDATED_WITHDRAWAL = 2D;
+
+    private static final Instant DEFAULT_TRANSACTION_TIME = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_TRANSACTION_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_STAFF = "AAAAAAAAAA";
+    private static final String UPDATED_STAFF = "BBBBBBBBBB";
 
     @Autowired
     private AccountingRepository accountingRepository;
@@ -116,7 +128,10 @@ public class AccountingResourceIntTest {
             .other(DEFAULT_OTHER)
             .patientIdentity(DEFAULT_PATIENT_IDENTITY)
             .discountReason(DEFAULT_DISCOUNT_REASON)
-            .discount(DEFAULT_DISCOUNT);
+            .discount(DEFAULT_DISCOUNT)
+            .withdrawal(DEFAULT_WITHDRAWAL)
+            .transactionTime(DEFAULT_TRANSACTION_TIME)
+            .staff(DEFAULT_STAFF);
         return accounting;
     }
 
@@ -148,6 +163,9 @@ public class AccountingResourceIntTest {
         assertThat(testAccounting.getPatientIdentity()).isEqualTo(DEFAULT_PATIENT_IDENTITY);
         assertThat(testAccounting.getDiscountReason()).isEqualTo(DEFAULT_DISCOUNT_REASON);
         assertThat(testAccounting.getDiscount()).isEqualTo(DEFAULT_DISCOUNT);
+        assertThat(testAccounting.getWithdrawal()).isEqualTo(DEFAULT_WITHDRAWAL);
+        assertThat(testAccounting.getTransactionTime()).isEqualTo(DEFAULT_TRANSACTION_TIME);
+        assertThat(testAccounting.getStaff()).isEqualTo(DEFAULT_STAFF);
     }
 
     @Test
@@ -205,7 +223,10 @@ public class AccountingResourceIntTest {
             .andExpect(jsonPath("$.[*].other").value(hasItem(DEFAULT_OTHER.doubleValue())))
             .andExpect(jsonPath("$.[*].patientIdentity").value(hasItem(DEFAULT_PATIENT_IDENTITY.toString())))
             .andExpect(jsonPath("$.[*].discountReason").value(hasItem(DEFAULT_DISCOUNT_REASON.toString())))
-            .andExpect(jsonPath("$.[*].discount").value(hasItem(DEFAULT_DISCOUNT.doubleValue())));
+            .andExpect(jsonPath("$.[*].discount").value(hasItem(DEFAULT_DISCOUNT.doubleValue())))
+            .andExpect(jsonPath("$.[*].withdrawal").value(hasItem(DEFAULT_WITHDRAWAL.doubleValue())))
+            .andExpect(jsonPath("$.[*].transactionTime").value(hasItem(DEFAULT_TRANSACTION_TIME.toString())))
+            .andExpect(jsonPath("$.[*].staff").value(hasItem(DEFAULT_STAFF.toString())));
     }
     
     @Test
@@ -226,7 +247,10 @@ public class AccountingResourceIntTest {
             .andExpect(jsonPath("$.other").value(DEFAULT_OTHER.doubleValue()))
             .andExpect(jsonPath("$.patientIdentity").value(DEFAULT_PATIENT_IDENTITY.toString()))
             .andExpect(jsonPath("$.discountReason").value(DEFAULT_DISCOUNT_REASON.toString()))
-            .andExpect(jsonPath("$.discount").value(DEFAULT_DISCOUNT.doubleValue()));
+            .andExpect(jsonPath("$.discount").value(DEFAULT_DISCOUNT.doubleValue()))
+            .andExpect(jsonPath("$.withdrawal").value(DEFAULT_WITHDRAWAL.doubleValue()))
+            .andExpect(jsonPath("$.transactionTime").value(DEFAULT_TRANSACTION_TIME.toString()))
+            .andExpect(jsonPath("$.staff").value(DEFAULT_STAFF.toString()));
     }
 
     @Test
@@ -257,7 +281,10 @@ public class AccountingResourceIntTest {
             .other(UPDATED_OTHER)
             .patientIdentity(UPDATED_PATIENT_IDENTITY)
             .discountReason(UPDATED_DISCOUNT_REASON)
-            .discount(UPDATED_DISCOUNT);
+            .discount(UPDATED_DISCOUNT)
+            .withdrawal(UPDATED_WITHDRAWAL)
+            .transactionTime(UPDATED_TRANSACTION_TIME)
+            .staff(UPDATED_STAFF);
 
         restAccountingMockMvc.perform(put("/api/accountings")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -276,6 +303,9 @@ public class AccountingResourceIntTest {
         assertThat(testAccounting.getPatientIdentity()).isEqualTo(UPDATED_PATIENT_IDENTITY);
         assertThat(testAccounting.getDiscountReason()).isEqualTo(UPDATED_DISCOUNT_REASON);
         assertThat(testAccounting.getDiscount()).isEqualTo(UPDATED_DISCOUNT);
+        assertThat(testAccounting.getWithdrawal()).isEqualTo(UPDATED_WITHDRAWAL);
+        assertThat(testAccounting.getTransactionTime()).isEqualTo(UPDATED_TRANSACTION_TIME);
+        assertThat(testAccounting.getStaff()).isEqualTo(UPDATED_STAFF);
     }
 
     @Test
