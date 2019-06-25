@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -140,6 +141,7 @@ public class NhiProcedureResourceIntTest {
         // Validate the NhiProcedure in the database
         List<NhiProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
         assertThat(nhiProcedureList).hasSize(databaseSizeBeforeCreate + 1);
+        nhiProcedureList.sort(Comparator.comparingLong(NhiProcedure::getId));
         NhiProcedure testNhiProcedure = nhiProcedureList.get(nhiProcedureList.size() - 1);
         assertThat(testNhiProcedure.getCode()).isEqualTo(DEFAULT_CODE);
         assertThat(testNhiProcedure.getName()).isEqualTo(DEFAULT_NAME);

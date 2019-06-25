@@ -38,6 +38,7 @@ gradle-test:
             - build/jacocoHtml/*
 # Uncomment following to expire the artifacts after defined period, https://docs.gitlab.com/ee/ci/yaml/README.html#artifacts-expire_in
 #       expire_in: 90 day
+
 gradle-front-test:
     stage: test
     image: openjdk:8-jre-stretch
@@ -49,34 +50,94 @@ gradle-front-test:
             - build/test-results/jest/*
             - build/test-results/lcov-report/*
 #       expire_in: 90 day
+
 gradle-repackage:
     stage: package
     image: openjdk:8-jdk-stretch
     script:
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - ./gradlew bootWar -Pdev -P4fe -x check -PnodeInstall --no-daemon
+        - git checkout $CI_COMMIT_REF_SLUG
+        - ./gradlew bootWar -Pprod -x check -PnodeInstall --no-daemon
     artifacts:
         paths:
             - build/*
 #       expire_in: 90 day
 
-depolyDockerImage:
+depolyGitlabRegistry:
     stage: deploy
+    dependencies:
+        - gradle-repackage
     image: docker
     services:
         - docker:dind
     variables:
-        MAJOR: 0
-        MINOR: 0
-        MINOR_RENEW_DATE: "2019-05-27"
+        DOCKER_DRIVER: overlay
     script:
-        - apk update && apk add nss && apk add git && apk add openjdk8-jre
+        - apk add --update make nss git openjdk8-jre
+        - war_path=build/libs/*.war
+        - filename=$(basename $war_path .war)
+        - version=${filename##*-}
         - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-        - git remote set-url origin https://gitlab-ci-token:$CI_PUSH_TOKEN@gitlab.com/$CI_PROJECT_PATH.git
         - git checkout $CI_COMMIT_REF_SLUG
-        - COUNT=$(git rev-list $CI_COMMIT_REF_SLUG --count --since=$MINOR_RENEW_DATE)
-        - ./gradlew -Pprod jib --image=registry.gitlab.com/dentall/totoro-admin/$CI_COMMIT_REF_SLUG:$MAJOR.$MINOR.$COUNT -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
+        - ./gradlew -Pprod jib --image=registry.gitlab.com/dentall/totoro-admin/$CI_COMMIT_REF_SLUG:$version -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
         - ./gradlew -Pprod jib --image=registry.gitlab.com/dentall/totoro-admin/$CI_COMMIT_REF_SLUG -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
+
+depolyCloudRun:
+    stage: deploy
+    environment:
+        name: staging/master-cloud-run
+        url: https://master-cloud-run-vgcfrtzwfa-uc.a.run.app
+        on_stop: stopCloudRun
+    when: manual
+    dependencies:
+        - gradle-repackage
+    image: docker
+    services:
+        - docker:dind
+    variables:
+        DOCKER_DRIVER: overlay
+    script:
+        # Install CA certs, openssl to https downloads, python for gcloud sdk
+        - apk add --update make ca-certificates openssl python
+        - update-ca-certificates
+        # Write our GCP service account private key into a file
+        - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+        # Download and install Google Cloud SDK
+        - wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
+        - tar zxvf google-cloud-sdk.tar.gz && ./google-cloud-sdk/install.sh --usage-reporting=false --path-update=true
+        - google-cloud-sdk/bin/gcloud --quiet components update
+        - google-cloud-sdk/bin/gcloud --quiet components install beta
+        - google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
+        - docker login -u _json_key --password-stdin https://us.gcr.io < ${HOME}/gcloud-service-key.json
+        - war_path=build/libs/*.war
+        - filename=$(basename $war_path .war)
+        - version=${filename##*-}
+        - cp build/libs/$filename.war docker/app.war
+        - docker build -t us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$version -f docker/Dockerfile docker
+        - docker push us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$version
+        - google-cloud-sdk/bin/gcloud beta auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
+        - google-cloud-sdk/bin/gcloud beta run deploy master-cloud-run --image us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$version --platform managed --region us-central1 --async --allow-unauthenticated --set-env-vars ^#^_JAVA_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx512m"#SPRING_PROFILES_ACTIVE="prod,embedded-postgres"#ARGS="--postgres.shared_buffers=128" --memory 768Mi
+
+stopCloudRun:
+    stage: deploy
+    environment:
+        name: staging/master-cloud-run
+        action: stop
+    when: manual
+    image: alpine
+    script:
+        # Install CA certs, openssl to https downloads, python for gcloud sdk
+        - apk add --update make ca-certificates openssl python
+        - update-ca-certificates
+        # Write our GCP service account private key into a file
+        - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+        # Download and install Google Cloud SDK
+        - wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
+        - tar zxvf google-cloud-sdk.tar.gz && ./google-cloud-sdk/install.sh --usage-reporting=false --path-update=true
+        - google-cloud-sdk/bin/gcloud --quiet components update
+        - google-cloud-sdk/bin/gcloud --quiet components install beta
+        - google-cloud-sdk/bin/gcloud beta auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
+        - google-cloud-sdk/bin/gcloud beta run services delete master-cloud-run --platform managed --region us-central1
 
 pages:
     stage: deploy

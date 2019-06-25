@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -29,6 +30,9 @@ public class DatabaseConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
 
+    @Value("${postgres.shared_buffers:512}")
+    private int sharedBuffers;
+
     @Bean(destroyMethod = "stop")
     @Profile("embedded-postgres")
     public PostgresProcess postgresProcess() throws IOException {
@@ -53,7 +57,7 @@ public class DatabaseConfiguration {
             postgresConfig.getAdditionalInitDbParams().add("--locale=en_US.utf8");
         }
 
-        postgresConfig.getAdditionalPostgresParams().addAll(Arrays.asList("-c", "shared_buffers=512MB"));
+        postgresConfig.getAdditionalPostgresParams().addAll(Arrays.asList("-c", "shared_buffers=" + sharedBuffers + "MB"));
         PostgresStarter<PostgresExecutable, PostgresProcess> runtime =
             PostgresStarter.getInstance(EmbeddedPostgres.defaultRuntimeConfig());
 
