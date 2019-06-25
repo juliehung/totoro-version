@@ -63,6 +63,8 @@ public class AppointmentCriteria implements Serializable {
 
     private BooleanFilter noCard;
 
+    private InstantFilter arrivalTime;
+
     public LongFilter getId() {
         return id;
     }
@@ -207,6 +209,14 @@ public class AppointmentCriteria implements Serializable {
         this.noCard = noCard;
     }
 
+    public InstantFilter getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(InstantFilter arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -233,7 +243,8 @@ public class AppointmentCriteria implements Serializable {
             Objects.equals(doctorId, that.doctorId) &&
             Objects.equals(treatmentProcedureId, that.treatmentProcedureId) &&
             Objects.equals(disposalId, that.disposalId) &&
-            Objects.equals(noCard, that.noCard);
+            Objects.equals(noCard, that.noCard) &&
+            Objects.equals(arrivalTime, that.arrivalTime);
     }
 
     @Override
@@ -256,7 +267,8 @@ public class AppointmentCriteria implements Serializable {
             doctorId,
             treatmentProcedureId,
             disposalId,
-            noCard
+            noCard,
+            arrivalTime
         );
     }
 
@@ -281,6 +293,7 @@ public class AppointmentCriteria implements Serializable {
             (treatmentProcedureId != null ? "treatmentProcedureId=" + treatmentProcedureId + ", " : "") +
             (disposalId != null ? "disposalId=" + disposalId + ", " : "") +
             (noCard != null ? "noCard=" + noCard + ", " : "") +
+            (arrivalTime != null ? "arrivalTime=" + arrivalTime + ", " : "") +
             "}";
     }
 
