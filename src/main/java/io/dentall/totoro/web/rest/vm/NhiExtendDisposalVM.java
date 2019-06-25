@@ -46,5 +46,7 @@ public class NhiExtendDisposalVM extends NhiExtendDisposal implements Serializab
         setNhiExtendTreatmentProcedures(nhiExtendDisposal.getNhiExtendTreatmentProcedures());
         setNhiExtendTreatmentDrugs(nhiExtendDisposal.getNhiExtendTreatmentDrugs());
         setNhiDayUploadDetails(nhiExtendDisposal.getNhiDayUploadDetails());
+        setPatientIdentity(nhiExtendDisposal.getPatientIdentity());
+        setSerialNumber(nhiExtendDisposal.getSerialNumber());
     }
 }
