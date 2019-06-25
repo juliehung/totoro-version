@@ -136,6 +136,14 @@ public class NhiExtendDisposal implements Serializable {
     @Column(name = "examination_point")
     private Integer examinationPoint;
 
+    // 病患身份
+    @Column(name = "patient_identity")
+    private String patientIdentity;
+
+    // 流水編號
+    @Column(name = "serial_number")
+    private String serialNumber;
+
     @OneToMany(mappedBy = "nhiExtendDisposal", fetch = FetchType.EAGER)
     private Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = null;
 
@@ -551,6 +559,22 @@ public class NhiExtendDisposal implements Serializable {
         this.nhiDayUploadDetails = nhiDayUploadDetails;
     }
 
+    public String getPatientIdentity() {
+        return patientIdentity;
+    }
+
+    public void setPatientIdentity(String patientIdentity) {
+        this.patientIdentity = patientIdentity;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -600,6 +624,8 @@ public class NhiExtendDisposal implements Serializable {
             ", uploadStatus='" + getUploadStatus() + "'" +
             ", examinationCode='" + getExaminationCode() + "'" +
             ", examinationPoint='" + getExaminationPoint() + "'" +
+            ", patientIdentity='" + getPatientIdentity() + "'" +
+            ", serialNumber='" + getSerialNumber() + "'" +
             "}";
     }
 }

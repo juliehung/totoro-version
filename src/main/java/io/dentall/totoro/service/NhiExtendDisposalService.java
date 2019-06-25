@@ -220,6 +220,14 @@ public class NhiExtendDisposalService {
                     nhiExtendDisposal.setExaminationPoint(updateNhiExtendDisposal.getExaminationPoint());
                 }
 
+                if (updateNhiExtendDisposal.getPatientIdentity() != null) {
+                    nhiExtendDisposal.setPatientIdentity(updateNhiExtendDisposal.getPatientIdentity());
+                }
+
+                if (updateNhiExtendDisposal.getSerialNumber() != null) {
+                    nhiExtendDisposal.setSerialNumber(updateNhiExtendDisposal.getSerialNumber());
+                }
+
                 log.debug("Update nhiExtendTreatmentProcedures({}) of NhiExtendDisposal(id: {})", updateNhiExtendDisposal.getNhiExtendTreatmentProcedures(), updateNhiExtendDisposal.getId());
                 relationshipService.addRelationshipWithNhiExtendTreatmentProcedures(nhiExtendDisposal, updateNhiExtendDisposal.getNhiExtendTreatmentProcedures());
 
