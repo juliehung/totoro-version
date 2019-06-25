@@ -57,7 +57,7 @@ def versionMinor = 0
 def versionMinorRenewDate = '2019-05-27'
 def branchName = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
 def commitCount = "git rev-list $branchName --count --since=$versionMinorRenewDate".execute().text.trim()
-version = "$versionMajor.$versionMinor.$commitCount-SNAPSHOT"
+version = "$branchName-$versionMajor.$versionMinor.$commitCount"
 
 description = ''
 
