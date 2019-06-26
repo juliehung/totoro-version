@@ -99,7 +99,7 @@ public class PatientService extends QueryService<Patient> {
         patient = patientRepository.save(patient.newPatient(true));
         patient.setNhiExtendPatient(nhiExtendPatientRepository.save(new NhiExtendPatient().patient(patient)));
         patient.setMedicalId(String.format("%05d", patient.getId()));
-        patient.getTreatments().add(createGeneralTreatmentAndPlanAndTask(patient));
+        createGeneralTreatmentAndPlanAndTask(patient);
 
         return patient;
     }

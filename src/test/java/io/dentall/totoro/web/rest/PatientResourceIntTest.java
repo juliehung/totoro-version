@@ -274,7 +274,6 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getTags()).contains(tag);
         assertThat(testPatient.getQuestionnaire().isDrug()).isEqualTo(patient.getQuestionnaire().isDrug());
         assertThat(testPatient.getPatientIdentity()).isEqualTo(patientIdentity);
-        assertThat(testPatient.getTreatments().size()).isEqualTo(1);
 
         tagRepository.findById(TagName.Hypertension.getValue()).ifPresent(tag -> assertThat(testPatient.getTags()).contains(tag));
     }
