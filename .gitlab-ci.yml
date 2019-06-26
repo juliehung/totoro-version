@@ -85,7 +85,7 @@ depolyGitlabRegistry:
 depolyCloudRun:
     stage: deploy
     environment:
-        name: staging/master-cloud-run
+        name: staging/$CI_COMMIT_REF_SLUG
         url: https://master-cloud-run-vgcfrtzwfa-uc.a.run.app
         on_stop: stopCloudRun
     when: manual
@@ -121,7 +121,7 @@ depolyCloudRun:
 stopCloudRun:
     stage: deploy
     environment:
-        name: staging/master-cloud-run
+        name: staging/$CI_COMMIT_REF_SLUG
         action: stop
     when: manual
     image: alpine
@@ -137,7 +137,7 @@ stopCloudRun:
         - google-cloud-sdk/bin/gcloud --quiet components update
         - google-cloud-sdk/bin/gcloud --quiet components install beta
         - google-cloud-sdk/bin/gcloud beta auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
-        - google-cloud-sdk/bin/gcloud beta run services delete master-cloud-run --platform managed --region us-central1
+        - google-cloud-sdk/bin/gcloud --quiet beta run services delete master-cloud-run --platform managed --region us-central1
 
 pages:
     stage: deploy
