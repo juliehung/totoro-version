@@ -154,10 +154,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @JsonIgnoreProperties("")
     private PatientIdentity patientIdentity;
 
-    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Treatment> treatments = new HashSet<>();
-
     @OneToMany(mappedBy = "patient")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Todo> todos = new HashSet<>();
@@ -674,31 +670,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
 
     public void setPatientIdentity(PatientIdentity patientIdentity) {
         this.patientIdentity = patientIdentity;
-    }
-
-    public Set<Treatment> getTreatments() {
-        return treatments;
-    }
-
-    public Patient treatments(Set<Treatment> treatments) {
-        this.treatments = treatments;
-        return this;
-    }
-
-    public Patient addTreatment(Treatment treatment) {
-        this.treatments.add(treatment);
-        treatment.setPatient(this);
-        return this;
-    }
-
-    public Patient removeTreatment(Treatment treatment) {
-        this.treatments.remove(treatment);
-        treatment.setPatient(null);
-        return this;
-    }
-
-    public void setTreatments(Set<Treatment> treatments) {
-        this.treatments = treatments;
     }
 
     public Set<Todo> getTodos() {

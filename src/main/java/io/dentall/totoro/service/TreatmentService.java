@@ -88,11 +88,6 @@ public class TreatmentService {
             StreamUtil.asStream(treatment.getTreatmentPlans()).forEach(treatmentPlan -> treatmentPlan.setTreatment(null));
             relationshipService.deleteTreatmentPlans(treatment.getTreatmentPlans());
 
-            if (treatment.getPatient() != null) {
-                Patient patient = treatment.getPatient();
-                patient.getTreatments().remove(treatment);
-            }
-
             treatmentRepository.deleteById(id);
         });
     }
