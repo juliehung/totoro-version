@@ -33,7 +33,10 @@ public enum TagName {
     Smoker(26L),
     DifficultExtractionOrContinuousBleeding(27L),
     NauseaOrDizziness(28L),
-    AdverseReactionsToAnestheticInjections(29L);
+    AdverseReactionsToAnestheticInjections(29L),
+    BeeninHospitalOrUndergoneOperation(30L),
+    TakenLongTermMedicineinAYear(31L),
+    UndergoneRadiationTherapyOrChemotherapy(32L);
 
     private final Long value;
 

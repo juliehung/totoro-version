@@ -27,3 +27,6 @@ id;jhi_type;name;modifiable
 27;OTHER;曾經拔牙困難或血流不止;FALSE
 28;OTHER;曾經治療牙齒時昏迷或暈眩;FALSE
 29;OTHER;曾經注射麻藥有不良反應;FALSE
+30;OTHER;曾住院或接受手術;FALSE
+31;OTHER;一年內服長期藥物(含避孕藥);FALSE
+32;OTHER;曾經接受放射線治療或化學治療;FALSE
