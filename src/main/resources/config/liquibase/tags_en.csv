@@ -27,3 +27,6 @@ id;jhi_type;name;modifiable
 27;OTHER;Difficult extraction or continuous bleeding;FALSE
 28;OTHER;Nausea or dizziness;FALSE
 29;OTHER;Adverse reactions to anesthetic injections;FALSE
+30;OTHER;been in a hospital or undergone an operation;FALSE
+31;OTHER;taken long-term medicine in a year (Birth-control pills included);FALSE
+32;OTHER;undergone radiation therapy or chemotherapy;FALSE
