@@ -54,6 +54,9 @@ public class NhiProcedure implements Serializable {
     @Column(name = "fdi")
     private String fdi;
 
+    @Column(name = "specific_code")
+    private String specificCode;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private NhiProcedureType nhiProcedureType;
@@ -178,6 +181,19 @@ public class NhiProcedure implements Serializable {
         this.fdi = fdi;
     }
 
+    public String getSpecificCode() {
+        return specificCode;
+    }
+
+    public NhiProcedure specificCode(String specificCode) {
+        this.specificCode = specificCode;
+        return this;
+    }
+
+    public void setSpecificCode(String specificCode) {
+        this.specificCode = specificCode;
+    }
+
     public NhiProcedureType getNhiProcedureType() {
         return nhiProcedureType;
     }
@@ -262,6 +278,7 @@ public class NhiProcedure implements Serializable {
             ", description='" + getDescription() + "'" +
             ", exclude='" + getExclude() + "'" +
             ", fdi='" + getFdi() + "'" +
+            ", specificCode='" + getSpecificCode() + "'" +
             "}";
     }
 }

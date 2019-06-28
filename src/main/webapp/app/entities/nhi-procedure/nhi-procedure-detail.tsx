@@ -77,6 +77,12 @@ export class NhiProcedureDetail extends React.Component<INhiProcedureDetailProps
             </dt>
             <dd>{nhiProcedureEntity.fdi}</dd>
             <dt>
+              <span id="specificCode">
+                <Translate contentKey="totoroApp.nhiProcedure.specificCode">Specific Code</Translate>
+              </span>
+            </dt>
+            <dd>{nhiProcedureEntity.specificCode}</dd>
+            <dt>
               <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
             </dt>
             <dd>{nhiProcedureEntity.nhiProcedureType ? nhiProcedureEntity.nhiProcedureType.id : ''}</dd>

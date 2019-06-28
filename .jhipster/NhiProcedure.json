@@ -61,6 +61,10 @@
         {
             "fieldName": "fdi",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "specificCode",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20181224042542",
