@@ -266,16 +266,6 @@ nhi_procedure_id;nhi_name;code;english_name;chinese_name
 121;乳牙複雜性拔牙;0CDWXZ0;Extraction of Upper Tooth, Single, External Approach;經由外部上部牙齒單一齒拔除術
 121;乳牙複雜性拔牙;0CDXXZ0;Extraction of Lower Tooth, Single, External Approach;經由外部下齒單一齒拔除術
 123;顎顏面骨壞死術後傷口照護;0CJYXZZ;Inspection of Mouth and Throat, External Approach;經由外部口腔及喉嚨視查術
-154;上顎單顆乳牙斷髓處理;0CBW0Z0;Excision of Upper Tooth, Open Approach, Single;開放性上部牙齒單一齒部分切除術
-154;下顎單顆乳牙斷髓處理;0CBX0Z0;Excision of Lower Tooth, Open Approach, Single;開放性下齒單一齒部分切除術
-155;上顎單顆乳牙根管治療;0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
-155;下顎單顆乳牙根管治療;0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
-156;上顎單顆乳牙多根管治療;0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
-156;下顎單顆乳牙多根管治療;0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
-157;乳牙拔除;0CDWXZ0;Extraction of Upper Tooth, Single, External Approach;經由外部上部牙齒單一齒拔除術
-157;乳牙拔除;0CDXXZ0;Extraction of Lower Tooth, Single, External Approach;經由外部下齒單一齒拔除術
-158;乳牙複雜性拔牙;0CDWXZ0;Extraction of Upper Tooth, Single, External Approach;經由外部上部牙齒單一齒拔除術
-158;乳牙複雜性拔牙;0CDXXZ0;Extraction of Lower Tooth, Single, External Approach;經由外部下齒單一齒拔除術
 159;上顎單顆恆牙根管治療(單根);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物
 159;下顎單顆恆牙根管治療(單根);0CRX0J0;Replacement of Lower Tooth, Single, with Synthetic Substitute, Open Approach;開放性下齒單一式置換術，使用合成替代物
 160;上顎單顆恆牙根管治療(雙根);0CRW0J0;Replacement of Upper Tooth, Single, with Synthetic Substitute, Open Approach;開放性上部牙齒單一式置換術，使用合成替代物

@@ -23,6 +23,7 @@
       "description": "Description",
       "exclude": "Exclude",
       "fdi": "Fdi",
+      "specificCode": "Specific Code",
       "nhiProcedureType": "Nhi Procedure Type",
       "nhiIcd9Cm": "Nhi Icd 9 Cm",
       "nhiIcd10Pcs": "Nhi Icd 10 Pcs"

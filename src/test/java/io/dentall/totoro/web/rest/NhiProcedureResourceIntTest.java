@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
+import java.util.Comparator;
 import javax.persistence.EntityManager;
 import java.util.Comparator;
 import java.util.List;
@@ -65,6 +66,9 @@ public class NhiProcedureResourceIntTest {
 
     private static final String DEFAULT_FDI = "AAAAAAAAAA";
     private static final String UPDATED_FDI = "BBBBBBBBBB";
+
+    private static final String DEFAULT_SPECIFIC_CODE = "AAAAAAAAAA";
+    private static final String UPDATED_SPECIFIC_CODE = "BBBBBBBBBB";
 
     @Autowired
     private NhiProcedureRepository nhiProcedureRepository;
@@ -118,7 +122,8 @@ public class NhiProcedureResourceIntTest {
             .defaultIcd10CmId(DEFAULT_DEFAULT_ICD_10_CM_ID)
             .description(DEFAULT_DESCRIPTION)
             .exclude(DEFAULT_EXCLUDE)
-            .fdi(DEFAULT_FDI);
+            .fdi(DEFAULT_FDI)
+            .specificCode(DEFAULT_SPECIFIC_CODE);
         return nhiProcedure;
     }
 
@@ -151,6 +156,7 @@ public class NhiProcedureResourceIntTest {
         assertThat(testNhiProcedure.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testNhiProcedure.getExclude()).isEqualTo(DEFAULT_EXCLUDE);
         assertThat(testNhiProcedure.getFdi()).isEqualTo(DEFAULT_FDI);
+        assertThat(testNhiProcedure.getSpecificCode()).isEqualTo(DEFAULT_SPECIFIC_CODE);
     }
 
     @Test
@@ -190,7 +196,8 @@ public class NhiProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].defaultIcd10CmId").value(hasItem(DEFAULT_DEFAULT_ICD_10_CM_ID.intValue())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].exclude").value(hasItem(DEFAULT_EXCLUDE.toString())))
-            .andExpect(jsonPath("$.[*].fdi").value(hasItem(DEFAULT_FDI.toString())));
+            .andExpect(jsonPath("$.[*].fdi").value(hasItem(DEFAULT_FDI.toString())))
+            .andExpect(jsonPath("$.[*].specificCode").value(hasItem(DEFAULT_SPECIFIC_CODE.toString())));
     }
     
     @Test
@@ -211,7 +218,8 @@ public class NhiProcedureResourceIntTest {
             .andExpect(jsonPath("$.defaultIcd10CmId").value(DEFAULT_DEFAULT_ICD_10_CM_ID.intValue()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.exclude").value(DEFAULT_EXCLUDE.toString()))
-            .andExpect(jsonPath("$.fdi").value(DEFAULT_FDI.toString()));
+            .andExpect(jsonPath("$.fdi").value(DEFAULT_FDI.toString()))
+            .andExpect(jsonPath("$.specificCode").value(DEFAULT_SPECIFIC_CODE.toString()));
     }
 
     @Test
@@ -235,13 +243,15 @@ public class NhiProcedureResourceIntTest {
         // Disconnect from session so that the updates on updatedNhiProcedure are not directly saved in db
         em.detach(updatedNhiProcedure);
         updatedNhiProcedure
+            .code(UPDATED_CODE)
             .name(UPDATED_NAME)
             .point(UPDATED_POINT)
             .englishName(UPDATED_ENGLISH_NAME)
             .defaultIcd10CmId(UPDATED_DEFAULT_ICD_10_CM_ID)
             .description(UPDATED_DESCRIPTION)
             .exclude(UPDATED_EXCLUDE)
-            .fdi(UPDATED_FDI);
+            .fdi(UPDATED_FDI)
+            .specificCode(UPDATED_SPECIFIC_CODE);
 
         restNhiProcedureMockMvc.perform(put("/api/nhi-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -251,7 +261,9 @@ public class NhiProcedureResourceIntTest {
         // Validate the NhiProcedure in the database
         List<NhiProcedure> nhiProcedureList = nhiProcedureRepository.findAll();
         assertThat(nhiProcedureList).hasSize(databaseSizeBeforeUpdate);
+        nhiProcedureList.sort(Comparator.comparingLong(NhiProcedure::getId));
         NhiProcedure testNhiProcedure = nhiProcedureList.get(nhiProcedureList.size() - 1);
+        assertThat(testNhiProcedure.getCode()).isEqualTo(UPDATED_CODE);
         assertThat(testNhiProcedure.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testNhiProcedure.getPoint()).isEqualTo(UPDATED_POINT);
         assertThat(testNhiProcedure.getEnglishName()).isEqualTo(UPDATED_ENGLISH_NAME);
@@ -259,6 +271,7 @@ public class NhiProcedureResourceIntTest {
         assertThat(testNhiProcedure.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testNhiProcedure.getExclude()).isEqualTo(UPDATED_EXCLUDE);
         assertThat(testNhiProcedure.getFdi()).isEqualTo(UPDATED_FDI);
+        assertThat(testNhiProcedure.getSpecificCode()).isEqualTo(UPDATED_SPECIFIC_CODE);
     }
 
     @Test

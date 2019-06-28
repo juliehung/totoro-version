@@ -82,6 +82,10 @@ public class NhiProcedureService {
         return nhiProcedureRepository
             .findById(updateNhiProcedure.getId())
             .map(nhiProcedure -> {
+                if (updateNhiProcedure.getCode() != null) {
+                    nhiProcedure.setCode(updateNhiProcedure.getCode());
+                }
+
                 if (updateNhiProcedure.getName() != null) {
                     nhiProcedure.setName(updateNhiProcedure.getName());
                 }
@@ -108,6 +112,10 @@ public class NhiProcedureService {
 
                 if (updateNhiProcedure.getFdi() != null) {
                     nhiProcedure.setFdi(updateNhiProcedure.getFdi());
+                }
+
+                if (updateNhiProcedure.getSpecificCode() != null) {
+                    nhiProcedure.setSpecificCode(updateNhiProcedure.getSpecificCode());
                 }
 
                 return nhiProcedure;

@@ -63,6 +63,9 @@ export class NhiProcedure extends React.Component<INhiProcedureProps> {
                   <Translate contentKey="totoroApp.nhiProcedure.fdi">Fdi</Translate>
                 </th>
                 <th>
+                  <Translate contentKey="totoroApp.nhiProcedure.specificCode">Specific Code</Translate>
+                </th>
+                <th>
                   <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
                 </th>
                 <th>
@@ -87,6 +90,7 @@ export class NhiProcedure extends React.Component<INhiProcedureProps> {
                   <td>{nhiProcedure.description}</td>
                   <td>{nhiProcedure.exclude}</td>
                   <td>{nhiProcedure.fdi}</td>
+                  <td>{nhiProcedure.specificCode}</td>
                   <td>
                     {nhiProcedure.nhiProcedureType ? (
                       <Link to={`nhi-procedure-type/${nhiProcedure.nhiProcedureType.id}`}>{nhiProcedure.nhiProcedureType.id}</Link>
