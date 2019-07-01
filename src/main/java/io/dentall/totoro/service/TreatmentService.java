@@ -1,6 +1,5 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Treatment;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.TreatmentRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -90,18 +88,6 @@ public class TreatmentService {
 
             treatmentRepository.deleteById(id);
         });
-    }
-
-    /**
-     * Get all the treatments by patient id.
-     *
-     * @param id the id of the patient
-     * @return the list of entities
-     */
-    @Transactional(readOnly = true)
-    public List<Treatment> findAllWithEagerRelationshipsByPatientId(Long id) {
-        log.debug("Request to get all Treatments by patient id : {}", id);
-        return treatmentRepository.findAllWithEagerRelationshipsByPatientId(id);
     }
 
     /**

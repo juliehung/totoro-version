@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
@@ -15,6 +16,7 @@ import java.util.Set;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
+import org.springframework.data.annotation.CreatedDate;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
@@ -24,6 +26,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 @Entity
 @Table(name = "treatment_procedure")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@AttributeOverride(name="createdDate", column=@Column(name="createdDate"))
 public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<TreatmentProcedure> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -95,6 +98,11 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
 
     @OneToOne(mappedBy = "treatmentProcedure", cascade = CascadeType.ALL)
     private NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure;
+
+    @CreatedDate
+    @Column(name = "created_date", nullable = false)
+    @JsonIgnore
+    private Instant createdDate;
 
     public Long getId() {
         return id;
@@ -336,6 +344,16 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
 
     public void setNhiExtendTreatmentProcedure(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         this.nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedure;
+    }
+
+    @Override
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    @Override
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
     }
 
     @Override

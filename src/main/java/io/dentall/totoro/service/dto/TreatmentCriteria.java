@@ -4,10 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
-import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 
@@ -45,6 +42,10 @@ public class TreatmentCriteria implements Serializable {
     private LongFilter patientId;
 
     private LongFilter treatmentPlanId;
+
+    private Boolean ignoreTodo;
+
+    private boolean eagerload = false;
 
     public LongFilter getId() {
         return id;
@@ -118,6 +119,21 @@ public class TreatmentCriteria implements Serializable {
         this.treatmentPlanId = treatmentPlanId;
     }
 
+    public Boolean getIgnoreTodo() {
+        return ignoreTodo;
+    }
+
+    public void setIgnoreTodo(Boolean ignoreTodo) {
+        this.ignoreTodo = ignoreTodo;
+    }
+
+    public boolean getEagerload() {
+        return eagerload;
+    }
+
+    public void setEagerload(boolean eagerload) {
+        this.eagerload = eagerload;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -128,8 +144,7 @@ public class TreatmentCriteria implements Serializable {
             return false;
         }
         final TreatmentCriteria that = (TreatmentCriteria) o;
-        return
-            Objects.equals(id, that.id) &&
+        return Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&
             Objects.equals(chiefComplaint, that.chiefComplaint) &&
             Objects.equals(goal, that.goal) &&
@@ -137,36 +152,42 @@ public class TreatmentCriteria implements Serializable {
             Objects.equals(finding, that.finding) &&
             Objects.equals(type, that.type) &&
             Objects.equals(patientId, that.patientId) &&
-            Objects.equals(treatmentPlanId, that.treatmentPlanId);
+            Objects.equals(treatmentPlanId, that.treatmentPlanId) &&
+            Objects.equals(ignoreTodo, that.ignoreTodo) &&
+            Objects.equals(eagerload, that.eagerload);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-        id,
-        name,
-        chiefComplaint,
-        goal,
-        note,
-        finding,
-        type,
-        patientId,
-        treatmentPlanId
+            id,
+            name,
+            chiefComplaint,
+            goal,
+            note,
+            finding,
+            type,
+            patientId,
+            treatmentPlanId,
+            ignoreTodo,
+            eagerload
         );
     }
 
     @Override
     public String toString() {
         return "TreatmentCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (name != null ? "name=" + name + ", " : "") +
-                (chiefComplaint != null ? "chiefComplaint=" + chiefComplaint + ", " : "") +
-                (goal != null ? "goal=" + goal + ", " : "") +
-                (note != null ? "note=" + note + ", " : "") +
-                (finding != null ? "finding=" + finding + ", " : "") +
-                (type != null ? "type=" + type + ", " : "") +
-                (patientId != null ? "patientId=" + patientId + ", " : "") +
-                (treatmentPlanId != null ? "treatmentPlanId=" + treatmentPlanId + ", " : "") +
+            (id != null ? "id=" + id + ", " : "") +
+            (name != null ? "name=" + name + ", " : "") +
+            (chiefComplaint != null ? "chiefComplaint=" + chiefComplaint + ", " : "") +
+            (goal != null ? "goal=" + goal + ", " : "") +
+            (note != null ? "note=" + note + ", " : "") +
+            (finding != null ? "finding=" + finding + ", " : "") +
+            (type != null ? "type=" + type + ", " : "") +
+            (patientId != null ? "patientId=" + patientId + ", " : "") +
+            (treatmentPlanId != null ? "treatmentPlanId=" + treatmentPlanId + ", " : "") +
+            (ignoreTodo != null ? "ignoreTodo=" + ignoreTodo + ", " : "") +
+            ("eagerload=" + eagerload + ", ") +
             "}";
     }
 
