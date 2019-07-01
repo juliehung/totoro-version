@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -77,11 +78,16 @@ public class TreatmentProcedureService {
 
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = treatmentProcedure.getNhiExtendTreatmentProcedure();
         Set<Tooth> teeth = treatmentProcedure.getTeeth();
+        Instant createdDate = treatmentProcedure.getCreatedDate();
         treatmentProcedure = treatmentProcedureRepository.save(treatmentProcedure.teeth(null).nhiExtendTreatmentProcedure(null));
         relationshipService.addRelationshipWithTeeth(treatmentProcedure.teeth(teeth));
 
         if (nhiExtendTreatmentProcedure != null) {
             treatmentProcedure.setNhiExtendTreatmentProcedure(getNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure.treatmentProcedure(treatmentProcedure)));
+        }
+
+        if (createdDate != null) {
+            treatmentProcedure.setCreatedDate(createdDate);
         }
 
         return treatmentProcedure;

@@ -241,6 +241,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
         return createdBy;
     }
 
+    @Override
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
