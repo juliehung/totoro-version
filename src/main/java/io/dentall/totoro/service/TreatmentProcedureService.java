@@ -79,18 +79,22 @@ public class TreatmentProcedureService {
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = treatmentProcedure.getNhiExtendTreatmentProcedure();
         Set<Tooth> teeth = treatmentProcedure.getTeeth();
         Instant createdDate = treatmentProcedure.getCreatedDate();
-        treatmentProcedure = treatmentProcedureRepository.save(treatmentProcedure.teeth(null).nhiExtendTreatmentProcedure(null));
-        relationshipService.addRelationshipWithTeeth(treatmentProcedure.teeth(teeth));
+        TreatmentProcedure txP = treatmentProcedureRepository.save(treatmentProcedure.teeth(null).nhiExtendTreatmentProcedure(null));
+        relationshipService.addRelationshipWithTeeth(txP.teeth(teeth));
 
         if (nhiExtendTreatmentProcedure != null) {
-            treatmentProcedure.setNhiExtendTreatmentProcedure(getNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure.treatmentProcedure(treatmentProcedure)));
+            txP.setNhiExtendTreatmentProcedure(getNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure.treatmentProcedure(txP)));
         }
 
         if (createdDate != null) {
-            treatmentProcedure.setCreatedDate(createdDate);
+            txP.setCreatedDate(createdDate);
         }
 
-        return treatmentProcedure;
+        if (txP.getTreatmentTask() != null && txP.getTreatmentTask().getId() != null) {
+            treatmentTaskRepository.findById(txP.getTreatmentTask().getId()).ifPresent(treatmentTask -> treatmentTask.getTreatmentProcedures().add(txP));
+        }
+
+        return txP;
     }
 
     /**
@@ -220,7 +224,11 @@ public class TreatmentProcedureService {
                 }
 
                 if (updateTreatmentProcedure.getTreatmentTask() != null && updateTreatmentProcedure.getTreatmentTask().getId() != null) {
-                    treatmentTaskRepository.findById(updateTreatmentProcedure.getTreatmentTask().getId()).ifPresent(treatmentProcedure::setTreatmentTask);
+                    treatmentTaskRepository.findById(updateTreatmentProcedure.getTreatmentTask().getId()).ifPresent(treatmentTask -> {
+                        treatmentProcedure.getTreatmentTask().getTreatmentProcedures().remove(treatmentProcedure);
+                        treatmentProcedure.setTreatmentTask(treatmentTask);
+                        treatmentTask.getTreatmentProcedures().add(treatmentProcedure);
+                    });
                 }
 
                 if (updateTreatmentProcedure.getTodo() != null && updateTreatmentProcedure.getTodo().getId() != null) {

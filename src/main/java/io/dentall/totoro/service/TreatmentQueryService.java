@@ -2,10 +2,12 @@ package io.dentall.totoro.service;
 
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.persistence.criteria.*;
 
+import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -120,7 +122,7 @@ public class TreatmentQueryService extends QueryService<Treatment> {
     }
 
     private BiFunction<Treatment, TreatmentCriteria, Treatment> mapper = (treatment, criteria) -> {
-        if (criteria.getEagerload() || criteria.getPatientId() != null || criteria.getIgnoreTodo() != null) {
+        if (criteria.getEagerload() || criteria.getPatientId() != null || criteria.getIgnoreTodo() || criteria.getTpCompleted()) {
             return fetchEagerRelationships(treatment, criteria);
         }
 
@@ -128,6 +130,10 @@ public class TreatmentQueryService extends QueryService<Treatment> {
     };
 
     private Treatment fetchEagerRelationships(Treatment treatment, TreatmentCriteria criteria) {
+        Predicate<TreatmentProcedure> ignoreTodo = criteria.getIgnoreTodo() ? treatmentProcedure -> treatmentProcedure.getTodo() == null : treatmentProcedure -> true;
+        Predicate<TreatmentProcedure> tpCompleted = criteria.getTpCompleted() ? treatmentProcedure -> treatmentProcedure.getStatus() == TreatmentProcedureStatus.COMPLETED : treatmentProcedure -> true;
+        Predicate<TreatmentProcedure> alwaysTrue = treatmentProcedure -> true;
+
         return treatment.treatmentPlans(treatment.getTreatmentPlans()
             .stream()
             .map(treatmentPlan -> treatmentPlan.treatmentTasks(
@@ -136,15 +142,7 @@ public class TreatmentQueryService extends QueryService<Treatment> {
                     .map(treatmentTask -> treatmentTask.treatmentProcedures(
                         treatmentTask.getTreatmentProcedures()
                             .stream()
-                            .filter(treatmentProcedure -> {
-                                if (criteria.getPatientId() != null && criteria.getPatientId().getEquals() != null &&
-                                    criteria.getIgnoreTodo() != null && criteria.getIgnoreTodo()
-                                ) {
-                                    return treatmentProcedure.getTodo() == null;
-                                }
-
-                                return true;
-                            })
+                            .filter(alwaysTrue.and(ignoreTodo).and(tpCompleted))
                             .collect(Collectors.toSet())
                         )
                     )
