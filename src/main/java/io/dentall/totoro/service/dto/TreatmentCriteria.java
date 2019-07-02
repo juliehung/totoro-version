@@ -43,9 +43,11 @@ public class TreatmentCriteria implements Serializable {
 
     private LongFilter treatmentPlanId;
 
-    private Boolean ignoreTodo;
+    private boolean ignoreTodo = false;
 
     private boolean eagerload = false;
+
+    private boolean tpCompleted = false;
 
     public LongFilter getId() {
         return id;
@@ -119,11 +121,11 @@ public class TreatmentCriteria implements Serializable {
         this.treatmentPlanId = treatmentPlanId;
     }
 
-    public Boolean getIgnoreTodo() {
+    public boolean getIgnoreTodo() {
         return ignoreTodo;
     }
 
-    public void setIgnoreTodo(Boolean ignoreTodo) {
+    public void setIgnoreTodo(boolean ignoreTodo) {
         this.ignoreTodo = ignoreTodo;
     }
 
@@ -133,6 +135,14 @@ public class TreatmentCriteria implements Serializable {
 
     public void setEagerload(boolean eagerload) {
         this.eagerload = eagerload;
+    }
+
+    public boolean getTpCompleted() {
+        return tpCompleted;
+    }
+
+    public void setTpCompleted(boolean tpCompleted) {
+        this.tpCompleted = tpCompleted;
     }
 
     @Override
@@ -154,7 +164,8 @@ public class TreatmentCriteria implements Serializable {
             Objects.equals(patientId, that.patientId) &&
             Objects.equals(treatmentPlanId, that.treatmentPlanId) &&
             Objects.equals(ignoreTodo, that.ignoreTodo) &&
-            Objects.equals(eagerload, that.eagerload);
+            Objects.equals(eagerload, that.eagerload) &&
+            Objects.equals(tpCompleted, that.tpCompleted);
     }
 
     @Override
@@ -170,7 +181,8 @@ public class TreatmentCriteria implements Serializable {
             patientId,
             treatmentPlanId,
             ignoreTodo,
-            eagerload
+            eagerload,
+            tpCompleted
         );
     }
 
@@ -186,8 +198,9 @@ public class TreatmentCriteria implements Serializable {
             (type != null ? "type=" + type + ", " : "") +
             (patientId != null ? "patientId=" + patientId + ", " : "") +
             (treatmentPlanId != null ? "treatmentPlanId=" + treatmentPlanId + ", " : "") +
-            (ignoreTodo != null ? "ignoreTodo=" + ignoreTodo + ", " : "") +
+            ("ignoreTodo=" + ignoreTodo + ", ") +
             ("eagerload=" + eagerload + ", ") +
+            ("tpCompleted=" + tpCompleted + ", ") +
             "}";
     }
 
