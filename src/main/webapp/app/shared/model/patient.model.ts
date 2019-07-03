@@ -24,6 +24,8 @@ export const enum Blood {
 
 export interface IPatient {
   id?: number;
+  lastModifiedDate?: string;
+  lastModifiedBy?: string;
   name?: string;
   phone?: string;
   gender?: Gender;
