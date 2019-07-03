@@ -113,7 +113,7 @@ export class PatientList extends React.Component<IPatientListProps, IPatientList
                       <CardSubtitle>{patient.medicalId}</CardSubtitle>
                     </div>
                   </div>
-                  <CardText>
+                  <CardText style={{ minHeight: '23px' }}>
                     <small>{patient.birth}</small>
                   </CardText>
                 </CardBody>
