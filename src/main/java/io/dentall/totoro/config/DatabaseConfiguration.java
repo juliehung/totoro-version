@@ -20,6 +20,7 @@ import ru.yandex.qatools.embed.postgresql.distribution.Version;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 @Configuration
@@ -30,8 +31,11 @@ public class DatabaseConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
 
-    @Value("${postgres.shared_buffers:512}")
+    @Value("${pgembed.shared_buffers:512}")
     private int sharedBuffers;
+
+    @Value("${pgembed.cached_path:#{null}}")
+    private String cachedPath;
 
     @Bean(destroyMethod = "stop")
     @Profile("embedded-postgres")
@@ -57,9 +61,15 @@ public class DatabaseConfiguration {
             postgresConfig.getAdditionalInitDbParams().add("--locale=en_US.utf8");
         }
 
+        log.info("embedded Postgres shared_buffers: {}", sharedBuffers);
         postgresConfig.getAdditionalPostgresParams().addAll(Arrays.asList("-c", "shared_buffers=" + sharedBuffers + "MB"));
-        PostgresStarter<PostgresExecutable, PostgresProcess> runtime =
-            PostgresStarter.getInstance(EmbeddedPostgres.defaultRuntimeConfig());
+        PostgresStarter<PostgresExecutable, PostgresProcess> runtime;
+        if (cachedPath == null) {
+            runtime = PostgresStarter.getInstance(EmbeddedPostgres.defaultRuntimeConfig());
+        } else {
+            log.info("embedded Postgres cached_path: {}", Paths.get(cachedPath).toString());
+            runtime = PostgresStarter.getInstance(EmbeddedPostgres.cachedRuntimeConfig(Paths.get(cachedPath)));
+        }
 
         return runtime.prepare(postgresConfig).start();
     }
