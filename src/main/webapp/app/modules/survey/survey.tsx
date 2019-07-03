@@ -11,6 +11,7 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Lottie from 'react-lottie';
 import './survey.css';
 import { Gender } from 'app/shared/model/patient.model';
+import moment from 'moment';
 
 export interface ISurveyProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -200,11 +201,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       </div>
     );
 
-    // TODO: replace with real last updated time
-    const today = new Date();
-    const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-    const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-    const dateTime = date + ' ' + time;
+    const dt = moment(patientEntity.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss');
 
     return (
       <div>
@@ -216,7 +213,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
         <Row>
           <Col>
             <div className="time-rect-container">
-              <div className="time-rect">最後更新: {dateTime}</div>
+              <div className="time-rect">最後更新: {dt}</div>
             </div>
             <div style={{ display: 'flex' }}>
               {this.renderProfile(patientEntity.gender)}
