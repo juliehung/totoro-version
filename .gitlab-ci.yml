@@ -113,10 +113,12 @@ depolyCloudRun:
         - filename=$(basename $war_path .war)
         - version=${filename##*-}
         - cp build/libs/$filename.war docker/app.war
+        - wget http://get.enterprisedb.com/postgresql/postgresql-10.6-1-linux-x64-binaries.tar.gz
+        - mv postgresql-10.6-1-linux-x64-binaries.tar.gz docker
         - docker build -t us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$version -f docker/Dockerfile docker
         - docker push us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$version
         - google-cloud-sdk/bin/gcloud beta auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
-        - google-cloud-sdk/bin/gcloud beta run deploy master-cloud-run --image us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$version --platform managed --region us-central1 --async --allow-unauthenticated --set-env-vars ^#^_JAVA_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx512m"#SPRING_PROFILES_ACTIVE="prod,embedded-postgres"#ARGS="--postgres.shared_buffers=128" --memory 768Mi
+        - google-cloud-sdk/bin/gcloud beta run deploy master-cloud-run --image us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$version --platform managed --region us-central1 --async --allow-unauthenticated --set-env-vars ^#^_JAVA_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx512m"#SPRING_PROFILES_ACTIVE="prod,embedded-postgres"#ARGS="'--pgembed.shared_buffers=128 --pgembed.cached_path=/home/jhipster/pgembed'" --memory 768Mi
 
 stopCloudRun:
     stage: deploy
