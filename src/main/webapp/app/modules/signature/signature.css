@@ -1,0 +1,38 @@
+.signatureContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.signatureBorder {
+  border: 1px solid #c2cbd5;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+}
+
+.signatureText {
+  position: absolute;
+  left: 22px;
+  top: 17px;
+  color: #061f33;
+  user-select: none;
+}
+
+.signatureTextBig {
+  font-size: 20px;
+  line-height: 20px;
+  font-weight: 600;
+  margin-bottom: 11px;
+}
+
+.signatureTextSmall {
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.clearSignature {
+  position: absolute;
+  right: 22px;
+  top: 17px;
+}

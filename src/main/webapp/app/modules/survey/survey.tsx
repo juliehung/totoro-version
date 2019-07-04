@@ -13,6 +13,8 @@ import './survey.css';
 import { Gender } from 'app/shared/model/patient.model';
 import moment from 'moment';
 
+import Signature from '../signature/signature';
+
 export interface ISurveyProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export interface ISurveyState {
@@ -27,6 +29,7 @@ export interface ISurveyState {
   problems: boolean[];
   drugName: string;
   loaded: boolean;
+  imgDataURL: string;
 }
 
 export class Survey extends React.Component<ISurveyProps, ISurveyState> {
@@ -41,7 +44,8 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     disease: new Array(16).fill(false),
     problems: new Array(6).fill(false),
     drugName: '',
-    loaded: false
+    loaded: false,
+    imgDataURL: ''
   };
 
   componentDidMount() {
@@ -93,6 +97,8 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     const smoking = data.get('smoking');
     const pregnant = data.get('pregnant');
     const disease = [];
+    const imgDataURL = this.state.imgDataURL;
+
     for (let i = 1; i <= 16; i++) {
       const d = data.get('disease' + i);
       if (d) {
@@ -135,7 +141,8 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       drug,
       drugName,
       glycemicAC,
-      glycemicPC
+      glycemicPC,
+      imgDataURL
     };
 
     this.setState({ showDino: true });
@@ -413,6 +420,10 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     if (gender === 'OTHER') return '無';
     if (gender === 'FEMALE') return '女';
     if (gender === 'MALE') return '男';
+  };
+
+  getSignatureURL = (url: string) => {
+    this.setState({ imgDataURL: url });
   };
 
   render() {
@@ -1153,6 +1164,9 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onChange}
                   />
                 </Col>
+              </FormGroup>
+              <FormGroup>
+                <Signature getSignatureURL={this.getSignatureURL} />
               </FormGroup>
               <FormGroup>
                 <Col sm={12} style={{ display: 'flex', justifyContent: 'center' }}>
