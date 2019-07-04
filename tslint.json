@@ -77,7 +77,7 @@
     "ordered-imports": [false],
     "curly": [true, "ignore-same-line"],
     "switch-default": true,
-    "cyclomatic-complexity": [true, 40],
+    "cyclomatic-complexity": [true, 50],
     "no-invalid-this": [true],
     "no-magic-numbers": false,
 
@@ -182,7 +182,7 @@
     "ordered-imports": [false],
     "curly": [true, "ignore-same-line"],
     "switch-default": true,
-    "cyclomatic-complexity": [true, 40],
+    "cyclomatic-complexity": [true, 50],
     "no-invalid-this": [true],
     "no-magic-numbers": false,
     "ban-types": [true, ["Object", "Use {} instead."]],
