@@ -1,0 +1,25 @@
+{
+  "totoroApp": {
+    "esign": {
+      "home": {
+        "title": "Esigns",
+        "createLabel": "Create a new Esign",
+        "createOrEditLabel": "Create or edit a Esign"
+      },
+      "created": "A new Esign is created with identifier {{ param }}",
+      "updated": "A Esign is updated with identifier {{ param }}",
+      "deleted": "A Esign is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Esign {{ id }}?"
+      },
+      "detail": {
+        "title": "Esign"
+      },
+      "patientId": "Patient Id",
+      "lob": "Lob",
+      "createTime": "Create Time",
+      "updateTime": "Update Time",
+      "sourceType": "Source Type"
+    }
+  }
+}

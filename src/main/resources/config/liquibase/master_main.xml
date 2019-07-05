@@ -46,6 +46,7 @@
     <include file="config/liquibase/changelog/20190522092741_added_entity_NhiDayUploadDetails.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190604084435_added_entity_NhiExtendPatient.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190606033824_added_entity_NhiMedicalRecord.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190629042204_added_entity_Esign.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190703091324_added_entity_MarriageOptions.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190703091325_added_entity_CareerOptions.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190703091326_added_entity_RelationshipOptions.xml" relativeToChangelogFile="false"/>
