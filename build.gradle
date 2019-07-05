@@ -1,5 +1,11 @@
 import org.gradle.internal.os.OperatingSystem
 
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+
 buildscript {
     repositories {
         mavenLocal()
@@ -54,12 +60,22 @@ group = 'io.dentall.totoro'
 
 def versionMajor = 0
 def versionMinor = 0
-def versionMinorRenewDate = '2019-05-27'
+def versionMinorRenewDate = { ->
+    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("YYYY-MM-dd")
+    
+    return LocalDateTime
+        .now(ZoneId.systemDefault())
+        .format(fmt)
+}
 def branchName = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
 def commitCount = "git rev-list $branchName --count --since=$versionMinorRenewDate".execute().text.trim()
-version = "$branchName-$versionMajor.$versionMinor.$commitCount"
+def semver = "$versionMajor.$versionMinor.$commitCount-$branchName"
 
 description = ''
+
+task xbuild(type: Exec) {
+    commandLine './gradlew', 'build', '-x', 'webpackBuildDev', '-x', 'npm_install' , '-x', 'test'
+}
 
 bootWar {
     mainClassName = 'io.dentall.totoro.TotoroApp'
@@ -68,6 +84,16 @@ bootWar {
 
 war {
 
+}
+
+task autoGenVersion(type: WriteProperties) {
+    outputFile = new File("build/generated/semver.properties")
+    property("versionMajor", versionMajor)
+    property("versionMinor", versionMinor)
+    property("versionMinorRenewDate", versionMinorRenewDate)
+    property("branchName", branchName)
+    property("commitCount", commitCount)
+    property("semver", semver)
 }
 
 springBoot {
@@ -275,6 +301,7 @@ task stage(dependsOn: 'bootWar') {
 }
 
 if (project.hasProperty('nodeInstall')) {
+
     node {
         version = "${node_version}"
         npmVersion = "${npm_version}"
@@ -284,5 +311,5 @@ if (project.hasProperty('nodeInstall')) {
 }
 
 compileJava.dependsOn processResources
-processResources.dependsOn cleanResources,bootBuildInfo
+processResources.dependsOn cleanResources,bootBuildInfo,autoGenVersion
 bootBuildInfo.mustRunAfter cleanResources
