@@ -25,6 +25,7 @@ import org.springframework.validation.Validator;
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -166,6 +167,10 @@ public class AppointmentResourceIntTest {
         appointment.setRegistration(registration);
 
         TreatmentProcedure treatmentProcedure = TreatmentProcedureResourceIntTest.createEntity(em);
+        if (appointment.getTreatmentProcedures() == null) {
+            appointment.setTreatmentProcedures(new HashSet<>());
+        }
+
         appointment.getTreatmentProcedures().add(treatmentProcedure);
 
         appointment.setPatient(patientRepository.save(PatientResourceIntTest.createEntity(em)));
@@ -749,6 +754,11 @@ public class AppointmentResourceIntTest {
         TreatmentProcedure treatmentProcedure = TreatmentProcedureResourceIntTest.createEntity(em);
         em.persist(treatmentProcedure);
         em.flush();
+
+        if (appointment.getTreatmentProcedures() == null) {
+            appointment.setTreatmentProcedures(new HashSet<>());
+        }
+
         appointment.addTreatmentProcedure(treatmentProcedure);
         appointmentRepository.saveAndFlush(appointment);
         Long treatmentProcedureId = treatmentProcedure.getId();

@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -262,6 +263,11 @@ public class TreatmentTaskResourceIntTest {
         TreatmentProcedure treatmentProcedure = TreatmentProcedureResourceIntTest.createEntity(em);
         em.persist(treatmentProcedure);
         em.flush();
+
+        if (treatmentTask.getTreatmentProcedures() == null) {
+            treatmentTask.setTreatmentProcedures(new HashSet<>());
+        }
+
         treatmentTask.addTreatmentProcedure(treatmentProcedure);
         treatmentTaskRepository.saveAndFlush(treatmentTask);
         Long treatmentProcedureId = treatmentProcedure.getId();

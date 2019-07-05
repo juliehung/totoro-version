@@ -12,7 +12,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 
@@ -53,7 +52,7 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
 
     @OneToMany(mappedBy = "todo", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
+    private Set<TreatmentProcedure> treatmentProcedures = null;
 
     @OneToOne(mappedBy = "todo")
     @JsonIgnore

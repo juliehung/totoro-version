@@ -54,10 +54,14 @@ public class TreatmentDrugService {
         log.debug("Request to save TreatmentDrug : {}", treatmentDrug);
 
         NhiExtendTreatmentDrug nhiExtendTreatmentDrug = treatmentDrug.getNhiExtendTreatmentDrug();
-        treatmentDrugRepository.save(treatmentDrug.nhiExtendTreatmentDrug(null));
+        TreatmentDrug txD = treatmentDrugRepository.save(treatmentDrug.nhiExtendTreatmentDrug(null));
 
         if (nhiExtendTreatmentDrug != null) {
-            treatmentDrug.setNhiExtendTreatmentDrug(getNhiExtendTreatmentDrug(nhiExtendTreatmentDrug.treatmentDrug(treatmentDrug)));
+            txD.setNhiExtendTreatmentDrug(getNhiExtendTreatmentDrug(nhiExtendTreatmentDrug.treatmentDrug(txD)));
+        }
+
+        if (txD.getPrescription() != null && txD.getPrescription().getId() != null) {
+            prescriptionRepository.findById(txD.getPrescription().getId()).ifPresent(prescription -> prescription.getTreatmentDrugs().add(txD));
         }
 
         return treatmentDrug;
@@ -142,7 +146,13 @@ public class TreatmentDrugService {
                 }
 
                 if (updateTreatmentDrug.getPrescription() != null && updateTreatmentDrug.getPrescription().getId() != null) {
-                    prescriptionRepository.findById(updateTreatmentDrug.getPrescription().getId()).ifPresent(treatmentDrug::setPrescription);
+                    prescriptionRepository.findById(updateTreatmentDrug.getPrescription().getId()).ifPresent(prescription -> {
+                        if (treatmentDrug.getPrescription() != null && !treatmentDrug.getPrescription().getId().equals(prescription.getId())) {
+                            treatmentDrug.getPrescription().getTreatmentDrugs().remove(treatmentDrug);
+                        }
+
+                        prescription.getTreatmentDrugs().add(treatmentDrug.prescription(prescription));
+                    });
                 }
 
                 if (updateTreatmentDrug.getNhiExtendTreatmentDrug() != null) {

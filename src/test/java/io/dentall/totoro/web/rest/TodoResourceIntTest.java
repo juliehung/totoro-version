@@ -31,6 +31,7 @@ import org.springframework.validation.Validator;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -135,6 +136,11 @@ public class TodoResourceIntTest {
 
         Patient patient = patientRepository.save(PatientResourceIntTest.createEntity(em));
         todo.setPatient(patient);
+
+        if (todo.getTreatmentProcedures() == null) {
+            todo.setTreatmentProcedures(new HashSet<>());
+        }
+
         TreatmentProcedure treatmentProcedure1 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         todo.getTreatmentProcedures().add(treatmentProcedure1);
         TreatmentProcedure treatmentProcedure2 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
@@ -447,6 +453,11 @@ public class TodoResourceIntTest {
         TreatmentProcedure treatmentProcedure = TreatmentProcedureResourceIntTest.createEntity(em);
         em.persist(treatmentProcedure);
         em.flush();
+
+        if (todo.getTreatmentProcedures() == null) {
+            todo.setTreatmentProcedures(new HashSet<>());
+        }
+
         todo.addTreatmentProcedure(treatmentProcedure);
         todoRepository.saveAndFlush(todo);
         Long treatmentProcedureId = treatmentProcedure.getId();

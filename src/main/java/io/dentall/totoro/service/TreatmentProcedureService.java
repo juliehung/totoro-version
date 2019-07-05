@@ -90,8 +90,20 @@ public class TreatmentProcedureService {
             txP.setCreatedDate(createdDate);
         }
 
+        if (txP.getAppointment() != null && txP.getAppointment().getId() != null) {
+            appointmentRepository.findById(txP.getAppointment().getId()).ifPresent(appointment -> appointment.getTreatmentProcedures().add(txP));
+        }
+
         if (txP.getTreatmentTask() != null && txP.getTreatmentTask().getId() != null) {
             treatmentTaskRepository.findById(txP.getTreatmentTask().getId()).ifPresent(treatmentTask -> treatmentTask.getTreatmentProcedures().add(txP));
+        }
+
+        if (txP.getTodo() != null && txP.getTodo().getId() != null) {
+            todoRepository.findById(txP.getTodo().getId()).ifPresent(todo -> todo.getTreatmentProcedures().add(txP));
+        }
+
+        if (txP.getDisposal() != null && txP.getDisposal().getId() != null) {
+            disposalRepository.findById(txP.getDisposal().getId()).ifPresent(disposal -> disposal.getTreatmentProcedures().add(txP));
         }
 
         return txP;
@@ -220,23 +232,43 @@ public class TreatmentProcedureService {
                 }
 
                 if (updateTreatmentProcedure.getAppointment() != null && updateTreatmentProcedure.getAppointment().getId() != null) {
-                    appointmentRepository.findById(updateTreatmentProcedure.getAppointment().getId()).ifPresent(treatmentProcedure::setAppointment);
+                    appointmentRepository.findById(updateTreatmentProcedure.getAppointment().getId()).ifPresent(appointment -> {
+                        if (treatmentProcedure.getAppointment() != null && !treatmentProcedure.getAppointment().getId().equals(appointment.getId())) {
+                            treatmentProcedure.getAppointment().getTreatmentProcedures().remove(treatmentProcedure);
+                        }
+
+                        appointment.getTreatmentProcedures().add(treatmentProcedure.appointment(appointment));
+                    });
                 }
 
                 if (updateTreatmentProcedure.getTreatmentTask() != null && updateTreatmentProcedure.getTreatmentTask().getId() != null) {
                     treatmentTaskRepository.findById(updateTreatmentProcedure.getTreatmentTask().getId()).ifPresent(treatmentTask -> {
-                        treatmentProcedure.getTreatmentTask().getTreatmentProcedures().remove(treatmentProcedure);
-                        treatmentProcedure.setTreatmentTask(treatmentTask);
-                        treatmentTask.getTreatmentProcedures().add(treatmentProcedure);
+                        if (treatmentProcedure.getTreatmentTask() != null && !treatmentProcedure.getTreatmentTask().getId().equals(treatmentTask.getId())) {
+                            treatmentProcedure.getTreatmentTask().getTreatmentProcedures().remove(treatmentProcedure);
+                        }
+
+                        treatmentTask.getTreatmentProcedures().add(treatmentProcedure.treatmentTask(treatmentTask));
                     });
                 }
 
                 if (updateTreatmentProcedure.getTodo() != null && updateTreatmentProcedure.getTodo().getId() != null) {
-                    todoRepository.findById(updateTreatmentProcedure.getTodo().getId()).ifPresent(treatmentProcedure::setTodo);
+                    todoRepository.findById(updateTreatmentProcedure.getTodo().getId()).ifPresent(todo -> {
+                        if (treatmentProcedure.getTodo() != null && !treatmentProcedure.getTodo().getId().equals(todo.getId())) {
+                            treatmentProcedure.getTodo().getTreatmentProcedures().remove(treatmentProcedure);
+                        }
+
+                        todo.getTreatmentProcedures().add(treatmentProcedure.todo(todo));
+                    });
                 }
 
                 if (updateTreatmentProcedure.getDisposal() != null && updateTreatmentProcedure.getDisposal().getId() != null) {
-                    disposalRepository.findById(updateTreatmentProcedure.getDisposal().getId()).ifPresent(treatmentProcedure::setDisposal);
+                    disposalRepository.findById(updateTreatmentProcedure.getDisposal().getId()).ifPresent(disposal -> {
+                        if (treatmentProcedure.getDisposal() != null && !treatmentProcedure.getDisposal().getId().equals(disposal.getId())) {
+                            treatmentProcedure.getDisposal().getTreatmentProcedures().remove(treatmentProcedure);
+                        }
+
+                        disposal.getTreatmentProcedures().add(treatmentProcedure.disposal(disposal));
+                    });
                 }
 
                 if (updateTreatmentProcedure.getTeeth() != null) {

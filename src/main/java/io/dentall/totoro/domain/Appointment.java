@@ -9,7 +9,6 @@ import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -71,7 +70,7 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
 
     @OneToMany(mappedBy = "appointment", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
+    private Set<TreatmentProcedure> treatmentProcedures = null;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     public Long getId() {
