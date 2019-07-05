@@ -142,3 +142,10 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
+
+######################
+# bussiness resource may just a pile of symbolic file for record
+# non-entity's resource. bussiness/resource directory must be
+# added mannually(symbolic link).
+######################
+/src/main/java/io/dentall/totoro/business/resource/*

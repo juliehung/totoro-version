@@ -157,6 +157,10 @@ import nhiMedicalRecord, {
   NhiMedicalRecordState
 } from 'app/entities/nhi-medical-record/nhi-medical-record.reducer';
 // prettier-ignore
+import esign, {
+  EsignState
+} from 'app/entities/esign/esign.reducer';
+// prettier-ignore
 import marriageOptions, {
   MarriageOptionsState
 } from 'app/entities/marriage-options/marriage-options.reducer';
@@ -168,6 +172,7 @@ import careerOptions, {
 import relationshipOptions, {
   RelationshipOptionsState
 } from 'app/entities/relationship-options/relationship-options.reducer';
+
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -217,6 +222,7 @@ export interface IRootState {
   readonly nhiDayUploadDetails: NhiDayUploadDetailsState;
   readonly nhiExtendPatient: NhiExtendPatientState;
   readonly nhiMedicalRecord: NhiMedicalRecordState;
+  readonly esign: EsignState;
   readonly marriageOptions: MarriageOptionsState;
   readonly careerOptions: CareerOptionsState;
   readonly relationshipOptions: RelationshipOptionsState;
@@ -271,6 +277,7 @@ const rootReducer = combineReducers<IRootState>({
   nhiDayUploadDetails,
   nhiExtendPatient,
   nhiMedicalRecord,
+  esign,
   marriageOptions,
   careerOptions,
   relationshipOptions,
