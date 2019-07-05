@@ -180,6 +180,36 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
             </dt>
             <dd>{patientEntity.newPatient ? 'true' : 'false'}</dd>
             <dt>
+              <span id="emergencyAddress">
+                <Translate contentKey="totoroApp.patient.emergencyAddress">Emergency Address</Translate>
+              </span>
+            </dt>
+            <dd>{patientEntity.emergencyAddress}</dd>
+            <dt>
+              <span id="emergencyRelationship">
+                <Translate contentKey="totoroApp.patient.emergencyRelationship">Emergency Relationship</Translate>
+              </span>
+            </dt>
+            <dd>{patientEntity.emergencyRelationship}</dd>
+            <dt>
+              <span id="mainNoticeChannel">
+                <Translate contentKey="totoroApp.patient.mainNoticeChannel">Main Notice Channel</Translate>
+              </span>
+            </dt>
+            <dd>{patientEntity.mainNoticeChannel}</dd>
+            <dt>
+              <span id="career">
+                <Translate contentKey="totoroApp.patient.career">Career</Translate>
+              </span>
+            </dt>
+            <dd>{patientEntity.career}</dd>
+            <dt>
+              <span id="marriage">
+                <Translate contentKey="totoroApp.patient.marriage">Marriage</Translate>
+              </span>
+            </dt>
+            <dd>{patientEntity.marriage}</dd>
+            <dt>
               <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate>
             </dt>
             <dd>{patientEntity.questionnaire ? patientEntity.questionnaire.id : ''}</dd>
@@ -230,6 +260,10 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
               <Translate contentKey="totoroApp.patient.patientIdentity">Patient Identity</Translate>
             </dt>
             <dd>{patientEntity.patientIdentity ? patientEntity.patientIdentity.id : ''}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate>
+            </dt>
+            <dd>{patientEntity.questionnaire ? patientEntity.questionnaire.id : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/patient" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

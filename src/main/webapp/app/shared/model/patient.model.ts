@@ -49,7 +49,11 @@ export interface IPatient {
   avatarContentType?: string;
   avatar?: any;
   newPatient?: boolean;
-  questionnaire?: IQuestionnaire;
+  emergencyAddress?: string;
+  emergencyRelationship?: string;
+  mainNoticeChannel?: string;
+  career?: string;
+  marriage?: string;
   appointments?: IAppointment[];
   introducer?: IPatient;
   parents?: IPatient[];
@@ -61,6 +65,7 @@ export interface IPatient {
   treatments?: ITreatment[];
   todos?: ITodo[];
   teeth?: ITooth[];
+  questionnaire?: IQuestionnaire;
 }
 
 export const defaultValue: Readonly<IPatient> = {

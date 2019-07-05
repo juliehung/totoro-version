@@ -37,6 +37,11 @@
       "writeIcTime": "Write Ic Time",
       "avatar": "Avatar",
       "newPatient": "New Patient",
+      "emergencyAddress": "Emergency Address",
+      "emergencyRelationship": "Emergency Relationship",
+      "mainNoticeChannel": "Main Notice Channel",
+      "career": "Career",
+      "marriage": "Marriage",
       "questionnaire": "Questionnaire",
       "appointment": "Appointment",
       "introducer": "Introducer",
@@ -48,7 +53,8 @@
       "patientIdentity": "Patient Identity",
       "treatment": "Treatment",
       "todo": "Todo",
-      "tooth": "Tooth"
+      "tooth": "Tooth",
+      "questionnaire": "Questionnaire"
     }
   }
 }

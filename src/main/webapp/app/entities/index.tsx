@@ -40,6 +40,9 @@ import NhiDayUpload from './nhi-day-upload';
 import NhiDayUploadDetails from './nhi-day-upload-details';
 import NhiExtendPatient from './nhi-extend-patient';
 import NhiMedicalRecord from './nhi-medical-record';
+import MarriageOptions from './marriage-options';
+import CareerOptions from './career-options';
+import RelationshipOptions from './relationship-options';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -82,6 +85,9 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/nhi-day-upload-details`} component={NhiDayUploadDetails} />
       <ErrorBoundaryRoute path={`${match.url}/nhi-extend-patient`} component={NhiExtendPatient} />
       <ErrorBoundaryRoute path={`${match.url}/nhi-medical-record`} component={NhiMedicalRecord} />
+      <ErrorBoundaryRoute path={`${match.url}/marriage-options`} component={MarriageOptions} />
+      <ErrorBoundaryRoute path={`${match.url}/career-options`} component={CareerOptions} />
+      <ErrorBoundaryRoute path={`${match.url}/relationship-options`} component={RelationshipOptions} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>

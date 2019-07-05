@@ -143,6 +143,23 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('newPatient')}>
                   <Translate contentKey="totoroApp.patient.newPatient">New Patient</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('emergencyAddress')}>
+                  <Translate contentKey="totoroApp.patient.emergencyAddress">Emergency Address</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('emergencyRelationship')}>
+                  <Translate contentKey="totoroApp.patient.emergencyRelationship">Emergency Relationship</Translate>{' '}
+                  <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('mainNoticeChannel')}>
+                  <Translate contentKey="totoroApp.patient.mainNoticeChannel">Main Notice Channel</Translate>{' '}
+                  <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('career')}>
+                  <Translate contentKey="totoroApp.patient.career">Career</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('marriage')}>
+                  <Translate contentKey="totoroApp.patient.marriage">Marriage</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -151,6 +168,9 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 </th>
                 <th>
                   <Translate contentKey="totoroApp.patient.patientIdentity">Patient Identity</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -209,6 +229,11 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                     ) : null}
                   </td>
                   <td>{patient.newPatient ? 'true' : 'false'}</td>
+                  <td>{patient.emergencyAddress}</td>
+                  <td>{patient.emergencyRelationship}</td>
+                  <td>{patient.mainNoticeChannel}</td>
+                  <td>{patient.career}</td>
+                  <td>{patient.marriage}</td>
                   <td>
                     {patient.questionnaire ? <Link to={`questionnaire/${patient.questionnaire.id}`}>{patient.questionnaire.id}</Link> : ''}
                   </td>
@@ -219,6 +244,9 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                     ) : (
                       ''
                     )}
+                  </td>
+                  <td>
+                    {patient.questionnaire ? <Link to={`questionnaire/${patient.questionnaire.id}`}>{patient.questionnaire.id}</Link> : ''}
                   </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

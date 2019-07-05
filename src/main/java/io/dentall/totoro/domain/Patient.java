@@ -78,6 +78,12 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @Column(name = "emergency_phone")
     private String emergencyPhone;
 
+    @Column(name = "emergency_address")
+    private String emergencyAddress;
+
+    @Column(name = "emergency_relationship")
+    private String emergencyRelationship;
+
     @Column(name = "delete_date")
     private Instant deleteDate;
 
@@ -100,6 +106,15 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
 
     @Column(name = "write_ic_time")
     private Instant writeIcTime;
+
+    @Column(name = "main_notice_channel")
+    private String mainNoticeChannel;
+
+    @Column(name = "career")
+    private String career;
+
+    @Column(name = "marriage")
+    private String marriage;
 
     @JsonIgnore
     @Lob
@@ -762,6 +777,32 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.nhiExtendPatient = nhiExtendPatient;
     }
 
+    public String getEmergencyAddress() {
+        return emergencyAddress;
+    }
+
+    public Patient emergencyAddress(String emergencyAddress) {
+        this.emergencyAddress = emergencyAddress;
+        return this;
+    }
+
+    public void setEmergencyAddress(String emergencyAddress) {
+        this.emergencyAddress = emergencyAddress;
+    }
+
+    public String getEmergencyRelationship() {
+        return emergencyRelationship;
+    }
+
+    public Patient emergencyRelationship(String emergencyRelationship) {
+        this.emergencyRelationship = emergencyRelationship;
+        return this;
+    }
+
+    public void setEmergencyRelationship(String emergencyRelationship) {
+        this.emergencyRelationship = emergencyRelationship;
+    }
+
     @Override
     @JsonIgnore(false)
     @JsonProperty
@@ -774,6 +815,45 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @JsonProperty
     public Instant getLastModifiedDate() {
         return super.getLastModifiedDate();
+    }
+
+    public String getMainNoticeChannel() {
+        return mainNoticeChannel;
+    }
+
+    public Patient mainNoticeChannel(String mainNoticeChannel) {
+        this.mainNoticeChannel = mainNoticeChannel;
+        return this;
+    }
+
+    public void setMainNoticeChannel(String mainNoticeChannel) {
+        this.mainNoticeChannel = mainNoticeChannel;
+    }
+
+    public String getCareer() {
+        return career;
+    }
+
+    public Patient career(String career) {
+        this.career = career;
+        return this;
+    }
+
+    public void setCareer(String career) {
+        this.career = career;
+    }
+
+    public String getMarriage() {
+        return marriage;
+    }
+
+    public Patient marriage(String marriage) {
+        this.marriage = marriage;
+        return this;
+    }
+
+    public void setMarriage(String marriage) {
+        this.marriage = marriage;
     }
 
     @Override
@@ -813,6 +893,8 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
             ", vip='" + getVip() + "'" +
             ", emergencyName='" + getEmergencyName() + "'" +
             ", emergencyPhone='" + getEmergencyPhone() + "'" +
+            ", emergencyAddress='" + getEmergencyAddress() + "'" +
+            ", emergencyRelationship='" + getEmergencyRelationship() + "'" +
             ", deleteDate='" + getDeleteDate() + "'" +
             ", scaling='" + getScaling() + "'" +
             ", lineId='" + getLineId() + "'" +
@@ -822,6 +904,9 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
             ", writeIcTime='" + getWriteIcTime() + "'" +
             ", avatarContentType='" + getAvatarContentType() + "'" +
             ", newPatient='" + isNewPatient() + "'" +
+            ", mainNoticeChannel='" + getMainNoticeChannel() + "'" +
+            ", career='" + getCareer() + "'" +
+            ", marriage='" + getMarriage() + "'" +
             "}";
     }
 }

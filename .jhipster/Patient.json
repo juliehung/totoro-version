@@ -194,6 +194,26 @@
         {
             "fieldName": "newPatient",
             "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "emergencyAddress",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "emergencyRelationship",
+            "fieldType": "String"
+        },
+        {
+          "fieldName": "mainNoticeChannel",
+          "fieldType": "String"
+        },
+        {
+          "fieldName": "career",
+          "fieldType": "String"
+        },
+        {
+          "fieldName": "marriage",
+          "fieldType": "String"
         }
     ],
     "changelogDate": "20181019094007",
