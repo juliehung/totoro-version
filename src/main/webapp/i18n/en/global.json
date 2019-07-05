@@ -44,6 +44,9 @@
         "nhiDayUploadDetails": "Nhi Day Upload Details",
         "nhiExtendPatient": "Nhi Extend Patient",
         "nhiMedicalRecord": "Nhi Medical Record",
+        "marriageOptions": "Marriage Options",
+        "careerOptions": "Career Options",
+        "relationshipOptions": "Relationship Options",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

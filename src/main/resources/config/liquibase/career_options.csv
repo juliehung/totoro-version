@@ -1,0 +1,14 @@
+id,code,name,jhi_order
+1,afaah,農、林、漁、牧,1
+2,annual,軍、公、教,2
+3,specialist,專業、科學及技術服務業,3
+4,manufacturing,製造業,4
+5,foodService,餐飲業,5
+6,security,治安人員,6
+7,construction,營造業,7
+8,serviceIndustry,服務業,8
+9,commonCarrier,運輸及倉儲業,9
+10,info,資訊及通訊傳播業,10
+11,financial,金融及保險,11
+12,athlete,職業運動人員,12
+13,homeManagement,家庭管理,13

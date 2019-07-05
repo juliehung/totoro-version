@@ -1,0 +1,23 @@
+{
+  "totoroApp": {
+    "marriageOptions": {
+      "home": {
+        "title": "Marriage Options",
+        "createLabel": "Create a new Marriage Options",
+        "createOrEditLabel": "Create or edit a Marriage Options"
+      },
+      "created": "A new Marriage Options is created with identifier {{ param }}",
+      "updated": "A Marriage Options is updated with identifier {{ param }}",
+      "deleted": "A Marriage Options is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Marriage Options {{ id }}?"
+      },
+      "detail": {
+        "title": "Marriage Options"
+      },
+      "code": "Code",
+      "name": "Name",
+      "order": "Order"
+    }
+  }
+}

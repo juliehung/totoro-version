@@ -178,6 +178,26 @@ public class PatientService extends QueryService<Patient> {
                     patient.setEmergencyPhone(updatePatient.getEmergencyPhone());
                 }
 
+                if (updatePatient.getEmergencyAddress() != null) {
+                    patient.setEmergencyAddress(updatePatient.getEmergencyAddress());
+                }
+
+                if (updatePatient.getEmergencyRelationship() != null) {
+                    patient.setEmergencyRelationship(updatePatient.getEmergencyRelationship());
+                }
+
+                if (updatePatient.getCareer() != null) {
+                    patient.setCareer(updatePatient.getCareer());
+                }
+
+                if (updatePatient.getMarriage() != null) {
+                    patient.setMarriage(updatePatient.getMarriage());
+                }
+
+                if (updatePatient.getMainNoticeChannel() != null) {
+                    patient.setMainNoticeChannel(updatePatient.getMainNoticeChannel());
+                }
+
                 if (updatePatient.getDeleteDate() != null) {
                     patient.setDeleteDate(updatePatient.getDeleteDate());
                 }

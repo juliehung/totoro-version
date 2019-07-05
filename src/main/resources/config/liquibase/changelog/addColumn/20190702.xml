@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190702-AddColumn" author="WeiChen">
+
+        <addColumn tableName="patient">
+            <column name="emergency_address" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="emergency_relationship" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="main_notice_channel" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="career" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="marriage" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+        </addColumn>
+
+    </changeSet>
+</databaseChangeLog>

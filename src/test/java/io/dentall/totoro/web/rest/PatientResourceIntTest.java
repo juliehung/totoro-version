@@ -93,6 +93,12 @@ public class PatientResourceIntTest {
     private static final String DEFAULT_EMERGENCY_PHONE = "AAAAAAAAAA";
     private static final String UPDATED_EMERGENCY_PHONE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_EMERGENCY_ADDRESS = "AAAAAAAAAA";
+    private static final String UPDATED_EMERGENCY_ADDRESS = "BBBBBBBBBB";
+
+    private static final String DEFAULT_EMERGENCY_RELATIONSHIP = "AAAAAAAAAA";
+    private static final String UPDATED_EMERGENCY_RELATIONSHIP = "BBBBBBBBBB";
+
     private static final Instant DEFAULT_DELETE_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DELETE_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -121,6 +127,15 @@ public class PatientResourceIntTest {
 
     private static final String UPLOAD_FILENAME = "chrome.png";
     private static final String UPLOAD_CONTENT_TYPE = "image/png";
+
+    private static final String DEFAULT_MARRIAGE  = "AAAAAAAAAA";
+    private static final String UPDATED_MARRIAGE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CAREER = "AAAAAAAAAA";
+    private static final String UPDATED_CAREER = "BBBBBBBBBB";
+
+    private static final String DEFAULT_MAIN_NOTICE_CHANNEL = "AAAAAAAAAA";
+    private static final String UPDATED_MAIN_NOTICE_CHANNEL = "BBBBBBBBBB";
 
     @Autowired
     private PatientRepository patientRepository;
@@ -200,6 +215,8 @@ public class PatientResourceIntTest {
             .vip(DEFAULT_VIP)
             .emergencyName(DEFAULT_EMERGENCY_NAME)
             .emergencyPhone(DEFAULT_EMERGENCY_PHONE)
+            .emergencyAddress(DEFAULT_EMERGENCY_ADDRESS)
+            .emergencyRelationship(DEFAULT_EMERGENCY_RELATIONSHIP)
             .deleteDate(DEFAULT_DELETE_DATE)
             .scaling(DEFAULT_SCALING)
             .lineId(DEFAULT_LINE_ID)
@@ -209,6 +226,9 @@ public class PatientResourceIntTest {
             .writeIcTime(DEFAULT_WRITE_IC_TIME)
             .avatar(DEFAULT_AVATAR)
             .avatarContentType(DEFAULT_AVATAR_CONTENT_TYPE)
+            .career(DEFAULT_CAREER)
+            .marriage(DEFAULT_MARRIAGE)
+            .mainNoticeChannel(DEFAULT_MAIN_NOTICE_CHANNEL)
             .tags(new HashSet<>());
         return patient;
     }
@@ -260,6 +280,8 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getVip()).isEqualTo(DEFAULT_VIP);
         assertThat(testPatient.getEmergencyName()).isEqualTo(DEFAULT_EMERGENCY_NAME);
         assertThat(testPatient.getEmergencyPhone()).isEqualTo(DEFAULT_EMERGENCY_PHONE);
+        assertThat(testPatient.getEmergencyAddress()).isEqualTo(DEFAULT_EMERGENCY_ADDRESS);
+        assertThat(testPatient.getEmergencyRelationship()).isEqualTo(DEFAULT_EMERGENCY_RELATIONSHIP);
         assertThat(testPatient.getDeleteDate()).isEqualTo(DEFAULT_DELETE_DATE);
         assertThat(testPatient.getScaling()).isEqualTo(DEFAULT_SCALING);
         assertThat(testPatient.getLineId()).isEqualTo(DEFAULT_LINE_ID);
@@ -274,7 +296,9 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getTags()).contains(tag);
         assertThat(testPatient.getQuestionnaire().isDrug()).isEqualTo(patient.getQuestionnaire().isDrug());
         assertThat(testPatient.getPatientIdentity()).isEqualTo(patientIdentity);
-
+        assertThat(testPatient.getCareer()).isEqualTo(DEFAULT_CAREER);
+        assertThat(testPatient.getMarriage()).isEqualTo(DEFAULT_MARRIAGE);
+        assertThat(testPatient.getMainNoticeChannel()).isEqualTo(DEFAULT_MAIN_NOTICE_CHANNEL);
         tagRepository.findById(TagName.Hypertension.getValue()).ifPresent(tag -> assertThat(testPatient.getTags()).contains(tag));
     }
 
@@ -356,6 +380,11 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.[*].vip").value(hasItem(DEFAULT_VIP.toString())))
             .andExpect(jsonPath("$.[*].emergencyName").value(hasItem(DEFAULT_EMERGENCY_NAME.toString())))
             .andExpect(jsonPath("$.[*].emergencyPhone").value(hasItem(DEFAULT_EMERGENCY_PHONE.toString())))
+            .andExpect(jsonPath("$.[*].emergencyAddress").value(hasItem(DEFAULT_EMERGENCY_ADDRESS.toString())))
+            .andExpect(jsonPath("$.[*].emergencyRelationship").value(hasItem(DEFAULT_EMERGENCY_RELATIONSHIP.toString())))
+            .andExpect(jsonPath("$.[*].career").value(hasItem(DEFAULT_CAREER.toString())))
+            .andExpect(jsonPath("$.[*].marriage").value(hasItem(DEFAULT_MARRIAGE.toString())))
+            .andExpect(jsonPath("$.[*].mainNoticeChannel").value(hasItem(DEFAULT_MAIN_NOTICE_CHANNEL.toString())))
             .andExpect(jsonPath("$.[*].deleteDate").value(hasItem(DEFAULT_DELETE_DATE.toString())))
             .andExpect(jsonPath("$.[*].scaling").value(hasItem(DEFAULT_SCALING.toString())))
             .andExpect(jsonPath("$.[*].lineId").value(hasItem(DEFAULT_LINE_ID.toString())))
@@ -388,6 +417,11 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.vip").value(DEFAULT_VIP.toString()))
             .andExpect(jsonPath("$.emergencyName").value(DEFAULT_EMERGENCY_NAME.toString()))
             .andExpect(jsonPath("$.emergencyPhone").value(DEFAULT_EMERGENCY_PHONE.toString()))
+            .andExpect(jsonPath("$.emergencyAddress").value(DEFAULT_EMERGENCY_ADDRESS.toString()))
+            .andExpect(jsonPath("$.emergencyRelationship").value(DEFAULT_EMERGENCY_RELATIONSHIP.toString()))
+            .andExpect(jsonPath("$.career").value(DEFAULT_CAREER.toString()))
+            .andExpect(jsonPath("$.marriage").value(DEFAULT_MARRIAGE.toString()))
+            .andExpect(jsonPath("$.mainNoticeChannel").value(DEFAULT_MAIN_NOTICE_CHANNEL.toString()))
             .andExpect(jsonPath("$.deleteDate").value(DEFAULT_DELETE_DATE.toString()))
             .andExpect(jsonPath("$.scaling").value(DEFAULT_SCALING.toString()))
             .andExpect(jsonPath("$.lineId").value(DEFAULT_LINE_ID.toString()))
@@ -434,6 +468,11 @@ public class PatientResourceIntTest {
             .vip(UPDATED_VIP)
             .emergencyName(UPDATED_EMERGENCY_NAME)
             .emergencyPhone(UPDATED_EMERGENCY_PHONE)
+            .emergencyAddress(UPDATED_EMERGENCY_ADDRESS)
+            .emergencyRelationship(UPDATED_EMERGENCY_RELATIONSHIP)
+            .career(UPDATED_CAREER)
+            .marriage(UPDATED_MARRIAGE)
+            .mainNoticeChannel(UPDATED_MAIN_NOTICE_CHANNEL)
             .deleteDate(UPDATED_DELETE_DATE)
             .scaling(UPDATED_SCALING)
             .lineId(UPDATED_LINE_ID)
@@ -464,6 +503,11 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getVip()).isEqualTo(UPDATED_VIP);
         assertThat(testPatient.getEmergencyName()).isEqualTo(UPDATED_EMERGENCY_NAME);
         assertThat(testPatient.getEmergencyPhone()).isEqualTo(UPDATED_EMERGENCY_PHONE);
+        assertThat(testPatient.getEmergencyAddress()).isEqualTo(UPDATED_EMERGENCY_ADDRESS);
+        assertThat(testPatient.getEmergencyRelationship()).isEqualTo(UPDATED_EMERGENCY_RELATIONSHIP);
+        assertThat(testPatient.getCareer()).isEqualTo(UPDATED_CAREER);
+        assertThat(testPatient.getMarriage()).isEqualTo(UPDATED_MARRIAGE);
+        assertThat(testPatient.getMainNoticeChannel()).isEqualTo(UPDATED_MAIN_NOTICE_CHANNEL);
         assertThat(testPatient.getDeleteDate()).isEqualTo(UPDATED_DELETE_DATE);
         assertThat(testPatient.getScaling()).isEqualTo(UPDATED_SCALING);
         assertThat(testPatient.getLineId()).isEqualTo(UPDATED_LINE_ID);

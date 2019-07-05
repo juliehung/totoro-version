@@ -368,6 +368,36 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   </Label>
                 </AvGroup>
                 <AvGroup>
+                  <Label id="emergencyAddressLabel" for="emergencyAddress">
+                    <Translate contentKey="totoroApp.patient.emergencyAddress">Emergency Address</Translate>
+                  </Label>
+                  <AvField id="patient-emergencyAddress" type="text" name="emergencyAddress" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="emergencyRelationshipLabel" for="emergencyRelationship">
+                    <Translate contentKey="totoroApp.patient.emergencyRelationship">Emergency Relationship</Translate>
+                  </Label>
+                  <AvField id="patient-emergencyRelationship" type="text" name="emergencyRelationship" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="mainNoticeChannelLabel" for="mainNoticeChannel">
+                    <Translate contentKey="totoroApp.patient.mainNoticeChannel">Main Notice Channel</Translate>
+                  </Label>
+                  <AvField id="patient-mainNoticeChannel" type="text" name="mainNoticeChannel" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="careerLabel" for="career">
+                    <Translate contentKey="totoroApp.patient.career">Career</Translate>
+                  </Label>
+                  <AvField id="patient-career" type="text" name="career" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="marriageLabel" for="marriage">
+                    <Translate contentKey="totoroApp.patient.marriage">Marriage</Translate>
+                  </Label>
+                  <AvField id="patient-marriage" type="text" name="marriage" />
+                </AvGroup>
+                <AvGroup>
                   <Label for="questionnaire.id">
                     <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate>
                   </Label>
@@ -471,6 +501,21 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                     <option value="" key="0" />
                     {patientIdentities
                       ? patientIdentities.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
+                <AvGroup>
+                  <Label for="questionnaire.id">
+                    <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate>
+                  </Label>
+                  <AvInput id="patient-questionnaire" type="select" className="form-control" name="questionnaire.id">
+                    <option value="" key="0" />
+                    {questionnaires
+                      ? questionnaires.map(otherEntity => (
                           <option value={otherEntity.id} key={otherEntity.id}>
                             {otherEntity.id}
                           </option>

@@ -1,0 +1,5 @@
+id,code,name,jhi_order
+1,unmarried,未婚,1
+2,married,已婚,2
+3,divorce,離婚,3
+4,dead,配偶死亡,4
