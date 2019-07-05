@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 
@@ -55,7 +54,7 @@ public class Prescription implements Serializable {
 
     @OneToMany(mappedBy = "prescription", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<TreatmentDrug> treatmentDrugs = new HashSet<>();
+    private Set<TreatmentDrug> treatmentDrugs = null;
     @OneToOne(mappedBy = "prescription")
     @JsonIgnore
     private Disposal disposal;

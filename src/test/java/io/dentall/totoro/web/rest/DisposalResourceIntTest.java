@@ -347,6 +347,11 @@ public class DisposalResourceIntTest {
         TreatmentProcedure treatmentProcedure = TreatmentProcedureResourceIntTest.createEntity(em);
         em.persist(treatmentProcedure);
         em.flush();
+
+        if (disposal.getTreatmentProcedures() == null) {
+            disposal.setTreatmentProcedures(new HashSet<>());
+        }
+
         disposal.addTreatmentProcedure(treatmentProcedure);
         disposalRepository.saveAndFlush(disposal);
         Long treatmentProcedureId = treatmentProcedure.getId();
