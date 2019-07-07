@@ -1,5 +1,6 @@
 import { createEntity, getEntity, reset, updateEntity } from 'app/entities/questionnaire/questionnaire.reducer';
-import { getEntity as getPatient } from 'app/entities/patient/patient.reducer';
+import { getEntity as getPatient, updateEntity as updatePatient } from 'app/entities/patient/patient.reducer';
+import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
 import { IRootState } from 'app/shared/reducers';
 
 import React from 'react';
@@ -21,6 +22,8 @@ export interface ISurveyState {
   drugNameDisabled: boolean;
   showDino: boolean;
   smoking: boolean;
+  smokeNumberADay: string;
+  smokingDisabled: boolean;
   pregnant: boolean;
   drug1: boolean;
   drug2: boolean;
@@ -37,6 +40,8 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     drugNameDisabled: true,
     showDino: false,
     smoking: false,
+    smokeNumberADay: '',
+    smokingDisabled: true,
     pregnant: false,
     drug1: false,
     drug2: false,
@@ -54,6 +59,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     if (pid) {
       this.props.getPatient(pid);
     }
+    this.props.getTags(0, 40, 'id,asc');
   }
 
   componentDidUpdate(prevProps) {
@@ -88,16 +94,14 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     const emergencyName = data.get('emergencyName');
     const emergencyPhone = data.get('emergencyPhone');
     const emergencyRelationship = data.get('emergencyRelationship');
-    const drug = data.get('drug');
+    const drug = data.get('drug') === 'no' ? false : true;
     const drugName = data.get('drugName');
     const glycemicAC = data.get('glycemicAC');
     const glycemicPC = data.get('glycemicPC');
-
-    // TODO: turn into tags
+    const smokeNumberADay = data.get('smokeNumberADay');
     const smoking = data.get('smoking');
     const pregnant = data.get('pregnant');
     const disease = [];
-    const imgDataURL = this.state.imgDataURL;
 
     for (let i = 1; i <= 16; i++) {
       const d = data.get('disease' + i);
@@ -120,52 +124,66 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       }
     }
 
-    // TODO: turn into tags
-    // console.log(disease);
-    // console.log(drugAllergy);
-    // console.log(problems);
+    const tags = [];
 
+    if (drugAllergy.length || disease.length || problems.length) {
+      for (const ex of this.props.tagList) {
+        if (drugAllergy.indexOf(ex.name) !== -1 || disease.indexOf(ex.name) !== -1 || problems.indexOf(ex.name) !== -1) {
+          tags.push(ex);
+        }
+      }
+    }
+
+    // additional information
+    // contactType, jobType, emergencyRelationship, maritalStatus, introducor,
+    const questionnaire = { ...this.props.patientEntity.questionnaire, drug, drugName, glycemicAC, glycemicPC, smokeNumberADay };
     const json = {
       blood,
       phone,
       address,
       lineId,
       fbId,
-      contactType,
-      jobType,
       emergencyName,
       emergencyPhone,
-      emergencyRelationship,
-      maritalStatus,
-      introducor,
-      drug,
-      drugName,
-      glycemicAC,
-      glycemicPC,
-      imgDataURL
+      tags,
+      questionnaire
     };
+
+    // TODO: sava imgURL to server
+    const imgDataURL = this.state.imgDataURL;
 
     this.setState({ showDino: true });
     // TODO: api and loading progress and success/error page
+    let deepCopyPatientEntity = JSON.parse(JSON.stringify(this.props.patientEntity));
+    deepCopyPatientEntity = { ...deepCopyPatientEntity, ...json };
+    this.props.updatePatient(deepCopyPatientEntity);
   };
 
   onChange = event => {
     switch (event.target.name) {
       case 'drug':
         if (event.target.value === 'yes1') {
-          this.setState({ drug1: true, drug2: false, drugNameDisabled: true });
+          this.setState({ drug1: true, drug2: false, drugNameDisabled: true, drugName: '' });
         } else if (event.target.value === 'yes2') {
           this.setState({ drug1: false, drug2: true, drugNameDisabled: false });
         } else if (event.target.value === 'no') {
-          this.setState({ drug1: false, drug2: false, drugNameDisabled: true });
+          this.setState({ drug1: false, drug2: false, drugNameDisabled: true, drugName: '' });
         }
         break;
       case 'drugName':
         this.setState({ drugName: event.target.value || '' });
         break;
       case 'smoking':
-        const { smoking } = this.state;
-        this.setState({ smoking: !smoking });
+        if (event.target.value === 'no') {
+          this.setState({ smoking: false, smokingDisabled: true, smokeNumberADay: '' });
+        } else if (event.target.value === 'yes') {
+          this.setState({ smoking: true, smokingDisabled: false });
+        }
+        break;
+      case 'smokeNumberADay':
+        if (!isNaN(Number(event.target.value))) {
+          this.setState({ smokeNumberADay: event.target.value || '' });
+        }
         break;
       case 'pregnant':
         const { pregnant } = this.state;
@@ -186,6 +204,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       case 'disease13':
       case 'disease14':
       case 'disease15':
+      case 'disease16':
         const { disease } = this.state;
         if (event.target.value === 'AIDS') {
           disease[0] = !disease[0];
@@ -453,7 +472,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       </div>
     );
     const dt = moment(patientEntity.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss');
-    const { smoking, pregnant, drugAllergy, disease, problems, drug1, drug2, drugName } = this.state;
+    const { smoking, pregnant, drugAllergy, disease, problems, drug1, drug2, drugName, smokeNumberADay } = this.state;
     return (
       <div>
         <Link to={'/'}>
@@ -837,8 +856,8 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     type="checkbox"
                     name="disease15"
                     id="disease15"
-                    label="風溼熱"
-                    value="風溼熱"
+                    label="風濕熱"
+                    value="風濕熱"
                     checked={disease[14]}
                     onChange={this.onChange}
                   />
@@ -945,17 +964,6 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 <Col sm={2}>
                   <CustomInput
                     type="checkbox"
-                    name="drugAllergy3"
-                    id="drugAllergy3"
-                    label="青黴素"
-                    value="青黴素"
-                    checked={drugAllergy[2]}
-                    onChange={this.onChange}
-                  />
-                </Col>
-                <Col sm={2}>
-                  <CustomInput
-                    type="checkbox"
                     name="drugAllergy4"
                     id="drugAllergy4"
                     label="Pyrine"
@@ -1024,14 +1032,26 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onChange}
                   />
                 </Col>
-                <Col sm={1}>
+                <Col sm={3}>
                   <CustomInput
                     type="radio"
                     id="smoking2"
                     name="smoking"
-                    label="有"
+                    label="有吸菸，一天(支)"
                     value="yes"
                     checked={smoking}
+                    onChange={this.onChange}
+                  />
+                </Col>
+                <Col sm={3}>
+                  <Input
+                    type="text"
+                    name="smokeNumberADay"
+                    id="smokeNumberADay"
+                    placeholder="請填入"
+                    maxLength={255}
+                    value={smokeNumberADay}
+                    disabled={this.state.smokingDisabled}
                     onChange={this.onChange}
                   />
                 </Col>
@@ -1184,8 +1204,9 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
   }
 }
 
-const mapStateToProps = ({ patient }: IRootState) => ({
-  patientEntity: patient.entity
+const mapStateToProps = ({ patient, tag }: IRootState) => ({
+  patientEntity: patient.entity,
+  tagList: tag.entities
 });
 
 const mapDispatchToProps = {
@@ -1193,7 +1214,9 @@ const mapDispatchToProps = {
   getEntity,
   updateEntity,
   reset,
-  getPatient
+  getPatient,
+  updatePatient,
+  getTags
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
