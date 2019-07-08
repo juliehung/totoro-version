@@ -131,7 +131,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
 
     const tags = [];
 
-    if (drugAllergy.length || disease.length || problems.length) {
+    if (drugAllergy.length || disease.length || problems.length || pregnant === 'yes' || smoking === 'yes') {
       for (const ex of this.props.tagList) {
         if (drugAllergy.indexOf(ex.name) !== -1 || disease.indexOf(ex.name) !== -1 || problems.indexOf(ex.name) !== -1) {
           tags.push(ex);
@@ -160,6 +160,8 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
 
     // TODO: sava imgURL to server
     const imgDataURL = this.signatureRef.current.trim();
+    const ContentType = imgDataURL.slice(imgDataURL.indexOf('image'), imgDataURL.indexOf(';'));
+    const base64 = imgDataURL;
 
     this.setState({ showDino: true });
     // TODO: api and loading progress and success/error page
