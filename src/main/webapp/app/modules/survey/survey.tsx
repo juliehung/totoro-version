@@ -53,7 +53,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     imgDataURL: ''
   };
 
-  signatureRef = React.createRef();
+  signatureRef = React.createRef<Signature>();
 
   componentDidMount() {
     const params = new URLSearchParams(this.props.location.search);
