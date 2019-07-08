@@ -8,6 +8,7 @@
 
     <!-- data -->
     <include file="config/liquibase/master_data.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/loadData/20190708103000-1-LoadData.xml" relativeToChangelogFile="false"/>
 
     <!-- constraints -->
     <include file="config/liquibase/master_constraints.xml" relativeToChangelogFile="false"/>

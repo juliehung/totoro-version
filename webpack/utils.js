@@ -10,15 +10,22 @@ module.exports = {
 // Returns the second occurrence of the version number from `build.gradle` file
 function parseVersion() {
   const versionKey = /^semver=/gm;
-  const versionProps = fs.readFileSync('build/generated/semver.properties', 'utf8');
+  let versionProps;
+  try {
+    versionProps = fs.readFileSync('build/generated/semver.properties', 'utf8');
+  } catch (ex) {
+
+    return "can-not-find-semver-properties-run-build-for-it";
+  }
 
   const prop = versionProps.split("\n")
     .filter(e => {
       return versionKey.exec(e);
     });
+
   return prop.toString().split("=")[1];
 }
-console.log(parseVersion());
+
 const _root = path.resolve(__dirname, '..');
 
 function root(args) {
