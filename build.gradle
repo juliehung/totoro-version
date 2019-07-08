@@ -60,13 +60,7 @@ group = 'io.dentall.totoro'
 
 def versionMajor = 0
 def versionMinor = 0
-def versionMinorRenewDate = { ->
-    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("YYYY-MM-dd")
-    
-    return LocalDateTime
-        .now(ZoneId.systemDefault())
-        .format(fmt)
-}
+def versionMinorRenewDate = "2019-05-27"
 def branchName = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
 def commitCount = "git rev-list $branchName --count --since=$versionMinorRenewDate".execute().text.trim()
 def semver = "$versionMajor.$versionMinor.$commitCount-$branchName"

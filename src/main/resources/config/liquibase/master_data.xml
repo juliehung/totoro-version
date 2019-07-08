@@ -87,24 +87,6 @@
                   separator=";"
                   tableName="nhi_icd_10_pcs">
         </loadData>
-
-        <loadData encoding="UTF-8"
-                  file="config/liquibase/marriage_options.csv"
-                  separator=","
-                  tableName="marriage_options">
-        </loadData>
-
-        <loadData encoding="UTF-8"
-                  file="config/liquibase/career_options.csv"
-                  separator=","
-                  tableName="career_options">
-        </loadData>
-
-        <loadData encoding="UTF-8"
-                  file="config/liquibase/relationship_options.csv"
-                  separator=","
-                  tableName="relationship_options">
-        </loadData>
     </changeSet>
 
 </databaseChangeLog>
