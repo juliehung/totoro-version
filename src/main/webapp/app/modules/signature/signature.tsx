@@ -28,8 +28,7 @@ class Signature extends React.Component<ISignatureProps, ISignatureSates> {
 
   trim = () => {
     const imgURL: string = this.sigCanvas.toDataURL(this.props.imgType ? `image/${this.props.imgType}` : 'image/png');
-    this.setState({ trimmedDataURL: imgURL });
-    this.props.getSignatureURL(imgURL);
+    return imgURL;
   };
 
   render() {
@@ -65,7 +64,6 @@ class Signature extends React.Component<ISignatureProps, ISignatureSates> {
             ref={(ref: any) => {
               this.sigCanvas = ref;
             }}
-            onEnd={this.trim}
           />
         </div>
       </div>

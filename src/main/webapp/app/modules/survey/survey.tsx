@@ -53,6 +53,8 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     imgDataURL: ''
   };
 
+  signatureRef = React.createRef<Signature>();
+
   componentDidMount() {
     const params = new URLSearchParams(this.props.location.search);
     const pid = params.get('pid');
@@ -74,8 +76,11 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       const state = this.parseTags(patientEntity.tags);
       const drugNameDisabled = !drug2;
       const drugName = patientEntity.questionnaire ? patientEntity.questionnaire.drugName : '';
+      const smokingDisabled = !state.smoking;
+      let smokeNumberADay = patientEntity.questionnaire ? patientEntity.questionnaire.smokeNumberADay.toString() : '';
+      smokeNumberADay = smokeNumberADay === '0' ? '' : smokeNumberADay;
       const loaded = true;
-      this.setState({ ...state, drug1, drug2, drugNameDisabled, drugName, loaded });
+      this.setState({ ...state, drug1, drug2, drugNameDisabled, drugName, loaded, smokingDisabled, smokeNumberADay });
     }
   }
 
@@ -98,8 +103,8 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     const drugName = data.get('drugName');
     const glycemicAC = data.get('glycemicAC');
     const glycemicPC = data.get('glycemicPC');
-    const smokeNumberADay = data.get('smokeNumberADay');
     const smoking = data.get('smoking');
+    const smokeNumberADay = smoking === 'no' ? '0' : data.get('smokeNumberADay');
     const pregnant = data.get('pregnant');
     const disease = [];
 
@@ -126,9 +131,13 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
 
     const tags = [];
 
-    if (drugAllergy.length || disease.length || problems.length) {
+    if (drugAllergy.length || disease.length || problems.length || pregnant === 'yes' || smoking === 'yes') {
       for (const ex of this.props.tagList) {
         if (drugAllergy.indexOf(ex.name) !== -1 || disease.indexOf(ex.name) !== -1 || problems.indexOf(ex.name) !== -1) {
+          tags.push(ex);
+        } else if (pregnant === 'yes' && ex.name === '懷孕') {
+          tags.push(ex);
+        } else if (smoking === 'yes' && ex.name === '抽煙者') {
           tags.push(ex);
         }
       }
@@ -150,12 +159,15 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     };
 
     // TODO: sava imgURL to server
-    const imgDataURL = this.state.imgDataURL;
+    const imgDataURL = this.signatureRef.current.trim();
+    const ContentType = imgDataURL.slice(imgDataURL.indexOf('image'), imgDataURL.indexOf(';'));
+    const base64 = imgDataURL;
 
     this.setState({ showDino: true });
     // TODO: api and loading progress and success/error page
     let deepCopyPatientEntity = JSON.parse(JSON.stringify(this.props.patientEntity));
     deepCopyPatientEntity = { ...deepCopyPatientEntity, ...json };
+
     this.props.updatePatient(deepCopyPatientEntity);
   };
 
@@ -1186,7 +1198,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Col>
               </FormGroup>
               <FormGroup>
-                <Signature getSignatureURL={this.getSignatureURL} />
+                <Signature getSignatureURL={this.getSignatureURL} ref={this.signatureRef} />
               </FormGroup>
               <FormGroup>
                 <Col sm={12} style={{ display: 'flex', justifyContent: 'center' }}>
@@ -1206,7 +1218,9 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
 
 const mapStateToProps = ({ patient, tag }: IRootState) => ({
   patientEntity: patient.entity,
-  tagList: tag.entities
+  tagList: tag.entities,
+  updateSuccess: patient.updateSuccess,
+  errorMessage: patient.errorMessage
 });
 
 const mapDispatchToProps = {
