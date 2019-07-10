@@ -2,10 +2,12 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import SignatureCanvas from 'react-signature-canvas';
 import './signature.css';
+import axios from 'axios';
 
 interface ISignatureProps {
   imgType?: string;
   getSignatureURL?: (arg0: string) => void;
+  pid?: number;
 }
 
 interface ISignatureSates {
@@ -13,14 +15,26 @@ interface ISignatureSates {
 }
 
 class Signature extends React.Component<ISignatureProps, ISignatureSates> {
+  sigCanvas = {
+    clear: () => {},
+    toDataURL: (params: any) => '',
+    fromDataURL: (base64String: string, option: any) => {}
+  };
+
   state = {
     trimmedDataURL: ''
   };
 
-  sigCanvas = {
-    clear: () => {},
-    toDataURL: (params: any) => ''
-  };
+  componentDidMount() {
+    let base64Img: string;
+    axios
+      .get(`/api/lob/esign?patientId.equals=${this.props.pid}`)
+      .then(response => {
+        base64Img = response.data.base64;
+        this.sigCanvas.fromDataURL(base64Img, { width: 713.875, height: 320 });
+      })
+      .catch();
+  }
 
   clearSignature = () => {
     this.sigCanvas.clear();

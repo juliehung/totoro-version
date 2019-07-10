@@ -43,3 +43,7 @@ Survey page styles
   color: #828991;
   text-align: center;
 }
+
+label[for='lineId'] {
+  font-size: 15px;
+}
