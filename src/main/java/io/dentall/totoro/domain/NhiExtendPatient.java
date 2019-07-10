@@ -47,6 +47,15 @@ public class NhiExtendPatient implements Serializable {
 
     @Column(name = "available_times")
     private Integer availableTimes;
+
+    @Column(name = "scaling")
+    private String scaling;
+
+    @Column(name = "fluoride")
+    private String fluoride;
+
+    @Column(name = "perio")
+    private String perio;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     @OneToMany(mappedBy = "nhiExtendPatient", fetch = FetchType.EAGER)
@@ -151,6 +160,45 @@ public class NhiExtendPatient implements Serializable {
     public void setAvailableTimes(Integer availableTimes) {
         this.availableTimes = availableTimes;
     }
+
+    public String getScaling() {
+        return scaling;
+    }
+
+    public NhiExtendPatient scaling(String scaling) {
+        this.scaling = scaling;
+        return this;
+    }
+
+    public void setScaling(String scaling) {
+        this.scaling = scaling;
+    }
+
+    public String getFluoride() {
+        return fluoride;
+    }
+
+    public NhiExtendPatient fluoride(String fluoride) {
+        this.fluoride = fluoride;
+        return this;
+    }
+
+    public void setFluoride(String fluoride) {
+        this.fluoride = fluoride;
+    }
+
+    public String getPerio() {
+        return perio;
+    }
+
+    public NhiExtendPatient perio(String perio) {
+        this.perio = perio;
+        return this;
+    }
+
+    public void setPerio(String perio) {
+        this.perio = perio;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     public Set<NhiMedicalRecord> getNhiMedicalRecords() {
@@ -208,6 +256,9 @@ public class NhiExtendPatient implements Serializable {
             ", cardIssueDate='" + getCardIssueDate() + "'" +
             ", nhiIdentity='" + getNhiIdentity() + "'" +
             ", availableTimes=" + getAvailableTimes() +
+            ", scaling='" + getScaling() + "'" +
+            ", fluoride='" + getFluoride() + "'" +
+            ", perio='" + getPerio() + "'" +
             "}";
     }
 }

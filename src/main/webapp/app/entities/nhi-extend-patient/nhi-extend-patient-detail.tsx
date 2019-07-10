@@ -65,6 +65,24 @@ export class NhiExtendPatientDetail extends React.Component<INhiExtendPatientDet
               </span>
             </dt>
             <dd>{nhiExtendPatientEntity.availableTimes}</dd>
+            <dt>
+              <span id="scaling">
+                <Translate contentKey="totoroApp.nhiExtendPatient.scaling">Scaling</Translate>
+              </span>
+            </dt>
+            <dd>{nhiExtendPatientEntity.scaling}</dd>
+            <dt>
+              <span id="fluoride">
+                <Translate contentKey="totoroApp.nhiExtendPatient.fluoride">Fluoride</Translate>
+              </span>
+            </dt>
+            <dd>{nhiExtendPatientEntity.fluoride}</dd>
+            <dt>
+              <span id="perio">
+                <Translate contentKey="totoroApp.nhiExtendPatient.perio">Perio</Translate>
+              </span>
+            </dt>
+            <dd>{nhiExtendPatientEntity.perio}</dd>
           </dl>
           <Button tag={Link} to="/entity/nhi-extend-patient" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

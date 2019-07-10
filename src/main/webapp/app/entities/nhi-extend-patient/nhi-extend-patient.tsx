@@ -56,6 +56,15 @@ export class NhiExtendPatient extends React.Component<INhiExtendPatientProps> {
                 <th>
                   <Translate contentKey="totoroApp.nhiExtendPatient.availableTimes">Available Times</Translate>
                 </th>
+                <th>
+                  <Translate contentKey="totoroApp.nhiExtendPatient.scaling">Scaling</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.nhiExtendPatient.fluoride">Fluoride</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.nhiExtendPatient.perio">Perio</Translate>
+                </th>
                 <th />
               </tr>
             </thead>
@@ -73,6 +82,9 @@ export class NhiExtendPatient extends React.Component<INhiExtendPatientProps> {
                   <td>{nhiExtendPatient.cardIssueDate}</td>
                   <td>{nhiExtendPatient.nhiIdentity}</td>
                   <td>{nhiExtendPatient.availableTimes}</td>
+                  <td>{nhiExtendPatient.scaling}</td>
+                  <td>{nhiExtendPatient.fluoride}</td>
+                  <td>{nhiExtendPatient.perio}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${nhiExtendPatient.id}`} color="info" size="sm">
