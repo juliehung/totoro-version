@@ -17,12 +17,16 @@ before_script:
 
 gradle-build:
     stage: build
+    only:
+        - merge_requests
     image: openjdk:8-jdk-stretch
     script:
         - ./gradlew compileJava -x check -x webpackBuildDev --no-daemon
 
 gradle-test:
     stage: test
+    only:
+        - merge_requests
     image: openjdk:8-jdk-stretch
     services:
         - postgres:10.4
@@ -41,6 +45,8 @@ gradle-test:
 
 gradle-front-test:
     stage: test
+    only:
+        - merge_requests
     image: openjdk:8-jre-stretch
     script:
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev git
@@ -53,6 +59,9 @@ gradle-front-test:
 
 gradle-repackage:
     stage: package
+    only:
+        - master
+        - merge_requests
     image: openjdk:8-jdk-stretch
     script:
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
@@ -65,6 +74,8 @@ gradle-repackage:
 
 depolyGitlabRegistry:
     stage: deploy
+    only:
+        - master
     dependencies:
         - gradle-repackage
     image: docker
@@ -84,6 +95,9 @@ depolyGitlabRegistry:
 
 depolyCloudRun:
     stage: deploy
+    only:
+        - master
+        - merge_requests
     environment:
         name: staging/$CI_COMMIT_REF_SLUG
         url: https://master-cloud-run-vgcfrtzwfa-uc.a.run.app
@@ -122,6 +136,9 @@ depolyCloudRun:
 
 stopCloudRun:
     stage: deploy
+    only:
+        - master
+        - merge_requests
     environment:
         name: staging/$CI_COMMIT_REF_SLUG
         action: stop
@@ -140,18 +157,3 @@ stopCloudRun:
         - google-cloud-sdk/bin/gcloud --quiet components install beta
         - google-cloud-sdk/bin/gcloud beta auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
         - google-cloud-sdk/bin/gcloud --quiet beta run services delete master-cloud-run --platform managed --region us-central1
-
-pages:
-    stage: deploy
-    image: alpine
-    dependencies:
-        - gradle-test
-        - gradle-front-test
-    script:
-        - mkdir public
-        - mv build/reports/tests/* public
-        - mv build/jacocoHtml public
-        - mv build/test-results/lcov-report public
-    artifacts:
-        paths:
-            - public
