@@ -14,6 +14,7 @@ import './survey.css';
 import { Gender } from 'app/shared/model/patient.model';
 import moment from 'moment';
 
+import axios from 'axios';
 import Signature from '../signature/signature';
 
 export interface ISurveyProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
@@ -84,6 +85,19 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     }
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
+      this.handleClose();
+    }
+  }
+
+  handleClose = () => {
+    setTimeout(() => {
+      this.setState({ showDino: false });
+      this.props.history.push('/list');
+    }, 3000);
+  };
+
   onFormSubmit = event => {
     event.preventDefault();
     const data = new FormData(event.target);
@@ -144,7 +158,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     }
 
     // additional information
-    // contactType, jobType, emergencyRelationship, maritalStatus, introducor,
+    // contactType, jobType, maritalStatus, introducor,
     const questionnaire = { ...this.props.patientEntity.questionnaire, drug, drugName, glycemicAC, glycemicPC, smokeNumberADay };
     const json = {
       blood,
@@ -154,21 +168,34 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       fbId,
       emergencyName,
       emergencyPhone,
+      emergencyRelationship,
       tags,
       questionnaire
     };
 
     // TODO: sava imgURL to server
     const imgDataURL = this.signatureRef.current.trim();
-    const ContentType = imgDataURL.slice(imgDataURL.indexOf('image'), imgDataURL.indexOf(';'));
+    const contentType = imgDataURL.slice(imgDataURL.indexOf('image'), imgDataURL.indexOf(';'));
     const base64 = imgDataURL;
+    const patientId = this.props.patientEntity.id;
 
     this.setState({ showDino: true });
     // TODO: api and loading progress and success/error page
     let deepCopyPatientEntity = JSON.parse(JSON.stringify(this.props.patientEntity));
     deepCopyPatientEntity = { ...deepCopyPatientEntity, ...json };
 
-    this.props.updatePatient(deepCopyPatientEntity);
+    axios
+      .post('/api/lob/esign/string64', {
+        contentType,
+        base64,
+        patientId
+      })
+      .then(res => {
+        this.props.updatePatient(deepCopyPatientEntity);
+      })
+      .catch(err => {
+        alert(err.response);
+      });
   };
 
   onChange = event => {
@@ -397,9 +424,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
         preserveAspectRatio: 'xMidYMid slice'
       }
     };
-    setTimeout(() => {
-      this.setState({ showDino: false });
-    }, 3000);
+
     return (
       <div
         style={{
@@ -563,7 +588,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Label>
                 <Col sm={8}>
                   <Input
-                    type="text"
+                    type="tel"
                     name="phone"
                     id="phone"
                     placeholder="請填入手機或市話"
@@ -702,13 +727,19 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                   關係
                 </Label>
                 <Col sm={3}>
-                  <Input type="select" name="emergencyRelationship" id="emergencyRelationship" defaultValue="select">
+                  <Input
+                    type="select"
+                    name="emergencyRelationship"
+                    id="emergencyRelationship"
+                    defaultValue={patientEntity.emergencyRelationship}
+                  >
                     <option disabled hidden value="select">
                       請選擇
                     </option>
                     <option>配偶</option>
                     <option>父母</option>
                     <option>子女</option>
+                    <option>朋友</option>
                   </Input>
                 </Col>
               </FormGroup>
@@ -1104,7 +1135,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Label>
                 <Col sm={3}>
                   <Input
-                    type="text"
+                    type="number"
                     name="glycemicAC"
                     id="glycemicAC"
                     placeholder="請填入"
@@ -1117,7 +1148,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Label>
                 <Col sm={3}>
                   <Input
-                    type="text"
+                    type="number"
                     name="glycemicPC"
                     id="glycemicPC"
                     placeholder="請填入"
@@ -1198,7 +1229,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Col>
               </FormGroup>
               <FormGroup>
-                <Signature getSignatureURL={this.getSignatureURL} ref={this.signatureRef} />
+                <Signature getSignatureURL={this.getSignatureURL} ref={this.signatureRef} pid={this.props.patientEntity.id} />
               </FormGroup>
               <FormGroup>
                 <Col sm={12} style={{ display: 'flex', justifyContent: 'center' }}>
