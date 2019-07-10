@@ -24,6 +24,18 @@
         {
             "fieldName": "availableTimes",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "scaling",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fluoride",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "perio",
+            "fieldType": "String"
         }
     ],
     "relationships": [],

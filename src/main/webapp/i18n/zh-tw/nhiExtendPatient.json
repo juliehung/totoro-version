@@ -20,7 +20,10 @@
       "cardValidDate": "Card Valid Date",
       "cardIssueDate": "Card Issue Date",
       "nhiIdentity": "Nhi Identity",
-      "availableTimes": "Available Times"
+      "availableTimes": "Available Times",
+      "scaling": "Scaling",
+      "fluoride": "Fluoride",
+      "perio": "Perio"
     }
   }
 }

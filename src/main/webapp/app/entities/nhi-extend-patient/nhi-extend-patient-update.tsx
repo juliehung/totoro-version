@@ -125,6 +125,24 @@ export class NhiExtendPatientUpdate extends React.Component<INhiExtendPatientUpd
                   </Label>
                   <AvField id="nhi-extend-patient-availableTimes" type="string" className="form-control" name="availableTimes" />
                 </AvGroup>
+                <AvGroup>
+                  <Label id="scalingLabel" for="scaling">
+                    <Translate contentKey="totoroApp.nhiExtendPatient.scaling">Scaling</Translate>
+                  </Label>
+                  <AvField id="nhi-extend-patient-scaling" type="text" name="scaling" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="fluorideLabel" for="fluoride">
+                    <Translate contentKey="totoroApp.nhiExtendPatient.fluoride">Fluoride</Translate>
+                  </Label>
+                  <AvField id="nhi-extend-patient-fluoride" type="text" name="fluoride" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="perioLabel" for="perio">
+                    <Translate contentKey="totoroApp.nhiExtendPatient.perio">Perio</Translate>
+                  </Label>
+                  <AvField id="nhi-extend-patient-perio" type="text" name="perio" />
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/nhi-extend-patient" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
                   &nbsp;

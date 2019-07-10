@@ -6,6 +6,9 @@ export interface INhiExtendPatient {
   cardIssueDate?: string;
   nhiIdentity?: string;
   availableTimes?: number;
+  scaling?: string;
+  fluoride?: string;
+  perio?: string;
 }
 
 export const defaultValue: Readonly<INhiExtendPatient> = {};

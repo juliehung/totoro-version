@@ -60,6 +60,15 @@ public class NhiExtendPatientResourceIntTest {
     private static final Integer DEFAULT_AVAILABLE_TIMES = 1;
     private static final Integer UPDATED_AVAILABLE_TIMES = 2;
 
+    private static final String DEFAULT_SCALING = "AAAAAAAAAA";
+    private static final String UPDATED_SCALING = "BBBBBBBBBB";
+
+    private static final String DEFAULT_FLUORIDE = "AAAAAAAAAA";
+    private static final String UPDATED_FLUORIDE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_PERIO = "AAAAAAAAAA";
+    private static final String UPDATED_PERIO = "BBBBBBBBBB";
+
     @Autowired
     private NhiExtendPatientRepository nhiExtendPatientRepository;
 
@@ -113,7 +122,10 @@ public class NhiExtendPatientResourceIntTest {
             .cardValidDate(DEFAULT_CARD_VALID_DATE)
             .cardIssueDate(DEFAULT_CARD_ISSUE_DATE)
             .nhiIdentity(DEFAULT_NHI_IDENTITY)
-            .availableTimes(DEFAULT_AVAILABLE_TIMES);
+            .availableTimes(DEFAULT_AVAILABLE_TIMES)
+            .scaling(DEFAULT_SCALING)
+            .fluoride(DEFAULT_FLUORIDE)
+            .perio(DEFAULT_PERIO);
         return nhiExtendPatient;
     }
 
@@ -144,6 +156,9 @@ public class NhiExtendPatientResourceIntTest {
         assertThat(testNhiExtendPatient.getCardIssueDate()).isEqualTo(DEFAULT_CARD_ISSUE_DATE);
         assertThat(testNhiExtendPatient.getNhiIdentity()).isEqualTo(DEFAULT_NHI_IDENTITY);
         assertThat(testNhiExtendPatient.getAvailableTimes()).isEqualTo(DEFAULT_AVAILABLE_TIMES);
+        assertThat(testNhiExtendPatient.getScaling()).isEqualTo(DEFAULT_SCALING);
+        assertThat(testNhiExtendPatient.getFluoride()).isEqualTo(DEFAULT_FLUORIDE);
+        assertThat(testNhiExtendPatient.getPerio()).isEqualTo(DEFAULT_PERIO);
     }
 
     @Test
@@ -181,7 +196,10 @@ public class NhiExtendPatientResourceIntTest {
             .andExpect(jsonPath("$.[*].cardValidDate").value(hasItem(DEFAULT_CARD_VALID_DATE.toString())))
             .andExpect(jsonPath("$.[*].cardIssueDate").value(hasItem(DEFAULT_CARD_ISSUE_DATE.toString())))
             .andExpect(jsonPath("$.[*].nhiIdentity").value(hasItem(DEFAULT_NHI_IDENTITY.toString())))
-            .andExpect(jsonPath("$.[*].availableTimes").value(hasItem(DEFAULT_AVAILABLE_TIMES)));
+            .andExpect(jsonPath("$.[*].availableTimes").value(hasItem(DEFAULT_AVAILABLE_TIMES)))
+            .andExpect(jsonPath("$.[*].scaling").value(hasItem(DEFAULT_SCALING.toString())))
+            .andExpect(jsonPath("$.[*].fluoride").value(hasItem(DEFAULT_FLUORIDE.toString())))
+            .andExpect(jsonPath("$.[*].perio").value(hasItem(DEFAULT_PERIO.toString())));
     }
     
     @Test
@@ -200,7 +218,10 @@ public class NhiExtendPatientResourceIntTest {
             .andExpect(jsonPath("$.cardValidDate").value(DEFAULT_CARD_VALID_DATE.toString()))
             .andExpect(jsonPath("$.cardIssueDate").value(DEFAULT_CARD_ISSUE_DATE.toString()))
             .andExpect(jsonPath("$.nhiIdentity").value(DEFAULT_NHI_IDENTITY.toString()))
-            .andExpect(jsonPath("$.availableTimes").value(DEFAULT_AVAILABLE_TIMES));
+            .andExpect(jsonPath("$.availableTimes").value(DEFAULT_AVAILABLE_TIMES))
+            .andExpect(jsonPath("$.scaling").value(DEFAULT_SCALING.toString()))
+            .andExpect(jsonPath("$.fluoride").value(DEFAULT_FLUORIDE.toString()))
+            .andExpect(jsonPath("$.perio").value(DEFAULT_PERIO.toString()));
     }
 
     @Test
@@ -229,7 +250,10 @@ public class NhiExtendPatientResourceIntTest {
             .cardValidDate(UPDATED_CARD_VALID_DATE)
             .cardIssueDate(UPDATED_CARD_ISSUE_DATE)
             .nhiIdentity(UPDATED_NHI_IDENTITY)
-            .availableTimes(UPDATED_AVAILABLE_TIMES);
+            .availableTimes(UPDATED_AVAILABLE_TIMES)
+            .scaling(UPDATED_SCALING)
+            .fluoride(UPDATED_FLUORIDE)
+            .perio(UPDATED_PERIO);
 
         restNhiExtendPatientMockMvc.perform(put("/api/nhi-extend-patients")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -246,6 +270,9 @@ public class NhiExtendPatientResourceIntTest {
         assertThat(testNhiExtendPatient.getCardIssueDate()).isEqualTo(UPDATED_CARD_ISSUE_DATE);
         assertThat(testNhiExtendPatient.getNhiIdentity()).isEqualTo(UPDATED_NHI_IDENTITY);
         assertThat(testNhiExtendPatient.getAvailableTimes()).isEqualTo(UPDATED_AVAILABLE_TIMES);
+        assertThat(testNhiExtendPatient.getScaling()).isEqualTo(UPDATED_SCALING);
+        assertThat(testNhiExtendPatient.getFluoride()).isEqualTo(UPDATED_FLUORIDE);
+        assertThat(testNhiExtendPatient.getPerio()).isEqualTo(UPDATED_PERIO);
     }
 
     @Test

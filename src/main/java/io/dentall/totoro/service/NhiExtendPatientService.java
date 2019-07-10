@@ -131,6 +131,18 @@ public class NhiExtendPatientService {
                     nhiExtendPatient.setAvailableTimes(updateNhiExtendPatient.getAvailableTimes());
                 }
 
+                if (updateNhiExtendPatient.getScaling() != null) {
+                    nhiExtendPatient.setScaling(updateNhiExtendPatient.getScaling());
+                }
+
+                if (updateNhiExtendPatient.getFluoride() != null) {
+                    nhiExtendPatient.setFluoride(updateNhiExtendPatient.getFluoride());
+                }
+
+                if (updateNhiExtendPatient.getPerio() != null) {
+                    nhiExtendPatient.setPerio(updateNhiExtendPatient.getPerio());
+                }
+
                 relationshipService.addRelationshipWithNhiMedicalRecords(nhiExtendPatient, updateNhiExtendPatient.getNhiMedicalRecords());
 
                 return nhiExtendPatient;
