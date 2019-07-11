@@ -18,6 +18,7 @@
       "status": "Status",
       "total": "Total",
       "dateTime": "Date Time",
+      "chiefComplaint": "Chief Complaint",
       "treatmentProcedure": "Treatment Procedure",
       "prescription": "Prescription",
       "todo": "Todo",

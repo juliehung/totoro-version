@@ -55,6 +55,9 @@ public class DisposalResourceIntTest {
     private static final Instant DEFAULT_DATE_TIME = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final String DEFAULT_CHIEF_COMPLAINT = "AAAAAAAAAA";
+    private static final String UPDATED_CHIEF_COMPLAINT = "BBBBBBBBBB";
+
     @Autowired
     private DisposalRepository disposalRepository;
 
@@ -120,7 +123,8 @@ public class DisposalResourceIntTest {
         Disposal disposal = new Disposal()
             .status(DEFAULT_STATUS)
             .total(DEFAULT_TOTAL)
-            .dateTime(DEFAULT_DATE_TIME);
+            .dateTime(DEFAULT_DATE_TIME)
+            .chiefComplaint(DEFAULT_CHIEF_COMPLAINT);
         return disposal;
     }
 
@@ -152,6 +156,7 @@ public class DisposalResourceIntTest {
         assertThat(testDisposal.getTotal()).isEqualTo(DEFAULT_TOTAL);
         assertThat(testDisposal.getCreatedBy()).isEqualTo(appointment.getDoctor().getUser().getLogin());
         assertThat(testDisposal.getDateTime()).isEqualTo(DEFAULT_DATE_TIME);
+        assertThat(testDisposal.getChiefComplaint()).isEqualTo(DEFAULT_CHIEF_COMPLAINT);
     }
 
     @Test
@@ -204,7 +209,8 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(disposal.getId().intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())))
-            .andExpect(jsonPath("$.[*].dateTime").value(hasItem(DEFAULT_DATE_TIME.toString())));
+            .andExpect(jsonPath("$.[*].dateTime").value(hasItem(DEFAULT_DATE_TIME.toString())))
+            .andExpect(jsonPath("$.[*].chiefComplaint").value(hasItem(DEFAULT_CHIEF_COMPLAINT.toString())));
     }
     
     @Test
@@ -220,7 +226,8 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.id").value(disposal.getId().intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.total").value(DEFAULT_TOTAL.doubleValue()))
-            .andExpect(jsonPath("$.dateTime").value(DEFAULT_DATE_TIME.toString()));
+            .andExpect(jsonPath("$.dateTime").value(DEFAULT_DATE_TIME.toString()))
+            .andExpect(jsonPath("$.chiefComplaint").value(DEFAULT_CHIEF_COMPLAINT.toString()));
     }
 
     @Test
@@ -448,7 +455,8 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(disposal.getId().intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())))
-            .andExpect(jsonPath("$.[*].dateTime").value(hasItem(DEFAULT_DATE_TIME.toString())));
+            .andExpect(jsonPath("$.[*].dateTime").value(hasItem(DEFAULT_DATE_TIME.toString())))
+            .andExpect(jsonPath("$.[*].chiefComplaint").value(hasItem(DEFAULT_CHIEF_COMPLAINT.toString())));
 
         // Check, that the count call also returns 1
         restDisposalMockMvc.perform(get("/api/disposals/count?sort=id,desc&" + filter))
@@ -498,7 +506,8 @@ public class DisposalResourceIntTest {
         updatedDisposal
             .status(UPDATED_STATUS)
             .total(UPDATED_TOTAL)
-            .dateTime(UPDATED_DATE_TIME);
+            .dateTime(UPDATED_DATE_TIME)
+            .chiefComplaint(UPDATED_CHIEF_COMPLAINT);
 
         restDisposalMockMvc.perform(put("/api/disposals")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -512,6 +521,7 @@ public class DisposalResourceIntTest {
         assertThat(testDisposal.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testDisposal.getTotal()).isEqualTo(UPDATED_TOTAL);
         assertThat(testDisposal.getDateTime()).isEqualTo(UPDATED_DATE_TIME);
+        assertThat(testDisposal.getChiefComplaint()).isEqualTo(UPDATED_CHIEF_COMPLAINT);
     }
 
     @Test

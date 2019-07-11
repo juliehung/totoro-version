@@ -214,6 +214,10 @@ public class DisposalService {
                     disposal.setDateTime(updateDisposal.getDateTime());
                 }
 
+                if (updateDisposal.getChiefComplaint() != null) {
+                    disposal.setChiefComplaint(updateDisposal.getChiefComplaint());
+                }
+
                 if (updateDisposal.getPrescription() != null) {
                     disposal.setPrescription(getPrescription(updateDisposal));
                 }
