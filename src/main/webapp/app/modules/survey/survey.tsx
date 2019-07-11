@@ -47,7 +47,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     drug1: false,
     drug2: false,
     drugAllergy: new Array(8).fill(false),
-    disease: new Array(16).fill(false),
+    disease: new Array(17).fill(false),
     problems: new Array(6).fill(false),
     drugName: '',
     loaded: false,
@@ -230,106 +230,152 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
         const { pregnant } = this.state;
         this.setState({ pregnant: !pregnant });
         break;
+      default:
+        break;
+    }
+  };
+
+  onDiseaseChange = event => {
+    const { disease } = this.state;
+    switch (event.target.name) {
       case 'disease1':
-      case 'disease2':
-      case 'disease3':
-      case 'disease4':
-      case 'disease5':
-      case 'disease6':
-      case 'disease7':
-      case 'disease8':
-      case 'disease9':
-      case 'disease10':
-      case 'disease11':
-      case 'disease12':
-      case 'disease13':
-      case 'disease14':
-      case 'disease15':
-      case 'disease16':
-        const { disease } = this.state;
-        if (event.target.value === 'AIDS') {
-          disease[0] = !disease[0];
-        } else if (event.target.value === '高血壓') {
-          disease[1] = !disease[1];
-        } else if (event.target.value === '低血壓') {
-          disease[2] = !disease[2];
-        } else if (event.target.value === '氣喘') {
-          disease[3] = !disease[3];
-        } else if (event.target.value === '心臟雜音') {
-          disease[4] = !disease[4];
-        } else if (event.target.value === '糖尿病') {
-          disease[5] = !disease[5];
-        } else if (event.target.value === '肺炎') {
-          disease[6] = !disease[6];
-        } else if (event.target.value === '肺結核') {
-          disease[7] = !disease[7];
-        } else if (event.target.value === '肝病') {
-          disease[8] = !disease[8];
-        } else if (event.target.value === '消化性潰瘍') {
-          disease[9] = !disease[9];
-        } else if (event.target.value === '癲癇') {
-          disease[10] = !disease[10];
-        } else if (event.target.value === '暈眩') {
-          disease[11] = !disease[11];
-        } else if (event.target.value === '中風') {
-          disease[12] = !disease[12];
-        } else if (event.target.value === '惡性腫瘤(癌症)') {
-          disease[13] = !disease[13];
-        } else if (event.target.value === '風濕熱') {
-          disease[14] = !disease[14];
-        } else if (event.target.value === '過敏') {
-          disease[15] = !disease[15];
-        }
+        if (event.target.value === 'AIDS') disease[0] = !disease[0];
         this.setState({ disease });
         break;
+      case 'disease2':
+        if (event.target.value === '高血壓') disease[1] = !disease[1];
+        this.setState({ disease });
+        break;
+      case 'disease3':
+        if (event.target.value === '低血壓') disease[2] = !disease[2];
+        this.setState({ disease });
+        break;
+      case 'disease4':
+        if (event.target.value === '氣喘') disease[3] = !disease[3];
+        this.setState({ disease });
+        break;
+      case 'disease5':
+        if (event.target.value === '心臟雜音') disease[4] = !disease[4];
+        this.setState({ disease });
+        break;
+      case 'disease6':
+        if (event.target.value === '糖尿病') disease[5] = !disease[5];
+        this.setState({ disease });
+        break;
+      case 'disease7':
+        if (event.target.value === '肺炎') disease[6] = !disease[6];
+        this.setState({ disease });
+        break;
+      case 'disease8':
+        if (event.target.value === '肺結核') disease[7] = !disease[7];
+        this.setState({ disease });
+        break;
+      case 'disease9':
+        if (event.target.value === '肝病') disease[8] = !disease[8];
+        this.setState({ disease });
+        break;
+      case 'disease10':
+        if (event.target.value === '消化性潰瘍') disease[9] = !disease[9];
+        this.setState({ disease });
+        break;
+      case 'disease11':
+        if (event.target.value === '癲癇') disease[10] = !disease[10];
+        this.setState({ disease });
+        break;
+      case 'disease12':
+        if (event.target.value === '暈眩') disease[11] = !disease[11];
+        this.setState({ disease });
+        break;
+      case 'disease13':
+        if (event.target.value === '中風') disease[12] = !disease[12];
+        this.setState({ disease });
+        break;
+      case 'disease14':
+        if (event.target.value === '惡性腫瘤(癌症)') disease[13] = !disease[13];
+        this.setState({ disease });
+        break;
+      case 'disease15':
+        if (event.target.value === '風濕熱') disease[14] = !disease[14];
+        this.setState({ disease });
+        break;
+      case 'disease16':
+        if (event.target.value === '過敏') disease[15] = !disease[15];
+        this.setState({ disease });
+        break;
+      case 'disease17':
+        if (event.target.value === 'B型肝炎') disease[16] = !disease[16];
+        this.setState({ disease });
+        break;
+      default:
+        break;
+    }
+  };
+
+  onAllergyChange = event => {
+    const { drugAllergy } = this.state;
+    switch (event.target.name) {
       case 'drugAllergy1':
-      case 'drugAllergy2':
-      case 'drugAllergy3':
-      case 'drugAllergy4':
-      case 'drugAllergy5':
-      case 'drugAllergy6':
-      case 'drugAllergy7':
-      case 'drugAllergy8':
-        const { drugAllergy } = this.state;
-        if (event.target.value === 'Aspirin') {
-          drugAllergy[0] = !drugAllergy[0];
-        } else if (event.target.value === 'Penicillin') {
-          drugAllergy[1] = !drugAllergy[1];
-        } else if (event.target.value === '青黴素') {
-          drugAllergy[2] = !drugAllergy[2];
-        } else if (event.target.value === 'Pyrine') {
-          drugAllergy[3] = !drugAllergy[3];
-        } else if (event.target.value === 'NSAID') {
-          drugAllergy[4] = !drugAllergy[4];
-        } else if (event.target.value === '磺胺') {
-          drugAllergy[5] = !drugAllergy[5];
-        } else if (event.target.value === '消炎藥') {
-          drugAllergy[6] = !drugAllergy[6];
-        } else if (event.target.value === '骨質疏鬆藥(雙磷酸鹽類藥物)') {
-          drugAllergy[7] = !drugAllergy[7];
-        }
+        if (event.target.value === 'Aspirin') drugAllergy[0] = !drugAllergy[0];
         this.setState({ drugAllergy });
         break;
+      case 'drugAllergy2':
+        if (event.target.value === 'Penicillin') drugAllergy[1] = !drugAllergy[1];
+        this.setState({ drugAllergy });
+        break;
+      case 'drugAllergy3':
+        if (event.target.value === '青黴素') drugAllergy[2] = !drugAllergy[2];
+        this.setState({ drugAllergy });
+        break;
+      case 'drugAllergy4':
+        if (event.target.value === 'Pyrine') drugAllergy[3] = !drugAllergy[3];
+        this.setState({ drugAllergy });
+        break;
+      case 'drugAllergy5':
+        if (event.target.value === 'NSAID') drugAllergy[4] = !drugAllergy[4];
+        this.setState({ drugAllergy });
+        break;
+      case 'drugAllergy6':
+        if (event.target.value === '磺胺') drugAllergy[5] = !drugAllergy[5];
+        this.setState({ drugAllergy });
+        break;
+      case 'drugAllergy7':
+        if (event.target.value === '消炎藥') drugAllergy[6] = !drugAllergy[6];
+        this.setState({ drugAllergy });
+        break;
+      case 'drugAllergy8':
+        if (event.target.value === '骨質疏鬆藥(雙磷酸鹽類藥物)') drugAllergy[7] = !drugAllergy[7];
+        this.setState({ drugAllergy });
+        break;
+      default:
+        break;
+    }
+  };
+
+  onProblemsChange = event => {
+    const { problems } = this.state;
+    switch (event.target.name) {
       case 'problems1':
+        if (event.target.value === '曾經拔牙困難或血流不止') problems[0] = !problems[0];
+        this.setState({ problems });
+        break;
       case 'problems2':
+        if (event.target.value === '曾經治療牙齒時昏迷或暈眩') problems[1] = !problems[1];
+        this.setState({ problems });
+        break;
       case 'problems3':
+        if (event.target.value === '曾經注射麻藥有不良反應') problems[2] = !problems[2];
+        this.setState({ problems });
+        break;
       case 'problems4':
+        if (event.target.value === '曾住院或接受手術') problems[3] = !problems[3];
+        this.setState({ problems });
+        break;
       case 'problems5':
+        if (event.target.value === '一年內服長期藥物(含避孕藥)') problems[4] = !problems[4];
+        this.setState({ problems });
+        break;
       case 'problems6':
-        const { problems } = this.state;
-        if (event.target.value === '曾經拔牙困難或血流不止') {
-          problems[0] = !problems[0];
-        } else if (event.target.value === '曾經治療牙齒時昏迷或暈眩') {
-          problems[1] = !problems[1];
-        } else if (event.target.value === '曾經注射麻藥有不良反應') {
-          problems[2] = !problems[2];
-        } else if (event.target.value === '曾住院或接受手術') {
-          problems[3] = !problems[3];
-        } else if (event.target.value === '一年內服長期藥物(含避孕藥)') {
-          problems[4] = !problems[4];
-        } else if (event.target.value === '曾經接受放射線治療或化學治療') {
-          problems[5] = !problems[5];
-        }
+        if (event.target.value === '曾經接受放射線治療或化學治療') problems[5] = !problems[5];
         this.setState({ problems });
         break;
       default:
@@ -344,7 +390,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       smoking: false,
       pregnant: false,
       drugAllergy: new Array(8).fill(false),
-      disease: new Array(16).fill(false),
+      disease: new Array(17).fill(false),
       problems: new Array(6).fill(false)
     };
     tags.map(tag => {
@@ -384,6 +430,8 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
         state.disease[14] = true;
       } else if (tag.name === '過敏') {
         state.disease[15] = true;
+      } else if (tag.name === 'B型肝炎') {
+        state.disease[16] = true;
       } else if (tag.name === 'Aspirin') {
         state.drugAllergy[0] = true;
       } else if (tag.name === 'Penicillin') {
@@ -761,7 +809,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="AIDS"
                     value="AIDS"
                     checked={disease[0]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -772,7 +820,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="高血壓"
                     value="高血壓"
                     checked={disease[1]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -783,7 +831,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="低血壓"
                     value="低血壓"
                     checked={disease[2]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -794,7 +842,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="氣喘"
                     value="氣喘"
                     checked={disease[3]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -805,7 +853,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="心臟雜音"
                     value="心臟雜音"
                     checked={disease[4]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -816,7 +864,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="糖尿病"
                     value="糖尿病"
                     checked={disease[5]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -827,7 +875,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="肺炎"
                     value="肺炎"
                     checked={disease[6]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -838,7 +886,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="肺結核"
                     value="肺結核"
                     checked={disease[7]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -849,7 +897,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="肝病"
                     value="肝病"
                     checked={disease[8]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -860,7 +908,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="癲癇"
                     value="癲癇"
                     checked={disease[10]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -871,7 +919,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="暈眩"
                     value="暈眩"
                     checked={disease[11]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -882,7 +930,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="中風"
                     value="中風"
                     checked={disease[12]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -893,7 +941,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="過敏"
                     value="過敏"
                     checked={disease[15]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -904,7 +952,18 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="風濕熱"
                     value="風濕熱"
                     checked={disease[14]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
+                  />
+                </Col>
+                <Col sm={2}>
+                  <CustomInput
+                    type="checkbox"
+                    name="disease17"
+                    id="disease17"
+                    label="B型肝炎"
+                    value="B型肝炎"
+                    checked={disease[16]}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -915,7 +974,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="消化性潰瘍"
                     value="消化性潰瘍"
                     checked={disease[9]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -926,7 +985,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="惡性腫瘤(癌症)"
                     value="惡性腫瘤(癌症)"
                     checked={disease[13]}
-                    onChange={this.onChange}
+                    onChange={this.onDiseaseChange}
                   />
                 </Col>
               </FormGroup>
@@ -992,7 +1051,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="Aspirin"
                     value="Aspirin"
                     checked={drugAllergy[0]}
-                    onChange={this.onChange}
+                    onChange={this.onAllergyChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -1003,7 +1062,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="Penicillin"
                     value="Penicillin"
                     checked={drugAllergy[1]}
-                    onChange={this.onChange}
+                    onChange={this.onAllergyChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -1014,7 +1073,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="Pyrine"
                     value="Pyrine"
                     checked={drugAllergy[3]}
-                    onChange={this.onChange}
+                    onChange={this.onAllergyChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -1025,7 +1084,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="NSAID"
                     value="NSAID"
                     checked={drugAllergy[4]}
-                    onChange={this.onChange}
+                    onChange={this.onAllergyChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -1036,7 +1095,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="磺胺"
                     value="磺胺"
                     checked={drugAllergy[5]}
-                    onChange={this.onChange}
+                    onChange={this.onAllergyChange}
                   />
                 </Col>
                 <Col sm={2}>
@@ -1047,7 +1106,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="消炎藥"
                     value="消炎藥"
                     checked={drugAllergy[6]}
-                    onChange={this.onChange}
+                    onChange={this.onAllergyChange}
                   />
                 </Col>
                 <Col sm={5}>
@@ -1058,7 +1117,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="骨質疏鬆藥(雙磷酸鹽類藥物)"
                     value="骨質疏鬆藥(雙磷酸鹽類藥物)"
                     checked={drugAllergy[7]}
-                    onChange={this.onChange}
+                    onChange={this.onAllergyChange}
                   />
                 </Col>
               </FormGroup>
@@ -1171,7 +1230,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="曾經拔牙困難或血流不止"
                     value="曾經拔牙困難或血流不止"
                     checked={problems[0]}
-                    onChange={this.onChange}
+                    onChange={this.onProblemsChange}
                   />
                 </Col>
                 <Col sm={4}>
@@ -1182,7 +1241,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="曾經治療牙齒時昏迷或暈眩"
                     value="曾經治療牙齒時昏迷或暈眩"
                     checked={problems[1]}
-                    onChange={this.onChange}
+                    onChange={this.onProblemsChange}
                   />
                 </Col>
                 <Col sm={4}>
@@ -1193,7 +1252,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="曾經注射麻藥有不良反應"
                     value="曾經注射麻藥有不良反應"
                     checked={problems[2]}
-                    onChange={this.onChange}
+                    onChange={this.onProblemsChange}
                   />
                 </Col>
                 <Col sm={4}>
@@ -1204,7 +1263,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="曾住院或接受手術"
                     value="曾住院或接受手術"
                     checked={problems[3]}
-                    onChange={this.onChange}
+                    onChange={this.onProblemsChange}
                   />
                 </Col>
                 <Col sm={4}>
@@ -1215,7 +1274,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="一年內服長期藥物(含避孕藥)"
                     value="一年內服長期藥物(含避孕藥)"
                     checked={problems[4]}
-                    onChange={this.onChange}
+                    onChange={this.onProblemsChange}
                   />
                 </Col>
                 <Col sm={4}>
@@ -1226,7 +1285,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     label="曾經接受放射線治療或化學治療"
                     value="曾經接受放射線治療或化學治療"
                     checked={problems[5]}
-                    onChange={this.onChange}
+                    onChange={this.onProblemsChange}
                   />
                 </Col>
               </FormGroup>

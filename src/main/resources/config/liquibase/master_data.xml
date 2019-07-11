@@ -89,4 +89,6 @@
         </loadData>
     </changeSet>
 
+    <include file="config/liquibase/changelog/2019/07/20190711_loadData.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>

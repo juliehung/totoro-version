@@ -36,7 +36,8 @@ public enum TagName {
     AdverseReactionsToAnestheticInjections(29L),
     BeeninHospitalOrUndergoneOperation(30L),
     TakenLongTermMedicineinAYear(31L),
-    UndergoneRadiationTherapyOrChemotherapy(32L);
+    UndergoneRadiationTherapyOrChemotherapy(32L),
+    HepatitisB(33L);
 
     private final Long value;
 
