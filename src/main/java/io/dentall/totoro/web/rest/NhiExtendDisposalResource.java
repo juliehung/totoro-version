@@ -84,13 +84,15 @@ public class NhiExtendDisposalResource {
      */
     @GetMapping("/nhi-extend-disposals")
     @Timed
-    public List<NhiExtendDisposalVM> getAllNhiExtendDisposals(@RequestParam(required = false) LocalDate date) {
+    public List<NhiExtendDisposalVM> getAllNhiExtendDisposals(@RequestParam(required = false) LocalDate date, @RequestParam(required = false) Integer yyyymm) {
         log.debug("REST request to get all NhiExtendDisposalVMs");
 
-        if (date == null) {
-            return nhiExtendDisposalService.findAll();
-        } else {
+        if (date != null) {
             return nhiExtendDisposalService.findByDate(date);
+        } else if (yyyymm != null) {
+            return nhiExtendDisposalService.findByYearMonth(yyyymm);
+        } else {
+            return nhiExtendDisposalService.findAll();
         }
     }
 

@@ -142,7 +142,7 @@ public class NhiExtendDisposal implements Serializable {
 
     // 流水編號
     @Column(name = "serial_number")
-    private String serialNumber;
+    private String serialNumber = "";
 
     @OneToMany(mappedBy = "nhiExtendDisposal", fetch = FetchType.EAGER)
     private Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = null;

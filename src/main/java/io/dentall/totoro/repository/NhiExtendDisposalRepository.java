@@ -16,4 +16,6 @@ import java.util.List;
 public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long> {
 
     List<NhiExtendDisposal> findByDate(LocalDate date);
+
+    List<NhiExtendDisposal> findByDateBetween(LocalDate start, LocalDate end);
 }

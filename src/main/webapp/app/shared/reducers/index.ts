@@ -173,6 +173,14 @@ import relationshipOptions, {
   RelationshipOptionsState
 } from 'app/entities/relationship-options/relationship-options.reducer';
 
+// prettier-ignore
+import nhiMonthDeclaration, {
+  NhiMonthDeclarationState
+} from 'app/entities/nhi-month-declaration/nhi-month-declaration.reducer';
+// prettier-ignore
+import nhiMonthDeclarationDetails, {
+  NhiMonthDeclarationDetailsState
+} from 'app/entities/nhi-month-declaration-details/nhi-month-declaration-details.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -226,6 +234,8 @@ export interface IRootState {
   readonly marriageOptions: MarriageOptionsState;
   readonly careerOptions: CareerOptionsState;
   readonly relationshipOptions: RelationshipOptionsState;
+  readonly nhiMonthDeclaration: NhiMonthDeclarationState;
+  readonly nhiMonthDeclarationDetails: NhiMonthDeclarationDetailsState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -281,6 +291,8 @@ const rootReducer = combineReducers<IRootState>({
   marriageOptions,
   careerOptions,
   relationshipOptions,
+  nhiMonthDeclaration,
+  nhiMonthDeclarationDetails,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

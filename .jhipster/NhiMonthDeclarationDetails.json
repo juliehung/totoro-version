@@ -1,0 +1,83 @@
+{
+    "name": "NhiMonthDeclarationDetails",
+    "fields": [
+        {
+            "fieldName": "type",
+            "fieldType": "NhiMonthDeclarationType",
+            "fieldValues": "SUBMISSION,SUPPLEMENT"
+        },
+        {
+            "fieldName": "way",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "caseTotal",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "pointTotal",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "outPatientPoint",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "preventiveCaseTotal",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "preventivePointTotal",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "generalCaseTotal",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "generalPointTotal",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "professionalCaseTotal",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "professionalPointTotal",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "partialCaseTotal",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "partialPointTotal",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "file",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "uploadTime",
+            "fieldType": "Instant"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "nhiMonthDeclaration",
+            "otherEntityName": "nhiMonthDeclaration",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190708032330",
+    "entityTableName": "nhi_month_declaration_details",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

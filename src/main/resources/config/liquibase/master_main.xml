@@ -50,6 +50,8 @@
     <include file="config/liquibase/changelog/20190703091324_added_entity_MarriageOptions.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190703091325_added_entity_CareerOptions.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190703091326_added_entity_RelationshipOptions.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190708032254_added_entity_NhiMonthDeclaration.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190708032330_added_entity_NhiMonthDeclarationDetails.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom tables -->
     <include file="config/liquibase/changelog/createTable/20190522.xml" relativeToChangelogFile="false"/>
