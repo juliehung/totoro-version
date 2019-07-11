@@ -6,6 +6,8 @@ import { getEntities as getMarriageOptions } from 'app/entities/marriage-options
 import { getEntities as getRelationshipOptions } from 'app/entities/relationship-options/relationship-options.reducer';
 import { IRootState } from 'app/shared/reducers';
 
+import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -132,12 +134,21 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
-      axios.post('/api/lob/esign/string64', {
-        contentType: this.state.contentType,
-        base64: this.state.base64,
-        patientId: this.props.patientEntity.id
-      });
-      this.handleClose();
+      axios
+        .post('/api/lob/esign/string64', {
+          contentType: this.state.contentType,
+          base64: this.state.base64,
+          patientId: this.props.patientEntity.id
+        })
+        .then(() => {
+          this.handleClose();
+        })
+        .catch(() => {
+          setTimeout(() => {
+            this.setState({ showDino: false });
+            toast('網路不穩定，請再送出一次！', { type: toast.TYPE.ERROR });
+          }, 2000);
+        });
     }
   }
 
@@ -145,7 +156,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     setTimeout(() => {
       this.setState({ showDino: false });
       this.props.history.push('/list');
-    }, 3000);
+    }, 2000);
   };
 
   onFormSubmit = event => {

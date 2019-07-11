@@ -35,9 +35,4 @@
   position: absolute;
   right: 22px;
   top: 17px;
-  z-index: 3;
-}
-
-.sigCanvas {
-  z-index: 2;
 }
