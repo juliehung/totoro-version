@@ -31,7 +31,7 @@ class Signature extends React.Component<ISignatureProps, ISignatureSates> {
       .get(`/api/lob/esign?patientId.equals=${this.props.pid}`)
       .then(response => {
         base64Img = response.data.base64;
-        this.sigCanvas.fromDataURL(base64Img, { width: 713.875, height: 320 });
+        this.sigCanvas.fromDataURL(base64Img, { width: 713, height: 320 });
       })
       .catch();
   }
@@ -70,7 +70,7 @@ class Signature extends React.Component<ISignatureProps, ISignatureSates> {
             minDistance={0.1}
             velocityFilterWeight={0.5}
             canvasProps={{
-              width: '713.875',
+              width: '713',
               height: '320',
               className: 'sigCanvas'
             }}

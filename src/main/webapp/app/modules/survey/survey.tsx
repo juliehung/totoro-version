@@ -1,6 +1,9 @@
 import { createEntity, getEntity, reset, updateEntity } from 'app/entities/questionnaire/questionnaire.reducer';
 import { getEntity as getPatient, updateEntity as updatePatient } from 'app/entities/patient/patient.reducer';
 import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
+import { getEntities as getCareerOptions } from 'app/entities/career-options/career-options.reducer';
+import { getEntities as getMarriageOptions } from 'app/entities/marriage-options/marriage-options.reducer';
+import { getEntities as getRelationshipOptions } from 'app/entities/relationship-options/relationship-options.reducer';
 import { IRootState } from 'app/shared/reducers';
 
 import React from 'react';
@@ -34,6 +37,14 @@ export interface ISurveyState {
   drugName: string;
   loaded: boolean;
   imgDataURL: string;
+  maritalStatus: string;
+  jobType: string;
+  glycemicAC: number;
+  glycemicPC: number;
+  mainNoticeChannel: string;
+  contentType: string;
+  base64: string;
+  emergencyRelationship: string;
 }
 
 export class Survey extends React.Component<ISurveyProps, ISurveyState> {
@@ -51,7 +62,15 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     problems: new Array(6).fill(false),
     drugName: '',
     loaded: false,
-    imgDataURL: ''
+    imgDataURL: '',
+    maritalStatus: '',
+    jobType: '',
+    glycemicAC: 0,
+    glycemicPC: 0,
+    mainNoticeChannel: '',
+    contentType: '',
+    base64: '',
+    emergencyRelationship: ''
   };
 
   signatureRef = React.createRef<Signature>();
@@ -62,7 +81,10 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     if (pid) {
       this.props.getPatient(pid);
     }
+    this.props.getCareerOptions(0, 40, 'id,asc');
     this.props.getTags(0, 40, 'id,asc');
+    this.props.getMarriageOptions(0, 40, 'id,asc');
+    this.props.getRelationshipOptions(0, 40, 'id,asc');
   }
 
   componentDidUpdate(prevProps) {
@@ -80,15 +102,41 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       const smokingDisabled = !state.smoking;
       let smokeNumberADay = patientEntity.questionnaire ? patientEntity.questionnaire.smokeNumberADay.toString() : '';
       smokeNumberADay = smokeNumberADay === '0' ? '' : smokeNumberADay;
+      const glycemicAC = patientEntity.questionnaire ? patientEntity.questionnaire.glycemicAC : 0;
+      const glycemicPC = patientEntity.questionnaire ? patientEntity.questionnaire.glycemicPC : 0;
+      const maritalStatus = patientEntity.marriage;
+      const jobType = patientEntity.career;
+      const mainNoticeChannel = patientEntity.mainNoticeChannel;
+      const emergencyRelationship = patientEntity.emergencyRelationship;
       const loaded = true;
       setTimeout(() => {
-        this.setState({ ...state, drug1, drug2, drugNameDisabled, drugName, loaded, smokingDisabled, smokeNumberADay });
+        this.setState({
+          ...state,
+          drug1,
+          drug2,
+          drugNameDisabled,
+          drugName,
+          loaded,
+          smokingDisabled,
+          smokeNumberADay,
+          maritalStatus,
+          jobType,
+          glycemicAC,
+          glycemicPC,
+          mainNoticeChannel,
+          emergencyRelationship
+        });
       }, 300);
     }
   }
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
+      axios.post('/api/lob/esign/string64', {
+        contentType: this.state.contentType,
+        base64: this.state.base64,
+        patientId: this.props.patientEntity.id
+      });
       this.handleClose();
     }
   }
@@ -108,7 +156,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     const address = data.get('address');
     const lineId = data.get('lineId');
     const fbId = data.get('fbId');
-    const contactType = data.get('contactType');
+    const mainNoticeChannel = data.get('mainNoticeChannel');
     const jobType = data.get('jobType');
     const maritalStatus = data.get('maritalStatus');
     const introducor = data.get('introducor');
@@ -159,8 +207,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       }
     }
 
-    // additional information
-    // contactType, jobType, maritalStatus, introducor,
+    // additional information introducor
     const questionnaire = { ...this.props.patientEntity.questionnaire, drug, drugName, glycemicAC, glycemicPC, smokeNumberADay };
     const json = {
       blood,
@@ -172,32 +219,23 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       emergencyPhone,
       emergencyRelationship,
       tags,
-      questionnaire
+      questionnaire,
+      marriage: maritalStatus,
+      career: jobType,
+      mainNoticeChannel
     };
 
     // TODO: sava imgURL to server
     const imgDataURL = this.signatureRef.current.trim();
     const contentType = imgDataURL.slice(imgDataURL.indexOf('image'), imgDataURL.indexOf(';'));
     const base64 = imgDataURL;
-    const patientId = this.props.patientEntity.id;
-
+    this.setState({ contentType, base64 });
     this.setState({ showDino: true });
     // TODO: api and loading progress and success/error page
     let deepCopyPatientEntity = JSON.parse(JSON.stringify(this.props.patientEntity));
     deepCopyPatientEntity = { ...deepCopyPatientEntity, ...json };
 
-    axios
-      .post('/api/lob/esign/string64', {
-        contentType,
-        base64,
-        patientId
-      })
-      .then(res => {
-        this.props.updatePatient(deepCopyPatientEntity);
-      })
-      .catch(err => {
-        alert(err.response);
-      });
+    this.props.updatePatient(deepCopyPatientEntity);
   };
 
   onChange = event => {
@@ -559,7 +597,23 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       </div>
     );
     const dt = moment(patientEntity.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss');
-    const { smoking, pregnant, drugAllergy, disease, problems, drug1, drug2, drugName, smokeNumberADay } = this.state;
+    const {
+      smoking,
+      pregnant,
+      drugAllergy,
+      disease,
+      problems,
+      drug1,
+      drug2,
+      drugName,
+      smokeNumberADay,
+      maritalStatus,
+      jobType,
+      glycemicAC,
+      glycemicPC,
+      mainNoticeChannel,
+      emergencyRelationship
+    } = this.state;
     return (
       <div>
         <Link to={'/'}>
@@ -675,18 +729,23 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 <Col sm={3}>
                   <Input type="text" name="fbId" id="fbId" placeholder="請填入" maxLength={15} defaultValue={patientEntity.fbId} />
                 </Col>
-                <Label for="contactType" sm={1}>
+                <Label for="mainNoticeChannel" sm={1}>
                   通知
                 </Label>
                 <Col sm={3}>
-                  <Input type="select" name="contactType" id="contactType" defaultValue="select">
+                  <Input
+                    type="select"
+                    name="mainNoticeChannel"
+                    id="mainNoticeChannel"
+                    defaultValue={mainNoticeChannel ? mainNoticeChannel : 'select'}
+                  >
                     <option disabled hidden value="select">
                       請選擇
                     </option>
-                    <option>LINE</option>
-                    <option>臉書</option>
-                    <option>Email</option>
-                    <option>電話</option>
+                    <option value="PhoneWay">電話</option>
+                    <option value="FaceBookWay">臉書</option>
+                    <option value="LineWay">Line</option>
+                    <option value="EmailWay">電子信箱</option>
                   </Input>
                 </Col>
               </FormGroup>
@@ -695,37 +754,34 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                   職業
                 </Label>
                 <Col sm={3}>
-                  <Input type="select" name="jobType" id="jobType" defaultValue="select">
+                  <Input type="select" name="jobType" id="jobType" defaultValue={jobType ? jobType : 'select'}>
                     <option disabled hidden value="select">
                       請選擇
                     </option>
-                    <option>農、林、漁、牧</option>
-                    <option>軍、公、教</option>
-                    <option>專業、科學及技術服務業</option>
-                    <option>製造業</option>
-                    <option>餐飲業</option>
-                    <option>治安人員</option>
-                    <option>營造業</option>
-                    <option>服務業</option>
-                    <option>運輸及倉儲業</option>
-                    <option>資訊及通訊傳播業</option>
-                    <option>金融及保險</option>
-                    <option>職業運動人員</option>
-                    <option>家庭管理</option>
+                    {this.props.careerOptionsEntities.length > 0
+                      ? this.props.careerOptionsEntities.map((career, i) => (
+                          <option key={i} value={career.code}>
+                            {career.name}
+                          </option>
+                        ))
+                      : null}
                   </Input>
                 </Col>
                 <Label for="maritalStatus" sm={1}>
                   婚姻
                 </Label>
                 <Col sm={3}>
-                  <Input type="select" name="maritalStatus" id="maritalStatus" defaultValue="select">
+                  <Input type="select" name="maritalStatus" id="maritalStatus" defaultValue={maritalStatus ? maritalStatus : 'select'}>
                     <option disabled hidden value="select">
                       請選擇
                     </option>
-                    <option>未婚</option>
-                    <option>已婚</option>
-                    <option>離婚</option>
-                    <option>配偶死亡</option>
+                    {this.props.marriageOptionsEntities.length > 0
+                      ? this.props.marriageOptionsEntities.map((mariage, i) => (
+                          <option key={i} value={mariage.code}>
+                            {mariage.name}
+                          </option>
+                        ))
+                      : null}
                   </Input>
                 </Col>
                 <Label for="introducor" sm={1}>
@@ -781,15 +837,18 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     type="select"
                     name="emergencyRelationship"
                     id="emergencyRelationship"
-                    defaultValue={patientEntity.emergencyRelationship}
+                    defaultValue={emergencyRelationship ? emergencyRelationship : 'select'}
                   >
                     <option disabled hidden value="select">
                       請選擇
                     </option>
-                    <option>配偶</option>
-                    <option>父母</option>
-                    <option>子女</option>
-                    <option>朋友</option>
+                    {this.props.relationshipOptions.length > 0
+                      ? this.props.relationshipOptions.map((relationship, i) => (
+                          <option key={i} value={relationship.code}>
+                            {relationship.name}
+                          </option>
+                        ))
+                      : null}
                   </Input>
                 </Col>
               </FormGroup>
@@ -1149,7 +1208,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Col>
                 <Col sm={3}>
                   <Input
-                    type="text"
+                    type="number"
                     name="smokeNumberADay"
                     id="smokeNumberADay"
                     placeholder="請填入"
@@ -1195,27 +1254,13 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                   飯前
                 </Label>
                 <Col sm={3}>
-                  <Input
-                    type="number"
-                    name="glycemicAC"
-                    id="glycemicAC"
-                    placeholder="請填入"
-                    maxLength={3}
-                    defaultValue={patientEntity.questionnaire ? patientEntity.questionnaire.glycemicAC : ''}
-                  />
+                  <Input type="number" name="glycemicAC" id="glycemicAC" placeholder="請填入" maxLength={3} defaultValue={glycemicAC} />
                 </Col>
                 <Label for="glycemicPC" sm={1}>
                   飯後
                 </Label>
                 <Col sm={3}>
-                  <Input
-                    type="number"
-                    name="glycemicPC"
-                    id="glycemicPC"
-                    placeholder="請填入"
-                    maxLength={3}
-                    defaultValue={patientEntity.questionnaire ? patientEntity.questionnaire.glycemicPC : ''}
-                  />
+                  <Input type="number" name="glycemicPC" id="glycemicPC" placeholder="請填入" maxLength={3} defaultValue={glycemicPC} />
                 </Col>
               </FormGroup>
               <FormGroup row>
@@ -1308,11 +1353,14 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
   }
 }
 
-const mapStateToProps = ({ patient, tag }: IRootState) => ({
+const mapStateToProps = ({ patient, tag, careerOptions, marriageOptions, relationshipOptions }: IRootState) => ({
   patientEntity: patient.entity,
   tagList: tag.entities,
   updateSuccess: patient.updateSuccess,
-  errorMessage: patient.errorMessage
+  errorMessage: patient.errorMessage,
+  careerOptionsEntities: careerOptions.entities,
+  marriageOptionsEntities: marriageOptions.entities,
+  relationshipOptions: relationshipOptions.entities
 });
 
 const mapDispatchToProps = {
@@ -1322,7 +1370,10 @@ const mapDispatchToProps = {
   reset,
   getPatient,
   updatePatient,
-  getTags
+  getTags,
+  getCareerOptions,
+  getMarriageOptions,
+  getRelationshipOptions
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
