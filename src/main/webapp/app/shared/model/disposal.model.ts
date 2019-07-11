@@ -16,6 +16,7 @@ export interface IDisposal {
   status?: DisposalStatus;
   total?: number;
   dateTime?: Moment;
+  chiefComplaint?: string;
   treatmentProcedures?: ITreatmentProcedure[];
   prescription?: IPrescription;
   todo?: ITodo;

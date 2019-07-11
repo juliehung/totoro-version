@@ -43,6 +43,9 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @Column(name = "date_time")
     private Instant dateTime;
 
+    @Column(name = "chief_complaint")
+    private String chiefComplaint;
+
     @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = null;
@@ -116,6 +119,19 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     public void setDateTime(Instant dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public String getChiefComplaint() {
+        return chiefComplaint;
+    }
+
+    public Disposal chiefComplaint(String chiefComplaint) {
+        this.chiefComplaint = chiefComplaint;
+        return this;
+    }
+
+    public void setChiefComplaint(String chiefComplaint) {
+        this.chiefComplaint = chiefComplaint;
     }
 
     public Set<TreatmentProcedure> getTreatmentProcedures() {
@@ -293,6 +309,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
             ", status='" + getStatus() + "'" +
             ", total=" + getTotal() +
             ", dateTime='" + getDateTime() + "'" +
+            ", chiefComplaint='" + getChiefComplaint() + "'" +
             "}";
     }
 }

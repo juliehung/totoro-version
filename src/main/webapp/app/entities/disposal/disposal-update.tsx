@@ -148,6 +148,12 @@ export class DisposalUpdate extends React.Component<IDisposalUpdateProps, IDispo
                   />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="chiefComplaintLabel" for="chiefComplaint">
+                    <Translate contentKey="totoroApp.disposal.chiefComplaint">Chief Complaint</Translate>
+                  </Label>
+                  <AvField id="disposal-chiefComplaint" type="text" name="chiefComplaint" />
+                </AvGroup>
+                <AvGroup>
                   <Label for="prescription.id">
                     <Translate contentKey="totoroApp.disposal.prescription">Prescription</Translate>
                   </Label>
