@@ -3,6 +3,7 @@ package io.dentall.totoro.service;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -13,6 +14,7 @@ import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.InstantFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -39,6 +41,9 @@ public class AppointmentQueryService extends QueryService<Appointment> {
     private final Logger log = LoggerFactory.getLogger(AppointmentQueryService.class);
 
     private final AppointmentRepository appointmentRepository;
+
+    @Value("${zoneOffset:Z}")
+    private String zoneOffset;
 
     public AppointmentQueryService(AppointmentRepository appointmentRepository) {
         this.appointmentRepository = appointmentRepository;
@@ -105,8 +110,9 @@ public class AppointmentQueryService extends QueryService<Appointment> {
                 if ((FilterUtil.predicateIsNull.test(criteria.getRegistrationId()) && predicateFilterEquals.test(criteria.getPatientId())) ||
                     predicateFilterEquals.test(criteria.getRegistrationType())) {
                     // default expectedArrivalTime is today
-                    Instant start = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MIN).toInstant();
-                    Instant end = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MAX).toInstant();
+                    ZoneOffset zoneOffSet = ZoneOffset.of(zoneOffset);
+                    Instant start = OffsetDateTime.now(zoneOffSet).toZonedDateTime().with(LocalTime.MIN).toInstant();
+                    Instant end = OffsetDateTime.now(zoneOffSet).toZonedDateTime().with(LocalTime.MAX).toInstant();
                     specification = specification.and(buildRangeSpecification(new InstantFilter().setGreaterOrEqualThan(start).setLessOrEqualThan(end), Appointment_.expectedArrivalTime));
                 }
             }

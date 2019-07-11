@@ -1,0 +1,23 @@
+{
+  "totoroApp": {
+    "nhiMonthDeclaration": {
+      "home": {
+        "title": "Nhi Month Declarations",
+        "createLabel": "Create a new Nhi Month Declaration",
+        "createOrEditLabel": "Create or edit a Nhi Month Declaration"
+      },
+      "created": "A new Nhi Month Declaration is created with identifier {{ param }}",
+      "updated": "A Nhi Month Declaration is updated with identifier {{ param }}",
+      "deleted": "A Nhi Month Declaration is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Nhi Month Declaration {{ id }}?"
+      },
+      "detail": {
+        "title": "Nhi Month Declaration"
+      },
+      "yearMonth": "Year Month",
+      "institution": "Institution",
+      "nhiMonthDeclarationDetails": "Nhi Month Declaration Details"
+    }
+  }
+}

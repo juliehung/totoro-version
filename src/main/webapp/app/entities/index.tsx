@@ -44,6 +44,8 @@ import Esign from './esign';
 import MarriageOptions from './marriage-options';
 import CareerOptions from './career-options';
 import RelationshipOptions from './relationship-options';
+import NhiMonthDeclaration from './nhi-month-declaration';
+import NhiMonthDeclarationDetails from './nhi-month-declaration-details';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -90,6 +92,8 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/marriage-options`} component={MarriageOptions} />
       <ErrorBoundaryRoute path={`${match.url}/career-options`} component={CareerOptions} />
       <ErrorBoundaryRoute path={`${match.url}/relationship-options`} component={RelationshipOptions} />
+      <ErrorBoundaryRoute path={`${match.url}/nhi-month-declaration`} component={NhiMonthDeclaration} />
+      <ErrorBoundaryRoute path={`${match.url}/nhi-month-declaration-details`} component={NhiMonthDeclarationDetails} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>

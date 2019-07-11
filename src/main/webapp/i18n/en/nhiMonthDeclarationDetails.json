@@ -1,0 +1,36 @@
+{
+  "totoroApp": {
+    "nhiMonthDeclarationDetails": {
+      "home": {
+        "title": "Nhi Month Declaration Details",
+        "createLabel": "Create a new Nhi Month Declaration Details",
+        "createOrEditLabel": "Create or edit a Nhi Month Declaration Details"
+      },
+      "created": "A new Nhi Month Declaration Details is created with identifier {{ param }}",
+      "updated": "A Nhi Month Declaration Details is updated with identifier {{ param }}",
+      "deleted": "A Nhi Month Declaration Details is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Nhi Month Declaration Details {{ id }}?"
+      },
+      "detail": {
+        "title": "Nhi Month Declaration Details"
+      },
+      "type": "Type",
+      "way": "Way",
+      "caseTotal": "Case Total",
+      "pointTotal": "Point Total",
+      "outPatientPoint": "Out Patient Point",
+      "preventiveCaseTotal": "Preventive Case Total",
+      "preventivePointTotal": "Preventive Point Total",
+      "generalCaseTotal": "General Case Total",
+      "generalPointTotal": "General Point Total",
+      "professionalCaseTotal": "Professional Case Total",
+      "professionalPointTotal": "Professional Point Total",
+      "partialCaseTotal": "Partial Case Total",
+      "partialPointTotal": "Partial Point Total",
+      "file": "File",
+      "uploadTime": "Upload Time",
+      "nhiMonthDeclaration": "Nhi Month Declaration"
+    }
+  }
+}

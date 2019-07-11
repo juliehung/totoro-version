@@ -1,0 +1,33 @@
+{
+    "name": "NhiMonthDeclaration",
+    "fields": [
+        {
+            "fieldName": "yearMonth",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "institution",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "nhiMonthDeclarationDetails",
+            "otherEntityName": "nhiMonthDeclarationDetails",
+            "otherEntityRelationshipName": "nhiMonthDeclaration"
+        }
+    ],
+    "changelogDate": "20190708032254",
+    "entityTableName": "nhi_month_declaration",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

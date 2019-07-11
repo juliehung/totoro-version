@@ -48,6 +48,8 @@
         "marriageOptions": "Marriage Options",
         "careerOptions": "Career Options",
         "relationshipOptions": "Relationship Options",
+        "nhiMonthDeclaration": "Nhi Month Declaration",
+        "nhiMonthDeclarationDetails": "Nhi Month Declaration Details",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

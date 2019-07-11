@@ -1,0 +1,23 @@
+{
+  "totoroApp": {
+    "nhiMonthDeclaration": {
+      "home": {
+        "title": "Nhi Month Declarations",
+        "createLabel": "建立一筆新的 Nhi Month Declaration",
+        "createOrEditLabel": "建立或編輯 Nhi Month Declaration"
+      },
+      "created": "新的 Nhi Month Declaration 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Nhi Month Declaration 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Nhi Month Declaration 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Nhi Month Declaration {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Nhi Month Declaration"
+      },
+      "yearMonth": "Year Month",
+      "institution": "Institution",
+      "nhiMonthDeclarationDetails": "Nhi Month Declaration Details"
+    }
+  }
+}

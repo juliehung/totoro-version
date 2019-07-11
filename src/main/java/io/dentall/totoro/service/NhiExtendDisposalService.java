@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -90,6 +92,22 @@ public class NhiExtendDisposalService {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Get the nhiExtendDisposalVMs by yyyymm.
+     *
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public List<NhiExtendDisposalVM> findByYearMonth(Integer yyyymm) {
+        log.debug("Request to get all NhiExtendDisposalVMs by yyyymm({})", yyyymm);
+        YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
+
+        return nhiExtendDisposalRepository
+            .findByDateBetween(ym.atDay(1), ym.atEndOfMonth())
+            .stream()
+            .map(NhiExtendDisposalVM::new)
+            .collect(Collectors.toList());
+    }
 
     /**
      * Get one nhiExtendDisposal by id.

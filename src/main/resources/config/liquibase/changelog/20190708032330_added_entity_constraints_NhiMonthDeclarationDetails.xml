@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity NhiMonthDeclarationDetails.
+    -->
+    <changeSet id="20190708032330-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="nhi_month_declaration_id"
+                                 baseTableName="nhi_month_declaration_details"
+                                 constraintName="fk_nhi_month_declaration_details_nhi_month_declaration_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="nhi_month_declaration"/>
+
+    </changeSet>
+</databaseChangeLog>
