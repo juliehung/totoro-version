@@ -101,7 +101,7 @@ export class PatientList extends React.Component<IPatientListProps, IPatientList
       <div>
         <h2 id="patient-heading">{/*<Translate contentKey="totoroApp.patient.home.title">Patients</Translate>*/}</h2>
         <Row>
-          {patientList.map((patient, i) => (
+          {patientList.filter(patient => patient.newPatient).map((patient, i) => (
             <Col md="6" lg="4" key={`p-${i}`}>
               <Link to={'/survey?pid=' + patient.id} key={`p-${i}`}>
                 <div style={{ height: '171px', marginBottom: '23px' }}>
