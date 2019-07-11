@@ -81,7 +81,9 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       let smokeNumberADay = patientEntity.questionnaire ? patientEntity.questionnaire.smokeNumberADay.toString() : '';
       smokeNumberADay = smokeNumberADay === '0' ? '' : smokeNumberADay;
       const loaded = true;
-      this.setState({ ...state, drug1, drug2, drugNameDisabled, drugName, loaded, smokingDisabled, smokeNumberADay });
+      setTimeout(() => {
+        this.setState({ ...state, drug1, drug2, drugNameDisabled, drugName, loaded, smokingDisabled, smokeNumberADay });
+      }, 300);
     }
   }
 
