@@ -1,0 +1,7 @@
+id;nhi_procedure_type_id;code;name;point;english_name;nhi_icd9cm_id;default_icd_10_cm_id;description;exclude;fdi;specific_code;chiefComplaint
+208;15;RCT;療程治療中繼;0;null;1;1;Tx:#  RCT with NaOCl and N.S. irrigation under RD,dry cotton dressing,   sealing.;null;null;P1;Continous root canal therapy
+209;160;85;定量免疫法糞便潛血檢查服務;200;null;null;null;null;null;null;A3;null
+210;21;8P;第二次評估檢查窩溝封填脫落補施(46);100;null;null;null;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;null;null;A3;Have cavities
+211;130;91021C;牙周病統合性治療第一階段給付;1800;null;4;4;Dx: FM Chronic periodontitis OHI, Charting, check X-ray (apical/ bitewing / or Applied for comprehensive periodontal treatment;null;null;15;Treatment for gum disease
+212;130;91022C;牙周病統合性治療第二階段給付;5000;null;4;4;OHI : plaque score recording        Subgingival, scaling and root planing under UR/UL/LR/LL local anesthesia;null;null;15;Treatment for gum disease
+213;130;91023C;牙周病統合性治療第三階段給付;3200;null;4;4;Charting, plaque score recording, OHI;null;null;15;Treatment for gum disease
