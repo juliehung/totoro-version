@@ -13,6 +13,7 @@ export interface INhiProcedure {
   exclude?: string;
   fdi?: string;
   specificCode?: string;
+  chiefComplaint?: string;
   nhiProcedureType?: INhiProcedureType;
   nhiIcd9Cm?: INhiIcd9Cm;
   nhiIcd10Pcs?: INhiIcd10Pcs[];

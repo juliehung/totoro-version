@@ -65,6 +65,10 @@
         {
             "fieldName": "specificCode",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "chiefComplaint",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20181224042542",

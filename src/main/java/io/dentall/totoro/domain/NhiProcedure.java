@@ -6,7 +6,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -56,6 +56,9 @@ public class NhiProcedure implements Serializable {
 
     @Column(name = "specific_code")
     private String specificCode;
+
+    @Column(name = "chief_complaint")
+    private String chiefComplaint;
 
     @ManyToOne
     @JsonIgnoreProperties("")
@@ -194,6 +197,19 @@ public class NhiProcedure implements Serializable {
         this.specificCode = specificCode;
     }
 
+    public String getChiefComplaint() {
+        return chiefComplaint;
+    }
+
+    public NhiProcedure chiefComplaint(String chiefComplaint) {
+        this.chiefComplaint = chiefComplaint;
+        return this;
+    }
+
+    public void setChiefComplaint(String chiefComplaint) {
+        this.chiefComplaint = chiefComplaint;
+    }
+
     public NhiProcedureType getNhiProcedureType() {
         return nhiProcedureType;
     }
@@ -279,6 +295,7 @@ public class NhiProcedure implements Serializable {
             ", exclude='" + getExclude() + "'" +
             ", fdi='" + getFdi() + "'" +
             ", specificCode='" + getSpecificCode() + "'" +
+            ", chiefComplaint='" + getChiefComplaint() + "'" +
             "}";
     }
 }

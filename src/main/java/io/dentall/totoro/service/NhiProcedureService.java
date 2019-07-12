@@ -118,6 +118,10 @@ public class NhiProcedureService {
                     nhiProcedure.setSpecificCode(updateNhiProcedure.getSpecificCode());
                 }
 
+                if (updateNhiProcedure.getChiefComplaint() != null) {
+                    nhiProcedure.setChiefComplaint(updateNhiProcedure.getChiefComplaint());
+                }
+
                 return nhiProcedure;
             })
             .get();

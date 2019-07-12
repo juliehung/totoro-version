@@ -6,7 +6,7 @@
 
     <changeSet id="20190711-AddColumn-2" author="WeiChen">
         <addColumn tableName="nhi_procedure">
-            <column name="chiefComplaint" type="varchar(255)"/>
+            <column name="chief_complaint" type="varchar(255)"/>
         </addColumn>
     </changeSet>
 

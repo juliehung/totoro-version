@@ -83,6 +83,12 @@ export class NhiProcedureDetail extends React.Component<INhiProcedureDetailProps
             </dt>
             <dd>{nhiProcedureEntity.specificCode}</dd>
             <dt>
+              <span id="chiefComplaint">
+                <Translate contentKey="totoroApp.nhiProcedure.chiefComplaint">Chief Complaint</Translate>
+              </span>
+            </dt>
+            <dd>{nhiProcedureEntity.chiefComplaint}</dd>
+            <dt>
               <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
             </dt>
             <dd>{nhiProcedureEntity.nhiProcedureType ? nhiProcedureEntity.nhiProcedureType.id : ''}</dd>
