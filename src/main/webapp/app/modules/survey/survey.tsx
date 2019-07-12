@@ -641,8 +641,8 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
             </div>
             <div style={{ display: 'flex' }}>
               {this.renderProfile(patientEntity.gender)}
-              <div style={{ marginLeft: '5px' }}>
-                <h1>{patientEntity.name}</h1>
+              <div style={{ marginLeft: '20px', marginTop: '6px' }}>
+                <h1 style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '600px', overflow: 'hidden' }}>{patientEntity.name}</h1>
                 <div>
                   <span>病歷編號: </span>
                   <span>{patientEntity.medicalId}</span>
@@ -655,13 +655,13 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
         <Row>
           <Col>
             <Form onSubmit={this.onFormSubmit}>
-              <FormGroup>
+              <FormGroup className={'mb-4'}>
                 <h4>基本資料</h4>
               </FormGroup>
               <FormGroup row>
                 <Col sm={3}>
                   <Label>姓名：</Label>
-                  <Label>{patientEntity.name}</Label>
+                  <Label>{patientEntity.name.slice(0, 6)}</Label>
                 </Col>
                 <Col sm={2}>
                   <Label>性別：</Label>
@@ -809,7 +809,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                   />
                 </Col>
               </FormGroup>
-              <FormGroup>
+              <FormGroup className={'mb-4'}>
                 <SlashLine />
                 <h4>緊急聯絡</h4>
               </FormGroup>
@@ -868,10 +868,10 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 <h4>詢問事項</h4>
               </FormGroup>
               <FormGroup row>
-                <Label for="disease" sm={12}>
+                <Label for="disease" sm={12} className={'mb-2'}>
                   疾病史
                 </Label>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease1"
@@ -882,7 +882,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease2"
@@ -893,7 +893,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease3"
@@ -904,7 +904,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease4"
@@ -915,7 +915,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease5"
@@ -926,7 +926,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease6"
@@ -937,7 +937,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease7"
@@ -948,7 +948,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease8"
@@ -959,7 +959,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease9"
@@ -970,7 +970,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease11"
@@ -981,7 +981,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease12"
@@ -992,7 +992,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease13"
@@ -1003,7 +1003,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease16"
@@ -1014,7 +1014,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease15"
@@ -1025,7 +1025,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease17"
@@ -1036,7 +1036,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease10"
@@ -1047,7 +1047,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onDiseaseChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="disease14"
@@ -1060,7 +1060,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Col>
               </FormGroup>
               <FormGroup row>
-                <Label for="drug" sm={12}>
+                <Label for="drug" sm={12} className={'mb-2'}>
                   正在服用藥物
                 </Label>
                 <Col sm={3}>
@@ -1110,10 +1110,10 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Col>
               </FormGroup>
               <FormGroup row>
-                <Label for="drugAllergy" sm={12}>
+                <Label for="drugAllergy" sm={12} className={'mb-2'}>
                   藥物過敏
                 </Label>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="drugAllergy1"
@@ -1124,7 +1124,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onAllergyChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="drugAllergy2"
@@ -1135,7 +1135,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onAllergyChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="drugAllergy4"
@@ -1146,7 +1146,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onAllergyChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="drugAllergy5"
@@ -1157,7 +1157,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onAllergyChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="drugAllergy6"
@@ -1168,7 +1168,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onAllergyChange}
                   />
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="drugAllergy7"
@@ -1179,7 +1179,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onAllergyChange}
                   />
                 </Col>
-                <Col sm={5}>
+                <Col sm={5} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="drugAllergy8"
@@ -1192,7 +1192,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Col>
               </FormGroup>
               <FormGroup row>
-                <Label for="smoking" sm={12}>
+                <Label for="smoking" sm={12} className={'mb-2'}>
                   吸菸
                 </Label>
                 <Col sm={1}>
@@ -1231,7 +1231,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Col>
               </FormGroup>
               <FormGroup row>
-                <Label for="pregnant" sm={12}>
+                <Label for="pregnant" sm={12} className={'mb-2'}>
                   懷孕
                 </Label>
                 <Col sm={1}>
@@ -1258,7 +1258,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Col>
               </FormGroup>
               <FormGroup row>
-                <Label for="glycemic" sm={12}>
+                <Label for="glycemic" sm={12} className={'mb-2'}>
                   血糖
                 </Label>
                 <Label for="glycemicAC" sm={1}>
@@ -1275,10 +1275,10 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Col>
               </FormGroup>
               <FormGroup row>
-                <Label for="problems" sm={12}>
+                <Label for="problems" sm={12} className={'mb-2'}>
                   牙科治療中曾遇到的問題
                 </Label>
-                <Col sm={4}>
+                <Col sm={4} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="problems1"
@@ -1289,7 +1289,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onProblemsChange}
                   />
                 </Col>
-                <Col sm={4}>
+                <Col sm={4} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="problems2"
@@ -1300,7 +1300,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onProblemsChange}
                   />
                 </Col>
-                <Col sm={4}>
+                <Col sm={4} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="problems3"
@@ -1311,7 +1311,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onProblemsChange}
                   />
                 </Col>
-                <Col sm={4}>
+                <Col sm={4} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="problems4"
@@ -1322,7 +1322,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onProblemsChange}
                   />
                 </Col>
-                <Col sm={4}>
+                <Col sm={4} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="problems5"
@@ -1333,7 +1333,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                     onChange={this.onProblemsChange}
                   />
                 </Col>
-                <Col sm={4}>
+                <Col sm={4} className={'mb-4'}>
                   <CustomInput
                     type="checkbox"
                     name="problems6"
