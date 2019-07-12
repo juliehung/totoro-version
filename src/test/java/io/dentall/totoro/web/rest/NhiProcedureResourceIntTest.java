@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
-import java.util.Comparator;
 import javax.persistence.EntityManager;
 import java.util.Comparator;
 import java.util.List;
@@ -69,6 +68,9 @@ public class NhiProcedureResourceIntTest {
 
     private static final String DEFAULT_SPECIFIC_CODE = "AAAAAAAAAA";
     private static final String UPDATED_SPECIFIC_CODE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CHIEF_COMPLAINT = "AAAAAAAAAA";
+    private static final String UPDATED_CHIEF_COMPLAINT = "BBBBBBBBBB";
 
     @Autowired
     private NhiProcedureRepository nhiProcedureRepository;
@@ -123,7 +125,8 @@ public class NhiProcedureResourceIntTest {
             .description(DEFAULT_DESCRIPTION)
             .exclude(DEFAULT_EXCLUDE)
             .fdi(DEFAULT_FDI)
-            .specificCode(DEFAULT_SPECIFIC_CODE);
+            .specificCode(DEFAULT_SPECIFIC_CODE)
+            .chiefComplaint(DEFAULT_CHIEF_COMPLAINT);
         return nhiProcedure;
     }
 
@@ -157,6 +160,7 @@ public class NhiProcedureResourceIntTest {
         assertThat(testNhiProcedure.getExclude()).isEqualTo(DEFAULT_EXCLUDE);
         assertThat(testNhiProcedure.getFdi()).isEqualTo(DEFAULT_FDI);
         assertThat(testNhiProcedure.getSpecificCode()).isEqualTo(DEFAULT_SPECIFIC_CODE);
+        assertThat(testNhiProcedure.getChiefComplaint()).isEqualTo(DEFAULT_CHIEF_COMPLAINT);
     }
 
     @Test
@@ -197,7 +201,8 @@ public class NhiProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].exclude").value(hasItem(DEFAULT_EXCLUDE.toString())))
             .andExpect(jsonPath("$.[*].fdi").value(hasItem(DEFAULT_FDI.toString())))
-            .andExpect(jsonPath("$.[*].specificCode").value(hasItem(DEFAULT_SPECIFIC_CODE.toString())));
+            .andExpect(jsonPath("$.[*].specificCode").value(hasItem(DEFAULT_SPECIFIC_CODE.toString())))
+            .andExpect(jsonPath("$.[*].chiefComplaint").value(hasItem(DEFAULT_CHIEF_COMPLAINT.toString())));
     }
     
     @Test
@@ -219,7 +224,8 @@ public class NhiProcedureResourceIntTest {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.exclude").value(DEFAULT_EXCLUDE.toString()))
             .andExpect(jsonPath("$.fdi").value(DEFAULT_FDI.toString()))
-            .andExpect(jsonPath("$.specificCode").value(DEFAULT_SPECIFIC_CODE.toString()));
+            .andExpect(jsonPath("$.specificCode").value(DEFAULT_SPECIFIC_CODE.toString()))
+            .andExpect(jsonPath("$.chiefComplaint").value(DEFAULT_CHIEF_COMPLAINT.toString()));
     }
 
     @Test
@@ -251,7 +257,8 @@ public class NhiProcedureResourceIntTest {
             .description(UPDATED_DESCRIPTION)
             .exclude(UPDATED_EXCLUDE)
             .fdi(UPDATED_FDI)
-            .specificCode(UPDATED_SPECIFIC_CODE);
+            .specificCode(UPDATED_SPECIFIC_CODE)
+            .chiefComplaint(UPDATED_CHIEF_COMPLAINT);
 
         restNhiProcedureMockMvc.perform(put("/api/nhi-procedures")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -272,6 +279,7 @@ public class NhiProcedureResourceIntTest {
         assertThat(testNhiProcedure.getExclude()).isEqualTo(UPDATED_EXCLUDE);
         assertThat(testNhiProcedure.getFdi()).isEqualTo(UPDATED_FDI);
         assertThat(testNhiProcedure.getSpecificCode()).isEqualTo(UPDATED_SPECIFIC_CODE);
+        assertThat(testNhiProcedure.getChiefComplaint()).isEqualTo(UPDATED_CHIEF_COMPLAINT);
     }
 
     @Test

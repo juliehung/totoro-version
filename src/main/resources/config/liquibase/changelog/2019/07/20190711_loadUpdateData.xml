@@ -10,7 +10,7 @@
                         primaryKey="id"
                         separator=";"
                         tableName="nhi_procedure">
-            <column name="chiefComplaint" type="STRING"/>
+            <column name="chief_complaint" type="STRING"/>
         </loadUpdateData>
     </changeSet>
 

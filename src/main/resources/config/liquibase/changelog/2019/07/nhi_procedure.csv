@@ -1,4 +1,4 @@
-id;nhi_procedure_type_id;code;name;point;english_name;nhi_icd9cm_id;default_icd_10_cm_id;description;exclude;fdi;specific_code;chiefComplaint
+id;nhi_procedure_type_id;code;name;point;english_name;nhi_icd9cm_id;default_icd_10_cm_id;description;exclude;fdi;specific_code;chief_complaint
 208;15;RCT;療程治療中繼;0;null;1;1;Tx:#  RCT with NaOCl and N.S. irrigation under RD,dry cotton dressing,   sealing.;null;null;P1;Continous root canal therapy
 209;160;85;定量免疫法糞便潛血檢查服務;200;null;null;null;null;null;null;A3;null
 210;21;8P;第二次評估檢查窩溝封填脫落補施(46);100;null;null;null;Topical anesthesia applied, rubber dam isolation, ultrasonic scaling, etching, bonding resin-based sealant applied;null;null;A3;Have cavities

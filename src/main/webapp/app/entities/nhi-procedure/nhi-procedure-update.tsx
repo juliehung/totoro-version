@@ -169,6 +169,12 @@ export class NhiProcedureUpdate extends React.Component<INhiProcedureUpdateProps
                   <AvField id="nhi-procedure-specificCode" type="text" name="specificCode" />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="chiefComplaintLabel" for="chiefComplaint">
+                    <Translate contentKey="totoroApp.nhiProcedure.chiefComplaint">Chief Complaint</Translate>
+                  </Label>
+                  <AvField id="nhi-procedure-chiefComplaint" type="text" name="chiefComplaint" />
+                </AvGroup>
+                <AvGroup>
                   <Label for="nhiProcedureType.id">
                     <Translate contentKey="totoroApp.nhiProcedure.nhiProcedureType">Nhi Procedure Type</Translate>
                   </Label>
