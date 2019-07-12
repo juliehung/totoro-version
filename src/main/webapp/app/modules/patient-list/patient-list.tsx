@@ -106,27 +106,29 @@ export class PatientList extends React.Component<IPatientListProps, IPatientList
               <Link to={'/survey?pid=' + patient.id} key={`p-${i}`}>
                 <div style={{ height: '171px', marginBottom: '23px' }}>
                   <Card outline color="primary" style={{ height: '100%' }}>
-                    <div className="cardBody" style={{ paddingTop: '33px', paddingLeft: '38px', flex: '1 1 auto' }}>
-                      <div style={{ display: 'flex' }}>
-                        {renderProfile(patient.gender)}
-                        <div style={{ marginLeft: '16px', marginTop: '-7px' }}>
+                    <div className="cardBody" style={{ flex: '1 1 auto' }}>
+                      <div style={{ display: 'flex', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }}>
+                        <div style={{ width: '80px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'center' }}>{renderProfile(patient.gender)}</div>
+                          <CardText style={{ minHeight: '23px', marginTop: '15px', textAlign: 'center' }}>
+                            <small>{patient.birth}</small>
+                          </CardText>
+                        </div>
+                        <div style={{ marginLeft: '10px', marginTop: '-7px', minWidth: '207px' }}>
                           <div>
-                            <CardTitle style={{ fontSize: '24px', fontWeight: 600, lineHeight: 1.62 }}>{patient.name}</CardTitle>
+                            <CardTitle className="ellipsis" style={{ fontSize: '24px', fontWeight: 600, lineHeight: 1.62, width: '200px' }}>
+                              {patient.name}
+                            </CardTitle>
                             <CardSubtitle style={{ lineHeight: 1.61 }}>{`病歷編號 ${patient.medicalId}`}</CardSubtitle>
                           </div>
-                          <div>
-                            <div style={{ marginTop: '16px', color: '#c2cbd5' }}>
-                              <CardSubtitle style={{ lineHeight: 1.61 }}>{`新增日期 ${patient.lastModifiedDate
-                                .slice(0, 16)
-                                .split('T')
-                                .join(' ')}`}</CardSubtitle>
-                            </div>
+                          <div style={{ marginTop: '16px', color: '#c2cbd5' }}>
+                            <CardSubtitle style={{ lineHeight: 1.61 }}>{`新增日期 ${patient.lastModifiedDate
+                              .slice(0, 16)
+                              .split('T')
+                              .join(' ')}`}</CardSubtitle>
                           </div>
                         </div>
                       </div>
-                      <CardText style={{ minHeight: '23px' }}>
-                        <small>{patient.birth}</small>
-                      </CardText>
                     </div>
                   </Card>
                 </div>
