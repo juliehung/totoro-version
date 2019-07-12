@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190711-LoadData-1" author="WeiChen">
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/changelog/2019/07/nhi_procedure.csv"
+                  separator=";"
+                  tableName="nhi_procedure">
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>
