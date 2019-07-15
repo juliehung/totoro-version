@@ -69,6 +69,7 @@
     <include file="config/liquibase/changelog/addColumn/20190702.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/addColumn/20190709.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2019/07/20190711_addColumn.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2019/07/20190711_addColumn_1.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2019/07/20190711_addColumn_2.xml" relativeToChangelogFile="false"/>
 
     <!-- add default values -->
@@ -77,5 +78,8 @@
     <!-- add custom indexes -->
     <include file="config/liquibase/changelog/createIndex/20190408.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/createIndex/20190524.xml" relativeToChangelogFile="false"/>
+
+    <!-- drop column -->
+    <include file="config/liquibase/changelog/2019/07/20190711_dropColumn.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

@@ -17,8 +17,8 @@
       },
       "patientId": "Patient Id",
       "lob": "Lob",
-      "createTime": "Create Time",
-      "updateTime": "Update Time",
+      "createdDate": "Created Date",
+      "createdBy": "Created By",
       "sourceType": "Source Type"
     }
   }

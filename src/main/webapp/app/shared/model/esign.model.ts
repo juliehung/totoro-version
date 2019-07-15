@@ -10,8 +10,8 @@ export interface IEsign {
   patientId?: number;
   lobContentType?: string;
   lob?: any;
-  createTime?: Moment;
-  updateTime?: Moment;
+  createdDate?: Moment;
+  createdBy?: string;
   sourceType?: SourceType;
 }
 

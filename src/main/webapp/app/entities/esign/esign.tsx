@@ -45,10 +45,10 @@ export class Esign extends React.Component<IEsignProps> {
                   <Translate contentKey="totoroApp.esign.lob">Lob</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.esign.createTime">Create Time</Translate>
+                  <Translate contentKey="totoroApp.esign.createdDate">Created Date</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="totoroApp.esign.updateTime">Update Time</Translate>
+                  <Translate contentKey="totoroApp.esign.createdBy">Created By</Translate>
                 </th>
                 <th>
                   <Translate contentKey="totoroApp.esign.sourceType">Source Type</Translate>
@@ -79,11 +79,9 @@ export class Esign extends React.Component<IEsignProps> {
                     ) : null}
                   </td>
                   <td>
-                    <TextFormat type="date" value={esign.createTime} format={APP_DATE_FORMAT} />
+                    <TextFormat type="date" value={esign.createdDate} format={APP_DATE_FORMAT} />
                   </td>
-                  <td>
-                    <TextFormat type="date" value={esign.updateTime} format={APP_DATE_FORMAT} />
-                  </td>
+                  <td>{esign.createdBy}</td>
                   <td>
                     <Translate contentKey={`totoroApp.SourceType.${esign.sourceType}`} />
                   </td>

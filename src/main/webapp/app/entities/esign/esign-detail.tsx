@@ -52,21 +52,19 @@ export class EsignDetail extends React.Component<IEsignDetailProps> {
               ) : null}
             </dd>
             <dt>
-              <span id="createTime">
-                <Translate contentKey="totoroApp.esign.createTime">Create Time</Translate>
+              <span id="createdDate">
+                <Translate contentKey="totoroApp.esign.createdDate">Created Date</Translate>
               </span>
             </dt>
             <dd>
-              <TextFormat value={esignEntity.createTime} type="date" format={APP_DATE_FORMAT} />
+              <TextFormat value={esignEntity.createdDate} type="date" format={APP_DATE_FORMAT} />
             </dd>
             <dt>
-              <span id="updateTime">
-                <Translate contentKey="totoroApp.esign.updateTime">Update Time</Translate>
+              <span id="createdBy">
+                <Translate contentKey="totoroApp.esign.createdBy">Created By</Translate>
               </span>
             </dt>
-            <dd>
-              <TextFormat value={esignEntity.updateTime} type="date" format={APP_DATE_FORMAT} />
-            </dd>
+            <dd>{esignEntity.createdBy}</dd>
             <dt>
               <span id="sourceType">
                 <Translate contentKey="totoroApp.esign.sourceType">Source Type</Translate>

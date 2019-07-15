@@ -33,9 +33,9 @@ public class EsignCriteria implements Serializable {
 
     private LongFilter patientId;
 
-    private InstantFilter createTime;
+    private InstantFilter createdDate;
 
-    private InstantFilter updateTime;
+    private StringFilter createdBy;
 
     private SourceTypeFilter sourceType;
 
@@ -55,20 +55,20 @@ public class EsignCriteria implements Serializable {
         this.patientId = patientId;
     }
 
-    public InstantFilter getCreateTime() {
-        return createTime;
+    public InstantFilter getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreateTime(InstantFilter createTime) {
-        this.createTime = createTime;
+    public void setCreatedDate(InstantFilter createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public InstantFilter getUpdateTime() {
-        return updateTime;
+    public StringFilter getCreatedBy() {
+        return createdBy;
     }
 
-    public void setUpdateTime(InstantFilter updateTime) {
-        this.updateTime = updateTime;
+    public void setCreatedBy(StringFilter createdBy) {
+        this.createdBy = createdBy;
     }
 
     public SourceTypeFilter getSourceType() {
@@ -92,8 +92,8 @@ public class EsignCriteria implements Serializable {
         return
             Objects.equals(id, that.id) &&
             Objects.equals(patientId, that.patientId) &&
-            Objects.equals(createTime, that.createTime) &&
-            Objects.equals(updateTime, that.updateTime) &&
+            Objects.equals(createdDate, that.createdDate) &&
+            Objects.equals(createdBy, that.createdBy) &&
             Objects.equals(sourceType, that.sourceType);
     }
 
@@ -102,8 +102,8 @@ public class EsignCriteria implements Serializable {
         return Objects.hash(
         id,
         patientId,
-        createTime,
-        updateTime,
+        createdDate,
+        createdBy,
         sourceType
         );
     }
@@ -113,8 +113,8 @@ public class EsignCriteria implements Serializable {
         return "EsignCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (patientId != null ? "patientId=" + patientId + ", " : "") +
-                (createTime != null ? "createTime=" + createTime + ", " : "") +
-                (updateTime != null ? "updateTime=" + updateTime + ", " : "") +
+                (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
+                (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
                 (sourceType != null ? "sourceType=" + sourceType + ", " : "") +
             "}";
     }

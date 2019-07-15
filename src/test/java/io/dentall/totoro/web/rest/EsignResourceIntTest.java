@@ -55,12 +55,6 @@ public class EsignResourceIntTest {
     private static final String DEFAULT_LOB_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_LOB_CONTENT_TYPE = "image/png";
 
-    private static final Instant DEFAULT_CREATE_TIME = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_CREATE_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
-    private static final Instant DEFAULT_UPDATE_TIME = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_UPDATE_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
     private static final SourceType DEFAULT_SOURCE_TYPE = SourceType.BY_STRING64;
     private static final SourceType UPDATED_SOURCE_TYPE = SourceType.BY_FILE;
 
@@ -115,8 +109,6 @@ public class EsignResourceIntTest {
             .patientId(DEFAULT_PATIENT_ID)
             .lob(DEFAULT_LOB)
             .lobContentType(DEFAULT_LOB_CONTENT_TYPE)
-            .createTime(DEFAULT_CREATE_TIME)
-            .updateTime(DEFAULT_UPDATE_TIME)
             .sourceType(DEFAULT_SOURCE_TYPE);
         return esign;
     }
@@ -144,8 +136,6 @@ public class EsignResourceIntTest {
         assertThat(testEsign.getPatientId()).isEqualTo(DEFAULT_PATIENT_ID);
         assertThat(testEsign.getLob()).isEqualTo(DEFAULT_LOB);
         assertThat(testEsign.getLobContentType()).isEqualTo(DEFAULT_LOB_CONTENT_TYPE);
-        assertThat(testEsign.getCreateTime()).isEqualTo(DEFAULT_CREATE_TIME);
-        assertThat(testEsign.getUpdateTime()).isEqualTo(DEFAULT_UPDATE_TIME);
         assertThat(testEsign.getSourceType()).isEqualTo(DEFAULT_SOURCE_TYPE);
     }
 
@@ -200,8 +190,6 @@ public class EsignResourceIntTest {
             .andExpect(jsonPath("$.[*].patientId").value(hasItem(DEFAULT_PATIENT_ID.intValue())))
             .andExpect(jsonPath("$.[*].lobContentType").value(hasItem(DEFAULT_LOB_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].lob").value(hasItem(Base64Utils.encodeToString(DEFAULT_LOB))))
-            .andExpect(jsonPath("$.[*].createTime").value(hasItem(DEFAULT_CREATE_TIME.toString())))
-            .andExpect(jsonPath("$.[*].updateTime").value(hasItem(DEFAULT_UPDATE_TIME.toString())))
             .andExpect(jsonPath("$.[*].sourceType").value(hasItem(DEFAULT_SOURCE_TYPE.toString())));
     }
     
@@ -219,8 +207,6 @@ public class EsignResourceIntTest {
             .andExpect(jsonPath("$.patientId").value(DEFAULT_PATIENT_ID.intValue()))
             .andExpect(jsonPath("$.lobContentType").value(DEFAULT_LOB_CONTENT_TYPE))
             .andExpect(jsonPath("$.lob").value(Base64Utils.encodeToString(DEFAULT_LOB)))
-            .andExpect(jsonPath("$.createTime").value(DEFAULT_CREATE_TIME.toString()))
-            .andExpect(jsonPath("$.updateTime").value(DEFAULT_UPDATE_TIME.toString()))
             .andExpect(jsonPath("$.sourceType").value(DEFAULT_SOURCE_TYPE.toString()));
     }
 
@@ -289,83 +275,30 @@ public class EsignResourceIntTest {
         defaultEsignShouldBeFound("patientId.lessThan=" + UPDATED_PATIENT_ID);
     }
 
-
     @Test
     @Transactional
-    public void getAllEsignsByCreateTimeIsEqualToSomething() throws Exception {
+    public void getAllEsignsByCreatedDateIsNullOrNotNull() throws Exception {
         // Initialize the database
         esignRepository.saveAndFlush(esign);
 
-        // Get all the esignList where createTime equals to DEFAULT_CREATE_TIME
-        defaultEsignShouldBeFound("createTime.equals=" + DEFAULT_CREATE_TIME);
+        // Get all the esignList where createdDate is not null
+        defaultEsignShouldBeFound("createdDate.specified=true");
 
-        // Get all the esignList where createTime equals to UPDATED_CREATE_TIME
-        defaultEsignShouldNotBeFound("createTime.equals=" + UPDATED_CREATE_TIME);
+        // Get all the esignList where createdDate is null
+        defaultEsignShouldNotBeFound("createdDate.specified=false");
     }
 
     @Test
     @Transactional
-    public void getAllEsignsByCreateTimeIsInShouldWork() throws Exception {
+    public void getAllEsignsByCreatedByIsNullOrNotNull() throws Exception {
         // Initialize the database
         esignRepository.saveAndFlush(esign);
 
-        // Get all the esignList where createTime in DEFAULT_CREATE_TIME or UPDATED_CREATE_TIME
-        defaultEsignShouldBeFound("createTime.in=" + DEFAULT_CREATE_TIME + "," + UPDATED_CREATE_TIME);
+        // Get all the esignList where createdBy is not null
+        defaultEsignShouldBeFound("createdBy.specified=true");
 
-        // Get all the esignList where createTime equals to UPDATED_CREATE_TIME
-        defaultEsignShouldNotBeFound("createTime.in=" + UPDATED_CREATE_TIME);
-    }
-
-    @Test
-    @Transactional
-    public void getAllEsignsByCreateTimeIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        esignRepository.saveAndFlush(esign);
-
-        // Get all the esignList where createTime is not null
-        defaultEsignShouldBeFound("createTime.specified=true");
-
-        // Get all the esignList where createTime is null
-        defaultEsignShouldNotBeFound("createTime.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllEsignsByUpdateTimeIsEqualToSomething() throws Exception {
-        // Initialize the database
-        esignRepository.saveAndFlush(esign);
-
-        // Get all the esignList where updateTime equals to DEFAULT_UPDATE_TIME
-        defaultEsignShouldBeFound("updateTime.equals=" + DEFAULT_UPDATE_TIME);
-
-        // Get all the esignList where updateTime equals to UPDATED_UPDATE_TIME
-        defaultEsignShouldNotBeFound("updateTime.equals=" + UPDATED_UPDATE_TIME);
-    }
-
-    @Test
-    @Transactional
-    public void getAllEsignsByUpdateTimeIsInShouldWork() throws Exception {
-        // Initialize the database
-        esignRepository.saveAndFlush(esign);
-
-        // Get all the esignList where updateTime in DEFAULT_UPDATE_TIME or UPDATED_UPDATE_TIME
-        defaultEsignShouldBeFound("updateTime.in=" + DEFAULT_UPDATE_TIME + "," + UPDATED_UPDATE_TIME);
-
-        // Get all the esignList where updateTime equals to UPDATED_UPDATE_TIME
-        defaultEsignShouldNotBeFound("updateTime.in=" + UPDATED_UPDATE_TIME);
-    }
-
-    @Test
-    @Transactional
-    public void getAllEsignsByUpdateTimeIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        esignRepository.saveAndFlush(esign);
-
-        // Get all the esignList where updateTime is not null
-        defaultEsignShouldBeFound("updateTime.specified=true");
-
-        // Get all the esignList where updateTime is null
-        defaultEsignShouldNotBeFound("updateTime.specified=false");
+        // Get all the esignList where createdBy is null
+        defaultEsignShouldNotBeFound("createdBy.specified=false");
     }
 
     @Test
@@ -417,8 +350,6 @@ public class EsignResourceIntTest {
             .andExpect(jsonPath("$.[*].patientId").value(hasItem(DEFAULT_PATIENT_ID.intValue())))
             .andExpect(jsonPath("$.[*].lobContentType").value(hasItem(DEFAULT_LOB_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].lob").value(hasItem(Base64Utils.encodeToString(DEFAULT_LOB))))
-            .andExpect(jsonPath("$.[*].createTime").value(hasItem(DEFAULT_CREATE_TIME.toString())))
-            .andExpect(jsonPath("$.[*].updateTime").value(hasItem(DEFAULT_UPDATE_TIME.toString())))
             .andExpect(jsonPath("$.[*].sourceType").value(hasItem(DEFAULT_SOURCE_TYPE.toString())));
 
         // Check, that the count call also returns 1
@@ -470,8 +401,6 @@ public class EsignResourceIntTest {
             .patientId(UPDATED_PATIENT_ID)
             .lob(UPDATED_LOB)
             .lobContentType(UPDATED_LOB_CONTENT_TYPE)
-            .createTime(UPDATED_CREATE_TIME)
-            .updateTime(UPDATED_UPDATE_TIME)
             .sourceType(UPDATED_SOURCE_TYPE);
 
         restEsignMockMvc.perform(put("/api/esigns")
@@ -486,8 +415,6 @@ public class EsignResourceIntTest {
         assertThat(testEsign.getPatientId()).isEqualTo(UPDATED_PATIENT_ID);
         assertThat(testEsign.getLob()).isEqualTo(UPDATED_LOB);
         assertThat(testEsign.getLobContentType()).isEqualTo(UPDATED_LOB_CONTENT_TYPE);
-        assertThat(testEsign.getCreateTime()).isEqualTo(UPDATED_CREATE_TIME);
-        assertThat(testEsign.getUpdateTime()).isEqualTo(UPDATED_UPDATE_TIME);
         assertThat(testEsign.getSourceType()).isEqualTo(UPDATED_SOURCE_TYPE);
     }
 
