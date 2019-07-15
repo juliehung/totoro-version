@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190711-DropColumn" author="WeiChen">
+
+        <dropColumn catalogName="totoro"
+                    schemaName="public"
+                    tableName="esign"
+                    columnName="create_time"/>
+
+        <dropColumn catalogName="totoro"
+                    schemaName="public"
+                    tableName="esign"
+                    columnName="update_time"/>
+
+    </changeSet>
+</databaseChangeLog>

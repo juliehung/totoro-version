@@ -86,11 +86,11 @@ public class EsignQueryService extends QueryService<Esign> {
             if (criteria.getPatientId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getPatientId(), Esign_.patientId));
             }
-            if (criteria.getCreateTime() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCreateTime(), Esign_.createTime));
+            if (criteria.getCreatedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Esign_.createdDate));
             }
-            if (criteria.getUpdateTime() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getUpdateTime(), Esign_.updateTime));
+            if (criteria.getCreatedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Esign_.createdBy));
             }
             if (criteria.getSourceType() != null) {
                 specification = specification.and(buildSpecification(criteria.getSourceType(), Esign_.sourceType));

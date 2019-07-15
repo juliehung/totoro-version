@@ -51,8 +51,7 @@ export class EsignUpdate extends React.Component<IEsignUpdateProps, IEsignUpdate
   };
 
   saveEntity = (event, errors, values) => {
-    values.createTime = new Date(values.createTime);
-    values.updateTime = new Date(values.updateTime);
+    values.createdDate = new Date(values.createdDate);
 
     if (errors.length === 0) {
       const { esignEntity } = this.props;
@@ -148,28 +147,22 @@ export class EsignUpdate extends React.Component<IEsignUpdateProps, IEsignUpdate
                   </AvGroup>
                 </AvGroup>
                 <AvGroup>
-                  <Label id="createTimeLabel" for="createTime">
-                    <Translate contentKey="totoroApp.esign.createTime">Create Time</Translate>
+                  <Label id="createdDateLabel" for="createdDate">
+                    <Translate contentKey="totoroApp.esign.createdDate">Created Date</Translate>
                   </Label>
                   <AvInput
-                    id="esign-createTime"
+                    id="esign-createdDate"
                     type="datetime-local"
                     className="form-control"
-                    name="createTime"
-                    value={isNew ? null : convertDateTimeFromServer(this.props.esignEntity.createTime)}
+                    name="createdDate"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.esignEntity.createdDate)}
                   />
                 </AvGroup>
                 <AvGroup>
-                  <Label id="updateTimeLabel" for="updateTime">
-                    <Translate contentKey="totoroApp.esign.updateTime">Update Time</Translate>
+                  <Label id="createdByLabel" for="createdBy">
+                    <Translate contentKey="totoroApp.esign.createdBy">Created By</Translate>
                   </Label>
-                  <AvInput
-                    id="esign-updateTime"
-                    type="datetime-local"
-                    className="form-control"
-                    name="updateTime"
-                    value={isNew ? null : convertDateTimeFromServer(this.props.esignEntity.updateTime)}
-                  />
+                  <AvField id="esign-createdBy" type="text" name="createdBy" />
                 </AvGroup>
                 <AvGroup>
                   <Label id="sourceTypeLabel">

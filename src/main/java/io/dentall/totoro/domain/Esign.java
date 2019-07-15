@@ -11,6 +11,9 @@ import java.time.Instant;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.SourceType;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * A Esign.
@@ -18,6 +21,7 @@ import io.dentall.totoro.domain.enumeration.SourceType;
 @Entity
 @Table(name = "esign")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@EntityListeners(AuditingEntityListener.class)
 public class Esign implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,11 +43,13 @@ public class Esign implements Serializable {
     @Column(name = "jhi_lob_content_type")
     private String lobContentType;
 
-    @Column(name = "create_time")
-    private Instant createTime;
+    @CreatedDate
+    @Column(name = "created_date")
+    private Instant createdDate;
 
-    @Column(name = "update_time")
-    private Instant updateTime;
+    @CreatedBy
+    @Column(name = "created_by")
+    private String createdBy;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "source_type")
@@ -97,30 +103,30 @@ public class Esign implements Serializable {
         this.lobContentType = lobContentType;
     }
 
-    public Instant getCreateTime() {
-        return createTime;
+    public Instant getCreatedDate() {
+        return createdDate;
     }
 
-    public Esign createTime(Instant createTime) {
-        this.createTime = createTime;
+    public Esign createdDate(Instant createdDate) {
+        this.createdDate = createdDate;
         return this;
     }
 
-    public void setCreateTime(Instant createTime) {
-        this.createTime = createTime;
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public Instant getUpdateTime() {
-        return updateTime;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public Esign updateTime(Instant updateTime) {
-        this.updateTime = updateTime;
+    public Esign createdBy(String createdBy) {
+        this.createdBy = createdBy;
         return this;
     }
 
-    public void setUpdateTime(Instant updateTime) {
-        this.updateTime = updateTime;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public SourceType getSourceType() {
@@ -164,8 +170,8 @@ public class Esign implements Serializable {
             ", patientId=" + getPatientId() +
             ", lob='" + getLob() + "'" +
             ", lobContentType='" + getLobContentType() + "'" +
-            ", createTime='" + getCreateTime() + "'" +
-            ", updateTime='" + getUpdateTime() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             ", sourceType='" + getSourceType() + "'" +
             "}";
     }

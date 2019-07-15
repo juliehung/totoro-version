@@ -2,6 +2,8 @@ package io.dentall.totoro.business.vm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.Instant;
+
 public class LobVM {
 
     @JsonProperty
@@ -10,13 +12,30 @@ public class LobVM {
     @JsonProperty
     private String base64;
 
-    public LobVM(String contentType, String base64) {
-        this.contentType = contentType;
-        this.base64 = base64;
+    private Instant createdDate;
+
+    public LobVM() { }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public LobVM createdDate(Instant createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getContentType() {
         return contentType;
+    }
+
+    public LobVM contentType(String contentType) {
+        this.contentType = contentType;
+        return this;
     }
 
     public void setContentType(String contentType) {
@@ -25,6 +44,11 @@ public class LobVM {
 
     public String getBase64() {
         return base64;
+    }
+
+    public LobVM base64(String base64) {
+        this.base64 = base64;
+        return this;
     }
 
     public void setBase64(String base64) {
@@ -36,6 +60,7 @@ public class LobVM {
         return "LobVM{" +
             "contentType='" + contentType + "'" +
             ", base64=" + base64 + "'" +
+            ", createdDate=" + createdDate + "'" +
             "}";
     }
 }

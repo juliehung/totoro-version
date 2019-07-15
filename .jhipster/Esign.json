@@ -20,12 +20,12 @@
             "fieldValidateRulesMaxbytes": 2048000
         },
         {
-            "fieldName": "createTime",
+            "fieldName": "createdDate",
             "fieldType": "Instant"
         },
         {
-          "fieldName": "updateTime",
-          "fieldType": "Instant"
+            "fieldName": "createdBy",
+            "fieldType": "String"
         },
         {
             "fieldName": "sourceType",
