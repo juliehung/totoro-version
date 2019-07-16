@@ -1,6 +1,6 @@
 package io.dentall.totoro.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -11,6 +11,8 @@ import java.time.Instant;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.NhiMonthDeclarationType;
+
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
  * A NhiMonthDeclarationDetails.
@@ -74,7 +76,7 @@ public class NhiMonthDeclarationDetails implements Serializable {
     private Instant uploadTime;
 
     @ManyToOne
-    @JsonIgnoreProperties("nhiMonthDeclarationDetails")
+    @JsonProperty(access = WRITE_ONLY)
     private NhiMonthDeclaration nhiMonthDeclaration;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
