@@ -3,7 +3,15 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAllAction, getSortState, IPaginationBaseState, getPaginationItemsNumber, JhiPagination } from 'react-jhipster';
+import {
+  Translate,
+  ICrudGetAllAction,
+  TextFormat,
+  getSortState,
+  IPaginationBaseState,
+  getPaginationItemsNumber,
+  JhiPagination
+} from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -82,6 +90,24 @@ export class Ledger extends React.Component<ILedgerProps, ILedgerState> {
                 <th className="hand" onClick={this.sort('doctor')}>
                   <Translate contentKey="totoroApp.ledger.doctor">Doctor</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('gid')}>
+                  <Translate contentKey="totoroApp.ledger.gid">Gid</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('displayName')}>
+                  <Translate contentKey="totoroApp.ledger.displayName">Display Name</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('createdDate')}>
+                  <Translate contentKey="totoroApp.ledger.createdDate">Created Date</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('createdBy')}>
+                  <Translate contentKey="totoroApp.ledger.createdBy">Created By</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('lastModifiedDate')}>
+                  <Translate contentKey="totoroApp.ledger.lastModifiedDate">Last Modified Date</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('lastModifiedBy')}>
+                  <Translate contentKey="totoroApp.ledger.lastModifiedBy">Last Modified By</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.ledger.treatmentPlan">Treatment Plan</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -101,6 +127,16 @@ export class Ledger extends React.Component<ILedgerProps, ILedgerState> {
                   <td>{ledger.arrears}</td>
                   <td>{ledger.note}</td>
                   <td>{ledger.doctor}</td>
+                  <td>{ledger.gid}</td>
+                  <td>{ledger.displayName}</td>
+                  <td>
+                    <TextFormat type="date" value={ledger.createdDate} format={APP_DATE_FORMAT} />
+                  </td>
+                  <td>{ledger.createdBy}</td>
+                  <td>
+                    <TextFormat type="date" value={ledger.lastModifiedDate} format={APP_DATE_FORMAT} />
+                  </td>
+                  <td>{ledger.lastModifiedBy}</td>
                   <td>
                     {ledger.treatmentPlan ? <Link to={`treatment-plan/${ledger.treatmentPlan.id}`}>{ledger.treatmentPlan.id}</Link> : ''}
                   </td>

@@ -40,8 +40,32 @@
             "fieldValidateRulesMaxlength": 5100
         },
         {
-            "fieldName": "doctor",
-            "fieldType": "String"
+          "fieldName": "doctor",
+          "fieldType": "String"
+        },
+        {
+          "fieldName": "gid",
+          "fieldType": "Long"
+        },
+        {
+          "fieldName": "displayName",
+          "fieldType": "String"
+        },
+        {
+          "fieldName": "createdDate",
+          "fieldType": "Instant"
+        },
+        {
+          "fieldName": "createdBy",
+          "fieldType": "String"
+        },
+        {
+          "fieldName": "lastModifiedDate",
+          "fieldType": "Instant"
+        },
+        {
+          "fieldName": "lastModifiedBy",
+          "fieldType": "String"
         }
     ],
     "changelogDate": "20190129062337",

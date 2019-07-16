@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -58,6 +58,46 @@ export class LedgerDetail extends React.Component<ILedgerDetailProps> {
               </span>
             </dt>
             <dd>{ledgerEntity.doctor}</dd>
+            <dt>
+              <span id="gid">
+                <Translate contentKey="totoroApp.ledger.gid">Gid</Translate>
+              </span>
+            </dt>
+            <dd>{ledgerEntity.gid}</dd>
+            <dt>
+              <span id="displayName">
+                <Translate contentKey="totoroApp.ledger.displayName">Display Name</Translate>
+              </span>
+            </dt>
+            <dd>{ledgerEntity.displayName}</dd>
+            <dt>
+              <span id="createdDate">
+                <Translate contentKey="totoroApp.ledger.createdDate">Created Date</Translate>
+              </span>
+            </dt>
+            <dd>
+              <TextFormat value={ledgerEntity.createdDate} type="date" format={APP_DATE_FORMAT} />
+            </dd>
+            <dt>
+              <span id="createdBy">
+                <Translate contentKey="totoroApp.ledger.createdBy">Created By</Translate>
+              </span>
+            </dt>
+            <dd>{ledgerEntity.createdBy}</dd>
+            <dt>
+              <span id="lastModifiedDate">
+                <Translate contentKey="totoroApp.ledger.lastModifiedDate">Last Modified Date</Translate>
+              </span>
+            </dt>
+            <dd>
+              <TextFormat value={ledgerEntity.lastModifiedDate} type="date" format={APP_DATE_FORMAT} />
+            </dd>
+            <dt>
+              <span id="lastModifiedBy">
+                <Translate contentKey="totoroApp.ledger.lastModifiedBy">Last Modified By</Translate>
+              </span>
+            </dt>
+            <dd>{ledgerEntity.lastModifiedBy}</dd>
             <dt>
               <Translate contentKey="totoroApp.ledger.treatmentPlan">Treatment Plan</Translate>
             </dt>

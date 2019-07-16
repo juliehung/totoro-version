@@ -20,6 +20,12 @@
       "arrears": "Arrears",
       "note": "Note",
       "doctor": "Doctor",
+      "gid": "Gid",
+      "displayName": "Display Name",
+      "createdDate": "Created Date",
+      "createdBy": "Created By",
+      "lastModifiedDate": "Last Modified Date",
+      "lastModifiedBy": "Last Modified By",
       "treatmentPlan": "Treatment Plan"
     }
   }

@@ -98,13 +98,27 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getDoctor() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDoctor(), Ledger_.doctor));
             }
+            if (criteria.getGid() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getGid(), Ledger_.gid));
+            }
+            if (criteria.getDisplayName() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getDisplayName(), Ledger_.displayName));
+            }
+            if (criteria.getCreatedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Ledger_.createdDate));
+            }
+            if (criteria.getCreatedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Ledger_.createdBy));
+            }
+            if (criteria.getLastModifiedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getLastModifiedDate(), Ledger_.lastModifiedDate));
+            }
+            if (criteria.getLastModifiedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), Ledger_.lastModifiedBy));
+            }
             if (criteria.getTreatmentPlanId() != null) {
                 specification = specification.and(buildSpecification(criteria.getTreatmentPlanId(),
                     root -> root.join(Ledger_.treatmentPlan, JoinType.LEFT).get(TreatmentPlan_.id)));
-            }
-
-            if (criteria.getCreatedDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Ledger_.createdDate));
             }
         }
         return specification;

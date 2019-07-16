@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 import { ITreatmentPlan } from 'app/shared/model//treatment-plan.model';
 
 export interface ILedger {
@@ -7,6 +8,12 @@ export interface ILedger {
   arrears?: number;
   note?: string;
   doctor?: string;
+  gid?: number;
+  displayName?: string;
+  createdDate?: Moment;
+  createdBy?: string;
+  lastModifiedDate?: Moment;
+  lastModifiedBy?: string;
   treatmentPlan?: ITreatmentPlan;
 }
 
