@@ -1,6 +1,5 @@
 package io.dentall.totoro.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -8,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 
@@ -34,9 +32,9 @@ public class NhiMonthDeclaration implements Serializable {
     @Column(name = "institution")
     private String institution;
 
-    @OneToMany(mappedBy = "nhiMonthDeclaration")
+    @OneToMany(mappedBy = "nhiMonthDeclaration", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<NhiMonthDeclarationDetails> nhiMonthDeclarationDetails = new HashSet<>();
+    private Set<NhiMonthDeclarationDetails> nhiMonthDeclarationDetails = null;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
