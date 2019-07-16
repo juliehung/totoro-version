@@ -49,6 +49,9 @@ export class LedgerUpdate extends React.Component<ILedgerUpdateProps, ILedgerUpd
   }
 
   saveEntity = (event, errors, values) => {
+    values.createdDate = new Date(values.createdDate);
+    values.lastModifiedDate = new Date(values.lastModifiedDate);
+
     if (errors.length === 0) {
       const { ledgerEntity } = this.props;
       const entity = {
@@ -144,13 +147,68 @@ export class LedgerUpdate extends React.Component<ILedgerUpdateProps, ILedgerUpd
                   <Label id="noteLabel" for="note">
                     <Translate contentKey="totoroApp.ledger.note">Note</Translate>
                   </Label>
-                  <AvField id="ledger-note" type="text" name="note" />
+                  <AvField
+                    id="ledger-note"
+                    type="text"
+                    name="note"
+                    validate={{
+                      maxLength: { value: 5100, errorMessage: translate('entity.validation.maxlength', { max: 5100 }) }
+                    }}
+                  />
                 </AvGroup>
                 <AvGroup>
                   <Label id="doctorLabel" for="doctor">
                     <Translate contentKey="totoroApp.ledger.doctor">Doctor</Translate>
                   </Label>
                   <AvField id="ledger-doctor" type="text" name="doctor" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="gidLabel" for="gid">
+                    <Translate contentKey="totoroApp.ledger.gid">Gid</Translate>
+                  </Label>
+                  <AvField id="ledger-gid" type="string" className="form-control" name="gid" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="displayNameLabel" for="displayName">
+                    <Translate contentKey="totoroApp.ledger.displayName">Display Name</Translate>
+                  </Label>
+                  <AvField id="ledger-displayName" type="text" name="displayName" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="createdDateLabel" for="createdDate">
+                    <Translate contentKey="totoroApp.ledger.createdDate">Created Date</Translate>
+                  </Label>
+                  <AvInput
+                    id="ledger-createdDate"
+                    type="datetime-local"
+                    className="form-control"
+                    name="createdDate"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.ledgerEntity.createdDate)}
+                  />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="createdByLabel" for="createdBy">
+                    <Translate contentKey="totoroApp.ledger.createdBy">Created By</Translate>
+                  </Label>
+                  <AvField id="ledger-createdBy" type="text" name="createdBy" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="lastModifiedDateLabel" for="lastModifiedDate">
+                    <Translate contentKey="totoroApp.ledger.lastModifiedDate">Last Modified Date</Translate>
+                  </Label>
+                  <AvInput
+                    id="ledger-lastModifiedDate"
+                    type="datetime-local"
+                    className="form-control"
+                    name="lastModifiedDate"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.ledgerEntity.lastModifiedDate)}
+                  />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="lastModifiedByLabel" for="lastModifiedBy">
+                    <Translate contentKey="totoroApp.ledger.lastModifiedBy">Last Modified By</Translate>
+                  </Label>
+                  <AvField id="ledger-lastModifiedBy" type="text" name="lastModifiedBy" />
                 </AvGroup>
                 <AvGroup>
                   <Label for="treatmentPlan.id">

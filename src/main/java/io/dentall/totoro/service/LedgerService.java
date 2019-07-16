@@ -109,6 +109,14 @@ public class LedgerService {
                     ledger.setDoctor(updateLedger.getDoctor());
                 }
 
+                if (updateLedger.getGid() != null) {
+                    ledger.setGid(updateLedger.getGid());
+                }
+
+                if (updateLedger.getDisplayName() != null) {
+                    ledger.setDisplayName(updateLedger.getDisplayName());
+                }
+
                 if (updateLedger.getTreatmentPlan() != null && updateLedger.getTreatmentPlan().getId() != null) {
                     treatmentPlanRepository.findById(updateLedger.getTreatmentPlan().getId()).ifPresent(ledger::setTreatmentPlan);
                 }

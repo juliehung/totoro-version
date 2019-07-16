@@ -26,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -58,6 +60,12 @@ public class LedgerResourceIntTest {
 
     private static final String DEFAULT_DOCTOR = "AAAAAAAAAA";
     private static final String UPDATED_DOCTOR = "BBBBBBBBBB";
+
+    private static final Long DEFAULT_GID = 1L;
+    private static final Long UPDATED_GID = 2L;
+
+    private static final String DEFAULT_DISPLAY_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_DISPLAY_NAME = "BBBBBBBBBB";
 
     @Autowired
     private LedgerRepository ledgerRepository;
@@ -111,7 +119,9 @@ public class LedgerResourceIntTest {
             .charge(DEFAULT_CHARGE)
             .arrears(DEFAULT_ARREARS)
             .note(DEFAULT_NOTE)
-            .doctor(DEFAULT_DOCTOR);
+            .doctor(DEFAULT_DOCTOR)
+            .gid(DEFAULT_GID)
+            .displayName(DEFAULT_DISPLAY_NAME);
         return ledger;
     }
 
@@ -140,6 +150,8 @@ public class LedgerResourceIntTest {
         assertThat(testLedger.getArrears()).isEqualTo(DEFAULT_ARREARS);
         assertThat(testLedger.getNote()).isEqualTo(DEFAULT_NOTE);
         assertThat(testLedger.getDoctor()).isEqualTo(DEFAULT_DOCTOR);
+        assertThat(testLedger.getGid()).isEqualTo(DEFAULT_GID);
+        assertThat(testLedger.getDisplayName()).isEqualTo(DEFAULT_DISPLAY_NAME);
     }
 
     @Test
@@ -230,7 +242,9 @@ public class LedgerResourceIntTest {
             .andExpect(jsonPath("$.[*].charge").value(hasItem(DEFAULT_CHARGE.doubleValue())))
             .andExpect(jsonPath("$.[*].arrears").value(hasItem(DEFAULT_ARREARS.doubleValue())))
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
-            .andExpect(jsonPath("$.[*].doctor").value(hasItem(DEFAULT_DOCTOR.toString())));
+            .andExpect(jsonPath("$.[*].doctor").value(hasItem(DEFAULT_DOCTOR.toString())))
+            .andExpect(jsonPath("$.[*].gid").value(hasItem(DEFAULT_GID.intValue())))
+            .andExpect(jsonPath("$.[*].displayName").value(hasItem(DEFAULT_DISPLAY_NAME.toString())));
     }
     
     @Test
@@ -248,7 +262,9 @@ public class LedgerResourceIntTest {
             .andExpect(jsonPath("$.charge").value(DEFAULT_CHARGE.doubleValue()))
             .andExpect(jsonPath("$.arrears").value(DEFAULT_ARREARS.doubleValue()))
             .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
-            .andExpect(jsonPath("$.doctor").value(DEFAULT_DOCTOR.toString()));
+            .andExpect(jsonPath("$.doctor").value(DEFAULT_DOCTOR.toString()))
+            .andExpect(jsonPath("$.gid").value(DEFAULT_GID.intValue()))
+            .andExpect(jsonPath("$.displayName").value(DEFAULT_DISPLAY_NAME.toString()));
     }
 
     @Test
@@ -448,6 +464,137 @@ public class LedgerResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllLedgersByGidIsEqualToSomething() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where gid equals to DEFAULT_GID
+        defaultLedgerShouldBeFound("gid.equals=" + DEFAULT_GID);
+
+        // Get all the ledgerList where gid equals to UPDATED_GID
+        defaultLedgerShouldNotBeFound("gid.equals=" + UPDATED_GID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLedgersByGidIsInShouldWork() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where gid in DEFAULT_GID or UPDATED_GID
+        defaultLedgerShouldBeFound("gid.in=" + DEFAULT_GID + "," + UPDATED_GID);
+
+        // Get all the ledgerList where gid equals to UPDATED_GID
+        defaultLedgerShouldNotBeFound("gid.in=" + UPDATED_GID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLedgersByGidIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where gid is not null
+        defaultLedgerShouldBeFound("gid.specified=true");
+
+        // Get all the ledgerList where gid is null
+        defaultLedgerShouldNotBeFound("gid.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllLedgersByGidIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where gid greater than or equals to DEFAULT_GID
+        defaultLedgerShouldBeFound("gid.greaterOrEqualThan=" + DEFAULT_GID);
+
+        // Get all the ledgerList where gid greater than or equals to UPDATED_GID
+        defaultLedgerShouldNotBeFound("gid.greaterOrEqualThan=" + UPDATED_GID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLedgersByGidIsLessThanSomething() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where gid less than or equals to DEFAULT_GID
+        defaultLedgerShouldNotBeFound("gid.lessThan=" + DEFAULT_GID);
+
+        // Get all the ledgerList where gid less than or equals to UPDATED_GID
+        defaultLedgerShouldBeFound("gid.lessThan=" + UPDATED_GID);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllLedgersByDisplayNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where displayName equals to DEFAULT_DISPLAY_NAME
+        defaultLedgerShouldBeFound("displayName.equals=" + DEFAULT_DISPLAY_NAME);
+
+        // Get all the ledgerList where displayName equals to UPDATED_DISPLAY_NAME
+        defaultLedgerShouldNotBeFound("displayName.equals=" + UPDATED_DISPLAY_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLedgersByDisplayNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where displayName in DEFAULT_DISPLAY_NAME or UPDATED_DISPLAY_NAME
+        defaultLedgerShouldBeFound("displayName.in=" + DEFAULT_DISPLAY_NAME + "," + UPDATED_DISPLAY_NAME);
+
+        // Get all the ledgerList where displayName equals to UPDATED_DISPLAY_NAME
+        defaultLedgerShouldNotBeFound("displayName.in=" + UPDATED_DISPLAY_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLedgersByDisplayNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where displayName is not null
+        defaultLedgerShouldBeFound("displayName.specified=true");
+
+        // Get all the ledgerList where displayName is null
+        defaultLedgerShouldNotBeFound("displayName.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllLedgersByCreatedByIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where createdBy is not null
+        defaultLedgerShouldBeFound("createdBy.specified=true");
+
+        // Get all the ledgerList where createdBy is null
+        defaultLedgerShouldNotBeFound("createdBy.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllLedgersByLastModifiedByIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ledgerRepository.saveAndFlush(ledger);
+
+        // Get all the ledgerList where lastModifiedBy is not null
+        defaultLedgerShouldBeFound("lastModifiedBy.specified=true");
+
+        // Get all the ledgerList where lastModifiedBy is null
+        defaultLedgerShouldNotBeFound("lastModifiedBy.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllLedgersByTreatmentPlanIsEqualToSomething() throws Exception {
         // Initialize the database
         TreatmentPlan treatmentPlan = TreatmentPlanResourceIntTest.createEntity(em);
@@ -476,7 +623,9 @@ public class LedgerResourceIntTest {
             .andExpect(jsonPath("$.[*].charge").value(hasItem(DEFAULT_CHARGE.doubleValue())))
             .andExpect(jsonPath("$.[*].arrears").value(hasItem(DEFAULT_ARREARS.doubleValue())))
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
-            .andExpect(jsonPath("$.[*].doctor").value(hasItem(DEFAULT_DOCTOR.toString())));
+            .andExpect(jsonPath("$.[*].doctor").value(hasItem(DEFAULT_DOCTOR.toString())))
+            .andExpect(jsonPath("$.[*].gid").value(hasItem(DEFAULT_GID.intValue())))
+            .andExpect(jsonPath("$.[*].displayName").value(hasItem(DEFAULT_DISPLAY_NAME.toString())));
 
         // Check, that the count call also returns 1
         restLedgerMockMvc.perform(get("/api/ledgers/count?sort=id,desc&" + filter))
@@ -528,7 +677,9 @@ public class LedgerResourceIntTest {
             .charge(UPDATED_CHARGE)
             .arrears(UPDATED_ARREARS)
             .note(UPDATED_NOTE)
-            .doctor(UPDATED_DOCTOR);
+            .doctor(UPDATED_DOCTOR)
+            .gid(UPDATED_GID)
+            .displayName(UPDATED_DISPLAY_NAME);
 
         restLedgerMockMvc.perform(put("/api/ledgers")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -544,6 +695,8 @@ public class LedgerResourceIntTest {
         assertThat(testLedger.getArrears()).isEqualTo(UPDATED_ARREARS);
         assertThat(testLedger.getNote()).isEqualTo(UPDATED_NOTE);
         assertThat(testLedger.getDoctor()).isEqualTo(UPDATED_DOCTOR);
+        assertThat(testLedger.getGid()).isEqualTo(UPDATED_GID);
+        assertThat(testLedger.getDisplayName()).isEqualTo(UPDATED_DISPLAY_NAME);
     }
 
     @Test

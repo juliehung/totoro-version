@@ -1,9 +1,13 @@
 package io.dentall.totoro.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -18,7 +22,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "ledger")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Ledger extends AbstractAuditingEntity implements Serializable {
+@EntityListeners(AuditingEntityListener.class)
+public class Ledger implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -46,8 +51,31 @@ public class Ledger extends AbstractAuditingEntity implements Serializable {
     @Column(name = "doctor")
     private String doctor;
 
+    @Column(name = "gid")
+    private Long gid;
+
+    @Column(name = "display_name")
+    private String displayName;
+
+    @CreatedDate
+    @Column(name = "created_date")
+    private Instant createdDate;
+
+    @CreatedBy
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @LastModifiedDate
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
+    @LastModifiedBy
+    @Column(name = "last_modified_by")
+    private String lastModifiedBy;
+
     @ManyToOne
     private TreatmentPlan treatmentPlan;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -122,6 +150,84 @@ public class Ledger extends AbstractAuditingEntity implements Serializable {
         this.doctor = doctor;
     }
 
+    public Long getGid() {
+        return gid;
+    }
+
+    public Ledger gid(Long gid) {
+        this.gid = gid;
+        return this;
+    }
+
+    public void setGid(Long gid) {
+        this.gid = gid;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public Ledger displayName(String displayName) {
+        this.displayName = displayName;
+        return this;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public Ledger createdDate(Instant createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public Ledger createdBy(String createdBy) {
+        this.createdBy = createdBy;
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public Ledger lastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+        return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public Ledger lastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+        return this;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
     public TreatmentPlan getTreatmentPlan() {
         return treatmentPlan;
     }
@@ -135,13 +241,6 @@ public class Ledger extends AbstractAuditingEntity implements Serializable {
         this.treatmentPlan = treatmentPlan;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
-
-    @Override
-    @JsonIgnore(false)
-    @JsonProperty
-    public Instant getCreatedDate() {
-        return super.getCreatedDate();
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -172,6 +271,12 @@ public class Ledger extends AbstractAuditingEntity implements Serializable {
             ", arrears=" + getArrears() +
             ", note='" + getNote() + "'" +
             ", doctor='" + getDoctor() + "'" +
+            ", gid=" + getGid() +
+            ", displayName='" + getDisplayName() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             "}";
     }
 }

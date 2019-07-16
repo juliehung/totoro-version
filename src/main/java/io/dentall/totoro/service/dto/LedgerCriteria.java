@@ -2,8 +2,14 @@ package io.dentall.totoro.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
-
-import io.github.jhipster.service.filter.*;
+import io.github.jhipster.service.filter.BooleanFilter;
+import io.github.jhipster.service.filter.DoubleFilter;
+import io.github.jhipster.service.filter.Filter;
+import io.github.jhipster.service.filter.FloatFilter;
+import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LongFilter;
+import io.github.jhipster.service.filter.StringFilter;
+import io.github.jhipster.service.filter.InstantFilter;
 
 /**
  * Criteria class for the Ledger entity. This class is used in LedgerResource to
@@ -29,9 +35,19 @@ public class LedgerCriteria implements Serializable {
 
     private StringFilter doctor;
 
-    private LongFilter treatmentPlanId;
+    private LongFilter gid;
+
+    private StringFilter displayName;
 
     private InstantFilter createdDate;
+
+    private StringFilter createdBy;
+
+    private InstantFilter lastModifiedDate;
+
+    private StringFilter lastModifiedBy;
+
+    private LongFilter treatmentPlanId;
 
     public LongFilter getId() {
         return id;
@@ -81,12 +97,20 @@ public class LedgerCriteria implements Serializable {
         this.doctor = doctor;
     }
 
-    public LongFilter getTreatmentPlanId() {
-        return treatmentPlanId;
+    public LongFilter getGid() {
+        return gid;
     }
 
-    public void setTreatmentPlanId(LongFilter treatmentPlanId) {
-        this.treatmentPlanId = treatmentPlanId;
+    public void setGid(LongFilter gid) {
+        this.gid = gid;
+    }
+
+    public StringFilter getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(StringFilter displayName) {
+        this.displayName = displayName;
     }
 
     public InstantFilter getCreatedDate() {
@@ -97,6 +121,39 @@ public class LedgerCriteria implements Serializable {
         this.createdDate = createdDate;
     }
 
+    public StringFilter getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(StringFilter createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public InstantFilter getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public StringFilter getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(StringFilter lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public LongFilter getTreatmentPlanId() {
+        return treatmentPlanId;
+    }
+
+    public void setTreatmentPlanId(LongFilter treatmentPlanId) {
+        this.treatmentPlanId = treatmentPlanId;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -106,41 +163,57 @@ public class LedgerCriteria implements Serializable {
             return false;
         }
         final LedgerCriteria that = (LedgerCriteria) o;
-        return Objects.equals(id, that.id) &&
+        return
+            Objects.equals(id, that.id) &&
             Objects.equals(amount, that.amount) &&
             Objects.equals(charge, that.charge) &&
             Objects.equals(arrears, that.arrears) &&
             Objects.equals(note, that.note) &&
             Objects.equals(doctor, that.doctor) &&
-            Objects.equals(treatmentPlanId, that.treatmentPlanId) &&
-            Objects.equals(createdDate, that.createdDate);
+            Objects.equals(gid, that.gid) &&
+            Objects.equals(displayName, that.displayName) &&
+            Objects.equals(createdDate, that.createdDate) &&
+            Objects.equals(createdBy, that.createdBy) &&
+            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
+            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
+            Objects.equals(treatmentPlanId, that.treatmentPlanId);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-            id,
-            amount,
-            charge,
-            arrears,
-            note,
-            doctor,
-            treatmentPlanId,
-            createdDate
+        id,
+        amount,
+        charge,
+        arrears,
+        note,
+        doctor,
+        gid,
+        displayName,
+        createdDate,
+        createdBy,
+        lastModifiedDate,
+        lastModifiedBy,
+        treatmentPlanId
         );
     }
 
     @Override
     public String toString() {
         return "LedgerCriteria{" +
-            (id != null ? "id=" + id + ", " : "") +
-            (amount != null ? "amount=" + amount + ", " : "") +
-            (charge != null ? "charge=" + charge + ", " : "") +
-            (arrears != null ? "arrears=" + arrears + ", " : "") +
-            (note != null ? "note=" + note + ", " : "") +
-            (doctor != null ? "doctor=" + doctor + ", " : "") +
-            (treatmentPlanId != null ? "treatmentPlanId=" + treatmentPlanId + ", " : "") +
-            (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
+                (id != null ? "id=" + id + ", " : "") +
+                (amount != null ? "amount=" + amount + ", " : "") +
+                (charge != null ? "charge=" + charge + ", " : "") +
+                (arrears != null ? "arrears=" + arrears + ", " : "") +
+                (note != null ? "note=" + note + ", " : "") +
+                (doctor != null ? "doctor=" + doctor + ", " : "") +
+                (gid != null ? "gid=" + gid + ", " : "") +
+                (displayName != null ? "displayName=" + displayName + ", " : "") +
+                (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
+                (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
+                (lastModifiedDate != null ? "lastModifiedDate=" + lastModifiedDate + ", " : "") +
+                (lastModifiedBy != null ? "lastModifiedBy=" + lastModifiedBy + ", " : "") +
+                (treatmentPlanId != null ? "treatmentPlanId=" + treatmentPlanId + ", " : "") +
             "}";
     }
 
