@@ -47,3 +47,128 @@ Survey page styles
 label[for='lineId'] {
   font-size: 14px;
 }
+
+#cover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  /* display:none; */
+}
+
+.popupSmall {
+  width: 344px;
+  z-index: 10;
+  background: #fff;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  font-size: 16px;
+  text-align: center;
+  color: #061f33;
+  overflow: hidden;
+}
+
+.stage1,
+.stage4 {
+  height: 242px;
+}
+
+.stage2 {
+  height: 162px;
+}
+
+.popupLarge {
+  width: 688px;
+  height: 847px;
+  z-index: 10;
+  background: #fff;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  border-radius: 10px;
+}
+
+.surveyStageBtn {
+  width: 112px;
+  height: 44px;
+  border-radius: 3px;
+}
+
+.surveyStageBtn p {
+  text-align: center;
+  line-height: 44px;
+  font-size: 16px;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.signPadContainer {
+  width: 600px;
+  height: 624px;
+  border: 1px solid #d0d7df;
+  margin: 24px auto 0px;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.handlePopupCross {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 28px;
+  right: 24px;
+  transition: all 0.5s;
+}
+
+.handlePopupCross:hover,
+.handlePopupCross:focus {
+  transform: scale(1.2);
+}
+
+.handlePopupCheck {
+  width: 60px;
+  height: 60px;
+  margin: 32px auto 16px auto;
+  animation-name: bounceInDown;
+  animation-duration: 0.75s;
+}
+
+@keyframes bounceInDown {
+  from,
+  60%,
+  75%,
+  90%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  0% {
+    opacity: 0;
+    transform: translateY(-300px);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(20px);
+  }
+
+  75% {
+    transform: translateY(-10px);
+  }
+
+  90% {
+    transform: translateY(5px);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
