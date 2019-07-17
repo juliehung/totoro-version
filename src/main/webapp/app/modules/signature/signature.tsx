@@ -3,9 +3,12 @@ import { Button } from 'reactstrap';
 import SignatureCanvas from 'react-signature-canvas';
 import './signature.css';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEraser } from '@fortawesome/free-solid-svg-icons';
+library.add(faEraser);
 
 interface ISignatureProps {
-  imgType?: string;
   getSignatureURL?: (arg0: string) => void;
   pid?: number;
 }
@@ -25,23 +28,12 @@ class Signature extends React.Component<ISignatureProps, ISignatureSates> {
     trimmedDataURL: ''
   };
 
-  componentDidMount() {
-    let base64Img: string;
-    axios
-      .get(`/api/lob/esign?patientId.equals=${this.props.pid}`)
-      .then(response => {
-        base64Img = response.data.base64;
-        this.sigCanvas.fromDataURL(base64Img, { width: 713, height: 320 });
-      })
-      .catch();
-  }
-
   clearSignature = () => {
     this.sigCanvas.clear();
   };
 
   trim = () => {
-    const imgURL: string = this.sigCanvas.toDataURL(this.props.imgType ? `image/${this.props.imgType}` : 'image/png');
+    const imgURL: string = this.sigCanvas.toDataURL('image/png');
     return imgURL;
   };
 
@@ -49,20 +41,26 @@ class Signature extends React.Component<ISignatureProps, ISignatureSates> {
     return (
       <div className="signatureContainer">
         <div className="signatureBorder">
-          <div className="signatureText">
-            <p className="signatureTextBig">簽名 Signature</p>
-            <p className="signatureTextSmall">未滿20歲須法定代理人簽名同意</p>
-          </div>
           <div className="clearSignature">
-            <Button
-              id="clearSiganture"
-              style={{ width: '100px' }}
-              className="btn btn-primary"
-              color="secondary"
+            <div
+              id="clearSignature"
+              style={{
+                width: '96px',
+                height: '40px',
+                borderRadius: '3px',
+                border: 'solid 1px #d0d7df',
+                display: 'flex',
+                justifyContent: 'space-around'
+              }}
               onClick={this.clearSignature}
             >
-              重新填寫
-            </Button>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ marginRight: '5px' }}>
+                  <FontAwesomeIcon icon="eraser" size="lg" color="#293f50" />
+                </div>
+                <p style={{ fontSize: '14px', color: '#293f50', fontWeight: 600, lineHeight: '40px', marginTop: 'auto' }}>清除</p>
+              </div>
+            </div>
           </div>
           <SignatureCanvas
             penColor="black"
@@ -70,11 +68,11 @@ class Signature extends React.Component<ISignatureProps, ISignatureSates> {
             minDistance={0.1}
             velocityFilterWeight={0.5}
             canvasProps={{
-              width: '713',
-              height: '320',
+              width: '598',
+              height: '622',
               className: 'sigCanvas'
             }}
-            backgroundColor="rgba(194,203,213,0.1)"
+            backgroundColor="#fff"
             ref={(ref: any) => {
               this.sigCanvas = ref;
             }}

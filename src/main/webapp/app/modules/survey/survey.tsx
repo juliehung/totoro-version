@@ -47,6 +47,9 @@ export interface ISurveyState {
   contentType: string;
   base64: string;
   emergencyRelationship: string;
+  controlFlowStage: number;
+  eSignRequired: boolean;
+  patientEntityStringForSend: object;
 }
 
 export class Survey extends React.Component<ISurveyProps, ISurveyState> {
@@ -72,7 +75,10 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     mainNoticeChannel: '',
     contentType: '',
     base64: '',
-    emergencyRelationship: ''
+    emergencyRelationship: '',
+    controlFlowStage: 0,
+    eSignRequired: false,
+    patientEntityStringForSend: {}
   };
 
   signatureRef = React.createRef<Signature>();
@@ -134,29 +140,68 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
-      axios
-        .post('/api/lob/esign/string64', {
-          contentType: this.state.contentType,
-          base64: this.state.base64,
-          patientId: this.props.patientEntity.id
-        })
-        .then(() => {
-          this.handleClose();
-        })
-        .catch(() => {
-          setTimeout(() => {
-            this.setState({ showDino: false });
+      if (!this.state.eSignRequired) {
+        this.setState({ controlFlowStage: 4 });
+      } else {
+        axios
+          .post('/api/lob/esign/string64', {
+            contentType: this.state.contentType,
+            base64: this.state.base64,
+            patientId: this.props.patientEntity.id
+          })
+          .then(() => {
+            this.setState({ controlFlowStage: 4 });
+          })
+          .catch(() => {
             toast('網路不穩定，請再送出一次！', { type: toast.TYPE.ERROR });
-          }, 2000);
-        });
+          });
+      }
     }
   }
 
   handleClose = () => {
-    setTimeout(() => {
-      this.setState({ showDino: false });
-      this.props.history.push('/list');
-    }, 2000);
+    this.props.history.push('/list');
+  };
+
+  handlePopup = e => {
+    const { controlFlowStage } = this.state;
+    const className = e.target.className;
+    switch (controlFlowStage) {
+      case 1:
+        if (className.indexOf('cover') !== -1 || className.indexOf('cancel') !== -1) {
+          this.setState({ controlFlowStage: 0 });
+        } else if (className.indexOf('confirm') !== -1) {
+          this.setState({ controlFlowStage: 2 });
+        }
+        break;
+      case 2:
+        if (className.indexOf('yes') !== -1) {
+          this.setState({ controlFlowStage: 3, eSignRequired: true });
+        } else if (className.indexOf('no') !== -1) {
+          this.props.updatePatient(this.state.patientEntityStringForSend);
+        } else if (className.indexOf('cover') !== -1) {
+          this.setState({ controlFlowStage: 0 });
+        }
+        break;
+      case 3:
+        if (className.indexOf('yes') !== -1) {
+          const imgDataURL = this.signatureRef.current.trim();
+          const contentType = imgDataURL.slice(imgDataURL.indexOf('image'), imgDataURL.indexOf(';'));
+          const base64 = imgDataURL;
+          this.setState({ contentType, base64 });
+          this.props.updatePatient(this.state.patientEntityStringForSend);
+        } else if (className.indexOf('no') !== -1) {
+          this.setState({ controlFlowStage: 0, eSignRequired: false });
+        }
+        break;
+      case 4:
+        if (className.indexOf('ok') !== -1) {
+          this.handleClose();
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   onFormSubmit = event => {
@@ -175,11 +220,17 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     const emergencyPhone = data.get('emergencyPhone');
     const emergencyRelationship = data.get('emergencyRelationship');
     const drug = data.get('drug') === 'no' ? false : true;
-    const drugName = data.get('drugName');
+    let drugName = data.get('drugName');
+    if (data.get('drug') === 'no' || data.get('drug') === 'yes1') {
+      drugName = '';
+    }
     const glycemicAC = data.get('glycemicAC');
     const glycemicPC = data.get('glycemicPC');
-    const smoking = data.get('smoking');
+    let smoking = data.get('smoking');
     const smokeNumberADay = smoking === 'no' ? '0' : data.get('smokeNumberADay');
+    if (!smokeNumberADay || Number(smokeNumberADay) === 0) {
+      smoking = 'no';
+    }
     const pregnant = data.get('pregnant');
     const disease = [];
 
@@ -236,17 +287,10 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       mainNoticeChannel
     };
 
-    // TODO: sava imgURL to server
-    const imgDataURL = this.signatureRef.current.trim();
-    const contentType = imgDataURL.slice(imgDataURL.indexOf('image'), imgDataURL.indexOf(';'));
-    const base64 = imgDataURL;
-    this.setState({ contentType, base64 });
-    this.setState({ showDino: true });
-    // TODO: api and loading progress and success/error page
     let deepCopyPatientEntity = JSON.parse(JSON.stringify(this.props.patientEntity));
     deepCopyPatientEntity = { ...deepCopyPatientEntity, ...json };
 
-    this.props.updatePatient(deepCopyPatientEntity);
+    this.setState({ patientEntityStringForSend: deepCopyPatientEntity, controlFlowStage: 1 });
   };
 
   onChange = event => {
@@ -608,6 +652,70 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
       </div>
     );
     const dt = moment(patientEntity.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss');
+
+    const { controlFlowStage } = this.state;
+    let popupContent;
+    if (controlFlowStage === 1) {
+      popupContent = (
+        <div className="popupSmall stage1">
+          <div className="handlePopupCheck">
+            <img src="content/images/Slices_Icon-check-circle.svg" alt="" />
+          </div>
+          <p style={{ fontWeight: 600 }}>填寫完成，請轉交給助理</p>
+          <div className="confirm handlePopupCross">
+            <img className="confirm" src="content/images/Slices_Icon-close.svg" alt="" />
+          </div>
+          <div className="cancel surveyStageBtn pos" style={{ background: '#eceff3', color: '#293f50', margin: '24px auto auto' }}>
+            <p>返回填寫</p>
+          </div>
+        </div>
+      );
+    } else if (controlFlowStage === 2) {
+      popupContent = (
+        <div className="popupSmall stage2">
+          <p style={{ fontWeight: 600, margin: '32px auto' }}>是否產生數位簽名？</p>
+          <div style={{ display: 'flex', width: '260px', justifyContent: 'space-between', marginLeft: 'auto', marginRight: 'auto' }}>
+            <div className="no surveyStageBtn nag" style={{ background: '#eceff3' }}>
+              <p>否</p>
+            </div>
+            <div className="yes surveyStageBtn pos" style={{ background: '#4da1ff', color: 'white' }}>
+              <p>是</p>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (controlFlowStage === 3) {
+      popupContent = (
+        <div className="popupLarge stage3">
+          <p style={{ fontWeight: 600, marginTop: '27px', marginBottom: 0, fontSize: '20px' }}>簽名</p>
+          <p style={{ marginTop: '16px', marginBottom: 0, fontSize: '14px' }}>請簽下您的姓名以及當天日期</p>
+          <div className="signPadContainer">
+            <Signature getSignatureURL={this.getSignatureURL} ref={this.signatureRef} pid={this.props.patientEntity.id} />
+          </div>
+          <div style={{ display: 'flex', width: '260px', justifyContent: 'space-between', margin: '32px auto' }}>
+            <div className="no surveyStageBtn nag" style={{ background: '#eceff3' }}>
+              <p>取消</p>
+            </div>
+            <div className="yes surveyStageBtn pos" style={{ background: '#4da1ff', color: 'white' }}>
+              <p>送出</p>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (controlFlowStage === 4) {
+      popupContent = (
+        <div className="popupSmall stage4">
+          <div className="handlePopupCheck">
+            <img src="content/images/Slices_Icon-check-circle.svg" alt="" />
+          </div>
+          <p style={{ fontWeight: 600 }}>已成功產生病患病歷表</p>
+          <div className="ok surveyStageBtn pos" style={{ background: '#4da1ff', color: 'white', margin: '24px auto auto' }}>
+            <p>確認</p>
+          </div>
+        </div>
+      );
+    }
+
     const {
       smoking,
       pregnant,
@@ -787,9 +895,9 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                       請選擇
                     </option>
                     {this.props.marriageOptionsEntities.length > 0
-                      ? this.props.marriageOptionsEntities.map((mariage, i) => (
-                          <option key={i} value={mariage.code}>
-                            {mariage.name}
+                      ? this.props.marriageOptionsEntities.map((marriage, i) => (
+                          <option key={i} value={marriage.code}>
+                            {marriage.name}
                           </option>
                         ))
                       : null}
@@ -1346,12 +1454,9 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
                 </Col>
               </FormGroup>
               <FormGroup>
-                <Signature getSignatureURL={this.getSignatureURL} ref={this.signatureRef} pid={this.props.patientEntity.id} />
-              </FormGroup>
-              <FormGroup>
                 <Col sm={12} style={{ display: 'flex', justifyContent: 'center' }}>
                   <Button type="submit" id="submit" style={{ width: '200px' }} className="btn-dentall btn btn-primary">
-                    存檔
+                    完成填寫
                   </Button>
                 </Col>
               </FormGroup>
@@ -1359,6 +1464,11 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
           </Col>
         </Row>
         {this.state.showDino && this.renderDino()}
+        {this.state.controlFlowStage > 0 ? (
+          <div id="cover" className="cover" onClick={this.handlePopup}>
+            {popupContent}
+          </div>
+        ) : null}
       </div>
     );
   }
