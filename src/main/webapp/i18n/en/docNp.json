@@ -1,0 +1,23 @@
+{
+  "totoroApp": {
+    "docNp": {
+      "home": {
+        "title": "Doc Nps",
+        "createLabel": "Create a new Doc Np",
+        "createOrEditLabel": "Create or edit a Doc Np"
+      },
+      "created": "A new Doc Np is created with identifier {{ param }}",
+      "updated": "A Doc Np is updated with identifier {{ param }}",
+      "deleted": "A Doc Np is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Doc Np {{ id }}?"
+      },
+      "detail": {
+        "title": "Doc Np"
+      },
+      "patient": "Patient",
+      "patientId": "Patient Id",
+      "esignId": "Esign Id"
+    }
+  }
+}

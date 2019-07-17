@@ -50,6 +50,7 @@
         "relationshipOptions": "Relationship Options",
         "nhiMonthDeclaration": "Nhi Month Declaration",
         "nhiMonthDeclarationDetails": "Nhi Month Declaration Details",
+        "docNp": "Doc Np",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
