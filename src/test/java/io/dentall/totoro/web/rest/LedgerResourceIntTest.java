@@ -1,15 +1,12 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
-
 import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.domain.TreatmentPlan;
 import io.dentall.totoro.repository.LedgerRepository;
+import io.dentall.totoro.service.LedgerQueryService;
 import io.dentall.totoro.service.LedgerService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
-import io.dentall.totoro.service.dto.LedgerCriteria;
-import io.dentall.totoro.service.LedgerQueryService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-
 
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;

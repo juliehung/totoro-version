@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -41,7 +41,20 @@ public class LedgerBusinessService {
         return res;
     }
 
+    public List<Ledger> findRecords(Long id, Long gid, boolean headOnly) {
+        if (headOnly) {
+            return findHeadRecord(id);
+        }else {
+            return findGroupRecords(gid);
+        }
+    }
+
     public List<Ledger> findHeadRecord(Long id) {
+
+        if (id == null) {
+            throw new ProblemUtil("Id is empty", Status.BAD_REQUEST);
+        }
+
         // Generate criteria and find head result
         LedgerCriteria c = ledgerCriteriaIdWrapper(id);
         List<Ledger> ledgers = ledgerQueryService.findByCriteria(c);
@@ -57,19 +70,32 @@ public class LedgerBusinessService {
         return ledgers;
     }
 
-    public List<Ledger> findRecords(Long id) {
+    public List<Ledger> findGroupRecords(Long gid) {
+
+        if (gid == null) {
+            throw new ProblemUtil("Gid is empty", Status.BAD_REQUEST);
+        }
+
         // Generate criteria and find head result assign to records
-        LedgerCriteria headC = ledgerCriteriaIdWrapper(id);
+        LedgerCriteria headC = ledgerCriteriaIdWrapper(gid);
         List<Ledger> records = ledgerQueryService.findByCriteria(headC);
 
+        if (records.size() < 1) {
+            throw new ProblemUtil("Not found ledgers with gid: "+gid, Status.NOT_FOUND);
+        }
+
         if (records.size() > 1) {
-            log.error("Ledger data is polluted more then one head record at id: {}", id);
+            log.error("Ledger data is polluted more then one head record at id: {}", gid);
         }
 
         // Generate criteria and find body result add to records
-        LedgerCriteria bodyC = ledgerCriteriaGidWrapper(id);
+        LedgerCriteria bodyC = ledgerCriteriaGidWrapper(gid);
         List<Ledger> body = ledgerQueryService.findByCriteria(bodyC);
         records.addAll(body);
+
+        if (records.size() < 1) {
+            throw new ProblemUtil("Not found ledgers with gid: "+gid, Status.NOT_FOUND);
+        }
 
         return records;
     }
@@ -79,17 +105,31 @@ public class LedgerBusinessService {
         if (l == null) {
             throw new ProblemUtil("Empty ledger", Status.BAD_REQUEST);
         }
-        if (l.getId() == null && l.getGid() == null) {
-            return;
-        }
-        else if (l.getId() == null && l.getGid() != null) {
-            return;
-        }else {
+
+        if (l.getId() != null) {
             throw new ProblemUtil(
                 "Only accept while id and gid are null(head), or id is null and " +
                     "gid is not null(body)",
                 Status.BAD_REQUEST
             );
+        }
+
+        if (l.getGid() != null) {
+            Optional<Ledger> res = ledgerRepository.findById(l.getGid());
+            if (!res.isPresent()) {
+                throw new ProblemUtil(
+                    "Not a validate gid(group need insert head first.)",
+                    Status.BAD_REQUEST
+                );
+            }
+
+            if (res.get().getGid() != null) {
+                throw new ProblemUtil(
+                    "Not a validate gid(gid indicated record must be head, meanwhile" +
+                        "gid indicated record's gid must be null)",
+                    Status.BAD_REQUEST
+                );
+            }
         }
     }
 

@@ -2,7 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.dto.EsignDTO;
-import io.dentall.totoro.business.service.LobService;
+import io.dentall.totoro.business.service.LobBusinessService;
 import io.dentall.totoro.business.vm.LobVM;
 import io.dentall.totoro.service.dto.EsignCriteria;
 import org.slf4j.Logger;
@@ -19,25 +19,25 @@ import java.util.List;
  * REST controller for managing Esign.
  */
 @RestController
-@RequestMapping("/api")
-public class LobResource {
+@RequestMapping("/api/business")
+public class LobBusinessResource {
     private final Logger log = LoggerFactory.getLogger(EsignResource.class);
 
-    private final LobService lobService;
+    private final LobBusinessService lobService;
 
-    public LobResource(LobService lobService) {
+    public LobBusinessResource(LobBusinessService lobService) {
         this.lobService = lobService;
     }
 
-    @PostMapping("/lob/esign/{patientId}/file")
+    @PostMapping("/esigns/file")
     @Timed
-    public ResponseEntity<LobVM> createEsign(@PathVariable Long patientId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<LobVM> createEsign(@RequestParam("patientId") Long patientId, @RequestParam("file") MultipartFile file) {
         log.debug("REST request to create Esign by patientId: {} and file.", patientId);
         LobVM vm = lobService.saveEsign(patientId, file);
         return new ResponseEntity<>(vm, HttpStatus.CREATED);
     }
 
-    @PostMapping("/lob/esign/string64")
+    @PostMapping("/esigns/string64")
     @Timed
     public ResponseEntity<LobVM> createEsignByString64(@RequestBody EsignDTO dto) {
         log.debug("REST request to create Esign by EsignDTO: {} with pure string of base64.", dto);
@@ -45,7 +45,7 @@ public class LobResource {
         return new ResponseEntity<>(vm, HttpStatus.CREATED);
     }
 
-    @GetMapping("/lob/esign")
+    @GetMapping("/esigns")
     @Timed
     public ResponseEntity<LobVM> getEsign(EsignCriteria c) {
         log.debug("REST request to get Esign by criteria: {}", c);
@@ -53,7 +53,7 @@ public class LobResource {
         return new ResponseEntity<>(vm, HttpStatus.OK);
     }
 
-    @GetMapping("/lob/esign/history")
+    @GetMapping("/esigns/history")
     @Timed
     public ResponseEntity<List<LobVM>> getEsignHistory(EsignCriteria c) {
         log.debug("REST request to get Esign by criteria: {}", c);
@@ -62,4 +62,3 @@ public class LobResource {
     }
 
 }
-

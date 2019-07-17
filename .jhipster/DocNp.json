@@ -1,0 +1,22 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "patientId",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "esignId",
+            "fieldType": "Long"
+        }
+    ],
+    "changelogDate": "20190716062608",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "doc_np",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

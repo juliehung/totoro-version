@@ -28,7 +28,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class LobService {
+public class LobBusinessService {
 
     private final Logger log = LoggerFactory.getLogger(EsignResource.class);
 
@@ -38,7 +38,7 @@ public class LobService {
 
     private final PatientRepository patientRepository;
 
-    public LobService(
+    public LobBusinessService(
         EsignQueryService esignQueryService,
         EsignService esignService,
         PatientRepository patientRepository
