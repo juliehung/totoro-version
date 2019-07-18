@@ -4,6 +4,7 @@ import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
 import { getEntities as getCareerOptions } from 'app/entities/career-options/career-options.reducer';
 import { getEntities as getMarriageOptions } from 'app/entities/marriage-options/marriage-options.reducer';
 import { getEntities as getRelationshipOptions } from 'app/entities/relationship-options/relationship-options.reducer';
+import { createEntity as createDoc } from 'app/entities/doc-np/doc-np.reducer';
 import { IRootState } from 'app/shared/reducers';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -24,6 +25,13 @@ import Signature from '../signature/signature';
 
 export interface ISurveyProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
+export const enum popupFlowStage {
+  Beginning,
+  FormComplete,
+  IsESign,
+  SignPad,
+  SubmitSuccess
+}
 export interface ISurveyState {
   drugNameDisabled: boolean;
   showDino: boolean;
@@ -47,7 +55,7 @@ export interface ISurveyState {
   contentType: string;
   base64: string;
   emergencyRelationship: string;
-  controlFlowStage: number;
+  controlFlowStage: popupFlowStage;
   eSignRequired: boolean;
   patientEntityStringForSend: object;
 }
@@ -76,7 +84,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     contentType: '',
     base64: '',
     emergencyRelationship: '',
-    controlFlowStage: 0,
+    controlFlowStage: popupFlowStage.Beginning,
     eSignRequired: false,
     patientEntityStringForSend: {}
   };
@@ -140,22 +148,27 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
+      const patientId = this.props.patientEntity.id;
+      const patient = this.state.patientEntityStringForSend;
       if (!this.state.eSignRequired) {
-        this.setState({ controlFlowStage: 4 });
+        this.props.createDoc({ patientId, patient });
       } else {
         axios
-          .post('/api/lob/esign/string64', {
+          .post('/api/business/esigns/string64', {
             contentType: this.state.contentType,
             base64: this.state.base64,
             patientId: this.props.patientEntity.id
           })
-          .then(() => {
-            this.setState({ controlFlowStage: 4 });
+          .then(res => {
+            const esignId = res.data.id;
+            this.props.createDoc({ esignId, patientId, patient });
           })
           .catch(() => {
             toast('網路不穩定，請再送出一次！', { type: toast.TYPE.ERROR });
           });
       }
+    } else if (nextProps.docNPUpdateSuccess !== this.props.docNPUpdateSuccess && nextProps.docNPUpdateSuccess) {
+      this.setState({ controlFlowStage: popupFlowStage.SubmitSuccess });
     }
   }
 
@@ -169,18 +182,18 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     switch (controlFlowStage) {
       case 1:
         if (className.indexOf('cover') !== -1 || className.indexOf('cancel') !== -1) {
-          this.setState({ controlFlowStage: 0 });
+          this.setState({ controlFlowStage: popupFlowStage.Beginning });
         } else if (className.indexOf('confirm') !== -1) {
-          this.setState({ controlFlowStage: 2 });
+          this.setState({ controlFlowStage: popupFlowStage.IsESign });
         }
         break;
       case 2:
         if (className.indexOf('yes') !== -1) {
-          this.setState({ controlFlowStage: 3, eSignRequired: true });
+          this.setState({ controlFlowStage: popupFlowStage.SignPad, eSignRequired: true });
         } else if (className.indexOf('no') !== -1) {
           this.props.updatePatient(this.state.patientEntityStringForSend);
         } else if (className.indexOf('cover') !== -1) {
-          this.setState({ controlFlowStage: 0 });
+          this.setState({ controlFlowStage: popupFlowStage.Beginning });
         }
         break;
       case 3:
@@ -191,7 +204,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
           this.setState({ contentType, base64 });
           this.props.updatePatient(this.state.patientEntityStringForSend);
         } else if (className.indexOf('no') !== -1) {
-          this.setState({ controlFlowStage: 0, eSignRequired: false });
+          this.setState({ controlFlowStage: popupFlowStage.Beginning, eSignRequired: false });
         }
         break;
       case 4:
@@ -290,7 +303,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
     let deepCopyPatientEntity = JSON.parse(JSON.stringify(this.props.patientEntity));
     deepCopyPatientEntity = { ...deepCopyPatientEntity, ...json };
 
-    this.setState({ patientEntityStringForSend: deepCopyPatientEntity, controlFlowStage: 1 });
+    this.setState({ patientEntityStringForSend: deepCopyPatientEntity, controlFlowStage: popupFlowStage.FormComplete });
   };
 
   onChange = event => {
@@ -655,7 +668,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
 
     const { controlFlowStage } = this.state;
     let popupContent;
-    if (controlFlowStage === 1) {
+    if (controlFlowStage === popupFlowStage.FormComplete) {
       popupContent = (
         <div className="popupSmall stage1">
           <div className="handlePopupCheck">
@@ -670,7 +683,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
           </div>
         </div>
       );
-    } else if (controlFlowStage === 2) {
+    } else if (controlFlowStage === popupFlowStage.IsESign) {
       popupContent = (
         <div className="popupSmall stage2">
           <p style={{ fontWeight: 600, margin: '32px auto' }}>是否產生數位簽名？</p>
@@ -684,7 +697,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
           </div>
         </div>
       );
-    } else if (controlFlowStage === 3) {
+    } else if (controlFlowStage === popupFlowStage.SignPad) {
       popupContent = (
         <div className="popupLarge stage3">
           <p style={{ fontWeight: 600, marginTop: '27px', marginBottom: 0, fontSize: '20px' }}>簽名</p>
@@ -702,7 +715,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
           </div>
         </div>
       );
-    } else if (controlFlowStage === 4) {
+    } else if (controlFlowStage === popupFlowStage.SubmitSuccess) {
       popupContent = (
         <div className="popupSmall stage4">
           <div className="handlePopupCheck">
@@ -1464,7 +1477,7 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
           </Col>
         </Row>
         {this.state.showDino && this.renderDino()}
-        {this.state.controlFlowStage > 0 ? (
+        {this.state.controlFlowStage > popupFlowStage.Beginning ? (
           <div id="cover" className="cover" onClick={this.handlePopup}>
             {popupContent}
           </div>
@@ -1474,14 +1487,15 @@ export class Survey extends React.Component<ISurveyProps, ISurveyState> {
   }
 }
 
-const mapStateToProps = ({ patient, tag, careerOptions, marriageOptions, relationshipOptions }: IRootState) => ({
+const mapStateToProps = ({ patient, tag, careerOptions, marriageOptions, relationshipOptions, docNp }: IRootState) => ({
   patientEntity: patient.entity,
   tagList: tag.entities,
   updateSuccess: patient.updateSuccess,
   errorMessage: patient.errorMessage,
   careerOptionsEntities: careerOptions.entities,
   marriageOptionsEntities: marriageOptions.entities,
-  relationshipOptions: relationshipOptions.entities
+  relationshipOptions: relationshipOptions.entities,
+  docNPUpdateSuccess: docNp.updateSuccess
 });
 
 const mapDispatchToProps = {
@@ -1494,7 +1508,8 @@ const mapDispatchToProps = {
   getTags,
   getCareerOptions,
   getMarriageOptions,
-  getRelationshipOptions
+  getRelationshipOptions,
+  createDoc
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
