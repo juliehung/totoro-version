@@ -14,6 +14,8 @@ public class LobVM {
 
     private Instant createdDate;
 
+    private Long id;
+
     public LobVM() { }
 
     public Instant getCreatedDate() {
@@ -55,12 +57,26 @@ public class LobVM {
         this.base64 = base64;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public LobVM id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "LobVM{" +
             "contentType='" + contentType + "'" +
             ", base64=" + base64 + "'" +
             ", createdDate=" + createdDate + "'" +
+            ", id=" + id + "'" +
             "}";
     }
 }

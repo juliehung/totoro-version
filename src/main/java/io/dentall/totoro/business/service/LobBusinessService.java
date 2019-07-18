@@ -203,7 +203,8 @@ public class LobBusinessService {
         return new LobVM()
             .contentType(es.getLobContentType())
             .base64(base64)
-            .createdDate(es.getCreatedDate());
+            .createdDate(es.getCreatedDate())
+            .id(es.getId());
     }
 
     public Esign esignWrapper(Long patientId, MultipartFile file) {
