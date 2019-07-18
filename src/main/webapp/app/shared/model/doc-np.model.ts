@@ -1,6 +1,6 @@
 export interface IDocNp {
   id?: number;
-  patient?: string;
+  patient?: object;
   patientId?: number;
   esignId?: number;
 }
