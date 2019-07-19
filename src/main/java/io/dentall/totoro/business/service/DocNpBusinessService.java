@@ -5,7 +5,9 @@ import io.dentall.totoro.repository.DocNpRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -20,12 +22,24 @@ public class DocNpBusinessService {
     }
 
     @Transactional(readOnly = true)
-    public List<DocNp> findDocNp(Long patientId, Long esignId) {
+    public List<DocNp> findDocNp(Long patientId, Long esignId, boolean latest) {
+        List<DocNp> docNps;
+
         if (esignId == null) {
-            return docNpRepository.findByPatientId(patientId);
+            docNps = docNpRepository.findByPatientId(patientId);
         }else {
-            return docNpRepository.findByPatientIdAndEsignId(patientId, esignId);
+            docNps = docNpRepository.findByPatientIdAndEsignId(patientId, esignId);
         }
+
+        if (latest) {
+            return docNps
+                .stream()
+                .sorted(Comparator.comparing(DocNp::getCreatedDate).reversed())
+                .limit(1)
+                .collect(Collectors.toList());
+        }
+
+        return docNps;
     }
 
 }

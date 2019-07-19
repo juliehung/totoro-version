@@ -5,10 +5,13 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Objects;
 
@@ -19,6 +22,7 @@ import java.util.Objects;
 @Table(name = "doc_np")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+@EntityListeners(AuditingEntityListener.class)
 public class DocNp implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,6 +41,14 @@ public class DocNp implements Serializable {
 
     @Column(name = "esign_id")
     private Long esignId;
+
+    @CreatedDate
+    @Column(name = "created_date")
+    private Instant createdDate;
+
+    @CreatedBy
+    @Column(name = "created_by")
+    private String createdBy;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -85,6 +97,32 @@ public class DocNp implements Serializable {
     public void setEsignId(Long esignId) {
         this.esignId = esignId;
     }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public DocNp createdDate(Instant createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public DocNp createdBy(String createdBy) {
+        this.createdBy = createdBy;
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -114,6 +152,9 @@ public class DocNp implements Serializable {
             ", patient='" + getPatient() + "'" +
             ", patientId=" + getPatientId() +
             ", esignId=" + getEsignId() +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
+
 }
