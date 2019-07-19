@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api/business")
 public class DocNpBusinessResource {
 
-    private final Logger log = LoggerFactory.getLogger(DocNpResource.class);
+    private final Logger log = LoggerFactory.getLogger(DocNpBusinessResource.class);
 
     private DocNpBusinessService docNpBusinessService;
 
@@ -32,14 +32,12 @@ public class DocNpBusinessResource {
     @Timed
     public ResponseEntity<List<DocNp>> getDocNp(
         @RequestParam(name = "patientId") Long patientId,
-        @RequestParam(name = "esignId", required = false) Long esignId
+        @RequestParam(name = "esignId", required = false) Long esignId,
+        @RequestParam(name = "latest", required = false) boolean latest
     ) {
         log.debug("REST request to find doc np by patient id or both");
 
-        List<DocNp> vm = docNpBusinessService.findDocNp(patientId, esignId);
-        if (vm.isEmpty()) {
-            return new ResponseEntity<>(vm, HttpStatus.NOT_FOUND);
-        }
+        List<DocNp> vm = docNpBusinessService.findDocNp(patientId, esignId, latest);
 
         return new ResponseEntity<>(vm, HttpStatus.OK);
     }

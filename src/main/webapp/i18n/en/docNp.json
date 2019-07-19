@@ -17,7 +17,9 @@
       },
       "patient": "Patient",
       "patientId": "Patient Id",
-      "esignId": "Esign Id"
+      "esignId": "Esign Id",
+      "createdDate": "Created Date",
+      "createdBy": "Created By"
     }
   }
 }

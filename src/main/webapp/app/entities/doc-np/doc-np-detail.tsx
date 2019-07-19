@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -46,6 +46,20 @@ export class DocNpDetail extends React.Component<IDocNpDetailProps> {
               </span>
             </dt>
             <dd>{docNpEntity.esignId}</dd>
+            <dt>
+              <span id="createdDate">
+                <Translate contentKey="totoroApp.docNp.createdDate">Created Date</Translate>
+              </span>
+            </dt>
+            <dd>
+              <TextFormat value={docNpEntity.createdDate} type="date" format={APP_DATE_FORMAT} />
+            </dd>
+            <dt>
+              <span id="createdBy">
+                <Translate contentKey="totoroApp.docNp.createdBy">Created By</Translate>
+              </span>
+            </dt>
+            <dd>{docNpEntity.createdBy}</dd>
           </dl>
           <Button tag={Link} to="/entity/doc-np" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

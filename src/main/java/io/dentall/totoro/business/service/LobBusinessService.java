@@ -30,7 +30,7 @@ import java.util.Optional;
 @Transactional
 public class LobBusinessService {
 
-    private final Logger log = LoggerFactory.getLogger(EsignResource.class);
+    private final Logger log = LoggerFactory.getLogger(LobBusinessService.class);
 
     private final EsignQueryService esignQueryService;
 

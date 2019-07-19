@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAllAction } from 'react-jhipster';
+import { Translate, ICrudGetAllAction, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -47,6 +47,12 @@ export class DocNp extends React.Component<IDocNpProps> {
                 <th>
                   <Translate contentKey="totoroApp.docNp.esignId">Esign Id</Translate>
                 </th>
+                <th>
+                  <Translate contentKey="totoroApp.docNp.createdDate">Created Date</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.docNp.createdBy">Created By</Translate>
+                </th>
                 <th />
               </tr>
             </thead>
@@ -61,6 +67,10 @@ export class DocNp extends React.Component<IDocNpProps> {
                   <td>{docNp.patient}</td>
                   <td>{docNp.patientId}</td>
                   <td>{docNp.esignId}</td>
+                  <td>
+                    <TextFormat type="date" value={docNp.createdDate} format={APP_DATE_FORMAT} />
+                  </td>
+                  <td>{docNp.createdBy}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${docNp.id}`} color="info" size="sm">

@@ -19,7 +19,7 @@ import java.util.Optional;
 @Transactional
 public class LedgerBusinessService {
 
-    private final Logger log = LoggerFactory.getLogger(LedgerQueryService.class);
+    private final Logger log = LoggerFactory.getLogger(LedgerBusinessService.class);
 
     private final LedgerRepository ledgerRepository;
 

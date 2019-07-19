@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/business")
 public class LobBusinessResource {
-    private final Logger log = LoggerFactory.getLogger(EsignResource.class);
+    private final Logger log = LoggerFactory.getLogger(LobBusinessResource.class);
 
     private final LobBusinessService lobService;
 

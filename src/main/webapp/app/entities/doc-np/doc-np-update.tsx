@@ -43,6 +43,8 @@ export class DocNpUpdate extends React.Component<IDocNpUpdateProps, IDocNpUpdate
   }
 
   saveEntity = (event, errors, values) => {
+    values.createdDate = new Date(values.createdDate);
+
     if (errors.length === 0) {
       const { docNpEntity } = this.props;
       const entity = {
@@ -106,6 +108,24 @@ export class DocNpUpdate extends React.Component<IDocNpUpdateProps, IDocNpUpdate
                     <Translate contentKey="totoroApp.docNp.esignId">Esign Id</Translate>
                   </Label>
                   <AvField id="doc-np-esignId" type="string" className="form-control" name="esignId" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="createdDateLabel" for="createdDate">
+                    <Translate contentKey="totoroApp.docNp.createdDate">Created Date</Translate>
+                  </Label>
+                  <AvInput
+                    id="doc-np-createdDate"
+                    type="datetime-local"
+                    className="form-control"
+                    name="createdDate"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.docNpEntity.createdDate)}
+                  />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="createdByLabel" for="createdBy">
+                    <Translate contentKey="totoroApp.docNp.createdBy">Created By</Translate>
+                  </Label>
+                  <AvField id="doc-np-createdBy" type="text" name="createdBy" />
                 </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/doc-np" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
