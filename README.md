@@ -254,6 +254,11 @@ docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml 
 docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml -f src/main/docker/app-cp.yml down --rmi all
 ```
 
+## deploy to GAE
+```
+./gradlew clean appengineDeploy -Pgae -Pprod
+```
+
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0

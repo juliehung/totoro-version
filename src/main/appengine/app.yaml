@@ -1,0 +1,17 @@
+runtime: custom
+env: flex
+
+env_variables:
+    _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx512m"
+    SPRING_PROFILES_ACTIVE: "prod,embedded-postgres"
+    JAVA_OPTS: "-Dpgembed.shared_buffers=256"
+
+automatic_scaling:
+    min_num_instances: 1
+    max_num_instances: 1
+    cpu_utilization:
+        target_utilization: 0.95
+
+resources:
+    cpu: 1
+    memory_gb: 2
