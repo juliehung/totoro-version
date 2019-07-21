@@ -1,11 +1,5 @@
 import org.gradle.internal.os.OperatingSystem
 
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-
 buildscript {
     repositories {
         mavenLocal()
@@ -18,6 +12,8 @@ buildscript {
         classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2"
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
+
+        classpath 'com.google.cloud.tools:appengine-gradle-plugin:1.+' // Latest 1.x.x release
     }
 }
 
@@ -46,6 +42,7 @@ apply plugin: 'propdeps'
 apply plugin: 'com.moowork.node'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
+apply plugin: 'com.google.cloud.tools.appengine'
 
 dependencyManagement {
   imports {
@@ -73,7 +70,10 @@ task xbuild(type: Exec) {
 
 bootWar {
     mainClassName = 'io.dentall.totoro.TotoroApp'
-    archiveName = "$baseName-$branchName-$versionMajor.$versionMinor.$commitCount.$extension"
+
+    if (!project.hasProperty('gae')) {
+        archiveName = "$baseName-$branchName-$versionMajor.$versionMinor.$commitCount.$extension"
+    }
 }
 
 war {
@@ -307,3 +307,18 @@ if (project.hasProperty('nodeInstall')) {
 compileJava.dependsOn processResources
 processResources.dependsOn cleanResources,bootBuildInfo,autoGenVersion
 bootBuildInfo.mustRunAfter cleanResources
+
+appengineDeploy.doFirst {
+    File file = new File("build/staged-app/app.yaml")
+    file.append("service: $branchName\n")
+}
+
+appengine {
+
+    deploy {   // deploy configuration
+        stopPreviousVersion = true
+        promote = true
+        version = "$versionMajor-$versionMinor-$commitCount"
+    }
+
+}
