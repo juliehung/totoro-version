@@ -128,6 +128,12 @@ public class NhiMonthDeclarationDetailsQueryService extends QueryService<NhiMont
             if (criteria.getUploadTime() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getUploadTime(), NhiMonthDeclarationDetails_.uploadTime));
             }
+            if (criteria.getLocalId() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getLocalId(), NhiMonthDeclarationDetails_.localId));
+            }
+            if (criteria.getNhiId() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNhiId(), NhiMonthDeclarationDetails_.nhiId));
+            }
             if (criteria.getNhiMonthDeclarationId() != null) {
                 specification = specification.and(buildSpecification(criteria.getNhiMonthDeclarationId(),
                     root -> root.join(NhiMonthDeclarationDetails_.nhiMonthDeclaration, JoinType.LEFT).get(NhiMonthDeclaration_.id)));

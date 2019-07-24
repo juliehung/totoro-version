@@ -61,6 +61,14 @@
         {
             "fieldName": "uploadTime",
             "fieldType": "Instant"
+        },
+        {
+            "fieldName": "localId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nhiId",
+            "fieldType": "String"
         }
     ],
     "relationships": [

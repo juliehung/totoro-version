@@ -75,6 +75,12 @@ public class NhiMonthDeclarationDetails implements Serializable {
     @Column(name = "upload_time")
     private Instant uploadTime;
 
+    @Column(name = "local_id")
+    private String localId;
+
+    @Column(name = "nhi_id")
+    private String nhiId;
+
     @ManyToOne
     @JsonProperty(access = WRITE_ONLY)
     private NhiMonthDeclaration nhiMonthDeclaration;
@@ -283,6 +289,32 @@ public class NhiMonthDeclarationDetails implements Serializable {
         this.uploadTime = uploadTime;
     }
 
+    public String getLocalId() {
+        return localId;
+    }
+
+    public NhiMonthDeclarationDetails localId(String localId) {
+        this.localId = localId;
+        return this;
+    }
+
+    public void setLocalId(String localId) {
+        this.localId = localId;
+    }
+
+    public String getNhiId() {
+        return nhiId;
+    }
+
+    public NhiMonthDeclarationDetails nhiId(String nhiId) {
+        this.nhiId = nhiId;
+        return this;
+    }
+
+    public void setNhiId(String nhiId) {
+        this.nhiId = nhiId;
+    }
+
     public NhiMonthDeclaration getNhiMonthDeclaration() {
         return nhiMonthDeclaration;
     }
@@ -336,6 +368,8 @@ public class NhiMonthDeclarationDetails implements Serializable {
             ", partialPointTotal=" + getPartialPointTotal() +
             ", file='" + getFile() + "'" +
             ", uploadTime='" + getUploadTime() + "'" +
+            ", localId='" + getLocalId() + "'" +
+            ", nhiId='" + getNhiId() + "'" +
             "}";
     }
 }
