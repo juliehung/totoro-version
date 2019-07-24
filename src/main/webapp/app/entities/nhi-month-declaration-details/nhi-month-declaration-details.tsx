@@ -86,6 +86,12 @@ export class NhiMonthDeclarationDetails extends React.Component<INhiMonthDeclara
                   <Translate contentKey="totoroApp.nhiMonthDeclarationDetails.uploadTime">Upload Time</Translate>
                 </th>
                 <th>
+                  <Translate contentKey="totoroApp.nhiMonthDeclarationDetails.localId">Local Id</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.nhiMonthDeclarationDetails.nhiId">Nhi Id</Translate>
+                </th>
+                <th>
                   <Translate contentKey="totoroApp.nhiMonthDeclarationDetails.nhiMonthDeclaration">Nhi Month Declaration</Translate>
                 </th>
                 <th />
@@ -118,6 +124,8 @@ export class NhiMonthDeclarationDetails extends React.Component<INhiMonthDeclara
                   <td>
                     <TextFormat type="date" value={nhiMonthDeclarationDetails.uploadTime} format={APP_DATE_FORMAT} />
                   </td>
+                  <td>{nhiMonthDeclarationDetails.localId}</td>
+                  <td>{nhiMonthDeclarationDetails.nhiId}</td>
                   <td>
                     {nhiMonthDeclarationDetails.nhiMonthDeclaration ? (
                       <Link to={`nhi-month-declaration/${nhiMonthDeclarationDetails.nhiMonthDeclaration.id}`}>

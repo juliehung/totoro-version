@@ -23,6 +23,8 @@ export interface INhiMonthDeclarationDetails {
   partialPointTotal?: number;
   file?: string;
   uploadTime?: Moment;
+  localId?: string;
+  nhiId?: string;
   nhiMonthDeclaration?: INhiMonthDeclaration;
 }
 

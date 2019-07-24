@@ -122,6 +122,18 @@ export class NhiMonthDeclarationDetailsDetail extends React.Component<INhiMonthD
               <TextFormat value={nhiMonthDeclarationDetailsEntity.uploadTime} type="date" format={APP_DATE_FORMAT} />
             </dd>
             <dt>
+              <span id="localId">
+                <Translate contentKey="totoroApp.nhiMonthDeclarationDetails.localId">Local Id</Translate>
+              </span>
+            </dt>
+            <dd>{nhiMonthDeclarationDetailsEntity.localId}</dd>
+            <dt>
+              <span id="nhiId">
+                <Translate contentKey="totoroApp.nhiMonthDeclarationDetails.nhiId">Nhi Id</Translate>
+              </span>
+            </dt>
+            <dd>{nhiMonthDeclarationDetailsEntity.nhiId}</dd>
+            <dt>
               <Translate contentKey="totoroApp.nhiMonthDeclarationDetails.nhiMonthDeclaration">Nhi Month Declaration</Translate>
             </dt>
             <dd>{nhiMonthDeclarationDetailsEntity.nhiMonthDeclaration ? nhiMonthDeclarationDetailsEntity.nhiMonthDeclaration.id : ''}</dd>

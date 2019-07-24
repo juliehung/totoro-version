@@ -92,6 +92,12 @@ public class NhiMonthDeclarationDetailsResourceIntTest {
     private static final Instant DEFAULT_UPLOAD_TIME = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_UPLOAD_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final String DEFAULT_LOCAL_ID = "AAAAAAAAAA";
+    private static final String UPDATED_LOCAL_ID = "BBBBBBBBBB";
+
+    private static final String DEFAULT_NHI_ID = "AAAAAAAAAA";
+    private static final String UPDATED_NHI_ID = "BBBBBBBBBB";
+
     @Autowired
     private NhiMonthDeclarationDetailsRepository nhiMonthDeclarationDetailsRepository;
 
@@ -154,7 +160,9 @@ public class NhiMonthDeclarationDetailsResourceIntTest {
             .partialCaseTotal(DEFAULT_PARTIAL_CASE_TOTAL)
             .partialPointTotal(DEFAULT_PARTIAL_POINT_TOTAL)
             .file(DEFAULT_FILE)
-            .uploadTime(DEFAULT_UPLOAD_TIME);
+            .uploadTime(DEFAULT_UPLOAD_TIME)
+            .localId(DEFAULT_LOCAL_ID)
+            .nhiId(DEFAULT_NHI_ID);
         return nhiMonthDeclarationDetails;
     }
 
@@ -193,6 +201,8 @@ public class NhiMonthDeclarationDetailsResourceIntTest {
         assertThat(testNhiMonthDeclarationDetails.getPartialPointTotal()).isEqualTo(DEFAULT_PARTIAL_POINT_TOTAL);
         assertThat(testNhiMonthDeclarationDetails.getFile()).isEqualTo(DEFAULT_FILE);
         assertThat(testNhiMonthDeclarationDetails.getUploadTime()).isEqualTo(DEFAULT_UPLOAD_TIME);
+        assertThat(testNhiMonthDeclarationDetails.getLocalId()).isEqualTo(DEFAULT_LOCAL_ID);
+        assertThat(testNhiMonthDeclarationDetails.getNhiId()).isEqualTo(DEFAULT_NHI_ID);
     }
 
     @Test
@@ -239,7 +249,9 @@ public class NhiMonthDeclarationDetailsResourceIntTest {
             .andExpect(jsonPath("$.[*].partialCaseTotal").value(hasItem(DEFAULT_PARTIAL_CASE_TOTAL)))
             .andExpect(jsonPath("$.[*].partialPointTotal").value(hasItem(DEFAULT_PARTIAL_POINT_TOTAL)))
             .andExpect(jsonPath("$.[*].file").value(hasItem(DEFAULT_FILE.toString())))
-            .andExpect(jsonPath("$.[*].uploadTime").value(hasItem(DEFAULT_UPLOAD_TIME.toString())));
+            .andExpect(jsonPath("$.[*].uploadTime").value(hasItem(DEFAULT_UPLOAD_TIME.toString())))
+            .andExpect(jsonPath("$.[*].localId").value(hasItem(DEFAULT_LOCAL_ID.toString())))
+            .andExpect(jsonPath("$.[*].nhiId").value(hasItem(DEFAULT_NHI_ID.toString())));
     }
     
     @Test
@@ -267,7 +279,9 @@ public class NhiMonthDeclarationDetailsResourceIntTest {
             .andExpect(jsonPath("$.partialCaseTotal").value(DEFAULT_PARTIAL_CASE_TOTAL))
             .andExpect(jsonPath("$.partialPointTotal").value(DEFAULT_PARTIAL_POINT_TOTAL))
             .andExpect(jsonPath("$.file").value(DEFAULT_FILE.toString()))
-            .andExpect(jsonPath("$.uploadTime").value(DEFAULT_UPLOAD_TIME.toString()));
+            .andExpect(jsonPath("$.uploadTime").value(DEFAULT_UPLOAD_TIME.toString()))
+            .andExpect(jsonPath("$.localId").value(DEFAULT_LOCAL_ID.toString()))
+            .andExpect(jsonPath("$.nhiId").value(DEFAULT_NHI_ID.toString()));
     }
 
     @Test
@@ -1154,6 +1168,84 @@ public class NhiMonthDeclarationDetailsResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllNhiMonthDeclarationDetailsByLocalIdIsEqualToSomething() throws Exception {
+        // Initialize the database
+        nhiMonthDeclarationDetailsRepository.saveAndFlush(nhiMonthDeclarationDetails);
+
+        // Get all the nhiMonthDeclarationDetailsList where localId equals to DEFAULT_LOCAL_ID
+        defaultNhiMonthDeclarationDetailsShouldBeFound("localId.equals=" + DEFAULT_LOCAL_ID);
+
+        // Get all the nhiMonthDeclarationDetailsList where localId equals to UPDATED_LOCAL_ID
+        defaultNhiMonthDeclarationDetailsShouldNotBeFound("localId.equals=" + UPDATED_LOCAL_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiMonthDeclarationDetailsByLocalIdIsInShouldWork() throws Exception {
+        // Initialize the database
+        nhiMonthDeclarationDetailsRepository.saveAndFlush(nhiMonthDeclarationDetails);
+
+        // Get all the nhiMonthDeclarationDetailsList where localId in DEFAULT_LOCAL_ID or UPDATED_LOCAL_ID
+        defaultNhiMonthDeclarationDetailsShouldBeFound("localId.in=" + DEFAULT_LOCAL_ID + "," + UPDATED_LOCAL_ID);
+
+        // Get all the nhiMonthDeclarationDetailsList where localId equals to UPDATED_LOCAL_ID
+        defaultNhiMonthDeclarationDetailsShouldNotBeFound("localId.in=" + UPDATED_LOCAL_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiMonthDeclarationDetailsByLocalIdIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        nhiMonthDeclarationDetailsRepository.saveAndFlush(nhiMonthDeclarationDetails);
+
+        // Get all the nhiMonthDeclarationDetailsList where localId is not null
+        defaultNhiMonthDeclarationDetailsShouldBeFound("localId.specified=true");
+
+        // Get all the nhiMonthDeclarationDetailsList where localId is null
+        defaultNhiMonthDeclarationDetailsShouldNotBeFound("localId.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiMonthDeclarationDetailsByNhiIdIsEqualToSomething() throws Exception {
+        // Initialize the database
+        nhiMonthDeclarationDetailsRepository.saveAndFlush(nhiMonthDeclarationDetails);
+
+        // Get all the nhiMonthDeclarationDetailsList where nhiId equals to DEFAULT_NHI_ID
+        defaultNhiMonthDeclarationDetailsShouldBeFound("nhiId.equals=" + DEFAULT_NHI_ID);
+
+        // Get all the nhiMonthDeclarationDetailsList where nhiId equals to UPDATED_NHI_ID
+        defaultNhiMonthDeclarationDetailsShouldNotBeFound("nhiId.equals=" + UPDATED_NHI_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiMonthDeclarationDetailsByNhiIdIsInShouldWork() throws Exception {
+        // Initialize the database
+        nhiMonthDeclarationDetailsRepository.saveAndFlush(nhiMonthDeclarationDetails);
+
+        // Get all the nhiMonthDeclarationDetailsList where nhiId in DEFAULT_NHI_ID or UPDATED_NHI_ID
+        defaultNhiMonthDeclarationDetailsShouldBeFound("nhiId.in=" + DEFAULT_NHI_ID + "," + UPDATED_NHI_ID);
+
+        // Get all the nhiMonthDeclarationDetailsList where nhiId equals to UPDATED_NHI_ID
+        defaultNhiMonthDeclarationDetailsShouldNotBeFound("nhiId.in=" + UPDATED_NHI_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiMonthDeclarationDetailsByNhiIdIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        nhiMonthDeclarationDetailsRepository.saveAndFlush(nhiMonthDeclarationDetails);
+
+        // Get all the nhiMonthDeclarationDetailsList where nhiId is not null
+        defaultNhiMonthDeclarationDetailsShouldBeFound("nhiId.specified=true");
+
+        // Get all the nhiMonthDeclarationDetailsList where nhiId is null
+        defaultNhiMonthDeclarationDetailsShouldNotBeFound("nhiId.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllNhiMonthDeclarationDetailsByNhiMonthDeclarationIsEqualToSomething() throws Exception {
         // Initialize the database
         NhiMonthDeclaration nhiMonthDeclaration = NhiMonthDeclarationResourceIntTest.createEntity(em);
@@ -1192,7 +1284,9 @@ public class NhiMonthDeclarationDetailsResourceIntTest {
             .andExpect(jsonPath("$.[*].partialCaseTotal").value(hasItem(DEFAULT_PARTIAL_CASE_TOTAL)))
             .andExpect(jsonPath("$.[*].partialPointTotal").value(hasItem(DEFAULT_PARTIAL_POINT_TOTAL)))
             .andExpect(jsonPath("$.[*].file").value(hasItem(DEFAULT_FILE.toString())))
-            .andExpect(jsonPath("$.[*].uploadTime").value(hasItem(DEFAULT_UPLOAD_TIME.toString())));
+            .andExpect(jsonPath("$.[*].uploadTime").value(hasItem(DEFAULT_UPLOAD_TIME.toString())))
+            .andExpect(jsonPath("$.[*].localId").value(hasItem(DEFAULT_LOCAL_ID.toString())))
+            .andExpect(jsonPath("$.[*].nhiId").value(hasItem(DEFAULT_NHI_ID.toString())));
 
         // Check, that the count call also returns 1
         restNhiMonthDeclarationDetailsMockMvc.perform(get("/api/nhi-month-declaration-details/count?sort=id,desc&" + filter))
@@ -1254,7 +1348,9 @@ public class NhiMonthDeclarationDetailsResourceIntTest {
             .partialCaseTotal(UPDATED_PARTIAL_CASE_TOTAL)
             .partialPointTotal(UPDATED_PARTIAL_POINT_TOTAL)
             .file(UPDATED_FILE)
-            .uploadTime(UPDATED_UPLOAD_TIME);
+            .uploadTime(UPDATED_UPLOAD_TIME)
+            .localId(UPDATED_LOCAL_ID)
+            .nhiId(UPDATED_NHI_ID);
 
         restNhiMonthDeclarationDetailsMockMvc.perform(put("/api/nhi-month-declaration-details")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -1280,6 +1376,8 @@ public class NhiMonthDeclarationDetailsResourceIntTest {
         assertThat(testNhiMonthDeclarationDetails.getPartialPointTotal()).isEqualTo(UPDATED_PARTIAL_POINT_TOTAL);
         assertThat(testNhiMonthDeclarationDetails.getFile()).isEqualTo(UPDATED_FILE);
         assertThat(testNhiMonthDeclarationDetails.getUploadTime()).isEqualTo(UPDATED_UPLOAD_TIME);
+        assertThat(testNhiMonthDeclarationDetails.getLocalId()).isEqualTo(UPDATED_LOCAL_ID);
+        assertThat(testNhiMonthDeclarationDetails.getNhiId()).isEqualTo(UPDATED_NHI_ID);
     }
 
     @Test

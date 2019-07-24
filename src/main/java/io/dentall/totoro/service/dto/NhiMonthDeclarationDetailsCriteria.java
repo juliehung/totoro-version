@@ -63,6 +63,10 @@ public class NhiMonthDeclarationDetailsCriteria implements Serializable {
 
     private LongFilter nhiMonthDeclarationId;
 
+    private StringFilter localId;
+
+    private StringFilter nhiId;
+
     public LongFilter getId() {
         return id;
     }
@@ -191,6 +195,22 @@ public class NhiMonthDeclarationDetailsCriteria implements Serializable {
         this.uploadTime = uploadTime;
     }
 
+    public StringFilter getLocalId() {
+        return localId;
+    }
+
+    public void setLocalId(StringFilter localId) {
+        this.localId = localId;
+    }
+
+    public StringFilter getNhiId() {
+        return nhiId;
+    }
+
+    public void setNhiId(StringFilter nhiId) {
+        this.nhiId = nhiId;
+    }
+
     public LongFilter getNhiMonthDeclarationId() {
         return nhiMonthDeclarationId;
     }
@@ -209,8 +229,7 @@ public class NhiMonthDeclarationDetailsCriteria implements Serializable {
             return false;
         }
         final NhiMonthDeclarationDetailsCriteria that = (NhiMonthDeclarationDetailsCriteria) o;
-        return
-            Objects.equals(id, that.id) &&
+        return Objects.equals(id, that.id) &&
             Objects.equals(type, that.type) &&
             Objects.equals(way, that.way) &&
             Objects.equals(caseTotal, that.caseTotal) &&
@@ -226,52 +245,58 @@ public class NhiMonthDeclarationDetailsCriteria implements Serializable {
             Objects.equals(partialPointTotal, that.partialPointTotal) &&
             Objects.equals(file, that.file) &&
             Objects.equals(uploadTime, that.uploadTime) &&
+            Objects.equals(localId, that.localId) &&
+            Objects.equals(nhiId, that.nhiId) &&
             Objects.equals(nhiMonthDeclarationId, that.nhiMonthDeclarationId);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-        id,
-        type,
-        way,
-        caseTotal,
-        pointTotal,
-        outPatientPoint,
-        preventiveCaseTotal,
-        preventivePointTotal,
-        generalCaseTotal,
-        generalPointTotal,
-        professionalCaseTotal,
-        professionalPointTotal,
-        partialCaseTotal,
-        partialPointTotal,
-        file,
-        uploadTime,
-        nhiMonthDeclarationId
+            id,
+            type,
+            way,
+            caseTotal,
+            pointTotal,
+            outPatientPoint,
+            preventiveCaseTotal,
+            preventivePointTotal,
+            generalCaseTotal,
+            generalPointTotal,
+            professionalCaseTotal,
+            professionalPointTotal,
+            partialCaseTotal,
+            partialPointTotal,
+            file,
+            uploadTime,
+            localId,
+            nhiId,
+            nhiMonthDeclarationId
         );
     }
 
     @Override
     public String toString() {
         return "NhiMonthDeclarationDetailsCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (type != null ? "type=" + type + ", " : "") +
-                (way != null ? "way=" + way + ", " : "") +
-                (caseTotal != null ? "caseTotal=" + caseTotal + ", " : "") +
-                (pointTotal != null ? "pointTotal=" + pointTotal + ", " : "") +
-                (outPatientPoint != null ? "outPatientPoint=" + outPatientPoint + ", " : "") +
-                (preventiveCaseTotal != null ? "preventiveCaseTotal=" + preventiveCaseTotal + ", " : "") +
-                (preventivePointTotal != null ? "preventivePointTotal=" + preventivePointTotal + ", " : "") +
-                (generalCaseTotal != null ? "generalCaseTotal=" + generalCaseTotal + ", " : "") +
-                (generalPointTotal != null ? "generalPointTotal=" + generalPointTotal + ", " : "") +
-                (professionalCaseTotal != null ? "professionalCaseTotal=" + professionalCaseTotal + ", " : "") +
-                (professionalPointTotal != null ? "professionalPointTotal=" + professionalPointTotal + ", " : "") +
-                (partialCaseTotal != null ? "partialCaseTotal=" + partialCaseTotal + ", " : "") +
-                (partialPointTotal != null ? "partialPointTotal=" + partialPointTotal + ", " : "") +
-                (file != null ? "file=" + file + ", " : "") +
-                (uploadTime != null ? "uploadTime=" + uploadTime + ", " : "") +
-                (nhiMonthDeclarationId != null ? "nhiMonthDeclarationId=" + nhiMonthDeclarationId + ", " : "") +
+            (id != null ? "id=" + id + ", " : "") +
+            (type != null ? "type=" + type + ", " : "") +
+            (way != null ? "way=" + way + ", " : "") +
+            (caseTotal != null ? "caseTotal=" + caseTotal + ", " : "") +
+            (pointTotal != null ? "pointTotal=" + pointTotal + ", " : "") +
+            (outPatientPoint != null ? "outPatientPoint=" + outPatientPoint + ", " : "") +
+            (preventiveCaseTotal != null ? "preventiveCaseTotal=" + preventiveCaseTotal + ", " : "") +
+            (preventivePointTotal != null ? "preventivePointTotal=" + preventivePointTotal + ", " : "") +
+            (generalCaseTotal != null ? "generalCaseTotal=" + generalCaseTotal + ", " : "") +
+            (generalPointTotal != null ? "generalPointTotal=" + generalPointTotal + ", " : "") +
+            (professionalCaseTotal != null ? "professionalCaseTotal=" + professionalCaseTotal + ", " : "") +
+            (professionalPointTotal != null ? "professionalPointTotal=" + professionalPointTotal + ", " : "") +
+            (partialCaseTotal != null ? "partialCaseTotal=" + partialCaseTotal + ", " : "") +
+            (partialPointTotal != null ? "partialPointTotal=" + partialPointTotal + ", " : "") +
+            (file != null ? "file=" + file + ", " : "") +
+            (uploadTime != null ? "uploadTime=" + uploadTime + ", " : "") +
+            (localId != null ? "localId=" + localId + ", " : "") +
+            (nhiId != null ? "nhiId=" + nhiId + ", " : "") +
+            (nhiMonthDeclarationId != null ? "nhiMonthDeclarationId=" + nhiMonthDeclarationId + ", " : "") +
             "}";
     }
 

@@ -30,6 +30,8 @@
       "partialPointTotal": "Partial Point Total",
       "file": "File",
       "uploadTime": "Upload Time",
+      "localId": "Local Id",
+      "nhiId": "Nhi Id",
       "nhiMonthDeclaration": "Nhi Month Declaration"
     }
   }

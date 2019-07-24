@@ -257,6 +257,18 @@ export class NhiMonthDeclarationDetailsUpdate extends React.Component<
                   />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="localIdLabel" for="localId">
+                    <Translate contentKey="totoroApp.nhiMonthDeclarationDetails.localId">Local Id</Translate>
+                  </Label>
+                  <AvField id="nhi-month-declaration-details-localId" type="text" name="localId" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="nhiIdLabel" for="nhiId">
+                    <Translate contentKey="totoroApp.nhiMonthDeclarationDetails.nhiId">Nhi Id</Translate>
+                  </Label>
+                  <AvField id="nhi-month-declaration-details-nhiId" type="text" name="nhiId" />
+                </AvGroup>
+                <AvGroup>
                   <Label for="nhiMonthDeclaration.id">
                     <Translate contentKey="totoroApp.nhiMonthDeclarationDetails.nhiMonthDeclaration">Nhi Month Declaration</Translate>
                   </Label>
