@@ -81,6 +81,8 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
         title = '新病患列表';
       } else if (tmp === '/survey') {
         title = '門診病歷表';
+      } else if (tmp === '/registration') {
+        title = '就診列表';
       }
     }
 
