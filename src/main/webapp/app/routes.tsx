@@ -10,6 +10,7 @@ import PasswordResetFinish from 'app/modules/account/password-reset/finish/passw
 import Logout from 'app/modules/login/logout';
 import Survey from 'app/modules/survey/survey';
 import PatientList from 'app/modules/patient-list/patient-list';
+import Registration from 'app/modules/registration/registration';
 import Entities from 'app/entities';
 import PrivateRoute from 'app/shared/auth/private-route';
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
@@ -41,6 +42,7 @@ const Routes = () => (
       <PrivateRoute path="/entity" component={Entities} hasAnyAuthorities={[AUTHORITIES.USER]} />
       <PrivateRoute path="/survey" component={Survey} />
       <PrivateRoute path="/list" component={PatientList} />
+      <PrivateRoute path="/registration" component={Registration} />
       <ErrorBoundaryRoute path="/" component={Login} />
     </Switch>
   </div>

@@ -23,6 +23,7 @@ export interface IAppointment {
   patient?: IPatient;
   registration?: IRegistration;
   treatmentProcedures?: ITreatmentProcedure[];
+  doctor?: any;
 }
 
 export const defaultValue: Readonly<IAppointment> = {
