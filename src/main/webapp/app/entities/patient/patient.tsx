@@ -160,6 +160,10 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 <th className="hand" onClick={this.sort('marriage')}>
                   <Translate contentKey="totoroApp.patient.marriage">Marriage</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('teethGraphPermanentSwitch')}>
+                  <Translate contentKey="totoroApp.patient.teethGraphPermanentSwitch">Teeth Graph Permanent Switch</Translate>{' '}
+                  <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -168,9 +172,6 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                 </th>
                 <th>
                   <Translate contentKey="totoroApp.patient.patientIdentity">Patient Identity</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th>
-                  <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -234,6 +235,7 @@ export class Patient extends React.Component<IPatientProps, IPatientState> {
                   <td>{patient.mainNoticeChannel}</td>
                   <td>{patient.career}</td>
                   <td>{patient.marriage}</td>
+                  <td>{patient.teethGraphPermanentSwitch}</td>
                   <td>
                     {patient.questionnaire ? <Link to={`questionnaire/${patient.questionnaire.id}`}>{patient.questionnaire.id}</Link> : ''}
                   </td>

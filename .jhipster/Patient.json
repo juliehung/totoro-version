@@ -204,16 +204,20 @@
             "fieldType": "String"
         },
         {
-          "fieldName": "mainNoticeChannel",
-          "fieldType": "String"
+            "fieldName": "mainNoticeChannel",
+            "fieldType": "String"
         },
         {
-          "fieldName": "career",
-          "fieldType": "String"
+            "fieldName": "career",
+            "fieldType": "String"
         },
         {
-          "fieldName": "marriage",
-          "fieldType": "String"
+            "fieldName": "marriage",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "teethGraphPermanentSwitch",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20181019094007",

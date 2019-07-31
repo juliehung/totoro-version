@@ -398,6 +398,12 @@ export class PatientUpdate extends React.Component<IPatientUpdateProps, IPatient
                   <AvField id="patient-marriage" type="text" name="marriage" />
                 </AvGroup>
                 <AvGroup>
+                  <Label id="teethGraphPermanentSwitchLabel" for="teethGraphPermanentSwitch">
+                    <Translate contentKey="totoroApp.patient.teethGraphPermanentSwitch">Teeth Graph Permanent Switch</Translate>
+                  </Label>
+                  <AvField id="patient-teethGraphPermanentSwitch" type="text" name="teethGraphPermanentSwitch" />
+                </AvGroup>
+                <AvGroup>
                   <Label for="questionnaire.id">
                     <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate>
                   </Label>

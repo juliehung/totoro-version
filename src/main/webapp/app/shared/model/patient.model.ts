@@ -54,6 +54,8 @@ export interface IPatient {
   mainNoticeChannel?: string;
   career?: string;
   marriage?: string;
+  teethGraphPermanentSwitch?: string;
+  questionnaire?: IQuestionnaire;
   appointments?: IAppointment[];
   introducer?: IPatient;
   parents?: IPatient[];
@@ -65,7 +67,6 @@ export interface IPatient {
   treatments?: ITreatment[];
   todos?: ITodo[];
   teeth?: ITooth[];
-  questionnaire?: IQuestionnaire;
 }
 
 export const defaultValue: Readonly<IPatient> = {
