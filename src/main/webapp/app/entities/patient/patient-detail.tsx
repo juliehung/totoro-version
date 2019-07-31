@@ -210,6 +210,12 @@ export class PatientDetail extends React.Component<IPatientDetailProps> {
             </dt>
             <dd>{patientEntity.marriage}</dd>
             <dt>
+              <span id="teethGraphPermanentSwitch">
+                <Translate contentKey="totoroApp.patient.teethGraphPermanentSwitch">Teeth Graph Permanent Switch</Translate>
+              </span>
+            </dt>
+            <dd>{patientEntity.teethGraphPermanentSwitch}</dd>
+            <dt>
               <Translate contentKey="totoroApp.patient.questionnaire">Questionnaire</Translate>
             </dt>
             <dd>{patientEntity.questionnaire ? patientEntity.questionnaire.id : ''}</dd>

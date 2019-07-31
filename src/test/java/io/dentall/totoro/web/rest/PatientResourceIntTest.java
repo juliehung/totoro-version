@@ -137,6 +137,9 @@ public class PatientResourceIntTest {
     private static final String DEFAULT_MAIN_NOTICE_CHANNEL = "AAAAAAAAAA";
     private static final String UPDATED_MAIN_NOTICE_CHANNEL = "BBBBBBBBBB";
 
+    private static final String DEFAULT_TEETH_GRAPH_PERMANENT_SWITCH = "AAAAAAAAAA";
+    private static final String UPDATED_TEETH_GRAPH_PERMANENT_SWITCH = "BBBBBBBBBB";
+
     @Autowired
     private PatientRepository patientRepository;
 
@@ -229,6 +232,7 @@ public class PatientResourceIntTest {
             .career(DEFAULT_CAREER)
             .marriage(DEFAULT_MARRIAGE)
             .mainNoticeChannel(DEFAULT_MAIN_NOTICE_CHANNEL)
+            .teethGraphPermanentSwitch(DEFAULT_TEETH_GRAPH_PERMANENT_SWITCH)
             .tags(new HashSet<>());
         return patient;
     }
@@ -299,6 +303,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getCareer()).isEqualTo(DEFAULT_CAREER);
         assertThat(testPatient.getMarriage()).isEqualTo(DEFAULT_MARRIAGE);
         assertThat(testPatient.getMainNoticeChannel()).isEqualTo(DEFAULT_MAIN_NOTICE_CHANNEL);
+        assertThat(testPatient.getTeethGraphPermanentSwitch()).isEqualTo(DEFAULT_TEETH_GRAPH_PERMANENT_SWITCH);
         tagRepository.findById(TagName.Hypertension.getValue()).ifPresent(tag -> assertThat(testPatient.getTags()).contains(tag));
     }
 
@@ -391,6 +396,7 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.[*].fbId").value(hasItem(DEFAULT_FB_ID.toString())))
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].clinicNote").value(hasItem(DEFAULT_CLINIC_NOTE.toString())))
+            .andExpect(jsonPath("$.[*].teethGraphPermanentSwitch").value(hasItem(DEFAULT_TEETH_GRAPH_PERMANENT_SWITCH.toString())))
             .andExpect(jsonPath("$.[*].writeIcTime").value(hasItem(DEFAULT_WRITE_IC_TIME.toString())));
     }
 
@@ -428,6 +434,7 @@ public class PatientResourceIntTest {
             .andExpect(jsonPath("$.fbId").value(DEFAULT_FB_ID.toString()))
             .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
             .andExpect(jsonPath("$.clinicNote").value(DEFAULT_CLINIC_NOTE.toString()))
+            .andExpect(jsonPath("$.teethGraphPermanentSwitch").value(DEFAULT_TEETH_GRAPH_PERMANENT_SWITCH.toString()))
             .andExpect(jsonPath("$.writeIcTime").value(DEFAULT_WRITE_IC_TIME.toString()));
     }
 
@@ -479,6 +486,7 @@ public class PatientResourceIntTest {
             .fbId(UPDATED_FB_ID)
             .note(UPDATED_NOTE)
             .clinicNote(UPDATED_CLINIC_NOTE)
+            .teethGraphPermanentSwitch(UPDATED_TEETH_GRAPH_PERMANENT_SWITCH)
             .writeIcTime(UPDATED_WRITE_IC_TIME);
         updatedPatient.setPatientIdentity(updatePatientIdentity);
 
@@ -514,6 +522,7 @@ public class PatientResourceIntTest {
         assertThat(testPatient.getFbId()).isEqualTo(UPDATED_FB_ID);
         assertThat(testPatient.getNote()).isEqualTo(UPDATED_NOTE);
         assertThat(testPatient.getClinicNote()).isEqualTo(UPDATED_CLINIC_NOTE);
+        assertThat(testPatient.getTeethGraphPermanentSwitch()).isEqualTo(UPDATED_TEETH_GRAPH_PERMANENT_SWITCH);
         assertThat(testPatient.getWriteIcTime()).isEqualTo(UPDATED_WRITE_IC_TIME);
         assertThat(testPatient.getPatientIdentity().getCode()).isEqualTo(updatePatientIdentity.getCode());
     }

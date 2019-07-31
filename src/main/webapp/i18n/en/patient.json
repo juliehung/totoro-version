@@ -42,6 +42,7 @@
       "mainNoticeChannel": "Main Notice Channel",
       "career": "Career",
       "marriage": "Marriage",
+      "teethGraphPermanentSwitch": "Teeth Graph Permanent Switch",
       "questionnaire": "Questionnaire",
       "appointment": "Appointment",
       "introducer": "Introducer",
@@ -53,8 +54,7 @@
       "patientIdentity": "Patient Identity",
       "treatment": "Treatment",
       "todo": "Todo",
-      "tooth": "Tooth",
-      "questionnaire": "Questionnaire"
+      "tooth": "Tooth"
     }
   }
 }

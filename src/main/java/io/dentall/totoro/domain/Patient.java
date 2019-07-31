@@ -3,22 +3,20 @@ package io.dentall.totoro.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dentall.totoro.domain.enumeration.Blood;
+import io.dentall.totoro.domain.enumeration.Gender;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
-
-import io.dentall.totoro.domain.enumeration.Gender;
-
-import io.dentall.totoro.domain.enumeration.Blood;
+import java.util.Set;
 
 /**
  * A Patient.
@@ -127,6 +125,9 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
 
     @Column(name = "new_patient")
     private Boolean newPatient;
+
+    @Column(name = "teeth_graph_permanent_switch")
+    private String teethGraphPermanentSwitch;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
@@ -856,6 +857,19 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.marriage = marriage;
     }
 
+    public String getTeethGraphPermanentSwitch() {
+        return teethGraphPermanentSwitch;
+    }
+
+    public Patient teethGraphPermanentSwitch(String teethGraphPermanentSwitch) {
+        this.teethGraphPermanentSwitch = teethGraphPermanentSwitch;
+        return this;
+    }
+
+    public void setTeethGraphPermanentSwitch(String teethGraphPermanentSwitch) {
+        this.teethGraphPermanentSwitch = teethGraphPermanentSwitch;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -907,6 +921,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
             ", mainNoticeChannel='" + getMainNoticeChannel() + "'" +
             ", career='" + getCareer() + "'" +
             ", marriage='" + getMarriage() + "'" +
+            ", permanent='" + getTeethGraphPermanentSwitch() + "'" +
             "}";
     }
 }
