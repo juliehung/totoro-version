@@ -51,6 +51,8 @@ public class PatientBusinessService {
                 .stream()
                 .collect(Collectors.joining("")));
 
+        patientService.update(patient);
+
         return getTeethGraphConfig(patient);
     }
 
