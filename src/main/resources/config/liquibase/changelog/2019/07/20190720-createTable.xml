@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190720-CreateTable" author="Jim">
+
+        <createTable tableName="todo_treatment_procedure">
+            <column name="treatment_procedures_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="todos_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="todos_id, treatment_procedures_id" tableName="todo_treatment_procedure"/>
+
+    </changeSet>
+</databaseChangeLog>

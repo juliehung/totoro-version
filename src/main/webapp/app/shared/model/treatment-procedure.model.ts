@@ -32,7 +32,7 @@ export interface ITreatmentProcedure {
   procedure?: IProcedure;
   appointment?: IAppointment;
   teeth?: ITooth[];
-  todo?: ITodo;
+  todos?: ITodo[];
   disposal?: IDisposal;
 }
 

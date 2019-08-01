@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -41,21 +42,7 @@ public class RelationshipService {
 
     private final TreatmentPlanService treatmentPlanService;
 
-    static Predicate<TreatmentProcedure> isDeletable = treatmentProcedure -> {
-        if (treatmentProcedure.getProcedure() == null && treatmentProcedure.getNhiProcedure() == null) {
-            return true;
-        }
-
-        if (treatmentProcedure.getProcedure() != null && StringUtils.isBlank(treatmentProcedure.getProcedure().getContent())) {
-            return true;
-        }
-
-        if (treatmentProcedure.getNhiProcedure() != null && StringUtils.isBlank(treatmentProcedure.getNhiProcedure().getCode())) {
-            return true;
-        }
-
-        return false;
-    };
+    private final TodoService todoService;
 
     public RelationshipService(
         @Lazy TreatmentProcedureService treatmentProcedureService,
@@ -67,7 +54,8 @@ public class RelationshipService {
         NhiExtendTreatmentDrugService nhiExtendTreatmentDrugService,
         @Lazy NhiDayUploadDetailsService nhiDayUploadDetailsService,
         NhiMedicalRecordService nhiMedicalRecordService,
-        @Lazy TreatmentPlanService treatmentPlanService
+        @Lazy TreatmentPlanService treatmentPlanService,
+        @Lazy TodoService todoService
     ) {
         this.treatmentProcedureService = treatmentProcedureService;
         this.treatmentTaskService = treatmentTaskService;
@@ -79,6 +67,7 @@ public class RelationshipService {
         this.nhiDayUploadDetailsService = nhiDayUploadDetailsService;
         this.nhiMedicalRecordService = nhiMedicalRecordService;
         this.treatmentPlanService = treatmentPlanService;
+        this.todoService = todoService;
     }
 
     void addRelationshipWithTreatmentTasks(TreatmentPlan treatmentPlan) {
@@ -110,7 +99,7 @@ public class RelationshipService {
         if (treatmentProcedures != null) {
             treatmentProcedures = getRelationshipWithOwners(
                 treatmentProcedures.stream().map(this::getTreatmentProcedure),
-                treatmentProcedure -> treatmentProcedure.todo(todo)
+                Function.identity()
             );
         }
 
@@ -261,6 +250,29 @@ public class RelationshipService {
         }
     }
 
+    void addRelationshipWithTodos(TreatmentProcedure treatmentProcedure, Set<Todo> todos) {
+        if (todos != null) {
+            todos = getRelationshipWithOwners(
+                todos.stream().map(this::getTodo),
+                todo -> {
+                    if (todo.getTreatmentProcedures() == null) {
+                        todo.setTreatmentProcedures(new HashSet<TreatmentProcedure>() {
+                            {
+                                add(treatmentProcedure);
+                            }
+                        });
+                    } else {
+                        todo.getTreatmentProcedures().add(treatmentProcedure);
+                    }
+
+                    return todo;
+                }
+            );
+
+            treatmentProcedure.setTodos(todos);
+        }
+    }
+
     void deleteTeeth(Set<Tooth> teeth) {
         StreamUtil.asStream(teeth)
             .map(Tooth::getId)
@@ -331,5 +343,9 @@ public class RelationshipService {
 
     private NhiMedicalRecord getNhiMedicalRecord(NhiMedicalRecord nhiMedicalRecord) {
         return nhiMedicalRecord.getId() == null ? nhiMedicalRecordService.save(nhiMedicalRecord) : nhiMedicalRecordService.update(nhiMedicalRecord);
+    }
+
+    private Todo getTodo(Todo todo) {
+        return todo.getId() == null ? todoService.save(todo) : todoService.update(todo);
     }
 }

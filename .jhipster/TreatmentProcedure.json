@@ -33,10 +33,11 @@
             "otherEntityRelationshipName": "treatmentProcedure"
         },
         {
+            "relationshipType": "many-to-many",
             "relationshipName": "todo",
             "otherEntityName": "todo",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id"
+            "ownerSide": false,
+            "otherEntityRelationshipName": "treatmentProcedure"
         },
         {
             "relationshipName": "disposal",

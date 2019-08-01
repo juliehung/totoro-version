@@ -132,7 +132,7 @@ public class TreatmentProcedureQueryService extends QueryService<TreatmentProced
             }
             if (criteria.getTodoId() != null) {
                 specification = specification.and(buildSpecification(criteria.getTodoId(),
-                    root -> root.join(TreatmentProcedure_.todo, JoinType.LEFT).get(Todo_.id)));
+                    root -> root.join(TreatmentProcedure_.todos, JoinType.LEFT).get(Todo_.id)));
             }
             if (criteria.getDisposalId() != null) {
                 specification = specification.and(buildSpecification(criteria.getDisposalId(),

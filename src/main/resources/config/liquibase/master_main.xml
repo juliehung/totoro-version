@@ -56,6 +56,7 @@
 
     <!-- add custom tables -->
     <include file="config/liquibase/changelog/createTable/20190522.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2019/07/20190720-createTable.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/addColumn/20190404.xml" relativeToChangelogFile="false"/>
@@ -84,8 +85,5 @@
     <!-- add custom indexes -->
     <include file="config/liquibase/changelog/createIndex/20190408.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/createIndex/20190524.xml" relativeToChangelogFile="false"/>
-
-    <!-- drop column -->
-    <include file="config/liquibase/changelog/2019/07/20190711_dropColumn.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

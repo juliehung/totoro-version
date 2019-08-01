@@ -16,9 +16,11 @@ import io.dentall.totoro.service.TodoQueryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -31,6 +33,7 @@ import org.springframework.validation.Validator;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -38,6 +41,8 @@ import java.util.List;
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -65,6 +70,12 @@ public class TodoResourceIntTest {
 
     @Autowired
     private TodoRepository todoRepository;
+
+    @Mock
+    private TodoRepository todoRepositoryMock;
+
+    @Mock
+    private TodoService todoServiceMock;
 
     @Autowired
     private TodoService todoService;
@@ -198,6 +209,39 @@ public class TodoResourceIntTest {
             .andExpect(jsonPath("$.[*].expectedDate").value(hasItem(DEFAULT_EXPECTED_DATE.toString())))
             .andExpect(jsonPath("$.[*].requiredTreatmentTime").value(hasItem(DEFAULT_REQUIRED_TREATMENT_TIME)))
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())));
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public void getAllTodosWithEagerRelationshipsIsEnabled() throws Exception {
+        TodoResource todoResource = new TodoResource(todoServiceMock, todoQueryService);
+        when(todoServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        MockMvc restTodoMockMvc = MockMvcBuilders.standaloneSetup(todoResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restTodoMockMvc.perform(get("/api/todos?eagerload=true"))
+            .andExpect(status().isOk());
+
+        verify(todoServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public void getAllTodosWithEagerRelationshipsIsNotEnabled() throws Exception {
+        TodoResource todoResource = new TodoResource(todoServiceMock, todoQueryService);
+        when(todoServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        MockMvc restTodoMockMvc = MockMvcBuilders.standaloneSetup(todoResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restTodoMockMvc.perform(get("/api/todos?eagerload=true"))
+            .andExpect(status().isOk());
+
+        verify(todoServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
     
     @Test
@@ -458,7 +502,7 @@ public class TodoResourceIntTest {
             todo.setTreatmentProcedures(new HashSet<>());
         }
 
-        todo.addTreatmentProcedure(treatmentProcedure);
+        todo.getTreatmentProcedures().add(treatmentProcedure);
         todoRepository.saveAndFlush(todo);
         Long treatmentProcedureId = treatmentProcedure.getId();
 

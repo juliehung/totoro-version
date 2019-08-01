@@ -17,9 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Service Implementation for managing Todo.
@@ -74,6 +76,27 @@ public class TodoService {
         return todoRepository.findAll(pageable);
     }
 
+    /**
+     * Get all the Todo with eager load of many-to-many relationships.
+     *
+     * @return the list of entities
+     */
+    public Page<Todo> findAllWithEagerRelationships(Pageable pageable) {
+        return todoRepository.findAllWithEagerRelationships(pageable);
+    }
+
+    /**
+     *  get all the todos where Disposal is null.
+     *  @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public List<Todo> findAllWhereDisposalIsNull() {
+        log.debug("Request to get all todos where Disposal is null");
+        return StreamSupport
+            .stream(todoRepository.findAll().spliterator(), false)
+            .filter(todo -> todo.getDisposal() == null)
+            .collect(Collectors.toList());
+    }
 
     /**
      * Get one todo by id.
@@ -84,7 +107,7 @@ public class TodoService {
     @Transactional(readOnly = true)
     public Optional<Todo> findOne(Long id) {
         log.debug("Request to get Todo : {}", id);
-        return todoRepository.findById(id);
+        return todoRepository.findOneWithEagerRelationships(id);
     }
 
     /**
@@ -99,9 +122,6 @@ public class TodoService {
             if (todo.getStatus() != TodoStatus.TEMPORARY) {
                 throw new ProblemUtil("A non-temporary todo cannot delete", Status.BAD_REQUEST);
             }
-
-            StreamUtil.asStream(todo.getTreatmentProcedures()).forEach(treatmentProcedure -> treatmentProcedure.setTodo(null));
-            relationshipService.deleteTreatmentProcedures(todo.getTreatmentProcedures());
 
             if (todo.getPatient() != null) {
                 Patient patient = todo.getPatient();
@@ -151,8 +171,12 @@ public class TodoService {
                     relationshipService.deleteTreatmentProcedures(
                         StreamUtil.asStream(originTxPs)
                             .filter(treatmentProcedure -> !ids.contains(treatmentProcedure.getId()))
-                            .map(treatmentProcedure -> treatmentProcedure.todo(null))
-                            .filter(RelationshipService.isDeletable)
+                            .map(treatmentProcedure -> {
+                                treatmentProcedure.getTodos().remove(todo);
+
+                                return treatmentProcedure;
+                            })
+                            .filter(TreatmentProcedureService.isDeletable)
                             .collect(Collectors.toSet())
                     );
                 }

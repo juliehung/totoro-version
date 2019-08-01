@@ -126,7 +126,7 @@ public class TreatmentProcedureResource {
     @Timed
     public ResponseEntity<TreatmentProcedure> getTreatmentProcedure(@PathVariable Long id) {
         log.debug("REST request to get TreatmentProcedure : {}", id);
-        Optional<TreatmentProcedure> treatmentProcedure = treatmentProcedureService.findOneWithEagerRelationships(id);
+        Optional<TreatmentProcedure> treatmentProcedure = treatmentProcedureService.findOne(id);
         return ResponseUtil.wrapOrNotFound(treatmentProcedure);
     }
 

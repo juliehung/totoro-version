@@ -239,7 +239,7 @@ public class DisposalService {
 
                     relationshipService.deleteTreatmentProcedures(
                         StreamUtil.asStream(originTxPs)
-                            .filter(RelationshipService.isDeletable)
+                            .filter(TreatmentProcedureService.isDeletable)
                             .collect(Collectors.toSet())
                     );
                 }

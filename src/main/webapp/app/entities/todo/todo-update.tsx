@@ -10,6 +10,8 @@ import { IRootState } from 'app/shared/reducers';
 
 import { IPatient } from 'app/shared/model/patient.model';
 import { getEntities as getPatients } from 'app/entities/patient/patient.reducer';
+import { ITreatmentProcedure } from 'app/shared/model/treatment-procedure.model';
+import { getEntities as getTreatmentProcedures } from 'app/entities/treatment-procedure/treatment-procedure.reducer';
 import { IDisposal } from 'app/shared/model/disposal.model';
 import { getEntities as getDisposals } from 'app/entities/disposal/disposal.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './todo.reducer';
@@ -22,6 +24,7 @@ export interface ITodoUpdateProps extends StateProps, DispatchProps, RouteCompon
 
 export interface ITodoUpdateState {
   isNew: boolean;
+  idstreatmentProcedure: any[];
   patientId: string;
   disposalId: string;
 }
@@ -30,6 +33,7 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
   constructor(props) {
     super(props);
     this.state = {
+      idstreatmentProcedure: [],
       patientId: '0',
       disposalId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
@@ -50,6 +54,7 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
     }
 
     this.props.getPatients();
+    this.props.getTreatmentProcedures();
     this.props.getDisposals();
   }
 
@@ -58,7 +63,8 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
       const { todoEntity } = this.props;
       const entity = {
         ...todoEntity,
-        ...values
+        ...values,
+        treatmentProcedures: mapIdList(values.treatmentProcedures)
       };
 
       if (this.state.isNew) {
@@ -74,7 +80,7 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
   };
 
   render() {
-    const { todoEntity, patients, disposals, loading, updating } = this.props;
+    const { todoEntity, patients, treatmentProcedures, disposals, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -138,7 +144,14 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
                   <Label id="noteLabel" for="note">
                     <Translate contentKey="totoroApp.todo.note">Note</Translate>
                   </Label>
-                  <AvField id="todo-note" type="text" name="note" />
+                  <AvField
+                    id="todo-note"
+                    type="text"
+                    name="note"
+                    validate={{
+                      maxLength: { value: 5100, errorMessage: translate('entity.validation.maxlength', { max: 5100 }) }
+                    }}
+                  />
                 </AvGroup>
                 <AvGroup>
                   <Label for="patient.id">
@@ -148,6 +161,28 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
                     <option value="" key="0" />
                     {patients
                       ? patients.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
+                <AvGroup>
+                  <Label for="treatmentProcedures">
+                    <Translate contentKey="totoroApp.todo.treatmentProcedure">Treatment Procedure</Translate>
+                  </Label>
+                  <AvInput
+                    id="todo-treatmentProcedure"
+                    type="select"
+                    multiple
+                    className="form-control"
+                    name="treatmentProcedures"
+                    value={todoEntity.treatmentProcedures && todoEntity.treatmentProcedures.map(e => e.id)}
+                  >
+                    <option value="" key="0" />
+                    {treatmentProcedures
+                      ? treatmentProcedures.map(otherEntity => (
                           <option value={otherEntity.id} key={otherEntity.id}>
                             {otherEntity.id}
                           </option>
@@ -179,6 +214,7 @@ export class TodoUpdate extends React.Component<ITodoUpdateProps, ITodoUpdateSta
 
 const mapStateToProps = (storeState: IRootState) => ({
   patients: storeState.patient.entities,
+  treatmentProcedures: storeState.treatmentProcedure.entities,
   disposals: storeState.disposal.entities,
   todoEntity: storeState.todo.entity,
   loading: storeState.todo.loading,
@@ -188,6 +224,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 
 const mapDispatchToProps = {
   getPatients,
+  getTreatmentProcedures,
   getDisposals,
   getEntity,
   updateEntity,

@@ -4,6 +4,7 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import org.zalando.problem.Status;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -37,13 +39,27 @@ public class TreatmentProcedureService {
 
     private final TreatmentTaskRepository treatmentTaskRepository;
 
-    private final TodoRepository todoRepository;
-
     private final DisposalRepository disposalRepository;
 
     private final NhiProcedureRepository nhiProcedureRepository;
 
     private final NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService;
+
+    static Predicate<TreatmentProcedure> isDeletable = treatmentProcedure -> {
+        if (treatmentProcedure.getProcedure() == null && treatmentProcedure.getNhiProcedure() == null) {
+            return true;
+        }
+
+        if (treatmentProcedure.getProcedure() != null && StringUtils.isBlank(treatmentProcedure.getProcedure().getContent())) {
+            return true;
+        }
+
+        if (treatmentProcedure.getNhiProcedure() != null && StringUtils.isBlank(treatmentProcedure.getNhiProcedure().getCode())) {
+            return true;
+        }
+
+        return false;
+    };
 
     public TreatmentProcedureService(
         TreatmentProcedureRepository treatmentProcedureRepository,
@@ -51,7 +67,6 @@ public class TreatmentProcedureService {
         AppointmentRepository appointmentRepository,
         RelationshipService relationshipService,
         TreatmentTaskRepository treatmentTaskRepository,
-        TodoRepository todoRepository,
         DisposalRepository disposalRepository,
         NhiProcedureRepository nhiProcedureRepository,
         NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService
@@ -61,7 +76,6 @@ public class TreatmentProcedureService {
         this.appointmentRepository = appointmentRepository;
         this.relationshipService = relationshipService;
         this.treatmentTaskRepository = treatmentTaskRepository;
-        this.todoRepository = todoRepository;
         this.disposalRepository = disposalRepository;
         this.nhiProcedureRepository = nhiProcedureRepository;
         this.nhiExtendTreatmentProcedureService = nhiExtendTreatmentProcedureService;
@@ -79,8 +93,10 @@ public class TreatmentProcedureService {
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = treatmentProcedure.getNhiExtendTreatmentProcedure();
         Set<Tooth> teeth = treatmentProcedure.getTeeth();
         Instant createdDate = treatmentProcedure.getCreatedDate();
-        TreatmentProcedure txP = treatmentProcedureRepository.save(treatmentProcedure.teeth(null).nhiExtendTreatmentProcedure(null));
+        Set<Todo> todos = treatmentProcedure.getTodos();
+        TreatmentProcedure txP = treatmentProcedureRepository.save(treatmentProcedure.teeth(null).nhiExtendTreatmentProcedure(null).todos(null));
         relationshipService.addRelationshipWithTeeth(txP.teeth(teeth));
+        relationshipService.addRelationshipWithTodos(txP, todos);
 
         if (nhiExtendTreatmentProcedure != null) {
             txP.setNhiExtendTreatmentProcedure(getNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure.treatmentProcedure(txP)));
@@ -96,10 +112,6 @@ public class TreatmentProcedureService {
 
         if (txP.getTreatmentTask() != null && txP.getTreatmentTask().getId() != null) {
             treatmentTaskRepository.findById(txP.getTreatmentTask().getId()).ifPresent(treatmentTask -> treatmentTask.getTreatmentProcedures().add(txP));
-        }
-
-        if (txP.getTodo() != null && txP.getTodo().getId() != null) {
-            todoRepository.findById(txP.getTodo().getId()).ifPresent(todo -> todo.getTreatmentProcedures().add(txP));
         }
 
         if (txP.getDisposal() != null && txP.getDisposal().getId() != null) {
@@ -147,7 +159,7 @@ public class TreatmentProcedureService {
                 throw new ProblemUtil("A treatmentProcedure which has nhiExtendTreatmentProcedure cannot delete", Status.BAD_REQUEST);
             }
 
-            if (treatmentProcedure.getAppointment() != null || treatmentProcedure.getDisposal() != null || treatmentProcedure.getTodo() != null) {
+            if (treatmentProcedure.getAppointment() != null || treatmentProcedure.getDisposal() != null || (treatmentProcedure.getTodos() != null && treatmentProcedure.getTodos().size() > 0)) {
                 return;
             }
 
@@ -161,18 +173,6 @@ public class TreatmentProcedureService {
 
             treatmentProcedureRepository.deleteById(id);
         });
-    }
-
-    /**
-     * Get one treatmentProcedure by id.
-     *
-     * @param id the id of the entity
-     * @return the entity
-     */
-    @Transactional(readOnly = true)
-    public Optional<TreatmentProcedure> findOneWithEagerRelationships(Long id) {
-        log.debug("Request to get TreatmentProcedure : {}", id);
-        return treatmentProcedureRepository.findById(id);
     }
 
     /**
@@ -251,16 +251,6 @@ public class TreatmentProcedureService {
                     });
                 }
 
-                if (updateTreatmentProcedure.getTodo() != null && updateTreatmentProcedure.getTodo().getId() != null) {
-                    todoRepository.findById(updateTreatmentProcedure.getTodo().getId()).ifPresent(todo -> {
-                        if (treatmentProcedure.getTodo() != null && !treatmentProcedure.getTodo().getId().equals(todo.getId())) {
-                            treatmentProcedure.getTodo().getTreatmentProcedures().remove(treatmentProcedure);
-                        }
-
-                        todo.getTreatmentProcedures().add(treatmentProcedure.todo(todo));
-                    });
-                }
-
                 if (updateTreatmentProcedure.getDisposal() != null && updateTreatmentProcedure.getDisposal().getId() != null) {
                     disposalRepository.findById(updateTreatmentProcedure.getDisposal().getId()).ifPresent(disposal -> {
                         if (treatmentProcedure.getDisposal() != null && !treatmentProcedure.getDisposal().getId().equals(disposal.getId())) {
@@ -288,6 +278,16 @@ public class TreatmentProcedureService {
                 if (updateTreatmentProcedure.getNhiExtendTreatmentProcedure() != null) {
                     NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = updateTreatmentProcedure.getNhiExtendTreatmentProcedure();
                     treatmentProcedure.setNhiExtendTreatmentProcedure(getNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure.treatmentProcedure(treatmentProcedure)));
+                }
+
+                if (updateTreatmentProcedure.getTodos() != null) {
+                    Set<Todo> originTodos = treatmentProcedure.getTodos();
+                    relationshipService.addRelationshipWithTodos(treatmentProcedure, updateTreatmentProcedure.getTodos());
+                    Set<Long> ids = StreamUtil.asStream(treatmentProcedure.getTodos()).map(Todo::getId).collect(Collectors.toSet());
+
+                    StreamUtil.asStream(originTodos)
+                        .filter(todo -> !ids.contains(todo.getId()))
+                        .forEach(todo -> todo.getTreatmentProcedures().remove(treatmentProcedure));
                 }
 
                 return treatmentProcedure;

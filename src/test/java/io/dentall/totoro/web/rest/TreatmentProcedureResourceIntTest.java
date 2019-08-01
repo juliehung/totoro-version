@@ -27,6 +27,7 @@ import org.springframework.validation.Validator;
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -728,8 +729,13 @@ public class TreatmentProcedureResourceIntTest {
         Todo todo = TodoResourceIntTest.createEntity(em);
         em.persist(todo);
         em.flush();
-        treatmentProcedure.setTodo(todo);
-        treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+
+        if (treatmentProcedure.getTodos() == null) {
+            treatmentProcedure.todos(new HashSet<>());
+        }
+
+        treatmentProcedure.getTodos().add(todo);
+        treatmentProcedureService.save(treatmentProcedure);
         Long todoId = todo.getId();
 
         // Get all the treatmentProcedureList where todo equals to todoId
