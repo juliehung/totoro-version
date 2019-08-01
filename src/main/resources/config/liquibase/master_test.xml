@@ -12,6 +12,9 @@
     <!-- constraints -->
     <include file="config/liquibase/master_constraints.xml" relativeToChangelogFile="false"/>
 
+    <!-- postprocess -->
+    <include file="config/liquibase/master_postprocess.xml" relativeToChangelogFile="false"/>
+
     <!-- sequence -->
     <include file="config/liquibase/master_sequence.xml" relativeToChangelogFile="false"/>
 

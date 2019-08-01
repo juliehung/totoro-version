@@ -33,6 +33,7 @@
     <include file="config/liquibase/changelog/addForeignKeyConstraint/20190522-1.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/addForeignKeyConstraint/20190522-2.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/addForeignKeyConstraint/20190522-3.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2019/07/20190720_addForeignKeyConstraint.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom unique constraints -->
     <include file="config/liquibase/changelog/addUniqueConstraint/20190404.xml" relativeToChangelogFile="false"/>

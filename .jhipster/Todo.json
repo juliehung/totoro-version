@@ -9,10 +9,12 @@
             "otherEntityField": "id"
         },
         {
+            "relationshipType": "many-to-many",
+            "otherEntityRelationshipName": "todo",
             "relationshipName": "treatmentProcedure",
             "otherEntityName": "treatmentProcedure",
-            "relationshipType": "one-to-many",
-            "otherEntityRelationshipName": "todo"
+            "otherEntityField": "id",
+            "ownerSide": true
         },
         {
             "relationshipName": "disposal",

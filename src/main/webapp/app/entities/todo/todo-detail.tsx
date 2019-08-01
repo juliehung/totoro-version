@@ -58,6 +58,19 @@ export class TodoDetail extends React.Component<ITodoDetailProps> {
               <Translate contentKey="totoroApp.todo.patient">Patient</Translate>
             </dt>
             <dd>{todoEntity.patient ? todoEntity.patient.id : ''}</dd>
+            <dt>
+              <Translate contentKey="totoroApp.todo.treatmentProcedure">Treatment Procedure</Translate>
+            </dt>
+            <dd>
+              {todoEntity.treatmentProcedures
+                ? todoEntity.treatmentProcedures.map((val, i) => (
+                    <span key={val.id}>
+                      <a>{val.id}</a>
+                      {i === todoEntity.treatmentProcedures.length - 1 ? '' : ', '}
+                    </span>
+                  ))
+                : null}
+            </dd>
           </dl>
           <Button tag={Link} to="/entity/todo" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}

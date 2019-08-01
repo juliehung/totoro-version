@@ -87,9 +87,9 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Tooth> teeth = new HashSet<>();
 
-    @ManyToOne
-    @JsonProperty(access = WRITE_ONLY)
-    private Todo todo;
+    @ManyToMany(mappedBy = "treatmentProcedures")
+    @JsonIgnore
+    private Set<Todo> todos = null;
 
     @ManyToOne
     @JsonProperty(access = WRITE_ONLY)
@@ -306,17 +306,29 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
         this.teeth = teeth;
     }
 
-    public Todo getTodo() {
-        return todo;
+    public Set<Todo> getTodos() {
+        return todos;
     }
 
-    public TreatmentProcedure todo(Todo todo) {
-        this.todo = todo;
+    public TreatmentProcedure todos(Set<Todo> todos) {
+        this.todos = todos;
         return this;
     }
 
-    public void setTodo(Todo todo) {
-        this.todo = todo;
+    public TreatmentProcedure addTodo(Todo todo) {
+        this.todos.add(todo);
+        todo.getTreatmentProcedures().add(this);
+        return this;
+    }
+
+    public TreatmentProcedure removeTodo(Todo todo) {
+        this.todos.remove(todo);
+        todo.getTreatmentProcedures().remove(this);
+        return this;
+    }
+
+    public void setTodos(Set<Todo> todos) {
+        this.todos = todos;
     }
 
     public Disposal getDisposal() {

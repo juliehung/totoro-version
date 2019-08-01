@@ -50,8 +50,11 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
     @JsonIgnoreProperties(value = {"appointments", "treatments", "todos", "teeth", "parents", "spouse1S"}, allowSetters = true)
     private Patient patient;
 
-    @OneToMany(mappedBy = "todo", fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "todo_treatment_procedure",
+        joinColumns = @JoinColumn(name = "todos_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "treatment_procedures_id", referencedColumnName = "id"))
     private Set<TreatmentProcedure> treatmentProcedures = null;
 
     @OneToOne(mappedBy = "todo")
@@ -142,13 +145,13 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
 
     public Todo addTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
         this.treatmentProcedures.add(treatmentProcedure);
-        treatmentProcedure.setTodo(this);
+        treatmentProcedure.getTodos().add(this);
         return this;
     }
 
     public Todo removeTreatmentProcedure(TreatmentProcedure treatmentProcedure) {
         this.treatmentProcedures.remove(treatmentProcedure);
-        treatmentProcedure.setTodo(null);
+        treatmentProcedure.getTodos().remove(this);
         return this;
     }
 

@@ -292,21 +292,6 @@ export class TreatmentProcedureUpdate extends React.Component<ITreatmentProcedur
                   </AvInput>
                 </AvGroup>
                 <AvGroup>
-                  <Label for="todo.id">
-                    <Translate contentKey="totoroApp.treatmentProcedure.todo">Todo</Translate>
-                  </Label>
-                  <AvInput id="treatment-procedure-todo" type="select" className="form-control" name="todo.id">
-                    <option value="" key="0" />
-                    {todos
-                      ? todos.map(otherEntity => (
-                          <option value={otherEntity.id} key={otherEntity.id}>
-                            {otherEntity.id}
-                          </option>
-                        ))
-                      : null}
-                  </AvInput>
-                </AvGroup>
-                <AvGroup>
                   <Label for="disposal.id">
                     <Translate contentKey="totoroApp.treatmentProcedure.disposal">Disposal</Translate>
                   </Label>
