@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190802-Sql-3" author="Jim" context="!dev">
+        <sql dbms="postgresql" splitStatements="true">
+            UPDATE setting SET preferences = jsonb_set(preferences, '{generalSetting, clinicName}', to_jsonb(''::text));
+        </sql>
+    </changeSet>
+</databaseChangeLog>
