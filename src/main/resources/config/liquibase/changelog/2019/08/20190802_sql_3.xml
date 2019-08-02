@@ -6,7 +6,7 @@
 
     <changeSet id="20190802-Sql-3" author="Jim" context="!dev">
         <sql dbms="postgresql" splitStatements="true">
-            UPDATE setting SET preferences = jsonb_set(preferences, '{generalSetting, clinicName}', to_jsonb(''::text));
+            UPDATE setting SET preferences = jsonb_set(preferences, '{generalSetting, clinicName}', to_jsonb(''::text)) WHERE id = 200;
         </sql>
     </changeSet>
 </databaseChangeLog>
