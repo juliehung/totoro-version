@@ -60,7 +60,7 @@ gradle-front-test:
 gradle-repackage:
     stage: package
     only:
-        - master
+        - $CI_COMMIT_REF_SLUG
         - merge_requests
     image: openjdk:8-jdk-stretch
     script:
@@ -75,7 +75,7 @@ gradle-repackage:
 depolyGitlabRegistry:
     stage: deploy
     only:
-        - master
+        - $CI_COMMIT_REF_SLUG
     dependencies:
         - gradle-repackage
     image: docker
@@ -96,7 +96,7 @@ depolyGitlabRegistry:
 depolyContainerRegistry:
     stage: deploy
     only:
-        - master
+        - $CI_COMMIT_REF_SLUG
         - merge_requests
     when: manual
     dependencies:
@@ -129,7 +129,7 @@ depolyContainerRegistry:
 depolyCloudRun:
     stage: deploy
     only:
-        - master
+        - $CI_COMMIT_REF_SLUG
         - merge_requests
     environment:
         name: staging/$CI_COMMIT_REF_SLUG
@@ -151,7 +151,7 @@ depolyCloudRun:
 stopCloudRun:
     stage: deploy
     only:
-        - master
+        - $CI_COMMIT_REF_SLUG
         - merge_requests
     environment:
         name: staging/$CI_COMMIT_REF_SLUG
@@ -170,7 +170,7 @@ depolyAppEngine:
         - dentall
     stage: deploy
     only:
-        - master
+        - $CI_COMMIT_REF_SLUG
         - merge_requests
     environment:
         name: staging/$CI_COMMIT_REF_SLUG
@@ -195,7 +195,7 @@ stopAppEngine:
         - dentall
     stage: deploy
     only:
-        - master
+        - $CI_COMMIT_REF_SLUG
         - merge_requests
     environment:
         name: staging/$CI_COMMIT_REF_SLUG
