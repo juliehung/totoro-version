@@ -1,9 +1,7 @@
 package io.dentall.totoro.service;
 
-import java.time.Instant;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -142,12 +140,10 @@ public class TreatmentQueryService extends QueryService<Treatment> {
                     .stream()
                     .map(treatmentTask ->
                         treatmentTask.treatmentProcedures(
-                            getTreatmentProcedures(
-                                treatmentTask.getTreatmentProcedures()
-                                    .stream()
-                                    .filter(ignoreTodo.and(tpCompleted))
-                                    .collect(Collectors.toSet())
-                            )
+                            treatmentTask.getTreatmentProcedures()
+                                .stream()
+                                .filter(ignoreTodo.and(tpCompleted))
+                                .collect(Collectors.toSet())
                         )
                     )
                     .collect(Collectors.toSet())
@@ -155,42 +151,5 @@ public class TreatmentQueryService extends QueryService<Treatment> {
             )
             .collect(Collectors.toSet())
         );
-    }
-
-    private Set<TreatmentProcedure> getTreatmentProcedures(Set<TreatmentProcedure> treatmentProcedures) {
-        Set<Long> ids = getTreatmentProcedureIdsByCompletedDate(treatmentProcedures);
-
-        return treatmentProcedures
-            .stream()
-            .filter(treatmentProcedure -> {
-                if (treatmentProcedure.getCompletedDate() == null) {
-                    return true;
-                } else {
-                    return ids.contains(treatmentProcedure.getId());
-                }
-            })
-            .collect(Collectors.toSet());
-    }
-
-    private Set<Long> getTreatmentProcedureIdsByCompletedDate(Set<TreatmentProcedure> treatmentProcedures) {
-        Map<Instant, TreatmentProcedure> map = treatmentProcedures
-            .stream()
-            .filter(treatmentProcedure -> treatmentProcedure.getCompletedDate() != null)
-            .collect(
-                Collectors.toMap(
-                    TreatmentProcedure::getCompletedDate,
-                    Function.identity(),
-                    (txP1, txP2) -> {
-                        if (txP2.getTodos() == null || txP2.getTodos().size() == 0) {
-                            return txP2;
-                        }
-
-                        return txP1;
-                    },
-                    HashMap::new
-                )
-            );
-
-        return map.values().stream().map(TreatmentProcedure::getId).collect(Collectors.toSet());
     }
 }
