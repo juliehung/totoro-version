@@ -8,6 +8,7 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Objects;
 
 import io.dentall.totoro.domain.enumeration.SourceType;
@@ -35,7 +36,7 @@ public class Esign implements Serializable {
     @Column(name = "patient_id", nullable = false)
     private Long patientId;
 
-    
+
     @Lob
     @Column(name = "jhi_lob")
     private byte[] lob;
@@ -168,7 +169,7 @@ public class Esign implements Serializable {
         return "Esign{" +
             "id=" + getId() +
             ", patientId=" + getPatientId() +
-            ", lob='" + getLob() + "'" +
+            ", lob='" + Arrays.toString(getLob()) + "'" +
             ", lobContentType='" + getLobContentType() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

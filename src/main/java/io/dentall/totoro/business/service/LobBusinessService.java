@@ -11,6 +11,7 @@ import io.dentall.totoro.service.EsignService;
 import io.dentall.totoro.service.dto.EsignCriteria;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.web.rest.EsignResource;
+import org.apache.commons.compress.utils.ByteUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Status;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -194,7 +196,12 @@ public class LobBusinessService {
                 base64 = Base64.getEncoder().encodeToString(es.getLob());
                 break;
             case BY_STRING64:
-                base64 = new String(es.getLob());
+                try {
+                    base64 = new String(es.getLob(), "UTF-8");
+                } catch (UnsupportedEncodingException ex) {
+                    log.error("Can not encode esign into UTF8 with Esign: {}", es);
+                    base64 = "";
+                }
                 break;
             default:
                 base64 = "";
@@ -228,10 +235,18 @@ public class LobBusinessService {
     }
 
     public Esign esignWrapper(EsignDTO dto) {
+        byte[] base64;
+
+        try {
+            base64 = dto.getBase64().getBytes("UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new ProblemUtil(ex.getMessage(), Status.BAD_REQUEST);
+        }
+
         return new Esign()
             .patientId(dto.getPatientId())
             .lobContentType(dto.getContentType())
-            .lob(dto.getBase64().getBytes())
+            .lob(base64)
             .sourceType(SourceType.BY_STRING64);
     }
 }

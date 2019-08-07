@@ -23,6 +23,7 @@ public class CalendarCriteria implements Serializable {
      */
     public static class TimeTypeFilter extends Filter<TimeType> {
     }
+
     /**
      * Class for filtering TimeInterval
      */

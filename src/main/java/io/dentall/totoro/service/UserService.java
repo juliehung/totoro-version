@@ -136,6 +136,7 @@ public class UserService {
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
+
     private boolean removeNonActivatedUser(User existingUser){
         if(existingUser.getActivated()) {
              return false;
@@ -279,8 +280,9 @@ public class UserService {
 
     /**
      * Update gmail and calendarId for a user
-     * @param gmail
-     * @param calendarId
+     *
+     * @param gmail gmail of user
+     * @param calendarId id of google calendar
      */
     public void updateExtendUser(String gmail, String calendarId) {
         SecurityUtils.getCurrentUserLogin()

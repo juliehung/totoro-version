@@ -27,6 +27,9 @@ plugins {
     id "org.liquibase.gradle" version "2.0.1"
     id "com.github.ben-manes.versions" version "0.20.0"
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
+
+    id 'findbugs'
+    id 'checkstyle'
 }
 
 apply plugin: 'java'
@@ -321,7 +324,7 @@ processResources.dependsOn cleanResources,bootBuildInfo,autoGenVersion
 bootBuildInfo.mustRunAfter cleanResources
 
 appengineDeploy.doFirst {
-    File file = new File("build/staged-app/app.yaml")
+    File file = file("build/staged-app/app.yaml")
     file.append("service: $branchName\n")
 }
 
@@ -334,3 +337,27 @@ appengine {
     }
 
 }
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+
+checkstyle {
+    configFile = file("${configDir}/google_checks.xml")
+    toolVersion = '8.23'
+    maxWarnings = 0
+}
+
+checkstyleMain.include 'io/dentall/totoro/business/**'
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+
+compileJava.finalizedBy checkstyleMain
