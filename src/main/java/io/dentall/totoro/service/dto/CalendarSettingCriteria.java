@@ -27,6 +27,7 @@ public class CalendarSettingCriteria implements Serializable {
      */
     public static class TimeIntervalFilter extends Filter<TimeInterval> {
     }
+
     /**
      * Class for filtering WeekDay
      */

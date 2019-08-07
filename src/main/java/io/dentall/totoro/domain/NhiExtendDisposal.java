@@ -267,7 +267,7 @@ public class NhiExtendDisposal implements Serializable {
         this.a17 = a17;
 
         if (a17 != null) {
-            date = LocalDate.of(Integer.valueOf(a17.substring(0, 3)) + 1911, Integer.valueOf(a17.substring(3, 5)), Integer.valueOf(a17.substring(5, 7)));
+            date = LocalDate.of(Integer.parseInt(a17.substring(0, 3)) + 1911, Integer.parseInt(a17.substring(3, 5)), Integer.parseInt(a17.substring(5, 7)));
         }
     }
 

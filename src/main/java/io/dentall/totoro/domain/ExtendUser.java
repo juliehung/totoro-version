@@ -385,7 +385,7 @@ public class ExtendUser implements Serializable, Avatar {
         return "ExtendUser{" +
             "id=" + getId() +
             ", firstLogin='" + isFirstLogin() + "'" +
-            ", avatar='" + getAvatar() + "'" +
+            ", avatar='" + Arrays.toString(getAvatar()) + "'" +
             ", avatarContentType='" + getAvatarContentType() + "'" +
             ", nationalId='" + getNationalId() + "'" +
             "}";
