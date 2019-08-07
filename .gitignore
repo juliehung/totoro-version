@@ -149,3 +149,8 @@ Desktop.ini
 # added mannually(symbolic link).
 ######################
 /src/main/java/io/dentall/totoro/business/resource/*
+
+######################
+# Sensitive data
+######################
+/migration/target-data-csv/*

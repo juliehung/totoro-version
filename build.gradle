@@ -156,15 +156,27 @@ project.ext.diffChangelogFile = 'src/main/resources/config/liquibase/changelog/'
 liquibase {
     activities {
         main {
-            driver 'org.h2.Driver'
-            url 'jdbc:h2:file:./target/h2db/db/totoro'
+            driver 'org.postgresql.Driver'
+            url 'jdbc:postgresql://localhost:5432/totoro'
             username 'totoro'
-            password ''
+            password 'totoro'
             changeLogFile 'src/main/resources/config/liquibase/master.xml'
             defaultSchemaName ''
             logLevel 'debug'
             classpath 'src/main/resources/'
         }
+
+        migration {
+            driver 'org.postgresql.Driver'
+            url 'jdbc:postgresql://localhost:5432/totoro'
+            username 'totoro'
+            password 'totoro'
+            changeLogFile 'migration/migration_master.xml'
+            defaultSchemaName ''
+            logLevel 'debug'
+            classpath 'src/main/resources/'
+        }
+
         diffLog {
             driver 'org.h2.Driver'
             url 'jdbc:h2:file:./target/h2db/db/totoro'

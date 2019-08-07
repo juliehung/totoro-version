@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="first-migration-data" author="WeiChen">
+
+        <loadData encoding="UTF-8"
+                  file="migration/target-data-csv/users.csv"
+                  separator=";"
+                  tableName="jhi_user"/>
+
+        <loadData encoding="UTF-8"
+                  file="migration/target-data-csv/extend_users.csv"
+                  separator=";"
+                  tableName="extend_user"/>
+
+        <loadData encoding="UTF-8"
+                  file="migration/target-data-csv/users_authorities.csv"
+                  separator=";"
+                  tableName="jhi_user_authority"/>
+        
+        <loadData encoding="UTF-8"
+                  file="migration/target-data-csv/patients.csv"
+                  separator=";"
+                  tableName="patient"/>
+
+        <loadData encoding="UTF-8"
+                  file="migration/target-data-csv/appointments.csv"
+                  separator=";"
+                  tableName="appointment"/>
+
+    </changeSet>
+
+</databaseChangeLog>
