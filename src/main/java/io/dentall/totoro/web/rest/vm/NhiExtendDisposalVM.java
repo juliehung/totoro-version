@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest.vm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.domain.Patient;
 
 import java.io.Serializable;
 
@@ -13,8 +14,13 @@ public class NhiExtendDisposalVM extends NhiExtendDisposal implements Serializab
     @JsonProperty
     private String doctor;
 
+    @JsonProperty
+    private String medicalId;
+
     public NhiExtendDisposalVM(NhiExtendDisposal nhiExtendDisposal) {
-        name = nhiExtendDisposal.getDisposal().getRegistration().getAppointment().getPatient().getName();
+        Patient patient = nhiExtendDisposal.getDisposal().getRegistration().getAppointment().getPatient();
+        name = patient.getName();
+        medicalId = patient.getMedicalId();
         doctor = nhiExtendDisposal.getDisposal().getCreatedBy();
 
         setId(nhiExtendDisposal.getId());
