@@ -63,6 +63,8 @@ gradle-repackage:
         - branches
         - tags
         - merge_requests
+    except:
+        - /^(\d)+-.*$/
     image: openjdk:8-jdk-stretch
     script:
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
@@ -78,6 +80,8 @@ depolyGitlabRegistry:
     only:
         - branches
         - tags
+    except:
+        - /^(\d)+-.*$/
     dependencies:
         - gradle-repackage
     image: docker
@@ -101,6 +105,8 @@ depolyContainerRegistry:
         - branches
         - tags
         - merge_requests
+    except:
+        - /^(\d)+-.*$/
     when: manual
     dependencies:
         - gradle-repackage
@@ -135,6 +141,8 @@ depolyCloudRun:
         - branches
         - tags
         - merge_requests
+    except:
+        - /^(\d)+-.*$/
     environment:
         name: staging/$CI_COMMIT_REF_SLUG
         url: https://master-cloud-run-vgcfrtzwfa-uc.a.run.app
@@ -158,6 +166,8 @@ stopCloudRun:
         - branches
         - tags
         - merge_requests
+    except:
+        - /^(\d)+-.*$/
     environment:
         name: staging/$CI_COMMIT_REF_SLUG
         action: stop
@@ -178,6 +188,8 @@ depolyAppEngine:
         - branches
         - tags
         - merge_requests
+    except:
+        - /^(\d)+-.*$/
     environment:
         name: staging/$CI_COMMIT_REF_SLUG
         url: https://$CI_COMMIT_REF_SLUG-dot-$GCP_PROJECT_ID.appspot.com
@@ -204,6 +216,8 @@ stopAppEngine:
         - branches
         - tags
         - merge_requests
+    except:
+        - /^(\d)+-.*$/
     environment:
         name: staging/$CI_COMMIT_REF_SLUG
         action: stop
