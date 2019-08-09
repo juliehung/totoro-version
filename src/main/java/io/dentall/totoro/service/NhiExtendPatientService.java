@@ -145,6 +145,10 @@ public class NhiExtendPatientService {
 
                 relationshipService.addRelationshipWithNhiMedicalRecords(nhiExtendPatient, updateNhiExtendPatient.getNhiMedicalRecords());
 
+                if (updateNhiExtendPatient.getLifetime() != null) {
+                    nhiExtendPatient.setLifetime(updateNhiExtendPatient.getLifetime());
+                }
+
                 return nhiExtendPatient;
             })
             .get();

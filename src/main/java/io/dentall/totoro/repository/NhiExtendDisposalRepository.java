@@ -18,4 +18,8 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
     List<NhiExtendDisposal> findByDate(LocalDate date);
 
     List<NhiExtendDisposal> findByDateBetween(LocalDate start, LocalDate end);
+
+    List<NhiExtendDisposal> findByDateGreaterThanEqualAndPatientIdOrderByDateDesc(LocalDate after, Long patientId);
+
+    List<NhiExtendDisposal> findByDateBetweenAndPatientId(LocalDate start, LocalDate end, Long patientId);
 }
