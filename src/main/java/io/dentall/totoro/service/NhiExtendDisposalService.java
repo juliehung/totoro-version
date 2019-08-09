@@ -1,9 +1,11 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
+import io.dentall.totoro.repository.DisposalRepository;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import org.slf4j.Logger;
@@ -13,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -32,9 +33,20 @@ public class NhiExtendDisposalService {
 
     private final RelationshipService relationshipService;
 
-    public NhiExtendDisposalService(NhiExtendDisposalRepository nhiExtendDisposalRepository, RelationshipService relationshipService) {
+    private final DisposalRepository disposalRepository;
+
+    private final NhiService nhiService;
+
+    public NhiExtendDisposalService(
+        NhiExtendDisposalRepository nhiExtendDisposalRepository,
+        RelationshipService relationshipService,
+        DisposalRepository disposalRepository,
+        NhiService nhiService
+    ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.relationshipService = relationshipService;
+        this.disposalRepository = disposalRepository;
+        this.nhiService = nhiService;
     }
 
     /**
@@ -50,6 +62,14 @@ public class NhiExtendDisposalService {
         Set<NhiExtendTreatmentDrug> nhiExtendTreatmentDrugs = nhiExtendDisposal.getNhiExtendTreatmentDrugs();
         if (nhiExtendDisposal.getUploadStatus() == null) {
             nhiExtendDisposal.setUploadStatus(NhiExtendDisposalUploadStatus.NONE);
+        }
+
+        if (nhiExtendDisposal.getDisposal() != null && nhiExtendDisposal.getDisposal().getId() != null) {
+            Optional<Disposal> disposal = disposalRepository.findById(nhiExtendDisposal.getDisposal().getId());
+            if (disposal.isPresent()) {
+                nhiExtendDisposal.setDisposal(disposal.get());
+                nhiExtendDisposal.setPatientId(disposal.get().getRegistration().getAppointment().getPatient().getId());
+            }
         }
 
         nhiExtendDisposal = nhiExtendDisposalRepository.save(nhiExtendDisposal.nhiExtendTreatmentProcedures(null).nhiExtendTreatmentDrugs(null));
@@ -105,6 +125,11 @@ public class NhiExtendDisposalService {
         return nhiExtendDisposalRepository
             .findByDateBetween(ym.atDay(1), ym.atEndOfMonth())
             .stream()
+            .map(nhiExtendDisposal -> {
+                nhiService.checkNhiExtendTreatmentProcedures(nhiExtendDisposal.getNhiExtendTreatmentProcedures());
+
+                return nhiExtendDisposal;
+            })
             .map(NhiExtendDisposalVM::new)
             .collect(Collectors.toList());
     }

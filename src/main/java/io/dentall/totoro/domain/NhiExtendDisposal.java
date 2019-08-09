@@ -144,6 +144,10 @@ public class NhiExtendDisposal implements Serializable {
     @Column(name = "serial_number")
     private String serialNumber = "";
 
+    @JsonProperty(access = READ_ONLY)
+    @Column(name = "patient_id")
+    private Long patientId;
+
     @OneToMany(mappedBy = "nhiExtendDisposal", fetch = FetchType.EAGER)
     private Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = null;
 
@@ -260,15 +264,13 @@ public class NhiExtendDisposal implements Serializable {
 
     public NhiExtendDisposal a17(String a17) {
         this.a17 = a17;
+        setDate(a17);
         return this;
     }
 
     public void setA17(String a17) {
         this.a17 = a17;
-
-        if (a17 != null) {
-            date = LocalDate.of(Integer.parseInt(a17.substring(0, 3)) + 1911, Integer.parseInt(a17.substring(3, 5)), Integer.parseInt(a17.substring(5, 7)));
-        }
+        setDate(a17);
     }
 
     public String getA18() {
@@ -457,6 +459,12 @@ public class NhiExtendDisposal implements Serializable {
         return date;
     }
 
+    public void setDate(String a17) {
+        if (a17 != null) {
+            date = LocalDate.of(Integer.parseInt(a17.substring(0, 3)) + 1911, Integer.parseInt(a17.substring(3, 5)), Integer.parseInt(a17.substring(5, 7)));
+        }
+    }
+
     public NhiExtendDisposalUploadStatus getUploadStatus() {
         return uploadStatus;
     }
@@ -563,6 +571,11 @@ public class NhiExtendDisposal implements Serializable {
         return patientIdentity;
     }
 
+    public NhiExtendDisposal patientIdentity(String patientIdentity) {
+        this.patientIdentity = patientIdentity;
+        return this;
+    }
+
     public void setPatientIdentity(String patientIdentity) {
         this.patientIdentity = patientIdentity;
     }
@@ -571,8 +584,26 @@ public class NhiExtendDisposal implements Serializable {
         return serialNumber;
     }
 
+    public NhiExtendDisposal serialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+        return this;
+    }
+
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public Long getPatientId() {
+        return patientId;
+    }
+
+    public NhiExtendDisposal patientId(Long patientId) {
+        this.patientId = patientId;
+        return this;
+    }
+
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
     }
 
     @Override
@@ -626,6 +657,7 @@ public class NhiExtendDisposal implements Serializable {
             ", examinationPoint='" + getExaminationPoint() + "'" +
             ", patientIdentity='" + getPatientIdentity() + "'" +
             ", serialNumber='" + getSerialNumber() + "'" +
+            ", patientId='" + getPatientId() + "'" +
             "}";
     }
 }

@@ -1,12 +1,16 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,6 +22,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 @Entity
 @Table(name = "nhi_extend_patient")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class NhiExtendPatient implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,6 +66,10 @@ public class NhiExtendPatient implements Serializable {
     @OneToMany(mappedBy = "nhiExtendPatient", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<NhiMedicalRecord> nhiMedicalRecords = null;
+
+    @Column(name = "lifetime", columnDefinition = "jsonb")
+    @Type(type = "jsonb")
+    private Map<String, Object> lifetime;
 
     public Long getId() {
         return id;
@@ -224,6 +233,19 @@ public class NhiExtendPatient implements Serializable {
 
     public void setNhiMedicalRecords(Set<NhiMedicalRecord> nhiMedicalRecords) {
         this.nhiMedicalRecords = nhiMedicalRecords;
+    }
+
+    public Map<String, Object> getLifetime() {
+        return lifetime;
+    }
+
+    public NhiExtendPatient lifetime(Map<String, Object> lifetime) {
+        this.lifetime = lifetime;
+        return this;
+    }
+
+    public void setLifetime(Map<String, Object> lifetime) {
+        this.lifetime = lifetime;
     }
 
     @Override

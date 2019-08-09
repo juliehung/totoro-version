@@ -4,13 +4,13 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.PatientCriteria;
+import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.FilterUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.github.jhipster.service.QueryService;
 import io.github.jhipster.service.filter.InstantFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -50,9 +50,6 @@ public class PatientService extends QueryService<Patient> {
     private final RelationshipService relationshipService;
 
     private final NhiExtendPatientRepository nhiExtendPatientRepository;
-
-    @Value("${zoneOffset:Z}")
-    private String zoneOffset;
 
     public PatientService(
         PatientRepository patientRepository,
@@ -356,9 +353,8 @@ public class PatientService extends QueryService<Patient> {
             } else {
                 if (FilterUtil.predicateIsNull.test(criteria.getQuestionnaireId())) {
                     // default createdDate is today
-                    ZoneOffset zoneOffSet = ZoneOffset.of(zoneOffset);
-                    Instant start = OffsetDateTime.now(zoneOffSet).toZonedDateTime().with(LocalTime.MIN).toInstant();
-                    Instant end = OffsetDateTime.now(zoneOffSet).toZonedDateTime().with(LocalTime.MAX).toInstant();
+                    Instant start = DateTimeUtil.localTimeMin.get();
+                    Instant end = DateTimeUtil.localTimeMax.get();
                     specification = specification.and(buildRangeSpecification(new InstantFilter().setGreaterOrEqualThan(start).setLessOrEqualThan(end), Patient_.createdDate));
                 }
             }
