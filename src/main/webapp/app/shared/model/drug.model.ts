@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 export interface IDrug {
   id?: number;
   name?: string;
@@ -11,6 +13,10 @@ export interface IDrug {
   warning?: string;
   days?: number;
   order?: number;
+  createdDate?: Moment;
+  createdBy?: string;
+  lastModifiedDate?: Moment;
+  LastModifiedBy?: string;
 }
 
 export const defaultValue: Readonly<IDrug> = {};

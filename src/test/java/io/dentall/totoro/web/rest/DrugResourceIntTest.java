@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 
+import io.dentall.totoro.business.service.DrugBusinessService;
 import io.dentall.totoro.domain.Drug;
 import io.dentall.totoro.repository.DrugRepository;
 import io.dentall.totoro.service.DrugService;
@@ -83,6 +84,9 @@ public class DrugResourceIntTest {
     private DrugService drugService;
 
     @Autowired
+    private DrugBusinessService drugBusinessService;
+
+    @Autowired
     private DrugQueryService drugQueryService;
 
     @Autowired
@@ -108,7 +112,12 @@ public class DrugResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final DrugResource drugResource = new DrugResource(drugService, drugQueryService);
-        this.restDrugMockMvc = MockMvcBuilders.standaloneSetup(drugResource)
+        final DrugBusinessResource drugBusinessResource =
+            new DrugBusinessResource(drugBusinessService);
+
+        this.restDrugMockMvc = MockMvcBuilders.standaloneSetup(
+            drugResource,
+            drugBusinessResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
@@ -865,7 +874,7 @@ public class DrugResourceIntTest {
         int databaseSizeBeforeDelete = drugRepository.findAll().size();
 
         // Get the drug
-        restDrugMockMvc.perform(delete("/api/drugs/{id}", drug.getId())
+        restDrugMockMvc.perform(delete("/api/business/drugs/{id}", drug.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 

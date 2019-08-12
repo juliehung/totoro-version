@@ -123,17 +123,4 @@ public class DrugResource {
         return ResponseUtil.wrapOrNotFound(drug);
     }
 
-    /**
-     * DELETE  /drugs/:id : delete the "id" drug.
-     *
-     * @param id the id of the drug to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/drugs/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteDrug(@PathVariable Long id) {
-        log.debug("REST request to delete Drug : {}", id);
-        drugService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
 }

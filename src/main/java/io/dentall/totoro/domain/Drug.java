@@ -1,12 +1,15 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -15,7 +18,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "drug")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Drug implements Serializable {
+public class Drug extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -57,8 +60,8 @@ public class Drug implements Serializable {
 
     @Column(name = "jhi_order")
     private Integer order;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
     public Long getId() {
         return id;
     }
@@ -209,6 +212,14 @@ public class Drug implements Serializable {
     public void setOrder(Integer order) {
         this.order = order;
     }
+
+    @Override
+    @JsonIgnore(false)
+    @JsonProperty
+    public Instant getCreatedDate() {
+        return super.getCreatedDate();
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
