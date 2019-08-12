@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAllAction } from 'react-jhipster';
+import { Translate, ICrudGetAllAction, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -71,6 +71,18 @@ export class Drug extends React.Component<IDrugProps> {
                 <th>
                   <Translate contentKey="totoroApp.drug.order">Order</Translate>
                 </th>
+                <th>
+                  <Translate contentKey="totoroApp.drug.createdDate">Created Date</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.drug.createdBy">Created By</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.drug.lastModifiedDate">Last Modified Date</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="totoroApp.drug.LastModifiedBy">Last Modified By</Translate>
+                </th>
                 <th />
               </tr>
             </thead>
@@ -93,6 +105,14 @@ export class Drug extends React.Component<IDrugProps> {
                   <td>{drug.warning}</td>
                   <td>{drug.days}</td>
                   <td>{drug.order}</td>
+                  <td>
+                    <TextFormat type="date" value={drug.createdDate} format={APP_DATE_FORMAT} />
+                  </td>
+                  <td>{drug.createdBy}</td>
+                  <td>
+                    <TextFormat type="date" value={drug.lastModifiedDate} format={APP_DATE_FORMAT} />
+                  </td>
+                  <td>{drug.LastModifiedBy}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${drug.id}`} color="info" size="sm">

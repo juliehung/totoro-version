@@ -49,6 +49,22 @@
         {
             "fieldName": "order",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "createdDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "createdBy",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "lastModifiedDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "LastModifiedBy",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20190214094023",

@@ -25,7 +25,11 @@
       "nhiCode": "Nhi Code",
       "warning": "Warning",
       "days": "Days",
-      "order": "Order"
+      "order": "Order",
+      "createdDate": "Created Date",
+      "createdBy": "Created By",
+      "lastModifiedDate": "Last Modified Date",
+      "LastModifiedBy": "Last Modified By"
     }
   }
 }

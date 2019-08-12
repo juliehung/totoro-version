@@ -43,6 +43,9 @@ export class DrugUpdate extends React.Component<IDrugUpdateProps, IDrugUpdateSta
   }
 
   saveEntity = (event, errors, values) => {
+    values.createdDate = new Date(values.createdDate);
+    values.lastModifiedDate = new Date(values.lastModifiedDate);
+
     if (errors.length === 0) {
       const { drugEntity } = this.props;
       const entity = {
@@ -161,6 +164,42 @@ export class DrugUpdate extends React.Component<IDrugUpdateProps, IDrugUpdateSta
                     <Translate contentKey="totoroApp.drug.order">Order</Translate>
                   </Label>
                   <AvField id="drug-order" type="string" className="form-control" name="order" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="createdDateLabel" for="createdDate">
+                    <Translate contentKey="totoroApp.drug.createdDate">Created Date</Translate>
+                  </Label>
+                  <AvInput
+                    id="drug-createdDate"
+                    type="datetime-local"
+                    className="form-control"
+                    name="createdDate"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.drugEntity.createdDate)}
+                  />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="createdByLabel" for="createdBy">
+                    <Translate contentKey="totoroApp.drug.createdBy">Created By</Translate>
+                  </Label>
+                  <AvField id="drug-createdBy" type="text" name="createdBy" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="lastModifiedDateLabel" for="lastModifiedDate">
+                    <Translate contentKey="totoroApp.drug.lastModifiedDate">Last Modified Date</Translate>
+                  </Label>
+                  <AvInput
+                    id="drug-lastModifiedDate"
+                    type="datetime-local"
+                    className="form-control"
+                    name="lastModifiedDate"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.drugEntity.lastModifiedDate)}
+                  />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="LastModifiedByLabel" for="LastModifiedBy">
+                    <Translate contentKey="totoroApp.drug.LastModifiedBy">Last Modified By</Translate>
+                  </Label>
+                  <AvField id="drug-LastModifiedBy" type="text" name="LastModifiedBy" />
                 </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/drug" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />

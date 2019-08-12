@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -94,6 +94,34 @@ export class DrugDetail extends React.Component<IDrugDetailProps> {
               </span>
             </dt>
             <dd>{drugEntity.order}</dd>
+            <dt>
+              <span id="createdDate">
+                <Translate contentKey="totoroApp.drug.createdDate">Created Date</Translate>
+              </span>
+            </dt>
+            <dd>
+              <TextFormat value={drugEntity.createdDate} type="date" format={APP_DATE_FORMAT} />
+            </dd>
+            <dt>
+              <span id="createdBy">
+                <Translate contentKey="totoroApp.drug.createdBy">Created By</Translate>
+              </span>
+            </dt>
+            <dd>{drugEntity.createdBy}</dd>
+            <dt>
+              <span id="lastModifiedDate">
+                <Translate contentKey="totoroApp.drug.lastModifiedDate">Last Modified Date</Translate>
+              </span>
+            </dt>
+            <dd>
+              <TextFormat value={drugEntity.lastModifiedDate} type="date" format={APP_DATE_FORMAT} />
+            </dd>
+            <dt>
+              <span id="LastModifiedBy">
+                <Translate contentKey="totoroApp.drug.LastModifiedBy">Last Modified By</Translate>
+              </span>
+            </dt>
+            <dd>{drugEntity.LastModifiedBy}</dd>
           </dl>
           <Button tag={Link} to="/entity/drug" replace color="info">
             <FontAwesomeIcon icon="arrow-left" />{' '}
