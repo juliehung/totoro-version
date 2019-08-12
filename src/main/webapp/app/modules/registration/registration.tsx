@@ -214,7 +214,7 @@ export class Registration extends React.Component<IRegistrationProps, IRegistrat
                     <td>{i + 1 + itemsPerPage * (activePage - 1)}</td>
                     <td>{this.renderProfile(registration.patient.gender)}</td>
                     <td>{registration.patient.name}</td>
-                    <td>{registration.patient.id}</td>
+                    <td>{registration.patient.medicalId}</td>
                     <td>
                       <TextFormat type="date" value={registration.registration.arrivalTime} format={'HH:mm'} />
                     </td>
