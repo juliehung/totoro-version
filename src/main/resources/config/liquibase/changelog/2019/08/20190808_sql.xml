@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190808-Sql" author="Jim" context="!test">
+        <sql dbms="postgresql" splitStatements="true">
+            DELETE FROM drug
+            WHERE id NOT IN (5, 35) AND NOT EXISTS (
+                SELECT 1
+                FROM treatment_drug
+                WHERE drug_id = drug.id
+            );
+
+            UPDATE drug SET jhi_order = NULL;
+
+            INSERT INTO drug (id, nhi_code, name, unit, price, quantity, frequency, way, warning, chinese_name, days, jhi_order, created_by, last_modified_by, created_date, last_modified_date)
+            VALUES ((SELECT COALESCE(MAX(id), 0)+1 FROM drug), 'AB32312100', 'Ibuprofen-400mg', 'tab', 0, 1, 'QID', 'PO', NULL, '布洛芬', 3, 2, 'system', 'system', (SELECT CURRENT_TIMESTAMP), (SELECT CURRENT_TIMESTAMP));
+
+            INSERT INTO drug (id, nhi_code, name, unit, price, quantity, frequency, way, warning, chinese_name, days, jhi_order, created_by, last_modified_by, created_date, last_modified_date)
+            VALUES ((SELECT COALESCE(MAX(id), 0)+1 FROM drug), 'AC31557100', 'Voren-50mg', 'tab', 0, 1, 'QID', 'PO', NULL, '非炎', 3, 3, 'system', 'system', (SELECT CURRENT_TIMESTAMP), (SELECT CURRENT_TIMESTAMP));
+
+            INSERT INTO drug (id, nhi_code, name, unit, price, quantity, frequency, way, warning, chinese_name, days, jhi_order, created_by, last_modified_by, created_date, last_modified_date)
+            VALUES ((SELECT COALESCE(MAX(id), 0)+1 FROM drug), 'AC46259421', 'DRXALINE', 'gm', 0, 1, 'PRN', 'TOPI', NULL, '口內膏', 3, 5, 'system', 'system', (SELECT CURRENT_TIMESTAMP), (SELECT CURRENT_TIMESTAMP));
+
+            UPDATE drug
+            SET jhi_order = 1
+            WHERE id = 5;
+
+            UPDATE drug
+            SET jhi_order = 4
+            WHERE id = 35;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
