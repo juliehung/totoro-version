@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190816-LoadUpdateData" author="Jim">
+        <loadUpdateData encoding="UTF-8"
+                        file="config/liquibase/changelog/2019/08/marriage_options_for_update.csv"
+                        primaryKey="id"
+                        separator=";"
+                        tableName="marriage_options">
+            <column name="name" type="STRING"/>
+        </loadUpdateData>
+    </changeSet>
+
+</databaseChangeLog>
