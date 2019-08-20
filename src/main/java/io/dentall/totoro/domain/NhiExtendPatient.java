@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.annotations.Cache;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -23,7 +25,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 @Table(name = "nhi_extend_patient")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
-public class NhiExtendPatient implements Serializable {
+public class NhiExtendPatient extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -246,6 +248,13 @@ public class NhiExtendPatient implements Serializable {
 
     public void setLifetime(Map<String, Object> lifetime) {
         this.lifetime = lifetime;
+    }
+
+    @Override
+    @JsonIgnore(false)
+    @JsonProperty
+    public Instant getLastModifiedDate() {
+        return super.getLastModifiedDate();
     }
 
     @Override
