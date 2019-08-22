@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -70,6 +71,7 @@ public class NhiMonthDeclaration implements Serializable {
         this.institution = institution;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<NhiMonthDeclarationDetails> getNhiMonthDeclarationDetails() {
         return nhiMonthDeclarationDetails;
     }

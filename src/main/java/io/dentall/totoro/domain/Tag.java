@@ -1,6 +1,7 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -111,6 +112,7 @@ public class Tag implements Serializable {
         this.order = order;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Patient> getPatients() {
         return patients;
     }

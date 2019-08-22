@@ -1,6 +1,7 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -146,6 +147,7 @@ public class Prescription implements Serializable {
         this.mode = mode;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<TreatmentDrug> getTreatmentDrugs() {
         return treatmentDrugs;
     }
@@ -171,6 +173,7 @@ public class Prescription implements Serializable {
         this.treatmentDrugs = treatmentDrugs;
     }
 
+    @ApiModelProperty(hidden = true)
     public Disposal getDisposal() {
         return disposal;
     }

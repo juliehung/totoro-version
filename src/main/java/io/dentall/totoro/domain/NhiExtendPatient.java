@@ -3,6 +3,7 @@ package io.dentall.totoro.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
@@ -212,6 +213,7 @@ public class NhiExtendPatient extends AbstractAuditingEntity implements Serializ
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    @ApiModelProperty(hidden = true)
     public Set<NhiMedicalRecord> getNhiMedicalRecords() {
         return nhiMedicalRecords;
     }

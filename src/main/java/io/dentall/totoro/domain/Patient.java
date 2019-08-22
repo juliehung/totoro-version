@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.enumeration.Blood;
 import io.dentall.totoro.domain.enumeration.Gender;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -512,6 +513,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.questionnaire = questionnaire;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Appointment> getAppointments() {
         return appointments;
     }
@@ -625,6 +627,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.tags = tags;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Patient> getChildren() {
         return children;
     }
@@ -650,6 +653,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.children = patients;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Patient> getSpouse2S() {
         return spouse2S;
     }
@@ -688,6 +692,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.patientIdentity = patientIdentity;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Todo> getTodos() {
         return todos;
     }
@@ -713,6 +718,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.todos = todos;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Tooth> getTeeth() {
         return teeth;
     }
@@ -765,6 +771,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.firstDoctor = firstDoctor;
     }
 
+    @ApiModelProperty(hidden = true)
     public NhiExtendPatient getNhiExtendPatient() {
         return nhiExtendPatient;
     }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -504,6 +505,7 @@ public class NhiExtendDisposal implements Serializable {
         this.examinationPoint = examinationPoint;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<NhiExtendTreatmentProcedure> getNhiExtendTreatmentProcedures() {
         return nhiExtendTreatmentProcedures;
     }
@@ -529,6 +531,7 @@ public class NhiExtendDisposal implements Serializable {
         this.nhiExtendTreatmentProcedures = nhiExtendTreatmentProcedures;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<NhiExtendTreatmentDrug> getNhiExtendTreatmentDrugs() {
         return nhiExtendTreatmentDrugs;
     }
@@ -554,6 +557,7 @@ public class NhiExtendDisposal implements Serializable {
         this.nhiExtendTreatmentDrugs = nhiExtendTreatmentDrugs;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<NhiDayUploadDetails> getNhiDayUploadDetails() {
         return nhiDayUploadDetails;
     }

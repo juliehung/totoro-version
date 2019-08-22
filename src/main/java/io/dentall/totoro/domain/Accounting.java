@@ -2,6 +2,7 @@ package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -234,6 +235,7 @@ public class Accounting implements Serializable {
         this.hospital = hospital;
     }
 
+    @ApiModelProperty(hidden = true)
     public Registration getRegistration() {
         return registration;
     }
