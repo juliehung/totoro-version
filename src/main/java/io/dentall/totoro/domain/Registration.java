@@ -3,6 +3,7 @@ package io.dentall.totoro.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -131,6 +132,7 @@ public class Registration extends AbstractAuditingEntity implements Serializable
         this.noCard = noCard;
     }
 
+    @ApiModelProperty(hidden = true)
     public Appointment getAppointment() {
         return appointment;
     }
@@ -157,6 +159,7 @@ public class Registration extends AbstractAuditingEntity implements Serializable
         this.accounting = accounting;
     }
 
+    @ApiModelProperty(hidden = true)
     public Disposal getDisposal() {
         return disposal;
     }

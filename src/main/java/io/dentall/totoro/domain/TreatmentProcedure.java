@@ -3,6 +3,7 @@ package io.dentall.totoro.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -281,6 +282,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
         this.appointment = appointment;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Tooth> getTeeth() {
         return teeth;
     }
@@ -306,6 +308,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
         this.teeth = teeth;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Todo> getTodos() {
         return todos;
     }
@@ -345,6 +348,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    @ApiModelProperty(hidden = true)
     public NhiExtendTreatmentProcedure getNhiExtendTreatmentProcedure() {
         return nhiExtendTreatmentProcedure;
     }

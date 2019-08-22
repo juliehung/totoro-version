@@ -2,6 +2,7 @@ package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -236,6 +237,7 @@ public class NhiProcedure implements Serializable {
         this.nhiIcd9Cm = nhiIcd9Cm;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<NhiIcd10Pcs> getNhiIcd10Pcs() {
         return nhiIcd10Pcs;
     }

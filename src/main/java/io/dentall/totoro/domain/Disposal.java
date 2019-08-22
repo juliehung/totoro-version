@@ -2,6 +2,7 @@ package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -134,6 +135,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
         this.chiefComplaint = chiefComplaint;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<TreatmentProcedure> getTreatmentProcedures() {
         return treatmentProcedures;
     }
@@ -198,6 +200,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
         this.registration = registration;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Tooth> getTeeth() {
         return teeth;
     }
@@ -224,6 +227,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    @ApiModelProperty(hidden = true)
     public Set<NhiExtendDisposal> getNhiExtendDisposals() {
         return nhiExtendDisposals;
     }

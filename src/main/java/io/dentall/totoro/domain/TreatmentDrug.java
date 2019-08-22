@@ -2,6 +2,7 @@ package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -138,6 +139,7 @@ public class TreatmentDrug implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    @ApiModelProperty(hidden = true)
     public NhiExtendTreatmentDrug getNhiExtendTreatmentDrug() {
         return nhiExtendTreatmentDrug;
     }

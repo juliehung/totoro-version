@@ -1,6 +1,7 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -158,6 +159,7 @@ public class Treatment extends AbstractDoctorAndAuditingEntity<Treatment> implem
         this.patient = patient;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<TreatmentPlan> getTreatmentPlans() {
         return treatmentPlans;
     }
