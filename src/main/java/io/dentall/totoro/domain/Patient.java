@@ -718,7 +718,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.todos = todos;
     }
 
-    @ApiModelProperty(hidden = true)
     public Set<Tooth> getTeeth() {
         return teeth;
     }

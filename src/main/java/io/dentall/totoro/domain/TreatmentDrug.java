@@ -112,6 +112,7 @@ public class TreatmentDrug implements Serializable {
         this.quantity = quantity;
     }
 
+    @ApiModelProperty(hidden = true)
     public Prescription getPrescription() {
         return prescription;
     }
@@ -139,7 +140,6 @@ public class TreatmentDrug implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    @ApiModelProperty(hidden = true)
     public NhiExtendTreatmentDrug getNhiExtendTreatmentDrug() {
         return nhiExtendTreatmentDrug;
     }

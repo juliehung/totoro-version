@@ -1,6 +1,7 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -160,6 +161,7 @@ public class ExtendUser implements Serializable, Avatar {
         this.user = user;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Patient> getLastPatients() {
         return lastPatients;
     }
@@ -185,6 +187,7 @@ public class ExtendUser implements Serializable, Avatar {
         this.lastPatients = lastPatients;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Patient> getFirstPatients() {
         return firstPatients;
     }
@@ -210,6 +213,7 @@ public class ExtendUser implements Serializable, Avatar {
         this.firstPatients = firstPatients;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Appointment> getAppointments() {
         return appointments;
     }
@@ -235,6 +239,7 @@ public class ExtendUser implements Serializable, Avatar {
         this.appointments = appointments;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<TreatmentProcedure> getTreatmentProcedures() {
         return treatmentProcedures;
     }
@@ -260,6 +265,7 @@ public class ExtendUser implements Serializable, Avatar {
         this.treatmentProcedures = treatmentProcedures;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<TreatmentTask> getTreatmentTasks() {
         return treatmentTasks;
     }
@@ -285,6 +291,7 @@ public class ExtendUser implements Serializable, Avatar {
         this.treatmentTasks = treatmentTasks;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Procedure> getProcedures() {
         return procedures;
     }
@@ -310,6 +317,7 @@ public class ExtendUser implements Serializable, Avatar {
         this.procedures = procedures;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Treatment> getTreatments() {
         return treatments;
     }
@@ -335,6 +343,7 @@ public class ExtendUser implements Serializable, Avatar {
         this.treatments = treatments;
     }
 
+    @ApiModelProperty(hidden = true)
     public Set<Calendar> getCalendars() {
         return calendars;
     }
