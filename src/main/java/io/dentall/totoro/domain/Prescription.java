@@ -147,7 +147,6 @@ public class Prescription implements Serializable {
         this.mode = mode;
     }
 
-    @ApiModelProperty(hidden = true)
     public Set<TreatmentDrug> getTreatmentDrugs() {
         return treatmentDrugs;
     }

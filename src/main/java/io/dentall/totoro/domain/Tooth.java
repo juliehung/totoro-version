@@ -3,6 +3,7 @@ package io.dentall.totoro.domain;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
@@ -109,6 +110,7 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
         this.status = status;
     }
 
+    @ApiModelProperty(hidden = true)
     public TreatmentProcedure getTreatmentProcedure() {
         return treatmentProcedure;
     }
@@ -122,6 +124,7 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
         this.treatmentProcedure = treatmentProcedure;
     }
 
+    @ApiModelProperty(hidden = true)
     public Disposal getDisposal() {
         return disposal;
     }
@@ -135,6 +138,7 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
         this.disposal = disposal;
     }
 
+    @ApiModelProperty(hidden = true)
     public Patient getPatient() {
         return patient;
     }

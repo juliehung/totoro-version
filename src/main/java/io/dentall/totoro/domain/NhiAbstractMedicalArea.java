@@ -1,6 +1,7 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
@@ -208,6 +209,7 @@ public abstract class NhiAbstractMedicalArea<ENTITY extends NhiAbstractMedicalAr
         this.check = check;
     }
 
+    @ApiModelProperty(hidden = true)
     @Override
     public NhiExtendDisposal getNhiExtendDisposal() {
         return nhiExtendDisposal;

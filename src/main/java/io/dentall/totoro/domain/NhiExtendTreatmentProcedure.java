@@ -1,6 +1,7 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -36,6 +37,7 @@ public class NhiExtendTreatmentProcedure extends NhiAbstractMedicalArea<NhiExten
         this.id = id;
     }
 
+    @ApiModelProperty(hidden = true)
     public TreatmentProcedure getTreatmentProcedure() {
         return treatmentProcedure;
     }
