@@ -2,6 +2,8 @@ package io.dentall.totoro.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
@@ -38,6 +40,8 @@ public class DisposalCriteria implements Serializable {
     private LongFilter todoId;
 
     private InstantFilter dateTime;
+
+    private InstantFilter dateTimeEnd;
 
     private LongFilter registrationId;
 
@@ -135,6 +139,14 @@ public class DisposalCriteria implements Serializable {
         this.toothId = toothId;
     }
 
+    public InstantFilter getDateTimeEnd() {
+        return dateTimeEnd;
+    }
+
+    public void setDateTimeEnd(InstantFilter dateTimeEnd) {
+        this.dateTimeEnd = dateTimeEnd;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -154,7 +166,8 @@ public class DisposalCriteria implements Serializable {
             Objects.equals(registrationId, that.registrationId) &&
             Objects.equals(patientId, that.patientId) &&
             Objects.equals(createdDate, that.createdDate) &&
-            Objects.equals(toothId, that.toothId);
+            Objects.equals(toothId, that.toothId) &&
+            Objects.equals(dateTimeEnd, that.dateTimeEnd);
     }
 
     @Override
@@ -170,7 +183,8 @@ public class DisposalCriteria implements Serializable {
             registrationId,
             patientId,
             createdDate,
-            toothId
+            toothId,
+            dateTimeEnd
         );
     }
 
@@ -188,6 +202,7 @@ public class DisposalCriteria implements Serializable {
             (patientId != null ? "patientId=" + patientId + ", " : "") +
             (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
             (toothId != null ? "toothId=" + toothId + ", " : "") +
+            (dateTimeEnd != null ? "dateTimeEnd=" + dateTimeEnd + ", " : "") +
             "}";
     }
 
