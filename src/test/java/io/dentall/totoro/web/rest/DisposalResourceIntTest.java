@@ -55,6 +55,9 @@ public class DisposalResourceIntTest {
     private static final Instant DEFAULT_DATE_TIME = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final Instant DEFAULT_DATE_TIME_END = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_DATE_TIME_END = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String DEFAULT_CHIEF_COMPLAINT = "AAAAAAAAAA";
     private static final String UPDATED_CHIEF_COMPLAINT = "BBBBBBBBBB";
 
@@ -124,6 +127,7 @@ public class DisposalResourceIntTest {
             .status(DEFAULT_STATUS)
             .total(DEFAULT_TOTAL)
             .dateTime(DEFAULT_DATE_TIME)
+            .dateTimeEnd(DEFAULT_DATE_TIME_END)
             .chiefComplaint(DEFAULT_CHIEF_COMPLAINT);
         return disposal;
     }
@@ -156,6 +160,7 @@ public class DisposalResourceIntTest {
         assertThat(testDisposal.getTotal()).isEqualTo(DEFAULT_TOTAL);
         assertThat(testDisposal.getCreatedBy()).isEqualTo(appointment.getDoctor().getUser().getLogin());
         assertThat(testDisposal.getDateTime()).isEqualTo(DEFAULT_DATE_TIME);
+        assertThat(testDisposal.getDateTimeEnd()).isEqualTo(DEFAULT_DATE_TIME_END);
         assertThat(testDisposal.getChiefComplaint()).isEqualTo(DEFAULT_CHIEF_COMPLAINT);
     }
 
@@ -210,6 +215,7 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())))
             .andExpect(jsonPath("$.[*].dateTime").value(hasItem(DEFAULT_DATE_TIME.toString())))
+            .andExpect(jsonPath("$.[*].dateTimeEnd").value(hasItem(DEFAULT_DATE_TIME_END.toString())))
             .andExpect(jsonPath("$.[*].chiefComplaint").value(hasItem(DEFAULT_CHIEF_COMPLAINT.toString())));
     }
     
@@ -227,6 +233,7 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.total").value(DEFAULT_TOTAL.doubleValue()))
             .andExpect(jsonPath("$.dateTime").value(DEFAULT_DATE_TIME.toString()))
+            .andExpect(jsonPath("$.dateTimeEnd").value(DEFAULT_DATE_TIME_END.toString()))
             .andExpect(jsonPath("$.chiefComplaint").value(DEFAULT_CHIEF_COMPLAINT.toString()));
     }
 
@@ -319,6 +326,12 @@ public class DisposalResourceIntTest {
 
         // Get all the disposalList where dateTime equals to UPDATED_DATE_TIME
         defaultDisposalShouldNotBeFound("dateTime.equals=" + UPDATED_DATE_TIME);
+
+        // Get all the disposalList where dateTime equals to DEFAULT_DATE_TIME
+        defaultDisposalShouldBeFound("dateTimeEnd.equals=" + DEFAULT_DATE_TIME_END);
+
+        // Get all the disposalList where dateTime equals to UPDATED_DATE_TIME
+        defaultDisposalShouldNotBeFound("dateTimeEnd.equals=" + UPDATED_DATE_TIME_END);
     }
 
     @Test
@@ -332,6 +345,12 @@ public class DisposalResourceIntTest {
 
         // Get all the disposalList where dateTime equals to UPDATED_DATE_TIME
         defaultDisposalShouldNotBeFound("dateTime.in=" + UPDATED_DATE_TIME);
+
+        // Get all the disposalList where dateTime in DEFAULT_DATE_TIME_END or UPDATED_DATE_TIME_END
+        defaultDisposalShouldBeFound("dateTimeEnd.in=" + DEFAULT_DATE_TIME_END + "," + UPDATED_DATE_TIME_END);
+
+        // Get all the disposalList where dateTime equals to UPDATED_DATE_TIME_END
+        defaultDisposalShouldNotBeFound("dateTimeEnd.in=" + UPDATED_DATE_TIME_END);
     }
 
     @Test
@@ -456,6 +475,7 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.doubleValue())))
             .andExpect(jsonPath("$.[*].dateTime").value(hasItem(DEFAULT_DATE_TIME.toString())))
+            .andExpect(jsonPath("$.[*].dateTimeEnd").value(hasItem(DEFAULT_DATE_TIME_END.toString())))
             .andExpect(jsonPath("$.[*].chiefComplaint").value(hasItem(DEFAULT_CHIEF_COMPLAINT.toString())));
 
         // Check, that the count call also returns 1

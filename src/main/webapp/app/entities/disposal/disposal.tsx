@@ -87,6 +87,9 @@ export class Disposal extends React.Component<IDisposalProps, IDisposalState> {
                 <th className="hand" onClick={this.sort('chiefComplaint')}>
                   <Translate contentKey="totoroApp.disposal.chiefComplaint">Chief Complaint</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('dateTimeEnd')}>
+                  <Translate contentKey="totoroApp.disposal.dateTimeEnd">Date Time End</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="totoroApp.disposal.prescription">Prescription</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -115,6 +118,9 @@ export class Disposal extends React.Component<IDisposalProps, IDisposalState> {
                     <TextFormat type="date" value={disposal.dateTime} format={APP_DATE_FORMAT} />
                   </td>
                   <td>{disposal.chiefComplaint}</td>
+                  <td>
+                    <TextFormat type="date" value={disposal.dateTimeEnd} format={APP_DATE_FORMAT} />
+                  </td>
                   <td>
                     {disposal.prescription ? <Link to={`prescription/${disposal.prescription.id}`}>{disposal.prescription.id}</Link> : ''}
                   </td>

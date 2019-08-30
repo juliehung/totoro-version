@@ -265,6 +265,10 @@ public class DisposalService {
                     disposal.setRegistration(registrationService.update(updateDisposal.getRegistration()));
                 }
 
+                if (updateDisposal.getDateTimeEnd() != null) {
+                    disposal.setDateTimeEnd(updateDisposal.getDateTimeEnd());
+                }
+
                 return disposal;
             })
             .get();

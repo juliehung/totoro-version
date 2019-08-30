@@ -59,6 +59,10 @@
         {
             "fieldName": "chiefComplaint",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "dateTimeEnd",
+            "fieldType": "Instant"
         }
     ],
     "changelogDate": "20190220033723",

@@ -126,6 +126,10 @@ public class DisposalQueryService extends QueryService<Disposal> {
                 specification = specification.and(buildSpecification(criteria.getToothId(),
                     root -> root.join(Disposal_.teeth, JoinType.LEFT).get(Tooth_.id)));
             }
+
+            if (criteria.getDateTimeEnd() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getDateTimeEnd(), Disposal_.dateTimeEnd));
+            }
         }
         return specification;
     }

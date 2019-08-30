@@ -75,6 +75,22 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     private String createdBy;
 
+    @Column(name = "date_time_end")
+    private Instant dateTimeEnd;
+
+    public Disposal dateTimeEnd(Instant dateTimeEnd) {
+        this.dateTimeEnd = dateTimeEnd;
+        return this;
+    }
+
+    public Instant getDateTimeEnd() {
+        return dateTimeEnd;
+    }
+
+    public void setDateTimeEnd(Instant dateTimeEnd) {
+        this.dateTimeEnd = dateTimeEnd;
+    }
+
     public Long getId() {
         return id;
     }

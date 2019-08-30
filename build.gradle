@@ -350,6 +350,7 @@ checkstyle {
     configFile = file("${configDir}/google_checks.xml")
     toolVersion = '8.23'
     maxWarnings = 0
+    sourceSets = [project.sourceSets.main]
 }
 
 checkstyleMain.include 'io/dentall/totoro/business/**'

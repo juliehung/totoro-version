@@ -19,6 +19,7 @@
       "total": "Total",
       "dateTime": "Date Time",
       "chiefComplaint": "Chief Complaint",
+      "dateTimeEnd": "Date Time End",
       "treatmentProcedure": "Treatment Procedure",
       "prescription": "Prescription",
       "todo": "Todo",

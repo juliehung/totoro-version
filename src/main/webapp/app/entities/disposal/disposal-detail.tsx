@@ -55,6 +55,14 @@ export class DisposalDetail extends React.Component<IDisposalDetailProps> {
             </dt>
             <dd>{disposalEntity.chiefComplaint}</dd>
             <dt>
+              <span id="dateTimeEnd">
+                <Translate contentKey="totoroApp.disposal.dateTimeEnd">Date Time End</Translate>
+              </span>
+            </dt>
+            <dd>
+              <TextFormat value={disposalEntity.dateTimeEnd} type="date" format={APP_DATE_FORMAT} />
+            </dd>
+            <dt>
               <Translate contentKey="totoroApp.disposal.prescription">Prescription</Translate>
             </dt>
             <dd>{disposalEntity.prescription ? disposalEntity.prescription.id : ''}</dd>

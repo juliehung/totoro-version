@@ -17,6 +17,7 @@ export interface IDisposal {
   total?: number;
   dateTime?: Moment;
   chiefComplaint?: string;
+  dateTimeEnd?: Moment;
   treatmentProcedures?: ITreatmentProcedure[];
   prescription?: IPrescription;
   todo?: ITodo;
