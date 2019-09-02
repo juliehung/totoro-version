@@ -460,7 +460,7 @@ public class NhiExtendDisposal implements Serializable {
         return date;
     }
 
-    public void setDate(String a17) {
+    private void setDate(String a17) {
         if (a17 != null) {
             date = LocalDate.of(Integer.parseInt(a17.substring(0, 3)) + 1911, Integer.parseInt(a17.substring(3, 5)), Integer.parseInt(a17.substring(5, 7)));
         }
