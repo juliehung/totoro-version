@@ -1,6 +1,7 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +23,6 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
     List<NhiExtendDisposal> findByDateGreaterThanEqualAndPatientIdOrderByDateDesc(LocalDate after, Long patientId);
 
     List<NhiExtendDisposal> findByDateBetweenAndPatientId(LocalDate start, LocalDate end, Long patientId);
+
+    List<NhiExtendDisposal> findByDateBetweenAndUploadStatusNot(LocalDate start, LocalDate end, NhiExtendDisposalUploadStatus status);
 }
