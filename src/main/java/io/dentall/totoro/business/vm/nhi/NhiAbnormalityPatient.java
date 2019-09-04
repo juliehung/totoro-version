@@ -5,6 +5,7 @@ import io.dentall.totoro.domain.Patient;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Map;
 
 public class NhiAbnormalityPatient implements Serializable {
 
@@ -28,6 +29,9 @@ public class NhiAbnormalityPatient implements Serializable {
 
     @JsonProperty
     private Long count;
+
+    @JsonProperty
+    private Map<String, Double> ratioOf90004cTo90015c;
 
     public NhiAbnormalityPatient(Patient patient) {
         id = patient.getId();
@@ -126,5 +130,18 @@ public class NhiAbnormalityPatient implements Serializable {
 
     public void setCount(Long count) {
         this.count = count;
+    }
+
+    public Map<String, Double> getRatioOf90004cTo90015c() {
+        return ratioOf90004cTo90015c;
+    }
+
+    public NhiAbnormalityPatient ratioOf90004cTo90015c(Map<String, Double> ratioOf90004cTo90015c) {
+        this.ratioOf90004cTo90015c = ratioOf90004cTo90015c;
+        return this;
+    }
+
+    public void setRatioOf90004cTo90015c(Map<String, Double> ratioOf90004cTo90015c) {
+        this.ratioOf90004cTo90015c = ratioOf90004cTo90015c;
     }
 }

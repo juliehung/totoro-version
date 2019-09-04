@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -156,5 +157,56 @@ public class NhiAbnormalityServiceIntTest {
         NhiAbnormalityPatient nhiAbnormalityPatient = nhiAbnormalityDoctor.getPatients().get(0);
         assertThat(nhiAbnormalityPatient.getId()).isEqualTo(patient.getId());
         assertThat(nhiAbnormalityPatient.getCount()).isEqualTo(2);
+    }
+
+    @Test
+    @Transactional
+    public void testGetDoctorsByRatio() {
+        LocalDate date = OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toLocalDate();
+
+        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure1 = new NhiExtendTreatmentProcedure().a73("90015C").a74("1122");
+        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure2 = new NhiExtendTreatmentProcedure().a73("90015C").a74("3344");
+        Disposal disposal1 = new Disposal().status(DisposalStatus.PERMANENT);
+        disposalRepository.save(disposal1);
+        disposal1.setCreatedBy(user.getLogin());
+        NhiExtendDisposal nhiExtendDisposal1 = new NhiExtendDisposal()
+            .a17(date.getYear() - 1911 + monthFormatter.format(date) + "20")
+            .patientId(patient.getId())
+            .nhiExtendTreatmentProcedures(new HashSet<>(Arrays.asList(nhiExtendTreatmentProcedure1, nhiExtendTreatmentProcedure2)))
+            .disposal(disposal1)
+            .uploadStatus(NhiExtendDisposalUploadStatus.NORMAL);
+        nhiExtendDisposalRepository.save(nhiExtendDisposal1);
+        nhiExtendTreatmentProcedure1.setNhiExtendDisposal(nhiExtendDisposal1);
+        nhiExtendTreatmentProcedure2.setNhiExtendDisposal(nhiExtendDisposal1);
+
+        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure3 = new NhiExtendTreatmentProcedure().a73("90004C").a74("1144");
+        Disposal disposal2 = new Disposal().status(DisposalStatus.PERMANENT);
+        disposalRepository.save(disposal2);
+        disposal2.setCreatedBy(user.getLogin());
+        NhiExtendDisposal nhiExtendDisposal2 = new NhiExtendDisposal()
+            .a17(date.getYear() - 1911 + monthFormatter.format(date) + "01")
+            .patientId(patient.getId())
+            .nhiExtendTreatmentProcedures(new HashSet<>(Collections.singletonList(nhiExtendTreatmentProcedure3)))
+            .disposal(disposal2)
+            .uploadStatus(NhiExtendDisposalUploadStatus.NORMAL);
+        nhiExtendDisposalRepository.save(nhiExtendDisposal2);
+        nhiExtendTreatmentProcedure3.setNhiExtendDisposal(nhiExtendDisposal2);
+
+        List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
+            .findByDateBetweenAndUploadStatusNot(
+                DateTimeUtil.localMonthFirstDay.get(),
+                DateTimeUtil.localMonthLastDay.get(),
+                NhiExtendDisposalUploadStatus.NONE
+            );
+        List<NhiAbnormalityDoctor> doctors = nhiAbnormalityService.getDoctorsByRatioOf90004cTo90015c(nhiExtendDisposals, 0.2);
+
+        assertThat(doctors).hasSize(1);
+        NhiAbnormalityDoctor nhiAbnormalityDoctor = doctors.get(0);
+        assertThat(nhiAbnormalityDoctor.getId()).isEqualTo(user.getId());
+        assertThat(nhiAbnormalityDoctor.getPatients()).hasSize(1);
+        NhiAbnormalityPatient nhiAbnormalityPatient = nhiAbnormalityDoctor.getPatients().get(0);
+        assertThat(nhiAbnormalityPatient.getId()).isEqualTo(patient.getId());
+        assertThat(nhiAbnormalityPatient.getRatioOf90004cTo90015c().get("11")).isEqualTo(0.25);
+        assertThat(nhiAbnormalityPatient.getRatioOf90004cTo90015c().get("44")).isEqualTo(0.25);
     }
 }
