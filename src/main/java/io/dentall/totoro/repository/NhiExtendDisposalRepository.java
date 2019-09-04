@@ -1,8 +1,9 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
-import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -16,15 +17,44 @@ import java.util.List;
 @Repository
 public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long> {
 
-    List<NhiExtendDisposal> findByDate(LocalDate date);
+    String dateBetween = "(nhiExtendDisposal.date between :start and :end or " +
+        "(nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate between :start and :end)) ";
 
-    List<NhiExtendDisposal> findByDateBetween(LocalDate start, LocalDate end);
+    String dateGte = "(nhiExtendDisposal.date >= :gte or " +
+        "(nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate >= :gte)) ";
 
-    List<NhiExtendDisposal> findByDateGreaterThanEqualAndPatientIdOrderByDateDesc(LocalDate after, Long patientId);
+    @Query(
+        "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
+            "(nhiExtendDisposal.date = :date or " +
+            "(nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate = :date))"
+    )
+    List<NhiExtendDisposal> findByDate(@Param("date") LocalDate date);
 
-    List<NhiExtendDisposal> findByDateBetweenAndPatientId(LocalDate start, LocalDate end, Long patientId);
+    @Query("select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " + dateBetween)
+    List<NhiExtendDisposal> findByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
 
-    List<NhiExtendDisposal> findByDateBetweenAndUploadStatusNot(LocalDate start, LocalDate end, NhiExtendDisposalUploadStatus status);
+    @Query(
+        "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
+            "nhiExtendDisposal.patientId = :patientId and " + dateGte +
+            "order by nhiExtendDisposal.date, nhiExtendDisposal.replenishmentDate desc"
+    )
+    List<NhiExtendDisposal> findByDateGreaterThanEqualAndPatientIdOrderByDateDesc(@Param("gte") LocalDate gte, @Param("patientId") Long patientId);
 
-    List<NhiExtendDisposal> findByDateGreaterThanEqualAndPatientIdAndUploadStatusNot(LocalDate after, Long patientId, NhiExtendDisposalUploadStatus status);
+    @Query(
+        "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
+            "nhiExtendDisposal.patientId = :patientId and " + dateBetween
+    )
+    List<NhiExtendDisposal> findByDateBetweenAndPatientId(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("patientId") Long patientId);
+
+    @Query(
+        "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
+            "nhiExtendDisposal.uploadStatus <> 'NONE' and " + dateBetween
+    )
+    List<NhiExtendDisposal> findByDateBetweenAndUploadStatusNotNone(@Param("start") LocalDate start, @Param("end") LocalDate end);
+
+    @Query(
+        "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
+            "nhiExtendDisposal.uploadStatus <> 'NONE' and nhiExtendDisposal.patientId = :patientId and " + dateGte
+    )
+    List<NhiExtendDisposal> findByDateGreaterThanEqualAndPatientIdAndUploadStatusNotNone(@Param("gte") LocalDate gte, @Param("patientId") Long patientId);
 }

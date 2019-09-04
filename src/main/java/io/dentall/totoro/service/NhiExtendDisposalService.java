@@ -97,7 +97,7 @@ public class NhiExtendDisposalService {
     }
 
     /**
-     * Get the nhiExtendDisposalVMs by date.
+     * Get the nhiExtendDisposalVMs by date or replenishmentDate.
      *
      * @return the list of entities
      */

@@ -100,10 +100,9 @@ public class NhiAbnormalityServiceIntTest {
         nhiExtendTreatmentProcedure2.setNhiExtendDisposal(nhiExtendDisposal);
 
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNot(
+            .findByDateBetweenAndUploadStatusNotNone(
                 DateTimeUtil.localMonthFirstDay.get(),
-                DateTimeUtil.localMonthLastDay.get(),
-                NhiExtendDisposalUploadStatus.NONE
+                DateTimeUtil.localMonthLastDay.get()
             );
         List<NhiAbnormalityDoctor> doctors = nhiAbnormalityService.getDoctorsByCode(nhiExtendDisposals, "9999C", 1);
 
@@ -143,10 +142,9 @@ public class NhiAbnormalityServiceIntTest {
         nhiExtendDisposalRepository.save(nhiExtendDisposal2);
 
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNot(
+            .findByDateBetweenAndUploadStatusNotNone(
                 DateTimeUtil.localMonthFirstDay.get(),
-                DateTimeUtil.localMonthLastDay.get(),
-                NhiExtendDisposalUploadStatus.NONE
+                DateTimeUtil.localMonthLastDay.get()
             );
         List<NhiAbnormalityDoctor> doctors = nhiAbnormalityService.getDoctorsByFrequency(nhiExtendDisposals, 1);
 
@@ -161,7 +159,7 @@ public class NhiAbnormalityServiceIntTest {
 
     @Test
     @Transactional
-    public void testGetDoctorsByRatio() {
+    public void testGetDoctorsByRatioOf90004cTo90015c() {
         LocalDate date = OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toLocalDate();
 
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure1 = new NhiExtendTreatmentProcedure().a73("90015C").a74("1122");
@@ -171,6 +169,8 @@ public class NhiAbnormalityServiceIntTest {
         disposal1.setCreatedBy(user.getLogin());
         NhiExtendDisposal nhiExtendDisposal1 = new NhiExtendDisposal()
             .a17(date.getYear() - 1911 + monthFormatter.format(date) + "20")
+            .a19("2")
+            .a54(date.getYear() - 1911 + monthFormatter.format(date) + "10")
             .patientId(patient.getId())
             .nhiExtendTreatmentProcedures(new HashSet<>(Arrays.asList(nhiExtendTreatmentProcedure1, nhiExtendTreatmentProcedure2)))
             .disposal(disposal1)
@@ -193,10 +193,9 @@ public class NhiAbnormalityServiceIntTest {
         nhiExtendTreatmentProcedure3.setNhiExtendDisposal(nhiExtendDisposal2);
 
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNot(
+            .findByDateBetweenAndUploadStatusNotNone(
                 DateTimeUtil.localMonthFirstDay.get(),
-                DateTimeUtil.localMonthLastDay.get(),
-                NhiExtendDisposalUploadStatus.NONE
+                DateTimeUtil.localMonthLastDay.get()
             );
         List<NhiAbnormalityDoctor> doctors = nhiAbnormalityService.getDoctorsByRatioOf90004cTo90015c(nhiExtendDisposals, 0.2);
 

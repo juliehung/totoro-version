@@ -43,10 +43,9 @@ public class NhiAbnormalityService {
     public NhiAbnormality getNhiAbnormality(int yyyymm) {
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNot(
+            .findByDateBetweenAndUploadStatusNotNone(
                 ym.atDay(1),
-                ym.atEndOfMonth(),
-                NhiExtendDisposalUploadStatus.NONE
+                ym.atEndOfMonth()
             );
 
         NhiAbnormality nhiAbnormality = new NhiAbnormality();
@@ -120,10 +119,9 @@ public class NhiAbnormalityService {
             );
             nhiExtTxPsByPatientDate.forEach((entry, nhiExtendTreatmentProcedures) -> {
                 List<NhiExtendDisposal> nhiExtDisposals = nhiExtendDisposalRepository
-                    .findByDateGreaterThanEqualAndPatientIdAndUploadStatusNot(
+                    .findByDateGreaterThanEqualAndPatientIdAndUploadStatusNotNone(
                         entry.getValue().minusDays(30),
-                        entry.getKey(),
-                        NhiExtendDisposalUploadStatus.NONE
+                        entry.getKey()
                     );
 
                 Set<String> positions = nhiExtendTreatmentProcedures
