@@ -17,15 +17,15 @@ import java.util.List;
 @Repository
 public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long> {
 
-    String dateBetween = "(nhiExtendDisposal.date between :start and :end or " +
+    String dateBetween = "((nhiExtendDisposal.date between :start and :end and nhiExtendDisposal.a54 is null) or " +
         "(nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate between :start and :end)) ";
 
-    String dateGte = "(nhiExtendDisposal.date >= :gte or " +
+    String dateGte = "((nhiExtendDisposal.date >= :gte and nhiExtendDisposal.a54 is null) or " +
         "(nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate >= :gte)) ";
 
     @Query(
         "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
-            "(nhiExtendDisposal.date = :date or " +
+            "((nhiExtendDisposal.date = :date and nhiExtendDisposal.a54 is null) or " +
             "(nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate = :date))"
     )
     List<NhiExtendDisposal> findByDate(@Param("date") LocalDate date);
