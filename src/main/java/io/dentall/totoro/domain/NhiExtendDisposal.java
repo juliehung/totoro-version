@@ -149,6 +149,10 @@ public class NhiExtendDisposal implements Serializable {
     @Column(name = "patient_id")
     private Long patientId;
 
+    // 案件分類
+    @Column(name = "category")
+    private String category;
+
     @OneToMany(mappedBy = "nhiExtendDisposal", fetch = FetchType.EAGER)
     private Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = null;
 
@@ -610,6 +614,19 @@ public class NhiExtendDisposal implements Serializable {
         this.patientId = patientId;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public NhiExtendDisposal category(String category) {
+        this.category = category;
+        return this;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -662,6 +679,7 @@ public class NhiExtendDisposal implements Serializable {
             ", patientIdentity='" + getPatientIdentity() + "'" +
             ", serialNumber='" + getSerialNumber() + "'" +
             ", patientId='" + getPatientId() + "'" +
+            ", category='" + getCategory() + "'" +
             "}";
     }
 }

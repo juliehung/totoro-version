@@ -271,6 +271,10 @@ public class NhiExtendDisposalService {
                     nhiExtendDisposal.setSerialNumber(updateNhiExtendDisposal.getSerialNumber());
                 }
 
+                if (updateNhiExtendDisposal.getCategory() != null) {
+                    nhiExtendDisposal.setCategory(updateNhiExtendDisposal.getCategory());
+                }
+
                 log.debug("Update nhiExtendTreatmentProcedures({}) of NhiExtendDisposal(id: {})", updateNhiExtendDisposal.getNhiExtendTreatmentProcedures(), updateNhiExtendDisposal.getId());
                 relationshipService.addRelationshipWithNhiExtendTreatmentProcedures(nhiExtendDisposal, updateNhiExtendDisposal.getNhiExtendTreatmentProcedures());
 
