@@ -153,6 +153,10 @@ public class NhiExtendDisposal implements Serializable {
     @Column(name = "category")
     private String category;
 
+    @JsonProperty(access = READ_ONLY)
+    @Column(name = "replenishment_date")
+    private LocalDate replenishmentDate;
+
     @OneToMany(mappedBy = "nhiExtendDisposal", fetch = FetchType.EAGER)
     private Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = null;
 
@@ -453,11 +457,13 @@ public class NhiExtendDisposal implements Serializable {
 
     public NhiExtendDisposal a54(String a54) {
         this.a54 = a54;
+        setReplenishmentDate(a54);
         return this;
     }
 
     public void setA54(String a54) {
         this.a54 = a54;
+        setReplenishmentDate(a54);
     }
 
     public LocalDate getDate() {
@@ -627,6 +633,16 @@ public class NhiExtendDisposal implements Serializable {
         this.category = category;
     }
 
+    public LocalDate getReplenishmentDate() {
+        return replenishmentDate;
+    }
+
+    private void setReplenishmentDate(String a54) {
+        if (a54 != null) {
+            replenishmentDate = LocalDate.of(Integer.parseInt(a54.substring(0, 3)) + 1911, Integer.parseInt(a54.substring(3, 5)), Integer.parseInt(a54.substring(5, 7)));
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -680,6 +696,7 @@ public class NhiExtendDisposal implements Serializable {
             ", serialNumber='" + getSerialNumber() + "'" +
             ", patientId='" + getPatientId() + "'" +
             ", category='" + getCategory() + "'" +
+            ", replenishmentDate='" + getReplenishmentDate() + "'" +
             "}";
     }
 }
