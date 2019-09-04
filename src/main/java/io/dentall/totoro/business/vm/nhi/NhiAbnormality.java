@@ -11,6 +11,9 @@ public class NhiAbnormality implements Serializable {
     private List<NhiAbnormalityDoctor> frequentDoctors;
 
     @JsonProperty
+    private List<NhiAbnormalityDoctor> ratioOf90004cTo90015cDoctors;
+
+    @JsonProperty
     private List<NhiAbnormalityDoctor> code92003cDoctors;
 
     @JsonProperty
@@ -33,6 +36,16 @@ public class NhiAbnormality implements Serializable {
 
     public void setCode92003cDoctors(List<NhiAbnormalityDoctor> code92003cDoctors) {
         this.code92003cDoctors = code92003cDoctors;
+    }
+
+    public List<NhiAbnormalityDoctor> getRatioOf90004cTo90015cDoctors() {
+        return ratioOf90004cTo90015cDoctors;
+    }
+
+    public void setRatioOf90004cTo90015cDoctors(
+        List<NhiAbnormalityDoctor> ratioOf90004cTo90015cDoctors
+    ) {
+        this.ratioOf90004cTo90015cDoctors = ratioOf90004cTo90015cDoctors;
     }
 
     public List<NhiAbnormalityDoctor> getCode92071cDoctors() {

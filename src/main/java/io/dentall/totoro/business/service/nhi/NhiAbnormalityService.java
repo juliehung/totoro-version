@@ -13,9 +13,13 @@ import io.dentall.totoro.service.util.StreamUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class NhiAbnormalityService {
@@ -48,7 +52,10 @@ public class NhiAbnormalityService {
         NhiAbnormality nhiAbnormality = new NhiAbnormality();
 
         nhiAbnormality.setFrequentDoctors(getDoctorsByFrequency(nhiExtendDisposals, 9));
-        nhiAbnormality.setCode91013cDoctors(getDoctorsByCode(nhiExtendDisposals, "92003C", 20));
+        nhiAbnormality.setRatioOf90004cTo90015cDoctors(
+            getDoctorsByRatioOf90004cTo90015c(nhiExtendDisposals, 0.4)
+        );
+        nhiAbnormality.setCode92003cDoctors(getDoctorsByCode(nhiExtendDisposals, "92003C", 20));
         nhiAbnormality.setCode92071cDoctors(getDoctorsByCode(nhiExtendDisposals, "92071C", 40));
         nhiAbnormality.setCode91013cDoctors(getDoctorsByCode(nhiExtendDisposals, "91013C", 24));
 
@@ -61,7 +68,7 @@ public class NhiAbnormalityService {
     ) {
         Map<Long, Long> map = nhiExtendDisposals
             .stream()
-            .collect(Collectors.groupingBy(
+            .collect(groupingBy(
                 NhiExtendDisposal::getPatientId, Collectors.counting()
             ));
         List<NhiAbnormalityDoctor> doctors = new ArrayList<>();
@@ -85,6 +92,97 @@ public class NhiAbnormalityService {
                 nhiAbnormalityPatient.setCount(count);
                 nhiAbnormalityDoctor.getPatients().add(nhiAbnormalityPatient);
             }
+        });
+
+        return doctors;
+    }
+
+    @Transactional(readOnly = true)
+    public List<NhiAbnormalityDoctor> getDoctorsByRatioOf90004cTo90015c(
+        List<NhiExtendDisposal> nhiExtendDisposals, Double limit
+    ) {
+        Map<Long, Integer> patientTeethCount = getPatientTeethCountByCode(
+            nhiExtendDisposals, "90015C"
+        );
+        Map<
+            String,
+            Map<AbstractMap.SimpleEntry<Long, LocalDate>,
+                List<NhiExtendTreatmentProcedure>
+                >
+            >
+            map = getDoctorPatientDateNhiExtendTreatmentProceduresByCode(
+                nhiExtendDisposals, "90015C"
+        );
+        List<NhiAbnormalityDoctor> doctors = new ArrayList<>();
+        map.forEach((login, nhiExtTxPsByPatientDate) -> {
+            User user = userRepository.findOneByLogin(login).orElseThrow(() ->
+                ProblemUtil.notFoundException("user")
+            );
+            nhiExtTxPsByPatientDate.forEach((entry, nhiExtendTreatmentProcedures) -> {
+                List<NhiExtendDisposal> nhiExtDisposals = nhiExtendDisposalRepository
+                    .findByDateGreaterThanEqualAndPatientIdAndUploadStatusNot(
+                        entry.getValue().minusDays(30),
+                        entry.getKey(),
+                        NhiExtendDisposalUploadStatus.NONE
+                    );
+
+                Set<String> positions = nhiExtendTreatmentProcedures
+                    .stream()
+                    .flatMap(nhiExtendTreatmentProcedure ->
+                        Arrays.stream(
+                            nhiExtendTreatmentProcedure.getA74().split("(?<=\\G.{2})")
+                        )
+                    )
+                    .collect(Collectors.toSet());
+
+                positions.forEach(position -> {
+                    long count = getCountByCodeAndPosition(nhiExtDisposals, "90004C", position);
+                    if (count == 0) {
+                        return;
+                    }
+
+                    Integer teeth = patientTeethCount.get(entry.getKey());
+                    if (teeth != null && teeth > 0) {
+                        Double ratio = count / Double.valueOf(teeth);
+                        if (ratio > limit) {
+                            Patient patient = getPatient(entry.getKey());
+                            NhiAbnormalityDoctor nhiAbnormalityDoctor = doctors
+                                .stream()
+                                .filter(doctor -> doctor.getId().equals(user.getId()))
+                                .findFirst()
+                                .orElseGet(() -> {
+                                    NhiAbnormalityDoctor doctor = new NhiAbnormalityDoctor()
+                                        .id(user.getId());
+                                    doctor.setPatients(new ArrayList<>());
+                                    doctors.add(doctor);
+
+                                    return doctor;
+                                });
+
+                            NhiAbnormalityPatient nhiAbnormalityPatient = nhiAbnormalityDoctor
+                                .getPatients()
+                                .stream()
+                                .filter(p ->
+                                    p.getId().equals(patient.getId()) &&
+                                        p.getDate() == entry.getValue())
+                                .findFirst()
+                                .orElseGet(() -> {
+                                    NhiAbnormalityPatient p = new
+                                        NhiAbnormalityPatient(patient)
+                                        .date(entry.getValue())
+                                        .ratioOf90004cTo90015c(new HashMap<>());
+                                    nhiAbnormalityDoctor.getPatients().add(p);
+
+                                    return p;
+                                });
+
+                            nhiAbnormalityPatient
+                                .getRatioOf90004cTo90015c()
+                                .put(position, ratio);
+                        }
+                    }
+                });
+            });
         });
 
         return doctors;
@@ -129,6 +227,79 @@ public class NhiAbnormalityService {
         return doctors;
     }
 
+    private Map<Long, Integer> getPatientTeethCountByCode(
+        List<NhiExtendDisposal> nhiExtendDisposals, String code
+    ) {
+        return nhiExtendDisposals
+            .stream()
+            .flatMap(nhiExtendDisposal ->
+                StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures())
+            )
+            .filter(nhiExtendTreatmentProcedure ->
+                nhiExtendTreatmentProcedure.getA73().equals(code)
+            )
+            .collect(groupingBy(
+                nhiExtendTreatmentProcedure ->
+                nhiExtendTreatmentProcedure.getNhiExtendDisposal().getPatientId(),
+                Collector.of(
+                    () -> new int[1],
+                    (a, t) -> {
+                        a[0] += t.getA74().split("(?<=\\G.{2})").length;
+                        },
+                    (a, b) -> {
+                        a[0] += b[0];
+                        return a;
+                        },
+                    a -> a[0])
+            ));
+    }
+
+    private Map<
+        String, Map<AbstractMap.SimpleEntry<Long, LocalDate>, List<NhiExtendTreatmentProcedure>>
+        >
+    getDoctorPatientDateNhiExtendTreatmentProceduresByCode(
+        List<NhiExtendDisposal> nhiExtendDisposals, String code
+    ) {
+        return nhiExtendDisposals
+            .stream()
+            .flatMap(nhiExtendDisposal ->
+                StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures())
+            )
+            .filter(nhiExtendTreatmentProcedure ->
+                nhiExtendTreatmentProcedure.getA73().equals(code)
+            )
+            .collect(groupingBy(
+                nhiExtendTreatmentProcedure ->
+                    nhiExtendTreatmentProcedure
+                        .getNhiExtendDisposal()
+                        .getDisposal()
+                        .getCreatedBy(),
+                groupingBy(nhiExtendTreatmentProcedure ->
+                    new AbstractMap.SimpleEntry<>(
+                        nhiExtendTreatmentProcedure.getNhiExtendDisposal().getPatientId(),
+                        nhiExtendTreatmentProcedure.getNhiExtendDisposal().getDate()
+                    )
+                ))
+            );
+    }
+
+    private long getCountByCodeAndPosition(
+        List<NhiExtendDisposal> nhiExtendDisposals, String code, String position
+    ) {
+        return nhiExtendDisposals
+            .stream()
+            .flatMap(nhiExtendDisposal ->
+                StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures())
+            )
+            .filter(nhiExtendTreatmentProcedure ->
+                nhiExtendTreatmentProcedure.getA73().equals(code) &&
+                    Arrays.asList(
+                        nhiExtendTreatmentProcedure.getA74().split("(?<=\\G.{2})")
+                    ).contains(position)
+            )
+            .count();
+    }
+
     private Map<String, List<NhiExtendTreatmentProcedure>>
     getDoctorNhiExtendTreatmentProceduresByCode(
         List<NhiExtendDisposal> nhiExtendDisposals, String code
@@ -141,7 +312,7 @@ public class NhiAbnormalityService {
             .filter(nhiExtendTreatmentProcedure ->
                 nhiExtendTreatmentProcedure.getA73().equals(code)
             )
-            .collect(Collectors.groupingBy(
+            .collect(groupingBy(
                 nhiExtendTreatmentProcedure ->
                     nhiExtendTreatmentProcedure
                         .getNhiExtendDisposal()
