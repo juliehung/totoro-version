@@ -11,16 +11,37 @@ public class NhiAbnormality implements Serializable {
     private List<NhiAbnormalityDoctor> frequentDoctors;
 
     @JsonProperty
+    private int frequentLimit = 9;
+
+    @JsonProperty
+    private List<NhiAbnormalityDoctor> code92013cAvgPointDoctors;
+
+    @JsonProperty
+    private int code92013cAvgPointLimit = 110;
+
+    @JsonProperty
     private List<NhiAbnormalityDoctor> ratioOf90004cTo90015cDoctors;
+
+    @JsonProperty
+    private double ratioOf90004cTo90015cLimit = 0.4;
 
     @JsonProperty
     private List<NhiAbnormalityDoctor> code92003cDoctors;
 
     @JsonProperty
+    private int code92003cLimit = 20;
+
+    @JsonProperty
     private List<NhiAbnormalityDoctor> code92071cDoctors;
 
     @JsonProperty
+    private int code92071cLimit = 40;
+
+    @JsonProperty
     private List<NhiAbnormalityDoctor> code91013cDoctors;
+
+    @JsonProperty
+    private int code91013cLimit = 24;
 
     public List<NhiAbnormalityDoctor> getFrequentDoctors() {
         return frequentDoctors;
@@ -28,6 +49,14 @@ public class NhiAbnormality implements Serializable {
 
     public void setFrequentDoctors(List<NhiAbnormalityDoctor> frequentDoctors) {
         this.frequentDoctors = frequentDoctors;
+    }
+
+    public List<NhiAbnormalityDoctor> getCode92013cAvgPointDoctors() {
+        return code92013cAvgPointDoctors;
+    }
+
+    public void setCode92013cAvgPointDoctors(List<NhiAbnormalityDoctor> code92013cAvgPointDoctors) {
+        this.code92013cAvgPointDoctors = code92013cAvgPointDoctors;
     }
 
     public List<NhiAbnormalityDoctor> getCode92003cDoctors() {
