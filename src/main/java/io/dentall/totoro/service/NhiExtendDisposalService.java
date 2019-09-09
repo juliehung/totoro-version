@@ -285,4 +285,20 @@ public class NhiExtendDisposalService {
             })
             .get();
     }
+
+    /**
+     * Get the nhiExtendDisposalVMs by patientId.
+     *
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public List<NhiExtendDisposalVM> findByPatientId(Long patientId) {
+        log.debug("Request to get all NhiExtendDisposalVMs by patientId({})", patientId);
+
+        return nhiExtendDisposalRepository
+            .findByPatientId(patientId)
+            .stream()
+            .map(NhiExtendDisposalVM::new)
+            .collect(Collectors.toList());
+    }
 }
