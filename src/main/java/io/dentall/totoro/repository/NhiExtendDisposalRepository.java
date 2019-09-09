@@ -57,4 +57,6 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
             "nhiExtendDisposal.uploadStatus <> 'NONE' and nhiExtendDisposal.patientId = :patientId and " + dateGte
     )
     List<NhiExtendDisposal> findByDateGreaterThanEqualAndPatientIdAndUploadStatusNotNone(@Param("gte") LocalDate gte, @Param("patientId") Long patientId);
+
+    List<NhiExtendDisposal> findByPatientId(Long patientId);
 }
