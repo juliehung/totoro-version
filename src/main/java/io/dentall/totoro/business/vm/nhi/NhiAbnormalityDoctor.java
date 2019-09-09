@@ -14,6 +14,9 @@ public class NhiAbnormalityDoctor implements Serializable {
     private int count;
 
     @JsonProperty
+    private double point;
+
+    @JsonProperty
     private List<NhiAbnormalityPatient> patients;
 
     public Long getId() {
@@ -40,6 +43,19 @@ public class NhiAbnormalityDoctor implements Serializable {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public double getPoint() {
+        return point;
+    }
+
+    public NhiAbnormalityDoctor point(double point) {
+        this.point = point;
+        return this;
+    }
+
+    public void setPoint(double point) {
+        this.point = point;
     }
 
     public List<NhiAbnormalityPatient> getPatients() {

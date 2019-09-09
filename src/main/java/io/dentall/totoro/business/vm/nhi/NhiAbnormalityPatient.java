@@ -33,6 +33,9 @@ public class NhiAbnormalityPatient implements Serializable {
     @JsonProperty
     private Map<String, Double> ratioOf90004cTo90015c;
 
+    @JsonProperty
+    private Double code92013cPoint;
+
     public NhiAbnormalityPatient(Patient patient) {
         id = patient.getId();
         name = patient.getName();
@@ -143,5 +146,18 @@ public class NhiAbnormalityPatient implements Serializable {
 
     public void setRatioOf90004cTo90015c(Map<String, Double> ratioOf90004cTo90015c) {
         this.ratioOf90004cTo90015c = ratioOf90004cTo90015c;
+    }
+
+    public Double getCode92013cPoint() {
+        return code92013cPoint;
+    }
+
+    public NhiAbnormalityPatient code92013cPoint(Double code92013cPoint) {
+        this.code92013cPoint = code92013cPoint;
+        return this;
+    }
+
+    public void setCode92013cPoint(Double code92013cPoint) {
+        this.code92013cPoint = code92013cPoint;
     }
 }
