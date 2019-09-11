@@ -280,7 +280,7 @@ public class PatientService extends QueryService<Patient> {
                 .getAppointments()
                 .stream()
                 .filter(appointment -> appointment.getRegistration() != null)
-                .count() <= 1
+                .count() < 1
         );
     }
 
