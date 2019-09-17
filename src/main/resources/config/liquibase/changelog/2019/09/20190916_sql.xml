@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190916-Sql" author="Jim">
+        <sql dbms="postgresql" splitStatements="true">
+            UPDATE nhi_extend_disposal
+            SET patient_id = sub.pid
+            FROM
+            (
+                SELECT ned.id nedid, a.patient_id pid
+                FROM nhi_extend_disposal ned
+                LEFT JOIN disposal d ON d.id = ned.disposal_id
+                LEFT JOIN registration r ON r.id = d.registration_id
+                LEFT JOIN appointment a ON a.registration_id = r.id
+                WHERE ned.patient_id IS NULL
+            ) sub
+            WHERE id = sub.nedid;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

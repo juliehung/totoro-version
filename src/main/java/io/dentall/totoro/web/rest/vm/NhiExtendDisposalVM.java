@@ -7,7 +7,7 @@ import io.dentall.totoro.domain.Patient;
 
 import java.io.Serializable;
 
-public class NhiExtendDisposalVM extends NhiExtendDisposal implements Serializable {
+public class NhiExtendDisposalVM implements Serializable {
 
     @JsonProperty
     private String name;

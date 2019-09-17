@@ -2,7 +2,6 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.service.util.StreamUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -12,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -182,8 +180,8 @@ public class RelationshipService {
         Set<NhiExtendDisposal> nhiExtendDisposals = disposal.getNhiExtendDisposals();
         if (nhiExtendDisposals != null) {
             nhiExtendDisposals = getRelationshipWithOwners(
-                nhiExtendDisposals.stream().map(this::getNhiExtendDisposal),
-                nhiExtendDisposal -> nhiExtendDisposal.disposal(disposal)
+                nhiExtendDisposals.stream().map(nhiExtendDisposal -> nhiExtendDisposal.disposal(disposal)).map(this::getNhiExtendDisposal),
+                Function.identity()
             );
         }
 
