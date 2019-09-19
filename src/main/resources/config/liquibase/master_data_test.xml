@@ -41,5 +41,6 @@
     <include file="config/liquibase/changelog/2019/07/20190711_loadData_1.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2019/07/20190711_loadUpdateData.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2019/08/20190816_loadUpdateData.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2019/09/20190918_loadUpdateData.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
