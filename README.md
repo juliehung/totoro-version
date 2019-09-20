@@ -259,6 +259,9 @@ docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml 
 ./gradlew clean appengineDeploy -Pgae -Pprod
 ```
 
+## Test with completed(in clinic) data
+Add `no-liquibase` in `SPRING_PROFILES_ACTIVE`
+
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0
