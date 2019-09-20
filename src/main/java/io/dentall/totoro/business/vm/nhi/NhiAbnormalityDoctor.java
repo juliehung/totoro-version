@@ -11,13 +11,15 @@ public class NhiAbnormalityDoctor implements Serializable {
     private Long id;
 
     @JsonProperty
-    private int count;
+    private Integer count;
 
     @JsonProperty
-    private double point;
+    private Double point;
 
     @JsonProperty
     private List<NhiAbnormalityPatient> patients;
+
+    private String login;
 
     public Long getId() {
         return id;
@@ -28,33 +30,33 @@ public class NhiAbnormalityDoctor implements Serializable {
         return this;
     }
 
-    public void setLogin(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public NhiAbnormalityDoctor count(int count) {
+    public NhiAbnormalityDoctor count(Integer count) {
         this.count = count;
         return this;
     }
 
-    public void setCount(int count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 
-    public double getPoint() {
+    public Double getPoint() {
         return point;
     }
 
-    public NhiAbnormalityDoctor point(double point) {
+    public NhiAbnormalityDoctor point(Double point) {
         this.point = point;
         return this;
     }
 
-    public void setPoint(double point) {
+    public void setPoint(Double point) {
         this.point = point;
     }
 
@@ -64,5 +66,23 @@ public class NhiAbnormalityDoctor implements Serializable {
 
     public void setPatients(List<NhiAbnormalityPatient> patients) {
         this.patients = patients;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public NhiAbnormalityDoctor login(String login) {
+        this.login = login;
+        return this;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public NhiAbnormalityDoctor increment(int v) {
+        this.count = this.count + v;
+        return this;
     }
 }

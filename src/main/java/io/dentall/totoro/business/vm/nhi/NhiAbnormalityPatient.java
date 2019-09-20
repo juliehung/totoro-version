@@ -28,7 +28,7 @@ public class NhiAbnormalityPatient implements Serializable {
     private LocalDate date;
 
     @JsonProperty
-    private Long count;
+    private Integer count;
 
     @JsonProperty
     private Map<String, Double> ratioOf90004cTo90015c;
@@ -122,16 +122,16 @@ public class NhiAbnormalityPatient implements Serializable {
         this.date = date;
     }
 
-    public Long getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public NhiAbnormalityPatient count(Long count) {
+    public NhiAbnormalityPatient count(Integer count) {
         this.count = count;
         return this;
     }
 
-    public void setCount(Long count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 
