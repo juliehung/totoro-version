@@ -5,10 +5,14 @@ import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.service.NhiExtendDisposalService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
+import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +35,9 @@ public class NhiExtendDisposalResource {
 
     private final NhiExtendDisposalService nhiExtendDisposalService;
 
-    public NhiExtendDisposalResource(NhiExtendDisposalService nhiExtendDisposalService) {
+    public NhiExtendDisposalResource(
+        NhiExtendDisposalService nhiExtendDisposalService
+    ) {
         this.nhiExtendDisposalService = nhiExtendDisposalService;
     }
 
@@ -102,6 +108,20 @@ public class NhiExtendDisposalResource {
         }
     }
 
+    @GetMapping("/nhi-extend-disposals/page")
+    @Timed
+    public ResponseEntity<List<NhiExtendDisposalVM>> getAllNhiExtendDisposals(
+        @RequestParam Integer yyyymm,
+        Pageable pageable
+    ) {
+        log.debug("REST request to get paged NhiExtendDisposalVMs");
+
+        Page<NhiExtendDisposalVM> pagedNhiDis = nhiExtendDisposalService.findByYearMonth(yyyymm, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pagedNhiDis, "/api/nhi-extend-disposals/page");
+
+        return ResponseEntity.ok().headers(headers).body(pagedNhiDis.getContent());
+    }
+
     /**
      * GET  /nhi-extend-disposals/:id : get the "id" nhiExtendDisposalVM.
      *
@@ -129,4 +149,5 @@ public class NhiExtendDisposalResource {
         nhiExtendDisposalService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
+
 }

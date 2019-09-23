@@ -10,6 +10,8 @@ import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Service Implementation for managing NhiExtendDisposal.
@@ -132,6 +137,22 @@ public class NhiExtendDisposalService {
             })
             .map(NhiExtendDisposalVM::new)
             .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<NhiExtendDisposalVM> findByYearMonth(
+        Integer yyyymm,
+        Pageable pageable
+    ) {
+        log.debug("Request to get paged NhiExtendDisposalVMs by yyyymm({})", yyyymm);
+        YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
+        return nhiExtendDisposalRepository
+            .findByDateBetween(ym.atDay(1), ym.atEndOfMonth(), pageable)
+            .map(nhiExtendDisposal -> {
+                nhiService.checkNhiExtendTreatmentProcedures(nhiExtendDisposal.getNhiExtendTreatmentProcedures());
+
+                return new NhiExtendDisposalVM(nhiExtendDisposal);
+            });
     }
 
     /**
@@ -300,5 +321,12 @@ public class NhiExtendDisposalService {
             .stream()
             .map(NhiExtendDisposalVM::new)
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public long count(int yyyymm) {
+        log.debug("Request to get all NhiExtendDisposalVMs by yyyymm({})", yyyymm);
+        YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
+        return nhiExtendDisposalRepository.countByDateBetween(ym.atDay(1), ym.atEndOfMonth());
     }
 }
