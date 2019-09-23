@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190918-addColumn" author="WeiChen">
+        <addColumn tableName="ledger">
+            <column name="project_code" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="jhi_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="patient_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="jhi_date" type="datetime">
+                <constraints nullable="true" />
+            </column>
+
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

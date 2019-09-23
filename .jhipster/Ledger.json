@@ -52,6 +52,22 @@
           "fieldType": "String"
         },
         {
+          "fieldName": "patientId",
+          "fieldType": "Long"
+        },
+        {
+          "fieldName": "type",
+          "fieldType": "String"
+        },
+        {
+          "fieldName": "project_code",
+          "fieldType": "String"
+        },
+        {
+          "fieldName": "date",
+          "fieldType": "Instant"
+        },
+        {
           "fieldName": "createdDate",
           "fieldType": "Instant"
         },

@@ -96,6 +96,18 @@ export class Ledger extends React.Component<ILedgerProps, ILedgerState> {
                 <th className="hand" onClick={this.sort('displayName')}>
                   <Translate contentKey="totoroApp.ledger.displayName">Display Name</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={this.sort('patientId')}>
+                  <Translate contentKey="totoroApp.ledger.patientId">Patient Id</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('type')}>
+                  <Translate contentKey="totoroApp.ledger.type">Type</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('project_code')}>
+                  <Translate contentKey="totoroApp.ledger.project_code">Project Code</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('date')}>
+                  <Translate contentKey="totoroApp.ledger.date">Date</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th className="hand" onClick={this.sort('createdDate')}>
                   <Translate contentKey="totoroApp.ledger.createdDate">Created Date</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -129,6 +141,12 @@ export class Ledger extends React.Component<ILedgerProps, ILedgerState> {
                   <td>{ledger.doctor}</td>
                   <td>{ledger.gid}</td>
                   <td>{ledger.displayName}</td>
+                  <td>{ledger.patientId}</td>
+                  <td>{ledger.type}</td>
+                  <td>{ledger.project_code}</td>
+                  <td>
+                    <TextFormat type="date" value={ledger.date} format={APP_DATE_FORMAT} />
+                  </td>
                   <td>
                     <TextFormat type="date" value={ledger.createdDate} format={APP_DATE_FORMAT} />
                   </td>

@@ -109,6 +109,22 @@ public class LedgerService {
                     ledger.setDoctor(updateLedger.getDoctor());
                 }
 
+                if (updateLedger.getProjectCode() != null) {
+                    ledger.setProjectCode(updateLedger.getProjectCode());
+                }
+
+                if (updateLedger.getType() != null) {
+                    ledger.setType(updateLedger.getType());
+                }
+
+                if (updateLedger.getDate() != null) {
+                    ledger.setDate(updateLedger.getDate());
+                }
+
+                if (updateLedger.getPatientId() != null) {
+                    ledger.setPatientId(updateLedger.getPatientId());
+                }
+
                 if (updateLedger.getGid() != null) {
                     ledger.setGid(updateLedger.getGid());
                 }

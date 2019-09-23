@@ -37,6 +37,12 @@ public class LedgerCriteria implements Serializable {
 
     private LongFilter gid;
 
+    private LongFilter patientId;
+
+    private StringFilter type;
+
+    private InstantFilter date;
+
     private StringFilter displayName;
 
     private InstantFilter createdDate;
@@ -48,6 +54,20 @@ public class LedgerCriteria implements Serializable {
     private StringFilter lastModifiedBy;
 
     private LongFilter treatmentPlanId;
+
+    private StringFilter projectCode;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public StringFilter getProjectCode() {
+        return projectCode;
+    }
+
+    public void setProjectCode(StringFilter projectCode) {
+        this.projectCode = projectCode;
+    }
 
     public LongFilter getId() {
         return id;
@@ -153,6 +173,29 @@ public class LedgerCriteria implements Serializable {
         this.treatmentPlanId = treatmentPlanId;
     }
 
+    public LongFilter getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(LongFilter patientId) {
+        this.patientId = patientId;
+    }
+
+    public StringFilter getType() {
+        return type;
+    }
+
+    public void setType(StringFilter type) {
+        this.type = type;
+    }
+
+    public InstantFilter getDate() {
+        return date;
+    }
+
+    public void setDate(InstantFilter date) {
+        this.date = date;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -171,6 +214,10 @@ public class LedgerCriteria implements Serializable {
             Objects.equals(note, that.note) &&
             Objects.equals(doctor, that.doctor) &&
             Objects.equals(gid, that.gid) &&
+            Objects.equals(patientId, that.patientId) &&
+            Objects.equals(type, that.type) &&
+            Objects.equals(date, that.date) &&
+            Objects.equals(projectCode, that.projectCode) &&
             Objects.equals(displayName, that.displayName) &&
             Objects.equals(createdDate, that.createdDate) &&
             Objects.equals(createdBy, that.createdBy) &&
@@ -187,8 +234,12 @@ public class LedgerCriteria implements Serializable {
         charge,
         arrears,
         note,
+        projectCode,
         doctor,
         gid,
+        date,
+        patientId,
+        type,
         displayName,
         createdDate,
         createdBy,
@@ -208,6 +259,10 @@ public class LedgerCriteria implements Serializable {
                 (note != null ? "note=" + note + ", " : "") +
                 (doctor != null ? "doctor=" + doctor + ", " : "") +
                 (gid != null ? "gid=" + gid + ", " : "") +
+                (type != null ? "type=" + type + ", " : "") +
+                (date != null ? "date=" + date + ", " : "") +
+                (projectCode != null ? "projectCode=" + projectCode + ", " : "") +
+                (patientId != null ? "patientId=" + patientId + ", " : "") +
                 (displayName != null ? "displayName=" + displayName + ", " : "") +
                 (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
                 (createdBy != null ? "createdBy=" + createdBy + ", " : "") +

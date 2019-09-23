@@ -57,6 +57,18 @@ public class Ledger implements Serializable {
     @Column(name = "display_name")
     private String displayName;
 
+    @Column(name = "project_code")
+    private String projectCode;
+
+    @Column(name = "jhi_type")
+    private String type;
+
+    @Column(name = "jhi_date")
+    private Instant date;
+
+    @Column(name = "patient_id")
+    private Long patientId;
+
     @CreatedDate
     @Column(name = "created_date")
     private Instant createdDate;
@@ -77,6 +89,20 @@ public class Ledger implements Serializable {
     private TreatmentPlan treatmentPlan;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    public Ledger projectCode(String projectCode) {
+        this.projectCode = projectCode;
+        return this;
+    }
+
+    public String getProjectCode() {
+        return projectCode;
+    }
+
+    public void setProjectCode(String projectCode) {
+        this.projectCode = projectCode;
+    }
+
     public Long getId() {
         return id;
     }
@@ -92,6 +118,34 @@ public class Ledger implements Serializable {
     public Ledger amount(Double amount) {
         this.amount = amount;
         return this;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Instant getDate() {
+        return date;
+    }
+
+    public void setDate(Instant date) {
+        this.date = date;
+    }
+
+    public Long getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
     }
 
     public void setAmount(Double amount) {

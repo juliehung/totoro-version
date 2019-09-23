@@ -49,6 +49,7 @@ export class LedgerUpdate extends React.Component<ILedgerUpdateProps, ILedgerUpd
   }
 
   saveEntity = (event, errors, values) => {
+    values.date = new Date(values.date);
     values.createdDate = new Date(values.createdDate);
     values.lastModifiedDate = new Date(values.lastModifiedDate);
 
@@ -173,6 +174,36 @@ export class LedgerUpdate extends React.Component<ILedgerUpdateProps, ILedgerUpd
                     <Translate contentKey="totoroApp.ledger.displayName">Display Name</Translate>
                   </Label>
                   <AvField id="ledger-displayName" type="text" name="displayName" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="patientIdLabel" for="patientId">
+                    <Translate contentKey="totoroApp.ledger.patientId">Patient Id</Translate>
+                  </Label>
+                  <AvField id="ledger-patientId" type="string" className="form-control" name="patientId" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="typeLabel" for="type">
+                    <Translate contentKey="totoroApp.ledger.type">Type</Translate>
+                  </Label>
+                  <AvField id="ledger-type" type="text" name="type" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="project_codeLabel" for="project_code">
+                    <Translate contentKey="totoroApp.ledger.project_code">Project Code</Translate>
+                  </Label>
+                  <AvField id="ledger-project_code" type="text" name="project_code" />
+                </AvGroup>
+                <AvGroup>
+                  <Label id="dateLabel" for="date">
+                    <Translate contentKey="totoroApp.ledger.date">Date</Translate>
+                  </Label>
+                  <AvInput
+                    id="ledger-date"
+                    type="datetime-local"
+                    className="form-control"
+                    name="date"
+                    value={isNew ? null : convertDateTimeFromServer(this.props.ledgerEntity.date)}
+                  />
                 </AvGroup>
                 <AvGroup>
                   <Label id="createdDateLabel" for="createdDate">

@@ -10,6 +10,10 @@ export interface ILedger {
   doctor?: string;
   gid?: number;
   displayName?: string;
+  patientId?: number;
+  type?: string;
+  project_code?: string;
+  date?: Moment;
   createdDate?: Moment;
   createdBy?: string;
   lastModifiedDate?: Moment;
