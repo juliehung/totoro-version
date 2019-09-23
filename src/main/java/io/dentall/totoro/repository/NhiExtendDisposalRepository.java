@@ -1,8 +1,10 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
-import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,7 +18,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long> {
+public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long>, JpaSpecificationExecutor<NhiExtendDisposal> {
 
     String dateBetween = "((nhiExtendDisposal.date between :start and :end and nhiExtendDisposal.a54 is null) or " +
         "(nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate between :start and :end)) ";
@@ -68,4 +70,11 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
             " and nhiExtendDisposal.uploadStatus <> 'NONE' and nhiExtendDisposal.patientId = :patientId"
     )
     List<NhiExtendDisposal> findByDateBetweenAndUploadStatusNotAndPatientId(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("patientId") Long patientId);
+
+    @Query("select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " + dateBetween + "order by patientId, a18")
+    Page<NhiExtendDisposal> findByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end, Pageable pageable);
+
+    @Query("select count(nhiExtendDisposal) from NhiExtendDisposal nhiExtendDisposal where " + dateBetween)
+    long countByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
+
 }
