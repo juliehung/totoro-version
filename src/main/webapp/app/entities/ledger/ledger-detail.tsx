@@ -71,6 +71,32 @@ export class LedgerDetail extends React.Component<ILedgerDetailProps> {
             </dt>
             <dd>{ledgerEntity.displayName}</dd>
             <dt>
+              <span id="patientId">
+                <Translate contentKey="totoroApp.ledger.patientId">Patient Id</Translate>
+              </span>
+            </dt>
+            <dd>{ledgerEntity.patientId}</dd>
+            <dt>
+              <span id="type">
+                <Translate contentKey="totoroApp.ledger.type">Type</Translate>
+              </span>
+            </dt>
+            <dd>{ledgerEntity.type}</dd>
+            <dt>
+              <span id="project_code">
+                <Translate contentKey="totoroApp.ledger.project_code">Project Code</Translate>
+              </span>
+            </dt>
+            <dd>{ledgerEntity.project_code}</dd>
+            <dt>
+              <span id="date">
+                <Translate contentKey="totoroApp.ledger.date">Date</Translate>
+              </span>
+            </dt>
+            <dd>
+              <TextFormat value={ledgerEntity.date} type="date" format={APP_DATE_FORMAT} />
+            </dd>
+            <dt>
               <span id="createdDate">
                 <Translate contentKey="totoroApp.ledger.createdDate">Created Date</Translate>
               </span>

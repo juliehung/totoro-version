@@ -3,6 +3,8 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.LedgerBusinessService;
 import io.dentall.totoro.domain.Ledger;
+import io.dentall.totoro.service.LedgerQueryService;
+import io.dentall.totoro.service.dto.LedgerCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +28,14 @@ public class LedgerBusinessResource {
 
     private final LedgerBusinessService ledgerBusinessService;
 
-    public LedgerBusinessResource(LedgerBusinessService ledgerBusinessService) {
+    private final LedgerQueryService ledgerQueryService;
+
+    public LedgerBusinessResource(
+        LedgerBusinessService ledgerBusinessService,
+        LedgerQueryService ledgerQueryService
+    ) {
         this.ledgerBusinessService = ledgerBusinessService;
+        this.ledgerQueryService = ledgerQueryService;
     }
 
     @PostMapping("/ledgers")
@@ -41,11 +49,21 @@ public class LedgerBusinessResource {
     @GetMapping("/ledgers")
     @Timed
     public ResponseEntity<List<Ledger>> getLedger(
-        @RequestParam(name = "id", required = false) Long id,
-        @RequestParam(name = "gid", required = false) Long gid,
+        LedgerCriteria criteria,
         @RequestParam(name = "headOnly", required = false) boolean headOnly
     ) {
         log.debug("REST request to find ledgers by id");
+
+        if (criteria.getPatientId() != null ||
+            criteria.getDate() != null ||
+            criteria.getProjectCode() != null
+        ) {
+            return new ResponseEntity<>(ledgerQueryService.findByCriteria(criteria), HttpStatus.OK);
+        }
+
+        Long id = criteria.getId() == null? null: criteria.getId().getEquals();
+        Long gid = criteria.getGid() == null? null: criteria.getGid().getEquals();
+
         if (headOnly &&
             (id == null || gid != null)
         ) {

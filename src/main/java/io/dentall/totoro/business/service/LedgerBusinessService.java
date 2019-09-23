@@ -5,6 +5,7 @@ import io.dentall.totoro.repository.LedgerRepository;
 import io.dentall.totoro.service.LedgerQueryService;
 import io.dentall.totoro.service.dto.LedgerCriteria;
 import io.dentall.totoro.service.util.ProblemUtil;
+import io.github.jhipster.service.filter.InstantFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
