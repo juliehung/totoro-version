@@ -89,6 +89,10 @@ code {
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
 }
+.popover .ant-row {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
 .login-form-wrapper {
   width: 100vw;
   height: 100vh;
@@ -148,4 +152,4 @@ code {
     transform: rotate(1turn);
   }
 }
-/*# sourceMappingURL=main.2489ccb5.chunk.css.map */
+/*# sourceMappingURL=main.4b1a3dd1.chunk.css.map */
