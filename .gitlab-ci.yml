@@ -67,6 +67,9 @@ gradle-repackage:
         - /^(\d)+-.*$/
     image: openjdk:8-jdk-stretch
     script:
+        - apt-get install -y --no-install-recommends curl unzip
+        - 'curl -SL --output tmp.zip --header "PRIVATE-TOKEN: A_p8RiYKYYTLESbEcsKQ" "https://gitlab.com/api/v4/projects/dentall%2Ftotoro-web/jobs/artifacts/master/download?job=install" && unzip tmp.zip -d ./src/main/webapp && rm tmp.zip'
+        - mv ./src/main/webapp/build ./src/main/webapp/appt
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
         - git checkout $CI_COMMIT_REF_SLUG
         - ./gradlew bootWar -Pprod -x check -PnodeInstall --no-daemon
