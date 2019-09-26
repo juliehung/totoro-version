@@ -42,6 +42,10 @@ public class LedgerBusinessResource {
     @Timed
     public ResponseEntity<Ledger> createLedger(@Valid @RequestBody Ledger ledger) {
         log.debug("REST request to save ledger");
+        if (ledger.getId() != null) {
+            throw new BadRequestAlertException("A new ledger cannot assign an ID ", ENTITY_NAME, " idexists");
+        }
+
         Ledger vm = ledgerBusinessService.saveLedgerRecord(ledger);
         return new ResponseEntity<>(vm, HttpStatus.CREATED);
     }
