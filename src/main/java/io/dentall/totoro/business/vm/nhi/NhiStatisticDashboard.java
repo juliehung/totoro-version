@@ -1,7 +1,6 @@
 package io.dentall.totoro.business.vm.nhi;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class NhiStatisticDashboard {
@@ -40,32 +39,27 @@ public class NhiStatisticDashboard {
     private Map<String, NhiCircleVM> circleMap = new HashMap<>();
 
     public NhiStatisticDashboard() {
-        int idx = 0;
-        String idxStr = String.valueOf(++idx);
-        circleMap.put("P".concat(String.valueOf(idxStr)), new NhiCircleVM().specificCode(idxStr));
-        idxStr = String.valueOf(++idx);
-        circleMap.put("P".concat(String.valueOf(idxStr)), new NhiCircleVM().specificCode(idxStr));
-        idxStr = String.valueOf(++idx);
-        circleMap.put("P".concat(String.valueOf(idxStr)), new NhiCircleVM().specificCode(idxStr));
-        idxStr = String.valueOf(++idx);
-        circleMap.put("P".concat(String.valueOf(idxStr)), new NhiCircleVM().specificCode(idxStr));
-        idxStr = String.valueOf(++idx);
-        circleMap.put("P".concat(String.valueOf(idxStr)), new NhiCircleVM().specificCode(idxStr));
-        idxStr = String.valueOf(++idx);
-        circleMap.put("P".concat(String.valueOf(idxStr)), new NhiCircleVM().specificCode(idxStr));
-        idxStr = String.valueOf(++idx);
-        circleMap.put("P".concat(String.valueOf(idxStr)), new NhiCircleVM().specificCode(idxStr));
-        idxStr = String.valueOf(++idx);
-        circleMap.put("P".concat(String.valueOf(idxStr)), new NhiCircleVM().specificCode(idxStr));
+
+        for (int idx = 1; idx < 10; idx++) {
+            String idxStr = String.valueOf(idx);
+            String specialCode = "P".concat(idxStr);
+            circleMap.put(specialCode, new NhiCircleVM().specificCode(specialCode));
+        }
+
         circleMap.put("other", new NhiCircleVM().specificCode("other"));
+    }
+
+    public NhiStatisticDashboard calculateRatio() {
+        this.endoRatio = Double.valueOf(this.endoCases) / Double.valueOf(this.totalCases);
+        this.gvRatio = Double.valueOf(this.gvCases) / Double.valueOf(this.totalCases);
+        this.periRatio = Double.valueOf(this.periCases) / Double.valueOf(this.totalCases);
+        this.otherRatio = Double.valueOf(this.otherCases) / Double.valueOf(this.totalCases);
+
+        return this;
     }
 
     public NhiStatisticDashboard incrementTotalCases() {
         ++this.totalCases;
-        this.endoRatio = this.endoCases / this.totalCases;
-        this.gvRatio = this.gvCases / this.totalCases;
-        this.periRatio = this.periCases / this.totalCases;
-        this.otherRatio = this.otherCases / this.totalCases;
         return this;
     }
 
