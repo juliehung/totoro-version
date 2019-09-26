@@ -42,49 +42,58 @@ public class NhiStatisticService {
             .flatMap(nhiExtendTreatmentDisposal -> StreamUtil.asStream(nhiExtendTreatmentDisposal.getNhiExtendTreatmentProcedures()))
             .forEach(nhiTx -> {
                 String docLogin = nhiTx.getNhiExtendDisposal().getDisposal().getCreatedBy();
+
+                NhiStatisticDashboard dashboard = null;
                 if (!docMap.containsKey(docLogin)) {
                     Optional<User> doc = userRepository.findOneByLogin(docLogin);
                     if (doc.isPresent()) {
                         long docId = doc.get().getId();
+                        dashboard = new NhiStatisticDashboard().doctorId(docId);
                         docMap.put(docLogin, docId);
-                        docDashboardMap.put(docLogin, new NhiStatisticDashboard().doctorId(docId));
+                        docDashboardMap.put(docLogin, dashboard);
                     }
                 } else {
-                    NhiProcedure nhiProc = nhiTx.getTreatmentProcedure().getNhiProcedure();
-                    String specificCode = docDashboardMap.containsKey(nhiProc.getSpecificCode())?nhiProc.getSpecificCode():"other";
-                    int points = nhiProc.getPoint();
+                    dashboard = docDashboardMap.get(docLogin);
+                }
 
-                    NhiStatisticDashboard dashboard = docDashboardMap.get(docLogin);
+                NhiProcedure nhiProc = nhiTx.getTreatmentProcedure().getNhiProcedure();
+                String specificCode = dashboard.getCircleMap().containsKey(nhiProc.getSpecificCode())?nhiProc.getSpecificCode():"other";
+                int points = nhiProc.getPoint();
 
-                    summaryDashboard.getSummaryCircle().incrementCase().incrementPoints(points);
-                    summaryDashboard.getCircleMap().get(specificCode).incrementCase().incrementPoints(points);
-                    dashboard.getSummaryCircle().incrementCase().incrementPoints(points);
-                    dashboard.getCircleMap().get(specificCode).incrementCase().incrementPoints(points);
+                summaryDashboard.getSummaryCircle().incrementCase().incrementPoints(points);
+                summaryDashboard.getCircleMap().get(specificCode).incrementCase().incrementPoints(points);
+                dashboard.getSummaryCircle().incrementCase().incrementPoints(points);
+                dashboard.getCircleMap().get(specificCode).incrementCase().incrementPoints(points);
 
-                    summaryDashboard.incrementTotalCases();
-                    dashboard.incrementTotalCases();
-                    switch (specificCode) {
-                        case "P1" :
-                        case "P5" :
-                            dashboard.incrementEndoCases();
-                            break;
-                        case "P2" :
-                        case "P3" :
-                            dashboard.incrementGvCases();
-                            break;
-                        case "P4" :
-                        case "P8" :
-                            dashboard.incrementPeriCases();
-                            break;
-                        case "P6" :
-                        case "P7" :
-                        case "other" :
-                        default :
-                            dashboard.incrementOtherCases();
-                            break;
-                    }
+                summaryDashboard.incrementTotalCases();
+                dashboard.incrementTotalCases();
+                switch (specificCode) {
+                    case "P1" :
+                    case "P5" :
+                        dashboard.incrementEndoCases();
+                        summaryDashboard.incrementEndoCases();
+                        break;
+                    case "P2" :
+                    case "P3" :
+                        dashboard.incrementGvCases();
+                        summaryDashboard.incrementGvCases();
+                        break;
+                    case "P4" :
+                    case "P8" :
+                        dashboard.incrementPeriCases();
+                        summaryDashboard.incrementPeriCases();
+                        break;
+                    case "P6" :
+                    case "P7" :
+                    case "other" :
+                    default :
+                        dashboard.incrementOtherCases();
+                        summaryDashboard.incrementOtherCases();
+                        break;
                 }
             });
+
+        docDashboardMap.forEach((k, v) -> v.calculateRatio());
 
         return new ArrayList<>(docDashboardMap.values());
     }
