@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190927-Sql" author="WeiChen">
+        <sql dbms="postgresql" splitStatements="true">
+            UPDATE ledger
+            SET
+            jhi_type = '未分類',
+            jhi_date = ledger.created_date,
+            display_name = to_char(ledger.created_date, 'YYYYMMDDHH24MISS'),
+            project_code = concat(to_char(ledger.created_date, 'YYYYMMDDHH24MISSMS'), '-1'),
+            patient_id = (select patient_id from treatment where id = (select treatment_id from treatment_plan where id = ledger.treatment_plan_id))
+            WHERE 1=1;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

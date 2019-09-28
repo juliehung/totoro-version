@@ -14,6 +14,7 @@
     <include file="config/liquibase/changelog/2019/08/20190816_sql.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2019/09/20190904_sql.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2019/09/20190916_sql.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2019/09/20190927_sql.xml" relativeToChangelogFile="false"/>
 
     <!-- drop foreign key constraints -->
     <include file="config/liquibase/changelog/2019/07/20190720_dropForeignKeyConstraint.xml" relativeToChangelogFile="false"/>
