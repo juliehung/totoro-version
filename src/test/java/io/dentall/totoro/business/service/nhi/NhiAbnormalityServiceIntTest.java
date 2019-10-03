@@ -133,7 +133,7 @@ public class NhiAbnormalityServiceIntTest {
         nhiExtendTreatmentProcedure2.setNhiExtendDisposal(nhiExtendDisposal);
 
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNotNone(
+            .findByDateBetween(
                 DateTimeUtil.localMonthFirstDay.get(),
                 DateTimeUtil.localMonthLastDay.get()
             );
@@ -175,7 +175,7 @@ public class NhiAbnormalityServiceIntTest {
         nhiExtendDisposalRepository.save(nhiExtendDisposal2);
 
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNotNone(
+            .findByDateBetween(
                 DateTimeUtil.localMonthFirstDay.get(),
                 DateTimeUtil.localMonthLastDay.get()
             );
@@ -231,7 +231,7 @@ public class NhiAbnormalityServiceIntTest {
         nhiExtendTreatmentProcedure3.setNhiExtendDisposal(nhiExtendDisposal2);
 
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNotNone(
+            .findByDateBetween(
                 DateTimeUtil.localMonthFirstDay.get(),
                 DateTimeUtil.localMonthLastDay.get()
             );
@@ -312,7 +312,7 @@ public class NhiAbnormalityServiceIntTest {
         nhiExtendTreatmentDrug4.setNhiExtendDisposal(nhiExtendDisposal3);
 
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNotNone(
+            .findByDateBetween(
                 DateTimeUtil.localMonthFirstDay.get(),
                 DateTimeUtil.localMonthLastDay.get()
             );
@@ -401,7 +401,7 @@ public class NhiAbnormalityServiceIntTest {
         nhiExtendTreatmentProcedure4.setNhiExtendDisposal(nhiExtendDisposal3);
 
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNotNone(
+            .findByDateBetween(
                 DateTimeUtil.localMonthFirstDay.get(),
                 DateTimeUtil.localMonthLastDay.get()
             );
@@ -466,7 +466,7 @@ public class NhiAbnormalityServiceIntTest {
         nhiExtendTreatmentProcedure4.setNhiExtendDisposal(nhiExtendDisposal3);
 
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNotNone(
+            .findByDateBetween(
                 DateTimeUtil.localMonthFirstDay.get(),
                 DateTimeUtil.localMonthLastDay.get()
             );
@@ -527,7 +527,7 @@ public class NhiAbnormalityServiceIntTest {
         nhiExtendDisposalRepository.save(nhiExtendDisposal3);
 
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNotNone(
+            .findByDateBetween(
                 DateTimeUtil.localMonthFirstDay.get(),
                 DateTimeUtil.localMonthLastDay.get()
             );
@@ -577,14 +577,14 @@ public class NhiAbnormalityServiceIntTest {
         createRelativeDataInMemo(date, patient1.getId(), user1.getLogin(), code, "1122");
 
         // Test
-        List<NhiExtendDisposal> r = nhiExtendDisposalRepository.findByDateBetweenAndUploadStatusNotAndPatientId(
+        List<NhiExtendDisposal> r = nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
             date.minusDays(2),
             date.plusDays(2),
             patient1.getId()
         );
         assertThat(r.size()).isEqualTo(1);
 
-        List<NhiExtendDisposal> rr = nhiExtendDisposalRepository.findByDateBetweenAndUploadStatusNotAndPatientId(
+        List<NhiExtendDisposal> rr = nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
             date.minusDays(2),
             date.plusDays(2),
             patient2.getId()

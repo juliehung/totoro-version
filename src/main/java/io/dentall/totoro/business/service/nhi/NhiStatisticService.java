@@ -28,7 +28,7 @@ public class NhiStatisticService {
 
     public List<NhiStatisticDashboard> calculate(YearMonth ym) {
         List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNotNone(
+            .findByDateBetween(
                 ym.atDay(1),
                 ym.atEndOfMonth()
             );

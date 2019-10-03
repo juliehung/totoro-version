@@ -4,7 +4,10 @@ import io.dentall.totoro.business.vm.nhi.NhiAbnormality;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormalityDoctor;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormalityPatient;
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.repository.*;
+import io.dentall.totoro.repository.NhiExtendDisposalRepository;
+import io.dentall.totoro.repository.NhiProcedureRepository;
+import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import org.springframework.stereotype.Service;
@@ -66,7 +69,7 @@ public class NhiAbnormalityService {
     public NhiAbnormality getNhiAbnormality(int yyyymm) {
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
         List<NhiExtendDisposal> monthlyNhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetweenAndUploadStatusNotNone(
+            .findByDateBetween(
                 ym.atDay(1),
                 ym.atEndOfMonth()
             );
@@ -177,7 +180,7 @@ public class NhiAbnormalityService {
         map.forEach((login, nhiExtTxPsByPatientDate) ->
             nhiExtTxPsByPatientDate.forEach((entry, nhiExtendTreatmentProcedures) -> {
                 List<NhiExtendDisposal> nhiExtDisposals = nhiExtendDisposalRepository
-                    .findByDateGreaterThanEqualAndPatientIdAndUploadStatusNotNone(entry.getValue().minusDays(30), entry.getKey());
+                    .findByDateGreaterThanEqualAndPatientId(entry.getValue().minusDays(30), entry.getKey());
 
                 Set<String> positions = nhiExtendTreatmentProcedures
                     .stream()
@@ -393,7 +396,7 @@ public class NhiAbnormalityService {
 
         // Process necessary past 2 year data
         patientList.forEach(pat ->
-            nhiExtendDisposalRepository.findByDateBetweenAndUploadStatusNotAndPatientId(
+            nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
                 ym.atDay(1).minusDays(730),
                 ym.atDay(1).minusDays(1),
                 pat).stream()
