@@ -51,25 +51,11 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
 
     @Query(
         "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
-            "nhiExtendDisposal.uploadStatus <> 'NONE' and " + dateBetween
+            "nhiExtendDisposal.patientId = :patientId and " + dateGte
     )
-    List<NhiExtendDisposal> findByDateBetweenAndUploadStatusNotNone(@Param("start") LocalDate start, @Param("end") LocalDate end);
-
-    @Query(
-        "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
-            "nhiExtendDisposal.uploadStatus <> 'NONE' and nhiExtendDisposal.patientId = :patientId and " + dateGte
-    )
-    List<NhiExtendDisposal> findByDateGreaterThanEqualAndPatientIdAndUploadStatusNotNone(@Param("gte") LocalDate gte, @Param("patientId") Long patientId);
+    List<NhiExtendDisposal> findByDateGreaterThanEqualAndPatientId(@Param("gte") LocalDate gte, @Param("patientId") Long patientId);
 
     List<NhiExtendDisposal> findByPatientId(Long patientId);
-
-    @Query(
-        "select nhiExtendDisposal " +
-            "from NhiExtendDisposal nhiExtendDisposal " +
-            "where " + dateBetween +
-            " and nhiExtendDisposal.uploadStatus <> 'NONE' and nhiExtendDisposal.patientId = :patientId"
-    )
-    List<NhiExtendDisposal> findByDateBetweenAndUploadStatusNotAndPatientId(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("patientId") Long patientId);
 
     @Query("select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " + dateBetween + "order by patientId, a18")
     Page<NhiExtendDisposal> findByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end, Pageable pageable);
