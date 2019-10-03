@@ -50,10 +50,12 @@ public class NhiStatisticDashboard {
     }
 
     public NhiStatisticDashboard calculateRatio() {
-        this.endoRatio = Double.valueOf(this.endoCases) / Double.valueOf(this.totalCases);
-        this.gvRatio = Double.valueOf(this.gvCases) / Double.valueOf(this.totalCases);
-        this.periRatio = Double.valueOf(this.periCases) / Double.valueOf(this.totalCases);
-        this.otherRatio = Double.valueOf(this.otherCases) / Double.valueOf(this.totalCases);
+        if (this.totalCases > 0) {
+            this.endoRatio = Double.valueOf(this.endoCases) / Double.valueOf(this.totalCases);
+            this.gvRatio = Double.valueOf(this.gvCases) / Double.valueOf(this.totalCases);
+            this.periRatio = Double.valueOf(this.periCases) / Double.valueOf(this.totalCases);
+            this.otherRatio = Double.valueOf(this.otherCases) / Double.valueOf(this.totalCases);
+        }
 
         return this;
     }
