@@ -33,7 +33,7 @@ public class NhiExtendDisposal implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = {"status", "total", "prescription", "todo", "registration", "treatmentProcedures", "teeth", "nhiExtendDisposals"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"status", "total", "todo", "registration", "teeth", "nhiExtendDisposals"}, allowSetters = true)
     private Disposal disposal;
 
     // 卡片號碼
