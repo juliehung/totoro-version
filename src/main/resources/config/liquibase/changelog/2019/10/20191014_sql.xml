@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20191014-Sql" author="WeiChen">
+        <sql dbms="postgresql" splitStatements="true">
+            UPDATE nhi_procedure SET specific_code='FP' WHERE code = '91021C';
+        </sql>
+        <sql dbms="postgresql" splitStatements="true">
+            UPDATE nhi_procedure SET specific_code='FQ' WHERE code = '91022C';
+        </sql>
+        <sql dbms="postgresql" splitStatements="true">
+            UPDATE nhi_procedure SET specific_code='FR' WHERE code = '91023C';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,837 @@
+id;code;name;english_name;nhi_icd9cm_id
+58;B370;念珠菌性口炎;Candidal stomatitis;22
+59;B3783;念珠菌性唇炎;Candidal cheilitis;22
+60;C000;上唇外側惡性腫瘤;Malignant neoplasm of external upper lip;23
+61;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;23
+62;C001;下唇外側惡性腫瘤;Malignant neoplasm of external lower lip;24
+63;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;24
+64;C003;上唇內側惡性腫瘤;Malignant neoplasm of upper lip, inner aspect;25
+65;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;25
+66;C004;下唇內側惡性腫瘤;Malignant neoplasm of lower lip, inner aspect;26
+67;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;26
+68;C005;唇內側惡性腫瘤;Malignant neoplasm of lip, unspecified, inner aspect;27
+69;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;27
+70;C006;唇連合惡性腫瘤;Malignant neoplasm of commissure of lip, unspecified;28
+71;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;28
+72;C008;唇重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of lip;29
+73;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;29
+74;C002;唇外側惡性腫瘤;Malignant neoplasm of external lip, unspecified;30
+75;C009;唇惡性腫瘤;Malignant neoplasm of lip, unspecified;30
+76;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;30
+77;C01;舌基部惡性腫瘤;Malignant neoplasm of base of tongue;31
+78;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;31
+79;C020;舌背面惡性腫瘤;Malignant neoplasm of dorsal surface of tongue;32
+80;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;32
+81;C021;舌(邊)緣惡性腫瘤;Malignant neoplasm of border of tongue;33
+82;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;33
+83;C022;舌腹面惡性腫瘤;Malignant neoplasm of ventral surface of tongue;34
+84;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;34
+85;C023;舌前三分之二部位之惡性腫瘤，未明示部位;Malignant neoplasm of anterior two-thirds of tongue, part unspecified;35
+86;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;35
+87;C028;舌重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of tongue;36
+88;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;36
+89;C024;舌扁桃體惡性腫瘤;Malignant neoplasm of lingual tonsil;37
+90;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;37
+91;C028;舌重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of tongue;38
+92;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;38
+93;C029;舌部惡性腫瘤;Malignant neoplasm of tongue, unspecified;39
+94;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;39
+95;C07;腮腺惡性腫瘤;Malignant neoplasm of parotid gland;40
+96;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;40
+97;C080;頜下腺惡性腫瘤;Malignant neoplasm of submandibular gland;41
+98;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;41
+99;C081;舌下腺惡性腫瘤;Malignant neoplasm of sublingual gland;42
+100;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;42
+101;C089;主要唾液腺惡性腫瘤;Malignant neoplasm of major salivary gland, unspecified;43
+102;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;43
+103;C089;主要唾液腺惡性腫瘤;Malignant neoplasm of major salivary gland, unspecified;44
+104;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;44
+105;C030;上齒齦惡性腫瘤;Malignant neoplasm of upper gum;45
+106;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;45
+107;C031;下齒齦惡性腫瘤;Malignant neoplasm of lower gum;46
+108;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;46
+109;C039;齒齦惡性腫瘤;Malignant neoplasm of gum, unspecified;47
+110;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;47
+111;C039;齒齦惡性腫瘤;Malignant neoplasm of gum, unspecified;48
+112;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;48
+113;C040;口底前部惡性腫瘤;Malignant neoplasm of anterior floor of mouth;49
+114;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;49
+115;C041;口底側部惡性腫瘤;Malignant neoplasm of lateral floor of mouth;50
+116;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;50
+117;C048;口底重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of floor of mouth;51
+118;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;51
+119;C049;口底惡性腫瘤;Malignant neoplasm of floor of mouth, unspecified;52
+120;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;52
+121;C060;頰粘膜惡性腫瘤;Malignant neoplasm of cheek mucosa;53
+122;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;53
+123;C061;口前庭部惡性腫瘤;Malignant neoplasm of vestibule of mouth;54
+124;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;54
+125;C050;硬顎惡性腫瘤;Malignant neoplasm of hard palate;55
+126;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;55
+127;C051;軟顎惡性腫瘤;Malignant neoplasm of soft palate;56
+128;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;56
+129;C052;懸雍垂惡性腫瘤;Malignant neoplasm of uvula;57
+130;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;57
+131;C058;顎重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of palate;58
+132;C059;顎惡性腫瘤;Malignant neoplasm of palate, unspecified;58
+133;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;58
+134;C062;臼齒後區惡性腫瘤;Malignant neoplasm of retromolar area;59
+135;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;59
+136;C0680;口腔未明示重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of unspecified parts of mouth;60
+137;C0689;口腔其他重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of other parts of mouth;60
+138;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;60
+139;C069;口惡性腫瘤;Malignant neoplasm of mouth, unspecified;61
+140;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;61
+141;C098;扁桃體重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of tonsil;62
+142;C099;扁桃腺惡性腫瘤;Malignant neoplasm of tonsil, unspecified;62
+143;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;62
+144;C090;扁桃腺窩惡性腫瘤;Malignant neoplasm of tonsillar fossa;63
+145;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;63
+146;C091;扁桃腺柱(前,後)惡性腫瘤;Malignant neoplasm of tonsillar pillar (anterior) (posterior);64
+147;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;64
+148;C100;會厭谿部惡性腫瘤;Malignant neoplasm of vallecula;65
+149;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;65
+150;C101;會厭前面惡性腫瘤;Malignant neoplasm of anterior surface of epiglottis;66
+151;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;66
+152;C108;口咽重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of oropharynx;67
+153;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;67
+154;C102;口咽側壁惡性腫瘤;Malignant neoplasm of lateral wall of oropharynx;68
+155;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;68
+156;C103;口咽後壁惡性腫瘤;Malignant neoplasm of posterior wall of oropharynx;69
+157;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;69
+158;C104;鰓裂惡性腫瘤;Malignant neoplasm of branchial cleft;70
+159;C108;口咽重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of oropharynx;70
+160;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;70
+161;C109;口咽惡性腫瘤;Malignant neoplasm of oropharynx, unspecified;71
+162;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;71
+163;C110;鼻咽上壁惡性腫瘤;Malignant neoplasm of superior wall of nasopharynx;72
+164;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;72
+165;C111;鼻咽後壁惡性腫瘤;Malignant neoplasm of posterior wall of nasopharynx;73
+166;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;73
+167;C112;鼻咽側壁惡性腫瘤;Malignant neoplasm of lateral wall of nasopharynx;74
+168;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;74
+169;C113;鼻咽前壁惡性腫瘤;Malignant neoplasm of anterior wall of nasopharynx;75
+170;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;75
+171;C118;鼻咽重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of nasopharynx;76
+172;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;76
+173;C119;鼻咽惡性腫瘤;Malignant neoplasm of nasopharynx, unspecified;77
+174;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;77
+175;C130;環狀軟骨後部惡性腫瘤;Malignant neoplasm of postcricoid region;78
+176;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;78
+177;C12;梨狀竇惡性腫瘤;Malignant neoplasm of pyriform sinus;79
+178;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;79
+179;C131;杓狀軟骨皺壁下咽面惡性腫瘤;Malignant neoplasm of aryepiglottic fold, hypopharyngeal aspect;80
+180;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;80
+181;C132;下咽後壁惡性腫瘤;Malignant neoplasm of posterior wall of hypopharynx;81
+182;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;81
+183;C138;下咽重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of hypopharynx;82
+184;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;82
+185;C139;下咽惡性腫瘤;Malignant neoplasm of hypopharynx, unspecified;83
+186;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;83
+187;C140;咽部惡性腫瘤;Malignant neoplasm of pharynx, unspecified;84
+188;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;84
+189;C142;Waldeyer氏扁桃環惡性腫瘤;Malignant neoplasm of Waldeyer's ring;85
+190;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;85
+191;C148;唇，口腔及咽重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of lip, oral cavity and pharynx;86
+192;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;86
+193;C148;唇，口腔及咽重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of lip, oral cavity and pharynx;87
+194;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;87
+195;C300;鼻腔惡性腫瘤;Malignant neoplasm of nasal cavity;88
+196;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;88
+197;C301;中耳惡性腫瘤;Malignant neoplasm of middle ear;89
+198;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;89
+199;C310;上頜竇惡性腫瘤;Malignant neoplasm of maxillary sinus;90
+200;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;90
+201;C311;篩竇惡性腫瘤;Malignant neoplasm of ethmoidal sinus;91
+202;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;91
+203;C312;額竇惡性腫瘤;Malignant neoplasm of frontal sinus;92
+204;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;92
+205;C313;蝶竇惡性腫瘤;Malignant neoplasm of sphenoid sinus;93
+206;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;93
+207;C318;副鼻竇重疊部位之惡性腫瘤;Malignant neoplasm of overlapping sites of accessory sinuses;94
+208;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;94
+209;C319;副鼻竇惡性腫瘤;Malignant neoplasm of accessory sinus, unspecified;95
+210;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;95
+211;C410;顱骨及顏面骨之惡性腫瘤;Malignant neoplasm of bones of skull and face;96
+212;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;96
+213;C411;下頜骨惡性腫瘤;Malignant neoplasm of mandible;97
+214;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;97
+215;C462;顎卡波西氏肉瘤;Kaposi's sarcoma of palate;98
+216;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;98
+217;C760;頭，顏面及頸之惡性腫瘤;Malignant neoplasm of head, face and neck;99
+218;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;99
+219;C8331;頭，臉及頸部淋巴結之瀰漫性巨大B-細胞淋巴瘤;Diffuse large B-cell lymphoma, lymph nodes of head, face, and neck;100
+220;C8461;頭，臉及頸淋巴結之異生性巨大細胞淋巴瘤ALK-陽性;Anaplastic large cell lymphoma, ALK-positive, lymph nodes of head, face, and neck;100
+221;C8471;頭，臉及頸淋巴結之異生性巨大細胞淋巴瘤ALK-陰性;Anaplastic large cell lymphoma, ALK-negative, lymph nodes of head, face, and neck;100
+222;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;100
+223;C8301;頭，臉及頸部淋巴結之小細胞B-細胞淋巴瘤;Small cell B-cell lymphoma, lymph nodes of head, face, and neck;101
+224;C8381;頭，臉及頸淋巴結之其他非濾泡型淋巴瘤;Other non-follicular lymphoma, lymph nodes of head, face, and neck;101
+225;C8391;頭，臉及頸淋巴結之非濾泡型（瀰漫性）淋巴瘤;Non-follicular (diffuse) lymphoma, unspecified, lymph nodes of head, face, and neck;101
+226;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;101
+227;C8191;頭,臉及頸部淋巴結之何杰金淋巴瘤;Hodgkin lymphoma, unspecified, lymph nodes of head, face, and neck;102
+228;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;102
+229;C8121;頭，臉及頸部淋巴結之混合細胞典型何杰金淋巴瘤;Mixed cellularity classical Hodgkin lymphoma, lymph nodes of head, face, and neck;103
+230;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;103
+231;C8131;頭，臉及頸部淋巴結之淋巴球缺乏典型何杰金淋巴瘤;Lymphocyte depleted classical Hodgkin lymphoma, lymph nodes of head, face, and neck;104
+232;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;104
+233;C8201;頭,臉及頸部淋巴結之I期濾泡型淋巴瘤;Follicular lymphoma grade I, lymph nodes of head, face, and neck;105
+234;C8211;頭,臉及頸部淋巴結之II期濾泡型淋巴瘤;Follicular lymphoma grade II, lymph nodes of head, face, and neck;105
+235;C8221;頭,臉及頸部淋巴結之III期濾泡型淋巴瘤;Follicular lymphoma grade III, unspecified, lymph nodes of head, face, and neck;105
+236;C8231;頭,臉及頸部淋巴結之IIIa期濾泡型淋巴瘤;Follicular lymphoma grade IIIa, lymph nodes of head, face, and neck;105
+237;C8241;頭、臉及頸部淋巴結之IIIb期濾泡型淋巴瘤;Follicular lymphoma grade IIIb, lymph nodes of head, face, and neck;105
+238;C8251;頭、臉及頸部淋巴結之瀰漫性濾泡型中心淋巴瘤;Diffuse follicle center lymphoma, lymph nodes of head, face, and neck;105
+239;C8261;頭、臉及頸部淋巴結之皮膚濾泡型中心淋巴瘤;Cutaneous follicle center lymphoma, lymph nodes of head, face, and neck;105
+240;C8281;頭、臉及頸部淋巴結之其他類型濾胞型淋巴瘤;Other types of follicular lymphoma, lymph nodes of head, face, and neck;105
+241;C8291;頭，臉及頸部淋巴結之濾泡型淋巴瘤;Follicular lymphoma, unspecified, lymph nodes of head, face, and neck;105
+242;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;105
+243;C8401;頭、臉及頸部淋巴結之蕈狀肉芽腫;Mycosis fungoides, lymph nodes of head, face, and neck;106
+244;C8441;頭，臉及頸部淋巴結之周邊Ｔ細胞淋巴瘤，未分類;Peripheral T-cell lymphoma, not classified, lymph nodes of head, face, and neck;106
+245;C8491;頭，臉及頸淋巴結之成熟T/NK細胞淋巴瘤;Mature T/NK-cell lymphomas, unspecified, lymph nodes of head, face, and neck;106
+246;C84A1;頭，臉及頸淋巴結之皮膚Ｔ細胞淋巴瘤;Cutaneous T-cell lymphoma, unspecified lymph nodes of head, face, and neck;106
+247;C84Z1;頭，臉及頸淋巴結之其他成熟T/NK-細胞淋巴瘤;Other mature T/NK-cell lymphomas, lymph nodes of head, face, and neck;106
+248;C860;淋巴結外鼻腔型NK/T–細胞淋巴瘤;Extranodal NK/T-cell lymphoma, nasal type;106
+249;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;106
+250;C8411;頭、臉及頸部淋巴結之Sezary(塞札瑞)病;Sezary disease, lymph nodes of head, face, and neck;107
+251;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;107
+252;C96A;組織球性肉瘤;Histiocytic sarcoma;108
+253;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;108
+254;C9140;毛(髮)狀細胞白血病，未達到緩解;Hairy cell leukemia not having achieved remission;109
+255;C9141;毛(髮)狀細胞白血病，緩解期;Hairy cell leukemia, in remission;109
+256;C9142;毛(髮)狀細胞白血病，復發;Hairy cell leukemia, in relapse;109
+257;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;109
+258;C960;多病灶及多系統性（散佈性）蘭格漢氏-細胞組織球增生症;Multifocal and multisystemic (disseminated) Langerhans-cell histiocytosis;110
+259;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;110
+260;C962;惡性肥大細胞瘤;Malignant mast cell tumor;111
+261;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;111
+262;C8311;頭，臉及頸部淋巴結之被套細胞淋巴瘤;Mantle cell lymphoma, lymph nodes of head, face, and neck;112
+263;C8331;頭，臉及頸部淋巴結之瀰漫性巨大B-細胞淋巴瘤;Diffuse large B-cell lymphoma, lymph nodes of head, face, and neck;112
+264;C8381;頭，臉及頸淋巴結之其他非濾泡型淋巴瘤;Other non-follicular lymphoma, lymph nodes of head, face, and neck;112
+265;C8511;頭，臉及頸淋巴結之B細胞淋巴瘤;Unspecified B-cell lymphoma, lymph nodes of head, face, and neck;112
+266;C8521;頭、臉及頸部淋巴結之縱膈(胸腺)巨大B細胞淋巴瘤;Mediastinal (thymic) large B-cell lymphoma, lymph nodes of head, face, and neck;112
+267;C8581;頭、臉及頸部淋巴結之其他特定類型的非何杰金(氏)淋巴瘤;Other specified types of non-Hodgkin lymphoma, lymph nodes of head, face, and neck;112
+268;C8591;頭、臉及頸部淋巴結之非何杰金(氏)淋巴瘤;Non-Hodgkin lymphoma, unspecified, lymph nodes of head, face, and neck;112
+269;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;112
+270;C969;淋巴、造血及相關組織之惡性腫瘤;Malignant neoplasm of lymphoid, hematopoietic and related tissue, unspecified;113
+271;C96Z;其他特定淋巴、造血及相關組織之惡性腫瘤;Other specified malignant neoplasms of lymphoid, hematopoietic and related tissue;113
+272;Z5112;來院接受抗腫瘤免疫療法;Encounter for antineoplastic immunotherapy;113
+273;D100;唇良性腫瘤;Benign neoplasm of lip;114
+274;D101;舌良性腫瘤;Benign neoplasm of tongue;115
+275;D110;腮腺良性腫瘤;Benign neoplasm of parotid gland;116
+276;D117;其他主要唾液腺良性腫瘤;Benign neoplasm of other major salivary glands;116
+277;D119;未明示主要唾液腺良性腫瘤;Benign neoplasm of major salivary gland, unspecified;116
+278;D102;口底部良性腫瘤;Benign neoplasm of floor of mouth;117
+279;D1030;未明示部位口之良性腫瘤;Benign neoplasm of unspecified part of mouth;118
+280;D1039;口其他部位之良性腫瘤;Benign neoplasm of other parts of mouth;118
+281;D104;扁桃腺良性腫瘤;Benign neoplasm of tonsil;119
+282;D105;口咽其他部位之良性腫瘤;Benign neoplasm of other parts of oropharynx;120
+283;D164;顱骨及顏面骨之良性腫瘤;Benign neoplasm of bones of skull and face;121
+284;D165;下頜骨良性腫瘤;Benign neoplasm of lower jaw bone;122
+285;D1779;其他部位之脂肪瘤腫瘤;Benign lipomatous neoplasm of other sites;123
+286;D179;良性脂肪瘤;Benign lipomatous neoplasm, unspecified;124
+287;D210;頭、臉及頸部結締組織及其他軟組織之良性腫瘤;Benign neoplasm of connective and other soft tissue of head, face and neck;125
+288;D220;唇部黑色素細胞痣;Melanocytic nevi of lip;126
+289;D230;唇部皮膚良性腫瘤;Other benign neoplasm of skin of lip;126
+290;D0000;口腔原位癌，未明示部位;Carcinoma in situ of oral cavity, unspecified site;127
+291;D0001;唇黏膜和唇紅緣之原位癌;Carcinoma in situ of labial mucosa and vermilion border;127
+292;D0002;口腔黏膜原位癌;Carcinoma in situ of buccal mucosa;127
+293;D0003;牙齦及無齒的齒槽脊之原位癌;Carcinoma in situ of gingiva and edentulous alveolar ridge;127
+294;D0004;軟顎原位癌;Carcinoma in situ of soft palate;127
+295;D0005;硬顎原位癌;Carcinoma in situ of hard palate;127
+296;D0006;口底部原位癌;Carcinoma in situ of floor of mouth;127
+297;D0007;舌原位癌;Carcinoma in situ of tongue;127
+298;D0008;咽部原位癌;Carcinoma in situ of pharynx;127
+299;D040;唇皮膚原位癌;Carcinoma in situ of skin of lip;128
+300;D37030;腮腺性態未明之腫瘤;Neoplasm of uncertain behavior of the parotid salivary glands;129
+301;D37031;舌下腺性態未明之腫瘤;Neoplasm of uncertain behavior of the sublingual salivary glands;129
+302;D37032;頜下腺性態未明之腫瘤;Neoplasm of uncertain behavior of the submandibular salivary glands;129
+303;D37039;主要唾液腺性態未明之腫瘤;Neoplasm of uncertain behavior of the major salivary glands, unspecified;129
+304;D3701;唇部性態未明之腫瘤;Neoplasm of uncertain behavior of lip;130
+305;D3702;舌頭性態未明之腫瘤;Neoplasm of uncertain behavior of tongue;130
+306;D3704;小唾液腺性態未明之腫瘤;Neoplasm of uncertain behavior of the minor salivary glands;130
+307;D3705;咽部性態未明之腫瘤;Neoplasm of uncertain behavior of pharynx;130
+308;D3709;口腔其他特定部位性態未明之腫瘤;Neoplasm of uncertain behavior of other specified sites of the oral cavity;130
+309;G500;三叉神經痛;Trigeminal neuralgia;131
+310;G501;非典型性臉痛;Atypical facial pain;132
+311;G508;三叉神經其他疾患;Other disorders of trigeminal nerve;133
+312;G509;三叉神經疾患;Disorder of trigeminal nerve, unspecified;134
+313;G510;Bell 氏麻痺;Bell's palsy;135
+314;G511;膝狀神經節炎;Geniculate ganglionitis;136
+315;G512;Melkersson氏症候群;Melkersson's syndrome;137
+316;G513;陣攣性半顏面痙攣;Clonic hemifacial spasm;137
+317;G514;顏面肌顫搐;Facial myokymia;137
+318;G518;顏面神經的其他疾患;Other disorders of facial nerve;137
+319;G519;顏面神經疾患;Disorder of facial nerve, unspecified;138
+320;I860;舌下靜脈曲張;Sublingual varices;139
+321;K000;無齒症;Anodontia;140
+322;K001;贅生齒;Supernumerary teeth;141
+323;K003;斑點齒;Mottled teeth;142
+324;K004;牙齒形成之障礙;Disturbances in tooth formation;143
+325;K005;牙齒結構遺傳性異常，他處未歸類者;Hereditary disturbances in tooth structure, not elsewhere classified;144
+326;K007;生齒徵候群;Teething syndrome;145
+327;K009;牙齒發育疾患;Disorder of tooth development, unspecified;146
+328;K030;牙齒過度磨耗;Excessive attrition of teeth;147
+329;K031;牙齒磨損;Abrasion of teeth;148
+330;K032;牙齒腐蝕;Erosion of teeth;149
+331;K033;牙齒病理性吸收;Pathological resorption of teeth;150
+332;K034;齒骨質增生症;Hypercementosis;151
+333;K035;牙齒黏連;Ankylosis of teeth;152
+334;K037;牙齒硬組織萌發後變色;Posteruptive color changes of dental hard tissues;153
+335;K0389;牙齒硬組織其他特定疾病;Other specified diseases of hard tissues of teeth;154
+336;K039;牙齒硬組織疾病;Disease of hard tissues of teeth, unspecified;155
+337;K041;齒髓壞死;Necrosis of pulp;156
+338;K042;齒髓變質;Pulp degeneration;157
+339;K043;齒髓內異常硬組織形成;Abnormal hard tissue formation in pulp;158
+340;K044;齒髓性急性根尖牙周組織炎;Acute apical periodontitis of pulpal origin;159
+341;K047;未伴有膿竇之根尖周圍膿瘍;Periapical abscess without sinus;160
+342;K046;根尖周圍膿瘍併膿竇;Periapical abscess with sinus;161
+343;K048;齒根囊腫;Radicular cyst;162
+344;K0500;急性齒齦炎，牙菌斑導致之;Acute gingivitis, plaque induced;163
+345;K0501;急性齒齦炎，非牙菌斑導致之;Acute gingivitis, non-plaque induced;163
+346;K060;齒齦萎縮;Gingival recession;164
+347;K0532;慢性牙周炎，一般性;Chronic periodontitis, generalized;165
+348;K036;牙齒沉附著[增積]物;Deposits [accretions] on teeth;166
+349;K055;其他牙周疾病;Other periodontal diseases;167
+350;K061;牙齦腫大;Gingival enlargement;167
+351;K062;與創傷相關的牙齦及無齒性齒槽骨病灶;Gingival and edentulous alveolar ridge lesions associated with trauma;167
+352;K068;牙齦及無齒性齒槽骨之其他特定疾患;Other specified disorders of gingiva and edentulous alveolar ridge;167
+353;M2600;頷骨大小異常;Unspecified anomaly of jaw size;168
+354;M2601;上頷骨增生;Maxillary hyperplasia;169
+355;M2603;下頷骨增生;Mandibular hyperplasia;170
+356;M2602;上頷骨發育不全;Maxillary hypoplasia;171
+357;M2604;下頜骨發育不全;Mandibular hypoplasia;172
+358;M2605;巨頰症;Macrogenia;173
+359;M2606;小頦畸形;Microgenia;174
+360;M2607;頜骨過度粗隆;Excessive tuberosity of jaw;175
+361;M2609;其他特定之頜骨大小異常;Other specified anomalies of jaw size;175
+362;M2610;頷骨與顱底關係異常;Unspecified anomaly of jaw-cranial base relationship;176
+363;M2611;上頷骨不對稱;Maxillary asymmetry;177
+364;M2612;其他頷骨不對稱;Other jaw asymmetry;178
+365;M2619;其他特定頷骨與顱底關係異常;Other specified anomalies of jaw-cranial base relationship;179
+366;M2620;齒弓關係異常;Unspecified anomaly of dental arch relationship;180
+367;M26211;Angle's class I 咬合不正;Malocclusion, Angle's class I;180
+368;M26212;Angle's class II 咬合不正;Malocclusion, Angle's class II;180
+369;M26213;Angle's class III 咬合不正;Malocclusion, Angle's class III;180
+370;M26219;Angle's class 咬合不正，未明示;Malocclusion, Angle's class, unspecified;180
+371;M26220;前牙開咬之咬合關係;Open anterior occlusal relationship;180
+372;M26221;後牙開咬之咬合關係;Open posterior occlusal relationship;180
+373;M2623;齒列弓過度水平重疊;Excessive horizontal overlap;180
+374;M2624;反向咬合;Reverse articulation;180
+375;M2625;頜間距離異常;Anomalies of interarch distance;180
+376;M2629;其他齒弓關係異常;Other anomalies of dental arch relationship;180
+377;M2681;前齒軟組織侵犯;Anterior soft tissue impingement;180
+378;M2682;後齒軟組織侵犯;Posterior soft tissue impingement;180
+379;M26219;Angle's class 咬合不正，未明示;Malocclusion, Angle's class, unspecified;181
+380;M264;咬合不正;Malocclusion, unspecified;181
+381;M2650;齒及面部功能異常;Dentofacial functional abnormalities, unspecified;182
+382;M2651;頜閉合異常;Abnormal jaw closure;182
+383;M2652;下頜骨關節活動度受限;Limited mandibular range of motion;182
+384;M2653;下頜開合偏斜;Deviation in opening and closing of the mandible;182
+385;M2654;前牙導引不足;Insufficient anterior guidance;182
+386;M2655;中心咬合最大牙尖吻合差異;Centric occlusion maximum intercuspation discrepancy;182
+387;M2656;非工作齒面干擾;Non-working side interference;182
+388;M2657;後咬合支持缺乏;Lack of posterior occlusal support;182
+389;M2659;其他齒及面部功能異常;Other dentofacial functional abnormalities;182
+390;M2660;顳頷關節疾患;Temporomandibular joint disorder, unspecified;183
+391;M2661;顳頷關節黏連和關節僵硬疾病;Adhesions and ankylosis of temporomandibular joint;184
+392;M2662;顳頷關節痛;Arthralgia of temporomandibular joint;185
+393;M2663;顳頷關節盤疾患;Articular disc disorder of temporomandibular joint;186
+394;M2669;其他特定顳頷關節疾患;Other specified disorders of temporomandibular joint;187
+395;M2669;其他特定顳頷關節疾患;Other specified disorders of temporomandibular joint;187
+396;M2670;齒槽異常;Unspecified alveolar anomaly;188
+397;M2671;上頷骨齒槽增生;Alveolar maxillary hyperplasia;189
+398;M2672;下頷骨齒槽增生;Alveolar mandibular hyperplasia;190
+399;M2673;上頷骨齒槽發育不全;Alveolar maxillary hypoplasia;191
+400;M2674;下頷骨齒槽發育不全;Alveolar mandibular hypoplasia;192
+401;M2679;其他特定之齒槽異常;Other specified alveolar anomalies;193
+402;M2689;其他特定齒及面部異常;Other dentofacial anomalies;194
+403;M269;齒及面部異常;Dentofacial anomaly, unspecified;195
+404;K080;全身性病因所致之牙齒脫落;Exfoliation of teeth due to systemic causes;196
+405;K08101;完全缺牙，未明示原因，第1類;Complete loss of teeth, unspecified cause, class I;197
+406;K08102;完全缺牙，未明示原因，第2類;Complete loss of teeth, unspecified cause, class II;197
+407;K08103;完全缺牙，未明示原因，第3類;Complete loss of teeth, unspecified cause, class III;197
+408;K08104;完全缺牙，未明示原因，第4類;Complete loss of teeth, unspecified cause, class IV;197
+409;K08109;完全缺牙，未明示原因，未明示分類;Complete loss of teeth, unspecified cause, unspecified class;197
+410;K08111;創傷所致的完全缺齒，第1類;Complete loss of teeth due to trauma, class I;197
+411;K08112;創傷所致的完全缺牙，第2類;Complete loss of teeth due to trauma, class II;197
+412;K08113;創傷所致的完全缺牙，第3類;Complete loss of teeth due to trauma, class III;197
+413;K08114;創傷所致的完全缺牙，第4類;Complete loss of teeth due to trauma, class IV;197
+414;K08119;創傷所致的完全缺牙，未明示類別;Complete loss of teeth due to trauma, unspecified class;197
+415;K08121;牙周病所致的完全缺牙，第1類;Complete loss of teeth due to periodontal diseases, class I;197
+416;K08122;牙周病所致的完全缺牙，第2類;Complete loss of teeth due to periodontal diseases, class II;197
+417;K08123;牙周病所致的完全缺牙，第3類;Complete loss of teeth due to periodontal diseases, class III;197
+418;K08124;牙周病所致的完全缺牙，第4類;Complete loss of teeth due to periodontal diseases, class IV;197
+419;K08129;牙周病所致的完全缺牙，未明示類別;Complete loss of teeth due to periodontal diseases, unspecified class;197
+420;K08131;齲齒所致的完全缺牙，第1類;Complete loss of teeth due to caries, class I;197
+421;K08132;齲齒所致的完全缺牙，第2類;Complete loss of teeth due to caries, class II;197
+422;K08133;齲齒所致的完全缺牙，第3類;Complete loss of teeth due to caries, class III;197
+423;K08134;齲齒所致的完全缺牙，第4類;Complete loss of teeth due to caries, class IV;197
+424;K08139;齲齒所致的完全缺牙，未明示類別;Complete loss of teeth due to caries, unspecified class;197
+425;K08191;其他特定原因所致的完全缺牙，第1類;Complete loss of teeth due to other specified cause, class I;197
+426;K08192;其他特定原因所致的完全缺牙，第2類;Complete loss of teeth due to other specified cause, class II;197
+427;K08193;其他特定原因所致的完全缺牙，第3類;Complete loss of teeth due to other specified cause, class III;197
+428;K08194;其他特定原因所致的完全缺牙，第4類;Complete loss of teeth due to other specified cause, class IV;197
+429;K08199;其他特定原因所致的完全缺牙，未明示類別;Complete loss of teeth due to other specified cause, unspecified class;197
+430;K08401;部分缺牙，未明示原因，第1類;Partial loss of teeth, unspecified cause, class I;197
+431;K08402;部分缺牙，未明示原因，第２類;Partial loss of teeth, unspecified cause, class II;197
+432;K08403;部分缺牙，未明示原因，第３類;Partial loss of teeth, unspecified cause, class III;197
+433;K08404;部分缺牙，未明示原因，第４類;Partial loss of teeth, unspecified cause, class IV;197
+434;K08409;部分缺牙，未明示原因，未明示分類;Partial loss of teeth, unspecified cause, unspecified class;197
+435;K08411;創傷所致的部分缺牙，第１類;Partial loss of teeth due to trauma, class I;197
+436;K08412;創傷所致的部分缺牙，第２類;Partial loss of teeth due to trauma, class II;197
+437;K08413;創傷所致的部分缺牙，第３類;Partial loss of teeth due to trauma, class III;197
+438;K08414;創傷所致的部分缺牙，第４類;Partial loss of teeth due to trauma, class IV;197
+439;K08419;創傷所致的部分缺牙，未明示類別;Partial loss of teeth due to trauma, unspecified class;197
+440;K08421;牙周病所致的部分缺牙，第１類;Partial loss of teeth due to periodontal diseases, class I;197
+441;K08422;牙周病所致的部分缺牙，第２類;Partial loss of teeth due to periodontal diseases, class II;197
+442;K08423;牙周病所致的部分缺牙，第３類;Partial loss of teeth due to periodontal diseases, class III;197
+443;K08424;牙周病所致的部分缺牙，第４類;Partial loss of teeth due to periodontal diseases, class IV;197
+444;K08429;牙周病所致的部分缺牙，未明示類別;Partial loss of teeth due to periodontal diseases, unspecified class;197
+445;K08431;齲齒所致的部分缺牙，第１類;Partial loss of teeth due to caries, class I;197
+446;K08432;齲齒所致的部分缺牙，第２類;Partial loss of teeth due to caries, class II;197
+447;K08433;齲齒所致的部分缺牙，第３類;Partial loss of teeth due to caries, class III;197
+448;K08434;齲齒所致的部分缺牙，第４類;Partial loss of teeth due to caries, class IV;197
+449;K08439;齲齒所致的部分缺牙，未明示類別;Partial loss of teeth due to caries, unspecified class;197
+450;K08491;其他特定原因所致的部分缺牙，第１類;Partial loss of teeth due to other specified cause, class I;197
+451;K08492;其他特定原因所致的部分缺牙，第２類;Partial loss of teeth due to other specified cause, class II;197
+452;K08493;其他特定原因所致的部分缺牙，第３類;Partial loss of teeth due to other specified cause, class III;197
+453;K08494;其他特定原因所致的部分缺牙，第４類;Partial loss of teeth due to other specified cause, class IV;197
+454;K08499;其他特定原因所致的部分缺牙，未明示類別;Partial loss of teeth due to other specified cause, unspecified class;197
+455;K0850;不滿意的牙齒修復;Unsatisfactory restoration of tooth, unspecified;198
+456;K0851;開放牙齒邊緣修復;Open restoration margins of tooth;198
+457;K0852;未修補外突的牙齒修復材料;Unrepairable overhanging of dental restorative materials;198
+458;K08530;牙齒修復材料之骨折未喪失材料;Fractured dental restorative material without loss of material;198
+459;K08531;牙齒修復材料之骨折併喪失材料;Fractured dental restorative material with loss of material;198
+460;K08539;牙齒修復材料之骨折;Fractured dental restorative material, unspecified;198
+461;K0854;牙的現存外形恢復生物不相容及口腔健康;Contour of existing restoration of tooth biologically incompatible with oral health;198
+462;K0855;對現存牙齒修補材料的過敏;Allergy to existing dental restorative material;198
+463;K0856;缺乏審美的現存牙齒修復;Poor aesthetic of existing restoration of tooth;198
+464;K0859;其他不滿意的牙齒修復;Other unsatisfactory restoration of tooth;198
+465;K088;牙齒及支持組織之其他特定疾患;Other specified disorders of teeth and supporting structures;198
+466;M2761;植牙之骨整合失敗;Osseointegration failure of dental implant;198
+467;M2762;植牙之骨整合後生物性植體失敗;Post-osseointegration biological failure of dental implant;198
+468;M2763;植牙之骨整合後機械性植體失敗;Post-osseointegration mechanical failure of dental implant;198
+469;M2769;其他骨內植牙失敗;Other endosseous dental implant failure;198
+470;K091;口腔部位的發育性(非齒源性)囊腫;Developmental (nonodontogenic) cysts of oral region;199
+471;M2740;頷骨囊腫;Unspecified cyst of jaw;200
+472;M2749;其他頷骨囊腫;Other cysts of jaw;200
+473;M271;頷骨中心巨細胞肉芽腫;Giant cell granuloma, central;201
+474;M272;頷骨發炎性病症;Inflammatory conditions of jaws;202
+475;M273;頷骨齒槽炎;Alveolitis of jaws;203
+476;M278;其他特定性頷骨疾病;Other specified diseases of jaws;204
+477;M2751;根管治療所致之根管空間穿孔;Perforation of root canal space due to endodontic treatment;205
+478;M2752;根管過度充填;Endodontic overfill;205
+479;M2753;根管底部填充;Endodontic underfill;205
+480;M2759;其他牙根周圍病變相關伴有先前根管治療;Other periradicular pathology associated with previous endodontic treatment;205
+481;M278;其他特定性頷骨疾病;Other specified diseases of jaws;205
+482;M270;頜發育性疾患;Developmental disorders of jaws;206
+483;M279;頷骨疾病;Disease of jaws, unspecified;206
+484;K110;唾液腺萎縮;Atrophy of salivary gland;207
+485;K111;唾液腺肥大;Hypertrophy of salivary gland;208
+486;K1120;唾液腺炎;Sialoadenitis, unspecified;209
+487;K1121;急性唾液腺炎;Acute sialoadenitis;209
+488;K1122;急性復發性唾液腺炎;Acute recurrent sialoadenitis;209
+489;K1123;慢性唾液腺炎;Chronic sialoadenitis;209
+490;K113;唾液腺膿瘍;Abscess of salivary gland;210
+491;K114;唾液腺?管;Fistula of salivary gland;211
+492;K115;唾液腺結石;Sialolithiasis;212
+493;K116;唾液腺黏液囊腫;Mucocele of salivary gland;213
+494;K117;唾液分泌障礙;Disturbances of salivary secretion;214
+495;R682;口乾;Dry mouth, unspecified;214
+496;K118;其他唾液腺疾病;Other diseases of salivary glands;215
+497;K119;唾液腺疾病;Disease of salivary gland, unspecified;216
+498;K121;其他類型口腔炎;Other forms of stomatitis;217
+499;K1230;口腔黏膜炎（潰瘍性);Oral mucositis (ulcerative), unspecified;217
+500;K1231;口腔黏膜炎（潰瘍性)源於抗腫瘤治療;Oral mucositis (ulcerative) due to antineoplastic therapy;217
+501;K1232;口腔黏膜炎（潰瘍性)源於其他藥物;Oral mucositis (ulcerative) due to other drugs;217
+502;K1233;口腔黏膜炎（潰瘍性)源於放射線;Oral mucositis (ulcerative) due to radiation;217
+503;K1239;其他口腔黏膜炎（潰瘍性);Other oral mucositis (ulcerative);217
+504;A690;壞死性潰瘍性口炎;Necrotizing ulcerative stomatitis;218
+505;K122;口腔蜂窩組織炎及膿瘍;Cellulitis and abscess of mouth;219
+506;K130;唇部疾病;Diseases of lips;220
+507;K1321;口腔黏膜白斑症，包括舌部;Leukoplakia of oral mucosa, including tongue;221
+508;K133;毛狀白斑;Hairy leukoplakia;221
+509;K1322;最小的角質化剩餘齒槽脊粘膜;Minimal keratinized residual ridge mucosa;222
+510;K1323;過度角質化剩餘齒槽脊粘膜;Excessive keratinized residual ridge mucosa;222
+511;K1324;菸草(所致)的顎白角化症;Leukokeratosis nicotina palati;222
+512;K1329;其他口腔上皮病變，包括舌部;Other disturbances of oral epithelium, including tongue;222
+513;K135;口腔黏膜下層纖維化症;Oral submucous fibrosis;223
+514;K140;舌炎;Glossitis;224
+515;K141;地圖舌;Geographic tongue;225
+516;K142;正中菱形舌炎;Median rhomboid glossitis;226
+517;K143;舌乳頭肥大;Hypertrophy of tongue papillae;227
+518;K144;舌乳頭萎縮;Atrophy of tongue papillae;228
+519;K145;舌皺疊;Plicated tongue;229
+520;K146;舌痛;Glossodynia;230
+521;K148;舌其他疾病;Other diseases of tongue;231
+522;K149;舌疾病;Disease of tongue, unspecified;232
+523;L0201;臉部皮膚膿瘍;Cutaneous abscess of face;233
+524;L03211;臉部蜂窩組織炎;Cellulitis of face;233
+525;L03212;臉部急性淋巴管炎;Acute lymphangitis of face;233
+526;L0211;頸部皮膚膿瘍;Cutaneous abscess of neck;234
+527;L03221;頸部蜂窩組織炎;Cellulitis of neck;234
+528;L03222;頸部急性淋巴管炎;Acute lymphangitis of neck;234
+529;L928;皮膚及皮下組織的其他肉芽腫疾患;Other granulomatous disorders of the skin and subcutaneous tissue;235
+530;L980;化膿性肉芽腫;Pyogenic granuloma;235
+531;L121;疤痕性類天疱瘡;Cicatricial pemphigoid;236
+532;L121;疤痕性類天疱瘡;Cicatricial pemphigoid;237
+533;L138;其他特定水疱性疾患;Other specified bullous disorders;238
+534;L14;歸類於他處疾病所致之水疱性疾患;Bullous disorders in diseases classified elsewhere;238
+535;L430;肥厚性扁平苔癬;Hypertrophic lichen planus;239
+536;L431;水疱性扁平苔癬;Bullous lichen planus;239
+537;L432;苔癬樣藥疹;Lichenoid drug reaction;239
+538;L433;亞急性扁平苔癬;Subacute (active) lichen planus;239
+539;L438;其他扁平苔癬;Other lichen planus;239
+540;L439;扁平苔癬;Lichen planus, unspecified;239
+541;L661;毛孔扁平苔癬;Lichen planopilaris;239
+542;M3500;乾燥症候群;Sicca syndrome, unspecified;240
+543;M3501;乾燥症候群伴有角膜結膜炎;Sicca syndrome with keratoconjunctivitis;240
+544;M3509;乾燥徵候群伴有侵及(侵犯、涉及)其他器官;Sicca syndrome with other organ involvement;240
+545;M3300;幼年型皮肌炎侵及(侵犯、涉及)器官;Juvenile dermatopolymyositis, organ involvement unspecified;241
+546;M3309;幼年型皮肌炎伴有侵及(侵犯、涉及)其他器官;Juvenile dermatopolymyositis with other organ involvement;241
+547;M3310;其他皮多肌炎侵及(侵犯、涉及)器官;Other dermatopolymyositis, organ involvement unspecified;241
+548;M3319;其他皮多肌炎伴有侵及(侵犯、涉及)其他器官;Other dermatopolymyositis with other organ involvement;241
+549;M3390;皮多肌炎侵及(侵犯、涉及)器官;Dermatopolymyositis, unspecified, organ involvement unspecified;241
+550;M3399;皮多肌炎伴有侵及(侵犯、涉及)其他器官;Dermatopolymyositis, unspecified with other organ involvement;241
+551;M360;腫瘤性疾病所致的皮多肌炎;Dermato(poly)myositis in neoplastic disease;241
+552;M3320;多發性肌炎侵及(侵犯、涉及)器官;Polymyositis, organ involvement unspecified;242
+553;M3329;多發性肌炎伴有侵及(侵犯、涉及)其他器官;Polymyositis with other organ involvement;242
+554;M726;壞死性筋膜炎;Necrotizing fasciitis;243
+555;M6080;未明示部位其他肌炎;Other myositis, unspecified site;244
+556;M8610;未明示部位其他急性骨髓炎;Other acute osteomyelitis, unspecified site;245
+557;M8620;未明示部位亞急性骨髓炎;Subacute osteomyelitis, unspecified site;245
+558;M8630;未明示部位慢性多發性(多病灶性)骨髓炎;Chronic multifocal osteomyelitis, unspecified site;246
+559;M8660;未明示部位其他慢性骨髓炎;Other chronic osteomyelitis, unspecified site;246
+560;M868X9;未明示部位其他骨髓炎;Other osteomyelitis, unspecified sites;246
+561;M87180;藥物所致之[藥物性]頷骨骨壞死;Osteonecrosis due to drugs, jaw;247
+562;Q359;腭裂;Cleft palate, unspecified;248
+563;Q359;腭裂;Cleft palate, unspecified;249
+564;Q353;軟腭裂;Cleft soft palate;250
+565;Q357;懸壅垂裂;Cleft uvula;250
+566;Q355;硬腭裂伴有軟腭裂;Cleft hard palate with cleft soft palate;251
+567;Q359;腭裂;Cleft palate, unspecified;251
+568;Q359;腭裂;Cleft palate, unspecified;252
+569;Q369;單側唇裂;Cleft lip, unilateral;253
+570;Q361;中線唇裂;Cleft lip, median;254
+571;Q369;單側唇裂;Cleft lip, unilateral;254
+572;Q369;單側唇裂;Cleft lip, unilateral;255
+573;Q360;雙側唇裂;Cleft lip, bilateral;256
+574;Q360;雙側唇裂;Cleft lip, bilateral;257
+575;Q379;腭裂伴有單側唇裂;Unspecified cleft palate with unilateral cleft lip;258
+576;Q371;硬腭裂伴有單側唇裂;Cleft hard palate with unilateral cleft lip;259
+577;Q373;軟腭裂伴有單側唇裂;Cleft soft palate with unilateral cleft lip;259
+578;Q375;硬腭裂及軟腭裂伴有單側唇裂;Cleft hard and soft palate with unilateral cleft lip;259
+579;Q379;腭裂伴有單側唇裂;Unspecified cleft palate with unilateral cleft lip;259
+580;Q371;硬腭裂伴有單側唇裂;Cleft hard palate with unilateral cleft lip;260
+581;Q373;軟腭裂伴有單側唇裂;Cleft soft palate with unilateral cleft lip;260
+582;Q375;硬腭裂及軟腭裂伴有單側唇裂;Cleft hard and soft palate with unilateral cleft lip;260
+583;Q379;腭裂伴有單側唇裂;Unspecified cleft palate with unilateral cleft lip;260
+584;Q370;硬腭裂伴有雙側唇裂;Cleft hard palate with bilateral cleft lip;261
+585;Q372;軟腭裂伴有雙側唇裂;Cleft soft palate with bilateral cleft lip;261
+586;Q374;硬腭裂及軟腭裂伴有雙側唇裂;Cleft hard and soft palate with bilateral cleft lip;261
+587;Q378;腭裂伴有雙側唇裂;Unspecified cleft palate with bilateral cleft lip;261
+588;Q370;硬腭裂伴有雙側唇裂;Cleft hard palate with bilateral cleft lip;262
+589;Q372;軟腭裂伴有雙側唇裂;Cleft soft palate with bilateral cleft lip;262
+590;Q374;硬腭裂及軟腭裂伴有雙側唇裂;Cleft hard and soft palate with bilateral cleft lip;262
+591;Q378;腭裂伴有雙側唇裂;Unspecified cleft palate with bilateral cleft lip;262
+592;Q379;腭裂伴有單側唇裂;Unspecified cleft palate with unilateral cleft lip;263
+593;Q385;腭先天性畸形，他處未歸類者;Congenital malformations of palate, not elsewhere classified;263
+594;Q381;舌黏連;Ankyloglossia;264
+595;Q383;舌其他先天性畸形;Other congenital malformations of tongue;265
+596;Q383;舌其他先天性畸形;Other congenital malformations of tongue;266
+597;Q383;舌其他先天性畸形;Other congenital malformations of tongue;267
+598;Q383;舌其他先天性畸形;Other congenital malformations of tongue;268
+599;Q382;巨舌;Macroglossia;269
+600;Q383;舌其他先天性畸形;Other congenital malformations of tongue;270
+601;Q383;舌其他先天性畸形;Other congenital malformations of tongue;271
+602;Q384;唾液腺及唾管先天性畸形;Congenital malformations of salivary glands and ducts;272
+603;Q384;唾液腺及唾管先天性畸形;Congenital malformations of salivary glands and ducts;273
+604;Q384;唾液腺及唾管先天性畸形;Congenital malformations of salivary glands and ducts;274
+605;Q384;唾液腺及唾管先天性畸形;Congenital malformations of salivary glands and ducts;275
+606;Q380;唇先天性畸形，他處未歸類者;Congenital malformations of lips, not elsewhere classified;276
+607;Q386;口腔其他先天性畸形;Other congenital malformations of mouth;277
+608;Q750;顱骨縫過早封閉;Craniosynostosis;278
+609;Q751;顱顏面骨成骨不全;Craniofacial dysostosis;278
+610;Q752;眼距過寬;Hypertelorism;278
+611;Q753;巨頭;Macrocephaly;278
+612;Q754;下頷顏面骨成骨不全;Mandibulofacial dysostosis;278
+613;Q755;眼下頷成骨不全;Oculomandibular dysostosis;278
+614;Q758;其他特定先天性顱骨及顏面骨畸形;Other specified congenital malformations of skull and face bones;278
+615;Q759;先天性顱骨及顏面骨畸形;Congenital malformation of skull and face bones, unspecified;278
+616;Q870;影響顏面為主的先天性畸形症候群;Congenital malformation syndromes predominantly affecting facial appearance;278
+617;S02609A;下頷骨未明示部位閉鎖性骨折之初期照護;Fracture of mandible, unspecified, initial encounter for closed fracture;279
+618;S0269XA;下頷骨其他特定部位閉鎖性骨折之初期照護;Fracture of mandible of other specified site, initial encounter for closed fracture;279
+619;S0261XA;下頷骨髁狀突閉鎖性骨折之初期照護;Fracture of condylar process of mandible, initial encounter for closed fracture;280
+620;S0262XA;下頷骨下髁閉鎖性骨折之初期照護;Fracture of subcondylar process of mandible, initial encounter for closed fracture;281
+621;S0263XA;下頷骨喙狀突閉鎖性骨折之初期照護;Fracture of coronoid process of mandible, initial encounter for closed fracture;282
+622;S0264XA;下頷骨枝閉鎖性骨折之初期照護;Fracture of ramus of mandible, initial encounter for closed fracture;283
+623;S0265XA;頷角閉鎖性骨折之初期照護;Fracture of angle of mandible, initial encounter for closed fracture;284
+624;S0266XA;下頷骨聯合體閉鎖性骨折之初期照護;Fracture of symphysis of mandible, initial encounter for closed fracture;285
+625;S0267XA;下頷骨齒槽閉鎖性骨折之初期照護;Fracture of alveolus of mandible, initial encounter for closed fracture;286
+626;S02600A;下頷體未明示部位閉鎖性骨折之初期照護;Fracture of unspecified part of body of mandible, initial encounter for closed fracture;287
+627;S02609A;下頷骨未明示部位閉鎖性骨折之初期照護;Fracture of mandible, unspecified, initial encounter for closed fracture;288
+628;S0269XA;下頷骨其他特定部位閉鎖性骨折之初期照護;Fracture of mandible of other specified site, initial encounter for closed fracture;288
+629;S02609B;下頷骨未明示部位開放性骨折之初期照護;Fracture of mandible, unspecified, initial encounter for open fracture;289
+630;S0269XB;下頷骨其他特定部位開放性骨折之初期照護;Fracture of mandible of other specified site, initial encounter for open fracture;289
+631;S0261XB;下頷骨髁狀突開放性骨折之初期照護;Fracture of condylar process of mandible, initial encounter for open fracture;290
+632;S0262XB;下頷骨下髁開放性骨折之初期照護;Fracture of subcondylar process of mandible, initial encounter for open fracture;291
+633;S0263XB;下頷骨喙狀突開放性骨折之初期照護;Fracture of coronoid process of mandible, initial encounter for open fracture;292
+634;S0264XB;下頷骨枝開放性骨折之初期照護;Fracture of ramus of mandible, initial encounter for open fracture;293
+635;S0265XB;頷角開放性骨折之初期照護;Fracture of angle of mandible, initial encounter for open fracture;294
+636;S0266XB;下頷骨聯合體開放性骨折之初期照護;Fracture of symphysis of mandible, initial encounter for open fracture;295
+637;S0267XB;下頷骨齒槽開放性骨折之初期照護;Fracture of alveolus of mandible, initial encounter for open fracture;296
+638;S02600B;下頷體未明示部位開放性骨折之初期照護;Fracture of unspecified part of body of mandible, initial encounter for open fracture;297
+639;S02609B;下頷骨未明示部位開放性骨折之初期照護;Fracture of mandible, unspecified, initial encounter for open fracture;298
+640;S0269XB;下頷骨其他特定部位開放性骨折之初期照護;Fracture of mandible of other specified site, initial encounter for open fracture;298
+641;S02400A;顴骨閉鎖性骨折之初期照護;Malar fracture unspecified, initial encounter for closed fracture;299
+642;S02401A;上頷骨閉鎖性骨折之初期照護;Maxillary fracture, unspecified, initial encounter for closed fracture;299
+643;S02402A;顴骨閉鎖性骨折之初期照護;Zygomatic fracture, unspecified, initial encounter for closed fracture;299
+644;S02411A;李霍氏I型閉鎖性骨折之初期照護;LeFort I fracture, initial encounter for closed fracture;299
+645;S02412A;李霍氏II型閉鎖性骨折之初期照護;LeFort II fracture, initial encounter for closed fracture;299
+646;S02413A;李霍氏III型閉鎖性骨折之初期照護;LeFort III fracture, initial encounter for closed fracture;299
+647;S02400B;顴骨開放性骨折之初期照護;Malar fracture unspecified, initial encounter for open fracture;300
+648;S02401B;上頷骨開放性骨折之初期照護;Maxillary fracture, unspecified, initial encounter for open fracture;300
+649;S02402B;顴骨開放性骨折之初期照護;Zygomatic fracture, unspecified, initial encounter for open fracture;300
+650;S02411B;李霍氏I型開放性骨折之初期照護;LeFort I fracture, initial encounter for open fracture;300
+651;S02412B;李霍氏II型開放性骨折之初期照護;LeFort II fracture, initial encounter for open fracture;300
+652;S02413B;李霍氏III型開放性骨折之初期照護;LeFort III fracture, initial encounter for open fracture;300
+653;S023XXA;眶底閉鎖性骨折之初期照護;Fracture of orbital floor, initial encounter for closed fracture;301
+654;S023XXB;眶底開放性骨折之初期照護;Fracture of orbital floor, initial encounter for open fracture;302
+655;S0242XA;上頷齒槽閉鎖性骨折之初期照護;Fracture of alveolus of maxilla, initial encounter for closed fracture;303
+656;S028XXA;其他特定部位顱骨及顏面骨閉鎖性骨折之初期照護;Fractures of other specified skull and facial bones, initial encounter for closed fracture;303
+657;S0292XA;顏面骨閉鎖性骨折之初期照護;Unspecified fracture of facial bones, initial encounter for closed fracture;303
+658;S0242XB;上頷齒槽開放性骨折之初期照護;Fracture of alveolus of maxilla, initial encounter for open fracture;304
+659;S028XXB;其他特定部位顱骨及顏面骨開放性骨折之初期照護;Fractures of other specified skull and facial bones, initial encounter for open fracture;304
+660;S0292XB;顏面骨開放性骨折之初期照護;Unspecified fracture of facial bones, initial encounter for open fracture;304
+661;T148;其他身體損傷;Other injury of unspecified body region;305
+662;T148;其他身體損傷;Other injury of unspecified body region;306
+663;S030XXA;頷骨脫臼之初期照護;Dislocation of jaw, initial encounter;307
+664;S01409A;未明示側性臉頰與顳骨下頜周圍開放性傷口之初期照護;Unspecified open wound of unspecified cheek and temporomandibular area, initial encounter;308
+665;S030XXA;頷骨脫臼之初期照護;Dislocation of jaw, initial encounter;308
+666;S034XXA;下頷扭傷之初期照護;Sprain of jaw, initial encounter;309
+667;S034XXA;下頷扭傷之初期照護;Sprain of jaw, initial encounter;309
+668;S0993XA;臉部損傷之初期照護;Unspecified injury of face, initial encounter;310
+669;S01401A;右臉頰與顳骨下頜周圍開放性傷口之初期照護;Unspecified open wound of right cheek and temporomandibular area, initial encounter;311
+670;S01402A;左臉頰與顳骨下頜周圍開放性傷口之初期照護;Unspecified open wound of left cheek and temporomandibular area, initial encounter;311
+671;S01409A;未明示側性臉頰與顳骨下頜周圍開放性傷口之初期照護;Unspecified open wound of unspecified cheek and temporomandibular area, initial encounter;311
+672;S01411A;右臉頰與顳骨下頜周圍撕裂傷未伴有異物之初期照護;Laceration without foreign body of right cheek and temporomandibular area, initial encounter;311
+673;S01412A;左臉頰與顳骨下頜周圍撕裂傷未伴有異物之初期照護;Laceration without foreign body of left cheek and temporomandibular area, initial encounter;311
+674;S01419A;未明示側性臉頰與顳骨下頜周圍撕裂傷未伴有異物之初期照護;Laceration without foreign body of unspecified cheek and temporomandibular area, initial encounter;311
+675;S01431A;右臉頰與顳骨下頜周圍穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of right cheek and temporomandibular area, initial encounter;311
+676;S01432A;左臉頰與顳骨下頜周圍穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of left cheek and temporomandibular area, initial encounter;311
+677;S01439A;未明示側性臉頰與顳骨下頜周圍穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of unspecified cheek and temporomandibular area, initial encounter;311
+678;S01451A;右臉頰與顳骨下頜周圍開放性咬傷之初期照護;Open bite of right cheek and temporomandibular area, initial encounter;311
+679;S01452A;左臉頰與顳骨下頜周圍開放性咬傷之初期照護;Open bite of left cheek and temporomandibular area, initial encounter;311
+680;S01459A;未明示側性臉頰與顳骨下頜周圍開放性咬傷之初期照護;Open bite of unspecified cheek and temporomandibular area, initial encounter;311
+681;S0180XA;頭部其他部位開放性傷口之初期照護;Unspecified open wound of other part of head, initial encounter;312
+682;S0181XA;頭部其他部位撕裂傷未伴有異物之初期照護;Laceration without foreign body of other part of head, initial encounter;312
+683;S0183XA;頭部其他部位穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of other part of head, initial encounter;312
+684;S0185XA;頭部其他部位開放性咬傷之初期照護;Open bite of other part of head, initial encounter;312
+685;S01501A;唇開放性傷口之初期照護;Unspecified open wound of lip, initial encounter;313
+686;S01511A;唇撕裂傷未伴有異物之初期照護;Laceration without foreign body of lip, initial encounter;313
+687;S01531A;唇穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of lip, initial encounter;313
+688;S01551A;唇開放性咬傷之初期照護;Open bite of lip, initial encounter;313
+689;S01401A;右臉頰與顳骨下頜周圍開放性傷口之初期照護;Unspecified open wound of right cheek and temporomandibular area, initial encounter;314
+690;S01402A;左臉頰與顳骨下頜周圍開放性傷口之初期照護;Unspecified open wound of left cheek and temporomandibular area, initial encounter;314
+691;S01409A;未明示側性臉頰與顳骨下頜周圍開放性傷口之初期照護;Unspecified open wound of unspecified cheek and temporomandibular area, initial encounter;314
+692;S01411A;右臉頰與顳骨下頜周圍撕裂傷未伴有異物之初期照護;Laceration without foreign body of right cheek and temporomandibular area, initial encounter;314
+693;S01412A;左臉頰與顳骨下頜周圍撕裂傷未伴有異物之初期照護;Laceration without foreign body of left cheek and temporomandibular area, initial encounter;314
+694;S01419A;未明示側性臉頰與顳骨下頜周圍撕裂傷未伴有異物之初期照護;Laceration without foreign body of unspecified cheek and temporomandibular area, initial encounter;314
+695;S01431A;右臉頰與顳骨下頜周圍穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of right cheek and temporomandibular area, initial encounter;314
+696;S01432A;左臉頰與顳骨下頜周圍穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of left cheek and temporomandibular area, initial encounter;314
+697;S01439A;未明示側性臉頰與顳骨下頜周圍穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of unspecified cheek and temporomandibular area, initial encounter;314
+698;S01451A;右臉頰與顳骨下頜周圍開放性咬傷之初期照護;Open bite of right cheek and temporomandibular area, initial encounter;314
+699;S01452A;左臉頰與顳骨下頜周圍開放性咬傷之初期照護;Open bite of left cheek and temporomandibular area, initial encounter;314
+700;S01459A;未明示側性臉頰與顳骨下頜周圍開放性咬傷之初期照護;Open bite of unspecified cheek and temporomandibular area, initial encounter;314
+701;S0180XA;頭部其他部位開放性傷口之初期照護;Unspecified open wound of other part of head, initial encounter;315
+702;S0181XA;頭部其他部位撕裂傷未伴有異物之初期照護;Laceration without foreign body of other part of head, initial encounter;315
+703;S0183XA;頭部其他部位穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of other part of head, initial encounter;315
+704;S0185XA;頭部其他部位開放性咬傷之初期照護;Open bite of other part of head, initial encounter;315
+705;A4852;傷口性肉毒桿菌病;Wound botulism;316
+706;S0192XA;頭部未明示部位撕裂傷伴有異物之初期照護;Laceration with foreign body of unspecified part of head, initial encounter;316
+707;S0194XA;頭部未明示部位穿刺傷伴有異物之初期照護;Puncture wound with foreign body of unspecified part of head, initial encounter;316
+708;A4852;傷口性肉毒桿菌病;Wound botulism;317
+709;S01421A;右臉頰與顳骨下頜周圍撕裂傷伴有異物之初期照護;Laceration with foreign body of right cheek and temporomandibular area, initial encounter;317
+710;S01422A;左臉頰與顳骨下頜周圍撕裂傷伴有異物之初期照護;Laceration with foreign body of left cheek and temporomandibular area, initial encounter;317
+711;S01429A;未明示側性臉頰與顳骨下頜周圍撕裂傷伴有異物之初期照護;Laceration with foreign body of unspecified cheek and temporomandibular area, initial encounter;317
+712;S01441A;右臉頰與顳骨下頜周圍穿刺傷伴有異物之初期照護;Puncture wound with foreign body of right cheek and temporomandibular area, initial encounter;317
+713;S01442A;左臉頰與顳骨下頜周圍穿刺傷伴有異物之初期照護;Puncture wound with foreign body of left cheek and temporomandibular area, initial encounter;317
+714;S01449A;未明示側性臉頰與顳骨下頜周圍穿刺傷伴有異物之初期照護;Puncture wound with foreign body of unspecified cheek and temporomandibular area, initial encounter;317
+715;A4852;傷口性肉毒桿菌病;Wound botulism;318
+716;S0182XA;頭部其他部位撕裂傷伴有異物之初期照護;Laceration with foreign body of other part of head, initial encounter;318
+717;S0184XA;頭部其他部位穿刺傷伴有異物之初期照護;Puncture wound with foreign body of other part of head, initial encounter;318
+718;A4852;傷口性肉毒桿菌病;Wound botulism;319
+719;S01521A;唇撕裂傷伴有異物之初期照護;Laceration with foreign body of lip, initial encounter;319
+720;S01541A;唇穿刺傷伴有異物之初期照護;Puncture wound with foreign body of lip, initial encounter;319
+721;A4852;傷口性肉毒桿菌病;Wound botulism;320
+722;S0182XA;頭部其他部位撕裂傷伴有異物之初期照護;Laceration with foreign body of other part of head, initial encounter;320
+723;S0184XA;頭部其他部位穿刺傷伴有異物之初期照護;Puncture wound with foreign body of other part of head, initial encounter;320
+724;A4852;傷口性肉毒桿菌病;Wound botulism;321
+725;S0182XA;頭部其他部位撕裂傷伴有異物之初期照護;Laceration with foreign body of other part of head, initial encounter;321
+726;S0184XA;頭部其他部位穿刺傷伴有異物之初期照護;Puncture wound with foreign body of other part of head, initial encounter;321
+727;S01502A;口腔開放性傷口之初期照護;Unspecified open wound of oral cavity, initial encounter;322
+728;S01512A;口腔撕裂傷未伴有異物之初期照護;Laceration without foreign body of oral cavity, initial encounter;322
+729;S01532A;口腔穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of oral cavity, initial encounter;322
+730;S01552A;口腔開放性咬傷之初期照護;Open bite of oral cavity, initial encounter;322
+731;S01512A;口腔撕裂傷未伴有異物之初期照護;Laceration without foreign body of oral cavity, initial encounter;323
+732;S01532A;口腔穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of oral cavity, initial encounter;323
+733;S01552A;口腔開放性咬傷之初期照護;Open bite of oral cavity, initial encounter;323
+734;S01512A;口腔撕裂傷未伴有異物之初期照護;Laceration without foreign body of oral cavity, initial encounter;324
+735;S01532A;口腔穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of oral cavity, initial encounter;324
+736;S01552A;口腔開放性咬傷之初期照護;Open bite of oral cavity, initial encounter;324
+737;K0381;裂齒;Cracked tooth;325
+738;S025XXA;牙齒閉鎖性骨折(外傷性)之初期照護;Fracture of tooth (traumatic), initial encounter for closed fracture;325
+739;S025XXB;牙齒開放性骨折(外傷性)之初期照護;Fracture of tooth (traumatic), initial encounter for open fracture;325
+740;S032XXA;牙齒脫位之初期照護;Dislocation of tooth, initial encounter;325
+741;S01512A;口腔撕裂傷未伴有異物之初期照護;Laceration without foreign body of oral cavity, initial encounter;326
+742;S01532A;口腔穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of oral cavity, initial encounter;326
+743;S01552A;口腔開放性咬傷之初期照護;Open bite of oral cavity, initial encounter;326
+744;S01512A;口腔撕裂傷未伴有異物之初期照護;Laceration without foreign body of oral cavity, initial encounter;327
+745;S01532A;口腔穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of oral cavity, initial encounter;327
+746;S01552A;口腔開放性咬傷之初期照護;Open bite of oral cavity, initial encounter;327
+747;S01512A;口腔撕裂傷未伴有異物之初期照護;Laceration without foreign body of oral cavity, initial encounter;328
+748;A4852;傷口性肉毒桿菌病;Wound botulism;329
+749;S01522A;口腔撕裂傷伴有異物之初期照護;Laceration with foreign body of oral cavity, initial encounter;329
+750;S01542A;口腔穿刺傷伴有異物之初期照護;Puncture wound with foreign body of oral cavity, initial encounter;329
+751;A4852;傷口性肉毒桿菌病;Wound botulism;330
+752;S01522A;口腔撕裂傷伴有異物之初期照護;Laceration with foreign body of oral cavity, initial encounter;330
+753;S01542A;口腔穿刺傷伴有異物之初期照護;Puncture wound with foreign body of oral cavity, initial encounter;330
+754;A4852;傷口性肉毒桿菌病;Wound botulism;331
+755;S01522A;口腔撕裂傷伴有異物之初期照護;Laceration with foreign body of oral cavity, initial encounter;331
+756;S01542A;口腔穿刺傷伴有異物之初期照護;Puncture wound with foreign body of oral cavity, initial encounter;331
+757;A4852;傷口性肉毒桿菌病;Wound botulism;332
+758;K0381;裂齒;Cracked tooth;332
+759;S025XXA;牙齒閉鎖性骨折(外傷性)之初期照護;Fracture of tooth (traumatic), initial encounter for closed fracture;332
+760;S025XXB;牙齒開放性骨折(外傷性)之初期照護;Fracture of tooth (traumatic), initial encounter for open fracture;332
+761;A4852;傷口性肉毒桿菌病;Wound botulism;333
+762;S01522A;口腔撕裂傷伴有異物之初期照護;Laceration with foreign body of oral cavity, initial encounter;333
+763;S01542A;口腔穿刺傷伴有異物之初期照護;Puncture wound with foreign body of oral cavity, initial encounter;333
+764;A4852;傷口性肉毒桿菌病;Wound botulism;334
+765;S01522A;口腔撕裂傷伴有異物之初期照護;Laceration with foreign body of oral cavity, initial encounter;334
+766;S01542A;口腔穿刺傷伴有異物之初期照護;Puncture wound with foreign body of oral cavity, initial encounter;334
+767;A4852;傷口性肉毒桿菌病;Wound botulism;335
+768;S01522A;口腔撕裂傷伴有異物之初期照護;Laceration with foreign body of oral cavity, initial encounter;335
+769;S01542A;口腔穿刺傷伴有異物之初期照護;Puncture wound with foreign body of oral cavity, initial encounter;335
+770;S0190XA;頭部未明示部位開放性傷口之初期照護;Unspecified open wound of unspecified part of head, initial encounter;336
+771;S0191XA;頭部未明示部位撕裂傷未伴有異物之初期照護;Laceration without foreign body of unspecified part of head, initial encounter;336
+772;S0193XA;頭部未明示部位穿刺傷未伴有異物之初期照護;Puncture wound without foreign body of unspecified part of head, initial encounter;336
+773;S0195XA;頭部未明示部位開放性咬傷之初期照護;Open bite of unspecified part of head, initial encounter;336
+774;S0889XA;頭部其他部位創傷性截斷之初期照護;Traumatic amputation of other parts of head, initial encounter;336
+775;S0912XA;頭部肌肉及肌腱裂傷之初期照護;Laceration of muscle and tendon of head, initial encounter;336
+776;S098XXA;頭部其他特定損傷之初期照護;Other specified injuries of head, initial encounter;336
+777;S0990XA;頭部損傷之初期照護;Unspecified injury of head, initial encounter;336
+778;A4852;傷口性肉毒桿菌病;Wound botulism;337
+779;S0192XA;頭部未明示部位撕裂傷伴有異物之初期照護;Laceration with foreign body of unspecified part of head, initial encounter;337
+780;S0194XA;頭部未明示部位穿刺傷伴有異物之初期照護;Puncture wound with foreign body of unspecified part of head, initial encounter;337
+781;S0195XA;頭部未明示部位開放性咬傷之初期照護;Open bite of unspecified part of head, initial encounter;337
+782;S020XXS;顱骨穹窿骨折之後遺症;Fracture of vault of skull, sequela;338
+783;S0210XS;顱骨底部骨折之後遺症;Unspecified fracture of base of skull, sequela;338
+784;S02110S;枕骨髁第I型骨折之後遺症;Type I occipital condyle fracture, sequela;338
+785;S02111S;枕骨髁第II型骨折之後遺症;Type II occipital condyle fracture, sequela;338
+786;S02112S;枕骨髁第III型骨折之後遺症;Type III occipital condyle fracture, sequela;338
+787;S02113S;未明示枕骨髁骨折之後遺症;Unspecified occipital condyle fracture, sequela;338
+788;S02118S;枕骨其他骨折之後遺症;Other fracture of occiput, sequela;338
+789;S02119S;枕骨骨折之後遺症;Unspecified fracture of occiput, sequela;338
+790;S0219XS;顱骨底部其他骨折之後遺症;Other fracture of base of skull, sequela;338
+791;S022XXS;鼻骨骨折之後遺症;Fracture of nasal bones, sequela;338
+792;S023XXS;眶底骨折之後遺症;Fracture of orbital floor, sequela;338
+793;S02400S;顱骨骨折之後期影響;Malar fracture unspecified, sequela;338
+794;S02401S;上頷骨骨折之後期影響;Maxillary fracture, unspecified, sequela;338
+795;S02402S;顱骨骨折之後期影響;Zygomatic fracture, unspecified, sequela;338
+796;S02411S;李霍氏I型骨折之後遺症;LeFort I fracture, sequela;338
+797;S02412S;李霍氏II型骨折之後遺症;LeFort II fracture, sequela;338
+798;S02413S;李霍氏III型骨折之後遺症;LeFort III fracture, sequela;338
+799;S0242XS;上頷齒槽骨折之後遺症;Fracture of alveolus of maxilla, sequela;338
+800;S025XXS;牙齒骨折(外傷性)之後遺症;Fracture of tooth (traumatic), sequela;338
+801;S02600S;下頷體未明示部位骨折之後遺症;Fracture of unspecified part of body of mandible, sequela;338
+802;S02609S;下頷骨未明示部位骨折之後遺症;Fracture of mandible, unspecified, sequela;338
+803;S0261XS;下頷骨髁狀突骨折之後遺症;Fracture of condylar process of mandible, sequela;338
+804;S0262XS;下頷骨下髁骨折之後遺症;Fracture of subcondylar process of mandible, sequela;338
+805;S0263XS;下頷骨喙狀突骨折之後遺症;Fracture of coronoid process of mandible, sequela;338
+806;S0264XS;下頷骨枝骨折之後遺症;Fracture of ramus of mandible, sequela;338
+807;S0265XS;頷角骨折之後遺症;Fracture of angle of mandible, sequela;338
+808;S0266XS;下頷骨聯合體骨折之後遺症;Fracture of symphysis of mandible, sequela;338
+809;S0267XS;下頷骨齒槽骨折之後遺症;Fracture of alveolus of mandible, sequela;338
+810;S0269XS;下頷骨其他特定部位骨折之後遺症;Fracture of mandible of other specified site, sequela;338
+811;S028XXS;其他特定部位顱骨及顏面骨之後遺症;Fractures of other specified skull and facial bones, sequela;338
+812;S0291XS;顱骨骨折之後遺症;Unspecified fracture of skull, sequela;338
+813;S0292XS;顏面骨骨折之後遺症;Unspecified fracture of facial bones, sequela;338
+814;S01401S;右臉頰與顳骨下頜周圍開放性傷口之後遺症;Unspecified open wound of right cheek and temporomandibular area, sequela;339
+815;S01402S;左臉頰與顳骨下頜周圍開放性傷口之後遺症;Unspecified open wound of left cheek and temporomandibular area, sequela;339
+816;S01409S;未明示側性臉頰與顳骨下頜周圍開放性傷口之後遺症;Unspecified open wound of unspecified cheek and temporomandibular area, sequela;339
+817;S01411S;右臉頰與顳骨下頜周圍撕裂傷未伴有異物之後遺症;Laceration without foreign body of right cheek and temporomandibular area, sequela;339
+818;S01412S;左臉頰與顳骨下頜周圍撕裂傷未伴有異物之後遺症;Laceration without foreign body of left cheek and temporomandibular area, sequela;339
+819;S01419S;未明示側性臉頰與顳骨下頜周圍撕裂傷未伴有異物之後遺症;Laceration without foreign body of unspecified cheek and temporomandibular area, sequela;339
+820;S01421S;右臉頰與顳骨下頜周圍撕裂傷伴有異物之後遺症;Laceration with foreign body of right cheek and temporomandibular area, sequela;339
+821;S01422S;左臉頰與顳骨下頜周圍撕裂傷伴有異物之後遺症;Laceration with foreign body of left cheek and temporomandibular area, sequela;339
+822;S01429S;未明示側性臉頰與顳骨下頜周圍撕裂傷伴有異物之後遺症;Laceration with foreign body of unspecified cheek and temporomandibular area, sequela;339
+823;S01431S;右臉頰與顳骨下頜周圍穿刺傷未伴有異物之後遺症;Puncture wound without foreign body of right cheek and temporomandibular area, sequela;339
+824;S01432S;左臉頰與顳骨下頜周圍穿刺傷未伴有異物之後遺症;Puncture wound without foreign body of left cheek and temporomandibular area, sequela;339
+825;S01439S;未明示側性臉頰與顳骨下頜周圍穿刺傷未伴有異物之後遺症;Puncture wound without foreign body of unspecified cheek and temporomandibular area, sequela;339
+826;S01441S;右臉頰與顳骨下頜周圍穿刺傷伴有異物之後遺症;Puncture wound with foreign body of right cheek and temporomandibular area, sequela;339
+827;S01442S;左臉頰與顳骨下頜周圍穿刺傷伴有異物之後遺症;Puncture wound with foreign body of left cheek and temporomandibular area, sequela;339
+828;S01449S;未明示側性臉頰與顳骨下頜周圍穿刺傷伴有異物之後遺症;Puncture wound with foreign body of unspecified cheek and temporomandibular area, sequela;339
+829;S01451S;右臉頰與顳骨下頜周圍開放性咬傷之後遺症;Open bite of right cheek and temporomandibular area, sequela;339
+830;S01452S;左臉頰與顳骨下頜周圍開放性咬傷之後遺症;Open bite of left cheek and temporomandibular area, sequela;339
+831;S01459S;未明示側性臉頰與顳骨下頜周圍開放性咬傷之後遺症;Open bite of unspecified cheek and temporomandibular area, sequela;339
+832;S01501S;唇開放性傷口之後遺症;Unspecified open wound of lip, sequela;339
+833;S01502S;口腔開放性傷口之後遺症;Unspecified open wound of oral cavity, sequela;339
+834;S01511S;唇撕裂傷未伴有異物之後遺症;Laceration without foreign body of lip, sequela;339
+835;S01512S;口腔撕裂傷未伴有異物之後遺症;Laceration without foreign body of oral cavity, sequela;339
+836;S01521S;唇撕裂傷伴有異物之後遺症;Laceration with foreign body of lip, sequela;339
+837;S01522S;口腔撕裂傷伴有異物之後遺症;Laceration with foreign body of oral cavity, sequela;339
+838;S01531S;唇穿刺傷未伴有異物之後遺症;Puncture wound without foreign body of lip, sequela;339
+839;S01532S;口腔穿刺傷未伴有異物之後遺症;Puncture wound without foreign body of oral cavity, sequela;339
+840;S01541S;唇穿刺傷伴有異物之後遺症;Puncture wound with foreign body of lip, sequela;339
+841;S01542S;口腔穿刺傷伴有異物之後遺症;Puncture wound with foreign body of oral cavity, sequela;339
+842;S01551S;唇開放性咬傷之後遺症;Open bite of lip, sequela;339
+843;S01552S;口腔開放性咬傷之後遺症;Open bite of oral cavity, sequela;339
+844;S0180XS;頭部其他部位開放性傷口之後遺症;Unspecified open wound of other part of head, sequela;339
+845;S0181XS;頭部其他部位撕裂傷未伴有異物之後遺症;Laceration without foreign body of other part of head, sequela;339
+846;S0182XS;頭部其他部位撕裂傷伴有異物之後遺症;Laceration with foreign body of other part of head, sequela;339
+847;S0183XS;頭部其他部位穿刺傷未伴有異物之後遺症;Puncture wound without foreign body of other part of head, sequela;339
+848;S0184XS;頭部其他部位穿刺傷伴有異物之後遺症;Puncture wound with foreign body of other part of head, sequela;339
+849;S0185XS;頭部其他部位開放性咬傷之後遺症;Open bite of other part of head, sequela;339
+850;S0190XS;頭部未明示部位開放性傷口之後遺症;Unspecified open wound of unspecified part of head, sequela;339
+851;S0191XS;頭部未明示部位撕裂傷未伴有異物之後遺症;Laceration without foreign body of unspecified part of head, sequela;339
+852;S0192XS;頭部未明示部位撕裂傷伴有異物之後遺症;Laceration with foreign body of unspecified part of head, sequela;339
+853;S0193XS;頭部未明示部位穿刺傷未伴有異物之後遺症;Puncture wound without foreign body of unspecified part of head, sequela;339
+854;S0194XS;頭部未明示部位穿刺傷伴有異物之後遺症;Puncture wound with foreign body of unspecified part of head, sequela;339
+855;S0195XS;頭部未明示部位開放性咬傷之後遺症;Open bite of unspecified part of head, sequela;339
+856;S032XXS;牙齒脫位之後遺症;Dislocation of tooth, sequela;339
+857;S00502S;口腔表淺損傷之後遺症;Unspecified superficial injury of oral cavity, sequela;340
+858;S00511S;唇擦傷之後遺症;Abrasion of lip, sequela;340
+859;S00512S;口腔擦傷之後遺症;Abrasion of oral cavity, sequela;340
+860;S00521S;唇水泡(非熱性)之後遺症;Blister (nonthermal) of lip, sequela;340
+861;S00522S;口腔水泡(非熱性)之後遺症;Blister (nonthermal) of oral cavity, sequela;340
+862;S00541S;唇外在攣縮之後遺症;External constriction of lip, sequela;340
+863;S00542S;口腔外在攣縮之後遺症;External constriction of oral cavity, sequela;340
+864;S00551S;唇 表淺性異物之後遺症;Superficial foreign body of lip, sequela;340
+865;S00552S;口腔 表淺性異物之後遺症;Superficial foreign body of oral cavity, sequela;340
+866;S00561S;唇昆蟲叮咬(無毒性)之後遺症;Insect bite (nonvenomous) of lip, sequela;340
+867;S00562S;口腔昆蟲叮咬(無毒性)之後遺症;Insect bite (nonvenomous) of oral cavity, sequela;340
+868;S00571S;唇其他表淺性叮咬之後遺症;Other superficial bite of lip, sequela;340
+869;S00572S;口腔其他表淺性叮咬之後遺症;Other superficial bite of oral cavity, sequela;340
+870;S00511A;唇擦傷之初期照護;Abrasion of lip, initial encounter;341
+871;S00512A;口腔擦傷之初期照護;Abrasion of oral cavity, initial encounter;341
+872;S00521A;唇水泡(非熱性)之初期照護;Blister (nonthermal) of lip, initial encounter;342
+873;S00522A;口腔水泡(非熱性)之初期照護;Blister (nonthermal) of oral cavity, initial encounter;342
+874;S00561A;唇昆蟲叮咬(無毒性)之初期照護;Insect bite (nonvenomous) of lip, initial encounter;343
+875;S00562A;口腔昆蟲叮咬(無毒性)之初期照護;Insect bite (nonvenomous) of oral cavity, initial encounter;343
+876;S00551A;唇 表淺性異物之初期照護;Superficial foreign body of lip, initial encounter;344
+877;S00552A;口腔 表淺性異物之初期照護;Superficial foreign body of oral cavity, initial encounter;344
+878;S00501A;唇表淺損傷之初期照護;Unspecified superficial injury of lip, initial encounter;345
+879;S00502A;口腔表淺損傷之初期照護;Unspecified superficial injury of oral cavity, initial encounter;345
+880;S00541A;唇外在攣縮之初期照護;External constriction of lip, initial encounter;345
+881;S00542A;口腔外在攣縮之初期照護;External constriction of oral cavity, initial encounter;345
+882;S00571A;唇其他表淺性叮咬之初期照護;Other superficial bite of lip, initial encounter;345
+883;S00572A;口腔其他表淺性叮咬之初期照護;Other superficial bite of oral cavity, initial encounter;345
+884;T180XXA;異物在口腔之初期照護;Foreign body in mouth, initial encounter;346
+885;T280XXA;口及咽燒傷之初期照護;Burn of mouth and pharynx, initial encounter;347
+886;T285XXA;口及咽腐蝕傷之初期照護;Corrosion of mouth and pharynx, initial encounter;347
+887;S0430XA;未明示側性三叉神經損傷之初期照護;Injury of trigeminal nerve, unspecified side, initial encounter;348
+888;S0431XA;右側三叉神經損傷之初期照護;Injury of trigeminal nerve, right side, initial encounter;348
+889;S0432XA;左側三叉神經損傷之初期照護;Injury of trigeminal nerve, left side, initial encounter;348
+890;S0450XA;未明示側性顏面神經損傷之初期照護;Injury of facial nerve, unspecified side, initial encounter;349
+891;S0451XA;右側顏面神經損傷之初期照護;Injury of facial nerve, right side, initial encounter;349
+892;S0452XA;左側顏面神經損傷之初期照護;Injury of facial nerve, left side, initial encounter;349
+893;Z965;存有牙（齒）根及下顎植入物;Presence of tooth-root and mandibular implants;350

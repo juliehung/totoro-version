@@ -1,0 +1,330 @@
+id;code;name;english_name
+22;112;口腔念珠菌病;Candidiasis of mouth
+23;140;上唇紅緣惡性腫瘤;Malignant neoplasm of upper lip, vermilion border
+24;1401;下唇紅緣惡性腫瘤;Malignant neoplasm of lower lip, vermilion border
+25;1403;上唇內側惡性腫瘤;Malignant neoplasm of upper lip, inner aspect
+26;1404;下唇內側惡性腫瘤;Malignant neoplasm of lower lip, inner aspect
+27;1405;唇內側惡性腫瘤;Malignant neoplasm of lip, unspecified, inner aspect
+28;1406;唇連合惡性腫瘤;Malignant neoplasm of commissure of lip
+29;1408;唇其他部位惡性腫瘤;Malignant neoplasm of other sites of lip
+30;1409;唇紅緣惡性腫瘤;Malignant neoplasm of lip, unspecified, vermilion border
+31;141;舌基部惡性腫瘤;Malignant neoplasm of base of tongue
+32;1411;舌背面惡性腫瘤;Malignant neoplasm of dorsal surface of tongue
+33;1412;舌尖及側緣之惡性腫瘤;Malignant neoplasm of tip and lateral border of tongue
+34;1413;舌腹面惡性腫瘤;Malignant neoplasm of ventral surface of tongue
+35;1414;舌前三分之二部位之惡性腫瘤;Malignant neoplasm of anterior two-thirds of tongue, part unspecified
+36;1415;舌連接帶惡性腫瘤;Malignant neoplasm of tongue of junctional zone
+37;1416;舌扁桃惡性腫瘤;Malignant neoplasm of lingual tonsil
+38;1418;舌其他部位之惡性腫瘤;Malignant neoplasm of other sites of tongue
+39;1419;舌部惡性腫瘤;Malignant neoplasm of tongue, unspecified
+40;142;腮腺惡性腫瘤;Malignant neoplasm of parotid gland
+41;1421;頜下腺惡性腫瘤;Malignant neoplasm of submandibular gland
+42;1422;舌下腺惡性腫瘤;Malignant neoplasm of sublingual gland
+43;1428;其他主要唾液腺惡性腫瘤;Malignant neoplasm of other major salivary glands
+44;1429;唾液腺惡性腫瘤;Malignant neoplasm of salivary gland, unspecified
+45;143;上齒齦惡性腫瘤;Malignant neoplasm of upper gum
+46;1431;下齒齦惡性腫瘤;Malignant neoplasm of lower gum
+47;1438;齒齦其他部位之惡性腫瘤;Malignant neoplasm of other sites of gum
+48;1439;齒齦惡性腫瘤;Malignant neoplasm of gum, unspecified
+49;144;口底前部惡性腫瘤;Malignant neoplasm of floor of mouth, anterior portion
+50;1441;口底側部惡性腫瘤;Malignant neoplasm of floor of mouth, lateral portion
+51;1448;口底其他部位之惡性腫瘤;Malignant neoplasm of other sites of floor of mouth
+52;1449;口底惡性腫瘤;Malignant neoplasm of floor of mouth, part unspecified
+53;145;頰粘膜惡性腫瘤;Malignant neoplasm of cheek mucosa
+54;1451;口前庭惡性腫瘤;Malignant neoplasm of vestibule of mouth
+55;1452;硬顎惡性腫瘤;Malignant neoplasm of hard palate
+56;1453;軟顎惡性腫瘤;Malignant neoplasm of soft palate
+57;1454;懸雍垂惡性腫瘤;Malignant neoplasm of uvula
+58;1455;顎惡性腫瘤;Malignant neoplasm of palate, unspecified
+59;1456;臼齒後區惡性腫瘤;Malignant neoplasm of retromolar area
+60;1458;口其他特定部位之惡性腫瘤;Malignant neoplasm of other specified parts of mouth
+61;1459;口惡性腫瘤;Malignant neoplasm of mouth, unspecified
+62;146;扁桃腺惡性腫瘤;Malignant neoplasm of tonsil
+63;1461;扁桃腺窩惡性腫瘤;Malignant neoplasm of tonsillar fossa
+64;1462;扁桃腺柱(前,後)惡性腫瘤;Malignant neoplasm of tonsillar pillars (anterior) (posterior)
+65;1463;會厭谿部惡性腫瘤;Malignant neoplasm of vallecula
+66;1464;會厭前面惡性腫瘤;Malignant neoplasm of anterior aspect of epiglottis
+67;1465;口咽連接部惡性腫瘤;Malignant neoplasm of junctional region of oropharynx
+68;1466;口咽側壁惡性腫瘤;Malignant neoplasm of lateral wall of oropharynx
+69;1467;口咽後壁惡性腫瘤;Malignant neoplasm of posterior wall of oropharynx
+70;1468;口咽其他特定部位之惡性腫瘤;Malignant neoplasm of other specified sites of oropharynx
+71;1469;口咽惡性腫瘤;Malignant neoplasm of oropharynx, unspecified
+72;147;鼻咽上壁惡性腫瘤;Malignant neoplasm of superior wall of nasopharynx
+73;1471;鼻咽後壁惡性腫瘤;Malignant neoplasm of posterior wall of nasopharynx
+74;1472;鼻咽側壁惡性腫瘤;Malignant neoplasm of lateral wall of nasopharynx
+75;1473;鼻咽前壁惡性腫瘤;Malignant neoplasm of anterior wall of nasopharynx
+76;1478;鼻咽其他特定部位之惡性腫瘤;Malignant neoplasm of other specified sites of nasopharynx
+77;1479;鼻咽惡性腫瘤;Malignant neoplasm of nasopharynx, unspecified
+78;148;下咽環狀軟骨後部惡性腫瘤;Malignant neoplasm of postcricoid region of hypopharynx
+79;1481;下咽梨狀竇惡性腫瘤;Malignant neoplasm of pyriform sinus of hypopharynx
+80;1482;杓狀軟骨皺壁下咽面惡性腫瘤;Malignant neoplasm of aryepiglottic fold, hypopharyngeal aspect
+81;1483;後下咽壁惡性腫瘤;Malignant neoplasm of posterior hypopharyngeal wall
+82;1488;下咽其他特定部位之惡性腫瘤;Malignant neoplasm of other specified sites of hypopharynx
+83;1489;下咽惡性腫瘤;Malignant neoplasm of hypopharynx, unspecified
+84;149;咽部惡性腫瘤;Malignant neoplasm of pharynx, unspecified
+85;1491;Waldeyer氏扁桃環惡性腫瘤;Malignant neoplasm of Waldeyer's ring
+86;1498;唇，口腔及咽內其他部位之惡性腫瘤;Malignant neoplasm of other sites within the lip, oral cavity, and pharynx
+87;1499;唇，口腔及咽內分界不明部位之惡性腫瘤;Malignant neoplasm of ill-defined sites within the lip, oral cavity, and pharynx
+88;160;鼻腔惡性腫瘤;Malignant neoplasm of nasal cavities
+89;1601;耳咽管，中耳及乳突氣室之惡性腫瘤;Malignant neoplasm of auditory tube, middle ear and mastoid air cells
+90;1602;上頜竇惡性腫瘤;Malignant neoplasm of maxillary sinus
+91;1603;篩竇惡性腫瘤;Malignant neoplasm of ethmoidal sinus
+92;1604;額竇惡性腫瘤;Malignant neoplasm of frontal sinus
+93;1605;蝶竇惡性腫瘤;Malignant neoplasm of sphenoidal sinus
+94;1608;其他鼻腔，中耳及副鼻竇之惡性腫瘤;Malignant neoplasm of nasal cavities, middle ear, and accessory sinuses, other
+95;1609;副鼻竇惡性腫瘤;Malignant neoplasm of accessory sinus, unspecified
+96;170;顱及顏面骨之惡性腫瘤(除下頜骨外);Malignant neoplasm of bones of skull and face, except mandible
+97;1701;下頜骨惡性腫瘤;Malignant neoplasm of mandible
+98;1762;顎Kaposi(卡波西)氏肉瘤;Kaposi's sarcoma of palate
+99;195;頭，臉及頸之其他及分界不明部位之惡性腫瘤;Malignant neoplasm of other and ill-defined sites of head, face and neck
+100;20001;頭，臉及頸部淋巴結之網狀細胞肉瘤;Reticulosarcoma, lymph nodes of head, face and neck
+101;20081;頭，臉及頸淋巴結其他名稱之變異型淋巴瘤;Other named variants lymphoma, lymph nodes of head face and neck
+102;20121;頭，臉及頸部淋巴結之Hodgkin(何杰金)氏肉瘤;Hodgkin's sarcoma, lymph nodes of head, face, and neck
+103;20161;頭，臉及頸部淋巴結之混合細胞型Hodgkin(何杰金)氏病;Mixed cellularity, lymph nodes of head, face and neck
+104;20171;頭，臉及頸部淋巴結之淋巴球短少型Hodgkin(何杰金)氏病;Lymphocytic depletion, lymph nodes of head, face and neck
+105;20201;頭，臉及頸部淋巴結之結節性淋巴瘤;Nodular lymphoma, lymph nodes of head, face and neck
+106;20211;頭，臉及頸部淋巴結之蕈狀肉芽腫;Mycosis fungoides, lymph nodes of head, face and neck
+107;20221;頭，臉及頸部淋巴結之Sezary(塞札瑞)氏病;Sezary's disease, lymph nodes of head, face, and neck
+108;20231;頭，臉及頸部淋巴結之惡性組織球增多症;Malignant histiocytosis, lymph nodes of head, face and neck
+109;20241;頭，臉及頸部淋巴結之白血病性網狀內皮增生症;Leukemic reticuloendotheliosis, lymph nodes of head, face and neck
+110;20251;頭，臉及頸部淋巴結之Letterer-Siwe(雷塞二氏)病;Letterer-Siwe disease, lymph nodes of head, face and neck
+111;20261;頭，臉及頸部淋巴結之惡性肥大細胞瘤;Malignant mast cell tumors, lymph nodes of head, face and neck
+112;20281;頭，臉及頸部淋巴結之其他淋巴瘤;Other lymphomas, lymph nodes of head, face and neck
+113;20291;頭，臉及頸部淋巴結之其他淋巴及組織細胞組織之惡性腫瘤;Other and unspecified malignant neoplasms of lymphoid and histiocytic tissue, lymph nodes of head, face and neck
+114;210;唇良性腫瘤;Benign neoplasm of lip
+115;2101;舌良性腫瘤;Benign neoplasm of tongue
+116;2102;主要唾液腺良性腫瘤;Benign neoplasm of major salivary glands
+117;2103;口底部良性腫瘤;Benign neoplasm of floor of mouth
+118;2104;口其他部位之良性腫瘤;Benign neoplasm of other and unspecified parts of mouth
+119;2105;扁桃腺良性腫瘤;Benign neoplasm of tonsil
+120;2106;口咽其他部位之良性腫瘤;Benign neoplasm of other parts of oropharynx
+121;213;顱骨及顏面骨之良性腫瘤;Benign neoplasm of bones of skull and face
+122;2131;下頜骨良性腫瘤;Benign neoplasm of lower jaw bone
+123;2148;其他特定部位之脂肪瘤;Lipoma of other specified sites
+124;2149;脂肪瘤;Lipoma, unspecified site
+125;215;頭，臉及頸部結締組織及其他軟組織之良性腫瘤;Benign neoplasm of connective and other soft tissue of head, face and neck
+126;216;唇部皮膚良性腫瘤;Benign neoplasm of skin of lip
+127;230;唇、口腔及咽之原位癌;Carcinoma in situ of lip, oral cavity and pharynx
+128;232;唇皮膚原位癌;Carcinoma in situ of skin of lip
+129;235;主要唾液腺性態未明之腫瘤;Neoplasm of uncertain behavior of major salivary glands
+130;2351;唇、口腔及咽性態未明之腫瘤;Neoplasm of uncertain behavior of lip, oral cavity and pharynx
+131;3501;三叉神經痛;Trigeminal neuralgia
+132;3502;非典型性臉痛;Atypical face pain
+133;3508;其他特定之三叉神經疾患;Other specified trigeminal nerve disorders
+134;3509;三叉神經疾患;Trigeminal nerve disorder, unspecified
+135;351;貝爾氏麻痺（面神經麻痺）;Bell's palsy
+136;3511;膝狀神經節（面神經感覺神經節炎）;Geniculate ganglionitis
+137;3518;其他面神經疾患;Other facial nerve disorders
+138;3519;面神經疾患;Facial nerve disorder, unspecified
+139;4563;舌下靜脈曲張;Sublingual varices
+140;520;無齒症;Anodontia
+141;5201;贅生齒;Supernumerary teeth
+142;5203;斑點齒;Mottled teeth
+143;5204;牙齒形成之障礙;Disturbances of tooth formation
+144;5205;牙齒遺傳性結構異常，NEC;Hereditary disturbances in tooth structure, not elsewhere classified
+145;5207;生齒徵候群;Teething syndrome
+146;5209;牙齒發育及萌發疾病;Unspecified disorder of tooth development and eruption
+147;5211;牙齒過度磨耗;Excessive attrition
+148;5212;牙齒磨損;Abrasion
+149;5213;牙齒腐蝕;Erosion
+150;5214;牙齒病理性吸收;Pathological resorption
+151;5215;齒骨質增生症;Hypercementosis
+152;5216;齒強直;Ankylosis of teeth
+153;5217;齒萌發後變色;Posteruptive color changes
+154;5218;牙齒硬組織之其他疾病;Other specified diseases of hard tissues of teeth
+155;5219;牙齒硬組織疾病;Unspecified disease of hard tissues of teeth
+156;5221;齒髓壞死;Necrosis of the pulp
+157;5222;齒髓變質;Pulp degeneration
+158;5223;齒髓內異常硬組織形成異常;Abnormal hard tissue formation in pulp
+159;5224;齒髓性急性根尖牙周組織炎;Acute apical periodontitis of pulpal origin
+160;5225;未併發膿竇之根尖周圍膿瘍;Periapical abscess without sinus
+161;5227;根尖周圍膿瘍併膿竇;Periapical abscess with sinus
+162;5228;齒根囊腫;Radicular cyst
+163;523;急性齒齦炎;Acute gingivitis
+164;5232;齒齦萎縮;Gingival recession
+165;5234;慢性牙周炎;Chronic periodontitis
+166;5236;齒黏連;Accretions on teeth
+167;5238;其他特定牙周疾病;Other specified periodontal diseases
+168;524;頷骨大小異常;Unspecified anomaly of jaw size
+169;52401;上頷骨增生;Maxillary hyperplasia
+170;52402;頷骨增生;Mandibular hyperplasia
+171;52403;上頷骨發育不全;Maxillary hypoplasia
+172;52404;下頜骨發育不全;Mandibular hypoplasia
+173;52405;巨頰症;Macrogenia
+174;52406;小頦畸形;Microgenia
+175;52409;其他特定之頜骨大小異常;Other specified anomaly of jaw size
+176;5241;頷骨與顱底關係異常;Unspecified anomaly of relationship of jaw to cranial base
+177;52411;上頷骨不對稱;Maxillary asymmetry
+178;52412;其他頷骨不對稱;Other jaw asymmetry
+179;52419;其他特定頷骨與顱底關係異常;Other specified anomaly of relationship of jaw to cranial base
+180;5242;齒弓關係異常;Anomalies of dental arch relationship
+181;5244;咬合不正;Malocclusion, unspecified
+182;5245;齒及面部功能異常;Dentofacial functional abnormalities
+183;5246;顳頷關節疾患;Temporomandibular joint disorders, unspecified
+184;52461;顳頷關節黏連和關節強直(骨化或纖維化);Adhesions and ankylosis (bony or fibrous)
+185;52462;顳頷關節痛;Arthralgia of temporomandibular joint
+186;52463;顳頷關節盤疾患(復位或未復位);Articular disc disorder (reducing or non-reducing)
+187;52469;其他特定顳頷關節疾患;Other specified temporomandibular joint disorders
+188;5247;齒槽異常;Unspecified alveolar anomaly
+189;52471;上頷骨齒槽增生;Alveolar maxillary hyperplasia
+190;52472;下頷骨齒槽增生;Alveolar mandibular hyperplasia
+191;52473;上頷骨齒槽發育不全;Alveolar maxillary hypoplasia
+192;52474;下頷骨齒槽發育不全;Alveolar mandibular hypoplasia
+193;52479;其他特定之齒槽異常;Other specified alveolar anomaly
+194;5248;其他特定齒及面部異常;Other specified dentofacial anomalies
+195;5249;齒及面部異常;Unspecified dentofacial anomalies
+196;525;全身性病因所致之牙齒脫落;Exfoliation of teeth due to systemic causes
+197;5251;因意外事故、拔除或局部性牙周病所致之缺牙;Loss of teeth due to accident, extraction, or local periodontal disease
+198;5258;牙齒及支持組織之其他特定疾患;Other specified disorders of the teeth and supporting structures
+199;5261;頷骨裂開性囊腫;Fissural cysts of jaw
+200;5262;其他頷骨囊腫;Other cysts of jaws
+201;5263;頷骨中心巨細胞（補償性)肉芽腫;Central giant cell (reparative) granuloma
+202;5264;頷骨發炎性病症;Inflammatory conditions
+203;5265;頷骨齒槽炎;Alveolitis of jaw
+204;52681;頷骨外生骨疣;Exostosis of jaw
+205;52689;其他特定頷骨疾病;Other specified diseases of the jaws
+206;5269;頷骨疾病;Unspecified disease of the jaws
+207;527;唾液腺萎縮;Atrophy of salivary glands
+208;5271;唾液腺肥大;Hypertrophy of salivary gland
+209;5272;唾液腺炎;Sialoadenitis
+210;5273;唾液腺膿瘍;Abscess of salivary glands
+211;5274;唾液腺瘻管;Fistula of salivary gland
+212;5275;唾液腺結石;Sialolithiasis
+213;5276;黏液囊腫;Mucocele
+214;5277;唾液分泌障礙;Disturbance of salivary secretion
+215;5278;其他特定之唾液腺疾病;Other specified diseases of the salivary glands
+216;5279;唾液腺疾病;Unspecified disease of the salivary glands
+217;528;口腔炎;Stomatitis
+218;5281;壞疽性口炎;Cancrum oris
+219;5283;口腔軟組織蜂窩組織炎及膿瘍;Cellulitis and abscess of oral soft tissues
+220;5285;唇部疾病;Diseases of lips
+221;5286;口腔黏膜白斑症，包括舌部;Leukoplakia of oral mucosa, including tongue
+222;5287;其他口腔上皮病變，包括舌部;Other disturbances of oral epithelium, including tongue
+223;5288;口腔黏膜下層纖維化症，包括舌部;Oral submucosal fibrosis, including of tongue
+224;529;舌炎;Glossitis
+225;5291;地圖舌;Geographic tongue
+226;5292;正中菱形舌炎;Median rhomboid glossitis
+227;5293;舌乳頭肥大;Hypertrophy of tongue papillae
+228;5294;舌乳頭萎縮;Atrophy of tongue papillae
+229;5295;舌皺疊;Plicated tongue
+230;5296;舌痛;Glossodynia
+231;5298;其他特定舌之病態;Other specified conditions of the tongue
+232;5299;舌之病態;Unspecified condition of the tongue
+233;682;臉部其他蜂窩組織炎及膿瘍;Other cellulitis and abscess, face
+234;6821;頸部其他蜂窩組織炎及膿瘍;Other cellulitis and abscess, neck
+235;6861;化膿性肉芽腫;Pyogenic granuloma
+236;6946;良性黏膜性類天疱瘡，未提及侵犯眼部;Benign mucous membrane pemphigoid without mention of ocular involvement
+237;69461;良性黏膜性類天疱瘡，侵犯眼部;Benign mucous membrane pemphigoid with ocular involvement
+238;6948;其他特定水泡性皮膚病;Other specified bullous dermatoses
+239;697;扁平苔癬;Lichen planus
+240;7102;乾燥徵候群;Sicca syndrome
+241;7103;皮肌炎;Dermatomyositis
+242;7104;多發性肌炎;Polymyositis
+243;72886;壞死性筋膜炎;Necrotizing fasciitis
+244;7291;肌痛及肌炎;Myalgia and myositis, unspecified
+245;730;急性骨髓炎;Acute osteomyelitis, unspecified site
+246;7301;慢性骨髓炎;Chronic osteomyelitis, unspecified site
+247;73349;其他骨之無菌性壞死;Aseptic necrosis of other bone
+248;749;顎裂;Cleft palate, unspecified
+249;74901;完全顎裂，單側;Complete cleft palate, unilateral
+250;74902;不完全顎裂，單側;Incomplete cleft palate, unilateral
+251;74903;完全顎裂，雙側;Complete cleft palate, bilateral
+252;74904;不完全顎裂，雙側;Incomplete cleft palate, bilateral
+253;7491;唇裂;Cleft lip, unspecified
+254;74911;完全唇裂，單側;Complete cleft lip, unilateral
+255;74912;不完全唇裂，單側;Incomplete cleft lip, unilateral
+256;74913;完全唇裂，雙側;Complete cleft lip, bilateral
+257;74914;不完全唇裂，雙側;Incomplete cleft lip, bilateral
+258;7492;顎裂伴有唇裂;Cleft palate with cleft lip, unspecified
+259;74921;完全顎裂伴有唇裂，單側;Complete cleft palate with cleft lip, unilateral
+260;74922;不完全顎裂伴有唇裂，單側;Incomplete cleft palate with cleft lip, unilateral
+261;74923;完全顎裂伴有唇裂，雙側;Complete cleft palate with cleft lip, bilateral
+262;74924;不完全顎裂伴有唇裂，雙側;Incomplete cleft palate with cleft lip, bilateral
+263;74925;顎裂伴有唇裂，其他合併型;Cleft palate with cleft lip, other combination
+264;750;舌繫帶短縮;Tongue tie
+265;7501;舌畸形;Anomaly of tongue, unspecified
+266;75011;無舌畸形;Aglossia
+267;75012;先天性舌黏連;Congenital adhesions of tongue
+268;75013;舌裂隙;Fissure of tongue
+269;75015;巨舌畸形;Macroglossia
+270;75016;小舌畸形;Microglossia
+271;75019;其他之舌畸形;Other anomalies of tongue
+272;75021;唾液腺缺乏;Absence of salivary gland
+273;75022;副唾液腺;Accessory salivary gland
+274;75023;唾液管閉鎖;Atresia, salivary duct
+275;75024;先天性唾液腺瘻管;Congenital fistula of salivary gland
+276;75025;先天性唇瘻管;Congenital fistula of lip
+277;75026;口其他特定之畸形;Other specified anomalies of mouth
+278;756;頭顱及面骨畸形;Anomalies of skull and face bones
+279;8022;下頷骨閉鎖性骨折;Fracture of mandible, closed, unspecified site
+280;80221;下頷骨髁狀突閉鎖性骨折;Fracture of mandible, closed, condylar process
+281;80222;下頷骨下髁閉鎖性骨折;Fracture of mandible, closed, subcondylar
+282;80223;下頷骨喙狀突閉鎖性骨折;Fracture of mandible, closed, coronoid process
+283;80224;下頷骨枝閉鎖性骨折;Fracture of mandible, closed, ramus, unspecified
+284;80225;頷角閉鎖性骨折;Fracture of mandible, closed, angle of jaw
+285;80226;下頷骨聯合體閉鎖性骨折;Fracture of mandible, closed, symphysis of body
+286;80227;下頷體齒槽邊緣閉鎖性骨折;Fracture of mandible, closed, alveolar border of body
+287;80228;其他下頷體閉鎖性骨折;Fracture of mandible, closed, body, other and unspecified
+288;80229;下頷骨多處閉鎖性骨折;Fracture of mandible, closed, mutiple sites
+289;8023;下頷骨開放性骨折;Fracture of mandible, open, unspecified site
+290;80231;下頷骨髁狀突開放性骨折;Fracture of mandible, open, condylar process
+291;80232;下頷骨下髁開放性骨折;Fracture of mandible, open, subcondylar
+292;80233;下頷骨喙狀突開放性骨折;Fracture of mandible, open, coronoid process
+293;80234;下頷骨枝開放性骨折;Fracture of mandible, open, ramus, unspecified
+294;80235;頷角開放性骨折;Fracture of mandible, open, angle of jaw
+295;80236;下頷骨聯合體開放性骨折;Fracture of mandible, open, symphysis of body
+296;80237;下頷體齒槽邊緣開放性骨折;Fracture of mandible, open, alveolar border of body
+297;80238;其他下頷體開放性骨折;Fracture of mandible, open, body, other and unspecified
+298;80239;下頷骨開放性多處骨折;Fracture of mandible, open, multiple sites
+299;8024;顴骨及上頷骨閉鎖性骨折;Fracture of malar and maxillary bones, closed
+300;8025;顴骨及上頷骨開放性骨折;Fracture of malar and maxillary bones, open
+301;8026;眶底閉鎖性骨折;Fracture of orbital floor (blow-out), closed
+302;8027;眶底開放性骨折;Fracture of orbital floor (blow-out), open
+303;8028;其他顏面骨閉鎖性骨折;Fracture of other facial bones, closed
+304;8029;其他顏面骨開放性骨折;Fracture of other facial bones, open
+305;829;閉鎖性骨折;Fracture of unspecified bones, closed
+306;8291;開放性骨折;Fracture of unspecified bones, open
+307;830;頷骨閉鎖性脫臼;Closed dislocation of jaw
+308;8301;頷骨開放性脫臼;Open dislocation of jaw
+309;8481;下頷之扭傷及拉傷;Sprains and strains of jaw
+310;8734;臉部之開放性傷口，未提及併發症;Open wound to unspecified site of face, without mention of complication
+311;87341;臉頰之開放性傷口，未提及併發症;Open wound of cheek, without mention of complication
+312;87342;前額之開放性傷口，未提及併發症;Open wound of forehead, without mention of complication
+313;87343;唇之開放性傷口，未提及併發症;Open wound of lip, without mention of complication
+314;87344;頷之開放性傷口，未提及併發症;Open wound of jaw, without mention of complication
+315;87349;臉其他及多處之開放性傷口，未提及併發症;Open wound to other and multiple sites of face, without mention of complication
+316;8735;臉部之開放性傷口，伴有併發症;Open wound to unspecified site of face, complicated
+317;87351;臉頰之開放性傷口，伴有併發症;Open wound of cheek, complicated
+318;87352;前額之開放性傷口，伴有併發症;Open wound of forehead, complicated
+319;87353;唇之開放性傷口，伴有併發症;Open wound of lip, complicated
+320;87354;頷之開放性傷口，伴有併發症;Open wound of jaw, complicated
+321;87359;臉其他及多處之開放性傷口，伴有併發症;Open wound to other and multiple sites of face, complicated
+322;8736;口之開放性傷口，未提及併發症;Open wound to unspecified site of mouth, without mention of complication
+323;87361;頰黏膜之開放性傷口，未提及併發症;Open wound of buccal mucosa, without mention of complication
+324;87362;齒齦(齒槽突)之開放性傷口，未提及併發症;Open wound of gum (alveolar process), without mention of complication
+325;87363;牙齒(斷裂)之開放性傷口，未提及併發症;Open wound of tooth (broken), without mention of complication
+326;87364;舌及口腔底之開放性傷口，未提及併發症;Open wound of tongue and floor of mouth, without mention of complication
+327;87365;顎之開放性傷口，未提及併發症;Open wound of palate, without mention of complication
+328;87369;口部其他及多處之開放性傷口，未提及併發症;Open wound to other and multiple sites of mouth, without mention of complication
+329;8737;口部之開放性傷口，伴有併發症;Open wound to unspecified site of mouth, complicated
+330;87371;頰黏膜之開放性傷口，伴有併發症;Open wound of buccal mucosa, complicated
+331;87372;齒齦(齒槽突)之開放性傷口，伴有併發症;Open wound of gum (alveolar process), complicated
+332;87373;牙齒(斷裂)之開放性傷口，伴有併發症;Open wound of tooth (broken), complicated
+333;87374;舌及口腔底之開放性傷口，伴有併發症;Open wound of tongue and floor of mouth, complicated
+334;87375;顎之開放性傷口，伴有併發症;Open wound of palate, complicated
+335;87379;口部其他及多處之開放性傷口，伴有併發症;Open wound to other and multiple sites of mouth, complicated
+336;8738;其他頭部開放性傷口，未提及併發症;Other and unspecified open wound of head, without mention of complication
+337;8739;其他頭部開放性傷口，伴有併發症;Other and unspecified open wound of head, complicated
+338;905;顱骨及顏面骨骨折之後期影響;Late effect of fracture of skull and face bones
+339;906;頭、頸及軀幹開放性傷口之後期影響;Late effect of open wound of head, neck, and trunk
+340;9062;表淺損傷之後期影響;Late effect of superficial injury
+341;910;臉、頸及頭皮磨損或擦傷，眼除外，未提及感染;Superficial injury of face, neck and scalp except eye, abrasion or friction burn, without mention of infection
+342;9102;臉、頸及頭皮水泡，眼除外，未提及感染;Superficial injury of face, neck and scalp except eye, blister without mention of infection
+343;9104;臉、頸及頭皮被無毒昆蟲咬傷，眼除外，未提及感染;Superficial injury of face, neck and scalp except eye, insect bite, nonvenomous, without mention of infection
+344;9106;臉、頸及頭皮之表淺異物（斷片）無重大開放性傷口，眼除外，未提及感染;Injury of face, neck and scalp except eye, superficial foreign body (splinter)without major open wound and without mention of infection
+345;9108;臉、頸及頭皮之其他表淺損傷，眼除外，未提及感染;Superficial injury of face, neck and scalp except eye, other and unspecified superficial injury without mention of infection
+346;935;口之異物;Foreign body in mouth
+347;947;口及咽燒傷;Burn of mouth and pharynx
+348;9512;三叉神經損傷;Injury to trigeminal nerve
+349;9514;顏面神經損傷;Injury to facial nerve
+350;V4389;其他器官或組織之其他置換術後;Other organ or tissue replaced by other means
