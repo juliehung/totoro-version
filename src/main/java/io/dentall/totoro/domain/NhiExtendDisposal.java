@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -471,8 +472,10 @@ public class NhiExtendDisposal implements Serializable {
     }
 
     private void setDate(String a17) {
-        if (a17 != null) {
+        if (StringUtils.isNotEmpty(a17)) {
             date = LocalDate.of(Integer.parseInt(a17.substring(0, 3)) + 1911, Integer.parseInt(a17.substring(3, 5)), Integer.parseInt(a17.substring(5, 7)));
+        } else {
+            date = null;
         }
     }
 
@@ -638,8 +641,10 @@ public class NhiExtendDisposal implements Serializable {
     }
 
     private void setReplenishmentDate(String a54) {
-        if (a54 != null) {
+        if (StringUtils.isNotEmpty(a54)) {
             replenishmentDate = LocalDate.of(Integer.parseInt(a54.substring(0, 3)) + 1911, Integer.parseInt(a54.substring(3, 5)), Integer.parseInt(a54.substring(5, 7)));
+        } else {
+            replenishmentDate = null;
         }
     }
 
