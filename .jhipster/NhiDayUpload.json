@@ -12,7 +12,7 @@
     "relationships": [
         {
             "relationshipType": "one-to-many",
-            "relationshipName": "dayUploadDetails",
+            "relationshipName": "nhiDayUploadDetails",
             "otherEntityName": "nhiDayUploadDetails",
             "otherEntityRelationshipName": "nhiDayUpload"
         }
@@ -20,9 +20,9 @@
     "changelogDate": "20190522092740",
     "entityTableName": "nhi_day_upload",
     "dto": "no",
-    "pagination": "no",
+    "pagination": "pagination",
     "service": "serviceClass",
-    "jpaMetamodelFiltering": false,
+    "jpaMetamodelFiltering": true,
     "fluentMethods": true,
     "clientRootFolder": "",
     "applications": "*"

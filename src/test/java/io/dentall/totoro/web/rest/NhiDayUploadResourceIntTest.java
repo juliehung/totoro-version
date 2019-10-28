@@ -3,9 +3,11 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 
 import io.dentall.totoro.domain.NhiDayUpload;
+import io.dentall.totoro.domain.NhiDayUploadDetails;
 import io.dentall.totoro.repository.NhiDayUploadRepository;
 import io.dentall.totoro.service.NhiDayUploadService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
+import io.dentall.totoro.service.NhiDayUploadQueryService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +27,8 @@ import org.springframework.validation.Validator;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.List;
-
 
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,6 +55,9 @@ public class NhiDayUploadResourceIntTest {
     private NhiDayUploadService nhiDayUploadService;
 
     @Autowired
+    private NhiDayUploadQueryService nhiDayUploadQueryService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -74,7 +79,7 @@ public class NhiDayUploadResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NhiDayUploadResource nhiDayUploadResource = new NhiDayUploadResource(nhiDayUploadService);
+        final NhiDayUploadResource nhiDayUploadResource = new NhiDayUploadResource(nhiDayUploadService, nhiDayUploadQueryService);
         this.restNhiDayUploadMockMvc = MockMvcBuilders.standaloneSetup(nhiDayUploadResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -168,7 +173,7 @@ public class NhiDayUploadResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(nhiDayUpload.getId().intValue())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getNhiDayUpload() throws Exception {
@@ -182,6 +187,125 @@ public class NhiDayUploadResourceIntTest {
             .andExpect(jsonPath("$.id").value(nhiDayUpload.getId().intValue()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
     }
+
+    @Test
+    @Transactional
+    public void getAllNhiDayUploadsByDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        nhiDayUploadRepository.saveAndFlush(nhiDayUpload);
+
+        // Get all the nhiDayUploadList where date equals to DEFAULT_DATE
+        defaultNhiDayUploadShouldBeFound("date.equals=" + DEFAULT_DATE);
+
+        // Get all the nhiDayUploadList where date equals to UPDATED_DATE
+        defaultNhiDayUploadShouldNotBeFound("date.equals=" + UPDATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiDayUploadsByDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        nhiDayUploadRepository.saveAndFlush(nhiDayUpload);
+
+        // Get all the nhiDayUploadList where date in DEFAULT_DATE or UPDATED_DATE
+        defaultNhiDayUploadShouldBeFound("date.in=" + DEFAULT_DATE + "," + UPDATED_DATE);
+
+        // Get all the nhiDayUploadList where date equals to UPDATED_DATE
+        defaultNhiDayUploadShouldNotBeFound("date.in=" + UPDATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiDayUploadsByDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        nhiDayUploadRepository.saveAndFlush(nhiDayUpload);
+
+        // Get all the nhiDayUploadList where date is not null
+        defaultNhiDayUploadShouldBeFound("date.specified=true");
+
+        // Get all the nhiDayUploadList where date is null
+        defaultNhiDayUploadShouldNotBeFound("date.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiDayUploadsByDateIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        nhiDayUploadRepository.saveAndFlush(nhiDayUpload);
+
+        // Get all the nhiDayUploadList where date greater than or equals to DEFAULT_DATE
+        defaultNhiDayUploadShouldBeFound("date.greaterOrEqualThan=" + DEFAULT_DATE);
+
+        // Get all the nhiDayUploadList where date greater than or equals to UPDATED_DATE
+        defaultNhiDayUploadShouldNotBeFound("date.greaterOrEqualThan=" + UPDATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiDayUploadsByDateIsLessThanSomething() throws Exception {
+        // Initialize the database
+        nhiDayUploadRepository.saveAndFlush(nhiDayUpload);
+
+        // Get all the nhiDayUploadList where date less than or equals to DEFAULT_DATE
+        defaultNhiDayUploadShouldNotBeFound("date.lessThan=" + DEFAULT_DATE);
+
+        // Get all the nhiDayUploadList where date less than or equals to UPDATED_DATE
+        defaultNhiDayUploadShouldBeFound("date.lessThan=" + UPDATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllNhiDayUploadsByNhiDayUploadDetailsIsEqualToSomething() throws Exception {
+        // Initialize the database
+        NhiDayUploadDetails nhiDayUploadDetails = NhiDayUploadDetailsResourceIntTest.createEntity(em);
+        em.persist(nhiDayUploadDetails);
+        em.flush();
+        nhiDayUploadDetails.setNhiDayUpload(nhiDayUpload);
+        nhiDayUpload.setNhiDayUploadDetails(Collections.singleton(nhiDayUploadDetails));
+        nhiDayUploadRepository.saveAndFlush(nhiDayUpload);
+        Long nhiDayUploadDetailsId = nhiDayUploadDetails.getId();
+
+        // Get all the nhiDayUploadList where nhiDayUploadDetails equals to nhiDayUploadDetailsId
+        defaultNhiDayUploadShouldBeFound("nhiDayUploadDetailsId.equals=" + nhiDayUploadDetailsId);
+
+        // Get all the nhiDayUploadList where nhiDayUploadDetails equals to nhiDayUploadDetailsId + 1
+        defaultNhiDayUploadShouldNotBeFound("nhiDayUploadDetailsId.equals=" + (nhiDayUploadDetailsId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned
+     */
+    private void defaultNhiDayUploadShouldBeFound(String filter) throws Exception {
+        restNhiDayUploadMockMvc.perform(get("/api/nhi-day-uploads?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(nhiDayUpload.getId().intValue())))
+            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
+
+        // Check, that the count call also returns 1
+        restNhiDayUploadMockMvc.perform(get("/api/nhi-day-uploads/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned
+     */
+    private void defaultNhiDayUploadShouldNotBeFound(String filter) throws Exception {
+        restNhiDayUploadMockMvc.perform(get("/api/nhi-day-uploads?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restNhiDayUploadMockMvc.perform(get("/api/nhi-day-uploads/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("0"));
+    }
+
 
     @Test
     @Transactional

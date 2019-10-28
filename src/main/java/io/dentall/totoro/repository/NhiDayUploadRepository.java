@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface NhiDayUploadRepository extends JpaRepository<NhiDayUpload, Long> {
+public interface NhiDayUploadRepository extends JpaRepository<NhiDayUpload, Long>, JpaSpecificationExecutor<NhiDayUpload> {
 
 }
