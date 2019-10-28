@@ -3,7 +3,15 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { Translate, ICrudGetAllAction, TextFormat } from 'react-jhipster';
+import {
+  Translate,
+  ICrudGetAllAction,
+  TextFormat,
+  getSortState,
+  IPaginationBaseState,
+  getPaginationItemsNumber,
+  JhiPagination
+} from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -11,16 +19,45 @@ import { getEntities } from './nhi-day-upload.reducer';
 import { INhiDayUpload } from 'app/shared/model/nhi-day-upload.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 export interface INhiDayUploadProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
-export class NhiDayUpload extends React.Component<INhiDayUploadProps> {
+export type INhiDayUploadState = IPaginationBaseState;
+
+export class NhiDayUpload extends React.Component<INhiDayUploadProps, INhiDayUploadState> {
+  state: INhiDayUploadState = {
+    ...getSortState(this.props.location, ITEMS_PER_PAGE)
+  };
+
   componentDidMount() {
-    this.props.getEntities();
+    this.getEntities();
   }
 
+  sort = prop => () => {
+    this.setState(
+      {
+        order: this.state.order === 'asc' ? 'desc' : 'asc',
+        sort: prop
+      },
+      () => this.sortEntities()
+    );
+  };
+
+  sortEntities() {
+    this.getEntities();
+    this.props.history.push(`${this.props.location.pathname}?page=${this.state.activePage}&sort=${this.state.sort},${this.state.order}`);
+  }
+
+  handlePagination = activePage => this.setState({ activePage }, () => this.sortEntities());
+
+  getEntities = () => {
+    const { activePage, itemsPerPage, sort, order } = this.state;
+    this.props.getEntities(activePage - 1, itemsPerPage, `${sort},${order}`);
+  };
+
   render() {
-    const { nhiDayUploadList, match } = this.props;
+    const { nhiDayUploadList, match, totalItems } = this.props;
     return (
       <div>
         <h2 id="nhi-day-upload-heading">
@@ -35,11 +72,11 @@ export class NhiDayUpload extends React.Component<INhiDayUploadProps> {
           <Table responsive>
             <thead>
               <tr>
-                <th>
-                  <Translate contentKey="global.field.id">ID</Translate>
+                <th className="hand" onClick={this.sort('id')}>
+                  <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  <Translate contentKey="totoroApp.nhiDayUpload.date">Date</Translate>
+                <th className="hand" onClick={this.sort('date')}>
+                  <Translate contentKey="totoroApp.nhiDayUpload.date">Date</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -82,13 +119,22 @@ export class NhiDayUpload extends React.Component<INhiDayUploadProps> {
             </tbody>
           </Table>
         </div>
+        <Row className="justify-content-center">
+          <JhiPagination
+            items={getPaginationItemsNumber(totalItems, this.state.itemsPerPage)}
+            activePage={this.state.activePage}
+            onSelect={this.handlePagination}
+            maxButtons={5}
+          />
+        </Row>
       </div>
     );
   }
 }
 
 const mapStateToProps = ({ nhiDayUpload }: IRootState) => ({
-  nhiDayUploadList: nhiDayUpload.entities
+  nhiDayUploadList: nhiDayUpload.entities,
+  totalItems: nhiDayUpload.totalItems
 });
 
 const mapDispatchToProps = {

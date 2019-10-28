@@ -21,6 +21,7 @@ const initialState = {
   entities: [] as ReadonlyArray<INhiDayUpload>,
   entity: defaultValue,
   updating: false,
+  totalItems: 0,
   updateSuccess: false
 };
 
@@ -63,6 +64,7 @@ export default (state: NhiDayUploadState = initialState, action): NhiDayUploadSt
       return {
         ...state,
         loading: false,
+        totalItems: action.payload.headers['x-total-count'],
         entities: action.payload.data
       };
     case SUCCESS(ACTION_TYPES.FETCH_NHIDAYUPLOAD):
@@ -99,10 +101,13 @@ const apiUrl = 'api/nhi-day-uploads';
 
 // Actions
 
-export const getEntities: ICrudGetAllAction<INhiDayUpload> = (page, size, sort) => ({
-  type: ACTION_TYPES.FETCH_NHIDAYUPLOAD_LIST,
-  payload: axios.get<INhiDayUpload>(`${apiUrl}?cacheBuster=${new Date().getTime()}`)
-});
+export const getEntities: ICrudGetAllAction<INhiDayUpload> = (page, size, sort) => {
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_NHIDAYUPLOAD_LIST,
+    payload: axios.get<INhiDayUpload>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)
+  };
+};
 
 export const getEntity: ICrudGetAction<INhiDayUpload> = id => {
   const requestUrl = `${apiUrl}/${id}`;
