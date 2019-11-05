@@ -3,8 +3,10 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.dto.TeethGraphConfigDTO;
 import io.dentall.totoro.business.service.PatientBusinessService;
+import io.dentall.totoro.business.vm.PatientVM;
 import io.dentall.totoro.business.vm.TeethGraphConfigVM;
 import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.service.PatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -56,6 +58,19 @@ public class PatientBusinessResource {
         return new ResponseEntity<>(
             patientBusinessService.getTeethGraphConfig(patient),
             HttpStatus.OK);
+    }
+
+    @GetMapping("/patients/{id}")
+    @Timed
+    public ResponseEntity<PatientVM> findPatientWithFirstVisitDate(
+        @PathVariable Long id
+    ) {
+        PatientVM patientVM = patientBusinessService.findPatientWithFirstVisitDate(id);
+        if (patientVM == null) {
+            ResponseEntity.notFound();
+        }
+
+        return ResponseEntity.ok(patientVM);
     }
 
 }
