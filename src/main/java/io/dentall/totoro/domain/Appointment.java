@@ -1,18 +1,16 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Set;
-
-import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 
 /**
  * A Appointment.
@@ -68,11 +66,10 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
     @OneToOne    @JoinColumn(unique = true)
     private Registration registration;
 
-    @OneToMany(mappedBy = "appointment", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = null;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-
     public Long getId() {
         return id;
     }

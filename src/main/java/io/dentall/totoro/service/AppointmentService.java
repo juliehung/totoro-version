@@ -1,18 +1,26 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.*;
-import io.dentall.totoro.repository.*;
+import io.dentall.totoro.config.TimeConfig;
+import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.Registration;
+import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.repository.AppointmentRepository;
+import io.dentall.totoro.repository.ExtendUserRepository;
 import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.time.YearMonth;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -215,5 +223,20 @@ public class AppointmentService {
         }
 
         return registration;
+    }
+
+    public List<MonthAppointmentVM> findMonthAppointment(
+        YearMonth yearMonth
+    ) {
+        return
+            appointmentRepository.findMonthAppointment(
+                yearMonth.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET),
+                yearMonth.atEndOfMonth().atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)
+            ).stream()
+                .map(appointmentDTO -> {
+                    MonthAppointmentVM monthAppointmentVM = new MonthAppointmentVM(appointmentDTO);
+                    return monthAppointmentVM;
+                })
+                .collect(Collectors.toList());
     }
 }
