@@ -2,12 +2,13 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.service.AppointmentQueryService;
 import io.dentall.totoro.service.AppointmentService;
+import io.dentall.totoro.service.dto.AppointmentCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.dentall.totoro.service.dto.AppointmentCriteria;
-import io.dentall.totoro.service.AppointmentQueryService;
+import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
@@ -142,5 +143,14 @@ public class AppointmentResource {
         log.debug("REST request to delete Appointment : {}", id);
         appointmentService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    @GetMapping("/appointments/{year}/{month}")
+    @Timed
+    public ResponseEntity<List<MonthAppointmentVM>> getMonthAppointments(
+        @PathVariable int year,
+        @PathVariable int month
+    ) {
+        return ResponseEntity.ok().body(appointmentService.findMonthAppointment(YearMonth.of(year, month)));
     }
 }
