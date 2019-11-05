@@ -1,10 +1,13 @@
 package io.dentall.totoro.business.service;
 
 import io.dentall.totoro.business.dto.TeethGraphConfigDTO;
+import io.dentall.totoro.business.vm.PatientVM;
 import io.dentall.totoro.business.vm.TeethGraphConfigVM;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.service.PatientService;
+import io.dentall.totoro.service.TreatmentQueryService;
 import io.dentall.totoro.service.util.ProblemUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -16,16 +19,24 @@ import java.util.stream.Collectors;
 @Service
 public class PatientBusinessService {
 
-    public PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
 
-    public PatientService patientService;
+    private final PatientService patientService;
+
+    private final TreatmentQueryService treatmentQueryService;
+
+    private final TreatmentProcedureRepository treatmentProcedureRepository;
 
     public PatientBusinessService(
         PatientRepository patientRepository,
-        PatientService patientService
+        PatientService patientService,
+        TreatmentQueryService treatmentQueryService,
+        TreatmentProcedureRepository treatmentProcedureRepository
     ) {
         this.patientRepository = patientRepository;
         this.patientService = patientService;
+        this.treatmentQueryService = treatmentQueryService;
+        this.treatmentProcedureRepository = treatmentProcedureRepository;
     }
 
     public Patient validatePatientExistence(Long patientId) {
@@ -71,6 +82,18 @@ public class PatientBusinessService {
                 .chars()
                 .mapToObj(i -> (char) i)
                 .collect(Collectors.toList()));
+    }
+
+    public PatientVM findPatientWithFirstVisitDate(Long id) {
+        PatientVM patientVM = new PatientVM();
+
+        Optional<Patient> optionalPatient = patientRepository.findById(id);
+        if (optionalPatient.isPresent()) {
+            patientVM.setPatient(optionalPatient.get());
+        }
+
+        patientVM.setFirstVisitDate(treatmentProcedureRepository.findPatientFirstProcedure(id));
+        return patientVM;
     }
 
 }
