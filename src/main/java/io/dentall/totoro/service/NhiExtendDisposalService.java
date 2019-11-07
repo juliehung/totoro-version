@@ -7,6 +7,7 @@ import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.DisposalRepository;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
+import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Service Implementation for managing NhiExtendDisposal.
@@ -296,11 +294,31 @@ public class NhiExtendDisposalService {
                     nhiExtendDisposal.setCategory(updateNhiExtendDisposal.getCategory());
                 }
 
-                log.debug("Update nhiExtendTreatmentProcedures({}) of NhiExtendDisposal(id: {})", updateNhiExtendDisposal.getNhiExtendTreatmentProcedures(), updateNhiExtendDisposal.getId());
-                relationshipService.addRelationshipWithNhiExtendTreatmentProcedures(nhiExtendDisposal, updateNhiExtendDisposal.getNhiExtendTreatmentProcedures());
+                if (updateNhiExtendDisposal.getNhiExtendTreatmentProcedures() != null) {
+                    Set<Long> updateIds = updateNhiExtendDisposal.getNhiExtendTreatmentProcedures().stream().map(NhiExtendTreatmentProcedure::getId).collect(Collectors.toSet());
+                    StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures())
+                        .filter(nhiExtendTreatmentProcedure -> !updateIds.contains(nhiExtendTreatmentProcedure.getId()))
+                        .forEach(nhiExtendTreatmentProcedure -> {
+                            nhiExtendTreatmentProcedure.getTreatmentProcedure().setDisposal(null);
+                            nhiExtendTreatmentProcedure.setNhiExtendDisposal(null);
+                        });
 
-                log.debug("Update nhiExtendTreatmentDrugs({}) of NhiExtendDisposal(id: {})", updateNhiExtendDisposal.getNhiExtendTreatmentDrugs(), updateNhiExtendDisposal.getId());
-                relationshipService.addRelationshipWithNhiExtendTreatmentDrugs(nhiExtendDisposal, updateNhiExtendDisposal.getNhiExtendTreatmentDrugs());
+                    log.debug("Update nhiExtendTreatmentProcedures({}) of NhiExtendDisposal(id: {})", updateNhiExtendDisposal.getNhiExtendTreatmentProcedures(), updateNhiExtendDisposal.getId());
+                    relationshipService.addRelationshipWithNhiExtendTreatmentProcedures(nhiExtendDisposal, updateNhiExtendDisposal.getNhiExtendTreatmentProcedures());
+                }
+
+                if (updateNhiExtendDisposal.getNhiExtendTreatmentDrugs() != null) {
+                    Set<Long> updateIds = updateNhiExtendDisposal.getNhiExtendTreatmentDrugs().stream().map(NhiExtendTreatmentDrug::getId).collect(Collectors.toSet());
+                    StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentDrugs())
+                        .filter(nhiExtendTreatmentDrug -> !updateIds.contains(nhiExtendTreatmentDrug.getId()))
+                        .forEach(nhiExtendTreatmentDrug -> {
+                            nhiExtendTreatmentDrug.getTreatmentDrug().setPrescription(null);
+                            nhiExtendTreatmentDrug.setNhiExtendDisposal(null);
+                        });
+
+                    log.debug("Update nhiExtendTreatmentDrugs({}) of NhiExtendDisposal(id: {})", updateNhiExtendDisposal.getNhiExtendTreatmentDrugs(), updateNhiExtendDisposal.getId());
+                    relationshipService.addRelationshipWithNhiExtendTreatmentDrugs(nhiExtendDisposal, updateNhiExtendDisposal.getNhiExtendTreatmentDrugs());
+                }
 
                 return nhiExtendDisposal;
             })
