@@ -21,6 +21,9 @@
     <!-- drop foreign key constraints -->
     <include file="config/liquibase/changelog/2019/07/20190720_dropForeignKeyConstraint.xml" relativeToChangelogFile="false"/>
 
+    <!-- drop not null constraints -->
+    <include file="config/liquibase/changelog/2019/11/20191113_dropNotNullConstraint.xml" relativeToChangelogFile="false"/>
+
     <!-- drop columns -->
     <include file="config/liquibase/changelog/2019/07/20190711_dropColumn.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2019/07/20190720_dropColumn.xml" relativeToChangelogFile="false"/>
