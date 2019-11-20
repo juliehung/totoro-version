@@ -1,55 +1,97 @@
 package io.dentall.totoro.service.dto;
 
 import io.dentall.totoro.domain.ExtendUser;
+import io.dentall.totoro.domain.enumeration.Gender;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 public class AppointmentDTO {
-
-    private final Instant expectedArrivalTime;
-
-    private final Integer requiredTreatmentTime;
 
     private final Long patientId;
 
     private final String patientName;
 
+    private final LocalDate birth;
+
+    private final String nationalId;
+
+    private final String phone;
+
+    private final Instant expectedArrivalTime;
+
     private final ExtendUser doctor;
 
-    public AppointmentDTO(
-        Instant expectedArrivalTime,
-        Integer requiredTreatmentTime,
-        Long patientId,
-        String patientName,
-        ExtendUser doctor
-    ) {
-        this.expectedArrivalTime = expectedArrivalTime;
-        this.requiredTreatmentTime = requiredTreatmentTime;
+    private final Integer requiredTreatmentTime;
+
+    private final String note;
+
+    private final boolean microscope;
+
+    private final boolean baseFloor;
+
+    private final Gender gender;
+
+    public AppointmentDTO(Long patientId, String patientName, LocalDate birth, String nationalId, Gender gender, String phone, Instant expectedArrivalTime, ExtendUser doctor, Integer requiredTreatmentTime, String note, boolean microscope, boolean baseFloor) {
         this.patientId = patientId;
         this.patientName = patientName;
+        this.birth = birth;
+        this.nationalId = nationalId;
+        this.phone = phone;
+        this.expectedArrivalTime = expectedArrivalTime;
         this.doctor = doctor;
-    }
-
-    public ExtendUser getDoctor() {
-        return doctor;
-    }
-
-    public Instant getExpectedArrivalTime() {
-        return expectedArrivalTime;
-    }
-
-    public Integer getRequiredTreatmentTime() {
-        return requiredTreatmentTime;
+        this.requiredTreatmentTime = requiredTreatmentTime;
+        this.note = note;
+        this.microscope = microscope;
+        this.baseFloor = baseFloor;
+        this.gender = gender;
     }
 
     public Long getPatientId() {
         return patientId;
     }
 
-
-
     public String getPatientName() {
         return patientName;
     }
 
+    public LocalDate getBirth() {
+        return birth;
+    }
+
+    public String getNationalId() {
+        return nationalId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public Instant getExpectedArrivalTime() {
+        return expectedArrivalTime;
+    }
+
+    public ExtendUser getDoctor() {
+        return doctor;
+    }
+
+    public Integer getRequiredTreatmentTime() {
+        return requiredTreatmentTime;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public boolean isMicroscope() {
+        return microscope;
+    }
+
+    public boolean isBaseFloor() {
+        return baseFloor;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
 }

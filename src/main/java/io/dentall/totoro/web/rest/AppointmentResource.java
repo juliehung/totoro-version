@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.YearMonth;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -145,12 +145,12 @@ public class AppointmentResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    @GetMapping("/appointments/{year}/{month}")
+    @GetMapping("/appointments/between")
     @Timed
-    public ResponseEntity<List<MonthAppointmentVM>> getMonthAppointments(
-        @PathVariable int year,
-        @PathVariable int month
+    public ResponseEntity<List<MonthAppointmentVM>> getAppointmentsBetween(
+        @RequestParam Instant beginDate,
+        @RequestParam Instant endDate
     ) {
-        return ResponseEntity.ok().body(appointmentService.findMonthAppointment(YearMonth.of(year, month)));
+        return ResponseEntity.ok().body(appointmentService.findAppointmentBetween(beginDate, endDate));
     }
 }
