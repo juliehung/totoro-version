@@ -1,6 +1,5 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.Appointment;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Registration;
@@ -17,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.YearMonth;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -225,13 +224,14 @@ public class AppointmentService {
         return registration;
     }
 
-    public List<MonthAppointmentVM> findMonthAppointment(
-        YearMonth yearMonth
+    public List<MonthAppointmentVM> findAppointmentBetween(
+        Instant beginDate,
+        Instant endDate
     ) {
         return
             appointmentRepository.findMonthAppointment(
-                yearMonth.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET),
-                yearMonth.atEndOfMonth().atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)
+                beginDate,
+                endDate
             ).stream()
                 .map(appointmentDTO -> {
                     MonthAppointmentVM monthAppointmentVM = new MonthAppointmentVM(appointmentDTO);

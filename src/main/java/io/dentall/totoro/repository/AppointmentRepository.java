@@ -25,11 +25,18 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
 
     @Query(value =
         "select new io.dentall.totoro.service.dto.AppointmentDTO( " +
-            "appointment.expectedArrivalTime, " +
-            "appointment.requiredTreatmentTime, " +
             "appointment.patient.id, " +
             "appointment.patient.name, " +
-            "appointment.doctor " +
+            "appointment.patient.birth, " +
+            "appointment.patient.nationalId, " +
+            "appointment.patient.gender, " +
+            "appointment.patient.phone, " +
+            "appointment.expectedArrivalTime, " +
+            "appointment.doctor, " +
+            "appointment.requiredTreatmentTime, " +
+            "appointment.note, " +
+            "appointment.microscope, " +
+            "appointment.baseFloor " +
             ") " +
         "from Appointment as appointment " +
         "where appointment.expectedArrivalTime between :beginDate and :endDate ")
