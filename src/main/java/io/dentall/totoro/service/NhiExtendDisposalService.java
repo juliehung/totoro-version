@@ -294,6 +294,14 @@ public class NhiExtendDisposalService {
                     nhiExtendDisposal.setCategory(updateNhiExtendDisposal.getCategory());
                 }
 
+                if (updateNhiExtendDisposal.getCheckedMonthDeclaration() != null) {
+                    nhiExtendDisposal.setCheckedMonthDeclaration(updateNhiExtendDisposal.getCheckedMonthDeclaration());
+                }
+
+                if (updateNhiExtendDisposal.getCheckedAuditing() != null) {
+                    nhiExtendDisposal.setCheckedAuditing(updateNhiExtendDisposal.getCheckedAuditing());
+                }
+
                 if (updateNhiExtendDisposal.getNhiExtendTreatmentProcedures() != null) {
                     Set<Long> updateIds = updateNhiExtendDisposal.getNhiExtendTreatmentProcedures().stream().map(NhiExtendTreatmentProcedure::getId).collect(Collectors.toSet());
                     StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures())
