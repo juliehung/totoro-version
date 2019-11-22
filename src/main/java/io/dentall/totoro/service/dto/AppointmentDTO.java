@@ -1,6 +1,7 @@
 package io.dentall.totoro.service.dto;
 
 import io.dentall.totoro.domain.ExtendUser;
+import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 import io.dentall.totoro.domain.enumeration.Gender;
 
 import java.time.Instant;
@@ -32,7 +33,11 @@ public class AppointmentDTO {
 
     private final Gender gender;
 
-    public AppointmentDTO(Long patientId, String patientName, LocalDate birth, String nationalId, Gender gender, String phone, Instant expectedArrivalTime, ExtendUser doctor, Integer requiredTreatmentTime, String note, boolean microscope, boolean baseFloor) {
+    private final AppointmentStatus status;
+
+    private final Instant registerArrivalTime;
+
+    public AppointmentDTO(Long patientId, String patientName, LocalDate birth, String nationalId, Gender gender, String phone, Instant expectedArrivalTime, ExtendUser doctor, Integer requiredTreatmentTime, String note, boolean microscope, boolean baseFloor, AppointmentStatus status, Instant registerArrivalTime) {
         this.patientId = patientId;
         this.patientName = patientName;
         this.birth = birth;
@@ -45,6 +50,16 @@ public class AppointmentDTO {
         this.microscope = microscope;
         this.baseFloor = baseFloor;
         this.gender = gender;
+        this.status = status;
+        this.registerArrivalTime = registerArrivalTime;
+    }
+
+    public AppointmentStatus getStatus() {
+        return status;
+    }
+
+    public Instant getRegisterArrivalTime() {
+        return registerArrivalTime;
     }
 
     public Long getPatientId() {
