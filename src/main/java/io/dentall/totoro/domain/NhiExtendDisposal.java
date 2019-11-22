@@ -158,6 +158,12 @@ public class NhiExtendDisposal implements Serializable {
     @Column(name = "replenishment_date")
     private LocalDate replenishmentDate;
 
+    @Column(name = "checked_month_declaration")
+    private Boolean checkedMonthDeclaration;
+
+    @Column(name = "checked_auditing")
+    private Boolean checkedAuditing;
+
     @OneToMany(mappedBy = "nhiExtendDisposal", fetch = FetchType.EAGER)
     private Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = null;
 
@@ -168,6 +174,32 @@ public class NhiExtendDisposal implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonIgnore
     private Set<NhiDayUploadDetails> nhiDayUploadDetails = null;
+
+    public NhiExtendDisposal checkedMonthDeclaration(Boolean checkedMonthDeclaration) {
+        this.checkedMonthDeclaration = checkedMonthDeclaration;
+        return this;
+    }
+
+    public NhiExtendDisposal checkedAuditing(Boolean checkedAuditing) {
+        this.checkedAuditing = checkedAuditing;
+        return this;
+    }
+
+    public Boolean getCheckedMonthDeclaration() {
+        return checkedMonthDeclaration;
+    }
+
+    public void setCheckedMonthDeclaration(Boolean checkedMonthDeclaration) {
+        this.checkedMonthDeclaration = checkedMonthDeclaration;
+    }
+
+    public Boolean getCheckedAuditing() {
+        return checkedAuditing;
+    }
+
+    public void setCheckedAuditing(Boolean checkedAuditing) {
+        this.checkedAuditing = checkedAuditing;
+    }
 
     public Long getId() {
         return id;
