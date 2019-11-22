@@ -56,6 +56,26 @@ public class Calendar implements Serializable {
     @JsonIgnoreProperties(value = {"lastPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments", "calendars"}, allowSetters = true)
     private ExtendUser doctor;
 
+    @Column(name = "day_off_cron")
+    private String dayOffCron;
+
+    public Calendar dayOffCron(String dayOffCron) {
+        this.dayOffCron = dayOffCron;
+        return this;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getDayOffCron() {
+        return dayOffCron;
+    }
+
+    public void setDayOffCron(String dayOffCron) {
+        this.dayOffCron = dayOffCron;
+    }
+
     public Long getId() {
         return id;
     }
