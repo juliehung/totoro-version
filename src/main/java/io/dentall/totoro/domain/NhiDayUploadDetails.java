@@ -2,18 +2,16 @@ package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dentall.totoro.domain.enumeration.NhiDayUploadDetailType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Set;
-
-import io.dentall.totoro.domain.enumeration.NhiDayUploadDetailType;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
@@ -43,7 +41,7 @@ public class NhiDayUploadDetails extends AbstractAuditingEntity implements Seria
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "nhi_day_upload_details_nhi_extend_disposal",
         joinColumns = @JoinColumn(name = "nhi_day_upload_details_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "nhi_extend_disposals_id", referencedColumnName = "id"))
