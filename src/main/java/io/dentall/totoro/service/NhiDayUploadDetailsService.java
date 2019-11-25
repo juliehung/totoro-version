@@ -64,7 +64,10 @@ public class NhiDayUploadDetailsService {
     @Transactional(readOnly = true)
     public Optional<NhiDayUploadDetails> findOne(Long id) {
         log.debug("Request to get NhiDayUploadDetails : {}", id);
-        return nhiDayUploadDetailsRepository.findById(id);
+        Optional<NhiDayUploadDetails> optionalNhiDayUploadDetails = nhiDayUploadDetailsRepository.findById(id);
+        // TODO: if some day it need upload details as history and display related nhi ext dis then uncomment below line.
+        // optionalNhiDayUploadDetails.ifPresent(nhiDayUploadDetails -> nhiDayUploadDetails.getNhiExtendDisposals().size());
+        return optionalNhiDayUploadDetails;
     }
 
     /**
