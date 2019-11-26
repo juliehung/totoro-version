@@ -38,7 +38,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.microscope, " +
             "appointment.baseFloor, " +
             "appointment.status, " +
-            "appointment.registration.arrivalTime " +
+            "appointment.registration.arrivalTime, " +
+            "appointment.id, " +
+            "appointment.patient.newPatient, " +
+            "appointment.registration.status, " +
+            "appointment.lastModifiedDate, " +
+            "appointment.lastModifiedBy " +
             ") " +
         "from Appointment as appointment " +
         "where appointment.expectedArrivalTime between :beginDate and :endDate ")
