@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest.vm;
 import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 import io.dentall.totoro.domain.enumeration.Gender;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.service.dto.AppointmentDTO;
 
 import java.time.Instant;
@@ -38,6 +39,16 @@ public class MonthAppointmentVM {
 
     private final Instant registerArrivalTime;
 
+    private final Long id;
+
+    private final boolean newPatient;
+
+    private final RegistrationStatus registrationStatus;
+
+    private final Instant lastModifiedDate;
+
+    private final String lastModifiedBy;
+
     public MonthAppointmentVM(AppointmentDTO appointmentDTO) {
         this.patientId = appointmentDTO.getPatientId();
         this.patientName = appointmentDTO.getPatientName();
@@ -53,6 +64,11 @@ public class MonthAppointmentVM {
         this.gender = appointmentDTO.getGender();
         this.status = appointmentDTO.getStatus();
         this.registerArrivalTime = appointmentDTO.getRegisterArrivalTime();
+        this.id = appointmentDTO.getId();
+        this.newPatient = appointmentDTO.isNewPatient();
+        this.registrationStatus = appointmentDTO.getRegistrationStatus();
+        this.lastModifiedDate = appointmentDTO.getLastModifiedDate();
+        this.lastModifiedBy = appointmentDTO.getLastModifiedBy();
     }
 
     public AppointmentStatus getStatus() {
@@ -109,5 +125,25 @@ public class MonthAppointmentVM {
 
     public boolean isBaseFloor() {
         return baseFloor;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public boolean isNewPatient() {
+        return newPatient;
+    }
+
+    public RegistrationStatus getRegistrationStatus() {
+        return registrationStatus;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
     }
 }

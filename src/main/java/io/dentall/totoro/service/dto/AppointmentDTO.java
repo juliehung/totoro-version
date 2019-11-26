@@ -3,6 +3,7 @@ package io.dentall.totoro.service.dto;
 import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 import io.dentall.totoro.domain.enumeration.Gender;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -37,7 +38,17 @@ public class AppointmentDTO {
 
     private final Instant registerArrivalTime;
 
-    public AppointmentDTO(Long patientId, String patientName, LocalDate birth, String nationalId, Gender gender, String phone, Instant expectedArrivalTime, ExtendUser doctor, Integer requiredTreatmentTime, String note, boolean microscope, boolean baseFloor, AppointmentStatus status, Instant registerArrivalTime) {
+    private final Long id;
+
+    private final boolean newPatient;
+
+    private final RegistrationStatus registrationStatus;
+
+    private final Instant lastModifiedDate;
+
+    private final String lastModifiedBy;
+
+    public AppointmentDTO(Long patientId, String patientName, LocalDate birth, String nationalId, Gender gender, String phone, Instant expectedArrivalTime, ExtendUser doctor, Integer requiredTreatmentTime, String note, boolean microscope, boolean baseFloor, AppointmentStatus status, Instant registerArrivalTime, Long id, boolean newPatient, RegistrationStatus registrationStatus, Instant lastModifiedDate, String lastModifiedBy) {
         this.patientId = patientId;
         this.patientName = patientName;
         this.birth = birth;
@@ -52,6 +63,31 @@ public class AppointmentDTO {
         this.gender = gender;
         this.status = status;
         this.registerArrivalTime = registerArrivalTime;
+        this.id = id;
+        this.newPatient = newPatient;
+        this.registrationStatus = registrationStatus;
+        this.lastModifiedDate = lastModifiedDate;
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public boolean isNewPatient() {
+        return newPatient;
+    }
+
+    public RegistrationStatus getRegistrationStatus() {
+        return registrationStatus;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
     }
 
     public AppointmentStatus getStatus() {
