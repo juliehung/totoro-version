@@ -42,8 +42,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.id, " +
             "appointment.patient.newPatient, " +
             "appointment.registration.status, " +
-            "appointment.lastModifiedDate, " +
-            "appointment.lastModifiedBy " +
+            "appointment.patient.lastModifiedDate, " +
+            "appointment.patient.lastModifiedBy " +
             ") " +
         "from Appointment as appointment " +
         "where appointment.expectedArrivalTime between :beginDate and :endDate ")
