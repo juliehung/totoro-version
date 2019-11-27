@@ -45,9 +45,9 @@ public class MonthAppointmentVM {
 
     private final RegistrationStatus registrationStatus;
 
-    private final Instant lastModifiedDate;
+    private final Instant patientLastModifiedDate;
 
-    private final String lastModifiedBy;
+    private final String patientLastModifiedBy;
 
     public MonthAppointmentVM(AppointmentDTO appointmentDTO) {
         this.patientId = appointmentDTO.getPatientId();
@@ -67,8 +67,8 @@ public class MonthAppointmentVM {
         this.id = appointmentDTO.getId();
         this.newPatient = appointmentDTO.isNewPatient();
         this.registrationStatus = appointmentDTO.getRegistrationStatus();
-        this.lastModifiedDate = appointmentDTO.getLastModifiedDate();
-        this.lastModifiedBy = appointmentDTO.getLastModifiedBy();
+        this.patientLastModifiedDate = appointmentDTO.getPatientLastModifiedDate();
+        this.patientLastModifiedBy = appointmentDTO.getPatientLastModifiedBy();
     }
 
     public AppointmentStatus getStatus() {
@@ -139,11 +139,11 @@ public class MonthAppointmentVM {
         return registrationStatus;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
+    public Instant getPatientLastModifiedDate() {
+        return patientLastModifiedDate;
     }
 
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
+    public String getPatientLastModifiedBy() {
+        return patientLastModifiedBy;
     }
 }

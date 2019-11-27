@@ -44,11 +44,11 @@ public class AppointmentDTO {
 
     private final RegistrationStatus registrationStatus;
 
-    private final Instant lastModifiedDate;
+    private final Instant patientLastModifiedDate;
 
-    private final String lastModifiedBy;
+    private final String patientLastModifiedBy;
 
-    public AppointmentDTO(Long patientId, String patientName, LocalDate birth, String nationalId, Gender gender, String phone, Instant expectedArrivalTime, ExtendUser doctor, Integer requiredTreatmentTime, String note, boolean microscope, boolean baseFloor, AppointmentStatus status, Instant registerArrivalTime, Long id, boolean newPatient, RegistrationStatus registrationStatus, Instant lastModifiedDate, String lastModifiedBy) {
+    public AppointmentDTO(Long patientId, String patientName, LocalDate birth, String nationalId, Gender gender, String phone, Instant expectedArrivalTime, ExtendUser doctor, Integer requiredTreatmentTime, String note, boolean microscope, boolean baseFloor, AppointmentStatus status, Instant registerArrivalTime, Long id, boolean newPatient, RegistrationStatus registrationStatus, Instant patientLastModifiedDate, String patientLastModifiedBy) {
         this.patientId = patientId;
         this.patientName = patientName;
         this.birth = birth;
@@ -66,12 +66,20 @@ public class AppointmentDTO {
         this.id = id;
         this.newPatient = newPatient;
         this.registrationStatus = registrationStatus;
-        this.lastModifiedDate = lastModifiedDate;
-        this.lastModifiedBy = lastModifiedBy;
+        this.patientLastModifiedDate = patientLastModifiedDate;
+        this.patientLastModifiedBy = patientLastModifiedBy;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Instant getPatientLastModifiedDate() {
+        return patientLastModifiedDate;
+    }
+
+    public String getPatientLastModifiedBy() {
+        return patientLastModifiedBy;
     }
 
     public boolean isNewPatient() {
@@ -80,14 +88,6 @@ public class AppointmentDTO {
 
     public RegistrationStatus getRegistrationStatus() {
         return registrationStatus;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
     }
 
     public AppointmentStatus getStatus() {
