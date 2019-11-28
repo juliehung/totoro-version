@@ -38,14 +38,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.microscope, " +
             "appointment.baseFloor, " +
             "appointment.status, " +
-            "appointment.registration.arrivalTime, " +
+            "registration.arrivalTime, " +
             "appointment.id, " +
             "appointment.patient.newPatient, " +
-            "appointment.registration.status, " +
+            "registration.status, " +
             "appointment.patient.lastModifiedDate, " +
             "appointment.patient.lastModifiedBy " +
             ") " +
-        "from Appointment as appointment " +
-        "where appointment.expectedArrivalTime between :beginDate and :endDate ")
-    List<AppointmentDTO> findMonthAppointment(@Param("beginDate")Instant beginDate, @Param("endDate")Instant endDate);
+            "from Appointment as appointment left outer join appointment.registration as registration " +
+            "where appointment.expectedArrivalTime between :beginDate and :endDate ")
+    List<AppointmentDTO> findMonthAppointment(@Param("beginDate") Instant beginDate, @Param("endDate") Instant endDate);
 }
