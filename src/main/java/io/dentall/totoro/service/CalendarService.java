@@ -114,6 +114,10 @@ public class CalendarService {
                     calendar.setDayOffCron((updateCalendar.getDayOffCron()));
                 }
 
+                if (updateCalendar.getDuration() != null) {
+                    calendar.setDuration((updateCalendar.getDuration()));
+                }
+
                 return calendar;
             })
             .get();
