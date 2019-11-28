@@ -59,9 +59,25 @@ public class Calendar implements Serializable {
     @Column(name = "day_off_cron")
     private String dayOffCron;
 
+    @Column(name = "duration")
+    private String duration;
+
+    public Calendar duration(String duration) {
+        this.duration = duration;
+        return this;
+    }
+
     public Calendar dayOffCron(String dayOffCron) {
         this.dayOffCron = dayOffCron;
         return this;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
     public static long getSerialVersionUID() {
