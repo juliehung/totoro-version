@@ -1,6 +1,7 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -59,6 +60,25 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
 
     @Query("select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " + dateBetween + "order by patientId, a18")
     Page<NhiExtendDisposal> findByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end, Pageable pageable);
+
+    @Query("select new io.dentall.totoro.repository.dao.MonthDisposalDAO(disposal.id, nhiExtendDisposal.id, " +
+        "nhiExtendDisposal.a11, nhiExtendDisposal.a12, nhiExtendDisposal.a13, " +
+        "nhiExtendDisposal.a14, nhiExtendDisposal.a15, nhiExtendDisposal.a16, " +
+        "nhiExtendDisposal.a17, nhiExtendDisposal.a18, nhiExtendDisposal.a19, " +
+        "nhiExtendDisposal.a22, nhiExtendDisposal.a23, nhiExtendDisposal.a25, " +
+        "nhiExtendDisposal.a26, nhiExtendDisposal.a27, nhiExtendDisposal.a31, " +
+        "nhiExtendDisposal.a32, nhiExtendDisposal.a41, nhiExtendDisposal.a42, " +
+        "nhiExtendDisposal.a43, nhiExtendDisposal.a44, nhiExtendDisposal.a54, " +
+        "nhiExtendDisposal.date, nhiExtendDisposal.uploadStatus, " +
+        "nhiExtendDisposal.examinationCode, nhiExtendDisposal.examinationPoint, " +
+        "nhiExtendDisposal.patientIdentity, nhiExtendDisposal.serialNumber, " +
+        "nhiExtendDisposal.patientId, nhiExtendDisposal.category, " +
+        "nhiExtendDisposal.replenishmentDate, " +
+        "nhiExtendDisposal.checkedMonthDeclaration, " +
+        "nhiExtendDisposal.checkedAuditing ) " +
+        "from NhiExtendDisposal as nhiExtendDisposal left outer join nhiExtendDisposal.disposal as disposal " +
+        "where " + dateBetween)
+    List<MonthDisposalDAO> findDisposalIdAndNhiExtendDisposalPrimByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
 
     @Query("select count(nhiExtendDisposal) from NhiExtendDisposal nhiExtendDisposal where " + dateBetween)
     long countByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);

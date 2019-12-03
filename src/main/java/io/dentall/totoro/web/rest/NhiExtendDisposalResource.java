@@ -6,6 +6,7 @@ import io.dentall.totoro.service.NhiExtendDisposalService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -16,9 +17,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
@@ -108,6 +112,7 @@ public class NhiExtendDisposalResource {
         }
     }
 
+    @Deprecated
     @GetMapping("/nhi-extend-disposals/page")
     @Timed
     public ResponseEntity<List<NhiExtendDisposalVM>> getAllNhiExtendDisposals(
@@ -120,6 +125,20 @@ public class NhiExtendDisposalResource {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pagedNhiDis, "/api/nhi-extend-disposals/page");
 
         return ResponseEntity.ok().headers(headers).body(pagedNhiDis.getContent());
+    }
+
+    @GetMapping("/v2/nhi-extend-disposals/{yyyymm}")
+    @Timed
+    public ResponseEntity<List<MonthDisposalVM>> getAllByYYYYMM(@PathVariable Integer yyyymm) {
+        log.debug("REST request to get all nhi ext dis all in year month");
+
+        YearMonth ym;
+        try {
+            ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
+        } catch (DateTimeException e) {
+            throw new BadRequestAlertException("Can not parse yyyymm", ENTITY_NAME, "invalidate");
+        }
+        return ResponseEntity.ok().body(nhiExtendDisposalService.findByYearMonthForLazyNhiExtDis(ym));
     }
 
     /**
