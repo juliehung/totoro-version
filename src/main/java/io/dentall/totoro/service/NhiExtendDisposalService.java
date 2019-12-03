@@ -7,7 +7,9 @@ import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.DisposalRepository;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
+import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,6 +153,18 @@ public class NhiExtendDisposalService {
 
                 return new NhiExtendDisposalVM(nhiExtendDisposal);
             });
+    }
+
+    @Transactional(readOnly = true)
+    public List<MonthDisposalVM> findByYearMonthForLazyNhiExtDis(YearMonth ym) {
+        return nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(ym.atDay(1), ym.atEndOfMonth()).stream()
+            .collect(Collectors.groupingBy(MonthDisposalDAO::getDisposalId))
+            .entrySet()
+            .stream()
+            .map(e -> {
+                return new MonthDisposalVM(e.getKey(), e.getValue());
+            })
+            .collect(Collectors.toList());
     }
 
     /**
