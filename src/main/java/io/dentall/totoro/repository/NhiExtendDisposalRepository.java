@@ -75,9 +75,14 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
         "nhiExtendDisposal.patientId, nhiExtendDisposal.category, " +
         "nhiExtendDisposal.replenishmentDate, " +
         "nhiExtendDisposal.checkedMonthDeclaration, " +
-        "nhiExtendDisposal.checkedAuditing ) " +
-        "from NhiExtendDisposal as nhiExtendDisposal left outer join nhiExtendDisposal.disposal as disposal " +
-        "where " + dateBetween)
+        "nhiExtendDisposal.checkedAuditing," +
+        "patient.name ) " +
+        "from " +
+        "   NhiExtendDisposal as nhiExtendDisposal left outer join nhiExtendDisposal.disposal as disposal," +
+        "   Patient as patient " +
+        "where 1 = 1 " +
+        "and nhiExtendDisposal.patientId = patient.id " +
+        "and " + dateBetween)
     List<MonthDisposalDAO> findDisposalIdAndNhiExtendDisposalPrimByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
 
     @Query("select count(nhiExtendDisposal) from NhiExtendDisposal nhiExtendDisposal where " + dateBetween)

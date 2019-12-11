@@ -127,20 +127,6 @@ public class NhiExtendDisposalResource {
         return ResponseEntity.ok().headers(headers).body(pagedNhiDis.getContent());
     }
 
-    @GetMapping("/v2/nhi-extend-disposals/{yyyymm}")
-    @Timed
-    public ResponseEntity<List<MonthDisposalVM>> getAllByYYYYMM(@PathVariable Integer yyyymm) {
-        log.debug("REST request to get all nhi ext dis all in year month");
-
-        YearMonth ym;
-        try {
-            ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
-        } catch (DateTimeException e) {
-            throw new BadRequestAlertException("Can not parse yyyymm", ENTITY_NAME, "invalidate");
-        }
-        return ResponseEntity.ok().body(nhiExtendDisposalService.findByYearMonthForLazyNhiExtDis(ym));
-    }
-
     /**
      * GET  /nhi-extend-disposals/:id : get the "id" nhiExtendDisposalVM.
      *
