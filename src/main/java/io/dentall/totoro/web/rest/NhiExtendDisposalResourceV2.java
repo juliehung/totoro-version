@@ -5,21 +5,18 @@ import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.service.NhiExtendDisposalService;
 import io.dentall.totoro.service.dto.NhiExtendDisposalCriteriaV2;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
-import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
-import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing NhiExtendDisposal.
@@ -42,6 +39,14 @@ public class NhiExtendDisposalResourceV2 {
     ) {
         this.nhiExtendDisposalResource = nhiExtendDisposalResource;
         this.nhiExtendDisposalService = nhiExtendDisposalService;
+    }
+
+    @GetMapping("/nhi-extend-disposals/daily-upload/{date}")
+    @Timed
+    public ResponseEntity<List<NhiExtendDisposalVM>> getDailyUploadNhiExtendDisposal(@PathVariable LocalDate date) {
+        log.debug("REST request to get daily upload nhi ext dis in date");
+
+        return ResponseEntity.ok(nhiExtendDisposalService.findByDate(date));
     }
 
     @GetMapping("/nhi-extend-disposals/yearmonth/{yyyymm}")
