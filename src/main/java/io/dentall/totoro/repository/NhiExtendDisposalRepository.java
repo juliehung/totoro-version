@@ -28,9 +28,7 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
         "(nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate >= :gte)) ";
 
     @Query(
-        "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
-            "((nhiExtendDisposal.date = :date and nhiExtendDisposal.replenishmentDate is null) or " +
-            "(nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate = :date))"
+        "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where nhiExtendDisposal.date = :date"
     )
     List<NhiExtendDisposal> findByDate(@Param("date") LocalDate date);
 
