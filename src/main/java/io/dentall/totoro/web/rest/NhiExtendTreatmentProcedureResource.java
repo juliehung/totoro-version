@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing NhiExtendTreatmentProcedure.
@@ -122,5 +123,15 @@ public class NhiExtendTreatmentProcedureResource {
 
         nhiExtendTreatmentProcedureService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    @GetMapping("/nhi-extend-treatment-procedures/rule-checked")
+    @Timed
+    public ResponseEntity<Set<NhiExtendTreatmentProcedure>> getRuleCheckedNhiExtendTreatmentProcedure(
+        @RequestParam(value = "disposalId") Long disposalId
+    ) {
+        log.debug("REST request to get a page of NhiExtendTreatmentProcedure");
+
+        return ResponseEntity.ok(nhiExtendTreatmentProcedureService.findRuleCheckedNhiTxByDisposalId(disposalId));
     }
 }
