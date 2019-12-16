@@ -48,7 +48,7 @@ public class Registration extends AbstractAuditingEntity implements Serializable
     @Column(name = "no_card")
     private Boolean noCard;
 
-    @OneToOne(mappedBy = "registration")
+    @OneToOne(mappedBy = "registration", fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = {"registration", "treatmentProcedures"}, allowSetters = true)
     private Appointment appointment;
 
