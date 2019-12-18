@@ -28,9 +28,9 @@ public class AppointmentDTO {
 
     private final String note;
 
-    private final boolean microscope;
+    private final Boolean microscope;
 
-    private final boolean baseFloor;
+    private final Boolean baseFloor;
 
     private final Gender gender;
 
@@ -40,7 +40,7 @@ public class AppointmentDTO {
 
     private final Long id;
 
-    private final boolean newPatient;
+    private final Boolean newPatient;
 
     private final RegistrationStatus registrationStatus;
 
@@ -48,7 +48,7 @@ public class AppointmentDTO {
 
     private final String patientLastModifiedBy;
 
-    public AppointmentDTO(Long patientId, String patientName, LocalDate birth, String nationalId, Gender gender, String phone, Instant expectedArrivalTime, ExtendUser doctor, Integer requiredTreatmentTime, String note, boolean microscope, boolean baseFloor, AppointmentStatus status, Instant registerArrivalTime, Long id, boolean newPatient, RegistrationStatus registrationStatus, Instant patientLastModifiedDate, String patientLastModifiedBy) {
+    public AppointmentDTO(Long patientId, String patientName, LocalDate birth, String nationalId, Gender gender, String phone, Instant expectedArrivalTime, ExtendUser doctor, Integer requiredTreatmentTime, String note, Boolean microscope, Boolean baseFloor, AppointmentStatus status, Instant registerArrivalTime, Long id, Boolean newPatient, RegistrationStatus registrationStatus, Instant patientLastModifiedDate, String patientLastModifiedBy) {
         this.patientId = patientId;
         this.patientName = patientName;
         this.birth = birth;
@@ -70,6 +70,18 @@ public class AppointmentDTO {
         this.patientLastModifiedBy = patientLastModifiedBy;
     }
 
+    public Boolean getMicroscope() {
+        return microscope;
+    }
+
+    public Boolean getBaseFloor() {
+        return baseFloor;
+    }
+
+    public Boolean getNewPatient() {
+        return newPatient;
+    }
+
     public Long getId() {
         return id;
     }
@@ -80,10 +92,6 @@ public class AppointmentDTO {
 
     public String getPatientLastModifiedBy() {
         return patientLastModifiedBy;
-    }
-
-    public boolean isNewPatient() {
-        return newPatient;
     }
 
     public RegistrationStatus getRegistrationStatus() {
@@ -132,14 +140,6 @@ public class AppointmentDTO {
 
     public String getNote() {
         return note;
-    }
-
-    public boolean isMicroscope() {
-        return microscope;
-    }
-
-    public boolean isBaseFloor() {
-        return baseFloor;
     }
 
     public Gender getGender() {
