@@ -29,9 +29,9 @@ public class MonthAppointmentVM {
 
     private final String note;
 
-    private final boolean microscope;
+    private final Boolean microscope;
 
-    private final boolean baseFloor;
+    private final Boolean baseFloor;
 
     private final Gender gender;
 
@@ -41,7 +41,7 @@ public class MonthAppointmentVM {
 
     private final Long id;
 
-    private final boolean newPatient;
+    private final Boolean newPatient;
 
     private final RegistrationStatus registrationStatus;
 
@@ -59,28 +59,16 @@ public class MonthAppointmentVM {
         this.doctor = appointmentDTO.getDoctor();
         this.requiredTreatmentTime = appointmentDTO.getRequiredTreatmentTime();
         this.note = appointmentDTO.getNote();
-        this.microscope = appointmentDTO.isMicroscope();
-        this.baseFloor = appointmentDTO.isBaseFloor();
+        this.microscope = appointmentDTO.getMicroscope();
+        this.baseFloor = appointmentDTO.getBaseFloor();
         this.gender = appointmentDTO.getGender();
         this.status = appointmentDTO.getStatus();
         this.registerArrivalTime = appointmentDTO.getRegisterArrivalTime();
         this.id = appointmentDTO.getId();
-        this.newPatient = appointmentDTO.isNewPatient();
+        this.newPatient = appointmentDTO.getNewPatient();
         this.registrationStatus = appointmentDTO.getRegistrationStatus();
         this.patientLastModifiedDate = appointmentDTO.getPatientLastModifiedDate();
         this.patientLastModifiedBy = appointmentDTO.getPatientLastModifiedBy();
-    }
-
-    public AppointmentStatus getStatus() {
-        return status;
-    }
-
-    public Instant getRegisterArrivalTime() {
-        return registerArrivalTime;
-    }
-
-    public Gender getGender() {
-        return gender;
     }
 
     public Long getPatientId() {
@@ -119,19 +107,31 @@ public class MonthAppointmentVM {
         return note;
     }
 
-    public boolean isMicroscope() {
+    public Boolean getMicroscope() {
         return microscope;
     }
 
-    public boolean isBaseFloor() {
+    public Boolean getBaseFloor() {
         return baseFloor;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public AppointmentStatus getStatus() {
+        return status;
+    }
+
+    public Instant getRegisterArrivalTime() {
+        return registerArrivalTime;
     }
 
     public Long getId() {
         return id;
     }
 
-    public boolean isNewPatient() {
+    public Boolean getNewPatient() {
         return newPatient;
     }
 
