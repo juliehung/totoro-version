@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20191223-Sql" author="WeiChen">
+        <sql dbms="postgresql" splitStatements="true">
+            UPDATE nhi_procedure
+            SET description = 'S: Pain and discomfort of 3rd molar region.\nO: 3rd molar impacted teeth. Soft tissue coverage with partial bony coverage of crown. Food impaction  over distal side of second  molar, with mild inflammation..\nA: impacted 3rd molar.\nP: Surgical extraction of3rd molar   under anesthesia, mucoperiosteal flap reflection, bur method removal of buccal bone, chiesel method tooth splitting and removal of the tooth piece by piece. Wound curretage and irrigation. Sutured with 3 stitches. Medication and for infection control and pain control.'
+            WHERE id = '93';
+        </sql>
+        <sql dbms="postgresql" splitStatements="true">
+            UPDATE nhi_procedure
+            SET description = regexp_replace(description, '說明：', '', 'g')
+            WHERE id in (16, 17, 18);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
