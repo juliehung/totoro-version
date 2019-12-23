@@ -110,6 +110,10 @@ public class CalendarService {
                     userRepository.findById(updateCalendar.getDoctor().getId()).ifPresent(user -> calendar.setDoctor(user.getExtendUser()));
                 }
 
+                if (updateCalendar.getDoctor() == null) {
+                    calendar.setDoctor(null);
+                }
+
                 if (updateCalendar.getDayOffCron() != null) {
                     calendar.setDayOffCron((updateCalendar.getDayOffCron()));
                 }
