@@ -74,7 +74,7 @@ public class NhiService {
         }
     }
 
-    void checkNhiExtendTreatmentProcedures(Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures) {
+    public void checkNhiExtendTreatmentProcedures(Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures) {
         if (!rules.isEmpty()) {
             nhiExtendTreatmentProcedures.forEach(nhiExtendTreatmentProcedure -> {
                 if (rules.getOrDefault(nhiExtendTreatmentProcedure.getA73(), Rule.allPass()).getCode() != null) {

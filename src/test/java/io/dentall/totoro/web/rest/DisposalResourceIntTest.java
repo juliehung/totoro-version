@@ -5,6 +5,7 @@ import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.DisposalService;
+import io.dentall.totoro.service.NhiService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 import io.dentall.totoro.service.DisposalQueryService;
 
@@ -100,6 +101,9 @@ public class DisposalResourceIntTest {
     @Autowired
     private RegistrationRepository registrationRepository;
 
+    @Autowired
+    private NhiService nhiService;
+
     private MockMvc restDisposalMockMvc;
 
     private Disposal disposal;
@@ -107,7 +111,7 @@ public class DisposalResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final DisposalResource disposalResource = new DisposalResource(disposalService, disposalQueryService);
+        final DisposalResource disposalResource = new DisposalResource(disposalService, disposalQueryService, nhiService);
         this.restDisposalMockMvc = MockMvcBuilders.standaloneSetup(disposalResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -218,7 +222,7 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.[*].dateTimeEnd").value(hasItem(DEFAULT_DATE_TIME_END.toString())))
             .andExpect(jsonPath("$.[*].chiefComplaint").value(hasItem(DEFAULT_CHIEF_COMPLAINT.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getDisposal() throws Exception {

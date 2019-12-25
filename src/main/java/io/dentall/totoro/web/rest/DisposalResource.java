@@ -2,7 +2,10 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Disposal;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.service.DisposalService;
+import io.dentall.totoro.service.NhiService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -14,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,8 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Disposal.
@@ -32,17 +36,22 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class DisposalResource {
 
-    private final Logger log = LoggerFactory.getLogger(DisposalResource.class);
-
     private static final String ENTITY_NAME = "disposal";
-
+    private final Logger log = LoggerFactory.getLogger(DisposalResource.class);
     private final DisposalService disposalService;
 
     private final DisposalQueryService disposalQueryService;
 
-    public DisposalResource(DisposalService disposalService, DisposalQueryService disposalQueryService) {
+    private final NhiService nhiService;
+
+    public DisposalResource(
+        DisposalService disposalService,
+        DisposalQueryService disposalQueryService,
+        NhiService nhiService
+    ) {
         this.disposalService = disposalService;
         this.disposalQueryService = disposalQueryService;
+        this.nhiService = nhiService;
     }
 
     /**
@@ -104,11 +113,11 @@ public class DisposalResource {
     }
 
     /**
-    * GET  /disposals/count : count all the disposals.
-    *
-    * @param criteria the criterias which the requested entities should match
-    * @return the ResponseEntity with status 200 (OK) and the count in body
-    */
+     * GET  /disposals/count : count all the disposals.
+     *
+     * @param criteria the criterias which the requested entities should match
+     * @return the ResponseEntity with status 200 (OK) and the count in body
+     */
     @GetMapping("/disposals/count")
     @Timed
     public ResponseEntity<Long> countDisposals(DisposalCriteria criteria) {
@@ -142,5 +151,21 @@ public class DisposalResource {
         log.debug("REST request to delete Disposal : {}", id);
         disposalService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    @GetMapping("/disposals/rules-checked/{id}")
+    @Timed
+    public ResponseEntity<Disposal> getDisposalWithRulesCheckedNhiExtTxProc(@PathVariable Long id) {
+        log.debug("REST request to get contain rules checked nhi-ext-tx-proc Disposal with id : {}", id);
+        Optional<Disposal> optDisposal = disposalService.findOneWithEagerRelationships(id);
+        if (optDisposal.isPresent()) {
+            Disposal disposal = optDisposal.get();
+            nhiService.checkNhiExtendTreatmentProcedures(disposal.getTreatmentProcedures().stream()
+                .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
+                .collect(Collectors.toSet())
+            );
+
+        }
+        return ResponseUtil.wrapOrNotFound(optDisposal);
     }
 }
