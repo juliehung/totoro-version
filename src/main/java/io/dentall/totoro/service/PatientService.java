@@ -365,6 +365,7 @@ public class PatientService extends QueryService<Patient> {
                     ((Specification<Patient>) (root, query, builder) -> builder.like(getFormatBirthExpression(builder, root.get(Patient_.birth)), wrapLikeQuery(like)))
                         .or(buildStringSpecification(criteria.getSearch(), Patient_.phone))
                         .or(buildStringSpecification(criteria.getSearch(), Patient_.name))
+                        .or(buildStringSpecification(criteria.getSearch(), Patient_.medicalId))
                         .or((root, query, builder) -> builder.like(getWithoutLeadingZerosMedicalIdExpression(builder, root.get(Patient_.medicalId)), wrapLikeQuery(like)))
                 ).and(searchOrderSpecification(like));
             }
@@ -390,16 +391,19 @@ public class PatientService extends QueryService<Patient> {
             .when(builder.equal(getFormatBirthExpression(builder, root.get(Patient_.birth)), like), 1)
             .when(builder.equal(root.get(Patient_.phone), like), 1)
             .when(builder.equal(root.get(Patient_.name), like), 1)
+            .when(builder.equal(root.get(Patient_.medicalId), like), 1)
             .when(builder.equal(getWithoutLeadingZerosMedicalIdExpression(builder, root.get(Patient_.medicalId)), like), 1)
             // like%
             .when(builder.like(getFormatBirthExpression(builder, root.get(Patient_.birth)), wrapPostfixLikeQuery(like)), 2)
             .when(builder.like(root.get(Patient_.phone), wrapPostfixLikeQuery(like)), 2)
             .when(builder.like(root.get(Patient_.name), wrapPostfixLikeQuery(like)), 2)
+            .when(builder.like(root.get(Patient_.medicalId), wrapPostfixLikeQuery(like)), 2)
             .when(builder.like(getWithoutLeadingZerosMedicalIdExpression(builder, root.get(Patient_.medicalId)), wrapPostfixLikeQuery(like)), 2)
             // %like%
             .when(builder.like(getFormatBirthExpression(builder, root.get(Patient_.birth)), wrapLikeQuery(like)), 3)
             .when(builder.like(root.get(Patient_.phone), wrapLikeQuery(like)), 3)
             .when(builder.like(root.get(Patient_.name), wrapLikeQuery(like)), 3)
+            .when(builder.like(root.get(Patient_.medicalId), wrapLikeQuery(like)), 3)
             .when(builder.like(getWithoutLeadingZerosMedicalIdExpression(builder, root.get(Patient_.medicalId)), wrapLikeQuery(like)), 3)
             .otherwise(4);
     }
