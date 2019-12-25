@@ -51,6 +51,7 @@
         "nhiMonthDeclaration": "Nhi Month Declaration",
         "nhiMonthDeclarationDetails": "Nhi Month Declaration Details",
         "docNp": "Doc Np",
+        "nhiAccumulatedMedicalRecord": "Nhi Accumulated Medical Record",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

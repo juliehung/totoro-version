@@ -1,0 +1,27 @@
+{
+  "totoroApp": {
+    "nhiAccumulatedMedicalRecord": {
+      "home": {
+        "title": "Nhi Accumulated Medical Records",
+        "createLabel": "建立一筆新的 Nhi Accumulated Medical Record",
+        "createOrEditLabel": "建立或編輯 Nhi Accumulated Medical Record"
+      },
+      "created": "新的 Nhi Accumulated Medical Record 建立成功，識別碼為 {{ param }}",
+      "updated": "識別碼為 {{ param }} 的 Nhi Accumulated Medical Record 更新成功",
+      "deleted": "識別碼為 {{ param }} 的 Nhi Accumulated Medical Record 刪除成功",
+      "delete": {
+        "question": "您確定要刪除 Nhi Accumulated Medical Record {{ id }} 嗎?"
+      },
+      "detail": {
+        "title": "Nhi Accumulated Medical Record"
+      },
+      "medicalCategory": "Medical Category",
+      "newbornMedicalTreatmentNote": "Newborn Medical Treatment Note",
+      "date": "Date",
+      "cardFillingNote": "Card Filling Note",
+      "seqNumber": "Seq Number",
+      "medicalInstitutionCode": "Medical Institution Code",
+      "patient": "Patient"
+    }
+  }
+}

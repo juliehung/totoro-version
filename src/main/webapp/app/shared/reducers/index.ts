@@ -185,6 +185,10 @@ import nhiMonthDeclarationDetails, {
 import docNp, {
   DocNpState
 } from 'app/entities/doc-np/doc-np.reducer';
+// prettier-ignore
+import nhiAccumulatedMedicalRecord, {
+  NhiAccumulatedMedicalRecordState
+} from 'app/entities/nhi-accumulated-medical-record/nhi-accumulated-medical-record.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -241,6 +245,7 @@ export interface IRootState {
   readonly nhiMonthDeclaration: NhiMonthDeclarationState;
   readonly nhiMonthDeclarationDetails: NhiMonthDeclarationDetailsState;
   readonly docNp: DocNpState;
+  readonly nhiAccumulatedMedicalRecord: NhiAccumulatedMedicalRecordState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -299,6 +304,7 @@ const rootReducer = combineReducers<IRootState>({
   nhiMonthDeclaration,
   nhiMonthDeclarationDetails,
   docNp,
+  nhiAccumulatedMedicalRecord,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

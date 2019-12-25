@@ -47,6 +47,7 @@ import RelationshipOptions from './relationship-options';
 import NhiMonthDeclaration from './nhi-month-declaration';
 import NhiMonthDeclarationDetails from './nhi-month-declaration-details';
 import DocNp from './doc-np';
+import NhiAccumulatedMedicalRecord from './nhi-accumulated-medical-record';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -96,6 +97,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/nhi-month-declaration`} component={NhiMonthDeclaration} />
       <ErrorBoundaryRoute path={`${match.url}/nhi-month-declaration-details`} component={NhiMonthDeclarationDetails} />
       <ErrorBoundaryRoute path={`${match.url}/doc-np`} component={DocNp} />
+      <ErrorBoundaryRoute path={`${match.url}/nhi-accumulated-medical-record`} component={NhiAccumulatedMedicalRecord} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>
