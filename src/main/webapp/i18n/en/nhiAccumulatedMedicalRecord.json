@@ -1,0 +1,27 @@
+{
+  "totoroApp": {
+    "nhiAccumulatedMedicalRecord": {
+      "home": {
+        "title": "Nhi Accumulated Medical Records",
+        "createLabel": "Create a new Nhi Accumulated Medical Record",
+        "createOrEditLabel": "Create or edit a Nhi Accumulated Medical Record"
+      },
+      "created": "A new Nhi Accumulated Medical Record is created with identifier {{ param }}",
+      "updated": "A Nhi Accumulated Medical Record is updated with identifier {{ param }}",
+      "deleted": "A Nhi Accumulated Medical Record is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Nhi Accumulated Medical Record {{ id }}?"
+      },
+      "detail": {
+        "title": "Nhi Accumulated Medical Record"
+      },
+      "medicalCategory": "Medical Category",
+      "newbornMedicalTreatmentNote": "Newborn Medical Treatment Note",
+      "date": "Date",
+      "cardFillingNote": "Card Filling Note",
+      "seqNumber": "Seq Number",
+      "medicalInstitutionCode": "Medical Institution Code",
+      "patient": "Patient"
+    }
+  }
+}

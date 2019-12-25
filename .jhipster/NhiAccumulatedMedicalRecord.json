@@ -1,0 +1,48 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "patient",
+            "otherEntityName": "patient",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "medicalCategory",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "newbornMedicalTreatmentNote",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "date",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "cardFillingNote",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "seqNumber",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "medicalInstitutionCode",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20191225042953",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "serviceClass",
+    "entityTableName": "nhi_accumulated_medical_record",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}
