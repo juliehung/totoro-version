@@ -1,7 +1,10 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.TotoroApp;
-import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendPatientRepository;

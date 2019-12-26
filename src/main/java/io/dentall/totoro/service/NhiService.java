@@ -49,6 +49,10 @@ public class NhiService {
 
     private static Map<String, Rule> rules;
 
+    private static Map<String, String> surfaceLimitMap = new HashMap();
+
+    private static Map<String, String> surfaceLimitErrorResponseMap = new HashMap();
+
     @Value("classpath:nhi_rule.csv")
     private Resource resourceFile;
 
@@ -58,6 +62,32 @@ public class NhiService {
     public NhiService(NhiExtendDisposalRepository nhiExtendDisposalRepository, NhiExtendPatientRepository nhiExtendPatientRepository) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
+
+        surfaceLimitMap.put("VALIDATED_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,FM,");
+        surfaceLimitMap.put("BLANK_ONLY", "");
+        surfaceLimitMap.put("FM_ONLY", "FM,");
+        surfaceLimitMap.put("TOOTH_AREA_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,");
+        surfaceLimitMap.put("TOOTH_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,");
+        surfaceLimitMap.put("DECIDUOUS_ONLY", "51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,");
+        surfaceLimitMap.put("PERMANENT_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,19,29,39,49,99,");
+        surfaceLimitMap.put("FRONT_ONLY", "11,12,13,21,22,23,31,32,33,41,42,43,51,52,53,61,62,63,71,72,73,81,82,83,19,29,39,49,99,");
+        surfaceLimitMap.put("BACK_ONLY", "14,15,16,17,18,24,25,26,27,28,34,35,36,37,38,44,45,46,47,48,54,55,64,65,74,75,84,85,19,29,39,49,99,");
+        surfaceLimitMap.put("PERMANENT_MOLAR_ONLY", "16,17,18,24,25,26,27,28,36,37,38,46,47,48,19,29,39,49,99,");
+        surfaceLimitMap.put("SPECIFIC_AREA_ONLY", "");
+        surfaceLimitMap.put("SPECIFIC_TOOTH_ONLY", "");
+
+        surfaceLimitErrorResponseMap.put("BLANK_ONLY", "不應填寫牙位");
+        surfaceLimitErrorResponseMap.put("VALIDATED_ONLY", "限填合法一般、區域、全域牙位");
+        surfaceLimitErrorResponseMap.put("FM_ONLY", "限填全域牙位");
+        surfaceLimitErrorResponseMap.put("TOOTH_ONLY", "限填一般牙位");
+        surfaceLimitErrorResponseMap.put("TOOTH_AREA_ONLY", "限填一般、區域牙位");
+        surfaceLimitErrorResponseMap.put("DECIDUOUS_ONLY", "限填乳牙牙位");
+        surfaceLimitErrorResponseMap.put("PERMANENT_ONLY", "限填恆牙牙位");
+        surfaceLimitErrorResponseMap.put("FRONT_ONLY", "限填前牙牙位");
+        surfaceLimitErrorResponseMap.put("BACK_ONLY", "限填後牙牙位");
+        surfaceLimitErrorResponseMap.put("PERMANENT_MOLAR_ONLY", "限填恆牙大臼齒牙位");
+        surfaceLimitErrorResponseMap.put("SPECIFIC_AREA_ONLY", "限填指定區域");
+        surfaceLimitErrorResponseMap.put("SPECIFIC_TOOTH_ONLY", "限填指定牙位");
     }
 
     @PostConstruct
@@ -86,11 +116,58 @@ public class NhiService {
                         .andThen(checkMedicalRecord)
                         .andThen(wrapCheckExclude)
                         .andThen(checkInterval)
+                        .andThen(checkSurfaceLimit)
                         .accept(nhiExtendTreatmentProcedure);
                 }
             });
         }
     }
+
+    public Consumer<NhiExtendTreatmentProcedure> checkSurfaceLimit = nhiExtendTreatmentProcedure -> {
+        String code = nhiExtendTreatmentProcedure.getA73();
+        String[] surfaceLimit = rules.get(code).getSurfaceLimit();
+        String limitType = surfaceLimit.length > 0 ?surfaceLimit[0] :"NO_SUCH_SURFACE_TYPE";
+        boolean checkFail = false;
+        String specificPosition = "";
+
+        switch (limitType) {
+            case "VALIDATED_ONLY":
+            case "FM_ONLY":
+            case "TOOTH_AREA_ONLY":
+            case "TOOTH_ONLY":
+            case "DECIDUOUS_ONLY":
+            case "PERMANENT_ONLY":
+            case "FRONT_ONLY":
+            case "BACK_ONLY":
+            case "PERMANENT_MOLAR_ONLY": {
+                checkFail = nhiExtendTreatmentProcedure.getTreatmentProcedure().getTeeth().stream()
+                    .anyMatch(tooth -> !surfaceLimitMap.get(limitType).contains(tooth.getPosition().concat(",")));
+                break;
+            }
+            case "BLANK_ONLY": {
+                checkFail = nhiExtendTreatmentProcedure.getTreatmentProcedure().getTeeth().size() > 0;
+                break;
+            }
+            case "SPECIFIC_TOOTH_ONLY":
+            case "SPECIFIC_AREA_ONLY": {
+                if (surfaceLimit.length < 2) {
+                    break;
+                }
+
+                String specificSurfaceLimit = surfaceLimit[1];
+                specificPosition = specificSurfaceLimit;
+                checkFail = nhiExtendTreatmentProcedure.getTreatmentProcedure().getTeeth().stream()
+                    .anyMatch(tooth -> !specificSurfaceLimit.contains(tooth.getPosition().concat(",")));
+                break;
+            }
+            default:
+                break;
+        }
+
+        if (checkFail) {
+            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + code + " " + surfaceLimitErrorResponseMap.get(limitType) + " " + specificPosition + "\n");
+        }
+    };
 
     public Consumer<NhiExtendTreatmentProcedure> checkXRay = nhiExtendTreatmentProcedure -> {
         String code = nhiExtendTreatmentProcedure.getA73();
@@ -472,11 +549,23 @@ public class NhiService {
         @Convert(conversionClass = Splitter.class, args = ",")
         private String[] fdi;
 
+        @Parsed(field = "surface_limit", defaultNullRead = "")
+        @Convert(conversionClass = Splitter.class, args = "=")
+        private String[] surfaceLimit;
+
         static Rule allPass() {
             Rule allPass = new Rule();
             allPass.setCode(null);
 
             return allPass;
+        }
+
+        public String[] getSurfaceLimit() {
+            return surfaceLimit;
+        }
+
+        public void setSurfaceLimit(String[] surfaceLimit) {
+            this.surfaceLimit = surfaceLimit;
         }
 
         public void setCode(String code) {
