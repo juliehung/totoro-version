@@ -5,6 +5,7 @@ import io.dentall.totoro.domain.Appointment;
 import io.dentall.totoro.service.AppointmentQueryService;
 import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.service.dto.AppointmentCriteria;
+import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -23,6 +24,7 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Appointment.
@@ -152,5 +154,16 @@ public class AppointmentResource {
         @RequestParam Instant endDate
     ) {
         return ResponseEntity.ok().body(appointmentService.findAppointmentBetween(beginDate, endDate));
+    }
+
+    @GetMapping("/appointments/with-relationship/between")
+    @Timed
+    public ResponseEntity<List<Appointment>> getAppointmentsWithRelationshipBetween(
+        @RequestParam Instant beginDate,
+        @RequestParam Instant endDate
+    ) {
+        return ResponseEntity.ok().body(appointmentService.findAppointmentWithRelationshipBetween(beginDate, endDate).stream()
+            .map(AppointmentSplitRelationshipDTO::getAppointment)
+            .collect(Collectors.toList()));
     }
 }
