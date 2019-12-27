@@ -1,7 +1,6 @@
 package io.dentall.totoro.scheduler;
 
 import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.handler.BroadcastWebSocket;
 import io.dentall.totoro.service.AppointmentQueryService;
 import io.dentall.totoro.service.BroadcastService;
 import io.dentall.totoro.service.dto.AppointmentCriteria;
@@ -52,7 +51,7 @@ public class BroadcastTasks {
         Instant start = OffsetDateTime.now().toZonedDateTime().with(LocalTime.MIN).toInstant();
         Instant end = OffsetDateTime.now().toInstant();
 
-        broadcastAppointments(start, end, notArrivedAppointments, BroadcastWebSocket.APPOINTMENT_NOT_ARRIVED);
+        broadcastAppointments(start, end, notArrivedAppointments, BroadcastService.APPOINTMENT_NOT_ARRIVED);
     }
 
     @Scheduled(initialDelayString = "${scheduler.initialDelay}", fixedDelayString = "${scheduler.fixedDelay}")
@@ -62,7 +61,7 @@ public class BroadcastTasks {
         Instant start = OffsetDateTime.now().toInstant();
         Instant end = OffsetDateTime.now().plusMinutes(comingSoon).toInstant();
 
-        broadcastAppointments(start, end, comingSoonAppointments, BroadcastWebSocket.APPOINTMENT_COMING_SOON);
+        broadcastAppointments(start, end, comingSoonAppointments, BroadcastService.APPOINTMENT_COMING_SOON);
     }
 
     private void broadcastAppointments(Instant start, Instant end, Set<Appointment> sentAppointments, String message) {

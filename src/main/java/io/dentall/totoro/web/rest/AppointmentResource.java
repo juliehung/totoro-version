@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.message.AppointmentSender;
 import io.dentall.totoro.service.AppointmentQueryService;
 import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.service.dto.AppointmentCriteria;
@@ -41,9 +42,16 @@ public class AppointmentResource {
 
     private final AppointmentQueryService appointmentQueryService;
 
-    public AppointmentResource(AppointmentService appointmentService, AppointmentQueryService appointmentQueryService) {
+    private final AppointmentSender appointmentMessageSender;
+
+    public AppointmentResource(
+        AppointmentService appointmentService,
+        AppointmentQueryService appointmentQueryService,
+        AppointmentSender appointmentMessageSender
+    ) {
         this.appointmentService = appointmentService;
         this.appointmentQueryService = appointmentQueryService;
+        this.appointmentMessageSender = appointmentMessageSender;
     }
 
     /**
@@ -60,7 +68,10 @@ public class AppointmentResource {
         if (appointment.getId() != null) {
             throw new BadRequestAlertException("A new appointment cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
         Appointment result = appointmentService.save(appointment);
+        appointmentMessageSender.send(result);
+
         return ResponseEntity.created(new URI("/api/appointments/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -84,6 +95,7 @@ public class AppointmentResource {
         }
 
         Appointment result = appointmentService.update(appointment);
+        appointmentMessageSender.send(result);
 
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
