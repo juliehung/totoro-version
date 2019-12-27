@@ -6,6 +6,8 @@ import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.ExtendUserRepository;
+import io.dentall.totoro.repository.dao.AppointmentDAO;
+import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;
 import org.slf4j.Logger;
@@ -238,5 +240,14 @@ public class AppointmentService {
                     return monthAppointmentVM;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<AppointmentSplitRelationshipDTO> findAppointmentWithRelationshipBetween(
+        Instant beginDate,
+        Instant endDate
+    ) {
+        return appointmentRepository.findAppointmentWithRelationshipBetween(beginDate, endDate).stream()
+            .map(AppointmentSplitRelationshipDTO::new)
+            .collect(Collectors.toList());
     }
 }
