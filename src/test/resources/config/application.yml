@@ -111,3 +111,8 @@ jhipster:
 # ===================================================================
 
 # application:
+
+queue:
+    appointment: totoro.appointmentQueue
+    patient: totoro.patientQueue
+    message: totoro.messageQueue

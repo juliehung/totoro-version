@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.message.AppointmentSender;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
@@ -109,10 +110,7 @@ public class AppointmentResourceIntTest {
     private PatientRepository patientRepository;
 
     @Autowired
-    private TreatmentProcedureRepository treatmentProcedureRepository;
-
-    @Autowired
-    private RegistrationRepository registrationRepository;
+    private AppointmentSender appointmentMessageSender;
 
     private MockMvc restAppointmentMockMvc;
 
@@ -121,7 +119,7 @@ public class AppointmentResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AppointmentResource appointmentResource = new AppointmentResource(appointmentService, appointmentQueryService);
+        final AppointmentResource appointmentResource = new AppointmentResource(appointmentService, appointmentQueryService, appointmentMessageSender);
         this.restAppointmentMockMvc = MockMvcBuilders.standaloneSetup(appointmentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -242,7 +240,7 @@ public class AppointmentResourceIntTest {
             .andExpect(jsonPath("$.[*].archived").value(hasItem(DEFAULT_ARCHIVED.booleanValue())))
             .andExpect(jsonPath("$.[*].contacted").value(hasItem(DEFAULT_CONTACTED.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getAppointment() throws Exception {

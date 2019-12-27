@@ -82,13 +82,13 @@ jhipster:
         max-pool-size: 50
         queue-capacity: 10000
     # By default CORS is disabled. Uncomment to enable.
-    #cors:
-        #allowed-origins: "*"
-        #allowed-methods: "*"
-        #allowed-headers: "*"
-        #exposed-headers: "Authorization,Link,X-Total-Count"
-        #allow-credentials: true
-        #max-age: 1800
+    cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+        allowed-headers: "*"
+        exposed-headers: "Authorization,Link,X-Total-Count"
+        allow-credentials: true
+        max-age: 1800
     mail:
         from: totoro@localhost
     swagger:
@@ -102,13 +102,6 @@ jhipster:
         contact-email:
         license:
         license-url:
-    cors:
-        allowed-origins: "*"
-        allowed-methods: "*"
-        allowed-headers: "*"
-        exposed-headers: "Authorization,Link,X-Total-Count"
-        allow-credentials: true
-        max-age: 1800
 
 logging:
     file: build/totoro.log
@@ -134,3 +127,16 @@ scheduler:
     appointment.comingSoon: 15
 
 zoneOffset: "+08:00"
+
+mqtt:
+    automaticReconnect: true
+    cleanSession: true
+    connectionTimeout: 10
+    clientId: totoro-MQTT
+    hostname: 127.0.0.1
+    port: 1883
+
+queue:
+    appointment: totoro.appointmentQueue
+    patient: totoro.patientQueue
+    message: totoro.messageQueue
