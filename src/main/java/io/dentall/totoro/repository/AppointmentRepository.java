@@ -96,11 +96,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "registration.type, " +
             "registration.onSite, " +
             "registration.noCard, " +
-            "doctor.id, " +
-            "doctor.firstLogin, " +
-            "doctor.gmail, " +
-            "doctor.calendarId, " +
-            "doctor.nationalId " +
+            "doctor" +
             ") " +
             "from Appointment as appointment " +
                 "left join appointment.patient as patient " +

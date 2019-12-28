@@ -1,5 +1,6 @@
 package io.dentall.totoro.repository.dao;
 
+import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 import io.dentall.totoro.domain.enumeration.Blood;
 import io.dentall.totoro.domain.enumeration.Gender;
@@ -57,11 +58,7 @@ public class AppointmentDAO {
     private final Boolean onSite;
     private final Boolean noCard;
     // Doctor
-    private final Long docId;
-    private final Boolean firstLogin;
-    private final String gmail;
-    private final String calendarId;
-    private final String docNationalId;
+    private final ExtendUser doctor;
 
     public AppointmentDAO(
         Long id,
@@ -108,11 +105,7 @@ public class AppointmentDAO {
         String type,
         Boolean onSite,
         Boolean noCard,
-        Long docId,
-        Boolean firstLogin,
-        String gmail,
-        String calendarId,
-        String docNationalId
+        ExtendUser doctor
     ) {
         this.id = id;
         this.status = status;
@@ -158,11 +151,7 @@ public class AppointmentDAO {
         this.type = type;
         this.onSite = onSite;
         this.noCard = noCard;
-        this.docId = docId;
-        this.firstLogin = firstLogin;
-        this.gmail = gmail;
-        this.calendarId = calendarId;
-        this.docNationalId = docNationalId;
+        this.doctor = doctor;
     }
 
     public Long getId() {
@@ -341,23 +330,7 @@ public class AppointmentDAO {
         return noCard;
     }
 
-    public Long getDocId() {
-        return docId;
-    }
-
-    public Boolean getFirstLogin() {
-        return firstLogin;
-    }
-
-    public String getGmail() {
-        return gmail;
-    }
-
-    public String getCalendarId() {
-        return calendarId;
-    }
-
-    public String getDocNationalId() {
-        return docNationalId;
+    public ExtendUser getDoctor() {
+        return doctor;
     }
 }
