@@ -11,13 +11,6 @@ public class AppointmentSplitRelationshipDTO {
     private final Appointment appointment;
 
     public AppointmentSplitRelationshipDTO(AppointmentDAO appointmentDAO) {
-        ExtendUser doc = new ExtendUser()
-            .firstLogin(appointmentDAO.getFirstLogin())
-            .nationalId(appointmentDAO.getNationalId());
-        doc.setCalendarId(appointmentDAO.getCalendarId());
-        doc.setGmail(appointmentDAO.getGmail());
-        doc.setId(appointmentDAO.getDocId());
-
         Registration registration = new Registration()
             .status(appointmentDAO.getRegistrationStatus())
             .arrivalTime(appointmentDAO.getArrivalTime())
@@ -69,7 +62,7 @@ public class AppointmentSplitRelationshipDTO {
         appointment.setId(appointmentDAO.getId());
         appointment.setPatient(patient);
         appointment.setRegistration(registration);
-        appointment.setDoctor(doc);
+        appointment.setDoctor(appointmentDAO.getDoctor());
 
         this.appointment = appointment;
     }
