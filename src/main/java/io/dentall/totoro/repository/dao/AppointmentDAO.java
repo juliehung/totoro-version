@@ -59,6 +59,8 @@ public class AppointmentDAO {
     private final Boolean noCard;
     // Doctor
     private final ExtendUser doctor;
+    // Disposal
+    private final Long disposalId;
 
     public AppointmentDAO(
         Long id,
@@ -105,8 +107,8 @@ public class AppointmentDAO {
         String type,
         Boolean onSite,
         Boolean noCard,
-        ExtendUser doctor
-    ) {
+        ExtendUser doctor,
+        Long disposalId) {
         this.id = id;
         this.status = status;
         this.subject = subject;
@@ -152,6 +154,7 @@ public class AppointmentDAO {
         this.onSite = onSite;
         this.noCard = noCard;
         this.doctor = doctor;
+        this.disposalId = disposalId;
     }
 
     public Long getId() {
@@ -332,5 +335,9 @@ public class AppointmentDAO {
 
     public ExtendUser getDoctor() {
         return doctor;
+    }
+
+    public Long getDisposalId() {
+        return disposalId;
     }
 }

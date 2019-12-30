@@ -96,12 +96,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "registration.type, " +
             "registration.onSite, " +
             "registration.noCard, " +
-            "doctor" +
+            "doctor," +
+            "disposal.id" +
             ") " +
             "from Appointment as appointment " +
                 "left join appointment.patient as patient " +
                 "left join appointment.registration as registration " +
                 "left join appointment.doctor as doctor " +
+                "left join appointment.registration.disposal as disposal " +
             "where appointment.expectedArrivalTime between :beginDate and :endDate ")
     List<AppointmentDAO> findAppointmentWithRelationshipBetween(@Param("beginDate") Instant beginDate, @Param("endDate") Instant endDate);
 }
