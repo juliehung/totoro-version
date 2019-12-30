@@ -1,9 +1,6 @@
 package io.dentall.totoro.service.dto;
 
-import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.ExtendUser;
-import io.dentall.totoro.domain.Patient;
-import io.dentall.totoro.domain.Registration;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.dao.AppointmentDAO;
 
 public class AppointmentSplitRelationshipDTO {
@@ -11,6 +8,9 @@ public class AppointmentSplitRelationshipDTO {
     private final Appointment appointment;
 
     public AppointmentSplitRelationshipDTO(AppointmentDAO appointmentDAO) {
+        Disposal disposal = new Disposal();
+        disposal.setId(appointmentDAO.getDisposalId());
+
         Registration registration = new Registration()
             .status(appointmentDAO.getRegistrationStatus())
             .arrivalTime(appointmentDAO.getArrivalTime())
@@ -18,6 +18,7 @@ public class AppointmentSplitRelationshipDTO {
             .onSite(appointmentDAO.getOnSite())
             .noCard(appointmentDAO.getNoCard());
         registration.setId(appointmentDAO.getRegistrationId());
+        registration.setDisposal(disposal);
 
         Patient patient = new Patient()
             .name(appointmentDAO.getName())
