@@ -33,13 +33,25 @@ function Name(props) {
     props.changeName(e.target.value);
   };
 
+  const onPressEnter = () => {
+    if (props.name && props.name.length !== 0) {
+      props.nextPage();
+    }
+  };
+
   return (
     <Container>
       <div>
         <StyleIcon type="right-circle" theme="twoTone" />
         <span>姓名*</span>
       </div>
-      <TransparentInput size="large" placeholder="請在此鍵入答案" onChange={onInputChange} value={props.name} />
+      <TransparentInput
+        size="large"
+        placeholder="請在此鍵入答案"
+        onChange={onInputChange}
+        value={props.name}
+        onPressEnter={onPressEnter}
+      />
       <ConfirmButton nextPage={props.nextPage} disabled={!props.name || props.name.length === 0} />
     </Container>
   );

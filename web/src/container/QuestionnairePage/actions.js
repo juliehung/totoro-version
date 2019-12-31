@@ -25,6 +25,13 @@ import {
   CHANGE_BIRTH,
   CHANGE_NATIONAL_ID,
   CHANGE_PHONE,
+  CHANGE_ADDRESS,
+  CHANGE_INTRODUCER,
+  CHANGE_EMERGENCY_NAME,
+  CHANGE_EMERGENCY_PHONE,
+  CHANGE_DRUG_A,
+  CHANGE_PREGANT_A,
+  CHANGE_SMOKING_A,
 } from './constant';
 
 export function nextPage() {
@@ -129,4 +136,32 @@ export function changeNationalId(id) {
 
 export function changePhone(phone) {
   return { type: CHANGE_PHONE, phone };
+}
+
+export function changeAddress(address) {
+  return { type: CHANGE_ADDRESS, address };
+}
+
+export function changeIntroducer(name) {
+  return { type: CHANGE_INTRODUCER, name };
+}
+
+export function changeEmergencyName(name) {
+  return { type: CHANGE_EMERGENCY_NAME, name };
+}
+
+export function changeEmergencyPhone(phone) {
+  return { type: CHANGE_EMERGENCY_PHONE, phone };
+}
+
+export function changeDrug(drug) {
+  return { type: CHANGE_DRUG_A, drug };
+}
+
+export function changePregnantDate(date) {
+  return { type: CHANGE_PREGANT_A, date };
+}
+
+export function changeSmokingAmount(amount) {
+  return { type: CHANGE_SMOKING_A, amount };
 }

@@ -25,7 +25,13 @@ function Birth(props) {
         <StyleIcon type="right-circle" theme="twoTone" />
         <span>生日*</span>
       </div>
-      <StyledDatePicker size="large" placeholder="請選擇生日" value={props.birth} onChange={props.changeBirth} />
+      <StyledDatePicker
+        size="large"
+        placeholder="請選擇生日"
+        value={props.birth}
+        onChange={props.changeBirth}
+        readOnly
+      />
       <br />
       <ConfirmButton nextPage={props.nextPage} disabled={!props.birth} />
     </Container>

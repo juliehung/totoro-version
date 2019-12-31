@@ -22,6 +22,7 @@ import { withRouter } from 'react-router-dom';
 import Background from '../../images/questionnaire_bg.svg';
 
 const Container = styled.div`
+  position: fixed;
   height: 100vh;
   width: 100vw;
   display: flex;
