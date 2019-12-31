@@ -72,6 +72,8 @@ public class NhiService {
         surfaceLimitMap.put("PERMANENT_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,19,29,39,49,99,");
         surfaceLimitMap.put("FRONT_ONLY", "11,12,13,21,22,23,31,32,33,41,42,43,51,52,53,61,62,63,71,72,73,81,82,83,19,29,39,49,99,");
         surfaceLimitMap.put("BACK_ONLY", "14,15,16,17,18,24,25,26,27,28,34,35,36,37,38,44,45,46,47,48,54,55,64,65,74,75,84,85,19,29,39,49,99,");
+        surfaceLimitMap.put("PERMANENT_FRONT_ONLY", "11,12,13,21,22,23,31,32,33,41,42,43,19,29,39,49,99,");
+        surfaceLimitMap.put("PERMANENT_BACK_ONLY", "14,15,16,17,18,24,25,26,27,28,34,35,36,37,38,44,45,46,47,48,19,29,39,49,99,");
         surfaceLimitMap.put("PERMANENT_MOLAR_ONLY", "16,17,18,24,25,26,27,28,36,37,38,46,47,48,19,29,39,49,99,");
         surfaceLimitMap.put("SPECIFIC_AREA_ONLY", "");
         surfaceLimitMap.put("SPECIFIC_TOOTH_ONLY", "");
