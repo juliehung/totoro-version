@@ -1,17 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import { getRegistrations, updateSelectedDate } from './actions';
-import { Button, DatePicker, Empty, Icon, Table, Tooltip, Typography } from 'antd';
+import { Button, DatePicker, Empty, Icon, Select, Table, Tooltip, Typography } from 'antd';
 import ManPng from '../../static/images/man.png';
 import WomanPng from '../../static/images/woman.png';
 import DefaultPng from '../../static/images/default.png';
 import styled from "styled-components";
 import moment from "moment";
 import { Helmet } from "react-helmet-async";
+import { getUsersStart } from '../AppointmentPage/actions';
 import { B1, G1, Gray700 } from '../../utils/colors';
 
 const { Title } = Typography;
+const { Option } = Select;
 
 const Container = styled.div`
   display: flex;
@@ -49,7 +51,7 @@ const StyledTitle = styled(Title)`
   margin: 0 !important;
 `;
 const StyledIcon = styled(Icon)`
-  font-size: 24px;
+  font-size: 36px;
 `;
 const StyledDatePicker = styled(DatePicker)`
   margin-top: 5px;
@@ -106,8 +108,16 @@ const columns = [
     { title: '治療事項', dataIndex: 'subject', key: 'subject', ellipsis: true, width: 200 },
 ];
 
+const allDoctors = "THESE_ARE_ALL_DOCTORS";
+
 function RegistrationPage(props) {
-    const { getRegistrations, updateSelectedDate } = props;
+    const { getRegistrations, updateSelectedDate, getUsersStart } = props;
+
+    const [selectedDoctor, setSelectedDoctor] = useState();
+
+    useEffect(() => {
+        getUsersStart();
+    }, [getUsersStart]);
 
     useEffect(() => {
         // TODO: find a better way to fetch first time
@@ -170,10 +180,26 @@ function RegistrationPage(props) {
         );
     };
 
+    const renderDoctorSelect = () => {
+      if (props.doctors) {
+        const options = props.doctors.map(doctor => {
+            return <Option key={doctor.id} value={doctor.login}>{doctor.name}</Option>;
+        });
+        options.unshift(<Option key={-1} value={allDoctors}>全診所醫師</Option>);
+        return <Select defaultValue={allDoctors} style={{ width: 120 }} onChange={onDoctorChange}>{options}</Select>;
+      }
+    };
+
     const convertToTableSource = registrations => {
         const tableSource = registrations
           // Don't show cancel appointment and no registration
           .filter(appt => appt.status !== 'CANCEL' && appt.registration.id)
+          .filter(appt => {
+              if (!selectedDoctor || !appt.doctor.user || selectedDoctor === allDoctors) {
+                  return true;
+              }
+              return (appt.doctor.user.login === selectedDoctor);
+          })
           .slice()
           .sort((a, b) => moment(a.registration.arrivalTime).unix() - moment(b.registration.arrivalTime).unix());
 
@@ -202,6 +228,11 @@ function RegistrationPage(props) {
         }
     };
 
+    const onDoctorChange = doctor => {
+        console.log(`selected ${doctor}`);
+        setSelectedDoctor(doctor);
+    };
+
     const moveDate = days => () => {
         const date = props.selectedDate.clone().add(days, 'day');
         onDatePickerChange(date);
@@ -218,6 +249,8 @@ function RegistrationPage(props) {
               <StyledIcon type="caret-left" onClick={moveDate(-1)} />
               <StyledDatePicker onChange={onDatePickerChange} value={props.selectedDate} />
               <StyledIcon type="caret-right" onClick={moveDate(1)} />
+              {withMargin(10)}
+              {renderDoctorSelect()}
           </DatePickerContainer>
           <StyledTable
             columns={columns}
@@ -232,15 +265,17 @@ function RegistrationPage(props) {
     );
 }
 
-const mapStateToProps = ({ registrationPageReducer }) => ({
+const mapStateToProps = ({ registrationPageReducer, appointmentPageReducer }) => ({
     registrations: registrationPageReducer.registration.registrations,
     loading: registrationPageReducer.registration.loading,
     selectedDate: registrationPageReducer.registration.selectedDate,
+    doctors: appointmentPageReducer.calendar.doctors,
 });
 
 const mapDispatchToProps = {
     getRegistrations,
     updateSelectedDate,
+    getUsersStart,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegistrationPage);

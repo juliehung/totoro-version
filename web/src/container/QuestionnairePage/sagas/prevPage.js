@@ -5,7 +5,7 @@ export function* prevPage() {
   while (true) {
     try {
       yield take(PREV_PAGE);
-      yield delay(0);
+      yield delay(300);
       yield put({ type: PREV_PAGE_DELAY });
     } catch (error) {}
   }

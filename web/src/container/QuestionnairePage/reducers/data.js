@@ -16,21 +16,34 @@ import {
   CHANGE_BIRTH,
   CHANGE_NATIONAL_ID,
   CHANGE_PHONE,
+  CHANGE_ADDRESS,
+  CHANGE_INTRODUCER,
+  CHANGE_EMERGENCY_NAME,
+  CHANGE_EMERGENCY_PHONE,
+  CHANGE_DRUG_A,
+  CHANGE_PREGANT_A,
+  CHANGE_SMOKING_A,
 } from '../constant';
 
 const initState = {
   name: '',
   birth: undefined,
   gender: undefined,
-  nationalId: '',
+  nationalId: undefined,
   bloodType: undefined,
+  phone: undefined,
+  address: undefined,
   career: undefined,
   marriage: undefined,
+  introducer: undefined,
   disease: [],
   allergy: [],
   doDrug: undefined,
+  drug: undefined,
   pregnant: undefined,
+  pregnantDate: undefined,
   smoking: undefined,
+  smokingAmount: undefined,
   other: [],
   emergencyContact: { name: undefined, phone: undefined, relationship: undefined },
 };
@@ -85,6 +98,27 @@ const data = (state = initialState, action) =>
         break;
       case CHANGE_PHONE:
         draft.phone = action.phone;
+        break;
+      case CHANGE_ADDRESS:
+        draft.address = action.address;
+        break;
+      case CHANGE_INTRODUCER:
+        draft.introducer = action.name;
+        break;
+      case CHANGE_EMERGENCY_NAME:
+        draft.emergencyContact.name = action.name;
+        break;
+      case CHANGE_EMERGENCY_PHONE:
+        draft.emergencyContact.phone = action.phone;
+        break;
+      case CHANGE_DRUG_A:
+        draft.drug = action.drug;
+        break;
+      case CHANGE_PREGANT_A:
+        draft.pregnantDate = action.date;
+        break;
+      case CHANGE_SMOKING_A:
+        draft.smokingAmount = action.amount;
         break;
       default:
         break;

@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { nextPage, prevPage } from '../actions';
+import { gotoPage, changePregnantDate } from '../actions';
 import { Icon, DatePicker } from 'antd';
 import { Container } from './Name';
+import ConfirmButton from './ConfirmButton';
 
 //#region
 const StyleIcon = styled(Icon)`
@@ -11,24 +12,37 @@ const StyleIcon = styled(Icon)`
 `;
 
 const StyledDatePicker = styled(DatePicker)`
-  margin-top: 20px !important;
+  margin: 20px 0 !important;
 `;
 //#endregion
 
-function PregnantA() {
+function PregnantA(props) {
   return (
     <Container>
       <div>
         <StyleIcon type="right-circle" theme="twoTone" />
         <span>預產期</span>
       </div>
-      <StyledDatePicker size="large" placeholder="請選擇生日" />
+      <StyledDatePicker
+        size="large"
+        placeholder="請選擇生日"
+        readOnly
+        onChange={props.changePregnantDate}
+        value={props.date}
+      />
+      <br />
+      <ConfirmButton
+        nextPage={() => {
+          props.gotoPage(19);
+        }}
+        disabled={!props.date}
+      />
     </Container>
   );
 }
 
-const mapStateToProps = state => ({ page: state.questionnairePageReducer.flow.page });
+const mapStateToProps = state => ({ date: state.questionnairePageReducer.data.pregnantDate });
 
-const mapDispatchToProps = { nextPage, prevPage };
+const mapDispatchToProps = { gotoPage, changePregnantDate };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PregnantA);

@@ -19,13 +19,25 @@ function Phone(props) {
     props.changePhone(e.target.value);
   };
 
+  const onPressEnter = () => {
+    if (props.phone && props.phone.length !== 0) {
+      props.nextPage();
+    }
+  };
+
   return (
     <Container>
       <div>
         <StyleIcon type="right-circle" theme="twoTone" />
         <span>聯絡電話*</span>
       </div>
-      <TransparentInput size="large" placeholder="請在此鍵入答案" onChange={onInputChange} value={props.phone} />
+      <TransparentInput
+        size="large"
+        placeholder="請在此鍵入答案"
+        onChange={onInputChange}
+        value={props.phone}
+        onPressEnter={onPressEnter}
+      />
       <ConfirmButton nextPage={props.nextPage} disabled={!props.phone || props.phone.length === 0} />
     </Container>
   );
