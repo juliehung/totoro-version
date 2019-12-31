@@ -2,7 +2,7 @@ import produce from 'immer';
 import { NEXT_PAGE, NEXT_PAGE_DELAY, PREV_PAGE, PREV_PAGE_DELAY, GOTO_PAGE, GOTO_PAGE_DELAY } from '../constant';
 
 const initState = {
-  page: 12,
+  page: 1,
   reverse: false,
 };
 

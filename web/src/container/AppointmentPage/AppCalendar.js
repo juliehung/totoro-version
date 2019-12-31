@@ -145,14 +145,14 @@ class AppCalendar extends React.Component {
     calendarApi.prev();
   };
 
-  nextYearClick = () => {
+  nextMonthClick = () => {
     let calendarApi = this.calendarComponentRef.current.getApi();
-    calendarApi.nextYear();
+    this.props.changeCalDate(moment(calendarApi.getDate()).add(1, 'month'));
   };
 
-  prevYearClick = () => {
+  prevMonthClick = () => {
     let calendarApi = this.calendarComponentRef.current.getApi();
-    calendarApi.prevYear();
+    this.props.changeCalDate(moment(calendarApi.getDate()).add(-1, 'month'));
   };
 
   todayClick = () => {
@@ -255,7 +255,7 @@ class AppCalendar extends React.Component {
         events={event}
         plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin, resourceTimeGridPlugin, listPlugin, momentPlugin]}
         header={{
-          left: 'customPrevYearButton,customPrevButton,customNextButton,customNextYearButton, customToday',
+          left: 'customPrevMonthButton,customPrevButton,customNextButton,customNextMonthButton, customToday',
           center: 'title',
           right: 'resourceTimeGridDay,timeGridWeek,dayGridMonth,listWeek',
         }}
@@ -268,12 +268,12 @@ class AppCalendar extends React.Component {
             click: this.prevClick,
             icon: 'chevron-left',
           },
-          customPrevYearButton: {
-            click: this.prevYearClick,
+          customPrevMonthButton: {
+            click: this.prevMonthClick,
             icon: 'chevrons-left',
           },
-          customNextYearButton: {
-            click: this.nextYearClick,
+          customNextMonthButton: {
+            click: this.nextMonthClick,
             icon: 'chevrons-right',
           },
           customToday: {
