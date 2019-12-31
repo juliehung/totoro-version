@@ -104,6 +104,8 @@ public class NhiServiceIntTest {
     @Transactional
     public void testCheckIntervalLessOrEqualThan() {
         LocalDate dateBefore100 = DateTimeUtil.getGreaterThanEqualDate.apply(100);
+        LocalDate dateBefore20 = DateTimeUtil.getGreaterThanEqualDate.apply(20);
+        //tx 1
         TreatmentProcedure treatmentProcedureDateBefore100 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalDateBefore100 = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
@@ -119,6 +121,22 @@ public class NhiServiceIntTest {
             )
             .a73("LessOrEqualThan180")
             .check("");
+
+        // tx2
+        TreatmentProcedure treatment2ProcedureDateBefore20 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
+        NhiExtendDisposal nhiExtDisposal2DateBefore20 = new NhiExtendDisposal()
+            .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
+            .a17(dateBefore20.getYear() - 1911 + monthFormatter.format(dateBefore20) + dayFormatter.format(dateBefore20))
+            .patientId(1L)
+            .nhiExtendTreatmentProcedures(Collections.singleton(
+                new NhiExtendTreatmentProcedure()
+                    .a73("LessOrEqualThan180")
+                    .treatmentProcedure(treatment2ProcedureDateBefore20)
+                )
+            );
+
+        nhiExtendDisposalService.save(nhiExtDisposal2DateBefore20);
+
         nhiService.checkInterval.accept(lessOrEqualThan180);
         assertThat(lessOrEqualThan180.getCheck()).isEqualTo(lessOrEqualThan180.getA73() + " 180 天內不得重複申報 1 次\n");
     }
@@ -297,6 +315,7 @@ public class NhiServiceIntTest {
     @Transactional
     public void testCheckIntervalLessOrEqualThanWithIdentity() {
         LocalDate dateBefore20 = DateTimeUtil.getGreaterThanEqualDate.apply(20);
+        // Tx 1
         TreatmentProcedure treatmentProcedureDateBefore20 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalDateBefore20 = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
@@ -309,6 +328,20 @@ public class NhiServiceIntTest {
                 )
             );
         nhiExtendDisposalService.save(nhiExtDisposalDateBefore20);
+
+        // tx2
+        TreatmentProcedure treatment2ProcedureDateBefore20 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
+        NhiExtendDisposal nhiExtDisposal2DateBefore20 = new NhiExtendDisposal()
+            .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
+            .a17(dateBefore20.getYear() - 1911 + monthFormatter.format(dateBefore20) + dayFormatter.format(dateBefore20))
+            .patientId(1L)
+            .nhiExtendTreatmentProcedures(Collections.singleton(
+                new NhiExtendTreatmentProcedure()
+                    .a73("SevereIdentity")
+                    .treatmentProcedure(treatment2ProcedureDateBefore20)
+                )
+            );
+        nhiExtendDisposalService.save(nhiExtDisposal2DateBefore20);
 
         NhiExtendTreatmentProcedure severeIdentity = new NhiExtendTreatmentProcedure()
             .nhiExtendDisposal(new NhiExtendDisposal()
@@ -326,6 +359,7 @@ public class NhiServiceIntTest {
     @Transactional
     public void testCheckIntervalLessOrEqualThanWithConjunction() {
         LocalDate dateBefore20 = DateTimeUtil.getGreaterThanEqualDate.apply(20);
+        // tx1
         TreatmentProcedure treatmentProcedureDateBefore20 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalDateBefore20 = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
@@ -338,6 +372,20 @@ public class NhiServiceIntTest {
                 )
             );
         nhiExtendDisposalService.save(nhiExtDisposalDateBefore20);
+
+        // tx2
+        TreatmentProcedure treatment2ProcedureDateBefore20 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
+        NhiExtendDisposal nhiExtDisposal2DateBefore20 = new NhiExtendDisposal()
+            .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
+            .a17(dateBefore20.getYear() - 1911 + monthFormatter.format(dateBefore20) + dayFormatter.format(dateBefore20))
+            .patientId(1L)
+            .nhiExtendTreatmentProcedures(Collections.singleton(
+                new NhiExtendTreatmentProcedure()
+                    .a73("LessOrEqualThanConjunction")
+                    .treatmentProcedure(treatment2ProcedureDateBefore20)
+                )
+            );
+        nhiExtendDisposalService.save(nhiExtDisposal2DateBefore20);
 
         NhiExtendTreatmentProcedure lessOrEqualThanConjunction = new NhiExtendTreatmentProcedure()
             .nhiExtendDisposal(new NhiExtendDisposal()
@@ -354,6 +402,8 @@ public class NhiServiceIntTest {
     @Transactional
     public void testCheckIntervalLessOrEqualThanWithDisjunction() {
         LocalDate dateBefore20 = DateTimeUtil.getGreaterThanEqualDate.apply(20);
+        LocalDate dateBefore10 = DateTimeUtil.getGreaterThanEqualDate.apply(10);
+        // tx1
         TreatmentProcedure treatmentProcedureDateBefore20 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalDateBefore20 = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
@@ -366,6 +416,20 @@ public class NhiServiceIntTest {
                 )
             );
         nhiExtendDisposalService.save(nhiExtDisposalDateBefore20);
+
+        // tx2
+        TreatmentProcedure treatmentProcedureDateBefore10 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
+        NhiExtendDisposal nhiExtDisposalDateBefore10 = new NhiExtendDisposal()
+            .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
+            .a17(dateBefore20.getYear() - 1911 + monthFormatter.format(dateBefore10) + dayFormatter.format(dateBefore10))
+            .patientId(1L)
+            .nhiExtendTreatmentProcedures(Collections.singleton(
+                new NhiExtendTreatmentProcedure()
+                    .a73("LessOrEqualThanDisjunction")
+                    .treatmentProcedure(treatmentProcedureDateBefore10)
+                )
+            );
+        nhiExtendDisposalService.save(nhiExtDisposalDateBefore10);
 
         NhiExtendTreatmentProcedure lessOrEqualThanDisjunction = new NhiExtendTreatmentProcedure()
             .nhiExtendDisposal(new NhiExtendDisposal()

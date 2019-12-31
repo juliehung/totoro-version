@@ -297,7 +297,8 @@ public class NhiService {
 
         if (conditions == null) {
             StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
-            if (nhiExtTxPs.size() >= times) {
+            // 由於當前資料會包含 當天 資料，所以扣掉 1 (當天治療)
+            if (nhiExtTxPs.size() - 1 >= times) {
                 StreamUtil.asStream(nhiExtTxPs).findFirst().ifPresent(first ->
                     // {健保代碼} {天數} 內不得重複申報 {次數} 次
                     check
