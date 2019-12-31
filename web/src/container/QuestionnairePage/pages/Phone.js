@@ -1,0 +1,38 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+import { nextPage, changePhone } from '../actions';
+import { Icon } from 'antd';
+import { Container } from './Name';
+import { TransparentInput } from './Name';
+import ConfirmButton from './ConfirmButton';
+
+//#region
+
+const StyleIcon = styled(Icon)`
+  margin-right: 10px;
+`;
+//#endregion
+
+function Phone(props) {
+  const onInputChange = e => {
+    props.changePhone(e.target.value);
+  };
+
+  return (
+    <Container>
+      <div>
+        <StyleIcon type="right-circle" theme="twoTone" />
+        <span>聯絡電話*</span>
+      </div>
+      <TransparentInput size="large" placeholder="請在此鍵入答案" onChange={onInputChange} value={props.phone} />
+      <ConfirmButton nextPage={props.nextPage} disabled={!props.phone || props.phone.length === 0} />
+    </Container>
+  );
+}
+
+const mapStateToProps = state => ({ phone: state.questionnairePageReducer.data.phone });
+
+const mapDispatchToProps = { nextPage, changePhone };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Phone);

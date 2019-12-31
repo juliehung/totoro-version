@@ -1,0 +1,42 @@
+.page {
+  left: 15px;
+  right: 15px;
+}
+
+.item-enter {
+  height: 0;
+  transform: translateY(100vh);
+}
+
+.item-enter-active {
+  transform: translateY(0);
+  transition: all 500ms ease-in;
+}
+
+.item-reverse-enter {
+  height: 0;
+  transform: translateY(-100vh);
+}
+
+.item-reverse-enter-active {
+  transform: translateY(0);
+  transition: all 500ms ease-in;
+}
+
+.item-exit {
+  transform: translateY(0);
+}
+
+.item-exit-active {
+  transform: translateY(-100vh);
+  transition: all 500ms ease-in;
+}
+
+.item-reverse-exit {
+  transform: translateY(0);
+}
+
+.item-reverse-exit-active {
+  transform: translateY(100vh);
+  transition: all 500ms ease-in;
+}
