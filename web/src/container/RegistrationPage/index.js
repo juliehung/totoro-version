@@ -147,7 +147,7 @@ function RegistrationPage(props) {
       } catch (e) {
         // ignored
       }
-      if (messageObj && !messageObj.registration) {
+      if (!messageObj || !messageObj.registration) {
         return;
       }
 
@@ -267,8 +267,14 @@ function RegistrationPage(props) {
   };
 
   const onDoctorChange = doctor => {
-    console.log(`selected ${doctor}`);
     setSelectedDoctor(doctor);
+  };
+
+  const onExpand = (expanded, record) => {
+    if (expanded) {
+
+    }
+    console.log(expanded, record);
   };
 
   const moveDate = days => () => {
@@ -297,6 +303,7 @@ function RegistrationPage(props) {
         loading={props.loading}
         locale={{ emptyText: <Empty description="無掛號" /> }}
         expandedRowRender={row => renderExpandedRow(row.patient)}
+        onExpand={onExpand}
         dataSource={convertToTableSource(props.registrations)}
       />
     </Container>

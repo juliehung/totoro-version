@@ -4,15 +4,15 @@ import { getRegistrationsSuccess } from '../actions';
 import registration from '../../../models/registration';
 
 export function* getRegistrations({ range }) {
-    try {
-        const result = yield call(registration.getBetween, range);
-        yield put(getRegistrationsSuccess(result));
-    } catch (err) {
-        //  ignore
-        console.log(err);
-    }
+  try {
+    const result = yield call(registration.getBetween, range);
+    yield put(getRegistrationsSuccess(result));
+  } catch (err) {
+    //  ignore
+    console.log(err);
+  }
 }
 
 export function* watchGetRegistrations() {
-    yield takeLatest(GET_REGISTRATIONS_START, getRegistrations);
+  yield takeLatest(GET_REGISTRATIONS_START, getRegistrations);
 }
