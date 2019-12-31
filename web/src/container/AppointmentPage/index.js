@@ -11,7 +11,6 @@ import { getUsersStart } from './actions';
 import CreateCalendarEventModal from './CreateCalendarEventModal';
 import EditCalendarEventModal from './EditCalendarEventModal';
 import { Helmet } from 'react-helmet-async';
-// import MqttHelper from '../../utils/mqtt';
 
 const Container = styled.div`
   height: 100vh;
@@ -23,17 +22,6 @@ const CalendarContainer = styled.div`
 `;
 
 function AppointmentPage({ getUsersStart }) {
-  // useEffect(() => {
-  //   MqttHelper.subscribeAppointment(AppointmentPage.name, message => {
-  //     console.log(message);
-  //     // TODO: update appointments
-  //   });
-
-  //   return () => {
-  //     MqttHelper.unsubscribeAppointment(AppointmentPage.name);
-  //   };
-  // }, []);
-
   useEffect(() => {
     getUsersStart();
   }, [getUsersStart]);

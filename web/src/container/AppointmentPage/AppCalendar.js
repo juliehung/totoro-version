@@ -39,6 +39,7 @@ import styled from 'styled-components';
 import { handleEventRender } from './utils/handleEventRender';
 import { convertSettingsToClinicOffEvent } from './utils/convertSettingsToClinicOffEvent';
 import { message } from 'antd';
+import MqttHelper from '../../utils/mqtt';
 
 //#region
 const StyledFullCalendar = styled(FullCalendar)`
@@ -66,6 +67,22 @@ class AppCalendar extends React.Component {
     // XD just delete the message
     const msg = document.querySelector('.fc-license-message');
     msg.parentNode.removeChild(msg);
+
+    MqttHelper.subscribeAppointment(AppCalendar.name, message => {
+      let messageObj;
+      try {
+        messageObj = JSON.parse(message);
+      } catch (e) {
+        return;
+      }
+
+      const { start, end } = this.props.calendarRange;
+      const expectedArrivalTime = moment(messageObj.expectedArrivalTime);
+      if (expectedArrivalTime.isBetween(start, end)) {
+        // TODO: find a better way to update appointments
+        this.props.getAllEvents();
+      }
+    });
   }
 
   generalSetting = [];
@@ -88,6 +105,10 @@ class AppCalendar extends React.Component {
       message.success('編輯預約成功');
       this.props.getAllEvents();
     }
+  }
+
+  componentWillUnmount() {
+    MqttHelper.unsubscribeAppointment(AppCalendar.name);
   }
 
   simulateMouseClick = element => {
