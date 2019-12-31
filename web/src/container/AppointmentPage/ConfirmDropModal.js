@@ -80,7 +80,7 @@ function ConfirmDropModal(props) {
             <span>?</span>
           </p>
         )}
-        {parseDeltaToBool(props.info.delta) !== 0 && !props.info.newResource && (
+        {parseDeltaToBool(props.info.delta) && !props.info.newResource && (
           <p>
             <span>確定更改</span>
             <HightLightSpan>{props.info.event ? props.info.event.title : ''}</HightLightSpan>
