@@ -22,6 +22,11 @@ RUN mkdir -p pgembed/pgsql-10.6-1 && tar -C pgembed/pgsql-10.6-1 -zxvf .embedpos
 
 ENTRYPOINT ["./entrypoint.sh"]
 
+# totoro admin server port
 EXPOSE 8080
+# moquette mqtt server port
+EXPOSE 1883
+# moquette mqtt websocket port
+EXPOSE 8081
 
 ADD *.war app.war

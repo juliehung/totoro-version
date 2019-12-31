@@ -10,6 +10,8 @@ services:
         mem_limit: 2048m
         ports:
             - 8080:8080
+            - 1883:1883
+            - 8081:8081
         networks:
             - backend
         volumes:
