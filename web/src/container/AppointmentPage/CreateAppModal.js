@@ -210,6 +210,7 @@ function CreateAppModal({
       footer={null}
       visible={visible}
       onCancel={closeModal}
+      maskClosable={false}
       closable={false}
       destroyOnClose
     >

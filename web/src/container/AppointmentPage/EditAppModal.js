@@ -176,6 +176,7 @@ function EditAppModal({
       footer={null}
       visible={visible}
       onCancel={closeModal}
+      maskClosable={false}
       closable={false}
       zIndex={1033}
       destroyOnClose
