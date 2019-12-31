@@ -121,7 +121,6 @@ function RegistrationPage(props) {
   }, [getUsersStart]);
 
   useEffect(() => {
-    // TODO: find a better way to fetch first time
     const updateRegistrations = (arrival) => {
       let sessionSelectedDate = null;
       try {
@@ -148,17 +147,15 @@ function RegistrationPage(props) {
       } catch (e) {
         // ignored
       }
-      console.log(messageObj);
-      if (!messageObj.registration) {
+      if (messageObj && !messageObj.registration) {
         return;
       }
 
       const arrivalTime = moment(messageObj.registration.arrivalTime);
       if (arrivalTime) {
+        // TODO: refactoring with better registration update mechanism
         updateRegistrations(arrivalTime);
       }
-
-      // TODO: refactoring with better registration update mechanism
     });
 
     return () => {
@@ -224,6 +221,13 @@ function RegistrationPage(props) {
     }
   };
 
+  const renderSubject =  (subject, note) => {
+    if ((!subject || subject === '') && (!note || note === '')) {
+      return '無';
+    }
+    return (subject && subject !== '') ? subject + ',' + note : note;
+  };
+
   const convertToTableSource = registrations => {
     const tableSource = registrations
       // Don't show cancel appointment and no registration
@@ -250,7 +254,7 @@ function RegistrationPage(props) {
           age: moment().diff(appt.patient.birth, 'years') + 'Y',
           type: appt.registration.type,
           doctor: appt.doctor.user.firstName,
-          subject: (appt.subject && appt.subject !== '') ? appt.subject + ',' + appt.note : appt.note,
+          subject: renderSubject(appt.subject, appt.note),
         };
       });
   };
