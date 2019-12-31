@@ -1,0 +1,39 @@
+.fc-toolbar.fc-header-toolbar {
+  background: #f3f8ff;
+  padding: 17px 23px 17px 38px;
+  margin-bottom: 0;
+  border-left: 1px solid rgb(221, 221, 221);
+  border-right: 1px solid rgb(221, 221, 221);
+}
+
+.fc-button.fc-button-primary {
+  background-color: #fff !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  border-color: #d9d9d9 !important;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.eventCard {
+  font-weight: 500;
+  letter-spacing: 2px;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.fc-license-message {
+  display: none;
+}
+.fc-unthemed .fc-today.fc-day-header {
+  background: rgb(252, 248, 227) !important;
+}
+
+.fc-unthemed .fc-day.fc-today {
+  background: white !important;
+}
+
+.fc-axis {
+  width: 40px !important;
+}

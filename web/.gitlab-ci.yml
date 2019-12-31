@@ -1,0 +1,23 @@
+image: node:alpine
+
+variables:
+  PUBLIC_URL: ./
+
+cache:
+  paths:
+    - node_modules
+
+stages:
+  - build
+
+install:
+  stage: build
+  script:
+    - npm install
+    - npm run build --prod
+  artifacts:
+    paths:
+      - build
+  only:
+    - master
+    - merge_requests

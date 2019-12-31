@@ -1,0 +1,132 @@
+import {
+  NEXT_PAGE,
+  PREV_PAGE,
+  GOTO_PAGE,
+  PRE_CHANGE_GENDER,
+  CHANGE_GENDER,
+  PRE_CHANGE_BLOOD_TYPE,
+  CHANGE_BLOOD_TYPE,
+  PRE_CHANGE_CAREER,
+  CHANGE_CAREER,
+  PRE_CHANGE_MARRIAGE,
+  CHANGE_MARRIAGE,
+  PRE_CHANGE_EMERGENCY_RELATIONSHIP,
+  CHANGE_EMERGENCY_RELATIONSHIP,
+  CHANGE_DISEASE,
+  CHANGE_ALLERGY,
+  PRE_CHANGE_DO_DRUG,
+  CHANGE_DO_DRUG,
+  PRE_CHANGE_PREGANT,
+  CHANGE_PREGANT,
+  PRE_CHANGE_SMOKING,
+  CHANGE_SMOKING,
+  CHANGE_OTHER,
+  CHANGE_NAME,
+  CHANGE_BIRTH,
+  CHANGE_NATIONAL_ID,
+  CHANGE_PHONE,
+} from './constant';
+
+export function nextPage() {
+  return { type: NEXT_PAGE };
+}
+
+export function prevPage() {
+  return { type: PREV_PAGE };
+}
+
+export function gotoPage(page) {
+  return { type: GOTO_PAGE, page };
+}
+
+export function preChangeGender(gender) {
+  return { type: PRE_CHANGE_GENDER, gender };
+}
+
+export function changeGender(gender) {
+  return { type: CHANGE_GENDER, gender };
+}
+
+export function preChangeBloodType(bloodType) {
+  return { type: PRE_CHANGE_BLOOD_TYPE, bloodType };
+}
+
+export function changeBloodType(bloodType) {
+  return { type: CHANGE_BLOOD_TYPE, bloodType };
+}
+
+export function preChangeCareer(career) {
+  return { type: PRE_CHANGE_CAREER, career };
+}
+
+export function changeCareer(career) {
+  return { type: CHANGE_CAREER, career };
+}
+
+export function preChangeMarriage(marriage) {
+  return { type: PRE_CHANGE_MARRIAGE, marriage };
+}
+
+export function changeMarriage(marriage) {
+  return { type: CHANGE_MARRIAGE, marriage };
+}
+
+export function preChangeEmergencyRelationship(relationship) {
+  return { type: PRE_CHANGE_EMERGENCY_RELATIONSHIP, relationship };
+}
+
+export function changeEmergencyRelationship(relationship) {
+  return { type: CHANGE_EMERGENCY_RELATIONSHIP, relationship };
+}
+
+export function changeDisease(disease) {
+  return { type: CHANGE_DISEASE, disease };
+}
+
+export function changeAllergy(allergy) {
+  return { type: CHANGE_ALLERGY, allergy };
+}
+
+export function preChangeDoDrug(doDrug) {
+  return { type: PRE_CHANGE_DO_DRUG, doDrug };
+}
+
+export function changeDoDrug(doDrug) {
+  return { type: CHANGE_DO_DRUG, doDrug };
+}
+
+export function preChangePregnant(pregnant) {
+  return { type: PRE_CHANGE_PREGANT, pregnant };
+}
+
+export function changePregnant(pregnant) {
+  return { type: CHANGE_PREGANT, pregnant };
+}
+
+export function preChangeSmoking(smoking) {
+  return { type: PRE_CHANGE_SMOKING, smoking };
+}
+
+export function changeSmoking(smoking) {
+  return { type: CHANGE_SMOKING, smoking };
+}
+
+export function changeOther(other) {
+  return { type: CHANGE_OTHER, other };
+}
+
+export function changeName(name) {
+  return { type: CHANGE_NAME, name };
+}
+
+export function changeBirth(birth) {
+  return { type: CHANGE_BIRTH, birth };
+}
+
+export function changeNationalId(id) {
+  return { type: CHANGE_NATIONAL_ID, id };
+}
+
+export function changePhone(phone) {
+  return { type: CHANGE_PHONE, phone };
+}
