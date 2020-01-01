@@ -25,7 +25,9 @@ const flow = (state = initialState, action) =>
         draft.page = state.page + 1;
         break;
       case PREV_PAGE_DELAY:
-        draft.page = state.page - 1;
+        if (state.page !== 1) {
+          draft.page = state.page - 1;
+        }
         break;
       case GOTO_PAGE_DELAY:
         draft.page = action.page;
