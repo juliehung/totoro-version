@@ -6,7 +6,7 @@ function* changeDoDrug(a) {
   yield put(cdd(a.doDrug));
   yield delay(300);
   if (a.doDrug === 'A') {
-    yield put(gotoPage(21));
+    yield put(gotoPage(22));
   } else if (a.doDrug === 'B') {
     yield put(nextPage());
   }

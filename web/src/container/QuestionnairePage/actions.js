@@ -32,6 +32,7 @@ import {
   CHANGE_DRUG_A,
   CHANGE_PREGANT_A,
   CHANGE_SMOKING_A,
+  CHANGE_IS_SIG_EMPTY,
 } from './constant';
 
 export function nextPage() {
@@ -164,4 +165,8 @@ export function changePregnantDate(date) {
 
 export function changeSmokingAmount(amount) {
   return { type: CHANGE_SMOKING_A, amount };
+}
+
+export function changeIsSigEmpty(isEmpty) {
+  return { type: CHANGE_IS_SIG_EMPTY, isEmpty };
 }

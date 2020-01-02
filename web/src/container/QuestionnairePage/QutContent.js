@@ -31,7 +31,7 @@ import './index.css';
 //#region
 const Container = styled.div`
   width: 600px;
-  height: 300px;
+  min-height: 400px;
   position: relative;
 `;
 //#endregion
@@ -177,21 +177,21 @@ function QutContent(props) {
             </div>
           </CSSTransition>
         )}
-        {props.page === 21 && (
+        {props.page === 22 && (
           <CSSTransition timeout={300} classNames={classNames}>
             <div>
               <DoDrugA />
             </div>
           </CSSTransition>
         )}
-        {props.page === 22 && (
+        {props.page === 23 && (
           <CSSTransition timeout={300} classNames={classNames}>
             <div>
               <PregnantA />
             </div>
           </CSSTransition>
         )}
-        {props.page === 23 && (
+        {props.page === 24 && (
           <CSSTransition timeout={300} classNames={classNames}>
             <div>
               <SmokingA />
@@ -203,9 +203,9 @@ function QutContent(props) {
   );
 }
 
-const mapStateToProps = state => ({
-  page: state.questionnairePageReducer.flow.page,
-  reverse: state.questionnairePageReducer.flow.reverse,
+const mapStateToProps = ({ questionnairePageReducer }) => ({
+  page: questionnairePageReducer.flow.page,
+  reverse: questionnairePageReducer.flow.reverse,
 });
 
 const mapDispatchToProps = { nextPage, prevPage };
