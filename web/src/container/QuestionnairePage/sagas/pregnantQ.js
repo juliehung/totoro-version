@@ -6,7 +6,7 @@ function* changePregnant(a) {
   yield put(cp(a.pregnant));
   yield delay(300);
   if (a.pregnant === 'A') {
-    yield put(gotoPage(22));
+    yield put(gotoPage(23));
   } else if (a.pregnant === 'B') {
     yield put(nextPage());
   }

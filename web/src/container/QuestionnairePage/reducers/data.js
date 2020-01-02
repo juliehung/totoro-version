@@ -23,6 +23,7 @@ import {
   CHANGE_DRUG_A,
   CHANGE_PREGANT_A,
   CHANGE_SMOKING_A,
+  CHANGE_IS_SIG_EMPTY,
 } from '../constant';
 
 const initState = {
@@ -46,6 +47,8 @@ const initState = {
   smokingAmount: undefined,
   other: [],
   emergencyContact: { name: undefined, phone: undefined, relationship: undefined },
+  isSigEmpty: true,
+  signature: undefined,
 };
 
 export const initialState = { ...initState };
@@ -119,6 +122,9 @@ const data = (state = initialState, action) =>
         break;
       case CHANGE_SMOKING_A:
         draft.smokingAmount = action.amount;
+        break;
+      case CHANGE_IS_SIG_EMPTY:
+        draft.isSigEmpty = action.isEmpty;
         break;
       default:
         break;

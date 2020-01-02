@@ -17,16 +17,18 @@ import {
 } from './actions';
 import './index.css';
 import QutContent from './QutContent';
+import Form from './pages/Form';
+import Signature from './pages/Signature';
 import { handleKeyEvent } from './utils/handleKeyEvent';
 import { withRouter } from 'react-router-dom';
 import Background from '../../images/questionnaire_bg.svg';
 
 const Container = styled.div`
   position: fixed;
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   display: flex;
-  background: white;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-image: url(${Background});
@@ -36,10 +38,11 @@ const Container = styled.div`
 `;
 
 const PageControlContainer = styled.div`
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  width: 600px;
   font-size: 30px;
-  position: fixed;
-  right: 200px;
-  bottom: 200px;
   & > * {
     margin: 0 10px;
     cursor: pointer;
@@ -107,11 +110,15 @@ function QuestionnairePage(props) {
 
   return (
     <Container>
-      <QutContent />
-      <PageControlContainer>
-        <Icon type="up" onClick={prevPage} />
-        <Icon type="down" onClick={nextPage} />
-      </PageControlContainer>
+      {props.page !== 20 && props.page !== 21 && <QutContent />}
+      {props.page === 20 && <Form />}
+      {props.page === 21 && <Signature />}
+      {props.page !== 20 && props.page !== 21 && (
+        <PageControlContainer>
+          <Icon type="up" onClick={prevPage} />
+          <Icon type="down" onClick={nextPage} />
+        </PageControlContainer>
+      )}
     </Container>
   );
 }

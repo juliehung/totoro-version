@@ -28,14 +28,13 @@ function NavHome() {
       >
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={['2']}>
-          {
-            process.env.NODE_ENV !== 'production' &&
+          {process.env.NODE_ENV !== 'production' && (
             <Menu.Item key="1">
               <Icon type="unordered-list" />
               <span>掛號</span>
               <Link to="/registration" />
             </Menu.Item>
-          }
+          )}
           <Menu.Item key="2">
             <Icon type="calendar" />
             <span>預約</span>

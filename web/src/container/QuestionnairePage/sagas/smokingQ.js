@@ -6,7 +6,7 @@ function* changeSmoking(a) {
   yield put(cs(a.smoking));
   yield delay(300);
   if (a.smoking === 'A') {
-    yield put(gotoPage(23));
+    yield put(gotoPage(24));
   } else if (a.smoking === 'B') {
     yield put(nextPage());
   }
