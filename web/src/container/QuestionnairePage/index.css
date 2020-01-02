@@ -10,7 +10,7 @@
 
 .item-enter-active {
   transform: translateY(0);
-  transition: all 300ms ease;
+  transition: all 500ms ease;
 }
 
 .item-reverse-enter {
@@ -20,7 +20,7 @@
 
 .item-reverse-enter-active {
   transform: translateY(0);
-  transition: all 300ms ease;
+  transition: all 500ms ease;
 }
 
 .item-exit {
@@ -29,7 +29,8 @@
 
 .item-exit-active {
   transform: translateY(-100vh);
-  transition: all 300ms ease;
+  transition: all 500ms ease;
+  transition-delay: 200ms;
 }
 
 .item-reverse-exit {
@@ -38,5 +39,6 @@
 
 .item-reverse-exit-active {
   transform: translateY(100vh);
-  transition: all 300ms ease;
+  transition: all 500ms ease;
+  transition-delay: 200ms;
 }

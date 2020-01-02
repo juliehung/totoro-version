@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Icon } from 'antd';
+import { Swipeable } from 'react-swipeable';
 import {
   nextPage,
   prevPage,
@@ -35,6 +36,9 @@ const Container = styled.div`
   background-repeat: no-repeat;
   background-position: bottom;
   background-size: contain;
+  & * {
+    user-select: none;
+  }
 `;
 
 const PageControlContainer = styled.div`
@@ -42,10 +46,17 @@ const PageControlContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 600px;
-  font-size: 30px;
-  & > * {
+  font-size: 20px;
+  & > div {
+    border: 1px solid rgb(208, 215, 223);
+    box-shadow: 0px 2px 9px 0px rgba(23, 104, 172, 0.13);
+    width: 35px;
+    height: 35px;
     margin: 0 10px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
@@ -109,17 +120,23 @@ function QuestionnairePage(props) {
   ]);
 
   return (
-    <Container>
-      {props.page !== 20 && props.page !== 21 && <QutContent />}
-      {props.page === 20 && <Form />}
-      {props.page === 21 && <Signature />}
-      {props.page !== 20 && props.page !== 21 && (
-        <PageControlContainer>
-          <Icon type="up" onClick={prevPage} />
-          <Icon type="down" onClick={nextPage} />
-        </PageControlContainer>
-      )}
-    </Container>
+    <Swipeable onSwipedUp={nextPage} onSwipedDown={prevPage}>
+      <Container>
+        {props.page !== 20 && props.page !== 21 && <QutContent />}
+        {props.page === 20 && <Form />}
+        {props.page === 21 && <Signature />}
+        {props.page !== 20 && props.page !== 21 && (
+          <PageControlContainer>
+            <div onClick={prevPage}>
+              <Icon type="up" />
+            </div>
+            <div onClick={nextPage}>
+              <Icon type="down" />
+            </div>
+          </PageControlContainer>
+        )}
+      </Container>
+    </Swipeable>
   );
 }
 

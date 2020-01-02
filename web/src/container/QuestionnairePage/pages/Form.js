@@ -194,7 +194,13 @@ function Form(props) {
         >
           返回編輯
         </StyledButton>
-        <StyledButton type="primary" disable={props.disable} onClick={props.nextPage}>
+        <StyledButton
+          type="primary"
+          disable={props.disable}
+          onClick={() => {
+            props.gotoPage(21);
+          }}
+        >
           確認進行數位簽章
         </StyledButton>
       </ButtonsContainer>
