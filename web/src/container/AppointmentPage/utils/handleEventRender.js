@@ -64,52 +64,59 @@ export function handleEventRender(info, func) {
               <StyledIcon type="solution"></StyledIcon>
               <span>{appointment.note}</span>
             </span>
-            {appointment.status === 'CANCEL' ? (
-              <Popconfirm
-                trigger="click"
-                title="確定恢復預約"
-                onConfirm={() => {
-                  func.cancel({ id: appointment.id, status: 'CONFIRMED' });
-                }}
-              >
-                <Button100 size="small">恢復預約</Button100>
-              </Popconfirm>
+            {!appointment.registrationStatus ? (
+              appointment.status === 'CANCEL' ? (
+                <Popconfirm
+                  trigger="click"
+                  title="確定恢復預約"
+                  onConfirm={() => {
+                    func.cancel({ id: appointment.id, status: 'CONFIRMED' });
+                  }}
+                >
+                  <Button100 size="small">恢復預約</Button100>
+                </Popconfirm>
+              ) : (
+                <Popconfirm
+                  trigger="click"
+                  title="確定取消預約"
+                  onConfirm={() => {
+                    func.cancel({ id: appointment.id, status: 'CANCEL' });
+                  }}
+                >
+                  <Button100 size="small">取消預約</Button100>
+                </Popconfirm>
+              )
             ) : (
-              <Popconfirm
-                trigger="click"
-                title="確定取消預約"
-                onConfirm={() => {
-                  func.cancel({ id: appointment.id, status: 'CANCEL' });
-                }}
-              >
-                <Button100 size="small">取消預約</Button100>
-              </Popconfirm>
+              undefined
             )}
           </PopoverContainer>
         );
 
-        const contentMenu = (
+        const contextMenu = !appointment.registrationStatus ? (
           <Menu
-            onClick={e => {
-              if (e.key === 'delete') {
-              } else if (e.key === 'edit') {
-                func.edit(appointment);
-              }
+            onClick={() => {
+              func.edit(appointment);
             }}
           >
             <Menu.Item key="edit">編輯</Menu.Item>
           </Menu>
+        ) : (
+          <div />
         );
 
         render(
           <Popover content={popoverContent} trigger="click" placement="right">
-            <Dropdown overlay={contentMenu} trigger={['contextMenu']}>
+            <Dropdown overlay={contextMenu} trigger={['contextMenu']}>
               <div
                 style={{ height: '100%' }}
                 dangerouslySetInnerHTML={{ __html: info.el.innerHTML }}
-                onDoubleClick={() => {
-                  func.edit(appointment);
-                }}
+                onDoubleClick={
+                  !appointment.registrationStatus
+                    ? () => {
+                        func.edit(appointment);
+                      }
+                    : undefined
+                }
               />
             </Dropdown>
           </Popover>,
