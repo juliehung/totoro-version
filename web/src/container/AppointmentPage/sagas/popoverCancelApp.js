@@ -7,8 +7,8 @@ export function* popoverCancelApp() {
   while (true) {
     try {
       const data = yield take(POPOVER_CANCEL_APP_START);
-      yield call(Appointment.editAppointment, data.appData);
-      yield put(popoverCancelAppSuccess());
+      const appointment = yield call(Appointment.editAppointment, data.appData);
+      yield put(popoverCancelAppSuccess(appointment));
     } catch (error) {
       // ignore
     }

@@ -9,9 +9,11 @@ export function* editAppointment() {
   while (true) {
     try {
       const data = yield take(EDIT_APPOINTMENT_START);
-      yield call(Appointment.editAppointment, data.app);
-      yield put(editAppointmentSuccess());
+      const appointment = yield call(Appointment.editAppointment, data.app);
+      yield put(editAppointmentSuccess(appointment));
     } catch (error) {
+      console.log(error);
+
       // ignore
     }
   }

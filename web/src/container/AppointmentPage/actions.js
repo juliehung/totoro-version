@@ -139,8 +139,8 @@ export function editAppointment(app) {
   return { type: EDIT_APPOINTMENT_START, app };
 }
 
-export function editAppointmentSuccess() {
-  return { type: EDIT_APPOINTMENT_SUCCESS };
+export function editAppointmentSuccess(appointment) {
+  return { type: EDIT_APPOINTMENT_SUCCESS, appointment };
 }
 
 export function createAppointment(app) {
@@ -428,6 +428,6 @@ export function popoverCancelApp(appData) {
   return { type: POPOVER_CANCEL_APP_START, appData };
 }
 
-export function popoverCancelAppSuccess() {
-  return { type: POPOVER_CANCEL_APP_SUCCESS };
+export function popoverCancelAppSuccess(appointment) {
+  return { type: POPOVER_CANCEL_APP_SUCCESS, appointment };
 }

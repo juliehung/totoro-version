@@ -1,5 +1,9 @@
 import produce from 'immer';
 import moment from 'moment';
+import { handleEditAppLocally } from '../utils/handleEditAppLocally';
+import { handleCountDocApp } from '../utils/handleCountDocApp';
+import convertAppsToEvt from '../utils/convertAppsToEvt';
+
 import {
   CHANGE_CAL_DATE,
   GET_APPOINTMENTS_START,
@@ -10,6 +14,7 @@ import {
   GET_CALENDAR_EVENT_SUCCESS,
   CHANGE_CAL_SLOT_DURATION,
   POPOVER_CANCEL_APP_SUCCESS,
+  EDIT_APPOINTMENT_SUCCESS,
 } from '../constant';
 
 const doctors = JSON.parse(localStorage.getItem('selectedDoctors'));
@@ -42,8 +47,8 @@ const calendar = (state = initialState, action) =>
         draft.range = action.range;
         break;
       case GET_APPOINTMENTS_SUCCESS:
-        draft.appointments = action.appData.appointment;
-        draft.doctorAppCount = action.appData.doctorAppCount;
+        draft.appointments = convertAppsToEvt(action.appData);
+        draft.doctorAppCount = handleCountDocApp(draft.appointments);
         break;
       case CHANGE_CAL_FIRST_DAY:
         draft.calendarFirstDay = action.firstDay % 7;
@@ -73,6 +78,12 @@ const calendar = (state = initialState, action) =>
         break;
       case POPOVER_CANCEL_APP_SUCCESS:
         draft.cancelApp = !state.cancelApp;
+        draft.appointments = handleEditAppLocally(state.appointments, action.appointment);
+        draft.doctorAppCount = handleCountDocApp(draft.appointments);
+        break;
+      case EDIT_APPOINTMENT_SUCCESS:
+        draft.appointments = handleEditAppLocally(state.appointments, action.appointment);
+        draft.doctorAppCount = handleCountDocApp(draft.appointments);
         break;
       default:
         break;

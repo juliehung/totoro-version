@@ -80,7 +80,7 @@ class AppCalendar extends React.Component {
       const expectedArrivalTime = moment(messageObj.expectedArrivalTime);
       if (expectedArrivalTime.isBetween(start, end)) {
         // TODO: find a better way to update appointments
-        this.props.getAllEvents();
+        // this.props.getAllEvents();
       }
     });
   }
@@ -102,8 +102,7 @@ class AppCalendar extends React.Component {
     if (prevProps.cancelApp !== this.props.cancelApp) {
       const title = document.querySelector('.fc-center');
       this.simulateMouseClick(title);
-      message.success('編輯預約成功');
-      this.props.getAllEvents();
+      message.success('取消/恢復預約成功');
     }
   }
 

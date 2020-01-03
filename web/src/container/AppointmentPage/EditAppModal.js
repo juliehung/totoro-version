@@ -120,9 +120,8 @@ function EditAppModal({
 
   useEffect(() => {
     if (editAppSuccess) {
-      message.success('編輯預約成功');
-      getAllEvents();
       changeEditAppModalVisible(false);
+      message.success('編輯預約成功');
     }
   }, [editAppSuccess, getAllEvents, changeEditAppModalVisible]);
 
