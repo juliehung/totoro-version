@@ -68,7 +68,7 @@ public class NhiService {
         surfaceLimitMap.put("FM_ONLY", "FM,");
         surfaceLimitMap.put("TOOTH_AREA_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,");
         surfaceLimitMap.put("TOOTH_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,");
-        surfaceLimitMap.put("DECIDUOUS_ONLY", "51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,");
+        surfaceLimitMap.put("DECIDUOUS_ONLY", "51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,99,");
         surfaceLimitMap.put("PERMANENT_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,19,29,39,49,99,");
         surfaceLimitMap.put("FRONT_ONLY", "11,12,13,21,22,23,31,32,33,41,42,43,51,52,53,61,62,63,71,72,73,81,82,83,19,29,39,49,99,");
         surfaceLimitMap.put("BACK_ONLY", "14,15,16,17,18,24,25,26,27,28,34,35,36,37,38,44,45,46,47,48,54,55,64,65,74,75,84,85,19,29,39,49,99,");
@@ -77,6 +77,7 @@ public class NhiService {
         surfaceLimitMap.put("PERMANENT_MOLAR_ONLY", "16,17,18,24,25,26,27,28,36,37,38,46,47,48,19,29,39,49,99,");
         surfaceLimitMap.put("SPECIFIC_AREA_ONLY", "");
         surfaceLimitMap.put("SPECIFIC_TOOTH_ONLY", "");
+        surfaceLimitMap.put("PERMANENT_PREMOLAR_ONLY", "14,15,24,25,34,35,44,45,19,29,39,49,99,");
 
         surfaceLimitErrorResponseMap.put("BLANK_ONLY", "不應填寫牙位");
         surfaceLimitErrorResponseMap.put("VALIDATED_ONLY", "限填合法一般、區域、全域牙位");
@@ -87,9 +88,12 @@ public class NhiService {
         surfaceLimitErrorResponseMap.put("PERMANENT_ONLY", "限填恆牙牙位");
         surfaceLimitErrorResponseMap.put("FRONT_ONLY", "限填前牙牙位");
         surfaceLimitErrorResponseMap.put("BACK_ONLY", "限填後牙牙位");
+        surfaceLimitErrorResponseMap.put("PERMANENT_FRONT_ONLY", "限填恆牙前牙牙位");
+        surfaceLimitErrorResponseMap.put("PERMANENT_BACK_ONLY", "限填恆牙後牙牙位");
         surfaceLimitErrorResponseMap.put("PERMANENT_MOLAR_ONLY", "限填恆牙大臼齒牙位");
         surfaceLimitErrorResponseMap.put("SPECIFIC_AREA_ONLY", "限填指定區域");
         surfaceLimitErrorResponseMap.put("SPECIFIC_TOOTH_ONLY", "限填指定牙位");
+        surfaceLimitErrorResponseMap.put("PERMANENT_PREMOLAR_ONLY", "限填恆牙小臼齒牙位");
     }
 
     @PostConstruct
@@ -141,7 +145,10 @@ public class NhiService {
             case "PERMANENT_ONLY":
             case "FRONT_ONLY":
             case "BACK_ONLY":
-            case "PERMANENT_MOLAR_ONLY": {
+            case "PERMANENT_FRONT_ONLY":
+            case "PERMANENT_BACK_ONLY":
+            case "PERMANENT_MOLAR_ONLY":
+            case "PERMANENT_PREMOLAR_ONLY": {
                 checkFail = nhiExtendTreatmentProcedure.getTreatmentProcedure().getTeeth().stream()
                     .anyMatch(tooth -> !surfaceLimitMap.get(limitType).contains(tooth.getPosition().concat(",")));
                 break;
