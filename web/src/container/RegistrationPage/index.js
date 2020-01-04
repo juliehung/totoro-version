@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
-import { getRegistrations, updateSelectedDate } from './actions';
+import { connect } from 'react-redux';
+import { getRegistrations, updateSelectedDate, onSelectPatient } from './actions';
 import { Button, DatePicker, Empty, Icon, Select, Table, Tooltip, Typography } from 'antd';
 import ManPng from '../../static/images/man.png';
 import WomanPng from '../../static/images/woman.png';
 import DefaultPng from '../../static/images/default.png';
-import styled from "styled-components";
-import moment from "moment";
-import { Helmet } from "react-helmet-async";
+import styled from 'styled-components';
+import moment from 'moment';
+import { Helmet } from 'react-helmet-async';
 import { getUsersStart } from '../AppointmentPage/actions';
 import { B1, G1, Gray700 } from '../../utils/colors';
 import MqttHelper from '../../utils/mqtt';
+import RegistDrawer from './RegistDrawer';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -68,7 +68,7 @@ const columns = [
     title: '序位',
     dataIndex: 'rowIndex',
     key: 'rowIndex',
-    width: 80
+    width: 80,
   },
   { title: '姓名', dataIndex: 'name', key: 'name', width: 250 },
   {
@@ -76,7 +76,7 @@ const columns = [
     dataIndex: 'age',
     key: 'age',
     sorter: (a, b) => a.age.replace('Y', '') - b.age.replace('Y', ''),
-    width: 80
+    width: 80,
   },
   {
     title: '掛號時間',
@@ -84,14 +84,14 @@ const columns = [
     key: 'arrivalTime',
     defaultSortOrder: 'ascend',
     sorter: (a, b) => moment(a.arrivalTime).unix() - moment(b.arrivalTime).unix(),
-    width: 150
+    width: 150,
   },
   {
     title: '預約時間',
     dataIndex: 'expectedArrivalTime',
     key: 'expectedArrivalTime',
     sorter: (a, b) => moment(a.expectedArrivalTime).unix() - moment(b.expectedArrivalTime).unix(),
-    width: 150
+    width: 150,
   },
   {
     title: '掛號類別',
@@ -99,17 +99,17 @@ const columns = [
     key: 'type',
     filters: [
       { text: '健保', value: '健保' },
-      { text: '自費', value: '自費' }
+      { text: '自費', value: '自費' },
     ],
     filterMultiple: false,
     onFilter: (value, record) => record.type.indexOf(value) === 0,
-    width: 100
+    width: 100,
   },
   { title: '醫師', dataIndex: 'doctor', key: 'doctor', width: 90 },
   { title: '治療事項', dataIndex: 'subject', key: 'subject', ellipsis: true, width: 200 },
 ];
 
-const allDoctors = "THESE_ARE_ALL_DOCTORS";
+const allDoctors = 'THESE_ARE_ALL_DOCTORS';
 
 function RegistrationPage(props) {
   const { getRegistrations, updateSelectedDate, getUsersStart } = props;
@@ -121,12 +121,11 @@ function RegistrationPage(props) {
   }, [getUsersStart]);
 
   useEffect(() => {
-    const updateRegistrations = (arrival) => {
+    const updateRegistrations = arrival => {
       let sessionSelectedDate = null;
       try {
         sessionSelectedDate = JSON.parse(sessionStorage.getItem('selectedDate'));
-      } catch (e) {
-      }
+      } catch (e) {}
       const date = sessionSelectedDate ? moment(sessionSelectedDate) : moment();
 
       if (arrival && !arrival.startOf('day').isSame(date.startOf('day'))) {
@@ -145,16 +144,14 @@ function RegistrationPage(props) {
       try {
         messageObj = JSON.parse(message);
       } catch (e) {
-        // ignored
-      }
-      if (!messageObj || !messageObj.registration) {
         return;
       }
-
-      const arrivalTime = moment(messageObj.registration.arrivalTime);
-      if (arrivalTime) {
-        // TODO: refactoring with better registration update mechanism
-        updateRegistrations(arrivalTime);
+      if (messageObj.registration) {
+        const arrivalTime = moment(messageObj.registration.arrivalTime);
+        if (arrivalTime) {
+          // TODO: refactoring with better registration update mechanism
+          updateRegistrations(arrivalTime);
+        }
       }
     });
 
@@ -175,7 +172,7 @@ function RegistrationPage(props) {
     if (status === 'PENDING') c = B1;
     return (
       <RowIndexContainer>
-        <Status style={{ background: c }}/>
+        <Status style={{ background: c }} />
         <StyledTitle level={3}>{rowIndex}</StyledTitle>
       </RowIndexContainer>
     );
@@ -184,7 +181,7 @@ function RegistrationPage(props) {
   const renderAvatarImg = gender => {
     if (gender === 'MALE') return <AvatarImg src={ManPng} alt="male" />;
     if (gender === 'FEMALE') return <AvatarImg src={WomanPng} alt="female" />;
-    return <AvatarImg src={DefaultPng} alt="default" />
+    return <AvatarImg src={DefaultPng} alt="default" />;
   };
 
   const renderName = patient => {
@@ -192,7 +189,10 @@ function RegistrationPage(props) {
       <Tooltip title={patient.name}>
         <NameContainer>
           {renderAvatarImg(patient.gender)}
-          <div><span>{patient.medicalId}</span><Title level={4}>{patient.name}</Title></div>
+          <div>
+            <span>{patient.medicalId}</span>
+            <Title level={4}>{patient.name}</Title>
+          </div>
         </NameContainer>
       </Tooltip>
     );
@@ -200,32 +200,44 @@ function RegistrationPage(props) {
 
   const renderExpandedRow = patient => {
     return (
-      <div>
-        <Link to={{
-          pathname: "/q",
-          state: { patient }
-        }}>
-          <Button type="primary">初診單</Button>
-        </Link>
-      </div>
+      <Button
+        type="primary"
+        onClick={() => {
+          props.onSelectPatient(patient);
+        }}
+      >
+        初診單
+      </Button>
     );
   };
 
   const renderDoctorSelect = () => {
     if (props.doctors) {
       const options = props.doctors.map(doctor => {
-        return <Option key={doctor.id} value={doctor.login}>{doctor.name}</Option>;
+        return (
+          <Option key={doctor.id} value={doctor.login}>
+            {doctor.name}
+          </Option>
+        );
       });
-      options.unshift(<Option key={-1} value={allDoctors}>全診所醫師</Option>);
-      return <Select defaultValue={allDoctors} style={{ width: 120 }} onChange={onDoctorChange}>{options}</Select>;
+      options.unshift(
+        <Option key={-1} value={allDoctors}>
+          全診所醫師
+        </Option>,
+      );
+      return (
+        <Select defaultValue={allDoctors} style={{ width: 120 }} onChange={onDoctorChange}>
+          {options}
+        </Select>
+      );
     }
   };
 
-  const renderSubject =  (subject, note) => {
+  const renderSubject = (subject, note) => {
     if ((!subject || subject === '') && (!note || note === '')) {
       return '無';
     }
-    return (subject && subject !== '') ? subject + ',' + note : note;
+    return subject && subject !== '' ? subject + ',' + note : note;
   };
 
   const convertToTableSource = registrations => {
@@ -236,27 +248,34 @@ function RegistrationPage(props) {
         if (!selectedDoctor || !appt.doctor.user || selectedDoctor === allDoctors) {
           return true;
         }
-        return (appt.doctor.user.login === selectedDoctor);
+        return appt.doctor.user.login === selectedDoctor;
       })
       .slice()
       .sort((a, b) => moment(a.registration.arrivalTime).unix() - moment(b.registration.arrivalTime).unix());
 
     let i = 1;
-    return tableSource
-      .map(appt => {
-        return {
-          key: appt.id,
-          rowIndex: renderRowIndex(i++, appt.registration.status),
-          name: renderName(appt.patient),
-          patient: appt.patient,
-          arrivalTime: appt.registration.arrivalTime && moment(appt.registration.arrivalTime).local().format('YYYY-MM-DD HH:mm'),
-          expectedArrivalTime: appt.expectedArrivalTime && moment(appt.expectedArrivalTime).local().format('YYYY-MM-DD HH:mm'),
-          age: moment().diff(appt.patient.birth, 'years') + 'Y',
-          type: appt.registration.type,
-          doctor: appt.doctor.user.firstName,
-          subject: renderSubject(appt.subject, appt.note),
-        };
-      });
+    return tableSource.map(appt => {
+      return {
+        key: appt.id,
+        rowIndex: renderRowIndex(i++, appt.registration.status),
+        name: renderName(appt.patient),
+        patient: appt.patient,
+        arrivalTime:
+          appt.registration.arrivalTime &&
+          moment(appt.registration.arrivalTime)
+            .local()
+            .format('YYYY-MM-DD HH:mm'),
+        expectedArrivalTime:
+          appt.expectedArrivalTime &&
+          moment(appt.expectedArrivalTime)
+            .local()
+            .format('YYYY-MM-DD HH:mm'),
+        age: moment().diff(appt.patient.birth, 'years') + 'Y',
+        type: appt.registration.type,
+        doctor: appt.doctor.user.firstName,
+        subject: renderSubject(appt.subject, appt.note),
+      };
+    });
   };
 
   const onDatePickerChange = date => {
@@ -272,7 +291,6 @@ function RegistrationPage(props) {
 
   const onExpand = (expanded, record) => {
     if (expanded) {
-
     }
     console.log(expanded, record);
   };
@@ -286,7 +304,9 @@ function RegistrationPage(props) {
 
   return (
     <Container>
-      <Helmet><title>掛號</title></Helmet>
+      <Helmet>
+        <title>掛號</title>
+      </Helmet>
       <DatePickerContainer>
         <StyledTitle level={3}>就診列表</StyledTitle>
         {withMargin(10)}
@@ -306,6 +326,7 @@ function RegistrationPage(props) {
         onExpand={onExpand}
         dataSource={convertToTableSource(props.registrations)}
       />
+      <RegistDrawer />
     </Container>
   );
 }
@@ -315,12 +336,14 @@ const mapStateToProps = ({ registrationPageReducer, appointmentPageReducer }) =>
   loading: registrationPageReducer.registration.loading,
   selectedDate: registrationPageReducer.registration.selectedDate,
   doctors: appointmentPageReducer.calendar.doctors,
+  drawerVisible: registrationPageReducer.drawer.visible,
 });
 
 const mapDispatchToProps = {
   getRegistrations,
   updateSelectedDate,
   getUsersStart,
+  onSelectPatient,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegistrationPage);

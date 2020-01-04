@@ -33,6 +33,7 @@ import {
   CHANGE_PREGANT_A,
   CHANGE_SMOKING_A,
   CHANGE_IS_SIG_EMPTY,
+  INIT_QUESTIONNAIRE,
 } from './constant';
 
 export function nextPage() {
@@ -169,4 +170,8 @@ export function changeSmokingAmount(amount) {
 
 export function changeIsSigEmpty(isEmpty) {
   return { type: CHANGE_IS_SIG_EMPTY, isEmpty };
+}
+
+export function initQuestionnaire(patient) {
+  return { type: INIT_QUESTIONNAIRE, patient };
 }

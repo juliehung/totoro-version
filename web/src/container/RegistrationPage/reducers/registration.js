@@ -1,16 +1,11 @@
-import {
-  GET_REGISTRATIONS_START,
-  GET_REGISTRATIONS_SUCCESS,
-  SET_SELECTED_DATE_SUCCESS
-} from '../constant';
+import { GET_REGISTRATIONS_START, GET_REGISTRATIONS_SUCCESS, SET_SELECTED_DATE_SUCCESS } from '../constant';
 import produce from 'immer';
-import moment from "moment";
+import moment from 'moment';
 
 let sessionSelectedDate = null;
 try {
   sessionSelectedDate = JSON.parse(sessionStorage.getItem('selectedDate'));
-} catch (e) {
-}
+} catch (e) {}
 
 const initState = {
   registrations: [],

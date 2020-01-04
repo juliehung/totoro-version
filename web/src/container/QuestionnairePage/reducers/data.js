@@ -1,6 +1,7 @@
 import produce from 'immer';
 import { toggleArrayItem } from '../utils/toggleArrayItem';
 import {
+  INIT_QUESTIONNAIRE,
   CHANGE_GENDER,
   CHANGE_BLOOD_TYPE,
   CHANGE_CAREER,
@@ -27,6 +28,7 @@ import {
 } from '../constant';
 
 const initState = {
+  id: undefined,
   name: '',
   birth: undefined,
   gender: undefined,
@@ -57,6 +59,14 @@ export const initialState = { ...initState };
 const data = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case INIT_QUESTIONNAIRE:
+        if (action.patient.name) {
+          draft.name = action.patient.name;
+        }
+        if (action.patient.id) {
+          draft.id = action.patient.id;
+        }
+        break;
       case CHANGE_GENDER:
         draft.gender = action.gender;
         break;

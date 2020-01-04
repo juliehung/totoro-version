@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { gotoPage, changePregnantDate } from '../actions';
-import { Icon, DatePicker } from 'antd';
+import { Icon, Input } from 'antd';
 import { Container } from './Name';
 import ConfirmButton from './ConfirmButton';
 
@@ -11,25 +11,25 @@ const StyleIcon = styled(Icon)`
   margin-right: 10px;
 `;
 
-const StyledDatePicker = styled(DatePicker)`
+export const StyledInput = styled(Input)`
+  font-size: 20px !important;
   margin: 20px 0 !important;
 `;
+
 //#endregion
 
 function PregnantA(props) {
+  const onChange = e => {
+    props.changePregnantDate(e.target.value);
+  };
+
   return (
     <Container>
       <div>
         <StyleIcon type="right-circle" theme="twoTone" />
         <span>預產期</span>
       </div>
-      <StyledDatePicker
-        size="large"
-        placeholder="請選擇生日"
-        readOnly
-        onChange={props.changePregnantDate}
-        value={props.date}
-      />
+      <StyledInput type="date" size="large" placeholder="請選擇生日" onChange={onChange} value={props.date} />
       <br />
       <ConfirmButton
         nextPage={() => {
