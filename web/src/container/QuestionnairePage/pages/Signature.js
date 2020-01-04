@@ -7,7 +7,8 @@ import { changeIsSigEmpty } from '../actions';
 
 //#region
 const Container = styled.div`
-  width: 600px;
+  max-width: 600px;
+  width: 95%;
   background: transparent;
 `;
 

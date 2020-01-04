@@ -30,11 +30,14 @@ import './index.css';
 
 //#region
 const Container = styled.div`
-  width: 600px;
+  max-width: 600px;
+  width: 95%;
   height: 400px;
   position: relative;
 `;
 //#endregion
+
+const timeout = 500;
 
 function QutContent(props) {
   const classNames = props.reverse ? 'item-reverse' : 'item';
@@ -45,154 +48,154 @@ function QutContent(props) {
       </Helmet>
       <TransitionGroup>
         {props.page === 1 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <Name />
             </div>
           </CSSTransition>
         )}
         {props.page === 2 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <Birth />
             </div>
           </CSSTransition>
         )}
         {props.page === 3 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <Gender />
             </div>
           </CSSTransition>
         )}
         {props.page === 4 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <NationalId />
             </div>
           </CSSTransition>
         )}
         {props.page === 5 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <BloodType />
             </div>
           </CSSTransition>
         )}
         {props.page === 6 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <Phone />
             </div>
           </CSSTransition>
         )}
         {props.page === 7 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <Address />
             </div>
           </CSSTransition>
         )}
         {props.page === 8 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <Career />
             </div>
           </CSSTransition>
         )}
         {props.page === 9 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <Marriage />
             </div>
           </CSSTransition>
         )}
         {props.page === 10 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <Introducer />
             </div>
           </CSSTransition>
         )}
         {props.page === 11 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <EmergencyContactName />
             </div>
           </CSSTransition>
         )}
         {props.page === 12 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <EmergencyContactPhone />
             </div>
           </CSSTransition>
         )}
         {props.page === 13 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <EmergencyContactRelationship />
             </div>
           </CSSTransition>
         )}
         {props.page === 14 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <Disease />
             </div>
           </CSSTransition>
         )}
         {props.page === 15 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <Allergy />
             </div>
           </CSSTransition>
         )}
         {props.page === 16 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <DoDrugQ />
             </div>
           </CSSTransition>
         )}
         {props.page === 17 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <SmokingQ />
             </div>
           </CSSTransition>
         )}
         {props.page === 18 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <PregnantQ />
             </div>
           </CSSTransition>
         )}
         {props.page === 19 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <Other />
             </div>
           </CSSTransition>
         )}
         {props.page === 22 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <DoDrugA />
             </div>
           </CSSTransition>
         )}
         {props.page === 23 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <PregnantA />
             </div>
           </CSSTransition>
         )}
         {props.page === 24 && (
-          <CSSTransition timeout={500} classNames={classNames}>
+          <CSSTransition timeout={timeout} classNames={classNames}>
             <div>
               <SmokingA />
             </div>

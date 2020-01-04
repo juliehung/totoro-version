@@ -15,6 +15,7 @@ import {
   changeAllergy,
   preChangeDoDrug,
   preChangePregnant,
+  initQuestionnaire,
 } from './actions';
 import './index.css';
 import QutContent from './QutContent';
@@ -36,9 +37,6 @@ const Container = styled.div`
   background-repeat: no-repeat;
   background-position: bottom;
   background-size: contain;
-  & * {
-    user-select: none;
-  }
 `;
 
 const PageControlContainer = styled.div`
@@ -78,12 +76,16 @@ function QuestionnairePage(props) {
   } = props;
 
   // TODO: Xu you can continue from here
+
   if (location.state) {
-    console.log(location.state.patient);
+    const patient = location.state.patient;
+    if (patient) {
+      props.initQuestionnaire(patient);
+    }
   }
 
   useEffect(() => {
-    function escFunction(keyEvent) {
+    function keyFunction(keyEvent) {
       handleKeyEvent(page, keyEvent, {
         prevPage,
         nextPage,
@@ -99,10 +101,10 @@ function QuestionnairePage(props) {
       });
     }
 
-    document.addEventListener('keydown', escFunction, false);
+    document.addEventListener('keydown', keyFunction, false);
 
     return () => {
-      document.removeEventListener('keydown', escFunction, false);
+      document.removeEventListener('keydown', keyFunction, false);
     };
   }, [
     nextPage,
@@ -154,6 +156,7 @@ const mapDispatchToProps = {
   changeAllergy,
   preChangeDoDrug,
   preChangePregnant,
+  initQuestionnaire,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(QuestionnairePage));

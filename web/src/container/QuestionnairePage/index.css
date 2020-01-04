@@ -1,3 +1,8 @@
+:root {
+  --transition-time: 500ms;
+  --transition-delay-time: 200ms;
+}
+
 .page {
   left: 15px;
   right: 15px;
@@ -10,7 +15,7 @@
 
 .item-enter-active {
   transform: translateY(0);
-  transition: all 500ms ease;
+  transition: all var(--transition-time) ease;
 }
 
 .item-reverse-enter {
@@ -20,7 +25,7 @@
 
 .item-reverse-enter-active {
   transform: translateY(0);
-  transition: all 500ms ease;
+  transition: all var(--transition-time) ease;
 }
 
 .item-exit {
@@ -29,8 +34,8 @@
 
 .item-exit-active {
   transform: translateY(-100vh);
-  transition: all 500ms ease;
-  transition-delay: 200ms;
+  transition: all var(--transition-time) ease;
+  transition-delay: var(--transition-delay-time);
 }
 
 .item-reverse-exit {
@@ -39,6 +44,6 @@
 
 .item-reverse-exit-active {
   transform: translateY(100vh);
-  transition: all 500ms ease;
-  transition-delay: 200ms;
+  transition: all var(--transition-time) ease;
+  transition-delay: var(--transition-delay-time);
 }

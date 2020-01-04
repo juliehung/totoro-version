@@ -8,7 +8,8 @@ import { parseDataToDisplay } from '../utils/parseDataToDisplay';
 //#region
 
 const Container = styled.div`
-  width: 600px;
+  max-width: 600px;
+  width: 95%;
   max-height: 85vh;
   font-size: 20px;
   overflow-y: scroll;
