@@ -2,23 +2,34 @@ package io.dentall.totoro.service.dto;
 
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.dao.AppointmentDAO;
+import org.springframework.security.core.parameters.P;
 
 public class AppointmentSplitRelationshipDTO {
 
     private final Appointment appointment;
 
     public AppointmentSplitRelationshipDTO(AppointmentDAO appointmentDAO) {
-        Disposal disposal = new Disposal();
-        disposal.setId(appointmentDAO.getDisposalId());
+        Registration registration = null;
+        if (appointmentDAO.getRegistrationId() != null) {
+            registration = new Registration()
+                .status(appointmentDAO.getRegistrationStatus())
+                .arrivalTime(appointmentDAO.getArrivalTime())
+                .type(appointmentDAO.getType())
+                .onSite(appointmentDAO.getOnSite())
+                .noCard(appointmentDAO.getNoCard());
+            registration.setId(appointmentDAO.getRegistrationId());
+            registration.setLastModifiedBy(appointmentDAO.getRegistrationLastModifiedBy());
+            registration.setLastModifiedDate(appointmentDAO.getRegistrationLastModifiedDate());
 
-        Registration registration = new Registration()
-            .status(appointmentDAO.getRegistrationStatus())
-            .arrivalTime(appointmentDAO.getArrivalTime())
-            .type(appointmentDAO.getType())
-            .onSite(appointmentDAO.getOnSite())
-            .noCard(appointmentDAO.getNoCard());
-        registration.setId(appointmentDAO.getRegistrationId());
-        registration.setDisposal(disposal);
+            Disposal disposal = null;
+            if (appointmentDAO.getDisposalId() != null) {
+                disposal = new Disposal();
+                disposal.setId(appointmentDAO.getDisposalId());
+                disposal.setCreatedDate(appointmentDAO.getDisposalCreatedDate());
+                disposal.setLastModifiedDate(appointmentDAO.getDisposalLastModifiedDate());
+            }
+            registration.setDisposal(disposal);
+        }
 
         Patient patient = new Patient()
             .name(appointmentDAO.getName())
@@ -48,6 +59,8 @@ public class AppointmentSplitRelationshipDTO {
             .marriage(appointmentDAO.getMarriage())
             .newPatient(appointmentDAO.getNewPatient());
         patient.setId(appointmentDAO.getPatientId());
+        patient.setLastModifiedBy(appointmentDAO.getPatientLastModifiedBy());
+        patient.setLastModifiedDate(appointmentDAO.getPatientLastModifiedDate());
 
         Appointment appointment = new Appointment()
             .status(appointmentDAO.getStatus())
@@ -60,10 +73,18 @@ public class AppointmentSplitRelationshipDTO {
             .colorId(appointmentDAO.getColorId())
             .archived(appointmentDAO.getArchived())
             .contacted(appointmentDAO.getContacted());
+        appointment.setCreatedBy(appointmentDAO.getCreatedBy());
+        appointment.setCreatedDate(appointmentDAO.getCreatedDate());
         appointment.setId(appointmentDAO.getId());
+
         appointment.setPatient(patient);
         appointment.setRegistration(registration);
-        appointment.setDoctor(appointmentDAO.getDoctor());
+
+        ExtendUser doctor = appointmentDAO.getDoctor();
+        if (doctor != null) {
+            doctor.setAvatar(null);
+        }
+        appointment.setDoctor(doctor);
 
         this.appointment = appointment;
     }

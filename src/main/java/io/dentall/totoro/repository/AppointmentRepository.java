@@ -53,6 +53,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
     @Query(value =
         "select new io.dentall.totoro.repository.dao.AppointmentDAO( " +
             "appointment.id, " +
+            "appointment.createdBy, " +
+            "appointment.createdDate, " +
             "appointment.status, " +
             "appointment.subject, " +
             "appointment.note, " +
@@ -64,6 +66,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.archived, " +
             "appointment.contacted, " +
             "patient.id, " +
+            "patient.createdBy, " +
+            "patient.createdDate, " +
+            "patient.lastModifiedBy, " +
+            "patient.lastModifiedDate, " +
             "patient.name, " +
             "patient.phone, " +
             "patient.gender, " +
@@ -91,13 +97,21 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "patient.marriage, " +
             "patient.newPatient, " +
             "registration.id, " +
+            "registration.createdBy, " +
+            "registration.createdDate, " +
+            "registration.lastModifiedBy, " +
+            "registration.lastModifiedDate, " +
             "registration.status, " +
             "registration.arrivalTime, " +
             "registration.type, " +
             "registration.onSite, " +
             "registration.noCard, " +
             "doctor," +
-            "disposal.id" +
+            "disposal.id," +
+            "disposal.createdBy, " +
+            "disposal.createdDate, " +
+            "disposal.lastModifiedBy, " +
+            "disposal.lastModifiedDate " +
             ") " +
             "from Appointment as appointment " +
                 "left join appointment.patient as patient " +
