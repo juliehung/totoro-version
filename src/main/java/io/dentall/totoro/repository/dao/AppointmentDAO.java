@@ -12,6 +12,8 @@ import java.time.LocalDate;
 public class AppointmentDAO {
     // Appointment
     private final Long id;
+    private final String createdBy;
+    private final Instant createdDate;
     private final AppointmentStatus status;
     private final String subject;
     private final String note;
@@ -24,6 +26,10 @@ public class AppointmentDAO {
     private final Boolean contacted;
     // Patient
     private final Long patientId;
+    private final String patientCreatedBy;
+    private final Instant patientCreatedDate;
+    private final String patientLastModifiedBy;
+    private final Instant patientLastModifiedDate;
     private final String name;
     private final String phone;
     private final Gender gender;
@@ -52,6 +58,10 @@ public class AppointmentDAO {
     private final Boolean newPatient;
     // Registration
     private final Long registrationId;
+    private final String registrationCreatedBy;
+    private final Instant registrationCreatedDate;
+    private final String registrationLastModifiedBy;
+    private final Instant registrationLastModifiedDate;
     private final RegistrationStatus registrationStatus;
     private final Instant arrivalTime;
     private final String type;
@@ -61,9 +71,15 @@ public class AppointmentDAO {
     private final ExtendUser doctor;
     // Disposal
     private final Long disposalId;
+    private final String disposalCreatedBy;
+    private final Instant disposalCreatedDate;
+    private final String disposalLastModifiedBy;
+    private final Instant disposalLastModifiedDate;
 
     public AppointmentDAO(
         Long id,
+        String createdBy,
+        Instant createdDate,
         AppointmentStatus status,
         String subject,
         String note,
@@ -75,6 +91,10 @@ public class AppointmentDAO {
         Boolean archived,
         Boolean contacted,
         Long patientId,
+        String patientCreatedBy,
+        Instant patientCreatedDate,
+        String patientLastModifiedBy,
+        Instant patientLastModifiedDate,
         String name,
         String phone,
         Gender gender,
@@ -102,14 +122,24 @@ public class AppointmentDAO {
         String marriage,
         Boolean newPatient,
         Long registrationId,
+        String registrationCreatedBy,
+        Instant registrationCreatedDate,
+        String registrationLastModifiedBy,
+        Instant registrationLastModifiedDate,
         RegistrationStatus registrationStatus,
         Instant arrivalTime,
         String type,
         Boolean onSite,
         Boolean noCard,
         ExtendUser doctor,
-        Long disposalId) {
+        Long disposalId,
+        String disposalCreatedBy,
+        Instant disposalCreatedDate,
+        String disposalLastModifiedBy,
+        Instant disposalLastModifiedDate) {
         this.id = id;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
         this.status = status;
         this.subject = subject;
         this.note = note;
@@ -121,6 +151,10 @@ public class AppointmentDAO {
         this.archived = archived;
         this.contacted = contacted;
         this.patientId = patientId;
+        this.patientCreatedBy = patientCreatedBy;
+        this.patientCreatedDate = patientCreatedDate;
+        this.patientLastModifiedBy = patientLastModifiedBy;
+        this.patientLastModifiedDate = patientLastModifiedDate;
         this.name = name;
         this.phone = phone;
         this.gender = gender;
@@ -148,6 +182,10 @@ public class AppointmentDAO {
         this.marriage = marriage;
         this.newPatient = newPatient;
         this.registrationId = registrationId;
+        this.registrationCreatedBy = registrationCreatedBy;
+        this.registrationCreatedDate = registrationCreatedDate;
+        this.registrationLastModifiedBy = registrationLastModifiedBy;
+        this.registrationLastModifiedDate = registrationLastModifiedDate;
         this.registrationStatus = registrationStatus;
         this.arrivalTime = arrivalTime;
         this.type = type;
@@ -155,10 +193,22 @@ public class AppointmentDAO {
         this.noCard = noCard;
         this.doctor = doctor;
         this.disposalId = disposalId;
+        this.disposalCreatedBy = disposalCreatedBy;
+        this.disposalCreatedDate = disposalCreatedDate;
+        this.disposalLastModifiedBy = disposalLastModifiedBy;
+        this.disposalLastModifiedDate = disposalLastModifiedDate;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
     }
 
     public AppointmentStatus getStatus() {
@@ -203,6 +253,22 @@ public class AppointmentDAO {
 
     public Long getPatientId() {
         return patientId;
+    }
+
+    public String getPatientCreatedBy() {
+        return patientCreatedBy;
+    }
+
+    public Instant getPatientCreatedDate() {
+        return patientCreatedDate;
+    }
+
+    public String getPatientLastModifiedBy() {
+        return patientLastModifiedBy;
+    }
+
+    public Instant getPatientLastModifiedDate() {
+        return patientLastModifiedDate;
     }
 
     public String getName() {
@@ -313,6 +379,22 @@ public class AppointmentDAO {
         return registrationId;
     }
 
+    public String getRegistrationCreatedBy() {
+        return registrationCreatedBy;
+    }
+
+    public Instant getRegistrationCreatedDate() {
+        return registrationCreatedDate;
+    }
+
+    public String getRegistrationLastModifiedBy() {
+        return registrationLastModifiedBy;
+    }
+
+    public Instant getRegistrationLastModifiedDate() {
+        return registrationLastModifiedDate;
+    }
+
     public RegistrationStatus getRegistrationStatus() {
         return registrationStatus;
     }
@@ -339,5 +421,21 @@ public class AppointmentDAO {
 
     public Long getDisposalId() {
         return disposalId;
+    }
+
+    public String getDisposalCreatedBy() {
+        return disposalCreatedBy;
+    }
+
+    public Instant getDisposalCreatedDate() {
+        return disposalCreatedDate;
+    }
+
+    public String getDisposalLastModifiedBy() {
+        return disposalLastModifiedBy;
+    }
+
+    public Instant getDisposalLastModifiedDate() {
+        return disposalLastModifiedDate;
     }
 }
