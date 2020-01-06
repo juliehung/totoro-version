@@ -90,7 +90,12 @@ public class RegistrationService {
             .map(registration -> {
                 if (updateRegistration.getStatus() != null) {
                     registration.setStatus(updateRegistration.getStatus());
-                    broadcastService.broadcastRegistrationStatus(registration.getAppointment().getPatient().getName(), registration.getStatus());
+
+                    if (registration.getAppointment() != null) {
+                        if (registration.getAppointment().getPatient() != null) {
+                            broadcastService.broadcastRegistrationStatus(registration.getAppointment().getPatient().getName(), registration.getStatus());
+                        }
+                    }
                 }
 
                 if (updateRegistration.getArrivalTime() != null) {
