@@ -68,6 +68,7 @@ class AppCalendar extends React.Component {
     const msg = document.querySelector('.fc-license-message');
     msg.parentNode.removeChild(msg);
 
+    // mqtt
     MqttHelper.subscribeAppointment(AppCalendar.name, message => {
       let messageObj;
       try {
@@ -80,7 +81,6 @@ class AppCalendar extends React.Component {
       const expectedArrivalTime = moment(messageObj.expectedArrivalTime);
       if (expectedArrivalTime.isBetween(start, end)) {
         // TODO: find a better way to update appointments
-        // this.props.getAllEvents();
       }
     });
   }
@@ -100,8 +100,7 @@ class AppCalendar extends React.Component {
     }
 
     if (prevProps.cancelApp !== this.props.cancelApp) {
-      const title = document.querySelector('.fc-center');
-      this.simulateMouseClick(title);
+      this.clickTitle();
       message.success('取消/恢復預約成功');
     }
   }
@@ -124,6 +123,12 @@ class AppCalendar extends React.Component {
     );
   };
 
+  clickTitle = () => {
+    const title = document.querySelector('.fc-center');
+    this.simulateMouseClick(title);
+  };
+
+  scrollListener = undefined;
   handleDatesRender = info => {
     // reset first day when leave timeGridWeek
     if (info.view.type !== 'timeGridWeek') {
@@ -141,6 +146,13 @@ class AppCalendar extends React.Component {
     const end = moment(info.view.activeEnd);
     this.props.getAppointments(start, end);
     this.props.getCalendarEvent(start, end);
+
+    // listen fullcalendar scroll event
+    if (this.scrollListener) {
+      this.scrollListener.removeEventListener('scroll', this.clickTitle);
+    }
+    this.scrollListener = document.querySelector('.fc-scroller');
+    this.scrollListener.addEventListener('scroll', this.clickTitle);
   };
 
   nextClick = () => {
