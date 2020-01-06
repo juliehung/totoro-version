@@ -8,15 +8,26 @@ import convertMrnTo5Digits from './convertMrnTo5Digits';
 const PopoverContainer = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 150px;
-  margin: 5px;
-  & > span {
-    margin: 5px 0;
-  }
+  width: 160px;
+`;
+
+const BreakP = styled.p`
+  margin: 5px 0;
+  overflow-wrap: break-word;
 `;
 
 const StyledIcon = styled(Icon)`
   margin-right: 5px;
+`;
+
+const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0 0;
+`;
+
+const Button50 = styled(Button)`
+  width: 50px;
 `;
 
 const Button100 = styled(Button)`
@@ -52,43 +63,53 @@ export function handleEventRender(info, func) {
               {appointment.status === 'CANCEL' ? '[C]' : null} {appointment.patientName}
             </HightLightSpan>
             <HightLightSpan>{convertMrnTo5Digits(appointment.patientId)}</HightLightSpan>
-            <span>
+            <BreakP>
               <StyledIcon type="phone" />
-              <span>{appointment.phone}</span>
-            </span>
-            <span>
-              <StyledIcon type="user"></StyledIcon>
-              <span>{appointment.doctor.user.firstName}</span>
-            </span>
-            <span>
-              <StyledIcon type="solution"></StyledIcon>
-              <span>{appointment.note}</span>
-            </span>
-            {!appointment.registrationStatus ? (
-              appointment.status === 'CANCEL' ? (
-                <Popconfirm
-                  trigger="click"
-                  title="確定恢復預約"
-                  onConfirm={() => {
-                    func.cancel({ id: appointment.id, status: 'CONFIRMED' });
+              {appointment.phone}
+            </BreakP>
+            <BreakP>
+              <StyledIcon type="user" />
+              {appointment.doctor.user.firstName}
+            </BreakP>
+            <BreakP>
+              <StyledIcon type="solution" />
+              {appointment.note}
+            </BreakP>
+            <ButtonsContainer>
+              {!appointment.registrationStatus ? (
+                appointment.status === 'CANCEL' ? (
+                  <Popconfirm
+                    trigger="click"
+                    title="確定恢復預約"
+                    onConfirm={() => {
+                      func.cancel({ id: appointment.id, status: 'CONFIRMED' });
+                    }}
+                  >
+                    <Button50 size="small">恢復</Button50>
+                  </Popconfirm>
+                ) : (
+                  <Popconfirm
+                    trigger="click"
+                    title="確定取消預約"
+                    onConfirm={() => {
+                      func.cancel({ id: appointment.id, status: 'CANCEL' });
+                    }}
+                  >
+                    <Button50 size="small">取消</Button50>
+                  </Popconfirm>
+                )
+              ) : null}
+              {!appointment.registrationStatus ? (
+                <Button100
+                  size="small"
+                  onClick={() => {
+                    func.edit(appointment);
                   }}
                 >
-                  <Button100 size="small">恢復預約</Button100>
-                </Popconfirm>
-              ) : (
-                <Popconfirm
-                  trigger="click"
-                  title="確定取消預約"
-                  onConfirm={() => {
-                    func.cancel({ id: appointment.id, status: 'CANCEL' });
-                  }}
-                >
-                  <Button100 size="small">取消預約</Button100>
-                </Popconfirm>
-              )
-            ) : (
-              undefined
-            )}
+                  編輯
+                </Button100>
+              ) : null}
+            </ButtonsContainer>
           </PopoverContainer>
         );
 
@@ -115,7 +136,7 @@ export function handleEventRender(info, func) {
                     ? () => {
                         func.edit(appointment);
                       }
-                    : undefined
+                    : null
                 }
               />
             </Dropdown>
