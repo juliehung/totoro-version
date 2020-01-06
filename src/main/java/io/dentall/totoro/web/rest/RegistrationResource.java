@@ -2,7 +2,6 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Registration;
-import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.RegistrationRepository;
 import io.dentall.totoro.service.RegistrationService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -84,7 +82,9 @@ public class RegistrationResource {
         if (registration.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Registration result = registrationRepository.save(registration);
+
+        Registration result = registrationService.update(registration);
+
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, registration.getId().toString()))
             .body(result);
