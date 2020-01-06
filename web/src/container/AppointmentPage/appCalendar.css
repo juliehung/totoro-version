@@ -37,3 +37,8 @@
 .fc-axis {
   width: 40px !important;
 }
+
+.fc-body.fc-widget-content > .fc-event-container {
+  max-height: 40vh !important;
+  overflow: scroll !important;
+}

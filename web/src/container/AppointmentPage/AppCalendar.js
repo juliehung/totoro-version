@@ -255,6 +255,17 @@ class AppCalendar extends React.Component {
     this.props.popoverCancelApp(apptData);
   };
 
+  eventDragStart = () => {
+    if (this.scrollListener) {
+      this.scrollListener.removeEventListener('scroll', this.clickTitle);
+    }
+  };
+
+  eventDragEnd = () => {
+    this.scrollListener = document.querySelector('.fc-scroller');
+    this.scrollListener.addEventListener('scroll', this.clickTitle);
+  };
+
   render() {
     const event = [
       ...this.props.appointments.filter(a => {
@@ -348,6 +359,9 @@ class AppCalendar extends React.Component {
         nowIndicator
         eventLimit
         selectable
+        eventDragStart={this.eventDragStart}
+        eventDragEnd={this.eventDragEnd}
+        timeGridEventMinHeight={15}
       />
     );
   }

@@ -35,10 +35,7 @@ export function mapStatusToColor(app) {
 
 export function convertAppToEvt(appointment) {
   const start = moment(appointment.expectedArrivalTime).toDate();
-  const requiredTreatmentTime =
-    !appointment.requiredTreatmentTime || appointment.requiredTreatmentTime === 0
-      ? 15
-      : appointment.requiredTreatmentTime;
+  const requiredTreatmentTime = appointment.requiredTreatmentTime;
   const end = moment(appointment.expectedArrivalTime)
     .add(requiredTreatmentTime, 'minutes')
     .toDate();
