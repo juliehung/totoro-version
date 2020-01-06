@@ -139,4 +139,5 @@ mqtt:
 queue:
     appointment: totoro.appointmentQueue
     patient: totoro.patientQueue
+    registration: totoro.registrationQueue
     message: totoro.messageQueue

@@ -15,15 +15,39 @@ public class MessageSender {
 
     private final JmsTemplate jmsTemplate;
 
+    @Value("${queue.appointment}")
+    private String appointmentQueue;
+
+    @Value("${queue.patient}")
+    private String patientQueue;
+
+    @Value("${queue.registration}")
+    private String registrationQueue;
+
     @Value("${queue.message}")
-    private String queue;
+    private String messageQueue;
 
     public MessageSender(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
     }
 
-    public void send(Map<String, Object> message) {
-        log.debug("send message[{}] to queue[{}]", message, queue);
-        jmsTemplate.convertAndSend(queue, message);
+    public void sendAppointment(Map<String, Object> message) {
+        log.debug("send appointment[{}] to queue[{}]", message, appointmentQueue);
+        jmsTemplate.convertAndSend(appointmentQueue, message);
+    }
+
+    public void sendPatient(Map<String, Object> message) {
+        log.debug("send patient[{}] to queue[{}]", message, patientQueue);
+        jmsTemplate.convertAndSend(patientQueue, message);
+    }
+
+    public void sendRegistration(Map<String, Object> message) {
+        log.debug("send registration[{}] to queue[{}]", message, registrationQueue);
+        jmsTemplate.convertAndSend(registrationQueue, message);
+    }
+
+    public void sendMessage(Map<String, Object> message) {
+        log.debug("send message[{}] to queue[{}]", message, messageQueue);
+        jmsTemplate.convertAndSend(messageQueue, message);
     }
 }

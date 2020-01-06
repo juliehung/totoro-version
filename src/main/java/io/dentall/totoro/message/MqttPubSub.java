@@ -2,8 +2,6 @@ package io.dentall.totoro.message;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.Patient;
 import io.github.jhipster.config.JHipsterConstants;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -32,13 +30,18 @@ public class MqttPubSub {
     }
 
     @JmsListener(destination = "${queue.appointment}")
-    public void receiveAppointment(Appointment appointment) {
-        publish("totoro/appointment", appointment, 0, true);
+    public void receiveAppointment(Map<String, Object> message) {
+        publish("totoro/appointment", message, 0, true);
     }
 
     @JmsListener(destination = "${queue.patient}")
-    public void receivePatient(Patient patient) {
-        publish("totoro/patient", patient, 0, true);
+    public void receivePatient(Map<String, Object> message) {
+        publish("totoro/patient", message, 0, true);
+    }
+
+    @JmsListener(destination = "${queue.registration}")
+    public void receiveRegistration(Map<String, Object> message) {
+        publish("totoro/registration", message, 0, true);
     }
 
     @JmsListener(destination = "${queue.message}")

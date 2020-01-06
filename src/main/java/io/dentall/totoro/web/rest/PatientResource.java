@@ -3,9 +3,9 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Tag;
-import io.dentall.totoro.message.PatientSender;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
+import io.dentall.totoro.service.BroadcastService;
 import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.service.dto.NullGroup;
@@ -59,20 +59,20 @@ public class PatientResource {
 
     private final PatientService patientService;
 
-    private final PatientSender patientMessageSender;
+    private final BroadcastService broadcastService;
 
     public PatientResource(
         PatientRepository patientRepository,
         TagRepository tagRepository,
         ImageService imageService,
         PatientService patientService,
-        PatientSender patientMessageSender
+        BroadcastService broadcastService
     ) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
         this.imageService = imageService;
         this.patientService = patientService;
-        this.patientMessageSender = patientMessageSender;
+        this.broadcastService = broadcastService;
     }
 
     /**
@@ -91,7 +91,7 @@ public class PatientResource {
         }
 
         Patient result = patientService.save(patient);
-        patientMessageSender.send(result);
+        broadcastService.broadcastDomainId(result.getId(), Patient.class);
 
         return ResponseEntity.created(new URI("/api/patients/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -116,7 +116,7 @@ public class PatientResource {
         }
 
         Patient result = patientService.update(patient);
-        patientMessageSender.send(result);
+        broadcastService.broadcastDomainId(result.getId(), Patient.class);
 
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))

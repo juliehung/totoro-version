@@ -3,8 +3,8 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TagName;
-import io.dentall.totoro.message.PatientSender;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.BroadcastService;
 import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
@@ -175,7 +175,7 @@ public class PatientResourceIntTest {
     private PatientIdentityRepository patientIdentityRepository;
 
     @Autowired
-    private PatientSender patientMessageSender;
+    private BroadcastService broadcastService;
 
     private MockMvc restPatientMockMvc;
 
@@ -192,7 +192,7 @@ public class PatientResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, imageService, patientService, patientMessageSender);
+        final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, imageService, patientService, broadcastService);
         this.restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
