@@ -20,18 +20,11 @@ const StyledIcon = styled(Icon)`
   margin-right: 5px;
 `;
 
-const ButtonsContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0 0;
-`;
-
-const Button50 = styled(Button)`
-  width: 50px;
-`;
-
-const Button100 = styled(Button)`
-  width: 100px;
+const EditIcon = styled(Icon)`
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 20px;
 `;
 
 const HightLightSpan = styled.span`
@@ -75,41 +68,37 @@ export function handleEventRender(info, func) {
               <StyledIcon type="solution" />
               {appointment.note}
             </BreakP>
-            <ButtonsContainer>
-              {!appointment.registrationStatus ? (
-                appointment.status === 'CANCEL' ? (
-                  <Popconfirm
-                    trigger="click"
-                    title="確定恢復預約"
-                    onConfirm={() => {
-                      func.cancel({ id: appointment.id, status: 'CONFIRMED' });
-                    }}
-                  >
-                    <Button50 size="small">恢復</Button50>
-                  </Popconfirm>
-                ) : (
-                  <Popconfirm
-                    trigger="click"
-                    title="確定取消預約"
-                    onConfirm={() => {
-                      func.cancel({ id: appointment.id, status: 'CANCEL' });
-                    }}
-                  >
-                    <Button50 size="small">取消</Button50>
-                  </Popconfirm>
-                )
-              ) : null}
-              {!appointment.registrationStatus ? (
-                <Button100
-                  size="small"
-                  onClick={() => {
-                    func.edit(appointment);
+            {!appointment.registrationStatus ? (
+              appointment.status === 'CANCEL' ? (
+                <Popconfirm
+                  trigger="click"
+                  title="確定恢復預約"
+                  onConfirm={() => {
+                    func.cancel({ id: appointment.id, status: 'CONFIRMED' });
                   }}
                 >
-                  編輯
-                </Button100>
-              ) : null}
-            </ButtonsContainer>
+                  <Button size="small">恢復預約</Button>
+                </Popconfirm>
+              ) : (
+                <Popconfirm
+                  trigger="click"
+                  title="確定取消預約"
+                  onConfirm={() => {
+                    func.cancel({ id: appointment.id, status: 'CANCEL' });
+                  }}
+                >
+                  <Button size="small">取消預約</Button>
+                </Popconfirm>
+              )
+            ) : null}
+            {!appointment.registrationStatus ? (
+              <EditIcon
+                type="edit"
+                onClick={() => {
+                  func.edit(appointment);
+                }}
+              />
+            ) : null}
           </PopoverContainer>
         );
 
