@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.repository.RegistrationRepository;
+import io.dentall.totoro.service.BroadcastService;
 import io.dentall.totoro.service.RegistrationService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
@@ -41,9 +42,16 @@ public class RegistrationResource {
 
     private final RegistrationService registrationService;
 
-    public RegistrationResource(RegistrationRepository registrationRepository, RegistrationService registrationService) {
+    private final BroadcastService broadcastService;
+
+    public RegistrationResource(
+        RegistrationRepository registrationRepository,
+        RegistrationService registrationService,
+        BroadcastService broadcastService
+    ) {
         this.registrationRepository = registrationRepository;
         this.registrationService = registrationService;
+        this.broadcastService = broadcastService;
     }
 
     /**
@@ -146,6 +154,7 @@ public class RegistrationResource {
         log.debug("REST request to delete Registration : {}", id);
 
         registrationService.delete(id);
+        broadcastService.broadcastDomainId(id, Registration.class);
 
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

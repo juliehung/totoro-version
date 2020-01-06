@@ -2,9 +2,9 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.message.AppointmentSender;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.AppointmentService;
+import io.dentall.totoro.service.BroadcastService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 import io.dentall.totoro.service.AppointmentQueryService;
 
@@ -110,7 +110,7 @@ public class AppointmentResourceIntTest {
     private PatientRepository patientRepository;
 
     @Autowired
-    private AppointmentSender appointmentMessageSender;
+    private BroadcastService broadcastService;
 
     private MockMvc restAppointmentMockMvc;
 
@@ -119,7 +119,7 @@ public class AppointmentResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AppointmentResource appointmentResource = new AppointmentResource(appointmentService, appointmentQueryService, appointmentMessageSender);
+        final AppointmentResource appointmentResource = new AppointmentResource(appointmentService, appointmentQueryService, broadcastService);
         this.restAppointmentMockMvc = MockMvcBuilders.standaloneSetup(appointmentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

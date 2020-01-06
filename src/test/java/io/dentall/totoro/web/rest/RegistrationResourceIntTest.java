@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.BroadcastService;
 import io.dentall.totoro.service.RegistrationService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 
@@ -93,6 +94,9 @@ public class RegistrationResourceIntTest {
     @Autowired
     private RegistrationDelRepository registrationDelRepository;
 
+    @Autowired
+    private BroadcastService broadcastService;
+
     private MockMvc restRegistrationMockMvc;
 
     private Registration registration;
@@ -100,7 +104,7 @@ public class RegistrationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final RegistrationResource registrationResource = new RegistrationResource(registrationRepository, registrationService);
+        final RegistrationResource registrationResource = new RegistrationResource(registrationRepository, registrationService, broadcastService);
         this.restRegistrationMockMvc = MockMvcBuilders.standaloneSetup(registrationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
