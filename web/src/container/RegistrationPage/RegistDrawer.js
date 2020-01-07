@@ -83,7 +83,7 @@ function RegistDrawer(props) {
           </div>
         </PatientContainer>
         <Table columns={columns} dataSource={data} pagination={false} />
-        <Link to={{ pathname: '/q', state: { patient: props.patient } }}>
+        <Link to={`/q/${props.patient.id}`}>
           <StyledButton type="primary">新增病歷首頁</StyledButton>
         </Link>
       </DrawerContainer>

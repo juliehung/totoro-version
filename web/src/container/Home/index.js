@@ -5,7 +5,7 @@ import QuestionnairePage from '../QuestionnairePage';
 import LoginPage from '../LoginPage';
 import { Switch, Route } from 'react-router-dom';
 import NavHome from '../NavHome';
-import RegistrationPage from "../RegistrationPage";
+import RegistrationPage from '../RegistrationPage';
 
 //#region
 const Container = styled.div`
@@ -24,7 +24,7 @@ function Home(props) {
 
   return (
     <Switch>
-      <Route path="/q">
+      <Route path="/q/:pid">
         <QuestionnairePage />
       </Route>
       <Route exact path="/registration">

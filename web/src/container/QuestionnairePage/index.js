@@ -16,6 +16,7 @@ import {
   preChangeDoDrug,
   preChangePregnant,
   initQuestionnaire,
+  getPatient,
 } from './actions';
 import './index.css';
 import QutContent from './QutContent';
@@ -73,6 +74,8 @@ function QuestionnairePage(props) {
     changeAllergy,
     preChangeDoDrug,
     preChangePregnant,
+    match,
+    getPatient,
   } = props;
 
   // TODO: Xu you can continue from here
@@ -103,6 +106,9 @@ function QuestionnairePage(props) {
 
     document.addEventListener('keydown', keyFunction, false);
 
+    const pid = match.params.pid;
+    getPatient(pid);
+
     return () => {
       document.removeEventListener('keydown', keyFunction, false);
     };
@@ -119,6 +125,8 @@ function QuestionnairePage(props) {
     changeAllergy,
     preChangeDoDrug,
     preChangePregnant,
+    match,
+    getPatient,
   ]);
 
   return (
@@ -157,6 +165,7 @@ const mapDispatchToProps = {
   preChangeDoDrug,
   preChangePregnant,
   initQuestionnaire,
+  getPatient,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(QuestionnairePage));

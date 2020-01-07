@@ -34,6 +34,9 @@ import {
   CHANGE_SMOKING_A,
   CHANGE_IS_SIG_EMPTY,
   INIT_QUESTIONNAIRE,
+  CREATE_Q_WITH_SIGN,
+  GET_PATIENT_START,
+  GET_PATIENT_SUCCESS,
 } from './constant';
 
 export function nextPage() {
@@ -174,4 +177,16 @@ export function changeIsSigEmpty(isEmpty) {
 
 export function initQuestionnaire(patient) {
   return { type: INIT_QUESTIONNAIRE, patient };
+}
+
+export function createQWSign(sign) {
+  return { type: CREATE_Q_WITH_SIGN, sign };
+}
+
+export function getPatient(pid) {
+  return { type: GET_PATIENT_START, pid };
+}
+
+export function getPatientSuccess(patient) {
+  return { type: GET_PATIENT_SUCCESS, patient };
 }

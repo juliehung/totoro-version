@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SignatureCanvas from 'react-signature-canvas';
 import { Button, Icon } from 'antd';
-import { changeIsSigEmpty } from '../actions';
+import { changeIsSigEmpty, createQWSign } from '../actions';
+import { trimDataUrl } from '../utils/trimDataUrl';
 
 //#region
 const Container = styled.div`
@@ -51,28 +52,33 @@ function Signature(props) {
     props.changeIsSigEmpty(sigRef.isEmpty());
   };
 
-  const onEnd = e => {
+  const onEnd = () => {
     props.changeIsSigEmpty(sigRef.isEmpty());
+  };
+
+  const SendWSign = () => {
+    const imgURL = trimDataUrl(sigRef.toDataURL());
+    props.createQWSign(imgURL);
   };
 
   return (
     <Container>
       <HeadContainer>
         <div>
-          <Title
-            onClick={() => {
-              const imgURL = sigRef.toDataURL('image/png');
-              console.log(imgURL);
-            }}
-          >
-            數位簽章
-          </Title>
+          <Title>數位簽章</Title>
           <SubTitle>請簽下您的姓名以及當天日期</SubTitle>
         </div>
-        <Button size="large" type="primary" disabled={props.isEmpty}>
-          送出
-          <Icon type="check" />
-        </Button>
+        {props.isEmpty ? (
+          <Button size="large">
+            不簽名直接送出
+            <Icon type="check" />
+          </Button>
+        ) : (
+          <Button size="large" type="primary" onClick={SendWSign}>
+            送出
+            <Icon type="check" />
+          </Button>
+        )}
       </HeadContainer>
       <SigContainer>
         <ClearButton onClick={clearSig}>清除</ClearButton>
@@ -97,6 +103,6 @@ const mapStateToProps = ({ questionnairePageReducer }) => ({
   isEmpty: questionnairePageReducer.data.isSigEmpty,
 });
 
-const mapDispatchToProps = { changeIsSigEmpty };
+const mapDispatchToProps = { changeIsSigEmpty, createQWSign };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signature);

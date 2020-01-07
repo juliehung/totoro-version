@@ -5,8 +5,9 @@ export function* nextPage() {
   while (true) {
     try {
       yield take(NEXT_PAGE);
+      yield delay(0);
       yield put({ type: NEXT_PAGE_DELAY });
-      yield delay(400);
+      yield delay(500);
     } catch (error) {}
   }
 }
