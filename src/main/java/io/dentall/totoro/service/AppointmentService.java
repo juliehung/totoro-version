@@ -6,7 +6,6 @@ import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.ExtendUserRepository;
-import io.dentall.totoro.repository.dao.AppointmentDAO;
 import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;

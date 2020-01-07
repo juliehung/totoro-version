@@ -111,13 +111,28 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "disposal.createdBy, " +
             "disposal.createdDate, " +
             "disposal.lastModifiedBy, " +
-            "disposal.lastModifiedDate " +
+            "disposal.lastModifiedDate, " +
+            "nhiPatient.cardNumber, " +
+            "nhiPatient.cardAnnotation, " +
+            "nhiPatient.cardValidDate, " +
+            "nhiPatient.cardIssueDate, " +
+            "nhiPatient.nhiIdentity, " +
+            "nhiPatient.availableTimes, " +
+            "nhiPatient.scaling, " +
+            "nhiPatient.fluoride, " +
+            "nhiPatient.perio, " +
+            "nhiPatient.createdBy, " +
+            "nhiPatient.createdDate, " +
+            "nhiPatient.lastModifiedBy, " +
+            "nhiPatient.lastModifiedDate " +
             ") " +
             "from Appointment as appointment " +
                 "left join appointment.patient as patient " +
+                "left join appointment.patient.tags as tags " +
+                "left join appointment.patient.nhiExtendPatient as nhiPatient " +
                 "left join appointment.registration as registration " +
                 "left join appointment.doctor as doctor " +
                 "left join appointment.registration.disposal as disposal " +
-            "where appointment.expectedArrivalTime between :beginDate and :endDate ")
+            "where appointment.expectedArrivalTime between :beginDate and :endDate and patient.id = nhiPatient.id")
     List<AppointmentDAO> findAppointmentWithRelationshipBetween(@Param("beginDate") Instant beginDate, @Param("endDate") Instant endDate);
 }

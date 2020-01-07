@@ -2,7 +2,6 @@ package io.dentall.totoro.service.dto;
 
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.dao.AppointmentDAO;
-import org.springframework.security.core.parameters.P;
 
 public class AppointmentSplitRelationshipDTO {
 
@@ -30,6 +29,20 @@ public class AppointmentSplitRelationshipDTO {
             }
             registration.setDisposal(disposal);
         }
+        NhiExtendPatient nhiExtendPatient = new NhiExtendPatient()
+            .cardNumber(appointmentDAO.getNhiPatientCardNumber())
+            .cardAnnotation(appointmentDAO.getNhiPatientCardAnnotation())
+            .cardValidDate(appointmentDAO.getNhiPatientCardValidDate())
+            .cardIssueDate(appointmentDAO.getNhiPatientCardIssueDate())
+            .nhiIdentity(appointmentDAO.getNhiPatientNhiIdentity())
+            .availableTimes(appointmentDAO.getNhiPatientAvailableTimes())
+            .scaling(appointmentDAO.getNhiPatientScaling())
+            .fluoride(appointmentDAO.getNhiPatientFluoride())
+            .perio(appointmentDAO.getNhiPatientPerio());
+        nhiExtendPatient.setCreatedBy(appointmentDAO.getNhiPatientCreatedBy());
+        nhiExtendPatient.setCreatedDate(appointmentDAO.getNhiPatientCreatedDate());
+        nhiExtendPatient.setLastModifiedBy(appointmentDAO.getNhiPatientLastModifiedBy());
+        nhiExtendPatient.setLastModifiedDate(appointmentDAO.getNhiPatientLastModifiedDate());
 
         Patient patient = new Patient()
             .name(appointmentDAO.getName())
@@ -61,6 +74,7 @@ public class AppointmentSplitRelationshipDTO {
         patient.setId(appointmentDAO.getPatientId());
         patient.setLastModifiedBy(appointmentDAO.getPatientLastModifiedBy());
         patient.setLastModifiedDate(appointmentDAO.getPatientLastModifiedDate());
+        patient.setNhiExtendPatient(nhiExtendPatient);
 
         Appointment appointment = new Appointment()
             .status(appointmentDAO.getStatus())

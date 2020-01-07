@@ -1,6 +1,7 @@
 package io.dentall.totoro.repository.dao;
 
 import io.dentall.totoro.domain.ExtendUser;
+import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 import io.dentall.totoro.domain.enumeration.Blood;
 import io.dentall.totoro.domain.enumeration.Gender;
@@ -8,6 +9,7 @@ import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Set;
 
 public class AppointmentDAO {
     // Appointment
@@ -75,6 +77,20 @@ public class AppointmentDAO {
     private final Instant disposalCreatedDate;
     private final String disposalLastModifiedBy;
     private final Instant disposalLastModifiedDate;
+    // NhiExtendPatient
+    private final String nhiPatientCardNumber;
+    private final String nhiPatientCardAnnotation;
+    private final String nhiPatientCardValidDate;
+    private final String nhiPatientCardIssueDate;
+    private final String nhiPatientNhiIdentity;
+    private final Integer nhiPatientAvailableTimes;
+    private final String nhiPatientScaling;
+    private final String nhiPatientFluoride;
+    private final String nhiPatientPerio;
+    private final String nhiPatientCreatedBy;
+    private final Instant nhiPatientCreatedDate;
+    private final String nhiPatientLastModifiedBy;
+    private final Instant nhiPatientLastModifiedDate;
 
     public AppointmentDAO(
         Long id,
@@ -136,7 +152,21 @@ public class AppointmentDAO {
         String disposalCreatedBy,
         Instant disposalCreatedDate,
         String disposalLastModifiedBy,
-        Instant disposalLastModifiedDate) {
+        Instant disposalLastModifiedDate,
+        String nhiPatientCardNumber,
+        String nhiPatientCardAnnotation,
+        String nhiPatientCardValidDate,
+        String nhiPatientCardIssueDate,
+        String nhiPatientNhiIdentity,
+        Integer nhiPatientAvailableTimes,
+        String nhiPatientScaling,
+        String nhiPatientFluoride,
+        String nhiPatientPerio,
+        String nhiPatientCreatedBy,
+        Instant nhiPatientCreatedDate,
+        String nhiPatientLastModifiedBy,
+        Instant nhiPatientLastModifiedDate
+    ) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
@@ -197,6 +227,71 @@ public class AppointmentDAO {
         this.disposalCreatedDate = disposalCreatedDate;
         this.disposalLastModifiedBy = disposalLastModifiedBy;
         this.disposalLastModifiedDate = disposalLastModifiedDate;
+        this.nhiPatientCardNumber = nhiPatientCardNumber;
+        this.nhiPatientCardAnnotation = nhiPatientCardAnnotation;
+        this.nhiPatientCardValidDate = nhiPatientCardValidDate;
+        this.nhiPatientCardIssueDate = nhiPatientCardIssueDate;
+        this.nhiPatientNhiIdentity = nhiPatientNhiIdentity;
+        this.nhiPatientAvailableTimes = nhiPatientAvailableTimes;
+        this.nhiPatientScaling = nhiPatientScaling;
+        this.nhiPatientFluoride = nhiPatientFluoride;
+        this.nhiPatientPerio = nhiPatientPerio;
+        this.nhiPatientCreatedBy = nhiPatientCreatedBy;
+        this.nhiPatientCreatedDate = nhiPatientCreatedDate;
+        this.nhiPatientLastModifiedBy = nhiPatientLastModifiedBy;
+        this.nhiPatientLastModifiedDate = nhiPatientLastModifiedDate;
+    }
+
+    public String getNhiPatientCreatedBy() {
+        return nhiPatientCreatedBy;
+    }
+
+    public Instant getNhiPatientCreatedDate() {
+        return nhiPatientCreatedDate;
+    }
+
+    public String getNhiPatientLastModifiedBy() {
+        return nhiPatientLastModifiedBy;
+    }
+
+    public Instant getNhiPatientLastModifiedDate() {
+        return nhiPatientLastModifiedDate;
+    }
+
+    public String getNhiPatientCardNumber() {
+        return nhiPatientCardNumber;
+    }
+
+    public String getNhiPatientCardAnnotation() {
+        return nhiPatientCardAnnotation;
+    }
+
+    public String getNhiPatientCardValidDate() {
+        return nhiPatientCardValidDate;
+    }
+
+    public String getNhiPatientCardIssueDate() {
+        return nhiPatientCardIssueDate;
+    }
+
+    public String getNhiPatientNhiIdentity() {
+        return nhiPatientNhiIdentity;
+    }
+
+    public Integer getNhiPatientAvailableTimes() {
+        return nhiPatientAvailableTimes;
+    }
+
+    public String getNhiPatientScaling() {
+        return nhiPatientScaling;
+    }
+
+    public String getNhiPatientFluoride() {
+        return nhiPatientFluoride;
+    }
+
+    public String getNhiPatientPerio() {
+        return nhiPatientPerio;
     }
 
     public Long getId() {
