@@ -119,7 +119,7 @@ public class AppointmentResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AppointmentResource appointmentResource = new AppointmentResource(appointmentService, appointmentQueryService, broadcastService);
+        final AppointmentResource appointmentResource = new AppointmentResource(appointmentService, appointmentQueryService, broadcastService, tagRepository);
         this.restAppointmentMockMvc = MockMvcBuilders.standaloneSetup(appointmentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

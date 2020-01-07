@@ -2,6 +2,8 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.domain.Tag;
+import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.service.AppointmentQueryService;
 import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.service.BroadcastService;
@@ -25,6 +27,7 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -44,14 +47,18 @@ public class AppointmentResource {
 
     private final BroadcastService broadcastService;
 
+    private final TagRepository tagRepository;
+
     public AppointmentResource(
         AppointmentService appointmentService,
         AppointmentQueryService appointmentQueryService,
-        BroadcastService broadcastService
+        BroadcastService broadcastService,
+        TagRepository tagRepository
     ) {
         this.appointmentService = appointmentService;
         this.appointmentQueryService = appointmentQueryService;
         this.broadcastService = broadcastService;
+        this.tagRepository = tagRepository;
     }
 
     /**
@@ -176,6 +183,15 @@ public class AppointmentResource {
     ) {
         return ResponseEntity.ok().body(appointmentService.findAppointmentWithRelationshipBetween(beginDate, endDate).stream()
             .map(AppointmentSplitRelationshipDTO::getAppointment)
+            .map(appointment -> {
+                if (appointment.getPatient() != null &&
+                    appointment.getPatient().getId() != null
+                ) {
+                    Set<Tag> tags = tagRepository.findByPatientId(appointment.getPatient().getId());
+                    appointment.getPatient().setTags(tags);
+                }
+                return appointment;
+            })
             .collect(Collectors.toList()));
     }
 }
