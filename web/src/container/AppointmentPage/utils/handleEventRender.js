@@ -153,6 +153,12 @@ export function handleEventRender(info, func) {
       }
 
       info.el.innerHTML = HTMLContent;
+
+      if (!appointment.registrationStatus) {
+        info.el.addEventListener('dblclick', () => {
+          func.edit(appointment);
+        });
+      }
     }
   } else if (info.event.extendedProps.eventType === 'doctorDayOff') {
     const doctorDayOff = info.event.extendedProps.doctorDayOff;
