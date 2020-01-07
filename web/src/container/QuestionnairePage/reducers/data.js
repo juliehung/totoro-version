@@ -34,34 +34,35 @@ import {
   CHANGE_DRUG_A,
   CHANGE_PREGANT_A,
   CHANGE_SMOKING_A,
-  CHANGE_IS_SIG_EMPTY,
   GET_PATIENT_SUCCESS,
+  INIT_PAGE,
 } from '../constant';
 
 const initState = {
-  id: undefined,
-  name: '',
-  birth: undefined,
-  gender: undefined,
-  nationalId: undefined,
-  bloodType: undefined,
-  phone: undefined,
-  address: undefined,
-  career: undefined,
-  marriage: undefined,
-  introducer: undefined,
-  disease: [],
-  allergy: [],
-  doDrug: undefined,
-  drug: undefined,
-  pregnant: undefined,
-  pregnantDate: undefined,
-  smoking: undefined,
-  smokingAmount: undefined,
-  other: [],
-  emergencyContact: { name: undefined, phone: undefined, relationship: undefined },
-  isSigEmpty: true,
-  signature: undefined,
+  patientEnity: undefined,
+  patient: {
+    id: undefined,
+    name: '',
+    birth: undefined,
+    gender: undefined,
+    nationalId: undefined,
+    bloodType: undefined,
+    phone: undefined,
+    address: undefined,
+    career: undefined,
+    marriage: undefined,
+    introducer: undefined,
+    disease: [],
+    allergy: [],
+    doDrug: undefined,
+    drug: undefined,
+    pregnant: undefined,
+    pregnantDate: undefined,
+    smoking: undefined,
+    smokingAmount: undefined,
+    other: [],
+    emergencyContact: { name: undefined, phone: undefined, relationship: undefined },
+  },
 };
 
 export const initialState = { ...initState };
@@ -70,112 +71,113 @@ export const initialState = { ...initState };
 const data = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case INIT_PAGE:
+        draft.patient = initState.patient;
+        draft.patientEnity = initState.patientEnity;
+        break;
       case GET_PATIENT_SUCCESS:
-        console.log(action.patient);
-        draft.id = action.patient.id;
-        draft.name = action.patient.name;
-        draft.phone = action.patient.phone;
-        draft.gender = parseTextToOption(action.patient.gender, GenderOption);
-        draft.birth = action.patient.birth;
-        draft.emergencyContact.name = action.patient.emergencyName;
-        draft.emergencyContact.phone = action.patient.emergencyPhone;
-        draft.emergencyContact.relationship = parseTextToOption(
+        draft.patientEnity = action.patient;
+        draft.patient.id = action.patient.id;
+        draft.patient.name = action.patient.name;
+        draft.patient.phone = action.patient.phone;
+        draft.patient.gender = parseTextToOption(action.patient.gender, GenderOption);
+        draft.patient.birth = action.patient.birth;
+        draft.patient.emergencyContact.name = action.patient.emergencyName;
+        draft.patient.emergencyContact.phone = action.patient.emergencyPhone;
+        draft.patient.emergencyContact.relationship = parseTextToOption(
           action.patient.emergencyRelationship,
           RelationshipOption,
         );
-        draft.nationalId = action.patient.nationalId;
-        draft.address = action.patient.address;
-        draft.bloodType = parseTextToOption(action.patient.blood, BloodTypeOption);
-        draft.career = parseTextToOption(action.patient.career, CareerOption);
-        draft.marriage = parseTextToOption(action.patient.marriage, MarriageOption);
-        draft.disease = parseTagToOption(action.patient.tags, 'DISEASE', tags);
-        draft.allergy = parseTagToOption(action.patient.tags, 'ALLERGY', tags);
-        draft.other = parseTagToOption(action.patient.tags, 'OTHER', tags);
+        draft.patient.nationalId = action.patient.nationalId;
+        draft.patient.address = action.patient.address;
+        draft.patient.bloodType = parseTextToOption(action.patient.blood, BloodTypeOption);
+        draft.patient.career = parseTextToOption(action.patient.career, CareerOption);
+        draft.patient.marriage = parseTextToOption(action.patient.marriage, MarriageOption);
+        draft.patient.disease = parseTagToOption(action.patient.tags, 'DISEASE', tags);
+        draft.patient.allergy = parseTagToOption(action.patient.tags, 'ALLERGY', tags);
+        draft.patient.other = parseTagToOption(action.patient.tags, 'OTHER', tags);
 
-        draft.doDrug = action.patient.questionnaire ? (action.patient.questionnaire.drug ? 'A' : 'B') : 'B';
-        draft.drug = action.patient.questionnaire ? action.patient.questionnaire.drugName : undefined;
+        draft.patient.doDrug = action.patient.questionnaire ? (action.patient.questionnaire.drug ? 'A' : 'B') : 'B';
+        draft.patient.drug = action.patient.questionnaire ? action.patient.questionnaire.drugName : undefined;
 
-        draft.pregnant = action.patient.tags.find(tag => tag.id === 25) ? 'A' : 'B';
-        draft.smoking = action.patient.tags.find(tag => tag.id === 26) ? 'A' : 'B';
-        draft.smokingAmount = action.patient.questionnaire ? action.patient.questionnaire.smokeNumberADay : undefined;
+        draft.patient.pregnant = action.patient.tags.find(tag => tag.id === 25) ? 'A' : 'B';
+        draft.patient.smoking = action.patient.tags.find(tag => tag.id === 26) ? 'A' : 'B';
+        draft.patient.smokingAmount = action.patient.questionnaire ? action.patient.questionnaire.smokeNumberADay : 0;
 
         break;
       case INIT_QUESTIONNAIRE:
         if (action.patient.name) {
-          draft.name = action.patient.name;
+          draft.patient.name = action.patient.name;
         }
         if (action.patient.id) {
-          draft.id = action.patient.id;
+          draft.patient.id = action.patient.id;
         }
         break;
       case CHANGE_GENDER:
-        draft.gender = action.gender;
+        draft.patient.gender = action.gender;
         break;
       case CHANGE_BLOOD_TYPE:
-        draft.bloodType = action.bloodType;
+        draft.patient.bloodType = action.bloodType;
         break;
       case CHANGE_CAREER:
-        draft.career = action.career;
+        draft.patient.career = action.career;
         break;
       case CHANGE_MARRIAGE:
-        draft.marriage = action.marriage;
+        draft.patient.marriage = action.marriage;
         break;
       case CHANGE_EMERGENCY_RELATIONSHIP:
-        draft.emergencyContact.relationship = action.relationship;
+        draft.patient.emergencyContact.relationship = action.relationship;
         break;
       case CHANGE_DISEASE:
-        draft.disease = toggleArrayItem(state.disease, action.disease);
+        draft.patient.disease = toggleArrayItem(state.disease, action.disease);
         break;
       case CHANGE_ALLERGY:
-        draft.allergy = toggleArrayItem(state.allergy, action.allergy);
+        draft.patient.allergy = toggleArrayItem(state.allergy, action.allergy);
         break;
       case CHANGE_DO_DRUG:
-        draft.doDrug = action.doDrug;
+        draft.patient.doDrug = action.doDrug;
         break;
       case CHANGE_PREGANT:
-        draft.pregnant = action.pregnant;
+        draft.patient.pregnant = action.pregnant;
         break;
       case CHANGE_SMOKING:
-        draft.smoking = action.smoking;
+        draft.patient.smoking = action.smoking;
         break;
       case CHANGE_OTHER:
-        draft.other = toggleArrayItem(state.other, action.other);
+        draft.patient.other = toggleArrayItem(state.other, action.other);
         break;
       case CHANGE_NAME:
-        draft.name = action.name;
+        draft.patient.name = action.name;
         break;
       case CHANGE_BIRTH:
-        draft.birth = action.birth;
+        draft.patient.birth = action.birth;
         break;
       case CHANGE_NATIONAL_ID:
-        draft.nationalId = action.id;
+        draft.patient.nationalId = action.id;
         break;
       case CHANGE_PHONE:
-        draft.phone = action.phone;
+        draft.patient.phone = action.phone;
         break;
       case CHANGE_ADDRESS:
-        draft.address = action.address;
+        draft.patient.address = action.address;
         break;
       case CHANGE_INTRODUCER:
-        draft.introducer = action.name;
+        draft.patient.introducer = action.name;
         break;
       case CHANGE_EMERGENCY_NAME:
-        draft.emergencyContact.name = action.name;
+        draft.patient.emergencyContact.name = action.name;
         break;
       case CHANGE_EMERGENCY_PHONE:
-        draft.emergencyContact.phone = action.phone;
+        draft.patient.emergencyContact.phone = action.phone;
         break;
       case CHANGE_DRUG_A:
-        draft.drug = action.drug;
+        draft.patient.drug = action.drug;
         break;
       case CHANGE_PREGANT_A:
-        draft.pregnantDate = action.date;
+        draft.patient.pregnantDate = action.date;
         break;
       case CHANGE_SMOKING_A:
-        draft.smokingAmount = action.amount;
-        break;
-      case CHANGE_IS_SIG_EMPTY:
-        draft.isSigEmpty = action.isEmpty;
+        draft.patient.smokingAmount = action.amount;
         break;
       default:
         break;

@@ -57,7 +57,7 @@ function Name(props) {
   );
 }
 
-const mapStateToProps = state => ({ name: state.questionnairePageReducer.data.name });
+const mapStateToProps = state => ({ name: state.questionnairePageReducer.data.patient.name });
 
 const mapDispatchToProps = { nextPage, changeName };
 

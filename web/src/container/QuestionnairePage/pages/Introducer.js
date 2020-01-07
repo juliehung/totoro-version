@@ -44,7 +44,7 @@ function Introducer(props) {
   );
 }
 
-const mapStateToProps = state => ({ introducer: state.questionnairePageReducer.data.introducer });
+const mapStateToProps = state => ({ introducer: state.questionnairePageReducer.data.patient.introducer });
 
 const mapDispatchToProps = { nextPage, changeIntroducer };
 

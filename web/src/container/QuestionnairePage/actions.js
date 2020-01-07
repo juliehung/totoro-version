@@ -35,8 +35,11 @@ import {
   CHANGE_IS_SIG_EMPTY,
   INIT_QUESTIONNAIRE,
   CREATE_Q_WITH_SIGN,
+  CREATE_Q_WITHOUT_SIGN,
   GET_PATIENT_START,
   GET_PATIENT_SUCCESS,
+  CREATE_Q_SUCCESS,
+  INIT_PAGE,
 } from './constant';
 
 export function nextPage() {
@@ -183,10 +186,22 @@ export function createQWSign(sign) {
   return { type: CREATE_Q_WITH_SIGN, sign };
 }
 
+export function createQWOSign() {
+  return { type: CREATE_Q_WITHOUT_SIGN };
+}
+
+export function changeCreateQSuccess() {
+  return { type: CREATE_Q_SUCCESS };
+}
+
 export function getPatient(pid) {
   return { type: GET_PATIENT_START, pid };
 }
 
 export function getPatientSuccess(patient) {
   return { type: GET_PATIENT_SUCCESS, patient };
+}
+
+export function initPage() {
+  return { type: INIT_PAGE };
 }

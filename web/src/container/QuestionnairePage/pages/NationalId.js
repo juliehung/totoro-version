@@ -44,7 +44,7 @@ function NationalId(props) {
   );
 }
 
-const mapStateToProps = state => ({ nationalId: state.questionnairePageReducer.data.nationalId });
+const mapStateToProps = state => ({ nationalId: state.questionnairePageReducer.data.patient.nationalId });
 
 const mapDispatchToProps = { nextPage, changeNationalId };
 

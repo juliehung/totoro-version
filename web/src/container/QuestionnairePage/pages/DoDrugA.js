@@ -49,7 +49,7 @@ function DoDrugA(props) {
   );
 }
 
-const mapStateToProps = state => ({ drug: state.questionnairePageReducer.data.drug });
+const mapStateToProps = state => ({ drug: state.questionnairePageReducer.data.patient.drug });
 
 const mapDispatchToProps = { gotoPage, changeDrug };
 

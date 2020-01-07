@@ -72,7 +72,7 @@ const StyledButton = styled(Button)`
 //#endregion
 
 function Form(props) {
-  const displayData = parseDataToDisplay(props.data);
+  const displayData = parseDataToDisplay(props.patient);
 
   return (
     <Container>
@@ -210,7 +210,7 @@ function Form(props) {
 }
 
 const mapStateToProps = state => ({
-  data: state.questionnairePageReducer.data,
+  patient: state.questionnairePageReducer.data.patient,
 });
 
 const mapDispatchToProps = { gotoPage, nextPage };

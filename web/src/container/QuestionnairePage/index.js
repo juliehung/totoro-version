@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Icon } from 'antd';
+import { Icon, message } from 'antd';
 import { Swipeable } from 'react-swipeable';
 import {
   nextPage,
@@ -17,6 +17,7 @@ import {
   preChangePregnant,
   initQuestionnaire,
   getPatient,
+  initPage,
 } from './actions';
 import './index.css';
 import QutContent from './QutContent';
@@ -76,6 +77,8 @@ function QuestionnairePage(props) {
     preChangePregnant,
     match,
     getPatient,
+    createQSuccess,
+    initPage,
   } = props;
 
   // TODO: Xu you can continue from here
@@ -106,9 +109,6 @@ function QuestionnairePage(props) {
 
     document.addEventListener('keydown', keyFunction, false);
 
-    const pid = match.params.pid;
-    getPatient(pid);
-
     return () => {
       document.removeEventListener('keydown', keyFunction, false);
     };
@@ -125,9 +125,23 @@ function QuestionnairePage(props) {
     changeAllergy,
     preChangeDoDrug,
     preChangePregnant,
-    match,
-    getPatient,
   ]);
+
+  useEffect(() => {
+    const pid = match.params.pid;
+    getPatient(pid);
+  }, [match.params.pid, getPatient]);
+
+  useEffect(() => {
+    if (createQSuccess) {
+      message.success('新增初診單成功');
+      props.history.replace('/registration');
+    }
+
+    return () => {
+      initPage();
+    };
+  }, [createQSuccess, initPage, props.history]);
 
   return (
     <Swipeable onSwipedUp={nextPage} onSwipedDown={prevPage}>
@@ -150,7 +164,10 @@ function QuestionnairePage(props) {
   );
 }
 
-const mapStateToProps = state => ({ page: state.questionnairePageReducer.flow.page });
+const mapStateToProps = state => ({
+  page: state.questionnairePageReducer.flow.page,
+  createQSuccess: state.questionnairePageReducer.flow.createQSuccess,
+});
 
 const mapDispatchToProps = {
   nextPage,
@@ -166,6 +183,7 @@ const mapDispatchToProps = {
   preChangePregnant,
   initQuestionnaire,
   getPatient,
+  initPage,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(QuestionnairePage));

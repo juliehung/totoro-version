@@ -78,7 +78,7 @@ function Gender(props) {
 
 const mapStateToProps = state => ({
   page: state.questionnairePageReducer.flow.page,
-  gender: state.questionnairePageReducer.data.gender,
+  gender: state.questionnairePageReducer.data.patient.gender,
 });
 
 const mapDispatchToProps = { preChangeGender };

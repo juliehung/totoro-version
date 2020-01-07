@@ -76,7 +76,7 @@ function PregnantQ(props) {
   );
 }
 
-const mapStateToProps = state => ({ pregnant: state.questionnairePageReducer.data.pregnant });
+const mapStateToProps = state => ({ pregnant: state.questionnairePageReducer.data.patient.pregnant });
 
 const mapDispatchToProps = { preChangePregnant };
 

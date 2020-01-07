@@ -69,7 +69,7 @@ function Marriage(props) {
   );
 }
 
-const mapStateToProps = state => ({ marriage: state.questionnairePageReducer.data.marriage });
+const mapStateToProps = state => ({ marriage: state.questionnairePageReducer.data.patient.marriage });
 
 const mapDispatchToProps = { preChangeMarriage };
 

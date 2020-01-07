@@ -37,7 +37,9 @@ function Home(props) {
   );
 }
 
-const mapStateToProps = ({ loginPageReducer }) => ({ loginSuccess: loginPageReducer.login.loginSuccess });
+const mapStateToProps = ({ loginPageReducer }) => ({
+  loginSuccess: loginPageReducer.login.loginSuccess,
+});
 
 const mapDispatchToProps = {};
 

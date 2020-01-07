@@ -84,7 +84,7 @@ function Disease(props) {
   );
 }
 
-const mapStateToProps = state => ({ disease: state.questionnairePageReducer.data.disease });
+const mapStateToProps = state => ({ disease: state.questionnairePageReducer.data.patient.disease });
 
 const mapDispatchToProps = { changeDisease, nextPage };
 
