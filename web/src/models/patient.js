@@ -31,4 +31,18 @@ export default class Patient {
     const result = await request(requestURL, options);
     return result;
   };
+
+  // parseUWPBase64Token
+  static put = async patient => {
+    let requestURL = `${requestUrl}`;
+    const options = {
+      headers: {
+        'content-type': 'application/json',
+      },
+      method: 'PUT',
+      body: JSON.stringify(patient),
+    };
+    const result = await request(requestURL, options);
+    return result;
+  };
 }

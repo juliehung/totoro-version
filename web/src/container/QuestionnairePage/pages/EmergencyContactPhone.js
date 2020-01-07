@@ -44,7 +44,7 @@ function EmergencyContactPhone(props) {
   );
 }
 
-const mapStateToProps = state => ({ phone: state.questionnairePageReducer.data.emergencyContact.phone });
+const mapStateToProps = state => ({ phone: state.questionnairePageReducer.data.patient.emergencyContact.phone });
 
 const mapDispatchToProps = { nextPage, changeEmergencyPhone };
 

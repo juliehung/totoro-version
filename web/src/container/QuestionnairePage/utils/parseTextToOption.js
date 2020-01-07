@@ -1,6 +1,4 @@
 export function parseTextToOption(text, options) {
-  console.log(text, options);
-
   if (!text) {
     return undefined;
   }

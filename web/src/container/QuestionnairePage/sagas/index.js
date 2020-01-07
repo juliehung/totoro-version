@@ -12,6 +12,7 @@ import { watchChangePregnantQ } from './pregnantQ';
 import { watchChangeSmokingQ } from './smokingQ';
 import { watchCreateQWSign } from './createQWSign';
 import { getPatientById } from './getPatientById';
+import { createQWOSign } from './createQWOSign';
 
 export default function* questionnairePage() {
   yield fork(nextPage);
@@ -27,4 +28,5 @@ export default function* questionnairePage() {
   yield fork(watchChangeSmokingQ);
   yield fork(watchCreateQWSign);
   yield fork(getPatientById);
+  yield fork(createQWOSign);
 }

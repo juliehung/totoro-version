@@ -41,7 +41,7 @@ function PregnantA(props) {
   );
 }
 
-const mapStateToProps = state => ({ date: state.questionnairePageReducer.data.pregnantDate });
+const mapStateToProps = state => ({ date: state.questionnairePageReducer.data.patient.pregnantDate });
 
 const mapDispatchToProps = { gotoPage, changePregnantDate };
 

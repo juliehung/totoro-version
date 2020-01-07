@@ -73,7 +73,7 @@ function BloodType(props) {
   );
 }
 
-const mapStateToProps = state => ({ bloodType: state.questionnairePageReducer.data.bloodType });
+const mapStateToProps = state => ({ bloodType: state.questionnairePageReducer.data.patient.bloodType });
 
 const mapDispatchToProps = { preChangeBloodType };
 

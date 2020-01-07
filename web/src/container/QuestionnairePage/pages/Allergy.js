@@ -84,7 +84,7 @@ function Allergy(props) {
   );
 }
 
-const mapStateToProps = state => ({ allergy: state.questionnairePageReducer.data.allergy });
+const mapStateToProps = state => ({ allergy: state.questionnairePageReducer.data.patient.allergy });
 
 const mapDispatchToProps = { changeAllergy, nextPage };
 

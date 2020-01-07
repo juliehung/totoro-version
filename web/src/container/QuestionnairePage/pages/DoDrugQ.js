@@ -77,7 +77,7 @@ function DoDrugQ(props) {
   );
 }
 
-const mapStateToProps = state => ({ doDrug: state.questionnairePageReducer.data.doDrug });
+const mapStateToProps = state => ({ doDrug: state.questionnairePageReducer.data.patient.doDrug });
 
 const mapDispatchToProps = { preChangeDoDrug };
 

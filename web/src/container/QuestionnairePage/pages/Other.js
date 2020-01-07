@@ -85,7 +85,7 @@ function Other(props) {
   );
 }
 
-const mapStateToProps = state => ({ other: state.questionnairePageReducer.data.other });
+const mapStateToProps = state => ({ other: state.questionnairePageReducer.data.patient.other });
 
 const mapDispatchToProps = { changeOther, nextPage };
 

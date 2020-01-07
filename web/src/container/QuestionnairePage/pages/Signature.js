@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SignatureCanvas from 'react-signature-canvas';
 import { Button, Icon } from 'antd';
-import { changeIsSigEmpty, createQWSign } from '../actions';
+import { changeIsSigEmpty, createQWSign, createQWOSign } from '../actions';
 import { trimDataUrl } from '../utils/trimDataUrl';
 
 //#region
@@ -69,12 +69,12 @@ function Signature(props) {
           <SubTitle>請簽下您的姓名以及當天日期</SubTitle>
         </div>
         {props.isEmpty ? (
-          <Button size="large">
+          <Button size="large" onClick={props.createQWOSign} loading={props.sendLoading}>
             不簽名直接送出
             <Icon type="check" />
           </Button>
         ) : (
-          <Button size="large" type="primary" onClick={SendWSign}>
+          <Button size="large" type="primary" onClick={SendWSign} loading={props.sendLoading}>
             送出
             <Icon type="check" />
           </Button>
@@ -100,9 +100,10 @@ function Signature(props) {
 }
 const mapStateToProps = ({ questionnairePageReducer }) => ({
   visible: questionnairePageReducer.flow.signatureModalVisible,
-  isEmpty: questionnairePageReducer.data.isSigEmpty,
+  isEmpty: questionnairePageReducer.flow.isSigEmpty,
+  sendLoading: questionnairePageReducer.flow.sendLoading,
 });
 
-const mapDispatchToProps = { changeIsSigEmpty, createQWSign };
+const mapDispatchToProps = { changeIsSigEmpty, createQWSign, createQWOSign };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signature);

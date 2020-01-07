@@ -71,7 +71,7 @@ function Career(props) {
   );
 }
 
-const mapStateToProps = state => ({ career: state.questionnairePageReducer.data.career });
+const mapStateToProps = state => ({ career: state.questionnairePageReducer.data.patient.career });
 
 const mapDispatchToProps = { preChangeCareer };
 

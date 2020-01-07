@@ -44,7 +44,7 @@ function Address(props) {
   );
 }
 
-const mapStateToProps = state => ({ address: state.questionnairePageReducer.data.address });
+const mapStateToProps = state => ({ address: state.questionnairePageReducer.data.patient.address });
 
 const mapDispatchToProps = { nextPage, changeAddress };
 

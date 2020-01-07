@@ -37,7 +37,7 @@ function Birth(props) {
   );
 }
 
-const mapStateToProps = state => ({ birth: state.questionnairePageReducer.data.birth });
+const mapStateToProps = state => ({ birth: state.questionnairePageReducer.data.patient.birth });
 
 const mapDispatchToProps = { nextPage, changeBirth };
 

@@ -70,7 +70,7 @@ function EmergencyContactRelationship(props) {
 }
 
 const mapStateToProps = state => ({
-  emergencyContactRelationship: state.questionnairePageReducer.data.emergencyContact.relationship,
+  emergencyContactRelationship: state.questionnairePageReducer.data.patient.emergencyContact.relationship,
 });
 
 const mapDispatchToProps = { preChangeEmergencyRelationship };

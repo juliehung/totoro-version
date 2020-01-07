@@ -50,7 +50,7 @@ function SmokingA(props) {
   );
 }
 
-const mapStateToProps = state => ({ smokingAmount: state.questionnairePageReducer.data.smokingAmount });
+const mapStateToProps = state => ({ smokingAmount: state.questionnairePageReducer.data.patient.smokingAmount });
 
 const mapDispatchToProps = { gotoPage, changeSmokingAmount };
 
