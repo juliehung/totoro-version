@@ -1,5 +1,15 @@
 import produce from 'immer';
 import { toggleArrayItem } from '../utils/toggleArrayItem';
+import { parseTextToOption } from '../utils/parseTextToOption';
+import { parseTagToOption } from '../utils/parseTagToOption';
+import {
+  GenderOption,
+  BloodTypeOption,
+  CareerOption,
+  MarriageOption,
+  RelationshipOption,
+  tags,
+} from '../constant_options';
 import {
   INIT_QUESTIONNAIRE,
   CHANGE_GENDER,
@@ -25,6 +35,7 @@ import {
   CHANGE_PREGANT_A,
   CHANGE_SMOKING_A,
   CHANGE_IS_SIG_EMPTY,
+  GET_PATIENT_SUCCESS,
 } from '../constant';
 
 const initState = {
@@ -59,6 +70,36 @@ export const initialState = { ...initState };
 const data = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case GET_PATIENT_SUCCESS:
+        console.log(action.patient);
+        draft.id = action.patient.id;
+        draft.name = action.patient.name;
+        draft.phone = action.patient.phone;
+        draft.gender = parseTextToOption(action.patient.gender, GenderOption);
+        draft.birth = action.patient.birth;
+        draft.emergencyContact.name = action.patient.emergencyName;
+        draft.emergencyContact.phone = action.patient.emergencyPhone;
+        draft.emergencyContact.relationship = parseTextToOption(
+          action.patient.emergencyRelationship,
+          RelationshipOption,
+        );
+        draft.nationalId = action.patient.nationalId;
+        draft.address = action.patient.address;
+        draft.bloodType = parseTextToOption(action.patient.blood, BloodTypeOption);
+        draft.career = parseTextToOption(action.patient.career, CareerOption);
+        draft.marriage = parseTextToOption(action.patient.marriage, MarriageOption);
+        draft.disease = parseTagToOption(action.patient.tags, 'DISEASE', tags);
+        draft.allergy = parseTagToOption(action.patient.tags, 'ALLERGY', tags);
+        draft.other = parseTagToOption(action.patient.tags, 'OTHER', tags);
+
+        draft.doDrug = action.patient.questionnaire ? (action.patient.questionnaire.drug ? 'A' : 'B') : 'B';
+        draft.drug = action.patient.questionnaire ? action.patient.questionnaire.drugName : undefined;
+
+        draft.pregnant = action.patient.tags.find(tag => tag.id === 25) ? 'A' : 'B';
+        draft.smoking = action.patient.tags.find(tag => tag.id === 26) ? 'A' : 'B';
+        draft.smokingAmount = action.patient.questionnaire ? action.patient.questionnaire.smokeNumberADay : undefined;
+
+        break;
       case INIT_QUESTIONNAIRE:
         if (action.patient.name) {
           draft.name = action.patient.name;

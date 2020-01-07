@@ -11,9 +11,9 @@ export const BloodTypeOption = [
 ];
 
 export const GenderOption = [
-  { key: 'A', value: '男性', image: Man },
-  { key: 'B', value: '女性', image: Woman },
-  { key: 'C', value: '其他', image: Default },
+  { key: 'A', value: '男性', image: Man, code: 'MALE' },
+  { key: 'B', value: '女性', image: Woman, code: 'FEMALE' },
+  { key: 'C', value: '其他', image: Default, code: 'OTHER' },
 ];
 
 export const CareerOption = [

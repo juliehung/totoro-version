@@ -38,6 +38,7 @@ function SmokingA(props) {
         type="number"
         onChange={onInputChange}
         onPressEnter={onPressEnter}
+        value={props.smokingAmount}
       />
       <ConfirmButton
         nextPage={() => {

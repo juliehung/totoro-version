@@ -243,7 +243,7 @@ function RegistrationPage(props) {
   const convertToTableSource = registrations => {
     const tableSource = registrations
       // Don't show cancel appointment and no registration
-      .filter(appt => appt.status !== 'CANCEL' && appt.registration.id)
+      .filter(appt => appt.status !== 'CANCEL' && appt.registration && appt.registration.id)
       .filter(appt => {
         if (!selectedDoctor || !appt.doctor.user || selectedDoctor === allDoctors) {
           return true;
