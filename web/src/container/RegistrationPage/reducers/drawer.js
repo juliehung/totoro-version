@@ -1,10 +1,11 @@
-import { ON_SELECT_PATIENT, CHANGE_DRAWER_VISIBLE } from '../constant';
+import { ON_SELECT_PATIENT, CHANGE_DRAWER_VISIBLE, GET_DOC_SUCCESS } from '../constant';
 import produce from 'immer';
-// import moment from 'moment';
+import { convertDocsToItem } from '../utils/convertDocsToItem';
 
 const initState = {
   visible: false,
   patient: { name: undefined, medicalId: undefined },
+  docs: [],
 };
 
 const initialState = { ...initState };
@@ -18,6 +19,9 @@ const drawer = (state = initialState, action) =>
         break;
       case CHANGE_DRAWER_VISIBLE:
         draft.visible = action.visible;
+        break;
+      case GET_DOC_SUCCESS:
+        draft.docs = action.docs.map(d => convertDocsToItem(d));
         break;
       default:
         break;

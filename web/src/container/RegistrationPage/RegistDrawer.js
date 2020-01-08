@@ -46,23 +46,17 @@ const StyledButton = styled(Button)`
 const columns = [
   {
     title: '產生日期',
-    dataIndex: 'date',
-    key: 'date',
+    dataIndex: 'creatDate',
+    key: 'creatDate',
     render: date => moment(date).format('YYYY-MM-DD HH:mm'),
   },
   {
     title: '操作',
     dataIndex: 'id',
     key: 'id',
+    // !todo
     render: id => <Link to={`/q/${id}`}>檢視</Link>,
   },
-];
-
-const data = [
-  // {
-  //   date: '2012-01-03',
-  //   id: 123,
-  // },
 ];
 
 function RegistDrawer(props) {
@@ -82,7 +76,7 @@ function RegistDrawer(props) {
             <span>{props.patient.name}</span>
           </div>
         </PatientContainer>
-        <Table columns={columns} dataSource={data} pagination={false} />
+        <Table columns={columns} dataSource={props.docs} pagination={false} />
         <Link to={`/q/${props.patient.id}`}>
           <StyledButton type="primary">新增病歷首頁</StyledButton>
         </Link>
@@ -94,6 +88,7 @@ function RegistDrawer(props) {
 const mapStateToProps = ({ registrationPageReducer }) => ({
   drawerVisible: registrationPageReducer.drawer.visible,
   patient: registrationPageReducer.drawer.patient,
+  docs: registrationPageReducer.drawer.docs,
 });
 
 const mapDispatchToProps = { changeDrawerVisible };
