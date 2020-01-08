@@ -12,6 +12,13 @@ export default class DocNps {
     return result;
   };
 
+  // get by id
+  static getById = async id => {
+    let requestURL = `${requestUrl}/${id}`;
+    const result = await request(requestURL);
+    return result;
+  };
+
   // POST
   static post = async doc => {
     let requestURL = `${requestUrl}`;

@@ -13,6 +13,7 @@ import { watchChangeSmokingQ } from './smokingQ';
 import { createQWSign } from './createQWSign';
 import { getPatientById } from './getPatientById';
 import { createQWOSign } from './createQWOSign';
+import { getDocById } from './getDocById';
 
 export default function* questionnairePage() {
   yield fork(nextPage);
@@ -29,4 +30,5 @@ export default function* questionnairePage() {
   yield fork(createQWSign);
   yield fork(getPatientById);
   yield fork(createQWOSign);
+  yield fork(getDocById);
 }
