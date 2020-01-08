@@ -45,7 +45,7 @@ public class Tooth extends AbstractAuditingEntity implements Serializable {
     @Column(name = "status")
     private String status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonProperty(access = WRITE_ONLY)
     private TreatmentProcedure treatmentProcedure;
 
