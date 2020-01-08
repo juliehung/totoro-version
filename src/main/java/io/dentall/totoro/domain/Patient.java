@@ -137,9 +137,9 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @OneToMany(mappedBy = "patient")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Appointment> appointments = new HashSet<>();
-    @ManyToOne
-    @JsonIgnoreProperties("")
-    private Patient introducer;
+
+    @Column(name = "introducer")
+    private String introducer;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "patient_parent",
@@ -539,17 +539,17 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.appointments = appointments;
     }
 
-    public Patient getIntroducer() {
+    public String getIntroducer() {
         return introducer;
     }
 
-    public Patient introducer(Patient patient) {
+    public Patient introducer(String patient) {
         this.introducer = patient;
         return this;
     }
 
-    public void setIntroducer(Patient patient) {
-        this.introducer = patient;
+    public void setIntroducer(String introducer) {
+        this.introducer = introducer;
     }
 
     public Set<Patient> getParents() {
