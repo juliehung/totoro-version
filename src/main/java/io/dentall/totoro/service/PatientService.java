@@ -232,6 +232,11 @@ public class PatientService extends QueryService<Patient> {
                     patient.setIntroducer(updatePatient.getIntroducer());
                 }
 
+                // dueDate
+                if (updatePatient.getDueDate() != null) {
+                    patient.setDueDate(updatePatient.getDueDate());
+                }
+
                 // lastDoctor
                 if (updatePatient.getLastDoctor() != null) {
                     log.debug("Update lastDoctor({}) of Patient(id: {})", updatePatient.getLastDoctor(), updatePatient.getId());
