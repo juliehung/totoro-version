@@ -322,6 +322,7 @@ function RegistrationPage(props) {
         pagination={false}
         loading={props.loading}
         locale={{ emptyText: <Empty description="無掛號" /> }}
+        expandRowByClick
         expandedRowRender={row => renderExpandedRow(row.patient)}
         onExpand={onExpand}
         dataSource={convertToTableSource(props.registrations)}
