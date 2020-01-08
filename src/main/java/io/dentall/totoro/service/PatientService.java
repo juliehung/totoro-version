@@ -229,8 +229,7 @@ public class PatientService extends QueryService<Patient> {
 
                 // introducer
                 if (updatePatient.getIntroducer() != null) {
-                    log.debug("Update introducer({}) of Patient(id: {})", updatePatient.getIntroducer(), updatePatient.getId());
-                    patient.setIntroducer(patientRepository.findById(updatePatient.getIntroducer().getId()).orElse(null));
+                    patient.setIntroducer(updatePatient.getIntroducer());
                 }
 
                 // lastDoctor
