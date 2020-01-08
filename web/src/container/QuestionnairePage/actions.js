@@ -40,6 +40,8 @@ import {
   GET_PATIENT_SUCCESS,
   CREATE_Q_SUCCESS,
   INIT_PAGE,
+  GET_DOC_START,
+  GET_DOC_SUCCESS,
 } from './constant';
 
 export function nextPage() {
@@ -204,4 +206,12 @@ export function getPatientSuccess(patient) {
 
 export function initPage() {
   return { type: INIT_PAGE };
+}
+
+export function getDoc(id) {
+  return { type: GET_DOC_START, id };
+}
+
+export function getDocSuccess(doc) {
+  return { type: GET_DOC_SUCCESS, doc };
 }

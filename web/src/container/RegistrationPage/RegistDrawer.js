@@ -54,8 +54,7 @@ const columns = [
     title: '操作',
     dataIndex: 'id',
     key: 'id',
-    // !todo
-    render: id => <Link to={`/q/${id}`}>檢視</Link>,
+    render: id => <Link to={`/q/history/${id}`}>檢視</Link>,
   },
 ];
 
