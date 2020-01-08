@@ -52,8 +52,8 @@ public class NhiAccumulatedMedicalRecordResourceIntTest {
     private static final String DEFAULT_NEWBORN_MEDICAL_TREATMENT_NOTE = "AAAAAAAAAA";
     private static final String UPDATED_NEWBORN_MEDICAL_TREATMENT_NOTE = "BBBBBBBBBB";
 
-    private static final Instant DEFAULT_DATE = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final String DEFAULT_DATE = "AAAAAAAAAA";
+    private static final String UPDATED_DATE = "BBBBBBBBBB";
 
     private static final String DEFAULT_CARD_FILLING_NOTE = "AAAAAAAAAA";
     private static final String UPDATED_CARD_FILLING_NOTE = "BBBBBBBBBB";
