@@ -192,6 +192,7 @@ function Form(props) {
             </FlexGrowDiv>
           </InfoRowContainer>
         </InfoContainer>
+        {props.esign && <img src={props.esign} alt="esign"></img>}
       </FormContainer>
       <Link to="/registration">
         <GoBackButton type="primary">返回列表</GoBackButton>
@@ -202,6 +203,7 @@ function Form(props) {
 
 const mapStateToProps = state => ({
   patient: state.questionnairePageReducer.form.patient,
+  esign: state.questionnairePageReducer.form.esign,
 });
 
 const mapDispatchToProps = { getDoc };

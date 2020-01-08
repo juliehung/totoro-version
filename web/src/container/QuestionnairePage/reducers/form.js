@@ -6,6 +6,7 @@ import { GET_DOC_SUCCESS } from '../constant';
 const initState = {
   createDate: undefined,
   patient: { name: undefined },
+  esign: undefined,
 };
 
 export const initialState = { ...initState };
@@ -17,6 +18,7 @@ const form = (state = initialState, action) =>
       case GET_DOC_SUCCESS:
         draft.createDate = action.doc.createDate;
         draft.patient = parseDataToDisplayFormPage(action.doc.patient);
+        draft.esign = action.doc.esign ? `data:image/png;base64, ${action.doc.esign.lob}` : undefined;
         break;
       default:
         break;
