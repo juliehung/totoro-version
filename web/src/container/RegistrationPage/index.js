@@ -85,14 +85,16 @@ const columns = [
     key: 'arrivalTime',
     defaultSortOrder: 'ascend',
     sorter: (a, b) => moment(a.arrivalTime).unix() - moment(b.arrivalTime).unix(),
-    width: 150,
+    width: 70,
+    render: date => moment(date).format('HH:mm'),
   },
   {
     title: '預約時間',
     dataIndex: 'expectedArrivalTime',
     key: 'expectedArrivalTime',
     sorter: (a, b) => moment(a.expectedArrivalTime).unix() - moment(b.expectedArrivalTime).unix(),
-    width: 150,
+    width: 70,
+    render: date => moment(date).format('HH:mm'),
   },
   {
     title: '掛號類別',
