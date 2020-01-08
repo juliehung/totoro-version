@@ -2,11 +2,7 @@ package io.dentall.totoro.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
-import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 import io.github.jhipster.service.filter.InstantFilter;
@@ -29,7 +25,7 @@ public class NhiAccumulatedMedicalRecordCriteria implements Serializable {
 
     private StringFilter newbornMedicalTreatmentNote;
 
-    private InstantFilter date;
+    private StringFilter date;
 
     private StringFilter cardFillingNote;
 
@@ -63,11 +59,11 @@ public class NhiAccumulatedMedicalRecordCriteria implements Serializable {
         this.newbornMedicalTreatmentNote = newbornMedicalTreatmentNote;
     }
 
-    public InstantFilter getDate() {
+    public StringFilter getDate() {
         return date;
     }
 
-    public void setDate(InstantFilter date) {
+    public void setDate(StringFilter date) {
         this.date = date;
     }
 

@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -33,7 +32,7 @@ public class NhiAccumulatedMedicalRecord implements Serializable {
     private String newbornMedicalTreatmentNote;
 
     @Column(name = "jhi_date")
-    private Instant date;
+    private String date;
 
     @Column(name = "card_filling_note")
     private String cardFillingNote;
@@ -84,16 +83,16 @@ public class NhiAccumulatedMedicalRecord implements Serializable {
         this.newbornMedicalTreatmentNote = newbornMedicalTreatmentNote;
     }
 
-    public Instant getDate() {
+    public String getDate() {
         return date;
     }
 
-    public NhiAccumulatedMedicalRecord date(Instant date) {
+    public NhiAccumulatedMedicalRecord date(String date) {
         this.date = date;
         return this;
     }
 
-    public void setDate(Instant date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

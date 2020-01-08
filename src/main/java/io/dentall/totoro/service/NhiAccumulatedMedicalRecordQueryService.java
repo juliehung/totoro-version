@@ -90,7 +90,7 @@ public class NhiAccumulatedMedicalRecordQueryService extends QueryService<NhiAcc
                 specification = specification.and(buildStringSpecification(criteria.getNewbornMedicalTreatmentNote(), NhiAccumulatedMedicalRecord_.newbornMedicalTreatmentNote));
             }
             if (criteria.getDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getDate(), NhiAccumulatedMedicalRecord_.date));
+                specification = specification.and(buildStringSpecification(criteria.getDate(), NhiAccumulatedMedicalRecord_.date));
             }
             if (criteria.getCardFillingNote() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getCardFillingNote(), NhiAccumulatedMedicalRecord_.cardFillingNote));
