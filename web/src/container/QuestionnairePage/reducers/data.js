@@ -39,7 +39,7 @@ import {
 } from '../constant';
 
 const initState = {
-  patientEnity: undefined,
+  patientEntity: undefined,
   patient: {
     id: undefined,
     name: '',
@@ -73,10 +73,10 @@ const data = (state = initialState, action) =>
     switch (action.type) {
       case INIT_PAGE:
         draft.patient = initState.patient;
-        draft.patientEnity = initState.patientEnity;
+        draft.patientEntity = initState.patientEntity;
         break;
       case GET_PATIENT_SUCCESS:
-        draft.patientEnity = action.patient;
+        draft.patientEntity = action.patient;
         draft.patient.id = action.patient.id;
         draft.patient.name = action.patient.name;
         draft.patient.phone = action.patient.phone;
@@ -129,10 +129,10 @@ const data = (state = initialState, action) =>
         draft.patient.emergencyContact.relationship = action.relationship;
         break;
       case CHANGE_DISEASE:
-        draft.patient.disease = toggleArrayItem(state.disease, action.disease);
+        draft.patient.disease = toggleArrayItem(state.patient.disease, action.disease);
         break;
       case CHANGE_ALLERGY:
-        draft.patient.allergy = toggleArrayItem(state.allergy, action.allergy);
+        draft.patient.allergy = toggleArrayItem(state.patient.allergy, action.allergy);
         break;
       case CHANGE_DO_DRUG:
         draft.patient.doDrug = action.doDrug;
@@ -144,7 +144,7 @@ const data = (state = initialState, action) =>
         draft.patient.smoking = action.smoking;
         break;
       case CHANGE_OTHER:
-        draft.patient.other = toggleArrayItem(state.other, action.other);
+        draft.patient.other = toggleArrayItem(state.patient.other, action.other);
         break;
       case CHANGE_NAME:
         draft.patient.name = action.name;

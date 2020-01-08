@@ -5,7 +5,6 @@ import {
   CareerOption,
   MarriageOption,
   RelationshipOption,
-  DiseaseOption,
   tags,
 } from '../constant_options';
 
@@ -25,7 +24,8 @@ export function parseDataToDisplay(data) {
   const emergencyContactPhone = data.emergencyContact.phone;
   const emergencyContactRelationship = parseKeyToValue(data.emergencyContact.relationship, RelationshipOption);
 
-  const disease = data.disease.map(d => parseKeyToValue(d, DiseaseOption)).join(', ');
+  const diseaseOption = tags.filter(t => t.jhi_type === 'DISEASE');
+  const disease = data.disease.map(d => parseKeyToValue(d, diseaseOption)).join(', ');
 
   const doDrug = data.doDrug;
   const drug = doDrug === 'A' ? data.drug : undefined;
