@@ -14,7 +14,7 @@ import {
 } from '../constant';
 
 const initState = {
-  page: 20,
+  page: 1,
   reverse: false,
   sendLoading: false,
   isSigEmpty: true,
