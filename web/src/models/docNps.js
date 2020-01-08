@@ -5,6 +5,13 @@ const LOCATION = `doc-nps`;
 const requestUrl = `${apiUrl}/${LOCATION}`;
 
 export default class DocNps {
+  // get by pid
+  static getByPid = async pid => {
+    let requestURL = `${apiUrl}/business/${LOCATION}?patientId=${pid}`;
+    const result = await request(requestURL);
+    return result;
+  };
+
   // POST
   static post = async doc => {
     let requestURL = `${requestUrl}`;

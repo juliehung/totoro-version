@@ -4,6 +4,7 @@ import {
   SET_SELECTED_DATE_SUCCESS,
   CHANGE_DRAWER_VISIBLE,
   ON_SELECT_PATIENT,
+  GET_DOC_SUCCESS,
 } from './constant';
 
 export function getRegistrations(start, end) {
@@ -24,4 +25,8 @@ export function changeDrawerVisible(visible) {
 
 export function onSelectPatient(patient) {
   return { type: ON_SELECT_PATIENT, patient };
+}
+
+export function getDocSuccess(docs) {
+  return { type: GET_DOC_SUCCESS, docs };
 }
