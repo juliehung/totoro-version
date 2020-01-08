@@ -61,6 +61,7 @@ const AvatarImg = styled.img`
   width: 48px;
   height: 48px;
   margin-right: 10px;
+  flex-shrink: 0;
 `;
 
 const columns = [
