@@ -191,6 +191,9 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @OneToOne(mappedBy = "patient")
     private NhiExtendPatient nhiExtendPatient;
 
+    @Column(name = "due_date")
+    private LocalDate dueDate;
+
     public Long getId() {
         return id;
     }
@@ -784,6 +787,14 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.nhiExtendPatient = nhiExtendPatient;
     }
 
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
     public String getEmergencyAddress() {
         return emergencyAddress;
     }
@@ -928,6 +939,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
             ", career='" + getCareer() + "'" +
             ", marriage='" + getMarriage() + "'" +
             ", permanent='" + getTeethGraphPermanentSwitch() + "'" +
+            ", dueDate='" + getDueDate() + "'" +
             "}";
     }
 }
