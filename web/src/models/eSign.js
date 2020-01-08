@@ -5,6 +5,13 @@ const LOCATION = `esigns`;
 const requestUrl = `${apiUrl}/${LOCATION}`;
 
 export default class ESign {
+  // GET by id
+  static getById = async id => {
+    let requestURL = `${requestUrl}/${id}`;
+    const result = await request(requestURL);
+    return result;
+  };
+
   // POST
   static create = async esign => {
     let requestURL = `${requestUrl}`;
