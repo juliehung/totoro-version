@@ -64,7 +64,7 @@ def versionMinorRenewDate = "2019-05-27"
 def branchName = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
 def commitCount = "git rev-list $branchName --count --since=$versionMinorRenewDate".execute().text.trim()
 def semver = "$versionMajor.$versionMinor.$commitCount-$branchName"
-def sha1 = "git show --pretty=tformat:%h --quiet"
+def sha1 = "git show --pretty=tformat:%h --quiet".execute().text.trim()
 
 description = ''
 
