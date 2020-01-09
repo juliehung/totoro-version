@@ -19,6 +19,18 @@
                     <queue name="totoro.patientQueue"/>
                 </anycast>
             </address>
+
+            <address name="totoro.registrationQueue">
+                <anycast>
+                    <queue name="totoro.registrationQueue"/>
+                </anycast>
+            </address>
+
+            <address name="totoro.messageQueue">
+                <anycast>
+                    <queue name="totoro.messageQueue"/>
+                </anycast>
+            </address>
         </addresses>
     </core>
 </configuration>
