@@ -1,7 +1,7 @@
 package io.dentall.totoro.repository.dao;
 
+import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.domain.ExtendUser;
-import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 import io.dentall.totoro.domain.enumeration.Blood;
 import io.dentall.totoro.domain.enumeration.Gender;
@@ -9,7 +9,6 @@ import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Set;
 
 public class AppointmentDAO {
     // Appointment
@@ -91,6 +90,8 @@ public class AppointmentDAO {
     private final Instant nhiPatientCreatedDate;
     private final String nhiPatientLastModifiedBy;
     private final Instant nhiPatientLastModifiedDate;
+    // Accounting
+    private final Accounting accounting;
 
     public AppointmentDAO(
         Long id,
@@ -165,8 +166,8 @@ public class AppointmentDAO {
         String nhiPatientCreatedBy,
         Instant nhiPatientCreatedDate,
         String nhiPatientLastModifiedBy,
-        Instant nhiPatientLastModifiedDate
-    ) {
+        Instant nhiPatientLastModifiedDate,
+        Accounting accounting) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
@@ -240,6 +241,11 @@ public class AppointmentDAO {
         this.nhiPatientCreatedDate = nhiPatientCreatedDate;
         this.nhiPatientLastModifiedBy = nhiPatientLastModifiedBy;
         this.nhiPatientLastModifiedDate = nhiPatientLastModifiedDate;
+        this.accounting = accounting;
+    }
+
+    public Accounting getAccounting() {
+        return accounting;
     }
 
     public String getNhiPatientCreatedBy() {

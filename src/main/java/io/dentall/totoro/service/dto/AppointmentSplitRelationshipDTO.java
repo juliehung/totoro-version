@@ -8,6 +8,7 @@ public class AppointmentSplitRelationshipDTO {
     private final Appointment appointment;
 
     public AppointmentSplitRelationshipDTO(AppointmentDAO appointmentDAO) {
+
         Registration registration = null;
         if (appointmentDAO.getRegistrationId() != null) {
             registration = new Registration()
@@ -28,6 +29,11 @@ public class AppointmentSplitRelationshipDTO {
                 disposal.setLastModifiedDate(appointmentDAO.getDisposalLastModifiedDate());
             }
             registration.setDisposal(disposal);
+
+            if (appointmentDAO.getAccounting() != null) {
+                registration.setAccounting(appointmentDAO.getAccounting());
+            }
+
         }
         NhiExtendPatient nhiExtendPatient = new NhiExtendPatient()
             .cardNumber(appointmentDAO.getNhiPatientCardNumber())
