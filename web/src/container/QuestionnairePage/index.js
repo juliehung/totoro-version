@@ -149,7 +149,7 @@ function QuestionnairePage(props) {
         {props.page !== 20 && props.page !== 21 && <QutContent />}
         {props.page === 20 && <Form />}
         {props.page === 21 && <Signature />}
-        {props.page !== 20 && props.page !== 21 && (
+        {![20, 21, 22, 23, 24].includes(props.page) && (
           <PageControlContainer>
             <div onClick={prevPage}>
               <Icon type="up" />
