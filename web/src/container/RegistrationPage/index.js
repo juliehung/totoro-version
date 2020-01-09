@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { getRegistrations, updateSelectedDate, onSelectPatient } from './actions';
-import { Button, DatePicker, Empty, Icon, Select, Table, Tooltip, Typography } from 'antd';
+import { DatePicker, Empty, Icon, Select, Table, Tooltip, Typography } from 'antd';
 import ManPng from '../../static/images/man.png';
 import WomanPng from '../../static/images/woman.png';
 import DefaultPng from '../../static/images/default.png';
@@ -201,19 +201,6 @@ function RegistrationPage(props) {
     );
   };
 
-  const renderExpandedRow = patient => {
-    return (
-      <Button
-        type="primary"
-        onClick={() => {
-          props.onSelectPatient(patient);
-        }}
-      >
-        初診單
-      </Button>
-    );
-  };
-
   const renderDoctorSelect = () => {
     if (props.doctors) {
       const options = props.doctors.map(doctor => {
@@ -292,12 +279,6 @@ function RegistrationPage(props) {
     setSelectedDoctor(doctor);
   };
 
-  const onExpand = (expanded, record) => {
-    if (expanded) {
-    }
-    console.log(expanded, record);
-  };
-
   const moveDate = days => () => {
     const date = props.selectedDate.clone().add(days, 'day');
     onDatePickerChange(date);
@@ -325,9 +306,13 @@ function RegistrationPage(props) {
         pagination={false}
         loading={props.loading}
         locale={{ emptyText: <Empty description="無掛號" /> }}
-        expandRowByClick
-        expandedRowRender={row => renderExpandedRow(row.patient)}
-        onExpand={onExpand}
+        onRow={(row, rowIndex) => {
+          return {
+            onClick: event => {
+              props.onSelectPatient(row.patient);
+            }
+          };
+        }}
         dataSource={convertToTableSource(props.registrations)}
       />
       <RegistDrawer />
