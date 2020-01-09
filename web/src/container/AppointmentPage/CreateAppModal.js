@@ -142,6 +142,7 @@ function CreateAppModal({
   changeCreateAppPatientBirth,
   createPatient,
   getAllEvents,
+  setting,
 }) {
   useEffect(() => {
     if (createAppSuccess) {
@@ -154,6 +155,12 @@ function CreateAppModal({
   useEffect(() => {
     checkConfirmButtonDisable();
   }, [appointment, patient, checkConfirmButtonDisable]);
+
+  useEffect(() => {
+    if (setting && visible) {
+      changeCreateAppDuration(setting.requiredTreatmentTime);
+    }
+  }, [setting, changeCreateAppDuration, visible]);
 
   const closeModal = () => {
     changeCreateAppModalVisible(false);
@@ -380,6 +387,7 @@ const mapStateToProps = ({ appointmentPageReducer }) => ({
   patient: appointmentPageReducer.createApp.patient,
   createAppSuccess: appointmentPageReducer.createApp.createAppSuccess,
   disabled: appointmentPageReducer.createApp.disabled,
+  setting: appointmentPageReducer.settings.generalSetting,
 });
 
 const mapDispatchToProps = {
