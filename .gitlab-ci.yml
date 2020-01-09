@@ -10,6 +10,7 @@ stages:
     - test
     - package
     - deploy
+    - release
 
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
@@ -161,11 +162,22 @@ depolyCloudRun:
         - gcloud beta auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
         - gcloud beta run deploy master-cloud-run --image us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$versionMajor.$versionMinor.$commitCount --platform managed --region us-central1 --async --allow-unauthenticated --set-env-vars ^#^_JAVA_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx${GCP_CLOUDRUN_JAVA_MEMORY:-512}m"#SPRING_PROFILES_ACTIVE="prod,embedded-postgres"#JAVA_OPTS="-Dpgembed.shared_buffers=${GCP_CLOUDRUN_PG_BUFFERS:-256}" --memory ${GCP_CLOUDRUN_MEMORY:-2}Gi
 
+releaseToFirebaseStorage:
+    stage: release
+    only:
+        - tags
+    dependencies:
+        - gradle-repackage
+    image: google/cloud-sdk:alpine
+    script:
+        - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+        - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
+        - gsutil cp build/libs/* gs://dentall-admin-auto-update/
+
 deployFirebaseStorage:
     stage: deploy
     only:
         - branches
-        - tags
     except:
         - /^(\d)+-.*$/
     when: manual
