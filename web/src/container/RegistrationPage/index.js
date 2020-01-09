@@ -40,7 +40,7 @@ const StyledTable = styled(Table)`
 const RowIndexContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
 `;
 const Status = styled.div`
   width: 6px;
@@ -69,15 +69,15 @@ const columns = [
     title: '序位',
     dataIndex: 'rowIndex',
     key: 'rowIndex',
-    width: 80,
+    width: 40,
   },
-  { title: '姓名', dataIndex: 'name', key: 'name', width: 250 },
+  { title: '姓名', dataIndex: 'name', key: 'name', width: 100 },
   {
     title: '年齡',
     dataIndex: 'age',
     key: 'age',
     sorter: (a, b) => a.age.replace('Y', '') - b.age.replace('Y', ''),
-    width: 80,
+    width: 50,
   },
   {
     title: '掛號時間',
@@ -106,9 +106,9 @@ const columns = [
     ],
     filterMultiple: false,
     onFilter: (value, record) => record.type.indexOf(value) === 0,
-    width: 100,
+    width: 60,
   },
-  { title: '醫師', dataIndex: 'doctor', key: 'doctor', width: 90 },
+  { title: '醫師', dataIndex: 'doctor', key: 'doctor', width: 70 },
   { title: '治療事項', dataIndex: 'subject', key: 'subject', ellipsis: true, width: 200 },
 ];
 
