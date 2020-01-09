@@ -124,7 +124,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "nhiPatient.createdBy, " +
             "nhiPatient.createdDate, " +
             "nhiPatient.lastModifiedBy, " +
-            "nhiPatient.lastModifiedDate " +
+            "nhiPatient.lastModifiedDate," +
+            "accounting " +
             ") " +
             "from Appointment as appointment " +
                 "left join appointment.patient as patient " +
@@ -132,6 +133,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
                 "left join appointment.registration as registration " +
                 "left join appointment.doctor as doctor " +
                 "left join appointment.registration.disposal as disposal " +
+                "left join appointment.registration.accounting as accounting " +
             "where appointment.expectedArrivalTime between :beginDate and :endDate")
     List<AppointmentDAO> findAppointmentWithRelationshipBetween(@Param("beginDate") Instant beginDate, @Param("endDate") Instant endDate);
 }
