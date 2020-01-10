@@ -273,10 +273,10 @@ function CreateAppModal({
                   <span>{selectedPatient && selectedPatient.name}</span>
                 </PatientDetailElement>
                 <PatientDetailElement>
+                  <span>{selectedPatient && (selectedPatient.birth ? selectedPatient.birth : '')}</span>
+                  <span>{selectedPatient && selectedPatient.birth ? ', ' : ''}</span>
                   <span>{selectedPatient && selectedPatient.age}</span>
-                  <span>
-                    {selectedPatient ? (selectedPatient.age ? (selectedPatient.gender ? ', ' : '') : '') : ''}
-                  </span>
+                  <span>{selectedPatient && (selectedPatient.age ? (selectedPatient.gender ? ', ' : '') : '')}</span>
                   <span>{selectedPatient && `${selectedPatient.gender ? selectedPatient.gender : ''}`}</span>
                 </PatientDetailElement>
                 <PatientDetailElement>
