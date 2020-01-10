@@ -188,8 +188,10 @@ function EditAppModal({
                 <span>{patient && patient.name}</span>
               </PatientDetailElement>
               <PatientDetailElement>
+                <span>{patient && (patient.birth ? patient.birth : '')}</span>
+                <span>{patient && patient.birth ? ', ' : ''}</span>
                 <span>{patient && patient.age}</span>
-                <span>{patient ? (patient.age ? (patient.gender ? ', ' : '') : '') : ''}</span>
+                <span>{patient && (patient.age ? (patient.gender ? ', ' : '') : '')}</span>
                 <span>{patient && `${patient.gender ? patient.gender : ''}`}</span>
               </PatientDetailElement>
               <PatientDetailElement>
