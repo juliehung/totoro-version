@@ -260,20 +260,24 @@ function AppRight(props) {
               <CardContent>無待辦事項</CardContent>
             </Card.Grid>
           ) : (
-            props.todos.map(t => (
-              <Card.Grid
-                style={{ ...generalGridStyle, ...todoGridStyle }}
-                key={t.id}
-                onClick={() => {
-                  onTodoCardClick(t);
-                }}
-              >
-                <CardContent>
-                  {`${moment(t.createdDate).format('HH:mm')} ${props.doctors.find(d => d.login === t.createdBy).name}
+            props.todos.map(t => {
+              const doctor = props.doctors.find(d => d.login === t.createdBy);
+              const doctorName = doctor ? doctor.name : '';
+              return (
+                <Card.Grid
+                  style={{ ...generalGridStyle, ...todoGridStyle }}
+                  key={t.id}
+                  onClick={() => {
+                    onTodoCardClick(t);
+                  }}
+                >
+                  <CardContent>
+                    {`${moment(t.createdDate).format('HH:mm')} ${doctorName}
                     ${t.todo.patient.name}需要預約`}
-                </CardContent>
-              </Card.Grid>
-            ))
+                  </CardContent>
+                </Card.Grid>
+              );
+            })
           )}
         </StyledCardContainer>
       </TodoContainer>
