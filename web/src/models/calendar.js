@@ -19,12 +19,13 @@ export default class Calendar {
     return result;
   };
 
-  static getBetween = async range => {
+  static getBetween = async (range, signal) => {
     let requestURL = `${requestUrl}`;
     const query =
       '?end.greaterOrEqualThan=' + range.start.toISOString() + '&start.lessOrEqualThan=' + range.end.toISOString();
     requestURL += query;
-    const result = await request(requestURL);
+    const option = { signal };
+    const result = await request(requestURL, option);
     return result;
   };
 

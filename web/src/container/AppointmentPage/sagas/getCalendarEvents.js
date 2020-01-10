@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, cancelled } from 'redux-saga/effects';
 import { getCalendarEventSuccess } from '../actions';
 import { GET_CALENDAR_EVENT_START } from '../constant';
 import Calendar from '../../../models/calendar';
@@ -9,11 +9,16 @@ export function* watchGetCalendarEvents() {
 }
 
 function* getCalendarEvent({ range }) {
+  const abortController = new AbortController();
   try {
-    const result = yield call(Calendar.getBetween, range);
+    const result = yield call(Calendar.getBetween, range, abortController.signal);
     yield put(getCalendarEventSuccess(convertCalendarToEvent(result, range)));
   } catch (err) {
     //  ignore
     console.log(err);
+  } finally {
+    if (yield cancelled()) {
+      abortController.abort();
+    }
   }
 }

@@ -5,7 +5,7 @@ const LOCATION = `disposals`;
 const requestUrl = `${apiUrl}/${LOCATION}`;
 
 export default class Disposal {
-  static getByDate = async date => {
+  static getByDate = async (date, signal) => {
     let requestURL = `${requestUrl}?createdDate.greaterOrEqualThan=${date
       .clone()
       .startOf('day')
@@ -14,7 +14,9 @@ export default class Disposal {
       .add(1, 'day')
       .startOf('day')
       .toISOString()}`;
-    const result = await request(requestURL);
+
+    const options = { signal };
+    const result = await request(requestURL, options);
     return result;
   };
 }

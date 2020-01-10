@@ -16,11 +16,12 @@ export default class Appointment {
     this.note = note;
   }
 
-  static getBetween = async range => {
+  static getBetween = async (range, signal) => {
     let requestURL = `${requestUrl}/between`;
     const query = '?beginDate=' + range.start.toISOString() + '&endDate=' + range.end.toISOString();
     requestURL += query;
-    const result = await request(requestURL);
+    const options = { signal };
+    const result = await request(requestURL, options);
     return result;
   };
 
