@@ -8,15 +8,13 @@ import {
   tags as TagOption,
 } from '../constant_options';
 
-// !todo introducer and dueDate are waiting for backend support
-
 export function handlePatientForApi(patientEntity, patient) {
   const name = patient.name;
   const birth = patient.birth;
   const phone = patient.phone;
   const address = patient.address;
   const nationalId = patient.nationalId;
-  // const introducer = patient.introducer;
+  const introducer = patient.introducer;
   const gender = mapOptionToText(patient.gender, GenderOption);
   const blood = mapOptionToText(patient.bloodType, BloodTypeOption);
   const career = mapOptionToText(patient.career, CareerOption);
@@ -29,7 +27,7 @@ export function handlePatientForApi(patientEntity, patient) {
   const smoking = mapOptionToText(patient.doDrug, BooleanOption);
   const smokeNumberADay = smoking ? patient.smokingAmount : undefined;
   const pregnant = mapOptionToText(patient.pregnant, BooleanOption);
-  // const dueDate = pregnant ? patient.pregnantDate : undefined;
+  const dueDate = pregnant ? patient.pregnantDate : undefined;
 
   const diseaseOption = TagOption.filter(t => t.jhi_type === 'DISEASE');
   const disease = patient.disease.map(d => mapOptionToText(d, diseaseOption));
@@ -67,8 +65,8 @@ export function handlePatientForApi(patientEntity, patient) {
     marriage,
     career,
     nationalId,
-    // introducer,
-    // dueDate,
+    introducer,
+    dueDate,
   };
 
   deepCopyPatientEntity = { ...deepCopyPatientEntity, ...json };

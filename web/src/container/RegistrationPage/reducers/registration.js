@@ -24,7 +24,6 @@ const registration = (state = initialState, action) =>
         draft.loading = true;
         break;
       case GET_REGISTRATIONS_SUCCESS:
-        console.log(action.appData);
         draft.registrations = action.appData;
         draft.loading = false;
         break;

@@ -1,7 +1,7 @@
+import moment from 'moment';
 import { GenderOption, CareerOption, MarriageOption, RelationshipOption } from '../constant_options';
 
 export function parseDataToDisplayFormPage(patient) {
-  console.log(patient);
   const name = patient.name;
   const birth = patient.birth;
   const nationalId = patient.nationalId;
@@ -33,11 +33,29 @@ export function parseDataToDisplayFormPage(patient) {
     .filter(t => t.type === 'OTHER' && ![25, 26].includes(t.id))
     .map(t => t.name)
     .join(', ');
-  console.log(patient.tags);
 
-  // !todo
-  // const pregnant = patient.tags ? patient.tags.find(t => t.id === 25) : undefined;
-  // const smoking = patient.tags ? patient.tags.find(t => t.id === 26) : undefined;
+  const pregnant = patient.tags ? patient.tags.find(t => t.id === 25) : undefined;
+  const smoking = patient.tags ? patient.tags.find(t => t.id === 26) : undefined;
+
+  let pregnantString;
+  if (pregnant) {
+    if (patient.dueDate) {
+      pregnantString = `懷孕中 (預產期${moment(patient.dueDate).format('YYYY-MM-DD')}) `;
+    } else {
+      pregnantString = '懷孕中';
+    }
+  }
+
+  let smokingString = smoking ? '抽菸' : undefined;
+  if (smoking) {
+    if (patient.questionnaire && patient.questionnaire.smokeNumberADay) {
+      smokingString = `抽菸 (一天${patient.questionnaire.smokeNumberADay}支) `;
+    } else {
+      smokingString = `抽菸`;
+    }
+  }
+
+  const special = [pregnantString, smokingString].filter(s => s).join(', ');
 
   const patientForDisplay = {
     name,
@@ -57,9 +75,8 @@ export function parseDataToDisplayFormPage(patient) {
     drugName,
     allergy,
     other,
+    special,
   };
-
-  console.log(123, patientForDisplay);
 
   return patientForDisplay;
 }
