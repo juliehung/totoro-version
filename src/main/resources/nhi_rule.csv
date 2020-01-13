@@ -1,4 +1,4 @@
-﻿code,x_ray,medical_record,exclude,interval,surface_limit
+﻿code,x_ray,medical_record,exclude,interval,position_limit
 00121C,,,,,BLANK_ONLY
 00122C,,,,,BLANK_ONLY
 00123C,,,,,BLANK_ONLY
