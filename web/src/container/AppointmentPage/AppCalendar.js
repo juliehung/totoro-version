@@ -256,13 +256,13 @@ class AppCalendar extends React.Component {
     this.props.popoverCancelApp(apptData);
   };
 
-  eventDragStart = () => {
+  eventEditStart = () => {
     if (this.scrollListener) {
       this.scrollListener.removeEventListener('scroll', this.clickTitle);
     }
   };
 
-  eventDragEnd = () => {
+  eventEditStop = () => {
     this.scrollListener = document.querySelector('.fc-scroller');
     this.scrollListener.addEventListener('scroll', this.clickTitle);
   };
@@ -360,8 +360,10 @@ class AppCalendar extends React.Component {
         nowIndicator
         eventLimit
         selectable
-        eventDragStart={this.eventDragStart}
-        eventDragEnd={this.eventDragEnd}
+        eventDragStart={this.eventEditStart}
+        eventDragStop={this.eventEditStop}
+        eventResizeStart={this.eventEditStart}
+        eventResizeStop={this.eventEditStop}
         timeGridEventMinHeight={15}
       />
     );
