@@ -220,7 +220,43 @@ export function handleKeyEvent(page, keyEvent, func) {
           break;
         case KeyCode.a:
         case KeyCode.b:
+          func.preChangeSmoking(keyEvent.key.toUpperCase());
+          break;
+        default:
+          break;
+      }
+      break;
+    case 18:
+      switch (keyEvent.keyCode) {
+        case KeyCode.down_arrow:
+          func.nextPage();
+          break;
+        case KeyCode.up_arrow:
+          func.prevPage();
+          break;
+        case KeyCode.a:
+        case KeyCode.b:
           func.preChangePregnant(keyEvent.key.toUpperCase());
+          break;
+        default:
+          break;
+      }
+      break;
+    case 19:
+      switch (keyEvent.keyCode) {
+        case KeyCode.down_arrow:
+          func.nextPage();
+          break;
+        case KeyCode.up_arrow:
+          func.prevPage();
+          break;
+        case KeyCode.a:
+        case KeyCode.b:
+        case KeyCode.c:
+        case KeyCode.d:
+        case KeyCode.e:
+        case KeyCode.f:
+          func.changeOther(keyEvent.key.toUpperCase());
           break;
         default:
           break;

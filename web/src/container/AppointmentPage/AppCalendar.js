@@ -40,6 +40,7 @@ import { handleEventRender } from './utils/handleEventRender';
 import { convertSettingsToClinicOffEvent } from './utils/convertSettingsToClinicOffEvent';
 import { message } from 'antd';
 import MqttHelper from '../../utils/mqtt';
+import { calFirstDay } from './reducers/calendar';
 
 //#region
 const StyledFullCalendar = styled(FullCalendar)`
@@ -132,7 +133,7 @@ class AppCalendar extends React.Component {
   handleDatesRender = info => {
     // reset first day when leave timeGridWeek
     if (info.view.type !== 'timeGridWeek') {
-      this.props.changeCalFirstDay(1);
+      this.props.changeCalFirstDay(calFirstDay);
     }
 
     if (this.calendarComponentRef.current) {

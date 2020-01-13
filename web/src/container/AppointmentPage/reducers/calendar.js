@@ -19,6 +19,8 @@ import {
 
 const doctors = JSON.parse(localStorage.getItem('selectedDoctors'));
 
+export const calFirstDay = 0;
+
 const initState = {
   calendarDate: moment(),
   appointments: [],
@@ -28,7 +30,7 @@ const initState = {
   doctorAppCount: {},
   selectedAllDoctors: doctors ? doctors.includes('all') : true,
   showCalEvt: doctors ? doctors.includes('dayOff') : false,
-  calendarFirstDay: 0,
+  calendarFirstDay: calFirstDay,
   slotDuration: 10,
   range: { start: undefined, end: undefined },
   cancelApp: false,
