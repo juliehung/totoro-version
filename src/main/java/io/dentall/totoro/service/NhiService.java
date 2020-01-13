@@ -49,9 +49,9 @@ public class NhiService {
 
     private static Map<String, Rule> rules;
 
-    private static Map<String, String> surfaceLimitMap = new HashMap();
+    private static Map<String, String> positionLimitMap = new HashMap();
 
-    private static Map<String, String> surfaceLimitErrorResponseMap = new HashMap();
+    private static Map<String, String> positionLimitErrorResponseMap = new HashMap();
 
     @Value("classpath:nhi_rule.csv")
     private Resource resourceFile;
@@ -63,37 +63,49 @@ public class NhiService {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
 
-        surfaceLimitMap.put("VALIDATED_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,FM,");
-        surfaceLimitMap.put("BLANK_ONLY", "");
-        surfaceLimitMap.put("FM_ONLY", "FM,");
-        surfaceLimitMap.put("TOOTH_AREA_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,");
-        surfaceLimitMap.put("TOOTH_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,");
-        surfaceLimitMap.put("DECIDUOUS_ONLY", "51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,99,");
-        surfaceLimitMap.put("PERMANENT_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,19,29,39,49,99,");
-        surfaceLimitMap.put("FRONT_ONLY", "11,12,13,21,22,23,31,32,33,41,42,43,51,52,53,61,62,63,71,72,73,81,82,83,19,29,39,49,99,");
-        surfaceLimitMap.put("BACK_ONLY", "14,15,16,17,18,24,25,26,27,28,34,35,36,37,38,44,45,46,47,48,54,55,64,65,74,75,84,85,19,29,39,49,99,");
-        surfaceLimitMap.put("PERMANENT_FRONT_ONLY", "11,12,13,21,22,23,31,32,33,41,42,43,19,29,39,49,99,");
-        surfaceLimitMap.put("PERMANENT_BACK_ONLY", "14,15,16,17,18,24,25,26,27,28,34,35,36,37,38,44,45,46,47,48,19,29,39,49,99,");
-        surfaceLimitMap.put("PERMANENT_MOLAR_ONLY", "16,17,18,24,25,26,27,28,36,37,38,46,47,48,19,29,39,49,99,");
-        surfaceLimitMap.put("SPECIFIC_AREA_ONLY", "");
-        surfaceLimitMap.put("SPECIFIC_TOOTH_ONLY", "");
-        surfaceLimitMap.put("PERMANENT_PREMOLAR_ONLY", "14,15,24,25,34,35,44,45,19,29,39,49,99,");
+        positionLimitMap.put("VALIDATED_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,FM,");
+        positionLimitMap.put("BLANK_ONLY", "");
+        positionLimitMap.put("FM_ONLY", "FM,");
+        positionLimitMap.put("TOOTH_AREA_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,");
+        positionLimitMap.put("TOOTH_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,");
+        positionLimitMap.put("DECIDUOUS_ONLY", "51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,99,");
+        positionLimitMap.put("PERMANENT_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,19,29,39,49,99,");
+        positionLimitMap.put("FRONT_ONLY", "11,12,13,21,22,23,31,32,33,41,42,43,51,52,53,61,62,63,71,72,73,81,82,83,19,29,39,49,99,");
+        positionLimitMap.put("BACK_ONLY", "14,15,16,17,18,24,25,26,27,28,34,35,36,37,38,44,45,46,47,48,54,55,64,65,74,75,84,85,19,29,39,49,99,");
+        positionLimitMap.put("PERMANENT_FRONT_ONLY", "11,12,13,21,22,23,31,32,33,41,42,43,19,29,39,49,99,");
+        positionLimitMap.put("PERMANENT_BACK_ONLY", "14,15,16,17,18,24,25,26,27,28,34,35,36,37,38,44,45,46,47,48,19,29,39,49,99,");
+        positionLimitMap.put("PERMANENT_PREMOLAR_ONLY", "14,15,24,25,34,35,44,45,19,29,39,49,99,");
+        positionLimitMap.put("PERMANENT_MOLAR_ONLY", "16,17,18,24,25,26,27,28,36,37,38,46,47,48,19,29,39,49,99,");
+        positionLimitMap.put("SPECIFIC_AREA_ONLY", "");
+        positionLimitMap.put("SPECIFIC_TOOTH_ONLY", "");
 
-        surfaceLimitErrorResponseMap.put("BLANK_ONLY", "不應填寫牙位");
-        surfaceLimitErrorResponseMap.put("VALIDATED_ONLY", "限填合法一般、區域、全域牙位");
-        surfaceLimitErrorResponseMap.put("FM_ONLY", "限填全域牙位");
-        surfaceLimitErrorResponseMap.put("TOOTH_ONLY", "限填一般牙位");
-        surfaceLimitErrorResponseMap.put("TOOTH_AREA_ONLY", "限填一般、區域牙位");
-        surfaceLimitErrorResponseMap.put("DECIDUOUS_ONLY", "限填乳牙牙位");
-        surfaceLimitErrorResponseMap.put("PERMANENT_ONLY", "限填恆牙牙位");
-        surfaceLimitErrorResponseMap.put("FRONT_ONLY", "限填前牙牙位");
-        surfaceLimitErrorResponseMap.put("BACK_ONLY", "限填後牙牙位");
-        surfaceLimitErrorResponseMap.put("PERMANENT_FRONT_ONLY", "限填恆牙前牙牙位");
-        surfaceLimitErrorResponseMap.put("PERMANENT_BACK_ONLY", "限填恆牙後牙牙位");
-        surfaceLimitErrorResponseMap.put("PERMANENT_MOLAR_ONLY", "限填恆牙大臼齒牙位");
-        surfaceLimitErrorResponseMap.put("SPECIFIC_AREA_ONLY", "限填指定區域");
-        surfaceLimitErrorResponseMap.put("SPECIFIC_TOOTH_ONLY", "限填指定牙位");
-        surfaceLimitErrorResponseMap.put("PERMANENT_PREMOLAR_ONLY", "限填恆牙小臼齒牙位");
+        positionLimitErrorResponseMap.put("BLANK_ONLY", "不應填寫牙位");
+        positionLimitErrorResponseMap.put("VALIDATED_ONLY", "限填合法一般、區域、全域牙位");
+        positionLimitErrorResponseMap.put("FM_ONLY", "限填全域牙位");
+        // 僅限 所有牙位
+        positionLimitErrorResponseMap.put("TOOTH_ONLY", "限填11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99");
+        // 僅限 所有牙位，所有區域
+        positionLimitErrorResponseMap.put("TOOTH_AREA_ONLY", "限填11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99,UB,LB,UR,UL,LR,LL,UA,LA");
+        // 僅限 乳牙牙位
+        positionLimitErrorResponseMap.put("DECIDUOUS_ONLY", "限填51-55,61-65,71-75,81-85,99");
+        // 僅限 恆牙牙位
+        positionLimitErrorResponseMap.put("PERMANENT_ONLY", "限填11-19,21-29,31-39,41-49,51-55,99");
+        // 僅限 前牙牙位
+        positionLimitErrorResponseMap.put("FRONT_ONLY", "限填11-13,21-23,31-33,41-43,51-53,61-63,71-73,81-83,99");
+        // 僅限 後牙牙位
+        positionLimitErrorResponseMap.put("BACK_ONLY", "限填14-19,24-29,34-39,44-49,51-53,61-63,71-73,81-83,99");
+        // 僅限 恆牙前牙牙位
+        positionLimitErrorResponseMap.put("PERMANENT_FRONT_ONLY", "限填11-13,21-23,31-33,41-43,99");
+        // 僅限 恆牙後牙牙位
+        positionLimitErrorResponseMap.put("PERMANENT_BACK_ONLY", "限填14-19,24-29,34-39,44-49");
+        // 僅限 恆牙小臼齒牙位
+        positionLimitErrorResponseMap.put("PERMANENT_PREMOLAR_ONLY", "限填14,15,24,25,34,35,44,45,19,29,39,49,99");
+        // 僅限 恆牙大臼齒牙位
+        positionLimitErrorResponseMap.put("PERMANENT_MOLAR_ONLY", "限填16,17,18,24,25,26,27,28,36,37,38,46,47,48,19,29,39,49,99");
+        // 僅限 指定牙位
+        positionLimitErrorResponseMap.put("SPECIFIC_TOOTH_ONLY", "限填指定牙位");
+        // 僅限 指定區域
+        positionLimitErrorResponseMap.put("SPECIFIC_AREA_ONLY", "限填指定區域");
     }
 
     @PostConstruct
@@ -122,17 +134,17 @@ public class NhiService {
                         .andThen(checkMedicalRecord)
                         .andThen(wrapCheckExclude)
                         .andThen(checkInterval)
-                        .andThen(checkSurfaceLimit)
+                        .andThen(checkPositionLimit)
                         .accept(nhiExtendTreatmentProcedure);
                 }
             });
         }
     }
 
-    public Consumer<NhiExtendTreatmentProcedure> checkSurfaceLimit = nhiExtendTreatmentProcedure -> {
+    public Consumer<NhiExtendTreatmentProcedure> checkPositionLimit = nhiExtendTreatmentProcedure -> {
         String code = nhiExtendTreatmentProcedure.getA73();
-        String[] surfaceLimit = rules.get(code).getSurfaceLimit();
-        String limitType = surfaceLimit.length > 0 ?surfaceLimit[0] :"NO_SUCH_SURFACE_TYPE";
+        String[] positionLimit = rules.get(code).getPositionLimit();
+        String limitType = positionLimit.length > 0 ?positionLimit[0] :"NO_SUCH_POSITION_TYPE";
         boolean checkFail = false;
         String specificPosition = "";
 
@@ -150,7 +162,7 @@ public class NhiService {
             case "PERMANENT_MOLAR_ONLY":
             case "PERMANENT_PREMOLAR_ONLY": {
                 checkFail = nhiExtendTreatmentProcedure.getTreatmentProcedure().getTeeth().stream()
-                    .anyMatch(tooth -> !surfaceLimitMap.get(limitType).contains(tooth.getPosition().concat(",")));
+                    .anyMatch(tooth -> !positionLimitMap.get(limitType).contains(tooth.getPosition().concat(",")));
                 break;
             }
             case "BLANK_ONLY": {
@@ -159,14 +171,14 @@ public class NhiService {
             }
             case "SPECIFIC_TOOTH_ONLY":
             case "SPECIFIC_AREA_ONLY": {
-                if (surfaceLimit.length < 2) {
+                if (positionLimit.length < 2) {
                     break;
                 }
 
-                String specificSurfaceLimit = surfaceLimit[1];
-                specificPosition = specificSurfaceLimit;
+                String specificPositionLimit = positionLimit[1];
+                specificPosition = specificPositionLimit;
                 checkFail = nhiExtendTreatmentProcedure.getTreatmentProcedure().getTeeth().stream()
-                    .anyMatch(tooth -> !specificSurfaceLimit.contains(tooth.getPosition().concat(",")));
+                    .anyMatch(tooth -> !specificPositionLimit.contains(tooth.getPosition().concat(",")));
                 break;
             }
             default:
@@ -174,7 +186,7 @@ public class NhiService {
         }
 
         if (checkFail) {
-            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + code + " " + surfaceLimitErrorResponseMap.get(limitType) + " " + specificPosition + "\n");
+            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + code + " " + positionLimitErrorResponseMap.get(limitType) + " " + specificPosition + "\n");
         }
     };
 
@@ -559,9 +571,9 @@ public class NhiService {
         @Convert(conversionClass = Splitter.class, args = ",")
         private String[] fdi;
 
-        @Parsed(field = "surface_limit", defaultNullRead = "")
+        @Parsed(field = "position_limit", defaultNullRead = "")
         @Convert(conversionClass = Splitter.class, args = "=")
-        private String[] surfaceLimit;
+        private String[] positionLimit;
 
         static Rule allPass() {
             Rule allPass = new Rule();
@@ -570,12 +582,12 @@ public class NhiService {
             return allPass;
         }
 
-        public String[] getSurfaceLimit() {
-            return surfaceLimit;
+        public String[] getPositionLimit() {
+            return positionLimit;
         }
 
-        public void setSurfaceLimit(String[] surfaceLimit) {
-            this.surfaceLimit = surfaceLimit;
+        public void setPositionLimit(String[] positionLimit) {
+            this.positionLimit = positionLimit;
         }
 
         public void setCode(String code) {
