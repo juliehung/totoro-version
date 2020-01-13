@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button, Table, Drawer } from 'antd';
@@ -59,8 +59,16 @@ const columns = [
 ];
 
 function RegistDrawer(props) {
+  const { changeDrawerVisible } = props;
+
+  useEffect(() => {
+    return () => {
+      changeDrawerVisible(false);
+    };
+  }, [changeDrawerVisible]);
+
   const onClose = () => {
-    props.changeDrawerVisible(false);
+    changeDrawerVisible(false);
   };
 
   return (
