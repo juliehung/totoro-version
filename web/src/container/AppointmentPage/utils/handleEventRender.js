@@ -132,6 +132,12 @@ export function handleEventRender(info, func) {
           </Popover>,
           info.el,
         );
+      } else if (info.view.type === 'dayGridMonth') {
+        if (!appointment.registrationStatus) {
+          info.el.addEventListener('dblclick', () => {
+            func.edit(appointment);
+          });
+        }
       }
     } else if (info.view.type === 'listWeek') {
       const regex = /<a>(.*?)<\/a>/;
@@ -199,6 +205,10 @@ export function handleEventRender(info, func) {
           </Dropdown>,
           info.el,
         );
+      } else if (info.view.type === 'dayGridMonth') {
+        info.el.addEventListener('dblclick', () => {
+          func.edit(doctorDayOff);
+        });
       }
     }
   }
