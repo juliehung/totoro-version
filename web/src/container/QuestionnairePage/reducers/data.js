@@ -103,6 +103,7 @@ const data = (state = initialState, action) =>
         draft.patient.pregnant = action.patient.tags.find(tag => tag.id === 25) ? 'A' : 'B';
         draft.patient.smoking = action.patient.tags.find(tag => tag.id === 26) ? 'A' : 'B';
         draft.patient.smokingAmount = action.patient.questionnaire ? action.patient.questionnaire.smokeNumberADay : 0;
+        draft.patient.introducer = action.patient.introducer;
 
         break;
       case INIT_QUESTIONNAIRE:

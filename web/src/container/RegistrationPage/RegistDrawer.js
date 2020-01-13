@@ -46,8 +46,8 @@ const StyledButton = styled(Button)`
 const columns = [
   {
     title: '產生日期',
-    dataIndex: 'creatDate',
-    key: 'creatDate',
+    dataIndex: 'createDate',
+    key: 'createDate',
     render: date => moment(date).format('YYYY-MM-DD HH:mm'),
   },
   {

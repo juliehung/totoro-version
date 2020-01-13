@@ -7,8 +7,6 @@ export function handleEditAppLocally(originApps, app) {
 }
 
 export function convertEditAppToEvt(appointment) {
-  console.log(appointment);
-
   const start = moment(appointment.expectedArrivalTime).toDate();
   const requiredTreatmentTime =
     !appointment.requiredTreatmentTime || appointment.requiredTreatmentTime === 0
