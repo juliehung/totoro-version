@@ -421,7 +421,7 @@ public class NhiServiceIntTest {
         TreatmentProcedure treatmentProcedureDateBefore10 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalDateBefore10 = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
-            .a17(dateBefore20.getYear() - 1911 + monthFormatter.format(dateBefore10) + dayFormatter.format(dateBefore10))
+            .a17(dateBefore10.getYear() - 1911 + monthFormatter.format(dateBefore10) + dayFormatter.format(dateBefore10))
             .patientId(1L)
             .nhiExtendTreatmentProcedures(Collections.singleton(
                 new NhiExtendTreatmentProcedure()
