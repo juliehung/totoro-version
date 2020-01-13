@@ -64,6 +64,7 @@ def versionMinorRenewDate = "2019-05-27"
 def branchName = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
 def commitCount = "git rev-list $branchName --count --since=$versionMinorRenewDate".execute().text.trim()
 def semver = "$versionMajor.$versionMinor.$commitCount-$branchName"
+def gitTag = "git describe --tags".execute().text.trim()
 def sha1 = "git show --pretty=tformat:%h --quiet".execute().text.trim()
 
 description = ''
@@ -76,7 +77,11 @@ bootWar {
     mainClassName = 'io.dentall.totoro.TotoroApp'
 
     if (!project.hasProperty('gae')) {
-        archiveName = "$baseName-$branchName-$sha1.$extension"
+        if (!gitTag.isEmpty()) {
+            archiveName = "$baseName-$gitTag-$sha1.$extension"
+        } else {
+            archiveName = "$baseName-$branchName-$sha1.$extension"
+        }
     }
 }
 
