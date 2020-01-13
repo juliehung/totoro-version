@@ -15,6 +15,8 @@ import {
   changeAllergy,
   preChangeDoDrug,
   preChangePregnant,
+  preChangeSmoking,
+  changeOther,
   initQuestionnaire,
   getPatient,
   initPage,
@@ -75,6 +77,8 @@ function QuestionnairePage(props) {
     changeAllergy,
     preChangeDoDrug,
     preChangePregnant,
+    preChangeSmoking,
+    changeOther,
     match,
     getPatient,
     createQSuccess,
@@ -104,6 +108,8 @@ function QuestionnairePage(props) {
         changeAllergy,
         preChangeDoDrug,
         preChangePregnant,
+        preChangeSmoking,
+        changeOther,
       });
     }
 
@@ -120,11 +126,13 @@ function QuestionnairePage(props) {
     preChangeBloodType,
     preChangeCareer,
     preChangeMarriage,
+    preChangeSmoking,
     preChangeEmergencyRelationship,
     changeDisease,
     changeAllergy,
     preChangeDoDrug,
     preChangePregnant,
+    changeOther,
   ]);
 
   useEffect(() => {
@@ -181,6 +189,8 @@ const mapDispatchToProps = {
   changeAllergy,
   preChangeDoDrug,
   preChangePregnant,
+  preChangeSmoking,
+  changeOther,
   initQuestionnaire,
   getPatient,
   initPage,
