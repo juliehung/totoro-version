@@ -56,11 +56,12 @@ public class Prescription implements Serializable {
     @OneToMany(mappedBy = "prescription", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentDrug> treatmentDrugs = null;
-    @OneToOne(mappedBy = "prescription")
+
+    @OneToOne(mappedBy = "prescription", fetch = FetchType.LAZY)
     @JsonIgnore
     private Disposal disposal;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
     public Long getId() {
         return id;
     }

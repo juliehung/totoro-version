@@ -58,10 +58,11 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "treatment_procedures_id", referencedColumnName = "id"))
     private Set<TreatmentProcedure> treatmentProcedures = null;
 
-    @OneToOne(mappedBy = "todo")
+    @OneToOne(mappedBy = "todo", fetch = FetchType.LAZY)
     @JsonIgnore
     private Disposal disposal;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
     public Long getId() {
         return id;
     }
