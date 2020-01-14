@@ -8,7 +8,7 @@ import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.AuthorityRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.AuthoritiesConstants;
-import io.dentall.totoro.service.ImageService;
+import io.dentall.totoro.service.AvatarService;
 import io.dentall.totoro.service.MailService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.dto.PasswordChangeDTO;
@@ -81,7 +81,7 @@ public class AccountResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
-    private ImageService imageService;
+    private AvatarService avatarService;
 
     @Mock
     private UserService mockUserService;
@@ -98,10 +98,10 @@ public class AccountResourceIntTest {
         MockitoAnnotations.initMocks(this);
         doNothing().when(mockMailService).sendActivationEmail(any());
         AccountResource accountResource =
-            new AccountResource(userRepository, userService, mockMailService, imageService);
+            new AccountResource(userRepository, userService, mockMailService, avatarService);
 
         AccountResource accountUserMockResource =
-            new AccountResource(userRepository, mockUserService, mockMailService, imageService);
+            new AccountResource(userRepository, mockUserService, mockMailService, avatarService);
         this.restMvc = MockMvcBuilders.standaloneSetup(accountResource)
             .setMessageConverters(httpMessageConverters)
             .setControllerAdvice(exceptionTranslator)

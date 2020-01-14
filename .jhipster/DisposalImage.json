@@ -1,0 +1,29 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "fields": [
+        {
+            "fieldName": "filePath",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fileName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fetchUrl",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "disposalId",
+            "fieldType": "Long"
+        }
+    ],
+    "changelogDate": "20191204094753",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "serviceClass",
+    "entityTableName": "disposal_image",
+    "jpaMetamodelFiltering": true,
+    "pagination": "no"
+}

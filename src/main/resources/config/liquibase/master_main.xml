@@ -54,10 +54,12 @@
     <include file="config/liquibase/changelog/20190708032330_added_entity_NhiMonthDeclarationDetails.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190716062608_added_entity_DocNp.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20191225042953_added_entity_NhiAccumulatedMedicalRecord.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20191204094753_added_entity_Image.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom tables -->
     <include file="config/liquibase/changelog/createTable/20190522.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2019/07/20190720-createTable.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2020/01/20200110_createTable.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/addColumn/20190404.xml" relativeToChangelogFile="false"/>

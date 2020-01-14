@@ -5,10 +5,10 @@ import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TagRepository;
+import io.dentall.totoro.service.AvatarService;
 import io.dentall.totoro.service.BroadcastService;
-import io.dentall.totoro.service.ImageService;
 import io.dentall.totoro.service.PatientService;
-import io.dentall.totoro.service.dto.NullGroup;
+import io.dentall.totoro.service.dto.CustomGroup;
 import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.dto.PatientDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
@@ -55,7 +55,7 @@ public class PatientResource {
 
     private final TagRepository tagRepository;
 
-    private final ImageService imageService;
+    private final AvatarService avatarService;
 
     private final PatientService patientService;
 
@@ -64,13 +64,13 @@ public class PatientResource {
     public PatientResource(
         PatientRepository patientRepository,
         TagRepository tagRepository,
-        ImageService imageService,
+        AvatarService avatarService,
         PatientService patientService,
         BroadcastService broadcastService
     ) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
-        this.imageService = imageService;
+        this.avatarService = avatarService;
         this.patientService = patientService;
         this.broadcastService = broadcastService;
     }
@@ -109,7 +109,7 @@ public class PatientResource {
      */
     @PutMapping("/patients")
     @Timed
-    public ResponseEntity<Patient> updatePatient(@Validated(NullGroup.class) @RequestBody PatientDTO patient) throws URISyntaxException {
+    public ResponseEntity<Patient> updatePatient(@Validated(CustomGroup.class) @RequestBody PatientDTO patient) throws URISyntaxException {
         log.debug("REST request to update Patient : {}", patient);
         if (patient.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -478,7 +478,7 @@ public class PatientResource {
     @Timed
     public Patient uploadAvatar(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
-            return imageService.storePatientAvatar(id, file).orElseThrow(() -> new InternalServerErrorException("Patient could not found"));
+            return avatarService.storePatientAvatar(id, file).orElseThrow(() -> new InternalServerErrorException("Patient could not found"));
         } catch (IOException e) {
             throw new InternalServerErrorException("Patient could not store avatar");
         }
