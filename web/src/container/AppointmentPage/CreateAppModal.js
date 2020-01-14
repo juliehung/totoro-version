@@ -241,7 +241,7 @@ function CreateAppModal({
             <NewPatientRow>
               <NewPatientElement>
                 <span>病患姓名：</span>
-                <Input onChange={onChangePatientName} value={patient.name} />
+                <Input onChange={onChangePatientName} value={patient.name} placeholder="請輸入病患姓名" />
               </NewPatientElement>
               <NewPatientElement>
                 <span>生日：</span>
@@ -249,18 +249,18 @@ function CreateAppModal({
                   allowClear
                   onChange={changeCreateAppPatientBirth}
                   value={patient.birth}
-                  placeholder="請選擇日期"
+                  placeholder="請選擇生日"
                 />
               </NewPatientElement>
             </NewPatientRow>
             <NewPatientRow>
               <NewPatientElement>
                 <span>身分證號：</span>
-                <Input onChange={onChangePatientNationalId} value={patient.nationalId} />
+                <Input onChange={onChangePatientNationalId} value={patient.nationalId} placeholder="請輸入身分證號" />
               </NewPatientElement>
               <NewPatientElement>
                 <span>電話：</span>
-                <Input onChange={onChangePatientPhone} value={patient.phone} />
+                <Input onChange={onChangePatientPhone} value={patient.phone} placeholder="請輸入電話" />
               </NewPatientElement>
             </NewPatientRow>
           </NewPatientContainer>

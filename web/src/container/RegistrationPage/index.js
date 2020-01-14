@@ -306,11 +306,11 @@ function RegistrationPage(props) {
         pagination={false}
         loading={props.loading}
         locale={{ emptyText: <Empty description="無掛號" /> }}
-        onRow={(row, rowIndex) => {
+        onRow={row => {
           return {
-            onClick: event => {
+            onClick: () => {
               props.onSelectPatient(row.patient);
-            }
+            },
           };
         }}
         dataSource={convertToTableSource(props.registrations)}
