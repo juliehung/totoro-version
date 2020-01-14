@@ -26,6 +26,7 @@
     <include file="config/liquibase/changelog/20190606033824_added_entity_constraints_NhiMedicalRecord.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190708032330_added_entity_constraints_NhiMonthDeclarationDetails.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20191225042953_added_entity_constraints_NhiAccumulatedMedicalRecord.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20191204094753_added_entity_constraints_Image.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 
     <!-- add custom foreign key constraints -->
@@ -35,6 +36,7 @@
     <include file="config/liquibase/changelog/addForeignKeyConstraint/20190522-2.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/addForeignKeyConstraint/20190522-3.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2019/07/20190720_addForeignKeyConstraint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2020/01/20200110_addForeignKeyConstraint.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom unique constraints -->
     <include file="config/liquibase/changelog/addUniqueConstraint/20190404.xml" relativeToChangelogFile="false"/>

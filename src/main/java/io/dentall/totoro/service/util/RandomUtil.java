@@ -1,6 +1,7 @@
 package io.dentall.totoro.service.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 
 /**
  * Utility class for generating random Strings.
@@ -37,5 +38,14 @@ public final class RandomUtil {
      */
     public static String generateResetKey() {
         return RandomStringUtils.randomNumeric(DEF_COUNT);
+    }
+
+    /**
+     * Generate a thumbnail temporary id.
+     *
+     * @return the generated thumbnail id
+     */
+    public static long generateThumbnailId() {
+        return RandomUtils.nextLong();
     }
 }

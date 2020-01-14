@@ -4,17 +4,16 @@ import io.dentall.totoro.domain.Patient;
 
 import javax.validation.constraints.Null;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A DTO representing a patient
  */
 public class PatientDTO extends Patient {
 
-    @Null(groups = NullGroup.class)
+    @Null(groups = CustomGroup.class)
     private String name;
 
-    @Null(groups = NullGroup.class)
+    @Null(groups = CustomGroup.class)
     private String phone;
 
     private List<String> isPermanent;

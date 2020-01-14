@@ -58,6 +58,20 @@ gradle-test:
 #            - build/test-results/lcov-report/*
 #       expire_in: 90 day
 
+gradle-test-ftp:
+    stage: test
+    only:
+        - merge_requests
+    image: openjdk:8-jdk-stretch
+    services:
+        - postgres:10.4
+    variables:
+        POSTGRES_DB: totoro
+        POSTGRES_USER: totoro
+        POSTGRES_PASSWORD: totoro
+    script:
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/totoro TTR_F_U=localhost TTR_F_A=user TTR_F_S=password TTR_F_T_P=56047 TTR_F_B_P=55536 TTR_F_P=21 ./gradlew test -PtestFtp --tests io.dentall.totoro.service.ImageBusinessServiceIntTest --no-daemon
+
 gradle-repackage:
     stage: package
     only:

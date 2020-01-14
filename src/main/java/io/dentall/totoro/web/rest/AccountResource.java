@@ -6,7 +6,7 @@ import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.SecurityUtils;
-import io.dentall.totoro.service.ImageService;
+import io.dentall.totoro.service.AvatarService;
 import io.dentall.totoro.service.MailService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.dto.PasswordChangeDTO;
@@ -45,13 +45,13 @@ public class AccountResource {
 
     private final MailService mailService;
 
-    private final ImageService imageService;
+    private final AvatarService avatarService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, ImageService imageService) {
+    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, AvatarService avatarService) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
-        this.imageService = imageService;
+        this.avatarService = avatarService;
     }
 
     /**
@@ -201,7 +201,7 @@ public class AccountResource {
     @PostMapping("/account/avatar")
     @Timed
     public String uploadAvatar(@RequestParam("file") MultipartFile file) {
-        return imageService.storeUserAvatar(file).orElseThrow(() -> new InternalServerErrorException("User could not store avatar"));
+        return avatarService.storeUserAvatar(file).orElseThrow(() -> new InternalServerErrorException("User could not store avatar"));
     }
 
     /**
