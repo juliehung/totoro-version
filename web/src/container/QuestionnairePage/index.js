@@ -49,6 +49,7 @@ const PageControlContainer = styled.div`
   justify-content: flex-end;
   width: 600px;
   font-size: 20px;
+  visibility: ${props => ([20, 21, 22, 23, 24].includes(props.page) ? 'hidden' : 'visible')};
   & > div {
     border: 1px solid rgb(208, 215, 223);
     box-shadow: 0px 2px 9px 0px rgba(23, 104, 172, 0.13);
@@ -157,16 +158,14 @@ function QuestionnairePage(props) {
         {props.page !== 20 && props.page !== 21 && <QutContent />}
         {props.page === 20 && <Form />}
         {props.page === 21 && <Signature />}
-        {![20, 21, 22, 23, 24].includes(props.page) && (
-          <PageControlContainer>
-            <div onClick={prevPage}>
-              <Icon type="up" />
-            </div>
-            <div onClick={nextPage}>
-              <Icon type="down" />
-            </div>
-          </PageControlContainer>
-        )}
+        <PageControlContainer page={props.page}>
+          <div onClick={prevPage}>
+            <Icon type="up" />
+          </div>
+          <div onClick={nextPage}>
+            <Icon type="down" />
+          </div>
+        </PageControlContainer>
       </Container>
     </Swipeable>
   );
