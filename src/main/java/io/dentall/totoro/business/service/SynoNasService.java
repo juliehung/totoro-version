@@ -60,7 +60,8 @@ public class SynoNasService extends ImageBusinessService {
         return ImageRepositoryConfiguration
             .BASIC_FOLDER_PATH
             .concat("/")
-            .concat(patientId.toString());
+            .concat(patientId.toString())
+            .concat("/");
     }
 
     @Override
@@ -93,7 +94,6 @@ public class SynoNasService extends ImageBusinessService {
             .fetchUrl(SYNO_NAS_FETCH_URL
                 .concat("&path=")
                 .concat(filePath)
-                .concat("/")
                 .concat(fileName)
             )
             .size(size)
