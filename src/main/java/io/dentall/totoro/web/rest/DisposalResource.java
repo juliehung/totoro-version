@@ -161,6 +161,7 @@ public class DisposalResource {
         if (optDisposal.isPresent()) {
             Disposal disposal = optDisposal.get();
             nhiService.checkNhiExtendTreatmentProcedures(disposal.getTreatmentProcedures().stream()
+                .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
                 .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
                 .collect(Collectors.toSet())
             );
