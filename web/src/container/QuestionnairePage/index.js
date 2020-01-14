@@ -65,7 +65,6 @@ const PageControlContainer = styled.div`
 
 function QuestionnairePage(props) {
   const {
-    location,
     nextPage,
     prevPage,
     page,
@@ -85,15 +84,6 @@ function QuestionnairePage(props) {
     createQSuccess,
     initPage,
   } = props;
-
-  // TODO: Xu you can continue from here
-
-  if (location.state) {
-    const patient = location.state.patient;
-    if (patient) {
-      props.initQuestionnaire(patient);
-    }
-  }
 
   useEffect(() => {
     function keyFunction(keyEvent) {
