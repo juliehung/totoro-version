@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service;
 
 import io.dentall.totoro.business.dto.TeethGraphConfigDTO;
+import io.dentall.totoro.business.vm.PatientSearchVM;
 import io.dentall.totoro.business.vm.PatientVM;
 import io.dentall.totoro.business.vm.TeethGraphConfigVM;
 import io.dentall.totoro.domain.Patient;
@@ -10,6 +11,10 @@ import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.service.TreatmentQueryService;
 import io.dentall.totoro.service.util.ProblemUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Status;
 
@@ -18,6 +23,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class PatientBusinessService {
+
+    private final Logger log = LoggerFactory.getLogger(PatientBusinessService.class);
 
     private final PatientRepository patientRepository;
 
@@ -96,4 +103,32 @@ public class PatientBusinessService {
         return patientVM;
     }
 
+    public Page<PatientSearchVM> findByBirth(String search, String format, Pageable page) {
+        if (format.toUpperCase().equals("CE")) {
+            return patientRepository.findByBirthCE(search, page);
+        } else if (format.toUpperCase().equals("ROC")) {
+            return patientRepository.findByBirthROC(search, page);
+        }
+
+        return Page.empty();
+    }
+
+    public Page<PatientSearchVM> findByName(String search, Pageable page) {
+        return patientRepository.findByName(search.toUpperCase(), page);
+    }
+
+    public Page<PatientSearchVM> findByPhone(String search, Pageable page) {
+        return patientRepository.findByPhone(search, page);
+    }
+
+    public Page<PatientSearchVM> findByNationalId(String search, Pageable page) {
+        return patientRepository.findByNationalId(search.toUpperCase(), page);
+    }
+
+    public Page<PatientSearchVM> findByMedicalId(String search, Pageable page) {
+        String result = search.replaceAll("^0*|-", "");
+        log.debug("search.replaceAll result: {}", result);
+
+        return patientRepository.findByMedicalId(result, page);
+    }
 }

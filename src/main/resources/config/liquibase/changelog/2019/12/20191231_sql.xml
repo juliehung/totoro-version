@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20191231-Sql" author="Jim">
+        <sql dbms="postgresql" splitStatements="true">
+            CREATE OR REPLACE FUNCTION SUCK_ROC_BIRTH_TO_CHAR(date)
+                RETURNS text
+            AS
+            $BODY$
+                select to_char($1 - interval '1911 years', 'yyyMMdd')
+            $BODY$
+            LANGUAGE sql
+            IMMUTABLE
+            RETURNS NULL ON NULL INPUT;
+
+            CREATE INDEX idx_patient_roc_birth ON patient (SUCK_ROC_BIRTH_TO_CHAR(birth));
+        </sql>
+    </changeSet>
+</databaseChangeLog>
