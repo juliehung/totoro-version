@@ -53,6 +53,10 @@ public class NhiService {
 
     private static Map<String, String> positionLimitErrorResponseMap = new HashMap();
 
+    private static Map<String, String> surfaceLimitMap = new HashMap();
+
+    private static Map<String, String> surfaceLimitErrorResponseMap = new HashMap();
+
     @Value("classpath:nhi_rule.csv")
     private Resource resourceFile;
 
@@ -62,6 +66,17 @@ public class NhiService {
     public NhiService(NhiExtendDisposalRepository nhiExtendDisposalRepository, NhiExtendPatientRepository nhiExtendPatientRepository) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
+
+        surfaceLimitMap.put("SURFACE_BLANK_ONLY", "");
+        surfaceLimitMap.put("SURFACE_VALIDATED_ONLY", "M,D,L,B,O,P,I,F,C");
+        surfaceLimitMap.put("SURFACE_SPECIFIC_1_ALPHABET_ONLY", "");
+        surfaceLimitMap.put("SURFACE_SPECIFIC_4_ALPHABET_ONLY", "");
+
+        surfaceLimitErrorResponseMap.put("SURFACE_BLANK_ONLY", "不需填寫牙面");
+        surfaceLimitErrorResponseMap.put("SURFACE_VALIDATED_ONLY", "限填合法牙面");
+        surfaceLimitErrorResponseMap.put("SURFACE_SPECIFIC_1_ALPHABET_ONLY", "限填牙面");
+        surfaceLimitErrorResponseMap.put("SURFACE_SPECIFIC_4_ALPHABET_ONLY", "限填牙面");
+        surfaceLimitErrorResponseMap.put("SURFACE_LIMIT_NUMBER", "限填牙面數量為");
 
         positionLimitMap.put("VALIDATED_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,FM,");
         positionLimitMap.put("BLANK_ONLY", "");
@@ -135,11 +150,102 @@ public class NhiService {
                         .andThen(wrapCheckExclude)
                         .andThen(checkInterval)
                         .andThen(checkPositionLimit)
+                        .andThen(checkSurfaceLimit)
                         .accept(nhiExtendTreatmentProcedure);
                 }
             });
         }
     }
+
+    public Consumer<NhiExtendTreatmentProcedure> checkSurfaceLimit = nhiExtendTreatmentProcedure -> {
+        String code = nhiExtendTreatmentProcedure.getA73();
+        String surface = nhiExtendTreatmentProcedure.getA75();
+        String[] surfaceLimitRule = rules.get(code).getSurfaceLimit();
+
+        String limitType = surfaceLimitRule.length > 0 ? surfaceLimitRule[0] : "NO_SUCH_SURFACE_TYPE";
+        String specificSurface = "";
+        int limitNumb = 0;
+        boolean checkFail = false;
+        boolean isOutOfLimitedSurfaceNumber = false;
+
+        // Split limitNumber and replace ; with ""
+        if (surfaceLimitRule.length > 1) {
+            try {
+                String[] ruleLimitNumb = surfaceLimitRule[1].split(";");
+                specificSurface = ruleLimitNumb[0];
+                limitNumb = Integer.valueOf(ruleLimitNumb[1]);
+            } catch (NumberFormatException e) {
+                // do nothing
+            }
+        }
+        limitType = limitType.replace(";", "");
+
+        // Surface string check
+        switch (limitType) {
+            case "SURFACE_BLANK_ONLY": {
+                if (!surface.isEmpty()) {
+                    checkFail = true;
+                }
+                break;
+            }
+            case "SURFACE_VALIDATED_ONLY": {
+                // Cause lambda need final value,  it's modified by previous code. Thought, make a copy for it.
+                String finalSpecificSurface = surfaceLimitMap.get("SURFACE_VALIDATED_ONLY").replace(",", "");
+                limitNumb = finalSpecificSurface.length();
+                if (surface.chars()
+                    .mapToObj(c -> String.valueOf((char) c))
+                    .anyMatch(c -> !finalSpecificSurface.contains(c))) {
+                    checkFail = true;
+                }
+
+                if (surface.length() > limitNumb) {
+                    checkFail = true;
+                    isOutOfLimitedSurfaceNumber = true;
+                }
+
+                break;
+            }
+            case "SURFACE_SPECIFIC_1_ALPHABET_ONLY": {
+                // Cause lambda need final value,  it's modified by previous code. Thought, make a copy for it.
+                String finalSpecificSurface = specificSurface;
+                if (surface.chars()
+                        .mapToObj(c -> String.valueOf((char) c))
+                        .anyMatch(c -> !finalSpecificSurface.contains(c))) {
+                    checkFail = true;
+                }
+
+                if (surface.length() > limitNumb) {
+                    checkFail = true;
+                    isOutOfLimitedSurfaceNumber = true;
+                }
+
+                break;
+            }
+            case "SURFACE_SPECIFIC_4_ALPHABET_ONLY": {
+                String finalSpecificSurface = specificSurface;
+                if (Arrays.stream(finalSpecificSurface.split(","))
+                    .allMatch(fss -> !fss.equals(surface))
+                ) {
+                    checkFail = true;
+                }
+
+                if (surface.split(",").length > limitNumb) {
+                    checkFail = true;
+                    isOutOfLimitedSurfaceNumber = true;
+                }
+
+                break;
+            }
+            default:
+                break;
+        }
+
+        if (checkFail) {
+            nhiExtendTreatmentProcedure.setCheck(isOutOfLimitedSurfaceNumber
+                ? nhiExtendTreatmentProcedure.getCheck() + code + " " + surfaceLimitErrorResponseMap.get("SURFACE_LIMIT_NUMBER") + " " + limitNumb + "\n"
+                : nhiExtendTreatmentProcedure.getCheck() + code + " " + surfaceLimitErrorResponseMap.get(limitType) + " " + specificSurface + "\n");
+        }
+    };
 
     public Consumer<NhiExtendTreatmentProcedure> checkPositionLimit = nhiExtendTreatmentProcedure -> {
         String code = nhiExtendTreatmentProcedure.getA73();
@@ -575,11 +681,23 @@ public class NhiService {
         @Convert(conversionClass = Splitter.class, args = "=")
         private String[] positionLimit;
 
+        @Parsed(field = "surface_limit", defaultNullRead = "")
+        @Convert(conversionClass = Splitter.class, args = {"="})
+        private String[] surfaceLimit;
+
         static Rule allPass() {
             Rule allPass = new Rule();
             allPass.setCode(null);
 
             return allPass;
+        }
+
+        public String[] getSurfaceLimit() {
+            return surfaceLimit;
+        }
+
+        public void setSurfaceLimit(String[] surfaceLimit) {
+            this.surfaceLimit = surfaceLimit;
         }
 
         public String[] getPositionLimit() {
