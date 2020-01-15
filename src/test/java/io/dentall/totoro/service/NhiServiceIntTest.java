@@ -69,6 +69,71 @@ public class NhiServiceIntTest {
     }
 
     @Test
+    public void testCheckSurfacePass() {
+        // Blank success test case
+        NhiExtendTreatmentProcedure blankOnlyS = new NhiExtendTreatmentProcedure().a73("SurfaceBlankOnly").a75("").check("");
+        nhiService.checkSurfaceLimit.accept(blankOnlyS);
+
+        // Validated success test case
+        NhiExtendTreatmentProcedure validatedOnlyS = new NhiExtendTreatmentProcedure().a73("SurfaceValidatedOnly").a75("DLM").check("");
+        nhiService.checkSurfaceLimit.accept(validatedOnlyS);
+
+
+        // Surface spec-1 success test case
+        NhiExtendTreatmentProcedure spec1S1 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific1Only").a75("A").check("");
+        nhiService.checkSurfaceLimit.accept(spec1S1);
+
+        // Surface spec-4 success test case
+        NhiExtendTreatmentProcedure spec4S1 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific4Only").a75("CDEF").check("");
+        nhiService.checkSurfaceLimit.accept(spec4S1);
+
+        // Surface spec-4 success test case
+        NhiExtendTreatmentProcedure spec4S2 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific4Only2").a75("ABCD").check("");
+        nhiService.checkSurfaceLimit.accept(spec4S2);
+
+        assertThat(blankOnlyS.getCheck()).isEqualTo("");
+        assertThat(validatedOnlyS.getCheck()).isEqualTo("");
+        assertThat(spec1S1.getCheck()).isEqualTo("");
+        assertThat(spec4S1.getCheck()).isEqualTo("");
+        assertThat(spec4S2.getCheck()).isEqualTo("");
+    }
+
+    @Test
+    public void testCheckSurfaceFail() {
+        // Blank failure test case
+        NhiExtendTreatmentProcedure blankOnlyF = new NhiExtendTreatmentProcedure().a73("SurfaceBlankOnly").a75("ABC").check("");
+        nhiService.checkSurfaceLimit.accept(blankOnlyF);
+
+        // Validated failure test case 1
+        NhiExtendTreatmentProcedure validatedOnlyF = new NhiExtendTreatmentProcedure().a73("SurfaceValidatedOnly").a75("ABC").check("");
+        nhiService.checkSurfaceLimit.accept(validatedOnlyF);
+
+        // Surface spec-1 failure test case 1
+        NhiExtendTreatmentProcedure spec1F1 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific1Only").a75("ABC").check("");
+        nhiService.checkSurfaceLimit.accept(spec1F1);
+
+        // Surface spec-1 failure test case 2
+        NhiExtendTreatmentProcedure spec1F2 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific1Only").a75("D").check("");
+        nhiService.checkSurfaceLimit.accept(spec1F2);
+
+        // Surface spec-4 failure test case 1
+        NhiExtendTreatmentProcedure spec4F1 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific4Only").a75("A").check("");
+        nhiService.checkSurfaceLimit.accept(spec4F1);
+
+        // Surface spec-4 failure test case 2
+        NhiExtendTreatmentProcedure spec4F2 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific4Only").a75("JKL:").check("");
+        nhiService.checkSurfaceLimit.accept(spec4F2);
+
+        assertThat(blankOnlyF.getCheck()).contains("不需填寫牙面");
+        assertThat(validatedOnlyF.getCheck()).contains("限填合法牙面");
+        assertThat(spec1F1.getCheck()).contains("限填牙面數量為 1");
+        assertThat(spec1F2.getCheck()).contains("限填牙面 A,B,C");
+        assertThat(spec4F1.getCheck()).contains("限填牙面 ABCD,BCDE,CDEF");
+        assertThat(spec4F2.getCheck()).contains("限填牙面 ABCD,BCDE,CDEF");
+
+    }
+
+    @Test
     public void testCheckXRay() {
         NhiExtendTreatmentProcedure xRayFalse = new NhiExtendTreatmentProcedure().a73("XRayFalse").check("");
         nhiService.checkXRay.accept(xRayFalse);
