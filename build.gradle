@@ -2,10 +2,10 @@ import org.gradle.internal.os.OperatingSystem
 
 buildscript {
     repositories {
+        maven { url "https://repo.spring.io/plugins-release" }
         mavenLocal()
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "http://repo.spring.io/plugins-release" }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
