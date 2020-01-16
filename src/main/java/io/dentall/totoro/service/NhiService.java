@@ -344,7 +344,7 @@ public class NhiService {
 
     private BiConsumer<String, NhiExtendTreatmentProcedure> checkIntervalIdentity = (interval, nhiExtendTreatmentProcedure) -> {
         if (interval.contains("@")) {
-            String identity = nhiExtendTreatmentProcedure.getNhiExtendDisposal().getPatientIdentity();
+            String identity = nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getPatientIdentity();
             String[] intervals = interval.split("-");
             Arrays.stream(intervals)
                 .filter(info -> info.split("@")[0].equals(identity))
@@ -418,7 +418,7 @@ public class NhiService {
 
         LocalDate date = DateTimeUtil.getGreaterThanEqualDate.apply(days);
         List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
-            nhiExtendDisposalRepository.findByDateGreaterThanEqualAndPatientIdOrderByDateDesc(date, nhiExtendTreatmentProcedure.getNhiExtendDisposal().getPatientId()),
+            nhiExtendDisposalRepository.findByDateGreaterThanEqualAndPatientIdOrderByDateDesc(date, nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId()),
             nhiExtendTreatmentProcedure
         );
 
@@ -458,7 +458,7 @@ public class NhiService {
         }
 
         List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
-            nhiExtendDisposalRepository.findByDateBetweenAndPatientId(DateTimeUtil.localMonthFirstDay.get(), DateTimeUtil.localMonthLastDay.get(), nhiExtendTreatmentProcedure.getNhiExtendDisposal().getPatientId()),
+            nhiExtendDisposalRepository.findByDateBetweenAndPatientId(DateTimeUtil.localMonthFirstDay.get(), DateTimeUtil.localMonthLastDay.get(), nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId()),
             nhiExtendTreatmentProcedure
         );
 
@@ -480,7 +480,7 @@ public class NhiService {
         int times = Integer.parseInt(info[1]);
 
         List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
-            nhiExtendDisposalRepository.findByDateBetweenAndPatientId(DateTimeUtil.localYearFirstDay.get(), DateTimeUtil.localYearLastDay.get(), nhiExtendTreatmentProcedure.getNhiExtendDisposal().getPatientId()),
+            nhiExtendDisposalRepository.findByDateBetweenAndPatientId(DateTimeUtil.localYearFirstDay.get(), DateTimeUtil.localYearLastDay.get(), nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId()),
             nhiExtendTreatmentProcedure
         );
 
@@ -496,7 +496,7 @@ public class NhiService {
     private void checkIntervalLifetime(String interval, NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         String[] conditions = interval.split(";");
 
-        long id = nhiExtendTreatmentProcedure.getNhiExtendDisposal().getPatientId();
+        long id = nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId();
         nhiExtendPatientRepository
             .findById(id)
             .filter(nhiExtendPatient -> nhiExtendPatient.getLifetime() != null)
@@ -597,7 +597,7 @@ public class NhiService {
         Map<String, Integer> teethCount,
         Function<String, List<String>> getTeeth
     ) {
-        long id = nhiExtendTreatmentProcedure.getNhiExtendDisposal().getPatientId();
+        long id = nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId();
         nhiExtendPatientRepository.findById(id).ifPresent(nhiExtendPatient -> {
             Map<String, Object> lifetime = nhiExtendPatient.getLifetime();
             String code = nhiExtendTreatmentProcedure.getA73();
@@ -626,7 +626,7 @@ public class NhiService {
     private void checkSameHospital(List<NhiExtendTreatmentProcedure> nhiExtTxPs, int limit, NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         long count = nhiExtTxPs
             .stream()
-            .filter(nhiExtTxP -> nhiExtTxP.getNhiExtendDisposal().getA14().equals(nhiExtendTreatmentProcedure.getNhiExtendDisposal().getA14()))
+            .filter(nhiExtTxP -> nhiExtTxP.getNhiExtendDisposal().getA14().equals(nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getA14()))
             .count();
 
         StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());

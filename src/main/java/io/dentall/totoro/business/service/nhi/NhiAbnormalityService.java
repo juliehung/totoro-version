@@ -328,11 +328,11 @@ public class NhiAbnormalityService {
             .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getA73().equals(code))
             .collect(
                 groupingBy(
-                    nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getNhiExtendDisposal().getDisposal().getCreatedBy(),
+                    nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getCreatedBy(),
                     groupingBy(nhiExtendTreatmentProcedure ->
                         new AbstractMap.SimpleEntry<>(
-                            nhiExtendTreatmentProcedure.getNhiExtendDisposal().getPatientId(),
-                            nhiExtendDisposalDate.apply(nhiExtendTreatmentProcedure.getNhiExtendDisposal())
+                            nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId(),
+                            nhiExtendDisposalDate.apply(nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next())
                         )
                     )
                 )
@@ -355,7 +355,7 @@ public class NhiAbnormalityService {
             .stream()
             .flatMap(nhiExtendDisposal -> StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures()))
             .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getA73().equals(code))
-            .collect(groupingBy(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getNhiExtendDisposal().getDisposal().getCreatedBy()));
+            .collect(groupingBy(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getCreatedBy()));
     }
 
     private List<NhiAbnormalityDoctor> get048Doctors(List<NhiExtendDisposal> currentMonthNhiDis, YearMonth ym) {
