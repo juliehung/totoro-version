@@ -118,6 +118,10 @@ public class RegistrationService {
                     registration.setAccounting(getAccounting(updateRegistration));
                 }
 
+                if (updateRegistration.getAbnormalCode() != null) {
+                    registration.setAbnormalCode(updateRegistration.getAbnormalCode());
+                }
+
                 return registration;
             })
             .get();
@@ -154,6 +158,7 @@ public class RegistrationService {
                     .noCard(registration.isNoCard())
                     .appointmentId(appointment.getId())
                     .accountingId(accounting == null ? null : accounting.registration(null).getId())
+                    .abnormalCode(registration.getAbnormalCode())
                 );
                 registrationRepository.deleteById(id);
 

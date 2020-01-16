@@ -53,6 +53,10 @@ public class RegistrationDel extends AbstractAuditingEntity implements Serializa
     private Long accountingId;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    @Column(name = "abnormal_code")
+    private String abnormalCode;
+
     public Long getId() {
         return id;
     }
@@ -153,6 +157,19 @@ public class RegistrationDel extends AbstractAuditingEntity implements Serializa
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    public String getAbnormalCode() {
+        return abnormalCode;
+    }
+
+    public RegistrationDel abnormalCode(String abnormalCode) {
+        this.abnormalCode = abnormalCode;
+        return this;
+    }
+
+    public void setAbnormalCode(String abnormalCode) {
+        this.abnormalCode = abnormalCode;
+    }
+
     @Override
     @JsonIgnore(false)
     @JsonProperty
@@ -198,6 +215,7 @@ public class RegistrationDel extends AbstractAuditingEntity implements Serializa
             ", noCard='" + isNoCard() + "'" +
             ", appointmentId=" + getAppointmentId() +
             ", accountingId=" + getAccountingId() +
+            ", abnormalCode='" + getAbnormalCode() + "'" +
             "}";
     }
 }
