@@ -43,7 +43,7 @@ public class NhiAccumulatedMedicalRecord implements Serializable {
     @Column(name = "medical_institution_code")
     private String medicalInstitutionCode;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @JsonIgnoreProperties("")
     private Patient patient;
