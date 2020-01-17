@@ -290,7 +290,6 @@ releaseToFirebaseStorage:
 releaseGitlabRegistry:
     stage: release
     only:
-        - branches
         - tags
     except:
         - /^(\d)+-.*$/
