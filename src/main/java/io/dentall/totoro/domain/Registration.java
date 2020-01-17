@@ -59,6 +59,10 @@ public class Registration extends AbstractAuditingEntity implements Serializable
     @JsonIgnoreProperties(value = "registration", allowSetters = true)
     private Disposal disposal;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    @Column(name = "abnormal_code")
+    private String abnormalCode;
+
     public Long getId() {
         return id;
     }
@@ -174,6 +178,19 @@ public class Registration extends AbstractAuditingEntity implements Serializable
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    public String getAbnormalCode() {
+        return abnormalCode;
+    }
+
+    public Registration abnormalCode(String abnormalCode) {
+        this.abnormalCode = abnormalCode;
+        return this;
+    }
+
+    public void setAbnormalCode(String abnormalCode) {
+        this.abnormalCode = abnormalCode;
+    }
+
     @Override
     @JsonIgnore(false)
     @JsonProperty
@@ -210,6 +227,7 @@ public class Registration extends AbstractAuditingEntity implements Serializable
             ", type='" + getType() + "'" +
             ", onSite='" + isOnSite() + "'" +
             ", noCard='" + isNoCard() + "'" +
+            ", abnormalCode='" + getAbnormalCode() + "'" +
             "}";
     }
 }
