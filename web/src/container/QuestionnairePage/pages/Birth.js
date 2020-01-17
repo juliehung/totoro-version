@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { nextPage, changeBirth } from '../actions';
@@ -30,7 +31,16 @@ function Birth(props) {
         <StyleIcon type="right-circle" theme="twoTone" />
         <span>生日*</span>
       </div>
-      <StyledInput type="date" size="large" placeholder="請選擇生日" value={props.birth} onChange={onChange} />
+      <StyledInput
+        type="date"
+        size="large"
+        value={props.birth}
+        onChange={onChange}
+        max={moment().format('YYYY-MM-DD')}
+        min={moment()
+          .add(-150, 'year')
+          .format('YYYY-MM-DD')}
+      />
       <br />
       <ConfirmButton nextPage={props.nextPage} disabled={!props.birth} />
     </Container>
