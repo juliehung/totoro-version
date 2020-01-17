@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { gotoPage, changePregnantDate } from '../actions';
@@ -29,7 +30,16 @@ function PregnantA(props) {
         <StyleIcon type="right-circle" theme="twoTone" />
         <span>預產期</span>
       </div>
-      <StyledInput type="date" size="large" placeholder="請選擇生日" onChange={onChange} value={props.date} />
+      <StyledInput
+        type="date"
+        size="large"
+        onChange={onChange}
+        value={props.date}
+        max={moment()
+          .add(2, 'year')
+          .format('YYYY-MM-DD')}
+        min={moment().format('YYYY-MM-DD')}
+      />
       <br />
       <ConfirmButton
         nextPage={() => {
