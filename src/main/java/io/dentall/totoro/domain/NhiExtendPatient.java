@@ -33,11 +33,6 @@ public class NhiExtendPatient extends AbstractAuditingEntity implements Serializ
     @Id
     private Long id;
 
-    @OneToOne
-    @MapsId
-    @JsonProperty(access = WRITE_ONLY)
-    private Patient patient;
-
     @Column(name = "card_number")
     private String cardNumber;
 
@@ -64,15 +59,21 @@ public class NhiExtendPatient extends AbstractAuditingEntity implements Serializ
 
     @Column(name = "perio")
     private String perio;
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    @Column(name = "lifetime", columnDefinition = "jsonb")
+    @Type(type = "jsonb")
+    private Map<String, Object> lifetime;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JsonProperty(access = WRITE_ONLY)
+    private Patient patient;
 
     @OneToMany(mappedBy = "nhiExtendPatient", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<NhiMedicalRecord> nhiMedicalRecords = null;
 
-    @Column(name = "lifetime", columnDefinition = "jsonb")
-    @Type(type = "jsonb")
-    private Map<String, Object> lifetime;
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     public Long getId() {
         return id;

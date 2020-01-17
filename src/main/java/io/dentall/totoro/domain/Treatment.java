@@ -51,7 +51,7 @@ public class Treatment extends AbstractDoctorAndAuditingEntity<Treatment> implem
     @Column(name = "jhi_type")
     private TreatmentType type;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = {"appointments", "treatments", "todos", "teeth", "parents", "spouse1S"}, allowSetters = true)
     private Patient patient;
 
