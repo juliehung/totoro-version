@@ -33,15 +33,6 @@ public class Image implements Serializable {
     @Column(name = "file_name")
     private String fileName;
 
-    @Column(name = "fetch_url")
-    private String fetchUrl;
-
-    @Column(name = "group_id")
-    private Long groupId;
-
-    @Column(name = "size")
-    private String size;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonProperty(access = WRITE_ONLY)
     private Patient patient;
@@ -78,45 +69,6 @@ public class Image implements Serializable {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
-    }
-
-    public String getFetchUrl() {
-        return fetchUrl;
-    }
-
-    public Image fetchUrl(String fetchUrl) {
-        this.fetchUrl = fetchUrl;
-        return this;
-    }
-
-    public void setFetchUrl(String fetchUrl) {
-        this.fetchUrl = fetchUrl;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public Image groupId(Long groupId) {
-        this.groupId = groupId;
-        return this;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public Image size(String size) {
-        this.size = size;
-        return this;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
     }
 
     @ApiModelProperty(hidden = true)
@@ -160,9 +112,6 @@ public class Image implements Serializable {
             "id=" + getId() +
             ", filePath='" + getFilePath() + "'" +
             ", fileName='" + getFileName() + "'" +
-            ", fetchUrl='" + getFetchUrl() + "'" +
-            ", groupId=" + getGroupId() +
-            ", size='" + getSize() + "'" +
             "}";
     }
 }

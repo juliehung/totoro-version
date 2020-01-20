@@ -311,8 +311,6 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-artemis"
     compile "org.apache.activemq:artemis-jms-server"
 
-    // https://mvnrepository.com/artifact/com.atlassian.core/atlassian-core-thumbnail
-    compile group: 'com.atlassian.core', name: 'atlassian-core-thumbnail', version: '6.0.0'
     // https://mvnrepository.com/artifact/commons-net/commons-net
     compile group: 'commons-net', name: 'commons-net', version: '3.6'
 
