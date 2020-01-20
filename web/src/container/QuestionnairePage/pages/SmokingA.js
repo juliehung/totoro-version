@@ -6,6 +6,7 @@ import { Icon } from 'antd';
 import { Container } from './Name';
 import { TransparentInput } from './Name';
 import ConfirmButton from './ConfirmButton';
+import PageControllContainer from '../PageControllContainer';
 
 //#region
 
@@ -45,6 +46,14 @@ function SmokingA(props) {
           props.gotoPage(18);
         }}
         disabled={!props.smokingAmount || props.smokingAmount.length === 0}
+      />
+      <PageControllContainer
+        pre={() => {
+          props.gotoPage(16);
+        }}
+        next={() => {
+          props.gotoPage(16);
+        }}
       />
     </Container>
   );

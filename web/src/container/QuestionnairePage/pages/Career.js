@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import { preChangeCareer } from '../actions';
 import { Icon } from 'antd';
 import { CareerOption } from '../constant_options';
-
 import { Container } from './Name';
+import { OptionsContainer, Option, CheckedIcon } from './BloodType';
+import PageControllContainer from '../PageControllContainer';
 
 //#region
 
@@ -13,35 +14,23 @@ const StyleIcon = styled(Icon)`
   margin-right: 10px;
 `;
 
-const OptionContainer = styled.div`
-  display: flex;
-  margin: 30px 0;
-  flex-wrap: wrap;
-`;
-
-const Option = styled.div`
+export const OptionContainer = styled.div`
+  position: relative;
   box-sizing: border-box;
-  width: 30%;
-  margin: 10px 1.5%;
-  font-size: 15px;
-  color: #000;
-  display: flex;
+  width: 28%;
+  padding: 8px 15px;
   align-items: center;
-  border: ${props => (props.selected ? '2px solid #1890ff' : '2px solid #fff')};
-  transition: border 300ms ease-in;
+  margin: 10px 2.5%;
+  font-size: 16px;
+  color: ${props => (props.selected ? '#1890ff' : '#000')};
+  display: flex;
+  border: ${props => (props.selected ? '2px solid #1890ff' : '2px solid transparent')};
+  outline: ${props => (props.selected ? '2px solid rgb(0, 145, 255,0.33)' : '2px solid transparent')};
   cursor: pointer;
   & > span {
     margin-left: 10px;
   }
-`;
-
-const Alphabet = styled.div`
-  width: 20px;
-  height: 20px;
-  border: 1px solid #ccc;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  transition: all ease-in-out 200ms;
 `;
 
 //#endregion
@@ -53,20 +42,25 @@ function Career(props) {
         <StyleIcon type="right-circle" theme="twoTone" />
         <span>職業</span>
       </div>
-      <OptionContainer>
-        {CareerOption.map(d => (
-          <Option
-            key={d.key}
-            selected={props.career === d.key}
-            onClick={() => {
-              props.preChangeCareer(d.key);
-            }}
-          >
-            <Alphabet>{d.key}</Alphabet>
-            <span>{d.value}</span>
-          </Option>
-        ))}
-      </OptionContainer>
+      <OptionsContainer>
+        {CareerOption.map(d => {
+          const selected = props.career === d.key;
+          return (
+            <OptionContainer
+              key={d.key}
+              selected={selected}
+              onClick={() => {
+                props.preChangeCareer(d.key);
+              }}
+            >
+              <Option selected={selected}>{d.key}</Option>
+              <span>{d.value}</span>
+              <CheckedIcon type="check" selected={selected} />
+            </OptionContainer>
+          );
+        })}
+      </OptionsContainer>
+      <PageControllContainer />
     </Container>
   );
 }

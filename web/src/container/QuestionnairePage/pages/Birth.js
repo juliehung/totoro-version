@@ -6,6 +6,7 @@ import { nextPage, changeBirth } from '../actions';
 import { Icon, Input } from 'antd';
 import { Container } from './Name';
 import ConfirmButton from './ConfirmButton';
+import PageControllContainer from '../PageControllContainer';
 
 //#region
 
@@ -14,8 +15,8 @@ const StyleIcon = styled(Icon)`
 `;
 
 export const StyledInput = styled(Input)`
-  font-size: 20px !important;
   margin: 20px 0 !important;
+  font-size: 24px !important;
 `;
 
 //#endregion
@@ -43,6 +44,7 @@ function Birth(props) {
       />
       <br />
       <ConfirmButton nextPage={props.nextPage} disabled={!props.birth} />
+      <PageControllContainer />
     </Container>
   );
 }

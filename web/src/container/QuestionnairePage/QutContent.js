@@ -30,11 +30,13 @@ import './index.css';
 
 //#region
 const Container = styled.div`
-  max-width: 600px;
+  max-width: 700px;
   width: 95%;
-  height: 400px;
+  height: 600px;
+  max-height: 90%;
   position: relative;
 `;
+
 //#endregion
 
 const timeout = 500;

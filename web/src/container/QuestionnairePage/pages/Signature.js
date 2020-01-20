@@ -8,7 +8,7 @@ import { trimDataUrl } from '../utils/trimDataUrl';
 
 //#region
 const Container = styled.div`
-  max-width: 600px;
+  max-width: 900px;
   width: 95%;
   background: transparent;
 `;
@@ -35,6 +35,7 @@ const SigContainer = styled.div`
   background: #f5f5f5;
   border-radius: 3px;
   position: relative;
+  height: 450px;
 `;
 
 const ClearButton = styled(Button)`
@@ -83,13 +84,10 @@ function Signature(props) {
       <SigContainer>
         <ClearButton onClick={clearSig}>清除</ClearButton>
         <SignatureCanvas
-          penColor="black"
           minDistance={0.1}
           velocityFilterWeight={0.5}
           canvasProps={{
-            width: '598',
-            height: '400',
-            className: 'sigCanvas',
+            style: { width: '100%', height: '100%' },
           }}
           ref={ref => (sigRef = ref)}
           onEnd={onEnd}

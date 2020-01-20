@@ -203,7 +203,7 @@ function Form(props) {
             !displayData.birth ||
             !displayData.nationalId ||
             displayData.nationalId.length === 0 ||
-            displayData.phone ||
+            !displayData.phone ||
             displayData.phone.length === 0
           }
           onClick={() => {

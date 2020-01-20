@@ -6,6 +6,7 @@ import { gotoPage, changePregnantDate } from '../actions';
 import { Icon, Input } from 'antd';
 import { Container } from './Name';
 import ConfirmButton from './ConfirmButton';
+import PageControllContainer from '../PageControllContainer';
 
 //#region
 const StyleIcon = styled(Icon)`
@@ -46,6 +47,14 @@ function PregnantA(props) {
           props.gotoPage(19);
         }}
         disabled={!props.date}
+      />
+      <PageControllContainer
+        pre={() => {
+          props.gotoPage(16);
+        }}
+        next={() => {
+          props.gotoPage(16);
+        }}
       />
     </Container>
   );

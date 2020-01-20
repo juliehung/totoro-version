@@ -6,6 +6,7 @@ import { Icon } from 'antd';
 import { Container } from './Name';
 import { TransparentInput } from './Name';
 import ConfirmButton from './ConfirmButton';
+import PageControllContainer from '../PageControllContainer';
 
 //#region
 
@@ -44,6 +45,14 @@ function DoDrugA(props) {
           props.gotoPage(17);
         }}
         disabled={!props.drug || props.drug.length === 0}
+      />
+      <PageControllContainer
+        pre={() => {
+          props.gotoPage(16);
+        }}
+        next={() => {
+          props.gotoPage(16);
+        }}
       />
     </Container>
   );

@@ -47,3 +47,17 @@
   transition: all var(--transition-time) ease;
   transition-delay: var(--transition-delay-time);
 }
+
+.item-enter #pc,
+.item-enter-active #pc,
+.item-reverse-enter #pc,
+.item-reverse-enter-active #pc,
+.item-exit #pc,
+.item-exit-active #pc,
+.item-reverse-exit #pc,
+.item-exit-active #pc,
+.item-reverse-exit #pc,
+.item-reverse-exit-active #pc {
+  display: none;
+  transition: all 0.5s ease-in-out;
+}
