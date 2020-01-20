@@ -37,5 +37,6 @@
     <include file="config/liquibase/changelog/2019/07/20190711_dropColumn.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2019/07/20190720_dropColumn.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2020/01/20200108_dropColumn.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2020/01/20200117_dropColumn.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

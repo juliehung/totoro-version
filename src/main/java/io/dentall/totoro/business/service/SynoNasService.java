@@ -5,6 +5,7 @@ import io.dentall.totoro.config.ImageRepositoryConfiguration;
 import io.dentall.totoro.domain.Image;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.ImageRepository;
+import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.EntityManager;
-import java.time.Instant;
+import javax.persistence.PersistenceContext;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Profile({"ftp", "synoNas"})
 @Service(value = "synoNasService")
-@Transactional
 public class SynoNasService extends ImageBusinessService {
 
     private Logger logger = LoggerFactory.getLogger(SynoNasService.class);
@@ -27,32 +30,21 @@ public class SynoNasService extends ImageBusinessService {
 
     private static final String SYNO_NAS_FETCH_URL = System.getenv("TTR_IMAGE_REPOSITORY_SYNO_NAS_FETCH_URL");
 
-    private static final String SYNO_NAS_LOGOUT_URL = System.getenv("TTR_IMAGE_REPOSITORY_SYNO_NAS_LOGOUT_URL");
-
-    private static final String REMOTE_ORIGIN_FILE_SUFFIX = "_origin";
-
-    private static final String REMOTE_MEDIUM_FILE_SUFFIX = "_medium";
-
-    private static final String REMOTE_ORIGIN_FILE_EXTENSION = ".png";
-
-    private static final String REMOTE_MEDIUM_FILE_EXTENSION = ".png";
-
     private final ImageRepository imageRepository;
 
     private final RestTemplate restTemplate;
 
-    private final EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public SynoNasService(
         FtpClientService ftpClientService,
         ImageRepository imageRepository,
-        RestTemplate restTemplate,
-        EntityManager entityManager
+        RestTemplate restTemplate
     ) {
         super(ftpClientService);
         this.imageRepository = imageRepository;
         this.restTemplate = restTemplate;
-        this.entityManager = entityManager;
     }
 
     @Override
@@ -64,46 +56,53 @@ public class SynoNasService extends ImageBusinessService {
             .concat("/");
     }
 
+    @Transactional
     @Override
-    public String createOriginImageName(String fileName) {
-        String basicFileName = Instant.now().toString();
-        basicFileName = fileName.isEmpty()?basicFileName :basicFileName.concat("_").concat(fileName);
-
-        return basicFileName
-                .concat(REMOTE_ORIGIN_FILE_SUFFIX)
-                .concat(REMOTE_ORIGIN_FILE_EXTENSION);
-    }
-
-    @Override
-    public String createMediumImageName(String fileName) {
-        String basicFileName = Instant.now().toString();
-        basicFileName = fileName.isEmpty()?basicFileName :basicFileName.concat("_").concat(fileName);
-
-        return basicFileName
-                .concat(REMOTE_MEDIUM_FILE_SUFFIX)
-                .concat(REMOTE_MEDIUM_FILE_EXTENSION);
-    }
-
-    @Override
-    public Image createImage(Long patientId, String filePath, String fileName, String size, Long groupId) {
-        Patient patient = entityManager.getReference(Patient.class, patientId);
+    public Image createImage(Long patientId, String filePath, String fileName) {
+        Patient patient = null;
+        if (patientId != null) {
+            patient = entityManager.getReference(Patient.class, patientId);
+        }
 
         return imageRepository.save(new Image()
             .filePath(filePath)
             .fileName(fileName)
-            .fetchUrl(SYNO_NAS_FETCH_URL
-                .concat("&path=")
-                .concat(filePath)
-                .concat(fileName)
-            )
-            .size(size)
-            .groupId(groupId)
             .patient(patient)
         );
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public String getSession() {
+    public Image getImageById(Long id) {
+        return imageRepository.findById(id).orElseThrow(() -> ProblemUtil.notFoundException("Image id: " + id));
+    }
+
+    @Override
+    public Map<String, String> getImageThumbnailsBySize(Long id, String size) {
+        Image image = getImageById(id);
+        String url = SYNO_NAS_FETCH_URL
+            .concat("&path=")
+            .concat(image.getFilePath())
+            .concat(image.getFileName())
+            .concat("&_sid=")
+            .concat(getSession())
+            .concat("&size=");
+
+        if (size == null) {
+            // default thumbnail size
+            return Collections.singletonMap(Size.medium.toString(), url.concat(Size.medium.toString()));
+        } else {
+            return Arrays.stream(size.toLowerCase().split(","))
+                .collect(Collectors.toMap(Function.identity(), url::concat));
+        }
+    }
+
+    @Override
+    public List<String> getImageSizes() {
+        return Arrays.stream(Size.values()).map(Enum::toString).collect(Collectors.toList());
+    }
+
+    private String getSession() {
         SynoNasSessionV6 s = restTemplate.getForObject(SYNO_NAS_AUTH_URL, SynoNasSessionV6.class);
 
         if (s == null ||
@@ -116,8 +115,7 @@ public class SynoNasService extends ImageBusinessService {
         return s.getData().getSid();
     }
 
-    @Override
-    public void releaseSession() {
-        restTemplate.getForObject(SYNO_NAS_LOGOUT_URL, SynoNasSessionV6.class);
+    private enum Size {
+        small, medium, large, original
     }
 }

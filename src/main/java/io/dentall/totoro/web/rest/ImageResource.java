@@ -1,6 +1,7 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.business.service.ImageBusinessService;
+import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.Image;
 import io.dentall.totoro.service.ImageQueryService;
 import io.dentall.totoro.service.dto.ImageCriteria;
@@ -18,9 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Collectors;
 
 @Profile({"ftp", "synoNas"})
 @RestController
@@ -46,9 +48,9 @@ public class ImageResource {
         this.imageQueryService = imageQueryService;
     }
 
-    @PostMapping("/images")
+    @PostMapping("/images/patients/{patientId}")
     public DeferredResult<ResponseEntity<Image>> uploadImage(
-        @RequestParam("patientId") Long patientId,
+        @PathVariable("patientId") Long patientId,
         @RequestParam("image") MultipartFile file
     ) {
         // Validation
@@ -61,23 +63,18 @@ public class ImageResource {
             Image image;
 
             // Business logic
-            try {
+            try(InputStream inputStream = file.getInputStream()) {
+                logger.debug("patientId: {}", patientId);
                 String remotePath = imageBusinessService.createImagePath(patientId);
 
-                // upload origin
-                String remoteFileName = imageBusinessService.createOriginImageName(file.getOriginalFilename());
-                imageBusinessService.uploadFile(remotePath, remoteFileName, file.getInputStream());
-                image = imageBusinessService.createImage(
-                    patientId, remotePath, remoteFileName, ImageBusinessService.Size.ORIGIN.toString(), null
-                );
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").withZone(TimeConfig.ZONE_OFF_SET);
+                String remoteFileName = dateTimeFormatter.format(Instant.now());
+                logger.debug("Instant.now() format: {}", remoteFileName);
+                remoteFileName = file.getOriginalFilename() == null ? remoteFileName : remoteFileName.concat("_").concat(file.getOriginalFilename());
 
-                // create and upload medium
-                remoteFileName = imageBusinessService.createMediumImageName(file.getOriginalFilename());
-                InputStream inputStream = imageBusinessService.getMediumImageInputStream(file.getInputStream());
+                // upload origin
                 imageBusinessService.uploadFile(remotePath, remoteFileName, inputStream);
-                imageBusinessService.createImage(
-                    patientId, remotePath, remoteFileName, ImageBusinessService.Size.MEDIUM.toString(), image.getId()
-                );
+                image = imageBusinessService.createImage(patientId, remotePath, remoteFileName);
             } catch (IOException e) {
                 logger.error("Upload image get exception:\n {}", e.getMessage());
                 imageBusinessService.disconnect();
@@ -91,24 +88,32 @@ public class ImageResource {
     }
 
     @GetMapping("/images")
-    public ResponseEntity<List<String>> getImagesByCriteria(ImageCriteria imageCriteria) {
-        String sid = imageBusinessService.getSession();
+    public ResponseEntity<List<Image>> getImagesByCriteria(ImageCriteria imageCriteria) {
+        return ResponseEntity.ok(imageQueryService.findByCriteria(imageCriteria));
+    }
 
-        List<String> imgUrls = imageQueryService.findByCriteria(imageCriteria).stream()
-            .map(image -> image.getFetchUrl().concat("&_sid=").concat(sid))
-            .collect(Collectors.toList());
+    @GetMapping("/images/{id}")
+    public ResponseEntity<Image> getImagesById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(imageBusinessService.getImageById(id));
+    }
 
-        imageBusinessService.releaseSession();
+    @GetMapping("/images/{id}/thumbnails")
+    public ResponseEntity<Map<String, String>> getImageThumbnailsBySize(
+        @PathVariable("id") Long id, @RequestParam(value = "size", required = false) String size
+    ) {
+        return ResponseEntity.ok(imageBusinessService.getImageThumbnailsBySize(id, size));
+    }
 
-        return ResponseEntity.ok(imgUrls);
+    @GetMapping("/images/sizes")
+    public ResponseEntity<List<String>> getImageSizes() {
+        return ResponseEntity.ok(imageBusinessService.getImageSizes());
     }
 
     @GetMapping("/images/test")
     public ResponseEntity getTestImage() throws IOException {
         String remotePath = imageBusinessService.createImagePath(-1L);
-        String remoteFileName = imageBusinessService.createOriginImageName("abc.png");
-        imageBusinessService.uploadFile(remotePath, remoteFileName, testImageFile.getInputStream());
+        imageBusinessService.uploadFile(remotePath, "abc.png", testImageFile.getInputStream());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("test upload file to ftp");
     }
 }

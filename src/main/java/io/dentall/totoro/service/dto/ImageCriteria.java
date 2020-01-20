@@ -25,12 +25,6 @@ public class ImageCriteria implements Serializable {
 
     private StringFilter fileName;
 
-    private StringFilter fetchUrl;
-
-    private LongFilter groupId;
-
-    private StringFilter size;
-
     private LongFilter patientId;
 
     public LongFilter getId() {
@@ -57,30 +51,6 @@ public class ImageCriteria implements Serializable {
         this.fileName = fileName;
     }
 
-    public StringFilter getFetchUrl() {
-        return fetchUrl;
-    }
-
-    public void setFetchUrl(StringFilter fetchUrl) {
-        this.fetchUrl = fetchUrl;
-    }
-
-    public LongFilter getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(LongFilter groupId) {
-        this.groupId = groupId;
-    }
-
-    public StringFilter getSize() {
-        return size;
-    }
-
-    public void setSize(StringFilter size) {
-        this.size = size;
-    }
-
     public LongFilter getPatientId() {
         return patientId;
     }
@@ -101,9 +71,6 @@ public class ImageCriteria implements Serializable {
         return Objects.equals(id, that.id) &&
             Objects.equals(filePath, that.filePath) &&
             Objects.equals(fileName, that.fileName) &&
-            Objects.equals(fetchUrl, that.fetchUrl) &&
-            Objects.equals(groupId, that.groupId) &&
-            Objects.equals(size, that.size) &&
             Objects.equals(patientId, that.patientId);
     }
 
@@ -113,9 +80,6 @@ public class ImageCriteria implements Serializable {
             id,
             filePath,
             fileName,
-            fetchUrl,
-            groupId,
-            size,
             patientId
         );
     }
@@ -126,9 +90,6 @@ public class ImageCriteria implements Serializable {
             (id != null ? "id=" + id + ", " : "") +
             (filePath != null ? "filePath=" + filePath + ", " : "") +
             (fileName != null ? "fileName=" + fileName + ", " : "") +
-            (fetchUrl != null ? "fetchUrl=" + fetchUrl + ", " : "") +
-            (groupId != null ? "groupId=" + groupId + ", " : "") +
-            (size != null ? "size=" + size + ", " : "") +
             (patientId != null ? "patientId=" + patientId + ", " : "") +
             "}";
     }
