@@ -197,7 +197,15 @@ function Form(props) {
         </StyledButton>
         <StyledButton
           type="primary"
-          disable={props.disable}
+          disabled={
+            !displayData.name ||
+            displayData.name.length === 0 ||
+            !displayData.birth ||
+            !displayData.nationalId ||
+            displayData.nationalId.length === 0 ||
+            displayData.phone ||
+            displayData.phone.length === 0
+          }
           onClick={() => {
             props.gotoPage(21);
           }}
