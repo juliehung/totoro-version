@@ -6,6 +6,7 @@ import { Icon } from 'antd';
 import { Container } from './Name';
 import { TransparentInput } from './Name';
 import ConfirmButton from './ConfirmButton';
+import PageControllContainer from '../PageControllContainer';
 
 //#region
 
@@ -40,6 +41,7 @@ function EmergencyContactPhone(props) {
         onPressEnter={onPressEnter}
       />
       <ConfirmButton nextPage={props.nextPage} disabled={!props.phone || props.phone.length === 0} />
+      <PageControllContainer />
     </Container>
   );
 }

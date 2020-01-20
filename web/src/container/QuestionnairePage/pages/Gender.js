@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { preChangeGender } from '../actions';
-import { Icon, Card } from 'antd';
+import { Icon } from 'antd';
 import { GenderOption } from '../constant_options';
 import { Container } from './Name';
+import PageControllContainer from '../PageControllContainer';
 
 //#region
 const StyleIcon = styled(Icon)`
@@ -17,32 +18,48 @@ const CardContainer = styled.div`
   margin-top: 30px;
 `;
 
-const StyledCard = styled(Card)`
+const StyledCard = styled.div`
+  width: 30%;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
-  margin: 0 20px !important;
-  border: ${props => (props.selected ? '2px solid #1890ff' : '2px solid #fff')}!important;
-  transition: border 300ms ease-in;
+  align-items: center;
+  border: ${props => (props.selected ? '2px solid #1890ff' : '2px solid transparent')};
+  outline: ${props => (props.selected ? '2px solid rgb(0, 145, 255,0.33)' : '2px solid transparent')};
+  cursor: pointer;
+  transition: all ease-in-out 200ms;
 `;
 
-const OptionContainer = styled.div`
-  width: 20px;
-  height: 20px;
-  border: 1px solid #ccc;
+export const OptionContainer = styled.div`
+  border-radius: 1px;
+  border: ${props => (props.selected ? '1px solid rgb(0, 145, 255)' : '1px solid rgb(151, 151, 151)')};
+  background: ${props => (props.selected ? 'rgb(0, 145, 255)' : 'rgb(245, 246, 250)')};
+  color: ${props => (props.selected ? '#fff' : '#000')};
+  height: 22px;
+  width: 22px;
+  font-size: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all ease-in-out 200ms;
 `;
 
-const TextContainer = styled.div`
+export const TextContainer = styled.div`
   color: #000;
   display: flex;
+  align-items: center;
+  margin-bottom: 10px;
   & > span {
     margin-left: 10px;
   }
 `;
 
 const StyledImg = styled.img`
-  padding: 10px;
+  max-width: 120px;
+  width: 80%;
+  height: auto;
+  margin: 25px 40px;
 `;
 
 //#endregion
@@ -55,23 +72,26 @@ function Gender(props) {
         <span>性別</span>
       </div>
       <CardContainer>
-        {GenderOption.map(g => (
-          <StyledCard
-            hoverable
-            key={g.key}
-            cover={<StyledImg alt="example" src={g.image} />}
-            selected={props.gender === g.key}
-            onClick={() => {
-              props.preChangeGender(g.key);
-            }}
-          >
-            <TextContainer>
-              <OptionContainer>{g.key}</OptionContainer>
-              <span>{g.value}</span>
-            </TextContainer>
-          </StyledCard>
-        ))}
+        {GenderOption.map(g => {
+          const selected = props.gender === g.key;
+          return (
+            <StyledCard
+              key={g.key}
+              selected={selected}
+              onClick={() => {
+                props.preChangeGender(g.key);
+              }}
+            >
+              <StyledImg alt="example" src={g.image} />
+              <TextContainer>
+                <OptionContainer selected={selected}>{g.key}</OptionContainer>
+                <span>{g.value}</span>
+              </TextContainer>
+            </StyledCard>
+          );
+        })}
       </CardContainer>
+      <PageControllContainer />
     </Container>
   );
 }

@@ -5,11 +5,12 @@ import { nextPage, changeName } from '../actions';
 import { Icon, Input } from 'antd';
 import { withRouter } from 'react-router-dom';
 import ConfirmButton from './ConfirmButton';
+import PageControllContainer from '../PageControllContainer';
 
 //#region
 
 export const Container = styled.div`
-  font-size: 20px;
+  font-size: 24px;
   color: #1890ff;
 `;
 
@@ -22,10 +23,12 @@ export const TransparentInput = styled(Input)`
   border: none !important;
   border-color: transparent !important;
   background: transparent !important;
+  font-size: 24px !important;
   &:focus {
     box-shadow: none !important;
   }
 `;
+
 //#endregion
 
 function Name(props) {
@@ -53,6 +56,7 @@ function Name(props) {
         onPressEnter={onPressEnter}
       />
       <ConfirmButton nextPage={props.nextPage} disabled={!props.name || props.name.length === 0} />
+      <PageControllContainer />
     </Container>
   );
 }
