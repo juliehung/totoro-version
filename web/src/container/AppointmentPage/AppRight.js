@@ -14,6 +14,8 @@ import {
   changeCreateAppExpectedArrivalDate,
   getPatient,
   changePatientSelected,
+  changeCreateAppNote,
+  changeCreateAppDuration,
 } from './actions';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
@@ -189,6 +191,8 @@ function AppRight(props) {
       doctorId: doctor ? doctor.id : undefined,
       expectedDate: disposol.todo.expectedDate,
       patientId: disposol.todo.patient.id,
+      note: disposol.todo.note,
+      duration: disposol.todo.requiredTreatmentTime,
     };
 
     insertAppToCreateAppModal(app);
@@ -200,6 +204,8 @@ function AppRight(props) {
     props.changeCreateAppExpectedArrivalDate(moment(app.expectedDate), 'YYYY-MM-DD');
     props.getPatient(app.patientId);
     props.changePatientSelected(true);
+    props.changeCreateAppNote({ target: { value: app.note } });
+    props.changeCreateAppDuration(app.duration);
   };
 
   return (
@@ -310,6 +316,8 @@ const mapDispatchToProps = {
   changeCreateAppExpectedArrivalDate,
   getPatient,
   changePatientSelected,
+  changeCreateAppNote,
+  changeCreateAppDuration,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRight);
