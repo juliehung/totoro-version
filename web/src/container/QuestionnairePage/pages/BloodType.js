@@ -23,8 +23,9 @@ export const OptionContainer = styled.div`
   font-size: 16px;
   color: ${props => (props.selected ? '#1890ff' : '#000')};
   display: flex;
-  border: ${props => (props.selected ? '2px solid #1890ff' : '2px solid transparent')};
-  outline: ${props => (props.selected ? '2px solid rgb(0, 145, 255,0.33)' : '2px solid transparent')};
+  border: ${props => (props.selected ? '3px solid #1890ff' : '2px solid transparent')};
+  box-shadow: ${props => (props.selected ? '0px 0px 0 2px rgb(0, 145, 255, 0.33)' : '0px transparent')};
+  border-radius: 2px;
   cursor: pointer;
   & > span {
     margin-left: 10px;
