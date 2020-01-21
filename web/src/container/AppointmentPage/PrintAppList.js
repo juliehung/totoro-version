@@ -67,7 +67,7 @@ export default class PrintAppList extends React.Component {
         title: '性別',
         dataIndex: 'gender',
         key: 'gender',
-        render: gender => <p style={style}>{gender === 'MALE' ? '男' : gender === 'FEMALE' ? '女' : gender}</p>,
+        render: gender => <p style={style}>{gender === 'MALE' ? '男' : gender === 'FEMALE' ? '女' : '無'}</p>,
       },
       {
         title: '電話',
