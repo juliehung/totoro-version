@@ -2,7 +2,6 @@ package io.dentall.totoro.message;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.jhipster.config.JHipsterConstants;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-@Profile("!" + JHipsterConstants.SPRING_PROFILE_TEST)
+@Profile("!no-queue")
 @Component
 public class MqttPubSub {
 

@@ -1,6 +1,5 @@
 package io.dentall.totoro.config;
 
-import io.github.jhipster.config.JHipsterConstants;
 import io.moquette.broker.Server;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -13,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-@Profile("!" + JHipsterConstants.SPRING_PROFILE_TEST)
+@Profile("!no-queue")
 @Configuration
 public class MqttClientConfiguration {
 

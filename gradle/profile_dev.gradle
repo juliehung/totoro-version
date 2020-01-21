@@ -16,6 +16,10 @@ if (project.hasProperty('tls')) {
     profiles += ',tls'
 }
 
+if (!project.hasProperty('queue')) {
+    profiles += ',no-queue'
+}
+
 bootRun {
     args = []
 }

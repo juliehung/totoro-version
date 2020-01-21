@@ -1,6 +1,5 @@
 package io.dentall.totoro.config;
 
-import io.github.jhipster.config.JHipsterConstants;
 import io.moquette.BrokerConstants;
 import io.moquette.broker.Server;
 import io.moquette.broker.config.*;
@@ -14,7 +13,7 @@ import org.springframework.context.annotation.Profile;
 import java.io.IOException;
 import java.util.Properties;
 
-@Profile("!" + JHipsterConstants.SPRING_PROFILE_TEST)
+@Profile("!no-queue")
 @Configuration
 public class MoquetteConfiguration {
 
