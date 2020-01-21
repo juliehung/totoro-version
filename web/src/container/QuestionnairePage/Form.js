@@ -74,6 +74,10 @@ const FlexGrowDiv = styled.div`
   flex-grow: 1;
 `;
 
+const ImageContainer = styled.div`
+  margin-top: 10px;
+  border: 2px solid #eee;
+`;
 //#endregion
 
 function Form(props) {
@@ -192,7 +196,11 @@ function Form(props) {
             </FlexGrowDiv>
           </InfoRowContainer>
         </InfoContainer>
-        {props.esign && <img src={props.esign} alt="esign"></img>}
+        {props.esign && (
+          <ImageContainer>
+            <img src={props.esign} alt="esign" width="100%"></img>
+          </ImageContainer>
+        )}
       </FormContainer>
       <Link to="/registration">
         <GoBackButton type="primary">返回列表</GoBackButton>

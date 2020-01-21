@@ -59,7 +59,7 @@ function Signature(props) {
 
   const SendWSign = () => {
     const imgURL = trimDataUrl(sigRef.toDataURL());
-    props.createQWSign(imgURL);
+    props.createQWSign({ base64: imgURL, contentType: 'image/png' });
   };
 
   return (
@@ -91,6 +91,7 @@ function Signature(props) {
           }}
           ref={ref => (sigRef = ref)}
           onEnd={onEnd}
+          backgroundColor="#fff"
         />
       </SigContainer>
     </Container>

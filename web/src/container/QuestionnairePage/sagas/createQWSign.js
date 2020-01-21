@@ -12,7 +12,7 @@ export function* createQWSign() {
     try {
       const a = yield take(CREATE_Q_WITH_SIGN);
       const patientEntity = yield select(getPatientEntity);
-      const esign = yield call(ESign.create, { lob: a.sign, patientId: patientEntity.id });
+      const esign = yield call(ESign.create, { ...a.sign, patientId: patientEntity.id });
       const esignId = esign.id;
       const patient = yield select(getPatient);
       const patientForApi = handlePatientForApi(patientEntity, patient);
