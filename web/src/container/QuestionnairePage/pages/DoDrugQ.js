@@ -39,7 +39,7 @@ function DoDrugQ(props) {
             props.preChangeDoDrug('A');
           }}
         >
-          <Option>A</Option>
+          <Option selected={props.doDrug === 'A'}>A</Option>
           <span>有</span>
           <CheckedIcon type="check" selected={props.doDrug === 'A'} />
         </OptionContainer>
@@ -50,7 +50,7 @@ function DoDrugQ(props) {
             props.preChangeDoDrug('B');
           }}
         >
-          <Option>B</Option>
+          <Option selected={props.doDrug === 'B'}>B</Option>
           <span>無</span>
           <CheckedIcon type="check" selected={props.doDrug === 'B'} />
         </OptionContainer>

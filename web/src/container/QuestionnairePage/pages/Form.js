@@ -198,13 +198,7 @@ function Form(props) {
         <StyledButton
           type="primary"
           disabled={
-            !displayData.name ||
-            displayData.name.length === 0 ||
-            !displayData.birth ||
-            !displayData.nationalId ||
-            displayData.nationalId.length === 0 ||
-            !displayData.phone ||
-            displayData.phone.length === 0
+            !displayData.name || displayData.name.length === 0 || !displayData.phone || displayData.phone.length === 0
           }
           onClick={() => {
             props.gotoPage(21);
