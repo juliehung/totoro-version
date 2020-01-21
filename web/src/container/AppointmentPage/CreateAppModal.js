@@ -8,6 +8,7 @@ import {
   changePatientSelected,
   changeCreateAppNote,
   changeCreateAppDuration,
+  chnageCreateAppDefaultDuration,
   changeCreateAppDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,
@@ -130,6 +131,7 @@ function CreateAppModal({
   changePatientSelected,
   changeCreateAppNote,
   changeCreateAppDuration,
+  chnageCreateAppDefaultDuration,
   changeCreateAppDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,
@@ -157,10 +159,10 @@ function CreateAppModal({
   }, [appointment, patient, checkConfirmButtonDisable]);
 
   useEffect(() => {
-    if (setting && visible) {
-      changeCreateAppDuration(setting.requiredTreatmentTime);
+    if (setting) {
+      chnageCreateAppDefaultDuration(setting.requiredTreatmentTime);
     }
-  }, [setting, changeCreateAppDuration, visible]);
+  }, [setting, chnageCreateAppDefaultDuration]);
 
   const closeModal = () => {
     changeCreateAppModalVisible(false);
@@ -397,6 +399,7 @@ const mapDispatchToProps = {
   changePatientSelected,
   changeCreateAppNote,
   changeCreateAppDuration,
+  chnageCreateAppDefaultDuration,
   changeCreateAppDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,

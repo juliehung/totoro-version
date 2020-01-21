@@ -25,6 +25,7 @@ import {
   CHANGE_CREATE_APP_EXPECTED_ARRIVAL_TIME,
   CHANGE_CREATE_APP_DOCTOR,
   CHANGE_CREATE_APP_DURATION,
+  CHANGE_CREATE_APP_DEFAULT_DURATION,
   CHANGE_CREATE_APP_NOTE,
   CHANGE_CREATE_APP_SPECIAL_NOTE,
   CHECK_CONFIRM_BUTTON_DISABLE,
@@ -189,6 +190,10 @@ export function changeCreateAppDoctor(doctorId) {
 
 export function changeCreateAppDuration(duration) {
   return { type: CHANGE_CREATE_APP_DURATION, duration };
+}
+
+export function chnageCreateAppDefaultDuration(duration) {
+  return { type: CHANGE_CREATE_APP_DEFAULT_DURATION, duration };
 }
 
 export function changeCreateAppNote(e) {
