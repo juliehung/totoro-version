@@ -61,7 +61,7 @@ class PrintModal extends React.Component {
         <div>
           <Header>列印預約表</Header>
           <Container>
-            <span>列印日期：</span>
+            <span>預約日期：</span>
             <DatePicker
               size="large"
               style={{ width: '280px' }}
