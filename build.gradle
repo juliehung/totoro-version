@@ -90,13 +90,12 @@ war {
 }
 
 task autoGenVersion(type: WriteProperties) {
-    outputFile = new File("build/generated/semver.properties")
-    property("versionMajor", versionMajor)
-    property("versionMinor", versionMinor)
-    property("versionMinorRenewDate", versionMinorRenewDate)
-    property("branchName", branchName)
-    property("commitCount", commitCount)
-    property("semver", semver)
+    outputFile = file("src/main/resources/totoro.properties")
+    if (!gitTag.isEmpty()) {
+        property("version", "$gitTag-$sha1")
+    } else {
+        property("version", "$branchName-$sha1")
+    }
 }
 
 springBoot {
