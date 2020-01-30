@@ -8,6 +8,7 @@ import io.dentall.totoro.business.vm.PatientVM;
 import io.dentall.totoro.business.vm.TeethGraphConfigVM;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -81,7 +82,11 @@ public class PatientBusinessResource {
 
     @GetMapping("/patients/birth")
     @Timed
-    public ResponseEntity<List<PatientSearchVM>> findByBirth(@RequestParam String search, @RequestParam String format, Pageable pageable) {
+    public ResponseEntity<List<PatientSearchVM>> findByBirth(
+        @RequestParam String search,
+        @ApiParam(allowableValues = "CE,ROC", required = true) @RequestParam String format,
+        Pageable pageable
+    ) {
         log.debug("REST request to get a page of Patients by birth[{}] and format[{}]", search, format);
 
         Page<PatientSearchVM> page = patientBusinessService.findByBirth(search, format, pageable);
