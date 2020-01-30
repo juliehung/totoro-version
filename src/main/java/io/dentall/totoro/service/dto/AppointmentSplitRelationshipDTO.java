@@ -82,6 +82,7 @@ public class AppointmentSplitRelationshipDTO {
         patient.setLastModifiedBy(appointmentDAO.getPatientLastModifiedBy());
         patient.setLastModifiedDate(appointmentDAO.getPatientLastModifiedDate());
         patient.setNhiExtendPatient(nhiExtendPatient);
+        patient.setPatientIdentity(appointmentDAO.getPatientIdentity());
 
         Appointment appointment = new Appointment()
             .status(appointmentDAO.getStatus())

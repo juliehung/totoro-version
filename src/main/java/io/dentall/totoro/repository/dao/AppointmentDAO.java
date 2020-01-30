@@ -2,6 +2,7 @@ package io.dentall.totoro.repository.dao;
 
 import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.domain.ExtendUser;
+import io.dentall.totoro.domain.PatientIdentity;
 import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 import io.dentall.totoro.domain.enumeration.Blood;
 import io.dentall.totoro.domain.enumeration.Gender;
@@ -57,6 +58,7 @@ public class AppointmentDAO {
     private final String career;
     private final String marriage;
     private final Boolean newPatient;
+    private final PatientIdentity patientIdentity;
     // Registration
     private final Long registrationId;
     private final String registrationCreatedBy;
@@ -139,6 +141,7 @@ public class AppointmentDAO {
         String career,
         String marriage,
         Boolean newPatient,
+        PatientIdentity patientIdentity,
         Long registrationId,
         String registrationCreatedBy,
         Instant registrationCreatedDate,
@@ -214,6 +217,7 @@ public class AppointmentDAO {
         this.career = career;
         this.marriage = marriage;
         this.newPatient = newPatient;
+        this.patientIdentity = patientIdentity;
         this.registrationId = registrationId;
         this.registrationCreatedBy = registrationCreatedBy;
         this.registrationCreatedDate = registrationCreatedDate;
@@ -245,6 +249,10 @@ public class AppointmentDAO {
         this.nhiPatientLastModifiedBy = nhiPatientLastModifiedBy;
         this.nhiPatientLastModifiedDate = nhiPatientLastModifiedDate;
         this.accounting = accounting;
+    }
+
+    public PatientIdentity getPatientIdentity() {
+        return patientIdentity;
     }
 
     public Accounting getAccounting() {
