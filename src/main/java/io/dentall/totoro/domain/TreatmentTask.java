@@ -1,17 +1,18 @@
 package io.dentall.totoro.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
+
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 /**
  * A TreatmentTask.
@@ -35,11 +36,12 @@ public class TreatmentTask extends AbstractDoctorAndAuditingEntity<TreatmentTask
     @Column(name = "note", length = 5100)
     private String note;
 
-    @OneToMany(mappedBy = "treatmentTask")
+    @OneToMany(mappedBy = "treatmentTask", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = new HashSet<>();
-    @ManyToOne
-    @JsonIgnoreProperties(value = "treatmentTasks", allowSetters = true)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonProperty(access = WRITE_ONLY)
     private TreatmentPlan treatmentPlan;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

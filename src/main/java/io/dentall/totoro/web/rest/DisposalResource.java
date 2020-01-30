@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -155,6 +156,7 @@ public class DisposalResource {
 
     @GetMapping("/disposals/rules-checked/{id}")
     @Timed
+    @Transactional
     public ResponseEntity<Disposal> getDisposalWithRulesCheckedNhiExtTxProc(@PathVariable Long id) {
         log.debug("REST request to get contain rules checked nhi-ext-tx-proc Disposal with id : {}", id);
         Optional<Disposal> optDisposal = disposalService.findOneWithEagerRelationships(id);
