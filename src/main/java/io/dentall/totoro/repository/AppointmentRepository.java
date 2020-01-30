@@ -96,6 +96,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "patient.career, " +
             "patient.marriage, " +
             "patient.newPatient, " +
+            "patient.patientIdentity, " +
             "registration.id, " +
             "registration.createdBy, " +
             "registration.createdDate, " +
