@@ -106,6 +106,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "registration.type, " +
             "registration.onSite, " +
             "registration.noCard, " +
+            "registration.abnormalCode, " +
             "doctor," +
             "disposal.id," +
             "disposal.createdBy, " +

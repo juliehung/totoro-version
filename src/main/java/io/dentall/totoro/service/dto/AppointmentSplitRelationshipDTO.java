@@ -16,7 +16,8 @@ public class AppointmentSplitRelationshipDTO {
                 .arrivalTime(appointmentDAO.getArrivalTime())
                 .type(appointmentDAO.getType())
                 .onSite(appointmentDAO.getOnSite())
-                .noCard(appointmentDAO.getNoCard());
+                .noCard(appointmentDAO.getNoCard())
+                .abnormalCode(appointmentDAO.getAbnormalCode());
             registration.setId(appointmentDAO.getRegistrationId());
             registration.setLastModifiedBy(appointmentDAO.getRegistrationLastModifiedBy());
             registration.setLastModifiedDate(appointmentDAO.getRegistrationLastModifiedDate());

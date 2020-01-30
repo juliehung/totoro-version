@@ -68,6 +68,7 @@ public class AppointmentDAO {
     private final String type;
     private final Boolean onSite;
     private final Boolean noCard;
+    private final String abnormalCode;
     // Doctor
     private final ExtendUser doctor;
     // Disposal
@@ -148,6 +149,7 @@ public class AppointmentDAO {
         String type,
         Boolean onSite,
         Boolean noCard,
+        String abnormalCode,
         ExtendUser doctor,
         Long disposalId,
         String disposalCreatedBy,
@@ -222,6 +224,7 @@ public class AppointmentDAO {
         this.type = type;
         this.onSite = onSite;
         this.noCard = noCard;
+        this.abnormalCode = abnormalCode;
         this.doctor = doctor;
         this.disposalId = disposalId;
         this.disposalCreatedBy = disposalCreatedBy;
@@ -514,6 +517,10 @@ public class AppointmentDAO {
 
     public Boolean getNoCard() {
         return noCard;
+    }
+
+    public String getAbnormalCode() {
+        return abnormalCode;
     }
 
     public ExtendUser getDoctor() {
