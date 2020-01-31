@@ -3,20 +3,19 @@ package io.dentall.totoro.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
-
-import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
-import org.springframework.data.annotation.CreatedDate;
+import java.util.Set;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
@@ -71,7 +70,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @JsonIgnoreProperties("")
     private NhiProcedure nhiProcedure;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonProperty(access = WRITE_ONLY)
     private TreatmentTask treatmentTask;
 
