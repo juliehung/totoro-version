@@ -2,15 +2,25 @@ import moment from 'moment';
 import { parseCalEvtToDayOffCron } from './parseCalEvtToDayOffCron';
 
 export function handleCalendarEventForApi(calEvt) {
-  const start = moment(
-    `${calEvt.startDate.format('YYYY-MM-DD')} ${calEvt.startTime.format('HH:mm')}`,
-    'YYYY-MM-DD HH:mm',
-  ).toISOString();
-  const end = moment(
-    `${calEvt.endDate.format('YYYY-MM-DD')} ${calEvt.endTime.format('HH:mm')}`,
-    'YYYY-MM-DD HH:mm',
-  ).toISOString();
-  const note = calEvt.note ? calEvt.note : '';
+  let start, end;
+  if (calEvt.allDay) {
+    start = moment(calEvt.startDate)
+      .startOf('day')
+      .toISOString();
+    end = moment(calEvt.endDate)
+      .endOf('day')
+      .toISOString();
+  } else {
+    start = moment(
+      `${calEvt.startDate.format('YYYY-MM-DD')} ${calEvt.startTime.format('HH:mm')}`,
+      'YYYY-MM-DD HH:mm',
+    ).toISOString();
+    end = moment(
+      `${calEvt.endDate.format('YYYY-MM-DD')} ${calEvt.endTime.format('HH:mm')}`,
+      'YYYY-MM-DD HH:mm',
+    ).toISOString();
+  }
+  const note = calEvt.note ? calEvt.note : undefined;
   const id = calEvt.id;
   // doctor = { id: null} is a special way to delete doctor, instead of change id to null
   const doctor = calEvt.doctorId !== 'none' ? { id: calEvt.doctorId } : undefined;

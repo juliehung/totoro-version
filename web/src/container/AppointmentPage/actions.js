@@ -54,6 +54,7 @@ import {
   CAHNGE_CREATE_CAL_EVT_START_TIME,
   CAHNGE_CREATE_CAL_EVT_END_DATE,
   CAHNGE_CREATE_CAL_EVT_END_TIME,
+  CHANGE_CREATE_CAL_EVT_ALL_DAY,
   CHANGE_CREATE_CAL_EVT_DOCTOR,
   CHANGE_CREATE_CAL_EVT_REPEAT,
   CHANGE_CREATE_CAL_EVT_REAPEAT_END_DATE,
@@ -69,6 +70,7 @@ import {
   CAHNGE_EDIT_CAL_EVT_START_TIME,
   CAHNGE_EDIT_CAL_EVT_END_DATE,
   CAHNGE_EDIT_CAL_EVT_END_TIME,
+  CHANGE_EDIT_CAL_EVT_ALL_DAY,
   CHANGE_EDIT_CAL_EVT_DOCTOR,
   CHANGE_EDIT_CAL_EVT_REPEAT,
   CHANGE_EDIT_CAL_EVT_REPEAT_END_DATE,
@@ -309,6 +311,10 @@ export function changeCreateCalEvtEndTime(time) {
   return { type: CAHNGE_CREATE_CAL_EVT_END_TIME, time };
 }
 
+export function changeCreateCalEvtAllDay(allDay) {
+  return { type: CHANGE_CREATE_CAL_EVT_ALL_DAY, allDay };
+}
+
 export function changeCreateCalEvtDoctor(doctorId) {
   return { type: CHANGE_CREATE_CAL_EVT_DOCTOR, doctorId };
 }
@@ -367,6 +373,10 @@ export function changeEditCalEvtEndDate(date) {
 
 export function changeEditCalEvtEndTime(time) {
   return { type: CAHNGE_EDIT_CAL_EVT_END_TIME, time };
+}
+
+export function changeEditCalEvtAllDay(allDay) {
+  return { type: CHANGE_EDIT_CAL_EVT_ALL_DAY, allDay };
 }
 
 export function changeEditCalEvtDoctor(doctorId) {

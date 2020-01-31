@@ -1,4 +1,4 @@
-import { Modal, Button, TimePicker, DatePicker, Select, Input, message } from 'antd';
+import { Modal, Button, TimePicker, DatePicker, Select, Input, message, Checkbox } from 'antd';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -8,6 +8,7 @@ import {
   changeCreateCalEvtStartTime,
   changeCreateCalEvtEndDate,
   changeCreateCalEvtEndTime,
+  changeCreateCalEvtAllDay,
   changeCreateCalEvtDoctor,
   changeCreateCalEvtRepeat,
   changeCreateCalEvtNote,
@@ -50,10 +51,16 @@ const RowContainer = styled.div`
 `;
 
 const DateContainer = styled.div`
+  display: flex;
+  align-items: center;
   margin-bottom: 10px;
 `;
 
 const StyledDatePicker = styled(DatePicker)`
+  margin-right: 15px !important;
+`;
+
+const StyledTimePicker = styled(TimePicker)`
   margin-right: 15px !important;
 `;
 
@@ -85,6 +92,7 @@ function CreateCalendarEventModal({
   changeCreateCalEvtStartTime,
   changeCreateCalEvtEndDate,
   changeCreateCalEvtEndTime,
+  changeCreateCalEvtAllDay,
   changeCreateCalEvtDoctor,
   changeCreateCalEvtRepeat,
   changeCreateCalEvtNote,
@@ -114,6 +122,10 @@ function CreateCalendarEventModal({
     changeCreateCalModalVisible(false);
   };
 
+  const onAllDayChange = e => {
+    changeCreateCalEvtAllDay(e.target.checked);
+  };
+
   return (
     <Modal
       centered
@@ -122,6 +134,7 @@ function CreateCalendarEventModal({
       visible={visible}
       onCancel={closeModal}
       closable={false}
+      width={600}
       destroyOnClose
     >
       <Container>
@@ -136,13 +149,15 @@ function CreateCalendarEventModal({
                   allowClear
                   placeholder="請選擇日期"
                 />
-                <TimePicker
+                <StyledTimePicker
                   format="HH:mm"
                   value={calendarEvt.startTime}
                   onChange={changeCreateCalEvtStartTime}
                   allowClear
                   placeholder="請選擇時間"
+                  disabled={calendarEvt.allDay}
                 />
+                <Checkbox onChange={onAllDayChange}>全天</Checkbox>
               </DateContainer>
               <DateContainer>
                 <StyledDatePicker
@@ -151,12 +166,13 @@ function CreateCalendarEventModal({
                   allowClear
                   placeholder="請選擇日期"
                 />
-                <TimePicker
+                <StyledTimePicker
                   format="HH:mm"
                   value={calendarEvt.endTime}
                   onChange={changeCreateCalEvtEndTime}
                   allowClear
                   placeholder="請選擇時間"
+                  disabled={calendarEvt.allDay}
                 />
               </DateContainer>
             </div>
@@ -231,6 +247,7 @@ const mapDispatchToProps = {
   changeCreateCalEvtStartTime,
   changeCreateCalEvtEndDate,
   changeCreateCalEvtEndTime,
+  changeCreateCalEvtAllDay,
   changeCreateCalEvtDoctor,
   changeCreateCalEvtRepeat,
   changeCreateCalEvtNote,

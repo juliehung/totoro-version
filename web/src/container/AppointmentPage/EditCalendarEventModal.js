@@ -1,4 +1,4 @@
-import { Modal, Button, TimePicker, DatePicker, Select, Input, message } from 'antd';
+import { Modal, Button, TimePicker, DatePicker, Select, Input, message, Checkbox } from 'antd';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import {
   changeEditCalEvtStartTime,
   changeEditCalEvtEndDate,
   changeEditCalEvtEndTime,
+  changeEditCalEvtAllDay,
   changeEditCalEvtDoctor,
   changeEditCalEvtRepeat,
   changeEditCalEvtNote,
@@ -52,10 +53,16 @@ const RowContainer = styled.div`
 `;
 
 const DateContainer = styled.div`
+  display: flex;
+  align-items: center;
   margin-bottom: 10px;
 `;
 
 const StyledDatePicker = styled(DatePicker)`
+  margin-right: 15px !important;
+`;
+
+const StyledTimePicker = styled(TimePicker)`
   margin-right: 15px !important;
 `;
 
@@ -96,6 +103,7 @@ function EditCalendarEventModal({
   changeEditCalEvtStartTime,
   changeEditCalEvtEndDate,
   changeEditCalEvtEndTime,
+  changeEditCalEvtAllDay,
   changeEditCalEvtDoctor,
   changeEditCalEvtRepeat,
   changeEditCalEvtRepeatEndDate,
@@ -144,6 +152,10 @@ function EditCalendarEventModal({
     changeEditCalEvtConfirmDelete(true);
   };
 
+  const onAllDayChange = e => {
+    changeEditCalEvtAllDay(e.target.checked);
+  };
+
   return (
     <Modal
       centered
@@ -152,6 +164,7 @@ function EditCalendarEventModal({
       visible={visible}
       onCancel={closeModal}
       closable={false}
+      width={600}
       destroyOnClose
     >
       <Container>
@@ -165,20 +178,25 @@ function EditCalendarEventModal({
                   onChange={changeEditCalEvtStartDate}
                   allowClear={false}
                 />
-                <TimePicker
+                <StyledTimePicker
                   format="HH:mm"
                   value={calendarEvt.startTime}
                   onChange={changeEditCalEvtStartTime}
                   allowClear={false}
+                  disabled={calendarEvt.allDay}
                 />
+                <Checkbox onChange={onAllDayChange} checked={calendarEvt.allDay}>
+                  全天
+                </Checkbox>
               </DateContainer>
               <DateContainer>
                 <StyledDatePicker value={calendarEvt.endDate} onChange={changeEditCalEvtEndDate} allowClear={false} />
-                <TimePicker
+                <StyledTimePicker
                   format="HH:mm"
                   value={calendarEvt.endTime}
                   onChange={changeEditCalEvtEndTime}
                   allowClear={false}
+                  disabled={calendarEvt.allDay}
                 />
               </DateContainer>
             </div>
@@ -272,6 +290,7 @@ const mapDispatchToProps = {
   changeEditCalEvtStartTime,
   changeEditCalEvtEndDate,
   changeEditCalEvtEndTime,
+  changeEditCalEvtAllDay,
   changeEditCalEvtDoctor,
   changeEditCalEvtRepeat,
   changeEditCalEvtRepeatEndDate,
