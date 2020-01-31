@@ -5,7 +5,7 @@ import { Button, Table, Drawer } from 'antd';
 import ManPng from '../../static/images/man.png';
 import styled from 'styled-components';
 import moment from 'moment';
-import { changeDrawerVisible } from './actions';
+import { changeDrawerVisible, getDoc } from './actions';
 
 //#region
 const DrawerContainer = styled.div`
@@ -59,32 +59,32 @@ const columns = [
 ];
 
 function RegistDrawer(props) {
-  const { changeDrawerVisible } = props;
+  const { changeDrawerVisible, getDoc, drawerVisible, patient } = props;
 
   useEffect(() => {
-    return () => {
-      changeDrawerVisible(false);
-    };
-  }, [changeDrawerVisible]);
+    if (drawerVisible) {
+      getDoc(patient.id);
+    }
+  }, [getDoc, drawerVisible, patient]);
 
   const onClose = () => {
     changeDrawerVisible(false);
   };
 
   return (
-    <Drawer placement="right" closable={true} width="500px" onClose={onClose} visible={props.drawerVisible}>
+    <Drawer placement="right" closable={true} width="500px" onClose={onClose} visible={drawerVisible}>
       <DrawerContainer>
         <PatientContainer>
           <img src={ManPng} alt={'avatar'}></img>
           <div>
             <span>
-              MRN. <span>{props.patient.medicalId}</span>
+              MRN. <span>{patient.medicalId}</span>
             </span>
-            <span>{props.patient.name}</span>
+            <span>{patient.name}</span>
           </div>
         </PatientContainer>
         <Table columns={columns} dataSource={props.docs} pagination={false} />
-        <Link to={`/q/${props.patient.id}`}>
+        <Link to={`/q/${patient.id}`}>
           <StyledButton type="primary">新增病歷首頁</StyledButton>
         </Link>
       </DrawerContainer>
@@ -98,6 +98,6 @@ const mapStateToProps = ({ registrationPageReducer }) => ({
   docs: registrationPageReducer.drawer.docs,
 });
 
-const mapDispatchToProps = { changeDrawerVisible };
+const mapDispatchToProps = { changeDrawerVisible, getDoc };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegistDrawer);

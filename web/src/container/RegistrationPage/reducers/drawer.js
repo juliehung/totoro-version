@@ -4,7 +4,7 @@ import { convertDocsToItem } from '../utils/convertDocsToItem';
 
 const initState = {
   visible: false,
-  patient: { name: undefined, medicalId: undefined },
+  patient: { name: undefined, id: undefined },
   docs: [],
 };
 

@@ -325,7 +325,6 @@ const mapStateToProps = ({ registrationPageReducer, appointmentPageReducer }) =>
   loading: registrationPageReducer.registration.loading,
   selectedDate: registrationPageReducer.registration.selectedDate,
   doctors: appointmentPageReducer.calendar.doctors,
-  drawerVisible: registrationPageReducer.drawer.visible,
 });
 
 const mapDispatchToProps = {
