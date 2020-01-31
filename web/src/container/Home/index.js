@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { getAccount } from './actions';
 import QuestionnairePage from '../QuestionnairePage';
 import LoginPage from '../LoginPage';
 import { Switch, Route } from 'react-router-dom';
@@ -16,7 +17,15 @@ const Container = styled.div`
 //#endregion
 
 function Home(props) {
-  if (!props.loginSuccess)
+  const { loginSuccess, getAccount } = props;
+
+  useEffect(() => {
+    if (loginSuccess) {
+      getAccount();
+    }
+  }, [loginSuccess, getAccount]);
+
+  if (!loginSuccess)
     return (
       <Container>
         <LoginPage />
@@ -45,6 +54,6 @@ const mapStateToProps = ({ loginPageReducer }) => ({
   loginSuccess: loginPageReducer.login.loginSuccess,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { getAccount };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

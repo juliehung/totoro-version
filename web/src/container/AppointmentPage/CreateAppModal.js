@@ -8,8 +8,9 @@ import {
   changePatientSelected,
   changeCreateAppNote,
   changeCreateAppDuration,
-  chnageCreateAppDefaultDuration,
+  changeCreateAppDefaultDuration,
   changeCreateAppDoctor,
+  changeCreateAppDefaultDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,
   createAppointment,
@@ -131,8 +132,9 @@ function CreateAppModal({
   changePatientSelected,
   changeCreateAppNote,
   changeCreateAppDuration,
-  chnageCreateAppDefaultDuration,
+  changeCreateAppDefaultDuration,
   changeCreateAppDoctor,
+  changeCreateAppDefaultDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,
   createAppointment,
@@ -145,6 +147,7 @@ function CreateAppModal({
   createPatient,
   getAllEvents,
   setting,
+  account,
 }) {
   useEffect(() => {
     if (createAppSuccess) {
@@ -160,9 +163,17 @@ function CreateAppModal({
 
   useEffect(() => {
     if (setting) {
-      chnageCreateAppDefaultDuration(setting.requiredTreatmentTime);
+      changeCreateAppDefaultDuration(setting.requiredTreatmentTime);
     }
-  }, [setting, chnageCreateAppDefaultDuration]);
+  }, [setting, changeCreateAppDefaultDuration]);
+
+  useEffect(() => {
+    if (account.data && account.data.authorities) {
+      if (account.data.authorities[0].includes('DOCTOR')) {
+        changeCreateAppDefaultDoctor(account.data.id);
+      }
+    }
+  }, [changeCreateAppDefaultDoctor, account]);
 
   const closeModal = () => {
     changeCreateAppModalVisible(false);
@@ -379,7 +390,7 @@ function CreateAppModal({
     </Modal>
   );
 }
-const mapStateToProps = ({ appointmentPageReducer }) => ({
+const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   visible: appointmentPageReducer.createApp.visible,
   patients: appointmentPageReducer.createApp.searchPatients,
   patientSelected: appointmentPageReducer.createApp.patientSelected,
@@ -390,6 +401,7 @@ const mapStateToProps = ({ appointmentPageReducer }) => ({
   createAppSuccess: appointmentPageReducer.createApp.createAppSuccess,
   disabled: appointmentPageReducer.createApp.disabled,
   setting: appointmentPageReducer.settings.generalSetting,
+  account: homePageReducer.account,
 });
 
 const mapDispatchToProps = {
@@ -399,8 +411,9 @@ const mapDispatchToProps = {
   changePatientSelected,
   changeCreateAppNote,
   changeCreateAppDuration,
-  chnageCreateAppDefaultDuration,
+  changeCreateAppDefaultDuration,
   changeCreateAppDoctor,
+  changeCreateAppDefaultDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,
   createAppointment,

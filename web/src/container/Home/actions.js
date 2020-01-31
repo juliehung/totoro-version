@@ -1,9 +1,9 @@
-import { ADD_COUNT, SUB_COUNT } from './constants';
+import { GET_ACCOUNT_START, GET_ACCOUNT_SUCCESS } from './constant';
 
-export function addCount() {
-  return { type: ADD_COUNT };
+export function getAccount() {
+  return { type: GET_ACCOUNT_START };
 }
 
-export function subCount() {
-  return { type: SUB_COUNT };
+export function getAccountSuccess(account) {
+  return { type: GET_ACCOUNT_SUCCESS, account };
 }
