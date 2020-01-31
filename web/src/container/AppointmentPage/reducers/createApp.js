@@ -8,6 +8,7 @@ import {
   CHANGE_CREATE_APP_DURATION,
   CHANGE_CREATE_APP_DEFAULT_DURATION,
   CHANGE_CREATE_APP_DOCTOR,
+  CHANGE_CREATE_APP_DEFAULT_DOCTOR,
   CHANGE_CREATE_APP_EXPECTED_ARRIVAL_DATE,
   CHANGE_CREATE_APP_EXPECTED_ARRIVAL_TIME,
   CHANGE_CREATE_APP_SPECIAL_NOTE,
@@ -39,7 +40,7 @@ const initState = {
     specialNote: [],
   },
   patient: { name: undefined, phone: undefined, nationalId: undefined, birth: undefined },
-  default: { duration: undefined },
+  default: { duration: undefined, doctorId: undefined },
 };
 
 export const initialState = { ...initState };
@@ -53,7 +54,11 @@ const createApp = (state = initialState, action) =>
         if (!action.visible) {
           draft.patientSelected = initState.patientSelected;
           draft.selectedPatient = initState.selectedPatient;
-          draft.appointment = { ...initState.appointment, duration: state.default.duration };
+          draft.appointment = {
+            ...initState.appointment,
+            duration: state.default.duration,
+            doctorId: state.default.doctorId,
+          };
           draft.patient = initState.patient;
           draft.loading = initState.loading;
           draft.searchPatients = initState.searchPatients;
@@ -83,6 +88,10 @@ const createApp = (state = initialState, action) =>
         }
         break;
       case CHANGE_CREATE_APP_DOCTOR:
+        draft.appointment.doctorId = action.doctorId;
+        break;
+      case CHANGE_CREATE_APP_DEFAULT_DOCTOR:
+        draft.default.doctorId = action.doctorId;
         draft.appointment.doctorId = action.doctorId;
         break;
       case CHANGE_CREATE_APP_EXPECTED_ARRIVAL_DATE:

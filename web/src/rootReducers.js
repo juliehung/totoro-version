@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import homePageReducer from './container/Home/reducer';
+import homePageReducer from './container/Home/reducers';
 import appointmentPageReducer from './container/AppointmentPage/reducers';
 import loginPageReducer from './container/LoginPage/reducers';
 import questionnairePageReducer from './container/QuestionnairePage/reducers';

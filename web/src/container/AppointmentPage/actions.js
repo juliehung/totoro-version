@@ -24,6 +24,7 @@ import {
   CHANGE_CREATE_APP_EXPECTED_ARRIVAL_DATE,
   CHANGE_CREATE_APP_EXPECTED_ARRIVAL_TIME,
   CHANGE_CREATE_APP_DOCTOR,
+  CHANGE_CREATE_APP_DEFAULT_DOCTOR,
   CHANGE_CREATE_APP_DURATION,
   CHANGE_CREATE_APP_DEFAULT_DURATION,
   CHANGE_CREATE_APP_NOTE,
@@ -190,11 +191,15 @@ export function changeCreateAppDoctor(doctorId) {
   return { type: CHANGE_CREATE_APP_DOCTOR, doctorId };
 }
 
+export function changeCreateAppDefaultDoctor(doctorId) {
+  return { type: CHANGE_CREATE_APP_DEFAULT_DOCTOR, doctorId };
+}
+
 export function changeCreateAppDuration(duration) {
   return { type: CHANGE_CREATE_APP_DURATION, duration };
 }
 
-export function chnageCreateAppDefaultDuration(duration) {
+export function changeCreateAppDefaultDuration(duration) {
   return { type: CHANGE_CREATE_APP_DEFAULT_DURATION, duration };
 }
 
