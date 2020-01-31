@@ -1,9 +1,11 @@
 import produce from 'immer';
+import moment from 'moment';
 import {
   CHANGE_CREATE_CAL_EVT_START_DATE,
   CAHNGE_CREATE_CAL_EVT_START_TIME,
   CAHNGE_CREATE_CAL_EVT_END_DATE,
   CAHNGE_CREATE_CAL_EVT_END_TIME,
+  CHANGE_CREATE_CAL_EVT_ALL_DAY,
   CHANGE_CREATE_CAL_EVT_DOCTOR,
   CHANGE_CREATE_CAL_EVT_REPEAT,
   CHANGE_CREATE_CAL_EVT_REAPEAT_END_DATE,
@@ -28,6 +30,7 @@ const initState = {
     doctorId: 'none',
     repeat: 'none',
     note: undefined,
+    allDay: false,
   },
 };
 
@@ -58,6 +61,13 @@ const createCalendarEvt = (state = initialState, action) =>
       case CAHNGE_CREATE_CAL_EVT_END_TIME:
         draft.event.endTime = action.time;
         break;
+      case CHANGE_CREATE_CAL_EVT_ALL_DAY:
+        draft.event.allDay = action.allDay;
+        if (action.allDay) {
+          draft.event.startTime = moment().startOf('day');
+          draft.event.endTime = moment().endOf('day');
+        }
+        break;
       case CHANGE_CREATE_CAL_EVT_DOCTOR:
         draft.event.doctorId = action.doctorId;
         break;
@@ -71,19 +81,22 @@ const createCalendarEvt = (state = initialState, action) =>
         draft.event.note = action.e.target.value;
         break;
       case CHECK_CREATE_CAL_CONFIRM_BUTTON_DISABLE:
-        if (state.event.startDate && state.event.startTime && state.event.endDate && state.event.endTime) {
-          if (state.event.repeat !== 'none') {
-            if (state.event.repeatEndDate) {
-              draft.disabled = false;
-            } else {
-              draft.disabled = true;
-            }
-          } else {
-            draft.disabled = false;
-          }
-        } else {
+        if (!state.event.startDate || !state.event.endDate) {
           draft.disabled = true;
+          break;
+        } else {
+          if (!draft.event.allDay) {
+            if (!state.event.startTime || !state.event.endTime) {
+              draft.disabled = true;
+              break;
+            }
+          }
         }
+        if (state.event.repeat !== 'none' && !state.event.repeatEndDate) {
+          draft.disabled = true;
+          break;
+        }
+        draft.disabled = false;
         break;
       case CREATE_CAL_EVT_START:
         draft.loading = true;

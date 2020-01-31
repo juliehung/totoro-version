@@ -1,5 +1,6 @@
 import moment from 'moment';
-const parser = require('cron-parser');
+import parser from 'cron-parser';
+import isAllDay from './isAllDay';
 
 export default function convertCalendarToEvent(calendarEvents) {
   let events = [];
@@ -42,6 +43,8 @@ export default function convertCalendarToEvent(calendarEvents) {
       const end = moment(e.end).toDate();
       const title = e.doctor ? e.doctor.user.firstName : '診所休假';
       const resourceId = e.doctor ? e.doctor.user.id : null;
+      const allDay = isAllDay(start, end);
+
       events.push({
         start,
         end,
@@ -51,6 +54,8 @@ export default function convertCalendarToEvent(calendarEvents) {
         doctorDayOff: e,
         eventType: 'doctorDayOff',
         editable: false,
+        resourceEditable: false,
+        allDay,
       });
     }
   });

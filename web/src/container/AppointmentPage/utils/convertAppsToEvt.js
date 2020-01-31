@@ -49,5 +49,6 @@ export function convertAppToEvt(appointment) {
     appointment,
     eventType: 'appointment',
     editable: appointment.registrationStatus ? false : true,
+    resourceEditable: appointment.registrationStatus ? false : true,
   };
 }

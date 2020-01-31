@@ -267,6 +267,13 @@ class AppCalendar extends React.Component {
     this.scrollListener.addEventListener('scroll', this.clickTitle);
   };
 
+  eventAllow = dropInfo => {
+    if (dropInfo.allDay) {
+      return false;
+    }
+    return true;
+  };
+
   render() {
     const event = [
       ...this.props.appointments.filter(a => {
@@ -344,7 +351,6 @@ class AppCalendar extends React.Component {
         scrollTime="08:30:00"
         slotLabelInterval={{ hours: 1 }}
         slotDuration={`00:${this.props.slotDuration}:00`}
-        allDaySlot={false}
         locales={zhTW}
         locale="zh-tw"
         datesRender={this.handleDatesRender}
@@ -365,6 +371,7 @@ class AppCalendar extends React.Component {
         eventResizeStart={this.eventEditStart}
         eventResizeStop={this.eventEditStop}
         timeGridEventMinHeight={15}
+        eventAllow={this.eventAllow}
       />
     );
   }

@@ -1,5 +1,6 @@
 import produce from 'immer';
 import moment from 'moment';
+import isAllDay from '../utils/isAllDay';
 import { parseDayOffCronToRepeat } from '../utils/parseDayOffCronToRepeat';
 import {
   CHANGE_EDIT_CAL_MODAL_VISIBLE,
@@ -8,6 +9,7 @@ import {
   CAHNGE_EDIT_CAL_EVT_START_TIME,
   CAHNGE_EDIT_CAL_EVT_END_DATE,
   CAHNGE_EDIT_CAL_EVT_END_TIME,
+  CHANGE_EDIT_CAL_EVT_ALL_DAY,
   CHANGE_EDIT_CAL_EVT_DOCTOR,
   CHANGE_EDIT_CAL_EVT_REPEAT,
   CHANGE_EDIT_CAL_EVT_REPEAT_END_DATE,
@@ -38,6 +40,7 @@ const initialState = {
     doctorId: 'none',
     repeat: 'none',
     note: undefined,
+    allDay: false,
   },
 };
 
@@ -69,6 +72,13 @@ const createCalendarEvt = (state = initialState, action) =>
       case CAHNGE_EDIT_CAL_EVT_END_TIME:
         draft.event.endTime = action.time;
         break;
+      case CHANGE_EDIT_CAL_EVT_ALL_DAY:
+        draft.event.allDay = action.allDay;
+        if (action.allDay) {
+          draft.event.startTime = moment().startOf('day');
+          draft.event.endTime = moment().endOf('day');
+        }
+        break;
       case CHANGE_EDIT_CAL_EVT_DOCTOR:
         draft.event.doctorId = action.doctorId;
         break;
@@ -82,11 +92,22 @@ const createCalendarEvt = (state = initialState, action) =>
         draft.event.note = action.e.target.value;
         break;
       case CHECK_EDIT_CAL_CONFIRM_BUTTON_DISABLE:
-        if (state.event.startDate && state.event.startTime && state.event.endDate && state.event.endTime) {
-          draft.disabled = false;
-          return;
+        if (!state.event.startDate) {
+          draft.disabled = true;
+          break;
+        } else {
+          if (!draft.event.allDay) {
+            if (!state.event.startTime || !state.event.endDate || !state.event.endTime) {
+              draft.disabled = true;
+              break;
+            }
+          }
         }
-        draft.disabled = true;
+        if (state.event.repeat !== 'none' && !state.event.repeatEndDate) {
+          draft.disabled = true;
+          break;
+        }
+        draft.disabled = false;
         break;
       case INSERT_CAL_EVT_TO_EDIT_CAL_EVT_MODEL:
         if (action.calEvt.dayOffCron && action.calEvt.dayOffCron.length > 0) {
@@ -102,6 +123,8 @@ const createCalendarEvt = (state = initialState, action) =>
 
         draft.event.startDate = moment(action.calEvt.start);
         draft.event.startTime = moment(action.calEvt.start);
+
+        draft.event.allDay = isAllDay(draft.event.startDate, draft.event.endDate);
 
         if (action.calEvt.doctor) {
           draft.event.doctorId = action.calEvt.doctor.id;
