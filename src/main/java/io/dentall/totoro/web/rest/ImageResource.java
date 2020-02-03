@@ -70,7 +70,7 @@ public class ImageResource {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").withZone(TimeConfig.ZONE_OFF_SET);
                 String remoteFileName = dateTimeFormatter.format(Instant.now());
                 logger.debug("Instant.now() format: {}", remoteFileName);
-                remoteFileName = file.getOriginalFilename() == null ? remoteFileName : remoteFileName.concat("_").concat(file.getOriginalFilename());
+                remoteFileName = file.getOriginalFilename() == null ? remoteFileName : remoteFileName.concat("_").concat(file.getOriginalFilename().replace(" ", "+"));
 
                 // upload origin
                 imageBusinessService.uploadFile(remotePath, remoteFileName, inputStream);
@@ -110,10 +110,15 @@ public class ImageResource {
     }
 
     @GetMapping("/images/test")
-    public ResponseEntity getTestImage() throws IOException {
+    public ResponseEntity<String> getTestImage() throws IOException {
         String remotePath = imageBusinessService.createImagePath(-1L);
         imageBusinessService.uploadFile(remotePath, "abc.png", testImageFile.getInputStream());
 
         return ResponseEntity.ok("test upload file to ftp");
+    }
+
+    @GetMapping("/images/thumbnail-url")
+    public ResponseEntity<String> getImageThumbnailUrl() {
+        return ResponseEntity.ok(imageBusinessService.getImageThumbnailUrl());
     }
 }

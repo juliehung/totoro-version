@@ -33,6 +33,8 @@ public abstract class ImageBusinessService {
 
     public abstract List<String> getImageSizes();
 
+    public abstract String getImageThumbnailUrl();
+
     public void uploadFile(String remotePath, String remoteFileName, InputStream inputStream) throws IOException {
         ftpClientService.connect();
         int replyCode = ftpClientService.upload(remotePath, remoteFileName, inputStream);

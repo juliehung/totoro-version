@@ -8,7 +8,6 @@ import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.service.PatientService;
-import io.dentall.totoro.service.TreatmentQueryService;
 import io.dentall.totoro.service.util.ProblemUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -30,19 +29,15 @@ public class PatientBusinessService {
 
     private final PatientService patientService;
 
-    private final TreatmentQueryService treatmentQueryService;
-
     private final TreatmentProcedureRepository treatmentProcedureRepository;
 
     public PatientBusinessService(
         PatientRepository patientRepository,
         PatientService patientService,
-        TreatmentQueryService treatmentQueryService,
         TreatmentProcedureRepository treatmentProcedureRepository
     ) {
         this.patientRepository = patientRepository;
         this.patientService = patientService;
-        this.treatmentQueryService = treatmentQueryService;
         this.treatmentProcedureRepository = treatmentProcedureRepository;
     }
 
