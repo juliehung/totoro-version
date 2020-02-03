@@ -82,7 +82,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @JsonProperty(access = WRITE_ONLY)
     private Appointment appointment;
 
-    @OneToMany(mappedBy = "treatmentProcedure", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "treatmentProcedure", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Tooth> teeth = new HashSet<>();
 

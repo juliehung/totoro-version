@@ -155,20 +155,22 @@ public class TreatmentProcedureService {
         log.debug("Request to delete TreatmentProcedure : {}", id);
 
         treatmentProcedureRepository.findById(id).ifPresent(treatmentProcedure -> {
-            if (treatmentProcedure.getNhiExtendTreatmentProcedure() != null) {
-                throw new ProblemUtil("A treatmentProcedure which has nhiExtendTreatmentProcedure cannot delete", Status.BAD_REQUEST);
+            if (treatmentProcedure.getTodos() != null) {
+                treatmentProcedure.getTodos().forEach(todo -> {
+                    todo.treatmentProcedures(null);
+                });
             }
 
-            if (treatmentProcedure.getAppointment() != null || treatmentProcedure.getDisposal() != null || (treatmentProcedure.getTodos() != null && treatmentProcedure.getTodos().size() > 0)) {
-                return;
+            if (treatmentProcedure.getAppointment() != null) {
+                treatmentProcedure.getAppointment().removeTreatmentProcedure(treatmentProcedure);
             }
 
-            StreamUtil.asStream(treatmentProcedure.getTeeth()).forEach(tooth -> tooth.setTreatmentProcedure(null));
-            relationshipService.deleteTeeth(treatmentProcedure.getTeeth());
+            if (treatmentProcedure.getDisposal() != null) {
+                treatmentProcedure.getDisposal().removeTreatmentProcedure(treatmentProcedure);
+            }
 
             if (treatmentProcedure.getTreatmentTask() != null) {
-                TreatmentTask treatmentTask = treatmentProcedure.getTreatmentTask();
-                treatmentTask.getTreatmentProcedures().remove(treatmentProcedure);
+                treatmentProcedure.getTreatmentTask().removeTreatmentProcedure(treatmentProcedure);
             }
 
             treatmentProcedureRepository.deleteById(id);
