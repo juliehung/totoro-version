@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service;
 
+import io.dentall.totoro.business.vm.SynoNasFileStation;
 import io.dentall.totoro.business.vm.SynoNasSessionV6;
 import io.dentall.totoro.config.ImageRepositoryConfiguration;
 import io.dentall.totoro.domain.Image;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.zalando.problem.Status;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,9 +28,11 @@ public class SynoNasService extends ImageBusinessService {
 
     private Logger logger = LoggerFactory.getLogger(SynoNasService.class);
 
-    private static final String SYNO_NAS_AUTH_URL = System.getenv("TTR_IMAGE_REPOSITORY_SYNO_NAS_AUTH_URL");
+    private static final String SYNO_NAS_AUTH_URL = System.getenv("SYNO_NAS_AUTH_URL");
 
-    private static final String SYNO_NAS_FETCH_URL = System.getenv("TTR_IMAGE_REPOSITORY_SYNO_NAS_FETCH_URL");
+    private static final String SYNO_NAS_FETCH_URL = System.getenv("SYNO_NAS_FETCH_URL");
+
+    private static final String SYNO_FILESTATION_INFO = System.getenv("SYNO_FILESTATION_INFO");
 
     private final ImageRepository imageRepository;
 
@@ -36,6 +40,8 @@ public class SynoNasService extends ImageBusinessService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private String sid;
 
     public SynoNasService(
         FtpClientService ftpClientService,
@@ -102,17 +108,34 @@ public class SynoNasService extends ImageBusinessService {
         return Arrays.stream(Size.values()).map(Enum::toString).collect(Collectors.toList());
     }
 
-    private String getSession() {
-        SynoNasSessionV6 s = restTemplate.getForObject(SYNO_NAS_AUTH_URL, SynoNasSessionV6.class);
+    @Override
+    public String getImageThumbnailUrl() {
+        return SYNO_NAS_FETCH_URL.concat("&_sid=").concat(getSession());
+    }
 
-        if (s == null ||
-            s.getData() == null ||
-            s.getData().getSid() == null
-        ) {
-            throw new BadRequestAlertException("Can get session id from syno nas", "IMAGE_BUSINESS", "nonassession");
+    private String getSession() {
+        if (sid == null || !isSessionAlive()) {
+            SynoNasSessionV6 s = restTemplate.getForObject(SYNO_NAS_AUTH_URL, SynoNasSessionV6.class);
+            if (s == null ||
+                s.getData() == null ||
+                s.getData().getSid() == null
+            ) {
+                throw new BadRequestAlertException("Can not get session id from syno nas", "IMAGE_BUSINESS", "nonassession");
+            }
+
+            return s.getData().getSid();
         }
 
-        return s.getData().getSid();
+        return sid;
+    }
+
+    private boolean isSessionAlive() {
+        SynoNasFileStation s = restTemplate.getForObject(SYNO_FILESTATION_INFO.concat("&_sid=").concat(sid), SynoNasFileStation.class);
+        if (s == null) {
+            throw new ProblemUtil("SynoNasFileStation object is null", Status.INTERNAL_SERVER_ERROR);
+        }
+
+        return s.isSuccess();
     }
 
     private enum Size {
