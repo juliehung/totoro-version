@@ -20,11 +20,16 @@ import {
   CHANGE_CREATE_APP_PATIENT_NATIONAL_ID,
   CHANGE_CREATE_APP_PATIENT_BIRTH,
   CREATE_PATIENT_SUCCESS,
+  CHANGE_TODO_APP_MODAL_VISIBLE,
+  CREATE_TODO_APP,
+  CREATE_TODO_APP_SUCCESS,
+  CHANGE_TODO_APP_DISPOSAL_ID,
 } from '../constant';
 
 const initState = {
   loading: false,
   visible: false,
+  todoModalvisible: false,
   disabled: true,
   patientSelected: false,
   searchPatients: [],
@@ -41,6 +46,7 @@ const initState = {
   },
   patient: { name: undefined, phone: undefined, nationalId: undefined, birth: undefined },
   default: { duration: undefined, doctorId: undefined },
+  disposalId: undefined,
 };
 
 export const initialState = { ...initState };
@@ -62,6 +68,22 @@ const createApp = (state = initialState, action) =>
           draft.patient = initState.patient;
           draft.loading = initState.loading;
           draft.searchPatients = initState.searchPatients;
+        }
+        draft.createAppSuccess = initState.createAppSuccess;
+        break;
+      case CHANGE_TODO_APP_MODAL_VISIBLE:
+        draft.todoModalVisible = action.visible;
+        if (!action.visible) {
+          draft.patientSelected = initState.patientSelected;
+          draft.selectedPatient = initState.selectedPatient;
+          draft.appointment = {
+            ...initState.appointment,
+            duration: state.default.duration,
+            doctorId: state.default.doctorId,
+          };
+          draft.patient = initState.patient;
+          draft.loading = initState.loading;
+          draft.disposalId = initState.disposalId;
         }
         draft.createAppSuccess = initState.createAppSuccess;
         break;
@@ -104,9 +126,13 @@ const createApp = (state = initialState, action) =>
         draft.appointment.specialNote = action.value;
         break;
       case CREATE_APPOINTMENT:
+      case CREATE_TODO_APP:
         draft.loading = true;
         break;
       case CREATE_APPOINTMENT_SUCCESS:
+        draft.createAppSuccess = true;
+        break;
+      case CREATE_TODO_APP_SUCCESS:
         draft.createAppSuccess = true;
         break;
       case CHECK_CONFIRM_BUTTON_DISABLE:
@@ -145,6 +171,9 @@ const createApp = (state = initialState, action) =>
         break;
       case CREATE_PATIENT_SUCCESS:
         draft.appointment.patientId = action.id;
+        break;
+      case CHANGE_TODO_APP_DISPOSAL_ID:
+        draft.disposalId = action.id;
         break;
       default:
         break;

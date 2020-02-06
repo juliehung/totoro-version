@@ -8,6 +8,7 @@ import {
   changeSelectedDoctors,
   changeCreateAppModalVisible,
   changeCreateCalModalVisible,
+  changeTodoAppModalVisible,
   changeCalSlotDuration,
   getTodos,
   changeCreateAppDoctor,
@@ -16,6 +17,7 @@ import {
   changePatientSelected,
   changeCreateAppNote,
   changeCreateAppDuration,
+  changeTodoAppDisposalId,
 } from './actions';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
@@ -185,27 +187,29 @@ function AppRight(props) {
     );
   };
 
-  const onTodoCardClick = disposol => {
-    const doctor = props.doctors.find(d => d.login === disposol.createdBy);
+  const onTodoCardClick = disposal => {
+    const doctor = props.doctors.find(d => d.login === disposal.createdBy);
     const app = {
       doctorId: doctor ? doctor.id : undefined,
-      expectedDate: disposol.todo.expectedDate,
-      patientId: disposol.todo.patient.id,
-      note: disposol.todo.note,
-      duration: disposol.todo.requiredTreatmentTime,
+      expectedDate: disposal.todo.expectedDate,
+      patientId: disposal.todo.patient.id,
+      note: disposal.todo.note,
+      duration: disposal.todo.requiredTreatmentTime,
+      disposalId: disposal.id,
     };
 
     insertAppToCreateAppModal(app);
   };
 
   const insertAppToCreateAppModal = app => {
-    props.changeCreateAppModalVisible(true);
+    props.changeTodoAppModalVisible(true);
     props.changeCreateAppDoctor(app.doctorId);
     props.changeCreateAppExpectedArrivalDate(moment(app.expectedDate), 'YYYY-MM-DD');
     props.getPatient(app.patientId);
     props.changePatientSelected(true);
     props.changeCreateAppNote({ target: { value: app.note } });
     props.changeCreateAppDuration(app.duration);
+    props.changeTodoAppDisposalId(app.disposalId);
   };
 
   return (
@@ -310,6 +314,7 @@ const mapDispatchToProps = {
   changeSelectedDoctors,
   changeCreateAppModalVisible,
   changeCreateCalModalVisible,
+  changeTodoAppModalVisible,
   changeCalSlotDuration,
   getTodos,
   changeCreateAppDoctor,
@@ -318,6 +323,7 @@ const mapDispatchToProps = {
   changePatientSelected,
   changeCreateAppNote,
   changeCreateAppDuration,
+  changeTodoAppDisposalId,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRight);

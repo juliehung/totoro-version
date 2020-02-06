@@ -1,11 +1,8 @@
-import { Modal, Button, TimePicker, DatePicker, Select, Input, Spin, message, Checkbox, Empty } from 'antd';
+import { Modal, Button, TimePicker, DatePicker, Select, Input, Spin, Checkbox } from 'antd';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
-  changeCreateAppModalVisible,
-  searchPatients,
-  getPatient,
-  changePatientSelected,
+  changeTodoAppModalVisible,
   changeCreateAppNote,
   changeCreateAppDuration,
   changeCreateAppDefaultDuration,
@@ -13,19 +10,13 @@ import {
   changeCreateAppDefaultDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,
-  createAppointment,
+  createTodoApp,
   changeCreateAppSpecialNote,
   checkConfirmButtonDisable,
-  changeCreateAppPatientName,
-  changeCreateAppPatientPhone,
-  changeCreateAppPatientNationalId,
-  changeCreateAppPatientBirth,
-  createPatient,
   getAllEvents,
 } from './actions';
 import styled from 'styled-components';
 import { requiredTreatmentTimeDefault } from './constant';
-import convertMrnTo5Digits from './utils/convertMrnTo5Digits';
 
 //#region
 const Container = styled.div`
@@ -68,37 +59,8 @@ const RequiredCol = styled.span`
   }
 `;
 
-const StyledSearchSelect = styled(Select)`
-  width: 100%;
-`;
-
-const NewPatientContainer = styled.div`
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px 10px;
-  background: #f5f6fa;
-  border-radius: 10px;
-`;
-
-const NewPatientRow = styled.div`
-  width: 100%;
-  margin: 5px 0;
-  display: flex;
-`;
-
-const NewPatientElement = styled.div`
-  width: 50%;
-  display: flex;
-  align-items: baseline;
-  padding: 0 3px;
-  & > span {
-    flex-shrink: 0;
-  }
-`;
-
 const PatientDetail = styled.div`
   width: 100%;
-  margin-top: 10px;
   padding: 10px 10px;
   background: #f5f6fa;
   display: flex;
@@ -116,9 +78,8 @@ const PatientDetailElement = styled.div`
 
 //#endregion
 
-function CreateAppModal({
+function TodoAppModal({
   visible,
-  patients,
   patientSelected,
   selectedPatient,
   doctors,
@@ -126,10 +87,7 @@ function CreateAppModal({
   patient,
   createAppSuccess,
   disabled,
-  changeCreateAppModalVisible,
-  searchPatients,
-  getPatient,
-  changePatientSelected,
+  changeTodoAppModalVisible,
   changeCreateAppNote,
   changeCreateAppDuration,
   changeCreateAppDefaultDuration,
@@ -137,14 +95,9 @@ function CreateAppModal({
   changeCreateAppDefaultDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,
-  createAppointment,
+  createTodoApp,
   changeCreateAppSpecialNote,
   checkConfirmButtonDisable,
-  changeCreateAppPatientName,
-  changeCreateAppPatientPhone,
-  changeCreateAppPatientNationalId,
-  changeCreateAppPatientBirth,
-  createPatient,
   getAllEvents,
   setting,
   account,
@@ -152,11 +105,9 @@ function CreateAppModal({
 }) {
   useEffect(() => {
     if (createAppSuccess) {
-      getAllEvents();
-      message.success('新增預約成功');
-      changeCreateAppModalVisible(false);
+      changeTodoAppModalVisible(false);
     }
-  }, [createAppSuccess, getAllEvents, changeCreateAppModalVisible]);
+  }, [createAppSuccess, getAllEvents, changeTodoAppModalVisible]);
 
   useEffect(() => {
     checkConfirmButtonDisable();
@@ -177,29 +128,12 @@ function CreateAppModal({
   }, [changeCreateAppDefaultDoctor, account]);
 
   const closeModal = () => {
-    changeCreateAppModalVisible(false);
-  };
-
-  let debounceSearch;
-  const onSearchTextChange = e => {
-    clearTimeout(debounceSearch);
-    if (e.length > 0) {
-      debounceSearch = setTimeout(() => {
-        searchPatients(e);
-      }, 300);
-    }
-  };
-
-  const onPatientSelect = id => {
-    getPatient(id);
-    changePatientSelected(true);
+    changeTodoAppModalVisible(false);
   };
 
   const handleConfirm = () => {
     if (appointment.patientId) {
-      createAppointment();
-    } else {
-      createPatient();
+      createTodoApp();
     }
   };
 
@@ -210,18 +144,6 @@ function CreateAppModal({
 
   const onSpecialNoteChange = value => {
     changeCreateAppSpecialNote(value);
-  };
-
-  const onChangePatientName = e => {
-    changeCreateAppPatientName(e.target.value);
-  };
-
-  const onChangePatientNationalId = e => {
-    changeCreateAppPatientNationalId(e.target.value);
-  };
-
-  const onChangePatientPhone = e => {
-    changeCreateAppPatientPhone(e.target.value);
   };
 
   return (
@@ -236,49 +158,6 @@ function CreateAppModal({
       destroyOnClose
     >
       <Container>
-        <StyledSearchSelect
-          showSearch
-          placeholder="請輸入病患病歷編號或姓名"
-          filterOption={false}
-          onSearch={onSearchTextChange}
-          onSelect={onPatientSelect}
-          notFoundContent={<Empty description="沒有資料" />}
-        >
-          {patients.map(({ id, name }) => (
-            <Select.Option key={id} value={id}>
-              {`${name}, ${convertMrnTo5Digits(id)}`}
-            </Select.Option>
-          ))}
-        </StyledSearchSelect>
-        {!patientSelected && (
-          <NewPatientContainer>
-            <NewPatientRow>
-              <NewPatientElement>
-                <span>病患姓名：</span>
-                <Input onChange={onChangePatientName} value={patient.name} placeholder="請輸入病患姓名" />
-              </NewPatientElement>
-              <NewPatientElement>
-                <span>生日：</span>
-                <DatePicker
-                  allowClear
-                  onChange={changeCreateAppPatientBirth}
-                  value={patient.birth}
-                  placeholder="請選擇生日"
-                />
-              </NewPatientElement>
-            </NewPatientRow>
-            <NewPatientRow>
-              <NewPatientElement>
-                <span>身分證號：</span>
-                <Input onChange={onChangePatientNationalId} value={patient.nationalId} placeholder="請輸入身分證號" />
-              </NewPatientElement>
-              <NewPatientElement>
-                <span>電話：</span>
-                <Input onChange={onChangePatientPhone} value={patient.phone} placeholder="請輸入電話" />
-              </NewPatientElement>
-            </NewPatientRow>
-          </NewPatientContainer>
-        )}
         {patientSelected && (
           <Spin spinning={selectedPatient === undefined}>
             <PatientDetail>
@@ -392,8 +271,7 @@ function CreateAppModal({
   );
 }
 const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
-  visible: appointmentPageReducer.createApp.visible,
-  patients: appointmentPageReducer.createApp.searchPatients,
+  visible: appointmentPageReducer.createApp.todoModalVisible,
   patientSelected: appointmentPageReducer.createApp.patientSelected,
   selectedPatient: appointmentPageReducer.createApp.selectedPatient,
   doctors: appointmentPageReducer.calendar.doctors,
@@ -407,10 +285,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
 });
 
 const mapDispatchToProps = {
-  changeCreateAppModalVisible,
-  searchPatients,
-  getPatient,
-  changePatientSelected,
+  changeTodoAppModalVisible,
   changeCreateAppNote,
   changeCreateAppDuration,
   changeCreateAppDefaultDuration,
@@ -418,15 +293,10 @@ const mapDispatchToProps = {
   changeCreateAppDefaultDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,
-  createAppointment,
+  createTodoApp,
   changeCreateAppSpecialNote,
   checkConfirmButtonDisable,
-  changeCreateAppPatientName,
-  changeCreateAppPatientPhone,
-  changeCreateAppPatientNationalId,
-  changeCreateAppPatientBirth,
-  createPatient,
   getAllEvents,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateAppModal);
+export default connect(mapStateToProps, mapDispatchToProps)(TodoAppModal);
