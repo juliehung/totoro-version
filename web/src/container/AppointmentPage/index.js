@@ -7,6 +7,7 @@ import PrintModal from './PrintModal';
 import ConfirmDropModal from './ConfirmDropModal';
 import CreatAppModal from './CreateAppModal';
 import EditAppModal from './EditAppModal';
+import TodoAppModal from './TodoAppModal';
 import { getUsersStart } from './actions';
 import CreateCalendarEventModal from './CreateCalendarEventModal';
 import EditCalendarEventModal from './EditCalendarEventModal';
@@ -28,7 +29,9 @@ function AppointmentPage({ getUsersStart }) {
 
   return (
     <Container>
-      <Helmet><title>預約</title></Helmet>
+      <Helmet>
+        <title>預約</title>
+      </Helmet>
       <CalendarContainer>
         <AppCalendar />
       </CalendarContainer>
@@ -39,6 +42,7 @@ function AppointmentPage({ getUsersStart }) {
       <EditAppModal />
       <CreateCalendarEventModal />
       <EditCalendarEventModal />
+      <TodoAppModal />
     </Container>
   );
 }

@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { GET_TODOS_START, GET_TODOS_SUCCESS } from '../constant';
+import { GET_TODOS_START, GET_TODOS_SUCCESS, CREATE_TODO_APP_SUCCESS } from '../constant';
 import { filterDisposalsToSortedTodos } from '../utils/filterDisposalsToSortedTodos';
 
 const initState = {
@@ -19,6 +19,11 @@ const todo = (state = initialState, action) =>
       case GET_TODOS_SUCCESS:
         draft.todos = filterDisposalsToSortedTodos(action.todos);
         draft.loading = initState.loading;
+        break;
+      case CREATE_TODO_APP_SUCCESS:
+        draft.todos = state.todos.filter(t => {
+          return t.id !== action.id;
+        });
         break;
       default:
         break;

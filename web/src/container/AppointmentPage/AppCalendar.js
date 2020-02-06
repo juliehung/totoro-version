@@ -32,7 +32,6 @@ import {
   deleteCalEvt,
   getSettings,
   popoverCancelApp,
-  getAllEvents,
 } from './actions';
 import zhTW from '@fullcalendar/core/locales/zh-tw';
 import styled from 'styled-components';
@@ -411,7 +410,6 @@ const mapDispatchToProps = {
   deleteCalEvt,
   getSettings,
   popoverCancelApp,
-  getAllEvents,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppCalendar);

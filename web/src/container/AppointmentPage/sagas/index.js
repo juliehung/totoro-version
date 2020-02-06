@@ -13,6 +13,7 @@ import { deleteCalendarEvent } from './deleteCalendarEvent';
 import { watchGetTodos } from './getTodos';
 import { watchGetSettings } from './getSettings';
 import { popoverCancelApp } from './popoverCancelApp';
+import { createTodoApp } from './createTodoApp';
 
 export default function* appointmentPage() {
   yield fork(watchGetAppointments);
@@ -33,4 +34,5 @@ export default function* appointmentPage() {
   yield fork(watchGetTodos);
   yield fork(watchGetSettings);
   yield fork(popoverCancelApp);
+  yield fork(createTodoApp);
 }

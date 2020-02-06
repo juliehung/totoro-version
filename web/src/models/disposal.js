@@ -19,4 +19,17 @@ export default class Disposal {
     const result = await request(requestURL, options);
     return result;
   };
+
+  static put = async disposal => {
+    let requestURL = `${requestUrl}`;
+    const options = {
+      headers: {
+        'content-type': 'application/json',
+      },
+      method: 'PUT',
+      body: JSON.stringify(disposal),
+    };
+    const result = await request(requestURL, options);
+    return result;
+  };
 }
