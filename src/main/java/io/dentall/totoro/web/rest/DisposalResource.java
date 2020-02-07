@@ -69,6 +69,9 @@ public class DisposalResource {
         if (disposal.getId() != null) {
             throw new BadRequestAlertException("A new disposal cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        if (disposal.getNhiExtendDisposals() != null && disposal.getNhiExtendDisposals().size() > 1) {
+            throw new BadRequestAlertException("Disposal and nhi extend disposal must be one-to-one relationship.", ENTITY_NAME, "relationconflict");
+        }
         Disposal result = disposalService.save(disposal);
         return ResponseEntity.created(new URI("/api/disposals/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -90,6 +93,9 @@ public class DisposalResource {
         log.debug("REST request to update Disposal : {}", disposal);
         if (disposal.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (disposal.getNhiExtendDisposals() != null && disposal.getNhiExtendDisposals().size() > 1) {
+            throw new BadRequestAlertException("Disposal and nhi extend disposal must be one-to-one relationship.", ENTITY_NAME, "relationconflict");
         }
         Disposal result = disposalService.update(disposal);
         return ResponseEntity.ok()

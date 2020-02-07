@@ -9,6 +9,7 @@ import io.dentall.totoro.repository.DisposalRepository;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import org.slf4j.Logger;
@@ -63,24 +64,20 @@ public class NhiExtendDisposalService {
     public NhiExtendDisposal save(NhiExtendDisposal nhiExtendDisposal) {
         log.debug("Request to save NhiExtendDisposal : {}", nhiExtendDisposal);
 
-        Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = nhiExtendDisposal.getNhiExtendTreatmentProcedures();
-        Set<NhiExtendTreatmentDrug> nhiExtendTreatmentDrugs = nhiExtendDisposal.getNhiExtendTreatmentDrugs();
         if (nhiExtendDisposal.getUploadStatus() == null) {
             nhiExtendDisposal.setUploadStatus(NhiExtendDisposalUploadStatus.NONE);
         }
 
         if (nhiExtendDisposal.getDisposal() != null && nhiExtendDisposal.getDisposal().getId() != null) {
-            Optional<Disposal> disposal = disposalRepository.findById(nhiExtendDisposal.getDisposal().getId());
-            if (disposal.isPresent()) {
-                nhiExtendDisposal.setDisposal(disposal.get());
-                nhiExtendDisposal.setPatientId(disposal.get().getRegistration().getAppointment().getPatient().getId());
+            Optional<Disposal> optionalDisposal = disposalRepository.findById(nhiExtendDisposal.getDisposal().getId());
+            if (optionalDisposal.isPresent() && optionalDisposal.get().getNhiExtendDisposals().size() != 0) {
+                throw new BadRequestAlertException("NhiExtendDisposal indicated disposal id has already had nhi extend disposal. Try using put for it",
+                    "nhiExtendDisposal",
+                    "relationship.conflict");
+            } else {
+                nhiExtendDisposalRepository.save(nhiExtendDisposal);
             }
         }
-
-        nhiExtendDisposal = nhiExtendDisposalRepository.save(nhiExtendDisposal.nhiExtendTreatmentProcedures(null).nhiExtendTreatmentDrugs(null));
-
-        relationshipService.addRelationshipWithNhiExtendTreatmentProcedures(nhiExtendDisposal, nhiExtendTreatmentProcedures);
-        relationshipService.addRelationshipWithNhiExtendTreatmentDrugs(nhiExtendDisposal, nhiExtendTreatmentDrugs);
 
         return nhiExtendDisposal;
     }
@@ -369,4 +366,5 @@ public class NhiExtendDisposalService {
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
         return nhiExtendDisposalRepository.countByDateBetween(ym.atDay(1), ym.atEndOfMonth());
     }
+
 }
