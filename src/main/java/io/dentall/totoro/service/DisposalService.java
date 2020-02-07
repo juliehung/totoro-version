@@ -5,6 +5,7 @@ import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import io.dentall.totoro.repository.DisposalRepository;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,18 +40,21 @@ public class DisposalService {
 
     private final RegistrationService registrationService;
 
+    private final NhiExtendDisposalService nhiExtendDisposalService;
+
     public DisposalService(
         DisposalRepository disposalRepository,
         PrescriptionService prescriptionService,
         TodoService todoService,
         RelationshipService relationshipService,
-        RegistrationService registrationService
-    ) {
+        RegistrationService registrationService,
+        NhiExtendDisposalService nhiExtendDisposalService) {
         this.disposalRepository = disposalRepository;
         this.prescriptionService = prescriptionService;
         this.todoService = todoService;
         this.relationshipService = relationshipService;
         this.registrationService = registrationService;
+        this.nhiExtendDisposalService = nhiExtendDisposalService;
     }
 
     /**
@@ -66,18 +70,16 @@ public class DisposalService {
         Todo todo = getTodo(disposal);
         Set<TreatmentProcedure> treatmentProcedures = disposal.getTreatmentProcedures();
         Set<Tooth> teeth = disposal.getTeeth();
-        Set<NhiExtendDisposal> nhiExtendDisposals = disposal.getNhiExtendDisposals();
 
         disposal = disposalRepository.save(disposal.treatmentProcedures(null).teeth(null).nhiExtendDisposals(null));
 
         relationshipService.addRelationshipWithTreatmentProcedures(disposal.treatmentProcedures(treatmentProcedures));
         relationshipService.addRelationshipWithTeeth(disposal.teeth(teeth));
-        relationshipService.addRelationshipWithNhiExtendDisposals(disposal.nhiExtendDisposals(nhiExtendDisposals));
         disposal.setPrescription(prescription);
         disposal.setTodo(todo);
         if (disposal.getRegistration() != null && disposal.getRegistration().getId() != null) {
             disposal.setRegistration(registrationService.update(disposal.getRegistration()));
-            
+
             Patient patient = disposal.getRegistration().getAppointment().getPatient();
             ExtendUser doctor = disposal.getRegistration().getAppointment().getDoctor();
 
@@ -109,7 +111,7 @@ public class DisposalService {
      *  get all the disposals where Prescription is null.
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public List<Disposal> findAllWherePrescriptionIsNull() {
         log.debug("Request to get all disposals where Prescription is null");
         return StreamSupport
@@ -123,7 +125,7 @@ public class DisposalService {
      *  get all the disposals where Todo is null.
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public List<Disposal> findAllWhereTodoIsNull() {
         log.debug("Request to get all disposals where Todo is null");
         return StreamSupport
@@ -258,7 +260,13 @@ public class DisposalService {
 
                 if (updateDisposal.getNhiExtendDisposals() != null) {
                     log.debug("Update nhiExtendDisposals({}) of Disposal(id: {})", updateDisposal.getNhiExtendDisposals(), updateDisposal.getId());
-                    relationshipService.addRelationshipWithNhiExtendDisposals(disposal.nhiExtendDisposals(updateDisposal.getNhiExtendDisposals()));
+                    if (disposal.getNhiExtendDisposals() == null || disposal.getNhiExtendDisposals().size() == 0) {
+                        nhiExtendDisposalService.save(updateDisposal.getNhiExtendDisposals().iterator().next());
+                    } else {
+                        NhiExtendDisposal updateNhiDisposal = updateDisposal.getNhiExtendDisposals().iterator().next();
+                        updateNhiDisposal.setId(disposal.getNhiExtendDisposals().iterator().next().getId());
+                        nhiExtendDisposalService.update(updateNhiDisposal);
+                    }
                 }
 
                 if (updateDisposal.getRegistration() != null && updateDisposal.getRegistration().getId() != null) {

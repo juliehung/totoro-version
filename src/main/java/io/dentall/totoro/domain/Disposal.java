@@ -66,6 +66,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     private Set<Tooth> teeth = null;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
+    // In fact we use it like one-to-one, add logic for make it fit one-to-one
     @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
     private Set<NhiExtendDisposal> nhiExtendDisposals = null;
 
