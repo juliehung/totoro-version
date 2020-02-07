@@ -1,12 +1,12 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.TotoroApp;
+import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendPatientRepository;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
-import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.web.rest.PatientResourceIntTest;
 import io.dentall.totoro.web.rest.TreatmentProcedureResourceIntTest;
 import org.junit.Before;
@@ -21,10 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,6 +43,11 @@ public class NhiServiceIntTest {
 
     private final DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
     private final DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
+
+    private final Function<Integer, LocalDate> getGreaterThanEqualDate = days ->
+        OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toLocalDate().minusDays(days);
+    private final Supplier<LocalDate> localMonthFirstDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.firstDayOfMonth()).toLocalDate();
+    private final Supplier<LocalDate> localYearFirstDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.firstDayOfYear()).toLocalDate();
 
     @Autowired
     private EntityManager em;
@@ -141,7 +150,7 @@ public class NhiServiceIntTest {
 
         NhiExtendTreatmentProcedure xRayTrue = new NhiExtendTreatmentProcedure().a73("XRayTrue").check("");
         nhiService.checkXRay.accept(xRayTrue);
-        assertThat(xRayTrue.getCheck()).isEqualTo(xRayTrue.getA73() + " 需要檢附 X 片\n");
+        assertThat(xRayTrue.getCheck()).isEqualTo("需要檢附 X 片\n");
     }
 
     @Test
@@ -152,7 +161,7 @@ public class NhiServiceIntTest {
 
         NhiExtendTreatmentProcedure medicalRecordTrue = new NhiExtendTreatmentProcedure().a73("MedicalRecordTrue").check("");
         nhiService.checkMedicalRecord.accept(medicalRecordTrue);
-        assertThat(medicalRecordTrue.getCheck()).isEqualTo(medicalRecordTrue.getA73() + " 病歷須記載\n");
+        assertThat(medicalRecordTrue.getCheck()).isEqualTo("病歷須記載\n");
     }
 
     @Test
@@ -162,14 +171,14 @@ public class NhiServiceIntTest {
         NhiExtendTreatmentProcedure nhi91012C = new NhiExtendTreatmentProcedure().a73("91012C");
 
         nhiService.checkExclude.accept(exclude91012C, Stream.of(exclude91012C, nhi89001C, nhi91012C).collect(Collectors.toSet()));
-        assertThat(exclude91012C.getCheck()).isEqualTo(exclude91012C.getA73() + " 不得與 " + nhi91012C.getA73() + " 同時申報\n");
+        assertThat(exclude91012C.getCheck()).isEqualTo("不得與 " + nhi91012C.getA73() + " 同時申報\n");
     }
 
     @Test
     @Transactional
     public void testCheckIntervalLessOrEqualThan() {
-        LocalDate dateBefore100 = DateTimeUtil.getGreaterThanEqualDate.apply(100);
-        LocalDate dateBefore20 = DateTimeUtil.getGreaterThanEqualDate.apply(20);
+        LocalDate dateBefore100 = getGreaterThanEqualDate.apply(100);
+        LocalDate dateBefore20 = getGreaterThanEqualDate.apply(20);
 
         //tx 1
         TreatmentProcedure treatmentProcedureDateBefore100 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
@@ -180,10 +189,12 @@ public class NhiServiceIntTest {
             .nhiExtendTreatmentProcedures(Collections.singleton(new NhiExtendTreatmentProcedure().a73("LessOrEqualThan180").treatmentProcedure(treatmentProcedureDateBefore100)));
         nhiExtendDisposalService.save(nhiExtDisposalDateBefore100);
 
+        LocalDate today = LocalDate.now(TimeConfig.ZONE_OFF_SET);
         NhiExtendTreatmentProcedure lessOrEqualThan180 = new NhiExtendTreatmentProcedure()
             .nhiExtendDisposal(new NhiExtendDisposal()
                 .disposal(new Disposal())
                 .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
+                .a17(today.getYear() - 1911 + monthFormatter.format(today) + dayFormatter.format(today))
                 .patientId(1L)
             )
             .a73("LessOrEqualThan180")
@@ -205,13 +216,13 @@ public class NhiServiceIntTest {
         nhiExtendDisposalService.save(nhiExtDisposal2DateBefore20);
 
         nhiService.checkInterval.accept(lessOrEqualThan180);
-        assertThat(lessOrEqualThan180.getCheck()).isEqualTo(lessOrEqualThan180.getA73() + " 180 天內不得重複申報 1 次\n");
+        assertThat(lessOrEqualThan180.getCheck()).isEqualTo("半年內不得重複申報 1 次\n");
     }
 
     @Test
     @Transactional
     public void testCheckIntervalMonth() {
-        LocalDate monthFirstDay = DateTimeUtil.localMonthFirstDay.get();
+        LocalDate monthFirstDay = localMonthFirstDay.get();
         TreatmentProcedure treatmentProcedureMonthFirstDay = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalMonthFirstDay = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
@@ -228,13 +239,13 @@ public class NhiServiceIntTest {
             .a73("Month1")
             .check("");
         nhiService.checkInterval.accept(month);
-        assertThat(month.getCheck()).isEqualTo(month.getA73() + " 1 個月內不得重複申報 1 次\n");
+        assertThat(month.getCheck()).isEqualTo("1 個月內不得重複申報 1 次\n");
     }
 
     @Test
     @Transactional
     public void testCheckIntervalYear() {
-        LocalDate yearFirstDay = DateTimeUtil.localYearFirstDay.get();
+        LocalDate yearFirstDay = localYearFirstDay.get();
         TreatmentProcedure treatmentProcedureYearFirstDay = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalYearFirstDay = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
@@ -243,7 +254,7 @@ public class NhiServiceIntTest {
             .nhiExtendTreatmentProcedures(Collections.singleton(new NhiExtendTreatmentProcedure().a73("Year2").treatmentProcedure(treatmentProcedureYearFirstDay)));
         nhiExtendDisposalService.save(nhiExtDisposalYearFirstDay);
 
-        LocalDate yearSecondDay = DateTimeUtil.localYearFirstDay.get().plusDays(1);
+        LocalDate yearSecondDay = localYearFirstDay.get().plusDays(1);
         TreatmentProcedure treatmentProcedureYearSecondDay = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalYearSecondDay = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
@@ -260,13 +271,13 @@ public class NhiServiceIntTest {
             .a73("Year2")
             .check("");
         nhiService.checkInterval.accept(year);
-        assertThat(year.getCheck()).isEqualTo(year.getA73() + " 年度不得重複申報 2 次\n");
+        assertThat(year.getCheck()).isEqualTo("年度不得重複申報 2 次\n");
     }
 
     @Test
     @Transactional
     public void testCheckIntervalMonthWithQuadrants() {
-        LocalDate monthFirstDay = DateTimeUtil.localMonthFirstDay.get();
+        LocalDate monthFirstDay = localMonthFirstDay.get();
         TreatmentProcedure treatmentProcedureMonthFirstDay = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalMonthFirstDay = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
@@ -290,13 +301,13 @@ public class NhiServiceIntTest {
             .a74("11")
             .check("");
         nhiService.checkInterval.accept(month);
-        assertThat(month.getCheck()).isEqualTo(month.getA73() + " 同象限不得重複申報 1 次\n");
+        assertThat(month.getCheck()).isEqualTo("同象限不得重複申報 1 次\n");
     }
 
     @Test
     @Transactional
     public void testCheckIntervalLessOrEqualThanWithPermanentTeeth() {
-        LocalDate dateBefore20 = DateTimeUtil.getGreaterThanEqualDate.apply(20);
+        LocalDate dateBefore20 = getGreaterThanEqualDate.apply(20);
         TreatmentProcedure treatmentProcedureDateBefore20 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalDateBefore20 = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
@@ -311,22 +322,24 @@ public class NhiServiceIntTest {
             );
         nhiExtendDisposalService.save(nhiExtDisposalDateBefore20);
 
+        LocalDate today = LocalDate.now(TimeConfig.ZONE_OFF_SET);
         NhiExtendTreatmentProcedure lessOrEqualThan30x2T1 = new NhiExtendTreatmentProcedure()
             .nhiExtendDisposal(new NhiExtendDisposal()
                 .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
+                .a17(today.getYear() - 1911 + monthFormatter.format(today) + dayFormatter.format(today))
                 .patientId(1L)
             )
             .a73("LessOrEqualThan30x2PT1")
             .a74("11")
             .check("");
         nhiService.checkInterval.accept(lessOrEqualThan30x2T1);
-        assertThat(lessOrEqualThan30x2T1.getCheck()).isEqualTo(lessOrEqualThan30x2T1.getA73() + " 同顆牙不得重複申報 1 次\n");
+        assertThat(lessOrEqualThan30x2T1.getCheck()).isEqualTo("同顆牙不得重複申報 1 次\n");
     }
 
     @Test
     @Transactional
     public void testCheckIntervalSameHospital() {
-        LocalDate dateBefore365 = DateTimeUtil.getGreaterThanEqualDate.apply(365);
+        LocalDate dateBefore365 = getGreaterThanEqualDate.apply(365);
         TreatmentProcedure treatmentProcedureDateBefore365 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalDateBefore365 = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
@@ -336,22 +349,24 @@ public class NhiServiceIntTest {
             .nhiExtendTreatmentProcedures(Collections.singleton(new NhiExtendTreatmentProcedure().a73("SameHospital").treatmentProcedure(treatmentProcedureDateBefore365)));
         nhiExtendDisposalService.save(nhiExtDisposalDateBefore365);
 
+        LocalDate today = LocalDate.now(TimeConfig.ZONE_OFF_SET);
         NhiExtendTreatmentProcedure sameHospital = new NhiExtendTreatmentProcedure()
             .nhiExtendDisposal(new NhiExtendDisposal()
                 .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
+                .a17(today.getYear() - 1911 + monthFormatter.format(today) + dayFormatter.format(today))
                 .a14("XYZ")
                 .patientId(1L)
             )
             .a73("SameHospital")
             .check("");
         nhiService.checkInterval.accept(sameHospital);
-        assertThat(sameHospital.getCheck()).isEqualTo(sameHospital.getA73() + " 同一院所不得重複申報 1 次\n");
+        assertThat(sameHospital.getCheck()).isEqualTo("同一院所不得重複申報 1 次\n");
     }
 
     @Test
     @Transactional
     public void testCheckIntervalLessOrEqualThanWithDeciduousTeeth() {
-        LocalDate dateBefore20 = DateTimeUtil.getGreaterThanEqualDate.apply(20);
+        LocalDate dateBefore20 = getGreaterThanEqualDate.apply(20);
         TreatmentProcedure treatmentProcedureDateBefore20 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalDateBefore20 = new NhiExtendDisposal()
             .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
@@ -366,22 +381,24 @@ public class NhiServiceIntTest {
             );
         nhiExtendDisposalService.save(nhiExtDisposalDateBefore20);
 
+        LocalDate today = LocalDate.now(TimeConfig.ZONE_OFF_SET);
         NhiExtendTreatmentProcedure lessOrEqualThan365DT1 = new NhiExtendTreatmentProcedure()
             .nhiExtendDisposal(new NhiExtendDisposal()
                 .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
+                .a17(today.getYear() - 1911 + monthFormatter.format(today) + dayFormatter.format(today))
                 .patientId(1L)
             )
             .a73("LessOrEqualThan365DT1")
             .a74("55")
             .check("");
         nhiService.checkInterval.accept(lessOrEqualThan365DT1);
-        assertThat(lessOrEqualThan365DT1.getCheck()).isEqualTo(lessOrEqualThan365DT1.getA73() + " 同顆牙不得重複申報 1 次\n");
+        assertThat(lessOrEqualThan365DT1.getCheck()).isEqualTo("同顆牙不得重複申報 1 次\n");
     }
 
     @Test
     @Transactional
     public void testCheckIntervalLessOrEqualThanWithIdentity() {
-        LocalDate dateBefore20 = DateTimeUtil.getGreaterThanEqualDate.apply(20);
+        LocalDate dateBefore20 = getGreaterThanEqualDate.apply(20);
         // Tx 1
         TreatmentProcedure treatmentProcedureDateBefore20 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalDateBefore20 = new NhiExtendDisposal()
@@ -419,13 +436,13 @@ public class NhiServiceIntTest {
             .a73("SevereIdentity")
             .check("");
         nhiService.checkInterval.accept(severeIdentity);
-        assertThat(severeIdentity.getCheck()).isEqualTo(severeIdentity.getA73() + " 60 天內不得重複申報 1 次\n");
+        assertThat(severeIdentity.getCheck()).isEqualTo("60 天內不得重複申報 1 次\n");
     }
 
     @Test
     @Transactional
     public void testCheckIntervalLessOrEqualThanWithConjunction() {
-        LocalDate dateBefore20 = DateTimeUtil.getGreaterThanEqualDate.apply(20);
+        LocalDate dateBefore20 = getGreaterThanEqualDate.apply(20);
         // tx1
         TreatmentProcedure treatmentProcedureDateBefore20 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalDateBefore20 = new NhiExtendDisposal()
@@ -454,22 +471,24 @@ public class NhiServiceIntTest {
             );
         nhiExtendDisposalService.save(nhiExtDisposal2DateBefore20);
 
+        LocalDate today = LocalDate.now(TimeConfig.ZONE_OFF_SET);
         NhiExtendTreatmentProcedure lessOrEqualThanConjunction = new NhiExtendTreatmentProcedure()
             .nhiExtendDisposal(new NhiExtendDisposal()
                 .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
+                .a17(today.getYear() - 1911 + monthFormatter.format(today) + dayFormatter.format(today))
                 .patientId(1L)
             )
             .a73("LessOrEqualThanConjunction")
             .check("");
         nhiService.checkInterval.accept(lessOrEqualThanConjunction);
-        assertThat(lessOrEqualThanConjunction.getCheck()).isEqualTo(lessOrEqualThanConjunction.getA73() + " 30 天內不得重複申報 1 次\n");
+        assertThat(lessOrEqualThanConjunction.getCheck()).isEqualTo("三十天內不得重複申報 1 次\n");
     }
 
     @Test
     @Transactional
     public void testCheckIntervalLessOrEqualThanWithDisjunction() {
-        LocalDate dateBefore20 = DateTimeUtil.getGreaterThanEqualDate.apply(20);
-        LocalDate dateBefore10 = DateTimeUtil.getGreaterThanEqualDate.apply(10);
+        LocalDate dateBefore20 = getGreaterThanEqualDate.apply(20);
+        LocalDate dateBefore10 = getGreaterThanEqualDate.apply(10);
         // tx1
         TreatmentProcedure treatmentProcedureDateBefore20 = treatmentProcedureRepository.save(TreatmentProcedureResourceIntTest.createEntity(em));
         NhiExtendDisposal nhiExtDisposalDateBefore20 = new NhiExtendDisposal()
@@ -498,15 +517,17 @@ public class NhiServiceIntTest {
             );
         nhiExtendDisposalService.save(nhiExtDisposalDateBefore10);
 
+        LocalDate today = LocalDate.now(TimeConfig.ZONE_OFF_SET);
         NhiExtendTreatmentProcedure lessOrEqualThanDisjunction = new NhiExtendTreatmentProcedure()
             .nhiExtendDisposal(new NhiExtendDisposal()
                 .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
+                .a17(today.getYear() - 1911 + monthFormatter.format(today) + dayFormatter.format(today))
                 .patientId(1L)
             )
             .a73("LessOrEqualThanDisjunction")
             .check("");
         nhiService.checkInterval.accept(lessOrEqualThanDisjunction);
-        assertThat(lessOrEqualThanDisjunction.getCheck()).isEqualTo(lessOrEqualThanDisjunction.getA73() + " 30 天內不得重複申報 1 次\n");
+        assertThat(lessOrEqualThanDisjunction.getCheck()).isEqualTo("三十天內不得重複申報 1 次\n");
     }
 
     @Test
@@ -527,6 +548,6 @@ public class NhiServiceIntTest {
             .a74("11")
             .check("");
         nhiService.checkInterval.accept(lessOrEqualThanDisjunction);
-        assertThat(lessOrEqualThanDisjunction.getCheck()).isEqualTo(lessOrEqualThanDisjunction.getA73() + " 同顆牙不得重複申報 1 次\n");
+        assertThat(lessOrEqualThanDisjunction.getCheck()).isEqualTo("同顆牙不得重複申報 1 次\n");
     }
 }

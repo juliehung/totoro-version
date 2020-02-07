@@ -37,13 +37,6 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
 
     @Query(
         "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
-            "nhiExtendDisposal.patientId = :patientId and " + dateGte +
-            "order by nhiExtendDisposal.date, nhiExtendDisposal.replenishmentDate desc"
-    )
-    List<NhiExtendDisposal> findByDateGreaterThanEqualAndPatientIdOrderByDateDesc(@Param("gte") LocalDate gte, @Param("patientId") Long patientId);
-
-    @Query(
-        "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
             "nhiExtendDisposal.patientId = :patientId and " + dateBetween
     )
     List<NhiExtendDisposal> findByDateBetweenAndPatientId(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("patientId") Long patientId);

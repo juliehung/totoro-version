@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PatientBusinessServiceMockTest {
 
     @Mock
-    PatientRepository mockPatientRepository;
+    private PatientRepository mockPatientRepository;
 
     @InjectMocks
     private PatientBusinessService patientBusinessService;

@@ -10,7 +10,6 @@ import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendPatientRepository;
-import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,8 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -31,6 +32,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 @Transactional
@@ -42,6 +45,8 @@ public class NhiService {
     }
 
     private final Logger log = LoggerFactory.getLogger(NhiService.class);
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
 
@@ -322,7 +327,7 @@ public class NhiService {
                 .collect(Collectors.toSet());
             Arrays.stream(excludes).forEach(exclude -> {
                 if (otherProcedureCodes.contains(exclude)) {
-                    check.append(code).append(" 不得與 ").append(exclude).append(" 同時申報\n");
+                    check.append("不得與 ").append(exclude).append(" 同時申報\n");
                 }
             });
 
@@ -382,8 +387,10 @@ public class NhiService {
         return nhiExtendDisposals
             .stream()
             .flatMap(nhiExtendDisposal -> StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures()))
+            // exclude self
             .filter(nhiExtTxP -> nhiExtTxP != nhiExtendTreatmentProcedure)
             .filter(nhiExtTxP -> nhiExtTxP.getA73().equals(nhiExtendTreatmentProcedure.getA73()))
+            // order by date desc
             .sorted(Comparator.<NhiExtendTreatmentProcedure, LocalDate>comparing(nhiExtTxP -> nhiExtTxP.getNhiExtendDisposal().getDate()).reversed())
             .collect(Collectors.toList());
     }
@@ -416,26 +423,38 @@ public class NhiService {
             }
         }
 
-        LocalDate date = DateTimeUtil.getGreaterThanEqualDate.apply(days);
+        LocalDate date = nhiExtendTreatmentProcedure.getNhiExtendDisposal().getDate();
         List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
-            nhiExtendDisposalRepository.findByDateGreaterThanEqualAndPatientIdOrderByDateDesc(date, nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId()),
+            nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
+                date.minusDays(days),
+                date,
+                nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId()
+            ),
             nhiExtendTreatmentProcedure
         );
 
         if (conditions == null) {
             StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
-            // 由於當前資料會包含 當天 資料，所以扣掉 1 (當天治療)
-            if (nhiExtTxPs.size() - 1 >= times) {
-                StreamUtil.asStream(nhiExtTxPs).findFirst().ifPresent(first ->
-                    // {健保代碼} {天數} 內不得重複申報 {次數} 次
+            if (nhiExtTxPs.size() >= times) {
+                LocalDate dateBefore = nhiExtTxPs.get(0).getNhiExtendDisposal().getDate();
+                String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
+                if (times == 1) {
+                    // {天數}內不得重複申報。上次：{日期}({天數} 天前)
                     check
-                        .append(nhiExtendTreatmentProcedure.getA73())
-                        .append(" ")
-                        .append(days)
-                        .append(" 天內不得重複申報 ")
+                        .append(formatDays.apply(days))
+                        .append("內不得重複申報。上次：")
+                        .append(nhiExtTxPBefore)
+                        .append("\n");
+                } else {
+                    // {天數}內不得申報超過 {次數} 次。上次：{日期}({天數} 天前)
+                    check
+                        .append(formatDays.apply(days))
+                        .append("內不得申報超過 ")
                         .append(times)
-                        .append(" 次\n")
-                );
+                        .append(" 次。上次：")
+                        .append(nhiExtTxPBefore)
+                        .append("\n");
+                }
             }
 
             nhiExtendTreatmentProcedure.setCheck(check.toString());
@@ -457,16 +476,36 @@ public class NhiService {
             times = Integer.parseInt(info[1]);
         }
 
+        LocalDate date = nhiExtendTreatmentProcedure.getNhiExtendDisposal().getDate();
         List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
-            nhiExtendDisposalRepository.findByDateBetweenAndPatientId(DateTimeUtil.localMonthFirstDay.get(), DateTimeUtil.localMonthLastDay.get(), nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId()),
+            nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
+                date.with(TemporalAdjusters.firstDayOfMonth()),
+                date,
+                nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId()
+            ),
             nhiExtendTreatmentProcedure
         );
 
         if (conditions == null) {
             StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
             if (nhiExtTxPs.size() >= times) {
-                // {健保代碼} 1 個月內不得重複申報 {次數} 次
-                check.append(nhiExtendTreatmentProcedure.getA73()).append(" 1 個月內不得重複申報 ").append(times).append(" 次\n");
+                LocalDate dateBefore = nhiExtTxPs.get(0).getNhiExtendDisposal().getDate();
+                String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
+                if (times == 1) {
+                    // 同一月份內不得重複申報。上次：{日期}({天數} 天前)
+                    check
+                        .append("同一月份內不得重複申報。上次：")
+                        .append(nhiExtTxPBefore)
+                        .append("\n");
+                } else {
+                    // 同一月份內不得申報超過 {次數} 次。上次：{日期}({天數} 天前)
+                    check
+                        .append("同一月份內不得申報超過 ")
+                        .append(times)
+                        .append(" 次。上次：")
+                        .append(nhiExtTxPBefore)
+                        .append("\n");
+                }
             }
 
             nhiExtendTreatmentProcedure.setCheck(check.toString());
@@ -479,15 +518,35 @@ public class NhiService {
         String[] info = interval.split("YYYYx");
         int times = Integer.parseInt(info[1]);
 
+        LocalDate date = nhiExtendTreatmentProcedure.getNhiExtendDisposal().getDate();
         List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
-            nhiExtendDisposalRepository.findByDateBetweenAndPatientId(DateTimeUtil.localYearFirstDay.get(), DateTimeUtil.localYearLastDay.get(), nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId()),
+            nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
+                date.with(TemporalAdjusters.firstDayOfYear()),
+                date,
+                nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId()
+            ),
             nhiExtendTreatmentProcedure
         );
 
         StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
         if (nhiExtTxPs.size() >= times) {
-            // {健保代碼} 年度不得重複申報 {次數} 次
-            check.append(nhiExtendTreatmentProcedure.getA73()).append(" 年度不得重複申報 ").append(times).append(" 次\n");
+            LocalDate dateBefore = nhiExtTxPs.get(0).getNhiExtendDisposal().getDate();
+            String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
+            if (times == 1) {
+                // 同一年度內不得重複申報。上次：{日期}({天數} 天前)
+                check
+                    .append("同一年度內不得重複申報。上次：")
+                    .append(nhiExtTxPBefore)
+                    .append("\n");
+            } else {
+                // 同一年度內不得申報超過 {次數} 次。上次：{日期}({天數} 天前)
+                check
+                    .append("同一年度內不得申報超過 ")
+                    .append(times)
+                    .append(" 次。上次：")
+                    .append(nhiExtTxPBefore)
+                    .append("\n");
+            }
         }
 
         nhiExtendTreatmentProcedure.setCheck(check.toString());
@@ -558,8 +617,8 @@ public class NhiService {
         StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
         boolean any = quadrantsCount.values().stream().anyMatch(count -> count > limit);
         if (any) {
-            // {健保代碼} 同象限不得重複申報 {次數} 次
-            check.append(nhiExtendTreatmentProcedure.getA73()).append(" 同象限不得重複申報 ").append(limit).append(" 次\n");
+            // 同象限不得重複申報 {次數} 次
+            check.append("同象限不得重複申報 ").append(limit).append(" 次\n");
         }
 
         nhiExtendTreatmentProcedure.setCheck(check.toString());
@@ -584,8 +643,8 @@ public class NhiService {
         StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
         boolean any = teethCount.values().stream().anyMatch(count -> count > limit);
         if (any) {
-            // {健保代碼} 同顆牙不得重複申報 {次數} 次
-            check.append(nhiExtendTreatmentProcedure.getA73()).append(" 同顆牙不得重複申報 ").append(limit).append(" 次\n");
+            // 同顆牙不得重複申報 {次數} 次
+            check.append("同顆牙不得重複申報 ").append(limit).append(" 次\n");
         }
 
         nhiExtendTreatmentProcedure.setCheck(check.toString());
@@ -614,8 +673,8 @@ public class NhiService {
                 Arrays.stream(teeth).forEach(position -> {
                     int count = teethCount.get(position);
                     if (count >= limit) {
-                        // {健保代碼} 同顆牙不得重複申報 {次數} 次
-                        check.append(code).append(" 同顆牙不得重複申報 ").append(limit).append(" 次\n");
+                        // 同顆牙不得重複申報 {次數} 次
+                        check.append("同顆牙不得重複申報 ").append(limit).append(" 次\n");
                     }
                 });
                 nhiExtendTreatmentProcedure.setCheck(check.toString());
@@ -631,8 +690,8 @@ public class NhiService {
 
         StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
         if (count >= limit) {
-            // {健保代碼} 同一院所不得重複申報 {次數} 次
-            check.append(nhiExtendTreatmentProcedure.getA73()).append(" 同一院所不得重複申報 ").append(limit).append(" 次\n");
+            // 同一院所不得重複申報 {次數} 次
+            check.append("同一院所不得重複申報 ").append(limit).append(" 次\n");
         }
 
         nhiExtendTreatmentProcedure.setCheck(check.toString());
@@ -652,6 +711,47 @@ public class NhiService {
 
         return rules;
     }
+
+    private Function<Integer, String> formatDays = days -> {
+        String format;
+        switch(days) {
+            case 1095:
+                format = "三年";
+                break;
+            case 730:
+                format = "兩年";
+                break;
+            case 365:
+                format = "一年";
+                break;
+            case 545:
+                format = "一年半";
+                break;
+            case 180:
+                format = "半年";
+                break;
+            case 60:
+                format = "六十天";
+                break;
+            case 90:
+                format = "九十天";
+                break;
+            case 30:
+                format = "三十天";
+                break;
+            case 7:
+                format = "七天";
+                break;
+            case 360:
+                format = "三百六十天";
+                break;
+            default:
+                format = days + " 天";
+                break;
+        }
+
+        return format;
+    };
 
     public static class Rule {
 
