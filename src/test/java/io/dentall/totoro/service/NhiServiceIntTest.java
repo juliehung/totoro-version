@@ -133,12 +133,12 @@ public class NhiServiceIntTest {
         NhiExtendTreatmentProcedure spec4F2 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific4Only").a75("JKL:").check("");
         nhiService.checkSurfaceLimit.accept(spec4F2);
 
-        assertThat(blankOnlyF.getCheck()).contains("不需填寫牙面");
-        assertThat(validatedOnlyF.getCheck()).contains("限填合法牙面");
-        assertThat(spec1F1.getCheck()).contains("限填牙面數量為 1");
-        assertThat(spec1F2.getCheck()).contains("限填牙面 A,B,C");
-        assertThat(spec4F1.getCheck()).contains("限填牙面 ABCD,BCDE,CDEF");
-        assertThat(spec4F2.getCheck()).contains("限填牙面 ABCD,BCDE,CDEF");
+        assertThat(blankOnlyF.getCheck()).contains("不須填牙面");
+        assertThat(validatedOnlyF.getCheck()).contains("須填牙面");
+        assertThat(spec1F1.getCheck()).contains("申報面數不合");
+        assertThat(spec1F2.getCheck()).contains("建議填 A,B,C 牙面");
+        assertThat(spec4F1.getCheck()).contains("建議填 ABCD,BCDE,CDEF 牙面");
+        assertThat(spec4F2.getCheck()).contains("建議填 ABCD,BCDE,CDEF 牙面");
 
     }
 

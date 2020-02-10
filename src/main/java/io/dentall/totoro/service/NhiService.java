@@ -11,6 +11,7 @@ import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendPatientRepository;
 import io.dentall.totoro.service.util.StreamUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,11 +78,11 @@ public class NhiService {
         surfaceLimitMap.put("SURFACE_SPECIFIC_1_ALPHABET_ONLY", "");
         surfaceLimitMap.put("SURFACE_SPECIFIC_4_ALPHABET_ONLY", "");
 
-        surfaceLimitErrorResponseMap.put("SURFACE_BLANK_ONLY", "不需填寫牙面");
-        surfaceLimitErrorResponseMap.put("SURFACE_VALIDATED_ONLY", "限填合法牙面");
-        surfaceLimitErrorResponseMap.put("SURFACE_SPECIFIC_1_ALPHABET_ONLY", "限填牙面");
-        surfaceLimitErrorResponseMap.put("SURFACE_SPECIFIC_4_ALPHABET_ONLY", "限填牙面");
-        surfaceLimitErrorResponseMap.put("SURFACE_LIMIT_NUMBER", "限填牙面數量為");
+        surfaceLimitErrorResponseMap.put("SURFACE_BLANK_ONLY", "不須填牙面");
+        surfaceLimitErrorResponseMap.put("SURFACE_VALIDATED_ONLY", "須填牙面");
+        surfaceLimitErrorResponseMap.put("SURFACE_SPECIFIC_1_ALPHABET_ONLY", "建議填");
+        surfaceLimitErrorResponseMap.put("SURFACE_SPECIFIC_4_ALPHABET_ONLY", "建議填");
+        surfaceLimitErrorResponseMap.put("SURFACE_LIMIT_NUMBER", "申報面數不合");
 
         positionLimitMap.put("VALIDATED_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,FM,");
         positionLimitMap.put("BLANK_ONLY", "");
@@ -246,9 +247,14 @@ public class NhiService {
         }
 
         if (checkFail) {
-            nhiExtendTreatmentProcedure.setCheck(isOutOfLimitedSurfaceNumber
-                ? nhiExtendTreatmentProcedure.getCheck() + code + " " + surfaceLimitErrorResponseMap.get("SURFACE_LIMIT_NUMBER") + " " + limitNumb + "\n"
-                : nhiExtendTreatmentProcedure.getCheck() + code + " " + surfaceLimitErrorResponseMap.get(limitType) + " " + specificSurface + "\n");
+            if (isOutOfLimitedSurfaceNumber) {
+                nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + " " + surfaceLimitErrorResponseMap.get("SURFACE_LIMIT_NUMBER") + "\n");
+            } else {
+                String withSpecification = StringUtils.isBlank(specificSurface)
+                    ? ""
+                    : specificSurface + " 牙面";
+                nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + " " + surfaceLimitErrorResponseMap.get(limitType) + " " + withSpecification + "\n");
+            }
         }
     };
 
