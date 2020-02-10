@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20200210-Sql" author="WeiChen">
+        <sql dbms="postgresql" splitStatements="true">
+            UPDATE nhi_procedure SET name='第一大臼齒窩溝封劑服務(16)' WHERE code='8A';
+            UPDATE nhi_procedure SET name='第一大臼齒窩溝封劑服務(26)' WHERE code='8B';
+            UPDATE nhi_procedure SET name='第一大臼齒窩溝封劑服務(36)' WHERE code='8C';
+            UPDATE nhi_procedure SET name='第一大臼齒窩溝封劑服務(46)' WHERE code='8D';
+            UPDATE nhi_procedure SET name='第一大臼齒窩溝封劑服務(16)(山地原住民區,離島區,身心障礙)' WHERE code='8E';
+            UPDATE nhi_procedure SET name='第一大臼齒窩溝封劑服務(26)(山地原住民區,離島區,身心障礙)' WHERE code='8F';
+            UPDATE nhi_procedure SET name='第一大臼齒窩溝封劑服務(36)(山地原住民區,離島區,身心障礙)' WHERE code='8G';
+            UPDATE nhi_procedure SET name='第一大臼齒窩溝封劑服務(46)(山地原住民區,離島區,身心障礙)' WHERE code='8H';
+            UPDATE nhi_procedure SET name='第一次評估檢查窩溝封填脫落補施(16)' WHERE code='8I';
+            UPDATE nhi_procedure SET name='第一次評估檢查窩溝封填脫落補施(26)' WHERE code='8J';
+            UPDATE nhi_procedure SET name='第一次評估檢查窩溝封填脫落補施(36)' WHERE code='8K';
+            UPDATE nhi_procedure SET name='第一次評估檢查窩溝封填脫落補施(46)' WHERE code='8L';
+            UPDATE nhi_procedure SET name='第二次評估檢查窩溝封填脫落補施(16)' WHERE code='8M';
+            UPDATE nhi_procedure SET name='第二次評估檢查窩溝封填脫落補施(26)' WHERE code='8N';
+            UPDATE nhi_procedure SET name='第二次評估檢查窩溝封填脫落補施(36)' WHERE code='8O';
+            UPDATE nhi_procedure SET name='大臼齒(C-shaped)根管' WHERE code='90091C';
+            UPDATE nhi_procedure SET name='有額外根管者' WHERE code='90092C';
+            UPDATE nhi_procedure SET name='根管特別彎曲、鈣化，器械斷折' WHERE code='90093C';
+            UPDATE nhi_procedure SET name='根管重新治之根管等個案' WHERE code='90094C';
+            UPDATE nhi_procedure SET name='符合3.3.1標準之多根管治療-五根管以上' WHERE code='90098C';
+            UPDATE nhi_procedure SET name='符合3.3.1標準之多根管治療-四根管' WHERE code='90097C';
+            UPDATE nhi_procedure SET name='符合3.3.1標準之多根管治療-三根管' WHERE code='90096C';
+            UPDATE nhi_procedure SET name='符合3.3.1標準之多根管治療-雙根管' WHERE code='90095C';
+            UPDATE nhi_procedure SET name='塗氟' WHERE code='81';
+            UPDATE nhi_procedure SET name='弱勢兒童塗氟' WHERE code='87';
+            UPDATE nhi_procedure SET name='塗氟(社區巡迴服務)' WHERE code='88';
+            UPDATE nhi_procedure SET name='弱勢兒童塗氟(社區巡迴服務)' WHERE code='89';
+            UPDATE nhi_procedure SET name='戒菸治療服務費(藥品自行調劑)' WHERE code='E1006C';
+            UPDATE nhi_procedure SET name='戒菸治療服務費(藥品交付調劑)' WHERE code='E1007C';
+            UPDATE nhi_procedure SET name='氟化物防齲服務-身心障礙牙醫服務計劃' WHERE code='P30002';
+            UPDATE nhi_procedure SET name='身心障礙轉出至特殊醫療服務計畫院所轉診費' WHERE code='00304C';
+            UPDATE nhi_procedure SET name='牙齦切除術' WHERE code='91013C';
+        </sql>
+    </changeSet>
+</databaseChangeLog>
