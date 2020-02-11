@@ -61,14 +61,15 @@ public class NhiServiceMockTest {
         treatmentTask = new TreatmentTask().treatmentPlan(treatmentPlan);
 
         // today
-        TreatmentProcedure treatmentProcedure = new TreatmentProcedure().treatmentTask(treatmentTask);
+        Disposal disposal = new Disposal();
+        TreatmentProcedure treatmentProcedure = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposal);
         nhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure()
             .treatmentProcedure(treatmentProcedure)
             .check("");
         nhiExtDisposalToday = new NhiExtendDisposal()
             .a17(today.getYear() - 1911 + monthFormatter.format(today) + dayFormatter.format(today))
             .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedure));
-        nhiExtendTreatmentProcedure.setNhiExtendDisposal(nhiExtDisposalToday);
+        disposal.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalToday));
     }
 
     @Test
@@ -84,7 +85,8 @@ public class NhiServiceMockTest {
         }});
 
         // 100 days ago
-        TreatmentProcedure treatmentProcedureDateBefore100 = new TreatmentProcedure().treatmentTask(treatmentTask);
+        Disposal disposalDateBefore100 = new Disposal();
+        TreatmentProcedure treatmentProcedureDateBefore100 = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposalDateBefore100);
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureDateBefore100 = new NhiExtendTreatmentProcedure()
             .a73(code)
             .treatmentProcedure(treatmentProcedureDateBefore100);
@@ -92,18 +94,20 @@ public class NhiServiceMockTest {
         NhiExtendDisposal nhiExtDisposalDateBefore100 = new NhiExtendDisposal()
             .a17(dateBefore100.getYear() - 1911 + monthFormatter.format(dateBefore100) + dayFormatter.format(dateBefore100))
             .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedureDateBefore100));
-        nhiExtendTreatmentProcedureDateBefore100.setNhiExtendDisposal(nhiExtDisposalDateBefore100);
+        disposalDateBefore100.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalDateBefore100));
 
         // 20 days ago
-        TreatmentProcedure treatmentProcedureDateBefore20 = new TreatmentProcedure().treatmentTask(treatmentTask);
+        Disposal disposalDateBefore20 = new Disposal();
+        TreatmentProcedure treatmentProcedureDateBefore20 = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposalDateBefore20);
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureDateBefore20 = new NhiExtendTreatmentProcedure()
             .a73(code)
             .treatmentProcedure(treatmentProcedureDateBefore20);
         LocalDate dateBefore20 = getGreaterThanEqualDate.apply(20);
         NhiExtendDisposal nhiExtDisposalDateBefore20 = new NhiExtendDisposal()
-            .a17(dateBefore20.getYear() - 1911 + monthFormatter.format(dateBefore20) + dayFormatter.format(dateBefore20))
+            .a19("2")
+            .a54(dateBefore20.getYear() - 1911 + monthFormatter.format(dateBefore20) + dayFormatter.format(dateBefore20))
             .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedureDateBefore20));
-        nhiExtendTreatmentProcedureDateBefore20.setNhiExtendDisposal(nhiExtDisposalDateBefore20);
+        disposalDateBefore20.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalDateBefore20));
 
         Mockito
             .when(mockNhiExtendDisposalRepository.findByDateBetweenAndPatientId(today.minusDays(180), today, patient.getId()))
@@ -126,7 +130,8 @@ public class NhiServiceMockTest {
         }});
 
         // 1st date of month
-        TreatmentProcedure treatmentProcedureMonthFirstDate = new TreatmentProcedure().treatmentTask(treatmentTask);
+        Disposal disposalMonthFirstDate = new Disposal();
+        TreatmentProcedure treatmentProcedureMonthFirstDate = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposalMonthFirstDate);
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureMonthFirstDate = new NhiExtendTreatmentProcedure()
             .a73(code)
             .treatmentProcedure(treatmentProcedureMonthFirstDate);
@@ -134,7 +139,7 @@ public class NhiServiceMockTest {
         NhiExtendDisposal nhiExtDisposalMonthFirstDate = new NhiExtendDisposal()
             .a17(monthFirstDate.getYear() - 1911 + monthFormatter.format(monthFirstDate) + dayFormatter.format(monthFirstDate))
             .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedureMonthFirstDate));
-        nhiExtendTreatmentProcedureMonthFirstDate.setNhiExtendDisposal(nhiExtDisposalMonthFirstDate);
+        disposalMonthFirstDate.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalMonthFirstDate));
 
         Mockito
             .when(mockNhiExtendDisposalRepository.findByDateBetweenAndPatientId(monthFirstDate, today, patient.getId()))

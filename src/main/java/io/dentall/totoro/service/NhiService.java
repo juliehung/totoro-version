@@ -557,7 +557,7 @@ public class NhiService {
             .filter(nhiExtTxP -> nhiExtTxP != nhiExtendTreatmentProcedure)
             .filter(nhiExtTxP -> nhiExtTxP.getA73().equals(nhiExtendTreatmentProcedure.getA73()))
             // order by date desc
-            .sorted(Comparator.<NhiExtendTreatmentProcedure, LocalDate>comparing(nhiExtTxP -> nhiExtTxP.getNhiExtendDisposal().getDate()).reversed())
+            .sorted(Comparator.comparing(this::getNhiExtendDisposalDate).reversed())
             .collect(Collectors.toList());
     }
 
@@ -600,7 +600,7 @@ public class NhiService {
             }
         }
 
-        LocalDate date = nhiExtendTreatmentProcedure.getNhiExtendDisposal().getDate();
+        LocalDate date = getNhiExtendDisposalDate(nhiExtendTreatmentProcedure);
         List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
             nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
                 date.minusDays(days),
@@ -613,7 +613,7 @@ public class NhiService {
         if (conditions == null) {
             StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
             if (nhiExtTxPs.size() >= times) {
-                LocalDate dateBefore = nhiExtTxPs.get(0).getNhiExtendDisposal().getDate();
+                LocalDate dateBefore = getNhiExtendDisposalDate(nhiExtTxPs.get(0));
                 String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
                 if (times == 1) {
                     // {天數}內不得重複申報。上次：{日期}({天數} 天前)
@@ -653,7 +653,7 @@ public class NhiService {
             times = Integer.parseInt(info[1]);
         }
 
-        LocalDate date = nhiExtendTreatmentProcedure.getNhiExtendDisposal().getDate();
+        LocalDate date = getNhiExtendDisposalDate(nhiExtendTreatmentProcedure);
         List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
             nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
                 date.with(TemporalAdjusters.firstDayOfMonth()),
@@ -666,7 +666,7 @@ public class NhiService {
         if (conditions == null) {
             StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
             if (nhiExtTxPs.size() >= times) {
-                LocalDate dateBefore = nhiExtTxPs.get(0).getNhiExtendDisposal().getDate();
+                LocalDate dateBefore = getNhiExtendDisposalDate(nhiExtTxPs.get(0));
                 String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
                 if (times == 1) {
                     // 同一月份內不得重複申報。上次：{日期}({天數} 天前)
@@ -695,7 +695,7 @@ public class NhiService {
         String[] info = interval.split("YYYYx");
         int times = Integer.parseInt(info[1]);
 
-        LocalDate date = nhiExtendTreatmentProcedure.getNhiExtendDisposal().getDate();
+        LocalDate date = getNhiExtendDisposalDate(nhiExtendTreatmentProcedure);
         List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
             nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
                 date.with(TemporalAdjusters.firstDayOfYear()),
@@ -707,7 +707,7 @@ public class NhiService {
 
         StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
         if (nhiExtTxPs.size() >= times) {
-            LocalDate dateBefore = nhiExtTxPs.get(0).getNhiExtendDisposal().getDate();
+            LocalDate dateBefore = getNhiExtendDisposalDate(nhiExtTxPs.get(0));
             String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
             if (times == 1) {
                 // 同一年度內不得重複申報。上次：{日期}({天數} 天前)
@@ -929,6 +929,15 @@ public class NhiService {
 
         return format;
     };
+
+    private LocalDate getNhiExtendDisposalDate(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+        NhiExtendDisposal nhiExtendDisposal = nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next();
+        if (nhiExtendDisposal.getReplenishmentDate() != null) {
+            return nhiExtendDisposal.getReplenishmentDate();
+        }
+
+        return nhiExtendDisposal.getDate();
+    }
 
     public static class Rule {
 

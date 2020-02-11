@@ -130,7 +130,7 @@ test {
     if (project.hasProperty('testFtp')) {
         exclude '**/CucumberTest*'
     } else {
-        exclude '**/CucumberTest*', 'io/dentall/totoro/service/ImageBusinessServiceIntTest.class'
+        exclude '**/CucumberTest*', 'io/dentall/totoro/business/service/ImageBusinessServiceIntTest.class'
     }
 
     // uncomment if the tests reports are not generated
