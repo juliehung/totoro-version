@@ -1,7 +1,6 @@
-package io.dentall.totoro.service;
+package io.dentall.totoro.business.service;
 
 import io.dentall.totoro.TotoroApp;
-import io.dentall.totoro.business.service.ImageBusinessService;
 import io.dentall.totoro.config.FtpConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTPClient;
