@@ -211,16 +211,19 @@ public abstract class NhiAbstractMedicalArea<ENTITY extends NhiAbstractMedicalAr
 
     @ApiModelProperty(hidden = true)
     @Override
+    // TODO: add deprecated on it in other branch
     public NhiExtendDisposal getNhiExtendDisposal() {
         return nhiExtendDisposal;
     }
 
+    // TODO: add deprecated on it in other branch
     public ENTITY nhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal) {
         this.nhiExtendDisposal = nhiExtendDisposal;
         return (ENTITY) this;
     }
 
     @Override
+    // TODO: add deprecated on it in other branch
     public void setNhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal) {
         this.nhiExtendDisposal = nhiExtendDisposal;
     }

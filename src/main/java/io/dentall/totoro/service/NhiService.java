@@ -6,11 +6,18 @@ import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.conversions.Conversion;
 import com.univocity.parsers.csv.CsvParserSettings;
 import com.univocity.parsers.csv.CsvRoutines;
+import io.dentall.totoro.business.dto.OtherCodeDeclarationInterval;
+import io.dentall.totoro.business.dto.OtherCodeDeclarationIntervalRange;
+import io.dentall.totoro.business.dto.PersonalNhiExtendTreatmentProcedureMap;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.Treatment;
+import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendPatientRepository;
+import io.dentall.totoro.service.dto.TreatmentCriteria;
 import io.dentall.totoro.service.util.StreamUtil;
+import io.github.jhipster.service.filter.LongFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +33,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -53,6 +61,8 @@ public class NhiService {
 
     private final NhiExtendPatientRepository nhiExtendPatientRepository;
 
+    private final TreatmentQueryService treatmentQueryService;
+
     private static Map<String, Rule> rules;
 
     private static Map<String, String> positionLimitMap = new HashMap();
@@ -69,9 +79,10 @@ public class NhiService {
     @Value("${nhi.rule:#{null}}")
     private String ruleFile;
 
-    public NhiService(NhiExtendDisposalRepository nhiExtendDisposalRepository, NhiExtendPatientRepository nhiExtendPatientRepository) {
+    public NhiService(NhiExtendDisposalRepository nhiExtendDisposalRepository, NhiExtendPatientRepository nhiExtendPatientRepository, TreatmentQueryService treatmentQueryService) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
+        this.treatmentQueryService = treatmentQueryService;
 
         surfaceLimitMap.put("SURFACE_BLANK_ONLY", "");
         surfaceLimitMap.put("SURFACE_VALIDATED_ONLY", "M,D,L,B,O,P,I,F,C");
@@ -143,21 +154,85 @@ public class NhiService {
         }
     }
 
+    public boolean isPermanentTooth(String tooth) {
+        return positionLimitMap.get("PERMANENT_ONLY").contains(tooth.concat(","));
+    }
+
+    public boolean isDeciduousTooth(String tooth) {
+        return positionLimitMap.get("DECIDUOUS_ONLY").contains(tooth.concat(","));
+    }
+
+    public Stream<String> splitToothFromA74(String a74) {
+        return Arrays.stream(a74.split("(?<=\\G..)"));
+    }
+
+    public PersonalNhiExtendTreatmentProcedureMap getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(
+        Long patientId,
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure
+    ) {
+        // Query patient's all nhi treatment procedures
+        TreatmentCriteria treatmentCriteria = new TreatmentCriteria();
+        LongFilter lf = new LongFilter();
+        lf.setEquals(patientId);
+        treatmentCriteria.setPatientId(lf);
+        Optional<Treatment> optionalTreatment = treatmentQueryService.findByCriteria(treatmentCriteria).stream().findFirst();
+
+        if (optionalTreatment.isPresent()) {
+            Treatment treatment = optionalTreatment.get();
+
+            // Create map which personal all nhi treatment procedure record with key as a73(nhi procedure code)
+            Set<NhiExtendTreatmentProcedure> peronalAllNhiTxProc = treatment.getTreatmentPlans().iterator().next()
+                .getTreatmentTasks().iterator().next()
+                .getTreatmentProcedures().stream()
+                .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
+                .filter(nhiExtendTreatmentProcedure -> !nhiExtendTreatmentProcedure.getId().equals(targetNhiExtendTreatmentProcedure.getId()))
+                .collect(Collectors.toSet());
+
+            return new PersonalNhiExtendTreatmentProcedureMap().nhiExtendTreatmentProcedure(peronalAllNhiTxProc);
+
+        } else {
+            return null;
+        }
+
+    }
+
+    /**
+     * Checking nhi treatment procedure main entrance
+     *
+     * @param nhiExtendTreatmentProcedures
+     */
     public void checkNhiExtendTreatmentProcedures(Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures) {
         if (!rules.isEmpty()) {
-            nhiExtendTreatmentProcedures.forEach(nhiExtendTreatmentProcedure -> {
-                if (rules.getOrDefault(nhiExtendTreatmentProcedure.getA73(), Rule.allPass()).getCode() != null) {
-                    nhiExtendTreatmentProcedure.setCheck("");
 
+            Long patientId = nhiExtendTreatmentProcedures.iterator().next()
+                .getTreatmentProcedure()
+                .getTreatmentTask()
+                .getTreatmentPlan()
+                .getTreatment()
+                .getPatient()
+                .getId();
+
+            nhiExtendTreatmentProcedures.forEach(targetNhiExtendTreatmentProcedure -> {
+                if (rules.getOrDefault(targetNhiExtendTreatmentProcedure.getA73(), Rule.allPass()).getCode() != null) {
+                    targetNhiExtendTreatmentProcedure.setCheck("");
+
+                    PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+                        getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(patientId, targetNhiExtendTreatmentProcedure);
+
+                    // Wrappers
                     Consumer<NhiExtendTreatmentProcedure> wrapCheckExclude = nhiExtendTxP -> checkExclude.accept(nhiExtendTxP, nhiExtendTreatmentProcedures);
+                    Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherCodeDelcarationConflict = nhiExtendTxP ->
+                        checkOtherCodeDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
 
                     checkXRay
-                        .andThen(checkMedicalRecord)
                         .andThen(wrapCheckExclude)
+                        .andThen(wrapCheckOtherCodeDelcarationConflict)
+                        .andThen(checkMedicalRecord)
                         .andThen(checkInterval)
                         .andThen(checkPositionLimit)
                         .andThen(checkSurfaceLimit)
-                        .accept(nhiExtendTreatmentProcedure);
+                        .accept(targetNhiExtendTreatmentProcedure);
+
                 }
             });
         }
@@ -215,8 +290,8 @@ public class NhiService {
                 // Cause lambda need final value,  it's modified by previous code. Thought, make a copy for it.
                 String finalSpecificSurface = specificSurface;
                 if (surface.chars()
-                        .mapToObj(c -> String.valueOf((char) c))
-                        .anyMatch(c -> !finalSpecificSurface.contains(c))) {
+                    .mapToObj(c -> String.valueOf((char) c))
+                    .anyMatch(c -> !finalSpecificSurface.contains(c))) {
                     checkFail = true;
                 }
 
@@ -261,7 +336,7 @@ public class NhiService {
     public Consumer<NhiExtendTreatmentProcedure> checkPositionLimit = nhiExtendTreatmentProcedure -> {
         String code = nhiExtendTreatmentProcedure.getA73();
         String[] positionLimit = rules.get(code).getPositionLimit();
-        String limitType = positionLimit.length > 0 ?positionLimit[0] :"NO_SUCH_POSITION_TYPE";
+        String limitType = positionLimit.length > 0 ? positionLimit[0] : "NO_SUCH_POSITION_TYPE";
         boolean checkFail = false;
         String specificPosition = "";
 
@@ -320,6 +395,91 @@ public class NhiService {
             nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + code + " 病歷須記載\n");
         }
     };
+
+    public BiConsumer<NhiExtendTreatmentProcedure, PersonalNhiExtendTreatmentProcedureMap> checkOtherCodeDeclarationConflict = ((targetNhiExtendTreatmentProcedure, personalNhiExtendTreatmentProcedureMap) -> {
+        NhiExtendDisposal targetNhiExtendDisposal = targetNhiExtendTreatmentProcedure.getTreatmentProcedure()
+            .getDisposal()
+            .getNhiExtendDisposals().iterator().next();
+        LocalDate targetDate = targetNhiExtendDisposal.getReplenishmentDate() == null
+            ? targetNhiExtendDisposal.getDate()
+            : targetNhiExtendDisposal.getReplenishmentDate();
+        String targetCode = targetNhiExtendTreatmentProcedure.getA73();
+        if (rules.containsKey(targetCode) && rules.get(targetCode).getOtherCodeDeclarationInterval() != null) {
+            Arrays.asList(rules.get(targetCode).getOtherCodeDeclarationInterval()).stream()
+                .map(OtherCodeDeclarationInterval::new)
+                .forEach(r -> {
+                    r.getCode().stream()
+                        .forEach(ruleCode -> {
+                            if (personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(ruleCode)) {
+                                if (r.getRange() == null) {
+                                    Optional<LocalDate> optionalLocalDate = personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
+                                        .getSortedDeclarationDates()
+                                        .filter(localDate -> {
+                                            LocalDate d = localDate.plusDays(r.getInterval());
+                                            return d.isAfter(targetDate) || d.isEqual(targetDate);
+                                        })
+                                        .findAny();
+                                    if (optionalLocalDate.isPresent()) {
+                                        LocalDate conflictDate = optionalLocalDate.get();
+
+                                        targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                                            r.getInterval() +
+                                            " 天內已申報 " +
+                                            ruleCode +
+                                            " 不得申報此項。上次申報時間：" +
+                                            formatter.format(conflictDate) +
+                                            "( " +
+                                            ChronoUnit.DAYS.between(conflictDate, targetDate) +
+                                            " 天 )\n");
+                                    }
+                                } else if (OtherCodeDeclarationIntervalRange.MONTH.equals(r.getRange())) {
+                                    Optional<LocalDate> optionalLocalDate = personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
+                                        .getSortedDeclarationDates()
+                                        .filter(localDate -> {
+                                            LocalDate start = targetDate.withDayOfMonth(1);
+                                            LocalDate end = targetDate.withDayOfMonth(targetDate.lengthOfMonth());
+                                            return end.isAfter(localDate) && start.isBefore(localDate) || end.isEqual(localDate) || start.isEqual(localDate);
+                                        })
+                                        .findAny();
+                                    if (optionalLocalDate.isPresent()) {
+                                        LocalDate conflictDate = optionalLocalDate.get();
+
+                                        targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                                            "當月內已申報 " +
+                                            ruleCode +
+                                            " 不得申報此項。上次申報時間：" +
+                                            formatter.format(conflictDate) +
+                                            "( " +
+                                            ChronoUnit.DAYS.between(conflictDate, targetDate) +
+                                            " 天 )\n");
+                                    }
+                                } else if (OtherCodeDeclarationIntervalRange.YEAR.equals(r.getRange())) {
+                                    Optional<LocalDate> optionalLocalDate = personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
+                                        .getSortedDeclarationDates()
+                                        .filter(localDate -> {
+                                            LocalDate start = targetDate.withDayOfYear(1);
+                                            LocalDate end = targetDate.withDayOfYear(targetDate.lengthOfYear());
+                                            return end.isAfter(localDate) && start.isBefore(localDate) || end.isEqual(localDate) || start.isEqual(localDate);
+                                        })
+                                        .findAny();
+                                    if (optionalLocalDate.isPresent()) {
+                                        LocalDate conflictDate = optionalLocalDate.get();
+
+                                        targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                                            "當年內已申報 " +
+                                            ruleCode +
+                                            " 不得申報此項。上次申報時間：" +
+                                            formatter.format(conflictDate) +
+                                            "( " +
+                                            ChronoUnit.DAYS.between(conflictDate, targetDate) +
+                                            " 天 )\n");
+                                    }
+                                }
+                            }
+                        });
+                });
+        }
+    });
 
     public BiConsumer<NhiExtendTreatmentProcedure, Set<NhiExtendTreatmentProcedure>> checkExclude = (nhiExtendTreatmentProcedure, nhiExtendTreatmentProcedures) -> {
         String code = nhiExtendTreatmentProcedure.getA73();
@@ -399,6 +559,17 @@ public class NhiService {
             // order by date desc
             .sorted(Comparator.<NhiExtendTreatmentProcedure, LocalDate>comparing(nhiExtTxP -> nhiExtTxP.getNhiExtendDisposal().getDate()).reversed())
             .collect(Collectors.toList());
+    }
+
+    private boolean isBeyondDays(Long days, List<LocalDate> declaredDates, LocalDate targetDate) {
+        boolean result = false;
+        for (LocalDate declaredDate : declaredDates) {
+            if (targetDate.minusDays(days).isAfter(declaredDate)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     private void checkIntervalLessOrEqualThan(String interval, NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
@@ -720,7 +891,7 @@ public class NhiService {
 
     private Function<Integer, String> formatDays = days -> {
         String format;
-        switch(days) {
+        switch (days) {
             case 1095:
                 format = "三年";
                 break;
@@ -791,11 +962,19 @@ public class NhiService {
         @Convert(conversionClass = Splitter.class, args = {"="})
         private String[] surfaceLimit;
 
+        @Parsed(field = "other_code_declaration_interval")
+        @Convert(conversionClass = Splitter.class, args = {";"})
+        private String[] otherCodeDeclarationInterval;
+
         static Rule allPass() {
             Rule allPass = new Rule();
             allPass.setCode(null);
 
             return allPass;
+        }
+
+        public String[] getOtherCodeDeclarationInterval() {
+            return otherCodeDeclarationInterval;
         }
 
         public String[] getSurfaceLimit() {
@@ -871,7 +1050,7 @@ public class NhiService {
 
         static List<Integer> getQuadrants(String val) {
             List<Integer> quadrants = new ArrayList<>();
-            switch(val) {
+            switch (val) {
                 case "FM":
                     quadrants.addAll(Arrays.asList(1, 2, 3, 4));
                     break;
@@ -953,15 +1132,43 @@ public class NhiService {
         }
 
         static Supplier<Map<String, Integer>> emptyPermanentTeethCount = () -> new HashMap<String, Integer>() {{
-            put("11", 0); put("12", 0); put("13", 0); put("14", 0); put("15", 0); put("16", 0); put("17", 0); put("18", 0);
-            put("21", 0); put("22", 0); put("23", 0); put("24", 0); put("25", 0); put("26", 0); put("27", 0); put("28", 0);
-            put("31", 0); put("32", 0); put("33", 0); put("34", 0); put("35", 0); put("36", 0); put("37", 0); put("38", 0);
-            put("41", 0); put("42", 0); put("43", 0); put("44", 0); put("45", 0); put("46", 0); put("47", 0); put("48", 0);
+            put("11", 0);
+            put("12", 0);
+            put("13", 0);
+            put("14", 0);
+            put("15", 0);
+            put("16", 0);
+            put("17", 0);
+            put("18", 0);
+            put("21", 0);
+            put("22", 0);
+            put("23", 0);
+            put("24", 0);
+            put("25", 0);
+            put("26", 0);
+            put("27", 0);
+            put("28", 0);
+            put("31", 0);
+            put("32", 0);
+            put("33", 0);
+            put("34", 0);
+            put("35", 0);
+            put("36", 0);
+            put("37", 0);
+            put("38", 0);
+            put("41", 0);
+            put("42", 0);
+            put("43", 0);
+            put("44", 0);
+            put("45", 0);
+            put("46", 0);
+            put("47", 0);
+            put("48", 0);
         }};
 
         static Function<String, List<String>> getPermanentTeeth = val -> {
             List<String> teeth = new ArrayList<>();
-            switch(val) {
+            switch (val) {
                 case "FM":
                     teeth.addAll(Arrays.asList(
                         "11", "12", "13", "14", "15", "16", "17", "18",
@@ -1053,15 +1260,31 @@ public class NhiService {
         };
 
         static Supplier<Map<String, Integer>> emptyDeciduousTeethCount = () -> new HashMap<String, Integer>() {{
-            put("51", 0); put("52", 0); put("53", 0); put("54", 0); put("55", 0);
-            put("61", 0); put("62", 0); put("63", 0); put("64", 0); put("65", 0);
-            put("71", 0); put("72", 0); put("73", 0); put("74", 0); put("75", 0);
-            put("81", 0); put("82", 0); put("83", 0); put("84", 0); put("85", 0);
+            put("51", 0);
+            put("52", 0);
+            put("53", 0);
+            put("54", 0);
+            put("55", 0);
+            put("61", 0);
+            put("62", 0);
+            put("63", 0);
+            put("64", 0);
+            put("65", 0);
+            put("71", 0);
+            put("72", 0);
+            put("73", 0);
+            put("74", 0);
+            put("75", 0);
+            put("81", 0);
+            put("82", 0);
+            put("83", 0);
+            put("84", 0);
+            put("85", 0);
         }};
 
         static Function<String, List<String>> getDeciduousTeeth = val -> {
             List<String> teeth = new ArrayList<>();
-            switch(val) {
+            switch (val) {
                 case "FM":
                     teeth.addAll(Arrays.asList(
                         "51", "52", "53", "54", "55",
@@ -1147,7 +1370,7 @@ public class NhiService {
         private String separator;
 
         public Splitter(String... args) {
-            if(args.length == 0){
+            if (args.length == 0) {
                 separator = ",";
             } else {
                 separator = args[0];
@@ -1156,7 +1379,7 @@ public class NhiService {
 
         @Override
         public String[] execute(String input) {
-            if(input == null){
+            if (input == null) {
                 return new String[0];
             }
             return input.split(separator);

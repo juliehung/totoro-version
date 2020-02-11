@@ -1,4 +1,4 @@
-﻿code,x_ray,medical_record,exclude,interval,position_limit,surface_limit
+﻿code,x_ray,medical_record,exclude,interval,position_limit,surface_limit,other_code_declaration_interval
 XRayFalse,,,,,,
 XRayTrue,y,,,,,
 MedicalRecordFalse,,,,,,
@@ -21,3 +21,6 @@ SurfaceValidatedNumbOnly,,,,,,SURFACE_VALIDATED_ONLY;2
 SurfaceSpecific1Only,,,,,,"SURFACE_SPECIFIC_1_ALPHABET_ONLY=A,B,C;1"
 SurfaceSpecific4Only,,,,,,"SURFACE_SPECIFIC_4_ALPHABET_ONLY=ABCD,BCDE,CDEF;1"
 SurfaceSpecific4Only2,,,,,,"SURFACE_SPECIFIC_4_ALPHABET_ONLY=ABCD;1"
+OtherCodeDeclarationInterval,,,,,,,"@code=A,B,C@interval=30"
+OtherCodeDeclarationMonthRange,,,,,,,"@code=M@range=MONTH"
+OtherCodeDeclarationYearRange,,,,,,,"@code=Y@range=YEAR"

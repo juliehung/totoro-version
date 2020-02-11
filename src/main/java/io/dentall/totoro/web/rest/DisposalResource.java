@@ -12,6 +12,7 @@ import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.service.dto.DisposalCriteria;
 import io.dentall.totoro.service.DisposalQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.ehcache.xml.model.CopierType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -168,12 +169,13 @@ public class DisposalResource {
         Optional<Disposal> optDisposal = disposalService.findOneWithEagerRelationships(id);
         if (optDisposal.isPresent()) {
             Disposal disposal = optDisposal.get();
-            nhiService.checkNhiExtendTreatmentProcedures(disposal.getTreatmentProcedures().stream()
-                .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
-                .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
-                .collect(Collectors.toSet())
-            );
-
+            // TODO: Add back for normal check rules and interval rules
+//            nhiService.checkNhiExtendTreatmentProcedures(disposal.getTreatmentProcedures().stream()
+//                .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
+//                .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
+//                .collect(Collectors.toSet())
+//            );
+//
         }
         return ResponseUtil.wrapOrNotFound(optDisposal);
     }
