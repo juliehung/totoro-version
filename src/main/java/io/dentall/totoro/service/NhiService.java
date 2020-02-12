@@ -29,7 +29,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -60,13 +59,13 @@ public class NhiService {
 
     private static Map<String, Rule> rules;
 
-    private static Map<String, String> positionLimitMap = new HashMap();
+    private static Map<String, String> positionLimitMap = new HashMap<>();
 
-    private static Map<String, String> positionLimitErrorResponseMap = new HashMap();
+    private static Map<String, String> positionLimitErrorResponseMap = new HashMap<>();
 
-    private static Map<String, String> surfaceLimitMap = new HashMap();
+    private static Map<String, String> surfaceLimitMap = new HashMap<>();
 
-    private static Map<String, String> surfaceLimitErrorResponseMap = new HashMap();
+    private static Map<String, String> surfaceLimitErrorResponseMap = new HashMap<>();
 
     @Value("classpath:nhi_rule.csv")
     private Resource resourceFile;
@@ -249,7 +248,7 @@ public class NhiService {
             try {
                 String[] ruleLimitNumb = surfaceLimitRule[1].split(";");
                 specificSurface = ruleLimitNumb[0];
-                limitNumb = Integer.valueOf(ruleLimitNumb[1]);
+                limitNumb = Integer.parseInt(ruleLimitNumb[1]);
             } catch (NumberFormatException e) {
                 // do nothing
             }
@@ -298,8 +297,7 @@ public class NhiService {
                 break;
             }
             case "SURFACE_SPECIFIC_4_ALPHABET_ONLY": {
-                String finalSpecificSurface = specificSurface;
-                if (Arrays.stream(finalSpecificSurface.split(","))
+                if (Arrays.stream(specificSurface.split(","))
                     .allMatch(fss -> !fss.equals(surface))
                 ) {
                     checkFail = true;
@@ -399,14 +397,14 @@ public class NhiService {
             ? targetNhiExtendDisposal.getDate()
             : targetNhiExtendDisposal.getReplenishmentDate();
         String targetCode = targetNhiExtendTreatmentProcedure.getA73();
-        List<String> targetTeeth = this.splitToothFromA74(targetNhiExtendTreatmentProcedure.getA74()).collect(Collectors.toList());
+        List<String> targetTeeth = splitToothFromA74(targetNhiExtendTreatmentProcedure.getA74()).collect(Collectors.toList());
         if (rules.containsKey(targetCode) && rules.get(targetCode).getOtherToothDeclarationInterval() != null) {
-            Arrays.asList(rules.get(targetCode).getOtherToothDeclarationInterval()).stream()
+            Arrays.stream(rules.get(targetCode).getOtherToothDeclarationInterval())
                 .map(OtherToothDeclarationInterval::new)
-                .forEach(r -> {
+                .forEach(r ->
                     r.getCode().stream()
-                        .filter(ruleCode -> personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(ruleCode))
-                        .forEach(ruleCode -> {
+                        .filter(personalNhiExtendTreatmentProcedureMap::containPersonalNhiExtendTreatmentProcedure)
+                        .forEach(ruleCode ->
                             personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
                                 .getDeclarationDateAndTooth()
                                 .entrySet()
@@ -422,8 +420,8 @@ public class NhiService {
                                             (isPermanentTooth(targetTooth) && r.getType().equals(OtherToothDeclaratioinType.PT)) ||
                                                 (isDeciduousTooth(targetTooth) && r.getType().equals(OtherToothDeclaratioinType.DT))
                                         )
-                                        .filter(targetTooth -> treatedTeeth.stream().anyMatch(treatedTooth -> targetTooth.equals(treatedTooth)))
-                                        .forEach(targetTooth -> {
+                                        .filter(targetTooth -> treatedTeeth.stream().anyMatch(targetTooth::equals))
+                                        .forEach(targetTooth ->
                                             targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
                                                     r.getInterval() +
                                                     " 天內 " +
@@ -435,11 +433,11 @@ public class NhiService {
                                                     " ( " +
                                                     ChronoUnit.DAYS.between(entry.getKey(), targetDate) +
                                                     " 天前 )\n"
-                                                );
-                                        });
-                                });
-                        });
-                });
+                                                )
+                                        );
+                                })
+                        )
+                );
         }
     });
 
@@ -452,10 +450,10 @@ public class NhiService {
             : targetNhiExtendDisposal.getReplenishmentDate();
         String targetCode = targetNhiExtendTreatmentProcedure.getA73();
         if (rules.containsKey(targetCode) && rules.get(targetCode).getOtherCodeDeclarationInterval() != null) {
-            Arrays.asList(rules.get(targetCode).getOtherCodeDeclarationInterval()).stream()
+            Arrays.stream(rules.get(targetCode).getOtherCodeDeclarationInterval())
                 .map(OtherCodeDeclarationInterval::new)
-                .forEach(r -> {
-                    r.getCode().stream()
+                .forEach(r ->
+                    r.getCode()
                         .forEach(ruleCode -> {
                             if (personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(ruleCode)) {
                                 if (r.getRange() == null) {
@@ -523,8 +521,8 @@ public class NhiService {
                                     }
                                 }
                             }
-                        });
-                });
+                        })
+                );
         }
     });
 
@@ -593,7 +591,7 @@ public class NhiService {
         }
     };
 
-    private List<NhiExtendTreatmentProcedure> getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
+    private List<NhiExtTxPDate> getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
         List<NhiExtendDisposal> nhiExtendDisposals,
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure
     ) {
@@ -603,20 +601,10 @@ public class NhiService {
             // exclude self
             .filter(nhiExtTxP -> nhiExtTxP != nhiExtendTreatmentProcedure)
             .filter(nhiExtTxP -> nhiExtTxP.getA73().equals(nhiExtendTreatmentProcedure.getA73()))
+            .map(NhiExtTxPDate::new)
             // order by date desc
-            .sorted(Comparator.comparing(this::getNhiExtendDisposalDate).reversed())
+            .sorted(Comparator.comparing(NhiExtTxPDate::getDate).reversed())
             .collect(Collectors.toList());
-    }
-
-    private boolean isBeyondDays(Long days, List<LocalDate> declaredDates, LocalDate targetDate) {
-        boolean result = false;
-        for (LocalDate declaredDate : declaredDates) {
-            if (targetDate.minusDays(days).isAfter(declaredDate)) {
-                result = true;
-                break;
-            }
-        }
-        return result;
     }
 
     private void checkIntervalLessOrEqualThan(String interval, NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
@@ -648,7 +636,7 @@ public class NhiService {
         }
 
         LocalDate date = getNhiExtendDisposalDate(nhiExtendTreatmentProcedure);
-        List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
+        List<NhiExtTxPDate> nhiExtTxPDates = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
             nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
                 date.minusDays(days),
                 date,
@@ -659,8 +647,8 @@ public class NhiService {
 
         if (conditions == null) {
             StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
-            if (nhiExtTxPs.size() >= times) {
-                LocalDate dateBefore = getNhiExtendDisposalDate(nhiExtTxPs.get(0));
+            if (nhiExtTxPDates.size() >= times) {
+                LocalDate dateBefore = nhiExtTxPDates.get(0).getDate();
                 String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
                 if (times == 1) {
                     // {天數}內不得重複申報。上次：{日期}({天數} 天前)
@@ -683,7 +671,13 @@ public class NhiService {
 
             nhiExtendTreatmentProcedure.setCheck(check.toString());
         } else {
-            Arrays.stream(conditions).skip(1).forEach(condition -> checkCondition(condition, nhiExtTxPs, nhiExtendTreatmentProcedure));
+            Arrays.stream(conditions).skip(1).forEach(condition ->
+                checkCondition(
+                    condition,
+                    nhiExtTxPDates.stream().map(NhiExtTxPDate::getNhiExtendTreatmentProcedure).collect(Collectors.toList()),
+                    nhiExtendTreatmentProcedure
+                )
+            );
         }
     }
 
@@ -701,7 +695,7 @@ public class NhiService {
         }
 
         LocalDate date = getNhiExtendDisposalDate(nhiExtendTreatmentProcedure);
-        List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
+        List<NhiExtTxPDate> nhiExtTxPDates = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
             nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
                 date.with(TemporalAdjusters.firstDayOfMonth()),
                 date,
@@ -712,8 +706,8 @@ public class NhiService {
 
         if (conditions == null) {
             StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
-            if (nhiExtTxPs.size() >= times) {
-                LocalDate dateBefore = getNhiExtendDisposalDate(nhiExtTxPs.get(0));
+            if (nhiExtTxPDates.size() >= times) {
+                LocalDate dateBefore = nhiExtTxPDates.get(0).getDate();
                 String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
                 if (times == 1) {
                     // 同一月份內不得重複申報。上次：{日期}({天數} 天前)
@@ -734,7 +728,13 @@ public class NhiService {
 
             nhiExtendTreatmentProcedure.setCheck(check.toString());
         } else {
-            Arrays.stream(conditions).skip(1).forEach(condition -> checkCondition(condition, nhiExtTxPs, nhiExtendTreatmentProcedure));
+            Arrays.stream(conditions).skip(1).forEach(condition ->
+                checkCondition(
+                    condition,
+                    nhiExtTxPDates.stream().map(NhiExtTxPDate::getNhiExtendTreatmentProcedure).collect(Collectors.toList()),
+                    nhiExtendTreatmentProcedure
+                )
+            );
         }
     }
 
@@ -743,7 +743,7 @@ public class NhiService {
         int times = Integer.parseInt(info[1]);
 
         LocalDate date = getNhiExtendDisposalDate(nhiExtendTreatmentProcedure);
-        List<NhiExtendTreatmentProcedure> nhiExtTxPs = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
+        List<NhiExtTxPDate> nhiExtTxPDates = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
             nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
                 date.with(TemporalAdjusters.firstDayOfYear()),
                 date,
@@ -753,8 +753,8 @@ public class NhiService {
         );
 
         StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
-        if (nhiExtTxPs.size() >= times) {
-            LocalDate dateBefore = getNhiExtendDisposalDate(nhiExtTxPs.get(0));
+        if (nhiExtTxPDates.size() >= times) {
+            LocalDate dateBefore = nhiExtTxPDates.get(0).getDate();
             String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
             if (times == 1) {
                 // 同一年度內不得重複申報。上次：{日期}({天數} 天前)
@@ -909,7 +909,9 @@ public class NhiService {
     private void checkSameHospital(List<NhiExtendTreatmentProcedure> nhiExtTxPs, int limit, NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         long count = nhiExtTxPs
             .stream()
-            .filter(nhiExtTxP -> nhiExtTxP.getNhiExtendDisposal().getA14().equals(nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getA14()))
+            .filter(nhiExtTxP -> nhiExtTxP.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next()
+                .getA14().equals(nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getA14())
+            )
             .count();
 
         StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
@@ -977,7 +979,7 @@ public class NhiService {
         return format;
     };
 
-    private LocalDate getNhiExtendDisposalDate(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+    private static LocalDate getNhiExtendDisposalDate(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         NhiExtendDisposal nhiExtendDisposal = nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next();
         if (nhiExtendDisposal.getReplenishmentDate() != null) {
             return nhiExtendDisposal.getReplenishmentDate();
@@ -1017,6 +1019,26 @@ public class NhiService {
                 out.append(value);
             }
             return out.toString();
+        }
+    }
+
+    private static class NhiExtTxPDate {
+
+        private NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure;
+
+        private LocalDate date;
+
+        public NhiExtTxPDate(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+            this.nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedure;
+            date = getNhiExtendDisposalDate(nhiExtendTreatmentProcedure);
+        }
+
+        public NhiExtendTreatmentProcedure getNhiExtendTreatmentProcedure() {
+            return nhiExtendTreatmentProcedure;
+        }
+
+        public LocalDate getDate() {
+            return date;
         }
     }
 }
