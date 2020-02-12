@@ -104,6 +104,83 @@ public class NhiServiceIntTest {
 
     @Test
     @Transactional
+    public void testCheckOtherToothDeclarationInterval() {
+        testCheckOtherToothDeclarationInterval1();
+        testCheckOtherToothDeclarationInterval2();
+    }
+
+    public void testCheckOtherToothDeclarationInterval1() {
+        Patient p = domainGenerator.generatePatientAndTxFamily("patient1", "0000000000");
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090101", "A", "112233");
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090101", "B", "44");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1090105", "OtherToothDeclarationInterval", "112244");
+
+        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
+        nhiService.checkOtherToothDeclarationConflict.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
+
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo(
+            "30 天內 11 牙位已申報 A ，不得再申報此項。上次： 2020/01/01 ( 4 天前 )\n" +
+            "30 天內 22 牙位已申報 A ，不得再申報此項。上次： 2020/01/01 ( 4 天前 )\n" +
+            "30 天內 44 牙位已申報 B ，不得再申報此項。上次： 2020/01/01 ( 4 天前 )\n");
+    }
+
+    public void testCheckOtherToothDeclarationInterval2() {
+        Patient p = domainGenerator.generatePatientAndTxFamily("patient2", "0000000000");
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090101", "A", "1122");
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090103", "E", "55");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1090105", "OtherToothDeclarationInterval", "1155");
+
+        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
+        nhiService.checkOtherToothDeclarationConflict.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo(
+                "30 天內 11 牙位已申報 A ，不得再申報此項。上次： 2020/01/01 ( 4 天前 )\n" +
+                "10 天內 55 牙位已申報 E ，不得再申報此項。上次： 2020/01/03 ( 2 天前 )\n");
+
+    }
+
+    public void testCheckOtherToothDeclarationInterval3() {
+        Patient p = domainGenerator.generatePatientAndTxFamily("patient3", "0000000000");
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090101", "A", "1122");
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090103", "E", "55");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1090105", "OtherToothDeclarationInterval", "6633");
+
+        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
+        nhiService.checkOtherToothDeclarationConflict.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
+
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("");
+    }
+
+    public void testCheckOtherToothDeclarationInterval4() {
+        Patient p = domainGenerator.generatePatientAndTxFamily("patient4", "0000000000");
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090101", "J", "1122");
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090103", "K", "55");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1090105", "OtherToothDeclarationInterval", "112255");
+
+        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
+        nhiService.checkOtherToothDeclarationConflict.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
+
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("");
+    }
+
+    public void testCheckOtherToothDeclarationInterval5() {
+        Patient p = domainGenerator.generatePatientAndTxFamily("patient5", "0000000000");
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090101", "A", "1122");
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090103", "E", "55");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1090205", "OtherToothDeclarationInterval", "112255");
+
+        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
+        nhiService.checkOtherToothDeclarationConflict.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
+
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("");
+    }
+
+    @Test
+    @Transactional
     public void testCheckOtherCodeDeclarationInterval() {
         subTestOfOtherCodeDeclarationInterval1();
         subTestOfOtherCodeDeclarationInterval2();

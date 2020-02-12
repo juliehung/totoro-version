@@ -2,6 +2,7 @@ package io.dentall.totoro.business.dto;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.service.NhiService;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ public class PersonalNhiExtendTreatmentProcedureMap {
     public PersonalNhiExtendTreatmentProcedureMap nhiExtendTreatmentProcedure(Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures) {
         nhiExtendTreatmentProcedures.stream().forEach(nhiExtendTreatmentProcedure -> {
             String key = nhiExtendTreatmentProcedure.getA73();
+            List<String> teeth = NhiService.splitToothFromA74(nhiExtendTreatmentProcedure.getA74()).collect(Collectors.toList());
             NhiExtendDisposal nhiExtendDisposal = nhiExtendTreatmentProcedure.getTreatmentProcedure()
                 .getDisposal()
                 .getNhiExtendDisposals().iterator().next();
@@ -24,12 +26,14 @@ public class PersonalNhiExtendTreatmentProcedureMap {
                     : nhiExtendDisposal.getReplenishmentDate();
 
             if (personalNhiExtendTreatmentProcedures.containsKey(key)) {
+                this.personalNhiExtendTreatmentProcedures.get(key).pushDeclarationDateAndTooth(declarationDate, teeth);
                 this.personalNhiExtendTreatmentProcedures.get(key).pushDeclarationDate(declarationDate);
             } else {
                 this.personalNhiExtendTreatmentProcedures.put(key,
                     new PersonalNhiExtendTreatmentProcedure().code(key)
                         .declarationDate(declarationDate)
                 );
+                this.personalNhiExtendTreatmentProcedures.get(key).pushDeclarationDateAndTooth(declarationDate, teeth);
             }
         });
         return this;

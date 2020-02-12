@@ -1,5 +1,6 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.business.dto.Rule;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import org.junit.Before;
@@ -78,9 +79,9 @@ public class NhiServiceMockTest {
 
         nhiExtendTreatmentProcedure.setA73(code);
 
-        NhiService.Rule rule = new NhiService.Rule();
+        Rule rule = new Rule();
         rule.setInterval("<=180");
-        ReflectionTestUtils.setField(nhiService, "rules", new HashMap<String, NhiService.Rule>() {{
+        ReflectionTestUtils.setField(nhiService, "rules", new HashMap<String, Rule>() {{
             put(code, rule);
         }});
 
@@ -123,9 +124,9 @@ public class NhiServiceMockTest {
 
         nhiExtendTreatmentProcedure.setA73(code);
 
-        NhiService.Rule rule = new NhiService.Rule();
+        Rule rule = new Rule();
         rule.setInterval("MMx1");
-        ReflectionTestUtils.setField(nhiService, "rules", new HashMap<String, NhiService.Rule>() {{
+        ReflectionTestUtils.setField(nhiService, "rules", new HashMap<String, Rule>() {{
             put(code, rule);
         }});
 

@@ -1,9 +1,7 @@
 package io.dentall.totoro.business.dto;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class PersonalNhiExtendTreatmentProcedure {
@@ -12,6 +10,8 @@ public class PersonalNhiExtendTreatmentProcedure {
 
     // 該健保代碼申報時間 確保資料已被排序過
     private Stack<LocalDate> declarationDates = new Stack<>();
+
+    private Map<LocalDate, List<String>> declarationDateAndTooth = new HashMap<>();
 
     public PersonalNhiExtendTreatmentProcedure code(String code) {
         this.code = code;
@@ -37,5 +37,13 @@ public class PersonalNhiExtendTreatmentProcedure {
 
     public Stream<LocalDate> getSortedDeclarationDates() {
         return this.declarationDates.stream().sorted();
+    }
+
+    public void pushDeclarationDateAndTooth(LocalDate declarationDate, List<String> teeth) {
+        this.declarationDateAndTooth.put(declarationDate, teeth);
+    }
+
+    public Map<LocalDate, List<String>> getDeclarationDateAndTooth() {
+        return this.declarationDateAndTooth;
     }
 }
