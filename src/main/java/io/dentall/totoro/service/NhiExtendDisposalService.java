@@ -127,11 +127,6 @@ public class NhiExtendDisposalService {
         return nhiExtendDisposalRepository
             .findByDateBetween(ym.atDay(1), ym.atEndOfMonth())
             .stream()
-            .map(nhiExtendDisposal -> {
-                nhiService.checkNhiExtendTreatmentProcedures(nhiExtendDisposal.getNhiExtendTreatmentProcedures());
-
-                return nhiExtendDisposal;
-            })
             .map(NhiExtendDisposalVM::new)
             .collect(Collectors.toList());
     }
@@ -145,11 +140,7 @@ public class NhiExtendDisposalService {
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
         return nhiExtendDisposalRepository
             .findByDateBetween(ym.atDay(1), ym.atEndOfMonth(), pageable)
-            .map(nhiExtendDisposal -> {
-                nhiService.checkNhiExtendTreatmentProcedures(nhiExtendDisposal.getNhiExtendTreatmentProcedures());
-
-                return new NhiExtendDisposalVM(nhiExtendDisposal);
-            });
+            .map(NhiExtendDisposalVM::new);
     }
 
     @Transactional(readOnly = true)
