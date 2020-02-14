@@ -352,7 +352,7 @@ public class NhiServiceIntTest {
         nhiService.checkSurfaceLimit.accept(spec4F2);
 
         assertThat(blankOnlyF.getCheck()).contains("不須填牙面");
-        assertThat(validatedOnlyF.getCheck()).contains("須填牙面");
+        assertThat(validatedOnlyF.getCheck()).contains("建議填 M,D,L,B,O,P,I,F,C 牙面");
         assertThat(spec1F1.getCheck()).contains("申報面數不合");
         assertThat(spec1F2.getCheck()).contains("建議填 A,B,C 牙面");
         assertThat(spec4F1.getCheck()).contains("建議填 ABCD,BCDE,CDEF 牙面");
