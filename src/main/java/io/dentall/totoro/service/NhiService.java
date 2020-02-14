@@ -84,7 +84,7 @@ public class NhiService {
         surfaceLimitMap.put("SURFACE_SPECIFIC_4_ALPHABET_ONLY", "");
 
         surfaceLimitErrorResponseMap.put("SURFACE_BLANK_ONLY", "不須填牙面");
-        surfaceLimitErrorResponseMap.put("SURFACE_VALIDATED_ONLY", "須填牙面");
+        surfaceLimitErrorResponseMap.put("SURFACE_VALIDATED_ONLY", "建議填");
         surfaceLimitErrorResponseMap.put("SURFACE_SPECIFIC_1_ALPHABET_ONLY", "建議填");
         surfaceLimitErrorResponseMap.put("SURFACE_SPECIFIC_4_ALPHABET_ONLY", "建議填");
         surfaceLimitErrorResponseMap.put("SURFACE_LIMIT_NUMBER", "申報面數不合");
@@ -106,32 +106,32 @@ public class NhiService {
         positionLimitMap.put("SPECIFIC_TOOTH_ONLY", "");
 
         positionLimitErrorResponseMap.put("BLANK_ONLY", "不應填寫牙位");
-        positionLimitErrorResponseMap.put("VALIDATED_ONLY", "限填合法一般、區域、全域牙位");
-        positionLimitErrorResponseMap.put("FM_ONLY", "限填全域牙位");
+        positionLimitErrorResponseMap.put("VALIDATED_ONLY", "建議填合法一般、區域、全域牙位");
+        positionLimitErrorResponseMap.put("FM_ONLY", "建議填全域牙位");
         // 僅限 所有牙位
-        positionLimitErrorResponseMap.put("TOOTH_ONLY", "限填11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99");
+        positionLimitErrorResponseMap.put("TOOTH_ONLY", "建議填11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99");
         // 僅限 所有牙位，所有區域
-        positionLimitErrorResponseMap.put("TOOTH_AREA_ONLY", "限填11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99,UB,LB,UR,UL,LR,LL,UA,LA");
+        positionLimitErrorResponseMap.put("TOOTH_AREA_ONLY", "建議填11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99,UB,LB,UR,UL,LR,LL,UA,LA");
         // 僅限 乳牙牙位
-        positionLimitErrorResponseMap.put("DECIDUOUS_ONLY", "限填51-55,61-65,71-75,81-85,99");
+        positionLimitErrorResponseMap.put("DECIDUOUS_ONLY", "建議填51-55,61-65,71-75,81-85,99");
         // 僅限 恆牙牙位
-        positionLimitErrorResponseMap.put("PERMANENT_ONLY", "限填11-19,21-29,31-39,41-49,51-55,99");
+        positionLimitErrorResponseMap.put("PERMANENT_ONLY", "建議填11-19,21-29,31-39,41-49,51-55,99");
         // 僅限 前牙牙位
-        positionLimitErrorResponseMap.put("FRONT_ONLY", "限填11-13,21-23,31-33,41-43,51-53,61-63,71-73,81-83,99");
+        positionLimitErrorResponseMap.put("FRONT_ONLY", "建議填11-13,21-23,31-33,41-43,51-53,61-63,71-73,81-83,99");
         // 僅限 後牙牙位
-        positionLimitErrorResponseMap.put("BACK_ONLY", "限填14-19,24-29,34-39,44-49,51-53,61-63,71-73,81-83,99");
+        positionLimitErrorResponseMap.put("BACK_ONLY", "建議填14-19,24-29,34-39,44-49,51-53,61-63,71-73,81-83,99");
         // 僅限 恆牙前牙牙位
-        positionLimitErrorResponseMap.put("PERMANENT_FRONT_ONLY", "限填11-13,21-23,31-33,41-43,99");
+        positionLimitErrorResponseMap.put("PERMANENT_FRONT_ONLY", "建議填11-13,21-23,31-33,41-43,99");
         // 僅限 恆牙後牙牙位
-        positionLimitErrorResponseMap.put("PERMANENT_BACK_ONLY", "限填14-19,24-29,34-39,44-49");
+        positionLimitErrorResponseMap.put("PERMANENT_BACK_ONLY", "建議填14-19,24-29,34-39,44-49");
         // 僅限 恆牙小臼齒牙位
-        positionLimitErrorResponseMap.put("PERMANENT_PREMOLAR_ONLY", "限填14,15,24,25,34,35,44,45,19,29,39,49,99");
+        positionLimitErrorResponseMap.put("PERMANENT_PREMOLAR_ONLY", "建議填14,15,24,25,34,35,44,45,19,29,39,49,99");
         // 僅限 恆牙大臼齒牙位
-        positionLimitErrorResponseMap.put("PERMANENT_MOLAR_ONLY", "限填16,17,18,24,25,26,27,28,36,37,38,46,47,48,19,29,39,49,99");
+        positionLimitErrorResponseMap.put("PERMANENT_MOLAR_ONLY", "建議填16,17,18,24,25,26,27,28,36,37,38,46,47,48,19,29,39,49,99");
         // 僅限 指定牙位
-        positionLimitErrorResponseMap.put("SPECIFIC_TOOTH_ONLY", "限填指定牙位");
+        positionLimitErrorResponseMap.put("SPECIFIC_TOOTH_ONLY", "建議填指定牙位");
         // 僅限 指定區域
-        positionLimitErrorResponseMap.put("SPECIFIC_AREA_ONLY", "限填指定區域");
+        positionLimitErrorResponseMap.put("SPECIFIC_AREA_ONLY", "建議填指定區域");
     }
 
     @PostConstruct
@@ -266,6 +266,7 @@ public class NhiService {
             case "SURFACE_VALIDATED_ONLY": {
                 // Cause lambda need final value,  it's modified by previous code. Thought, make a copy for it.
                 String finalSpecificSurface = surfaceLimitMap.get("SURFACE_VALIDATED_ONLY").replace(",", "");
+                specificSurface = surfaceLimitMap.get("SURFACE_VALIDATED_ONLY");
                 limitNumb = finalSpecificSurface.length();
                 if (surface.chars()
                     .mapToObj(c -> String.valueOf((char) c))
