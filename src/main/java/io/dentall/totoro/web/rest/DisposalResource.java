@@ -169,13 +169,12 @@ public class DisposalResource {
         Optional<Disposal> optDisposal = disposalService.findOneWithEagerRelationships(id);
         if (optDisposal.isPresent()) {
             Disposal disposal = optDisposal.get();
-            // TODO: Add back for normal check rules and interval rules
-//            nhiService.checkNhiExtendTreatmentProcedures(disposal.getTreatmentProcedures().stream()
-//                .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
-//                .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
-//                .collect(Collectors.toSet())
-//            );
-//
+            nhiService.checkNhiExtendTreatmentProcedures(disposal.getTreatmentProcedures().stream()
+                .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
+                .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
+                .collect(Collectors.toSet())
+            );
+
         }
         return ResponseUtil.wrapOrNotFound(optDisposal);
     }
