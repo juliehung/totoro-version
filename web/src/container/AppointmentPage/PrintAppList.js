@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
 import { Table } from 'antd';
+import convertBirthToROCBirth from './utils/convertBirthToROCBirth';
+import { Gender } from './utils/convertPatientToPatientDetail';
 
 const headerData = [
   {
@@ -51,11 +53,7 @@ export default class PrintAppList extends React.Component {
             const age = moment().diff(moment(birth, 'YYYY-MM-DD'), 'years');
             return (
               <p style={style}>
-                {moment(birth)
-                  .add(-1911, 'year')
-                  .format('YYYY-MM-DD')
-                  .replace(/^0+/, '')}{' '}
-                ({age})
+                {convertBirthToROCBirth(birth)} ({age})
               </p>
             );
           } else {
@@ -67,7 +65,15 @@ export default class PrintAppList extends React.Component {
         title: '性別',
         dataIndex: 'gender',
         key: 'gender',
-        render: gender => <p style={style}>{gender === 'MALE' ? '男' : gender === 'FEMALE' ? '女' : '無'}</p>,
+        render: gender => (
+          <p style={style}>
+            {gender === headerData[0].gender
+              ? headerData[0].gender
+              : Gender.find(g => g.en === gender)
+              ? Gender.find(g => g.en === gender).ch
+              : '無'}
+          </p>
+        ),
       },
       {
         title: '電話',

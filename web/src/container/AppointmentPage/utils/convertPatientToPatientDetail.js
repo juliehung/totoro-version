@@ -1,9 +1,9 @@
 import moment from 'moment';
 import analysisAppointments from './analysisAppointments';
 
-const Gender = [
-  { ch: '男性', en: 'MALE' },
-  { ch: '女性', en: 'FEMALE' },
+export const Gender = [
+  { ch: '男', en: 'MALE' },
+  { ch: '女', en: 'FEMALE' },
   { ch: '其他', en: 'OTHER' },
 ];
 
