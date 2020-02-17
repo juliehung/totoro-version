@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20200217-Sql" author="WeiChen">
+        <sql dbms="postgresql" splitStatements="true">
+            DELETE FROM patient_identity WHERE code in ('903', '904', '005');
+            UPDATE patient_identity SET name='福保(低收入戶)' WHERE code='003';
+            UPDATE patient_identity SET name='榮保(榮民)' WHERE code='004';
+            UPDATE patient_identity SET name='勞保(因職業傷害者）' WHERE code='006';
+            UPDATE patient_identity SET name='山地離島地區' WHERE code='007';
+            UPDATE patient_identity SET name='經離島轉診至本島(當次)' WHERE code='008';
+            UPDATE patient_identity SET name='預防保健、同療、天然災害' WHERE code='009';
+            UPDATE patient_identity SET name='(研發)替代役役男' WHERE code='906';
+        </sql>
+    </changeSet>
+</databaseChangeLog>
