@@ -104,9 +104,113 @@ public class NhiServiceIntTest {
 
     @Test
     @Transactional
+    public void testCheckIdentityLimit() {
+        // 一般人 >= 6 歲
+        testCheckIdentityLimit1();
+        // 一般人 < 6 歲
+        testCheckIdentityLimit2();
+        // 一般人區間不符合
+        testCheckIdentityLimit3();
+        // 特殊人 >= 12 歲
+        testCheckIdentityLimit4();
+        // 特殊人 < 12 歲
+        testCheckIdentityLimit5();
+        // 特殊人區間不符合
+        testCheckIdentityLimit6();
+    }
+
+    private void testCheckIdentityLimit1() {
+        Patient p = domainGenerator.generatePatientAndTxFamily("patient1", "0000000000");
+        p.setBirth(LocalDate.of(1999,01,01));
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1021010", "IdentityLimit", "44", "");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1081010",  "IdentityLimit", "112244", "H10");
+
+        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
+        nhiService.checkIdentityLimit.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
+
+//        logger.info(targetTxProc.getNhiExtendTreatmentProcedure().getCheck());
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("不符合申報 IdentityLimit 資格\n");
+    }
+
+    private void testCheckIdentityLimit2() {
+        Patient p = domainGenerator.generatePatientAndTxFamily("patient2", "0000000000");
+        p.setBirth(LocalDate.of(1999,01,01));
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1021010", "IdentityLimit", "44", "");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1051010", "IdentityLimit", "112244", "H10");
+
+        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
+        nhiService.checkIdentityLimit.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
+
+//        logger.info(targetTxProc.getNhiExtendTreatmentProcedure().getCheck());
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("");
+    }
+
+    private void testCheckIdentityLimit3() {
+        Patient p = domainGenerator.generatePatientAndTxFamily("patient3", "0000000000");
+        p.setBirth(LocalDate.of(1999,01,01));
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1021010", "IdentityLimit", "44", "");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1030310", "IdentityLimit", "112244", "H10");
+
+        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
+        nhiService.checkIdentityLimit.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
+
+//        logger.info(targetTxProc.getNhiExtendTreatmentProcedure().getCheck());
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("半年不得重複申報（未滿六歲兒童）上次： 2013/10/10 ( 151 天前)\n");
+    }
+
+    private void testCheckIdentityLimit4() {
+        Patient p = domainGenerator.generatePatientAndTxFamily("patient4", "0000000000");
+        p.setBirth(LocalDate.of(1999,01,01));
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1121010", "IdentityLimit", "44", "");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1131010",  "IdentityLimit", "112244", "003");
+
+        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
+        nhiService.checkIdentityLimit.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
+
+//        logger.info(targetTxProc.getNhiExtendTreatmentProcedure().getCheck());
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("不符合申報 IdentityLimit 資格\n");
+    }
+
+    private void testCheckIdentityLimit5() {
+        Patient p = domainGenerator.generatePatientAndTxFamily("patient5", "0000000000");
+        p.setBirth(LocalDate.of(1999,01,01));
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1091010",  "IdentityLimit", "44", "");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1100110", "IdentityLimit", "112244", "003");
+
+        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
+        nhiService.checkIdentityLimit.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
+
+//        logger.info(targetTxProc.getNhiExtendTreatmentProcedure().getCheck());
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("");
+    }
+
+    private void testCheckIdentityLimit6() {
+        Patient p = domainGenerator.generatePatientAndTxFamily("patient6", "0000000000");
+        p.setBirth(LocalDate.of(1999,01,01));
+        domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1091010", "IdentityLimit", "44", "");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1001010", "1091110","IdentityLimit", "112244", "003");
+
+        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
+            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
+        nhiService.checkIdentityLimit.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
+
+//        logger.info(targetTxProc.getNhiExtendTreatmentProcedure().getCheck());
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("九十天不得重複申報（未滿十二歲之低收入戶、身心障礙、設籍原住民族地區、偏遠及離島地區兒童）上次： 2020/10/10 ( 31 天前)\n");
+    }
+
+    @Test
+    @Transactional
     public void testCheckOtherToothDeclarationInterval() {
         testCheckOtherToothDeclarationInterval1();
         testCheckOtherToothDeclarationInterval2();
+        testCheckOtherToothDeclarationInterval3();
+        testCheckOtherToothDeclarationInterval4();
+        testCheckOtherToothDeclarationInterval5();
     }
 
     public void testCheckOtherToothDeclarationInterval1() {

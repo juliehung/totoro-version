@@ -57,12 +57,62 @@ public class DomainGenerator {
 
     /**
      * Before using this function make sure you already have treatment family. If not, then call `generatePatientAndTxFamily`
+     *
      * @param patient
+     * @param a13
      * @param a17
      * @param a73
      * @param a74
+     * @param patientIdentity
      * @return
      */
+    public TreatmentProcedure generateTreatmentProcedureToDisposal(
+        Patient patient,
+        String a13,
+        String a17,
+        String a73,
+        String a74,
+        String patientIdentity
+    ) {
+        // Query patient's all nhi treatment procedures
+        TreatmentCriteria treatmentCriteria = new TreatmentCriteria();
+        LongFilter lf = new LongFilter();
+        lf.setEquals(patient.getId());
+        treatmentCriteria.setPatientId(lf);
+        TreatmentTask treatmentTask = treatmentQueryService.findByCriteria(treatmentCriteria).stream()
+            .findFirst()
+            .get()
+            .getTreatmentPlans().iterator().next()
+            .getTreatmentTasks().iterator().next();
+
+        Disposal disposal = new Disposal().status(DisposalStatus.PERMANENT);
+        TreatmentProcedure treatmentProcedure = new TreatmentProcedure().status(TreatmentProcedureStatus.COMPLETED);
+        NhiExtendDisposal nhiExtendDisposal = new NhiExtendDisposal().a17(a17).uploadStatus(NhiExtendDisposalUploadStatus.NORMAL);
+        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73(a73).a74(a74).check("");
+
+        // Save disposal
+        disposal = disposalRepository.saveAndFlush(disposal);
+        // Save nhi disposal with relationship
+        Set<NhiExtendDisposal> nhiExtendDisposals = new HashSet<>();
+        nhiExtendDisposals.add(nhiExtendDisposal);
+        disposal.nhiExtendDisposals(nhiExtendDisposals);
+        nhiExtendDisposal.setA13(a13);
+        nhiExtendDisposal.disposal(disposal);
+        nhiExtendDisposal.setPatientIdentity(patientIdentity);
+        nhiExtendDisposalRepository.saveAndFlush(nhiExtendDisposal);
+        // Save treatment with relationship
+        treatmentTask.getTreatmentProcedures().add(treatmentProcedure);
+        treatmentProcedure.disposal(disposal);
+        treatmentProcedure.treatmentTask(treatmentTask);
+        treatmentProcedure = treatmentProcedureRepository.saveAndFlush(treatmentProcedure);
+        // Save nhi treatment with relationship
+        treatmentProcedure.nhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure);
+        nhiExtendTreatmentProcedure.treatmentProcedure(treatmentProcedure);
+        nhiExtendTreatmentProcedureRepository.saveAndFlush(nhiExtendTreatmentProcedure);
+
+        return treatmentProcedure;
+    }
+
     public TreatmentProcedure generateTreatmentProcedureToDisposal(
         Patient patient,
         String a17,

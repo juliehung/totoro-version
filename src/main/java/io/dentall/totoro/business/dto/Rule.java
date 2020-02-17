@@ -49,11 +49,23 @@ public class Rule {
     @Convert(conversionClass = NhiService.Splitter.class, args = {";"})
     private String[] otherToothDeclarationInterval;
 
+    @Parsed(field = "identity_limit")
+    @Convert(conversionClass = NhiService.Splitter.class, args = {";"})
+    private String[] identityLimit;
+
     public static Rule allPass() {
         Rule allPass = new Rule();
         allPass.setCode(null);
 
         return allPass;
+    }
+
+    public String[] getIdentityLimit() {
+        return identityLimit;
+    }
+
+    public void setIdentityLimit(String[] identityLimit) {
+        this.identityLimit = identityLimit;
     }
 
     public void setOtherCodeDeclarationInterval(String[] otherCodeDeclarationInterval) {
