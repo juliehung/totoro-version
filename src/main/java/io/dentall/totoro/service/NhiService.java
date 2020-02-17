@@ -11,6 +11,7 @@ import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendPatientRepository;
 import io.dentall.totoro.service.dto.TreatmentCriteria;
+import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.github.jhipster.service.filter.LongFilter;
 import org.apache.commons.lang3.StringUtils;
@@ -215,12 +216,18 @@ public class NhiService {
 
                     // Wrappers
                     Consumer<NhiExtendTreatmentProcedure> wrapCheckExclude = nhiExtendTxP -> checkExclude.accept(nhiExtendTxP, nhiExtendTreatmentProcedures);
-                    Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherCodeDelcarationConflict = nhiExtendTxP ->
+                    Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherCodeDeclarationConflict = nhiExtendTxP ->
                         checkOtherCodeDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+                    Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherToothDeclarationConflict = nhiExtendTxP ->
+                        checkOtherToothDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+                    Consumer<NhiExtendTreatmentProcedure> wrapCheckIdentityLimit = nhiExtendTxP ->
+                        checkIdentityLimit.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
 
                     checkXRay
                         .andThen(wrapCheckExclude)
-                        .andThen(wrapCheckOtherCodeDelcarationConflict)
+                        .andThen(wrapCheckOtherCodeDeclarationConflict)
+                        .andThen(wrapCheckOtherToothDeclarationConflict)
+                        .andThen(wrapCheckIdentityLimit)
                         .andThen(checkMedicalRecord)
                         .andThen(checkInterval)
                         .andThen(checkPositionLimit)
@@ -390,6 +397,54 @@ public class NhiService {
         }
     };
 
+    public BiConsumer<NhiExtendTreatmentProcedure, PersonalNhiExtendTreatmentProcedureMap> checkIdentityLimit = ((targetNhiExtendTreatmentProcedure, personalNhiExtendTreatmentProcedureMap) -> {
+        NhiExtendDisposal targetNhiExtendDisposal = targetNhiExtendTreatmentProcedure.getTreatmentProcedure()
+            .getDisposal()
+            .getNhiExtendDisposals().iterator().next();
+        LocalDate targetDate = targetNhiExtendDisposal.getReplenishmentDate() == null
+            ? targetNhiExtendDisposal.getDate()
+            : targetNhiExtendDisposal.getReplenishmentDate();
+        String targetCode = targetNhiExtendTreatmentProcedure.getA73();
+        if (rules.containsKey(targetCode) && personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(targetCode)) {
+            Arrays.stream(rules.get(targetCode).getIdentityLimit())
+                .map(IdentityLimit::new)
+                .forEach(r -> {
+                    String currentIdentity = targetNhiExtendDisposal.getPatientIdentity();
+                    int patientAge = DateTimeUtil.getAge(
+                        DateTimeUtil.transformROCDateToLocalDate(targetNhiExtendDisposal.getA13()),
+                        DateTimeUtil.transformROCDateToLocalDate(targetNhiExtendDisposal.getA17())
+                    );
+                    // 排除不再資格條件下的規則
+                    if (r.getIdentity() != null && !r.getIdentity().stream()
+                            .anyMatch(identity -> identity.equals(currentIdentity))
+                    ) {
+                        return ;
+                    }
+                    // 檢核年齡
+                    if (patientAge > r.getAge()) {
+                        targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                            "不符合申報 " +
+                            targetCode +
+                            " 資格\n");
+                        return ;
+                    }
+                    // 檢核區間
+                    personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(targetCode).getSortedDeclarationDates()
+                        .filter(localDate -> localDate.plusDays(r.getInterval()).isAfter(targetDate))
+                        .forEach(localDate -> {
+                            targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                                DateTimeUtil.formatDays(r.getInterval()) +
+                                r.getMessage() +
+                                "上次： " +
+                                formatter.format(localDate) +
+                                " ( " +
+                                ChronoUnit.DAYS.between(localDate, targetDate) +
+                                " 天前)\n");
+                        });
+                });
+        }
+    });
+
     public BiConsumer<NhiExtendTreatmentProcedure, PersonalNhiExtendTreatmentProcedureMap> checkOtherToothDeclarationConflict = ((targetNhiExtendTreatmentProcedure, personalNhiExtendTreatmentProcedureMap) -> {
         NhiExtendDisposal targetNhiExtendDisposal = targetNhiExtendTreatmentProcedure.getTreatmentProcedure()
             .getDisposal()
@@ -424,17 +479,17 @@ public class NhiService {
                                         .filter(targetTooth -> treatedTeeth.stream().anyMatch(targetTooth::equals))
                                         .forEach(targetTooth ->
                                             targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
-                                                    r.getInterval() +
-                                                    " 天內 " +
-                                                    targetTooth +
-                                                    " 牙位已申報 " +
-                                                    ruleCode +
-                                                    " ，不得再申報此項。上次： " +
-                                                    formatter.format(entry.getKey()) +
-                                                    " ( " +
-                                                    ChronoUnit.DAYS.between(entry.getKey(), targetDate) +
-                                                    " 天前 )\n"
-                                                )
+                                                r.getInterval() +
+                                                " 天內 " +
+                                                targetTooth +
+                                                " 牙位已申報 " +
+                                                ruleCode +
+                                                " ，不得再申報此項。上次： " +
+                                                formatter.format(entry.getKey()) +
+                                                " ( " +
+                                                ChronoUnit.DAYS.between(entry.getKey(), targetDate) +
+                                                " 天前 )\n"
+                                            )
                                         );
                                 })
                         )
