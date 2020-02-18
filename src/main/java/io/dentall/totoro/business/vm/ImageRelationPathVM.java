@@ -1,4 +1,4 @@
-package io.dentall.totoro.web.rest.vm;
+package io.dentall.totoro.business.vm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.ImageRelation;

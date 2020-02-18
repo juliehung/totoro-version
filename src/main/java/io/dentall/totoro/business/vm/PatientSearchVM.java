@@ -1,7 +1,5 @@
 package io.dentall.totoro.business.vm;
 
-import io.dentall.totoro.domain.Patient;
-
 public class PatientSearchVM {
 
     private Long id;
