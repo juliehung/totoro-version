@@ -4,6 +4,7 @@ import io.dentall.totoro.business.service.ImageRelationBusinessService;
 import io.dentall.totoro.domain.ImageRelation;
 import io.dentall.totoro.domain.enumeration.ImageRelationDomain;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
+import io.dentall.totoro.web.rest.vm.ImageRelationPathVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class ImageRelationResource {
 
-    private final Logger logger = LoggerFactory.getLogger(ImageRelationResource.class);
+    private final Logger log = LoggerFactory.getLogger(ImageRelationResource.class);
 
     private static final String ENTITY_NAME = "imageRelation";
 
@@ -38,7 +39,20 @@ public class ImageRelationResource {
     }
 
     @GetMapping("/image-relations/images")
-    public ResponseEntity<List<String>> getImagePathsByDomain(@RequestParam(value = "domain") ImageRelationDomain domain, @RequestParam(value = "domainId") Long domainId) {
-        return ResponseEntity.ok(imageRelationBusinessService.getImagePathsByDomain(domain, domainId));
+    public ResponseEntity<List<ImageRelationPathVM>> getImagePathsByDomain(@RequestParam(value = "domain") ImageRelationDomain domain, @RequestParam(value = "domainId") Long domainId) {
+        return ResponseEntity.ok(imageRelationBusinessService.getImageRelationPathsByDomain(domain, domainId));
+    }
+
+    /**
+     * DELETE  /image-relations/:id : delete the "id" image-relation.
+     *
+     * @param id the id of the image-relation to delete
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @DeleteMapping("/image-relations/{id}")
+    public ResponseEntity<Void> deleteImageRelation(@PathVariable Long id) {
+        log.debug("REST request to delete ImageRelation : {}", id);
+        imageRelationBusinessService.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

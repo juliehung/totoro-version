@@ -1,6 +1,5 @@
 package io.dentall.totoro.repository;
 
-import io.dentall.totoro.domain.Image;
 import io.dentall.totoro.domain.ImageRelation;
 import io.dentall.totoro.domain.enumeration.ImageRelationDomain;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +18,6 @@ import java.util.stream.Stream;
 @Repository
 public interface ImageRelationRepository extends JpaRepository<ImageRelation, Long>, JpaSpecificationExecutor<ImageRelation> {
 
-    @Query("SELECT DISTINCT imageRelation.image FROM ImageRelation imageRelation WHERE imageRelation.domain = :domain AND imageRelation.domainId = :domainId")
-    Stream<Image> findDistinctImageByDomainAndDomainId(@Param("domain") ImageRelationDomain domain, @Param("domainId") Long domainId);
+    @Query("SELECT imageRelation FROM ImageRelation imageRelation WHERE imageRelation.domain = :domain AND imageRelation.domainId = :domainId")
+    Stream<ImageRelation> findDistinctImageByDomainAndDomainId(@Param("domain") ImageRelationDomain domain, @Param("domainId") Long domainId);
 }
