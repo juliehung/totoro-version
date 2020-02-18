@@ -11,6 +11,8 @@ public class OtherCodeDeclarationInterval {
 
     private OtherCodeDeclarationIntervalRange range;
 
+    private Integer max;
+
     public OtherCodeDeclarationInterval(String rule) {
         try {
             String[] tokens = rule.split("@");
@@ -32,6 +34,9 @@ public class OtherCodeDeclarationInterval {
                     case "interval":
                         this.interval = Long.valueOf(valueToken);
                         break;
+                    case "max":
+                        this.max = Integer.valueOf(valueToken);
+                        break;
                     default:
                         break;
                 }
@@ -39,6 +44,14 @@ public class OtherCodeDeclarationInterval {
         } catch (Exception e) {
             // do nothing
         }
+    }
+
+    public Integer getMax() {
+        return max;
+    }
+
+    public void setMax(Integer max) {
+        this.max = max;
     }
 
     public OtherCodeDeclarationIntervalRange getRange() {
