@@ -53,6 +53,14 @@ public class Rule {
     @Convert(conversionClass = NhiService.Splitter.class, args = {";"})
     private String[] identityLimit;
 
+    @Parsed(field = "always_message")
+    @Convert(conversionClass = NhiService.Splitter.class, args = {";"})
+    private String[] alwaysMessage;
+
+    @Parsed(field = "depend_on")
+    @Convert(conversionClass = NhiService.Splitter.class, args = {";"})
+    private String[] dependOn;
+
     public static Rule allPass() {
         Rule allPass = new Rule();
         allPass.setCode(null);
@@ -66,6 +74,22 @@ public class Rule {
 
     public void setIdentityLimit(String[] identityLimit) {
         this.identityLimit = identityLimit;
+    }
+
+    public String[] getDependOn() {
+        return dependOn;
+    }
+
+    public void setDependOn(String[] dependOn) {
+        this.dependOn = dependOn;
+    }
+
+    public String[] getAlwaysMessage() {
+        return alwaysMessage;
+    }
+
+    public void setAlwaysMessage(String[] alwaysMessage) {
+        this.alwaysMessage = alwaysMessage;
     }
 
     public void setOtherCodeDeclarationInterval(String[] otherCodeDeclarationInterval) {

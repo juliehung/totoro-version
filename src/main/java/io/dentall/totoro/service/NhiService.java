@@ -14,6 +14,7 @@ import io.dentall.totoro.service.dto.TreatmentCriteria;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.github.jhipster.service.filter.LongFilter;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -222,12 +223,16 @@ public class NhiService {
                         checkOtherToothDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
                     Consumer<NhiExtendTreatmentProcedure> wrapCheckIdentityLimit = nhiExtendTxP ->
                         checkIdentityLimit.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+                    Consumer<NhiExtendTreatmentProcedure> wrapCheckDependOn = nhiExtendTxP ->
+                        checkDependOn.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
 
                     checkXRay
                         .andThen(wrapCheckExclude)
                         .andThen(wrapCheckOtherCodeDeclarationConflict)
                         .andThen(wrapCheckOtherToothDeclarationConflict)
                         .andThen(wrapCheckIdentityLimit)
+                        .andThen(wrapCheckDependOn)
+                        .andThen(checkAlwaysMessage)
                         .andThen(checkMedicalRecord)
                         .andThen(checkInterval)
                         .andThen(checkPositionLimit)
@@ -383,6 +388,17 @@ public class NhiService {
         }
     };
 
+    public Consumer<NhiExtendTreatmentProcedure> checkAlwaysMessage = nhiExtendTreatmentProcedure -> {
+        String code = nhiExtendTreatmentProcedure.getA73();
+        if (rules.get(code) != null &&
+            rules.get(code).getAlwaysMessage() != null
+        ) {
+            Arrays.stream(rules.get(code).getAlwaysMessage())
+                .map(AlwaysMessage::new)
+                .forEach(r -> nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + r.getMessage() + "\n"));
+        }
+    };
+
     public Consumer<NhiExtendTreatmentProcedure> checkXRay = nhiExtendTreatmentProcedure -> {
         String code = nhiExtendTreatmentProcedure.getA73();
         if (rules.get(code).getXRay()) {
@@ -497,7 +513,7 @@ public class NhiService {
         }
     });
 
-    public BiConsumer<NhiExtendTreatmentProcedure, PersonalNhiExtendTreatmentProcedureMap> checkOtherCodeDeclarationConflict = ((targetNhiExtendTreatmentProcedure, personalNhiExtendTreatmentProcedureMap) -> {
+    public BiConsumer<NhiExtendTreatmentProcedure, PersonalNhiExtendTreatmentProcedureMap> checkDependOn = ((targetNhiExtendTreatmentProcedure, personalNhiExtendTreatmentProcedureMap) -> {
         NhiExtendDisposal targetNhiExtendDisposal = targetNhiExtendTreatmentProcedure.getTreatmentProcedure()
             .getDisposal()
             .getNhiExtendDisposals().iterator().next();
@@ -506,75 +522,139 @@ public class NhiService {
             : targetNhiExtendDisposal.getReplenishmentDate();
         String targetCode = targetNhiExtendTreatmentProcedure.getA73();
         if (rules.containsKey(targetCode) && rules.get(targetCode).getOtherCodeDeclarationInterval() != null) {
+            Arrays.stream(rules.get(targetCode).getDependOn())
+                .map(DependOn::new)
+                .forEach(r -> {
+                    if (!personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getCode()) ||
+                        personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getCode()).getSortedDeclarationDates()
+                            .anyMatch(localDate -> {
+                                LocalDate d = localDate.plusDays(r.getInterval());
+                                return d.isAfter(targetDate) || d.isEqual(targetDate);
+                            })
+                    ) {
+                        targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() + r.getMessage() + "\n");
+                    }
+                });
+        }
+    });
+
+    public BiConsumer<NhiExtendTreatmentProcedure, PersonalNhiExtendTreatmentProcedureMap> checkOtherCodeDeclarationConflict = ((targetNhiExtendTreatmentProcedure, personalNhiExtendTreatmentProcedureMap) -> {
+        NhiExtendDisposal targetNhiExtendDisposal = targetNhiExtendTreatmentProcedure.getTreatmentProcedure()
+            .getDisposal()
+            .getNhiExtendDisposals().iterator().next();
+        LocalDate targetDate = targetNhiExtendDisposal.getReplenishmentDate() == null
+            ? targetNhiExtendDisposal.getDate()
+            : targetNhiExtendDisposal.getReplenishmentDate();
+        Map<String, List<LocalDate>> countingTreatmentProcedure = new HashedMap();
+        String targetCode = targetNhiExtendTreatmentProcedure.getA73();
+        if (rules.containsKey(targetCode) && rules.get(targetCode).getOtherCodeDeclarationInterval() != null) {
             Arrays.stream(rules.get(targetCode).getOtherCodeDeclarationInterval())
                 .map(OtherCodeDeclarationInterval::new)
                 .forEach(r ->
-                    r.getCode()
+                    r.getCode().stream()
+                        .filter(ruleCode -> personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(ruleCode))
                         .forEach(ruleCode -> {
-                            if (personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(ruleCode)) {
-                                if (r.getRange() == null) {
-                                    Optional<LocalDate> optionalLocalDate = personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
-                                        .getSortedDeclarationDates()
-                                        .filter(localDate -> {
-                                            LocalDate d = localDate.plusDays(r.getInterval());
-                                            return d.isAfter(targetDate) || d.isEqual(targetDate);
-                                        })
-                                        .findAny();
-                                    if (optionalLocalDate.isPresent()) {
-                                        LocalDate conflictDate = optionalLocalDate.get();
+                            if (r.getMax() != null) {
+                                personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
+                                    .getSortedDeclarationDates()
+                                    .filter(localDate -> {
+                                        LocalDate d = localDate.plusDays(r.getInterval());
+                                        return d.isAfter(targetDate) || d.isEqual(targetDate);
+                                    })
+                                    .forEach(localDate -> {
+                                        if (!countingTreatmentProcedure.containsKey(ruleCode)) {
+                                            List<LocalDate> l = new ArrayList<>();
+                                            l.add(localDate);
+                                            countingTreatmentProcedure.put(ruleCode, l);
+                                        } else {
+                                            countingTreatmentProcedure.get(ruleCode).add(localDate);
+                                        }
+                                    });
+                                int cmax = countingTreatmentProcedure.values().stream().mapToInt(Collection::size).sum();
+                                if (cmax >= r.getMax()) {
+                                    targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                                        this.formatDays.apply(r.getInterval().intValue()) +
+                                        "內已於同一特約醫療院所施行並申報 " +
+                                        r.getCode().toString() +
+                                        " " +
+                                        r.getMax() +
+                                        " 次\n");
+                                    countingTreatmentProcedure.forEach((key, value) ->
+                                        value.stream()
+                                            .forEach(localDate -> {
+                                                targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                                                    key +
+                                                    " ( " +
+                                                    formatter.format(localDate) +
+                                                    " ) ( " +
+                                                    ChronoUnit.DAYS.between(localDate, targetDate) +
+                                                    " 天前)" +
+                                                    "\n");
+                                            })
+                                    );
+                                }
+                            } else if (r.getRange() == null) {
+                                Optional<LocalDate> optionalLocalDate = personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
+                                    .getSortedDeclarationDates()
+                                    .filter(localDate -> {
+                                        LocalDate d = localDate.plusDays(r.getInterval());
+                                        return d.isAfter(targetDate) || d.isEqual(targetDate);
+                                    })
+                                    .findAny();
+                                if (optionalLocalDate.isPresent()) {
+                                    LocalDate conflictDate = optionalLocalDate.get();
 
-                                        targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
-                                            r.getInterval() +
-                                            " 天內已申報 " +
-                                            ruleCode +
-                                            " 不得申報此項。上次申報時間：" +
-                                            formatter.format(conflictDate) +
-                                            "( " +
-                                            ChronoUnit.DAYS.between(conflictDate, targetDate) +
-                                            " 天 )\n");
-                                    }
-                                } else if (OtherCodeDeclarationIntervalRange.MONTH.equals(r.getRange())) {
-                                    Optional<LocalDate> optionalLocalDate = personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
-                                        .getSortedDeclarationDates()
-                                        .filter(localDate -> {
-                                            LocalDate start = targetDate.withDayOfMonth(1);
-                                            LocalDate end = targetDate.withDayOfMonth(targetDate.lengthOfMonth());
-                                            return end.isAfter(localDate) && start.isBefore(localDate) || end.isEqual(localDate) || start.isEqual(localDate);
-                                        })
-                                        .findAny();
-                                    if (optionalLocalDate.isPresent()) {
-                                        LocalDate conflictDate = optionalLocalDate.get();
+                                    targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                                        r.getInterval() +
+                                        " 天內已申報 " +
+                                        ruleCode +
+                                        " 不得申報此項。上次申報時間：" +
+                                        formatter.format(conflictDate) +
+                                        "( " +
+                                        ChronoUnit.DAYS.between(conflictDate, targetDate) +
+                                        " 天 )\n");
+                                }
+                            } else if (OtherCodeDeclarationIntervalRange.MONTH.equals(r.getRange())) {
+                                Optional<LocalDate> optionalLocalDate = personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
+                                    .getSortedDeclarationDates()
+                                    .filter(localDate -> {
+                                        LocalDate start = targetDate.withDayOfMonth(1);
+                                        LocalDate end = targetDate.withDayOfMonth(targetDate.lengthOfMonth());
+                                        return end.isAfter(localDate) && start.isBefore(localDate) || end.isEqual(localDate) || start.isEqual(localDate);
+                                    })
+                                    .findAny();
+                                if (optionalLocalDate.isPresent()) {
+                                    LocalDate conflictDate = optionalLocalDate.get();
 
-                                        targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
-                                            "當月內已申報 " +
-                                            ruleCode +
-                                            " 不得申報此項。上次申報時間：" +
-                                            formatter.format(conflictDate) +
-                                            "( " +
-                                            ChronoUnit.DAYS.between(conflictDate, targetDate) +
-                                            " 天 )\n");
-                                    }
-                                } else if (OtherCodeDeclarationIntervalRange.YEAR.equals(r.getRange())) {
-                                    Optional<LocalDate> optionalLocalDate = personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
-                                        .getSortedDeclarationDates()
-                                        .filter(localDate -> {
-                                            LocalDate start = targetDate.withDayOfYear(1);
-                                            LocalDate end = targetDate.withDayOfYear(targetDate.lengthOfYear());
-                                            return end.isAfter(localDate) && start.isBefore(localDate) || end.isEqual(localDate) || start.isEqual(localDate);
-                                        })
-                                        .findAny();
-                                    if (optionalLocalDate.isPresent()) {
-                                        LocalDate conflictDate = optionalLocalDate.get();
+                                    targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                                        "當月內已申報 " +
+                                        ruleCode +
+                                        " 不得申報此項。上次申報時間：" +
+                                        formatter.format(conflictDate) +
+                                        "( " +
+                                        ChronoUnit.DAYS.between(conflictDate, targetDate) +
+                                        " 天 )\n");
+                                }
+                            } else if (OtherCodeDeclarationIntervalRange.YEAR.equals(r.getRange())) {
+                                Optional<LocalDate> optionalLocalDate = personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
+                                    .getSortedDeclarationDates()
+                                    .filter(localDate -> {
+                                        LocalDate start = targetDate.withDayOfYear(1);
+                                        LocalDate end = targetDate.withDayOfYear(targetDate.lengthOfYear());
+                                        return end.isAfter(localDate) && start.isBefore(localDate) || end.isEqual(localDate) || start.isEqual(localDate);
+                                    })
+                                    .findAny();
+                                if (optionalLocalDate.isPresent()) {
+                                    LocalDate conflictDate = optionalLocalDate.get();
 
-                                        targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
-                                            "當年內已申報 " +
-                                            ruleCode +
-                                            " 不得申報此項。上次申報時間：" +
-                                            formatter.format(conflictDate) +
-                                            "( " +
-                                            ChronoUnit.DAYS.between(conflictDate, targetDate) +
-                                            " 天 )\n");
-                                    }
+                                    targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                                        "當年內已申報 " +
+                                        ruleCode +
+                                        " 不得申報此項。上次申報時間：" +
+                                        formatter.format(conflictDate) +
+                                        "( " +
+                                        ChronoUnit.DAYS.between(conflictDate, targetDate) +
+                                        " 天 )\n");
                                 }
                             }
                         })
