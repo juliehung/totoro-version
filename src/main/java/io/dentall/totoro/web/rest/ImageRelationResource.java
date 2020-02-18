@@ -4,7 +4,7 @@ import io.dentall.totoro.business.service.ImageRelationBusinessService;
 import io.dentall.totoro.domain.ImageRelation;
 import io.dentall.totoro.domain.enumeration.ImageRelationDomain;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
-import io.dentall.totoro.web.rest.vm.ImageRelationPathVM;
+import io.dentall.totoro.business.vm.ImageRelationPathVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
