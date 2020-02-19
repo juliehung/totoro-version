@@ -121,7 +121,7 @@ public class PatientBusinessService {
     }
 
     public Page<PatientSearchVM> findByMedicalId(String search, Pageable page) {
-        String result = search.replaceAll("^0*|-", "");
+        String result = search.replaceAll("^0*", "");
         log.debug("search.replaceAll result: {}", result);
 
         return patientRepository.findByMedicalId(result, page);

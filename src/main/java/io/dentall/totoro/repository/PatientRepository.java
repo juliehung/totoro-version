@@ -81,15 +81,8 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
     Page<PatientSearchVM> findByNationalId(@Param("search") String search, Pageable pageable);
 
     @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId) " +
-        "FROM Patient patient WHERE FUNCTION('regexp_replace', patient.medicalId, '^0*|-', '', 'g') like '%'||:search||'%' " +
-        "ORDER BY " +
-        "CASE " +
-        "      WHEN (FUNCTION('regexp_replace', patient.medicalId, '^0*|-', '', 'g') = :search) THEN 1 " +
-        "      WHEN (FUNCTION('regexp_replace', patient.medicalId, '^0*|-', '', 'g') like :search||'%') THEN 2 " +
-        "      WHEN (FUNCTION('regexp_replace', patient.medicalId, '^0*|-', '', 'g') like '%'||:search) THEN 4 " +
-        "      WHEN (FUNCTION('regexp_replace', patient.medicalId, '^0*|-', '', 'g') like '%'||:search||'%') THEN 3 " +
-        "      ELSE 5 " +
-        "END",
-        countQuery = "SELECT count(*) FROM Patient patient WHERE FUNCTION('regexp_replace', patient.medicalId, '^0*|-', '', 'g') like '%'||:search||'%'")
+        "FROM Patient patient WHERE FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) > 0 " +
+        "ORDER BY FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) DESC, patient.id ASC",
+        countQuery = "SELECT count(*) FROM Patient patient WHERE FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) > 0")
     Page<PatientSearchVM> findByMedicalId(@Param("search") String search, Pageable pageable);
 }

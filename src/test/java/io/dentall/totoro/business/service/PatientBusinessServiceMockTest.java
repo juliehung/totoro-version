@@ -47,18 +47,18 @@ public class PatientBusinessServiceMockTest {
 
     @Test
     public void testFindByMedicalId() {
-        Mockito.when(mockPatientRepository.findByMedicalId("102", Pageable.unpaged())).thenReturn(
+        Mockito.when(mockPatientRepository.findByMedicalId("1-02", Pageable.unpaged())).thenReturn(
             new PageImpl<>(Collections.singletonList(
-                new PatientSearchVM(null, null, "0001-02")
+                new PatientSearchVM(null, null, "00001-02")
             ))
         );
 
         PatientSearchVM patientSearchVM = patientBusinessService
-            .findByMedicalId("00102", Pageable.unpaged())
+            .findByMedicalId("01-02", Pageable.unpaged())
             .stream()
             .findFirst()
             .get();
 
-        assertThat(patientSearchVM.getMedicalId()).isEqualTo("0001-02");
+        assertThat(patientSearchVM.getMedicalId()).isEqualTo("00001-02");
     }
 }
