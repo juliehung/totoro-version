@@ -6,7 +6,7 @@
 
     <changeSet id="20200217-Sql" author="WeiChen">
         <sql dbms="postgresql" splitStatements="true">
-            DELETE FROM patient_identity WHERE code in ('903', '904', '005');
+            DELETE FROM patient_identity WHERE code in ('904', '005');
             UPDATE patient_identity SET name='福保(低收入戶)' WHERE code='003';
             UPDATE patient_identity SET name='榮保(榮民)' WHERE code='004';
             UPDATE patient_identity SET name='勞保(因職業傷害者）' WHERE code='006';
