@@ -167,7 +167,10 @@ public class DisposalResource {
     public ResponseEntity<Disposal> getDisposalWithRulesCheckedNhiExtTxProc(@PathVariable Long id) {
         log.debug("REST request to get contain rules checked nhi-ext-tx-proc Disposal with id : {}", id);
         Optional<Disposal> optDisposal = disposalService.findOneWithEagerRelationships(id);
-        if (optDisposal.isPresent()) {
+        if (optDisposal.isPresent() &&
+            optDisposal.get().getTreatmentProcedures() != null &&
+            optDisposal.get().getTreatmentProcedures().size() > 0
+        ) {
             Disposal disposal = optDisposal.get();
             nhiService.checkNhiExtendTreatmentProcedures(disposal.getTreatmentProcedures().stream()
                 .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
