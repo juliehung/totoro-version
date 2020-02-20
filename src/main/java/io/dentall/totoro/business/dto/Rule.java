@@ -37,8 +37,8 @@ public class Rule {
     @Convert(conversionClass = NhiService.Splitter.class, args = "=")
     private String[] positionLimit;
 
-    @Parsed(field = "surface_limit", defaultNullRead = "")
-    @Convert(conversionClass = NhiService.Splitter.class, args = {"="})
+    @Parsed(field = "surface_limit")
+    @Convert(conversionClass = NhiService.Splitter.class, args = {";"})
     private String[] surfaceLimit;
 
     @Parsed(field = "other_code_declaration_interval")
