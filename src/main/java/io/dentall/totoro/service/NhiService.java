@@ -402,14 +402,14 @@ public class NhiService {
     public Consumer<NhiExtendTreatmentProcedure> checkXRay = nhiExtendTreatmentProcedure -> {
         String code = nhiExtendTreatmentProcedure.getA73();
         if (rules.get(code).getXRay()) {
-            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + code + " 需要檢附 X 片\n");
+            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + " 需要檢附 X 片\n");
         }
     };
 
     public Consumer<NhiExtendTreatmentProcedure> checkMedicalRecord = nhiExtendTreatmentProcedure -> {
         String code = nhiExtendTreatmentProcedure.getA73();
         if (rules.get(code).getMedicalRecord()) {
-            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + code + " 病歷須記載\n");
+            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + " 病歷須記載\n");
         }
     };
 
