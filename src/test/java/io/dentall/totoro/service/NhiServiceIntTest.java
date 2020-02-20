@@ -512,68 +512,100 @@ public class NhiServiceIntTest {
     }
 
     @Test
-    public void testCheckSurfacePass() {
-        // Blank success test case
-        NhiExtendTreatmentProcedure blankOnlyS = new NhiExtendTreatmentProcedure().a73("SurfaceBlankOnly").a75("").check("");
-        nhiService.checkSurfaceLimit.accept(blankOnlyS);
-
-        // Validated success test case
-        NhiExtendTreatmentProcedure validatedOnlyS = new NhiExtendTreatmentProcedure().a73("SurfaceValidatedOnly").a75("DLM").check("");
-        nhiService.checkSurfaceLimit.accept(validatedOnlyS);
-
-
-        // Surface spec-1 success test case
-        NhiExtendTreatmentProcedure spec1S1 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific1Only").a75("A").check("");
-        nhiService.checkSurfaceLimit.accept(spec1S1);
-
-        // Surface spec-4 success test case
-        NhiExtendTreatmentProcedure spec4S1 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific4Only").a75("CDEF").check("");
-        nhiService.checkSurfaceLimit.accept(spec4S1);
-
-        // Surface spec-4 success test case
-        NhiExtendTreatmentProcedure spec4S2 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific4Only2").a75("ABCD").check("");
-        nhiService.checkSurfaceLimit.accept(spec4S2);
-
-        assertThat(blankOnlyS.getCheck()).isEqualTo("");
-        assertThat(validatedOnlyS.getCheck()).isEqualTo("");
-        assertThat(spec1S1.getCheck()).isEqualTo("");
-        assertThat(spec4S1.getCheck()).isEqualTo("");
-        assertThat(spec4S2.getCheck()).isEqualTo("");
+    public void testCheckSurface() {
+        // Success test case
+        testCheckSurface1();
+        testCheckSurface2();
+        testCheckSurface3();
+        testCheckSurface4();
+//         Failure test case
+        testCheckSurface5();
+        testCheckSurface6();
+        testCheckSurface7();
+        testCheckSurface8();
+        testCheckSurface9();
+        testCheckSurface10();
+        testCheckSurface11();
     }
 
-    @Test
-    public void testCheckSurfaceFail() {
-        // Blank failure test case
-        NhiExtendTreatmentProcedure blankOnlyF = new NhiExtendTreatmentProcedure().a73("SurfaceBlankOnly").a75("ABC").check("");
-        nhiService.checkSurfaceLimit.accept(blankOnlyF);
+    public void testCheckSurface1() {
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73("SurfaceBlankOnly").a75("").check("");
+        nhiService.checkSurfaceLimit.accept(targetNhiExtendTreatmentProcedure);
+//        logger.info(targetNhiExtendTreatmentProcedure.getCheck());
+        assertThat(targetNhiExtendTreatmentProcedure.getCheck()).isEqualTo("");
+    }
 
-        // Validated failure test case 1
-        NhiExtendTreatmentProcedure validatedOnlyF = new NhiExtendTreatmentProcedure().a73("SurfaceValidatedOnly").a75("ABC").check("");
-        nhiService.checkSurfaceLimit.accept(validatedOnlyF);
+    public void testCheckSurface2() {
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73("SurfaceCombo1").a75("MLDL").check("");
+        nhiService.checkSurfaceLimit.accept(targetNhiExtendTreatmentProcedure);
+//        logger.info(targetNhiExtendTreatmentProcedure.getCheck());
+        assertThat(targetNhiExtendTreatmentProcedure.getCheck()).isEqualTo("");
+    }
 
-        // Surface spec-1 failure test case 1
-        NhiExtendTreatmentProcedure spec1F1 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific1Only").a75("ABC").check("");
-        nhiService.checkSurfaceLimit.accept(spec1F1);
+    public void testCheckSurface3() {
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73("SurfaceCombo2").a75("MOD").check("");
+        nhiService.checkSurfaceLimit.accept(targetNhiExtendTreatmentProcedure);
+//        logger.info(targetNhiExtendTreatmentProcedure.getCheck());
+        assertThat(targetNhiExtendTreatmentProcedure.getCheck()).isEqualTo("");
+    }
 
-        // Surface spec-1 failure test case 2
-        NhiExtendTreatmentProcedure spec1F2 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific1Only").a75("D").check("");
-        nhiService.checkSurfaceLimit.accept(spec1F2);
+    public void testCheckSurface4() {
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73("SurfaceValidate").a75("ML").check("");
+        nhiService.checkSurfaceLimit.accept(targetNhiExtendTreatmentProcedure);
+//        logger.info(targetNhiExtendTreatmentProcedure.getCheck());
+        assertThat(targetNhiExtendTreatmentProcedure.getCheck()).isEqualTo("");
+    }
 
-        // Surface spec-4 failure test case 1
-        NhiExtendTreatmentProcedure spec4F1 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific4Only").a75("A").check("");
-        nhiService.checkSurfaceLimit.accept(spec4F1);
+    public void testCheckSurface5() {
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73("SurfaceBlankOnly").a75("ALMS").check("");
+        nhiService.checkSurfaceLimit.accept(targetNhiExtendTreatmentProcedure);
+//        logger.info(targetNhiExtendTreatmentProcedure.getCheck());
+        assertThat(targetNhiExtendTreatmentProcedure.getCheck()).isEqualTo("不須填牙面\n");
+    }
 
-        // Surface spec-4 failure test case 2
-        NhiExtendTreatmentProcedure spec4F2 = new NhiExtendTreatmentProcedure().a73("SurfaceSpecific4Only").a75("JKL:").check("");
-        nhiService.checkSurfaceLimit.accept(spec4F2);
+    public void testCheckSurface6() {
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73("SurfaceCombo1").a75("ABCD").check("");
+        nhiService.checkSurfaceLimit.accept(targetNhiExtendTreatmentProcedure);
+//        logger.info(targetNhiExtendTreatmentProcedure.getCheck());
+        assertThat(targetNhiExtendTreatmentProcedure.getCheck()).isEqualTo("須填牙面，建議填 [MODO, MLDL] 牙面\n");
+    }
 
-        assertThat(blankOnlyF.getCheck()).contains("不須填牙面");
-        assertThat(validatedOnlyF.getCheck()).contains("建議填 M,D,L,B,O,P,I,F,C 牙面");
-        assertThat(spec1F1.getCheck()).contains("申報面數不合");
-        assertThat(spec1F2.getCheck()).contains("建議填 A,B,C 牙面");
-        assertThat(spec4F1.getCheck()).contains("建議填 ABCD,BCDE,CDEF 牙面");
-        assertThat(spec4F2.getCheck()).contains("建議填 ABCD,BCDE,CDEF 牙面");
+    public void testCheckSurface7() {
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73("SurfaceCombo1").a75("ACD").check("");
+        nhiService.checkSurfaceLimit.accept(targetNhiExtendTreatmentProcedure);
+//        logger.info(targetNhiExtendTreatmentProcedure.getCheck());
+        assertThat(targetNhiExtendTreatmentProcedure.getCheck()).isEqualTo("須填牙面，建議填 [MODO, MLDL] 牙面\n" +
+            "申報面數不合\n");
+    }
 
+    public void testCheckSurface8() {
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73("SurfaceCombo2").a75("ABC").check("");
+        nhiService.checkSurfaceLimit.accept(targetNhiExtendTreatmentProcedure);
+//        logger.info(targetNhiExtendTreatmentProcedure.getCheck());
+        assertThat(targetNhiExtendTreatmentProcedure.getCheck()).isEqualTo("須填牙面，建議填 [MOD] 牙面\n");
+    }
+
+    public void testCheckSurface9() {
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73("SurfaceCombo2").a75("ACDE").check("");
+        nhiService.checkSurfaceLimit.accept(targetNhiExtendTreatmentProcedure);
+//        logger.info(targetNhiExtendTreatmentProcedure.getCheck());
+        assertThat(targetNhiExtendTreatmentProcedure.getCheck()).isEqualTo("須填牙面，建議填 [MOD] 牙面\n" +
+            "申報面數不合\n");
+    }
+
+    public void testCheckSurface10() {
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73("SurfaceValidate").a75("AB").check("");
+        nhiService.checkSurfaceLimit.accept(targetNhiExtendTreatmentProcedure);
+//        logger.info(targetNhiExtendTreatmentProcedure.getCheck());
+        assertThat(targetNhiExtendTreatmentProcedure.getCheck()).isEqualTo("須填牙面，建議填 [M, O, D, L, P] 牙面\n");
+    }
+
+    public void testCheckSurface11() {
+        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73("SurfaceValidate").a75("LOA").check("");
+        nhiService.checkSurfaceLimit.accept(targetNhiExtendTreatmentProcedure);
+//        logger.info(targetNhiExtendTreatmentProcedure.getCheck());
+        assertThat(targetNhiExtendTreatmentProcedure.getCheck()).isEqualTo("須填牙面，建議填 [M, O, D, L, P] 牙面\n" +
+            "申報面數不合\n");
     }
 
     @Test

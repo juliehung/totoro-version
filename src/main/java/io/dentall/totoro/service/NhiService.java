@@ -15,7 +15,6 @@ import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.github.jhipster.service.filter.LongFilter;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,17 +78,6 @@ public class NhiService {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
         this.treatmentQueryService = treatmentQueryService;
-
-        surfaceLimitMap.put("SURFACE_BLANK_ONLY", "");
-        surfaceLimitMap.put("SURFACE_VALIDATED_ONLY", "M,D,L,B,O,P,I,F,C");
-        surfaceLimitMap.put("SURFACE_SPECIFIC_1_ALPHABET_ONLY", "");
-        surfaceLimitMap.put("SURFACE_SPECIFIC_4_ALPHABET_ONLY", "");
-
-        surfaceLimitErrorResponseMap.put("SURFACE_BLANK_ONLY", "不須填牙面");
-        surfaceLimitErrorResponseMap.put("SURFACE_VALIDATED_ONLY", "建議填");
-        surfaceLimitErrorResponseMap.put("SURFACE_SPECIFIC_1_ALPHABET_ONLY", "建議填");
-        surfaceLimitErrorResponseMap.put("SURFACE_SPECIFIC_4_ALPHABET_ONLY", "建議填");
-        surfaceLimitErrorResponseMap.put("SURFACE_LIMIT_NUMBER", "申報面數不合");
 
         positionLimitMap.put("VALIDATED_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,FM,");
         positionLimitMap.put("BLANK_ONLY", "");
@@ -244,99 +232,50 @@ public class NhiService {
         }
     }
 
-    public Consumer<NhiExtendTreatmentProcedure> checkSurfaceLimit = nhiExtendTreatmentProcedure -> {
-        String code = nhiExtendTreatmentProcedure.getA73();
-        String surface = nhiExtendTreatmentProcedure.getA75();
-        String[] surfaceLimitRule = rules.get(code).getSurfaceLimit();
+    public Consumer<NhiExtendTreatmentProcedure> checkSurfaceLimit = targetNhiExtendTreatmentProcedure -> {
+        String code = targetNhiExtendTreatmentProcedure.getA73();
+        String surfaces = targetNhiExtendTreatmentProcedure.getA75();
+        String[] surfaceChar = surfaces.split("(?<=\\G.)");
+        int surfaceNumb = surfaces.length();
 
-        String limitType = surfaceLimitRule.length > 0 ? surfaceLimitRule[0] : "NO_SUCH_SURFACE_TYPE";
-        String specificSurface = "";
-        int limitNumb = 0;
-        boolean checkFail = false;
-        boolean isOutOfLimitedSurfaceNumber = false;
-
-        // Split limitNumber and replace ; with ""
-        if (surfaceLimitRule.length > 1) {
-            try {
-                String[] ruleLimitNumb = surfaceLimitRule[1].split(";");
-                specificSurface = ruleLimitNumb[0];
-                limitNumb = Integer.parseInt(ruleLimitNumb[1]);
-            } catch (NumberFormatException e) {
-                // do nothing
-            }
-        }
-        limitType = limitType.replace(";", "");
-
-        // Surface string check
-        switch (limitType) {
-            case "SURFACE_BLANK_ONLY": {
-                if (!surface.isEmpty()) {
-                    checkFail = true;
-                }
-                break;
-            }
-            case "SURFACE_VALIDATED_ONLY": {
-                // Cause lambda need final value,  it's modified by previous code. Thought, make a copy for it.
-                String finalSpecificSurface = surfaceLimitMap.get("SURFACE_VALIDATED_ONLY").replace(",", "");
-                specificSurface = surfaceLimitMap.get("SURFACE_VALIDATED_ONLY");
-                limitNumb = finalSpecificSurface.length();
-                if (surface.chars()
-                    .mapToObj(c -> String.valueOf((char) c))
-                    .anyMatch(c -> !finalSpecificSurface.contains(c))) {
-                    checkFail = true;
-                }
-
-                if (surface.length() > limitNumb) {
-                    checkFail = true;
-                    isOutOfLimitedSurfaceNumber = true;
-                }
-
-                break;
-            }
-            case "SURFACE_SPECIFIC_1_ALPHABET_ONLY": {
-                // Cause lambda need final value,  it's modified by previous code. Thought, make a copy for it.
-                String finalSpecificSurface = specificSurface;
-                if (surface.chars()
-                    .mapToObj(c -> String.valueOf((char) c))
-                    .anyMatch(c -> !finalSpecificSurface.contains(c))) {
-                    checkFail = true;
-                }
-
-                if (surface.length() > limitNumb) {
-                    checkFail = true;
-                    isOutOfLimitedSurfaceNumber = true;
-                }
-
-                break;
-            }
-            case "SURFACE_SPECIFIC_4_ALPHABET_ONLY": {
-                if (Arrays.stream(specificSurface.split(","))
-                    .allMatch(fss -> !fss.equals(surface))
-                ) {
-                    checkFail = true;
-                }
-
-                if (surface.split(",").length > limitNumb) {
-                    checkFail = true;
-                    isOutOfLimitedSurfaceNumber = true;
-                }
-
-                break;
-            }
-            default:
-                break;
+        if (rules.get(code) == null || rules.get(code).getSurfaceLimit() == null) {
+            return;
         }
 
-        if (checkFail) {
-            if (isOutOfLimitedSurfaceNumber) {
-                nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + " " + surfaceLimitErrorResponseMap.get("SURFACE_LIMIT_NUMBER") + "\n");
-            } else {
-                String withSpecification = StringUtils.isBlank(specificSurface)
-                    ? ""
-                    : specificSurface + " 牙面";
-                nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + " " + surfaceLimitErrorResponseMap.get(limitType) + " " + withSpecification + "\n");
-            }
+        if (rules.get(code).getSurfaceLimit() != null) {
+            Arrays.stream(rules.get(code).getSurfaceLimit())
+                .map(SurfaceLimit::new)
+                .forEach(r -> {
+                    if (SurfaceLimitType.SURFACE_BLANK_ONLY.equals(r.getType())) {
+                        if (!surfaces.isEmpty()) {
+                            targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() + "不須填牙面\n");
+                        }
+                    } else if (SurfaceLimitType.SURFACE_SPECIFIC_ONLY.equals(r.getType())) {
+                        if (r.getSurfaceCombo() != null &&
+                            !r.getSurfaceCombo().stream()
+                                .anyMatch(combo -> combo.equals(surfaces))
+                        ) {
+                            targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() + "須填牙面，建議填 " +
+                                r.getSurfaceCombo() +
+                                " 牙面\n");
+                        } else if (r.getSurface() != null &&
+                            Arrays.asList(surfaceChar).stream()
+                                .anyMatch(sc -> !r.getSurface().stream()
+                                    .anyMatch(surfaceLimit -> sc.equals(surfaceLimit)))
+                        ) {
+                            targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() + "須填牙面，建議填 " +
+                                r.getSurface() +
+                                " 牙面\n");
+                        }
+
+                        if (r.getMustNumb() != null && surfaceNumb != r.getMustNumb()) {
+                            targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() + "申報面數不合\n");
+                        }
+
+                    }
+                });
         }
+
     };
 
     public Consumer<NhiExtendTreatmentProcedure> checkPositionLimit = nhiExtendTreatmentProcedure -> {
@@ -432,9 +371,9 @@ public class NhiService {
                     );
                     // 排除不再資格條件下的規則
                     if (r.getIdentity() != null && !r.getIdentity().stream()
-                            .anyMatch(identity -> identity.equals(currentIdentity))
+                        .anyMatch(identity -> identity.equals(currentIdentity))
                     ) {
-                        return ;
+                        return;
                     }
                     // 檢核年齡
                     if (patientAge > r.getAge()) {
@@ -442,7 +381,7 @@ public class NhiService {
                             "不符合申報 " +
                             targetCode +
                             " 資格\n");
-                        return ;
+                        return;
                     }
                     // 檢核區間
                     personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(targetCode).getSortedDeclarationDates()
