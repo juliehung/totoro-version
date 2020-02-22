@@ -130,7 +130,7 @@ test {
     if (project.hasProperty('testFtp')) {
         exclude '**/CucumberTest*'
     } else {
-        exclude '**/CucumberTest*', 'io/dentall/totoro/business/service/ImageBusinessServiceIntTest.class'
+        exclude '**/CucumberTest*', 'io/dentall/totoro/business/service/ImageFtpBusinessServiceIntTest.class'
     }
 
     // uncomment if the tests reports are not generated
@@ -313,7 +313,8 @@ dependencies {
     // https://mvnrepository.com/artifact/commons-net/commons-net
     compile group: 'commons-net', name: 'commons-net', version: '3.6'
 
-    testCompile group: 'org.mockftpserver', name: 'MockFtpServer', version: '2.7.1'
+    testCompile "org.mockftpserver:MockFtpServer:2.7.1"
+    compile "net.coobird:thumbnailator:0.4.9"
 }
 
 task cleanResources(type: Delete) {
