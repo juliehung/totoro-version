@@ -1,33 +1,37 @@
 package io.dentall.totoro.business.service;
 
+import io.dentall.totoro.config.ImageRepositoryConfiguration;
 import io.dentall.totoro.domain.Image;
+import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.repository.ImageRepository;
+import io.dentall.totoro.service.util.ProblemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-@Profile("ftp")
 @Service
 public abstract class ImageBusinessService {
 
     private Logger logger = LoggerFactory.getLogger(ImageBusinessService.class);
 
-    private final FtpClientService ftpClientService;
+    private final String sep = System.getProperty("file.separator");
 
-    public ImageBusinessService(FtpClientService ftpClientService) {
-        this.ftpClientService = ftpClientService;
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    private final ImageRepository imageRepository;
+
+    public ImageBusinessService(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
     }
-
-    public abstract String createImagePath(Long patientId);
-
-    public abstract Image createImage(Long patientId, String filePath, String fileName);
-
-    public abstract Image getImageById(Long id);
 
     public abstract Map<String, String> getImageThumbnailsBySize(Long id, String size);
 
@@ -35,18 +39,34 @@ public abstract class ImageBusinessService {
 
     public abstract String getImageThumbnailUrl();
 
-    public void uploadFile(String remotePath, String remoteFileName, InputStream inputStream) throws IOException {
-        ftpClientService.connect();
-        int replyCode = ftpClientService.upload(remotePath, remoteFileName, inputStream);
-        if (replyCode == FtpClientService.FTP_COULD_NOT_CREATE_FILE) {
-            ftpClientService.mkdir(remotePath);
-            ftpClientService.upload(remotePath, remoteFileName, inputStream);
-        }
+    public abstract void uploadFile(String remotePath, String remoteFileName, InputStream inputStream) throws IOException;
 
-        ftpClientService.disconnect();
+    public abstract int disconnect();
+
+    public String createImagePath(Long patientId) {
+        return ImageRepositoryConfiguration
+            .BASIC_FOLDER_PATH
+            .concat(sep)
+            .concat(patientId.toString())
+            .concat(sep);
     }
 
-    public int disconnect() {
-        return ftpClientService.disconnect();
+    @Transactional
+    public Image createImage(Long patientId, String filePath, String fileName) {
+        Patient patient = null;
+        if (patientId != null) {
+            patient = entityManager.getReference(Patient.class, patientId);
+        }
+
+        return imageRepository.save(new Image()
+            .filePath(filePath)
+            .fileName(fileName)
+            .patient(patient)
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public Image getImageById(Long id) {
+        return imageRepository.findById(id).orElseThrow(() -> ProblemUtil.notFoundException("Image id: " + id));
     }
 }

@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Configuration
 public class ImageRepositoryConfiguration {
 
-    public final static String BASIC_FOLDER_PATH = System.getenv("TTR_IMAGE_REPOSITORY_BASIC_FOLDER_PATH");
+    public final static String BASIC_FOLDER_PATH = System.getenv("IMAGE_BASIC_FOLDER_PATH");
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {

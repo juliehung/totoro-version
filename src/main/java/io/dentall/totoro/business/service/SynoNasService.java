@@ -2,9 +2,7 @@ package io.dentall.totoro.business.service;
 
 import io.dentall.totoro.business.vm.SynoNasFileStation;
 import io.dentall.totoro.business.vm.SynoNasSessionV6;
-import io.dentall.totoro.config.ImageRepositoryConfiguration;
 import io.dentall.totoro.domain.Image;
-import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.ImageRepository;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
@@ -12,19 +10,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.zalando.problem.Status;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Profile({"ftp", "synoNas"})
 @Service(value = "synoNasService")
-public class SynoNasService extends ImageBusinessService {
+public class SynoNasService extends ImageFtpBusinessService {
 
     private Logger logger = LoggerFactory.getLogger(SynoNasService.class);
 
@@ -34,53 +29,13 @@ public class SynoNasService extends ImageBusinessService {
 
     private static final String SYNO_FILESTATION_INFO = System.getenv("SYNO_FILESTATION_INFO");
 
-    private final ImageRepository imageRepository;
-
     private final RestTemplate restTemplate;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     private String sid;
 
-    public SynoNasService(
-        FtpClientService ftpClientService,
-        ImageRepository imageRepository,
-        RestTemplate restTemplate
-    ) {
-        super(ftpClientService);
-        this.imageRepository = imageRepository;
+    public SynoNasService(ImageRepository imageRepository, FtpClientService ftpClientService, RestTemplate restTemplate) {
+        super(imageRepository, ftpClientService);
         this.restTemplate = restTemplate;
-    }
-
-    @Override
-    public String createImagePath(Long patientId) {
-        return ImageRepositoryConfiguration
-            .BASIC_FOLDER_PATH
-            .concat("/")
-            .concat(patientId.toString())
-            .concat("/");
-    }
-
-    @Transactional
-    @Override
-    public Image createImage(Long patientId, String filePath, String fileName) {
-        Patient patient = null;
-        if (patientId != null) {
-            patient = entityManager.getReference(Patient.class, patientId);
-        }
-
-        return imageRepository.save(new Image()
-            .filePath(filePath)
-            .fileName(fileName)
-            .patient(patient)
-        );
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Image getImageById(Long id) {
-        return imageRepository.findById(id).orElseThrow(() -> ProblemUtil.notFoundException("Image id: " + id));
     }
 
     @Override

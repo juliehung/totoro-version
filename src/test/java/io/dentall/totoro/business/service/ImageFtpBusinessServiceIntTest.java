@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("ftp")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TotoroApp.class)
-public class ImageBusinessServiceIntTest {
+public class ImageFtpBusinessServiceIntTest {
 
     private static final String UPLOAD_FILENAME = "chrome.png";
     private static final String FTP_USER = "user";

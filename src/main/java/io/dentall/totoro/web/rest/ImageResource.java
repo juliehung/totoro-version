@@ -1,17 +1,21 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.business.service.ImageBusinessService;
+import io.dentall.totoro.business.service.ImageHostBusinessService;
 import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.Image;
 import io.dentall.totoro.service.ImageQueryService;
 import io.dentall.totoro.service.dto.ImageCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -19,12 +23,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
-@Profile({"ftp", "synoNas"})
+@Profile("img-host")
 @RestController
 @RequestMapping("/api")
 public class ImageResource {
@@ -41,7 +46,7 @@ public class ImageResource {
     private final ImageQueryService imageQueryService;
 
     public ImageResource(
-        @Qualifier("synoNasService") ImageBusinessService imageBusinessService,
+        @Qualifier("imgHostService") ImageBusinessService imageBusinessService,
         ImageQueryService imageQueryService
     ) {
         this.imageBusinessService = imageBusinessService;
@@ -120,5 +125,40 @@ public class ImageResource {
     @GetMapping("/images/thumbnail-url")
     public ResponseEntity<String> getImageThumbnailUrl() {
         return ResponseEntity.ok(imageBusinessService.getImageThumbnailUrl());
+    }
+
+    @Profile("img-host")
+    @GetMapping("/images/host")
+    public DeferredResult<ResponseEntity<byte[]>> getImageFromHost(
+        @RequestParam("path") String path,
+        @RequestParam(value = "size", required = false) String size
+    ) {
+        DeferredResult<ResponseEntity<byte[]>> result = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            try {
+                HttpHeaders headers = new HttpHeaders();
+                headers.set("Content-Disposition", "inline; filename=" + Paths.get(path).getFileName());
+
+                String ext = FilenameUtils.getExtension(path).toLowerCase();
+                if (ext.equals("jpeg") || ext.equals("jpg")) {
+                    headers.setContentType(MediaType.IMAGE_JPEG);
+                } else if (ext.equals("png")) {
+                    headers.setContentType(MediaType.IMAGE_PNG);
+                }
+
+                ImageHostBusinessService imageHostBusinessService = (ImageHostBusinessService) imageBusinessService;
+                result.setResult(ResponseEntity
+                    .ok()
+                    .headers(headers)
+                    .body(imageHostBusinessService.getImageByPathAndSize(path, size))
+                );
+            } catch (IOException e) {
+                logger.error("unable to get image from host path[{}] and size[{}]: {}", path, size, e.getMessage());
+
+                throw new BadRequestAlertException("unable to get image from host", ENTITY_NAME, null);
+            }
+        });
+
+        return result;
     }
 }
