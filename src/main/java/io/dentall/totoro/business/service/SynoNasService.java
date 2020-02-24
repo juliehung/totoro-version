@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Profile({"ftp", "synoNas"})
+@Profile("synoNas")
 @Service(value = "synoNasService")
 public class SynoNasService extends ImageFtpBusinessService {
 
