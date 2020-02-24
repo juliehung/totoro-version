@@ -325,6 +325,13 @@ public class NhiService {
         if (checkFail) {
             nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + positionLimitErrorResponseMap.get(limitType) + " " + specificPosition + "\n");
         }
+
+        if (nhiExtendTreatmentProcedure.getA74() != null &&
+            (nhiExtendTreatmentProcedure.getA74().length() > 6 ||
+                (nhiExtendTreatmentProcedure.getA74().contains("FM") && nhiExtendTreatmentProcedure.getA74().length() > 4))
+        ) {
+            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + "每次醫令最多填三個牙位，FM 須獨立填寫\n");
+        }
     };
 
     public Consumer<NhiExtendTreatmentProcedure> checkAlwaysMessage = nhiExtendTreatmentProcedure -> {
