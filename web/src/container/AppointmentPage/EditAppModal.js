@@ -234,11 +234,13 @@ function EditAppModal({
             <RequiredCol>主治醫師：</RequiredCol>
             <span>
               <StyledSelect placeholder="請選擇醫師" onSelect={changeEditAppDoctor} value={appointment.doctorId}>
-                {doctors.map(d => (
-                  <Select.Option key={d.id} value={d.id}>
-                    {d.name}
-                  </Select.Option>
-                ))}
+                {doctors
+                  .filter(d => d.activated)
+                  .map(d => (
+                    <Select.Option key={d.id} value={d.id}>
+                      {d.name}
+                    </Select.Option>
+                  ))}
               </StyledSelect>
             </span>
           </div>

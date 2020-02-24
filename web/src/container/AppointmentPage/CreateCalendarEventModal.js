@@ -181,11 +181,13 @@ function CreateCalendarEventModal({
             <RequiredCol>醫師：</RequiredCol>
             <span>
               <StyledSelect placeholder="請選擇醫師" value={calendarEvt.doctorId} onChange={changeCreateCalEvtDoctor}>
-                {[...[{ id: 'none', name: '診所休假' }], ...doctors].map(d => (
-                  <Select.Option key={d.id} value={d.id}>
-                    {d.name}
-                  </Select.Option>
-                ))}
+                {[...[{ id: 'none', name: '診所休假', activated: true }], ...doctors]
+                  .filter(d => d.activated)
+                  .map(d => (
+                    <Select.Option key={d.id} value={d.id}>
+                      {d.name}
+                    </Select.Option>
+                  ))}
               </StyledSelect>
             </span>
           </RowContainer>
