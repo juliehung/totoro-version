@@ -9,7 +9,6 @@ import { HashRouter } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
 import { HelmetProvider } from 'react-helmet-async';
 import 'antd/dist/antd.css';
-import './App.css';
 
 const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

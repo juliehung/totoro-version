@@ -12,10 +12,6 @@
   border-color: #d9d9d9 !important;
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 .eventCard {
   font-weight: 500;
   letter-spacing: 2px;
