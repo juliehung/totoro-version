@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
 @Profile("ftp")
 @Service
-public abstract class ImageFtpBusinessService extends ImageBusinessService {
+public class ImageFtpBusinessService extends ImageBusinessService {
 
     private Logger logger = LoggerFactory.getLogger(ImageFtpBusinessService.class);
 
@@ -20,6 +22,21 @@ public abstract class ImageFtpBusinessService extends ImageBusinessService {
     public ImageFtpBusinessService(ImageRepository imageRepository, FtpClientService ftpClientService) {
         super(imageRepository);
         this.ftpClientService = ftpClientService;
+    }
+
+    @Override
+    public Map<String, String> getImageThumbnailsBySize(Long id, String size) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<String> getImageSizes() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getImageThumbnailUrl() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

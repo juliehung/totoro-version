@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service;
 
+import io.dentall.totoro.domain.Image;
 import io.dentall.totoro.repository.ImageRepository;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FilenameUtils;
@@ -21,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Profile("img-host")
@@ -38,7 +40,20 @@ public class ImageHostBusinessService extends ImageBusinessService {
 
     @Override
     public Map<String, String> getImageThumbnailsBySize(Long id, String size) {
-        return Collections.emptyMap();
+        Image image = getImageById(id);
+        String url = getImageThumbnailUrl()
+            .concat("path=")
+            .concat(image.getFilePath())
+            .concat(image.getFileName())
+            .concat("&size=");
+
+        if (size == null) {
+            // default thumbnail size
+            return Collections.singletonMap(Size.medium.toString(), url.concat(Size.medium.toString()));
+        } else {
+            return Arrays.stream(size.toLowerCase().split(","))
+                .collect(Collectors.toMap(Function.identity(), url::concat));
+        }
     }
 
     @Override
