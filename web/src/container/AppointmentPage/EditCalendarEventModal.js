@@ -210,11 +210,13 @@ function EditCalendarEventModal({
                 onChange={changeEditCalEvtDoctor}
                 disabled
               >
-                {[...[{ id: 'none', name: '診所休假' }], ...doctors].map(d => (
-                  <Select.Option key={d.id} value={d.id}>
-                    {d.name}
-                  </Select.Option>
-                ))}
+                {[...[{ id: 'none', name: '診所休假', activated: true }], ...doctors]
+                  .filter(d => d.activated)
+                  .map(d => (
+                    <Select.Option key={d.id} value={d.id}>
+                      {d.name}
+                    </Select.Option>
+                  ))}
               </StyledSelect>
             </span>
           </RowContainer>
