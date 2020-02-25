@@ -67,7 +67,7 @@ public class ImageHostBusinessService extends ImageBusinessService {
             String hostAddress = InetAddress.getLocalHost().getHostAddress();
             String serverPort = env.getProperty("server.port");
 
-            return "http://".concat(hostAddress).concat(":").concat(Objects.requireNonNull(serverPort)).concat("/images/host?");
+            return "http://".concat(hostAddress).concat(":").concat(Objects.requireNonNull(serverPort)).concat("/api/images/host?");
         } catch (UnknownHostException e) {
             logger.warn("The host name could not be determined");
 
