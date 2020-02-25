@@ -1,6 +1,7 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
+import io.dentall.totoro.domain.Prescription;
 import io.dentall.totoro.domain.TreatmentDrug;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.util.ProblemUtil;
@@ -106,7 +107,10 @@ public class TreatmentDrugService {
             }
 
             if (treatmentDrug.getPrescription() != null) {
-                throw new ProblemUtil("A treatmentDrug which has prescription cannot delete", Status.BAD_REQUEST);
+                Optional<Prescription> optionalPrescription = prescriptionRepository.findById(treatmentDrug.getPrescription().getId());
+                if (optionalPrescription.isPresent()) {
+                    optionalPrescription.get().removeTreatmentDrug(treatmentDrug);
+                }
             }
 
             treatmentDrugRepository.deleteById(id);
