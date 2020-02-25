@@ -6,6 +6,7 @@ import io.dentall.totoro.repository.NhiExtendTreatmentDrugRepository;
 import io.dentall.totoro.repository.TreatmentDrugRepository;
 import io.dentall.totoro.service.util.MedicalAreaUtil;
 import io.dentall.totoro.service.util.ProblemUtil;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -91,7 +92,13 @@ public class NhiExtendTreatmentDrugService {
      */
     public void delete(Long id) {
         log.debug("Request to delete NhiExtendTreatmentDrug : {}", id);
-        nhiExtendTreatmentDrugRepository.deleteById(id);
+        Optional<TreatmentDrug> optionalTreatmentDrug = treatmentDrugRepository.findById(id);
+        if (optionalTreatmentDrug.isPresent()) {
+            optionalTreatmentDrug.get().nhiExtendTreatmentDrug(null);
+            nhiExtendTreatmentDrugRepository.deleteById(id);
+        } else {
+            throw new BadRequestAlertException("Can not found treatment drug by id", "NHI_EXTEND_TREATMENT_DRUG", "noentity");
+        }
     }
 
     /**
