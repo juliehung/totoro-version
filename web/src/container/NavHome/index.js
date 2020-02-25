@@ -47,7 +47,7 @@ function NavHome() {
         </Menu>
       </Sider>
       <Layout style={{ backgroundColor: 'white' }}>
-        <Content style={{ margin: '0 5px', backgroundColor: 'white' }}>
+        <Content style={{ backgroundColor: 'white' }}>
           <Switch>
             <Route exact path="/">
               <AppointmentPage />
