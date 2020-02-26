@@ -117,7 +117,7 @@ public class NhiService {
         // 僅限 恆牙小臼齒牙位
         positionLimitErrorResponseMap.put("PERMANENT_PREMOLAR_ONLY", "建議填 14,15,24,25,34,35,44,45,19,29,39,49,99");
         // 僅限 恆牙大臼齒牙位
-        positionLimitErrorResponseMap.put("PERMANENT_MOLAR_ONLY", "建議填 16,17,18,24,25,26,27,28,36,37,38,46,47,48,19,29,39,49,99");
+        positionLimitErrorResponseMap.put("PERMANENT_MOLAR_ONLY", "建議填 16-19,26-29,36-39,46-49,99");
         // 僅限 指定牙位
         positionLimitErrorResponseMap.put("SPECIFIC_TOOTH_ONLY", "建議填 ");
         // 僅限 指定區域
@@ -298,8 +298,14 @@ public class NhiService {
             case "PERMANENT_BACK_ONLY":
             case "PERMANENT_MOLAR_ONLY":
             case "PERMANENT_PREMOLAR_ONLY": {
-                checkFail = nhiExtendTreatmentProcedure.getTreatmentProcedure().getTeeth().stream()
-                    .anyMatch(tooth -> !positionLimitMap.get(limitType).contains(tooth.getPosition().concat(",")));
+                if (nhiExtendTreatmentProcedure.getA74() == null ||
+                    "".equals(nhiExtendTreatmentProcedure.getA74().trim())
+                ) {
+                    checkFail = true;
+                } else {
+                    checkFail = nhiExtendTreatmentProcedure.getTreatmentProcedure().getTeeth().stream()
+                        .anyMatch(tooth -> !positionLimitMap.get(limitType).contains(tooth.getPosition().concat(",")));
+                }
                 break;
             }
             case "BLANK_ONLY": {
@@ -323,7 +329,12 @@ public class NhiService {
         }
 
         if (checkFail) {
-            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + positionLimitErrorResponseMap.get(limitType) + " " + specificPosition + "\n");
+            if ("SPECIFIC_TOOTH_ONLY".equals(limitType) ||
+                "SPECIFIC_AREA_ONLY".equals(limitType)
+            ) {
+                specificPosition = specificPosition.substring(0, specificPosition.length() - 1);
+            }
+            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + positionLimitErrorResponseMap.get(limitType) + " " + specificPosition + " 牙位\n");
         }
 
         if (nhiExtendTreatmentProcedure.getA74() != null &&
@@ -471,14 +482,26 @@ public class NhiService {
             Arrays.stream(rules.get(targetCode).getDependOn())
                 .map(DependOn::new)
                 .forEach(r -> {
-                    if (!personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getCode()) ||
-                        personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getCode()).getSortedDeclarationDates()
-                            .anyMatch(localDate -> {
-                                LocalDate d = localDate.plusDays(r.getInterval());
-                                return d.isAfter(targetDate) || d.isEqual(targetDate);
-                            })
-                    ) {
-                        targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() + r.getMessage() + "\n");
+                    if (r.getDuring() != null) {
+                        if (!personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getCode()) ||
+                            !personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getCode()).getSortedDeclarationDates()
+                                .anyMatch(localDate -> {
+                                    LocalDate d = localDate.plusDays(r.getDuring());
+                                    return d.isAfter(targetDate) || d.isEqual(targetDate);
+                                })
+                        ) {
+                            targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() + r.getMessage() + "\n");
+                        }
+                    } else {
+                        if (!personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getCode()) ||
+                            personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getCode()).getSortedDeclarationDates()
+                                .anyMatch(localDate -> {
+                                    LocalDate d = localDate.plusDays(r.getInterval());
+                                    return d.isAfter(targetDate) || d.isEqual(targetDate);
+                                })
+                        ) {
+                            targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() + r.getMessage() + "\n");
+                        }
                     }
                 });
         }

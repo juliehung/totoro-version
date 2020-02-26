@@ -6,6 +6,8 @@ public class DependOn {
 
     private Long interval;
 
+    private Long during;
+
     private String message;
 
     public DependOn(String rule) {
@@ -25,6 +27,9 @@ public class DependOn {
                     case "interval":
                         this.interval = Long.valueOf(valueToken);
                         break;
+                    case "during":
+                        this.during = Long.valueOf(valueToken);
+                        break;
                     default:
                         break;
                 }
@@ -32,6 +37,14 @@ public class DependOn {
         } catch (Exception e) {
             // do nothing
         }
+    }
+
+    public Long getDuring() {
+        return during;
+    }
+
+    public void setDuring(Long during) {
+        this.during = during;
     }
 
     public String getMessage() {
