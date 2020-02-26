@@ -39,7 +39,7 @@ public class SynoNasService extends ImageFtpBusinessService {
     }
 
     @Override
-    public Map<String, String> getImageThumbnailsBySize(Long id, String size) {
+    public Map<String, String> getImageThumbnailsBySize(String host, Long id, String size) {
         Image image = getImageById(id);
         String url = SYNO_NAS_FETCH_URL
             .concat("&path=")
@@ -64,7 +64,11 @@ public class SynoNasService extends ImageFtpBusinessService {
     }
 
     @Override
-    public String getImageThumbnailUrl() {
+    public String getImageThumbnailUrl(String host) {
+        return getImageThumbnailUrl();
+    }
+
+    private String getImageThumbnailUrl() {
         return SYNO_NAS_FETCH_URL.concat("&_sid=").concat(getSession());
     }
 

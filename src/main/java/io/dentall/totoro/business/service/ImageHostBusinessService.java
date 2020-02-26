@@ -39,9 +39,9 @@ public class ImageHostBusinessService extends ImageBusinessService {
     }
 
     @Override
-    public Map<String, String> getImageThumbnailsBySize(Long id, String size) {
+    public Map<String, String> getImageThumbnailsBySize(String host, Long id, String size) {
         Image image = getImageById(id);
-        String url = getImageThumbnailUrl()
+        String url = getImageThumbnailUrl(host)
             .concat("path=")
             .concat(image.getFilePath())
             .concat(image.getFileName())
@@ -62,16 +62,25 @@ public class ImageHostBusinessService extends ImageBusinessService {
     }
 
     @Override
-    public String getImageThumbnailUrl() {
-        try {
-            String hostAddress = InetAddress.getLocalHost().getHostAddress();
-            String serverPort = env.getProperty("server.port");
+    public String getImageThumbnailUrl(String host) {
+        if (host == null) {
+            try {
+                String hostAddress = InetAddress.getLocalHost().getHostAddress();
+                String serverPort = env.getProperty("server.port");
 
-            return "http://".concat(hostAddress).concat(":").concat(Objects.requireNonNull(serverPort)).concat("/api/images/host?");
-        } catch (UnknownHostException e) {
-            logger.warn("The host name could not be determined");
+                return "http://".concat(hostAddress).concat(":").concat(Objects.requireNonNull(serverPort)).concat("/api/images/host?");
+            } catch (UnknownHostException e) {
+                logger.warn("The host name could not be determined");
 
-            return null;
+                return null;
+            }
+        } else {
+            int index = host.lastIndexOf(":");
+            if (index > -1) {
+                return "http://".concat(host.substring(0, index)).concat(":").concat(host.substring(index + 1)).concat("/api/images/host?");
+            } else {
+                return "http://".concat(host).concat("/api/images/host?");
+            }
         }
     }
 
