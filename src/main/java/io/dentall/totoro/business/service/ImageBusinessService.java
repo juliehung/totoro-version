@@ -33,11 +33,11 @@ public abstract class ImageBusinessService {
         this.imageRepository = imageRepository;
     }
 
-    public abstract Map<String, String> getImageThumbnailsBySize(Long id, String size);
+    public abstract Map<String, String> getImageThumbnailsBySize(String host, Long id, String size);
 
     public abstract List<String> getImageSizes();
 
-    public abstract String getImageThumbnailUrl();
+    public abstract String getImageThumbnailUrl(String host);
 
     public abstract void uploadFile(String remotePath, String remoteFileName, InputStream inputStream) throws IOException;
 

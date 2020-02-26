@@ -104,9 +104,11 @@ public class ImageResource {
 
     @GetMapping("/images/{id}/thumbnails")
     public ResponseEntity<Map<String, String>> getImageThumbnailsBySize(
-        @PathVariable("id") Long id, @RequestParam(value = "size", required = false) String size
+        @RequestHeader(name = "Host", required = false) String host,
+        @PathVariable("id") Long id,
+        @RequestParam(value = "size", required = false) String size
     ) {
-        return ResponseEntity.ok(imageBusinessService.getImageThumbnailsBySize(id, size));
+        return ResponseEntity.ok(imageBusinessService.getImageThumbnailsBySize(host, id, size));
     }
 
     @GetMapping("/images/sizes")
@@ -123,8 +125,10 @@ public class ImageResource {
     }
 
     @GetMapping("/images/thumbnail-url")
-    public ResponseEntity<String> getImageThumbnailUrl() {
-        return ResponseEntity.ok(imageBusinessService.getImageThumbnailUrl());
+    public ResponseEntity<String> getImageThumbnailUrl(@RequestHeader(name = "Host", required = false) String host) {
+        logger.info("Host of request header: {}", host);
+
+        return ResponseEntity.ok(imageBusinessService.getImageThumbnailUrl(host));
     }
 
     @Profile("img-host")

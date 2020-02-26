@@ -25,7 +25,7 @@ public class ImageFtpBusinessService extends ImageBusinessService {
     }
 
     @Override
-    public Map<String, String> getImageThumbnailsBySize(Long id, String size) {
+    public Map<String, String> getImageThumbnailsBySize(String host, Long id, String size) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -35,7 +35,7 @@ public class ImageFtpBusinessService extends ImageBusinessService {
     }
 
     @Override
-    public String getImageThumbnailUrl() {
+    public String getImageThumbnailUrl(String host) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
