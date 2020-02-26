@@ -169,7 +169,7 @@ public class NhiService {
                 .getTreatmentTasks().iterator().next()
                 .getTreatmentProcedures().stream()
                 .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
-                .filter(nhiExtendTreatmentProcedure -> !nhiExtendTreatmentProcedure.getId().equals(targetNhiExtendTreatmentProcedure.getId()))
+                .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure != null && !nhiExtendTreatmentProcedure.getId().equals(targetNhiExtendTreatmentProcedure.getId()))
                 .collect(Collectors.toSet());
 
             return new PersonalNhiExtendTreatmentProcedureMap().nhiExtendTreatmentProcedure(peronalAllNhiTxProc);
