@@ -21,7 +21,8 @@ public class PersonalNhiExtendTreatmentProcedureMap {
             if (nhiExtendTreatmentProcedure != null &&
                 nhiExtendTreatmentProcedure.getTreatmentProcedure() != null &&
                 nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal() != null &&
-                nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals() != null
+                nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals() != null &&
+                nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().size() > 0
             ) {
                 NhiExtendDisposal nhiExtendDisposal = nhiExtendTreatmentProcedure.getTreatmentProcedure()
                     .getDisposal()
