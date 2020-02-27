@@ -115,7 +115,7 @@ public class NhiServiceMockTest {
             .thenReturn(Arrays.asList(nhiExtDisposalDateBefore100, nhiExtDisposalDateBefore20, nhiExtDisposalToday));
 
         nhiService.checkInterval.accept(nhiExtendTreatmentProcedure);
-        assertThat(nhiExtendTreatmentProcedure.getCheck()).isEqualTo("半年內不得重複申報。上次：" + formatter.format(dateBefore20) + "(20 天前)\n");
+        assertThat(nhiExtendTreatmentProcedure.getCheck()).isEqualTo("180 天內不得重複申報。上次：" + formatter.format(dateBefore20) + "(20 天前)\n");
     }
 
     @Test

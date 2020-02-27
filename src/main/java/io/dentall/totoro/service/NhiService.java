@@ -549,16 +549,15 @@ public class NhiService {
                                         r.getMax() +
                                         " 次\n");
                                     countingTreatmentProcedure.forEach((key, value) ->
-                                        value.stream()
-                                            .forEach(localDate -> {
-                                                targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
-                                                    key +
-                                                    " ( " +
-                                                    formatter.format(localDate) +
-                                                    " ) ( " +
-                                                    ChronoUnit.DAYS.between(localDate, targetDate) +
-                                                    " 天前)" +
-                                                    "\n");
+                                        value.forEach(localDate -> {
+                                            targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                                                key +
+                                                " ( " +
+                                                formatter.format(localDate) +
+                                                " ) ( " +
+                                                ChronoUnit.DAYS.between(localDate, targetDate) +
+                                                " 天前)" +
+                                                "\n");
                                             })
                                     );
                                 }
@@ -1043,46 +1042,7 @@ public class NhiService {
         return rules;
     }
 
-    private Function<Integer, String> formatDays = days -> {
-        String format;
-        switch (days) {
-            case 1095:
-                format = "三年";
-                break;
-            case 730:
-                format = "兩年";
-                break;
-            case 365:
-                format = "一年";
-                break;
-            case 545:
-                format = "一年半";
-                break;
-            case 180:
-                format = "半年";
-                break;
-            case 60:
-                format = "六十天";
-                break;
-            case 90:
-                format = "九十天";
-                break;
-            case 30:
-                format = "三十天";
-                break;
-            case 7:
-                format = "七天";
-                break;
-            case 360:
-                format = "三百六十天";
-                break;
-            default:
-                format = days + " 天";
-                break;
-        }
-
-        return format;
-    };
+    private Function<Integer, String> formatDays = days -> days + " 天";
 
     private static LocalDate getNhiExtendDisposalDate(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         NhiExtendDisposal nhiExtendDisposal = nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next();
