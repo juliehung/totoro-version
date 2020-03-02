@@ -2,7 +2,7 @@ package io.dentall.totoro.business.dto;
 
 public class DependOn {
 
-    private String code;
+    private String dependOn;
 
     private Long interval;
 
@@ -18,8 +18,8 @@ public class DependOn {
                 String keyToken = ruleToken.length > 0 ? ruleToken[0] : "OUT_OF_SWITCH";
                 String valueToken = ruleToken.length > 1 ? ruleToken[1] : "";
                 switch (keyToken) {
-                    case "code":
-                        this.code = valueToken;
+                    case "dependOn":
+                        this.dependOn = valueToken;
                         break;
                     case "message":
                         this.message = valueToken;
@@ -55,12 +55,12 @@ public class DependOn {
         this.message = message;
     }
 
-    public String getCode() {
-        return code;
+    public String getDependOn() {
+        return dependOn;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setDependOn(String dependOn) {
+        this.dependOn = dependOn;
     }
 
     public Long getInterval() {

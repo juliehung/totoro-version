@@ -169,7 +169,13 @@ public class NhiService {
                 .getTreatmentTasks().iterator().next()
                 .getTreatmentProcedures().stream()
                 .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
-                .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure != null && !nhiExtendTreatmentProcedure.getId().equals(targetNhiExtendTreatmentProcedure.getId()))
+                .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure != null &&
+                    !nhiExtendTreatmentProcedure.getId().equals(targetNhiExtendTreatmentProcedure.getId()))
+                .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getTreatmentProcedure() != null &&
+                    nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal() != null &&
+                    nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime() != null &&
+                    !nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime()
+                        .isAfter(targetNhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime()))
                 .collect(Collectors.toSet());
 
             return new PersonalNhiExtendTreatmentProcedureMap().nhiExtendTreatmentProcedure(peronalAllNhiTxProc);
@@ -483,8 +489,8 @@ public class NhiService {
                 .map(DependOn::new)
                 .forEach(r -> {
                     if (r.getDuring() != null) {
-                        if (!personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getCode()) ||
-                            !personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getCode()).getSortedDeclarationDates()
+                        if (!personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getDependOn()) ||
+                            !personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getDependOn()).getSortedDeclarationDates()
                                 .anyMatch(localDate -> {
                                     LocalDate d = localDate.plusDays(r.getDuring());
                                     return d.isAfter(targetDate) || d.isEqual(targetDate);
@@ -493,8 +499,8 @@ public class NhiService {
                             targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() + r.getMessage() + "\n");
                         }
                     } else {
-                        if (!personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getCode()) ||
-                            personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getCode()).getSortedDeclarationDates()
+                        if (!personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getDependOn()) ||
+                            personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getDependOn()).getSortedDeclarationDates()
                                 .anyMatch(localDate -> {
                                     LocalDate d = localDate.plusDays(r.getInterval());
                                     return d.isAfter(targetDate) || d.isEqual(targetDate);
@@ -580,7 +586,7 @@ public class NhiService {
                                         formatter.format(conflictDate) +
                                         "( " +
                                         ChronoUnit.DAYS.between(conflictDate, targetDate) +
-                                        " 天 )\n");
+                                        " 天前)\n");
                                 }
                             } else if (OtherCodeDeclarationIntervalRange.MONTH.equals(r.getRange())) {
                                 Optional<LocalDate> optionalLocalDate = personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
@@ -601,7 +607,7 @@ public class NhiService {
                                         formatter.format(conflictDate) +
                                         "( " +
                                         ChronoUnit.DAYS.between(conflictDate, targetDate) +
-                                        " 天 )\n");
+                                        " 天前)\n");
                                 }
                             } else if (OtherCodeDeclarationIntervalRange.YEAR.equals(r.getRange())) {
                                 Optional<LocalDate> optionalLocalDate = personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(ruleCode)
@@ -622,7 +628,7 @@ public class NhiService {
                                         formatter.format(conflictDate) +
                                         "( " +
                                         ChronoUnit.DAYS.between(conflictDate, targetDate) +
-                                        " 天 )\n");
+                                        " 天前)\n");
                                 }
                             }
                         })
