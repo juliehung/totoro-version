@@ -69,6 +69,9 @@ public class Ledger implements Serializable {
     @Column(name = "patient_id")
     private Long patientId;
 
+    @Column(name = "include_stamp_tax")
+    private Boolean includeStampTax;
+
     @CreatedDate
     @Column(name = "created_date")
     private Instant createdDate;
@@ -93,6 +96,14 @@ public class Ledger implements Serializable {
     public Ledger projectCode(String projectCode) {
         this.projectCode = projectCode;
         return this;
+    }
+
+    public Boolean getIncludeStampTax() {
+        return includeStampTax;
+    }
+
+    public void setIncludeStampTax(Boolean includeStampTax) {
+        this.includeStampTax = includeStampTax;
     }
 
     public String getProjectCode() {
