@@ -755,37 +755,36 @@ public class NhiService {
             nhiExtendTreatmentProcedure
         );
 
-        if (conditions == null) {
+        if (nhiExtTxPDates.size() >= times) {
+            LocalDate dateBefore = nhiExtTxPDates.get(0).getDate();
+            String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
             StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
-            if (nhiExtTxPDates.size() >= times) {
-                LocalDate dateBefore = nhiExtTxPDates.get(0).getDate();
-                String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
-                if (times == 1) {
-                    // {天數}內不得重複申報。上次：{日期}({天數} 天前)
-                    check
-                        .append(formatDays.apply(days))
-                        .append("內不得重複申報。上次：")
-                        .append(nhiExtTxPBefore)
-                        .append("\n");
-                } else {
-                    // {天數}內不得申報超過 {次數} 次。上次：{日期}({天數} 天前)
-                    check
-                        .append(formatDays.apply(days))
-                        .append("內不得申報超過 ")
-                        .append(times)
-                        .append(" 次。上次：")
-                        .append(nhiExtTxPBefore)
-                        .append("\n");
-                }
+            if (times == 1) {
+                // {天數}內不得重複申報。上次：{日期}({天數} 天前)
+                check
+                    .append(formatDays.apply(days))
+                    .append("內不得重複申報。上次：")
+                    .append(nhiExtTxPBefore)
+                    .append("\n");
+            } else {
+                // {天數}內不得申報超過 {次數} 次。上次：{日期}({天數} 天前)
+                check
+                    .append(formatDays.apply(days))
+                    .append("內不得申報超過 ")
+                    .append(times)
+                    .append(" 次。上次：")
+                    .append(nhiExtTxPBefore)
+                    .append("\n");
             }
 
             nhiExtendTreatmentProcedure.setCheck(check.toString());
-        } else {
+        }
+
+        if (conditions != null) {
             Arrays.stream(conditions).skip(1).forEach(condition ->
                 checkCondition(
                     condition,
-                    nhiExtTxPDates.stream().map(NhiExtTxPDate::getNhiExtendTreatmentProcedure).collect(Collectors.toList()),
-                    nhiExtendTreatmentProcedure
+                    Stream.concat(Stream.of(new NhiExtTxPDate(nhiExtendTreatmentProcedure)), nhiExtTxPDates.stream()).collect(Collectors.toList())
                 )
             );
         }
@@ -814,35 +813,34 @@ public class NhiService {
             nhiExtendTreatmentProcedure
         );
 
-        if (conditions == null) {
+        if (nhiExtTxPDates.size() >= times) {
+            LocalDate dateBefore = nhiExtTxPDates.get(0).getDate();
+            String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
             StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
-            if (nhiExtTxPDates.size() >= times) {
-                LocalDate dateBefore = nhiExtTxPDates.get(0).getDate();
-                String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
-                if (times == 1) {
-                    // 同一月份內不得重複申報。上次：{日期}({天數} 天前)
-                    check
-                        .append("同一月份內不得重複申報。上次：")
-                        .append(nhiExtTxPBefore)
-                        .append("\n");
-                } else {
-                    // 同一月份內不得申報超過 {次數} 次。上次：{日期}({天數} 天前)
-                    check
-                        .append("同一月份內不得申報超過 ")
-                        .append(times)
-                        .append(" 次。上次：")
-                        .append(nhiExtTxPBefore)
-                        .append("\n");
-                }
+            if (times == 1) {
+                // 同一月份內不得重複申報。上次：{日期}({天數} 天前)
+                check
+                    .append("同一月份內不得重複申報。上次：")
+                    .append(nhiExtTxPBefore)
+                    .append("\n");
+            } else {
+                // 同一月份內不得申報超過 {次數} 次。上次：{日期}({天數} 天前)
+                check
+                    .append("同一月份內不得申報超過 ")
+                    .append(times)
+                    .append(" 次。上次：")
+                    .append(nhiExtTxPBefore)
+                    .append("\n");
             }
 
             nhiExtendTreatmentProcedure.setCheck(check.toString());
-        } else {
+        }
+
+        if (conditions != null) {
             Arrays.stream(conditions).skip(1).forEach(condition ->
                 checkCondition(
                     condition,
-                    nhiExtTxPDates.stream().map(NhiExtTxPDate::getNhiExtendTreatmentProcedure).collect(Collectors.toList()),
-                    nhiExtendTreatmentProcedure
+                    Stream.concat(Stream.of(new NhiExtTxPDate(nhiExtendTreatmentProcedure)), nhiExtTxPDates.stream()).collect(Collectors.toList())
                 )
             );
         }
@@ -904,23 +902,24 @@ public class NhiService {
             });
     }
 
-    private void checkCondition(String condition, List<NhiExtendTreatmentProcedure> nhiExtTxPs, NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+    private void checkCondition(String condition, List<NhiExtTxPDate> nhiExtTxPDates) {
         if (condition.contains("Qx")) {
             String[] nums = condition.split("Qx");
             int limit = Integer.parseInt(nums[1]);
-            checkQuadrants(nhiExtTxPs, limit, nhiExtendTreatmentProcedure);
-        } else if (condition.contains("PTx")) {
+            checkQuadrants(nhiExtTxPDates, limit);
+        }
+        else if (condition.contains("PTx")) {
             String[] nums = condition.split("PTx");
             int limit = Integer.parseInt(nums[1]);
-            checkTeeth(nhiExtTxPs, limit, nhiExtendTreatmentProcedure, Rule.emptyPermanentTeethCount.get(), Rule.getPermanentTeeth);
+            checkTeeth(nhiExtTxPDates, limit, Rule.emptyPermanentTeethCount.get(), Rule.getPermanentTeeth);
         } else if (condition.contains("DTx")) {
             String[] nums = condition.split("DTx");
             int limit = Integer.parseInt(nums[1]);
-            checkTeeth(nhiExtTxPs, limit, nhiExtendTreatmentProcedure, Rule.emptyDeciduousTeethCount.get(), Rule.getDeciduousTeeth);
+            checkTeeth(nhiExtTxPDates, limit, Rule.emptyDeciduousTeethCount.get(), Rule.getDeciduousTeeth);
         } else if (condition.contains("SHx")) {
             String[] nums = condition.split("SHx");
             int limit = Integer.parseInt(nums[1]);
-            checkSameHospital(nhiExtTxPs, limit, nhiExtendTreatmentProcedure);
+            checkSameHospital(nhiExtTxPDates, limit);
         }
     }
 
@@ -936,52 +935,64 @@ public class NhiService {
         }
     }
 
-    private void checkQuadrants(List<NhiExtendTreatmentProcedure> nhiExtTxPs, int limit, NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+    private void checkQuadrants(List<NhiExtTxPDate> nhiExtTxPDates, int limit) {
         Map<Integer, Integer> quadrantsCount = Rule.emptyQuadrantsCount.get();
 
-        Stream.concat(Stream.of(nhiExtendTreatmentProcedure), nhiExtTxPs.stream()).forEach(nhiExtTxP -> {
-            String[] positions = nhiExtTxP.getA74().split("(?<=\\G.{2})");
-            Arrays.stream(positions).forEach(position ->
-                Rule.getQuadrants(position).forEach(quadrant ->
-                    quadrantsCount.put(quadrant, quadrantsCount.get(quadrant) + 1)
-                )
-            );
-        });
+        for (NhiExtTxPDate nhiExtTxPDate : nhiExtTxPDates) {
+            String[] positions = nhiExtTxPDate.getNhiExtendTreatmentProcedure().getA74().split("(?<=\\G.{2})");
+            for (String position : positions) {
+                for (Integer quadrant : Rule.getQuadrants(position)) {
+                    quadrantsCount.put(quadrant, quadrantsCount.get(quadrant) + 1);
+                    if (quadrantsCount.get(quadrant) > limit) {
+                        LocalDate date = nhiExtTxPDates.get(0).getDate();
+                        LocalDate dateBefore = nhiExtTxPDate.getDate();
+                        String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
 
-        StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
-        boolean any = quadrantsCount.values().stream().anyMatch(count -> count > limit);
-        if (any) {
-            // 同象限不得重複申報 {次數} 次
-            check.append("同象限不得重複申報 ").append(limit).append(" 次\n");
+                        // 同象限不得重複申報 {次數} 次。上次：{日期}({天數} 天前)
+                        String check = nhiExtTxPDates.get(0).getNhiExtendTreatmentProcedure().getCheck() +
+                            "同象限不得重複申報 " +
+                            limit +
+                            " 次。上次：" +
+                            nhiExtTxPBefore +
+                            "\n";
+                        nhiExtTxPDates.get(0).getNhiExtendTreatmentProcedure().setCheck(check);
+
+                        return;
+                    }
+                }
+            }
         }
-
-        nhiExtendTreatmentProcedure.setCheck(check.toString());
     }
 
     private void checkTeeth(
-        List<NhiExtendTreatmentProcedure> nhiExtTxPs,
+        List<NhiExtTxPDate> nhiExtTxPDates,
         int limit,
-        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure,
         Map<String, Integer> teethCount,
         Function<String, List<String>> getTeeth
     ) {
-        Stream.concat(Stream.of(nhiExtendTreatmentProcedure), nhiExtTxPs.stream()).forEach(nhiExtTxP -> {
-            String[] positions = nhiExtTxP.getA74().split("(?<=\\G.{2})");
-            Arrays.stream(positions).forEach(position ->
-                getTeeth.apply(position).forEach(tooth ->
-                    teethCount.put(tooth, teethCount.get(tooth) + 1)
-                )
-            );
-        });
+        for (NhiExtTxPDate nhiExtTxPDate : nhiExtTxPDates) {
+            String[] positions = nhiExtTxPDate.getNhiExtendTreatmentProcedure().getA74().split("(?<=\\G.{2})");
+            for (String position : positions) {
+                for (String tooth : getTeeth.apply(position)) {
+                    teethCount.put(tooth, teethCount.get(tooth) + 1);
+                    if (teethCount.get(tooth) > limit) {
+                        LocalDate date = nhiExtTxPDates.get(0).getDate();
+                        LocalDate dateBefore = nhiExtTxPDate.getDate();
+                        String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
 
-        StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
-        boolean any = teethCount.values().stream().anyMatch(count -> count > limit);
-        if (any) {
-            // 同顆牙不得重複申報 {次數} 次
-            check.append("同顆牙不得重複申報 ").append(limit).append(" 次\n");
+                        // 同顆牙不得重複申報 {次數} 次。上次：{日期}({天數} 天前)
+                        String check = nhiExtTxPDates.get(0).getNhiExtendTreatmentProcedure().getCheck() + "同顆牙不得重複申報 " +
+                            limit +
+                            " 次。上次：" +
+                            nhiExtTxPBefore +
+                            "\n";
+                        nhiExtTxPDates.get(0).getNhiExtendTreatmentProcedure().setCheck(check);
+
+                        return;
+                    }
+                }
+            }
         }
-
-        nhiExtendTreatmentProcedure.setCheck(check.toString());
     }
 
     private void checkLifetimeTeeth(
@@ -1016,21 +1027,33 @@ public class NhiService {
         });
     }
 
-    private void checkSameHospital(List<NhiExtendTreatmentProcedure> nhiExtTxPs, int limit, NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
-        long count = nhiExtTxPs
-            .stream()
-            .filter(nhiExtTxP -> nhiExtTxP.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next()
-                .getA14().equals(nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getA14())
-            )
-            .count();
+    private void checkSameHospital(List<NhiExtTxPDate> nhiExtTxPDates, int limit) {
+        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = nhiExtTxPDates.get(0).getNhiExtendTreatmentProcedure();
+        int count = 0;
+        for (NhiExtTxPDate nhiExtTxPDate : nhiExtTxPDates.subList(1, nhiExtTxPDates.size())) {
+            if (nhiExtTxPDate.getNhiExtendTreatmentProcedure().getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getA14()
+                .equals(nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getA14())
+            ) {
+                count += 1;
+            }
 
-        StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
-        if (count >= limit) {
-            // 同一院所不得重複申報 {次數} 次
-            check.append("同一院所不得重複申報 ").append(limit).append(" 次\n");
+            if (count >= limit) {
+                LocalDate date = nhiExtTxPDates.get(0).getDate();
+                LocalDate dateBefore = nhiExtTxPDate.getDate();
+                String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
+
+                // 同一院所不得重複申報 {次數} 次。上次：{日期}({天數} 天前)
+                String check = nhiExtendTreatmentProcedure.getCheck() +
+                    "同一院所不得重複申報 " +
+                    limit +
+                    " 次。上次：" +
+                    nhiExtTxPBefore +
+                    "\n";
+                nhiExtendTreatmentProcedure.setCheck(check);
+
+                return;
+            }
         }
-
-        nhiExtendTreatmentProcedure.setCheck(check.toString());
     }
 
     private Map<String, Rule> loadRules(InputStream input) {
