@@ -151,4 +151,77 @@ public class NhiServiceMockTest {
             "同一月份內不得重複申報。上次：" + formatter.format(monthFirstDate) + "(" + DAYS.between(monthFirstDate, today) + " 天前)\n"
         );
     }
+
+    @Test
+    public void testCheckIntervalMonthWithQuadrants() {
+        final String code = "Month2Q1";
+
+        nhiExtendTreatmentProcedure.setA73(code);
+        nhiExtendTreatmentProcedure.setA74("11");
+
+        Rule rule = new Rule();
+        rule.setInterval("MMx2;Qx1");
+        ReflectionTestUtils.setField(nhiService, "rules", new HashMap<String, Rule>() {{
+            put(code, rule);
+        }});
+
+        // 1st date of month
+        Disposal disposalMonthFirstDate = new Disposal();
+        TreatmentProcedure treatmentProcedureMonthFirstDate = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposalMonthFirstDate);
+        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureMonthFirstDate = new NhiExtendTreatmentProcedure()
+            .a73(code)
+            .a74("FM")
+            .treatmentProcedure(treatmentProcedureMonthFirstDate);
+        LocalDate monthFirstDate = today.with(TemporalAdjusters.firstDayOfMonth());
+        NhiExtendDisposal nhiExtDisposalMonthFirstDate = new NhiExtendDisposal()
+            .a17(monthFirstDate.getYear() - 1911 + monthFormatter.format(monthFirstDate) + dayFormatter.format(monthFirstDate))
+            .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedureMonthFirstDate));
+        disposalMonthFirstDate.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalMonthFirstDate));
+
+        Mockito
+            .when(mockNhiExtendDisposalRepository.findByDateBetweenAndPatientId(monthFirstDate, today, patient.getId()))
+            .thenReturn(Arrays.asList(nhiExtDisposalMonthFirstDate, nhiExtDisposalToday));
+
+        nhiService.checkInterval.accept(nhiExtendTreatmentProcedure);
+        assertThat(nhiExtendTreatmentProcedure.getCheck()).isEqualTo(
+            "同象限不得重複申報 1 次。上次：" + formatter.format(monthFirstDate) + "(" + DAYS.between(monthFirstDate, today) + " 天前)\n"
+        );
+    }
+
+    @Test
+    public void testCheckIntervalSameHospital() {
+        final String code = "SameHospital";
+        final String hospital = "XYZ";
+
+        nhiExtendTreatmentProcedure.setA73(code);
+        nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().a14(hospital);
+
+        Rule rule = new Rule();
+        rule.setInterval("<=730x2;SHx1");
+        ReflectionTestUtils.setField(nhiService, "rules", new HashMap<String, Rule>() {{
+            put(code, rule);
+        }});
+
+        // last year
+        Disposal disposalLastYearDate = new Disposal();
+        TreatmentProcedure treatmentProcedureMonthFirstDate = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposalLastYearDate);
+        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureMonthFirstDate = new NhiExtendTreatmentProcedure()
+            .a73(code)
+            .treatmentProcedure(treatmentProcedureMonthFirstDate);
+        LocalDate lastYearDate = today.minusYears(1);
+        NhiExtendDisposal nhiExtDisposalLastYearDate = new NhiExtendDisposal()
+            .a14(hospital)
+            .a17(lastYearDate.getYear() - 1911 + monthFormatter.format(lastYearDate) + dayFormatter.format(lastYearDate))
+            .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedureMonthFirstDate));
+        disposalLastYearDate.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalLastYearDate));
+
+        Mockito
+            .when(mockNhiExtendDisposalRepository.findByDateBetweenAndPatientId(getGreaterThanEqualDate.apply(730), today, patient.getId()))
+            .thenReturn(Arrays.asList(nhiExtDisposalLastYearDate, nhiExtDisposalToday));
+
+        nhiService.checkInterval.accept(nhiExtendTreatmentProcedure);
+        assertThat(nhiExtendTreatmentProcedure.getCheck()).isEqualTo(
+            "同一院所不得重複申報 1 次。上次：" + formatter.format(lastYearDate) + "(" + DAYS.between(lastYearDate, today) + " 天前)\n"
+        );
+    }
 }
