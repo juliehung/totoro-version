@@ -154,36 +154,50 @@ public class NhiServiceMockTest {
 
     @Test
     public void testCheckIntervalMonthWithQuadrants() {
-        final String code = "Month1Q1";
+        final String code = "Month2Q1";
 
         nhiExtendTreatmentProcedure.setA73(code);
         nhiExtendTreatmentProcedure.setA74("11");
 
         Rule rule = new Rule();
-        rule.setInterval("MMx1;Qx1");
+        rule.setInterval("MMx2;Qx1");
         ReflectionTestUtils.setField(nhiService, "rules", new HashMap<String, Rule>() {{
             put(code, rule);
         }});
 
-        // 1st date of month
-        Disposal disposalMonthFirstDate = new Disposal();
-        TreatmentProcedure treatmentProcedureMonthFirstDate = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposalMonthFirstDate);
-        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureMonthFirstDate = new NhiExtendTreatmentProcedure()
+        // 1st date of month: 1
+        Disposal disposalMonthFirstDate1 = new Disposal();
+        TreatmentProcedure treatmentProcedureMonthFirstDate1 = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposalMonthFirstDate1);
+        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureMonthFirstDate1 = new NhiExtendTreatmentProcedure()
             .a73(code)
             .a74("FM")
-            .treatmentProcedure(treatmentProcedureMonthFirstDate);
+            .treatmentProcedure(treatmentProcedureMonthFirstDate1);
+        LocalDate monthFirstDate1 = today.with(TemporalAdjusters.firstDayOfMonth());
+        NhiExtendDisposal nhiExtDisposalMonthFirstDate1 = new NhiExtendDisposal()
+            .a17(monthFirstDate1.getYear() - 1911 + monthFormatter.format(monthFirstDate1) + dayFormatter.format(monthFirstDate1))
+            .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedureMonthFirstDate1));
+        disposalMonthFirstDate1.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalMonthFirstDate1));
+
+        // 1st date of month: 2
+        Disposal disposalMonthFirstDate2 = new Disposal();
+        TreatmentProcedure treatmentProcedureMonthFirstDate2 = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposalMonthFirstDate2);
+        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureMonthFirstDate2 = new NhiExtendTreatmentProcedure()
+            .a73(code)
+            .a74("FM")
+            .treatmentProcedure(treatmentProcedureMonthFirstDate2);
         LocalDate monthFirstDate = today.with(TemporalAdjusters.firstDayOfMonth());
-        NhiExtendDisposal nhiExtDisposalMonthFirstDate = new NhiExtendDisposal()
+        NhiExtendDisposal nhiExtDisposalMonthFirstDate2 = new NhiExtendDisposal()
             .a17(monthFirstDate.getYear() - 1911 + monthFormatter.format(monthFirstDate) + dayFormatter.format(monthFirstDate))
-            .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedureMonthFirstDate));
-        disposalMonthFirstDate.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalMonthFirstDate));
+            .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedureMonthFirstDate2));
+        disposalMonthFirstDate2.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalMonthFirstDate2));
 
         Mockito
             .when(mockNhiExtendDisposalRepository.findByDateBetweenAndPatientId(monthFirstDate, today, patient.getId()))
-            .thenReturn(Arrays.asList(nhiExtDisposalMonthFirstDate, nhiExtDisposalToday));
+            .thenReturn(Arrays.asList(nhiExtDisposalMonthFirstDate1, nhiExtDisposalMonthFirstDate2, nhiExtDisposalToday));
 
         nhiService.checkInterval.accept(nhiExtendTreatmentProcedure);
         assertThat(nhiExtendTreatmentProcedure.getCheck()).isEqualTo(
+            "同一月份內不得申報超過 2 次。上次：" + formatter.format(monthFirstDate) + "(" + DAYS.between(monthFirstDate, today) + " 天前)\n" +
             "同象限不得重複申報 1 次。上次：" + formatter.format(monthFirstDate) + "(" + DAYS.between(monthFirstDate, today) + " 天前)\n"
         );
     }

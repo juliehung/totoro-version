@@ -756,7 +756,7 @@ public class NhiService {
             nhiExtendTreatmentProcedure
         );
 
-        if ((conditions == null && nhiExtTxPDates.size() >= times) || (conditions != null && times > 1)) {
+        if (nhiExtTxPDates.size() >= times && ((conditions == null) || (times > 1))) {
             LocalDate dateBefore = nhiExtTxPDates.get(0).getDate();
             String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
             StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
@@ -814,7 +814,7 @@ public class NhiService {
             nhiExtendTreatmentProcedure
         );
 
-        if ((conditions == null && nhiExtTxPDates.size() >= times) || (conditions != null && times > 1)) {
+        if (nhiExtTxPDates.size() >= times && ((conditions == null) || (times > 1))) {
             LocalDate dateBefore = nhiExtTxPDates.get(0).getDate();
             String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
             StringBuilder check = new StringBuilder(nhiExtendTreatmentProcedure.getCheck());
