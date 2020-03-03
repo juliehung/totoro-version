@@ -775,7 +775,7 @@ public class NhiServiceIntTest {
             .patientId(1L)
             .nhiExtendTreatmentProcedures(Collections.singleton(
                 new NhiExtendTreatmentProcedure()
-                    .a73("Month2Q1")
+                    .a73("Month1Q1")
                     .a74("FM")
                     .treatmentProcedure(treatmentProcedureMonthFirstDay)
                 )
@@ -787,7 +787,7 @@ public class NhiServiceIntTest {
                 .uploadStatus(NhiExtendDisposalUploadStatus.NONE)
                 .patientId(1L)
             )
-            .a73("Month2Q1")
+            .a73("Month1Q1")
             .a74("11")
             .check("");
         nhiService.checkInterval.accept(month);
