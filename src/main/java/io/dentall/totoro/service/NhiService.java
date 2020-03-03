@@ -15,6 +15,7 @@ import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.github.jhipster.service.filter.LongFilter;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -433,7 +434,7 @@ public class NhiService {
             : targetNhiExtendDisposal.getReplenishmentDate();
         String targetCode = targetNhiExtendTreatmentProcedure.getA73();
         List<String> targetTeeth = splitToothFromA74(targetNhiExtendTreatmentProcedure.getA74()).collect(Collectors.toList());
-        if (rules.containsKey(targetCode) && rules.get(targetCode).getOtherToothDeclarationInterval() != null) {
+        if (rules.containsKey(targetCode) && rules.get(targetCode).getOtherToothDeclarationInterval() != null && StringUtils.isNotBlank(targetNhiExtendTreatmentProcedure.getA74())) {
             Arrays.stream(rules.get(targetCode).getOtherToothDeclarationInterval())
                 .map(OtherToothDeclarationInterval::new)
                 .forEach(r ->
