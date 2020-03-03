@@ -258,7 +258,7 @@ public class DisposalService {
                     relationshipService.addRelationshipWithTeeth(disposal.teeth(updateDisposal.getTeeth()));
                 }
 
-                if (updateDisposal.getNhiExtendDisposals() != null) {
+                if (updateDisposal.getNhiExtendDisposals() != null && updateDisposal.getNhiExtendDisposals().size() > 0) {
                     log.debug("Update nhiExtendDisposals({}) of Disposal(id: {})", updateDisposal.getNhiExtendDisposals(), updateDisposal.getId());
                     if (disposal.getNhiExtendDisposals() == null || disposal.getNhiExtendDisposals().size() == 0) {
                         nhiExtendDisposalService.save(updateDisposal.getNhiExtendDisposals().iterator().next());
