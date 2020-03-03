@@ -154,13 +154,13 @@ public class NhiServiceMockTest {
 
     @Test
     public void testCheckIntervalMonthWithQuadrants() {
-        final String code = "Month2Q1";
+        final String code = "Month1Q1";
 
         nhiExtendTreatmentProcedure.setA73(code);
         nhiExtendTreatmentProcedure.setA74("11");
 
         Rule rule = new Rule();
-        rule.setInterval("MMx2;Qx1");
+        rule.setInterval("MMx1;Qx1");
         ReflectionTestUtils.setField(nhiService, "rules", new HashMap<String, Rule>() {{
             put(code, rule);
         }});
@@ -197,7 +197,7 @@ public class NhiServiceMockTest {
         nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().a14(hospital);
 
         Rule rule = new Rule();
-        rule.setInterval("<=730x2;SHx1");
+        rule.setInterval("<=730;SHx1");
         ReflectionTestUtils.setField(nhiService, "rules", new HashMap<String, Rule>() {{
             put(code, rule);
         }});
