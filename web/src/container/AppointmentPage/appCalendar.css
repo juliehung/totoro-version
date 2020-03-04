@@ -12,6 +12,12 @@
   border-color: #d9d9d9 !important;
 }
 
+@media (max-width: 800px) {
+  .fc-button.fc-button-primary {
+    display: none !important;
+  }
+}
+
 .eventCard {
   font-weight: 500;
   letter-spacing: 2px;
