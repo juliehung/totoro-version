@@ -782,12 +782,8 @@ public class NhiService {
         }
 
         if (conditions != null) {
-            Arrays.stream(conditions).skip(1).forEach(condition ->
-                checkCondition(
-                    condition,
-                    Stream.concat(Stream.of(new NhiExtTxPDate(nhiExtendTreatmentProcedure)), nhiExtTxPDates.stream()).collect(Collectors.toList())
-                )
-            );
+            nhiExtTxPDates.add(0, new NhiExtTxPDate(nhiExtendTreatmentProcedure));
+            Arrays.stream(conditions).skip(1).forEach(condition -> checkCondition(condition, nhiExtTxPDates));
         }
     }
 
@@ -838,12 +834,8 @@ public class NhiService {
         }
 
         if (conditions != null) {
-            Arrays.stream(conditions).skip(1).forEach(condition ->
-                checkCondition(
-                    condition,
-                    Stream.concat(Stream.of(new NhiExtTxPDate(nhiExtendTreatmentProcedure)), nhiExtTxPDates.stream()).collect(Collectors.toList())
-                )
-            );
+            nhiExtTxPDates.add(0, new NhiExtTxPDate(nhiExtendTreatmentProcedure));
+            Arrays.stream(conditions).skip(1).forEach(condition -> checkCondition(condition, nhiExtTxPDates));
         }
     }
 
@@ -908,8 +900,7 @@ public class NhiService {
             String[] nums = condition.split("Qx");
             int limit = Integer.parseInt(nums[1]);
             checkQuadrants(nhiExtTxPDates, limit);
-        }
-        else if (condition.contains("PTx")) {
+        } else if (condition.contains("PTx")) {
             String[] nums = condition.split("PTx");
             int limit = Integer.parseInt(nums[1]);
             checkTeeth(nhiExtTxPDates, limit, Rule.emptyPermanentTeethCount.get(), Rule.getPermanentTeeth);
@@ -1029,6 +1020,11 @@ public class NhiService {
     }
 
     private void checkSameHospital(List<NhiExtTxPDate> nhiExtTxPDates, int limit) {
+        // only self
+        if (nhiExtTxPDates.size() == 1) {
+            return;
+        }
+
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = nhiExtTxPDates.get(0).getNhiExtendTreatmentProcedure();
         int count = 0;
         for (NhiExtTxPDate nhiExtTxPDate : nhiExtTxPDates.subList(1, nhiExtTxPDates.size())) {
