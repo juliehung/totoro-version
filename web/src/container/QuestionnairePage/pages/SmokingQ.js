@@ -32,7 +32,7 @@ function SmokingQ(props) {
             props.preChangeSmoking('A');
           }}
         >
-          <Option>A</Option>
+          <Option selected={props.smoking === 'A'}>A</Option>
           <span>有</span>
           <CheckedIcon type="check" selected={props.smoking === 'A'} />
         </OptionContainer>
@@ -43,7 +43,7 @@ function SmokingQ(props) {
             props.preChangeSmoking('B');
           }}
         >
-          <Option>B</Option>
+          <Option selected={props.smoking === 'B'}>B</Option>
           <span>無</span>
           <CheckedIcon type="check" selected={props.smoking === 'B'} />
         </OptionContainer>
