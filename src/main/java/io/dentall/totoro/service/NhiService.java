@@ -96,29 +96,29 @@ public class NhiService {
         positionLimitMap.put("SPECIFIC_AREA_ONLY", "");
         positionLimitMap.put("SPECIFIC_TOOTH_ONLY", "");
 
-        positionLimitErrorResponseMap.put("BLANK_ONLY", "不應填寫牙位");
-        positionLimitErrorResponseMap.put("VALIDATED_ONLY", "建議依象限填入恆牙(1-9),乳牙(A-E),99及區域型(UB,LB,UR,UL,LR,LL,UA,LA,FM) 牙位");
-        positionLimitErrorResponseMap.put("FM_ONLY", "建議填 FM 牙位");
+        positionLimitErrorResponseMap.put("BLANK_ONLY", "不應填寫");
+        positionLimitErrorResponseMap.put("VALIDATED_ONLY", "建議依象限填入恆牙(1-9),乳牙(A-E),99及區域型(UB,LB,UR,UL,LR,LL,UA,LA,FM)");
+        positionLimitErrorResponseMap.put("FM_ONLY", "建議填 FM");
         // 僅限 所有牙位
-        positionLimitErrorResponseMap.put("TOOTH_ONLY", "建議依象限填入恆牙(1-9),乳牙(A-E),99 牙位");
+        positionLimitErrorResponseMap.put("TOOTH_ONLY", "建議依象限填入恆牙(1-9),乳牙(A-E),99");
         // 僅限 所有牙位，所有區域
-        positionLimitErrorResponseMap.put("TOOTH_AREA_ONLY", "建議依象限填入恆牙(1-9),乳牙(A-E),99及區域型(UB,LB,UR,UL,LR,LL,UA,LA) 牙位");
+        positionLimitErrorResponseMap.put("TOOTH_AREA_ONLY", "建議依象限填入恆牙(1-9),乳牙(A-E),99及區域型(UB,LB,UR,UL,LR,LL,UA,LA)");
         // 僅限 乳牙牙位
-        positionLimitErrorResponseMap.put("DECIDUOUS_ONLY", "建議依象限填入乳牙A,B,C,D,E及99 牙位");
+        positionLimitErrorResponseMap.put("DECIDUOUS_ONLY", "建議依象限填入乳牙A,B,C,D,E及99");
         // 僅限 恆牙牙位
-        positionLimitErrorResponseMap.put("PERMANENT_ONLY", "建議依象限填入恆牙(1-9)及99 牙位");
+        positionLimitErrorResponseMap.put("PERMANENT_ONLY", "建議依象限填入恆牙(1-9)及99");
         // 僅限 前牙牙位
-        positionLimitErrorResponseMap.put("FRONT_ONLY", "建議依象限填入恆牙前牙(1-3),乳牙前牙(A,B,C)及99 牙位");
+        positionLimitErrorResponseMap.put("FRONT_ONLY", "建議依象限填入恆牙前牙(1-3),乳牙前牙(A,B,C)及99");
         // 僅限 後牙牙位
-        positionLimitErrorResponseMap.put("BACK_ONLY", "建議依象限填入恆牙後牙(4-9),乳牙後牙(D,E)及99 牙位");
+        positionLimitErrorResponseMap.put("BACK_ONLY", "建議依象限填入恆牙後牙(4-9),乳牙後牙(D,E)及99");
         // 僅限 恆牙前牙牙位
-        positionLimitErrorResponseMap.put("PERMANENT_FRONT_ONLY", "建議依象限填入恆牙前牙(1-3)及99 牙位");
+        positionLimitErrorResponseMap.put("PERMANENT_FRONT_ONLY", "建議依象限填入恆牙前牙(1-3)及99");
         // 僅限 恆牙後牙牙位
-        positionLimitErrorResponseMap.put("PERMANENT_BACK_ONLY", "建議依象限填入恆牙後牙(4-9)及99 牙位");
+        positionLimitErrorResponseMap.put("PERMANENT_BACK_ONLY", "建議依象限填入恆牙後牙(4-9)及99");
         // 僅限 恆牙小臼齒牙位
-        positionLimitErrorResponseMap.put("PERMANENT_PREMOLAR_ONLY", "建議依象限填入恆牙小臼齒(4-5)及99 牙位");
+        positionLimitErrorResponseMap.put("PERMANENT_PREMOLAR_ONLY", "建議依象限填入恆牙小臼齒(4-5)及99");
         // 僅限 恆牙大臼齒牙位
-        positionLimitErrorResponseMap.put("PERMANENT_MOLAR_ONLY", "建議依象限填入恆牙大臼齒(6-9)及99 牙位");
+        positionLimitErrorResponseMap.put("PERMANENT_MOLAR_ONLY", "建議依象限填入恆牙大臼齒(6-9)及99");
         // 僅限 指定牙位
         positionLimitErrorResponseMap.put("SPECIFIC_TOOTH_ONLY", "建議填 ");
         // 僅限 指定區域
@@ -341,7 +341,11 @@ public class NhiService {
             ) {
                 specificPosition = specificPosition.substring(0, specificPosition.length() - 1);
             }
-            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + positionLimitErrorResponseMap.get(limitType) + " " + specificPosition + " 牙位\n");
+            nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() +
+                positionLimitErrorResponseMap.get(limitType) +
+                " " +
+                specificPosition +
+                " 牙位\n");
         }
 
         if (nhiExtendTreatmentProcedure.getA74() != null &&
