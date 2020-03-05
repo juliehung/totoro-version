@@ -49,13 +49,17 @@ const InfoContainer = styled.div`
     background: #fff;
   }
 
+  & > div {
+    padding: 0.5em 1em;
+    min-height: 36px;
+  }
+
   color: #000;
   font-size: 14px;
 `;
 
 const InfoRowContainer = styled.div`
   display: flex;
-  height: 36px;
   align-items: center;
   & > div {
     width: 33.3%;
