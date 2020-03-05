@@ -17,7 +17,7 @@ function NavHome() {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout>
       <Sider
         collapsedWidth={0}
         zeroWidthTriggerStyle={{ zIndex: 5, top: '15px' }}

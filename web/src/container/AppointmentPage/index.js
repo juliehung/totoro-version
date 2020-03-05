@@ -23,7 +23,9 @@ const Container = styled.div`
 `;
 const CalendarContainer = styled.div`
   width: 85%;
+  height: 100%;
   @media (max-width: 800px) {
+    height: 600px;
     width: 100%;
   }
 `;

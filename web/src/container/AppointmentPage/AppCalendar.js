@@ -117,6 +117,8 @@ class AppCalendar extends React.Component {
         this.props.changeSelectedDoctors([id.toString()]);
       }
     }
+
+    window.dispatchEvent(new Event('resize'));
   }
 
   componentWillUnmount() {

@@ -29,6 +29,8 @@ const Container = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
+  background: #fff;
+  z-index: 400;
   @media (max-width: 800px) {
     width: 100%;
     min-height: 90vh;
