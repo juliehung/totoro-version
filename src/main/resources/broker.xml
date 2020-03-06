@@ -3,10 +3,6 @@
     <core xmlns="urn:activemq:core">
         <persistence-enabled>false</persistence-enabled>
 
-        <acceptors>
-            <acceptor name="netty">tcp://0.0.0.0:61616?protocols=AMQP,CORE</acceptor>
-        </acceptors>
-
         <addresses>
             <address name="totoro.appointmentQueue">
                 <anycast>

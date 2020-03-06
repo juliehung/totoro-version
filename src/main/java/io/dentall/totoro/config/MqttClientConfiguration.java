@@ -20,9 +20,9 @@ public class MqttClientConfiguration {
     public IMqttClient mqttClient(
         @Value("${mqtt.clientId}") String clientId,
         @Value("${mqtt.hostname}") String hostname,
-        @Value("${mqtt.port}") int port,
+        @Value("${moquette.port:1883}") int port,
         MqttConnectOptions mqttConnectOptions,
-        Server server
+        Server server // depend on embeddedMoquetteBrokerServer Bean for creation order
     ) throws MqttException {
         IMqttClient mqttClient = new MqttClient("tcp://" + hostname + ":" + port, clientId, new MemoryPersistence());
         mqttClient.connect(mqttConnectOptions);

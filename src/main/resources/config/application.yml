@@ -134,10 +134,11 @@ mqtt:
     connectionTimeout: 10
     clientId: totoro-MQTT
     hostname: 127.0.0.1
-    port: 1883
 
 queue:
     appointment: totoro.appointmentQueue
     patient: totoro.patientQueue
     registration: totoro.registrationQueue
     message: totoro.messageQueue
+
+artemis.acceptor.netty.port: 61616
