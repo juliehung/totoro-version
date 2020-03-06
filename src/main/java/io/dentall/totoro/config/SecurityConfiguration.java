@@ -108,6 +108,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
             .antMatchers("/api/greeting").permitAll()
+            .antMatchers("/api/version").permitAll()
             .antMatchers("/api/images/test").permitAll()
             .antMatchers("/api/images/host").permitAll()
             .antMatchers("/api/**").authenticated()
