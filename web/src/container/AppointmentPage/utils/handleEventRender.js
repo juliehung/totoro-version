@@ -40,9 +40,12 @@ export function handleEventRender(info, func) {
       if (info.view.type !== 'dayGridMonth') {
         const fcTitle = info.el.querySelector('.fc-title');
         if (fcTitle) {
-          fcTitle.innerHTML += appointment.note
-            ? `<br /><i>${convertMrnTo5Digits(appointment.patientId)}</i><br/><span>${appointment.note}</span>`
-            : `<br /><i>${convertMrnTo5Digits(appointment.patientId)}</i>`;
+          const fcTitleClone = fcTitle.innerHTML;
+          fcTitle.innerHTML = appointment.note
+            ? `<div><b>${fcTitleClone}</b><br /><i>${convertMrnTo5Digits(appointment.patientId)}</i><br/><span>${
+                appointment.note
+              }</span></div>`
+            : `<div><b>${fcTitleClone}</b><br /><i>${convertMrnTo5Digits(appointment.patientId)}</i></div>`;
         }
 
         const fcContent = info.el.querySelector('.fc-content');
