@@ -17,8 +17,9 @@ RUN chmod 755 entrypoint.sh && chown jhipster:jhipster entrypoint.sh
 
 USER jhipster
 
-RUN mkdir .embedpostgresql && wget -P .embedpostgresql http://get.enterprisedb.com/postgresql/postgresql-10.6-1-linux-x64-binaries.tar.gz
-RUN mkdir -p pgembed/pgsql-10.6-1 && tar -C pgembed/pgsql-10.6-1 -zxvf .embedpostgresql/postgresql-10.6-1-linux-x64-binaries.tar.gz
+# Comment embedded postgres to reduce docker image building duration
+#RUN mkdir .embedpostgresql && wget -P .embedpostgresql http://get.enterprisedb.com/postgresql/postgresql-10.6-1-linux-x64-binaries.tar.gz
+#RUN mkdir -p pgembed/pgsql-10.6-1 && tar -C pgembed/pgsql-10.6-1 -zxvf .embedpostgresql/postgresql-10.6-1-linux-x64-binaries.tar.gz
 
 ENTRYPOINT ["./entrypoint.sh"]
 
