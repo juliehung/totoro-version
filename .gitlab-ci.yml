@@ -109,8 +109,7 @@ releaseImageToGitlabRegistry:
         - version=${filename##*-}
         - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
         - git checkout $CI_COMMIT_TAG
-        - ./gradlew -Pprod jib --image=registry.gitlab.com/dentall/totoro-admin/$CI_COMMIT_TAG:$version -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
-        - ./gradlew -Pprod jib --image=registry.gitlab.com/dentall/totoro-admin/$CI_COMMIT_TAG -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
+        - ./gradlew -Pprod jib --image=registry.gitlab.com/dentall/totoro-admin:$CI_COMMIT_TAG -Djib.to.auth.username=gitlab-ci-token -Djib.to.auth.password=$CI_JOB_TOKEN -x processResources -x compileJava -x check --no-daemon
 
 releaseImageToGCPRegistry:
     stage: release
@@ -118,7 +117,6 @@ releaseImageToGCPRegistry:
         - tags
     except:
         - /^(\d)+-.*$/
-    when: manual
     dependencies:
         - repackageByGradle
     image: docker
@@ -143,8 +141,8 @@ releaseImageToGCPRegistry:
         - filename=$(basename $war_path .war)
         - version=${filename##*-}
         - mv build/libs/$filename.war src/main/docker/app.war
-        - docker build -t us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_TAG -f src/main/docker/Dockerfile src/main/docker
-        - docker push us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_TAG
+        - docker build -t us.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:$CI_COMMIT_TAG -f src/main/docker/Dockerfile src/main/docker
+        - docker push us.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 # deploy stage
 depolyCloudRun:
