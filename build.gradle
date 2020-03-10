@@ -315,6 +315,7 @@ dependencies {
 
     testCompile "org.mockftpserver:MockFtpServer:2.7.1"
     compile "net.coobird:thumbnailator:0.4.9"
+    runtime "com.google.cloud.sql:postgres-socket-factory:1.0.15"
 }
 
 task cleanResources(type: Delete) {
