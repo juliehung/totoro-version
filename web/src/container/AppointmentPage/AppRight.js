@@ -263,7 +263,7 @@ function AppRight(props) {
         </StyledSelect>
       </SelectDoctorContainer>
       <TodoContainer>
-        <span>待辦清單 ({props.calendarDate.format('llddd')})</span>
+        <span>待辦清單 ({props.calendarDate.locale('zh-tw').format('llddd')})</span>
         <StyledCardContainer bordered={false} loading={props.todosLoading}>
           {props.todos.length === 0 ? (
             <Card.Grid style={{ ...generalGridStyle }} key={'none'}>
