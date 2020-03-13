@@ -40,7 +40,7 @@ public class ImageFtpBusinessService extends ImageBusinessService {
     }
 
     @Override
-    public void uploadFile(String remotePath, String remoteFileName, InputStream inputStream) throws IOException {
+    public void uploadFile(String remotePath, String remoteFileName, InputStream inputStream, String contentType) throws IOException {
         ftpClientService.connect();
         int replyCode = ftpClientService.upload(remotePath, remoteFileName, inputStream);
         if (replyCode == FtpClientService.FTP_COULD_NOT_CREATE_FILE) {
