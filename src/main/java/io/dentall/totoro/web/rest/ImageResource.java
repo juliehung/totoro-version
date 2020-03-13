@@ -10,7 +10,6 @@ import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
@@ -26,10 +25,11 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
-@Profile("img-host")
+@Profile({"img-host", "img-gcs"})
 @RestController
 @RequestMapping("/api")
 public class ImageResource {
@@ -46,7 +46,7 @@ public class ImageResource {
     private final ImageQueryService imageQueryService;
 
     public ImageResource(
-        @Qualifier("imgHostService") ImageBusinessService imageBusinessService,
+        ImageBusinessService imageBusinessService,
         ImageQueryService imageQueryService
     ) {
         this.imageBusinessService = imageBusinessService;
@@ -78,7 +78,7 @@ public class ImageResource {
                 remoteFileName = file.getOriginalFilename() == null ? remoteFileName : remoteFileName.concat("_").concat(file.getOriginalFilename().replace(" ", "+"));
 
                 // upload origin
-                imageBusinessService.uploadFile(remotePath, remoteFileName, inputStream);
+                imageBusinessService.uploadFile(remotePath, remoteFileName, inputStream, file.getContentType());
                 image = imageBusinessService.createImage(patientId, remotePath, remoteFileName);
             } catch (IOException e) {
                 logger.error("Upload image get exception:\n {}", e.getMessage());
@@ -119,7 +119,7 @@ public class ImageResource {
     @GetMapping("/images/test")
     public ResponseEntity<String> getTestImage() throws IOException {
         String remotePath = imageBusinessService.createImagePath(-1L);
-        imageBusinessService.uploadFile(remotePath, "abc.png", testImageFile.getInputStream());
+        imageBusinessService.uploadFile(remotePath, "abc.png", testImageFile.getInputStream(), "image/png");
 
         return ResponseEntity.ok("test upload file to ftp");
     }

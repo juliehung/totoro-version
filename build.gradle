@@ -6,6 +6,7 @@ buildscript {
         mavenLocal()
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
+        google()
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
@@ -316,6 +317,7 @@ dependencies {
     testCompile "org.mockftpserver:MockFtpServer:2.7.1"
     compile "net.coobird:thumbnailator:0.4.9"
     runtime "com.google.cloud.sql:postgres-socket-factory:1.0.15"
+    compile "com.google.cloud:google-cloud-storage:1.105.1"
 }
 
 task cleanResources(type: Delete) {

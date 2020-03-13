@@ -39,7 +39,7 @@ public abstract class ImageBusinessService {
 
     public abstract String getImageThumbnailUrl(String host);
 
-    public abstract void uploadFile(String remotePath, String remoteFileName, InputStream inputStream) throws IOException;
+    public abstract void uploadFile(String remotePath, String remoteFileName, InputStream inputStream, String contentType) throws IOException;
 
     public abstract int disconnect();
 

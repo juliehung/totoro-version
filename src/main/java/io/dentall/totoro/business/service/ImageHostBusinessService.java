@@ -26,7 +26,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Profile("img-host")
-@Service("imgHostService")
+@Service
 public class ImageHostBusinessService extends ImageBusinessService {
 
     private Logger logger = LoggerFactory.getLogger(ImageHostBusinessService.class);
@@ -85,7 +85,7 @@ public class ImageHostBusinessService extends ImageBusinessService {
     }
 
     @Override
-    public void uploadFile(String remotePath, String remoteFileName, InputStream inputStream) throws IOException {
+    public void uploadFile(String remotePath, String remoteFileName, InputStream inputStream, String contentType) throws IOException {
         Path dir = Paths.get(remotePath);
         if (!Files.exists(dir)) {
             Files.createDirectories(dir);

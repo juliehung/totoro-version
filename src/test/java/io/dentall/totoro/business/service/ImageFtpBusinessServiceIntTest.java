@@ -60,7 +60,7 @@ public class ImageFtpBusinessServiceIntTest {
     @Test
     public void testUploadFile() throws IOException {
         FileInputStream stream = FileUtils.openInputStream(ResourceUtils.getFile(getClass().getResource("/static/" + UPLOAD_FILENAME)));
-        imageBusinessService.uploadFile(FTP_HOME + "/", UPLOAD_FILENAME, stream);
+        imageBusinessService.uploadFile(FTP_HOME + "/", UPLOAD_FILENAME, stream, "image/png");
 
         FTPClient client = new FTPClient();
         client.connect("localhost", fakeFtpServer.getServerControlPort());
