@@ -1,19 +1,21 @@
 package io.dentall.totoro.config;
 
-import java.time.Duration;
-
+import io.dentall.totoro.domain.HomePageCover;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
-import org.ehcache.config.builders.*;
-import org.ehcache.jsr107.Eh107Configuration;
-
-import io.github.jhipster.config.jcache.BeanClassLoaderAwareJCacheRegionFactory;
 import io.github.jhipster.config.JHipsterProperties;
-
+import io.github.jhipster.config.jcache.BeanClassLoaderAwareJCacheRegionFactory;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.jsr107.Eh107Configuration;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.time.Duration;
 
 @Configuration
 @EnableCaching
@@ -111,6 +113,7 @@ public class CacheConfiguration {
             cm.createCache(io.dentall.totoro.domain.NhiAccumulatedMedicalRecord.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.Image.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.ImageRelation.class.getName(), jcacheConfiguration);
+            cm.createCache(HomePageCover.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }
