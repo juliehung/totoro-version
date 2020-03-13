@@ -9,10 +9,10 @@ export function mapStatusToColor(app) {
 
   if (app.registrationStatus) {
     if (app.registrationStatus === 'PENDING') {
-      return '#91c5ff ';
+      return '#0085fe ';
     }
     if (app.registrationStatus === 'IN_PROGRESS') {
-      return '#83d2b4';
+      return '#00c49e';
     }
     if (app.registrationStatus === 'FINISHED') {
       return '#c2cbd5';
@@ -27,7 +27,7 @@ export function mapStatusToColor(app) {
   }
 
   if (isBefore) {
-    return '#fcb754';
+    return '#fcb34c';
   }
 
   return '#c2cbd5';
