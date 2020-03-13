@@ -348,7 +348,7 @@ class AppCalendar extends React.Component {
         }}
         minTime="08:00:00"
         scrollTime="08:30:00"
-        slotLabelInterval={{ hours: 1 }}
+        slotLabelInterval={{ hours: 0.5 }}
         slotDuration={`00:${this.props.slotDuration}:00`}
         locales={zhTW}
         locale="zh-tw"
