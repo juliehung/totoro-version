@@ -42,10 +42,10 @@ export function handleEventRender(info, func) {
         if (fcTitle) {
           const fcTitleClone = fcTitle.innerHTML;
           fcTitle.innerHTML = appointment.note
-            ? `<div><b>${fcTitleClone}</b><br /><i>${convertMrnTo5Digits(appointment.patientId)}</i><br/><span>${
+            ? `<div><b>${fcTitleClone}(${convertMrnTo5Digits(appointment.patientId)})</b><br /><span>${
                 appointment.note
               }</span></div>`
-            : `<div><b>${fcTitleClone}</b><br /><i>${convertMrnTo5Digits(appointment.patientId)}</i></div>`;
+            : `<div><b>${fcTitleClone}(${convertMrnTo5Digits(appointment.patientId)})</b><br /></div>`;
         }
 
         const fcContent = info.el.querySelector('.fc-content');
