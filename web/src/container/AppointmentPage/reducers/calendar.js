@@ -31,7 +31,7 @@ const initState = {
   selectedAllDoctors: doctors ? doctors.includes('all') : true,
   showCalEvt: doctors ? doctors.includes('dayOff') : false,
   calendarFirstDay: calFirstDay,
-  slotDuration: 10,
+  slotDuration: 15,
   range: { start: undefined, end: undefined },
   cancelApp: false,
 };

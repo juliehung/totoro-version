@@ -38,3 +38,8 @@
   max-height: 40vh !important;
   overflow: scroll !important;
 }
+
+.fc-time-grid .fc-slats td {
+  height: 3em;
+  border-bottom: 0;
+}
