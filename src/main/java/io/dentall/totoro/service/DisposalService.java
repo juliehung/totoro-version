@@ -5,10 +5,8 @@ import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import io.dentall.totoro.repository.DisposalRepository;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
-import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -256,17 +254,6 @@ public class DisposalService {
                             .collect(Collectors.toSet())
                     );
                     relationshipService.addRelationshipWithTeeth(disposal.teeth(updateDisposal.getTeeth()));
-                }
-
-                if (updateDisposal.getNhiExtendDisposals() != null && updateDisposal.getNhiExtendDisposals().size() > 0) {
-                    log.debug("Update nhiExtendDisposals({}) of Disposal(id: {})", updateDisposal.getNhiExtendDisposals(), updateDisposal.getId());
-                    if (disposal.getNhiExtendDisposals() == null || disposal.getNhiExtendDisposals().size() == 0) {
-                        nhiExtendDisposalService.save(updateDisposal.getNhiExtendDisposals().iterator().next());
-                    } else {
-                        NhiExtendDisposal updateNhiDisposal = updateDisposal.getNhiExtendDisposals().iterator().next();
-                        updateNhiDisposal.setId(disposal.getNhiExtendDisposals().iterator().next().getId());
-                        nhiExtendDisposalService.update(updateNhiDisposal);
-                    }
                 }
 
                 if (updateDisposal.getRegistration() != null && updateDisposal.getRegistration().getId() != null) {
