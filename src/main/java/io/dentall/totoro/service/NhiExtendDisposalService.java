@@ -41,18 +41,14 @@ public class NhiExtendDisposalService {
 
     private final DisposalRepository disposalRepository;
 
-    private final NhiService nhiService;
-
     public NhiExtendDisposalService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         RelationshipService relationshipService,
-        DisposalRepository disposalRepository,
-        NhiService nhiService
+        DisposalRepository disposalRepository
     ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.relationshipService = relationshipService;
         this.disposalRepository = disposalRepository;
-        this.nhiService = nhiService;
     }
 
     /**
@@ -68,16 +64,36 @@ public class NhiExtendDisposalService {
             nhiExtendDisposal.setUploadStatus(NhiExtendDisposalUploadStatus.NONE);
         }
 
-        if (nhiExtendDisposal.getDisposal() != null && nhiExtendDisposal.getDisposal().getId() != null) {
-            Optional<Disposal> optionalDisposal = disposalRepository.findById(nhiExtendDisposal.getDisposal().getId());
-            if (optionalDisposal.isPresent() && optionalDisposal.get().getNhiExtendDisposals().size() != 0) {
-                throw new BadRequestAlertException("NhiExtendDisposal indicated disposal id has already had nhi extend disposal. Try using put for it",
-                    "nhiExtendDisposal",
-                    "relationship.conflict");
-            } else {
-                nhiExtendDisposalRepository.save(nhiExtendDisposal);
-            }
+        if (nhiExtendDisposal.getDisposal() == null ||
+            nhiExtendDisposal.getDisposal().getId() == null
+        ) {
+            throw new BadRequestAlertException("NhiExtendDisposal must include disposal id",
+                "nhiExtendDisposal",
+                "require.pk");
         }
+
+        Optional<Disposal> optionalDisposal = disposalRepository.findById(nhiExtendDisposal.getDisposal().getId());
+
+        if (!optionalDisposal.isPresent()) {
+            throw new BadRequestAlertException("NhiExtendDisposal must create disposal first",
+                "nhiExtendDisposal",
+                "require.pk");
+        }
+
+        Disposal disposal = optionalDisposal.get();
+
+        if (disposal.getRegistration() == null ||
+            disposal.getRegistration().getAppointment() == null ||
+            disposal.getRegistration().getAppointment().getPatient() == null ||
+            disposal.getRegistration().getAppointment().getPatient().getId() == null
+        ) {
+            throw new BadRequestAlertException("NhiExtendDisposal related disposal must include full relation chain (disposal.registration.appointment.patient.id)",
+                "nhiExtendDisposal",
+                "require.essential.data");
+        }
+
+        nhiExtendDisposal.setPatientId(disposal.getRegistration().getAppointment().getPatient().getId());
+        nhiExtendDisposalRepository.save(nhiExtendDisposal);
 
         return nhiExtendDisposal;
     }
