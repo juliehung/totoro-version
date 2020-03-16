@@ -1,10 +1,10 @@
 package io.dentall.totoro.business.service;
 
+import io.dentall.totoro.business.vm.ImageRelationPathVM;
 import io.dentall.totoro.domain.Image;
 import io.dentall.totoro.domain.ImageRelation;
 import io.dentall.totoro.domain.enumeration.ImageRelationDomain;
 import io.dentall.totoro.repository.ImageRelationRepository;
-import io.dentall.totoro.business.vm.ImageRelationPathVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

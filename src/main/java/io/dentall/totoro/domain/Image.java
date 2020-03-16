@@ -6,8 +6,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
@@ -18,7 +18,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 @Entity
 @Table(name = "image")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Image implements Serializable {
+public class Image extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -85,6 +85,18 @@ public class Image implements Serializable {
         this.patient = patient;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    @Override
+    @JsonProperty
+    public String getCreatedBy() {
+        return super.getCreatedBy();
+    }
+
+    @Override
+    @JsonProperty
+    public Instant getCreatedDate() {
+        return super.getCreatedDate();
+    }
 
     @Override
     public boolean equals(Object o) {
