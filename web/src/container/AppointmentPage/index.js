@@ -17,12 +17,20 @@ const Container = styled.div`
   height: 100vh;
   display: flex;
   flex-wrap: no-wrap;
+  @media (max-width: 800px) {
+    flex-direction: column;
+  }
 `;
 const CalendarContainer = styled.div`
   width: 85%;
+  height: 100%;
+  @media (max-width: 800px) {
+    height: 600px;
+    width: 100%;
+  }
 `;
 
-function AppointmentPage({ getUsersStart }) {
+function AppointmentPage({ getUsersStart, changeSelectedDoctors, account }) {
   useEffect(() => {
     getUsersStart();
   }, [getUsersStart]);

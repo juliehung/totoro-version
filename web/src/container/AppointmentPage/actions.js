@@ -131,8 +131,8 @@ export function getDoctorsSuccess(doctors) {
   return { type: GET_DOCTORS_SUCCESS, doctors };
 }
 
-export function changeSelectedDoctors(selectedDoctors) {
-  return { type: CHANGE_SELECTED_DOCTORS, selectedDoctors };
+export function changeSelectedDoctors(selectedDoctors, mobileFirstRrender) {
+  return { type: CHANGE_SELECTED_DOCTORS, selectedDoctors, mobileFirstRrender };
 }
 
 export function changeConfirmModalVisible(visible) {

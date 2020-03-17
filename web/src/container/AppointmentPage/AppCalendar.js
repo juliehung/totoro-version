@@ -32,6 +32,7 @@ import {
   deleteCalEvt,
   getSettings,
   popoverCancelApp,
+  changeSelectedDoctors,
 } from './actions';
 import zhTW from '@fullcalendar/core/locales/zh-tw';
 import styled from 'styled-components';
@@ -40,6 +41,7 @@ import { convertSettingsToClinicOffEvent } from './utils/convertSettingsToClinic
 import { message } from 'antd';
 import MqttHelper from '../../utils/mqtt';
 import { calFirstDay } from './reducers/calendar';
+import MobileDetect from 'mobile-detect';
 
 //#region
 const StyledFullCalendar = styled(FullCalendar)`
@@ -54,6 +56,10 @@ const StyledFullCalendar = styled(FullCalendar)`
   }
 `;
 //#endregion
+
+const md = new MobileDetect(window.navigator.userAgent);
+const phone = md.phone();
+const defaultView = phone ? 'resourceTimeGridDay' : 'timeGridWeek';
 
 class AppCalendar extends React.Component {
   state = { fd: 1 };
@@ -103,6 +109,16 @@ class AppCalendar extends React.Component {
       this.clickTitle();
       message.success('取消/恢復預約成功');
     }
+
+    //select self on mobile
+    const id = this.props.account ? this.props.account.id : undefined;
+    if (phone && id) {
+      if (this.props.doctors.length !== 0 && this.props.selectedDoctors.length === 0) {
+        this.props.changeSelectedDoctors([id.toString()]);
+      }
+    }
+
+    window.dispatchEvent(new Event('resize'));
   }
 
   componentWillUnmount() {
@@ -371,12 +387,13 @@ class AppCalendar extends React.Component {
         eventResizeStop={this.eventEditStop}
         timeGridEventMinHeight={15}
         eventAllow={this.eventAllow}
+        defaultView={defaultView}
       />
     );
   }
 }
 
-const mapStateToProps = ({ appointmentPageReducer }) => ({
+const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   calendarDate: appointmentPageReducer.calendar.calendarDate,
   appointments: appointmentPageReducer.calendar.appointments,
   firstDay: appointmentPageReducer.calendar.calendarFirstDay,
@@ -389,6 +406,7 @@ const mapStateToProps = ({ appointmentPageReducer }) => ({
   generalSetting: appointmentPageReducer.settings.generalSetting,
   calendarRange: appointmentPageReducer.calendar.range,
   cancelApp: appointmentPageReducer.calendar.cancelApp,
+  account: homePageReducer.account.data,
 });
 
 const mapDispatchToProps = {
@@ -410,6 +428,7 @@ const mapDispatchToProps = {
   deleteCalEvt,
   getSettings,
   popoverCancelApp,
+  changeSelectedDoctors,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppCalendar);

@@ -29,6 +29,12 @@ const Container = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
+  background: #fff;
+  z-index: 400;
+  @media (max-width: 800px) {
+    width: 100%;
+    min-height: 90vh;
+  }
 `;
 
 const TopContainer = styled.div`
@@ -57,6 +63,7 @@ const PrintButton = styled(Button)`
 const TodoContainer = styled.div`
   margin: 20px 0;
   flex: 1;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
@@ -94,7 +101,7 @@ const SelectDoctorContainer = styled.div`
 `;
 
 const StyledSelect = styled(Select)`
-  /* flex-grow: 1; */
+  margin-top: 15px;
   width: 100%;
 `;
 
