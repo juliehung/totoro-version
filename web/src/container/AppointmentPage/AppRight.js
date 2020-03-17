@@ -231,6 +231,7 @@ function AppRight(props) {
               <Menu.Item key="1">醫師/診所休假</Menu.Item>
             </Menu>
           }
+          trigger={['click']}
         >
           <DropdownButton size={'large'} type="primary">
             <Icon type="down" />
