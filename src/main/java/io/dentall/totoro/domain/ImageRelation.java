@@ -9,6 +9,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
@@ -19,9 +20,21 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 @Entity
 @Table(name = "image_relation")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ImageRelation implements Serializable {
+public class ImageRelation extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @Override
+    @JsonProperty
+    public String getCreatedBy() {
+        return super.getCreatedBy();
+    }
+
+    @Override
+    @JsonProperty
+    public Instant getCreatedDate() {
+        return super.getCreatedDate();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
