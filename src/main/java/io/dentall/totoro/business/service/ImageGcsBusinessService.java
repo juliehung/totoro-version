@@ -22,10 +22,6 @@ import java.util.stream.Collectors;
 @Service
 public class ImageGcsBusinessService extends ImageBusinessService {
 
-    private static final String bucketName = "totoro-admin";
-
-    private static final String fetchBaseUrl = "https://storage.googleapis.com/" + bucketName + "/";
-
     private Logger logger = LoggerFactory.getLogger(ImageGcsBusinessService.class);
 
     private Storage storage = StorageOptions.getDefaultInstance().getService();
@@ -37,7 +33,7 @@ public class ImageGcsBusinessService extends ImageBusinessService {
     @Override
     public Map<String, String> getImageThumbnailsBySize(String host, Long id, String size) {
         Image image = getImageById(id);
-        String url = fetchBaseUrl
+        String url = GcpConstants.GCS_BASE_URL
             .concat(image.getFilePath())
             .concat(image.getFileName());
 
@@ -57,12 +53,12 @@ public class ImageGcsBusinessService extends ImageBusinessService {
 
     @Override
     public String getImageThumbnailUrl(String host) {
-        return fetchBaseUrl;
+        return GcpConstants.GCS_BASE_URL;
     }
 
     @Override
     public void uploadFile(String remotePath, String remoteFileName, InputStream inputStream, String contentType) throws IOException {
-        BlobId blobId = BlobId.of(bucketName, remotePath.concat(remoteFileName));
+        BlobId blobId = BlobId.of(GcpConstants.BUCKET_NAME, remotePath.concat(remoteFileName));
         BlobInfo blobInfo = BlobInfo
             .newBuilder(blobId)
             .setContentType(contentType)
