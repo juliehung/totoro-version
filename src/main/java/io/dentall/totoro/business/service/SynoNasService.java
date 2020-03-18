@@ -8,12 +8,18 @@ import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.zalando.problem.Status;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,8 +39,13 @@ public class SynoNasService extends ImageFtpBusinessService {
 
     private String sid;
 
-    public SynoNasService(ImageRepository imageRepository, FtpClientService ftpClientService, RestTemplate restTemplate) {
+    public SynoNasService(ImageRepository imageRepository, FtpClientService ftpClientService, RestTemplateBuilder builder) {
         super(imageRepository, ftpClientService);
+
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter.setSupportedMediaTypes(Arrays.asList(MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON));
+        RestTemplate restTemplate = builder.build();
+        restTemplate.getMessageConverters().add(0, converter);
         this.restTemplate = restTemplate;
     }
 

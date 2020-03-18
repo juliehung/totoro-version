@@ -318,6 +318,7 @@ dependencies {
     compile "net.coobird:thumbnailator:0.4.9"
     runtime "com.google.cloud.sql:postgres-socket-factory:1.0.15"
     compile "com.google.cloud:google-cloud-storage:1.105.1"
+    compile "com.google.auth:google-auth-library-oauth2-http:0.20.0"
 }
 
 task cleanResources(type: Delete) {
