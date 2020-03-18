@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import Home from './container/Home';
@@ -8,6 +8,7 @@ import { rootSaga } from './rootSaga';
 import { HashRouter } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
 import { HelmetProvider } from 'react-helmet-async';
+import { initGA } from './ga';
 import 'antd/dist/antd.css';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -16,6 +17,10 @@ const store = createStore(rootReducer, /* preloadedState, */ composeEnhancers(ap
 sagaMiddleware.run(rootSaga);
 
 function App() {
+  useEffect(() => {
+    initGA();
+  }, []);
+
   return (
     <Provider store={store}>
       <HashRouter>

@@ -21,6 +21,7 @@ import {
 } from './actions';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
+import { GAevent } from '../../ga';
 
 //#region
 const Container = styled.div`
@@ -287,6 +288,7 @@ function AppRight(props) {
                   key={t.id}
                   onClick={() => {
                     onTodoCardClick(t);
+                    GAevent('Appointment page', 'Todo item clicked');
                   }}
                 >
                   <CardContent>
