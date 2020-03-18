@@ -12,6 +12,8 @@ import {
 import convertPatientToOption from '../utils/convertPatientToOption';
 import convertPatientToPatientDetail from '../utils/convertPatientToPatientDetail';
 import { handleAppointmentForApi } from '../utils/handleAppointmentForApi';
+import registration from '../../../models/registration';
+import moment from 'moment';
 
 export function* createAppointment() {
   while (true) {
@@ -32,8 +34,27 @@ export function* searchPatients() {
   while (true) {
     try {
       const data = yield take(SEARCH_PATIENTS_START);
-      const result = yield call(Patient.search, data.searchText);
-      yield put(searchPatientsSuccess(convertPatientToOption(result)));
+      let result = [];
+      if (!data.searchText || data.searchText.length === 0) {
+        const registrations = yield call(registration.getBetween, {
+          start: moment().startOf('d'),
+          end: moment().endOf('d'),
+        });
+
+        const patients = registrations
+          .filter(r => r.status !== 'CANCEL' && r.registration && r.registration.id)
+          .sort((a, b) => moment(b.registration.arrivalTime).unix() - moment(a.registration.arrivalTime).unix())
+          .map(r => r.patient);
+
+        const filteredPatients = patients.filter(
+          (patient, index, self) => index === self.findIndex(p => p.id === patient.id),
+        );
+        result = convertPatientToOption(filteredPatients);
+      } else {
+        const patient = yield call(Patient.search, data.searchText);
+        result = convertPatientToOption(patient);
+      }
+      yield put(searchPatientsSuccess(result));
     } catch (error) {
       // ignore
     }

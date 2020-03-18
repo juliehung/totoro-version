@@ -183,11 +183,16 @@ function CreateAppModal({
   let debounceSearch;
   const onSearchTextChange = e => {
     clearTimeout(debounceSearch);
-    if (e.length > 0) {
-      debounceSearch = setTimeout(() => {
-        searchPatients(e);
-      }, 300);
-    }
+    debounceSearch = setTimeout(() => {
+      searchPatients(e);
+    }, 300);
+  };
+
+  const onSearchTextFocus = () => {
+    clearTimeout(debounceSearch);
+    debounceSearch = setTimeout(() => {
+      searchPatients(undefined);
+    }, 300);
   };
 
   const onPatientSelect = id => {
@@ -241,6 +246,7 @@ function CreateAppModal({
           placeholder="請輸入病患病歷編號或姓名"
           filterOption={false}
           onSearch={onSearchTextChange}
+          onFocus={onSearchTextFocus}
           onSelect={onPatientSelect}
           notFoundContent={<Empty description="沒有資料" />}
         >

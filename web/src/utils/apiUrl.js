@@ -16,7 +16,7 @@ if (window) {
 
 if (process.env.NODE_ENV !== 'production') {
   host = 'dev.dentall.site';
-  apiPort = 8083;
+  apiPort = 8084;
   // host = 'dev.dentall.site';
   // apiPort = 8082;
 }
