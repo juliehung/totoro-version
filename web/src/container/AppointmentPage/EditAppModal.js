@@ -35,6 +35,13 @@ const ButtonsContainer = styled.div`
   justify-content: flex-end;
 `;
 
+const PreDeleteButton = styled(Button)`
+  &:hover {
+    color: red !important;
+    border-color: red !important;
+  }
+`;
+
 const DeleteButton = styled(Button)`
   color: #fff !important;
   border: red 1px solid !important;
@@ -283,7 +290,7 @@ function EditAppModal({
               確定刪除?
             </DeleteButton>
           ) : (
-            <Button onClick={onDeleteClick}>刪除預約</Button>
+            <PreDeleteButton onClick={onDeleteClick}>刪除預約</PreDeleteButton>
           )}
           <ButtonsContainer>
             <StyledButton onClick={closeModal}>取消</StyledButton>
