@@ -16,6 +16,7 @@ const ResourceContainer = styled.div`
     justify-content: center;
     align-items: center;
     margin-bottom: 5px;
+    user-select: none;
   }
 `;
 
