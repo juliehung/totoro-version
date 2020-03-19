@@ -152,12 +152,14 @@ export function handleEventRender(info, func) {
           regex,
           `<a style='color:rgba(0,0,0,0.2)'>${patientId}, '[C]'${patientName}, ${phone ? phone + `,` : ''} ${
             doctor.user.firstName
-          }, ${note}</a>`,
+          }${note ? ', ' + note : ''}</a>`,
         );
       } else {
         HTMLContent = info.el.innerHTML.replace(
           regex,
-          `<a>${`No. ` + patientId}, ${patientName}, ${phone ? phone + `,` : ''} ${doctor.user.firstName}, ${note}</a>`,
+          `<a>${`No. ` + patientId}, ${patientName}, ${phone ? phone + `,` : ''} ${doctor.user.firstName}${
+            note ? ', ' + note : ''
+          }</a>`,
         );
       }
 
