@@ -155,6 +155,7 @@ function AppRight(props) {
 
   const onSliderChange = value => {
     props.changeCalSlotDuration(value);
+    GAevent('Appointment page', 'Change slot duration');
   };
 
   const headerRender = ({ value }) => {
