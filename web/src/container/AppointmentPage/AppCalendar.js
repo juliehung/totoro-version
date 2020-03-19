@@ -36,6 +36,7 @@ import {
 import zhTW from '@fullcalendar/core/locales/zh-tw';
 import styled from 'styled-components';
 import { handleEventRender } from './utils/handleEventRender';
+import { handleResourceRender } from './utils/handleResourceRender';
 import { convertSettingsToClinicOffEvent } from './utils/convertSettingsToClinicOffEvent';
 import { message } from 'antd';
 import MqttHelper from '../../utils/mqtt';
@@ -422,6 +423,7 @@ class AppCalendar extends React.Component {
           slotWidth={2}
           firstDay={this.props.firstDay}
           eventRender={this.eventRender}
+          resourceRender={handleResourceRender}
           eventDrop={this.handleEventDrop}
           eventResize={this.handleEventResize}
           navLinks
