@@ -27,6 +27,8 @@
     <include file="config/liquibase/changelog/20190708032330_added_entity_constraints_NhiMonthDeclarationDetails.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20191225042953_added_entity_constraints_NhiAccumulatedMedicalRecord.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20191204094753_added_entity_constraints_Image.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200319025446_added_entity_constraints_UserShift.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200319030046_added_entity_constraints_UserDayOff.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 
     <!-- add custom foreign key constraints -->

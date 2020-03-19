@@ -1,9 +1,6 @@
 package io.dentall.totoro.config;
 
-import io.dentall.totoro.domain.HomePageCover;
-import io.dentall.totoro.domain.NhiExtendDisposal;
-import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
-import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.*;
 import io.github.jhipster.config.JHipsterProperties;
 import io.github.jhipster.config.jcache.BeanClassLoaderAwareJCacheRegionFactory;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
@@ -114,6 +111,8 @@ public class CacheConfiguration {
             cm.createCache(io.dentall.totoro.domain.Image.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.ImageRelation.class.getName(), jcacheConfiguration);
             cm.createCache(HomePageCover.class.getName(), jcacheConfiguration);
+            cm.createCache(UserDayOff.class.getName(), jcacheConfiguration);
+            cm.createCache(UserShift.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }
