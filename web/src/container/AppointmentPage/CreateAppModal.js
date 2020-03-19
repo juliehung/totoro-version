@@ -26,6 +26,7 @@ import {
 import styled from 'styled-components';
 import { requiredTreatmentTimeDefault } from './constant';
 import convertMrnTo5Digits from './utils/convertMrnTo5Digits';
+import { GAevent } from '../../ga';
 
 //#region
 const Container = styled.div`
@@ -201,6 +202,7 @@ function CreateAppModal({
   };
 
   const handleConfirm = () => {
+    GAevent('Appointment page', 'Create appointment clicked');
     if (appointment.patientId) {
       createAppointment();
     } else {
