@@ -44,7 +44,7 @@ const initState = {
     note: undefined,
     specialNote: [],
   },
-  patient: { name: undefined, phone: undefined, nationalId: undefined, birth: undefined },
+  patient: { name: undefined, phone: undefined, nationalId: undefined, birth: undefined, newPatient: false },
   default: { duration: undefined, doctorId: undefined },
   disposalId: undefined,
 };
