@@ -7,6 +7,7 @@ import LoginPage from '../LoginPage';
 import { Switch, Route } from 'react-router-dom';
 import NavHome from '../NavHome';
 import RegistrationPage from '../RegistrationPage';
+import ShiftPage from '../ShiftPage';
 import Form from '../QuestionnairePage/Form';
 
 //#region
@@ -43,6 +44,10 @@ function Home(props) {
       <Route exact path="/registration">
         <RegistrationPage />
       </Route>
+      {/* !todo, uncomment when finish shift page */}
+      {/* <Route exact path="/Shift">
+        <ShiftPage />
+      </Route> */}
       <Route path="/">
         <NavHome />
       </Route>

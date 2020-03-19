@@ -26,7 +26,6 @@ import SmokingQ from './pages/SmokingQ';
 import SmokingA from './pages/SmokingA';
 import Other from './pages/Other';
 import { Helmet } from 'react-helmet-async';
-import './index.css';
 
 //#region
 const Container = styled.div`

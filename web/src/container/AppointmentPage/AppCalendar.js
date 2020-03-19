@@ -12,7 +12,6 @@ import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 import '@fullcalendar/timegrid/main.css';
 import '@fullcalendar/list/main.css';
-import './appCalendar.css';
 import {
   changeCalDate,
   changeCalFirstDay,
@@ -44,16 +43,63 @@ import { calFirstDay } from './reducers/calendar';
 import MobileDetect from 'mobile-detect';
 
 //#region
-const StyledFullCalendar = styled(FullCalendar)`
-  & {
-    .fc-toolbar.fc-header-toolbar {
-      background: #f3f8ff !important;
-      padding: 17px 23px 17px 38px;
-      margin-bottom: 0;
-      border-left: 1px solid rgb(221, 221, 221);
-      border-right: 1px solid rgb(221, 221, 221);
+const Container = styled.div`
+  min-height: 100%;
+  .fc-toolbar.fc-header-toolbar {
+    background: #f3f8ff;
+    padding: 17px 23px 17px 38px;
+    margin-bottom: 0;
+    border-left: 1px solid rgb(221, 221, 221);
+    border-right: 1px solid rgb(221, 221, 221);
+  }
+
+  .fc-button.fc-button-primary {
+    background-color: #fff !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+    border-color: #d9d9d9 !important;
+  }
+
+  @media (max-width: 800px) {
+    .fc-button.fc-button-primary {
+      display: none !important;
     }
   }
+
+  .eventCard {
+    font-weight: 500;
+    letter-spacing: 2px;
+    padding: 5px;
+    font-size: 14px;
+  }
+
+  .fc-license-message {
+    display: none;
+  }
+  .fc-unthemed .fc-today.fc-day-header {
+    background: rgb(252, 248, 227) !important;
+  }
+
+  .fc-unthemed .fc-day.fc-today {
+    background: white !important;
+  }
+
+  .fc-axis {
+    width: 40px !important;
+  }
+
+  .fc-body.fc-widget-content > .fc-event-container {
+    max-height: 40vh !important;
+    overflow: scroll !important;
+  }
+
+  .fc-time-grid .fc-slats td {
+    height: 3em;
+    border-bottom: 0;
+  }
+`;
+
+const StyledFullCalendar = styled(FullCalendar)`
+  font-size: 400px !important;
 `;
 //#endregion
 
@@ -72,7 +118,9 @@ class AppCalendar extends React.Component {
 
     // XD just delete the message
     const msg = document.querySelector('.fc-license-message');
-    msg.parentNode.removeChild(msg);
+    if (msg) {
+      msg.parentNode.removeChild(msg);
+    }
 
     // mqtt
     MqttHelper.subscribeAppointment(AppCalendar.name, message => {
@@ -302,93 +350,95 @@ class AppCalendar extends React.Component {
     ];
 
     return (
-      <StyledFullCalendar
-        ref={this.calendarComponentRef}
-        height="parent"
-        resources={this.props.doctors
-          .filter(d => d.activated)
-          .filter(d => {
-            if (this.props.selectedAllDoctors) {
-              return d;
-            } else {
-              return this.props.selectedDoctors.includes(d.id.toString());
-            }
-          })
-          .map(d => ({
-            id: d.id,
-            title: d.name,
-          }))}
-        events={event}
-        plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin, resourceTimeGridPlugin, listPlugin, momentPlugin]}
-        header={{
-          left: 'customPrevMonthButton,customPrevButton,customNextButton,customNextMonthButton, customToday',
-          center: 'title',
-          right: 'resourceTimeGridDay,timeGridWeek,dayGridMonth,listWeek',
-        }}
-        customButtons={{
-          customNextButton: {
-            click: this.nextClick,
-            icon: 'chevron-right',
-          },
-          customPrevButton: {
-            click: this.prevClick,
-            icon: 'chevron-left',
-          },
-          customPrevMonthButton: {
-            click: this.prevMonthClick,
-            icon: 'chevrons-left',
-          },
-          customNextMonthButton: {
-            click: this.nextMonthClick,
-            icon: 'chevrons-right',
-          },
-          customToday: {
-            click: this.todayClick,
-            text: '今日',
-          },
-        }}
-        buttonText={{
-          listWeek: '時間表',
-        }}
-        titleRangeSeparator=" ~ "
-        titleFormat={{ year: 'numeric', month: 'numeric', day: 'numeric' }}
-        eventTimeFormat={{
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        }}
-        slotLabelFormat={{
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        }}
-        minTime="08:00:00"
-        scrollTime="08:30:00"
-        slotLabelInterval={{ hours: 0.5 }}
-        slotDuration={`00:${this.props.slotDuration}:00`}
-        locales={zhTW}
-        locale="zh-tw"
-        datesRender={this.handleDatesRender}
-        dateClick={this.handleDateClick}
-        slotWidth={2}
-        firstDay={this.props.firstDay}
-        eventRender={this.eventRender}
-        eventDrop={this.handleEventDrop}
-        eventResize={this.handleEventResize}
-        navLinks
-        editable
-        droppable
-        nowIndicator
-        eventLimit
-        selectable
-        eventDragStart={this.eventEditStart}
-        eventDragStop={this.eventEditStop}
-        eventResizeStart={this.eventEditStart}
-        eventResizeStop={this.eventEditStop}
-        timeGridEventMinHeight={15}
-        eventAllow={this.eventAllow}
-        defaultView={defaultView}
-      />
+      <Container>
+        <StyledFullCalendar
+          ref={this.calendarComponentRef}
+          height="parent"
+          resources={this.props.doctors
+            .filter(d => d.activated)
+            .filter(d => {
+              if (this.props.selectedAllDoctors) {
+                return d;
+              } else {
+                return this.props.selectedDoctors.includes(d.id.toString());
+              }
+            })
+            .map(d => ({
+              id: d.id,
+              title: d.name,
+            }))}
+          events={event}
+          plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin, resourceTimeGridPlugin, listPlugin, momentPlugin]}
+          header={{
+            left: 'customPrevMonthButton,customPrevButton,customNextButton,customNextMonthButton, customToday',
+            center: 'title',
+            right: 'resourceTimeGridDay,timeGridWeek,dayGridMonth,listWeek',
+          }}
+          customButtons={{
+            customNextButton: {
+              click: this.nextClick,
+              icon: 'chevron-right',
+            },
+            customPrevButton: {
+              click: this.prevClick,
+              icon: 'chevron-left',
+            },
+            customPrevMonthButton: {
+              click: this.prevMonthClick,
+              icon: 'chevrons-left',
+            },
+            customNextMonthButton: {
+              click: this.nextMonthClick,
+              icon: 'chevrons-right',
+            },
+            customToday: {
+              click: this.todayClick,
+              text: '今日',
+            },
+          }}
+          buttonText={{
+            listWeek: '時間表',
+          }}
+          titleRangeSeparator=" ~ "
+          titleFormat={{ year: 'numeric', month: 'numeric', day: 'numeric' }}
+          eventTimeFormat={{
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          }}
+          slotLabelFormat={{
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          }}
+          minTime="08:00:00"
+          scrollTime="08:30:00"
+          slotLabelInterval={{ hours: 0.5 }}
+          slotDuration={`00:${this.props.slotDuration}:00`}
+          locales={zhTW}
+          locale="zh-tw"
+          datesRender={this.handleDatesRender}
+          dateClick={this.handleDateClick}
+          slotWidth={2}
+          firstDay={this.props.firstDay}
+          eventRender={this.eventRender}
+          eventDrop={this.handleEventDrop}
+          eventResize={this.handleEventResize}
+          navLinks
+          editable
+          droppable
+          nowIndicator
+          eventLimit
+          selectable
+          eventDragStart={this.eventEditStart}
+          eventDragStop={this.eventEditStop}
+          eventResizeStart={this.eventEditStart}
+          eventResizeStop={this.eventEditStop}
+          timeGridEventMinHeight={15}
+          eventAllow={this.eventAllow}
+          defaultView={defaultView}
+        />
+      </Container>
     );
   }
 }

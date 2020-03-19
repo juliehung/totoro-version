@@ -13,12 +13,20 @@ import CreateCalendarEventModal from './CreateCalendarEventModal';
 import EditCalendarEventModal from './EditCalendarEventModal';
 import { Helmet } from 'react-helmet-async';
 
+//#region
 const Container = styled.div`
   height: 100vh;
   display: flex;
   flex-wrap: no-wrap;
   @media (max-width: 800px) {
     flex-direction: column;
+  }
+  & *::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    scrollbar-width: none;
   }
 `;
 const CalendarContainer = styled.div`
@@ -29,6 +37,7 @@ const CalendarContainer = styled.div`
     width: 100%;
   }
 `;
+//#endregion
 
 function AppointmentPage({ getUsersStart, changeSelectedDoctors, account }) {
   useEffect(() => {
