@@ -56,6 +56,8 @@
     <include file="config/liquibase/changelog/20191225042953_added_entity_NhiAccumulatedMedicalRecord.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20191204094753_added_entity_Image.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200312071313_added_entity_HomePageCover.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200319025446_added_entity_UserShift.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200319030046_added_entity_UserDayOff.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom tables -->
     <include file="config/liquibase/changelog/createTable/20190522.xml" relativeToChangelogFile="false"/>
