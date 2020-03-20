@@ -7,7 +7,7 @@ import '@fullcalendar/daygrid/main.css';
 import '@fullcalendar/timegrid/main.css';
 import '@fullcalendar/list/main.css';
 import { connect } from 'react-redux';
-import zhTW from '@fullcalendar/core/locales/zh-tw';
+// import zhTW from '@fullcalendar/core/locales/zh-tw';
 import styled from 'styled-components';
 import '@fullcalendar/timeline/main.css';
 import '@fullcalendar/resource-timeline/main.css';
@@ -29,7 +29,7 @@ function ShiftCalendar() {
   return (
     <Container>
       <FullCalendar
-        height="auto"
+        // height="auto"
         height="parent"
         resources={[
           {
@@ -159,6 +159,6 @@ function ShiftCalendar() {
 
 const mapStateToProps = ({}) => ({});
 
-const mapDispatchToProps = {};
+// const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShiftCalendar);
+export default connect(mapStateToProps)(ShiftCalendar);
