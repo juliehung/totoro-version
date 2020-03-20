@@ -42,6 +42,7 @@ import { message } from 'antd';
 import MqttHelper from '../../utils/mqtt';
 import { calFirstDay } from './reducers/calendar';
 import MobileDetect from 'mobile-detect';
+import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 //#region
 const Container = styled.div`
@@ -451,7 +452,7 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   firstDay: appointmentPageReducer.calendar.calendarFirstDay,
   selectedDoctors: appointmentPageReducer.calendar.selectedDoctors,
   selectedAllDoctors: appointmentPageReducer.calendar.selectedAllDoctors,
-  doctors: appointmentPageReducer.calendar.doctors,
+  doctors: extractDoctorsFromUser(homePageReducer.user.users),
   calendarEvents: appointmentPageReducer.calendar.calendarEvents,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
   showCalEvt: appointmentPageReducer.calendar.showCalEvt,

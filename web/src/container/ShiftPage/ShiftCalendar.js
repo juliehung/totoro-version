@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import '@fullcalendar/timeline/main.css';
 import '@fullcalendar/resource-timeline/main.css';
+import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 //#region
 const Container = styled.div`
@@ -19,7 +20,7 @@ const Container = styled.div`
 `;
 //#endregion
 
-function ShiftCalendar() {
+function ShiftCalendar(props) {
   useEffect(() => {
     const msg = document.querySelector('.fc-license-message');
     if (msg) {
@@ -29,36 +30,10 @@ function ShiftCalendar() {
   return (
     <Container>
       <FullCalendar
-        // height="auto"
-        height="parent"
-        resources={[
-          {
-            id: 1,
-            title: 'Homer Simpson',
-            imageUrl: 'https://upload.wikimedia.org/wikipedia/en/0/02/Homer_Simpson_2006.png',
-          },
-          {
-            id: 2,
-            title: 'Marge Simpson',
-            imageUrl: 'https://static.simpsonswiki.com/images/0/0b/Marge_Simpson.png',
-          },
-          {
-            id: 3,
-            title: "Abraham Jebediah 'Abe' Simpson II",
-            imageUrl:
-              'https://vignette.wikia.nocookie.net/simpsons/images/a/a9/Abraham_Simpson.png/revision/latest?cb=20151011181838',
-          },
-          {
-            id: 4,
-            title: 'Moe Szyslak',
-            imageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Moe_Szyslak.png/220px-Moe_Szyslak.png',
-          },
-          {
-            id: 5,
-            title: 'Barney Gumble',
-            imageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/d/de/Barney_Gumble.png/220px-Barney_Gumble.png',
-          },
-        ]}
+        height="auto"
+        resources={props.doctors.map((d, i) => {
+          return { id: i + 1, title: d.name };
+        })}
         slotWidth={60}
         events={[
           {
@@ -135,7 +110,6 @@ function ShiftCalendar() {
           },
         ]}
         selectable
-        // plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin, resourceTimeGridPlugin, listPlugin, momentPlugin]}
         plugins={[interactionPlugin, resourceTimelinePlugin]}
         defaultView={'resourceTimelineDay'}
         views={{
@@ -157,7 +131,7 @@ function ShiftCalendar() {
   );
 }
 
-const mapStateToProps = ({}) => ({});
+const mapStateToProps = ({ homePageReducer }) => ({ doctors: extractDoctorsFromUser(homePageReducer.user.users) });
 
 // const mapDispatchToProps = {};
 

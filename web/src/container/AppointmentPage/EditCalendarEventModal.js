@@ -20,6 +20,7 @@ import {
   changeEditCalEvtConfirmDelete,
   changeEditCalEvtRepeatEndDate,
 } from './actions';
+import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 //#region
 const Container = styled.div`
@@ -274,8 +275,8 @@ function EditCalendarEventModal({
     </Modal>
   );
 }
-const mapStateToProps = ({ appointmentPageReducer }) => ({
-  doctors: appointmentPageReducer.calendar.doctors,
+const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
+  doctors: extractDoctorsFromUser(homePageReducer.user.users),
   calendarEvt: appointmentPageReducer.editCalendarEvt.event,
   disabled: appointmentPageReducer.editCalendarEvt.disabled,
   visible: appointmentPageReducer.editCalendarEvt.visible,

@@ -9,7 +9,6 @@ import {
   GET_APPOINTMENTS_START,
   GET_APPOINTMENTS_SUCCESS,
   CHANGE_CAL_FIRST_DAY,
-  GET_DOCTORS_SUCCESS,
   CHANGE_SELECTED_DOCTORS,
   GET_CALENDAR_EVENT_SUCCESS,
   CHANGE_CAL_SLOT_DURATION,
@@ -25,7 +24,6 @@ const initState = {
   calendarDate: moment(),
   appointments: [],
   calendarEvents: [],
-  doctors: [],
   selectedDoctors: doctors || ['all'],
   doctorAppCount: {},
   selectedAllDoctors: doctors ? doctors.includes('all') : true,
@@ -54,9 +52,6 @@ const calendar = (state = initialState, action) =>
         break;
       case CHANGE_CAL_FIRST_DAY:
         draft.calendarFirstDay = action.firstDay % 7;
-        break;
-      case GET_DOCTORS_SUCCESS:
-        draft.doctors = action.doctors.sort((a, b) => a.id - b.id);
         break;
       case CHANGE_SELECTED_DOCTORS:
         draft.selectedDoctors = action.selectedDoctors;

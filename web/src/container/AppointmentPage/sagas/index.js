@@ -1,7 +1,6 @@
 import { fork } from 'redux-saga/effects';
 import { watchGetAppointments } from './getAppointment';
 import { watchGetPrintAppointments } from './getPrintAppointments';
-import { watchGetUsers } from './getUsers';
 import { editAppointment, getPatient as getPatientEditApp } from './editAppointment';
 import { createAppointment, searchPatients, getPatient, createPatient } from './createAppointment';
 import { deleteAppointments } from './deleteAppointment';
@@ -18,7 +17,6 @@ import { createTodoApp } from './createTodoApp';
 export default function* appointmentPage() {
   yield fork(watchGetAppointments);
   yield fork(watchGetPrintAppointments);
-  yield fork(watchGetUsers);
   yield fork(editAppointment);
   yield fork(createAppointment);
   yield fork(searchPatients);

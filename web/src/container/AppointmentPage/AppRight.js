@@ -22,6 +22,7 @@ import {
 import moment from 'moment';
 import 'moment/locale/zh-tw';
 import { GAevent } from '../../ga';
+import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 //#region
 const Container = styled.div`
@@ -309,9 +310,9 @@ function AppRight(props) {
     </Container>
   );
 }
-const mapStateToProps = ({ appointmentPageReducer }) => ({
+const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   calendarDate: appointmentPageReducer.calendar.calendarDate,
-  doctors: appointmentPageReducer.calendar.doctors,
+  doctors: extractDoctorsFromUser(homePageReducer.user.users),
   selectedDoctors: appointmentPageReducer.calendar.selectedDoctors,
   doctorAppCount: appointmentPageReducer.calendar.doctorAppCount,
   slotDuration: appointmentPageReducer.calendar.slotDuration,

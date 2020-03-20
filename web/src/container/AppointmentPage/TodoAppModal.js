@@ -17,6 +17,7 @@ import {
 } from './actions';
 import styled from 'styled-components';
 import { requiredTreatmentTimeDefault } from './constant';
+import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 //#region
 const Container = styled.div`
@@ -276,7 +277,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   visible: appointmentPageReducer.createApp.todoModalVisible,
   patientSelected: appointmentPageReducer.createApp.patientSelected,
   selectedPatient: appointmentPageReducer.createApp.selectedPatient,
-  doctors: appointmentPageReducer.calendar.doctors,
+  doctors: extractDoctorsFromUser(homePageReducer.user.users),
   appointment: appointmentPageReducer.createApp.appointment,
   patient: appointmentPageReducer.createApp.patient,
   createAppSuccess: appointmentPageReducer.createApp.createAppSuccess,

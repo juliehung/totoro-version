@@ -1,13 +1,12 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { GET_USERS_START } from '../constant';
-import { getDoctorsSuccess } from '../actions';
 import user from '../../../models/user';
-import extractDoctorsFromUser from '../utils/extractDoctorsFromUser';
+import { GET_USER_START } from '../constant';
+import { getUserSuccess } from '../actions';
 
 export function* getUsers() {
   try {
     const result = yield call(user.getAll);
-    yield put(getDoctorsSuccess(extractDoctorsFromUser(result)));
+    yield put(getUserSuccess(result));
   } catch (err) {
     //  ignore
     console.log(err);
@@ -15,5 +14,5 @@ export function* getUsers() {
 }
 
 export function* watchGetUsers() {
-  yield takeLatest(GET_USERS_START, getUsers);
+  yield takeLatest(GET_USER_START, getUsers);
 }
