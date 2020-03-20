@@ -18,6 +18,7 @@ import {
 import styled from 'styled-components';
 import { requiredTreatmentTimeDefault } from './constant';
 import moment from 'moment';
+import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 //#region
 const Container = styled.div`
@@ -303,13 +304,13 @@ function EditAppModal({
     </Modal>
   );
 }
-const mapStateToProps = ({ appointmentPageReducer }) => ({
+const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   visible: appointmentPageReducer.editApp.visible,
   appointment: appointmentPageReducer.editApp.appointment,
   patient: appointmentPageReducer.editApp.patient,
   deleteLoading: appointmentPageReducer.editApp.deleteLoading,
   deleteAppSuccess: appointmentPageReducer.editApp.deleteAppSuccess,
-  doctors: appointmentPageReducer.calendar.doctors,
+  doctors: extractDoctorsFromUser(homePageReducer.user.users),
   disabled: appointmentPageReducer.editApp.disabled,
   loading: appointmentPageReducer.editApp.loading,
   editAppSuccess: appointmentPageReducer.editApp.editAppSuccess,

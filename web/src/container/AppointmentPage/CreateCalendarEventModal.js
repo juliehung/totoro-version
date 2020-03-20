@@ -18,6 +18,7 @@ import {
   getAllEvents,
   changeCreateCalEvtRepeatEndDate,
 } from './actions';
+import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 //#region
 const Container = styled.div`
@@ -235,8 +236,8 @@ function CreateCalendarEventModal({
     </Modal>
   );
 }
-const mapStateToProps = ({ appointmentPageReducer }) => ({
-  doctors: appointmentPageReducer.calendar.doctors,
+const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
+  doctors: extractDoctorsFromUser(homePageReducer.user.users),
   calendarEvt: appointmentPageReducer.createCalendarEvt.event,
   disabled: appointmentPageReducer.createCalendarEvt.disabled,
   visible: appointmentPageReducer.createCalendarEvt.visible,

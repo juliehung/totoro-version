@@ -6,8 +6,6 @@ import {
   CHANGE_PRINT_DATE,
   GET_PRINT_APP_LIST_SUCCESS,
   CHANGE_CAL_FIRST_DAY,
-  GET_USERS_START,
-  GET_DOCTORS_SUCCESS,
   CHANGE_SELECTED_DOCTORS,
   CHANGE_CONFIRM_MODAL_VISIBLE,
   INSERT_PENDING_INFO,
@@ -121,14 +119,6 @@ export function changePrintDate(date) {
 
 export function getPrintAppointmentsSuccess(appData) {
   return { type: GET_PRINT_APP_LIST_SUCCESS, appData };
-}
-
-export function getUsersStart() {
-  return { type: GET_USERS_START };
-}
-
-export function getDoctorsSuccess(doctors) {
-  return { type: GET_DOCTORS_SUCCESS, doctors };
 }
 
 export function changeSelectedDoctors(selectedDoctors, mobileFirstRrender) {

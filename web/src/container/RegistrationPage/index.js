@@ -8,10 +8,10 @@ import DefaultPng from '../../static/images/default.png';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Helmet } from 'react-helmet-async';
-import { getUsersStart } from '../AppointmentPage/actions';
 import { B1, G1, Gray700 } from '../../utils/colors';
 import MqttHelper from '../../utils/mqtt';
 import RegistDrawer from './RegistDrawer';
+import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -115,13 +115,9 @@ const columns = [
 const allDoctors = 'THESE_ARE_ALL_DOCTORS';
 
 function RegistrationPage(props) {
-  const { getRegistrations, updateSelectedDate, getUsersStart } = props;
+  const { getRegistrations, updateSelectedDate } = props;
 
   const [selectedDoctor, setSelectedDoctor] = useState();
-
-  useEffect(() => {
-    getUsersStart();
-  }, [getUsersStart]);
 
   useEffect(() => {
     const updateRegistrations = arrival => {
@@ -320,17 +316,16 @@ function RegistrationPage(props) {
   );
 }
 
-const mapStateToProps = ({ registrationPageReducer, appointmentPageReducer }) => ({
+const mapStateToProps = ({ registrationPageReducer, homePageReducer }) => ({
   registrations: registrationPageReducer.registration.registrations,
   loading: registrationPageReducer.registration.loading,
   selectedDate: registrationPageReducer.registration.selectedDate,
-  doctors: appointmentPageReducer.calendar.doctors,
+  doctors: extractDoctorsFromUser(homePageReducer.user.users),
 });
 
 const mapDispatchToProps = {
   getRegistrations,
   updateSelectedDate,
-  getUsersStart,
   onSelectPatient,
 };
 

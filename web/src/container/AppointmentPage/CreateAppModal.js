@@ -27,6 +27,7 @@ import styled from 'styled-components';
 import { requiredTreatmentTimeDefault } from './constant';
 import convertMrnTo5Digits from './utils/convertMrnTo5Digits';
 import { GAevent } from '../../ga';
+import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 //#region
 const Container = styled.div`
@@ -406,7 +407,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   patients: appointmentPageReducer.createApp.searchPatients,
   patientSelected: appointmentPageReducer.createApp.patientSelected,
   selectedPatient: appointmentPageReducer.createApp.selectedPatient,
-  doctors: appointmentPageReducer.calendar.doctors,
+  doctors: extractDoctorsFromUser(homePageReducer.user.users),
   appointment: appointmentPageReducer.createApp.appointment,
   patient: appointmentPageReducer.createApp.patient,
   createAppSuccess: appointmentPageReducer.createApp.createAppSuccess,

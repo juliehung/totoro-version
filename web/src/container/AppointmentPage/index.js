@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import AppCalendar from './AppCalendar';
@@ -8,7 +8,6 @@ import ConfirmDropModal from './ConfirmDropModal';
 import CreatAppModal from './CreateAppModal';
 import EditAppModal from './EditAppModal';
 import TodoAppModal from './TodoAppModal';
-import { getUsersStart } from './actions';
 import CreateCalendarEventModal from './CreateCalendarEventModal';
 import EditCalendarEventModal from './EditCalendarEventModal';
 import { Helmet } from 'react-helmet-async';
@@ -39,11 +38,7 @@ const CalendarContainer = styled.div`
 `;
 //#endregion
 
-function AppointmentPage({ getUsersStart, changeSelectedDoctors, account }) {
-  useEffect(() => {
-    getUsersStart();
-  }, [getUsersStart]);
-
+function AppointmentPage({ changeSelectedDoctors, account }) {
   return (
     <Container>
       <Helmet>
@@ -66,6 +61,6 @@ function AppointmentPage({ getUsersStart, changeSelectedDoctors, account }) {
 
 const mapStateToProps = state => ({});
 
-const mapDispatchToProps = { getUsersStart };
+// const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppointmentPage);
+export default connect(mapStateToProps)(AppointmentPage);
