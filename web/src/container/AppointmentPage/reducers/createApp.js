@@ -44,7 +44,20 @@ const initState = {
     note: undefined,
     specialNote: [],
   },
-  patient: { name: undefined, phone: undefined, nationalId: undefined, birth: undefined, newPatient: false },
+  patient: {
+    name: undefined,
+    phone: undefined,
+    nationalId: undefined,
+    birth: undefined,
+    newPatient: false,
+    patientIdentity: {
+      code: 'H10',
+      freeBurden: false,
+      id: 1,
+      name: '一般門診',
+    },
+    vip: '無',
+  },
   default: { duration: undefined, doctorId: undefined },
   disposalId: undefined,
 };
