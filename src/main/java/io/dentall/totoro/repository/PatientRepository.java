@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpecificationExecutor<Patient> {
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth) " +
         "FROM Patient patient WHERE to_char(patient.birth, 'yyyyMMdd') like '%'||:search||'%' " +
         "ORDER BY " +
         "CASE " +
@@ -28,7 +28,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         countQuery = "SELECT count(*) FROM Patient patient WHERE to_char(patient.birth, 'yyyyMMdd') like '%'||:search||'%'")
     Page<PatientSearchVM> findByBirthCE(@Param("search") String search, Pageable pageable);
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth) " +
         "FROM Patient patient WHERE FUNCTION('SUCK_ROC_BIRTH_TO_CHAR', patient.birth) like '%'||:search||'%' " +
         "ORDER BY " +
         "CASE " +
@@ -41,7 +41,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         countQuery = "SELECT count(*) FROM Patient patient WHERE function('SUCK_ROC_BIRTH_TO_CHAR', patient.birth) like '%'||:search||'%'")
     Page<PatientSearchVM> findByBirthROC(@Param("search") String search, Pageable pageable);
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth) " +
         "FROM Patient patient WHERE UPPER(patient.name) like '%'||:search||'%' " +
         "ORDER BY " +
         "CASE " +
@@ -54,7 +54,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         countQuery = "SELECT count(*) FROM Patient patient WHERE UPPER(patient.name) like '%'||:search||'%'")
     Page<PatientSearchVM> findByName(@Param("search") String search, Pageable pageable);
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth) " +
         "FROM Patient patient WHERE patient.phone like '%'||:search||'%' " +
         "ORDER BY " +
         "CASE " +
@@ -67,7 +67,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         countQuery = "SELECT count(*) FROM Patient patient WHERE patient.phone like '%'||:search||'%'")
     Page<PatientSearchVM> findByPhone(@Param("search") String search, Pageable pageable);
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth) " +
         "FROM Patient patient WHERE UPPER(patient.nationalId) like '%'||:search||'%' " +
         "ORDER BY " +
         "CASE " +
@@ -80,7 +80,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         countQuery = "SELECT count(*) FROM Patient patient WHERE UPPER(patient.nationalId) like '%'||:search||'%'")
     Page<PatientSearchVM> findByNationalId(@Param("search") String search, Pageable pageable);
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth) " +
         "FROM Patient patient WHERE FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) > 0 " +
         "ORDER BY FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) DESC, patient.id ASC",
         countQuery = "SELECT count(*) FROM Patient patient WHERE FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) > 0")

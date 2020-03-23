@@ -1,5 +1,7 @@
 package io.dentall.totoro.business.vm;
 
+import java.time.LocalDate;
+
 public class PatientSearchVM {
 
     private Long id;
@@ -8,10 +10,14 @@ public class PatientSearchVM {
 
     private String medicalId;
 
-    public PatientSearchVM(Long id, String name, String medicalId) {
+    private LocalDate birth;
+
+
+    public PatientSearchVM(Long id, String name, String medicalId, LocalDate birth) {
         this.id = id;
         this.name = name;
         this.medicalId = medicalId;
+        this.birth = birth;
     }
 
     public Long getId() {
@@ -36,5 +42,13 @@ public class PatientSearchVM {
 
     public void setMedicalId(String medicalId) {
         this.medicalId = medicalId;
+    }
+
+    public LocalDate getBirth() {
+        return birth;
+    }
+
+    public void setBirth(LocalDate birth) {
+        this.birth = birth;
     }
 }
