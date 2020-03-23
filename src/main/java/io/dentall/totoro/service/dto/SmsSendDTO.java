@@ -3,9 +3,9 @@ package io.dentall.totoro.service.dto;
 import javax.validation.constraints.NotBlank;
 
 /**
- * A DTO representing a sms.
+ * A DTO representing a SmsSend.
  */
-public class SmsDTO {
+public class SmsSendDTO {
 
     @NotBlank
     private String clinic;
@@ -15,7 +15,7 @@ public class SmsDTO {
 
     private String content;
 
-    public SmsDTO() {
+    public SmsSendDTO() {
         // Empty constructor needed for Jackson.
     }
 
@@ -45,7 +45,7 @@ public class SmsDTO {
 
     @Override
     public String toString() {
-        return "SmsDTO{" +
+        return "SmsSendDTO{" +
             "clinic='" + clinic + '\'' +
             ", phone='" + phone + '\'' +
             ", content='" + content + '\'' +
