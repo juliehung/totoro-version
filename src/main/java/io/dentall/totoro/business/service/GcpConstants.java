@@ -8,5 +8,7 @@ public class GcpConstants {
 
     static final String SERVICE_ACCOUNT_PREFIX = "dentall-saas-";
 
-    static final String SMS_FUNCTION = "https://asia-east2-dentall-saas.cloudfunctions.net/sendSms";
+    static final String SEND_SMS_FUNCTION = "https://asia-east2-dentall-saas.cloudfunctions.net/sendSms";
+
+    static final String CHARGE_SMS_FUNCTION = "https://asia-east2-dentall-saas.cloudfunctions.net/chargeSms";
 }
