@@ -4,6 +4,7 @@ import appointmentPage from './container/AppointmentPage/sagas';
 import loginPage from './container/LoginPage/sagas';
 import registrationPage from './container/RegistrationPage/sagas';
 import questionnairePage from './container/QuestionnairePage/sagas';
+import shiftPage from './container/ShiftPage/sagas';
 
 export function* rootSaga() {
   yield fork(homePage);
@@ -11,4 +12,5 @@ export function* rootSaga() {
   yield fork(loginPage);
   yield fork(registrationPage);
   yield fork(questionnairePage);
+  yield fork(shiftPage);
 }
