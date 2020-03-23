@@ -12,6 +12,8 @@ import styled from 'styled-components';
 import '@fullcalendar/timeline/main.css';
 import '@fullcalendar/resource-timeline/main.css';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
+// import { handleResourceRender } from './utils/handleResourceRender';
+import { changeDate, getShift } from './actions';
 
 //#region
 const Container = styled.div`
@@ -21,12 +23,27 @@ const Container = styled.div`
 //#endregion
 
 function ShiftCalendar(props) {
+  const { range, getShift } = props;
+
   useEffect(() => {
     const msg = document.querySelector('.fc-license-message');
     if (msg) {
       msg.parentNode.removeChild(msg);
     }
   });
+
+  useEffect(() => {
+    if (range.start && range.end) {
+      getShift(range);
+    }
+  }, [range, getShift]);
+
+  const datesRender = ({ view }) => {
+    const start = view.activeStart;
+    const end = view.activeEnd;
+    props.changeDate({ start, end });
+  };
+
   return (
     <Container>
       <FullCalendar
@@ -34,6 +51,7 @@ function ShiftCalendar(props) {
         resources={props.doctors.map((d, i) => {
           return { id: i + 1, title: d.name };
         })}
+        resourceRender={handleResourceRender}
         slotWidth={60}
         events={[
           {
@@ -126,13 +144,17 @@ function ShiftCalendar(props) {
           right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth',
         }}
         resourceAreaWidth={'20%'}
+        datesRender={datesRender}
       />
     </Container>
   );
 }
 
-const mapStateToProps = ({ homePageReducer }) => ({ doctors: extractDoctorsFromUser(homePageReducer.user.users) });
+const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
+  doctors: extractDoctorsFromUser(homePageReducer.user.users),
+  range: shiftPageReducer.shift.range,
+});
 
-// const mapDispatchToProps = {};
+const mapDispatchToProps = { changeDate, getShift };
 
-export default connect(mapStateToProps)(ShiftCalendar);
+export default connect(mapStateToProps, mapDispatchToProps)(ShiftCalendar);
