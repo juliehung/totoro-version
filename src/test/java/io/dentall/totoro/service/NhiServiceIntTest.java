@@ -5,9 +5,6 @@ import io.dentall.totoro.business.dto.PersonalNhiExtendTreatmentProcedureMap;
 import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import io.dentall.totoro.repository.NhiExtendPatientRepository;
-import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.util.DomainGenerator;
 import io.dentall.totoro.web.rest.PatientResourceIntTest;
@@ -16,10 +13,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +28,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -68,6 +64,9 @@ public class NhiServiceIntTest {
     @Autowired
     private NhiExtendPatientRepository nhiExtendPatientRepository;
 
+    @MockBean
+    private SettingRepository settingRepository;
+
     @Autowired
     private TreatmentRepository treatmentRepository;
 
@@ -99,7 +98,161 @@ public class NhiServiceIntTest {
 
     @Before
     public void setup() {
-        nhiService = new NhiService(nhiExtendDisposalRepository, nhiExtendPatientRepository, treatmentQueryService);
+        nhiService = new NhiService(nhiExtendDisposalRepository, nhiExtendPatientRepository, treatmentQueryService, settingRepository);
+        List<Setting> ss = new ArrayList<>();
+        Setting s = new Setting();
+        LinkedHashMap<String, Object> oo = new LinkedHashMap<>();
+        oo.put("meetRegStartDate", "2020-01-01T15:59:00+00:00");
+        oo.put("meetRegEndDate", "2020-01-03T15:59:00+00:00");
+        s.setPreferences("generalSetting", oo);
+        ss.add(s);
+        Mockito.when(settingRepository.findAll()).thenReturn(ss);
+
+    }
+
+    @Test
+    @Transactional
+    public void testCheckInfectionControl() {
+        testGetInfectionDate();
+        testCheckInfectionControl1();
+        testCheckInfectionControl2();
+        testCheckInfectionControl3();
+        testCheckInfectionControl4();
+        testCheckInfectionControl5();
+    }
+
+    private void testGetInfectionDate() {
+        nhiService.getInfectionDate();
+    }
+
+    private void testCheckInfectionControl1() {
+        Disposal d = new Disposal();
+        NhiExtendDisposal ed = new NhiExtendDisposal();
+        TreatmentProcedure tp = new TreatmentProcedure();
+        NhiExtendTreatmentProcedure ntp = new NhiExtendTreatmentProcedure();
+
+        ntp.a73("InfectionControl");
+        ntp.setCheck("");
+        ntp.setTreatmentProcedure(tp);
+        tp.setNhiExtendTreatmentProcedure(ntp);
+        ed.setA17("1090101");
+
+        Set<NhiExtendDisposal> ds = new HashSet<>();
+        ds.add(ed);
+        Set<TreatmentProcedure> tps = new HashSet<>();
+        tps.add(tp);
+
+        d.setNhiExtendDisposals(ds);
+        ed.setDisposal(d);
+        tp.setDisposal(d);
+        d.setTreatmentProcedures(tps);
+
+        nhiService.checkInfectionControl.accept(ntp);
+        assertThat(ntp.getCheck()).isEqualTo("要變殭屍啦\n");
+    }
+
+    private void testCheckInfectionControl2() {
+        Disposal d = new Disposal();
+        NhiExtendDisposal ed = new NhiExtendDisposal();
+        TreatmentProcedure tp = new TreatmentProcedure();
+        NhiExtendTreatmentProcedure ntp = new NhiExtendTreatmentProcedure();
+
+        ntp.a73("InfectionControl");
+        ntp.setCheck("");
+        ntp.setTreatmentProcedure(tp);
+        tp.setNhiExtendTreatmentProcedure(ntp);
+        ed.setA17("1090102");
+
+        Set<NhiExtendDisposal> ds = new HashSet<>();
+        ds.add(ed);
+        Set<TreatmentProcedure> tps = new HashSet<>();
+        tps.add(tp);
+
+        d.setNhiExtendDisposals(ds);
+        ed.setDisposal(d);
+        tp.setDisposal(d);
+        d.setTreatmentProcedures(tps);
+
+        nhiService.checkInfectionControl.accept(ntp);
+        assertThat(ntp.getCheck()).isEqualTo("要變殭屍啦\n");
+    }
+
+    private void testCheckInfectionControl3() {
+        Disposal d = new Disposal();
+        NhiExtendDisposal ed = new NhiExtendDisposal();
+        TreatmentProcedure tp = new TreatmentProcedure();
+        NhiExtendTreatmentProcedure ntp = new NhiExtendTreatmentProcedure();
+
+        ntp.a73("InfectionControl");
+        ntp.setCheck("");
+        ntp.setTreatmentProcedure(tp);
+        tp.setNhiExtendTreatmentProcedure(ntp);
+        ed.setA17("1090103");
+
+        Set<NhiExtendDisposal> ds = new HashSet<>();
+        ds.add(ed);
+        Set<TreatmentProcedure> tps = new HashSet<>();
+        tps.add(tp);
+
+        d.setNhiExtendDisposals(ds);
+        ed.setDisposal(d);
+        tp.setDisposal(d);
+        d.setTreatmentProcedures(tps);
+
+        nhiService.checkInfectionControl.accept(ntp);
+        assertThat(ntp.getCheck()).isEqualTo("要變殭屍啦\n");
+    }
+
+    private void testCheckInfectionControl4() {
+        Disposal d = new Disposal();
+        NhiExtendDisposal ed = new NhiExtendDisposal();
+        TreatmentProcedure tp = new TreatmentProcedure();
+        NhiExtendTreatmentProcedure ntp = new NhiExtendTreatmentProcedure();
+
+        ntp.a73("InfectionControl");
+        ntp.setCheck("");
+        ntp.setTreatmentProcedure(tp);
+        tp.setNhiExtendTreatmentProcedure(ntp);
+        ed.setA17("1091201");
+
+        Set<NhiExtendDisposal> ds = new HashSet<>();
+        ds.add(ed);
+        Set<TreatmentProcedure> tps = new HashSet<>();
+        tps.add(tp);
+
+        d.setNhiExtendDisposals(ds);
+        ed.setDisposal(d);
+        tp.setDisposal(d);
+        d.setTreatmentProcedures(tps);
+
+        nhiService.checkInfectionControl.accept(ntp);
+        assertThat(ntp.getCheck()).isEqualTo("");
+    }
+
+    private void testCheckInfectionControl5() {
+        Disposal d = new Disposal();
+        NhiExtendDisposal ed = new NhiExtendDisposal();
+        TreatmentProcedure tp = new TreatmentProcedure();
+        NhiExtendTreatmentProcedure ntp = new NhiExtendTreatmentProcedure();
+
+        ntp.a73("InfectionControl");
+        ntp.setCheck("");
+        ntp.setTreatmentProcedure(tp);
+        tp.setNhiExtendTreatmentProcedure(ntp);
+        ed.setA17("1081201");
+
+        Set<NhiExtendDisposal> ds = new HashSet<>();
+        ds.add(ed);
+        Set<TreatmentProcedure> tps = new HashSet<>();
+        tps.add(tp);
+
+        d.setNhiExtendDisposals(ds);
+        ed.setDisposal(d);
+        tp.setDisposal(d);
+        d.setTreatmentProcedures(tps);
+
+        nhiService.checkInfectionControl.accept(ntp);
+        assertThat(ntp.getCheck()).isEqualTo("");
     }
 
     @Test
