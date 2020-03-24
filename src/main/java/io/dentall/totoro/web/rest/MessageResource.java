@@ -36,15 +36,15 @@ public class MessageResource {
     }
 
     @PostMapping("/messages/sms/send")
-    public DeferredResult<ResponseEntity<String>> sendSms(@Valid @RequestBody SmsSendDTO sms) {
-        if (!ImageRepositoryConfiguration.BASIC_FOLDER_PATH.equals(sms.getClinic())) {
+    public DeferredResult<ResponseEntity<String>> sendSms(@Valid @RequestBody SmsSendDTO dto) {
+        if (!ImageRepositoryConfiguration.BASIC_FOLDER_PATH.equals(dto.getClinic())) {
             throw new BadRequestAlertException("Invalid clinic", ENTITY_NAME, "clinicwrong");
         }
 
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             try {
-                result.setResult(ResponseEntity.ok(cloudFunctionService.sendSms(sms)));
+                result.setResult(ResponseEntity.ok(cloudFunctionService.sendSms(dto)));
             } catch (IOException e) {
                 throw new InternalServerErrorException("Send sms get exception: " + e);
             }
@@ -54,15 +54,15 @@ public class MessageResource {
     }
 
     @PostMapping("/messages/sms/charge")
-    public DeferredResult<ResponseEntity<String>> chargeSms(@Valid @RequestBody SmsChargeDTO sms) {
-        if (!ImageRepositoryConfiguration.BASIC_FOLDER_PATH.equals(sms.getClinic())) {
+    public DeferredResult<ResponseEntity<String>> chargeSms(@Valid @RequestBody SmsChargeDTO dto) {
+        if (!ImageRepositoryConfiguration.BASIC_FOLDER_PATH.equals(dto.getClinic())) {
             throw new BadRequestAlertException("Invalid clinic", ENTITY_NAME, "clinicwrong");
         }
 
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             try {
-                result.setResult(ResponseEntity.ok(cloudFunctionService.chargeSms(sms)));
+                result.setResult(ResponseEntity.ok(cloudFunctionService.chargeSms(dto)));
             } catch (IOException e) {
                 throw new InternalServerErrorException("Charge sms get exception: " + e);
             }
