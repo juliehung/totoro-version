@@ -113,6 +113,7 @@ public class CacheConfiguration {
             cm.createCache(HomePageCover.class.getName(), jcacheConfiguration);
             cm.createCache(UserDayOff.class.getName(), jcacheConfiguration);
             cm.createCache(UserShift.class.getName(), jcacheConfiguration);
+            cm.createCache(ConfigurationMap.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }
