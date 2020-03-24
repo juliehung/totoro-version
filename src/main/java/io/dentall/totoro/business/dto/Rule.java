@@ -61,11 +61,23 @@ public class Rule {
     @Convert(conversionClass = NhiService.Splitter.class, args = {";"})
     private String[] dependOn;
 
+    @Parsed(field = "infection_control")
+    @Convert(conversionClass = NhiService.Splitter.class, args = {";"})
+    private String[] infectionControl;
+
     public static Rule allPass() {
         Rule allPass = new Rule();
         allPass.setCode(null);
 
         return allPass;
+    }
+
+    public String[] getInfectionControl() {
+        return infectionControl;
+    }
+
+    public void setInfectionControl(String[] infectionControl) {
+        this.infectionControl = infectionControl;
     }
 
     public String[] getIdentityLimit() {

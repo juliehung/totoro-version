@@ -4,12 +4,11 @@ import com.univocity.parsers.conversions.Conversion;
 import com.univocity.parsers.csv.CsvParserSettings;
 import com.univocity.parsers.csv.CsvRoutines;
 import io.dentall.totoro.business.dto.*;
-import io.dentall.totoro.domain.NhiExtendDisposal;
-import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
-import io.dentall.totoro.domain.Treatment;
-import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendPatientRepository;
+import io.dentall.totoro.repository.SettingRepository;
+import io.dentall.totoro.service.dto.InfectionControlDuration;
 import io.dentall.totoro.service.dto.TreatmentCriteria;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.StreamUtil;
@@ -27,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -59,6 +59,8 @@ public class NhiService {
 
     private final TreatmentQueryService treatmentQueryService;
 
+    private final SettingRepository settingRepository;
+
     private static Map<String, Rule> rules;
 
     private static Map<String, String> positionLimitMap = new HashMap<>();
@@ -69,16 +71,19 @@ public class NhiService {
 
     private static Map<String, String> surfaceLimitErrorResponseMap = new HashMap<>();
 
+    private InfectionControlDuration infectionControlDuration = null;
+
     @Value("classpath:nhi_rule.csv")
     private Resource resourceFile;
 
     @Value("${nhi.rule:#{null}}")
     private String ruleFile;
 
-    public NhiService(NhiExtendDisposalRepository nhiExtendDisposalRepository, NhiExtendPatientRepository nhiExtendPatientRepository, TreatmentQueryService treatmentQueryService) {
+    public NhiService(NhiExtendDisposalRepository nhiExtendDisposalRepository, NhiExtendPatientRepository nhiExtendPatientRepository, TreatmentQueryService treatmentQueryService, SettingRepository settingRepository) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
         this.treatmentQueryService = treatmentQueryService;
+        this.settingRepository = settingRepository;
 
         positionLimitMap.put("VALIDATED_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,FM,");
         positionLimitMap.put("BLANK_ONLY", "");
@@ -187,6 +192,65 @@ public class NhiService {
 
     }
 
+    public Consumer<NhiExtendTreatmentProcedure> checkInfectionControl = nhiExtendTreatmentProcedure -> {
+        String code = nhiExtendTreatmentProcedure.getA73();
+        LocalDate targetDate = nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getDate() != null
+            ? nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getDate()
+            : nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getReplenishmentDate();
+
+        this.getInfectionDate();
+
+        if (rules.get(code) != null &&
+            rules.get(code).getInfectionControl() != null
+        ) {
+            if (targetDate.isEqual(this.infectionControlDuration.getInfectionControlBeginDate()) ||
+                targetDate.isEqual(this.infectionControlDuration.getInfectionControlEndDate()) ||
+                (targetDate.isAfter(this.infectionControlDuration.getInfectionControlBeginDate()) &&
+                    targetDate.isBefore(this.infectionControlDuration.getInfectionControlEndDate()))
+            ) {
+                Arrays.stream(rules.get(code).getInfectionControl())
+                    .map(InfectionControl::new)
+                    .forEach(r -> nhiExtendTreatmentProcedure.setCheck(nhiExtendTreatmentProcedure.getCheck() + r.getMessage() + "\n"));
+            }
+        }
+    };
+
+    public void getInfectionDate() {
+        if (infectionControlDuration != null) {
+            return;
+        }
+
+        try {
+            List<Setting> settingList = settingRepository.findAll();
+            if (settingList.size() > 0 &&
+                settingList.get(0).getPreferences() != null &&
+                settingList.get(0).getPreferences().containsKey("generalSetting") &&
+                settingList.get(0).getPreferences().get("generalSetting") instanceof java.util.LinkedHashMap
+            ) {
+                LinkedHashMap<String, Object> g = (LinkedHashMap<String, Object>) settingList.get(0).getPreferences().get("generalSetting");
+                String infectionControlBeginDateString = (String) g.get("meetRegStartDate");
+                String infectionControlEndDateString = (String) g.get("meetRegEndDate");
+
+                this.infectionControlDuration = new InfectionControlDuration()
+                    .infectionControlBeginDate(
+                        LocalDate.of(Integer.parseInt(infectionControlBeginDateString.substring(0, 4)),
+                            Integer.parseInt(infectionControlBeginDateString.substring(5, 7)),
+                            Integer.parseInt(infectionControlBeginDateString.substring(8, 10))
+                            )
+                    )
+                    .infectionControlEndDate(
+                        LocalDate.of(Integer.parseInt(infectionControlEndDateString.substring(0, 4)),
+                            Integer.parseInt(infectionControlEndDateString.substring(5, 7)),
+                            Integer.parseInt(infectionControlEndDateString.substring(8, 10))
+                        )
+                    );
+            }
+        } catch (DateTimeException | ClassCastException e) {
+            log.error("Setting's infection control(meetRegEnd/StartDate) data may do something wrong at FE.");
+            log.error(e.getMessage());
+        }
+    }
+
     /**
      * Checking nhi treatment procedure main entrance
      *
@@ -232,6 +296,7 @@ public class NhiService {
                         .andThen(checkInterval)
                         .andThen(checkPositionLimit)
                         .andThen(checkSurfaceLimit)
+                        .andThen(checkInfectionControl)
                         .accept(targetNhiExtendTreatmentProcedure);
 
                 }
