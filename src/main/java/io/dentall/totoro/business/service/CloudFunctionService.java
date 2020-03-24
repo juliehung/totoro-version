@@ -31,8 +31,9 @@ public class CloudFunctionService {
         this.mapper = mapper;
     }
 
-    public String sendSms(SmsSendDTO sms) throws IOException {
-        HttpEntity<String> request = getRequest(sms);
+    public String sendSms(SmsSendDTO dto) throws IOException {
+        String token = getIdTokenWithAudience(GcpConstants.SEND_SMS_FUNCTION);
+        HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(dto), getRequestHeaderBearer(token));
         RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.postForObject(GcpConstants.SEND_SMS_FUNCTION, request, String.class);
         SmsStatus status = SmsStatus.valueOf(result);
@@ -42,8 +43,9 @@ public class CloudFunctionService {
         return status.toString();
     }
 
-    public String chargeSms(SmsChargeDTO sms) throws IOException {
-        HttpEntity<String> request = getRequest(sms);
+    public String chargeSms(SmsChargeDTO dto) throws IOException {
+        String token = getIdTokenWithAudience(GcpConstants.CHARGE_SMS_FUNCTION);
+        HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(dto), getRequestHeaderBearer(token));
         RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.postForObject(GcpConstants.CHARGE_SMS_FUNCTION, request, String.class);
         SmsStatus status = SmsStatus.valueOf(result);
@@ -53,21 +55,16 @@ public class CloudFunctionService {
         return status.toString();
     }
 
-    private HttpEntity<String> getRequest(Object value) throws IOException {
-        return new HttpEntity<>(mapper.writeValueAsString(value), getRequestHeaderBearer());
-    }
-
-    private HttpHeaders getRequestHeaderBearer() throws IOException {
-        String token = getIdToken();
-
+    private HttpHeaders getRequestHeaderBearer(String token) {
         HttpHeaders headers = new HttpHeaders();
+
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add(AuthHttpConstants.AUTHORIZATION, AuthHttpConstants.BEARER.concat(" ").concat(token));
 
         return headers;
     }
 
-    private String getIdToken() throws IOException {
+    private String getIdTokenWithAudience(String audience) throws IOException {
         String clinic = ImageRepositoryConfiguration.BASIC_FOLDER_PATH;
         BlobId blobId = BlobId.of(
             GcpConstants.BUCKET_NAME,
@@ -78,7 +75,7 @@ public class CloudFunctionService {
             new ByteArrayInputStream(storage.readAllBytes(blobId))
         );
 
-        return credentials.idTokenWithAudience(GcpConstants.SEND_SMS_FUNCTION, null).getTokenValue();
+        return credentials.idTokenWithAudience(audience, null).getTokenValue();
     }
 
     private enum SmsStatus {
