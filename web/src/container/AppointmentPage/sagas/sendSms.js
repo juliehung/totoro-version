@@ -1,7 +1,6 @@
 import { SEND_SMS } from '../constant';
-import { call, put, take, select } from 'redux-saga/effects';
+import { call, take } from 'redux-saga/effects';
 import Sms from '../../../models/sms';
-import { sendSms } from '../actions';
 
 export function* sendSmsAsync() {
   while (true) {
