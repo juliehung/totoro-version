@@ -198,8 +198,6 @@ public class NhiService {
             ? nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getDate()
             : nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getReplenishmentDate();
 
-        this.getInfectionDate();
-
         if (rules.get(code) != null &&
             rules.get(code).getInfectionControl() != null
         ) {
@@ -216,9 +214,6 @@ public class NhiService {
     };
 
     public void getInfectionDate() {
-        if (infectionControlDuration != null) {
-            return;
-        }
 
         try {
             List<Setting> settingList = settingRepository.findAll();
@@ -231,19 +226,30 @@ public class NhiService {
                 String infectionControlBeginDateString = (String) g.get("meetRegStartDate");
                 String infectionControlEndDateString = (String) g.get("meetRegEndDate");
 
-                this.infectionControlDuration = new InfectionControlDuration()
-                    .infectionControlBeginDate(
-                        LocalDate.of(Integer.parseInt(infectionControlBeginDateString.substring(0, 4)),
-                            Integer.parseInt(infectionControlBeginDateString.substring(5, 7)),
-                            Integer.parseInt(infectionControlBeginDateString.substring(8, 10))
+                if (StringUtils.isBlank(infectionControlBeginDateString) ||
+                    StringUtils.isBlank(infectionControlEndDateString) ||
+                    infectionControlBeginDateString.length() < 10 ||
+                    infectionControlEndDateString.length() < 10
+                ) {
+                    this.infectionControlDuration = new InfectionControlDuration()
+                        .infectionControlBeginDate(LocalDate.MIN)
+                        .infectionControlEndDate(LocalDate.MIN);
+                } else {
+                    this.infectionControlDuration = new InfectionControlDuration()
+                        .infectionControlBeginDate(
+                            LocalDate.of(Integer.parseInt(infectionControlBeginDateString.substring(0, 4)),
+                                Integer.parseInt(infectionControlBeginDateString.substring(5, 7)),
+                                Integer.parseInt(infectionControlBeginDateString.substring(8, 10))
                             )
-                    )
-                    .infectionControlEndDate(
-                        LocalDate.of(Integer.parseInt(infectionControlEndDateString.substring(0, 4)),
-                            Integer.parseInt(infectionControlEndDateString.substring(5, 7)),
-                            Integer.parseInt(infectionControlEndDateString.substring(8, 10))
                         )
-                    );
+                        .infectionControlEndDate(
+                            LocalDate.of(Integer.parseInt(infectionControlEndDateString.substring(0, 4)),
+                                Integer.parseInt(infectionControlEndDateString.substring(5, 7)),
+                                Integer.parseInt(infectionControlEndDateString.substring(8, 10))
+                            )
+                        );
+
+                }
             }
         } catch (DateTimeException | ClassCastException e) {
             log.error("Setting's infection control(meetRegEnd/StartDate) data may do something wrong at FE.");
@@ -266,6 +272,8 @@ public class NhiService {
                 .getTreatment()
                 .getPatient()
                 .getId();
+
+            this.getInfectionDate();
 
             nhiExtendTreatmentProcedures.forEach(targetNhiExtendTreatmentProcedure -> {
                 if (rules.getOrDefault(targetNhiExtendTreatmentProcedure.getA73(), Rule.allPass()).getCode() != null) {
