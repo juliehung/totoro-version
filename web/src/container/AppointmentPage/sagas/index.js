@@ -13,6 +13,7 @@ import { watchGetTodos } from './getTodos';
 import { watchGetSettings } from './getSettings';
 import { popoverCancelApp } from './popoverCancelApp';
 import { createTodoApp } from './createTodoApp';
+import { sendSmsAsync } from './sendSms';
 
 export default function* appointmentPage() {
   yield fork(watchGetAppointments);
@@ -33,4 +34,5 @@ export default function* appointmentPage() {
   yield fork(watchGetSettings);
   yield fork(popoverCancelApp);
   yield fork(createTodoApp);
+  yield fork(sendSmsAsync);
 }

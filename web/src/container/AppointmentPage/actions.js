@@ -91,6 +91,7 @@ import {
   CREATE_TODO_APP,
   CREATE_TODO_APP_SUCCESS,
   CHANGE_TODO_APP_DISPOSAL_ID,
+  SEND_SMS,
 } from './constant';
 
 export function changeCalDate(date) {
@@ -460,4 +461,8 @@ export function createTodoAppSuccess(id) {
 
 export function changeTodoAppDisposalId(id) {
   return { type: CHANGE_TODO_APP_DISPOSAL_ID, id };
+}
+
+export function sendSms(appointment) {
+  return { type: SEND_SMS, appointment };
 }

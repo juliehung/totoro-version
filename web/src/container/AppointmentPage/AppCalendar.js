@@ -32,6 +32,7 @@ import {
   getSettings,
   popoverCancelApp,
   changeSelectedDoctors,
+  sendSms,
 } from './actions';
 import zhTW from '@fullcalendar/core/locales/zh-tw';
 import styled from 'styled-components';
@@ -301,7 +302,7 @@ class AppCalendar extends React.Component {
 
   eventRender = info => {
     if (info.event.extendedProps.eventType === 'appointment') {
-      handleEventRender(info, { edit: this.handleAppointmentDblClick, cancel: this.handlePopoverCancelApp });
+      handleEventRender(info, { edit: this.handleAppointmentDblClick, cancel: this.handlePopoverCancelApp, send: this.handleSendsms });
     } else if (info.event.extendedProps.eventType === 'doctorDayOff') {
       handleEventRender(info, { edit: this.handleCalEvtDblClick });
     }
@@ -315,6 +316,10 @@ class AppCalendar extends React.Component {
   handleCalEvtDblClick = calEvt => {
     this.props.changeEditCalModalVisible(true);
     this.props.insertCalEvtToEditCalEvtModal(calEvt);
+  };
+
+  handleSendsms = app => {
+    this.props.sendSms(app);
   };
 
   handlePopoverCancelApp = apptData => {
@@ -482,6 +487,7 @@ const mapDispatchToProps = {
   getSettings,
   popoverCancelApp,
   changeSelectedDoctors,
+  sendSms,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppCalendar);

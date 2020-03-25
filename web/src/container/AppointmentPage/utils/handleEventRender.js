@@ -3,6 +3,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
 import convertMrnTo5Digits from './convertMrnTo5Digits';
+import Sms from '../../../models/sms';
 import { PhoneOutlined, UserOutlined, SolutionOutlined, EditOutlined } from '@ant-design/icons';
 
 //#region
@@ -104,11 +105,21 @@ export function handleEventRender(info, func) {
               )
             ) : null}
             {!appointment.registrationStatus ? (
-              <StyledEditOutlined
-                onClick={() => {
-                  func.edit(appointment);
-                }}
-              />
+              <span>
+                <StyledEditOutlined
+                  onClick={() => {
+                    func.edit(appointment);
+                  }}
+                />
+                {process.env.NODE_ENV !== 'production' && (
+                <Button
+                  type="link"
+                  onClick={() => {
+                    func.send(appointment);
+                  }}
+                >發送簡訊</Button>
+                )}
+              </span>
             ) : null}
           </PopoverContainer>
         );
