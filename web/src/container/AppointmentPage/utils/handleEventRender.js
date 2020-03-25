@@ -1,8 +1,9 @@
-import { Popover, Icon, Dropdown, Menu, Button, Popconfirm } from 'antd';
+import { Popover, Dropdown, Menu, Button, Popconfirm } from 'antd';
 import React from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
 import convertMrnTo5Digits from './convertMrnTo5Digits';
+import { PhoneOutlined, UserOutlined, SolutionOutlined, EditOutlined } from '@ant-design/icons';
 
 //#region
 const PopoverContainer = styled.div`
@@ -16,11 +17,19 @@ const BreakP = styled.p`
   overflow-wrap: break-word;
 `;
 
-const StyledIcon = styled(Icon)`
+const StyledPhoneOutlined = styled(PhoneOutlined)`
   margin-right: 5px;
 `;
 
-const EditIcon = styled(Icon)`
+const StyledUserOutlined = styled(UserOutlined)`
+  margin-right: 5px;
+`;
+
+const StyledSolutionOutlined = styled(SolutionOutlined)`
+  margin-right: 5px;
+`;
+
+const StyledEditOutlined = styled(EditOutlined)`
   position: absolute;
   right: 20px;
   top: 20px;
@@ -60,15 +69,15 @@ export function handleEventRender(info, func) {
             </HightLightSpan>
             <HightLightSpan>{convertMrnTo5Digits(appointment.patientId)}</HightLightSpan>
             <BreakP>
-              <StyledIcon type="phone" />
+              <StyledPhoneOutlined />
               {appointment.phone}
             </BreakP>
             <BreakP>
-              <StyledIcon type="user" />
+              <StyledUserOutlined />
               {appointment.doctor.user.firstName}
             </BreakP>
             <BreakP>
-              <StyledIcon type="solution" />
+              <StyledSolutionOutlined />
               {appointment.note}
             </BreakP>
             {!appointment.registrationStatus ? (
@@ -95,8 +104,7 @@ export function handleEventRender(info, func) {
               )
             ) : null}
             {!appointment.registrationStatus ? (
-              <EditIcon
-                type="edit"
+              <StyledEditOutlined
                 onClick={() => {
                   func.edit(appointment);
                 }}

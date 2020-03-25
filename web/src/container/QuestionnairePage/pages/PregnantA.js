@@ -3,16 +3,13 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { gotoPage, changePregnantDate } from '../actions';
-import { Icon, Input } from 'antd';
+import { Input } from 'antd';
 import { Container } from './Name';
 import ConfirmButton from './ConfirmButton';
 import PageControllContainer from '../PageControllContainer';
+import { StyleRightCircleTwoTone } from './Address';
 
 //#region
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
-`;
-
 export const StyledInput = styled(Input)`
   font-size: 20px !important;
   margin: 20px 0 !important;
@@ -28,7 +25,7 @@ function PregnantA(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>預產期</span>
       </div>
       <StyledInput

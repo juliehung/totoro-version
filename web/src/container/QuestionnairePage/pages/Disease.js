@@ -2,17 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { changeDisease, nextPage } from '../actions';
-import { Icon, Button } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import { tags } from '../constant_options';
 import { Container } from './Name';
 import { OptionsContainer, Option, CheckedIcon, OptionContainer } from './BloodType';
 import PageControllContainer from '../PageControllContainer';
+import { StyleRightCircleTwoTone } from './Address';
 
 //#region
-
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
-`;
 
 const Note = styled.span`
   font-size: 12px;
@@ -24,7 +22,7 @@ function Disease(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>疾病歷史</span>
         <Note>(可複選)</Note>
       </div>
@@ -51,7 +49,7 @@ function Disease(props) {
       <Button type="primary" onClick={props.nextPage}>
         <span>
           確認
-          <Icon type="check" />
+          <CheckOutlined />
         </span>
       </Button>
       <PageControllContainer />

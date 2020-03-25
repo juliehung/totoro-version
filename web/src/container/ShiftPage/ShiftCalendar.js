@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import '@fullcalendar/core/main.css';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -14,16 +14,72 @@ import '@fullcalendar/resource-timeline/main.css';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 // import { handleResourceRender } from './utils/handleResourceRender';
 import { changeDate, getShift } from './actions';
+import { Radio, Checkbox, InputNumber } from 'antd';
 
 //#region
 const Container = styled.div`
-  height: 100%;
+  /* height: 100%; */
   width: 100%;
+  border: 1px solid #070707;
+  border-radius: 10px;
+  padding: 20px;
+  flex-grow: 1;
+  .fc-license-message {
+    display: none;
+  }
 `;
+
+const Popover = styled.div`
+  width: 300px;
+  background: #facfac;
+  position: absolute;
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 400;
+  top: ${props => (props.position ? props.position.y : 0)}px;
+  left: ${props => (props.position ? props.position.x : 0)}px;
+  display: ${props => (props.visible ? 'visible' : 'none')};
+  display: ${props => (props.visible ? 'flex' : 'none')};
+  flex-direction: column;
+  transition: all ease-in-out 200ms;
+`;
+
+const CheckboxConatainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 2em;
+  & > * {
+    margin-left: 0 !important;
+  }
+`;
+
+const BoldSpan = styled.div`
+  font-size: 14px;
+  font-weight: bold;
+`;
+
+const StyleInputNumber = styled(InputNumber)`
+  width: 50px !important;
+  margin: 0 1em !important;
+`;
+
+const radioStyle = {
+  display: 'block',
+  height: '30px',
+  lineHeight: '30px',
+};
+
 //#endregion
 
 function ShiftCalendar(props) {
-  const { range, getShift } = props;
+  const { range, getShift, setPopoverVisible } = props;
+  const [clickInfo, setClickInfo] = useState({ x: undefined, y: undefined });
+
+  useEffect(() => {
+    if (clickInfo.x && clickInfo.y) {
+      // console.log(clickInfo);
+    }
+  }, [clickInfo]);
 
   useEffect(() => {
     const msg = document.querySelector('.fc-license-message');
@@ -44,6 +100,15 @@ function ShiftCalendar(props) {
     props.changeDate({ start, end });
   };
 
+  const onPopoverClick = e => {
+    e.stopPropagation();
+  };
+
+  const dateClick = dateClickInfo => {
+    const { jsEvent } = dateClickInfo;
+    setClickInfo({ x: jsEvent.clientX, y: jsEvent.clientY });
+    setPopoverVisible(true);
+  };
   return (
     <Container>
       <FullCalendar
@@ -51,82 +116,9 @@ function ShiftCalendar(props) {
         resources={props.doctors.map((d, i) => {
           return { id: i + 1, title: d.name };
         })}
-        resourceRender={handleResourceRender}
+        // resourceRender={handleResourceRender}
         slotWidth={60}
-        events={[
-          {
-            resourceId: 1,
-            title: 'Lunch',
-            start: '2020-03-21T13:00:00.000Z',
-            end: '2020-03-21T14:00:00.000Z',
-            description: '🍱',
-            index: 'evt-0',
-          },
-          {
-            resourceId: 2,
-            title: 'Hair Appointment',
-            start: '2020-03-21T10:30:00.000Z',
-            end: '2020-03-21T12:30:00.000Z',
-            description: '💇',
-            index: 'evt-1',
-          },
-          {
-            resourceId: 3,
-            title: 'Nap Time',
-            start: '2020-03-21T10:00:00.000Z',
-            end: '2020-03-21T13:00:00.000Z',
-            description: '😴',
-            index: 'evt-2',
-          },
-          {
-            resourceId: 1,
-            title: 'Lunch',
-            start: '2020-03-20T11:00:00.000Z',
-            end: '2020-03-20T12:00:00.000Z',
-            description: '🍲',
-            index: 'evt-3',
-          },
-          {
-            resourceId: 1,
-            title: "Drink at Moe's",
-            start: '2020-03-20T12:05:00.000Z',
-            end: '2020-03-20T15:00:00.000Z',
-            description: '🍺',
-            index: 'evt-4',
-          },
-          {
-            resourceId: 4,
-            title: "Sling Drinks at Moe's",
-            start: '2020-03-20T10:00:00.000Z',
-            end: '2020-03-20T16:00:00.000Z',
-            description: '🍺',
-            index: 'evt-5',
-          },
-          {
-            resourceId: 3,
-            title: 'Rap Time',
-            start: '2020-03-20T12:00:00.000Z',
-            end: '2020-03-20T13:00:00.000Z',
-            description: '🎤',
-            index: 'evt-6',
-          },
-          {
-            resourceId: 5,
-            title: "Drink at Moe's",
-            start: '2020-03-20T10:00:00.000Z',
-            end: '2020-03-21T16:00:00.000Z',
-            description: '🍺🍺🍺🍺🍺🍺🍺🍺',
-            index: 'evt-7',
-          },
-          {
-            resourceId: 4,
-            title: "Sling Drinks at Moe's",
-            start: '2020-03-21T10:00:00.000Z',
-            end: '2020-03-21T16:00:00.000Z',
-            description: '🍺',
-            index: 'evt-8',
-          },
-        ]}
+        events={[]}
         selectable
         plugins={[interactionPlugin, resourceTimelinePlugin]}
         defaultView={'resourceTimelineDay'}
@@ -145,7 +137,33 @@ function ShiftCalendar(props) {
         }}
         resourceAreaWidth={'20%'}
         datesRender={datesRender}
+        dateClick={dateClick}
       />
+      <Popover visible={props.popoverVisible} position={clickInfo} className="shift-popover" onClick={onPopoverClick}>
+        <span>班別選擇</span>
+        <Radio.Group
+          onChange={e => {
+            console.log(e.target.value);
+          }}
+        >
+          <Radio style={radioStyle} value={1}>
+            範本班別
+          </Radio>
+          <CheckboxConatainer>
+            {props.defaultShift.map(s => (
+              <Checkbox key={s.name}>
+                {s.name} ({s.range.start} ~ {s.range.end})
+              </Checkbox>
+            ))}
+          </CheckboxConatainer>
+          <Radio style={radioStyle} value={2}>
+            <span>自訂時間</span>
+          </Radio>
+          <BoldSpan>
+            每<StyleInputNumber size="small" defaultValue={1} min={0} max={10}></StyleInputNumber>周重複至3月底
+          </BoldSpan>
+        </Radio.Group>
+      </Popover>
     </Container>
   );
 }
@@ -153,6 +171,7 @@ function ShiftCalendar(props) {
 const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
   range: shiftPageReducer.shift.range,
+  defaultShift: shiftPageReducer.shift.defaultShift,
 });
 
 const mapDispatchToProps = { changeDate, getShift };

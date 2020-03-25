@@ -2,16 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { preChangeBloodType } from '../actions';
-import { Icon } from 'antd';
 import { BloodTypeOption } from '../constant_options';
 import { Container } from './Name';
 import PageControllContainer from '../PageControllContainer';
+import { CheckOutlined } from '@ant-design/icons';
+import { StyleRightCircleTwoTone } from './Address';
 
 //#region
-
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
-`;
 
 export const OptionContainer = styled.div`
   position: relative;
@@ -55,7 +52,7 @@ export const OptionsContainer = styled.div`
   margin: 25px 0;
 `;
 
-export const CheckedIcon = styled(Icon)`
+export const CheckedIcon = styled(CheckOutlined)`
   position: absolute;
   right: 5px;
   visibility: ${props => (props.selected ? 'show' : 'hidden')};
@@ -66,7 +63,7 @@ function BloodType(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>血型</span>
       </div>
       <OptionsContainer>
@@ -82,7 +79,7 @@ function BloodType(props) {
             >
               <Option selected={selected}>{d.key}</Option>
               <span>{d.value}</span>
-              <CheckedIcon type="check" selected={selected} />
+              <CheckedIcon selected={selected} />
             </OptionContainer>
           );
         })}

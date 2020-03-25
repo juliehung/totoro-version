@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { gotoPage, nextPage } from '../actions';
-import { Icon, Button } from 'antd';
+import { Button } from 'antd';
 import { parseDataToDisplay } from '../utils/parseDataToDisplay';
+import { StyleRightCircleTwoTone } from './Address';
 
 //#region
 
@@ -13,10 +14,6 @@ const Container = styled.div`
   max-height: 85vh;
   font-size: 20px;
   overflow-y: scroll;
-`;
-
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
 `;
 
 const FormContainer = styled.div``;
@@ -81,7 +78,7 @@ function Form(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>資料確認</span>
       </div>
       <FormContainer>

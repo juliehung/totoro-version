@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@ant-design/compatible": "^1.0.1",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
     "@fullcalendar/core": "^4.4.0",
     "@fullcalendar/daygrid": "^4.4.0",
@@ -16,7 +17,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "antd": "^3.26.0",
+    "antd": "^4.0.4",
     "babel-polyfill": "^6.26.0",
     "cron-parser": "^2.13.0",
     "immer": "^5.0.0",

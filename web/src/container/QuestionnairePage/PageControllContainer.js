@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Icon } from 'antd';
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { nextPage, prevPage, gotoPage } from './actions';
 import { connect } from 'react-redux';
 
@@ -44,7 +44,7 @@ function PageControllContainer(props) {
   return (
     <Container page={props.page} id="pc">
       <div onClick={props.pre || props.prevPage}>
-        <Icon type="up" />
+        <UpOutlined />
       </div>
       <ConfirmButton
         disabled={disable}
@@ -57,7 +57,7 @@ function PageControllContainer(props) {
         <span>完成送出</span>
       </ConfirmButton>
       <div onClick={props.next || props.nextPage}>
-        <Icon type="down" />
+        <DownOutlined />
       </div>
     </Container>
   );

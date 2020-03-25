@@ -2,16 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { preChangeGender } from '../actions';
-import { Icon } from 'antd';
 import { GenderOption } from '../constant_options';
 import { Container } from './Name';
 import PageControllContainer from '../PageControllContainer';
+import { StyleRightCircleTwoTone } from './Address';
 
 //#region
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
-`;
-
 const CardContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -69,7 +65,7 @@ function Gender(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>性別</span>
       </div>
       <CardContainer>

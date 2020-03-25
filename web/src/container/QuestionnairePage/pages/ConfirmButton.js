@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Icon } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 const StyledButton = styled(Button)`
   font-size: 16px !important;
@@ -12,7 +13,7 @@ export default function ConfirmButton(props) {
     <StyledButton type="primary" onClick={props.nextPage} disabled={props.disabled}>
       <span>
         確認
-        <Icon type="check" />
+        <CheckOutlined />
       </span>
     </StyledButton>
   );

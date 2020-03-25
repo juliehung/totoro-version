@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { getRegistrations, updateSelectedDate, onSelectPatient } from './actions';
-import { DatePicker, Empty, Icon, Select, Table, Tooltip, Typography } from 'antd';
+import { DatePicker, Empty, Select, Table, Tooltip, Typography } from 'antd';
 import ManPng from '../../static/images/man.png';
 import WomanPng from '../../static/images/woman.png';
 import DefaultPng from '../../static/images/default.png';
@@ -12,6 +12,7 @@ import { B1, G1, Gray700 } from '../../utils/colors';
 import MqttHelper from '../../utils/mqtt';
 import RegistDrawer from './RegistDrawer';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -51,7 +52,10 @@ const Status = styled.div`
 const StyledTitle = styled(Title)`
   margin: 0 !important;
 `;
-const StyledIcon = styled(Icon)`
+const StyledRightOutlined = styled(RightOutlined)`
+  font-size: 36px;
+`;
+const StyledLeftOutlined = styled(LeftOutlined)`
   font-size: 36px;
 `;
 const StyledDatePicker = styled(DatePicker)`
@@ -290,9 +294,9 @@ function RegistrationPage(props) {
       <DatePickerContainer>
         <StyledTitle level={3}>就診列表</StyledTitle>
         {withMargin(10)}
-        <StyledIcon type="caret-left" onClick={moveDate(-1)} />
+        <StyledLeftOutlined onClick={moveDate(-1)} />
         <StyledDatePicker onChange={onDatePickerChange} value={props.selectedDate} />
-        <StyledIcon type="caret-right" onClick={moveDate(1)} />
+        <StyledRightOutlined onClick={moveDate(1)} />
         {withMargin(10)}
         {renderDoctorSelect()}
       </DatePickerContainer>

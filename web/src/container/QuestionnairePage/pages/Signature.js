@@ -2,7 +2,8 @@ import React, { useRef } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SignatureCanvas from 'react-signature-canvas';
-import { Button, Icon } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import { changeIsSigEmpty, createQWSign, createQWOSign } from '../actions';
 import { trimDataUrl } from '../utils/trimDataUrl';
 
@@ -72,12 +73,12 @@ function Signature(props) {
         {props.isEmpty ? (
           <Button size="large" onClick={props.createQWOSign} loading={props.sendLoading}>
             不簽名直接送出
-            <Icon type="check" />
+            <CheckOutlined />
           </Button>
         ) : (
           <Button size="large" type="primary" onClick={SendWSign} loading={props.sendLoading}>
             送出
-            <Icon type="check" />
+            <CheckOutlined />
           </Button>
         )}
       </HeadContainer>

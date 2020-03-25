@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Button, Calendar, Dropdown, Icon, Menu, Row, Col, Slider, Select, Card } from 'antd';
+import { DownOutlined, LeftOutlined, PrinterOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Calendar, Dropdown, Menu, Row, Col, Slider, Select, Card } from 'antd';
 import {
   changeCalDate,
   changePrintModalVisible,
@@ -173,7 +174,7 @@ function AppRight(props) {
                 changeCalDate(moment(calendarDate).add(-1, 'M'));
               }}
             >
-              <Icon type="left" />
+              <LeftOutlined />
             </Button>
           </Col>
           <DateTitleContainer>
@@ -189,7 +190,7 @@ function AppRight(props) {
                 changeCalDate(moment(calendarDate).add(1, 'M'));
               }}
             >
-              <Icon type="right" />
+              <RightOutlined />
             </Button>
           </Col>
         </Row>
@@ -244,11 +245,11 @@ function AppRight(props) {
           trigger={['click']}
         >
           <DropdownButton size={'large'} type="primary">
-            <Icon type="down" />
+            <DownOutlined />
           </DropdownButton>
         </Dropdown>
         <PrintButton size={'large'} onClick={props.changePrintModalVisible}>
-          <Icon type="printer" size={'large'} />
+          <PrinterOutlined size={'large'} />
         </PrintButton>
       </TopContainer>
       <StyledCalendar

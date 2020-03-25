@@ -3,16 +3,13 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { nextPage, changeBirth } from '../actions';
-import { Icon, Input } from 'antd';
+import { Input } from 'antd';
 import { Container } from './Name';
 import ConfirmButton from './ConfirmButton';
 import PageControllContainer from '../PageControllContainer';
+import { StyleRightCircleTwoTone } from './Address';
 
 //#region
-
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
-`;
 
 export const StyledInput = styled(Input)`
   margin: 20px 0 !important;
@@ -29,7 +26,7 @@ function Birth(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>生日*</span>
       </div>
       <StyledInput
