@@ -3,7 +3,6 @@ import React from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
 import convertMrnTo5Digits from './convertMrnTo5Digits';
-import Sms from '../../../models/sms';
 import { PhoneOutlined, UserOutlined, SolutionOutlined, EditOutlined } from '@ant-design/icons';
 
 //#region

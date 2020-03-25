@@ -1,5 +1,4 @@
 import request from '../utils/request';
-import apiUrl from '../utils/apiUrl';
 import moment from 'moment';
 
 const tempUrl = 'http://35.189.178.64:8080/api/';
