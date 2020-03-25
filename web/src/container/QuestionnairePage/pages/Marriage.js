@@ -1,26 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 import { preChangeMarriage } from '../actions';
-import { Icon } from 'antd';
 import { MarriageOption } from '../constant_options';
 import { Container } from './Name';
 import PageControllContainer from '../PageControllContainer';
 import { OptionsContainer, Option, CheckedIcon, OptionContainer } from './BloodType';
-
-//#region
-
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
-`;
-
-//#endregion
+import { StyleRightCircleTwoTone } from './Address';
 
 function Marriage(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>婚姻</span>
       </div>
       <OptionsContainer>

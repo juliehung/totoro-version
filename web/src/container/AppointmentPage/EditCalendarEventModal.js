@@ -1,3 +1,4 @@
+import { DeleteOutlined } from '@ant-design/icons';
 import { Modal, Button, TimePicker, DatePicker, Select, Input, message, Checkbox } from 'antd';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -256,11 +257,11 @@ function EditCalendarEventModal({
         </InfoRowContainer>
         <BottomContainer>
           {confirmDelete ? (
-            <DeleteButton icon="delete" loading={deleteLoading} onClick={onDeleteConfirm}>
+            <DeleteButton icon={<DeleteOutlined />} loading={deleteLoading} onClick={onDeleteConfirm}>
               確定刪除?
             </DeleteButton>
           ) : (
-            <Button icon="delete" loading={deleteLoading} onClick={onDeleteClick}>
+            <Button icon={<DeleteOutlined />} loading={deleteLoading} onClick={onDeleteClick}>
               刪除休假
             </Button>
           )}

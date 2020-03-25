@@ -1,27 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 import { preChangeSmoking } from '../actions';
-import { Icon } from 'antd';
 import { Container } from './Name';
 import { Option, CheckedIcon } from './BloodType';
 import { OptionContainer } from './Career';
 import PageControllContainer from '../PageControllContainer';
 import { OptionsContainer } from './DoDrugQ';
-
-//#region
-
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
-`;
-
-//#endregion
+import { StyleRightCircleTwoTone } from './Address';
 
 function SmokingQ(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>吸菸</span>
       </div>
       <OptionsContainer>

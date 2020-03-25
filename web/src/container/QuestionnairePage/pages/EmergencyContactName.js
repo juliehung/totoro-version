@@ -1,20 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 import { nextPage, changeEmergencyName } from '../actions';
-import { Icon } from 'antd';
 import { Container } from './Name';
 import { TransparentInput } from './Name';
 import ConfirmButton from './ConfirmButton';
 import PageControllContainer from '../PageControllContainer';
-
-//#region
-
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
-`;
-
-//#endregion
+import { StyleRightCircleTwoTone } from './Address';
 
 function EmergencyContactName(props) {
   const onInputChange = e => {
@@ -30,7 +21,7 @@ function EmergencyContactName(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>緊急聯絡人姓名</span>
       </div>
       <TransparentInput

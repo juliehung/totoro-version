@@ -1,26 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 import { preChangeEmergencyRelationship } from '../actions';
-import { Icon } from 'antd';
 import { RelationshipOption } from '../constant_options';
 import { Container } from './Name';
 import PageControllContainer from '../PageControllContainer';
 import { OptionsContainer, Option, CheckedIcon, OptionContainer } from './BloodType';
-
-//#region
-
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
-`;
-
-//#endregion
+import { StyleRightCircleTwoTone } from './Address';
 
 function EmergencyContactRelationship(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>緊急聯絡人關係</span>
       </div>
       <OptionsContainer>

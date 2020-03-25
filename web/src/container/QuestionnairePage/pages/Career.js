@@ -2,17 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { preChangeCareer } from '../actions';
-import { Icon } from 'antd';
 import { CareerOption } from '../constant_options';
 import { Container } from './Name';
 import { OptionsContainer, Option, CheckedIcon } from './BloodType';
 import PageControllContainer from '../PageControllContainer';
+import { StyleRightCircleTwoTone } from './Address';
 
 //#region
-
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
-`;
 
 export const OptionContainer = styled.div`
   position: relative;
@@ -40,7 +36,7 @@ function Career(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>職業</span>
       </div>
       <OptionsContainer>

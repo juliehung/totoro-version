@@ -22,7 +22,7 @@ function Home(props) {
 
   useEffect(() => {
     getUserStart();
-  }, [getUserStart]);
+  }, [getUserStart, loginSuccess]);
 
   useEffect(() => {
     if (loginSuccess) {

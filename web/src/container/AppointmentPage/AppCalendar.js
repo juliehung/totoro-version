@@ -167,8 +167,8 @@ class AppCalendar extends React.Component {
         this.props.changeSelectedDoctors([id.toString()]);
       }
     }
-
-    window.dispatchEvent(new Event('resize'));
+    // !todo this line cause antd v4 crash
+    // window.dispatchEvent(new Event('resize'));
   }
 
   componentWillUnmount() {

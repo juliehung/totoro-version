@@ -2,20 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { nextPage, changeName } from '../actions';
-import { Icon, Input } from 'antd';
+import { Input } from 'antd';
 import { withRouter } from 'react-router-dom';
 import ConfirmButton from './ConfirmButton';
 import PageControllContainer from '../PageControllContainer';
+import { StyleRightCircleTwoTone } from './Address';
 
 //#region
 
 export const Container = styled.div`
   font-size: 24px;
   color: #1890ff;
-`;
-
-const StyleIcon = styled(Icon)`
-  margin-right: 10px;
 `;
 
 export const TransparentInput = styled(Input)`
@@ -45,7 +42,7 @@ function Name(props) {
   return (
     <Container>
       <div>
-        <StyleIcon type="right-circle" theme="twoTone" />
+        <StyleRightCircleTwoTone />
         <span>姓名*</span>
       </div>
       <TransparentInput

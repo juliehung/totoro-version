@@ -1,5 +1,8 @@
 import React from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button } from 'antd';
 import { login } from './actions';
 import { connect } from 'react-redux';
 
@@ -20,17 +23,13 @@ class NormalLoginForm extends React.Component {
         <Form.Item>
           {getFieldDecorator('username', {
             rules: [{ required: true, message: 'Please input your username!' }],
-          })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="帳號" />)}
+          })(<Input prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="帳號" />)}
         </Form.Item>
         <Form.Item>
           {getFieldDecorator('password', {
             rules: [{ required: true, message: 'Please input your Password!' }],
           })(
-            <Input
-              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type="password"
-              placeholder="密碼"
-            />,
+            <Input prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="密碼" />,
           )}
         </Form.Item>
         <Form.Item>

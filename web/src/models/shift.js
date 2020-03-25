@@ -1,18 +1,14 @@
 import request from '../utils/request';
 import requestNoParse from '../utils/requestNoParse';
 import apiUrl from '../utils/apiUrl';
+import combineUrlAndQueryData from '../utils/combineUrlAndQueryData';
 
 const LOCATION = `user-shifts`;
 const requestUrl = `${apiUrl}/${LOCATION}`;
 
 export default class Shift {
   static get = async data => {
-    let requestURL = requestUrl;
-    if (data) {
-      const searchParams = new URLSearchParams(data);
-      const querystring = searchParams.toString();
-      requestURL = requestURL + '?' + querystring;
-    }
+    const requestURL = combineUrlAndQueryData(requestUrl, data);
     const result = await request(requestURL);
     return result;
   };
