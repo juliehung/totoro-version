@@ -1,4 +1,4 @@
-import { CHANGE_DATE, GET_SHIFT_START, GET_SHIFT_SUCCESS } from './constant';
+import { CHANGE_DATE, GET_SHIFT_START, GET_SHIFT_SUCCESS, CREATE_SHIFT_START, CREATE_SHIFT_SUCCESS } from './constant';
 
 export const changeDate = range => {
   return { type: CHANGE_DATE, range };
@@ -10,4 +10,12 @@ export const getShift = range => {
 
 export const getShiftSuccess = shift => {
   return { type: GET_SHIFT_SUCCESS, shift };
+};
+
+export const createShift = data => {
+  return { type: CREATE_SHIFT_START, data };
+};
+
+export const createShiftSuccess = shifts => {
+  return { type: CREATE_SHIFT_SUCCESS, shifts };
 };

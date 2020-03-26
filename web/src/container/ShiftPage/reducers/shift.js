@@ -1,14 +1,16 @@
 import produce from 'immer';
-import { CHANGE_DATE, GET_SHIFT_SUCCESS } from '../constant';
+import { CHANGE_DATE, GET_SHIFT_SUCCESS, CREATE_SHIFT_START, CREATE_SHIFT_SUCCESS } from '../constant';
 import moment from 'moment';
 
 const initialState = {
   range: { start: undefined, end: undefined },
   shift: [],
   defaultShift: [
-    { name: '早班', range: { start: '9:00', end: '12:00' } },
-    { name: '午班', range: { start: '13:00', end: '16:00' } },
+    { id: 1, name: '早班', range: { start: '9:00', end: '12:00' } },
+    { id: 2, name: '午班', range: { start: '13:00', end: '16:00' } },
+    { id: 3, name: '晚班', range: { start: '17:00', end: '19:00' } },
   ],
+  createShiftSuccess: false,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -21,6 +23,14 @@ const shift = (state = initialState, action) =>
         break;
       case GET_SHIFT_SUCCESS:
         draft.shift = action.shift;
+        draft.createShiftSuccess = true;
+        break;
+      case CREATE_SHIFT_START:
+        draft.createShiftSuccess = false;
+        break;
+      case CREATE_SHIFT_SUCCESS:
+        draft.createShiftSuccess = true;
+        draft.shift = [...state.shift, ...action.shifts];
         break;
       default:
         break;

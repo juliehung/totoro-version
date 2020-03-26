@@ -9,6 +9,7 @@ export function* getShift({ range }) {
       'toDate.greaterOrEqualThan': range.start.toISOString(),
       'fromDate.lessOrEqualThan': range.end.toISOString(),
     });
+
     yield put(getShiftSuccess(result));
   } catch (err) {
     console.log(err);
