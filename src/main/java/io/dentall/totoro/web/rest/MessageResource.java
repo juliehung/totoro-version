@@ -5,7 +5,6 @@ import io.dentall.totoro.config.ImageRepositoryConfiguration;
 import io.dentall.totoro.service.dto.SmsChargeDTO;
 import io.dentall.totoro.service.dto.SmsSendDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
-import io.dentall.totoro.web.rest.errors.InternalServerErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.zalando.problem.ThrowableProblem;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -45,8 +45,8 @@ public class MessageResource {
         ForkJoinPool.commonPool().submit(() -> {
             try {
                 result.setResult(ResponseEntity.ok(cloudFunctionService.sendSms(dto)));
-            } catch (IOException e) {
-                throw new InternalServerErrorException("Send sms get exception: " + e);
+            } catch (IOException | ThrowableProblem e) {
+                result.setErrorResult(e);
             }
         });
 
@@ -63,8 +63,8 @@ public class MessageResource {
         ForkJoinPool.commonPool().submit(() -> {
             try {
                 result.setResult(ResponseEntity.ok(cloudFunctionService.chargeSms(dto)));
-            } catch (IOException e) {
-                throw new InternalServerErrorException("Charge sms get exception: " + e);
+            } catch (IOException | ThrowableProblem e) {
+                result.setErrorResult(e);
             }
         });
 
