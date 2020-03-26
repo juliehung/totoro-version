@@ -13,6 +13,7 @@ import '@fullcalendar/timeline/main.css';
 import '@fullcalendar/resource-timeline/main.css';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import convertShiftToEvent from './utils/convertShiftToEvent';
+import handlePopoverPosition from './utils/handlePopoverPosition';
 // import { handleResourceRender } from './utils/handleResourceRender';
 import { changeDate, getShift, createShift } from './actions';
 import ShiftPopover from './ShiftPopover';
@@ -45,8 +46,6 @@ function ShiftCalendar(props) {
 
   useEffect(() => {
     if (range.start && range.end) {
-      console.log('get');
-
       getShift(range);
     }
   }, [range, getShift]);
@@ -65,7 +64,7 @@ function ShiftCalendar(props) {
 
   const dateClick = dateClickInfo => {
     const { jsEvent, resource, date } = dateClickInfo;
-    setClickInfo({ position: { x: jsEvent.clientX, y: jsEvent.clientY }, date, resourceId: resource.id });
+    setClickInfo({ position: handlePopoverPosition(jsEvent), date, resourceId: resource.id });
     setPopoverVisible(true);
   };
 

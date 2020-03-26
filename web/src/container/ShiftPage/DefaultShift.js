@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 //#region
 const Container = styled.div`
-  height: 20vh;
+  min-height: 20vh;
   border: 1px solid #070707;
   border-radius: 10px;
   padding: 10px;
