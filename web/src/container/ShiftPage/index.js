@@ -36,7 +36,7 @@ function ShiftPage() {
   return (
     <Container onClick={onClick}>
       <Helmet>
-        <title>預約</title>
+        <title>排班</title>
       </Helmet>
       <DefaultShift />
       <ShiftCalendar popoverVisible={popoverVisible} setPopoverVisible={setPopoverVisible} />

@@ -4,6 +4,8 @@ import {
   GET_SHIFT_SUCCESS,
   CREATE_SHIFT_START,
   CREATE_SHIFT_SUCCESS,
+  GET_DEFAULT_SHIFT_START,
+  GET_DEFAULT_SHIFT_SUCCESS,
   EDIT_SHIFT_START,
   EDIT_SHIFT_SUCCESS,
 } from './constant';
@@ -27,6 +29,14 @@ export const createShift = data => {
 export const createShiftSuccess = shifts => {
   return { type: CREATE_SHIFT_SUCCESS, shifts };
 };
+
+export const getDefaultShift = () => {
+  return { type: GET_DEFAULT_SHIFT_START };
+};
+
+export const getDefaultShiftSuccess = shift => {
+  return { type: GET_DEFAULT_SHIFT_SUCCESS, shift };
+}
 
 export const editShift = shift => {
   return { type: EDIT_SHIFT_START, shift };
