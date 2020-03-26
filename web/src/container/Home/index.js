@@ -7,7 +7,6 @@ import LoginPage from '../LoginPage';
 import { Switch, Route } from 'react-router-dom';
 import NavHome from '../NavHome';
 import RegistrationPage from '../RegistrationPage';
-import ShiftPage from '../ShiftPage';
 import Form from '../QuestionnairePage/Form';
 
 //#region
@@ -48,10 +47,6 @@ function Home(props) {
       <Route exact path="/registration">
         <RegistrationPage />
       </Route>
-      {process.env.NODE_ENV !== 'production' && (
-        <Route exact path="/shift">
-          <ShiftPage />
-        </Route>)}
       <Route path="/">
         <NavHome />
       </Route>
