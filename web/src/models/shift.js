@@ -26,6 +26,19 @@ export default class Shift {
     return result;
   };
 
+  static put = async body => {
+    let requestURL = `${requestUrl}`;
+    const options = {
+      headers: {
+        'content-type': 'application/json',
+      },
+      method: 'PUT',
+      body: JSON.stringify(body),
+    };
+    const result = await request(requestURL, options);
+    return result;
+  };
+
   static delete = async id => {
     let requestURL = `${requestUrl}/${id}`;
     const options = {
