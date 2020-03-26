@@ -9,7 +9,6 @@ import NavHome from '../NavHome';
 import RegistrationPage from '../RegistrationPage';
 import ShiftPage from '../ShiftPage';
 import Form from '../QuestionnairePage/Form';
-import {Menu} from "antd";
 
 //#region
 const Container = styled.div`
