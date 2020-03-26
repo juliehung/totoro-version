@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { getDefaultShift } from './actions';
 
 //#region
 const Container = styled.div`
@@ -29,6 +30,10 @@ const ShiftCard = styled.div`
 //#endregion
 
 function DefaultShift(props) {
+  const { getDefaultShift } = props;
+  useEffect(() => {
+    getDefaultShift();
+  }, [getDefaultShift]);
   return (
     <Container>
       <h2>班別</h2>
@@ -48,9 +53,9 @@ function DefaultShift(props) {
 }
 
 const mapStateToProps = ({ shiftPageReducer }) => ({
-  defaultShift: shiftPageReducer.shift.defaultShift,
+  defaultShift: shiftPageReducer.defaultShift.shift,
 });
 
-// const mapDispatchToProps = {};
+const mapDispatchToProps = { getDefaultShift };
 
-export default connect(mapStateToProps)(DefaultShift);
+export default connect(mapStateToProps, mapDispatchToProps)(DefaultShift);

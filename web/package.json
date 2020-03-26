@@ -20,6 +20,7 @@
     "antd": "^4.0.4",
     "babel-polyfill": "^6.26.0",
     "cron-parser": "^2.13.0",
+    "dot-prop": "^5.2.0",
     "immer": "^5.0.0",
     "mobile-detect": "^1.4.4",
     "mqtt": "^3.0.0",

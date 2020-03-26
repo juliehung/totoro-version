@@ -131,7 +131,7 @@ function ShiftCalendar(props) {
 const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   resource: extractDoctorsFromUser(homePageReducer.user.users).map(d => ({ id: d.id, title: d.name })),
   range: shiftPageReducer.shift.range,
-  defaultShift: shiftPageReducer.shift.defaultShift,
+  defaultShift: shiftPageReducer.defaultShift.shift,
   event: convertShiftToEvent(shiftPageReducer.shift.shift),
   createShiftSuccess: shiftPageReducer.shift.createShiftSuccess,
   editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,

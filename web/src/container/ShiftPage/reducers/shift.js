@@ -12,11 +12,6 @@ import moment from 'moment';
 const initialState = {
   range: { start: undefined, end: undefined },
   shift: [],
-  defaultShift: [
-    { id: 1, name: '早班', range: { start: '9:00', end: '12:00' } },
-    { id: 2, name: '午班', range: { start: '13:00', end: '16:00' } },
-    { id: 3, name: '晚班', range: { start: '17:00', end: '19:00' } },
-  ],
   createShiftSuccess: false,
   editShiftSuccess: false,
 };
