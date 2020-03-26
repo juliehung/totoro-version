@@ -7,6 +7,7 @@ const convertShiftToEvent = shifts => {
     title: '',
     start: moment(s.fromDate).toDate(),
     end: moment(s.toDate).toDate(),
+    event: s,
   }));
   return event;
 };

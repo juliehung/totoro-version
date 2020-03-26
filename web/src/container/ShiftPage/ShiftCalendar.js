@@ -15,8 +15,10 @@ import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import convertShiftToEvent from './utils/convertShiftToEvent';
 import handlePopoverPosition from './utils/handlePopoverPosition';
 // import { handleResourceRender } from './utils/handleResourceRender';
-import { changeDate, getShift, createShift } from './actions';
+import { changeDate, getShift, createShift, editShift } from './actions';
 import ShiftPopover from './ShiftPopover';
+import { handleEventDrop } from './utils/handleEventDrop';
+import { message } from 'antd';
 
 //#region
 const Container = styled.div`
@@ -34,7 +36,7 @@ const Container = styled.div`
 //#endregion
 
 function ShiftCalendar(props) {
-  const { range, getShift, setPopoverVisible, createShiftSuccess } = props;
+  const { range, getShift, setPopoverVisible, createShiftSuccess, editShiftSuccess } = props;
   const [clickInfo, setClickInfo] = useState({ x: undefined, y: undefined });
 
   useEffect(() => {
@@ -53,8 +55,15 @@ function ShiftCalendar(props) {
   useEffect(() => {
     if (createShiftSuccess) {
       setPopoverVisible(false);
+      message.success('新增成功');
     }
   }, [createShiftSuccess, setPopoverVisible]);
+
+  useEffect(() => {
+    if (editShiftSuccess) {
+      message.success('更新成功');
+    }
+  }, [editShiftSuccess]);
 
   const datesRender = ({ view }) => {
     const start = view.activeStart;
@@ -66,6 +75,14 @@ function ShiftCalendar(props) {
     const { jsEvent, resource, date } = dateClickInfo;
     setClickInfo({ position: handlePopoverPosition(jsEvent), date, resourceId: resource.id });
     setPopoverVisible(true);
+  };
+
+  const eventDrop = eventDropInfo => {
+    props.editShift(handleEventDrop(eventDropInfo));
+  };
+
+  const eventResize = eventResizeInfo => {
+    props.editShift(handleEventDrop(eventResizeInfo));
   };
 
   return (
@@ -95,6 +112,8 @@ function ShiftCalendar(props) {
         resourceAreaWidth={'20%'}
         datesRender={datesRender}
         dateClick={dateClick}
+        eventDrop={eventDrop}
+        eventResize={eventResize}
       />
       <ShiftPopover
         visible={props.popoverVisible}
@@ -115,8 +134,9 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   defaultShift: shiftPageReducer.shift.defaultShift,
   event: convertShiftToEvent(shiftPageReducer.shift.shift),
   createShiftSuccess: shiftPageReducer.shift.createShiftSuccess,
+  editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
 });
 
-const mapDispatchToProps = { changeDate, getShift, createShift };
+const mapDispatchToProps = { changeDate, getShift, createShift, editShift };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShiftCalendar);
