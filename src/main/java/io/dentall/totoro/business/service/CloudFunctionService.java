@@ -9,12 +9,14 @@ import com.google.cloud.storage.StorageOptions;
 import io.dentall.totoro.config.ImageRepositoryConfiguration;
 import io.dentall.totoro.service.dto.SmsChargeDTO;
 import io.dentall.totoro.service.dto.SmsSendDTO;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.zalando.problem.ThrowableProblem;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,30 +29,29 @@ public class CloudFunctionService {
 
     private Storage storage = StorageOptions.getDefaultInstance().getService();
 
-    public CloudFunctionService(ObjectMapper mapper) {
+    private RestTemplate restTemplate;
+
+    public CloudFunctionService(ObjectMapper mapper, RestTemplateBuilder restTemplateBuilder) {
         this.mapper = mapper;
+        restTemplate = restTemplateBuilder
+            .errorHandler(new RestTemplateResponseErrorHandler())
+            .build();
     }
 
-    public String sendSms(SmsSendDTO dto) throws IOException {
+    public String sendSms(SmsSendDTO dto) throws IOException, ThrowableProblem {
         String token = getIdTokenWithAudience(GcpConstants.SEND_SMS_FUNCTION);
         HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(dto), getRequestHeaderBearer(token));
-        RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.postForObject(GcpConstants.SEND_SMS_FUNCTION, request, String.class);
         SmsStatus status = SmsStatus.valueOf(result);
-
-        // check status do something...
 
         return status.toString();
     }
 
-    public String chargeSms(SmsChargeDTO dto) throws IOException {
+    public String chargeSms(SmsChargeDTO dto) throws IOException, ThrowableProblem {
         String token = getIdTokenWithAudience(GcpConstants.CHARGE_SMS_FUNCTION);
         HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(dto), getRequestHeaderBearer(token));
-        RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.postForObject(GcpConstants.CHARGE_SMS_FUNCTION, request, String.class);
         SmsStatus status = SmsStatus.valueOf(result);
-
-        // check status do something...
 
         return status.toString();
     }

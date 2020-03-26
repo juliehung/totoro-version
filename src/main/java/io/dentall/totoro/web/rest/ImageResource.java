@@ -65,8 +65,6 @@ public class ImageResource {
 
         DeferredResult<ResponseEntity<Image>> result = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
-            Image image;
-
             // Business logic
             try(InputStream inputStream = file.getInputStream()) {
                 logger.debug("patientId: {}", patientId);
@@ -79,14 +77,13 @@ public class ImageResource {
 
                 // upload origin
                 imageBusinessService.uploadFile(remotePath, remoteFileName, inputStream, file.getContentType());
-                image = imageBusinessService.createImage(patientId, remotePath, remoteFileName);
+                Image image = imageBusinessService.createImage(patientId, remotePath, remoteFileName);
+                result.setResult(ResponseEntity.ok(image));
             } catch (IOException e) {
                 logger.error("Upload image get exception:\n {}", e.getMessage());
                 imageBusinessService.disconnect();
-                throw new BadRequestAlertException("Some", "Shit", "Happened");
+                result.setErrorResult(e);
             }
-
-            result.setResult(ResponseEntity.ok(image));
         });
 
         return result;
