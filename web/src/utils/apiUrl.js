@@ -15,10 +15,10 @@ if (window) {
 }
 
 if (process.env.NODE_ENV !== 'production') {
-  host = 'dev.dentall.site';
-  apiPort = 8084;
   // host = 'dev.dentall.site';
-  // apiPort = 8082;
+  // apiPort = 8084;
+  host = 'dev.dentall.site';
+  apiPort = 8082;
 }
 
 export const mqttUrl = `${mqttProtocol}://${host}:${mqttPort}${mqttPrefix}`;
