@@ -6,6 +6,7 @@ import {
   createDefaultShiftTemplate,
   changeDeafultShiftName,
   changeDefaultShiftRange,
+  createDefaultShift,
 } from './actions';
 import { Card, Button, TimePicker, Input, Tooltip } from 'antd';
 import { Draggable } from '@fullcalendar/interaction';
@@ -56,10 +57,16 @@ const ShiftContainer = styled.div`
 //#endregion
 
 function DefaultShift(props) {
-  const { getDefaultShift, createDefaultShiftTemplate } = props;
+  const { getDefaultShift, createDefaultShiftTemplate, createSuccess } = props;
   useEffect(() => {
     getDefaultShift();
   }, [getDefaultShift]);
+
+  useEffect(() => {
+    if (createSuccess) {
+      getDefaultShift();
+    }
+  }, [createSuccess, getDefaultShift]);
 
   useEffect(() => {
     let draggableEl = document.getElementById('external-events');
@@ -92,7 +99,7 @@ function DefaultShift(props) {
                 style={{ color: 'black' }}
                 actions={[
                   <Tooltip placement="bottom" title={'儲存'}>
-                    <SaveOutlined />
+                    <SaveOutlined onClick={props.createDefaultShift} />
                   </Tooltip>,
                 ]}
               >
@@ -173,6 +180,7 @@ function DefaultShift(props) {
 
 const mapStateToProps = ({ shiftPageReducer }) => ({
   defaultShift: shiftPageReducer.defaultShift.shift,
+  createSuccess: shiftPageReducer.defaultShift.createSuccess,
 });
 
 const mapDispatchToProps = {
@@ -180,6 +188,7 @@ const mapDispatchToProps = {
   createDefaultShiftTemplate,
   changeDeafultShiftName,
   changeDefaultShiftRange,
+  createDefaultShift,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultShift);

@@ -302,7 +302,11 @@ class AppCalendar extends React.Component {
 
   eventRender = info => {
     if (info.event.extendedProps.eventType === 'appointment') {
-      handleEventRender(info, { edit: this.handleAppointmentDblClick, cancel: this.handlePopoverCancelApp, send: this.handleSendsms });
+      handleEventRender(info, {
+        edit: this.handleAppointmentDblClick,
+        cancel: this.handlePopoverCancelApp,
+        send: this.handleSendSms,
+      });
     } else if (info.event.extendedProps.eventType === 'doctorDayOff') {
       handleEventRender(info, { edit: this.handleCalEvtDblClick });
     }
@@ -318,7 +322,7 @@ class AppCalendar extends React.Component {
     this.props.insertCalEvtToEditCalEvtModal(calEvt);
   };
 
-  handleSendsms = app => {
+  handleSendSms = app => {
     this.props.sendSms(app);
   };
 
