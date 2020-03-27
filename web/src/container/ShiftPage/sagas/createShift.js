@@ -9,8 +9,10 @@ export function* createShift() {
     try {
       const action = yield take(CREATE_SHIFT_START);
       const { data } = action;
-      const selectDefaultShift = state => state.shiftPageReducer.shift.defaultShift;
+      const selectDefaultShift = state => state.shiftPageReducer.defaultShift.shift;
       const defaultShift = yield select(selectDefaultShift);
+      console.log(333, defaultShift);
+
       const shifts = handleRepeatShift(data, defaultShift);
       let createdShifts = [];
       for (let shift of shifts) {

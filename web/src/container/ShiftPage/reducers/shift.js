@@ -26,7 +26,6 @@ const shift = (state = initialState, action) =>
         break;
       case GET_SHIFT_SUCCESS:
         draft.shift = action.shift;
-        draft.createShiftSuccess = true;
         break;
       case CREATE_SHIFT_START:
         draft.createShiftSuccess = initialState.createShiftSuccess;

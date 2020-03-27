@@ -7,7 +7,7 @@ import DefaultShift from './DefaultShift';
 
 //#region
 const Container = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -17,6 +17,7 @@ const Container = styled.div`
   & > div {
     margin: 20px 0;
   }
+  overflow-y: scroll;
 `;
 //#endregion
 

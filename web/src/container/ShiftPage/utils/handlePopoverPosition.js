@@ -1,7 +1,9 @@
 const handlePopoverPosition = jsEvent => {
-  const defaultOffset = 20;
+  const defaultOffset = 10;
   var windowWidth = window.innerWidth;
+  var windowHeight = window.innerHeight;
   const popOverWidth = 370;
+  const popOverHeight = 250;
   let x = jsEvent.clientX;
   let y = jsEvent.clientY;
   if (jsEvent.clientX + popOverWidth + defaultOffset + 30 > windowWidth) {
@@ -9,7 +11,13 @@ const handlePopoverPosition = jsEvent => {
   } else {
     x = x + defaultOffset;
   }
-  y = y + 10;
+
+  if (jsEvent.clientY + popOverHeight + defaultOffset + 30 > windowHeight) {
+    y = y - popOverHeight - defaultOffset;
+  } else {
+    y = y + defaultOffset;
+  }
+
   return { x, y };
 };
 
