@@ -1,23 +1,28 @@
 import { take, select, call, put } from 'redux-saga/effects';
-import { CREATE_SHIFT_START } from '../constant';
-import { createShiftSuccess } from '../actions';
-import { handleRepeatShift } from '../utils/handleRepeatShift';
-import Shift from '../../../models/shift';
+import { CREATE_DEFAULT_SHIFT_START } from '../constant';
+import { createDefaultShiftSuccess } from '../actions';
+import Configuration, { defaultShiftConfigPrefix } from '../../../models/configuration';
+import { handleShiftForApi } from '../utils/handleShiftForApi';
+
+const selectDefaultShift = state => state.shiftPageReducer.defaultShift.shift;
 
 export function* createDefaultShift() {
   while (true) {
     try {
-      const action = yield take(CREATE_SHIFT_START);
-      // const { data } = action;
-      // const selectDefaultShift = state => state.shiftPageReducer.shift.defaultShift;
-      // const defaultShift = yield select(selectDefaultShift);
-      // const shifts = handleRepeatShift(data, defaultShift);
-      // let createdShifts = [];
-      // for (let shift of shifts) {
-      //   const createdShift = yield call(Shift.post, shift);
-      //   createdShifts.push(createdShift);
-      // }
-      // yield put(createShiftSuccess(createdShifts));
+      yield take(CREATE_DEFAULT_SHIFT_START);
+      const defaultShift = yield select(selectDefaultShift);
+      const shift = defaultShift.find(s => s.isNew);
+      const shiftForApi = handleShiftForApi(shift);
+      console.log(shiftForApi);
+      yield call(Configuration.post, {
+        configKey: `${defaultShiftConfigPrefix}.${shiftForApi.id}.name`,
+        configValue: shiftForApi.name,
+      });
+      yield call(Configuration.post, {
+        configKey: `${defaultShiftConfigPrefix}.${shiftForApi.id}.time`,
+        configValue: shiftForApi.time,
+      });
+      yield put(createDefaultShiftSuccess());
     } catch (err) {
       console.log(err);
     }

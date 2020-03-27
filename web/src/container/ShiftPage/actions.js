@@ -55,8 +55,8 @@ export const createDefaultShiftTemplate = () => {
   return { type: CREATE_DEFAULT_SHIFT_TEMPLATE };
 };
 
-export const createDefaultShift = shift => {
-  return { type: CREATE_DEFAULT_SHIFT_START, shift };
+export const createDefaultShift = () => {
+  return { type: CREATE_DEFAULT_SHIFT_START };
 };
 
 export const createDefaultShiftSuccess = () => {

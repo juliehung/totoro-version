@@ -5,7 +5,10 @@ import {
   CREATE_DEFAULT_SHIFT_TEMPLATE,
   CHANGE_DEFAULT_SHIFT_NAME,
   CHANGE_DEFAULT_SHIFT_RANGE,
+  CREATE_DEFAULT_SHIFT_START,
+  CREATE_DEFAULT_SHIFT_SUCCESS,
 } from '../constant';
+import { parseShiftConfigToShift } from '../utils/parseShiftConfigToShift';
 
 const defaultShiftTemplate = {
   origin: { id: 0, name: '早班', range: { start: '9:00', end: '12:00' } },
@@ -30,29 +33,36 @@ const defaultShift = (state = initialState, action) =>
         draft.createSuccess = initialState.createSuccess;
         break;
       case GET_DEFAULT_SHIFT_SUCCESS:
-        // draft.shift = action.shift;
+        draft.shift = parseShiftConfigToShift(action.shift);
         break;
       case CREATE_DEFAULT_SHIFT_TEMPLATE:
-        draft.shift = [defaultShiftTemplate, ...state.shift];
+        if (!state.shift.find(s => s.isNew)) {
+          draft.shift = [defaultShiftTemplate, ...state.shift];
+        }
         break;
       case CHANGE_DEFAULT_SHIFT_NAME:
-        draft.shift = state.shift.map(s => {
-          if (s.id === action.id) {
-            return { ...s, new: { name: action.name } };
-          }
-          return s;
-        });
+        draft.shift = state.shift.map(s =>
+          s.origin.id === action.id ? { ...s, new: { ...s.new, name: action.name } } : s,
+        );
         break;
       case CHANGE_DEFAULT_SHIFT_RANGE:
-        draft.shift = state.shift.map(s => {
-          if (s.id === action.id) {
-            return {
-              ...s,
-              new: { range: { start: action.range[0].format('HH:mm'), end: action.range[1].format('HH:mm') } },
-            };
-          }
-          return s;
-        });
+        draft.shift = state.shift.map(s =>
+          s.origin.id === action.id
+            ? {
+                ...s,
+                new: {
+                  ...s.new,
+                  range: { start: action.range[0].format('HH:mm'), end: action.range[1].format('HH:mm') },
+                },
+              }
+            : s,
+        );
+        break;
+      case CREATE_DEFAULT_SHIFT_START:
+        draft.createSuccess = initialState.createSuccess;
+        break;
+      case CREATE_DEFAULT_SHIFT_SUCCESS:
+        draft.createSuccess = true;
         break;
       default:
         break;
