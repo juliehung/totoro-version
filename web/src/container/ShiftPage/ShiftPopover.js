@@ -9,13 +9,12 @@ const Conatainer = styled.div`
   font-size: 14px;
   max-width: 370px;
   background: #f0f0f0;
-  position: absolute;
+  position: fixed;
   border-radius: 10px;
   padding: 10px;
   z-index: 400;
   top: ${props => (props.position ? props.position.y : 0)}px;
   left: ${props => (props.position ? props.position.x : 0)}px;
-  display: ${props => (props.visible ? 'visible' : 'none')};
   display: ${props => (props.visible ? 'flex' : 'none')};
   flex-direction: column;
   transition: all ease-in-out 200ms;
@@ -80,8 +79,8 @@ function ShiftPopover(props) {
         </Radio>
         <Checkbox.Group
           options={props.defaultShift.map(s => ({
-            label: `${s.name} {${s.range.start} ~ ${s.range.end})`,
-            value: s.id,
+            label: `${s.origin.name} {${s.origin.range.start} ~ ${s.origin.range.end})`,
+            value: s.origin.id,
           }))}
           value={selectedShift}
           disabled={radioValue !== 1}
@@ -97,6 +96,7 @@ function ShiftPopover(props) {
             disabled={radioValue !== 2}
             value={customRange}
             onChange={setCustomRange}
+            allowClear={false}
           />
         </Radio>
       </Radio.Group>
