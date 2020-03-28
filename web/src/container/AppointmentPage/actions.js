@@ -92,6 +92,8 @@ import {
   CREATE_TODO_APP_SUCCESS,
   CHANGE_TODO_APP_DISPOSAL_ID,
   SEND_SMS,
+  GET_SHIFT_START,
+  GET_SHIFT_SUCCESS,
 } from './constant';
 
 export function changeCalDate(date) {
@@ -465,4 +467,12 @@ export function changeTodoAppDisposalId(id) {
 
 export function sendSms(appointment) {
   return { type: SEND_SMS, appointment };
+}
+
+export function getShift(start, end) {
+  return { type: GET_SHIFT_START, start, end };
+}
+
+export function getShiftSuccess(shift) {
+  return { type: GET_SHIFT_SUCCESS, shift };
 }

@@ -33,6 +33,7 @@ import {
   popoverCancelApp,
   changeSelectedDoctors,
   sendSms,
+  getShift,
 } from './actions';
 import zhTW from '@fullcalendar/core/locales/zh-tw';
 import styled from 'styled-components';
@@ -213,6 +214,7 @@ class AppCalendar extends React.Component {
     const end = moment(info.view.activeEnd);
     this.props.getAppointments(start, end);
     this.props.getCalendarEvent(start, end);
+    this.props.getShift(start, end);
 
     // listen fullcalendar scroll event
     if (this.scrollListener) {
@@ -492,6 +494,7 @@ const mapDispatchToProps = {
   popoverCancelApp,
   changeSelectedDoctors,
   sendSms,
+  getShift,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppCalendar);
