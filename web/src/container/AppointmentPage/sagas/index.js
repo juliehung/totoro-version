@@ -14,6 +14,7 @@ import { watchGetSettings } from './getSettings';
 import { popoverCancelApp } from './popoverCancelApp';
 import { createTodoApp } from './createTodoApp';
 import { sendSmsAsync } from './sendSms';
+import { watchGetShift } from './watchGetShift';
 
 export default function* appointmentPage() {
   yield fork(watchGetAppointments);
@@ -35,4 +36,5 @@ export default function* appointmentPage() {
   yield fork(popoverCancelApp);
   yield fork(createTodoApp);
   yield fork(sendSmsAsync);
+  yield fork(watchGetShift);
 }

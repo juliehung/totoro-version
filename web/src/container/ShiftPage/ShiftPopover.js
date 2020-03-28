@@ -44,6 +44,8 @@ const radioStyle = {
 //#endregion
 
 function ShiftPopover(props) {
+  const { visible } = props;
+
   const [radioValue, setRadioValue] = useState(1);
   const [selectedShift, setSelectedShift] = useState([]);
   const [customRange, setCustomRange] = useState([undefined, undefined]);
@@ -65,8 +67,18 @@ function ShiftPopover(props) {
       setButtonDisabled(customRange[0] === undefined && customRange[1] === undefined);
     }
   }, [radioValue, selectedShift, customRange, buttonDisabled]);
+
+  useEffect(() => {
+    if (!visible) {
+      setRadioValue(1);
+      setSelectedShift([]);
+      setCustomRange([undefined, undefined]);
+      setWeek(0);
+    }
+  }, [visible, setRadioValue, setSelectedShift, setCustomRange, setWeek]);
+
   return (
-    <Conatainer className="shift-popover" visible={props.visible} position={props.position} onClick={onPopoverClick}>
+    <Conatainer className="shift-popover" visible={visible} position={props.position} onClick={onPopoverClick}>
       <span>班別選擇</span>
       <Radio.Group
         defaultValue={radioValue}

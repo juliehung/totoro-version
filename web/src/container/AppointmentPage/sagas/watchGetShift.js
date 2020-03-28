@@ -3,11 +3,11 @@ import { GET_SHIFT_START } from '../constant';
 import Shift from '../../../models/shift';
 import { getShiftSuccess } from '../actions';
 
-export function* getShift({ range }) {
+function* getShift({ start, end }) {
   try {
     const result = yield call(Shift.get, {
-      'toDate.greaterOrEqualThan': range.start.toISOString(),
-      'fromDate.lessOrEqualThan': range.end.toISOString(),
+      'toDate.greaterOrEqualThan': start.toISOString(),
+      'fromDate.lessOrEqualThan': end.toISOString(),
     });
 
     yield put(getShiftSuccess(result));

@@ -2,7 +2,7 @@ import moment from 'moment';
 
 export const generateApiObj = (userId, date, timeRange, repeatWeek) => {
   let shift = [];
-  if (repeatWeek === 0) {
+  if (!repeatWeek) {
     shift = [...shift, { userId, ...combineDateAndRange(date, timeRange) }];
   } else if (repeatWeek > 0) {
     let currentDate = moment(date);
@@ -19,15 +19,12 @@ function combineDateAndRange(date, range) {
   const dateString = moment(date).format('YYYY-MM-DD');
   const startTime = moment(range.start).format('HH:mm');
   const endEnd = moment(range.end).format('HH:mm');
-
   const fromDate = moment(dateString + ' ' + startTime).toISOString();
   const toDate = moment(dateString + ' ' + endEnd).toISOString();
   return { fromDate, toDate };
 }
 
 export const handleRepeatShift = (data, defaultShift) => {
-  console.log(666, defaultShift, data);
-
   let shift = [];
   if (data.radioValue === 1) {
     data.selectedShift

@@ -6,6 +6,8 @@ import {
   CREATE_SHIFT_SUCCESS,
   EDIT_SHIFT_START,
   EDIT_SHIFT_SUCCESS,
+  SHIFT_DROP_START,
+  SHIFT_DROP_SUCCESS,
 } from '../constant';
 import moment from 'moment';
 
@@ -28,9 +30,11 @@ const shift = (state = initialState, action) =>
         draft.shift = action.shift;
         break;
       case CREATE_SHIFT_START:
+      case SHIFT_DROP_START:
         draft.createShiftSuccess = initialState.createShiftSuccess;
         break;
       case CREATE_SHIFT_SUCCESS:
+      case SHIFT_DROP_SUCCESS:
         draft.createShiftSuccess = true;
         draft.shift = [...state.shift, ...action.shifts];
         break;

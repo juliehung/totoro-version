@@ -13,6 +13,8 @@ import {
   CREATE_DEFAULT_SHIFT_SUCCESS,
   CHANGE_DEFAULT_SHIFT_NAME,
   CHANGE_DEFAULT_SHIFT_RANGE,
+  SHIFT_DROP_START,
+  SHIFT_DROP_SUCCESS,
 } from './constant';
 
 export const changeDate = range => {
@@ -69,4 +71,12 @@ export const changeDeafultShiftName = (id, name) => {
 
 export const changeDefaultShiftRange = (id, range) => {
   return { type: CHANGE_DEFAULT_SHIFT_RANGE, id, range };
+};
+
+export const shiftDrop = shift => {
+  return { type: SHIFT_DROP_START, shift };
+};
+
+export const shiftDropSucces = shifts => {
+  return { type: SHIFT_DROP_SUCCESS, shifts };
 };

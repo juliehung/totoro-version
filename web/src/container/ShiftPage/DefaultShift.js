@@ -10,9 +10,8 @@ import {
 } from './actions';
 import { Card, Button, TimePicker, Input, Tooltip } from 'antd';
 import { Draggable } from '@fullcalendar/interaction';
-import { EditOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import { DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import { convertRangeToRangePickerValue } from './utils/convertRangeToRangePickerValue';
-
 const { RangePicker } = TimePicker;
 
 //#region
@@ -71,14 +70,10 @@ function DefaultShift(props) {
   useEffect(() => {
     let draggableEl = document.getElementById('external-events');
     new Draggable(draggableEl, {
-      itemSelector: '.fc-event',
+      itemSelector: '.external-event',
       eventData: function(eventEl) {
-        let title = eventEl.getAttribute('title');
-        let id = eventEl.getAttribute('data');
-        return {
-          title: title,
-          id: id,
-        };
+        const title = eventEl.dataset.title;
+        return { title, create: false };
       },
     });
   }, []);
@@ -121,46 +116,21 @@ function DefaultShift(props) {
                 </ShiftContainer>
               </ShiftCard>
             );
-          } else if (s.isEditing) {
-            return (
-              <ShiftCard
-                bodyStyle={{
-                  padding: '15px',
-                  width: '300px',
-                  height: '120px',
-                }}
-                key={s.origin.id}
-                style={{ color: 'black' }}
-                actions={[
-                  <Tooltip placement="bottom" title={'刪除'}>
-                    <DeleteOutlined />
-                  </Tooltip>,
-                  <Tooltip placement="bottom" title={'儲存'}>
-                    <SaveOutlined />
-                  </Tooltip>,
-                ]}
-              >
-                <ShiftContainer>
-                  <Input defaultValue={s.origin.name}></Input>
-                  <RangePicker format={'HH:mm'} allowClear={false} />
-                </ShiftContainer>
-              </ShiftCard>
-            );
           } else {
             return (
               <ShiftCard
                 bodyStyle={{ padding: '15px', width: '300px', height: '120px' }}
                 key={s.origin.id}
-                className={'fc-event'}
+                className={'external-event'}
                 style={{ color: 'black' }}
                 actions={[
-                  <Tooltip placement="bottom" title={'編輯'}>
-                    <EditOutlined />
-                  </Tooltip>,
                   <Tooltip placement="bottom" title={'刪除'}>
                     <DeleteOutlined />
                   </Tooltip>,
                 ]}
+                data-start={s.origin.range.start}
+                data-end={s.origin.range.end}
+                data-title={s.origin.name}
               >
                 <ShiftContainer>
                   <span>{s.origin.name}</span>
