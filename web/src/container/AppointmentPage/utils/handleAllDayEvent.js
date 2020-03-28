@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export function handleAllDatEvent(bfEvent, viewType) {
+export function handleAllDayEvent(bfEvent, viewType) {
   if (viewType === 'dayGridMonth') {
     return bfEvent
       .map(e => moment(e.start).format('YYYY-MM-DD'))
