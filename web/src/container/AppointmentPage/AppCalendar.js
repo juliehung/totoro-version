@@ -45,6 +45,8 @@ import MqttHelper from '../../utils/mqtt';
 import { calFirstDay } from './reducers/calendar';
 import MobileDetect from 'mobile-detect';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
+import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
+import { handleAllDatEvent } from './utils/handleAllDatEvent';
 
 //#region
 const Container = styled.div`
@@ -112,7 +114,7 @@ const phone = md.phone();
 const defaultView = phone ? 'resourceTimeGridDay' : 'timeGridWeek';
 
 class AppCalendar extends React.Component {
-  state = { fd: 1 };
+  state = { viewType: defaultView };
   calendarComponentRef = React.createRef();
 
   componentDidMount() {
@@ -199,6 +201,7 @@ class AppCalendar extends React.Component {
   scrollListener = undefined;
   handleDatesRender = info => {
     // reset first day when leave timeGridWeek
+    this.setState({ viewType: info.view.type });
     if (info.view.type !== 'timeGridWeek') {
       this.props.changeCalFirstDay(calFirstDay);
     }
@@ -359,7 +362,8 @@ class AppCalendar extends React.Component {
         return this.props.selectedDoctors.includes(a.appointment.doctor.user.id.toString());
       }),
       ...this.props.calendarEvents.filter(() => this.props.showCalEvt),
-      ...this.generalSetting,
+      // ...this.generalSetting,
+      ...handleAllDatEvent(this.props.backgroundEvent, this.state.viewType),
     ];
 
     return (
@@ -471,6 +475,7 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   calendarRange: appointmentPageReducer.calendar.range,
   cancelApp: appointmentPageReducer.calendar.cancelApp,
   account: homePageReducer.account.data,
+  backgroundEvent: convertShitToBackgroundEvent(appointmentPageReducer.shift.shift),
 });
 
 const mapDispatchToProps = {
