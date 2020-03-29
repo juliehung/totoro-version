@@ -12,16 +12,12 @@ import { parseShiftConfigToShift } from '../utils/parseShiftConfigToShift';
 
 const defaultShiftTemplate = {
   origin: { id: 0, name: '早班', range: { start: '9:00', end: '12:00' } },
-  isNew: true,
   new: {},
+  isNew: true,
 };
 
 const initialState = {
-  shift: [
-    { origin: { id: 1, name: '早班', range: { start: '9:00', end: '12:00' } }, new: {}, isEditing: false },
-    { origin: { id: 2, name: '午班', range: { start: '13:00', end: '16:00' } }, new: {}, isEditing: true },
-    { origin: { id: 3, name: '晚班', range: { start: '17:00', end: '19:00' } }, new: {}, isEditing: false },
-  ],
+  shift: [],
   createSuccess: false,
 };
 
