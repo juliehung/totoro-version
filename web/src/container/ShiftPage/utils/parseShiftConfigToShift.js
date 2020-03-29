@@ -11,7 +11,7 @@ export function parseShiftConfigToShift(shiftConfig) {
     const name = parsedShiftConfig[k].name;
     const time = parsedShiftConfig[k].time.split(' ');
     const range = { start: time[0], end: time[1] };
-    return { origin: { id: k, name, range, new: {}, isEditing: false } };
+    return { origin: { id: k, name, range } };
   });
   return defaultShift;
 }

@@ -16,7 +16,7 @@ const { RangePicker } = TimePicker;
 
 //#region
 const Container = styled.div`
-  min-height: 20vh;
+  height: 25vh;
   border: 1px solid #070707;
   border-radius: 10px;
   padding: 10px;
@@ -44,6 +44,7 @@ const TitleContainer = styled.div`
 const ShiftsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  overflow-y: scroll;
 `;
 
 const ShiftContainer = styled.div`
