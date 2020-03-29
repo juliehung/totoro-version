@@ -4,7 +4,7 @@ export function handleAllDayEvent(bfEvent, viewType) {
   if (viewType === 'dayGridMonth') {
     return bfEvent
       .map(e => moment(e.start).format('YYYY-MM-DD'))
-      .filter((item, pos, self) => self.indexOf(item) == pos)
+      .filter((item, pos, self) => self.indexOf(item) === pos)
       .map(e => ({
         start: moment(e).format('YYYY-MM-DD HH:mm'),
         allDay: true,

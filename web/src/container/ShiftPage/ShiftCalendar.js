@@ -14,6 +14,7 @@ import '@fullcalendar/resource-timeline/main.css';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import convertShiftToEvent from './utils/convertShiftToEvent';
 import handlePopoverPosition from './utils/handlePopoverPosition';
+import handleShiftEvtTitle from './utils/handleShiftEvtTitle';
 // import { handleResourceRender } from './utils/handleResourceRender';
 import { changeDate, getShift, createShift, editShift, shiftDrop } from './actions';
 import ShiftPopover from './ShiftPopover';
@@ -96,14 +97,15 @@ function ShiftCalendar(props) {
     shiftDrop({ resourceId, date, timeRange });
   };
 
+  const events = handleShiftEvtTitle(props.event, props.defaultShift);
+
   return (
     <Container>
       <FullCalendar
         height="auto"
         resources={props.resource}
-        // resourceRender={handleResourceRender}
         slotWidth={60}
-        events={props.event}
+        events={events}
         selectable
         plugins={[interactionPlugin, resourceTimelinePlugin]}
         defaultView={'resourceTimelineMonth'}
