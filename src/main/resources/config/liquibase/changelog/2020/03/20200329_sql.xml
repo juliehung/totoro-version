@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20200329-Sql" author="WeiChen">
+        <sql dbms="postgresql" splitStatements="true">
+            UPDATE nhi_procedure SET description='Dx&amp;Tx plan: Panoramic Finding (00315C)\n- Missing:\n- Impaction:\n- 3rdMolar:\n- Crown/Bridge/SSC:\n- Pulpitis:\n- RR:\n- Caries:\n- Periodontal status: [ ] Normal, [ ] Gingivitis, [ ] Periodontitis\n- Other finding:' where code = '00315C';
+            UPDATE nhi_procedure SET description='Dx&amp;Tx plan: Panoramic Finding (00316C)\n- Missing:\n- Impaction:\n- 3rdMolar:\n- Crown/Bridge/SSC:\n- Pulpitis:\n- RR:\n- Caries:\n- Periodontal status: [ ] Normal, [ ] Gingivitis, [ ] Periodontitis\n- Other finding:' where code = '00316C';
+            UPDATE nhi_procedure SET description='Dx&amp;Tx plan: Panoramic Finding (00317C)\n- Missing:\n- Impaction:\n- 3rdMolar:\n- Crown/Bridge/SSC:\n- Pulpitis:\n- RR:\n- Caries:\n- Periodontal status: [ ] Normal, [ ] Gingivitis, [ ] Periodontitis\n- Other finding:' where code = '00317C';
+        </sql>
+    </changeSet>
+</databaseChangeLog>
