@@ -788,7 +788,7 @@ public class NhiService {
             .flatMap(nhiExtendDisposal -> StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures()))
             // exclude self
             .filter(nhiExtTxP -> nhiExtTxP != nhiExtendTreatmentProcedure)
-            .filter(nhiExtTxP -> nhiExtTxP.getA73().equals(nhiExtendTreatmentProcedure.getA73()))
+            .filter(nhiExtTxP -> nhiExtTxP.getA73() != null && nhiExtTxP.getA73().equals(nhiExtendTreatmentProcedure.getA73()))
             .map(NhiExtTxPDate::new)
             // order by date desc
             .sorted(Comparator.comparing(NhiExtTxPDate::getDate).reversed())
