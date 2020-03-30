@@ -46,7 +46,7 @@ import { calFirstDay } from './reducers/calendar';
 import MobileDetect from 'mobile-detect';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
-import { handleAllDayEvent } from './utils/handleAllDayEvent';
+import { reverseEvents } from './utils/reverseEvents';
 import { handleResources } from './utils/handleResources';
 
 //#region
@@ -359,7 +359,7 @@ class AppCalendar extends React.Component {
       ...this.props.appointments,
       ...this.props.calendarEvents.filter(() => this.props.showCalEvt),
       // ...this.generalSetting,
-      ...handleAllDayEvent(this.props.backgroundEvent, this.state.viewType),
+      ...reverseEvents(this.props.backgroundEvent, this.state.viewType, this.props.calendarRange),
     ];
 
     const resource = handleResources(this.props.doctors, this.props.backgroundEvent);
