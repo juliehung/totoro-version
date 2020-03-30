@@ -46,8 +46,9 @@ import { calFirstDay } from './reducers/calendar';
 import MobileDetect from 'mobile-detect';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
-import { reverseEvents } from './utils/reverseEvents';
-import { handleResources } from './utils/handleResources';
+// !todo uncomment next version
+// import { reverseEvents } from './utils/reverseEvents';
+// import { handleResources } from './utils/handleResources';
 
 //#region
 const Container = styled.div`
@@ -355,21 +356,47 @@ class AppCalendar extends React.Component {
   };
 
   render() {
+    // !TODO uncomment next version
+    // const event = [
+    //   ...this.props.appointments,
+    //   ...this.props.calendarEvents.filter(() => this.props.showCalEvt),
+    //   // ...this.generalSetting,
+    //   ...reverseEvents(this.props.backgroundEvent, this.state.viewType, this.props.calendarRange),
+    // ];
+
+    // !TODO comment next version
     const event = [
-      ...this.props.appointments,
+      ...this.props.appointments.filter(a => {
+        if (this.props.selectedAllDoctors) {
+          return a;
+        }
+        return this.props.selectedDoctors.includes(a.appointment.doctor.user.id.toString());
+      }),
       ...this.props.calendarEvents.filter(() => this.props.showCalEvt),
-      // ...this.generalSetting,
-      ...reverseEvents(this.props.backgroundEvent, this.state.viewType, this.props.calendarRange),
+      ...this.generalSetting,
     ];
 
-    const resource = handleResources(this.props.doctors, this.props.backgroundEvent);
+    // !TODO uncomment next version
+    // const resource = handleResources(this.props.doctors, this.props.backgroundEvent);
 
     return (
       <Container>
         <StyledFullCalendar
           ref={this.calendarComponentRef}
           height="parent"
-          resources={resource}
+          // !TODO uncomment next version
+          // resources={resource}
+          // !TODO comment next version
+          resources={this.props.doctors
+            .filter(d => d.activated)
+            .filter(d => {
+              if (this.props.selectedAllDoctors) {
+                return d;
+              } else {
+                return this.props.selectedDoctors.includes(d.id.toString());
+              }
+            })
+            .map(d => ({ id: d.id, title: d.name }))}
           events={event}
           plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin, resourceTimeGridPlugin, listPlugin, momentPlugin]}
           header={{
