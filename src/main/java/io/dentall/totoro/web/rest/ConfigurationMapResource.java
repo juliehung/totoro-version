@@ -6,6 +6,7 @@ import io.dentall.totoro.service.ConfigurationMapService;
 import io.dentall.totoro.service.dto.ConfigurationMapCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
+import io.dentall.totoro.web.rest.vm.ConfigurationVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,33 @@ public class ConfigurationMapResource {
     public ConfigurationMapResource(ConfigurationMapService configurationMapService, ConfigurationMapQueryService configurationMapQueryService) {
         this.configurationMapService = configurationMapService;
         this.configurationMapQueryService = configurationMapQueryService;
+    }
+
+    @PostMapping("/configuration-maps/multiple")
+    public ResponseEntity<ConfigurationVM> createMultipleConfigurationMap(@RequestBody ConfigurationVM configurationVM) throws URISyntaxException {
+        log.debug("REST request to save multiple ConfigurationMap : {}", configurationVM);
+        ConfigurationVM result = configurationMapService.saveAll(configurationVM);
+        return ResponseEntity.created(new URI("/api/configuration-maps/multiple"))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "all"))
+            .body(result);
+    }
+
+    @PutMapping("/configuration-maps/multiple")
+    public ResponseEntity<ConfigurationVM> updateConfigurationMap(@RequestBody ConfigurationVM configurationVM) {
+        log.debug("REST request to update multiple ConfigurationMap : {}", configurationVM);
+
+        ConfigurationVM result = configurationMapService.updateAll(configurationVM);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, "all"))
+            .body(result);
+    }
+
+    @DeleteMapping("/configuration-maps/multiple")
+    public ResponseEntity<Void> deleteConfigurationMap(@RequestBody ConfigurationVM configurationVM) {
+        log.debug("REST request to delete multiple ConfigurationMap : {}", configurationVM);
+
+        configurationMapService.deleteAll(configurationVM);
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, "all")).build();
     }
 
     /**
