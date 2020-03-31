@@ -2,17 +2,15 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Disposal;
-import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.service.DisposalQueryService;
 import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.NhiService;
+import io.dentall.totoro.service.dto.DisposalCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.dentall.totoro.service.dto.DisposalCriteria;
-import io.dentall.totoro.service.DisposalQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.ehcache.xml.model.CopierType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -25,10 +23,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -171,13 +167,16 @@ public class DisposalResource {
             optDisposal.get().getTreatmentProcedures() != null &&
             optDisposal.get().getTreatmentProcedures().size() > 0
         ) {
-            Disposal disposal = optDisposal.get();
-            nhiService.checkNhiExtendTreatmentProcedures(disposal.getTreatmentProcedures().stream()
-                .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
-                .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
-                .collect(Collectors.toSet())
-            );
-
+            try {
+                Disposal disposal = optDisposal.get();
+                nhiService.checkNhiExtendTreatmentProcedures(disposal.getTreatmentProcedures().stream()
+                    .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
+                    .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
+                    .collect(Collectors.toSet())
+                );
+            } catch(Exception e) {
+                log.error(e.getMessage());
+            }
         }
         return ResponseUtil.wrapOrNotFound(optDisposal);
     }
