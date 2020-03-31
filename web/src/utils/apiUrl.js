@@ -1,17 +1,28 @@
 let host = 'localhost';
 
-const apiProtocol = 'http';
+let apiProtocol = 'http';
 let apiPort = 8082;
 const apiPrefix = '/api';
 
-const mqttProtocol = 'ws';
-const mqttPort = 8081;
+let mqttProtocol = 'ws';
+let mqttPort = 8081;
 const mqttPrefix = '/mqtt';
+
+let clinic = '';
 
 if (window) {
   const currentLocation = window.location;
   host = currentLocation.hostname;
   apiPort = currentLocation.port;
+
+  clinic = currentLocation.pathname.split('/')[1];
+  // SaaS
+  if (clinic !== '') {
+    clinic = '/' + clinic;
+    apiProtocol = 'https';
+    mqttProtocol = 'wss';
+    mqttPort = apiPort; // 443
+  }
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -21,7 +32,7 @@ if (process.env.NODE_ENV !== 'production') {
   apiPort = 8082;
 }
 
-export const mqttUrl = `${mqttProtocol}://${host}:${mqttPort}${mqttPrefix}`;
-const apiUrl = `${apiProtocol}://${host}:${apiPort}${apiPrefix}`;
+export const mqttUrl = `${mqttProtocol}://${host}:${mqttPort}${clinic}${mqttPrefix}`;
+const apiUrl = `${apiProtocol}://${host}:${apiPort}${clinic}${apiPrefix}`;
 
 export default apiUrl;
