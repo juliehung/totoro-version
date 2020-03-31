@@ -26,8 +26,6 @@ import moment from 'moment';
 const Container = styled.div`
   /* height: 100%; */
   width: 100%;
-  border: 1px solid #070707;
-  border-radius: 10px;
   padding: 20px;
   flex-grow: 1;
   .fc-license-message {
@@ -130,6 +128,7 @@ function ShiftCalendar(props) {
         drop={drop}
       />
       <ShiftPopover
+        setVisible={setPopoverVisible}
         visible={props.popoverVisible}
         position={clickInfo.position}
         date={clickInfo.date}

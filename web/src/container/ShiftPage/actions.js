@@ -65,7 +65,7 @@ export const createDefaultShiftSuccess = () => {
   return { type: CREATE_DEFAULT_SHIFT_SUCCESS };
 };
 
-export const changeDeafultShiftName = (id, name) => {
+export const changeDefaultShiftName = (id, name) => {
   return { type: CHANGE_DEFAULT_SHIFT_NAME, id, name };
 };
 
@@ -77,6 +77,6 @@ export const shiftDrop = shift => {
   return { type: SHIFT_DROP_START, shift };
 };
 
-export const shiftDropSucces = shifts => {
+export const shiftDropSuccess = shifts => {
   return { type: SHIFT_DROP_SUCCESS, shifts };
 };

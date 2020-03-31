@@ -7,17 +7,12 @@ import DefaultShift from './DefaultShift';
 
 //#region
 const Container = styled.div`
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   display: flex;
-  flex-direction: column;
+  padding: 1%;
   margin: 0 auto;
-  padding: 5%;
   position: relative;
-  & > div {
-    margin: 20px 0;
-  }
-  overflow-y: scroll;
 `;
 //#endregion
 
@@ -39,8 +34,8 @@ function ShiftPage() {
       <Helmet>
         <title>排班</title>
       </Helmet>
-      <DefaultShift />
       <ShiftCalendar popoverVisible={popoverVisible} setPopoverVisible={setPopoverVisible} />
+      <DefaultShift />
     </Container>
   );
 }
