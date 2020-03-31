@@ -29,19 +29,30 @@ export function reverseEvents(shiftEvents, viewType, range) {
           backgroundColor: '#ccc',
         }));
     } else if (viewType === 'timeGridWeek') {
-      let allTimeEvent = [
-        {
-          start: moment(range.start).format('YYYY-MM-DD HH:mm'),
-          end: moment(range.end).format('YYYY-MM-DD HH:mm'),
-          rendering: 'background',
-          backgroundColor: '#ccc',
-        },
-      ];
+      const allTimeEvent = [generateRangeEvent(range)];
       const mergedEvent = mergeEvents(shiftEvents);
       const events = subtractEvent(allTimeEvent, mergedEvent);
       return events;
+    } else if (viewType === 'resourceTimeGridDay') {
+      let classifiedEvents = {};
+      shiftEvents.forEach(s => {
+        if (classifiedEvents[s.resourceId]) {
+          classifiedEvents[s.resourceId] = [...classifiedEvents[s.resourceId], s];
+        } else {
+          classifiedEvents[s.resourceId] = [s];
+        }
+      });
+      let combinedEvents = [];
+      Object.keys(classifiedEvents)
+        .map(e => classifiedEvents[e])
+        .forEach(r => {
+          const allTimeEvent = [generateRangeEvent(range, r[0].resourceId)];
+          const mergedEvent = mergeEvents(r);
+          const events = subtractEvent(allTimeEvent, mergedEvent);
+          combinedEvents = [...combinedEvents, ...events];
+        });
+      return combinedEvents;
     }
-
     return shiftEvents;
   }
   return [];
@@ -67,6 +78,16 @@ function mergeEvents(shiftEvents) {
     }
   });
   return mergedEvent;
+}
+
+function generateRangeEvent(range, resourceId) {
+  return {
+    start: moment(range.start).format('YYYY-MM-DD HH:mm'),
+    end: moment(range.end).format('YYYY-MM-DD HH:mm'),
+    rendering: 'background',
+    backgroundColor: '#ccc',
+    resourceId,
+  };
 }
 
 function isOverlap(a, b) {
