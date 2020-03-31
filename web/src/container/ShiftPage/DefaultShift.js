@@ -4,41 +4,25 @@ import { connect } from 'react-redux';
 import {
   getDefaultShift,
   createDefaultShiftTemplate,
-  changeDeafultShiftName,
+  changeDefaultShiftName,
   changeDefaultShiftRange,
   createDefaultShift,
 } from './actions';
-import { Card, Button, TimePicker, Input, Tooltip } from 'antd';
+import { Card, Button, TimePicker, Input } from 'antd';
 import { Draggable } from '@fullcalendar/interaction';
-import { DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import { DeleteTwoTone, SaveOutlined } from '@ant-design/icons';
 import { convertRangeToRangePickerValue } from './utils/convertRangeToRangePickerValue';
+import { orderDefaultShiftByStartTime } from './utils/orderDefaultShiftByStartTime';
 const { RangePicker } = TimePicker;
 
 //#region
 const Container = styled.div`
-  height: 25vh;
-  border: 1px solid #070707;
-  border-radius: 10px;
+  width: 300px;
+  height: 100%;
   padding: 10px;
   display: flex;
   flex-direction: column;
-  & > div {
-    margin: 0px 5px 15px;
-  }
-`;
-
-const ShiftCard = styled(Card)`
-  margin: 5px 5px !important;
-`;
-
-const TitleContainer = styled.div`
-  display: flex;
-  font-size: 20px;
-  font-weight: bold;
-  align-items: baseline;
-  & > :not(:first-child) {
-    margin-left: 10px;
-  }
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.05);
 `;
 
 const ShiftsContainer = styled.div`
@@ -47,14 +31,45 @@ const ShiftsContainer = styled.div`
   overflow-y: scroll;
 `;
 
-const ShiftContainer = styled.div`
+const CardContent = styled.span`
   display: flex;
-  flex-direction: column;
-  & > * {
-    margin: 5px 0 !important;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+  & > div:first-child {
+    display: flex;
+    flex-direction: column;
+    & > :first-child {
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+  & > div:not(:first-child) {
+    display: flex;
+    align-items: center;
   }
 `;
+
+const ButtonContainer = styled.div`
+  opacity: 0;
+  transition: all ease-in-out 400ms;
+  margin-left: 15px;
+  ${CardContent}:hover & {
+    opacity: 1;
+  }
+`;
+
 //#endregion
+
+const gridStyle = {
+  cursor: 'pointer',
+  width: '100%',
+  margin: '16px 0 0',
+  borderRadius: '8px',
+  padding: '9px 15px',
+};
 
 function DefaultShift(props) {
   const { getDefaultShift, createDefaultShiftTemplate, createSuccess } = props;
@@ -81,83 +96,79 @@ function DefaultShift(props) {
 
   return (
     <Container>
-      <TitleContainer>
-        <span>班別</span>
-        <Button onClick={createDefaultShiftTemplate}>新增</Button>
-      </TitleContainer>
+      <Button type="primary" size="large" onClick={createDefaultShiftTemplate}>
+        新增班別
+      </Button>
       <ShiftsContainer id={'external-events'}>
         {props.defaultShift.map(s => {
           if (s.isNew) {
             return (
-              <ShiftCard
-                bodyStyle={{ padding: '15px', width: '300px', height: '120px' }}
-                key={s.origin.id}
-                style={{ color: 'black' }}
-                actions={[
-                  <Tooltip placement="bottom" title={'儲存'}>
-                    <SaveOutlined onClick={props.createDefaultShift} />
-                  </Tooltip>,
-                ]}
-              >
-                <ShiftContainer>
-                  <Input
-                    defaultValue={s.origin.name}
-                    onChange={e => {
-                      props.changeDeafultShiftName(s.origin.id, e.target.value);
-                    }}
-                  ></Input>
-                  <RangePicker
-                    format={'HH:mm'}
-                    allowClear={false}
-                    defaultValue={convertRangeToRangePickerValue(s.origin.range)}
-                    onChange={range => {
-                      props.changeDefaultShiftRange(s.origin.id, range);
-                    }}
-                  />
-                </ShiftContainer>
-              </ShiftCard>
+              <Card.Grid style={gridStyle} key={s.origin.id}>
+                <CardContent>
+                  <div>
+                    <Input
+                      onFocus={() => {
+                        console.log(123);
+                      }}
+                      defaultValue={s.origin.name}
+                      onChange={e => {
+                        props.changeDefaultShiftName(s.origin.id, e.target.value);
+                      }}
+                    />
+                    <RangePicker
+                      format={'HH:mm'}
+                      allowClear={false}
+                      defaultValue={convertRangeToRangePickerValue(s.origin.range)}
+                      onChange={range => {
+                        props.changeDefaultShiftRange(s.origin.id, range);
+                      }}
+                    />
+                  </div>
+                  <ButtonContainer>
+                    <SaveOutlined onClick={props.createDefaultShift} style={{ fontSize: '20px', color: '#1890ff' }} />
+                  </ButtonContainer>
+                </CardContent>
+              </Card.Grid>
             );
           } else {
             return (
-              <ShiftCard
-                bodyStyle={{ padding: '15px', width: '300px', height: '120px' }}
+              <Card.Grid
+                style={gridStyle}
                 key={s.origin.id}
                 className={'external-event'}
-                style={{ color: 'black' }}
-                actions={[
-                  <Tooltip placement="bottom" title={'刪除'}>
-                    <DeleteOutlined />
-                  </Tooltip>,
-                ]}
                 data-start={s.origin.range.start}
                 data-end={s.origin.range.end}
                 data-title={s.origin.name}
               >
-                <ShiftContainer>
-                  <span>{s.origin.name}</span>
-                  <span>
-                    {s.origin.range.start} ~ {s.origin.range.end}
-                  </span>
-                </ShiftContainer>
-              </ShiftCard>
+                <CardContent>
+                  <div>
+                    <span>{s.origin.name}</span>
+                    <span>
+                      {s.origin.range.start} ~ {s.origin.range.end}
+                    </span>
+                  </div>
+                  <ButtonContainer>
+                    <DeleteTwoTone twoToneColor="red" style={{ fontSize: '20px' }} />
+                  </ButtonContainer>
+                </CardContent>
+              </Card.Grid>
             );
           }
         })}
-        <div></div>
       </ShiftsContainer>
     </Container>
   );
 }
 
 const mapStateToProps = ({ shiftPageReducer }) => ({
-  defaultShift: shiftPageReducer.defaultShift.shift,
+  defaultShift: orderDefaultShiftByStartTime(shiftPageReducer.defaultShift.shift),
   createSuccess: shiftPageReducer.defaultShift.createSuccess,
 });
 
 const mapDispatchToProps = {
   getDefaultShift,
   createDefaultShiftTemplate,
-  changeDeafultShiftName,
+  changeDefaultShiftName,
   changeDefaultShiftRange,
   createDefaultShift,
 };

@@ -1,6 +1,6 @@
 import { take, call, put, fork } from 'redux-saga/effects';
 import { SHIFT_DROP_START } from '../constant';
-import { createShiftSuccess } from '../actions';
+import { shiftDropSuccess } from '../actions';
 import { generateApiObj } from '../utils/handleRepeatShift';
 import Shift from '../../../models/shift';
 
@@ -12,7 +12,7 @@ function* dropShift(shiftObj) {
       const createdShift = yield call(Shift.post, shift);
       createdShifts.push(createdShift);
     }
-    yield put(createShiftSuccess(createdShifts));
+    yield put(shiftDropSuccess(createdShifts));
   } catch (err) {
     console.log(err);
   }

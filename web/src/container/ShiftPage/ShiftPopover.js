@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Radio, Checkbox, InputNumber, Button, TimePicker } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 const { RangePicker } = TimePicker;
 
 //#region
-const Conatainer = styled.div`
+const Container = styled.div`
   font-size: 14px;
   max-width: 370px;
-  background: #f0f0f0;
+  background: #fff;
   position: fixed;
   border-radius: 10px;
-  padding: 10px;
+  padding: 0 10px 10px;
   z-index: 400;
   top: ${props => (props.position ? props.position.y : 0)}px;
   left: ${props => (props.position ? props.position.x : 0)}px;
@@ -21,6 +23,17 @@ const Conatainer = styled.div`
   & > * {
     margin: 6px 0;
   }
+  & > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    & > span {
+      font-size: 20px;
+      color: rgba(0, 0, 0, 0.85);
+    }
+  }
+  border-top: 10px red solid;
+  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
 `;
 
 const BoldSpan = styled.div`
@@ -37,6 +50,10 @@ const StyledRangePicker = styled(RangePicker)`
   margin: 0.5em 1em !important;
 `;
 
+const ButtonContainer = styled.div`
+  align-self: flex-end;
+`;
+
 const radioStyle = {
   display: 'block',
 };
@@ -44,7 +61,7 @@ const radioStyle = {
 //#endregion
 
 function ShiftPopover(props) {
-  const { visible } = props;
+  const { visible, setVisible } = props;
 
   const [radioValue, setRadioValue] = useState(1);
   const [selectedShift, setSelectedShift] = useState([]);
@@ -78,8 +95,15 @@ function ShiftPopover(props) {
   }, [visible, setRadioValue, setSelectedShift, setCustomRange, setWeek]);
 
   return (
-    <Conatainer className="shift-popover" visible={visible} position={props.position} onClick={onPopoverClick}>
-      <span>班別選擇</span>
+    <Container className="shift-popover" visible={visible} position={props.position} onClick={onPopoverClick}>
+      <div>
+        <span>新增</span>
+        <CloseOutlined
+          onClick={() => {
+            setVisible(false);
+          }}
+        />
+      </div>
       <Radio.Group
         defaultValue={radioValue}
         onChange={e => {
@@ -90,6 +114,7 @@ function ShiftPopover(props) {
           範本班別
         </Radio>
         <Checkbox.Group
+          style={{ maxHeight: '200px', overflowY: 'scroll' }}
           options={props.defaultShift.map(s => ({
             label: `${s.origin.name} {${s.origin.range.start} ~ ${s.origin.range.end})`,
             value: s.origin.id,
@@ -115,12 +140,14 @@ function ShiftPopover(props) {
       <BoldSpan>
         每
         <StyleInputNumber size="small" value={week} min={0} max={5} onChange={setWeek} />
-        周重複至3月底
+        周重複至 {props.date ? moment(props.date).format('M') : ''} 月底
       </BoldSpan>
-      <Button onClick={onConfirm} type="primary" disabled={buttonDisabled}>
-        確認
-      </Button>
-    </Conatainer>
+      <ButtonContainer>
+        <Button onClick={onConfirm} type="primary" disabled={buttonDisabled}>
+          儲存
+        </Button>
+      </ButtonContainer>
+    </Container>
   );
 }
 
