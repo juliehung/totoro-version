@@ -16,7 +16,7 @@ import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import convertShiftToEvent from './utils/convertShiftToEvent';
 import handlePopoverPosition from './utils/handlePopoverPosition';
 import handleShiftEvtTitle from './utils/handleShiftEvtTitle';
-// import { handleResourceRender } from './utils/handleResourceRender';
+import { handleResourceRender } from './utils/handleResourceRender';
 import { changeDate, getShift, createShift, editShift, shiftDrop } from './actions';
 import ShiftPopover from './ShiftPopover';
 import { handleEventDrop } from './utils/handleEventDrop';
@@ -104,6 +104,7 @@ function ShiftCalendar(props) {
         locale="zh-tw"
         height="auto"
         resources={props.resource}
+        resourceRender={handleResourceRender}
         slotWidth={60}
         events={events}
         selectable

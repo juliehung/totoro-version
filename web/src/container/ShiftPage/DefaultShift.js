@@ -67,7 +67,7 @@ const ButtonContainer = styled.div`
 const gridStyle = {
   cursor: 'pointer',
   width: '100%',
-  margin: '16px 0 0',
+  margin: '10px 0',
   borderRadius: '8px',
   padding: '9px 15px',
 };
