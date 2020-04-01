@@ -6,6 +6,8 @@ import { editShift } from './editShift';
 import { createDefaultShift } from './createDefaultShift';
 import { deleteDefaultShift } from './deleteDefaultShift';
 import { watchDropShift } from './watchDropShift';
+import { changeResourceColor } from './changeResourceColor';
+import { getResourceColor } from './getResourceColor';
 
 export default function* shiftPage() {
   yield fork(watchGetShift);
@@ -15,4 +17,6 @@ export default function* shiftPage() {
   yield fork(createDefaultShift);
   yield fork(deleteDefaultShift);
   yield fork(watchDropShift);
+  yield fork(changeResourceColor);
+  yield fork(getResourceColor);
 }
