@@ -17,7 +17,15 @@ import convertShiftToEvent from './utils/convertShiftToEvent';
 import handlePopoverPosition from './utils/handlePopoverPosition';
 import handleShiftEvtTitle from './utils/handleShiftEvtTitle';
 import { handleResourceRender } from './utils/handleResourceRender';
-import { changeDate, getShift, createShift, editShift, shiftDrop, changeResourceColor } from './actions';
+import {
+  changeDate,
+  getShift,
+  createShift,
+  editShift,
+  shiftDrop,
+  changeResourceColor,
+  getResourceColor,
+} from './actions';
 import ShiftPopover from './ShiftPopover';
 import { handleEventDrop } from './utils/handleEventDrop';
 import { message } from 'antd';
@@ -39,6 +47,7 @@ function ShiftCalendar(props) {
   const {
     range,
     getShift,
+    getResourceColor,
     setPopoverVisible,
     createShiftSuccess,
     editShiftSuccess,
@@ -46,7 +55,12 @@ function ShiftCalendar(props) {
     changeColorSuccess,
   } = props;
 
-  const [clickInfo, setClickInfo] = useState({ x: undefined, y: undefined });
+  const [clickInfo, setClickInfo] = useState({
+    position: { x: undefined, y: undefined },
+    date: undefined,
+    resourceId: undefined,
+    color: undefined,
+  });
 
   useEffect(() => {
     const msg = document.querySelector('.fc-license-message');
@@ -59,7 +73,8 @@ function ShiftCalendar(props) {
     if (range.start && range.end) {
       getShift(range);
     }
-  }, [range, getShift]);
+    getResourceColor();
+  }, [range, getShift, getResourceColor]);
 
   useEffect(() => {
     if (createShiftSuccess) {
@@ -88,7 +103,16 @@ function ShiftCalendar(props) {
 
   const dateClick = dateClickInfo => {
     const { jsEvent, resource, date } = dateClickInfo;
-    setClickInfo({ position: handlePopoverPosition(jsEvent), date, resourceId: resource.id });
+
+    const id = Object.keys(props.resourceColor).find(id => id === resource.id);
+    let color;
+    if (id) {
+      color = props.resourceColor[id];
+    }
+
+    console.log(color);
+
+    setClickInfo({ position: handlePopoverPosition(jsEvent), date, resourceId: resource.id, color });
     setPopoverVisible(true);
   };
 
@@ -111,7 +135,7 @@ function ShiftCalendar(props) {
   };
 
   const resourceRender = info => {
-    handleResourceRender(info, { colorClick: handleResourceColorClick });
+    handleResourceRender(info, { colorClick: handleResourceColorClick, resourceColor: props.resourceColor });
   };
 
   const handleResourceColorClick = (id, color) => {
@@ -161,6 +185,7 @@ function ShiftCalendar(props) {
         position={clickInfo.position}
         date={clickInfo.date}
         resourceId={clickInfo.resourceId}
+        color={clickInfo.color}
         className="shift-popover"
         defaultShift={props.defaultShift}
         onConfirm={props.createShift}
@@ -173,12 +198,21 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   resource: extractDoctorsFromUser(homePageReducer.user.users).map(d => ({ id: d.id, title: d.name })),
   range: shiftPageReducer.shift.range,
   defaultShift: shiftPageReducer.defaultShift.shift,
-  event: convertShiftToEvent(shiftPageReducer.shift.shift),
+  event: convertShiftToEvent(shiftPageReducer.shift.shift, shiftPageReducer.resourceColor.color),
   createShiftSuccess: shiftPageReducer.shift.createShiftSuccess,
   editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
   changeColorSuccess: shiftPageReducer.resourceColor.changeColorSuccess,
+  resourceColor: shiftPageReducer.resourceColor.color,
 });
 
-const mapDispatchToProps = { changeDate, getShift, createShift, editShift, shiftDrop, changeResourceColor };
+const mapDispatchToProps = {
+  changeDate,
+  getShift,
+  createShift,
+  editShift,
+  shiftDrop,
+  changeResourceColor,
+  getResourceColor,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShiftCalendar);

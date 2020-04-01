@@ -6,18 +6,19 @@ import { Popover, Button } from 'antd';
 const Container = styled.div`
   display: flex;
   align-items: center;
-  & > div:first-child {
-    background-color: #ae1234;
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    margin-right: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-  }
+`;
+
+const Color = styled.div`
+  background-color: ${props => (props.color ? props.color : '#dea')};
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  margin-right: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
 `;
 
 const PopoverContainer = styled.div`
@@ -59,9 +60,9 @@ export const eventColors = [
   '#52C41A',
 ];
 
-export const handleResourceRender = ({ resource, el }, func) => {
-  var div = document.createElement('div');
-  var p = document.createElement('p');
+export const handleResourceRender = ({ resource, el }, utils) => {
+  const div = document.createElement('div');
+  const p = document.createElement('p');
   div.appendChild(p);
 
   const container = el.querySelector('div');
@@ -77,7 +78,7 @@ export const handleResourceRender = ({ resource, el }, func) => {
             key={color}
             type="link"
             onClick={async () => {
-              func.colorClick(resource.id, color);
+              utils.colorClick(resource.id, color);
             }}
           >
             <ColorContainer key={color} color={color} />
@@ -87,10 +88,16 @@ export const handleResourceRender = ({ resource, el }, func) => {
     </PopoverContainer>
   );
 
+  const id = Object.keys(utils.resourceColor).find(id => id === resource.id);
+  let color;
+  if (id) {
+    color = utils.resourceColor[id];
+  }
+
   const content = (
     <Container>
       <Popover content={colorPlate} trigger="click" placement="right" className="popover-app-detail">
-        <div>{resource.title[0]}</div>
+        <Color color={color}>{resource.title[0]}</Color>
       </Popover>
       <span>{resource.title}</span>
     </Container>

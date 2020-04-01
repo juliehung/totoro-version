@@ -17,6 +17,8 @@ import {
   SHIFT_DROP_SUCCESS,
   DELETE_DEFAULT_SHIFT_START,
   DELETE_DEFAULT_SHIFT_SUCCESS,
+  GET_RESOURCE_COLOR_START,
+  GET_RESOURCE_COLOR_SUCCESS,
   CHANGE_RESOURCE_COLOR_START,
   CHANGE_RESOURCE_COLOR_SUCCESS,
 } from './constant';
@@ -91,6 +93,14 @@ export const shiftDrop = shift => {
 
 export const shiftDropSuccess = shifts => {
   return { type: SHIFT_DROP_SUCCESS, shifts };
+};
+
+export const getResourceColor = () => {
+  return { type: GET_RESOURCE_COLOR_START };
+};
+
+export const getResourceColorSuccess = color => {
+  return { type: GET_RESOURCE_COLOR_SUCCESS, color };
 };
 
 export const changeResourceColor = (id, color) => {
