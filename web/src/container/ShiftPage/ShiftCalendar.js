@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import '@fullcalendar/core/main.css';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -62,6 +62,25 @@ function ShiftCalendar(props) {
     color: undefined,
   });
 
+  const simulateMouseClick = element => {
+    const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
+    mouseClickEvents.forEach(mouseEventType =>
+      element.dispatchEvent(
+        new MouseEvent(mouseEventType, {
+          view: window,
+          bubbles: true,
+          cancelable: true,
+          buttons: 1,
+        }),
+      ),
+    );
+  };
+
+  const clickTitle = useCallback(() => {
+    const title = document.querySelector('.fc-center');
+    simulateMouseClick(title);
+  }, []);
+
   useEffect(() => {
     const msg = document.querySelector('.fc-license-message');
     if (msg) {
@@ -91,9 +110,10 @@ function ShiftCalendar(props) {
 
   useEffect(() => {
     if (changeColorSuccess) {
+      clickTitle();
       message.success('更新成功');
     }
-  }, [changeColorSuccess]);
+  }, [changeColorSuccess, clickTitle]);
 
   const datesRender = ({ view }) => {
     const start = view.activeStart;
@@ -109,8 +129,6 @@ function ShiftCalendar(props) {
     if (id) {
       color = props.resourceColor[id];
     }
-
-    console.log(color);
 
     setClickInfo({ position: handlePopoverPosition(jsEvent), date, resourceId: resource.id, color });
     setPopoverVisible(true);

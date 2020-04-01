@@ -1,8 +1,6 @@
 import moment from 'moment';
 
 const convertShiftToEvent = (shifts, resourceColor) => {
-  console.log(resourceColor);
-
   const event = shifts.map(s => {
     const id = Object.keys(resourceColor).find(id => `${id}` === `${s.userId}`);
     let backgroundColor;

@@ -9,7 +9,7 @@ const Container = styled.div`
 `;
 
 const Color = styled.div`
-  background-color: ${props => (props.color ? props.color : '#dea')};
+  background-color: ${props => (props.color ? props.color : '#1890ff')};
   height: 25px;
   width: 25px;
   border-radius: 50%;
