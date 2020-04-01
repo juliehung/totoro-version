@@ -32,7 +32,7 @@ const Container = styled.div`
       color: rgba(0, 0, 0, 0.85);
     }
   }
-  border-top: 10px solid ${props => (props.color ? props.color : '#1890ff')};
+  border-top: 10px red solid;
   box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
 `;
 
@@ -61,7 +61,7 @@ const radioStyle = {
 //#endregion
 
 function ShiftPopover(props) {
-  const { visible, setVisible, color } = props;
+  const { visible, setVisible } = props;
 
   const [radioValue, setRadioValue] = useState(1);
   const [selectedShift, setSelectedShift] = useState([]);
@@ -95,13 +95,7 @@ function ShiftPopover(props) {
   }, [visible, setRadioValue, setSelectedShift, setCustomRange, setWeek]);
 
   return (
-    <Container
-      className="shift-popover"
-      visible={visible}
-      position={props.position}
-      onClick={onPopoverClick}
-      color={color}
-    >
+    <Container className="shift-popover" visible={visible} position={props.position} onClick={onPopoverClick}>
       <div>
         <span>新增</span>
         <CloseOutlined
