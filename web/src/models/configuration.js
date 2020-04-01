@@ -26,6 +26,19 @@ export default class Configuration {
     return result;
   };
 
+  static createMultiple = async body => {
+    let requestURL = `${requestUrl}/multiple`;
+    const options = {
+      headers: {
+        'content-type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(body),
+    };
+    const result = await requestNoParse(requestURL, options);
+    return result;
+  };
+
   static deleteMultiple = async body => {
     let requestURL = `${requestUrl}/multiple`;
     const options = {
@@ -41,3 +54,4 @@ export default class Configuration {
 }
 
 export const defaultShiftConfigPrefix = 'web.shift.defaultShift';
+export const shiftResourceColorConfigPrefix = 'web.shift.resourceColor';

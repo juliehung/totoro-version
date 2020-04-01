@@ -17,7 +17,7 @@ import convertShiftToEvent from './utils/convertShiftToEvent';
 import handlePopoverPosition from './utils/handlePopoverPosition';
 import handleShiftEvtTitle from './utils/handleShiftEvtTitle';
 import { handleResourceRender } from './utils/handleResourceRender';
-import { changeDate, getShift, createShift, editShift, shiftDrop } from './actions';
+import { changeDate, getShift, createShift, editShift, shiftDrop, changeResourceColor } from './actions';
 import ShiftPopover from './ShiftPopover';
 import { handleEventDrop } from './utils/handleEventDrop';
 import { message } from 'antd';
@@ -36,7 +36,16 @@ const Container = styled.div`
 //#endregion
 
 function ShiftCalendar(props) {
-  const { range, getShift, setPopoverVisible, createShiftSuccess, editShiftSuccess, shiftDrop } = props;
+  const {
+    range,
+    getShift,
+    setPopoverVisible,
+    createShiftSuccess,
+    editShiftSuccess,
+    shiftDrop,
+    changeColorSuccess,
+  } = props;
+
   const [clickInfo, setClickInfo] = useState({ x: undefined, y: undefined });
 
   useEffect(() => {
@@ -64,6 +73,12 @@ function ShiftCalendar(props) {
       message.success('更新成功');
     }
   }, [editShiftSuccess]);
+
+  useEffect(() => {
+    if (changeColorSuccess) {
+      message.success('更新成功');
+    }
+  }, [changeColorSuccess]);
 
   const datesRender = ({ view }) => {
     const start = view.activeStart;
@@ -95,6 +110,14 @@ function ShiftCalendar(props) {
     shiftDrop({ resourceId, date, timeRange });
   };
 
+  const resourceRender = info => {
+    handleResourceRender(info, { colorClick: handleResourceColorClick });
+  };
+
+  const handleResourceColorClick = (id, color) => {
+    props.changeResourceColor(id, color);
+  };
+
   const events = handleShiftEvtTitle(props.event, props.defaultShift);
 
   return (
@@ -104,7 +127,7 @@ function ShiftCalendar(props) {
         locale="zh-tw"
         height="auto"
         resources={props.resource}
-        resourceRender={handleResourceRender}
+        resourceRender={resourceRender}
         slotWidth={60}
         events={events}
         selectable
@@ -153,8 +176,9 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   event: convertShiftToEvent(shiftPageReducer.shift.shift),
   createShiftSuccess: shiftPageReducer.shift.createShiftSuccess,
   editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
+  changeColorSuccess: shiftPageReducer.resourceColor.changeColorSuccess,
 });
 
-const mapDispatchToProps = { changeDate, getShift, createShift, editShift, shiftDrop };
+const mapDispatchToProps = { changeDate, getShift, createShift, editShift, shiftDrop, changeResourceColor };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShiftCalendar);
