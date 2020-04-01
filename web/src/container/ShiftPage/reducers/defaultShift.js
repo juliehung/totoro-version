@@ -7,6 +7,7 @@ import {
   CHANGE_DEFAULT_SHIFT_RANGE,
   CREATE_DEFAULT_SHIFT_START,
   CREATE_DEFAULT_SHIFT_SUCCESS,
+  DELETE_DEFAULT_SHIFT_SUCCESS,
 } from '../constant';
 import { parseShiftConfigToShift } from '../utils/parseShiftConfigToShift';
 
@@ -59,6 +60,9 @@ const defaultShift = (state = initialState, action) =>
         break;
       case CREATE_DEFAULT_SHIFT_SUCCESS:
         draft.createSuccess = true;
+        break;
+      case DELETE_DEFAULT_SHIFT_SUCCESS:
+        draft.shift = state.shift.filter(s => s.origin.id !== action.id);
         break;
       default:
         break;
