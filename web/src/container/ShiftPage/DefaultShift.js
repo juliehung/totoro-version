@@ -7,10 +7,11 @@ import {
   changeDefaultShiftName,
   changeDefaultShiftRange,
   createDefaultShift,
+  deleteDefaultShift,
 } from './actions';
 import { Card, Button, TimePicker, Input } from 'antd';
-import { Draggable } from '@fullcalendar/interaction';
 import { DeleteTwoTone, SaveOutlined } from '@ant-design/icons';
+import { Draggable } from '@fullcalendar/interaction';
 import { convertRangeToRangePickerValue } from './utils/convertRangeToRangePickerValue';
 import { orderDefaultShiftByStartTime } from './utils/orderDefaultShiftByStartTime';
 const { RangePicker } = TimePicker;
@@ -148,7 +149,13 @@ function DefaultShift(props) {
                     </span>
                   </div>
                   <ButtonContainer>
-                    <DeleteTwoTone twoToneColor="red" style={{ fontSize: '20px' }} />
+                    <DeleteTwoTone
+                      twoToneColor="red"
+                      style={{ fontSize: '20px' }}
+                      onClick={() => {
+                        props.deleteDefaultShift(s.origin.id);
+                      }}
+                    />
                   </ButtonContainer>
                 </CardContent>
               </Card.Grid>
@@ -171,6 +178,7 @@ const mapDispatchToProps = {
   changeDefaultShiftName,
   changeDefaultShiftRange,
   createDefaultShift,
+  deleteDefaultShift,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultShift);

@@ -26,13 +26,14 @@ export default class Configuration {
     return result;
   };
 
-  static delete = async id => {
-    let requestURL = `${requestUrl}/${id}`;
+  static deleteMultiple = async body => {
+    let requestURL = `${requestUrl}/multiple`;
     const options = {
       headers: {
         'content-type': 'application/json',
       },
       method: 'DELETE',
+      body: JSON.stringify(body),
     };
     const result = await requestNoParse(requestURL, options);
     return result;
