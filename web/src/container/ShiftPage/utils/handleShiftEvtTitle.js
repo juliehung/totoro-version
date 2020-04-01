@@ -13,7 +13,7 @@ function handleShiftEvtTitle(shifts, defaultShifts) {
     if (defaultShift) {
       return { ...s, title: defaultShift.origin.name };
     }
-    return s;
+    return { ...s, title: `${moment(s.start).format('H:mm')}~${moment(s.end).format('H:mm')}` };
   });
 }
 

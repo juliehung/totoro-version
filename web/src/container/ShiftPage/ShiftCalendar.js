@@ -3,6 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import '@fullcalendar/core/main.css';
 import interactionPlugin from '@fullcalendar/interaction';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import zhTW from '@fullcalendar/core/locales/zh-tw';
 import '@fullcalendar/daygrid/main.css';
 import '@fullcalendar/timegrid/main.css';
 import '@fullcalendar/list/main.css';
@@ -32,7 +33,6 @@ const Container = styled.div`
     display: none;
   }
 `;
-
 //#endregion
 
 function ShiftCalendar(props) {
@@ -100,6 +100,8 @@ function ShiftCalendar(props) {
   return (
     <Container>
       <FullCalendar
+        locales={zhTW}
+        locale="zh-tw"
         height="auto"
         resources={props.resource}
         slotWidth={60}
@@ -126,6 +128,8 @@ function ShiftCalendar(props) {
         eventDrop={eventDrop}
         eventResize={eventResize}
         drop={drop}
+        slotLabelFormat={{ day: 'numeric', weekday: 'short' }}
+        displayEventTime={false}
       />
       <ShiftPopover
         setVisible={setPopoverVisible}
