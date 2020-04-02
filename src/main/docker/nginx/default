@@ -1,0 +1,33 @@
+server {
+
+  listen 80 default_server;
+
+  root /var/www/html;
+
+  location / {
+  }
+
+  location ~ ^/static/.* {
+  }
+
+  location = /nginx-health {
+    access_log off;
+    return 200;
+  }
+
+  location ~ ^/(?<sub>[^/\.]+)$ {
+    rewrite ^/.* https://$host$request_uri/ permanent;
+  }
+
+  location ~ ^/(?<sub>[^/]+)/mqtt {
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    resolver 169.254.169.254;
+    proxy_pass http://$sub.asia-east1-c.c.dentall-saas.internal:8081/mqtt;
+  }
+
+  location ~ ^/(?<sub>[^/]+)/(.*) {
+    resolver 169.254.169.254;
+    proxy_pass http://$sub.asia-east1-c.c.dentall-saas.internal:8080/$2$is_args$args;
+  }
+}
