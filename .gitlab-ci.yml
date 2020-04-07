@@ -152,42 +152,18 @@ releaseImageToGCPRegistry:
         - google-cloud-sdk/bin/gcloud --quiet components update
         - google-cloud-sdk/bin/gcloud --quiet components install beta
         - google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
-        - docker login -u _json_key --password-stdin https://us.gcr.io < ${HOME}/gcloud-service-key.json
+        - docker login -u _json_key --password-stdin https://asia.gcr.io < ${HOME}/gcloud-service-key.json
         - war_path=build/libs/*.war
         - filename=$(basename $war_path .war)
         - version=${filename##*-}
         - mv build/libs/$filename.war src/main/docker/app.war
-        - docker build -t us.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:$CI_COMMIT_TAG -f src/main/docker/Dockerfile src/main/docker
-        - docker push us.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:$CI_COMMIT_TAG
-        - docker login -u _json_key --password-stdin https://asia.gcr.io < ${HOME}/gcloud-service-key.json
+        - docker build -t asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:$CI_COMMIT_TAG -f src/main/docker/Dockerfile src/main/docker
+        - docker push asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:$CI_COMMIT_TAG
         - mv build/resources/main/public/ src/main/docker/nginx/
-        - docker build -t asia.gcr.io/$GCP_PROJECT_ID/nginx:$CI_COMMIT_TAG -f src/main/docker/nginx/Dockerfile src/main/docker/nginx
-        - docker push asia.gcr.io/$GCP_PROJECT_ID/nginx:$CI_COMMIT_TAG
+        - docker build -t asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME/nginx:$CI_COMMIT_TAG -f src/main/docker/nginx/Dockerfile src/main/docker/nginx
+        - docker push asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME/nginx:$CI_COMMIT_TAG
 
 # deploy stage
-depolyCloudRun:
-    stage: deploy
-    only:
-        - tags
-    except:
-        - /^(\d)+-.*$/
-    environment:
-        name: staging/$CI_COMMIT_REF_SLUG
-        url: https://master-cloud-run-vgcfrtzwfa-uc.a.run.app
-        on_stop: stopCloudRun
-    when: manual
-    image: google/cloud-sdk:alpine
-    script:
-        - versionMajor="$(grep 'versionMajor' build/generated/semver.properties | cut -d'=' -f2)"
-        - versionMinor="$(grep -w 'versionMinor' build/generated/semver.properties | cut -d'=' -f2)"
-        - commitCount="$(grep 'commitCount' build/generated/semver.properties | cut -d'=' -f2)"
-        - gcloud --quiet components update
-        - gcloud --quiet components install beta
-        - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-        - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
-        - gcloud beta auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
-        - gcloud beta run deploy master-cloud-run --image us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$versionMajor.$versionMinor.$commitCount --platform managed --region us-central1 --async --allow-unauthenticated --set-env-vars ^#^_JAVA_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx${GCP_CLOUDRUN_JAVA_MEMORY:-512}m"#SPRING_PROFILES_ACTIVE="prod,embedded-postgres"#JAVA_OPTS="-Dpgembed.shared_buffers=${GCP_CLOUDRUN_PG_BUFFERS:-256}" --memory ${GCP_CLOUDRUN_MEMORY:-2}Gi
-
 depolyAppEngine:
     tags:
         - dentall
@@ -212,7 +188,7 @@ depolyAppEngine:
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
         - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
         - 'echo "service: ${CI_COMMIT_REF_SLUG}" >> src/main/appengine/app.yaml'
-        - gcloud --quiet app deploy src/main/appengine/app.yaml --version $versionMajor-$versionMinor-$commitCount --image-url us.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$versionMajor.$versionMinor.$commitCount --promote --stop-previous-version
+        - gcloud --quiet app deploy src/main/appengine/app.yaml --version $versionMajor-$versionMinor-$commitCount --image-url asia.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$versionMajor.$versionMinor.$commitCount --promote --stop-previous-version
 
 # operation stage
 stopAppEngine:
@@ -233,21 +209,3 @@ stopAppEngine:
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
         - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
         - gcloud --quiet app services delete $CI_COMMIT_REF_SLUG
-
-stopCloudRun:
-    stage: operation
-    only:
-        - tags
-    except:
-        - /^(\d)+-.*$/
-    environment:
-        name: staging/$CI_COMMIT_REF_SLUG
-        action: stop
-    when: manual
-    image: google/cloud-sdk:alpine
-    script:
-        - gcloud --quiet components update
-        - gcloud --quiet components install beta
-        - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-        - gcloud beta auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
-        - gcloud --quiet beta run services delete master-cloud-run --platform managed --region us-central1
