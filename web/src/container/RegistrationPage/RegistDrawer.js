@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button, Table, Drawer } from 'antd';
 import ManPng from '../../static/images/man.png';
+import WomanPng from '../../static/images/woman.png';
+import DefaultPng from '../../static/images/default.png';
 import styled from 'styled-components';
 import moment from 'moment';
 import { changeDrawerVisible, getDoc } from './actions';
@@ -71,11 +73,13 @@ function RegistDrawer(props) {
     changeDrawerVisible(false);
   };
 
+  const avatar = patient.gender === 'MALE' ? ManPng : patient.gender === 'FEMALE' ? WomanPng : DefaultPng;
+
   return (
     <Drawer placement="right" closable={true} width="500px" onClose={onClose} visible={drawerVisible}>
       <DrawerContainer>
         <PatientContainer>
-          <img src={ManPng} alt={'avatar'}></img>
+          <img src={avatar} alt={'avatar'} />
           <div>
             <span>
               MRN. <span>{patient.medicalId}</span>
