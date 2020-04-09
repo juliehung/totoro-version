@@ -106,7 +106,11 @@ function Calendar(props) {
 }
 
 const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
-  resource: extractDoctorsFromUser(homePageReducer.user.users).map(d => ({ id: d.id, title: d.name })),
+  resource: extractDoctorsFromUser(homePageReducer.user.users).map(d => ({
+    id: d.id,
+    title: d.name,
+    avatar: d.avatar,
+  })),
   range: shiftPageReducer.shift.range,
   defaultShift: shiftPageReducer.defaultShift.shift,
   event: convertShiftToEvent(shiftPageReducer.shift.shift, shiftPageReducer.resourceColor.color),

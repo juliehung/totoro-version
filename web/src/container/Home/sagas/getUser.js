@@ -5,7 +5,15 @@ import { getUserSuccess } from '../actions';
 
 export function* getUsers() {
   try {
-    const result = yield call(user.getAll);
+    let result = yield call(user.getAll);
+    for (const r of result) {
+      const account = yield call(user.getByLogin, r.login);
+      const id = account.id;
+      const avatar = account.extendUser.avatar;
+      if (avatar) {
+        result = [...result.filter(r => r.id !== id), account];
+      }
+    }
     yield put(getUserSuccess(result));
   } catch (err) {
     //  ignore

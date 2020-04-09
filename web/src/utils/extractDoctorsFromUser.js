@@ -6,5 +6,6 @@ export default function extractDoctorsFromUser(users) {
       name: d.firstName,
       login: d.login,
       activated: d.activated,
+      avatar: d.extendUser.avatar,
     }));
 }
