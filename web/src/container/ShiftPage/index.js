@@ -14,6 +14,7 @@ const Container = styled.div`
   padding: 1%;
   margin: 0 auto;
   position: relative;
+  overflow-y: scroll;
 `;
 //#endregion
 

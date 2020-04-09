@@ -21,7 +21,7 @@ import { handleEventRender } from './utils/handleEventRender';
 import moment from 'moment';
 
 function Calendar(props) {
-  const { shiftDrop, setClickInfo, setPopoverVisible, deleteShift } = props;
+  const { shiftDrop, setClickInfo, setPopoverVisible, deleteShift, popoverSize } = props;
 
   const datesRender = ({ view }) => {
     const start = view.activeStart;
@@ -30,14 +30,26 @@ function Calendar(props) {
   };
 
   const dateClick = dateClickInfo => {
-    const { jsEvent, resource, date } = dateClickInfo;
-    const id = Object.keys(props.resourceColor).find(id => id === resource.id);
-    let color;
-    if (id) {
-      color = props.resourceColor[id];
+    const hightlight = document.querySelector('.fc-highlight');
+    if (hightlight) {
+      const highlightRec = hightlight.getBoundingClientRect();
+      const right = highlightRec.right;
+      const top = highlightRec.top;
+      const left = highlightRec.left;
+      const { resource, date } = dateClickInfo;
+      const id = Object.keys(props.resourceColor).find(id => id === resource.id);
+      let color;
+      if (id) {
+        color = props.resourceColor[id];
+      }
+      setClickInfo({
+        position: handlePopoverPosition({ right, left, top }, popoverSize),
+        date,
+        resourceId: resource.id,
+        color,
+      });
+      setPopoverVisible(true);
     }
-    setClickInfo({ position: handlePopoverPosition(jsEvent), date, resourceId: resource.id, color });
-    setPopoverVisible(true);
   };
 
   const eventDrop = eventDropInfo => {
