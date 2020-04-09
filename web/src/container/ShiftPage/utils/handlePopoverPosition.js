@@ -1,24 +1,35 @@
-const handlePopoverPosition = jsEvent => {
-  const defaultOffset = 0;
-  var windowWidth = window.innerWidth;
-  var windowHeight = window.innerHeight;
-  const popOverWidth = 370;
-  const popOverHeight = 500;
-  let x = jsEvent.clientX;
-  let y = jsEvent.clientY;
-  if (jsEvent.clientX + popOverWidth + defaultOffset > windowWidth) {
-    x = x - popOverWidth - defaultOffset;
+const handlePopoverPosition = (position, popoverSize) => {
+  const defaultOffsetY = 20;
+  const defaultOffsetX = 15;
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+  const popOverWidth = popoverSize.width;
+  const popOverHeight = popoverSize.height;
+  let x = position.right;
+  let y = position.top;
+
+  let vertical;
+  let horizontal;
+  if (x + popOverWidth + defaultOffsetX > windowWidth) {
+    x = position.left - popOverWidth - defaultOffsetX;
+    horizontal = 'left';
   } else {
-    x = x + defaultOffset + 20;
+    x = x + defaultOffsetX;
+    horizontal = 'right';
   }
 
-  if (windowHeight > jsEvent.clientY + popOverHeight + defaultOffset) {
-    y = y + defaultOffset;
+  if (windowHeight > y + popOverHeight + defaultOffsetY) {
+    y = y + defaultOffsetY;
+    vertical = 'top';
+  } else if (y < popOverHeight) {
+    y = y - popOverHeight / 2;
+    vertical = 'center';
   } else {
-    y = y - popOverHeight / 2 - defaultOffset;
+    vertical = 'bottom';
+    y = y - popOverHeight + defaultOffsetY;
   }
 
-  return { x, y };
+  return { x, y, vertical, horizontal };
 };
 
 export default handlePopoverPosition;

@@ -37,11 +37,13 @@ function ShiftCalendar(props) {
   const [popoverVisible, setPopoverVisible] = useState(false);
 
   const [clickInfo, setClickInfo] = useState({
-    position: { x: undefined, y: undefined },
+    position: { x: undefined, y: undefined, vertical: undefined, horizontal: undefined },
     date: undefined,
     resourceId: undefined,
     color: undefined,
   });
+
+  const [popoverSize, setPopoverSize] = useState({ height: undefined, width: undefined });
 
   const simulateMouseClick = element => {
     const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
@@ -111,6 +113,7 @@ function ShiftCalendar(props) {
         popoverVisible={popoverVisible}
         setPopoverVisible={setPopoverVisible}
         changeColorSuccess={changeColorSuccess}
+        popoverSize={popoverSize}
       />
       <ShiftPopover
         setVisible={setPopoverVisible}
@@ -121,6 +124,8 @@ function ShiftCalendar(props) {
         color={clickInfo.color}
         defaultShift={props.defaultShift}
         onConfirm={props.createShift}
+        setSize={setPopoverSize}
+        size={popoverSize}
       />
     </Container>
   );

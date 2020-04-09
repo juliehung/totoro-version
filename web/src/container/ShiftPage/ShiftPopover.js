@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { Checkbox, InputNumber, Button, TimePicker } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
@@ -11,11 +11,12 @@ const { RangePicker } = TimePicker;
 
 //#region
 const Container = styled.div`
+  box-sizing: border-box;
   font-size: 14px;
   max-width: 370px;
   background: #fff;
   position: fixed;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 0 30px 10px;
   z-index: 400;
   top: ${props => (props.position ? props.position.y : 0)}px;
@@ -26,7 +27,7 @@ const Container = styled.div`
   & > * {
     margin: 6px 0;
   }
-  & > div:first-child {
+  & > div:nth-child(2) {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -37,7 +38,9 @@ const Container = styled.div`
     }
   }
   border-top: 10px solid ${props => (props.color ? props.color : '#1890ff')};
-  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+  border-right: 1px solid ${props => (props.color ? props.color : '#1890ff')};
+  border-bottom: 1px solid ${props => (props.color ? props.color : '#1890ff')};
+  border-left: 1px solid ${props => (props.color ? props.color : '#1890ff')};
 `;
 
 const StyleInputNumber = styled(InputNumber)`
@@ -81,10 +84,40 @@ const HeightDiv = styled.div`
   overflow-y: scroll;
 `;
 
+const DiamondContainer = styled.div`
+  position: absolute;
+  z-index: -100;
+  top: ${props =>
+    props.position.vertical === 'top'
+      ? '-5px'
+      : props.position.vertical === 'center'
+      ? `${props.size.height / 2}px`
+      : `${props.size.height - 40}px`};
+  left: ${props => (props.position.horizontal === 'right' ? -14 : props.size.width - 14)}px;
+`;
+
+const Diamond = styled.div`
+  z-index: -100;
+  position: relative;
+  width: 14px;
+  height: 14px;
+  transform: rotate(45deg) translateX(10px);
+  background-color: #fff;
+  border-left: 1px solid
+    ${props => (props.position.horizontal === 'right' ? (props.color ? props.color : '#1890ff') : '#fff')};
+  border-bottom: 1px solid
+    ${props => (props.position.horizontal === 'right' ? (props.color ? props.color : '#1890ff') : '#fff')};
+  border-right: 1px solid
+    ${props => (props.position.horizontal === 'left' ? (props.color ? props.color : '#1890ff') : '#fff')};
+  border-top: 1px solid
+    ${props => (props.position.horizontal === 'left' ? (props.color ? props.color : '#1890ff') : '#fff')};
+`;
+
 //#endregion
 
 function ShiftPopover(props) {
-  const { visible, setVisible, color } = props;
+  const { visible, setVisible, color, size, setSize } = props;
+  const ref = useRef(null);
 
   const [selectedShift, setSelectedShift] = useState([]);
   const [customRange, setCustomRange] = useState([undefined, undefined]);
@@ -111,15 +144,29 @@ function ShiftPopover(props) {
     }
   }, [visible, setSelectedShift, setCustomRange, setWeek]);
 
-  useEffect(() => {
-    window.addEventListener('mousedown', e => {
-      const child = e.target.querySelector(':scope>.fc-event-container');
-      if (child) {
+  const mousedownCallback = useCallback(
+    e => {
+      const child = e.target;
+      if (child.querySelector(':scope>.fc-event-container') || child.className.includes('fc-highlight')) {
         return;
       }
       setVisible(false);
-    });
-  }, [visible, setVisible]);
+    },
+    [setVisible],
+  );
+
+  useEffect(() => {
+    window.addEventListener('mousedown', mousedownCallback);
+    return () => {
+      window.removeEventListener('mousedown', mousedownCallback);
+    };
+  }, [visible, mousedownCallback]);
+
+  useEffect(() => {
+    const height = ref.current.clientHeight;
+    const width = ref.current.clientWidth;
+    setSize({ height, width });
+  }, [setSize, visible]);
 
   const onMouseDown = e => {
     e.stopPropagation();
@@ -127,12 +174,16 @@ function ShiftPopover(props) {
 
   return (
     <Container
+      ref={ref}
       visible={visible}
       position={props.position}
       onClick={onPopoverClick}
       color={color}
       onMouseDown={onMouseDown}
     >
+      <DiamondContainer size={size} position={props.position}>
+        <Diamond color={color} position={props.position} />
+      </DiamondContainer>
       <div>
         <span>新增看診時間</span>
         <CloseOutlined
