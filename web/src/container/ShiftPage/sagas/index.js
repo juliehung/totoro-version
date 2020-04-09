@@ -1,6 +1,7 @@
 import { fork } from 'redux-saga/effects';
 import { watchGetShift } from './getShift';
 import { createShift } from './createShift';
+import { deleteShift } from './deleteShift';
 import { getDefaultShift } from './getDefaultShift';
 import { editShift } from './editShift';
 import { createDefaultShift } from './createDefaultShift';
@@ -19,4 +20,5 @@ export default function* shiftPage() {
   yield fork(watchDropShift);
   yield fork(changeResourceColor);
   yield fork(getResourceColor);
+  yield fork(deleteShift);
 }

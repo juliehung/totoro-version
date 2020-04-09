@@ -4,11 +4,12 @@ import {
   GET_SHIFT_SUCCESS,
   CREATE_SHIFT_START,
   CREATE_SHIFT_SUCCESS,
+  DELETE_SHIFT_START,
+  DELETE_SHIFT_SUCCESS,
   GET_DEFAULT_SHIFT_START,
   GET_DEFAULT_SHIFT_SUCCESS,
   EDIT_SHIFT_START,
   EDIT_SHIFT_SUCCESS,
-  CREATE_DEFAULT_SHIFT_TEMPLATE,
   CREATE_DEFAULT_SHIFT_START,
   CREATE_DEFAULT_SHIFT_SUCCESS,
   CHANGE_DEFAULT_SHIFT_NAME,
@@ -43,6 +44,14 @@ export const createShiftSuccess = shifts => {
   return { type: CREATE_SHIFT_SUCCESS, shifts };
 };
 
+export const deleteShift = id => {
+  return { type: DELETE_SHIFT_START, id };
+};
+
+export const deleteShiftSuccess = id => {
+  return { type: DELETE_SHIFT_SUCCESS, id };
+};
+
 export const getDefaultShift = () => {
   return { type: GET_DEFAULT_SHIFT_START };
 };
@@ -55,12 +64,8 @@ export const editShift = shift => {
   return { type: EDIT_SHIFT_START, shift };
 };
 
-export const editShiftSuccess = () => {
-  return { type: EDIT_SHIFT_SUCCESS };
-};
-
-export const createDefaultShiftTemplate = () => {
-  return { type: CREATE_DEFAULT_SHIFT_TEMPLATE };
+export const editShiftSuccess = shift => {
+  return { type: EDIT_SHIFT_SUCCESS, shift };
 };
 
 export const createDefaultShift = () => {
@@ -79,12 +84,12 @@ export const deleteDefaultShiftSuccess = id => {
   return { type: DELETE_DEFAULT_SHIFT_SUCCESS, id };
 };
 
-export const changeDefaultShiftName = (id, name) => {
-  return { type: CHANGE_DEFAULT_SHIFT_NAME, id, name };
+export const changeDefaultShiftName = name => {
+  return { type: CHANGE_DEFAULT_SHIFT_NAME, name };
 };
 
-export const changeDefaultShiftRange = (id, range) => {
-  return { type: CHANGE_DEFAULT_SHIFT_RANGE, id, range };
+export const changeDefaultShiftRange = range => {
+  return { type: CHANGE_DEFAULT_SHIFT_RANGE, range };
 };
 
 export const shiftDrop = shift => {

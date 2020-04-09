@@ -8,8 +8,8 @@ export function* editShift() {
     try {
       const action = yield take(EDIT_SHIFT_START);
       const { shift } = action;
-      yield call(Shift.put, shift);
-      yield put(editShiftSuccess());
+      const result = yield call(Shift.put, shift);
+      yield put(editShiftSuccess(result));
     } catch (err) {
       console.log(err);
     }

@@ -4,11 +4,7 @@ export function reverseEvents(shiftEvents, viewType, range) {
   if (shiftEvents && viewType && range.start && range.end) {
     if (viewType === 'dayGridMonth') {
       const filteredEvent = shiftEvents
-        .map(e =>
-          moment(e.start)
-            .startOf('d')
-            .format('YYYY-MM-DD HH:mm'),
-        )
+        .map(e => moment(e.start).startOf('d').format('YYYY-MM-DD HH:mm'))
         .filter((item, pos, self) => self.indexOf(item) === pos);
 
       let firstDayOfMonth = moment(range.start).startOf('d');
@@ -28,7 +24,7 @@ export function reverseEvents(shiftEvents, viewType, range) {
           eventType: 'doctorShift',
           backgroundColor: '#ccc',
         }));
-    } else if (viewType === 'timeGridWeek') {
+    } else if (viewType === 'timeGridWeek' || viewType === 'listWeek') {
       const allTimeEvent = [generateRangeEvent(range)];
       const mergedEvent = mergeEvents(shiftEvents);
       const events = subtractEvent(allTimeEvent, mergedEvent);

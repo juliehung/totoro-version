@@ -147,7 +147,7 @@ function AppRight(props) {
         props.changeSelectedDoctors(d.filter(d => d !== 'all'));
       } else {
         if (d.includes('all')) {
-          props.changeSelectedDoctors(['all']);
+          props.changeSelectedDoctors(d.filter(d => ['all', 'dayOff'].includes(d)));
         } else {
           props.changeSelectedDoctors(d);
         }

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Radio, Checkbox, InputNumber, Button, TimePicker } from 'antd';
+import { Checkbox, InputNumber, Button, TimePicker } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
+import clockIcon from '../../images/Icon-clock.svg';
+import repeatIcon from '../../images/Icon-repeat.svg';
+import boardIcon from '../../images/Icon-board.svg';
 import moment from 'moment';
 
 const { RangePicker } = TimePicker;
@@ -13,7 +16,7 @@ const Container = styled.div`
   background: #fff;
   position: fixed;
   border-radius: 10px;
-  padding: 0 10px 10px;
+  padding: 0 30px 10px;
   z-index: 400;
   top: ${props => (props.position ? props.position.y : 0)}px;
   left: ${props => (props.position ? props.position.x : 0)}px;
@@ -28,17 +31,13 @@ const Container = styled.div`
     justify-content: space-between;
     align-items: center;
     & > span {
-      font-size: 20px;
+      font-size: 22px;
+      font-weight: 600;
       color: rgba(0, 0, 0, 0.85);
     }
   }
   border-top: 10px solid ${props => (props.color ? props.color : '#1890ff')};
   box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
-`;
-
-const BoldSpan = styled.div`
-  font-size: 16px;
-  font-weight: bold;
 `;
 
 const StyleInputNumber = styled(InputNumber)`
@@ -54,16 +53,39 @@ const ButtonContainer = styled.div`
   align-self: flex-end;
 `;
 
-const radioStyle = {
-  display: 'block',
-};
+const ItemContainer = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  & > :first-child {
+    display: flex;
+    align-items: baseline;
+    & > :first-child {
+      width: 30px;
+      & > img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  & > :nth-child(2) {
+    margin-left: 30px !important;
+    margin-top: 5px !important;
+    margin-bottom: 10px !important;
+  }
+`;
+
+const HeightDiv = styled.div`
+  max-height: 200px;
+  overflow-y: scroll;
+`;
 
 //#endregion
 
 function ShiftPopover(props) {
   const { visible, setVisible, color } = props;
 
-  const [radioValue, setRadioValue] = useState(1);
   const [selectedShift, setSelectedShift] = useState([]);
   const [customRange, setCustomRange] = useState([undefined, undefined]);
   const [week, setWeek] = useState(0);
@@ -74,80 +96,102 @@ function ShiftPopover(props) {
   };
 
   const onConfirm = () => {
-    props.onConfirm({ radioValue, selectedShift, customRange, week, date: props.date, userId: props.resourceId });
+    props.onConfirm({ selectedShift, customRange, week, date: props.date, userId: props.resourceId });
   };
 
   useEffect(() => {
-    if (radioValue === 1) {
-      setButtonDisabled(selectedShift.length === 0);
-    } else if (radioValue === 2) {
-      setButtonDisabled(customRange[0] === undefined && customRange[1] === undefined);
-    }
-  }, [radioValue, selectedShift, customRange, buttonDisabled]);
+    setButtonDisabled(selectedShift.length === 0 && (!customRange[0] || !customRange[1]));
+  }, [selectedShift, customRange, buttonDisabled]);
 
   useEffect(() => {
     if (!visible) {
-      setRadioValue(1);
       setSelectedShift([]);
       setCustomRange([undefined, undefined]);
       setWeek(0);
     }
-  }, [visible, setRadioValue, setSelectedShift, setCustomRange, setWeek]);
+  }, [visible, setSelectedShift, setCustomRange, setWeek]);
+
+  useEffect(() => {
+    window.addEventListener('mousedown', e => {
+      const child = e.target.querySelector(':scope>.fc-event-container');
+      if (child) {
+        return;
+      }
+      setVisible(false);
+    });
+  }, [visible, setVisible]);
+
+  const onMouseDown = e => {
+    e.stopPropagation();
+  };
 
   return (
     <Container
-      className="shift-popover"
       visible={visible}
       position={props.position}
       onClick={onPopoverClick}
       color={color}
+      onMouseDown={onMouseDown}
     >
       <div>
-        <span>新增</span>
+        <span>新增看診時間</span>
         <CloseOutlined
           onClick={() => {
             setVisible(false);
           }}
         />
       </div>
-      <Radio.Group
-        defaultValue={radioValue}
-        onChange={e => {
-          setRadioValue(e.target.value);
-        }}
-      >
-        <Radio style={radioStyle} value={1}>
-          範本班別
-        </Radio>
-        <Checkbox.Group
-          style={{ maxHeight: '200px', overflowY: 'scroll' }}
-          options={props.defaultShift.map(s => ({
-            label: `${s.origin.name} {${s.origin.range.start} ~ ${s.origin.range.end})`,
-            value: s.origin.id,
-          }))}
-          value={selectedShift}
-          disabled={radioValue !== 1}
+      <ItemContainer>
+        <span>
+          <span>
+            <img src={boardIcon} alt="icon" />
+          </span>
+          <span>班表</span>
+        </span>
+        <HeightDiv>
+          <Checkbox.Group
+            options={props.defaultShift.map(s => ({
+              label: `${s.origin.name} {${s.origin.range.start} ~ ${s.origin.range.end})`,
+              value: s.origin.id,
+            }))}
+            value={selectedShift}
+            onChange={setSelectedShift}
+          />
+        </HeightDiv>
+      </ItemContainer>
+      <ItemContainer>
+        <span>
+          <span>
+            <img src={clockIcon} alt="icon" />
+          </span>
+          自訂時間
+        </span>
+        <StyledRangePicker
+          size="small"
+          format={'HH:mm'}
+          value={customRange}
           onChange={e => {
-            setSelectedShift(e);
+            if (!e) {
+              setCustomRange([undefined, undefined]);
+              return;
+            }
+            setCustomRange(e);
           }}
         />
-        <Radio style={radioStyle} value={2}>
-          <span>自訂時間</span>
-          <StyledRangePicker
-            size="small"
-            format={'HH:mm'}
-            disabled={radioValue !== 2}
-            value={customRange}
-            onChange={setCustomRange}
-            allowClear={false}
-          />
-        </Radio>
-      </Radio.Group>
-      <BoldSpan>
-        每
-        <StyleInputNumber size="small" value={week} min={0} max={5} onChange={setWeek} />
-        周重複至 {props.date ? moment(props.date).format('M') : ''} 月底
-      </BoldSpan>
+      </ItemContainer>
+      <ItemContainer>
+        <span>
+          <span>
+            <img src={repeatIcon} alt="icon" />
+          </span>
+          複製
+        </span>
+        <span>
+          每
+          <StyleInputNumber size="small" value={week} min={0} max={5} onChange={setWeek} />
+          周重複至 {props.date ? moment(props.date).format('M') : ''} 月底
+        </span>
+      </ItemContainer>
       <ButtonContainer>
         <Button onClick={onConfirm} type="primary" disabled={buttonDisabled}>
           儲存

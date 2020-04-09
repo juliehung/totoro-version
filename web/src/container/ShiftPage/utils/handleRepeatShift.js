@@ -26,16 +26,17 @@ function combineDateAndRange(date, range) {
 
 export const handleRepeatShift = (data, defaultShift) => {
   let shift = [];
-  if (data.radioValue === 1) {
+  if (data.selectedShift.length) {
     data.selectedShift
       .map(s => defaultShift.find(ds => ds.origin.id === s))
       .forEach(ds => {
         const range = { start: moment(ds.origin.range.start, 'HH:mm'), end: moment(ds.origin.range.end, 'HH:mm') };
         shift = [...shift, ...generateApiObj(data.userId, data.date, range, data.week)];
       });
-  } else if (data.radioValue === 2) {
+  }
+  if (data.customRange[0] && data.customRange[1]) {
     const range = { start: data.customRange[0], end: data.customRange[1] };
-    shift = generateApiObj(data.userId, data.date, range, data.week);
+    shift = [...shift, ...generateApiObj(data.userId, data.date, range, data.week)];
   }
 
   return shift;

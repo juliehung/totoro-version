@@ -2,23 +2,40 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { Popover, Button } from 'antd';
+import totoro from '../../../images/totoro.jpg';
+
 //#region
 const Container = styled.div`
   display: flex;
   align-items: center;
 `;
 
+const AvatarContainer = styled.div`
+  position: relative;
+  cursor: pointer;
+  margin-right: 10px;
+
+  & > div:first-child {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+
+    & > img {
+      width: 40px;
+    }
+  }
+`;
+
 const Color = styled.div`
   background-color: ${props => (props.color ? props.color : '#1890ff')};
-  height: 25px;
-  width: 25px;
+  height: 15px;
+  width: 15px;
+  border: 3px #fff solid;
   border-radius: 50%;
-  margin-right: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 `;
 
 const PopoverContainer = styled.div`
@@ -61,14 +78,16 @@ export const eventColors = [
 ];
 
 export const handleResourceRender = ({ resource, el }, utils) => {
-  const div = document.createElement('div');
-  const p = document.createElement('p');
-  div.appendChild(p);
-
   const container = el.querySelector('div');
   container.style.display = 'flex';
-  container.style.justifyContent = 'center';
   container.style.alignItems = 'center';
+  container.style.minHeight = '60px';
+
+  const fcCellContent = el.querySelector('div.fc-cell-content');
+  if (fcCellContent) {
+    fcCellContent.style.display = 'flex';
+    fcCellContent.style.alignItems = 'center';
+  }
 
   const colorPlate = (
     <PopoverContainer>
@@ -96,8 +115,13 @@ export const handleResourceRender = ({ resource, el }, utils) => {
 
   const content = (
     <Container>
-      <Popover content={colorPlate} trigger="click" placement="right" className="popover-app-detail">
-        <Color color={color}>{resource.title[0]}</Color>
+      <Popover content={colorPlate} trigger="click" placement="right">
+        <AvatarContainer>
+          <div>
+            <img alt="avatar" src={totoro}></img>
+          </div>
+          <Color color={color}></Color>
+        </AvatarContainer>
       </Popover>
       <span>{resource.title}</span>
     </Container>
