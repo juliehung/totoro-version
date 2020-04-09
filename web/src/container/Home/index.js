@@ -20,7 +20,9 @@ function Home(props) {
   const { loginSuccess, getAccount, getUserStart } = props;
 
   useEffect(() => {
-    getUserStart();
+    if (loginSuccess) {
+      getUserStart();
+    }
   }, [getUserStart, loginSuccess]);
 
   useEffect(() => {

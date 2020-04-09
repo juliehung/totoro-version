@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { Popover, Button } from 'antd';
-import totoro from '../../../images/totoro.jpg';
 
 //#region
 const Container = styled.div`
@@ -23,6 +22,16 @@ const AvatarContainer = styled.div`
 
     & > img {
       width: 40px;
+      height: 40px;
+    }
+
+    & > div {
+      width: 40px;
+      height: 40px;
+      background-color: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 `;
@@ -107,6 +116,8 @@ export const handleResourceRender = ({ resource, el }, utils) => {
     </PopoverContainer>
   );
 
+  const avatar = resource.extendedProps.avatar ? resource.extendedProps.avatar : undefined;
+
   const id = Object.keys(utils.resourceColor).find(id => id === resource.id);
   let color;
   if (id) {
@@ -118,7 +129,7 @@ export const handleResourceRender = ({ resource, el }, utils) => {
       <Popover content={colorPlate} trigger="click" placement="right">
         <AvatarContainer>
           <div>
-            <img alt="avatar" src={totoro}></img>
+            {avatar ? <img alt="avatar" src={`data:image/png;base64,${avatar}`}></img> : <div>{resource.title[0]}</div>}
           </div>
           <Color color={color}></Color>
         </AvatarContainer>
