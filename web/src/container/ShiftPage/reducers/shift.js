@@ -4,6 +4,8 @@ import {
   GET_SHIFT_SUCCESS,
   CREATE_SHIFT_START,
   CREATE_SHIFT_SUCCESS,
+  DELETE_SHIFT_START,
+  DELETE_SHIFT_SUCCESS,
   EDIT_SHIFT_START,
   EDIT_SHIFT_SUCCESS,
   SHIFT_DROP_START,
@@ -16,6 +18,7 @@ const initialState = {
   shift: [],
   createShiftSuccess: false,
   editShiftSuccess: false,
+  deleteSuccess: false,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -33,6 +36,13 @@ const shift = (state = initialState, action) =>
       case SHIFT_DROP_START:
         draft.createShiftSuccess = initialState.createShiftSuccess;
         break;
+      case DELETE_SHIFT_START:
+        draft.deleteSuccess = initialState.deleteSuccess;
+        break;
+      case DELETE_SHIFT_SUCCESS:
+        draft.shift = state.shift.filter(s => s.id.toString() !== action.id);
+        draft.deleteSuccess = true;
+        break;
       case CREATE_SHIFT_SUCCESS:
       case SHIFT_DROP_SUCCESS:
         draft.createShiftSuccess = true;
@@ -42,6 +52,7 @@ const shift = (state = initialState, action) =>
         draft.editShiftSuccess = initialState.editShiftSuccess;
         break;
       case EDIT_SHIFT_SUCCESS:
+        draft.shift = [...state.shift.filter(s => s.id !== action.shift.id), action.shift];
         draft.editShiftSuccess = true;
         break;
       default:

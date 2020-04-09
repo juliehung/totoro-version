@@ -5,7 +5,7 @@ import { Switch, Route, Link } from 'react-router-dom';
 import { CalendarOutlined, LogoutOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { useCookies } from 'react-cookie';
-import ShiftPage from "../ShiftPage";
+import ShiftPage from '../ShiftPage';
 
 const { Content, Sider } = Layout;
 
@@ -55,13 +55,14 @@ function NavHome() {
           </Menu.Item>
         </Menu>
       </Sider>
-      <Layout style={{ backgroundColor: 'white' }}>
+      <Layout style={{ backgroundColor: 'white', height: '100vh', overflow: 'hidden' }}>
         <Content style={{ backgroundColor: 'white' }}>
           <Switch>
             {process.env.NODE_ENV !== 'production' && (
               <Route exact path="/shift">
                 <ShiftPage />
-              </Route>)}
+              </Route>
+            )}
             <Route exact path="/">
               <AppointmentPage />
             </Route>

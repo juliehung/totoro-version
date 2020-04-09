@@ -1,12 +1,4 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import '@fullcalendar/core/main.css';
-import interactionPlugin from '@fullcalendar/interaction';
-import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
-import zhTW from '@fullcalendar/core/locales/zh-tw';
-import '@fullcalendar/daygrid/main.css';
-import '@fullcalendar/timegrid/main.css';
-import '@fullcalendar/list/main.css';
 import { connect } from 'react-redux';
 // import zhTW from '@fullcalendar/core/locales/zh-tw';
 import styled from 'styled-components';
@@ -14,22 +6,10 @@ import '@fullcalendar/timeline/main.css';
 import '@fullcalendar/resource-timeline/main.css';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import convertShiftToEvent from './utils/convertShiftToEvent';
-import handlePopoverPosition from './utils/handlePopoverPosition';
-import handleShiftEvtTitle from './utils/handleShiftEvtTitle';
-import { handleResourceRender } from './utils/handleResourceRender';
-import {
-  changeDate,
-  getShift,
-  createShift,
-  editShift,
-  shiftDrop,
-  changeResourceColor,
-  getResourceColor,
-} from './actions';
+import { changeDate, getShift, createShift, editShift, changeResourceColor, getResourceColor } from './actions';
 import ShiftPopover from './ShiftPopover';
-import { handleEventDrop } from './utils/handleEventDrop';
 import { message } from 'antd';
-import moment from 'moment';
+import Calendar from './Calendar';
 
 //#region
 const Container = styled.div`
@@ -48,12 +28,13 @@ function ShiftCalendar(props) {
     range,
     getShift,
     getResourceColor,
-    setPopoverVisible,
     createShiftSuccess,
     editShiftSuccess,
-    shiftDrop,
     changeColorSuccess,
+    deleteSuccess,
   } = props;
+
+  const [popoverVisible, setPopoverVisible] = useState(false);
 
   const [clickInfo, setClickInfo] = useState({
     position: { x: undefined, y: undefined },
@@ -109,102 +90,35 @@ function ShiftCalendar(props) {
   }, [editShiftSuccess]);
 
   useEffect(() => {
+    if (deleteSuccess) {
+      message.warning('刪除成功');
+    }
+  }, [deleteSuccess]);
+
+  useEffect(() => {
     if (changeColorSuccess) {
-      clickTitle();
       message.success('更新成功');
+      clickTitle();
     }
+    clickTitle();
   }, [changeColorSuccess, clickTitle]);
-
-  const datesRender = ({ view }) => {
-    const start = view.activeStart;
-    const end = view.activeEnd;
-    props.changeDate({ start, end });
-  };
-
-  const dateClick = dateClickInfo => {
-    const { jsEvent, resource, date } = dateClickInfo;
-
-    const id = Object.keys(props.resourceColor).find(id => id === resource.id);
-    let color;
-    if (id) {
-      color = props.resourceColor[id];
-    }
-
-    setClickInfo({ position: handlePopoverPosition(jsEvent), date, resourceId: resource.id, color });
-    setPopoverVisible(true);
-  };
-
-  const eventDrop = eventDropInfo => {
-    props.editShift(handleEventDrop(eventDropInfo));
-  };
-
-  const eventResize = eventResizeInfo => {
-    props.editShift(handleEventDrop(eventResizeInfo));
-  };
-
-  const drop = info => {
-    const resourceId = info.resource.id;
-    const date = info.date;
-    const timeRange = {
-      start: moment(info.draggedEl.dataset.start, 'HH:mm'),
-      end: moment(info.draggedEl.dataset.end, 'HH:mm'),
-    };
-    shiftDrop({ resourceId, date, timeRange });
-  };
-
-  const resourceRender = info => {
-    handleResourceRender(info, { colorClick: handleResourceColorClick, resourceColor: props.resourceColor });
-  };
-
-  const handleResourceColorClick = (id, color) => {
-    props.changeResourceColor(id, color);
-  };
-
-  const events = handleShiftEvtTitle(props.event, props.defaultShift);
 
   return (
     <Container>
-      <FullCalendar
-        locales={zhTW}
-        locale="zh-tw"
-        height="auto"
-        resources={props.resource}
-        resourceRender={resourceRender}
-        slotWidth={60}
-        events={events}
-        selectable
-        plugins={[interactionPlugin, resourceTimelinePlugin]}
-        defaultView={'resourceTimelineMonth'}
-        views={{
-          resourceTimelineFourDays: {
-            type: 'resourceTimeline',
-            duration: { days: 4 },
-          },
-        }}
-        editable={true}
-        resourceLabelText={'Doctor'}
-        header={{
-          left: 'today prev',
-          center: 'title',
-          right: 'next',
-        }}
-        resourceAreaWidth={'20%'}
-        datesRender={datesRender}
-        dateClick={dateClick}
-        eventDrop={eventDrop}
-        eventResize={eventResize}
-        drop={drop}
-        slotLabelFormat={{ day: 'numeric', weekday: 'short' }}
-        displayEventTime={false}
+      <Calendar
+        clickInfo={clickInfo}
+        setClickInfo={setClickInfo}
+        popoverVisible={popoverVisible}
+        setPopoverVisible={setPopoverVisible}
+        changeColorSuccess={changeColorSuccess}
       />
       <ShiftPopover
         setVisible={setPopoverVisible}
-        visible={props.popoverVisible}
+        visible={popoverVisible}
         position={clickInfo.position}
         date={clickInfo.date}
         resourceId={clickInfo.resourceId}
         color={clickInfo.color}
-        className="shift-popover"
         defaultShift={props.defaultShift}
         onConfirm={props.createShift}
       />
@@ -218,6 +132,7 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   defaultShift: shiftPageReducer.defaultShift.shift,
   event: convertShiftToEvent(shiftPageReducer.shift.shift, shiftPageReducer.resourceColor.color),
   createShiftSuccess: shiftPageReducer.shift.createShiftSuccess,
+  deleteSuccess: shiftPageReducer.shift.deleteSuccess,
   editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
   changeColorSuccess: shiftPageReducer.resourceColor.changeColorSuccess,
   resourceColor: shiftPageReducer.resourceColor.color,
@@ -228,7 +143,6 @@ const mapDispatchToProps = {
   getShift,
   createShift,
   editShift,
-  shiftDrop,
   changeResourceColor,
   getResourceColor,
 };

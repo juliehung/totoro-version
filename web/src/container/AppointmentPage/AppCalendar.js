@@ -46,13 +46,12 @@ import { calFirstDay } from './reducers/calendar';
 import MobileDetect from 'mobile-detect';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
-// !todo uncomment next version
-// import { reverseEvents } from './utils/reverseEvents';
-// import { handleResources } from './utils/handleResources';
+import { reverseEvents } from './utils/reverseEvents';
+import { handleResources } from './utils/handleResources';
 
 //#region
 const Container = styled.div`
-  min-height: 100%;
+  height: 100vh;
   .fc-toolbar.fc-header-toolbar {
     background: #f3f8ff;
     padding: 17px 23px 17px 38px;
@@ -173,8 +172,7 @@ class AppCalendar extends React.Component {
         this.props.changeSelectedDoctors([id.toString()]);
       }
     }
-    // !todo this line cause antd v4 crash
-    // window.dispatchEvent(new Event('resize'));
+    window.dispatchEvent(new Event('resize'));
   }
 
   componentWillUnmount() {
@@ -356,15 +354,6 @@ class AppCalendar extends React.Component {
   };
 
   render() {
-    // !TODO uncomment next version
-    // const event = [
-    //   ...this.props.appointments,
-    //   ...this.props.calendarEvents.filter(() => this.props.showCalEvt),
-    //   // ...this.generalSetting,
-    //   ...reverseEvents(this.props.backgroundEvent, this.state.viewType, this.props.calendarRange),
-    // ];
-
-    // !TODO comment next version
     const event = [
       ...this.props.appointments.filter(a => {
         if (this.props.selectedAllDoctors) {
@@ -373,30 +362,18 @@ class AppCalendar extends React.Component {
         return this.props.selectedDoctors.includes(a.appointment.doctor.user.id.toString());
       }),
       ...this.props.calendarEvents.filter(() => this.props.showCalEvt),
-      ...this.generalSetting,
+      // ...this.generalSetting,
+      ...reverseEvents(this.props.backgroundEvent, this.state.viewType, this.props.calendarRange),
     ];
 
-    // !TODO uncomment next version
-    // const resource = handleResources(this.props.doctors, this.props.backgroundEvent);
+    const resource = handleResources(this.props.doctors, this.props.backgroundEvent, this.props.getShiftSuccess);
 
     return (
       <Container>
         <StyledFullCalendar
           ref={this.calendarComponentRef}
           height="parent"
-          // !TODO uncomment next version
-          // resources={resource}
-          // !TODO comment next version
-          resources={this.props.doctors
-            .filter(d => d.activated)
-            .filter(d => {
-              if (this.props.selectedAllDoctors) {
-                return d;
-              } else {
-                return this.props.selectedDoctors.includes(d.id.toString());
-              }
-            })
-            .map(d => ({ id: d.id, title: d.name }))}
+          resources={resource}
           events={event}
           plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin, resourceTimeGridPlugin, listPlugin, momentPlugin]}
           header={{
@@ -489,6 +466,7 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   cancelApp: appointmentPageReducer.calendar.cancelApp,
   account: homePageReducer.account.data,
   backgroundEvent: convertShitToBackgroundEvent(appointmentPageReducer.shift.shift),
+  getShiftSuccess: appointmentPageReducer.shift.getShiftSuccess,
 });
 
 const mapDispatchToProps = {
