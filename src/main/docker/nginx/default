@@ -15,8 +15,8 @@ server {
     return 200;
   }
 
-  location ~ ^/(?<sub>[^/\.]+)$ {
-    rewrite ^/.* https://$host$request_uri/ permanent;
+  location ~ ^/([^/\.]+)$ {
+    rewrite ^/(.+)$ https://$host/$1/$is_args$args? permanent;
   }
 
   location ~ ^/(?<sub>[^/]+)/mqtt {
