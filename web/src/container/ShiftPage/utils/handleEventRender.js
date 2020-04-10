@@ -40,7 +40,7 @@ export function handleEventRender({ el, event }, { deleteShift }) {
           deleteShift(event.id);
         }}
       >
-        <CloseOutlined />
+        <CloseOutlined style={{ pointerEvents: 'none' }} />
       </HoverSpan>
     </Container>
   );
