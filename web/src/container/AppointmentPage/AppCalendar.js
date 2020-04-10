@@ -47,7 +47,8 @@ import MobileDetect from 'mobile-detect';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
 import { reverseEvents } from './utils/reverseEvents';
-import { handleResources } from './utils/handleResources';
+// !todo uncomment when shift feature open
+// import { handleResources } from './utils/handleResources';
 
 //#region
 const Container = styled.div`
@@ -172,7 +173,10 @@ class AppCalendar extends React.Component {
         this.props.changeSelectedDoctors([id.toString()]);
       }
     }
-    window.dispatchEvent(new Event('resize'));
+    if (this.calendarComponentRef.current) {
+      let calendarApi = this.calendarComponentRef.current.getApi();
+      calendarApi.updateSize();
+    }
   }
 
   componentWillUnmount() {
@@ -366,8 +370,18 @@ class AppCalendar extends React.Component {
       ...reverseEvents(this.props.backgroundEvent, this.state.viewType, this.props.calendarRange),
     ];
 
-    const resource = handleResources(this.props.doctors, this.props.backgroundEvent, this.props.getShiftSuccess);
-
+    // !todo uncomment when shift feature open
+    // const resource = handleResources(this.props.doctors, this.props.backgroundEvent, this.props.getShiftSuccess);
+    const resource = this.props.doctors
+      .filter(d => d.activated)
+      .filter(d => {
+        if (this.props.selectedAllDoctors) {
+          return d;
+        } else {
+          return this.props.selectedDoctors.includes(d.id.toString());
+        }
+      })
+      .map(d => ({ id: d.id, title: d.name }));
     return (
       <Container>
         <StyledFullCalendar
