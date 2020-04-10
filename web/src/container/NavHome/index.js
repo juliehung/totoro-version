@@ -42,11 +42,13 @@ function NavHome() {
             <span>預約</span>
             <Link to="/" />
           </Menu.Item>
-          <Menu.Item key="3">
-            <UnorderedListOutlined />
-            <span>排班</span>
-            <Link to="/shift" />
-          </Menu.Item>
+          {process.env.NODE_ENV !== 'production' && (
+            <Menu.Item key="3">
+              <UnorderedListOutlined />
+              <span>排班</span>
+              <Link to="/shift" />
+            </Menu.Item>
+          )}
           <Menu.Item key="9" onClick={logout}>
             <LogoutOutlined />
             <span>登出</span>
@@ -56,9 +58,11 @@ function NavHome() {
       <Layout style={{ backgroundColor: 'white', height: '100vh', overflow: 'hidden' }}>
         <Content style={{ backgroundColor: 'white' }}>
           <Switch>
-            <Route exact path="/shift">
-              <ShiftPage />
-            </Route>
+            {process.env.NODE_ENV !== 'production' && (
+              <Route exact path="/shift">
+                <ShiftPage />
+              </Route>
+            )}
             <Route exact path="/">
               <AppointmentPage />
             </Route>
