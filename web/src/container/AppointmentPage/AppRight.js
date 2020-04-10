@@ -155,8 +155,27 @@ function AppRight(props) {
     }
   };
 
+  const simulateMouseClick = element => {
+    const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
+    mouseClickEvents.forEach(mouseEventType =>
+      element.dispatchEvent(
+        new MouseEvent(mouseEventType, {
+          view: window,
+          bubbles: true,
+          cancelable: true,
+          buttons: 1,
+        }),
+      ),
+    );
+  };
+
   const onSliderChange = value => {
-    props.changeCalSlotDuration(value);
+    const title = document.querySelector('.fc-center');
+    if (title) {
+      simulateMouseClick(title);
+      props.changeCalSlotDuration(value);
+    }
+
     GAevent('Appointment page', 'Change slot duration');
   };
 
@@ -306,7 +325,7 @@ function AppRight(props) {
       </TodoContainer>
       <ChangeSlotDurationContainer>
         <span>縮放</span>
-        <Slider min={10} max={30} step={5} onChange={onSliderChange} value={props.slotDuration} />
+        <Slider min={10} max={30} step={5} onAfterChange={onSliderChange} defaultValue={props.slotDuration} />
       </ChangeSlotDurationContainer>
     </Container>
   );
