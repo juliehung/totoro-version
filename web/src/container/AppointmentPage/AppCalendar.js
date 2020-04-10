@@ -199,7 +199,9 @@ class AppCalendar extends React.Component {
 
   clickTitle = () => {
     const title = document.querySelector('.fc-center');
-    this.simulateMouseClick(title);
+    if (title) {
+      this.simulateMouseClick(title);
+    }
   };
 
   scrollListener = undefined;
