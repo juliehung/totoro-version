@@ -180,8 +180,8 @@ public class NhiService {
                 .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getTreatmentProcedure() != null &&
                     nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal() != null &&
                     nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime() != null &&
-                    !nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime()
-                        .isAfter(targetNhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime()))
+                    !nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS)
+                        .isAfter(targetNhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS)))
                 .collect(Collectors.toSet());
 
             return new PersonalNhiExtendTreatmentProcedureMap().nhiExtendTreatmentProcedure(peronalAllNhiTxProc);
