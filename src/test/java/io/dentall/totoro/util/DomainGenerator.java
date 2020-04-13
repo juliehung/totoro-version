@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -130,7 +131,7 @@ public class DomainGenerator {
             .getTreatmentPlans().iterator().next()
             .getTreatmentTasks().iterator().next();
 
-        Disposal disposal = new Disposal().status(DisposalStatus.PERMANENT);
+        Disposal disposal = new Disposal().status(DisposalStatus.PERMANENT).dateTime(Instant.now());
         TreatmentProcedure treatmentProcedure = new TreatmentProcedure().status(TreatmentProcedureStatus.COMPLETED);
         NhiExtendDisposal nhiExtendDisposal = new NhiExtendDisposal().a17(a17).uploadStatus(NhiExtendDisposalUploadStatus.NORMAL);
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = new NhiExtendTreatmentProcedure().a73(a73).a74(a74).check("");

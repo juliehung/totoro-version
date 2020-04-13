@@ -257,11 +257,21 @@ class AppCalendar extends React.Component {
 
   nextMonthClick = () => {
     let calendarApi = this.calendarComponentRef.current.getApi();
+    const currentViewType = calendarApi.state.viewType;
+    if (currentViewType === 'dayGridMonth') {
+      calendarApi.nextYear();
+      return;
+    }
     this.props.changeCalDate(moment(calendarApi.getDate()).add(1, 'month'));
   };
 
   prevMonthClick = () => {
     let calendarApi = this.calendarComponentRef.current.getApi();
+    const currentViewType = calendarApi.state.viewType;
+    if (currentViewType === 'dayGridMonth') {
+      calendarApi.prevYear();
+      return;
+    }
     this.props.changeCalDate(moment(calendarApi.getDate()).add(-1, 'month'));
   };
 
