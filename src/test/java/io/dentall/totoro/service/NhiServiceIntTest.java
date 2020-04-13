@@ -261,8 +261,6 @@ public class NhiServiceIntTest {
         testCheckDependOn1();
         testCheckDependOn2();
         testCheckDependOn3();
-        testCheckDependOn4();
-        testCheckDependOn5();
     }
 
     private void testCheckDependOn1() {
@@ -284,40 +282,20 @@ public class NhiServiceIntTest {
         PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
             nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
         nhiService.checkDependOn.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
-        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("Not fit dependency clause\n");
+//        logger.info(targetTxProc.getNhiExtendTreatmentProcedure().getCheck());
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("Not fit dependency clause ( DependOnA 日期 10 天前 )\n");
     }
 
     private void testCheckDependOn3() {
         Patient p = domainGenerator.generatePatientAndTxFamily("patient3", "0000000000");
-        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090101", "DependOnB", "112233");
-        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1090131", "DependOn", "112244");
-
-        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
-            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
-        nhiService.checkDependOn.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
-        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("Not fit dependency clause\n");
-    }
-
-    private void testCheckDependOn4() {
-        Patient p = domainGenerator.generatePatientAndTxFamily("patient4", "0000000000");
         domainGenerator.generateTreatmentProcedureToDisposal(p, "1090101", "DependOnA", "112233");
-        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1090131", "DependOn1", "112244");
+        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1090105", "DependOn", "112244");
 
         PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
             nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
         nhiService.checkDependOn.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
-        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("Not fit dependency clause\n");
-    }
-
-    private void testCheckDependOn5() {
-        Patient p = domainGenerator.generatePatientAndTxFamily("patient5", "0000000000");
-        domainGenerator.generateTreatmentProcedureToDisposal(p, "1090101", "DependOnA", "112233");
-        TreatmentProcedure targetTxProc = domainGenerator.generateTreatmentProcedureToDisposal(p, "1090103", "DependOn1", "112244");
-
-        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
-            nhiService.getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(p.getId(), targetTxProc.getNhiExtendTreatmentProcedure());
-        nhiService.checkDependOn.accept(targetTxProc.getNhiExtendTreatmentProcedure(), finalPersonalNhiExtendTreatmentProcedureMap);
-        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("");
+//        logger.info(targetTxProc.getNhiExtendTreatmentProcedure().getCheck());
+        assertThat(targetTxProc.getNhiExtendTreatmentProcedure().getCheck()).isEqualTo("Not fit dependency clause ( DependOnA 日期 4 天前 )\n");
     }
 
     @Test

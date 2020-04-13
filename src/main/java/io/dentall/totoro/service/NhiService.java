@@ -566,26 +566,20 @@ public class NhiService {
             Arrays.stream(rules.get(targetCode).getDependOn())
                 .map(DependOn::new)
                 .forEach(r -> {
-                    if (r.getDuring() != null) {
-                        if (!personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getDependOn()) ||
-                            !personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getDependOn()).getSortedDeclarationDates()
-                                .anyMatch(localDate -> {
-                                    LocalDate d = localDate.plusDays(r.getDuring());
-                                    return d.isAfter(targetDate) || d.isEqual(targetDate);
-                                })
-                        ) {
-                            targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() + r.getMessage() + "\n");
-                        }
-                    } else {
-                        if (!personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getDependOn()) ||
-                            personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getDependOn()).getSortedDeclarationDates()
-                                .anyMatch(localDate -> {
-                                    LocalDate d = localDate.plusDays(r.getInterval());
-                                    return d.isAfter(targetDate) || d.isEqual(targetDate);
-                                })
-                        ) {
-                            targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() + r.getMessage() + "\n");
-                        }
+                    if (personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getDependOn())) {
+                        personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getDependOn()).getSortedDeclarationDates()
+                            .forEach( localDate -> {
+                                LocalDate d = localDate.plusDays(r.getInterval());
+                                if (d.isAfter(targetDate) || d.isEqual(targetDate)) {
+                                    targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
+                                        r.getMessage() +
+                                        " ( " +
+                                        r.getDependOn() +
+                                        " 日期 " +
+                                        ChronoUnit.DAYS.between(localDate, targetDate) +
+                                        " 天前 )\n");
+                                }
+                            });
                     }
                 });
         }

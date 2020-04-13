@@ -26,7 +26,6 @@ OtherToothDeclarationInterval,,,,,,,,"@type=PT@code=A,B,C@interval=30;@type=DT@c
 IdentityLimit,,,,,,,,,"@identity=H10@age=6@interval=180@message=不得重複申報（未滿六歲兒童）;@identity=003,007@age=12@intervale=90@message=不得重複申報（未滿十二歲之低收入戶、身心障礙、設籍原住民族地區、偏遠及離島地區兒童）",,,
 AlwaysMessage,,,,,,,,,,@message=IMM1,,
 AlwaysMessage2,,,,,,,,,,@message=IMM1;@message=IMM2,,
-DependOn,,,,,,,,,,,@code=DependOnA@interval=10@message=Not fit dependency clause,
+DependOn,,,,,,,,,,,@dependOn=DependOnA@interval=10@message=Not fit dependency clause,
 Max,,,,,,,"@code=MaxA,MaxB@interval=30@max=3",,,,,
-DependOn1,,,,,,,,,,,@code=DependOnA@during=10@message=Not fit dependency clause,
 InfectionControl,,,,,,,,,,,,@message=要變殭屍啦
