@@ -1,6 +1,7 @@
-import { Modal, Button, TimePicker, DatePicker, Select, Input, Spin, message, Checkbox, Empty } from 'antd';
+import { Modal, Button, DatePicker, Select, Input, Spin, message, Checkbox, Empty } from 'antd';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import {
   changeCreateAppModalVisible,
   searchPatients,
@@ -28,6 +29,7 @@ import { requiredTreatmentTimeDefault } from './constant';
 import convertMrnTo5Digits from './utils/convertMrnTo5Digits';
 import { GAevent } from '../../ga';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
+import { defaultTimeOption } from './utils/generateDefaultTime';
 
 //#region
 const Container = styled.div`
@@ -264,26 +266,21 @@ function CreateAppModal({
             <NewPatientRow>
               <NewPatientElement>
                 <span>病患姓名：</span>
-                <Input onChange={onChangePatientName} value={patient.name} placeholder="請輸入病患姓名" />
+                <Input onChange={onChangePatientName} value={patient.name} placeholder="(必填)" />
               </NewPatientElement>
               <NewPatientElement>
                 <span>生日：</span>
-                <DatePicker
-                  allowClear
-                  onChange={changeCreateAppPatientBirth}
-                  value={patient.birth}
-                  placeholder="請選擇生日"
-                />
+                <DatePicker allowClear onChange={changeCreateAppPatientBirth} value={patient.birth} placeholder="" />
               </NewPatientElement>
             </NewPatientRow>
             <NewPatientRow>
               <NewPatientElement>
                 <span>身分證號：</span>
-                <Input onChange={onChangePatientNationalId} value={patient.nationalId} placeholder="請輸入身分證號" />
+                <Input onChange={onChangePatientNationalId} value={patient.nationalId} />
               </NewPatientElement>
               <NewPatientElement>
                 <span>電話：</span>
-                <Input onChange={onChangePatientPhone} value={patient.phone} placeholder="請輸入電話" />
+                <Input onChange={onChangePatientPhone} value={patient.phone} placeholder="(必填)" />
               </NewPatientElement>
             </NewPatientRow>
           </NewPatientContainer>
@@ -335,12 +332,25 @@ function CreateAppModal({
                 value={appointment.expectedArrivalDate}
                 placeholder="請選擇日期"
               />
-              <TimePicker
-                format="HH:mm"
-                onChange={changeCreateAppExpectedArrivalTime}
-                value={appointment.expectedArrivalTime}
+              <StyledSelect
                 placeholder="請選擇時間"
-              />
+                value={appointment.expectedArrivalTime && moment(appointment.expectedArrivalTime).format('HH:mm')}
+                onChange={t => {
+                  changeCreateAppExpectedArrivalTime(moment(t, 'HH:mm'));
+                }}
+              >
+                {defaultTimeOption.map(t => {
+                  const time24 = t.format('HH:mm');
+                  const time12 = t.format('hh:mm');
+                  const prefix = t.locale('en-US').format('a') === 'am' ? '上午' : '下午';
+
+                  return (
+                    <Select.Option key={time24} value={time24}>
+                      {prefix} {time12}
+                    </Select.Option>
+                  );
+                })}
+              </StyledSelect>
             </span>
           </div>
           <div>
