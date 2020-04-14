@@ -31,6 +31,7 @@ function ShiftCalendar(props) {
     editShiftSuccess,
     changeColorSuccess,
     deleteSuccess,
+    deleteDefaultShiftSuccess,
   } = props;
 
   const [popoverVisible, setPopoverVisible] = useState(false);
@@ -97,6 +98,12 @@ function ShiftCalendar(props) {
   }, [deleteSuccess]);
 
   useEffect(() => {
+    if (deleteDefaultShiftSuccess) {
+      message.warning('刪除成功');
+    }
+  }, [deleteDefaultShiftSuccess]);
+
+  useEffect(() => {
     if (changeColorSuccess) {
       message.success('更新成功');
       clickTitle();
@@ -139,6 +146,7 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
   changeColorSuccess: shiftPageReducer.resourceColor.changeColorSuccess,
   resourceColor: shiftPageReducer.resourceColor.color,
+  deleteDefaultShiftSuccess: shiftPageReducer.defaultShift.deleteSuccess,
 });
 
 const mapDispatchToProps = {
