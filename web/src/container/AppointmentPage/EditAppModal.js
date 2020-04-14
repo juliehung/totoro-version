@@ -1,4 +1,4 @@
-import { Modal, Button, TimePicker, DatePicker, Select, Input, Spin, message, Checkbox } from 'antd';
+import { Modal, Button, DatePicker, Select, Input, Spin, message, Checkbox } from 'antd';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
@@ -19,6 +19,7 @@ import styled from 'styled-components';
 import { requiredTreatmentTimeDefault } from './constant';
 import moment from 'moment';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
+import { defaultTimeOption } from './utils/generateDefaultTime';
 
 //#region
 const Container = styled.div`
@@ -230,12 +231,25 @@ function EditAppModal({
                 value={appointment.expectedArrivalDate}
                 allowClear={false}
               />
-              <TimePicker
-                format="HH:mm"
-                onChange={changeEditAppExpectedArrivalTime}
-                value={appointment.expectedArrivalTime}
-                allowClear={false}
-              />
+              <StyledSelect
+                placeholder="請選擇時間"
+                value={appointment.expectedArrivalTime && moment(appointment.expectedArrivalTime).format('HH:mm')}
+                onChange={t => {
+                  changeEditAppExpectedArrivalTime(moment(t, 'HH:mm'));
+                }}
+              >
+                {defaultTimeOption.map(t => {
+                  const time24 = t.format('HH:mm');
+                  const time12 = t.format('hh:mm');
+                  const prefix = t.locale('en-US').format('a') === 'am' ? '上午' : '下午';
+
+                  return (
+                    <Select.Option key={time24} value={time24}>
+                      {prefix} {time12}
+                    </Select.Option>
+                  );
+                })}
+              </StyledSelect>
             </span>
           </div>
           <div>
