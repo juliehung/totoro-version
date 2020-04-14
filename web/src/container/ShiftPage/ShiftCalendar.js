@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import '@fullcalendar/timeline/main.css';
 import '@fullcalendar/resource-timeline/main.css';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
-import convertShiftToEvent from './utils/convertShiftToEvent';
 import { changeDate, getShift, createShift, editShift, changeResourceColor, getResourceColor } from './actions';
 import ShiftPopover from './ShiftPopover';
 import { message } from 'antd';
@@ -135,7 +134,6 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   resource: extractDoctorsFromUser(homePageReducer.user.users).map(d => ({ id: d.id, title: d.name })),
   range: shiftPageReducer.shift.range,
   defaultShift: shiftPageReducer.defaultShift.shift,
-  event: convertShiftToEvent(shiftPageReducer.shift.shift, shiftPageReducer.resourceColor.color),
   createShiftSuccess: shiftPageReducer.shift.createShiftSuccess,
   deleteSuccess: shiftPageReducer.shift.deleteSuccess,
   editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
