@@ -147,7 +147,10 @@ function ShiftPopover(props) {
   const mousedownCallback = useCallback(
     e => {
       const child = e.target;
-      if (child.querySelector(':scope>.fc-event-container') || child.className.includes('fc-highlight')) {
+      if (
+        child.querySelector(':scope>.fc-event-container') ||
+        (child.className.includes && child.className.includes('fc-highlight'))
+      ) {
         return;
       }
       setVisible(false);
