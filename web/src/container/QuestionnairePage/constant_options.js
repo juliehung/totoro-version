@@ -47,7 +47,7 @@ export const MarriageOption = [
 export const RelationshipOption = [
   { key: 'A', value: '配偶', code: 'spouse', jhi_order: 1 },
   { key: 'B', value: '父母', code: 'parent', jhi_order: 2 },
-  { key: 'C', value: '女', code: 'child', jhi_order: 3 },
+  { key: 'C', value: '子女', code: 'child', jhi_order: 3 },
   { key: 'D', value: '朋友', code: 'friend', jhi_order: 4 },
 ];
 
