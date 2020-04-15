@@ -52,7 +52,7 @@ import { reverseEvents } from './utils/reverseEvents';
 
 //#region
 const Container = styled.div`
-  height: 100vh;
+  height: 100%;
   .fc-toolbar.fc-header-toolbar {
     background: #f3f8ff;
     padding: 17px 23px 17px 38px;

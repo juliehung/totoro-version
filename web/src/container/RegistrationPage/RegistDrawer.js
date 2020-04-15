@@ -76,7 +76,7 @@ function RegistDrawer(props) {
   const avatar = patient.gender === 'MALE' ? ManPng : patient.gender === 'FEMALE' ? WomanPng : DefaultPng;
 
   return (
-    <Drawer placement="right" closable={true} width="500px" onClose={onClose} visible={drawerVisible}>
+    <Drawer placement="right" closable={true} width="375px" onClose={onClose} visible={drawerVisible}>
       <DrawerContainer>
         <PatientContainer>
           <img src={avatar} alt={'avatar'} />

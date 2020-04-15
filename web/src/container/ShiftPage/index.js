@@ -8,13 +8,10 @@ import './index.css';
 
 //#region
 const Container = styled.div`
-  height: 100vh;
-  width: 100%;
+  height: 100%;
   display: flex;
-  padding: 1%;
-  margin: 0 auto;
   position: relative;
-  overflow-y: scroll;
+  padding: 10px;
 `;
 //#endregion
 
