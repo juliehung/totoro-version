@@ -14,7 +14,7 @@ import { Helmet } from 'react-helmet-async';
 
 //#region
 const Container = styled.div`
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-wrap: no-wrap;
   @media (max-width: 800px) {
@@ -30,7 +30,6 @@ const Container = styled.div`
 `;
 const CalendarContainer = styled.div`
   width: 85%;
-  height: 100%;
   @media (max-width: 800px) {
     height: 600px;
     width: 100%;

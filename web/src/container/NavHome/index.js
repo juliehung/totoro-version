@@ -1,16 +1,138 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import AppointmentPage from '../AppointmentPage';
-import { Switch, Route, Link } from 'react-router-dom';
-import { CalendarOutlined, LogoutOutlined, UnorderedListOutlined } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
+import RegistrationPage from '../RegistrationPage';
+import { Switch, Route, Link, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import ShiftPage from '../ShiftPage';
+import BookOpen from './svg/BookOpen';
+import Pantone from './svg/Pantone';
+import CalendarFill from './svg/CalendarFill';
+import DentallHisLogo from '../../images/DentallHisLogo.svg';
+import { Menu, Dropdown, Drawer } from 'antd';
+import { parseAccountData } from './utils/parseAccountData';
 
-const { Content, Sider } = Layout;
+//#region
+const Container = styled.div`
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+`;
 
-function NavHome() {
-  const [collapsed, setCollapsed] = useState(true);
+const NavContainer = styled.nav`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 1% 16px 1%;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  margin: 15px 1%;
+  border-radius: 8px;
+  & > :nth-child(1) {
+    font-size: 2rem;
+  }
+
+  & > div:nth-child(3) {
+    ul {
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  @media (min-width: 960px) {
+    & > :nth-child(1) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 960px) {
+    & > div:nth-child(3) {
+      display: none;
+    }
+  }
+`;
+
+const NavItem = styled.li`
+  box-shadow: ${props => (props.focus ? '0 2px 10px 0 rgba(50, 102, 255, 0.5)' : 'none')};
+  background-image: ${props => (props.focus ? 'linear-gradient(288deg, #0a54c5, #3266ff)' : 'none')};
+  color: ${props => (props.focus ? '#fff' : '#333')};
+  list-style-type: none;
+  margin: 0 2vw;
+  font-size: 12px;
+  padding: 10px;
+  border-radius: 34px;
+  & {
+    a {
+      text-decoration: none;
+      & > div {
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        & > :first-child {
+          margin-right: 10px;
+        }
+      }
+      & .svg {
+        fill: ${props => (props.focus ? '#fff' : '#333')};
+        color: ${props => (props.focus ? '#fff' : '#333')};
+      }
+    }
+  }
+`;
+
+const UserContainer = styled.div`
+  display: flex;
+  align-items: center;
+  & > :first-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    & > :nth-child(2) {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.45);
+    }
+  }
+  & > :nth-child(2) {
+    width: 40px;
+    height: 40px;
+    background: #eee;
+    border-radius: 50%;
+    margin-left: 20px;
+    overflow: hidden;
+  }
+`;
+
+const DrawerItem = styled(Link)`
+  text-decoration: none;
+  font-size: 14px;
+  color: #222b45;
+  font-weight: bold;
+  padding: 15px;
+  margin: 15px 0;
+  & > div {
+    display: flex;
+    align-items: center;
+    & > :first-child {
+      margin-right: 10px;
+    }
+  }
+`;
+
+const ContentContainer = styled.div`
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+//#endregion
+
+function NavHome(props) {
+  const { account } = props;
+
   const [, , removeCookie] = useCookies(['token']);
 
   const logout = () => {
@@ -18,61 +140,142 @@ function NavHome() {
     window.location.reload();
   };
 
+  const [currentLocation, setCurrentLocation] = useState(undefined);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
+  const menuClick = ({ key }) => {
+    if (key === 'logout') {
+      logout();
+    }
+  };
+
+  let location = useLocation();
+  useEffect(() => {
+    const route = location.pathname.split('/')[1];
+    if (route !== currentLocation) {
+      setCurrentLocation(route);
+    }
+  }, [location, currentLocation]);
+
   return (
-    <Layout>
-      <Sider
-        collapsedWidth={0}
-        zeroWidthTriggerStyle={{ zIndex: 5, top: '15px' }}
-        width={150}
-        collapsible
-        collapsed={collapsed}
-        onCollapse={c => setCollapsed(c)}
+    <Container>
+      <NavContainer>
+        <span
+          onClick={() => {
+            setDrawerVisible(true);
+          }}
+        >
+          ☰
+        </span>
+        <Link to="/">
+          <img src={DentallHisLogo} alt="dentallHis" />
+        </Link>
+        <div>
+          <ul>
+            <NavItem focus={currentLocation === 'registration'}>
+              <Link to="/registration">
+                <div>
+                  <BookOpen />
+                  <span className="svg">就診列表</span>
+                </div>
+              </Link>
+            </NavItem>
+            <NavItem focus={currentLocation === ''}>
+              <Link to="/">
+                <div>
+                  <CalendarFill />
+                  <span className="svg">約診排程</span>
+                </div>
+              </Link>
+            </NavItem>
+            <NavItem focus={currentLocation === 'shift'}>
+              <Link to="/shift">
+                <div>
+                  <Pantone />
+                  <span className="svg">排班</span>
+                </div>
+              </Link>
+            </NavItem>
+          </ul>
+        </div>
+        <Dropdown
+          trigger="click"
+          overlay={
+            <Menu onClick={menuClick}>
+              <Menu.Item key="logout">登出</Menu.Item>
+            </Menu>
+          }
+          placement="bottomCenter"
+        >
+          <UserContainer>
+            <div>
+              <span>{account.name}</span>
+              <span>{account.role}</span>
+            </div>
+            {account.avatar ? (
+              <img alt="avatar" src={`data:image/png;base64,${account.avatar}`}></img>
+            ) : (
+              <div>{account.name[0]}</div>
+            )}
+          </UserContainer>
+        </Dropdown>
+      </NavContainer>
+      <Drawer
+        visible={drawerVisible}
+        closable
+        placement="left"
+        onClose={() => {
+          setDrawerVisible(false);
+        }}
+        onClick={() => {
+          setDrawerVisible(false);
+        }}
       >
-        <div className="logo" />
-        <Menu theme="dark" defaultSelectedKeys={['2']}>
-          {process.env.NODE_ENV !== 'production' && (
-            <Menu.Item key="1">
-              <UnorderedListOutlined />
-              <span>掛號</span>
-              <Link to="/registration" />
-            </Menu.Item>
-          )}
-          <Menu.Item key="2">
-            <CalendarOutlined />
-            <span>預約</span>
-            <Link to="/" />
-          </Menu.Item>
-          <Menu.Item key="3">
-            <UnorderedListOutlined />
-            <span>排班</span>
-            <Link to="/shift" />
-          </Menu.Item>
-          <Menu.Item key="9" onClick={logout}>
-            <LogoutOutlined />
-            <span>登出</span>
-          </Menu.Item>
-        </Menu>
-      </Sider>
-      <Layout style={{ backgroundColor: 'white', height: '100vh', overflow: 'hidden' }}>
-        <Content style={{ backgroundColor: 'white' }}>
-          <Switch>
-            <Route exact path="/shift">
-              <ShiftPage />
-            </Route>
-            <Route exact path="/">
-              <AppointmentPage />
-            </Route>
-            <Route path="*">
-              <AppointmentPage />
-            </Route>
-          </Switch>
-        </Content>
-      </Layout>
-    </Layout>
+        <div to="/" style={{ marginBottom: '30px' }}>
+          <img src={DentallHisLogo} alt="dentallHis" />
+        </div>
+        <DrawerItem to="/registration">
+          <div>
+            <BookOpen />
+            <span>就診列表</span>
+          </div>
+        </DrawerItem>
+        <DrawerItem to="/">
+          <div>
+            <CalendarFill />
+            <span>約診排程</span>
+          </div>
+        </DrawerItem>
+        <DrawerItem to="/shift">
+          <div>
+            <Pantone />
+            <span>LABOYS</span>
+          </div>
+        </DrawerItem>
+      </Drawer>
+      <ContentContainer>
+        <Switch>
+          <Route exact path="/shift">
+            <ShiftPage />
+          </Route>
+          <Route exact path="/">
+            <AppointmentPage />
+          </Route>
+          <Route exact path="/registration">
+            <RegistrationPage />
+          </Route>
+          <Route path="*">
+            <AppointmentPage />
+          </Route>
+        </Switch>
+      </ContentContainer>
+    </Container>
   );
 }
 
-const mapStateToProps = ({ loginPageReducer }) => ({ loginSuccess: loginPageReducer.login.loginSuccess });
+const mapStateToProps = ({ homePageReducer }) => ({
+  account: parseAccountData(homePageReducer.account.data),
+});
 
 const mapDispatchToProps = {};
 

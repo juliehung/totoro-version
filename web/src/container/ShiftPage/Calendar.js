@@ -88,7 +88,7 @@ function Calendar(props) {
     <FullCalendar
       locales={zhTW}
       locale="zh-tw"
-      height="auto"
+      height="parent"
       resources={props.resource}
       resourceRender={resourceRender}
       slotWidth={150}
@@ -113,6 +113,7 @@ function Calendar(props) {
       slotLabelFormat={{ day: 'numeric', weekday: 'short' }}
       displayEventTime={false}
       selectable
+      selectLongPressDelay={500}
     />
   );
 }

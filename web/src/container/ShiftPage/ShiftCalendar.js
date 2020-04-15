@@ -12,10 +12,8 @@ import Calendar from './Calendar';
 
 //#region
 const Container = styled.div`
-  /* height: 100%; */
   width: 100%;
-  padding: 20px;
-  flex-grow: 1;
+  margin: 10px;
   .fc-license-message {
     display: none;
   }
@@ -108,7 +106,7 @@ function ShiftCalendar(props) {
       message.success('更新成功');
       clickTitle();
     }
-    clickTitle();
+    // clickTitle();
   }, [changeColorSuccess, clickTitle]);
 
   return (
