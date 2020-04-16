@@ -7,7 +7,7 @@ function* getShift({ start, end }) {
   try {
     const result = yield call(Shift.get, {
       'toDate.greaterOrEqualThan': start.toISOString(),
-      'fromDate.lessOrEqualThan': end.toISOString(),
+      'fromDate.lessThan': end.toISOString(),
     });
 
     yield put(getShiftSuccess(result));

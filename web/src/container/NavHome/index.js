@@ -6,6 +6,7 @@ import RegistrationPage from '../RegistrationPage';
 import { Switch, Route, Link, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import ShiftPage from '../ShiftPage';
+import SettingPage from '../SettingPage';
 import BookOpen from './svg/BookOpen';
 import Pantone from './svg/Pantone';
 import CalendarFill from './svg/CalendarFill';
@@ -157,6 +158,8 @@ function NavHome(props) {
     }
   }, [location, currentLocation]);
 
+  const showShift = props.generalSetting && props.generalSetting.showShift;
+
   return (
     <Container>
       <NavContainer>
@@ -188,14 +191,16 @@ function NavHome(props) {
                 </div>
               </Link>
             </NavItem>
-            <NavItem focus={currentLocation === 'shift'}>
-              <Link to="/shift">
-                <div>
-                  <Pantone />
-                  <span className="svg">排班</span>
-                </div>
-              </Link>
-            </NavItem>
+            {showShift && (
+              <NavItem focus={currentLocation === 'shift'}>
+                <Link to="/shift">
+                  <div>
+                    <Pantone />
+                    <span className="svg">排班</span>
+                  </div>
+                </Link>
+              </NavItem>
+            )}
           </ul>
         </div>
         <Dropdown
@@ -246,23 +251,30 @@ function NavHome(props) {
             <span>約診排程</span>
           </div>
         </DrawerItem>
-        <DrawerItem to="/shift">
-          <div>
-            <Pantone />
-            <span>LABOYS</span>
-          </div>
-        </DrawerItem>
+        {showShift && (
+          <DrawerItem to="/shift">
+            <div>
+              <Pantone />
+              <span>排班</span>
+            </div>
+          </DrawerItem>
+        )}
       </Drawer>
       <ContentContainer>
         <Switch>
-          <Route exact path="/shift">
-            <ShiftPage />
-          </Route>
+          {showShift && (
+            <Route exact path="/shift">
+              <ShiftPage />
+            </Route>
+          )}
           <Route exact path="/">
             <AppointmentPage />
           </Route>
           <Route exact path="/registration">
             <RegistrationPage />
+          </Route>
+          <Route path="/setting">
+            <SettingPage />
           </Route>
           <Route path="*">
             <AppointmentPage />
@@ -273,8 +285,9 @@ function NavHome(props) {
   );
 }
 
-const mapStateToProps = ({ homePageReducer }) => ({
+const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   account: parseAccountData(homePageReducer.account.data),
+  generalSetting: homePageReducer.settings.generalSetting,
 });
 
 const mapDispatchToProps = {};

@@ -422,7 +422,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   patient: appointmentPageReducer.createApp.patient,
   createAppSuccess: appointmentPageReducer.createApp.createAppSuccess,
   disabled: appointmentPageReducer.createApp.disabled,
-  setting: appointmentPageReducer.settings.generalSetting,
+  setting: homePageReducer.settings.generalSetting,
   account: homePageReducer.account,
   loading: appointmentPageReducer.createApp.loading,
 });
