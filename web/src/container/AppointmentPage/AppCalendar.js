@@ -29,7 +29,6 @@ import {
   changeEditCalModalVisible,
   deleteAppointment,
   deleteCalEvt,
-  getSettings,
   popoverCancelApp,
   changeSelectedDoctors,
   sendSms,
@@ -47,8 +46,7 @@ import MobileDetect from 'mobile-detect';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
 import { reverseEvents } from './utils/reverseEvents';
-// !todo uncomment when shift feature open
-// import { handleResources } from './utils/handleResources';
+import { handleResources } from './utils/handleResources';
 
 //#region
 const Container = styled.div`
@@ -122,7 +120,6 @@ class AppCalendar extends React.Component {
   componentDidMount() {
     let calendarApi = this.calendarComponentRef.current.getApi();
     calendarApi.gotoDate(this.props.calendarDate.format('YYYY-MM-DD'));
-    this.props.getSettings();
 
     // XD just delete the message
     const msg = document.querySelector('.fc-license-message');
@@ -370,30 +367,36 @@ class AppCalendar extends React.Component {
   };
 
   render() {
+    const shiftOpen = this.props.generalSetting && this.props.generalSetting.showShift;
+
     const event = [
-      ...this.props.appointments.filter(a => {
-        if (this.props.selectedAllDoctors) {
-          return a;
-        }
-        return this.props.selectedDoctors.includes(a.appointment.doctor.user.id.toString());
-      }),
+      ...(shiftOpen
+        ? this.props.appointments
+        : this.props.appointments.filter(a => {
+            if (this.props.selectedAllDoctors) {
+              return a;
+            }
+            return this.props.selectedDoctors.includes(a.appointment.doctor.user.id.toString());
+          })),
       ...this.props.calendarEvents.filter(() => this.props.showCalEvt),
-      // ...this.generalSetting,
-      ...reverseEvents(this.props.backgroundEvent, this.state.viewType, this.props.calendarRange),
+      ...(shiftOpen
+        ? reverseEvents(this.props.backgroundEvent, this.state.viewType, this.props.calendarRange)
+        : this.generalSetting),
     ];
 
-    // !todo uncomment when shift feature open
-    // const resource = handleResources(this.props.doctors, this.props.backgroundEvent, this.props.getShiftSuccess);
-    const resource = this.props.doctors
-      .filter(d => d.activated)
-      .filter(d => {
-        if (this.props.selectedAllDoctors) {
-          return d;
-        } else {
-          return this.props.selectedDoctors.includes(d.id.toString());
-        }
-      })
-      .map(d => ({ id: d.id, title: d.name }));
+    const resource = shiftOpen
+      ? handleResources(this.props.doctors, this.props.backgroundEvent, this.props.getShiftSuccess)
+      : this.props.doctors
+          .filter(d => d.activated)
+          .filter(d => {
+            if (this.props.selectedAllDoctors) {
+              return d;
+            } else {
+              return this.props.selectedDoctors.includes(d.id.toString());
+            }
+          })
+          .map(d => ({ id: d.id, title: d.name }));
+
     return (
       <Container>
         <StyledFullCalendar
@@ -487,7 +490,7 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   calendarEvents: appointmentPageReducer.calendar.calendarEvents,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
   showCalEvt: appointmentPageReducer.calendar.showCalEvt,
-  generalSetting: appointmentPageReducer.settings.generalSetting,
+  generalSetting: homePageReducer.settings.generalSetting,
   calendarRange: appointmentPageReducer.calendar.range,
   cancelApp: appointmentPageReducer.calendar.cancelApp,
   account: homePageReducer.account.data,
@@ -512,7 +515,6 @@ const mapDispatchToProps = {
   changeEditCalModalVisible,
   deleteAppointment,
   deleteCalEvt,
-  getSettings,
   popoverCancelApp,
   changeSelectedDoctors,
   sendSms,
