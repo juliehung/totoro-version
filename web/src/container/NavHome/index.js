@@ -102,6 +102,9 @@ const UserContainer = styled.div`
     border-radius: 50%;
     margin-left: 20px;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
