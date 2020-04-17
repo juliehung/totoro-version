@@ -83,8 +83,6 @@ import {
   CHANGE_CAL_SLOT_DURATION,
   GET_TODOS_START,
   GET_TODOS_SUCCESS,
-  GET_SETTINGS_START,
-  GET_SETTINGS_SUCCESS,
   POPOVER_CANCEL_APP_START,
   POPOVER_CANCEL_APP_SUCCESS,
   CHANGE_TODO_APP_MODAL_VISIBLE,
@@ -431,14 +429,6 @@ export function getTodos() {
 
 export function getTodosSuccess(todos) {
   return { type: GET_TODOS_SUCCESS, todos };
-}
-
-export function getSettings() {
-  return { type: GET_SETTINGS_START };
-}
-
-export function getSettingsSuccess(settings) {
-  return { type: GET_SETTINGS_SUCCESS, settings };
 }
 
 export function popoverCancelApp(appData) {

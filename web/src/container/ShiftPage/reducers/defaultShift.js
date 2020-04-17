@@ -6,6 +6,7 @@ import {
   CHANGE_DEFAULT_SHIFT_RANGE,
   CREATE_DEFAULT_SHIFT_START,
   CREATE_DEFAULT_SHIFT_SUCCESS,
+  DELETE_DEFAULT_SHIFT_START,
   DELETE_DEFAULT_SHIFT_SUCCESS,
 } from '../constant';
 import { parseShiftConfigToShift } from '../utils/parseShiftConfigToShift';
@@ -14,6 +15,7 @@ const initialState = {
   shift: [],
   newShift: { name: undefined, range: { start: undefined, end: undefined } },
   createSuccess: false,
+  deleteSuccess: false,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -39,7 +41,11 @@ const defaultShift = (state = initialState, action) =>
         draft.newShift = initialState.newShift;
         draft.createSuccess = true;
         break;
+      case DELETE_DEFAULT_SHIFT_START:
+        draft.deleteSuccess = initialState.deleteSuccess;
+        break;
       case DELETE_DEFAULT_SHIFT_SUCCESS:
+        draft.deleteSuccess = true;
         draft.shift = state.shift.filter(s => s.origin.id !== action.id);
         break;
       default:

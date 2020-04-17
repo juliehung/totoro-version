@@ -18,8 +18,7 @@ const { RangePicker } = TimePicker;
 //#region
 const Container = styled.div`
   width: 300px;
-  height: 100%;
-  padding: 10px;
+  margin: 10px;
   display: flex;
   flex-direction: column;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.05);
@@ -30,6 +29,10 @@ const Container = styled.div`
     & > :first-child {
       margin-right: 10px;
     }
+  }
+
+  @media (max-width: 960px) {
+    display: none;
   }
 `;
 

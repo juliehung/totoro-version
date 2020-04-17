@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { getAccount, getUserStart } from './actions';
+import { getAccount, getUserStart, getSettings } from './actions';
 import QuestionnairePage from '../QuestionnairePage';
 import LoginPage from '../LoginPage';
 import { Switch, Route } from 'react-router-dom';
 import NavHome from '../NavHome';
-import RegistrationPage from '../RegistrationPage';
 import Form from '../QuestionnairePage/Form';
 
 //#region
@@ -17,19 +16,15 @@ const Container = styled.div`
 //#endregion
 
 function Home(props) {
-  const { loginSuccess, getAccount, getUserStart } = props;
-
-  useEffect(() => {
-    if (loginSuccess) {
-      getUserStart();
-    }
-  }, [getUserStart, loginSuccess]);
+  const { loginSuccess, getAccount, getUserStart, getSettings } = props;
 
   useEffect(() => {
     if (loginSuccess) {
       getAccount();
+      getSettings();
+      getUserStart();
     }
-  }, [loginSuccess, getAccount]);
+  }, [loginSuccess, getAccount, getSettings, getUserStart]);
 
   if (!loginSuccess)
     return (
@@ -46,9 +41,6 @@ function Home(props) {
       <Route path="/q/:pid">
         <QuestionnairePage />
       </Route>
-      <Route exact path="/registration">
-        <RegistrationPage />
-      </Route>
       <Route path="/">
         <NavHome />
       </Route>
@@ -60,6 +52,6 @@ const mapStateToProps = ({ loginPageReducer }) => ({
   loginSuccess: loginPageReducer.login.loginSuccess,
 });
 
-const mapDispatchToProps = { getAccount, getUserStart };
+const mapDispatchToProps = { getAccount, getUserStart, getSettings };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

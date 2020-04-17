@@ -20,14 +20,15 @@ const { Option } = Select;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 1250px;
+  width: 100%;
+  max-width: 1250px;
   margin: 0 auto;
 `;
 const DatePickerContainer = styled.div`
   display: flex;
   align-items: center;
   height: 70px;
+  padding: 10px;
 `;
 const NameContainer = styled.div`
   display: flex;
@@ -37,6 +38,7 @@ const NameContainer = styled.div`
 const StyledTable = styled(Table)`
   flex-grow: 1;
   height: 80vh;
+  touch-action: pan-y;
 `;
 const RowIndexContainer = styled.div`
   display: flex;
@@ -74,8 +76,9 @@ const columns = [
     dataIndex: 'rowIndex',
     key: 'rowIndex',
     width: 40,
+    fixed: 'left',
   },
-  { title: '姓名', dataIndex: 'name', key: 'name', width: 100 },
+  { title: '姓名', dataIndex: 'name', key: 'name', width: 100, fixed: 'left' },
   {
     title: '年齡',
     dataIndex: 'age',
@@ -251,15 +254,9 @@ function RegistrationPage(props) {
         name: renderName(appt.patient),
         patient: appt.patient,
         arrivalTime:
-          appt.registration.arrivalTime &&
-          moment(appt.registration.arrivalTime)
-            .local()
-            .format('YYYY-MM-DD HH:mm'),
+          appt.registration.arrivalTime && moment(appt.registration.arrivalTime).local().format('YYYY-MM-DD HH:mm'),
         expectedArrivalTime:
-          appt.expectedArrivalTime &&
-          moment(appt.expectedArrivalTime)
-            .local()
-            .format('YYYY-MM-DD HH:mm'),
+          appt.expectedArrivalTime && moment(appt.expectedArrivalTime).local().format('YYYY-MM-DD HH:mm'),
         age: moment().diff(appt.patient.birth, 'years') + 'Y',
         type: appt.registration.type,
         doctor: appt.doctor.user.firstName,
@@ -314,6 +311,7 @@ function RegistrationPage(props) {
           };
         }}
         dataSource={convertToTableSource(props.registrations)}
+        scroll={{ y: 'calc(100vh - 270px)', x: 960 }}
       />
       <RegistDrawer />
     </Container>

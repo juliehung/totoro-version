@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import '@fullcalendar/timeline/main.css';
 import '@fullcalendar/resource-timeline/main.css';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
-import convertShiftToEvent from './utils/convertShiftToEvent';
 import { changeDate, getShift, createShift, editShift, changeResourceColor, getResourceColor } from './actions';
 import ShiftPopover from './ShiftPopover';
 import { message } from 'antd';
@@ -13,10 +12,8 @@ import Calendar from './Calendar';
 
 //#region
 const Container = styled.div`
-  /* height: 100%; */
   width: 100%;
-  padding: 20px;
-  flex-grow: 1;
+  margin: 10px;
   .fc-license-message {
     display: none;
   }
@@ -32,6 +29,7 @@ function ShiftCalendar(props) {
     editShiftSuccess,
     changeColorSuccess,
     deleteSuccess,
+    deleteDefaultShiftSuccess,
   } = props;
 
   const [popoverVisible, setPopoverVisible] = useState(false);
@@ -98,11 +96,17 @@ function ShiftCalendar(props) {
   }, [deleteSuccess]);
 
   useEffect(() => {
+    if (deleteDefaultShiftSuccess) {
+      message.warning('刪除成功');
+    }
+  }, [deleteDefaultShiftSuccess]);
+
+  useEffect(() => {
     if (changeColorSuccess) {
       message.success('更新成功');
       clickTitle();
     }
-    clickTitle();
+    // clickTitle();
   }, [changeColorSuccess, clickTitle]);
 
   return (
@@ -135,12 +139,12 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   resource: extractDoctorsFromUser(homePageReducer.user.users).map(d => ({ id: d.id, title: d.name })),
   range: shiftPageReducer.shift.range,
   defaultShift: shiftPageReducer.defaultShift.shift,
-  event: convertShiftToEvent(shiftPageReducer.shift.shift, shiftPageReducer.resourceColor.color),
   createShiftSuccess: shiftPageReducer.shift.createShiftSuccess,
   deleteSuccess: shiftPageReducer.shift.deleteSuccess,
   editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
   changeColorSuccess: shiftPageReducer.resourceColor.changeColorSuccess,
   resourceColor: shiftPageReducer.resourceColor.color,
+  deleteDefaultShiftSuccess: shiftPageReducer.defaultShift.deleteSuccess,
 });
 
 const mapDispatchToProps = {

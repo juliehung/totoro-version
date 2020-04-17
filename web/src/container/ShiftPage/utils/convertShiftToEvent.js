@@ -4,8 +4,9 @@ const convertShiftToEvent = (shifts, resourceColor) => {
   const event = shifts.map(s => {
     const id = Object.keys(resourceColor).find(id => `${id}` === `${s.userId}`);
     let backgroundColor;
-    if (id) {
-      backgroundColor = resourceColor[id];
+    backgroundColor = resourceColor[id];
+    if (!backgroundColor) {
+      backgroundColor = '#1890FF';
     }
 
     return {
