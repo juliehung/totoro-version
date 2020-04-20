@@ -8,13 +8,9 @@ export function handleSendMultipleToken() {
   if (cloudName && token) {
     try {
       return token[cloudName];
-
-      const tokens = JSON.parse(unescape(token));
-      return tokens[cloudName];
     } catch (e) {
       console.log(e);
     }
   }
-
   return token;
 }
