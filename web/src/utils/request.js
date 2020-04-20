@@ -1,5 +1,5 @@
-import { Cookies } from 'react-cookie';
-const cookies = new Cookies();
+import { handleSendMultipleToken } from './handleSendMultipleToken';
+
 export function parseJSON(response) {
   if (response.status === 204 || response.status === 205) {
     return null;
@@ -18,7 +18,7 @@ export function checkStatus(response) {
 }
 
 export default function request(url, options) {
-  const token = cookies.get('token') || undefined;
+  const token = handleSendMultipleToken();
   const headers = {
     Authorization: `Bearer ${token}`,
   };
@@ -37,7 +37,5 @@ export default function request(url, options) {
     option = { headers };
   }
 
-  return fetch(url, option)
-    .then(checkStatus)
-    .then(parseJSON);
+  return fetch(url, option).then(checkStatus).then(parseJSON);
 }
