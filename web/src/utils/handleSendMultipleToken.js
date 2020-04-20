@@ -5,9 +5,17 @@ const cookies = new Cookies();
 
 export function handleSendMultipleToken() {
   const token = cookies.get('token') || undefined;
+
+  console.log('cloudName', cloudName);
+  console.log('token', token);
+
   if (cloudName && token) {
     try {
-      const tokens = JSON.parse(token);
+      console.log('JSON.parse');
+
+      const tokens = JSON.parse(unescape(token));
+      console.log('tokens', tokens);
+
       return tokens[cloudName];
     } catch (e) {
       console.log(e);
