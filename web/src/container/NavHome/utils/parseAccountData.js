@@ -1,8 +1,6 @@
 export function parseAccountData(accountData) {
   if (accountData) {
     const name = accountData.firstName;
-    console.log(accountData.authorities[0]);
-
     const role = ['ROLE_ADMIN', 'ROLE_MANAGER'].includes(accountData.authorities[0])
       ? '管理者'
       : accountData.authorities[0] === 'ROLE_DOCTOR'
