@@ -7,7 +7,6 @@ import PrintModal from './PrintModal';
 import ConfirmDropModal from './ConfirmDropModal';
 import CreatAppModal from './CreateAppModal';
 import EditAppModal from './EditAppModal';
-import TodoAppModal from './TodoAppModal';
 import CreateCalendarEventModal from './CreateCalendarEventModal';
 import EditCalendarEventModal from './EditCalendarEventModal';
 import { Helmet } from 'react-helmet-async';
@@ -53,7 +52,6 @@ function AppointmentPage({ changeSelectedDoctors, account }) {
       <EditAppModal />
       <CreateCalendarEventModal />
       <EditCalendarEventModal />
-      <TodoAppModal />
     </Container>
   );
 }

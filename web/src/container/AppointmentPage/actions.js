@@ -81,14 +81,8 @@ import {
   DELETE_CAL_EVT_START,
   DELETE_CAL_EVT_SUCCESS,
   CHANGE_CAL_SLOT_DURATION,
-  GET_TODOS_START,
-  GET_TODOS_SUCCESS,
   POPOVER_CANCEL_APP_START,
   POPOVER_CANCEL_APP_SUCCESS,
-  CHANGE_TODO_APP_MODAL_VISIBLE,
-  CREATE_TODO_APP,
-  CREATE_TODO_APP_SUCCESS,
-  CHANGE_TODO_APP_DISPOSAL_ID,
   SEND_SMS,
   GET_SHIFT_START,
   GET_SHIFT_SUCCESS,
@@ -423,36 +417,12 @@ export function changeCalSlotDuration(duration) {
   return { type: CHANGE_CAL_SLOT_DURATION, duration };
 }
 
-export function getTodos() {
-  return { type: GET_TODOS_START };
-}
-
-export function getTodosSuccess(todos) {
-  return { type: GET_TODOS_SUCCESS, todos };
-}
-
 export function popoverCancelApp(appData) {
   return { type: POPOVER_CANCEL_APP_START, appData };
 }
 
 export function popoverCancelAppSuccess(appointment) {
   return { type: POPOVER_CANCEL_APP_SUCCESS, appointment };
-}
-
-export function changeTodoAppModalVisible(visible) {
-  return { type: CHANGE_TODO_APP_MODAL_VISIBLE, visible };
-}
-
-export function createTodoApp(app) {
-  return { type: CREATE_TODO_APP, app };
-}
-
-export function createTodoAppSuccess(id) {
-  return { type: CREATE_TODO_APP_SUCCESS, id };
-}
-
-export function changeTodoAppDisposalId(id) {
-  return { type: CHANGE_TODO_APP_DISPOSAL_ID, id };
 }
 
 export function sendSms(appointment) {
