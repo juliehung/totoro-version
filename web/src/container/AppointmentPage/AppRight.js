@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { DownOutlined, LeftOutlined, PrinterOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Calendar, Dropdown, Menu, Row, Col, Slider, Select } from 'antd';
+import { DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import { Button, Calendar, Dropdown, Menu, Row, Col, Select, Divider } from 'antd';
 import {
   changeCalDate,
   changePrintModalVisible,
@@ -13,8 +14,11 @@ import {
 } from './actions';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
-import { GAevent } from '../../ga';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
+import GridIcon from '../../images/grid.svg';
+import PointerIcon from '../../images/printer.svg';
+import SettingsIcon from '../../images/settings.svg';
+import { putSettings } from '../Home/actions';
 
 //#region
 const Container = styled.div`
@@ -33,10 +37,41 @@ const Container = styled.div`
 
 const TopContainer = styled.div`
   display: flex;
+  margin-top: 30px;
 `;
 
 const StyledCalendar = styled(Calendar)`
   margin-top: 15px;
+`;
+
+const ItemContainer = styled.div`
+  font-size: 15px;
+  height: 60px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  & img {
+    width: 20px;
+    margin-right: 10px;
+  }
+
+  & button {
+    border: 0;
+    padding: 0;
+    font-size: 100%;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+    color: #3366ff;
+  }
+
+  & button:active {
+    color: red;
+  }
+
+  & > :nth-child(2) {
+    font-size: 10px;
+  }
 `;
 
 const AppButton = styled(Button)`
@@ -48,10 +83,6 @@ const DropdownButton = styled(Button)`
   border-left: 0.5px solid #fff;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-`;
-
-const PrintButton = styled(Button)`
-  margin-left: 5px;
 `;
 
 const DateTitleContainer = styled(Col)`
@@ -77,22 +108,10 @@ const StyledSelect = styled(Select)`
   width: 100%;
 `;
 
-const ChangeSlotDurationContainer = styled.div`
-  display: flex;
-  align-items: baseline;
-  & > span {
-    font-weight: bold;
-    margin-right: 10px;
-  }
-  & > *:not(span) {
-    flex-grow: 1;
-  }
-`;
-
 //#endregion
 
 function AppRight(props) {
-  const { calendarDate, changeCalDate, selectedDoctors } = props;
+  const { calendarDate, changeCalDate, selectedDoctors, settings, showShiftCalc, putSettings } = props;
 
   const handleMenuClick = () => {
     props.changeCreateCalModalVisible(true);
@@ -128,14 +147,27 @@ function AppRight(props) {
     );
   };
 
-  const onSliderChange = value => {
+  const onSlotDurationChange = value => {
+    const max = 30;
+    const min = 10;
+    const step = 5;
     const title = document.querySelector('.fc-center');
     if (title) {
       simulateMouseClick(title);
-      props.changeCalSlotDuration(value);
+      if (value) {
+        if (props.slotDuration + step > max) {
+          props.changeCalSlotDuration(max);
+        } else {
+          props.changeCalSlotDuration(props.slotDuration + step);
+        }
+      } else {
+        if (props.slotDuration - step < min) {
+          props.changeCalSlotDuration(min);
+        } else {
+          props.changeCalSlotDuration(props.slotDuration - step);
+        }
+      }
     }
-
-    GAevent('Appointment page', 'Change slot duration');
   };
 
   const headerRender = ({ value }) => {
@@ -174,8 +206,88 @@ function AppRight(props) {
     );
   };
 
+  const onShiftButtonClick = () => {
+    const showShift = !showShiftCalc;
+    if (settings.id) {
+      const generalSetting = {
+        ...{ ...(settings.preferences ? settings.preferences.generalSetting : {}) },
+        showShift,
+      };
+      const preferences = { ...settings.preferences, generalSetting };
+      const newSettings = { ...settings, preferences };
+      putSettings(newSettings);
+    }
+  };
+
   return (
     <Container>
+      <StyledCalendar
+        fullscreen={false}
+        headerRender={headerRender}
+        onSelect={props.changeCalDate}
+        value={props.calendarDate}
+      />
+      <ItemContainer>
+        <div>
+          <img src={PointerIcon} alt="列印" />
+          <span>列印</span>
+        </div>
+        <div>
+          <button onClick={props.changePrintModalVisible}>預約表</button>
+        </div>
+      </ItemContainer>
+      <ItemContainer>
+        <div>
+          <img src={GridIcon} alt="密度" />
+          <span>密度</span>
+        </div>
+        <div>
+          <button
+            onClick={() => {
+              onSlotDurationChange(true);
+            }}
+          >
+            縮小
+          </button>
+          <Divider type="vertical" />
+          <button
+            onClick={() => {
+              onSlotDurationChange(false);
+            }}
+          >
+            放大
+          </button>
+        </div>
+      </ItemContainer>
+      <ItemContainer>
+        <div>
+          <img src={SettingsIcon} alt="設定" />
+          <span>設定</span>
+        </div>
+        <div>
+          <button onClick={onShiftButtonClick}>{showShiftCalc ? '停用' : '啟用'}</button>
+          <Divider type="vertical" />
+          <Link to="/shift">
+            <button>編輯</button>
+          </Link>
+        </div>
+      </ItemContainer>
+      <SelectDoctorContainer>
+        <span>顯示</span>
+        <StyledSelect onChange={handleDoctorChange} mode="tags" allowClear maxTagCount={1} value={selectedDoctors}>
+          {[
+            <Select.Option key={'all'}>{`全部醫師`}</Select.Option>,
+            ...props.doctors
+              .filter(d => d.activated)
+              .map(d => (
+                <Select.Option key={d.id}>
+                  {`${d.name} (${props.doctorAppCount[d.id] ? props.doctorAppCount[d.id] : 0})`}
+                </Select.Option>
+              )),
+            <Select.Option key={'dayOff'}>{`休假`}</Select.Option>,
+          ]}
+        </StyledSelect>
+      </SelectDoctorContainer>
       <TopContainer>
         <AppButton
           type="primary"
@@ -199,36 +311,7 @@ function AppRight(props) {
             <DownOutlined />
           </DropdownButton>
         </Dropdown>
-        <PrintButton size={'large'} onClick={props.changePrintModalVisible}>
-          <PrinterOutlined size={'large'} />
-        </PrintButton>
       </TopContainer>
-      <StyledCalendar
-        fullscreen={false}
-        headerRender={headerRender}
-        onSelect={props.changeCalDate}
-        value={props.calendarDate}
-      />
-      <SelectDoctorContainer>
-        <span>顯示</span>
-        <StyledSelect onChange={handleDoctorChange} mode="tags" allowClear maxTagCount={1} value={selectedDoctors}>
-          {[
-            <Select.Option key={'all'}>{`全部醫師`}</Select.Option>,
-            ...props.doctors
-              .filter(d => d.activated)
-              .map(d => (
-                <Select.Option key={d.id}>
-                  {`${d.name} (${props.doctorAppCount[d.id] ? props.doctorAppCount[d.id] : 0})`}
-                </Select.Option>
-              )),
-            <Select.Option key={'dayOff'}>{`休假`}</Select.Option>,
-          ]}
-        </StyledSelect>
-      </SelectDoctorContainer>
-      <ChangeSlotDurationContainer>
-        <span>縮放</span>
-        <Slider min={10} max={30} step={5} onAfterChange={onSliderChange} defaultValue={props.slotDuration} />
-      </ChangeSlotDurationContainer>
     </Container>
   );
 }
@@ -238,6 +321,9 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   selectedDoctors: appointmentPageReducer.calendar.selectedDoctors,
   doctorAppCount: appointmentPageReducer.calendar.doctorAppCount,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
+  generalSetting: homePageReducer.settings.generalSetting,
+  settings: homePageReducer.settings.settings,
+  showShiftCalc: homePageReducer.settings.generalSetting && homePageReducer.settings.generalSetting.showShift,
 });
 
 const mapDispatchToProps = {
@@ -247,6 +333,7 @@ const mapDispatchToProps = {
   changeCreateAppModalVisible,
   changeCreateCalModalVisible,
   changeCalSlotDuration,
+  putSettings,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRight);

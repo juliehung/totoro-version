@@ -8,7 +8,6 @@ import { useCookies } from 'react-cookie';
 import ShiftPage from '../ShiftPage';
 import SettingPage from '../SettingPage';
 import BookOpen from './svg/BookOpen';
-import Pantone from './svg/Pantone';
 import CalendarFill from './svg/CalendarFill';
 import DentallHisLogo from '../../images/DentallHisLogo.svg';
 import { Menu, Dropdown, Drawer } from 'antd';
@@ -158,8 +157,6 @@ function NavHome(props) {
     }
   }, [location, currentLocation]);
 
-  const showShift = props.generalSetting && props.generalSetting.showShift;
-
   return (
     <Container>
       <NavContainer>
@@ -191,16 +188,6 @@ function NavHome(props) {
                 </div>
               </Link>
             </NavItem>
-            {showShift && (
-              <NavItem focus={currentLocation === 'shift'}>
-                <Link to="/shift">
-                  <div>
-                    <Pantone />
-                    <span className="svg">排班</span>
-                  </div>
-                </Link>
-              </NavItem>
-            )}
           </ul>
         </div>
         <Dropdown
@@ -251,22 +238,12 @@ function NavHome(props) {
             <span>約診排程</span>
           </div>
         </DrawerItem>
-        {showShift && (
-          <DrawerItem to="/shift">
-            <div>
-              <Pantone />
-              <span>排班</span>
-            </div>
-          </DrawerItem>
-        )}
       </Drawer>
       <ContentContainer>
         <Switch>
-          {showShift && (
-            <Route exact path="/shift">
-              <ShiftPage />
-            </Route>
-          )}
+          <Route exact path="/shift">
+            <ShiftPage />
+          </Route>
           <Route exact path="/">
             <AppointmentPage />
           </Route>
@@ -285,9 +262,8 @@ function NavHome(props) {
   );
 }
 
-const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
+const mapStateToProps = ({ homePageReducer }) => ({
   account: parseAccountData(homePageReducer.account.data),
-  generalSetting: homePageReducer.settings.generalSetting,
 });
 
 const mapDispatchToProps = {};
