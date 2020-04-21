@@ -5,6 +5,8 @@ import {
   GET_USER_SUCCESS,
   GET_SETTINGS_START,
   GET_SETTINGS_SUCCESS,
+  PUT_SETTINGS_START,
+  PUT_SETTINGS_SUCCESS,
 } from './constant';
 
 export function getAccount() {
@@ -29,4 +31,12 @@ export function getSettings() {
 
 export function getSettingsSuccess(settings) {
   return { type: GET_SETTINGS_SUCCESS, settings };
+}
+
+export function putSettings(settings) {
+  return { type: PUT_SETTINGS_START, settings };
+}
+
+export function putSettingsSuccess(settings) {
+  return { type: PUT_SETTINGS_SUCCESS, settings };
 }

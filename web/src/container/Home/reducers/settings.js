@@ -1,10 +1,11 @@
 import produce from 'immer';
-import { GET_SETTINGS_START, GET_SETTINGS_SUCCESS } from '../constant';
+import { GET_SETTINGS_START, GET_SETTINGS_SUCCESS, PUT_SETTINGS_START, PUT_SETTINGS_SUCCESS } from '../constant';
 
 const initState = {
   settings: undefined,
-  loading: false,
   generalSetting: undefined,
+  loading: false,
+  putSuccess: false,
 };
 
 export const initialState = { ...initState };
@@ -20,6 +21,13 @@ const settings = (state = initialState, action) =>
         draft.settings = action.settings;
         draft.generalSetting = action.settings.preferences.generalSetting;
         draft.loading = initState.loading;
+        break;
+      case PUT_SETTINGS_START:
+        draft.putSuccess = initState.putSuccess;
+        break;
+      case PUT_SETTINGS_SUCCESS:
+        draft.putSuccess = true;
+        draft.generalSetting = action.settings.preferences.generalSetting;
         break;
       default:
         break;

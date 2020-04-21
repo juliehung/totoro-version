@@ -16,7 +16,7 @@ const Container = styled.div`
 //#endregion
 
 function Home(props) {
-  const { loginSuccess, getAccount, getUserStart, getSettings } = props;
+  const { loginSuccess, getAccount, getUserStart, getSettings, putSuccess } = props;
 
   useEffect(() => {
     if (loginSuccess) {
@@ -25,6 +25,12 @@ function Home(props) {
       getUserStart();
     }
   }, [loginSuccess, getAccount, getSettings, getUserStart]);
+
+  useEffect(() => {
+    if (loginSuccess && putSuccess) {
+      getSettings();
+    }
+  }, [loginSuccess, putSuccess, getSettings]);
 
   if (!loginSuccess)
     return (
@@ -48,8 +54,9 @@ function Home(props) {
   );
 }
 
-const mapStateToProps = ({ loginPageReducer }) => ({
+const mapStateToProps = ({ loginPageReducer, homePageReducer }) => ({
   loginSuccess: loginPageReducer.login.loginSuccess,
+  putSuccess: homePageReducer.settings.putSuccess,
 });
 
 const mapDispatchToProps = { getAccount, getUserStart, getSettings };
