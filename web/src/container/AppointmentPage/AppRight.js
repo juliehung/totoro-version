@@ -1,24 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { DownOutlined, LeftOutlined, PrinterOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Calendar, Dropdown, Menu, Row, Col, Slider, Select, Card } from 'antd';
+import { Button, Calendar, Dropdown, Menu, Row, Col, Slider, Select } from 'antd';
 import {
   changeCalDate,
   changePrintModalVisible,
   changeSelectedDoctors,
   changeCreateAppModalVisible,
   changeCreateCalModalVisible,
-  changeTodoAppModalVisible,
   changeCalSlotDuration,
-  getTodos,
-  changeCreateAppDoctor,
-  changeCreateAppExpectedArrivalDate,
-  getPatient,
-  changePatientSelected,
-  changeCreateAppNote,
-  changeCreateAppDuration,
-  changeTodoAppDisposalId,
 } from './actions';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
@@ -63,28 +54,6 @@ const PrintButton = styled(Button)`
   margin-left: 5px;
 `;
 
-const TodoContainer = styled.div`
-  margin: 20px 0;
-  flex: 1;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-
-  & > span {
-    font-weight: bold;
-  }
-`;
-
-const StyledCardContainer = styled(Card)`
-  flex: 1 !important;
-  overflow-y: scroll;
-`;
-
-const CardContent = styled.span`
-  user-select: none;
-`;
-
 const DateTitleContainer = styled(Col)`
   display: flex;
   align-items: center;
@@ -120,20 +89,10 @@ const ChangeSlotDurationContainer = styled.div`
   }
 `;
 
-const generalGridStyle = {
-  width: '100%',
-  padding: '20px 5px',
-};
-
-const todoGridStyle = { cursor: 'pointer' };
 //#endregion
 
 function AppRight(props) {
-  const { getTodos, calendarDate, selectedDoctors } = props;
-
-  useEffect(() => {
-    getTodos();
-  }, [getTodos, calendarDate]);
+  const { calendarDate, changeCalDate, selectedDoctors } = props;
 
   const handleMenuClick = () => {
     props.changeCreateCalModalVisible(true);
@@ -189,7 +148,6 @@ function AppRight(props) {
             <Button
               type="link"
               onClick={() => {
-                const { changeCalDate, calendarDate } = props;
                 changeCalDate(moment(calendarDate).add(-1, 'M'));
               }}
             >
@@ -205,7 +163,6 @@ function AppRight(props) {
             <Button
               type="link"
               onClick={() => {
-                const { changeCalDate, calendarDate } = props;
                 changeCalDate(moment(calendarDate).add(1, 'M'));
               }}
             >
@@ -215,31 +172,6 @@ function AppRight(props) {
         </Row>
       </div>
     );
-  };
-
-  const onTodoCardClick = disposal => {
-    const doctor = props.doctors.find(d => d.login === disposal.createdBy);
-    const app = {
-      doctorId: doctor ? doctor.id : undefined,
-      expectedDate: disposal.todo.expectedDate,
-      patientId: disposal.todo.patient.id,
-      note: disposal.todo.note,
-      duration: disposal.todo.requiredTreatmentTime,
-      disposalId: disposal.id,
-    };
-
-    insertAppToCreateAppModal(app);
-  };
-
-  const insertAppToCreateAppModal = app => {
-    props.changeTodoAppModalVisible(true);
-    props.changeCreateAppDoctor(app.doctorId);
-    props.changeCreateAppExpectedArrivalDate(moment(app.expectedDate), 'YYYY-MM-DD');
-    props.getPatient(app.patientId);
-    props.changePatientSelected(true);
-    props.changeCreateAppNote({ target: { value: app.note } });
-    props.changeCreateAppDuration(app.duration);
-    props.changeTodoAppDisposalId(app.disposalId);
   };
 
   return (
@@ -293,36 +225,6 @@ function AppRight(props) {
           ]}
         </StyledSelect>
       </SelectDoctorContainer>
-      <TodoContainer>
-        <span>待辦清單 ({props.calendarDate.locale('zh-tw').format('llddd')})</span>
-        <StyledCardContainer bordered={false} loading={props.todosLoading}>
-          {props.todos.length === 0 ? (
-            <Card.Grid style={{ ...generalGridStyle }} key={'none'}>
-              <CardContent>無待辦事項</CardContent>
-            </Card.Grid>
-          ) : (
-            props.todos.map(t => {
-              const doctor = props.doctors.find(d => d.login === t.createdBy);
-              const doctorName = doctor ? doctor.name : '';
-              return (
-                <Card.Grid
-                  style={{ ...generalGridStyle, ...todoGridStyle }}
-                  key={t.id}
-                  onClick={() => {
-                    onTodoCardClick(t);
-                    GAevent('Appointment page', 'Todo item clicked');
-                  }}
-                >
-                  <CardContent>
-                    {`${moment(t.createdDate).format('HH:mm')} ${doctorName}
-                    ${t.todo.patient.name}需要預約`}
-                  </CardContent>
-                </Card.Grid>
-              );
-            })
-          )}
-        </StyledCardContainer>
-      </TodoContainer>
       <ChangeSlotDurationContainer>
         <span>縮放</span>
         <Slider min={10} max={30} step={5} onAfterChange={onSliderChange} defaultValue={props.slotDuration} />
@@ -336,8 +238,6 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   selectedDoctors: appointmentPageReducer.calendar.selectedDoctors,
   doctorAppCount: appointmentPageReducer.calendar.doctorAppCount,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
-  todos: appointmentPageReducer.todo.todos,
-  todosLoading: appointmentPageReducer.todo.loading,
 });
 
 const mapDispatchToProps = {
@@ -346,16 +246,7 @@ const mapDispatchToProps = {
   changeSelectedDoctors,
   changeCreateAppModalVisible,
   changeCreateCalModalVisible,
-  changeTodoAppModalVisible,
   changeCalSlotDuration,
-  getTodos,
-  changeCreateAppDoctor,
-  changeCreateAppExpectedArrivalDate,
-  getPatient,
-  changePatientSelected,
-  changeCreateAppNote,
-  changeCreateAppDuration,
-  changeTodoAppDisposalId,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRight);
