@@ -21,7 +21,7 @@ const Container = styled.div`
   z-index: 400;
   top: ${props => (props.position ? props.position.y : 0)}px;
   left: ${props => (props.position ? props.position.x : 0)}px;
-  visibility: ${props => (props.visible ? 'visible' : 'hidden')};
+  display: ${props => (props.visible ? 'visible' : 'none')};
   flex-direction: column;
   transition: all ease-in-out 200ms;
   & > * {
