@@ -13,12 +13,25 @@ import CalendarFill from './svg/CalendarFill';
 import DentallHisLogo from '../../images/DentallHisLogo.svg';
 import { Menu, Dropdown, Drawer } from 'antd';
 import { parseAccountData } from './utils/parseAccountData';
+import IconBookOpen from '../../images/icon-book-open.svg';
+import IconBookOpenFill from '../../images/icon-book-open-fill.svg';
+import IconCalendar from '../../images/icon-calendar.svg';
+import IconCalendarFill from '../../images/icon-calendar-fill.svg';
 
 //#region
 const Container = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: #f8fafb;
+`;
+
+const Top = styled.div`
+  position: fixed;
+  height: 4px;
+  background: #3266ff;
+  width: 100%;
+  top: 0px;
 `;
 
 const NavContainer = styled.nav`
@@ -30,6 +43,7 @@ const NavContainer = styled.nav`
   z-index: 100;
   margin: 15px 1%;
   border-radius: 8px;
+  background: #fff;
   & > :nth-child(1) {
     font-size: 2rem;
   }
@@ -126,8 +140,13 @@ const DrawerItem = styled(Link)`
 
 const ContentContainer = styled.div`
   height: 100%;
+  padding: 1%;
+  margin: 0 1% 15px;
   overflow-y: scroll;
   scrollbar-width: none;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
   &::-webkit-scrollbar {
     display: none;
   }
@@ -165,6 +184,7 @@ function NavHome(props) {
 
   return (
     <Container>
+      <Top />
       <NavContainer>
         <span
           onClick={() => {
@@ -181,7 +201,11 @@ function NavHome(props) {
             <NavItem focus={currentLocation === 'registration'}>
               <Link to="/registration">
                 <div>
-                  <BookOpen />
+                  {currentLocation === 'registration' ? (
+                    <img src={IconBookOpenFill} alt="bookIcon" />
+                  ) : (
+                    <img src={IconBookOpen} alt="bookIcon" />
+                  )}
                   <span className="svg">就診列表</span>
                 </div>
               </Link>
@@ -189,7 +213,11 @@ function NavHome(props) {
             <NavItem focus={currentLocation === ''}>
               <Link to="/">
                 <div>
-                  <CalendarFill />
+                  {currentLocation === 'registration' ? (
+                    <img src={IconCalendarFill} alt="calendarIcon" />
+                  ) : (
+                    <img src={IconCalendar} alt="calendarIcon" />
+                  )}
                   <span className="svg">約診排程</span>
                 </div>
               </Link>
