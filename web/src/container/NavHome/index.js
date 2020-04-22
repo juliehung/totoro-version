@@ -101,6 +101,7 @@ const UserContainer = styled.div`
     border-radius: 50%;
     margin-left: 20px;
     overflow: hidden;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12);
   }
 `;
 
