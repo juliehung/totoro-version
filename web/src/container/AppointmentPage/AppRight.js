@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import styled, { keyframes } from 'styled-components';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Button, Calendar, Dropdown, Menu, Row, Col, Select, Divider } from 'antd';
+import { Button, Calendar, Row, Col, Select, Divider } from 'antd';
 import {
   changeCalDate,
   changePrintModalVisible,
@@ -18,6 +18,9 @@ import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import GridIcon from '../../images/grid.svg';
 import PointerIcon from '../../images/printer.svg';
 import SettingsIcon from '../../images/settings.svg';
+import PlusIcon from '../../images/plus.svg';
+import CalendarIcon from '../../images/calendar-fill.svg';
+import MoonIcon from '../../images/moon-fill.svg';
 import { putSettings } from '../Home/actions';
 
 //#region
@@ -29,15 +32,11 @@ const Container = styled.div`
   flex-direction: column;
   background: #fff;
   z-index: 400;
+  position: relative;
   @media (max-width: 800px) {
     width: 100%;
     min-height: 90vh;
   }
-`;
-
-const TopContainer = styled.div`
-  display: flex;
-  margin-top: 30px;
 `;
 
 const StyledCalendar = styled(Calendar)`
@@ -74,17 +73,6 @@ const ItemContainer = styled.div`
   }
 `;
 
-const AppButton = styled(Button)`
-  margin-right: 0px;
-`;
-
-const DropdownButton = styled(Button)`
-  margin-left: -5px;
-  border-left: 0.5px solid #fff;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-`;
-
 const DateTitleContainer = styled(Col)`
   display: flex;
   align-items: center;
@@ -108,12 +96,78 @@ const StyledSelect = styled(Select)`
   width: 100%;
 `;
 
+const MenuContainer = styled.div`
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+`;
+
+const RoundContainer = styled.div`
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all ease-in-out 300ms;
+  & img {
+    width: 28px;
+  }
+`;
+
+const rotate = keyframes`
+  0% { transform: rotate(0deg); }
+  50% { background:#1FAADE;
+        border: 1px solid #1FAADE;
+      }
+  100% { transform: rotate(405deg); }
+`;
+
+const rotateReverse = keyframes`
+  0% { transform: rotate(405deg); }
+  50% { background:#1FAADE;
+        border: 1px solid #1FAADE;
+      }
+  100% { transform: rotate(0deg); }
+`;
+
+const MenuMainItemContainer = styled(RoundContainer)`
+  width: 56px;
+  height: 56px;
+  background: #3266ff;
+  border: 1px solid #3266ff;
+  & img {
+    width: 28px;
+  }
+  transform: ${props => (props.expand ? 'rotate(45deg)' : 'rotate(0)')};
+  animation: ${props => (props.loaded ? (props.expand ? rotate : rotateReverse) : '')} 300ms;
+`;
+
+const MenuSubItemContainer = styled(RoundContainer)`
+  width: 48px;
+  height: 48px;
+  background: #edf1f7;
+  border: 1px solid #edf1f7;
+  margin-left: auto;
+  margin-right: auto;
+  & img {
+    width: 24px;
+  }
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  bottom: ${props => (props.expand ? props.distance : 0)}px;
+`;
+
 //#endregion
 
 function AppRight(props) {
   const { calendarDate, changeCalDate, selectedDoctors, settings, showShiftCalc, putSettings } = props;
 
-  const handleMenuClick = () => {
+  const [expand, setExpand] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  const moonClick = () => {
     props.changeCreateCalModalVisible(true);
   };
 
@@ -219,6 +273,11 @@ function AppRight(props) {
     }
   };
 
+  const toggleExpand = () => {
+    setLoaded(true);
+    setExpand(!expand);
+  };
+
   return (
     <Container>
       <StyledCalendar
@@ -261,8 +320,8 @@ function AppRight(props) {
       </ItemContainer>
       <ItemContainer>
         <div>
-          <img src={SettingsIcon} alt="設定" />
-          <span>設定</span>
+          <img src={SettingsIcon} alt="排班" />
+          <span>排班</span>
         </div>
         <div>
           <button onClick={onShiftButtonClick}>{showShiftCalc ? '停用' : '啟用'}</button>
@@ -288,30 +347,31 @@ function AppRight(props) {
           ]}
         </StyledSelect>
       </SelectDoctorContainer>
-      <TopContainer>
-        <AppButton
-          type="primary"
-          size={'large'}
-          block
+      <MenuContainer>
+        <MenuMainItemContainer onClick={toggleExpand} expand={expand} loaded={loaded}>
+          <img src={PlusIcon} alt="plus" />
+        </MenuMainItemContainer>
+        <MenuSubItemContainer
+          onClick={() => {
+            moonClick();
+            toggleExpand();
+          }}
+          expand={expand}
+          distance={70}
+        >
+          <img src={MoonIcon} alt="moon" />
+        </MenuSubItemContainer>
+        <MenuSubItemContainer
           onClick={() => {
             props.changeCreateAppModalVisible(true);
+            toggleExpand();
           }}
+          expand={expand}
+          distance={130}
         >
-          新增預約
-        </AppButton>
-        <Dropdown
-          overlay={
-            <Menu onClick={handleMenuClick}>
-              <Menu.Item key="1">醫師/診所休假</Menu.Item>
-            </Menu>
-          }
-          trigger={['click']}
-        >
-          <DropdownButton size={'large'} type="primary">
-            <DownOutlined />
-          </DropdownButton>
-        </Dropdown>
-      </TopContainer>
+          <img src={CalendarIcon} alt="calendar" />
+        </MenuSubItemContainer>
+      </MenuContainer>
     </Container>
   );
 }
