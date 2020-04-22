@@ -100,6 +100,7 @@ const MenuContainer = styled.div`
   position: fixed;
   right: 20px;
   bottom: 20px;
+  z-index: 100000;
 `;
 
 const RoundContainer = styled.div`
@@ -116,17 +117,11 @@ const RoundContainer = styled.div`
 
 const rotate = keyframes`
   0% { transform: rotate(0deg); }
-  50% { background:#1FAADE;
-        border: 1px solid #1FAADE;
-      }
   100% { transform: rotate(405deg); }
 `;
 
 const rotateReverse = keyframes`
   0% { transform: rotate(405deg); }
-  50% { background:#1FAADE;
-        border: 1px solid #1FAADE;
-      }
   100% { transform: rotate(0deg); }
 `;
 
@@ -157,6 +152,7 @@ const MenuSubItemContainer = styled(RoundContainer)`
   left: 0;
   right: 0;
   bottom: ${props => (props.expand ? props.distance : 0)}px;
+  box-shadow: 0 8px 16px -4px rgba(50, 102, 255, 0.2);
 `;
 
 //#endregion
@@ -357,7 +353,7 @@ function AppRight(props) {
             toggleExpand();
           }}
           expand={expand}
-          distance={70}
+          distance={130}
         >
           <img src={MoonIcon} alt="moon" />
         </MenuSubItemContainer>
@@ -367,7 +363,7 @@ function AppRight(props) {
             toggleExpand();
           }}
           expand={expand}
-          distance={130}
+          distance={70}
         >
           <img src={CalendarIcon} alt="calendar" />
         </MenuSubItemContainer>
