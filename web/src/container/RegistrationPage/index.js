@@ -23,6 +23,7 @@ const Container = styled.div`
   width: 100%;
   max-width: 1250px;
   margin: 0 auto;
+  height: 100%;
 `;
 const DatePickerContainer = styled.div`
   display: flex;
