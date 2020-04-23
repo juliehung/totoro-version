@@ -417,22 +417,6 @@ export function changeCalSlotDuration(duration) {
   return { type: CHANGE_CAL_SLOT_DURATION, duration };
 }
 
-export function getTodos() {
-  return { type: GET_TODOS_START };
-}
-
-export function getTodosSuccess(todos) {
-  return { type: GET_TODOS_SUCCESS, todos };
-}
-
-export function getSettings() {
-  return { type: GET_SETTINGS_START };
-}
-
-export function getSettingsSuccess(settings) {
-  return { type: GET_SETTINGS_SUCCESS, settings };
-}
-
 export function popoverCancelApp(appData) {
   return { type: POPOVER_CANCEL_APP_START, appData };
 }
