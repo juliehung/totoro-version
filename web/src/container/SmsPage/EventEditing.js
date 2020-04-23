@@ -46,6 +46,12 @@ const BoneContainer = styled.div`
   border-radius: 10px
   background: white;
   overflow: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Chrome/Safari/Webkit */
+  }
 `;
 
 const FieldsContainer = styled.div`
