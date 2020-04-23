@@ -336,18 +336,20 @@ function CreateAppModal({
               />
               <StyledSelect
                 placeholder="請選擇時間"
-                value={appointment.expectedArrivalTime && moment(appointment.expectedArrivalTime).format('HH:mm')}
+                value={appointment.expectedArrivalTime && moment(appointment.expectedArrivalTime).format('HHmm')}
                 onChange={t => {
                   changeCreateAppExpectedArrivalTime(moment(t, 'HH:mm'));
                 }}
                 showSearch
                 onSearch={e => {
-                  const time = moment(e, 'HHmm');
-                  if (time.isValid()) {
-                    if (expectedTimeOption.map(et => et.format('HHmm')).includes(time.format('HHmm'))) {
-                      return;
+                  if (e.length === 4) {
+                    const time = moment(e, 'HHmm');
+                    if (time.isValid()) {
+                      if (expectedTimeOption.map(et => et.format('HHmm')).includes(time.format('HHmm'))) {
+                        return;
+                      }
+                      setExpectedTimeOption([...defaultTimeOption, time]);
                     }
-                    setExpectedTimeOption([...defaultTimeOption, time]);
                   }
                 }}
               >
