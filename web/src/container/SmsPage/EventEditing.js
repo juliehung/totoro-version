@@ -84,6 +84,7 @@ const TagsContainer = styled.div`
   grid-area: theOne;
   z-index: 2;
   margin: 4px;
+  background: #f8fafb;
 `;
 
 const VariablesContainer = styled.div`
@@ -152,14 +153,17 @@ function EventEditing(props) {
         <FieldsContainer>
           <FieldContainer>
             <FieldLabel>主題：</FieldLabel>
-            <Input size="large" onChange={editTitle} value={editingEvent.title} />
+            <Input 
+              style={{background:'#f8fafb'}}
+              size="large" 
+              onChange={editTitle} value={editingEvent.title} />
           </FieldContainer>
           <FieldContainer>
             <FieldLabel>寄送：</FieldLabel>
             <ContactContainer>
               <Input
+                style={{background:'#f8fafb', gridArea: 'theOne'}}
                 size="large"
-                style={{ gridArea: 'theOne' }} 
                 onClick={() => toggleAppointmentModal()} 
                 suffix={<PersonalAddFill style={{ margin: 'auto 4px' }}/>} />
               <TagsContainer onClick={() => toggleAppointmentModal()}>
@@ -186,6 +190,7 @@ function EventEditing(props) {
             </FieldLabel>
           </FieldContainer>
           <Input.TextArea
+            style={{background:'#f8fafb'}}
             autoSize={{ minRows: 6 }}
             onChange={editTemplate}
             value={editingEvent.template}
