@@ -1,11 +1,10 @@
 import React,{ useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Menu, Button } from 'antd';
+import { Button } from 'antd';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import { getEvents, setSelectedEvent, createEvent ,filterEvents, getClinicSettings, getClinicRemaining } from './action';
 import EventCard from './EventCard';
-import { TrophyFilled, CreditCardOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import InboxFill from './svg/InboxFill'
 import Edit from './svg/Edit'
