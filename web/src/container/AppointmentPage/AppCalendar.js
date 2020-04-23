@@ -47,6 +47,7 @@ import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
 import { reverseEvents } from './utils/reverseEvents';
 import { handleResources } from './utils/handleResources';
+import { GAevent } from '../../ga';
 
 //#region
 const Container = styled.div`
@@ -316,6 +317,7 @@ class AppCalendar extends React.Component {
     if (doctor) {
       this.props.changeCreateAppDoctor(doctor);
     }
+    GAevent('Appointment page', 'DblClick calendar to create appt');
   };
 
   eventRender = info => {
@@ -333,11 +335,13 @@ class AppCalendar extends React.Component {
   handleAppointmentDblClick = app => {
     this.props.changeEditAppModalVisible(true);
     this.props.insertAppToEditAppModal(app);
+    GAevent('Appointment page', 'DblClick appt to edit');
   };
 
   handleCalEvtDblClick = calEvt => {
     this.props.changeEditCalModalVisible(true);
     this.props.insertCalEvtToEditCalEvtModal(calEvt);
+    GAevent('Appointment page', 'DblClick calendar event to edit');
   };
 
   handleSendSms = app => {
