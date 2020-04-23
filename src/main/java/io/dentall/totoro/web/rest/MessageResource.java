@@ -2,22 +2,23 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.business.service.CloudFunctionService;
 import io.dentall.totoro.config.ImageRepositoryConfiguration;
+import io.dentall.totoro.security.SecurityUtils;
 import io.dentall.totoro.service.dto.SmsChargeDTO;
-import io.dentall.totoro.service.dto.SmsSendDTO;
+import io.dentall.totoro.service.dto.SmsEventDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.errors.InternalServerErrorException;
+import io.dentall.totoro.web.rest.vm.SmsInfoVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.zalando.problem.ThrowableProblem;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 @Profile("saas")
@@ -35,16 +36,12 @@ public class MessageResource {
         this.cloudFunctionService = cloudFunctionService;
     }
 
-    @PostMapping("/messages/sms/send")
-    public DeferredResult<ResponseEntity<String>> sendSms(@Valid @RequestBody SmsSendDTO dto) {
-        if (!ImageRepositoryConfiguration.BASIC_FOLDER_PATH.equals(dto.getClinic())) {
-            throw new BadRequestAlertException("Invalid clinic", ENTITY_NAME, "clinicwrong");
-        }
-
+    @PostMapping("/messages/sms/events/{eventId}/execute")
+    public DeferredResult<ResponseEntity<String>> executeSmsEvent(@PathVariable String eventId) {
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             try {
-                result.setResult(ResponseEntity.ok(cloudFunctionService.sendSms(dto)));
+                result.setResult(ResponseEntity.ok(cloudFunctionService.executeSmsEvent(ImageRepositoryConfiguration.BASIC_FOLDER_PATH, eventId)));
             } catch (IOException | ThrowableProblem e) {
                 result.setErrorResult(e);
             }
@@ -55,14 +52,93 @@ public class MessageResource {
 
     @PostMapping("/messages/sms/charge")
     public DeferredResult<ResponseEntity<String>> chargeSms(@Valid @RequestBody SmsChargeDTO dto) {
-        if (!ImageRepositoryConfiguration.BASIC_FOLDER_PATH.equals(dto.getClinic())) {
-            throw new BadRequestAlertException("Invalid clinic", ENTITY_NAME, "clinicwrong");
-        }
-
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             try {
                 result.setResult(ResponseEntity.ok(cloudFunctionService.chargeSms(dto)));
+            } catch (IOException | ThrowableProblem e) {
+                result.setErrorResult(e);
+            }
+        });
+
+        return result;
+    }
+
+    @PostMapping("/messages/sms/events")
+    public DeferredResult<ResponseEntity<SmsEventDTO>> createSmsEvent(@Valid @RequestBody SmsEventDTO dto) {
+        final String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new InternalServerErrorException("Current user login not found"));
+        dto.setCreatedBy(userLogin);
+        dto.setModifiedBy(userLogin);
+        dto.setClinic(ImageRepositoryConfiguration.BASIC_FOLDER_PATH);
+
+        DeferredResult<ResponseEntity<SmsEventDTO>> result = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            try {
+                result.setResult(ResponseEntity.ok(cloudFunctionService.upsertSmsEvent(dto)));
+            } catch (IOException | ThrowableProblem e) {
+                result.setErrorResult(e);
+            }
+        });
+
+        return result;
+    }
+
+    @PutMapping("/messages/sms/events")
+    public DeferredResult<ResponseEntity<SmsEventDTO>> updateSmsEvent(@Valid @RequestBody SmsEventDTO dto) {
+        if (dto.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+
+        final String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new InternalServerErrorException("Current user login not found"));
+        dto.setModifiedBy(userLogin);
+        dto.setClinic(ImageRepositoryConfiguration.BASIC_FOLDER_PATH);
+
+        DeferredResult<ResponseEntity<SmsEventDTO>> result = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            try {
+                result.setResult(ResponseEntity.ok(cloudFunctionService.upsertSmsEvent(dto)));
+            } catch (IOException | ThrowableProblem e) {
+                result.setErrorResult(e);
+            }
+        });
+
+        return result;
+    }
+
+    @GetMapping("/messages/sms/events")
+    public DeferredResult<ResponseEntity<List<SmsEventDTO>>> getSmsEvents() {
+        DeferredResult<ResponseEntity<List<SmsEventDTO>>> result = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            try {
+                result.setResult(ResponseEntity.ok(cloudFunctionService.getSmsEvents(ImageRepositoryConfiguration.BASIC_FOLDER_PATH)));
+            } catch (IOException | ThrowableProblem e) {
+                result.setErrorResult(e);
+            }
+        });
+
+        return result;
+    }
+
+    @GetMapping("/messages/sms")
+    public DeferredResult<ResponseEntity<SmsInfoVM>> getSmsInfo() {
+        DeferredResult<ResponseEntity<SmsInfoVM>> result = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            try {
+                result.setResult(ResponseEntity.ok(cloudFunctionService.getSmsInfo(ImageRepositoryConfiguration.BASIC_FOLDER_PATH)));
+            } catch (IOException | ThrowableProblem e) {
+                result.setErrorResult(e);
+            }
+        });
+
+        return result;
+    }
+
+    @DeleteMapping("/messages/sms/events/{eventId}")
+    public DeferredResult<ResponseEntity<String>> deleteSmsEvent(@PathVariable String eventId) {
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>();
+        ForkJoinPool.commonPool().submit(() -> {
+            try {
+                result.setResult(ResponseEntity.ok(cloudFunctionService.deleteSmsEvent(ImageRepositoryConfiguration.BASIC_FOLDER_PATH, eventId)));
             } catch (IOException | ThrowableProblem e) {
                 result.setErrorResult(e);
             }

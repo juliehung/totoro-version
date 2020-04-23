@@ -7,6 +7,8 @@ import { Switch, Route, Link, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import ShiftPage from '../ShiftPage';
 import SettingPage from '../SettingPage';
+import SmsPage from '../SmsPage';
+import Message from './svg/Message';
 import BookOpen from './svg/BookOpen';
 import CalendarFill from './svg/CalendarFill';
 import DentallHisLogo from '../../images/DentallHisLogo.svg';
@@ -207,6 +209,14 @@ function NavHome(props) {
                 </div>
               </Link>
             </NavItem>
+            <NavItem focus={currentLocation === 'sms'}>
+              <Link to="/sms">
+                <div>
+                  <Message />
+                  <span className="svg">SMS</span>
+                </div>
+              </Link>
+            </NavItem>
             <NavItem focus={currentLocation === ''}>
               <Link to="/">
                 <div>
@@ -263,6 +273,12 @@ function NavHome(props) {
             <span>就診列表</span>
           </div>
         </DrawerItem>
+        <DrawerItem to="/sms">
+          <div>
+            <Message />
+            <span>SMS</span>
+          </div>
+        </DrawerItem>
         <DrawerItem to="/">
           <div>
             <CalendarFill />
@@ -283,6 +299,9 @@ function NavHome(props) {
           </Route>
           <Route path="/setting">
             <SettingPage />
+          </Route>
+          <Route path="/sms">
+            <SmsPage />
           </Route>
           <Route path="*">
             <AppointmentPage />

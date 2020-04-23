@@ -83,7 +83,6 @@ import {
   CHANGE_CAL_SLOT_DURATION,
   POPOVER_CANCEL_APP_START,
   POPOVER_CANCEL_APP_SUCCESS,
-  SEND_SMS,
   GET_SHIFT_START,
   GET_SHIFT_SUCCESS,
 } from './constant';
@@ -423,10 +422,6 @@ export function popoverCancelApp(appData) {
 
 export function popoverCancelAppSuccess(appointment) {
   return { type: POPOVER_CANCEL_APP_SUCCESS, appointment };
-}
-
-export function sendSms(appointment) {
-  return { type: SEND_SMS, appointment };
 }
 
 export function getShift(start, end) {

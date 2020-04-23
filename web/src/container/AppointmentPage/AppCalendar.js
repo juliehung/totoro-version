@@ -31,7 +31,6 @@ import {
   deleteCalEvt,
   popoverCancelApp,
   changeSelectedDoctors,
-  sendSms,
   getShift,
 } from './actions';
 import zhTW from '@fullcalendar/core/locales/zh-tw';
@@ -323,7 +322,6 @@ class AppCalendar extends React.Component {
       handleEventRender(info, {
         edit: this.handleAppointmentDblClick,
         cancel: this.handlePopoverCancelApp,
-        send: this.handleSendSms,
       });
     } else if (info.event.extendedProps.eventType === 'doctorDayOff') {
       handleEventRender(info, { edit: this.handleCalEvtDblClick });
@@ -338,10 +336,6 @@ class AppCalendar extends React.Component {
   handleCalEvtDblClick = calEvt => {
     this.props.changeEditCalModalVisible(true);
     this.props.insertCalEvtToEditCalEvtModal(calEvt);
-  };
-
-  handleSendSms = app => {
-    this.props.sendSms(app);
   };
 
   handlePopoverCancelApp = apptData => {
@@ -517,7 +511,6 @@ const mapDispatchToProps = {
   deleteCalEvt,
   popoverCancelApp,
   changeSelectedDoctors,
-  sendSms,
   getShift,
 };
 
