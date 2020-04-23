@@ -217,7 +217,7 @@ function EventEditing(props) {
             儲存
           </Button>
           <Button 
-            disabled={!isLoaded}
+            disabled={editingEvent.sms.length === 0 || !isLoaded}
             shape="round"
             type="primary"
             onClick={()=> {
