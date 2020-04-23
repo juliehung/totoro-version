@@ -25,6 +25,13 @@ const Container = styled.div`
   background-color: #f8fafb;
 `;
 
+const Banner = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 4px;
+  background-color: #3266ff;
+`;
+
 const NavContainer = styled.nav`
   display: flex;
   justify-content: space-between;
@@ -174,6 +181,7 @@ function NavHome(props) {
 
   return (
     <Container>
+      <Banner />
       <NavContainer>
         <span
           onClick={() => {
