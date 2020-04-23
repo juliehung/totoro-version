@@ -10,8 +10,6 @@ export const initGA = () => {
 };
 
 export const GApageView = page => {
-  console.log(page ? page : window.location.href);
-
   if (isProduction) {
     ReactGA.pageview(page ? page : window.location.href);
   }
