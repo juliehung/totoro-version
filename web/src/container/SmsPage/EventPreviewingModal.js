@@ -46,6 +46,12 @@ const EventList = styled.div`
   overflow: scroll;
   padding: 0 4px;
   height: 55vh;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Chrome/Safari/Webkit */
+  }
 `;
 
 const EventListItem = styled.div`

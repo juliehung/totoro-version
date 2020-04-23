@@ -76,6 +76,12 @@ const DateText = styled(NoMarginText)`
 const EventList = styled.div`
   overflow: scroll;
   padding: 0 4px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Chrome/Safari/Webkit */
+  }
 `;
 
 const EventListItem = styled.div`

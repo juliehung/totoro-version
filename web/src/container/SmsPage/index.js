@@ -156,6 +156,12 @@ const MenuName = styled.div`
 
 const EventList = styled.div`
   overflow: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Chrome/Safari/Webkit */
+  }
 `;
 
 const EventListItem = styled.div`
