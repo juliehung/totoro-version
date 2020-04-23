@@ -93,7 +93,12 @@ const event = (state = initialState, action) =>
             var newArr = state.staticEvents.slice();
             newArr.shift();
             draft.staticEvents = newArr
-            draft.events = newArr
+            draft.events = state.currentKey === 'ALL' ? 
+              newArr : 
+              newArr.filter(event => {
+                var sta = event.status.toLowerCase() === 'completed' ? 'sent': 'draft'
+                return sta === state.currentKey.toLowerCase()
+              })
           }
           // close existing
           else if(state.editingEvent !== null) {
@@ -171,7 +176,6 @@ const event = (state = initialState, action) =>
       case FILTER_EVENTS:
         draft.selectedEvent = null
         draft.selectedEventId = null
-        draft.editingEvent = null
         draft.currentKey = action.key
         draft.events = action.key === 'ALL'? state.staticEvents : 
         state.staticEvents.filter(event => {

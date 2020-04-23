@@ -302,7 +302,7 @@ function SmsPage(props) {
           <EventList>
             {events.map(item => (
               <EventListItem
-                eventSelected={selectedEventId === item.id}
+                eventSelected={selectedEvent && selectedEventId === item.id}
                 key={item.id}
                 onClick={e => {
                   setSelectedEvent(item)
