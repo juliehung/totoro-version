@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import {togglePreviewingModal, saveEventAndSendImmediately} from './action'
 import moment from 'moment'
-import { SendOutlined } from '@ant-design/icons';
 import PaperPlane from './svg/PaperPlane'
 const NoMarginText = styled.p`
   margin: auto 0;
