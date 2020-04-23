@@ -81,8 +81,6 @@ import {
   DELETE_CAL_EVT_START,
   DELETE_CAL_EVT_SUCCESS,
   CHANGE_CAL_SLOT_DURATION,
-  GET_TODOS_START,
-  GET_TODOS_SUCCESS,
   POPOVER_CANCEL_APP_START,
   POPOVER_CANCEL_APP_SUCCESS,
   SEND_SMS,
@@ -425,6 +423,14 @@ export function getTodos() {
 
 export function getTodosSuccess(todos) {
   return { type: GET_TODOS_SUCCESS, todos };
+}
+
+export function getSettings() {
+  return { type: GET_SETTINGS_START };
+}
+
+export function getSettingsSuccess(settings) {
+  return { type: GET_SETTINGS_SUCCESS, settings };
 }
 
 export function popoverCancelApp(appData) {
