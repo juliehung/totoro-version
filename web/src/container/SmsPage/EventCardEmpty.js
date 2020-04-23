@@ -6,6 +6,8 @@ import { RedEnvelopeOutlined } from '@ant-design/icons';
 const RootContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  height: 100%;
 `;
 
 const BoneContainer = styled.div`
