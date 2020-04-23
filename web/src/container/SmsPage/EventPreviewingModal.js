@@ -124,7 +124,7 @@ function EventPreviewingModal(props) {
   return ( 
     <Modal
       width={856}
-      style={{ top: 20 }}
+      centered
       bodyStyle={{ padding: '0', margin: 'auto' }}  
       visible={visible}
       footer={null}
