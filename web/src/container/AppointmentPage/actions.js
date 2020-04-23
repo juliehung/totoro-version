@@ -85,10 +85,6 @@ import {
   GET_TODOS_SUCCESS,
   POPOVER_CANCEL_APP_START,
   POPOVER_CANCEL_APP_SUCCESS,
-  CHANGE_TODO_APP_MODAL_VISIBLE,
-  CREATE_TODO_APP,
-  CREATE_TODO_APP_SUCCESS,
-  CHANGE_TODO_APP_DISPOSAL_ID,
   SEND_SMS,
   GET_SHIFT_START,
   GET_SHIFT_SUCCESS,
@@ -437,22 +433,6 @@ export function popoverCancelApp(appData) {
 
 export function popoverCancelAppSuccess(appointment) {
   return { type: POPOVER_CANCEL_APP_SUCCESS, appointment };
-}
-
-export function changeTodoAppModalVisible(visible) {
-  return { type: CHANGE_TODO_APP_MODAL_VISIBLE, visible };
-}
-
-export function createTodoApp(app) {
-  return { type: CREATE_TODO_APP, app };
-}
-
-export function createTodoAppSuccess(id) {
-  return { type: CREATE_TODO_APP_SUCCESS, id };
-}
-
-export function changeTodoAppDisposalId(id) {
-  return { type: CHANGE_TODO_APP_DISPOSAL_ID, id };
 }
 
 export function sendSms(appointment) {

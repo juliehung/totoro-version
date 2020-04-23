@@ -1,5 +1,5 @@
 import { Modal, Button, DatePicker, Select, Input, Spin, message, Checkbox } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import {
   changeEditAppModalVisible,
@@ -119,6 +119,8 @@ function EditAppModal({
   getAllEvents,
   changeEditAppointmentConformDelete,
 }) {
+  const [expectedTimeOption, setExpectedTimeOption] = useState(defaultTimeOption);
+
   useEffect(() => {
     if (deleteAppSuccess) {
       message.success('刪除預約成功');
@@ -237,9 +239,19 @@ function EditAppModal({
                 onChange={t => {
                   changeEditAppExpectedArrivalTime(moment(t, 'HH:mm'));
                 }}
+                showSearch
+                onSearch={e => {
+                  const time = moment(e, 'HHmm');
+                  if (time.isValid()) {
+                    if (expectedTimeOption.map(et => et.format('HHmm')).includes(time.format('HHmm'))) {
+                      return;
+                    }
+                    setExpectedTimeOption([...defaultTimeOption, time]);
+                  }
+                }}
               >
-                {defaultTimeOption.map(t => {
-                  const time24 = t.format('HH:mm');
+                {expectedTimeOption.map(t => {
+                  const time24 = t.format('HHmm');
                   const time12 = t.format('hh:mm');
                   const prefix = t.locale('en-US').format('a') === 'am' ? '上午' : '下午';
 

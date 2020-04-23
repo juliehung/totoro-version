@@ -1,5 +1,5 @@
 import { Modal, Button, DatePicker, Select, Input, Spin, message, Checkbox, Empty } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import {
@@ -154,6 +154,8 @@ function CreateAppModal({
   account,
   loading,
 }) {
+  const [expectedTimeOption, setExpectedTimeOption] = useState(defaultTimeOption);
+
   useEffect(() => {
     if (createAppSuccess) {
       getAllEvents();
@@ -338,9 +340,19 @@ function CreateAppModal({
                 onChange={t => {
                   changeCreateAppExpectedArrivalTime(moment(t, 'HH:mm'));
                 }}
+                showSearch
+                onSearch={e => {
+                  const time = moment(e, 'HHmm');
+                  if (time.isValid()) {
+                    if (expectedTimeOption.map(et => et.format('HHmm')).includes(time.format('HHmm'))) {
+                      return;
+                    }
+                    setExpectedTimeOption([...defaultTimeOption, time]);
+                  }
+                }}
               >
-                {defaultTimeOption.map(t => {
-                  const time24 = t.format('HH:mm');
+                {expectedTimeOption.map(t => {
+                  const time24 = t.format('HHmm');
                   const time12 = t.format('hh:mm');
                   const prefix = t.locale('en-US').format('a') === 'am' ? '上午' : '下午';
 

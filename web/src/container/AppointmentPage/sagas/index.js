@@ -9,9 +9,7 @@ import { createCalendarEvent } from './createCalendarEvent';
 import { watchGetAllEvents } from './getAllEvents';
 import { editCalendarEvent } from './editCalendarEvent';
 import { deleteCalendarEvent } from './deleteCalendarEvent';
-import { watchGetTodos } from './getTodos';
 import { popoverCancelApp } from './popoverCancelApp';
-import { createTodoApp } from './createTodoApp';
 import { sendSmsAsync } from './sendSms';
 import { watchGetShift } from './watchGetShift';
 
@@ -30,9 +28,7 @@ export default function* appointmentPage() {
   yield fork(watchGetAllEvents);
   yield fork(editCalendarEvent);
   yield fork(deleteCalendarEvent);
-  yield fork(watchGetTodos);
   yield fork(popoverCancelApp);
-  yield fork(createTodoApp);
   yield fork(sendSmsAsync);
   yield fork(watchGetShift);
 }
