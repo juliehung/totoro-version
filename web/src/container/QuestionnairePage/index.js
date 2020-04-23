@@ -28,6 +28,7 @@ import Signature from './pages/Signature';
 import { handleKeyEvent } from './utils/handleKeyEvent';
 import { withRouter } from 'react-router-dom';
 import Background from '../../images/questionnaire_bg.svg';
+import { GApageView } from '../../ga';
 
 const Container = styled.div`
   position: fixed;
@@ -64,6 +65,10 @@ function QuestionnairePage(props) {
     createQSuccess,
     initPage,
   } = props;
+
+  useEffect(() => {
+    GApageView();
+  }, []);
 
   useEffect(() => {
     function keyFunction(keyEvent) {

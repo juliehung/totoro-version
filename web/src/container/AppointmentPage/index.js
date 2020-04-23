@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import AppCalendar from './AppCalendar';
@@ -10,6 +10,7 @@ import EditAppModal from './EditAppModal';
 import CreateCalendarEventModal from './CreateCalendarEventModal';
 import EditCalendarEventModal from './EditCalendarEventModal';
 import { Helmet } from 'react-helmet-async';
+import { GApageView } from '../../ga';
 
 //#region
 const Container = styled.div`
@@ -36,7 +37,11 @@ const CalendarContainer = styled.div`
 `;
 //#endregion
 
-function AppointmentPage({ changeSelectedDoctors, account }) {
+function AppointmentPage() {
+  useEffect(() => {
+    GApageView();
+  }, []);
+
   return (
     <Container>
       <Helmet>

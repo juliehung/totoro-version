@@ -13,7 +13,7 @@ import MqttHelper from '../../utils/mqtt';
 import RegistDrawer from './RegistDrawer';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { GAevent } from '../../ga';
+import { GAevent, GApageView } from '../../ga';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -127,6 +127,10 @@ function RegistrationPage(props) {
   const { getRegistrations, updateSelectedDate } = props;
 
   const [selectedDoctor, setSelectedDoctor] = useState();
+
+  useEffect(() => {
+    GApageView();
+  }, []);
 
   useEffect(() => {
     const updateRegistrations = arrival => {
