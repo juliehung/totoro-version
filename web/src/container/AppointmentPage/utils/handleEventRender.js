@@ -110,16 +110,6 @@ export function handleEventRender(info, func) {
                     func.edit(appointment);
                   }}
                 />
-                {process.env.NODE_ENV !== 'production' && (
-                  <Button
-                    type="link"
-                    onClick={() => {
-                      func.send(appointment);
-                    }}
-                  >
-                    發送簡訊
-                  </Button>
-                )}
               </span>
             ) : null}
           </PopoverContainer>

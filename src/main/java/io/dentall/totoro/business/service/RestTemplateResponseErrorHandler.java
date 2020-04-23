@@ -29,7 +29,8 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
         if (response.getStatusCode().is4xxClientError() || response.getStatusCode().is5xxServerError()) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.getBody()))) {
                 String message = reader.lines().collect(Collectors.joining());
-                logger.debug("response error: {}", message);
+                logger.debug("response message: {}", message);
+                logger.debug("status code name: {}", response.getStatusCode().name());
 
                 throw new ProblemUtil(message, Status.valueOf(response.getStatusCode().name()));
             }

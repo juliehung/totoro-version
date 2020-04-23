@@ -7,6 +7,8 @@ import { Switch, Route, Link, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import ShiftPage from '../ShiftPage';
 import SettingPage from '../SettingPage';
+import SmsPage from '../SmsPage';
+import Message from './svg/Message';
 import BookOpen from './svg/BookOpen';
 import CalendarFill from './svg/CalendarFill';
 import DentallHisLogo from '../../images/DentallHisLogo.svg';
@@ -23,6 +25,13 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #f8fafb;
+`;
+
+const Banner = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 4px;
+  background-color: #3266ff;
 `;
 
 const NavContainer = styled.nav`
@@ -174,6 +183,7 @@ function NavHome(props) {
 
   return (
     <Container>
+      <Banner />
       <NavContainer>
         <span
           onClick={() => {
@@ -196,6 +206,14 @@ function NavHome(props) {
                     <img src={IconBookOpen} alt="bookIcon" />
                   )}
                   <span className="svg">就診列表</span>
+                </div>
+              </Link>
+            </NavItem>
+            <NavItem focus={currentLocation === 'sms'}>
+              <Link to="/sms">
+                <div>
+                  <Message />
+                  <span className="svg">SMS</span>
                 </div>
               </Link>
             </NavItem>
@@ -255,6 +273,12 @@ function NavHome(props) {
             <span>就診列表</span>
           </div>
         </DrawerItem>
+        <DrawerItem to="/sms">
+          <div>
+            <Message />
+            <span>SMS</span>
+          </div>
+        </DrawerItem>
         <DrawerItem to="/">
           <div>
             <CalendarFill />
@@ -275,6 +299,9 @@ function NavHome(props) {
           </Route>
           <Route path="/setting">
             <SettingPage />
+          </Route>
+          <Route path="/sms">
+            <SmsPage />
           </Route>
           <Route path="*">
             <AppointmentPage />
