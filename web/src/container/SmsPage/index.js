@@ -283,7 +283,7 @@ function SmsPage(props) {
             ))}
           </CategoryContainer>
           <BalanceContainer>
-            <Remaining>Balanace:{remaining}</Remaining>
+            <Remaining>Balanace: {remaining}</Remaining>
             <RemainingActionSection>
               <RemainingActionItem>
                 <GiftFill />
