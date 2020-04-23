@@ -8,7 +8,6 @@ import { useCookies } from 'react-cookie';
 import ShiftPage from '../ShiftPage';
 import SettingPage from '../SettingPage';
 import BookOpen from './svg/BookOpen';
-import Pantone from './svg/Pantone';
 import CalendarFill from './svg/CalendarFill';
 import DentallHisLogo from '../../images/DentallHisLogo.svg';
 import { Menu, Dropdown, Drawer } from 'antd';
@@ -24,14 +23,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #f8fafb;
-`;
-
-const Top = styled.div`
-  position: fixed;
-  height: 4px;
-  background: #3266ff;
-  width: 100%;
-  top: 0px;
 `;
 
 const NavContainer = styled.nav`
@@ -119,6 +110,7 @@ const UserContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12);
   }
 `;
 
@@ -142,11 +134,11 @@ const ContentContainer = styled.div`
   height: 100%;
   padding: 1%;
   margin: 0 1% 15px;
-  overflow-y: scroll;
-  scrollbar-width: none;
   border-radius: 8px;
   background-color: #fff;
   box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+  overflow-y: scroll;
+  scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -180,11 +172,8 @@ function NavHome(props) {
     }
   }, [location, currentLocation]);
 
-  const showShift = props.generalSetting && props.generalSetting.showShift;
-
   return (
     <Container>
-      <Top />
       <NavContainer>
         <span
           onClick={() => {
@@ -213,7 +202,7 @@ function NavHome(props) {
             <NavItem focus={currentLocation === ''}>
               <Link to="/">
                 <div>
-                  {currentLocation === 'registration' ? (
+                  {currentLocation === '' ? (
                     <img src={IconCalendarFill} alt="calendarIcon" />
                   ) : (
                     <img src={IconCalendar} alt="calendarIcon" />
@@ -222,16 +211,6 @@ function NavHome(props) {
                 </div>
               </Link>
             </NavItem>
-            {showShift && (
-              <NavItem focus={currentLocation === 'shift'}>
-                <Link to="/shift">
-                  <div>
-                    <Pantone />
-                    <span className="svg">排班</span>
-                  </div>
-                </Link>
-              </NavItem>
-            )}
           </ul>
         </div>
         <Dropdown
@@ -282,22 +261,12 @@ function NavHome(props) {
             <span>約診排程</span>
           </div>
         </DrawerItem>
-        {showShift && (
-          <DrawerItem to="/shift">
-            <div>
-              <Pantone />
-              <span>排班</span>
-            </div>
-          </DrawerItem>
-        )}
       </Drawer>
       <ContentContainer>
         <Switch>
-          {showShift && (
-            <Route exact path="/shift">
-              <ShiftPage />
-            </Route>
-          )}
+          <Route exact path="/shift">
+            <ShiftPage />
+          </Route>
           <Route exact path="/">
             <AppointmentPage />
           </Route>
@@ -316,9 +285,8 @@ function NavHome(props) {
   );
 }
 
-const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
+const mapStateToProps = ({ homePageReducer }) => ({
   account: parseAccountData(homePageReducer.account.data),
-  generalSetting: homePageReducer.settings.generalSetting,
 });
 
 const mapDispatchToProps = {};

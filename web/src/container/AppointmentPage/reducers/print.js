@@ -1,10 +1,6 @@
-import produce from "immer";
-import {
-  CHANGE_PRINT_MODAL_VISIBLE,
-  CHANGE_PRINT_DATE,
-  GET_PRINT_APP_LIST_SUCCESS
-} from "../constant";
-import moment from "moment";
+import produce from 'immer';
+import { CHANGE_PRINT_MODAL_VISIBLE, CHANGE_PRINT_DATE, GET_PRINT_APP_LIST_SUCCESS } from '../constant';
+import moment from 'moment';
 
 const initVisible = false;
 const intiDate = moment();
@@ -15,7 +11,7 @@ export const initialState = {
   visible: initVisible,
   date: intiDate,
   printButtonDisable: initPrintButtonDisable,
-  appData: initAppData
+  appData: initAppData,
 };
 
 /* eslint-disable default-case, no-param-reassign */

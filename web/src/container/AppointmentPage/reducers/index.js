@@ -6,7 +6,6 @@ import createApp from './createApp';
 import editApp from './editApp';
 import createCalendarEvt from './createCalendarEvt';
 import editCalendarEvt from './editCalendarEvt';
-import todo from './todo';
 import shift from './shift';
 
 const appointmentPageReducer = combineReducers({
@@ -17,7 +16,6 @@ const appointmentPageReducer = combineReducers({
   editApp,
   createCalendarEvt,
   editCalendarEvt,
-  todo,
   shift,
 });
 
