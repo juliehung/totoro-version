@@ -99,7 +99,7 @@ function AppointmentsModal(props) {
   return ( 
     <Modal
       width={900}
-      style={{ top: 20 }}
+      centered
       bodyStyle={{ padding: '0' }}
       visible={visible}
       footer={null}
