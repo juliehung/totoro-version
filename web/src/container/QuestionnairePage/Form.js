@@ -5,6 +5,7 @@ import Background from '../../images/questionnaire_bg.svg';
 import { withRouter, Link } from 'react-router-dom';
 import { getDoc } from './actions';
 import { Button } from 'antd';
+import { GApageView } from '../../ga';
 
 //#region
 
@@ -86,6 +87,9 @@ const ImageContainer = styled.div`
 
 function Form(props) {
   const { match, getDoc } = props;
+  useEffect(() => {
+    GApageView();
+  }, []);
 
   useEffect(() => {
     const id = match.params.id;

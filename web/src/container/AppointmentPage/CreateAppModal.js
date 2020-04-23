@@ -30,6 +30,7 @@ import convertMrnTo5Digits from './utils/convertMrnTo5Digits';
 import { GAevent } from '../../ga';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { defaultTimeOption } from './utils/generateDefaultTime';
+import { appointmentPage } from './';
 
 //#region
 const Container = styled.div`
@@ -207,7 +208,7 @@ function CreateAppModal({
   };
 
   const handleConfirm = () => {
-    GAevent('Appointment page', 'Create appointment clicked');
+    GAevent(appointmentPage, 'Create appointment click');
     if (appointment.patientId) {
       createAppointment();
     } else {

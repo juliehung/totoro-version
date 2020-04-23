@@ -22,6 +22,8 @@ import PlusIcon from '../../images/plus.svg';
 import CalendarIcon from '../../images/calendar-fill.svg';
 import MoonIcon from '../../images/moon-fill.svg';
 import { putSettings } from '../Home/actions';
+import { GAevent } from '../../ga';
+import { appointmentPage } from './';
 
 //#region
 const Container = styled.div`
@@ -272,6 +274,7 @@ function AppRight(props) {
   const toggleExpand = () => {
     setLoaded(true);
     setExpand(!expand);
+    GAevent(appointmentPage, 'Click add event button');
   };
 
   return (
@@ -288,7 +291,14 @@ function AppRight(props) {
           <span>列印</span>
         </div>
         <div>
-          <button onClick={props.changePrintModalVisible}>預約表</button>
+          <button
+            onClick={() => {
+              props.changePrintModalVisible();
+              GAevent(appointmentPage, 'Print appt list');
+            }}
+          >
+            預約表
+          </button>
         </div>
       </ItemContainer>
       <ItemContainer>
@@ -300,6 +310,7 @@ function AppRight(props) {
           <button
             onClick={() => {
               onSlotDurationChange(true);
+              GAevent(appointmentPage, 'Smaller slot size');
             }}
           >
             縮小
@@ -308,6 +319,7 @@ function AppRight(props) {
           <button
             onClick={() => {
               onSlotDurationChange(false);
+              GAevent(appointmentPage, 'Bigger slot size');
             }}
           >
             放大
@@ -320,7 +332,14 @@ function AppRight(props) {
           <span>排班</span>
         </div>
         <div>
-          <button onClick={onShiftButtonClick}>{showShiftCalc ? '停用' : '啟用'}</button>
+          <button
+            onClick={() => {
+              onShiftButtonClick();
+              GAevent(appointmentPage, 'Turn on/off shift');
+            }}
+          >
+            {showShiftCalc ? '停用' : '啟用'}
+          </button>
           <Divider type="vertical" />
           <Link to="/shift">
             <button>編輯</button>
@@ -349,6 +368,7 @@ function AppRight(props) {
         </MenuMainItemContainer>
         <MenuSubItemContainer
           onClick={() => {
+            GAevent(appointmentPage, 'Click show create calendar event modal button');
             moonClick();
             toggleExpand();
           }}
@@ -359,6 +379,7 @@ function AppRight(props) {
         </MenuSubItemContainer>
         <MenuSubItemContainer
           onClick={() => {
+            GAevent(appointmentPage, 'Click show create appt modal button');
             props.changeCreateAppModalVisible(true);
             toggleExpand();
           }}

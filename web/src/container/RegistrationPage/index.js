@@ -13,6 +13,9 @@ import MqttHelper from '../../utils/mqtt';
 import RegistDrawer from './RegistDrawer';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { GAevent, GApageView } from '../../ga';
+
+export const registrationPage = 'Registration page';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -126,6 +129,10 @@ function RegistrationPage(props) {
   const { getRegistrations, updateSelectedDate } = props;
 
   const [selectedDoctor, setSelectedDoctor] = useState();
+
+  useEffect(() => {
+    GApageView();
+  }, []);
 
   useEffect(() => {
     const updateRegistrations = arrival => {
@@ -275,11 +282,13 @@ function RegistrationPage(props) {
 
   const onDoctorChange = doctor => {
     setSelectedDoctor(doctor);
+    GAevent(registrationPage, 'Change doctor');
   };
 
   const moveDate = days => () => {
     const date = props.selectedDate.clone().add(days, 'day');
     onDatePickerChange(date);
+    GAevent(registrationPage, 'Change date');
   };
 
   const withMargin = width => <div style={{ width: width + 'px' }} />;
@@ -308,6 +317,7 @@ function RegistrationPage(props) {
           return {
             onClick: () => {
               props.onSelectPatient(row.patient);
+              GAevent(registrationPage, 'Click patient');
             },
           };
         }}
