@@ -12,6 +12,8 @@ import EditCalendarEventModal from './EditCalendarEventModal';
 import { Helmet } from 'react-helmet-async';
 import { GApageView } from '../../ga';
 
+export const appointmentPage = 'Appointment page';
+
 //#region
 const Container = styled.div`
   height: 100%;
