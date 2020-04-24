@@ -78,6 +78,7 @@ const NavItem = styled.li`
   list-style-type: none;
   margin: 0 2vw;
   font-size: 12px;
+  font-weight: bold;
   padding: 10px;
   border-radius: 34px;
   & {
@@ -214,7 +215,7 @@ function NavHome(props) {
             <NavItem focus={currentLocation === 'sms'}>
               <Link to="/sms">
                 <div>
-                {currentLocation === 'sms' ? (
+                  {currentLocation === 'sms' ? (
                     <img src={MessageCircleFill} alt="smsIcon" />
                   ) : (
                     <img src={MessageCircle} alt="smsIcon" />
