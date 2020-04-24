@@ -1,10 +1,12 @@
 import React from 'react';
-import { Modal, Button, } from 'antd';
+import { Modal } from 'antd';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import {togglePreviewingModal, saveEventAndSendImmediately} from './action'
 import moment from 'moment'
 import PaperPlane from './svg/PaperPlane'
+import { StyledLargerButton } from './Button'
+
 const NoMarginText = styled.p`
   margin: auto 0;
 `;
@@ -157,8 +159,9 @@ function EventPreviewingModal(props) {
           <Warning>您的帳戶額度不足</Warning>
         </WarningContainer> :
          <ActionContainer>
-         <Button
-          size="large"
+         <StyledLargerButton
+          className="styled-larger-btn"
+          style={{ border: 'solid 1px white' }}
           disabled={editingEvent.sms.length === 0 || isWrongNumberLength || isWrongContentLength || !isLoaded } 
           type="primary"
           shape="round"  
@@ -167,7 +170,7 @@ function EventPreviewingModal(props) {
             <PaperPlane />
             <NoMarginText>立即發送訊息</NoMarginText>
           </div>
-         </Button>
+         </StyledLargerButton>
        </ActionContainer>
       }
   </Modal>

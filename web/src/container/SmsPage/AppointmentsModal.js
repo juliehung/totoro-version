@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { CloseOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Modal, DatePicker, Table, Button } from 'antd';
+import { Modal, DatePicker, Table } from 'antd';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { getAppointments, toggleAppointmentModal, addContactAppointments } from './action';
-
+import { StyledLargerButton } from './Button'
 const NoMarginText = styled.p`
   margin: auto 0;
 `;
@@ -124,7 +124,14 @@ function AppointmentsModal(props) {
         dataSource={appointments} 
         columns={columns} />
       <ActionContainer>
-        <Button style={{ background: 'transparent' }} key="submit" type="primary" onClick={handleOk}>插入</Button>
+        <StyledLargerButton
+          className="styled-larger-btn"
+          style={{ border: 'solid 1px white', width: '86px' }}
+          type="primary" 
+          onClick={handleOk} 
+          shape="round">
+            插入
+        </StyledLargerButton>
         {tempAppointments.length > 0? 
           <SelectionContainer>
             <CloseOutlined onClick={handleCancelAll} />
