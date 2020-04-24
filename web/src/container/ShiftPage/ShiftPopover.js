@@ -83,6 +83,10 @@ const ItemContainer = styled.div`
 const HeightDiv = styled.div`
   max-height: 200px;
   overflow-y: scroll;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const DiamondContainer = styled.div`
