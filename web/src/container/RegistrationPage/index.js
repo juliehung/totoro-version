@@ -322,7 +322,6 @@ function RegistrationPage(props) {
           };
         }}
         dataSource={convertToTableSource(props.registrations)}
-        scroll={{ y: 'calc(100vh - 270px)', x: 960 }}
       />
       <RegistDrawer />
     </Container>
