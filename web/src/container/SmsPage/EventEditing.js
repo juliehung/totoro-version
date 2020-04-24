@@ -1,4 +1,4 @@
-import { Button, Input, Tag, Radio } from 'antd';
+import { Button, Input, Tag, Radio, Popover } from 'antd';
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -9,15 +9,12 @@ import moment from 'moment'
 import Close from './svg/Close'
 import PersonalAddFill from './svg/PersonalAddFill'
 import AlertTriangle from './svg/AlertTriangle'
+import { P2, Caption, Subtitle, Title, NoMarginText } from '../../utils/textComponents';
 
 const RootContainer = styled.div`
   display: grid;
   grid-template-rows: 70px 1fr;
   height: 100%;
-`;
-
-const NoMarginText = styled.p`
-  margin: auto 0;
 `;
 
 const HeaderContainer = styled.div`
@@ -28,12 +25,6 @@ const HeaderContainer = styled.div`
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.04), inset 0 -1px 0 0 #eeeeee;
   background: white;
   border-radius: 0 10px 0 0;
-`;
-
-const Header = styled(NoMarginText)`
-  font-size: 18px;
-  font-weight: 600;
-  color: #222b45;
 `;
 
 const BoneContainer = styled.div`
@@ -71,11 +62,9 @@ const FieldContainer = styled.div`
   margin-bottom: 16px;  
 `;
 
-const FieldLabel = styled(NoMarginText)`
-  font-weight: 600;
+const FieldLabel = styled(Subtitle)`
   width: 60px; 
 `;
-
 
 const ContactContainer = styled.div`
   display: grid;
@@ -153,7 +142,7 @@ function EventEditing(props) {
             else setSelectedEvent(null)
           }}>
         </Button>
-        <Header>{editingEvent.title}</Header>
+        <Title>{editingEvent.title}</Title>
       </HeaderContainer>
       <BoneContainer>
         <FieldsContainer>
@@ -175,15 +164,29 @@ function EventEditing(props) {
               <TagsContainer onClick={() => toggleAppointmentModal()}>
                 {editingEvent.selectedAppointments.map(app => {
                   return (
-                    <Tag 
-                      key={app.id} 
-                      closable
-                      onClose={e => {
-                        unselectAppointment(app)
-                      }}
-                      >
-                        {`${app.patientName}(${moment(app.expectedArrivalTime).format('MM/DD HH:mm')})`}
-                    </Tag>
+                    <Popover
+                      title={
+                        <div style={{margin: '7px 0'}}>
+                          <FieldLabel>{app.patientName}</FieldLabel>
+                          <P2>{app.phone}</P2>
+                        </div>
+                      }
+                      content={ 
+                        <div>
+                          <Caption>{`${moment(app.expectedArrivalTime).format('YYYY/MM/DD HH:mm')} 預約`}</Caption>
+                          <Caption>{app.note}</Caption>
+                        </div>
+                      }>
+                      <Tag 
+                        key={app.id} 
+                        closable
+                        onClose={e => {
+                          unselectAppointment(app)
+                        }}
+                        >
+                          {`${app.patientName}(${app.phone})`}
+                      </Tag>
+                    </Popover>
                   )}
                 )}
               </TagsContainer>
