@@ -38,6 +38,7 @@ export const Gray800 ='#5C6167';
 export const Gray900 ='#36393D';
 export const Black ='#000000';
 export const Dark ='#293f50';
+export const Default = '#222b45'
 
 export const R1 ='#EF4C52';
 export const R1Tint0 ='#FCE5E6';
