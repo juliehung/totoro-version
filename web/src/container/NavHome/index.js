@@ -40,7 +40,7 @@ const NavContainer = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 1% 16px 1%;
+  padding: 16px 30px 16px 30px;
   box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
   z-index: 100;
   margin: 15px 1%;
@@ -48,6 +48,7 @@ const NavContainer = styled.nav`
   background: #fff;
   & > :nth-child(1) {
     font-size: 2rem;
+    display: none;
   }
 
   & > div:nth-child(3) {
@@ -58,13 +59,12 @@ const NavContainer = styled.nav`
     }
   }
 
-  @media (min-width: 960px) {
-    & > :nth-child(1) {
-      display: none;
-    }
-  }
-
   @media (max-width: 960px) {
+    & > :nth-child(1) {
+      display: block;
+    }
+
+    padding: 16px 1% 16px 1%;
     & > div:nth-child(3) {
       display: none;
     }
