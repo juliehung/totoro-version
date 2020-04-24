@@ -62,9 +62,8 @@ testFTP:
 testPackage:
     stage: package
     only:
-        - merge
-    except:
-        - /^(\d)+-.*$/
+        - master
+        - develop
     image: openjdk:8-jdk-stretch
     script:
         - apt-get install -y --no-install-recommends curl unzip
