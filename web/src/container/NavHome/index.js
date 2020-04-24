@@ -40,7 +40,7 @@ const NavContainer = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 30px 16px 30px;
+  padding: 10px 30px;
   box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
   z-index: 100;
   margin: 15px 1%;
@@ -79,7 +79,6 @@ const NavItem = styled.li`
   margin: 0 2vw;
   font-size: 12px;
   font-weight: bold;
-  padding: 10px;
   border-radius: 34px;
   & {
     a {
@@ -87,9 +86,10 @@ const NavItem = styled.li`
       & > div {
         display: flex;
         align-items: center;
-        padding: 0 10px;
+        padding: 6px 10px;
         & > :first-child {
           margin-right: 10px;
+          height: 16px;
         }
       }
       & .svg {
