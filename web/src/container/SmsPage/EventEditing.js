@@ -9,6 +9,7 @@ import moment from 'moment'
 import Close from './svg/Close'
 import PersonalAddFill from './svg/PersonalAddFill'
 import AlertTriangle from './svg/AlertTriangle'
+import { StyledButton } from './Button'
 import { P2, Caption, Subtitle, Title, NoMarginText } from '../../utils/textComponents';
 
 const RootContainer = styled.div`
@@ -160,7 +161,7 @@ function EventEditing(props) {
                 style={{background:'#f8fafb', gridArea: 'theOne'}}
                 size="large"
                 onClick={() => toggleAppointmentModal()} 
-                suffix={<PersonalAddFill style={{ margin: 'auto 4px' }}/>} />
+                suffix={<PersonalAddFill />} />
               <TagsContainer onClick={() => toggleAppointmentModal()}>
                 {editingEvent.selectedAppointments.map(app => {
                   return (
@@ -222,15 +223,15 @@ function EventEditing(props) {
 
         <ActionContainer>
           <Warning style={{ visibility: isWrongNumberLength? null : 'hidden' }}>手機號碼格式錯誤</Warning>
-          <Button 
+          <StyledButton
             type="link"
             disabled={editingEvent.sms.length === 0 || isWrongNumberLength || isWrongContentLength || !isLoaded }
             style={{ margin: ' 0 16px' }}
             onClick={()=> saveEvent(editingEvent)}
           >
             儲存
-          </Button>
-          <Button 
+          </StyledButton>
+          <StyledButton
             disabled={editingEvent.sms.length === 0 || !isLoaded}
             shape="round"
             type="primary"
@@ -239,7 +240,7 @@ function EventEditing(props) {
             }}
           >
             預覽及寄送
-          </Button>
+          </StyledButton>
         </ActionContainer>
         <AppointmentsModal />
         <EventPreviewingModal />
@@ -261,7 +262,7 @@ const mapStateToProps = ({ smsPageReducer }) => ({
 const mapDispatchToProps = { 
   setSelectedEvent, 
   editTitle, 
-  editTemplate, 
+  editTemplate,
   addTag, 
   toggleAppointmentModal, 
   unselectAppointment,

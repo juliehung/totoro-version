@@ -13,8 +13,7 @@ import PaperPlane from './svg/PaperPlane'
 import MenuIcon from './svg/Menu'
 import GiftFill from './svg/GiftFill'
 import AwardFill from './svg/AwardFill'
-
-
+import { StyledLargerButton } from './Button'
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -257,9 +256,8 @@ function SmsPage(props) {
         <OverallContainer expanding>
           <CategoryContainer>
             <ButtonBox>
-              <Button 
-                className="logo" 
-                size="large" 
+              <StyledLargerButton 
+                className="styled-larger-btn" 
                 type="primary"
                 shape="round"
                 block
@@ -270,7 +268,7 @@ function SmsPage(props) {
                   <Edit2 />
                   <NoMarginText>CREATE</NoMarginText>
                 </div>
-              </Button>
+              </StyledLargerButton>
             </ButtonBox>
             {categories.map((category, i) => (
               <MenuItem 
