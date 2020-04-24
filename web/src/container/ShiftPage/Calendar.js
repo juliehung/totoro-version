@@ -1,13 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import FullCalendar from '@fullcalendar/react';
-import '@fullcalendar/core/main.css';
 import interactionPlugin from '@fullcalendar/interaction';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import zhTW from '@fullcalendar/core/locales/zh-tw';
-import '@fullcalendar/daygrid/main.css';
-import '@fullcalendar/timegrid/main.css';
-import '@fullcalendar/list/main.css';
-import { connect } from 'react-redux';
+import '@fullcalendar/core/main.css';
 import '@fullcalendar/timeline/main.css';
 import '@fullcalendar/resource-timeline/main.css';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
