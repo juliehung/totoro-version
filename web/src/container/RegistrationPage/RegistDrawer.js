@@ -32,7 +32,6 @@ const PatientContainer = styled.div`
     }
     & > span:not(:first-child) {
       color: rgb(0, 0, 0);
-      font-family: Muli-Bold;
       font-size: 24px;
       font-weight: bold;
     }
