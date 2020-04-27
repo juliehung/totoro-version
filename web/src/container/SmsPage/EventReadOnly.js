@@ -54,11 +54,6 @@ const SenderContainer = styled.div`
   grid-template: 21px 21px/ 48px auto; 
 `;
 
-
-const ActionContainer = styled.div`
-  display: flex;
-`;
-
 const AvatarImg = styled.img`
   width: 42px;
   height: 42px;
@@ -118,24 +113,18 @@ const Splitter = styled.div`
 `;
 
 function EventReadOnly(props) {
-  const { selectedEvent, setSelectedEvent, executeEvent, deleteEvent, isLoaded } = props
+  const { selectedEvent, setSelectedEvent, executeEvent, deleteEvent } = props
   return ( 
     <RootContainer>
       <HeaderContainer>
         <Button 
           icon={<Close />}
           type="link" 
-          onClick={() => {
-            if (selectedEvent.id == null) setSelectedEvent(null, true)
-            else setSelectedEvent(null)
-          }}>
-         
-        </Button>
+          onClick={() => setSelectedEvent(null)} />
         <Header>{selectedEvent.title}</Header>
         <Button
           style={{ display: selectedEvent.status === 'draft' ? null : 'none', justifySelf: 'flex-end' }}
           danger
-          disabled={!isLoaded}
           type="link" 
           icon={<Trash />}
           onClick={() => deleteEvent(selectedEvent.id)} />
@@ -147,18 +136,15 @@ function EventReadOnly(props) {
             <NameText style={{ gridRow: '1/2', gridColumn: '2/3'}}>{selectedEvent.createdBy}</NameText>
             <DateText style={{ gridRow: '2/3', gridColumn: '2/3'}}>{moment(selectedEvent.modifiedDate).format('YYYY/MM/DD HH:mm')}</DateText>
           </SenderContainer>
-          <ActionContainer style={{ visibility: selectedEvent.status === 'draft' ? null : 'hidden' }}>
             <Button
+              style={{ visibility: selectedEvent.status === 'draft' ? null : 'hidden' }}
               icon={<PaperPlane />}
               type="link"
-              disabled={!isLoaded}
-              onClick={() => executeEvent(selectedEvent)}>
-            </Button>        
-          </ActionContainer>
+              onClick={() => executeEvent(selectedEvent)} />
         </EventDetailContainer>
         <EventList>
           {selectedEvent.sms.map(item => (
-              <EventListItem key={item.phone}>
+              <EventListItem key={item.phone + item.content}>
               <EventPatientNameText>{item.metadata.patientName}</EventPatientNameText>
               <EventOccurText>{`${moment(item.metadata.appointmentDate).format('YYYY/MM/DD HH:mm')}的預約已發送至${item.phone}`}</EventOccurText>
               <Splitter />
@@ -172,7 +158,6 @@ function EventReadOnly(props) {
 }
 const mapStateToProps = ({ smsPageReducer }) => ({ 
   selectedEvent: smsPageReducer.event.selectedEvent,
-  isLoaded: smsPageReducer.event.isLoaded,
 });
 
 const mapDispatchToProps = { setSelectedEvent, executeEvent, deleteEvent};

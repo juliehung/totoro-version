@@ -114,7 +114,7 @@ const TemplatePlace = styled.div`
 `;
 
 function EventPreviewingModal(props) {
-  const { togglePreviewingModal, saveEventAndSendImmediately, editingEvent, visible, isWrongNumberLength, isWrongContentLength, isLoaded, isChargeFailed } = props
+  const { togglePreviewingModal, saveEventAndSendImmediately, editingEvent, visible, isChargeFailed } = props
 
   const handleOk = () => {
     saveEventAndSendImmediately(editingEvent)
@@ -139,7 +139,7 @@ function EventPreviewingModal(props) {
       </HeaderContainer>
       <FieldContainer>
         <Title>範本</Title>
-        <TemplatePlace>{editingEvent.template}</TemplatePlace>
+        <TemplatePlace>{editingEvent.metadata.template}</TemplatePlace>
       </FieldContainer>
       <FieldContainer>
         <Title>發送預覽</Title>
@@ -162,7 +162,6 @@ function EventPreviewingModal(props) {
          <StyledLargerButton
           className="styled-larger-btn"
           style={{ border: 'solid 1px white' }}
-          disabled={editingEvent.sms.length === 0 || isWrongNumberLength || isWrongContentLength || !isLoaded } 
           type="primary"
           shape="round"  
           onClick={handleOk}>
@@ -182,9 +181,6 @@ const mapStateToProps = ({ smsPageReducer }) => {
     appointments: smsPageReducer.appointment.appointments,
     editingEvent: smsPageReducer.event.editingEvent,
     visible: smsPageReducer.event.visible,
-    isWrongNumberLength: smsPageReducer.event.isWrongNumberLength,
-    isWrongContentLength: smsPageReducer.event.isWrongContentLength,
-    isLoaded: smsPageReducer.event.isLoaded,
     isChargeFailed: smsPageReducer.event.isChargeFailed,
   }
 };

@@ -59,8 +59,8 @@ function AppointmentsModal(props) {
   const [ date, setDate ] = useState(moment().startOf('day'));
   const [ tempAppointments, setTempAppointments ] = useState([]);
   
-  useEffect(() => {    
-    getAppointments({start: moment(date), end: moment(date).add(1, 'days').add(1, 'seconds')});
+  useEffect(() => {
+    if (visible) getAppointments({start: moment(date), end: moment(date).add(1, 'days').add(1, 'seconds')});
     // eslint-disable-next-line
   }, [date])
 
