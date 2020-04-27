@@ -1,16 +1,18 @@
 import { Button, Input, Tag, Radio, Popover } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { setSelectedEvent, editTitle, editTemplate, addTag, toggleAppointmentModal, unselectAppointment, togglePreviewingModal, saveEvent } from './action';
+import { setSelectedEvent, editTitle, editTemplate, addTag, toggleAppointmentModal, unselectAppointment, togglePreviewingModal, saveEvent, deleteEvent } from './action';
 import AppointmentsModal from './AppointmentsModal';
 import EventPreviewingModal from './EventPreviewingModal'
 import moment from 'moment'
 import Close from './svg/Close'
 import PersonalAddFill from './svg/PersonalAddFill'
 import AlertTriangle from './svg/AlertTriangle'
+import Trash from './svg/Trash';
 import { StyledButton } from './Button'
 import { P2, Caption, Subtitle, Title, NoMarginText } from '../../utils/textComponents';
+import isEqual from 'lodash.isequal'
 
 const RootContainer = styled.div`
   display: grid;
@@ -112,9 +114,22 @@ const Warning = styled(NoMarginText)`
   color: red;
 `;
 
+
+const isDiff = (o1, o2) => {
+  const newApp = o1.metadata.selectedAppointments.map(app => app.id)
+  const oldApp = o2.metadata.selectedAppointments.map(app => app.id)
+
+  if(o1.metadata.template !== o2.metadata.template) return true
+  if(!isEqual(newApp, oldApp)) return true
+  if(o1.title !== o2.title) return true
+  
+  return false
+}
+
 function EventEditing(props) {
   const {
     editingEvent,
+    selectedEvent,
     tags,
     setSelectedEvent,
     editTitle,
@@ -123,27 +138,45 @@ function EventEditing(props) {
     toggleAppointmentModal,
     unselectAppointment,
     togglePreviewingModal,
+    saveEvent,
+    deleteEvent,
     isWrongNumberLength,
     isWrongContentLength,
-    isLoaded,
-    saveEvent,
   } = props
 
-  const handleTagChange = value => {
-    addTag(value)
-  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (editingEvent !== null && editingEvent.isEdit) {
+        if (editingEvent.sms.length === 0 || isWrongContentLength || isWrongNumberLength) return
+        if (isDiff(editingEvent, selectedEvent)) {
+          saveEvent(editingEvent)
+        }
+      }
+    }, 2000);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line
+  }, [editingEvent]);
+
+
   return ( 
     <RootContainer>
       <HeaderContainer>
         <Button 
           icon={<Close />}
           type="link" 
-          onClick={() => {
-            if (editingEvent.id == null) setSelectedEvent(null, true)
-            else setSelectedEvent(null)
-          }}>
+          onClick={() => setSelectedEvent(null)}>
         </Button>
         <Title>{editingEvent.title}</Title>
+        <Button
+          style={{ display: editingEvent.status === 'draft' ? null : 'none', justifySelf: 'flex-end' }}
+          danger
+          type="link" 
+          icon={<Trash />}
+          onClick={() => {
+            if (editingEvent.id !== null) deleteEvent(editingEvent.id)
+            else setSelectedEvent(null)
+          }} />
       </HeaderContainer>
       <BoneContainer>
         <FieldsContainer>
@@ -163,9 +196,10 @@ function EventEditing(props) {
                 onClick={() => toggleAppointmentModal()} 
                 suffix={<PersonalAddFill />} />
               <TagsContainer onClick={() => toggleAppointmentModal()}>
-                {editingEvent.selectedAppointments.map(app => {
+                {editingEvent.metadata.selectedAppointments.map(app => {
                   return (
                     <Popover
+                      key={app.id} 
                       title={
                         <div style={{margin: '7px 0'}}>
                           <FieldLabel>{app.patientName}</FieldLabel>
@@ -179,7 +213,6 @@ function EventEditing(props) {
                         </div>
                       }>
                       <Tag 
-                        key={app.id} 
                         closable
                         onClose={e => {
                           unselectAppointment(app)
@@ -196,14 +229,14 @@ function EventEditing(props) {
           <FieldContainer>
           <FieldLabel style={{ width: '76px' }}>訊息內容：</FieldLabel>
             <FieldLabel style={{ color: '#FE9F43', width: 'auto', visibility : isWrongContentLength ? null : 'hidden' }}>
-              <AlertTriangle /> 內容文字已達一封簡訊 70 字上限
+              <AlertTriangle /> 內容不得為空或已達一封簡訊 70 字上限
             </FieldLabel>
           </FieldContainer>
           <Input.TextArea
             style={{background:'#f8fafb'}}
             autoSize={{ minRows: 6 }}
             onChange={editTemplate}
-            value={editingEvent.template}
+            value={editingEvent.metadata?.template}
           />
           <VariablesContainer>
           <VariableText>加入變數：</VariableText>
@@ -212,7 +245,7 @@ function EventEditing(props) {
               <Radio.Button
                 key={tag}
                 value={tag}                
-                onClick={() => handleTagChange(tag)}
+                onClick={() => addTag(tag)}
               >
                 {tag}
               </Radio.Button>
@@ -224,15 +257,7 @@ function EventEditing(props) {
         <ActionContainer>
           <Warning style={{ visibility: isWrongNumberLength? null : 'hidden' }}>手機號碼格式錯誤</Warning>
           <StyledButton
-            type="link"
-            disabled={editingEvent.sms.length === 0 || isWrongNumberLength || isWrongContentLength || !isLoaded }
-            style={{ margin: ' 0 16px' }}
-            onClick={()=> saveEvent(editingEvent)}
-          >
-            儲存
-          </StyledButton>
-          <StyledButton
-            disabled={editingEvent.sms.length === 0 || !isLoaded}
+            disabled={editingEvent.sms.length === 0 || isWrongContentLength || isWrongNumberLength}
             shape="round"
             type="primary"
             onClick={()=> {
@@ -251,12 +276,12 @@ function EventEditing(props) {
 }
 const mapStateToProps = ({ smsPageReducer }) => ({ 
   editingEvent: smsPageReducer.event.editingEvent,
+  selectedEvent: smsPageReducer.event.selectedEvent,
   appointments: smsPageReducer.appointment.appointments,
   tags: smsPageReducer.event.tags,
   visible: smsPageReducer.appointment.visible,
   isWrongNumberLength: smsPageReducer.event.isWrongNumberLength,
   isWrongContentLength: smsPageReducer.event.isWrongContentLength,
-  isLoaded: smsPageReducer.event.isLoaded,
 });
 
 const mapDispatchToProps = { 
@@ -268,6 +293,7 @@ const mapDispatchToProps = {
   unselectAppointment,
   togglePreviewingModal,
   saveEvent,
+  deleteEvent,
  };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventEditing);

@@ -1,9 +1,9 @@
-import React,{ useState, useEffect } from 'react';
+import React,{ useState, useEffect, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'antd';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { getEvents, setSelectedEvent, createEvent ,filterEvents, getClinicSettings, getClinicRemaining } from './action';
+import { getEvents, setSelectedEvent, createEvent, saveEvent, filterEvents, getClinicSettings, getClinicRemaining } from './action';
 import EventCard from './EventCard';
 import moment from 'moment';
 import InboxFill from './svg/InboxFill'
@@ -14,6 +14,9 @@ import MenuIcon from './svg/Menu'
 import GiftFill from './svg/GiftFill'
 import AwardFill from './svg/AwardFill'
 import { StyledLargerButton } from './Button'
+import isEqual from 'lodash.isequal'
+
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -174,11 +177,61 @@ const EventListItem = styled.div`
   color: ${props => (props.eventSelected ? 'white' : '#222b45')};
 `;
 
+
+const EventListContainer = styled.div`
+  display: grid;
+  overflow: hidden;
+  grid-template-rows: 70px 1fr;
+  grid-row: 1/2;
+  grid-column: 2/3;
+  flex-direction: column;
+  box-shadow: 2px 0 6px 0 rgba(209, 209, 209, 0.5);
+  background: white;
+  z-index: 2;
+  @media (max-width: 480px) {
+    grid-column: 1/2;
+    width: 100vw;
+    height: 100%;
+    display: ${props => props.hasEvent? 'none' : props.expanding? 'none' : null};
+  }
+`;
+
+const OverallContainer = styled.div`
+  grid-row: 1/2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 260px;
+  box-shadow: 2px 0 10px 0 rgba(0, 0, 0, 0.05);
+  background: white;
+  z-index: 3;
+  border-radius: 10px 0 0 10px;
+  @media screen and (max-width: 480px) {
+    width: 100vw;
+    height: 100%;
+    grid-column: 1/2;
+    display: ${props => props.hasEvent? 'none' : props.expanding? null : 'none'};
+  }
+`;
+
+const EventCardContainer = styled.div`  
+  grid-column: 3/4;
+  grid-row: 1/2;
+  overflow: hidden;
+  @media (max-width: 480px) {
+    grid-column: 1/2
+    width: 100vw;
+    height: 100%;
+    d/isplay: ${props => props.hasEvent ? null : 'none'}
+  }
+`;
+
+
 const categories = ['ALL', 'DRAFT', 'SENT',]
 const categoryIcons = [<InboxFill />, <Edit />, <PaperPlane />]
 
 function SmsPage(props) {
-  const { getEvents, filterEvents, currentKey, createEvent, getClinicSettings, getClinicRemaining, setSelectedEvent, selectedEvent, selectedEventId, staticEvents, events, isLoaded, remaining } = props;
+  const { getEvents, filterEvents, currentKey, createEvent, saveEvent, getClinicSettings, getClinicRemaining, setSelectedEvent, selectedEvent, selectedEventId, editingEvent, events, remaining } = props;
   const [expanding, setExpanding] = useState(false)
   const [hasEvent, setHasEvent] = useState(false)
 
@@ -194,66 +247,37 @@ function SmsPage(props) {
     // eslint-disable-next-line
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setHasEvent(selectedEvent !== null)
   }, [selectedEvent])
 
+  const isDiff = (o1, o2) => {
+    if (o1 === null || o2 === null) return false
+    if (o1.metadata.template !== o2.metadata.template) return true
+   
+    const newApp = o1.metadata.selectedAppointments.map(app => app.id)
+    const oldApp = o2.metadata.selectedAppointments.map(app => app.id)
+    if(!isEqual(newApp, oldApp)) return true
+    if(o1.title !== o2.title) return true
+    
+    return false
+  }
 
-  const OverallContainer = styled.div`
-    grid-row: 1/2;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 260px;
-    box-shadow: 2px 0 10px 0 rgba(0, 0, 0, 0.05);
-    background: white;
-    z-index: 3;
-    border-radius: 10px 0 0 10px;
-    @media screen and (max-width: 480px) {
-      width: 100vw;
-      height: 100%;
-      grid-column: 1/2;
-      display: ${hasEvent? 'none' : expanding? null: 'none'};
-    }
-  `;
+  const handleSelectionChanging = item => {
+    // if current(previous) item is able to be posted or put
+    if (isDiff(editingEvent, selectedEvent)) saveEvent(editingEvent)
 
-  const EventListContainer = styled.div`
-    display: grid;
-    overflow: hidden;
-    grid-template-rows: 70px 1fr;
-    grid-row: 1/2;
-    grid-column: 2/3;
-    flex-direction: column;
-    box-shadow: 2px 0 6px 0 rgba(209, 209, 209, 0.5);
-    background: white;
-    z-index: 2;
-    @media (max-width: 480px) {
-      grid-column: 1/2;
-      width: 100vw;
-      height: 100%;
-      display: ${hasEvent? 'none' : expanding? 'none' : null};
-    }
-  `;
-
-  const EventCardContainer = styled.div`  
-    grid-column: 3/4;
-    grid-row: 1/2;
-    overflow: hidden;
-    @media (max-width: 480px) {
-      grid-column: 1/2
-      width: 100vw;
-      height: 100%;
-      display: ${hasEvent? null : 'none'}
-    }
-  `;
-
+    // else just changing
+    else setSelectedEvent(item)
+  }
+ 
   return (
     <Container>
       <Helmet>
         <title>簡訊</title>
       </Helmet>
       <RootConatiner>
-        <OverallContainer expanding>
+        <OverallContainer expanding={expanding} hasEvent={hasEvent}>
           <CategoryContainer>
             <ButtonBox>
               <StyledLargerButton 
@@ -261,7 +285,6 @@ function SmsPage(props) {
                 type="primary"
                 shape="round"
                 block
-                disabled={staticEvents.some(event => event.isEdit) || !isLoaded}
                 onClick={createEvent}
               >
                 <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -294,7 +317,7 @@ function SmsPage(props) {
             </RemainingActionSection>
           </BalanceContainer>
         </OverallContainer>
-        <EventListContainer expanding>
+        <EventListContainer expanding={expanding} hasEvent={hasEvent}>
           <CategoryTitleContainer>
             <Button
               type="link"
@@ -306,27 +329,33 @@ function SmsPage(props) {
           <EventList>
             {events.map(item => (
               <EventListItem
-                eventSelected={selectedEvent && selectedEventId === item.id}
-                key={item.id}
-                onClick={e => {
-                  setSelectedEvent(item)
-                  setHasEvent(true)
-                }}>
-                {item.status === 'draft'? <StatusDot style={{ gridRow: '1/2', gridColumn: '1/2'}} /> : null}
+                eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}
+                key={item.id !== null ? item.id : item.tempId}
+                onClick={() => handleSelectionChanging(item)}
+              >
+                <StatusDot style={item.status === 'draft'? { gridRow: '1/2', gridColumn: '1/2'}: {display: 'none'}} />
+                
                 <Title style={{ gridRow: '1/2', gridColumn: '2/3'}}>{item.title}</Title>
-                <Caption eventSelected={selectedEventId === item.id}>{item.status === 'completed'? `${item.createdBy}已傳送${item.sms.length}則`: ''}</Caption>
-                <TinyBold eventSelected={selectedEventId === item.id}>{(() => {
-                  if (moment().isSame(item.modifiedDate  , 'day')) return moment(item.modifiedDate).format('HH:mm')
-                  else {
-                    if(moment().startOf('date').add(-1, 'days').isSame(item.modifiedDate  , 'day')) return 'yesterday'
-                    else return moment(item.modifiedDate).format('MM/DD') 
-                  }
-                })()}</TinyBold>
+            
+            
+                <Caption eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}>
+                  {item.status === 'completed'? `${item.createdBy}已傳送${item.sms.length}則`: ''}
+                </Caption>
+                
+                <TinyBold eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}>
+                  {(() => {
+                    if (moment().isSame(item.modifiedDate  , 'day')) return moment(item.modifiedDate).format('HH:mm')
+                    else {
+                      if(moment().startOf('date').add(-1, 'days').isSame(item.modifiedDate  , 'day')) return 'yesterday'
+                      else return moment(item.modifiedDate).format('MM/DD') 
+                    }
+                  })()}
+                </TinyBold>
               </EventListItem>
               ))}
           </EventList>
         </EventListContainer>
-        <EventCardContainer>
+        <EventCardContainer hasEvent={hasEvent}>
           <EventCard />
         </EventCardContainer>
       </RootConatiner>
@@ -336,11 +365,10 @@ function SmsPage(props) {
 
 const mapStateToProps = ({smsPageReducer}) => ({
   events: smsPageReducer.event.events,
-  staticEvents: smsPageReducer.event.staticEvents,
   selectedEventId: smsPageReducer.event.selectedEventId,
   selectedEvent: smsPageReducer.event.selectedEvent,
+  editingEvent: smsPageReducer.event.editingEvent,
   clinicName: smsPageReducer.event.clinicName,
-  isLoaded: smsPageReducer.event.isLoaded,
   remaining: smsPageReducer.event.remaining,
   currentKey: smsPageReducer.event.currentKey,
 })
@@ -351,6 +379,7 @@ const mapDispatchToProps = {
   getClinicRemaining,
   setSelectedEvent,
   createEvent,
+  saveEvent,
   filterEvents,
   getClinicSettings,
 };

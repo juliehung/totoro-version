@@ -8,6 +8,7 @@ import {
   FILTER_EVENTS,
   ADD_TAG,
   SAVE_EVENT,
+  SAVE_EVENT_SUCCESS,
   GET_APPOINTMENTS,
   GET_APPOINTMENTS_SUCCESS,
   TOGGLE_APPOINTMENT_MODAL,
@@ -20,8 +21,9 @@ import {
   GET_CLINIC_REMAINING,
   GET_CLINIC_REMAINING_SUCCESS,
   EXECUTE_EVENT,
-  DELETE_EVENT,
   EXECUTE_EVENT_FAILED,
+  DELETE_EVENT,
+  DELETE_EVENT_SUCCESS,
 } from './constant';
 
 export function getEvents() {
@@ -32,8 +34,8 @@ export function getEventsSuccess(events) {
   return { type: GET_EVENTS_SUCCESS, events };
 }
 
-export function setSelectedEvent(event, shouldDumpDraft) {
-  return { type: SET_SELECT_EVENT, payload: {event, shouldDumpDraft} };
+export function setSelectedEvent(event) {
+  return { type: SET_SELECT_EVENT, event };
 }
 
 export function createEvent() {
@@ -60,6 +62,10 @@ export function saveEvent(event) {
   return { type: SAVE_EVENT, event };
 }
 
+export function saveEventSuccess(result, identity) {
+  return { type: SAVE_EVENT_SUCCESS, payload: {result, identity} };
+}
+
 export function executeEvent(event) {
   return { type: EXECUTE_EVENT, event };
 }
@@ -70,6 +76,10 @@ export function executeEventFailed() {
 
 export function deleteEvent(id) {
   return { type: DELETE_EVENT, id };
+}
+
+export function deleteEventSuccess(identity) {
+  return { type: DELETE_EVENT_SUCCESS, identity };
 }
 
 export function saveEventAndSendImmediately(event) {

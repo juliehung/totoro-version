@@ -1,6 +1,6 @@
 import { GET_EVENTS, SAVE_EVENT, SAVE_EVENT_AND_SEND_IMMEDIATELY, GET_CLINIC_REMAINING, EXECUTE_EVENT, DELETE_EVENT } from '../constant';
 import { call, take, put } from 'redux-saga/effects';
-import { getEventsSuccess, getClinicRemainingSuccess, executeEventFailed } from '../action';
+import { getEventsSuccess, getClinicRemainingSuccess, executeEventFailed, saveEventSuccess, deleteEventSuccess } from '../action';
 import SmsEvent from '../../../models/smsEvent';
 
 export function* getEvents() {
@@ -16,16 +16,15 @@ export function* getEvents() {
   }
 }
 
-// future support
+// auto save usage
 export function* saveEvent() {
   while (true) {
     try {
       // 1. create
-      const action = yield take(SAVE_EVENT);
-      yield call(SmsEvent.post, action.event);
-      // 2. reload
-      const events = yield call(SmsEvent.get);
-      yield put(getEventsSuccess(events))
+      const action = yield take(SAVE_EVENT)
+      const identity = action.event.id !== null ? action.event.id : action.event.tempId
+      const result = yield call(SmsEvent.post, action.event)
+      yield put(saveEventSuccess(result, identity))
     } catch (err) {
       //  ignore
       console.log(err);
@@ -59,10 +58,9 @@ export function* deleteEvent() {
   while (true) {
     try {
       const action = yield take(DELETE_EVENT);
-      yield call(SmsEvent.delete, action.id);
+      const isSucess = yield call(SmsEvent.delete, action.id);
       // 2. reload
-      const events = yield call(SmsEvent.get);
-      yield put(getEventsSuccess(events))
+      if (isSucess) yield put(deleteEventSuccess(action.id))
     } catch (err) {
       console.log(err)
     }
