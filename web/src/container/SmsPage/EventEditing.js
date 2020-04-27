@@ -73,6 +73,12 @@ const ContactContainer = styled.div`
   display: grid;
   grid-template: "theOne";
   width: 100%;
+  & > .ant-input-affix-wrapper-lg {
+    background: #f8fafb;
+    & .ant-input {
+      background: #f8fafb;
+    }
+  }
 `;
 
 const TagsContainer = styled.div`
@@ -82,7 +88,7 @@ const TagsContainer = styled.div`
   grid-area: theOne;
   z-index: 2;
   margin: 4px;
-  background: #f8fafb;
+  background: transparent;
 `;
 
 const VariablesContainer = styled.div`
@@ -112,6 +118,7 @@ const VariableText = styled(NoMarginText)`
 const Warning = styled(NoMarginText)`
   font-weight: 600;
   color: red;
+  margin-right: 16px;
 `;
 
 
@@ -191,7 +198,8 @@ function EventEditing(props) {
             <FieldLabel>寄送：</FieldLabel>
             <ContactContainer>
               <Input
-                style={{background:'#f8fafb', gridArea: 'theOne'}}
+                placeholder={editingEvent.metadata.selectedAppointments.length === 0 ? '點擊加入對象' : ''}
+                style={{gridArea: 'theOne'}}
                 size="large"
                 onClick={() => toggleAppointmentModal()} 
                 suffix={<PersonalAddFill />} />
@@ -233,6 +241,7 @@ function EventEditing(props) {
             </FieldLabel>
           </FieldContainer>
           <Input.TextArea
+            placeholder="填寫簡訊寄送內容，至多 70 字"
             style={{background:'#f8fafb'}}
             autoSize={{ minRows: 6 }}
             onChange={editTemplate}
