@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Button, Calendar, Row, Col, Select, Divider } from 'antd';
@@ -18,12 +18,10 @@ import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import GridIcon from '../../images/grid.svg';
 import PointerIcon from '../../images/printer.svg';
 import SettingsIcon from '../../images/settings.svg';
-import PlusIcon from '../../images/plus.svg';
-import CalendarIcon from '../../images/calendar-fill.svg';
-import MoonIcon from '../../images/moon-fill.svg';
 import { putSettings } from '../Home/actions';
 import { GAevent } from '../../ga';
 import { appointmentPage } from './';
+import FloatingActionButton from './FloatingActionButton';
 
 //#region
 const Container = styled.div`
@@ -98,65 +96,6 @@ const StyledSelect = styled(Select)`
   width: 100%;
 `;
 
-const MenuContainer = styled.div`
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 100000;
-`;
-
-const RoundContainer = styled.div`
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all ease-in-out 300ms;
-  & img {
-    width: 28px;
-  }
-`;
-
-const rotate = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(405deg); }
-`;
-
-const rotateReverse = keyframes`
-  0% { transform: rotate(405deg); }
-  100% { transform: rotate(0deg); }
-`;
-
-const MenuMainItemContainer = styled(RoundContainer)`
-  width: 56px;
-  height: 56px;
-  background: #3266ff;
-  border: 1px solid #3266ff;
-  & img {
-    width: 28px;
-  }
-  transform: ${props => (props.expand ? 'rotate(45deg)' : 'rotate(0)')};
-  animation: ${props => (props.loaded ? (props.expand ? rotate : rotateReverse) : '')} 300ms;
-`;
-
-const MenuSubItemContainer = styled(RoundContainer)`
-  width: 48px;
-  height: 48px;
-  background: #edf1f7;
-  border: 1px solid #edf1f7;
-  margin-left: auto;
-  margin-right: auto;
-  & img {
-    width: 24px;
-  }
-  position: absolute;
-  z-index: -1;
-  left: 0;
-  right: 0;
-  bottom: ${props => (props.expand ? props.distance : 0)}px;
-  box-shadow: 0 8px 16px -4px rgba(50, 102, 255, 0.2);
-`;
-
 //#endregion
 
 function AppRight(props) {
@@ -164,10 +103,6 @@ function AppRight(props) {
 
   const [expand, setExpand] = useState(false);
   const [loaded, setLoaded] = useState(false);
-
-  const moonClick = () => {
-    props.changeCreateCalModalVisible(true);
-  };
 
   const handleDoctorChange = d => {
     if (props.selectedDoctors.includes('dayOff') !== d.includes('dayOff')) {
@@ -277,6 +212,18 @@ function AppRight(props) {
     GAevent(appointmentPage, 'Click add event button');
   };
 
+  const fabMoonClick = () => {
+    GAevent(appointmentPage, 'Click show create calendar event modal button');
+    props.changeCreateCalModalVisible(true);
+    toggleExpand();
+  };
+
+  const fabCalClick = () => {
+    GAevent(appointmentPage, 'Click show create appt modal button');
+    props.changeCreateAppModalVisible(true);
+    toggleExpand();
+  };
+
   return (
     <Container>
       <StyledCalendar
@@ -362,33 +309,13 @@ function AppRight(props) {
           ]}
         </StyledSelect>
       </SelectDoctorContainer>
-      <MenuContainer>
-        <MenuMainItemContainer onClick={toggleExpand} expand={expand} loaded={loaded}>
-          <img src={PlusIcon} alt="plus" />
-        </MenuMainItemContainer>
-        <MenuSubItemContainer
-          onClick={() => {
-            GAevent(appointmentPage, 'Click show create calendar event modal button');
-            moonClick();
-            toggleExpand();
-          }}
-          expand={expand}
-          distance={130}
-        >
-          <img src={MoonIcon} alt="moon" />
-        </MenuSubItemContainer>
-        <MenuSubItemContainer
-          onClick={() => {
-            GAevent(appointmentPage, 'Click show create appt modal button');
-            props.changeCreateAppModalVisible(true);
-            toggleExpand();
-          }}
-          expand={expand}
-          distance={70}
-        >
-          <img src={CalendarIcon} alt="calendar" />
-        </MenuSubItemContainer>
-      </MenuContainer>
+      <FloatingActionButton
+        expand={expand}
+        toggleExpand={toggleExpand}
+        loaded={loaded}
+        moonClick={fabMoonClick}
+        calClick={fabCalClick}
+      />
     </Container>
   );
 }
