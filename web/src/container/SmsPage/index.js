@@ -228,6 +228,7 @@ const EventCardContainer = styled.div`
 
 
 const categories = ['ALL', 'DRAFT', 'SENT',]
+const categoriesChinese = ['全部', '草稿', '寄送備份',]
 const categoryIcons = [<InboxFill />, <Edit />, <PaperPlane />]
 
 function SmsPage(props) {
@@ -299,7 +300,7 @@ function SmsPage(props) {
                 selected={currentKey === category}  
                 onClick={() => filterEvents(category)}>
                 {categoryIcons[i]}
-                <MenuName>{category}</MenuName>
+                <MenuName>{categoriesChinese[i]}</MenuName>
               </MenuItem>  
             ))}
           </CategoryContainer>
@@ -324,7 +325,7 @@ function SmsPage(props) {
               icon={<MenuIcon style={{ margin: 'auto 16px auto 0' }} />}
               onClick={() => setExpanding(true)}
             />
-            <CategoryTitle>{currentKey}</CategoryTitle>
+            <CategoryTitle>{categoriesChinese[categories.indexOf(currentKey)]}</CategoryTitle>
           </CategoryTitleContainer>
           <EventList>
             {events.map(item => (

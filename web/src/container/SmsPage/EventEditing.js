@@ -6,7 +6,6 @@ import { setSelectedEvent, editTitle, editTemplate, addTag, toggleAppointmentMod
 import AppointmentsModal from './AppointmentsModal';
 import EventPreviewingModal from './EventPreviewingModal'
 import moment from 'moment'
-import Close from './svg/Close'
 import PersonalAddFill from './svg/PersonalAddFill'
 import AlertTriangle from './svg/AlertTriangle'
 import Trash from './svg/Trash';
@@ -22,9 +21,9 @@ const RootContainer = styled.div`
 
 const HeaderContainer = styled.div`
   display: grid;
-  grid-template-columns: 32px auto auto;
+  grid-template-columns: auto auto;
   align-items: center;
-  padding: 0 32px 0 16px; 
+  padding: 0 32px 0 24px; 
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.04), inset 0 -1px 0 0 #eeeeee;
   background: white;
   border-radius: 0 10px 0 0;
@@ -162,11 +161,6 @@ function EventEditing(props) {
   return ( 
     <RootContainer>
       <HeaderContainer>
-        <Button 
-          icon={<Close />}
-          type="link" 
-          onClick={() => setSelectedEvent(null)}>
-        </Button>
         <Title>{editingEvent.title}</Title>
         <Button
           style={{ display: editingEvent.status === 'draft' ? null : 'none', justifySelf: 'flex-end' }}

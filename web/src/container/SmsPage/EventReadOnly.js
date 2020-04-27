@@ -6,7 +6,6 @@ import { setSelectedEvent, executeEvent, deleteEvent } from './action';
 import DefaultPng from '../../static/images/default.png';
 import moment from "moment";
 import Trash from './svg/Trash';
-import Close from './svg/Close'
 import PaperPlane from './svg/PaperPlane'
 
 const RootContainer = styled.div`
@@ -21,9 +20,9 @@ const NoMarginText = styled.p`
 
 const HeaderContainer = styled.div`
   display: grid;
-  grid-template-columns: 32px auto auto;
+  grid-template-columns: auto auto;
   align-items: center;
-  padding: 0 32px 0 16px; 
+  padding: 0 32px 0 24px; 
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.04), inset 0 -1px 0 0 #eeeeee;
   background: white;
   border-radius: 0 10px 0 0;
@@ -113,17 +112,13 @@ const Splitter = styled.div`
 `;
 
 function EventReadOnly(props) {
-  const { selectedEvent, setSelectedEvent, executeEvent, deleteEvent } = props
+  const { selectedEvent, executeEvent, deleteEvent } = props
   return ( 
     <RootContainer>
       <HeaderContainer>
-        <Button 
-          icon={<Close />}
-          type="link" 
-          onClick={() => setSelectedEvent(null)} />
         <Header>{selectedEvent.title}</Header>
         <Button
-          style={{ display: selectedEvent.status === 'draft' ? null : 'none', justifySelf: 'flex-end' }}
+          style={{ justifySelf: 'flex-end' }}
           danger
           type="link" 
           icon={<Trash />}
