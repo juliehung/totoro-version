@@ -59,20 +59,6 @@ const CategoryContainer = styled.div`
   flex-direction: column;
 `;
 
-const BalanceContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Remaining = styled(NoMarginText)`
-  font-size: 15px;
-  font-weight: 600;
-  color: #8f9bb3;
-  margin: auto 20px ;
-  margin-bottom: 20px;
-`;
-
-// TODO: SMS HIDE
 const RemainingActionSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -86,8 +72,12 @@ const RemainingActionItem = styled.div`
   align-items: center;
   height: 40px;
   margin: auto 0;
+  cursor: pointer;
   & :first-child {
     margin-right: 8px;
+  }
+  & :hover {
+    color: #7e8aa2;
   }
 `;
 
@@ -303,19 +293,17 @@ function SmsPage(props) {
               </MenuItem>  
             ))}
           </CategoryContainer>
-          <BalanceContainer>
-            <Remaining>Balanace: {remaining}</Remaining>
-            <RemainingActionSection>
-              <RemainingActionItem>
-                <GiftFill />
-                <ActionName>Add Value</ActionName>
-              </RemainingActionItem>
-              <RemainingActionItem>
-                <AwardFill />
-                <ActionName>Purchase History</ActionName>
-              </RemainingActionItem>
-            </RemainingActionSection>
-          </BalanceContainer>
+          {/* TODO: SMS: link update */}
+          <RemainingActionSection>
+            <RemainingActionItem onClick={() => window.open('https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b')}>
+              <GiftFill />
+              <ActionName>{`儲值 (剩餘 ${remaining} 封)`}</ActionName>
+            </RemainingActionItem>
+            <RemainingActionItem onClick={() => window.open('https://www.dentaltw.com/myOrders')}>
+              <AwardFill />
+              <ActionName>購買紀錄</ActionName>
+            </RemainingActionItem>
+          </RemainingActionSection>
         </OverallContainer>
         <EventListContainer expanding={expanding} hasEvent={hasEvent}>
           <CategoryTitleContainer>

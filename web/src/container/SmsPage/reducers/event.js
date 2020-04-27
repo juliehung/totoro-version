@@ -36,7 +36,7 @@ const initState = {
   visible: false,
   clinicName: '',
   clinicId: null,
-  remaining: null,
+  remaining: 0,
   isWrongNumberLength: false,
   isWrongContentLength: false,
   isChargeFailed: false,
