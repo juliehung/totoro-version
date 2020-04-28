@@ -54,6 +54,21 @@ const TitleText = styled(NoMarginText)`
   font-weight: 600;
 `;
 
+const NoPageTable = styled(Table)`
+  margin: 0 24px 24px 24px;
+  & ul {
+    display: none;
+  }
+  & .ant-table-body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+    &::-webkit-scrollbar {
+      width: 0px;
+      background: transparent; /* Chrome/Safari/Webkit */
+    }
+  }
+`;
+
 function AppointmentsModal(props) {
   const { getAppointments, toggleAppointmentModal, addContactAppointments, appointments, visible } = props
   const [ date, setDate ] = useState(moment().startOf('day'));
@@ -116,10 +131,11 @@ function AppointmentsModal(props) {
         <DatePicker value={date} onChange={setDate} />
         <RightOutlined onClick={()=> setDate(moment(date).add(1, 'days'))}/>
       </DateContainer>
-      <Table
+      <NoPageTable
         size="small"
-        style={{ margin: '0 24px' }}
+        scroll={{y: 300}}
         rowKey="id"
+        pagination={{ pageSize: appointments.length }}
         rowSelection={rowSelection} 
         dataSource={appointments} 
         columns={columns} />
