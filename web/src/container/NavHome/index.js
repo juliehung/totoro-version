@@ -8,9 +8,9 @@ import { useCookies } from 'react-cookie';
 import ShiftPage from '../ShiftPage';
 import SettingPage from '../SettingPage';
 import SmsPage from '../SmsPage';
-import Message from './svg/Message';
 import BookOpen from './svg/BookOpen';
 import CalendarFill from './svg/CalendarFill';
+import Message from './svg/Message';
 import DentallHisLogo from '../../images/DentallHisLogo.svg';
 import { Menu, Dropdown, Drawer } from 'antd';
 import { parseAccountData } from './utils/parseAccountData';
@@ -18,6 +18,8 @@ import IconBookOpen from '../../images/icon-book-open.svg';
 import IconBookOpenFill from '../../images/icon-book-open-fill.svg';
 import IconCalendar from '../../images/icon-calendar.svg';
 import IconCalendarFill from '../../images/icon-calendar-fill.svg';
+import MessageCircle from '../../images/message-circle.svg';
+import MessageCircleFill from '../../images/message-circle-fill.svg';
 
 //#region
 const Container = styled.div`
@@ -38,7 +40,7 @@ const NavContainer = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 1% 16px 1%;
+  padding: 10px 30px;
   box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
   z-index: 100;
   margin: 15px 1%;
@@ -46,6 +48,7 @@ const NavContainer = styled.nav`
   background: #fff;
   & > :nth-child(1) {
     font-size: 2rem;
+    display: none;
   }
 
   & > div:nth-child(3) {
@@ -56,13 +59,12 @@ const NavContainer = styled.nav`
     }
   }
 
-  @media (min-width: 960px) {
-    & > :nth-child(1) {
-      display: none;
-    }
-  }
-
   @media (max-width: 960px) {
+    & > :nth-child(1) {
+      display: block;
+    }
+
+    padding: 16px 1% 16px 1%;
     & > div:nth-child(3) {
       display: none;
     }
@@ -76,7 +78,7 @@ const NavItem = styled.li`
   list-style-type: none;
   margin: 0 2vw;
   font-size: 12px;
-  padding: 10px;
+  font-weight: bold;
   border-radius: 34px;
   & {
     a {
@@ -84,9 +86,10 @@ const NavItem = styled.li`
       & > div {
         display: flex;
         align-items: center;
-        padding: 0 10px;
+        padding: 6px 10px;
         & > :first-child {
           margin-right: 10px;
+          height: 16px;
         }
       }
       & .svg {
@@ -212,7 +215,11 @@ function NavHome(props) {
             <NavItem focus={currentLocation === 'sms'}>
               <Link to="/sms">
                 <div>
-                  <Message />
+                  {currentLocation === 'sms' ? (
+                    <img src={MessageCircleFill} alt="smsIcon" />
+                  ) : (
+                    <img src={MessageCircle} alt="smsIcon" />
+                  )}
                   <span className="svg">SMS</span>
                 </div>
               </Link>

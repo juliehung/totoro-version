@@ -6,7 +6,6 @@ import { setSelectedEvent, executeEvent, deleteEvent } from './action';
 import DefaultPng from '../../static/images/default.png';
 import moment from "moment";
 import Trash from './svg/Trash';
-import Close from './svg/Close'
 import PaperPlane from './svg/PaperPlane'
 
 const RootContainer = styled.div`
@@ -21,9 +20,9 @@ const NoMarginText = styled.p`
 
 const HeaderContainer = styled.div`
   display: grid;
-  grid-template-columns: 32px auto auto;
+  grid-template-columns: auto auto;
   align-items: center;
-  padding: 0 32px 0 16px; 
+  padding: 0 32px 0 24px; 
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.04), inset 0 -1px 0 0 #eeeeee;
   background: white;
   border-radius: 0 10px 0 0;
@@ -54,11 +53,6 @@ const SenderContainer = styled.div`
   grid-template: 21px 21px/ 48px auto; 
 `;
 
-
-const ActionContainer = styled.div`
-  display: flex;
-`;
-
 const AvatarImg = styled.img`
   width: 42px;
   height: 42px;
@@ -76,6 +70,12 @@ const DateText = styled(NoMarginText)`
 const EventList = styled.div`
   overflow: scroll;
   padding: 0 4px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Chrome/Safari/Webkit */
+  }
 `;
 
 const EventListItem = styled.div`
@@ -112,24 +112,14 @@ const Splitter = styled.div`
 `;
 
 function EventReadOnly(props) {
-  const { selectedEvent, setSelectedEvent, executeEvent, deleteEvent, isLoaded } = props
+  const { selectedEvent, executeEvent, deleteEvent } = props
   return ( 
     <RootContainer>
       <HeaderContainer>
-        <Button 
-          icon={<Close />}
-          type="link" 
-          onClick={() => {
-            if (selectedEvent.id == null) setSelectedEvent(null, true)
-            else setSelectedEvent(null)
-          }}>
-         
-        </Button>
         <Header>{selectedEvent.title}</Header>
         <Button
-          style={{ display: selectedEvent.status === 'draft' ? null : 'none', justifySelf: 'flex-end' }}
+          style={{ justifySelf: 'flex-end' }}
           danger
-          disabled={!isLoaded}
           type="link" 
           icon={<Trash />}
           onClick={() => deleteEvent(selectedEvent.id)} />
@@ -141,18 +131,15 @@ function EventReadOnly(props) {
             <NameText style={{ gridRow: '1/2', gridColumn: '2/3'}}>{selectedEvent.createdBy}</NameText>
             <DateText style={{ gridRow: '2/3', gridColumn: '2/3'}}>{moment(selectedEvent.modifiedDate).format('YYYY/MM/DD HH:mm')}</DateText>
           </SenderContainer>
-          <ActionContainer style={{ visibility: selectedEvent.status === 'draft' ? null : 'hidden' }}>
             <Button
+              style={{ visibility: selectedEvent.status === 'draft' ? null : 'hidden' }}
               icon={<PaperPlane />}
               type="link"
-              disabled={!isLoaded}
-              onClick={() => executeEvent(selectedEvent)}>
-            </Button>        
-          </ActionContainer>
+              onClick={() => executeEvent(selectedEvent)} />
         </EventDetailContainer>
         <EventList>
           {selectedEvent.sms.map(item => (
-              <EventListItem key={item.phone}>
+              <EventListItem key={item.phone + item.content}>
               <EventPatientNameText>{item.metadata.patientName}</EventPatientNameText>
               <EventOccurText>{`${moment(item.metadata.appointmentDate).format('YYYY/MM/DD HH:mm')}的預約已發送至${item.phone}`}</EventOccurText>
               <Splitter />
@@ -166,7 +153,6 @@ function EventReadOnly(props) {
 }
 const mapStateToProps = ({ smsPageReducer }) => ({ 
   selectedEvent: smsPageReducer.event.selectedEvent,
-  isLoaded: smsPageReducer.event.isLoaded,
 });
 
 const mapDispatchToProps = { setSelectedEvent, executeEvent, deleteEvent};

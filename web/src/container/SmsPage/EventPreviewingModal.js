@@ -1,10 +1,12 @@
 import React from 'react';
-import { Modal, Button, } from 'antd';
+import { Modal } from 'antd';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import {togglePreviewingModal, saveEventAndSendImmediately} from './action'
 import moment from 'moment'
 import PaperPlane from './svg/PaperPlane'
+import { StyledLargerButton } from './Button'
+
 const NoMarginText = styled.p`
   margin: auto 0;
 `;
@@ -46,6 +48,12 @@ const EventList = styled.div`
   overflow: scroll;
   padding: 0 4px;
   height: 55vh;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Chrome/Safari/Webkit */
+  }
 `;
 
 const EventListItem = styled.div`
@@ -106,7 +114,7 @@ const TemplatePlace = styled.div`
 `;
 
 function EventPreviewingModal(props) {
-  const { togglePreviewingModal, saveEventAndSendImmediately, editingEvent, visible, isWrongNumberLength, isWrongContentLength, isLoaded, isChargeFailed } = props
+  const { togglePreviewingModal, saveEventAndSendImmediately, editingEvent, visible, isChargeFailed } = props
 
   const handleOk = () => {
     saveEventAndSendImmediately(editingEvent)
@@ -118,7 +126,7 @@ function EventPreviewingModal(props) {
   return ( 
     <Modal
       width={856}
-      style={{ top: 20 }}
+      centered
       bodyStyle={{ padding: '0', margin: 'auto' }}  
       visible={visible}
       footer={null}
@@ -131,7 +139,7 @@ function EventPreviewingModal(props) {
       </HeaderContainer>
       <FieldContainer>
         <Title>範本</Title>
-        <TemplatePlace>{editingEvent.template}</TemplatePlace>
+        <TemplatePlace>{editingEvent.metadata.template}</TemplatePlace>
       </FieldContainer>
       <FieldContainer>
         <Title>發送預覽</Title>
@@ -151,9 +159,9 @@ function EventPreviewingModal(props) {
           <Warning>您的帳戶額度不足</Warning>
         </WarningContainer> :
          <ActionContainer>
-         <Button
-          size="large"
-          disabled={editingEvent.sms.length === 0 || isWrongNumberLength || isWrongContentLength || !isLoaded } 
+         <StyledLargerButton
+          className="styled-larger-btn"
+          style={{ border: 'solid 1px white' }}
           type="primary"
           shape="round"  
           onClick={handleOk}>
@@ -161,7 +169,7 @@ function EventPreviewingModal(props) {
             <PaperPlane />
             <NoMarginText>立即發送訊息</NoMarginText>
           </div>
-         </Button>
+         </StyledLargerButton>
        </ActionContainer>
       }
   </Modal>
@@ -173,9 +181,6 @@ const mapStateToProps = ({ smsPageReducer }) => {
     appointments: smsPageReducer.appointment.appointments,
     editingEvent: smsPageReducer.event.editingEvent,
     visible: smsPageReducer.event.visible,
-    isWrongNumberLength: smsPageReducer.event.isWrongNumberLength,
-    isWrongContentLength: smsPageReducer.event.isWrongContentLength,
-    isLoaded: smsPageReducer.event.isLoaded,
     isChargeFailed: smsPageReducer.event.isChargeFailed,
   }
 };

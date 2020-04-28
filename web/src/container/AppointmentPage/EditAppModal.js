@@ -20,6 +20,8 @@ import { requiredTreatmentTimeDefault } from './constant';
 import moment from 'moment';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { defaultTimeOption } from './utils/generateDefaultTime';
+import { GAevent } from '../../ga';
+import { appointmentPage } from './';
 
 //#region
 const Container = styled.div`
@@ -160,6 +162,7 @@ function EditAppModal({
     };
 
     editAppointment(appt);
+    GAevent(appointmentPage, 'Edit appointment click');
   };
 
   const options = [

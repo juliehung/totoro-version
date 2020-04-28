@@ -21,7 +21,8 @@ const Container = styled.div`
   z-index: 400;
   top: ${props => (props.position ? props.position.y : 0)}px;
   left: ${props => (props.position ? props.position.x : 0)}px;
-  display: ${props => (props.visible ? 'visible' : 'none')};
+  visibility: ${props => (props.visible ? 'visible' : 'hidden')};
+  z-index: ${props => (props.visible ? 1 : -100)};
   flex-direction: column;
   transition: all ease-in-out 200ms;
   & > * {
@@ -82,6 +83,10 @@ const ItemContainer = styled.div`
 const HeightDiv = styled.div`
   max-height: 200px;
   overflow-y: scroll;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const DiamondContainer = styled.div`
@@ -116,7 +121,7 @@ const Diamond = styled.div`
 //#endregion
 
 function ShiftPopover(props) {
-  const { visible, setVisible, color, size, setSize } = props;
+  const { visible, setVisible, color, size, setSize, position, defaultShift, date } = props;
   const ref = useRef(null);
 
   const [selectedShift, setSelectedShift] = useState([]);
@@ -179,13 +184,13 @@ function ShiftPopover(props) {
     <Container
       ref={ref}
       visible={visible}
-      position={props.position}
+      position={position}
       onClick={onPopoverClick}
       color={color}
       onMouseDown={onMouseDown}
     >
-      <DiamondContainer size={size} position={props.position}>
-        <Diamond color={color} position={props.position} />
+      <DiamondContainer size={size} position={position}>
+        <Diamond color={color} position={position} />
       </DiamondContainer>
       <div>
         <span>新增看診時間</span>
@@ -204,7 +209,7 @@ function ShiftPopover(props) {
         </span>
         <HeightDiv>
           <Checkbox.Group
-            options={props.defaultShift.map(s => ({
+            options={defaultShift.map(s => ({
               label: `${s.origin.name} {${s.origin.range.start} ~ ${s.origin.range.end})`,
               value: s.origin.id,
             }))}
@@ -243,7 +248,7 @@ function ShiftPopover(props) {
         <span>
           每
           <StyleInputNumber size="small" value={week} min={0} max={5} onChange={setWeek} />
-          周重複至 {props.date ? moment(props.date).format('M') : ''} 月底
+          周重複至 {date ? moment(date).format('M') : ''} 月底
         </span>
       </ItemContainer>
       <ButtonContainer>

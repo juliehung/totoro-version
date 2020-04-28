@@ -17,10 +17,14 @@ import {
   SAVE_EVENT_AND_SEND_IMMEDIATELY,
   EXECUTE_EVENT_FAILED,
   DELETE_EVENT,
+  SAVE_EVENT_SUCCESS,
+  DELETE_EVENT_SUCCESS,
 } from '../constant';
 
 import produce from 'immer';
 import moment from 'moment';
+import uuid from 'react-uuid'
+
 const initState = {
   staticEvents: [],
   events: [],
@@ -32,7 +36,7 @@ const initState = {
   visible: false,
   clinicName: '',
   clinicId: null,
-  remaining: null,
+  remaining: 0,
   isWrongNumberLength: false,
   isWrongContentLength: false,
   isChargeFailed: false,
@@ -46,23 +50,22 @@ const initialState = {
 const event = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case SAVE_EVENT:
-      case EXECUTE_EVENT:
-      case DELETE_EVENT:
-      case SAVE_EVENT_AND_SEND_IMMEDIATELY:
-        draft.isLoaded = false
-        break
+      
       // make sure editign stuff is clear 
       case GET_EVENTS:
         draft.selectedEvent = null
         draft.selectedEventId = null
         draft.editingEvent = null
+        draft.isLoaded = false
         break
-      case GET_CLINIC_SETTINGS_SUCCESS:
-        draft.clinicName = action.settings.preferences.generalSetting.clinicName;
-        draft.clinicId = action.settings.id
+      case SAVE_EVENT:
+      case DELETE_EVENT:
+      case EXECUTE_EVENT:
+      case SAVE_EVENT_AND_SEND_IMMEDIATELY:
+        draft.isLoaded = false
         break
-      case GET_EVENTS_SUCCESS:
+
+      case GET_EVENTS_SUCCESS: {
         var sorted = action.events.slice().sort((a, b) => (a.modifiedDate > b.modifiedDate) ? -1 : 1)
         draft.staticEvents = sorted
         draft.events = state.currentKey === 'ALL' ? 
@@ -76,41 +79,116 @@ const event = (state = initialState, action) =>
         draft.editingEvent = null
         draft.isLoaded = true
         break;
-      case GET_CLINIC_REMAINING_SUCCESS:
-        draft.remaining = action.remaining.remaining
-        break
-      case EXECUTE_EVENT_FAILED:
-        draft.isChargeFailed = true
+      }
+    
+      case SAVE_EVENT_SUCCESS: {
+        const snapShot = [...state.staticEvents]
+        const identity = action.payload.identity
+        var toBePlaced = action.payload.result
+        // stilling editing ?
+        if (identity === state.editingEvent.id || identity === state.editingEvent.tempId) {
+          toBePlaced = {...state.editingEvent, ...toBePlaced}
+        }
+        const replaceIdx = snapShot.indexOf(snapShot.find(ev => ev.id !== null ? identity === ev.id : identity === ev.tempId))
+        snapShot[replaceIdx] = toBePlaced
+        draft.staticEvents = snapShot
+        draft.events = state.currentKey === 'ALL' ? 
+          draft.staticEvents : 
+          draft.staticEvents.filter(event => {
+            var sta = event.status.toLowerCase() === 'completed' ? 'sent': 'draft'
+            return sta === state.currentKey.toLowerCase()
+          })
+        draft.selectedEvent = draft.staticEvents[replaceIdx]
+        draft.editingEvent = toBePlaced
         draft.isLoaded = true
-        break;
-      case SET_SELECT_EVENT: {
-        if (action.payload.event === null){
+        break
+      }
+
+      case DELETE_EVENT_SUCCESS: {
+        let snapShot = [...state.staticEvents]
+        const identity = action.identity
+       
+        snapShot = snapShot.filter(event => event.id !== identity)
+        draft.staticEvents = snapShot
+        draft.events = state.currentKey === 'ALL' ? 
+          draft.staticEvents : 
+          draft.staticEvents.filter(event => {
+            var sta = event.status.toLowerCase() === 'completed' ? 'sent': 'draft'
+            return sta === state.currentKey.toLowerCase()
+          })
+
           draft.selectedEvent = null
           draft.selectedEventId = null
           draft.editingEvent = null
-          // close new
-          if (action.payload.shouldDumpDraft) {
-            var newArr = state.staticEvents.slice();
-            newArr.shift();
+          draft.isLoaded = true
+        break
+      }
+
+      case EXECUTE_EVENT_FAILED: {
+        draft.isChargeFailed = true
+        draft.isLoaded = true
+        break
+      }
+
+   
+      case GET_CLINIC_SETTINGS_SUCCESS: {
+        draft.clinicName = action.settings.preferences.generalSetting.clinicName;
+        draft.clinicId = action.settings.id
+        break
+      }
+
+      case GET_CLINIC_REMAINING_SUCCESS: {
+        draft.remaining = action.remaining.remaining
+        break
+      }
+
+      case SET_SELECT_EVENT: {     
+        // 1. cleaning the view 
+        if (action.event === null){
+          draft.selectedEvent = null
+          draft.selectedEventId = null
+          draft.editingEvent = null
+          // if it doesn't have id, delete locally here.
+          // if it has id => go saga > event > deleteEvent
+          if(state.selectedEvent.id === null) {
+            var newArr = state.staticEvents.filter(event => state.selectedEventId !== event.tempId)
             draft.staticEvents = newArr
-            draft.events = newArr
+            draft.events = state.currentKey === 'ALL' ? 
+              draft.staticEvents : 
+              draft.staticEvents.filter(event => {
+                var sta = event.status.toLowerCase() === 'completed' ? 'sent': 'draft'
+                return sta === state.currentKey.toLowerCase()
+              })
           }
-          // close existing
-          else if(state.editingEvent !== null) {
-            draft.selectedEvent = state.editingEvent
-            draft.selectedEventId = state.editingEvent.id
-            draft.editingEvent = state.editingEvent
-          }
+        // 2. changing the view
+        } else if (action.event !== null) {
+          // 2-2. 
+          var selection = {...action.event};
+          if (selection.status === 'draft') selection.isEdit = true
+          draft.selectedEvent = selection
+          draft.selectedEventId = selection.id !== null ? selection.id : selection.tempId
+          draft.editingEvent = selection.isEdit ? selection : null
         }
-        else if (action.payload.event !== null) {
-          draft.selectedEvent = action.payload.event
-          draft.selectedEventId = action.payload.event.id
-        }
-              
         break;
       }
-      case CREATE_EVENT:
+
+      case CREATE_EVENT: {
+        // 1. save existing
+        const snapShot = [...state.staticEvents]
+        if (state.editingEvent !== null) {
+          const toBeSaved = state.editingEvent
+          const replaceIdx = snapShot.indexOf(snapShot.find(ev => ev.id !== null ? state.selectedEventId === ev.id : state.selectedEventId === ev.tempId))
+          snapShot[replaceIdx] = toBeSaved
+          draft.events = state.currentKey === 'ALL' ? 
+            draft.staticEvents : 
+            draft.staticEvents.filter(event => {
+              var sta = event.status.toLowerCase() === 'completed' ? 'sent': 'draft'
+              return sta === state.currentKey.toLowerCase()
+            })
+        }
+        // 2. add new one
         var newEvent = {
+          tempId: uuid(),
           clinicName: state.clinicName,
           isEdit: true,
           template: '',
@@ -119,66 +197,91 @@ const event = (state = initialState, action) =>
           ],
           id: null,
           title: '無主旨',
-          status: 'DRAFT',
-          sms: []
+          status: 'draft',
+          sms: [],
+          metadata: {
+            template: '',
+            selectedAppointments: []
+          }
         };
-        var allEvents = [newEvent, ...state.staticEvents]
+        var allEvents = [newEvent, ...snapShot]
+
+        // 3. go to ALL section
         draft.currentKey = 'ALL'
         draft.staticEvents = allEvents
         draft.events = allEvents
-        draft.selectedEvent = draft.events[0]
-        draft.selectedEventId = draft.events[0].id
-        draft.editingEvent = draft.events[0]
+          
+        // 4. selecting manually
+        draft.selectedEvent = newEvent
+        draft.selectedEventId = newEvent.tempId
+        draft.editingEvent = newEvent
         break
+      }
 
+      //#region edit
       case EDIT_TITLE:
         draft.editingEvent.title = action.value
         break;
       case EDIT_TEMPLATE:
-        draft.editingEvent.template = action.value
+        draft.editingEvent.metadata.template = action.value
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent)
-        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70)
+        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70) || draft.editingEvent.metadata.template.length === 0
         break;
       case ADD_TAG:
         var adding = ' {{' + action.value + '}}'
-        draft.editingEvent.template += adding
+        draft.editingEvent.metadata.template += adding
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent)
-        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70)
+        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70) || draft.editingEvent.metadata.template.length === 0
         break
       case ADD_CONTACT_APPOINTMENTS:
-        const allApps = [...action.appointments, ...state.editingEvent.selectedAppointments]
-        draft.editingEvent.selectedAppointments = allApps.filter(distinct)
+        const allApps = [...action.appointments, ...state.editingEvent.metadata.selectedAppointments]
+        draft.editingEvent.metadata.selectedAppointments = allApps.filter(distinct)
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent)
         draft.isWrongNumberLength = draft.editingEvent.sms.some(m => checkPhoneFormat(m.phone))
-        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70)
+        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70) || draft.editingEvent.metadata.template.length === 0
         break
       case UNSELECT_APPOINTMENT: {
-        const newArr = [...state.editingEvent.selectedAppointments]
-        var removeIdx = state.editingEvent.selectedAppointments.indexOf(action.key)
+        const newArr = [...state.editingEvent.metadata.selectedAppointments]
+        var removeIdx = state.editingEvent.metadata.selectedAppointments.indexOf(action.key)
         newArr.splice(removeIdx, 1);
-        draft.editingEvent.selectedAppointments = newArr;
+        draft.editingEvent.metadata.selectedAppointments = newArr;
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent)
         draft.isWrongNumberLength = draft.editingEvent.sms.some(m => checkPhoneFormat(m.phone))
-        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70)
+        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70) || draft.editingEvent.metadata.template.length === 0
         break
       }
+      //#endregion
+
 
       case TOGGLE_PREVIEWING_MODAL:
         draft.visible = !state.visible
         // just init
         draft.isChargeFailed = false
         break
-      case FILTER_EVENTS:
+
+      case FILTER_EVENTS: {
+        // when loading data do not let user do filtering
+        if (!state.isLoaded) break
+        // locally save
+        const snapShot = [...state.staticEvents]
+        if (state.editingEvent !== null) {
+          const toBeSaved = state.editingEvent
+          const replaceIdx = snapShot.indexOf(snapShot.find(ev => ev.id !== null ? state.selectedEventId === ev.id : state.selectedEventId === ev.tempId))
+          snapShot[replaceIdx] = toBeSaved
+        }
         draft.selectedEvent = null
         draft.selectedEventId = null
         draft.editingEvent = null
         draft.currentKey = action.key
-        draft.events = action.key === 'ALL'? state.staticEvents : 
-        state.staticEvents.filter(event => {
-          var sta = event.status.toLowerCase() === 'completed' ? 'sent': 'draft'
-          return sta === action.key.toLowerCase()
-        })
+        draft.staticEvents = snapShot
+        draft.events = action.key === 'ALL'? 
+          snapShot : 
+          snapShot.filter(event => {
+            var sta = event.status.toLowerCase() === 'completed' ? 'sent': 'draft'
+            return sta === action.key.toLowerCase()
+          })
         break   
+      }
 
       default:
         break;
@@ -186,8 +289,8 @@ const event = (state = initialState, action) =>
   })
 
 const processingEventSms = (clinicName, event) => {
- return event.selectedAppointments.map(app => {
-  var content = decodeTemplate(clinicName, app, event.template);
+ return event.metadata.selectedAppointments.map(app => {
+  var content = decodeTemplate(clinicName, app, event.metadata.template);
   return {
     metadata: {
       patientId: app.patientId,

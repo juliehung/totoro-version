@@ -18,13 +18,18 @@ export default class SmsEvent {
       id: event.id,
       clinic: event.clinicName,
       title: event.title,
+      metadata: {
+        template: event.metadata.template,
+        selectedAppointments: event.metadata.selectedAppointments
+      },
       sms: event.sms.map((mes, i) => {
         var newM = {
           phone: mes.phone,
           content: mes.content,
           metadata: {
-            patientName: mes.patientName,
-            appointmentDate: event.selectedAppointments[i].expectedArrivalTime
+            patientId: mes.metadata.patientId,
+            patientName: mes.metadata.patientName,
+            appointmentDate: event.metadata.selectedAppointments[i].expectedArrivalTime
           },
         }
 
@@ -36,7 +41,7 @@ export default class SmsEvent {
       headers: {
         'content-type': 'application/json',
       },
-      method: processedEvent.id == null ? 'POST' : 'UPDATE',
+      method: processedEvent.id == null ? 'POST' : 'PUT',
       body: JSON.stringify(processedEvent),
     };
     const result = await request(requestUrl, options);

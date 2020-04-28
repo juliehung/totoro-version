@@ -1,9 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
-// import zhTW from '@fullcalendar/core/locales/zh-tw';
 import styled from 'styled-components';
-import '@fullcalendar/timeline/main.css';
-import '@fullcalendar/resource-timeline/main.css';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { changeDate, getShift, createShift, editShift, changeResourceColor, getResourceColor } from './actions';
 import ShiftPopover from './ShiftPopover';
@@ -16,6 +13,9 @@ const Container = styled.div`
   margin: 10px;
   .fc-license-message {
     display: none;
+  }
+  .fc-no-scrollbars {
+    overflow: hidden !important;
   }
 `;
 //#endregion

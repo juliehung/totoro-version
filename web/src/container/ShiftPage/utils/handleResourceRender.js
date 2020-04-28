@@ -38,8 +38,8 @@ const AvatarContainer = styled.div`
 
 const Color = styled.div`
   background-color: ${props => (props.color ? props.color : '#1890ff')};
-  height: 15px;
-  width: 15px;
+  height: 12px;
+  width: 12px;
   border: 3px #fff solid;
   border-radius: 50%;
   position: absolute;
