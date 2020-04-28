@@ -122,12 +122,13 @@ const Warning = styled(NoMarginText)`
 
 
 const isDiff = (o1, o2) => {
+  if(o1.metadata.template !== o2.metadata.template) return true
+  
   const newApp = o1.metadata.selectedAppointments.map(app => app.id)
   const oldApp = o2.metadata.selectedAppointments.map(app => app.id)
 
-  if(o1.metadata.template !== o2.metadata.template) return true
-  if(!isEqual(newApp, oldApp)) return true
-  if(o1.title !== o2.title) return true
+  if (!isEqual(newApp, oldApp)) return true
+  if (o1.title !== o2.title) return true
   
   return false
 }
@@ -154,12 +155,12 @@ function EventEditing(props) {
   useEffect(() => {
     const interval = setInterval(() => {
       if (editingEvent !== null && editingEvent.isEdit) {
-        if (editingEvent.sms.length === 0 || isWrongContentLength || isWrongNumberLength) return
+        if (isWrongContentLength || isWrongNumberLength) return
         if (isDiff(editingEvent, selectedEvent)) {
           saveEvent(editingEvent)
         }
       }
-    }, 2000);
+    }, 1000);
     return () => clearInterval(interval);
     // eslint-disable-next-line
   }, [editingEvent]);
