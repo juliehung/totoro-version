@@ -115,6 +115,7 @@ const UserContainer = styled.div`
   & > :nth-child(2) {
     width: 40px;
     height: 40px;
+    object-fit: cover;
     background: #eee;
     border-radius: 50%;
     margin-left: 20px;
@@ -252,7 +253,7 @@ function NavHome(props) {
               <span>{account.role}</span>
             </div>
             {account.avatar ? (
-              <img alt="avatar" src={`data:image/png;base64,${account.avatar}`}></img>
+              <img alt="avatar" src={`data:image/png;base64,${account.avatar}`} />
             ) : (
               <div>{account.name[0]}</div>
             )}
