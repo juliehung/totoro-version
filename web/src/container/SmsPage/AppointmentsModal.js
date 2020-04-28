@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { getAppointments, toggleAppointmentModal, addContactAppointments } from './action';
-import { StyledLargerButton } from './Button'
+import { StyledMediumButton, StyledModal } from './StyledComponents'
+
 const NoMarginText = styled.p`
   margin: auto 0;
 `;
@@ -13,9 +14,10 @@ const NoMarginText = styled.p`
 const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
-  background: ##f8fafb;
+  background: #f8fafb;
   height: 56px;
-  margin: 0 24px;
+  padding: 0 24px;
+  border-radius: 4px 4px 0 0;
 `;
 
 const Header = styled(NoMarginText)`
@@ -41,6 +43,7 @@ const ActionContainer = styled.div`
   height: 56px;
   padding: 0 24px;
   flex-direction: row-reverse;
+  border-radius: 0 0 4px 4px;
 `;
 
 const SelectionContainer = styled.div`
@@ -112,7 +115,7 @@ function AppointmentsModal(props) {
   ];
 
   return ( 
-    <Modal
+    <StyledModal
       width={900}
       centered
       bodyStyle={{ padding: '0' }}
@@ -140,14 +143,14 @@ function AppointmentsModal(props) {
         dataSource={appointments} 
         columns={columns} />
       <ActionContainer>
-        <StyledLargerButton
-          className="styled-larger-btn"
-          style={{ border: 'solid 1px white', width: '86px' }}
+        <StyledMediumButton
+          className="styled-medium-btn"
+          style={{ border: 'solid 1px white', width: '86px', background: 'rgba(255,255,255,0.08)'  }}
           type="primary" 
           onClick={handleOk} 
           shape="round">
             插入
-        </StyledLargerButton>
+        </StyledMediumButton>
         {tempAppointments.length > 0? 
           <SelectionContainer>
             <CloseOutlined onClick={handleCancelAll} />
@@ -156,7 +159,7 @@ function AppointmentsModal(props) {
           null 
         }
       </ActionContainer>
-  </Modal>
+  </StyledModal>
   );
 }
 
