@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CloseOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Modal, DatePicker, Table } from 'antd';
+import { DatePicker, Table } from 'antd';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import moment from 'moment';

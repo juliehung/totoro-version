@@ -1,5 +1,4 @@
 import React from 'react';
-import { Modal } from 'antd';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import {togglePreviewingModal, saveEventAndSendImmediately} from './action'

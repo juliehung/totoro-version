@@ -1,6 +1,5 @@
 import React,{ useState, useEffect, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'antd';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import { getEvents, setSelectedEvent, createEvent, saveEvent, filterEvents, getClinicSettings, getClinicRemaining } from './action';
@@ -10,7 +9,6 @@ import InboxFill from './svg/InboxFill'
 import Edit from './svg/Edit'
 import Edit2 from './svg/Edit2'
 import PaperPlane from './svg/PaperPlane'
-import MenuIcon from './svg/Menu'
 import GiftFill from './svg/GiftFill'
 import AwardFill from './svg/AwardFill'
 import { StyledLargerButton } from './StyledComponents'
@@ -60,17 +58,17 @@ const CategoryContainer = styled.div`
 
 const RemainingActionSection = styled.div`
   display: flex;
+  height: 126px;
   flex-direction: column;
   border-top: solid 1px #dae1e7;
-  padding: 16px;
-  justify-content: center;
+  padding: 12px 36px;
+  justify-content: flex-start;
 `;
 
 const RemainingActionItem = styled.div`
   display: flex;
   align-items: center;
   height: 40px;
-  margin: auto 0;
   cursor: pointer;
   & :first-child {
     margin-right: 8px;
@@ -89,7 +87,7 @@ const ActionName = styled(NoMarginText)`
 const CategoryTitleContainer = styled.div`
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 24px;
   color: #222b45;
 `;
 
@@ -101,12 +99,15 @@ const CategoryTitle = styled(NoMarginText)`
 const Title = styled(NoMarginText)`
   font-size: 15px;
   font-weight: 600;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const Caption = styled(NoMarginText)`
   font-size: 12px;
   grid-area: 2/2 / 3/3
-  color: ${props => (props.eventSelected ? 'white' : '#8f9bb3')};
+  color: ${props => (props.eventSelected ? 'white' : props.isDraft? '#fe9f43' : '#8f9bb3')};
 `;
 
 const TinyBold = styled(NoMarginText)`
@@ -117,14 +118,6 @@ const TinyBold = styled(NoMarginText)`
   grid-area: 1/3/2/4;
   color: ${props => (props.eventSelected ? 'white' : '#8f9bb3')};
 
-`;
-
-const StatusDot = styled.div`
-  width: 8px;
-  height: 8px;
-  border-radius: 6px;
-  background: #fe9f43;
-  margin: auto;
 `;
 
 const MenuItem = styled.div`
@@ -159,6 +152,7 @@ const EventListItem = styled.div`
   display: grid;
   grid-template: 24px 20px / 20px auto 56px;
   background-image: ${props => (props.eventSelected ? 'linear-gradient(283deg, #0a54c5, #3266ff)' : 'none')};
+  box-shadow: ${props => (props.eventSelected ? '0 15px 30px 0 rgba(48, 101, 252, 0.11)': 'none')};
   width: 100%;
   padding: 16px;
   border-bottom: solid 1px #dae1e7;
@@ -174,7 +168,7 @@ const EventListContainer = styled.div`
   grid-row: 1/2;
   grid-column: 2/3;
   flex-direction: column;
-  box-shadow: 2px 0 6px 0 rgba(209, 209, 209, 0.5);
+  box-shadow: 1px 0 0 0 rgba(209, 209, 209, 0.5);
   background: white;
   z-index: 2;
   @media (max-width: 480px) {
@@ -191,7 +185,8 @@ const OverallContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   width: 260px;
-  box-shadow: 2px 0 10px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
+  border-right: 1px #dae1e7 solid;
   background: white;
   z-index: 3;
   border-radius: 10px 0 0 10px;
@@ -308,11 +303,6 @@ function SmsPage(props) {
         </OverallContainer>
         <EventListContainer expanding={expanding} hasEvent={hasEvent}>
           <CategoryTitleContainer>
-            <Button
-              type="link"
-              icon={<MenuIcon style={{ margin: 'auto 16px auto 0' }} />}
-              onClick={() => setExpanding(true)}
-            />
             <CategoryTitle>{categoriesChinese[categories.indexOf(currentKey)]}</CategoryTitle>
           </CategoryTitleContainer>
           <EventList>
@@ -322,13 +312,13 @@ function SmsPage(props) {
                 key={item.id !== null ? item.id : item.tempId}
                 onClick={() => handleSelectionChanging(item)}
               >
-                <StatusDot style={item.status === 'draft'? { gridRow: '1/2', gridColumn: '1/2'}: {display: 'none'}} />
+                
                 
                 <Title style={{ gridRow: '1/2', gridColumn: '2/3'}}>{item.title}</Title>
             
-            
-                <Caption eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}>
-                  {item.status === 'completed'? `${item.createdBy}已傳送${item.sms.length}則`: ''}
+                
+                <Caption eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)} isDraft={item.status === 'draft'}>
+                  {item.status === 'completed'? `${item.createdBy}已傳送${item.sms.length}則`: '草稿'}
                 </Caption>
                 
                 <TinyBold eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}>
