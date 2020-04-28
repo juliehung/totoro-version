@@ -95,10 +95,28 @@ const NewPatientElement = styled.div`
   width: 50%;
   display: flex;
   align-items: baseline;
+  justify-content: center;
   padding: 0 3px;
-  & > span {
+  & > :nth-child(1) {
     flex-shrink: 0;
   }
+  & > :nth-child(2) {
+    width: 145px;
+  }
+  &:nth-child(n + 1) {
+    & > span {
+      width: 75px;
+    }
+  }
+  &:nth-child(2n) {
+    & > span {
+      width: 50px;
+    }
+  }
+`;
+
+const BoldSpan = styled.span`
+  font-weight: bold;
 `;
 
 const PatientDetail = styled.div`
@@ -251,7 +269,7 @@ function CreateAppModal({
       <Container>
         <StyledSearchSelect
           showSearch
-          placeholder="請輸入病患病歷編號或姓名"
+          placeholder="請輸入複診病患病歷編號或姓名"
           filterOption={false}
           onSearch={onSearchTextChange}
           onFocus={onSearchTextFocus}
@@ -268,7 +286,7 @@ function CreateAppModal({
           <NewPatientContainer>
             <NewPatientRow>
               <NewPatientElement>
-                <span>病患姓名：</span>
+                <BoldSpan>新病患名：</BoldSpan>
                 <Input onChange={onChangePatientName} value={patient.name} placeholder="(必填)" />
               </NewPatientElement>
               <NewPatientElement>
@@ -282,7 +300,7 @@ function CreateAppModal({
                 <Input onChange={onChangePatientNationalId} value={patient.nationalId} />
               </NewPatientElement>
               <NewPatientElement>
-                <span>電話：</span>
+                <BoldSpan>電話：</BoldSpan>
                 <Input onChange={onChangePatientPhone} value={patient.phone} placeholder="(必填)" />
               </NewPatientElement>
             </NewPatientRow>
