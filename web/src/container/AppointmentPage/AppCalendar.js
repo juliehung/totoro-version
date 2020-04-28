@@ -48,30 +48,105 @@ import { reverseEvents } from './utils/reverseEvents';
 import { handleResources } from './utils/handleResources';
 import { GAevent } from '../../ga';
 import { appointmentPage } from './';
+import TwoArrowLeft from '../../images/arrow-left.svg';
+import TwoArrowRight from '../../images/arrow-right.svg';
+import ArrowLeft from '../../images/two-arrow-left.svg';
+import ArrowRight from '../../images/two-arrow-right.svg';
+import { parseDisplayRange } from './utils/parseDisplayRange';
 
 //#region
 const Container = styled.div`
-  height: 100%;
-  .fc-toolbar.fc-header-toolbar {
-    background: #f3f8ff;
-    padding: 17px 23px 17px 38px;
-    margin-bottom: 0;
-    border-left: 1px solid rgb(221, 221, 221);
-    border-right: 1px solid rgb(221, 221, 221);
-  }
-
-  .fc-button.fc-button-primary {
-    background-color: #fff !important;
-    color: rgba(0, 0, 0, 0.65) !important;
-    border-color: #d9d9d9 !important;
-  }
-
+  display: flex;
+  flex-direction: column;
+  width: 85%;
   @media (max-width: 800px) {
-    .fc-button.fc-button-primary {
-      display: none !important;
-    }
+    width: 100%;
+    height: 600px;
+  }
+`;
+
+const Header = styled.div`
+  flex-shrink: 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1%;
+  margin-bottom: 15px;
+  @media (max-width: 850px) {
+    justify-content: flex-end;
+  }
+`;
+
+const TodayContainer = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  display: flex;
+  color: #8f9bb3;
+  & > div {
+    font-size: 10px;
+    padding: 5px 10px;
+    border: solid 1px #8f9bb3;
+    border-radius: 34px;
+    margin-left: 7px;
+    cursor: pointer;
+  }
+  @media (max-width: 850px) {
+    display: none;
+  }
+`;
+
+const TitleContainer = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  color: #222b45;
+  & > img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+  & > span {
+    margin-right: 20px;
+  }
+  @media (max-width: 1180px) {
+    display: none;
+  }
+`;
+
+const ViewContainer = styled.div`
+  font-size: 12px;
+  display: flex;
+  height: 32px;
+  color: #3366ff;
+  font-weight: bold;
+  cursor: pointer;
+`;
+
+const ViewItem = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #3266ff;
+  width: 60px;
+  &:first-child {
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+  }
+  &:last-child {
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
   }
 
+  background: ${props => (props.selected ? '#3366ff' : '#fff')};
+  color: ${props => (props.selected ? '#fff' : '#3366ff')};
+`;
+
+const CalendarContainer = styled.div`
+  flex: 1;
+  overflow: scroll;
   .eventCard {
     font-weight: 500;
     letter-spacing: 2px;
@@ -103,10 +178,6 @@ const Container = styled.div`
     height: 3em;
     border-bottom: 0;
   }
-`;
-
-const StyledFullCalendar = styled(FullCalendar)`
-  font-size: 400px !important;
 `;
 //#endregion
 
@@ -205,7 +276,6 @@ class AppCalendar extends React.Component {
   scrollListener = undefined;
   handleDatesRender = info => {
     // reset first day when leave timeGridWeek
-    this.setState({ viewType: info.view.type });
     if (info.view.type !== 'timeGridWeek') {
       this.props.changeCalFirstDay(calFirstDay);
     }
@@ -365,6 +435,31 @@ class AppCalendar extends React.Component {
     return true;
   };
 
+  onDayClick = () => {
+    this.changeView('resourceTimeGridDay');
+  };
+
+  onWeekClick = () => {
+    this.changeView('timeGridWeek');
+  };
+
+  onMonthClick = () => {
+    this.changeView('dayGridMonth');
+  };
+
+  onListClick = () => {
+    this.changeView('listWeek');
+  };
+
+  changeView = view => {
+    let calendarApi = this.calendarComponentRef.current.getApi();
+    calendarApi.changeView(view);
+  };
+
+  viewSkeletonRender = info => {
+    this.setState({ viewType: info.view.type });
+  };
+
   render() {
     const shiftOpen = this.props.generalSetting && this.props.generalSetting.showShift;
 
@@ -398,82 +493,92 @@ class AppCalendar extends React.Component {
 
     return (
       <Container>
-        <StyledFullCalendar
-          ref={this.calendarComponentRef}
-          height="parent"
-          resources={resource}
-          events={event}
-          plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin, resourceTimeGridPlugin, listPlugin, momentPlugin]}
-          header={{
-            left: 'customPrevMonthButton,customPrevButton,customNextButton,customNextMonthButton, customToday',
-            center: 'title',
-            right: 'resourceTimeGridDay,timeGridWeek,dayGridMonth,listWeek',
-          }}
-          customButtons={{
-            customNextButton: {
-              click: this.nextClick,
-              icon: 'chevron-right',
-            },
-            customPrevButton: {
-              click: this.prevClick,
-              icon: 'chevron-left',
-            },
-            customPrevMonthButton: {
-              click: this.prevMonthClick,
-              icon: 'chevrons-left',
-            },
-            customNextMonthButton: {
-              click: this.nextMonthClick,
-              icon: 'chevrons-right',
-            },
-            customToday: {
-              click: this.todayClick,
-              text: '今日',
-            },
-          }}
-          buttonText={{
-            listWeek: '時間表',
-          }}
-          titleRangeSeparator=" ~ "
-          titleFormat={{ year: 'numeric', month: 'numeric', day: 'numeric' }}
-          eventTimeFormat={{
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-          }}
-          slotLabelFormat={{
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-          }}
-          minTime="08:00:00"
-          scrollTime="08:30:00"
-          slotLabelInterval={{ hours: 0.5 }}
-          slotDuration={`00:${this.props.slotDuration}:00`}
-          locales={zhTW}
-          locale="zh-tw"
-          datesRender={this.handleDatesRender}
-          dateClick={this.handleDateClick}
-          slotWidth={2}
-          firstDay={this.props.firstDay}
-          eventRender={this.eventRender}
-          resourceRender={handleResourceRender}
-          eventDrop={this.handleEventDrop}
-          eventResize={this.handleEventResize}
-          navLinks
-          editable
-          droppable
-          nowIndicator
-          eventLimit
-          selectable
-          eventDragStart={this.eventEditStart}
-          eventDragStop={this.eventEditStop}
-          eventResizeStart={this.eventEditStart}
-          eventResizeStop={this.eventEditStop}
-          timeGridEventMinHeight={15}
-          eventAllow={this.eventAllow}
-          defaultView={defaultView}
-        />
+        <Header>
+          <TodayContainer>
+            <span>{moment().format('LLLL')}</span>
+            <div onClick={this.todayClick}>
+              <span>今日</span>
+            </div>
+          </TodayContainer>
+          <TitleContainer className="fc-center">
+            <img src={TwoArrowLeft} alt="two-arrow-left" onClick={this.prevMonthClick} />
+            <img src={ArrowLeft} alt="arrow-left" onClick={this.prevClick} />
+            <span>{parseDisplayRange(this.props.calendarRange)}</span>
+            <img src={ArrowRight} alt="arrow-right" onClick={this.nextClick} />
+            <img src={TwoArrowRight} alt="two-arrow-right" onClick={this.nextMonthClick} />
+          </TitleContainer>
+          <ViewContainer>
+            <ViewItem onClick={this.onDayClick} selected={this.state.viewType === 'resourceTimeGridDay'}>
+              <span>天</span>
+            </ViewItem>
+            <ViewItem onClick={this.onWeekClick} selected={this.state.viewType === 'timeGridWeek'}>
+              <span>周</span>
+            </ViewItem>
+            <ViewItem onClick={this.onMonthClick} selected={this.state.viewType === 'dayGridMonth'}>
+              <span>月</span>
+            </ViewItem>
+            <ViewItem onClick={this.onListClick} selected={this.state.viewType === 'listWeek'}>
+              <span>周列表</span>
+            </ViewItem>
+          </ViewContainer>
+        </Header>
+        <CalendarContainer>
+          <FullCalendar
+            ref={this.calendarComponentRef}
+            height="parent"
+            resources={resource}
+            events={event}
+            plugins={[
+              interactionPlugin,
+              timeGridPlugin,
+              dayGridPlugin,
+              resourceTimeGridPlugin,
+              listPlugin,
+              momentPlugin,
+            ]}
+            header={false}
+            titleRangeSeparator=" ~ "
+            titleFormat={{ year: 'numeric', month: 'numeric', day: 'numeric' }}
+            eventTimeFormat={{
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+            }}
+            slotLabelFormat={{
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+            }}
+            minTime="08:00:00"
+            scrollTime="08:30:00"
+            slotLabelInterval={{ hours: 0.5 }}
+            slotDuration={`00:${this.props.slotDuration}:00`}
+            locales={zhTW}
+            locale="zh-tw"
+            datesRender={this.handleDatesRender}
+            dateClick={this.handleDateClick}
+            slotWidth={2}
+            firstDay={this.props.firstDay}
+            eventRender={this.eventRender}
+            resourceRender={handleResourceRender}
+            eventDrop={this.handleEventDrop}
+            eventResize={this.handleEventResize}
+            navLinks
+            editable
+            droppable
+            nowIndicator
+            eventLimit
+            selectable
+            eventDragStart={this.eventEditStart}
+            eventDragStop={this.eventEditStop}
+            eventResizeStart={this.eventEditStart}
+            eventResizeStop={this.eventEditStop}
+            timeGridEventMinHeight={15}
+            eventAllow={this.eventAllow}
+            defaultView={defaultView}
+            viewSkeletonRender={this.viewSkeletonRender}
+          />
+        </CalendarContainer>
       </Container>
     );
   }
