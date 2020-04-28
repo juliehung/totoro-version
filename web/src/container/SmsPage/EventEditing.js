@@ -9,7 +9,7 @@ import moment from 'moment'
 import PersonalAddFill from './svg/PersonalAddFill'
 import AlertTriangle from './svg/AlertTriangle'
 import Trash from './svg/Trash';
-import { StyledButton } from './StyledComponents'
+import { StyledButton, StyledMediumButton } from './StyledComponents'
 import { P2, Caption, Subtitle, Title, NoMarginText } from '../../utils/textComponents';
 import isEqual from 'lodash.isequal'
 
@@ -260,7 +260,8 @@ function EventEditing(props) {
 
         <ActionContainer>
           <Warning style={{ visibility: isWrongNumberLength? null : 'hidden' }}>手機號碼格式錯誤</Warning>
-          <StyledButton
+          <StyledMediumButton
+            className="styled-medium-btn"
             disabled={editingEvent.sms.length === 0 || isWrongContentLength || isWrongNumberLength}
             shape="round"
             type="primary"
@@ -269,7 +270,7 @@ function EventEditing(props) {
             }}
           >
             預覽及寄送
-          </StyledButton>
+          </StyledMediumButton>
         </ActionContainer>
         <AppointmentsModal />
         <EventPreviewingModal />

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Button, Modal } from 'antd';
+import { Gray700, Gray100 } from '../../utils/colors'
 
 export const StyledButton = styled(Button)`
   padding: 0 16px;
@@ -16,6 +17,17 @@ export const StyledButton = styled(Button)`
   &.ant-btn-primary:hover, &.ant-btn-primary:focus, &.ant-btn-primary:active  {
     background-color: #3266ff;
     border-color: transparent;
+  }
+
+  &.ant-btn-primary:disabled  {
+    color: ${Gray700};
+    border: ${Gray700} 1px solid;
+    background: ${Gray100};
+    &:hover {
+      color: ${Gray700};
+      border: ${Gray700} 1px solid;
+      background: ${Gray100};
+    }
   }
 
 
