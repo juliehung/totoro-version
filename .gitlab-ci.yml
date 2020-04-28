@@ -64,6 +64,7 @@ testPackage:
     only:
         - master
         - develop
+        - release
     image: openjdk:8-jdk-stretch
     script:
         - apt-get install -y --no-install-recommends curl unzip
