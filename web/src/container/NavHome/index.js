@@ -144,7 +144,6 @@ const DrawerItem = styled(Link)`
 
 const ContentContainer = styled.div`
   height: 100%;
-  padding: 1%;
   margin: 0 1% 15px;
   border-radius: 8px;
   background-color: #fff;
