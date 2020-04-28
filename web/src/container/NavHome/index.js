@@ -47,7 +47,7 @@ const NavContainer = styled.nav`
   border-radius: 8px;
   background: #fff;
   & > :nth-child(1) {
-    font-size: 2rem;
+    font-size: 1.5rem;
     display: none;
   }
 
@@ -64,7 +64,7 @@ const NavContainer = styled.nav`
       display: block;
     }
 
-    padding: 16px 1% 16px 1%;
+    padding: 10px 1%;
     & > div:nth-child(3) {
       display: none;
     }

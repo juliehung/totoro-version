@@ -30,13 +30,6 @@ const Container = styled.div`
     scrollbar-width: none;
   }
 `;
-const CalendarContainer = styled.div`
-  width: 85%;
-  @media (max-width: 800px) {
-    height: 600px;
-    width: 100%;
-  }
-`;
 //#endregion
 
 function AppointmentPage() {
@@ -49,9 +42,7 @@ function AppointmentPage() {
       <Helmet>
         <title>預約</title>
       </Helmet>
-      <CalendarContainer>
-        <AppCalendar />
-      </CalendarContainer>
+      <AppCalendar />
       <AppRight />
       <PrintModal />
       <ConfirmDropModal />
