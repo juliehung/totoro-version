@@ -36,6 +36,7 @@ const FloatingButton = styled.div`
   align-items: center;
   transition: all ease-in-out 300ms;
   & > :first-child {
+    font-size: 12px;
     user-select: none;
     background-color: #101426;
     border-radius: 8px;
