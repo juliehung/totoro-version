@@ -248,8 +248,9 @@ function SmsPage(props) {
    
     const newApp = o1.metadata.selectedAppointments.map(app => app.id)
     const oldApp = o2.metadata.selectedAppointments.map(app => app.id)
-    if(!isEqual(newApp, oldApp)) return true
-    if(o1.title !== o2.title) return true
+
+    if (!isEqual(newApp, oldApp)) return true
+    if (o1.title !== o2.title) return true
     
     return false
   }
