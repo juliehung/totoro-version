@@ -20,7 +20,6 @@ import isEqual from 'lodash.isequal'
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 32px 48px;
   height: 100%;
   @media screen and (max-width: 480px) {
     padding: 0px;
