@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 
 export const StyledButton = styled(Button)`
   padding: 0 16px;
@@ -39,3 +39,15 @@ export const StyledLargerButton = styled(StyledButton)`
   }
 `;
 
+export const StyledMediumButton = styled(StyledButton)`
+  &.styled-medium-btn {
+    height: 40px;
+    padding: 0 16px;
+  }
+`;
+
+export const StyledModal = styled(Modal)`
+  & .ant-modal-content {
+    border-radius: 8px;
+  }
+`;

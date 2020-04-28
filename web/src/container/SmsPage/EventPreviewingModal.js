@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import {togglePreviewingModal, saveEventAndSendImmediately} from './action'
 import moment from 'moment'
 import PaperPlane from './svg/PaperPlane'
-import { StyledLargerButton } from './Button'
+import { StyledMediumButton, StyledModal } from './StyledComponents'
 
 const NoMarginText = styled.p`
   margin: auto 0;
@@ -17,6 +17,7 @@ const HeaderContainer = styled.div`
   background: #f8fafb;
   height: 56px;
   padding: 0 24px;
+  border-radius: 4px 4px 0 0;
 `;
 
 const Header = styled(NoMarginText)`
@@ -42,6 +43,7 @@ const ActionContainer = styled.div`
   height: 56px;
   background: #3266ff;
   padding: 0 24px;
+  border-radius: 0 0 4px 4px;
 `;
 
 const EventList = styled.div`
@@ -124,7 +126,7 @@ function EventPreviewingModal(props) {
   }
 
   return ( 
-    <Modal
+    <StyledModal
       width={856}
       centered
       bodyStyle={{ padding: '0', margin: 'auto' }}  
@@ -159,9 +161,9 @@ function EventPreviewingModal(props) {
           <Warning>您的帳戶額度不足</Warning>
         </WarningContainer> :
          <ActionContainer>
-         <StyledLargerButton
-          className="styled-larger-btn"
-          style={{ border: 'solid 1px white' }}
+         <StyledMediumButton
+          className="styled-medium-btn"
+          style={{ border: 'solid 1px white', background: 'rgba(255,255,255,0.08)' }}
           type="primary"
           shape="round"  
           onClick={handleOk}>
@@ -169,10 +171,10 @@ function EventPreviewingModal(props) {
             <PaperPlane />
             <NoMarginText>立即發送訊息</NoMarginText>
           </div>
-         </StyledLargerButton>
+         </StyledMediumButton>
        </ActionContainer>
       }
-  </Modal>
+  </StyledModal>
   );
 }
 

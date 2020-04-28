@@ -9,7 +9,7 @@ import moment from 'moment'
 import PersonalAddFill from './svg/PersonalAddFill'
 import AlertTriangle from './svg/AlertTriangle'
 import Trash from './svg/Trash';
-import { StyledButton } from './Button'
+import { StyledButton } from './StyledComponents'
 import { P2, Caption, Subtitle, Title, NoMarginText } from '../../utils/textComponents';
 import isEqual from 'lodash.isequal'
 

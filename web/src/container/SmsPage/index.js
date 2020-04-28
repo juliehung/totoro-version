@@ -13,7 +13,7 @@ import PaperPlane from './svg/PaperPlane'
 import MenuIcon from './svg/Menu'
 import GiftFill from './svg/GiftFill'
 import AwardFill from './svg/AwardFill'
-import { StyledLargerButton } from './Button'
+import { StyledLargerButton } from './StyledComponents'
 import isEqual from 'lodash.isequal'
 
 
