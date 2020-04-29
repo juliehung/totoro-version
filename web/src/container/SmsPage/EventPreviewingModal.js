@@ -27,13 +27,14 @@ const Header = styled(NoMarginText)`
 const FieldContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 16px 24px 0 24px;
+  padding: 16px 0 0;
 `;
 
 const Title = styled(NoMarginText)`
   font-size: 15px;
   font-weight: 600;
   color: #8f9bb3;
+  margin: 0 24px;
 `;
 
 const ActionContainer = styled.div`
@@ -47,7 +48,6 @@ const ActionContainer = styled.div`
 
 const EventList = styled.div`
   overflow: scroll;
-  padding: 0 4px;
   height: 55vh;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE 10+ */
@@ -60,15 +60,14 @@ const EventList = styled.div`
 const EventListItem = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
   padding: 32px;
-  box-shadow: 0px 3px 5px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   > *:not(:first-child) {
     margin-top: 8px;
   }
   background: white;
-  margin: 16px 0;
+  margin: 16px 24px;
 `;
 
 const EventPatientNameText = styled(NoMarginText)`
@@ -110,7 +109,7 @@ const TemplatePlace = styled.div`
   border-radius: 8px;
   border: solid 1px #e4e9f2;
   padding: 16px 32px;
-  margin: 16px 0;
+  margin: 16px 24px 0;
   background: rgba(100,100,100,0.03);
 `;
 
