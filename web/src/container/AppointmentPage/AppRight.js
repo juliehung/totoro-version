@@ -73,8 +73,11 @@ const ItemContainer = styled.div`
     color: red;
   }
 
+  & > :nth-child(1) {
+    display: flex;
+  }
   & > :nth-child(2) {
-    font-size: 10px;
+    font-size: 12px;
   }
 `;
 
