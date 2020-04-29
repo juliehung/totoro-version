@@ -86,10 +86,16 @@ const NavItem = styled.li`
       & > div {
         display: flex;
         align-items: center;
-        padding: 6px 10px;
-        & > :first-child {
-          margin-right: 10px;
+        padding: 6px 12px;
+        & > img {
+          margin-right: 6px;
           height: 16px;
+          &:first-child {
+            display: ${props => (props.focus ? 'block' : 'none')};
+          }
+          &:nth-child(2) {
+            display: ${props => (props.focus ? 'none' : 'block')};
+          }
         }
       }
       & .svg {
@@ -203,11 +209,8 @@ function NavHome(props) {
             <NavItem focus={currentLocation === 'registration'}>
               <Link to="/registration">
                 <div>
-                  {currentLocation === 'registration' ? (
-                    <img src={IconBookOpenFill} alt="bookIcon" />
-                  ) : (
-                    <img src={IconBookOpen} alt="bookIcon" />
-                  )}
+                  <img src={IconBookOpenFill} alt="bookIcon" />
+                  <img src={IconBookOpen} alt="bookIcon" />
                   <span className="svg">就診列表</span>
                 </div>
               </Link>
@@ -215,11 +218,8 @@ function NavHome(props) {
             <NavItem focus={currentLocation === 'sms'}>
               <Link to="/sms">
                 <div>
-                  {currentLocation === 'sms' ? (
-                    <img src={MessageCircleFill} alt="smsIcon" />
-                  ) : (
-                    <img src={MessageCircle} alt="smsIcon" />
-                  )}
+                  <img src={MessageCircleFill} alt="smsIcon" />
+                  <img src={MessageCircle} alt="smsIcon" />
                   <span className="svg">SMS</span>
                 </div>
               </Link>
@@ -227,11 +227,8 @@ function NavHome(props) {
             <NavItem focus={currentLocation === ''}>
               <Link to="/">
                 <div>
-                  {currentLocation === '' ? (
-                    <img src={IconCalendarFill} alt="calendarIcon" />
-                  ) : (
-                    <img src={IconCalendar} alt="calendarIcon" />
-                  )}
+                  <img src={IconCalendarFill} alt="calendarIcon" />
+                  <img src={IconCalendar} alt="calendarIcon" />
                   <span className="svg">約診排程</span>
                 </div>
               </Link>
