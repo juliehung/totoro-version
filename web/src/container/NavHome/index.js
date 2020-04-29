@@ -86,9 +86,9 @@ const NavItem = styled.li`
       & > div {
         display: flex;
         align-items: center;
-        padding: 6px 10px;
+        padding: 6px 12px;
         & > :first-child {
-          margin-right: 10px;
+          margin-right: 6px;
           height: 16px;
         }
       }
