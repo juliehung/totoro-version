@@ -62,4 +62,30 @@ export const StyledModal = styled(Modal)`
   & .ant-modal-content {
     border-radius: 8px;
   }
+
+  & .ant-modal-close {
+    &:active {
+      transform: translateY(2px) translateX(-2px);
+    }
+  }
+  & .ant-modal-close-x {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px 0 rgba(0,0,0,.1);
+
+  }
+  & .ant-modal-close-icon {
+    display: grid;
+    height: 100%;
+
+    & > svg {
+      margin: auto;
+      fill: black;
+    }
+  }
 `;
