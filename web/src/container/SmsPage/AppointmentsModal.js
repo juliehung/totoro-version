@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { CloseOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Modal, DatePicker, Table } from 'antd';
+import { DatePicker, Table } from 'antd';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { getAppointments, toggleAppointmentModal, addContactAppointments } from './action';
-import { StyledLargerButton } from './Button'
+import { StyledMediumButton, StyledModal } from './StyledComponents'
+
 const NoMarginText = styled.p`
   margin: auto 0;
 `;
@@ -13,9 +14,10 @@ const NoMarginText = styled.p`
 const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
-  background: ##f8fafb;
+  background: #f8fafb;
   height: 56px;
-  margin: 0 24px;
+  padding: 0 24px;
+  border-radius: 4px 4px 0 0;
 `;
 
 const Header = styled(NoMarginText)`
@@ -41,6 +43,7 @@ const ActionContainer = styled.div`
   height: 56px;
   padding: 0 24px;
   flex-direction: row-reverse;
+  border-radius: 0 0 4px 4px;
 `;
 
 const SelectionContainer = styled.div`
@@ -52,6 +55,21 @@ const SelectionContainer = styled.div`
 const TitleText = styled(NoMarginText)`
   font-size: 15px;
   font-weight: 600;
+`;
+
+const NoPageTable = styled(Table)`
+  margin: 0 24px 24px 24px;
+  & ul {
+    display: none;
+  }
+  & .ant-table-body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+    &::-webkit-scrollbar {
+      width: 0px;
+      background: transparent; /* Chrome/Safari/Webkit */
+    }
+  }
 `;
 
 function AppointmentsModal(props) {
@@ -97,7 +115,7 @@ function AppointmentsModal(props) {
   ];
 
   return ( 
-    <Modal
+    <StyledModal
       width={900}
       centered
       bodyStyle={{ padding: '0' }}
@@ -116,22 +134,23 @@ function AppointmentsModal(props) {
         <DatePicker value={date} onChange={setDate} />
         <RightOutlined onClick={()=> setDate(moment(date).add(1, 'days'))}/>
       </DateContainer>
-      <Table
+      <NoPageTable
         size="small"
-        style={{ margin: '0 24px' }}
+        scroll={{y: 300}}
         rowKey="id"
+        pagination={{ pageSize: appointments.length }}
         rowSelection={rowSelection} 
         dataSource={appointments} 
         columns={columns} />
       <ActionContainer>
-        <StyledLargerButton
-          className="styled-larger-btn"
-          style={{ border: 'solid 1px white', width: '86px' }}
+        <StyledMediumButton
+          className="styled-medium-btn"
+          style={{ border: 'solid 1px white', width: '86px', background: 'rgba(255,255,255,0.08)'  }}
           type="primary" 
           onClick={handleOk} 
           shape="round">
             插入
-        </StyledLargerButton>
+        </StyledMediumButton>
         {tempAppointments.length > 0? 
           <SelectionContainer>
             <CloseOutlined onClick={handleCancelAll} />
@@ -140,7 +159,7 @@ function AppointmentsModal(props) {
           null 
         }
       </ActionContainer>
-  </Modal>
+  </StyledModal>
   );
 }
 

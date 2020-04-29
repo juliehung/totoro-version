@@ -37,14 +37,14 @@ const Header = styled(NoMarginText)`
 const BoneContainer = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
-  margin: 16px 32px;
+  margin: 16px 0;
   overflow: hidden;
 `;
 
 const EventDetailContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin: 0 32px 8px;
 `;
 
 
@@ -69,7 +69,6 @@ const DateText = styled(NoMarginText)`
 
 const EventList = styled.div`
   overflow: scroll;
-  padding: 0 4px;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE 10+ */
   &::-webkit-scrollbar {
@@ -81,10 +80,9 @@ const EventList = styled.div`
 const EventListItem = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
   padding: 32px;
-  margin: 16px 0;
-  box-shadow: 1px 0 8px 0 rgba(0, 0, 0, 0.1);
+  margin: 16px 32px;
+  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   > *:not(:first-child) {
     margin-top: 8px;
@@ -139,7 +137,7 @@ function EventReadOnly(props) {
         </EventDetailContainer>
         <EventList>
           {selectedEvent.sms.map(item => (
-              <EventListItem key={item.phone + item.content}>
+            <EventListItem key={item.phone + item.content}>
               <EventPatientNameText>{item.metadata.patientName}</EventPatientNameText>
               <EventOccurText>{`${moment(item.metadata.appointmentDate).format('YYYY/MM/DD HH:mm')}的預約已發送至${item.phone}`}</EventOccurText>
               <Splitter />

@@ -9,7 +9,7 @@ import moment from 'moment'
 import PersonalAddFill from './svg/PersonalAddFill'
 import AlertTriangle from './svg/AlertTriangle'
 import Trash from './svg/Trash';
-import { StyledButton } from './Button'
+import { StyledMediumButton } from './StyledComponents'
 import { P2, Caption, Subtitle, Title, NoMarginText } from '../../utils/textComponents';
 import isEqual from 'lodash.isequal'
 
@@ -122,12 +122,13 @@ const Warning = styled(NoMarginText)`
 
 
 const isDiff = (o1, o2) => {
+  if(o1.metadata.template !== o2.metadata.template) return true
+  
   const newApp = o1.metadata.selectedAppointments.map(app => app.id)
   const oldApp = o2.metadata.selectedAppointments.map(app => app.id)
 
-  if(o1.metadata.template !== o2.metadata.template) return true
-  if(!isEqual(newApp, oldApp)) return true
-  if(o1.title !== o2.title) return true
+  if (!isEqual(newApp, oldApp)) return true
+  if (o1.title !== o2.title) return true
   
   return false
 }
@@ -154,12 +155,12 @@ function EventEditing(props) {
   useEffect(() => {
     const interval = setInterval(() => {
       if (editingEvent !== null && editingEvent.isEdit) {
-        if (editingEvent.sms.length === 0 || isWrongContentLength || isWrongNumberLength) return
+        if (isWrongContentLength || isWrongNumberLength) return
         if (isDiff(editingEvent, selectedEvent)) {
           saveEvent(editingEvent)
         }
       }
-    }, 2000);
+    }, 1000);
     return () => clearInterval(interval);
     // eslint-disable-next-line
   }, [editingEvent]);
@@ -259,7 +260,8 @@ function EventEditing(props) {
 
         <ActionContainer>
           <Warning style={{ visibility: isWrongNumberLength? null : 'hidden' }}>手機號碼格式錯誤</Warning>
-          <StyledButton
+          <StyledMediumButton
+            className="styled-medium-btn"
             disabled={editingEvent.sms.length === 0 || isWrongContentLength || isWrongNumberLength}
             shape="round"
             type="primary"
@@ -268,7 +270,7 @@ function EventEditing(props) {
             }}
           >
             預覽及寄送
-          </StyledButton>
+          </StyledMediumButton>
         </ActionContainer>
         <AppointmentsModal />
         <EventPreviewingModal />

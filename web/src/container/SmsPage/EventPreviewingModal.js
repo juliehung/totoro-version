@@ -1,11 +1,10 @@
 import React from 'react';
-import { Modal } from 'antd';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import {togglePreviewingModal, saveEventAndSendImmediately} from './action'
 import moment from 'moment'
 import PaperPlane from './svg/PaperPlane'
-import { StyledLargerButton } from './Button'
+import { StyledMediumButton, StyledModal } from './StyledComponents'
 
 const NoMarginText = styled.p`
   margin: auto 0;
@@ -17,6 +16,7 @@ const HeaderContainer = styled.div`
   background: #f8fafb;
   height: 56px;
   padding: 0 24px;
+  border-radius: 4px 4px 0 0;
 `;
 
 const Header = styled(NoMarginText)`
@@ -27,13 +27,14 @@ const Header = styled(NoMarginText)`
 const FieldContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 16px 24px 0 24px;
+  padding: 16px 0 0;
 `;
 
 const Title = styled(NoMarginText)`
   font-size: 15px;
   font-weight: 600;
   color: #8f9bb3;
+  margin: 0 24px;
 `;
 
 const ActionContainer = styled.div`
@@ -42,11 +43,11 @@ const ActionContainer = styled.div`
   height: 56px;
   background: #3266ff;
   padding: 0 24px;
+  border-radius: 0 0 4px 4px;
 `;
 
 const EventList = styled.div`
   overflow: scroll;
-  padding: 0 4px;
   height: 55vh;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE 10+ */
@@ -59,15 +60,14 @@ const EventList = styled.div`
 const EventListItem = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
   padding: 32px;
-  box-shadow: 0px 3px 5px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   > *:not(:first-child) {
     margin-top: 8px;
   }
   background: white;
-  margin: 16px 0;
+  margin: 16px 24px;
 `;
 
 const EventPatientNameText = styled(NoMarginText)`
@@ -109,7 +109,7 @@ const TemplatePlace = styled.div`
   border-radius: 8px;
   border: solid 1px #e4e9f2;
   padding: 16px 32px;
-  margin: 16px 0;
+  margin: 16px 24px 0;
   background: rgba(100,100,100,0.03);
 `;
 
@@ -124,7 +124,7 @@ function EventPreviewingModal(props) {
   }
 
   return ( 
-    <Modal
+    <StyledModal
       width={856}
       centered
       bodyStyle={{ padding: '0', margin: 'auto' }}  
@@ -159,9 +159,9 @@ function EventPreviewingModal(props) {
           <Warning>您的帳戶額度不足</Warning>
         </WarningContainer> :
          <ActionContainer>
-         <StyledLargerButton
-          className="styled-larger-btn"
-          style={{ border: 'solid 1px white' }}
+         <StyledMediumButton
+          className="styled-medium-btn"
+          style={{ border: 'solid 1px white', background: 'rgba(255,255,255,0.08)' }}
           type="primary"
           shape="round"  
           onClick={handleOk}>
@@ -169,10 +169,10 @@ function EventPreviewingModal(props) {
             <PaperPlane />
             <NoMarginText>立即發送訊息</NoMarginText>
           </div>
-         </StyledLargerButton>
+         </StyledMediumButton>
        </ActionContainer>
       }
-  </Modal>
+  </StyledModal>
   );
 }
 
