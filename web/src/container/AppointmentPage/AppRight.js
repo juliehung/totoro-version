@@ -27,28 +27,33 @@ import FloatingActionButton from './FloatingActionButton';
 const Container = styled.div`
   width: 15%;
   min-width: 300px;
-  padding: 20px;
+  padding: 6px;
   display: flex;
   flex-direction: column;
   background: #fff;
   z-index: 400;
   position: relative;
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
   @media (max-width: 800px) {
     width: 100%;
     min-height: 90vh;
   }
 `;
 
-const StyledCalendar = styled(Calendar)`
-  margin-top: 15px;
+const CalendarContainer = styled.div`
+  margin-top: 20px;
+  border-radius: 6px;
+  border: 1px solid #e4e9f2;
+  padding: 3px 0px;
 `;
 
 const ItemContainer = styled.div`
   font-size: 15px;
-  height: 60px;
+  height: 64px;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid #edf1f7;
   & img {
     width: 20px;
     margin-right: 10px;
@@ -68,8 +73,11 @@ const ItemContainer = styled.div`
     color: red;
   }
 
+  & > :nth-child(1) {
+    display: flex;
+  }
   & > :nth-child(2) {
-    font-size: 10px;
+    font-size: 12px;
   }
 `;
 
@@ -82,6 +90,7 @@ const DateTitleContainer = styled(Col)`
 `;
 
 const SelectDoctorContainer = styled.div`
+  margin-top: 20px;
   display: flex;
   align-items: center;
   & > span {
@@ -226,12 +235,14 @@ function AppRight(props) {
 
   return (
     <Container>
-      <StyledCalendar
-        fullscreen={false}
-        headerRender={headerRender}
-        onSelect={props.changeCalDate}
-        value={props.calendarDate}
-      />
+      <CalendarContainer>
+        <Calendar
+          fullscreen={false}
+          headerRender={headerRender}
+          onSelect={props.changeCalDate}
+          value={props.calendarDate}
+        />
+      </CalendarContainer>
       <ItemContainer>
         <div>
           <img src={PointerIcon} alt="列印" />
