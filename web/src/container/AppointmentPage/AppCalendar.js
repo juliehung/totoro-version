@@ -67,12 +67,11 @@ const Container = styled.div`
 
 const Header = styled.div`
   flex-shrink: 0;
-  height: 64px;
+  height: 76px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1%;
-  margin-bottom: 15px;
   @media (max-width: 850px) {
     justify-content: flex-end;
   }
