@@ -460,6 +460,12 @@ class AppCalendar extends React.Component {
     this.setState({ viewType: info.view.type });
   };
 
+  navLinkDayClick = date => {
+    this.props.changeCalDate(moment(date));
+    let calendarApi = this.calendarComponentRef.current.getApi();
+    calendarApi.changeView('resourceTimeGridDay');
+  };
+
   render() {
     const shiftOpen = this.props.generalSetting && this.props.generalSetting.showShift;
 
@@ -564,6 +570,7 @@ class AppCalendar extends React.Component {
             eventDrop={this.handleEventDrop}
             eventResize={this.handleEventResize}
             navLinks
+            navLinkDayClick={this.navLinkDayClick}
             editable
             droppable
             nowIndicator
