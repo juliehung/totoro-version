@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { setSelectedEvent, executeEvent, deleteEvent } from './action';
-import DefaultPng from '../../static/images/default.png';
+import { parseAccountData } from '../NavHome/utils/parseAccountData';
 import moment from "moment";
 import Trash from './svg/Trash';
 import PaperPlane from './svg/PaperPlane'
@@ -50,13 +50,17 @@ const EventDetailContainer = styled.div`
 
 const SenderContainer = styled.div`
   display: grid;
-  grid-template: 21px 21px/ 48px auto; 
+  grid-template: 24px 24px/ 48px auto; 
 `;
 
 const AvatarImg = styled.img`
-  width: 42px;
-  height: 42px;
-  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  grid-row: 1/3;
+  box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.12);
+  justify-self: center;
+  align-self: center;
 `;
 
 const NameText = styled(NoMarginText)`
@@ -110,7 +114,7 @@ const Splitter = styled.div`
 `;
 
 function EventReadOnly(props) {
-  const { selectedEvent, executeEvent, deleteEvent } = props
+  const { selectedEvent, executeEvent, deleteEvent, account } = props
   return ( 
     <RootContainer>
       <HeaderContainer>
@@ -125,7 +129,11 @@ function EventReadOnly(props) {
       <BoneContainer>
         <EventDetailContainer>
           <SenderContainer>
-            <AvatarImg src={DefaultPng} alt="default" />
+            {account.avatar ? (
+              <AvatarImg alt="avatar" src={`data:image/png;base64,${account.avatar}`} />
+            ) : (
+              <AvatarImg alt={account.name[0]} src={null} style={{ textAlign: 'center' }} />
+            )}
             <NameText style={{ gridRow: '1/2', gridColumn: '2/3'}}>{selectedEvent.createdBy}</NameText>
             <DateText style={{ gridRow: '2/3', gridColumn: '2/3'}}>{moment(selectedEvent.modifiedDate).format('YYYY/MM/DD HH:mm')}</DateText>
           </SenderContainer>
@@ -149,8 +157,9 @@ function EventReadOnly(props) {
     </RootContainer>
   );
 }
-const mapStateToProps = ({ smsPageReducer }) => ({ 
+const mapStateToProps = ({ smsPageReducer, homePageReducer }) => ({ 
   selectedEvent: smsPageReducer.event.selectedEvent,
+  account: parseAccountData(homePageReducer.account.data),
 });
 
 const mapDispatchToProps = { setSelectedEvent, executeEvent, deleteEvent};
