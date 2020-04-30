@@ -9,7 +9,7 @@ import moment from 'moment'
 import PersonalAddFill from './svg/PersonalAddFill'
 import AlertTriangle from './svg/AlertTriangle'
 import Trash from './svg/Trash';
-import { StyledMediumButton } from './StyledComponents'
+import { StyledMediumButton, StyledTag } from './StyledComponents'
 import { P2, Caption, Subtitle, Title, NoMarginText } from '../../utils/textComponents';
 import isEqual from 'lodash.isequal'
 
@@ -215,14 +215,14 @@ function EventEditing(props) {
                           <Caption>{app.note}</Caption>
                         </div>
                       }>
-                      <Tag 
+                      <StyledTag 
                         closable
                         onClose={e => {
                           unselectAppointment(app)
                         }}
                         >
                           {`${app.patientName}(${app.phone})`}
-                      </Tag>
+                      </StyledTag>
                     </Popover>
                   )}
                 )}

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Tag } from 'antd';
 import { Gray700, Gray100 } from '../../utils/colors'
 
 export const StyledButton = styled(Button)`
@@ -87,5 +87,19 @@ export const StyledModal = styled(Modal)`
       margin: auto;
       fill: black;
     }
+  }
+`;
+
+
+export const StyledTag = styled(Tag)`
+  &.ant-tag {
+    color: #8f9bb3;
+    border: #8f9bb3 1px solid;
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 0 16px;
+    height: 24px;
+    background: rgba(143, 155, 179,.08);
+    margin: 2px;
   }
 `;
