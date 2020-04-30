@@ -2,7 +2,7 @@ import React,{ useState, useEffect, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { getEvents, setSelectedEvent, createEvent, saveEvent, filterEvents, getClinicSettings, getClinicRemaining } from './action';
+import { getEvents, setSelectedEvent, createEvent, saveEvent, filterEvents, getClinicSettings, getClinicRemaining, getUsers } from './action';
 import EventCard from './EventCard';
 import moment from 'moment';
 import InboxFill from './svg/InboxFill'
@@ -216,7 +216,7 @@ const categoriesChinese = ['全部', '草稿', '寄送備份',]
 const categoryIcons = [<InboxFill />, <Edit />, <PaperPlane />]
 
 function SmsPage(props) {
-  const { getEvents, filterEvents, currentKey, createEvent, saveEvent, getClinicSettings, getClinicRemaining, setSelectedEvent, selectedEvent, selectedEventId, editingEvent, events, remaining } = props;
+  const { getEvents, filterEvents, currentKey, createEvent, saveEvent, getClinicSettings, getClinicRemaining, getUsers, setSelectedEvent, selectedEvent, selectedEventId, editingEvent, events, remaining, users } = props;
   const [expanding, setExpanding] = useState(false)
   const [hasEvent, setHasEvent] = useState(false)
 
@@ -226,6 +226,7 @@ function SmsPage(props) {
 
 
   useEffect(() => {
+    getUsers()
     getClinicSettings()
     getEvents()
     getClinicRemaining()
@@ -306,32 +307,37 @@ function SmsPage(props) {
             <CategoryTitle>{categoriesChinese[categories.indexOf(currentKey)]}</CategoryTitle>
           </CategoryTitleContainer>
           <EventList>
-            {events.map(item => (
-              <EventListItem
-                eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}
-                key={item.id !== null ? item.id : item.tempId}
-                onClick={() => handleSelectionChanging(item)}
-              >
-                
-                
-                <Title style={{ gridRow: '1/2', gridColumn: '2/3'}}>{item.title}</Title>
-            
-                
-                <Caption eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)} isDraft={item.status === 'draft'}>
-                  {item.status === 'completed'? `${item.createdBy}已傳送${item.sms.length}則`: '草稿'}
-                </Caption>
-                
-                <TinyBold eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}>
-                  {(() => {
-                    if (moment().isSame(item.modifiedDate  , 'day')) return moment(item.modifiedDate).format('HH:mm')
-                    else {
-                      if(moment().startOf('date').add(-1, 'days').isSame(item.modifiedDate  , 'day')) return 'yesterday'
-                      else return moment(item.modifiedDate).format('MM/DD') 
-                    }
-                  })()}
-                </TinyBold>
-              </EventListItem>
-              ))}
+            {events.map(item => {
+              const user = users.find(user => user.login === item.createdBy);
+              const createdBy = user ? user.firstName : ''
+
+              return (
+                <EventListItem
+                  eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}
+                  key={item.id !== null ? item.id : item.tempId}
+                  onClick={() => handleSelectionChanging(item)}
+                >
+                  
+                  
+                  <Title style={{ gridRow: '1/2', gridColumn: '2/3'}}>{item.title}</Title>
+              
+                  
+                  <Caption eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)} isDraft={item.status === 'draft'}>
+                    {item.status === 'completed'? `${createdBy}已傳送${item.sms.length}則`: '草稿'}
+                  </Caption>
+                  
+                  <TinyBold eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}>
+                    {(() => {
+                      if (moment().isSame(item.modifiedDate  , 'day')) return moment(item.modifiedDate).format('HH:mm')
+                      else {
+                        if(moment().startOf('date').add(-1, 'days').isSame(item.modifiedDate  , 'day')) return 'yesterday'
+                        else return moment(item.modifiedDate).format('MM/DD') 
+                      }
+                    })()}
+                  </TinyBold>
+                </EventListItem>
+                )
+            })}
           </EventList>
         </EventListContainer>
         <EventCardContainer hasEvent={hasEvent}>
@@ -342,7 +348,8 @@ function SmsPage(props) {
   );
 }
 
-const mapStateToProps = ({smsPageReducer}) => ({
+const mapStateToProps = ({smsPageReducer, homePageReducer}) => ({
+  users: smsPageReducer.user.users,
   events: smsPageReducer.event.events,
   selectedEventId: smsPageReducer.event.selectedEventId,
   selectedEvent: smsPageReducer.event.selectedEvent,
@@ -356,6 +363,7 @@ const mapStateToProps = ({smsPageReducer}) => ({
 const mapDispatchToProps = {
   getEvents,
   getClinicRemaining,
+  getUsers,
   setSelectedEvent,
   createEvent,
   saveEvent,
