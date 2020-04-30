@@ -63,12 +63,17 @@ const NoPageTable = styled(Table)`
     display: none;
   }
   & .ant-table-body {
+    min-height: ${props => props.minHeight === null ? null : props.minHeight + 'px'};
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE 10+ */
     &::-webkit-scrollbar {
       width: 0px;
       background: transparent; /* Chrome/Safari/Webkit */
     }
+  }
+
+  & .ant-table-tbody {
+    height: ${props => props.dataSource.length === 0 ? props.minHeight + 'px' : null};
   }
 `;
 
@@ -135,6 +140,7 @@ function AppointmentsModal(props) {
         <RightOutlined onClick={()=> setDate(moment(date).add(1, 'days'))}/>
       </DateContainer>
       <NoPageTable
+        minHeight={300}
         size="small"
         scroll={{y: 300}}
         rowKey="id"
