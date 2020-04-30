@@ -111,12 +111,29 @@ function AppointmentsModal(props) {
   };
 
   const columns = [
-    { title: '姓名', dataIndex: 'patientName', width: 140 },
-    { title: '時間', dataIndex: 'expectedArrivalTime', render: time => moment(time).format('HH:mm'), width: 100 },
-    { title: '號碼', dataIndex: 'phone', width: 100 },
-    { title: '醫生', dataIndex: 'doctor', render: doctor => doctor.user.firstName, width: 100},
+    { title: '姓名', dataIndex: 'patientName', width: 140,
+      sorter: (a, b) => a.patientName.localeCompare(b.patientName)
+    },
+    { title: '時間', dataIndex: 'expectedArrivalTime', 
+      render: time => moment(time).format('HH:mm'), width: 100, 
+      sorter: (a, b) => a.expectedArrivalTime.localeCompare(b.expectedArrivalTime)
+    },
+    { title: '號碼', dataIndex: 'phone', width: 100,
+      sorter: (a, b) => a.phone.localeCompare(b.phone)
+    },
+    { title: '醫生', dataIndex: 'doctor', 
+      render: doctor => doctor.user.firstName, width: 100,
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.doctor.user.firstName.localeCompare(b.doctor.user.firstName)
+    },
     // { title: '上次寄發', dataIndex: 'note', render: note => '?', width: 140},
-    { title: '預約內容', dataIndex: 'note', render: note => note, width: 250},
+    { title: '預約內容', dataIndex: 'note', render: note => note, width: 250,
+      sorter: (a, b) => {
+        var aNote = a.note ?? ''
+        var bNote = b.note ?? ''
+        return aNote.localeCompare(bNote)
+      }
+    },
   ];
 
   return ( 
