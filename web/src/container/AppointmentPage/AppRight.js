@@ -48,15 +48,17 @@ const CalendarContainer = styled.div`
 `;
 
 const ItemContainer = styled.div`
+  margin: 0 -6px;
   font-size: 15px;
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #edf1f7;
+  padding: 0 22px;
   & img {
     width: 20px;
-    margin-right: 10px;
+    margin-right: 16px;
   }
 
   & button {
