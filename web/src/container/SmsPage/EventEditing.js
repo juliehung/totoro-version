@@ -230,10 +230,7 @@ function EventEditing(props) {
             </ContactContainer>
           </FieldContainer>      
           <FieldContainer>
-          <FieldLabel style={{ width: '76px' }}>訊息內容：</FieldLabel>
-            <FieldLabel style={{ color: '#FE9F43', width: 'auto', visibility : isWrongContentLength ? null : 'hidden' }}>
-              <AlertTriangle /> 內容不得為空或已達一封簡訊 70 字上限
-            </FieldLabel>
+            <FieldLabel style={{ width: '76px' }}>訊息內容：</FieldLabel>
           </FieldContainer>
           <Input.TextArea
             placeholder="填寫簡訊寄送內容，至多 70 字"
