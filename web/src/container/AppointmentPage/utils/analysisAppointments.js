@@ -32,6 +32,7 @@ export default function analysisAppointments(appointments) {
 
     if (a.registration) {
       appointmentsAnalysis.recentRegistration = moment(a.registration.arrivalTime).format('YYYY-MM-DD');
+      appointmentsAnalysis.lastDoctorId = a.doctor.id;
     }
 
     if (!a.registration && expectedArrivalTime.isBefore(currentDate)) {

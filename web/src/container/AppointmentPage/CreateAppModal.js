@@ -201,6 +201,13 @@ function CreateAppModal({
     }
   }, [changeCreateAppDefaultDoctor, account]);
 
+  useEffect(() => {
+    const lastDoctor = selectedPatient?.appointmentsAnalysis?.lastDoctorId;
+    if (lastDoctor) {
+      changeCreateAppDoctor(lastDoctor);
+    }
+  }, [selectedPatient, changeCreateAppDoctor]);
+
   const closeModal = () => {
     changeCreateAppModalVisible(false);
   };
