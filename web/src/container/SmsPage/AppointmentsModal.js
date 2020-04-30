@@ -142,23 +142,23 @@ function AppointmentsModal(props) {
         rowSelection={rowSelection} 
         dataSource={appointments} 
         columns={columns} />
-      <ActionContainer>
-        <StyledMediumButton
-          className="styled-medium-btn"
-          style={{ border: 'solid 1px white', width: '86px', background: 'rgba(255,255,255,0.08)'  }}
-          type="primary" 
-          onClick={handleOk} 
-          shape="round">
-            插入
-        </StyledMediumButton>
-        {tempAppointments.length > 0? 
-          <SelectionContainer>
-            <CloseOutlined onClick={handleCancelAll} />
-            <TitleText style={{ marginLeft: '24px' }}>{`已選取${tempAppointments.length}個項目`}</TitleText> 
-          </SelectionContainer> : 
-          null 
+        {tempAppointments.length > 0 ? (
+          <ActionContainer>
+            <StyledMediumButton
+              className="styled-medium-btn"
+              style={{ border: 'solid 1px white', width: '86px', background: 'rgba(255,255,255,0.08)'  }}
+              type="primary" 
+              onClick={handleOk} 
+              shape="round">
+                插入
+            </StyledMediumButton>
+              <SelectionContainer>
+                <CloseOutlined onClick={handleCancelAll} />
+                <TitleText style={{ marginLeft: '24px' }}>{`已選取${tempAppointments.length}個項目`}</TitleText> 
+              </SelectionContainer> 
+          </ActionContainer>
+          ) : <div style={{height: '56px'}} />
         }
-      </ActionContainer>
   </StyledModal>
   );
 }
