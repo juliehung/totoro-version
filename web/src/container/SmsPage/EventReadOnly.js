@@ -116,7 +116,7 @@ function EventReadOnly(props) {
       <HeaderContainer>
         <Header>{selectedEvent.title}</Header>
         <Button
-          style={{ justifySelf: 'flex-end' }}
+          style={{ justifySelf: 'flex-end', display: selectedEvent.status === 'completed' ? 'none' : null }}
           danger
           type="link" 
           icon={<Trash />}
