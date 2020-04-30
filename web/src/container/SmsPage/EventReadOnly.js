@@ -114,7 +114,9 @@ const Splitter = styled.div`
 `;
 
 function EventReadOnly(props) {
-  const { selectedEvent, executeEvent, deleteEvent, account } = props
+  const { selectedEvent, executeEvent, deleteEvent, account, users } = props
+  const createdBy = users.find(user => user.login === selectedEvent.createdBy).firstName;
+
   return ( 
     <RootContainer>
       <HeaderContainer>
@@ -134,7 +136,7 @@ function EventReadOnly(props) {
             ) : (
               <AvatarImg alt={account.name[0]} src={null} style={{ textAlign: 'center' }} />
             )}
-            <NameText style={{ gridRow: '1/2', gridColumn: '2/3'}}>{selectedEvent.createdBy}</NameText>
+            <NameText style={{ gridRow: '1/2', gridColumn: '2/3'}}>{createdBy}</NameText>
             <DateText style={{ gridRow: '2/3', gridColumn: '2/3'}}>{moment(selectedEvent.modifiedDate).format('YYYY/MM/DD HH:mm')}</DateText>
           </SenderContainer>
             <Button
@@ -158,6 +160,7 @@ function EventReadOnly(props) {
   );
 }
 const mapStateToProps = ({ smsPageReducer, homePageReducer }) => ({ 
+  users: smsPageReducer.user.users,
   selectedEvent: smsPageReducer.event.selectedEvent,
   account: parseAccountData(homePageReducer.account.data),
 });
