@@ -13,6 +13,7 @@ import GiftFill from './svg/GiftFill'
 import AwardFill from './svg/AwardFill'
 import { StyledLargerButton } from './StyledComponents'
 import isEqual from 'lodash.isequal'
+import { O1 } from '../../utils/colors'
 
 
 const Container = styled.div`
@@ -107,7 +108,7 @@ const Title = styled(NoMarginText)`
 const Caption = styled(NoMarginText)`
   font-size: 12px;
   grid-area: 2/2 / 3/3
-  color: ${props => (props.eventSelected ? 'white' : props.isDraft? '#fe9f43' : '#8f9bb3')};
+  color: ${props => (props.eventSelected ? 'white' : props.isDraft? O1 : '#8f9bb3')};
 `;
 
 const TinyBold = styled(NoMarginText)`
@@ -292,8 +293,8 @@ function SmsPage(props) {
           {/* TODO: SMS: link update */}
           <RemainingActionSection>
             <RemainingActionItem onClick={() => window.open('https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b')}>
-              <GiftFill />
-              <ActionName>{`儲值 (剩餘 ${remaining} 封)`}</ActionName>
+              <GiftFill fill={remaining === 0 ? O1 : null}/>
+              <ActionName style={{color: remaining === 0 ? O1 : null}}>{`儲值 (剩餘 ${remaining} 封)`}</ActionName>
             </RemainingActionItem>
             <RemainingActionItem onClick={() => window.open('https://www.dentaltw.com/myOrders')}>
               <AwardFill />
