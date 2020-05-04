@@ -58,7 +58,6 @@ const ItemContainer = styled.div`
   padding: 0 22px;
   & img {
     width: 20px;
-    margin-right: 16px;
   }
 
   & button {
@@ -77,10 +76,25 @@ const ItemContainer = styled.div`
 
   & > :nth-child(1) {
     display: flex;
+    & > div {
+      margin-right: 16px;
+      position: relative;
+    }
   }
   & > :nth-child(2) {
     font-size: 12px;
   }
+`;
+
+const StatusIncdicator = styled.div`
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color: ${props => (props.on ? '#00e096' : '#8f9bb3')};
+  border-radius: 50%;
+  border: 2px solid #ffffff;
 `;
 
 const DateTitleContainer = styled(Col)`
@@ -247,7 +261,9 @@ function AppRight(props) {
       </CalendarContainer>
       <ItemContainer>
         <div>
-          <img src={PointerIcon} alt="列印" />
+          <div>
+            <img src={PointerIcon} alt="列印" />
+          </div>
           <span>列印</span>
         </div>
         <div>
@@ -263,7 +279,9 @@ function AppRight(props) {
       </ItemContainer>
       <ItemContainer>
         <div>
-          <img src={GridIcon} alt="密度" />
+          <div>
+            <img src={GridIcon} alt="密度" />
+          </div>
           <span>密度</span>
         </div>
         <div>
@@ -288,7 +306,10 @@ function AppRight(props) {
       </ItemContainer>
       <ItemContainer>
         <div>
-          <img src={SettingsIcon} alt="排班" />
+          <div>
+            <img src={SettingsIcon} alt="排班" />
+            <StatusIncdicator on={showShiftCalc} />
+          </div>
           <span>排班</span>
         </div>
         <div>
