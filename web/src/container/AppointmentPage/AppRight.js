@@ -308,7 +308,7 @@ function AppRight(props) {
         <div>
           <div>
             <img src={SettingsIcon} alt="排班" />
-            <StatusIncdicator on={showShiftCalc} />
+            <StatusIncdicator on={showShiftCalc ? 1 : 0} />
           </div>
           <span>排班</span>
         </div>
