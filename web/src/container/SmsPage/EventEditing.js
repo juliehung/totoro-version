@@ -65,7 +65,7 @@ const FieldContainer = styled.div`
 `;
 
 const FieldLabel = styled(Subtitle)`
-  width: 60px; 
+  min-width: 60px; 
 `;
 
 const ContactContainer = styled.div`
@@ -205,7 +205,7 @@ function EventEditing(props) {
                       key={app.id} 
                       title={
                         <div style={{margin: '7px 0'}}>
-                          <FieldLabel>{app.patientName}</FieldLabel>
+                          <Subtitle>{app.patientName}</Subtitle>
                           <P2>{app.phone}</P2>
                         </div>
                       }
@@ -230,7 +230,7 @@ function EventEditing(props) {
             </ContactContainer>
           </FieldContainer>      
           <FieldContainer>
-            <FieldLabel style={{ width: '76px' }}>訊息內容：</FieldLabel>
+            <FieldLabel>訊息內容：</FieldLabel>
           </FieldContainer>
           <Input.TextArea
             placeholder="填寫簡訊寄送內容，至多 70 字"
