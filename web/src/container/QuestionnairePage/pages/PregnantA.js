@@ -17,6 +17,9 @@ export const StyledInput = styled(Input)`
 
 //#endregion
 
+export const checkPregnantDateValidation = date =>
+  !date || moment().add(1, 'y').isBefore(moment(date)) || moment().add(-1, 'y').isAfter(moment(date));
+
 function PregnantA(props) {
   const onChange = e => {
     props.changePregnantDate(e.target.value);
@@ -33,17 +36,15 @@ function PregnantA(props) {
         size="large"
         onChange={onChange}
         value={props.date}
-        max={moment()
-          .add(2, 'year')
-          .format('YYYY-MM-DD')}
-        min={moment().format('YYYY-MM-DD')}
+        max={moment().add(1, 'y').format('YYYY-MM-DD')}
+        min={moment().add(-1, 'y').format('YYYY-MM-DD')}
       />
       <br />
       <ConfirmButton
         nextPage={() => {
           props.gotoPage(19);
         }}
-        disabled={!props.date}
+        disabled={checkPregnantDateValidation(props.date)}
       />
       <PageControllContainer
         pre={() => {

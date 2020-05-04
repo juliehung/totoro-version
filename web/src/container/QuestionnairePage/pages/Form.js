@@ -5,6 +5,10 @@ import { gotoPage, nextPage } from '../actions';
 import { Button } from 'antd';
 import { parseDataToDisplay } from '../utils/parseDataToDisplay';
 import { StyleRightCircleTwoTone } from './Address';
+import { checkBirthValidation } from './Birth';
+import { checkSmokingAmountValidation } from './SmokingA';
+import { checkPregnantDateValidation } from './PregnantA';
+import { checkDrugValidation } from './DoDrugA';
 
 //#region
 
@@ -73,7 +77,18 @@ const StyledButton = styled(Button)`
 //#endregion
 
 function Form(props) {
+  const { patient } = props;
   const displayData = parseDataToDisplay(props.patient);
+
+  const disabled =
+    !patient.name ||
+    patient.name.length === 0 ||
+    !patient.phone ||
+    patient.phone.length === 0 ||
+    checkBirthValidation(patient.birth) ||
+    (patient.smoking === 'A' && checkSmokingAmountValidation(patient.smokingAmount)) ||
+    (patient.pregnant === 'A' && checkPregnantDateValidation(patient.pregnantDate)) ||
+    (patient.doDrug === 'A' && checkDrugValidation(patient.drug));
 
   return (
     <Container>
@@ -198,9 +213,7 @@ function Form(props) {
         </StyledButton>
         <StyledButton
           type="primary"
-          disabled={
-            !displayData.name || displayData.name.length === 0 || !displayData.phone || displayData.phone.length === 0
-          }
+          disabled={disabled}
           onClick={() => {
             props.gotoPage(21);
           }}

@@ -7,6 +7,8 @@ import ConfirmButton from './ConfirmButton';
 import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
 
+export const checkDrugValidation = drug => !drug || drug.length === 0;
+
 function DoDrugA(props) {
   const onInputChange = e => {
     props.changeDrug(e.target.value);
@@ -35,7 +37,7 @@ function DoDrugA(props) {
         nextPage={() => {
           props.gotoPage(17);
         }}
-        disabled={!props.drug || props.drug.length === 0}
+        disabled={checkDrugValidation(props.drug)}
       />
       <PageControllContainer
         pre={() => {
