@@ -1,4 +1,4 @@
-import { Button, Input, Tag, Radio, Popover } from 'antd';
+import { Button, Input, Radio, Popover } from 'antd';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -7,7 +7,6 @@ import AppointmentsModal from './AppointmentsModal';
 import EventPreviewingModal from './EventPreviewingModal'
 import moment from 'moment'
 import PersonalAddFill from './svg/PersonalAddFill'
-import AlertTriangle from './svg/AlertTriangle'
 import Trash from './svg/Trash';
 import { StyledMediumButton, StyledTag } from './StyledComponents'
 import { P2, Caption, Subtitle, Title, NoMarginText } from '../../utils/textComponents';
