@@ -2,7 +2,7 @@ import React,{ useState, useEffect, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { getEvents, setSelectedEvent, createEvent, saveEvent, filterEvents, getClinicSettings, getClinicRemaining } from './action';
+import { getEvents, setSelectedEvent, createEvent, saveEvent, filterEvents, getClinicSettings, getClinicRemaining, getUsers } from './action';
 import EventCard from './EventCard';
 import moment from 'moment';
 import InboxFill from './svg/InboxFill'
@@ -13,6 +13,7 @@ import GiftFill from './svg/GiftFill'
 import AwardFill from './svg/AwardFill'
 import { StyledLargerButton } from './StyledComponents'
 import isEqual from 'lodash.isequal'
+import { O1 } from '../../utils/colors'
 
 
 const Container = styled.div`
@@ -107,7 +108,7 @@ const Title = styled(NoMarginText)`
 const Caption = styled(NoMarginText)`
   font-size: 12px;
   grid-area: 2/2 / 3/3
-  color: ${props => (props.eventSelected ? 'white' : props.isDraft? '#fe9f43' : '#8f9bb3')};
+  color: ${props => (props.eventSelected ? 'white' : props.isDraft? O1 : '#8f9bb3')};
 `;
 
 const TinyBold = styled(NoMarginText)`
@@ -216,7 +217,7 @@ const categoriesChinese = ['全部', '草稿', '寄送備份',]
 const categoryIcons = [<InboxFill />, <Edit />, <PaperPlane />]
 
 function SmsPage(props) {
-  const { getEvents, filterEvents, currentKey, createEvent, saveEvent, getClinicSettings, getClinicRemaining, setSelectedEvent, selectedEvent, selectedEventId, editingEvent, events, remaining } = props;
+  const { getEvents, filterEvents, currentKey, createEvent, saveEvent, getClinicSettings, getClinicRemaining, getUsers, setSelectedEvent, selectedEvent, selectedEventId, editingEvent, events, remaining, users } = props;
   const [expanding, setExpanding] = useState(false)
   const [hasEvent, setHasEvent] = useState(false)
 
@@ -226,6 +227,7 @@ function SmsPage(props) {
 
 
   useEffect(() => {
+    getUsers()
     getClinicSettings()
     getEvents()
     getClinicRemaining()
@@ -292,8 +294,8 @@ function SmsPage(props) {
           {/* TODO: SMS: link update */}
           <RemainingActionSection>
             <RemainingActionItem onClick={() => window.open('https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b')}>
-              <GiftFill />
-              <ActionName>{`儲值 (剩餘 ${remaining} 封)`}</ActionName>
+              <GiftFill fill={remaining === 0 ? O1 : null}/>
+              <ActionName style={{color: remaining === 0 ? O1 : null}}>{`儲值 (剩餘 ${remaining} 封)`}</ActionName>
             </RemainingActionItem>
             <RemainingActionItem onClick={() => window.open('https://www.dentaltw.com/myOrders')}>
               <AwardFill />
@@ -306,32 +308,37 @@ function SmsPage(props) {
             <CategoryTitle>{categoriesChinese[categories.indexOf(currentKey)]}</CategoryTitle>
           </CategoryTitleContainer>
           <EventList>
-            {events.map(item => (
-              <EventListItem
-                eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}
-                key={item.id !== null ? item.id : item.tempId}
-                onClick={() => handleSelectionChanging(item)}
-              >
-                
-                
-                <Title style={{ gridRow: '1/2', gridColumn: '2/3'}}>{item.title}</Title>
-            
-                
-                <Caption eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)} isDraft={item.status === 'draft'}>
-                  {item.status === 'completed'? `${item.createdBy}已傳送${item.sms.length}則`: '草稿'}
-                </Caption>
-                
-                <TinyBold eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}>
-                  {(() => {
-                    if (moment().isSame(item.modifiedDate  , 'day')) return moment(item.modifiedDate).format('HH:mm')
-                    else {
-                      if(moment().startOf('date').add(-1, 'days').isSame(item.modifiedDate  , 'day')) return 'yesterday'
-                      else return moment(item.modifiedDate).format('MM/DD') 
-                    }
-                  })()}
-                </TinyBold>
-              </EventListItem>
-              ))}
+            {events.map(item => {
+              const user = users.find(user => user.login === item.createdBy);
+              const createdBy = user ? user.firstName : ''
+
+              return (
+                <EventListItem
+                  eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}
+                  key={item.id !== null ? item.id : item.tempId}
+                  onClick={() => handleSelectionChanging(item)}
+                >
+                  
+                  
+                  <Title style={{ gridRow: '1/2', gridColumn: '2/3'}}>{item.title}</Title>
+              
+                  
+                  <Caption eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)} isDraft={item.status === 'draft'}>
+                    {item.status === 'completed'? `${createdBy}已傳送${item.sms.length}則`: '草稿'}
+                  </Caption>
+                  
+                  <TinyBold eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}>
+                    {(() => {
+                      if (moment().isSame(item.modifiedDate  , 'day')) return moment(item.modifiedDate).format('HH:mm')
+                      else {
+                        if(moment().startOf('date').add(-1, 'days').isSame(item.modifiedDate  , 'day')) return 'yesterday'
+                        else return moment(item.modifiedDate).format('MM/DD') 
+                      }
+                    })()}
+                  </TinyBold>
+                </EventListItem>
+                )
+            })}
           </EventList>
         </EventListContainer>
         <EventCardContainer hasEvent={hasEvent}>
@@ -342,7 +349,8 @@ function SmsPage(props) {
   );
 }
 
-const mapStateToProps = ({smsPageReducer}) => ({
+const mapStateToProps = ({smsPageReducer, homePageReducer}) => ({
+  users: smsPageReducer.user.users,
   events: smsPageReducer.event.events,
   selectedEventId: smsPageReducer.event.selectedEventId,
   selectedEvent: smsPageReducer.event.selectedEvent,
@@ -356,6 +364,7 @@ const mapStateToProps = ({smsPageReducer}) => ({
 const mapDispatchToProps = {
   getEvents,
   getClinicRemaining,
+  getUsers,
   setSelectedEvent,
   createEvent,
   saveEvent,

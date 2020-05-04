@@ -1,4 +1,4 @@
-import { Button, Input, Tag, Radio, Popover } from 'antd';
+import { Button, Input, Radio, Popover } from 'antd';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -7,9 +7,8 @@ import AppointmentsModal from './AppointmentsModal';
 import EventPreviewingModal from './EventPreviewingModal'
 import moment from 'moment'
 import PersonalAddFill from './svg/PersonalAddFill'
-import AlertTriangle from './svg/AlertTriangle'
 import Trash from './svg/Trash';
-import { StyledMediumButton } from './StyledComponents'
+import { StyledMediumButton, StyledTag } from './StyledComponents'
 import { P2, Caption, Subtitle, Title, NoMarginText } from '../../utils/textComponents';
 import isEqual from 'lodash.isequal'
 
@@ -65,7 +64,7 @@ const FieldContainer = styled.div`
 `;
 
 const FieldLabel = styled(Subtitle)`
-  width: 60px; 
+  min-width: 60px; 
 `;
 
 const ContactContainer = styled.div`
@@ -205,7 +204,7 @@ function EventEditing(props) {
                       key={app.id} 
                       title={
                         <div style={{margin: '7px 0'}}>
-                          <FieldLabel>{app.patientName}</FieldLabel>
+                          <Subtitle>{app.patientName}</Subtitle>
                           <P2>{app.phone}</P2>
                         </div>
                       }
@@ -215,14 +214,14 @@ function EventEditing(props) {
                           <Caption>{app.note}</Caption>
                         </div>
                       }>
-                      <Tag 
+                      <StyledTag 
                         closable
                         onClose={e => {
                           unselectAppointment(app)
                         }}
                         >
                           {`${app.patientName}(${app.phone})`}
-                      </Tag>
+                      </StyledTag>
                     </Popover>
                   )}
                 )}
@@ -230,10 +229,7 @@ function EventEditing(props) {
             </ContactContainer>
           </FieldContainer>      
           <FieldContainer>
-          <FieldLabel style={{ width: '76px' }}>訊息內容：</FieldLabel>
-            <FieldLabel style={{ color: '#FE9F43', width: 'auto', visibility : isWrongContentLength ? null : 'hidden' }}>
-              <AlertTriangle /> 內容不得為空或已達一封簡訊 70 字上限
-            </FieldLabel>
+            <FieldLabel>訊息內容：</FieldLabel>
           </FieldContainer>
           <Input.TextArea
             placeholder="填寫簡訊寄送內容，至多 70 字"

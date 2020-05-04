@@ -24,6 +24,8 @@ import {
   EXECUTE_EVENT_FAILED,
   DELETE_EVENT,
   DELETE_EVENT_SUCCESS,
+  GET_USERS,
+  GET_USERS_SUCCESS,
 } from './constant';
 
 export function getEvents() {
@@ -125,4 +127,12 @@ export function getClinicRemaining(){
 
 export function getClinicRemainingSuccess(remaining){
   return { type: GET_CLINIC_REMAINING_SUCCESS, remaining };
+}
+
+export function getUsers() {
+  return { type: GET_USERS };
+}
+
+export function getUsersSuccess(users) {
+  return { type: GET_USERS_SUCCESS, users };
 }

@@ -18,3 +18,8 @@ code {
 * {
   box-sizing: border-box;
 }
+
+/* since popover is same level as #root in body */
+.ant-popover-inner {
+    border-radius: 8px !important; 
+}

@@ -67,12 +67,11 @@ const Container = styled.div`
 
 const Header = styled.div`
   flex-shrink: 0;
-  height: 64px;
+  height: 76px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1%;
-  margin-bottom: 15px;
   @media (max-width: 850px) {
     justify-content: flex-end;
   }
@@ -460,6 +459,12 @@ class AppCalendar extends React.Component {
     this.setState({ viewType: info.view.type });
   };
 
+  navLinkDayClick = date => {
+    this.props.changeCalDate(moment(date));
+    let calendarApi = this.calendarComponentRef.current.getApi();
+    calendarApi.changeView('resourceTimeGridDay');
+  };
+
   render() {
     const shiftOpen = this.props.generalSetting && this.props.generalSetting.showShift;
 
@@ -564,6 +569,7 @@ class AppCalendar extends React.Component {
             eventDrop={this.handleEventDrop}
             eventResize={this.handleEventResize}
             navLinks
+            navLinkDayClick={this.navLinkDayClick}
             editable
             droppable
             nowIndicator
