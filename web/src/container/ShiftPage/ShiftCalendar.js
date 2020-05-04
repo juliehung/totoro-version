@@ -9,7 +9,7 @@ import Calendar from './Calendar';
 
 //#region
 const Container = styled.div`
-  width: 100%;
+  flex: 1;
   margin: 10px;
   .fc-license-message {
     display: none;
