@@ -177,6 +177,27 @@ const CalendarContainer = styled.div`
     height: 3em;
     border-bottom: 0;
   }
+
+  .fc-unthemed thead,
+  .fc-unthemed tbody {
+    /* border-color: red !important; */
+  }
+
+  .fc-axis.fc-time {
+    color: #8f9bb3;
+  }
+
+  .fc-day-header.fc-widget-header {
+    & > a {
+      color: #222b45;
+      font-weight: 600;
+    }
+  }
+
+  .fc-widget-header,
+  .fc-widget-content {
+    border: 1px solid #d7e3f1;
+  }
 `;
 //#endregion
 
@@ -542,8 +563,6 @@ class AppCalendar extends React.Component {
               momentPlugin,
             ]}
             header={false}
-            titleRangeSeparator=" ~ "
-            titleFormat={{ year: 'numeric', month: 'numeric', day: 'numeric' }}
             eventTimeFormat={{
               hour: '2-digit',
               minute: '2-digit',
