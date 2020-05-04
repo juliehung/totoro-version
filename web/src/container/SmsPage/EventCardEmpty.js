@@ -21,7 +21,7 @@ function EventCardEmpty(props) {
   return (
     <RootContainer>
       <BoneContainer>
-        <img src={EmailIcon} />
+        <img src={EmailIcon} alt="empty icon" />
       </BoneContainer>
     </RootContainer>
   );
