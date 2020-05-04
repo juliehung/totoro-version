@@ -159,6 +159,9 @@ const EventListItem = styled.div`
   border-bottom: solid 1px #dae1e7;
   cursor: pointer;
   color: ${props => (props.eventSelected ? 'white' : '#222b45')};
+
+  &:hover {
+    background: ${props => (props.eventSelected ? null : '#f7f9fc')};
 `;
 
 
