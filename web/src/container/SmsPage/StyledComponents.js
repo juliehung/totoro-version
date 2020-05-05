@@ -100,5 +100,21 @@ export const StyledTag = styled(Tag)`
     height: 24px;
     background: rgba(143, 155, 179, 0.08);
     margin: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & button {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    & svg {
+      width: 16px;
+      height: 16px;
+      margin: 2.5px 0;
+      & path {
+        fill: #8f9bb3;
+      }
+    }
   }
 `;
