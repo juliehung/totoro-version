@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Button, Calendar, Row, Col, Select, Divider } from 'antd';
+import { Button, Calendar, Row, Col, Select, Divider, message } from 'antd';
 import {
   changeCalDate,
   changePrintModalVisible,
@@ -135,10 +135,26 @@ const StyledSelect = styled(Select)`
 //#endregion
 
 function AppRight(props) {
-  const { calendarDate, changeCalDate, selectedDoctors, settings, showShiftCalc, putSettings } = props;
+  const {
+    calendarDate,
+    changeCalDate,
+    selectedDoctors,
+    settings,
+    showShiftCalc,
+    putSettings,
+    putSettingSuccess,
+  } = props;
 
   const [expand, setExpand] = useState(false);
   const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (putSettingSuccess && showShiftCalc) {
+      message.success('班表啟用成功!');
+    } else if (putSettingSuccess && !showShiftCalc) {
+      message.warning('班表已關閉。');
+    }
+  }, [putSettingSuccess, showShiftCalc]);
 
   const handleDoctorChange = d => {
     if (props.selectedDoctors.includes('dayOff') !== d.includes('dayOff')) {
@@ -372,6 +388,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   generalSetting: homePageReducer.settings.generalSetting,
   settings: homePageReducer.settings.settings,
   showShiftCalc: homePageReducer.settings.generalSetting && homePageReducer.settings.generalSetting.showShift,
+  putSettingSuccess: homePageReducer.settings.putSuccess,
 });
 
 const mapDispatchToProps = {
