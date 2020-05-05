@@ -23,6 +23,10 @@ import { GAevent } from '../../ga';
 import { appointmentPage } from './';
 import FloatingActionButton from './FloatingActionButton';
 
+const maxSlotDuration = 30;
+const minSlotDuration = 10;
+const slotDurationStep = 5;
+
 //#region
 const Container = styled.div`
   width: 15%;
@@ -56,6 +60,7 @@ const ItemContainer = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid #edf1f7;
   padding: 0 22px;
+  font-weight: bold;
   & img {
     width: 20px;
   }
@@ -68,10 +73,16 @@ const ItemContainer = styled.div`
     background: transparent;
     cursor: pointer;
     color: #3366ff;
+    font-weight: bold;
   }
 
   & button:active {
     color: red;
+  }
+
+  & button:disabled {
+    color: #8f9bb3;
+    cursor: not-allowed;
   }
 
   & > :nth-child(1) {
@@ -160,23 +171,20 @@ function AppRight(props) {
   };
 
   const onSlotDurationChange = value => {
-    const max = 30;
-    const min = 10;
-    const step = 5;
     const title = document.querySelector('.fc-center');
     if (title) {
       simulateMouseClick(title);
       if (value) {
-        if (props.slotDuration + step > max) {
-          props.changeCalSlotDuration(max);
+        if (props.slotDuration + slotDurationStep > maxSlotDuration) {
+          props.changeCalSlotDuration(maxSlotDuration);
         } else {
-          props.changeCalSlotDuration(props.slotDuration + step);
+          props.changeCalSlotDuration(props.slotDuration + slotDurationStep);
         }
       } else {
-        if (props.slotDuration - step < min) {
-          props.changeCalSlotDuration(min);
+        if (props.slotDuration - slotDurationStep < minSlotDuration) {
+          props.changeCalSlotDuration(minSlotDuration);
         } else {
-          props.changeCalSlotDuration(props.slotDuration - step);
+          props.changeCalSlotDuration(props.slotDuration - slotDurationStep);
         }
       }
     }
@@ -286,6 +294,7 @@ function AppRight(props) {
         </div>
         <div>
           <button
+            disabled={props.slotDuration >= maxSlotDuration}
             onClick={() => {
               onSlotDurationChange(true);
               GAevent(appointmentPage, 'Smaller slot size');
@@ -295,6 +304,7 @@ function AppRight(props) {
           </button>
           <Divider type="vertical" />
           <button
+            disabled={props.slotDuration <= minSlotDuration}
             onClick={() => {
               onSlotDurationChange(false);
               GAevent(appointmentPage, 'Bigger slot size');

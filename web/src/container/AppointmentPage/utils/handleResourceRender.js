@@ -7,7 +7,7 @@ const ResourceContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 10px auto;
-  & > div {
+  & > :first-child {
     width: 35px;
     height: 35px;
     border-radius: 50%;
@@ -17,15 +17,18 @@ const ResourceContainer = styled.div`
     align-items: center;
     margin-bottom: 5px;
     user-select: none;
+    object-fit: cover;
   }
 `;
 
 export const handleResourceRender = ({ resource, el }) => {
   const content = (
     <ResourceContainer>
-      <div>
-        <span>{resource.title.charAt(0)}</span>
-      </div>
+      {resource.extendedProps.avatar ? (
+        <img alt="avatar" src={`data:image/png;base64,${resource.extendedProps.avatar}`} />
+      ) : (
+        <div>{resource.title[0]}</div>
+      )}
       <span>{resource.title}</span>
     </ResourceContainer>
   );

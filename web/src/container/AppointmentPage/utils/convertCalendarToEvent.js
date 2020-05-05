@@ -35,7 +35,6 @@ export default function convertCalendarToEvent(calendarEvents) {
         } catch (e) {
           break;
         }
-        console.log(events);
       }
     } else {
       const start = moment(e.start).toDate();
