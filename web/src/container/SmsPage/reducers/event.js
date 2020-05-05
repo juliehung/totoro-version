@@ -77,9 +77,9 @@ const event = (state = initialState, action) =>
         draft.selectedEvent = null;
         draft.selectedEventId = null;
         draft.editingEvent = null;
-        
-        if (draft.staticEvents.find(e => e.id === sessionStorage.getItem('eventKey'))){
-          const selection = draft.staticEvents.find(e => e.id === sessionStorage.getItem('eventKey'))
+
+        if (draft.staticEvents.find(e => e.id === sessionStorage.getItem('eventKey'))) {
+          const selection = draft.staticEvents.find(e => e.id === sessionStorage.getItem('eventKey'));
           if (selection.status === 'draft') selection.isEdit = true;
           draft.selectedEvent = selection;
           draft.selectedEventId = selection.id === null ? selection.tempId : selection.id;
@@ -110,9 +110,9 @@ const event = (state = initialState, action) =>
                 return sta === state.currentKey.toLowerCase();
               });
         if (draft.selectedEventId === toBePlaced.id) {
-          draft.selectedEvent = draft.staticEvents[replaceIdx]
-          draft.selectedEventId = toBePlaced.id
-          draft.editingEvent = toBePlaced
+          draft.selectedEvent = draft.staticEvents[replaceIdx];
+          draft.selectedEventId = toBePlaced.id;
+          draft.editingEvent = toBePlaced;
         }
         draft.isLoaded = true;
         break;
