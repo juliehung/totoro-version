@@ -77,6 +77,14 @@ const event = (state = initialState, action) =>
         draft.selectedEvent = null;
         draft.selectedEventId = null;
         draft.editingEvent = null;
+        
+        if (draft.staticEvents.find(e => e.id === sessionStorage.getItem('eventKey'))){
+          const selection = draft.staticEvents.find(e => e.id === sessionStorage.getItem('eventKey'))
+          if (selection.status === 'draft') selection.isEdit = true;
+          draft.selectedEvent = selection;
+          draft.selectedEventId = selection.id === null ? selection.tempId : selection.id;
+          draft.editingEvent = selection;
+        }
         draft.isLoaded = true;
         break;
       }
@@ -173,6 +181,7 @@ const event = (state = initialState, action) =>
           draft.selectedEvent = selection;
           draft.selectedEventId = selection.id !== null ? selection.id : selection.tempId;
           draft.editingEvent = selection.isEdit ? selection : null;
+          sessionStorage.setItem('eventKey', draft.selectedEventId);
         }
         break;
       }
