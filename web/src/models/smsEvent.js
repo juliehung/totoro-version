@@ -18,6 +18,7 @@ export default class SmsEvent {
       id: event.id,
       clinic: event.clinicName,
       title: event.title,
+      status: event.status,
       metadata: {
         template: event.metadata.template,
         selectedAppointments: event.metadata.selectedAppointments,
