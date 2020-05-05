@@ -17,7 +17,7 @@ const BoneContainer = styled.div`
   justify-content: center;
 `;
 
-function EventCardEmpty(props) {
+function EventCardEmpty() {
   return (
     <RootContainer>
       <BoneContainer>

@@ -54,7 +54,7 @@ function AppointmentPage() {
   );
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = () => ({});
 
 // const mapDispatchToProps = {};
 

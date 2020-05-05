@@ -4,12 +4,8 @@ import { parseCalEvtToDayOffCron } from './parseCalEvtToDayOffCron';
 export function handleCalendarEventForApi(calEvt) {
   let start, end;
   if (calEvt.allDay) {
-    start = moment(calEvt.startDate)
-      .startOf('day')
-      .toISOString();
-    end = moment(calEvt.endDate)
-      .endOf('day')
-      .toISOString();
+    start = moment(calEvt.startDate).startOf('day').toISOString();
+    end = moment(calEvt.endDate).endOf('day').toISOString();
   } else {
     start = moment(
       `${calEvt.startDate.format('YYYY-MM-DD')} ${calEvt.startTime.format('HH:mm')}`,

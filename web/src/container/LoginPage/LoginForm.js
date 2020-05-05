@@ -44,7 +44,7 @@ class NormalLoginForm extends React.Component {
 
 const LoginForm = Form.create({ name: 'normal_login' })(NormalLoginForm);
 
-const mapStateToProps = ({ appointmentPageReducer }) => ({});
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = { login };
 

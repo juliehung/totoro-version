@@ -6,7 +6,6 @@ const patientCallbacks = {};
 const messageCallbacks = {};
 
 class MqttHelper {
-
   constructor() {
     const clientId = 'totoro-web' + Math.random().toString(16).substr(2, 8);
     const options = {
@@ -21,14 +20,14 @@ class MqttHelper {
         topic: 'WillMsg',
         payload: 'Connection Closed abnormally..!',
         qos: 0,
-        retain: false
-      }
+        retain: false,
+      },
     };
 
     this.client = mqtt.connect(mqttUrl, options);
     this.client.on('error', err => {
       console.log(err);
-      this.client.end()
+      this.client.end();
     });
 
     this.client.on('connect', () => {
@@ -36,7 +35,7 @@ class MqttHelper {
     });
 
     this.client.on('close', () => {
-      console.log(clientId + ' disconnected')
+      console.log(clientId + ' disconnected');
     });
 
     this.client.subscribe('totoro/appointment', { qos: 0 });
@@ -44,10 +43,11 @@ class MqttHelper {
     this.client.subscribe('totoro/message', { qos: 0 });
 
     // This is a demo of receiving message
+    // eslint-disable-next-line no-unused-vars
     this.client.on('message', (topic, message, packet) => {
       const payload = message.toString();
-      console.log('Received Message:= ' + payload + '\nOn topic:= ' + topic);
 
+      console.log('Received Message:= ' + payload + '\nOn topic:= ' + topic);
       if (topic === 'totoro/appointment') {
         const keys = Object.keys(appointmentCallbacks);
         for (let i = 0; i < keys.length; i++) {
@@ -71,7 +71,7 @@ class MqttHelper {
     appointmentCallbacks[name] = callback;
   };
 
-  unsubscribeAppointment = (name) => {
+  unsubscribeAppointment = name => {
     delete appointmentCallbacks[name];
   };
 
@@ -79,7 +79,7 @@ class MqttHelper {
     patientCallbacks[name] = callback;
   };
 
-  unsubscribePatient = (name) => {
+  unsubscribePatient = name => {
     delete patientCallbacks[name];
   };
 
@@ -87,7 +87,7 @@ class MqttHelper {
     messageCallbacks[name] = callback;
   };
 
-  unsubscribeMessage = (name) => {
+  unsubscribeMessage = name => {
     delete messageCallbacks[name];
   };
 
@@ -96,12 +96,9 @@ class MqttHelper {
   publish = (topic, message) => {
     this.client.publish(topic, message, { qos: 0, retain: false });
   };
-
 }
 
 const MqttHelperInstance = new MqttHelper();
 Object.freeze(MqttHelperInstance);
 
 export default MqttHelperInstance;
-
-
