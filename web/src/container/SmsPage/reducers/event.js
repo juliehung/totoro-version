@@ -101,8 +101,11 @@ const event = (state = initialState, action) =>
                 var sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
                 return sta === state.currentKey.toLowerCase();
               });
-        draft.selectedEvent = draft.staticEvents[replaceIdx];
-        draft.editingEvent = toBePlaced;
+        if (draft.selectedEventId === toBePlaced.id) {
+          draft.selectedEvent = draft.staticEvents[replaceIdx]
+          draft.selectedEventId = toBePlaced.id
+          draft.editingEvent = toBePlaced
+        }
         draft.isLoaded = true;
         break;
       }

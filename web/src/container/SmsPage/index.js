@@ -277,8 +277,7 @@ function SmsPage(props) {
   const handleSelectionChanging = item => {
     // if current(previous) item is able to be posted or put
     if (isDiff(editingEvent, selectedEvent) && editingEvent.metadata.template.length !== 0) saveEvent(editingEvent);
-    // else just changing
-    else setSelectedEvent(item);
+    setSelectedEvent(item);
   };
 
   return (
