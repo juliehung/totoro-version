@@ -220,7 +220,7 @@ const categoriesChinese = ['全部', '草稿', '寄送備份',]
 const categoryIcons = [<InboxFill />, <Edit />, <PaperPlane />]
 
 function SmsPage(props) {
-  const { getEvents, filterEvents, currentKey, createEvent, saveEvent, getClinicSettings, getClinicRemaining, getUsers, setSelectedEvent, selectedEvent, selectedEventId, editingEvent, events, remaining, users } = props;
+  const { getEvents, filterEvents, currentKey, createEvent, saveEvent, getClinicSettings, getClinicRemaining, getUsers, setSelectedEvent, selectedEvent, selectedEventId, editingEvent, events, remaining, isRemainingLoaded, users } = props;
   const [expanding, setExpanding] = useState(false)
   const [hasEvent, setHasEvent] = useState(false)
 
@@ -296,7 +296,9 @@ function SmsPage(props) {
           </CategoryContainer>
           {/* TODO: SMS: link update */}
           <RemainingActionSection>
-            <RemainingActionItem onClick={() => window.open('https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b')}>
+            <RemainingActionItem 
+              style={{ visibility: isRemainingLoaded ? null : 'hidden' }}
+              onClick={() => window.open('https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b')}>
               <GiftFill fill={remaining === 0 ? O1 : null}/>
               <ActionName style={{color: remaining === 0 ? O1 : null}}>{`儲值 (剩餘 ${remaining} 封)`}</ActionName>
             </RemainingActionItem>
@@ -360,6 +362,7 @@ const mapStateToProps = ({smsPageReducer, homePageReducer}) => ({
   editingEvent: smsPageReducer.event.editingEvent,
   clinicName: smsPageReducer.event.clinicName,
   remaining: smsPageReducer.event.remaining,
+  isRemainingLoaded: smsPageReducer.event.isRemainingLoaded,
   currentKey: smsPageReducer.event.currentKey,
 })
 

@@ -37,6 +37,7 @@ const initState = {
   clinicName: '',
   clinicId: null,
   remaining: 0,
+  isRemainingLoaded: false,
   isWrongNumberLength: false,
   isWrongContentLength: false,
   isChargeFailed: false,
@@ -139,6 +140,7 @@ const event = (state = initialState, action) =>
 
       case GET_CLINIC_REMAINING_SUCCESS: {
         draft.remaining = action.remaining.remaining
+        draft.isRemainingLoaded = true
         break
       }
 
