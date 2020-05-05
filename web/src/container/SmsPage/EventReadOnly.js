@@ -109,7 +109,7 @@ const EventContentText = styled(NoMarginText)`
 
 const Splitter = styled.div`
   height: 1px;
-  border: solid 1px #dae1e7;
+  background: #dae1e7;
 `;
 
 function EventReadOnly(props) {
