@@ -20,6 +20,8 @@ export function* createQWSign() {
       yield call(DocNps.post, { esignId, patientId: responsePatient.id, patient: responsePatient });
       yield delay(500);
       yield put(changeCreateQSuccess());
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

@@ -1,20 +1,28 @@
-import React,{ useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { getEvents, setSelectedEvent, createEvent, saveEvent, filterEvents, getClinicSettings, getClinicRemaining, getUsers } from './action';
+import {
+  getEvents,
+  setSelectedEvent,
+  createEvent,
+  saveEvent,
+  filterEvents,
+  getClinicSettings,
+  getClinicRemaining,
+  getUsers,
+} from './action';
 import EventCard from './EventCard';
 import moment from 'moment';
-import InboxFill from './svg/InboxFill'
-import Edit from './svg/Edit'
-import Edit2 from './svg/Edit2'
-import PaperPlane from './svg/PaperPlane'
-import GiftFill from './svg/GiftFill'
-import AwardFill from './svg/AwardFill'
-import { StyledLargerButton } from './StyledComponents'
-import isEqual from 'lodash.isequal'
-import { O1 } from '../../utils/colors'
-
+import InboxFill from './svg/InboxFill';
+import Edit from './svg/Edit';
+import Edit2 from './svg/Edit2';
+import PaperPlane from './svg/PaperPlane';
+import GiftFill from './svg/GiftFill';
+import AwardFill from './svg/AwardFill';
+import { StyledLargerButton } from './StyledComponents';
+import isEqual from 'lodash.isequal';
+import { O1 } from '../../utils/colors';
 
 const Container = styled.div`
   display: flex;
@@ -34,7 +42,7 @@ const RootConatiner = styled.div`
   height: 100%;
   grid-template-columns: 260px 270px auto;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.05);
-  border: solid .5px #dae1e7;
+  border: solid 0.5px #dae1e7;
   border-radius: 10px;
   background: #f8fafb;
   @media (max-width: 480px) {
@@ -43,14 +51,12 @@ const RootConatiner = styled.div`
   }
 `;
 
-
 const ButtonBox = styled.div`
   display: grid;
   height: 92px;
   padding: 0 24px;
   align-content: center;
 `;
-
 
 const CategoryContainer = styled.div`
   display: flex;
@@ -107,8 +113,8 @@ const Title = styled(NoMarginText)`
 
 const Caption = styled(NoMarginText)`
   font-size: 12px;
-  grid-area: 2/2 / 3/3
-  color: ${props => (props.eventSelected ? 'white' : props.isDraft? O1 : '#8f9bb3')};
+  grid-area: 2/2 / 3/3;
+  color: ${props => (props.eventSelected ? 'white' : props.isDraft ? O1 : '#8f9bb3')};
 `;
 
 const TinyBold = styled(NoMarginText)`
@@ -118,7 +124,6 @@ const TinyBold = styled(NoMarginText)`
   margin-right: 8px;
   grid-area: 1/3/2/4;
   color: ${props => (props.eventSelected ? 'white' : '#8f9bb3')};
-
 `;
 
 const MenuItem = styled.div`
@@ -142,7 +147,7 @@ const MenuName = styled.div`
 const EventList = styled.div`
   overflow: scroll;
   scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE 10+ */
+  -ms-overflow-style: none; /* IE 10+ */
   &::-webkit-scrollbar {
     width: 0px;
     background: transparent; /* Chrome/Safari/Webkit */
@@ -153,7 +158,7 @@ const EventListItem = styled.div`
   display: grid;
   grid-template: 24px 20px / 20px auto 56px;
   background-image: ${props => (props.eventSelected ? 'linear-gradient(283deg, #0a54c5, #3266ff)' : 'none')};
-  box-shadow: ${props => (props.eventSelected ? '0 15px 30px 0 rgba(48, 101, 252, 0.11)': 'none')};
+  box-shadow: ${props => (props.eventSelected ? '0 15px 30px 0 rgba(48, 101, 252, 0.11)' : 'none')};
   width: 100%;
   padding: 16px;
   border-bottom: solid 1px #dae1e7;
@@ -162,8 +167,8 @@ const EventListItem = styled.div`
 
   &:hover {
     background: ${props => (props.eventSelected ? null : '#f7f9fc')};
+  }
 `;
-
 
 const EventListContainer = styled.div`
   display: grid;
@@ -179,7 +184,7 @@ const EventListContainer = styled.div`
     grid-column: 1/2;
     width: 100vw;
     height: 100%;
-    display: ${props => props.hasEvent? 'none' : props.expanding? 'none' : null};
+    display: ${props => (props.hasEvent ? 'none' : props.expanding ? 'none' : null)};
   }
 `;
 
@@ -198,70 +203,84 @@ const OverallContainer = styled.div`
     width: 100vw;
     height: 100%;
     grid-column: 1/2;
-    display: ${props => props.hasEvent? 'none' : props.expanding? null : 'none'};
+    display: ${props => (props.hasEvent ? 'none' : props.expanding ? null : 'none')};
   }
 `;
 
-const EventCardContainer = styled.div`  
+const EventCardContainer = styled.div`
   grid-column: 3/4;
   grid-row: 1/2;
   overflow: hidden;
   @media (max-width: 480px) {
-    grid-column: 1/2
+    grid-column: 1/2;
     width: 100vw;
     height: 100%;
-    d/isplay: ${props => props.hasEvent ? null : 'none'}
+    display: ${props => (props.hasEvent ? null : 'none')};
   }
 `;
 
-
-const categories = ['ALL', 'DRAFT', 'SENT',]
-const categoriesChinese = ['全部', '草稿', '寄送備份',]
-const categoryIcons = [<InboxFill />, <Edit />, <PaperPlane />]
+const categories = ['ALL', 'DRAFT', 'SENT'];
+const categoriesChinese = ['全部', '草稿', '寄送備份'];
+const categoryIcons = [<InboxFill key={1} />, <Edit key={2} />, <PaperPlane key={3} />];
 
 function SmsPage(props) {
-  const { getEvents, filterEvents, currentKey, createEvent, saveEvent, getClinicSettings, getClinicRemaining, getUsers, setSelectedEvent, selectedEvent, selectedEventId, editingEvent, events, remaining, isRemainingLoaded, users } = props;
-  const [expanding, setExpanding] = useState(false)
-  const [hasEvent, setHasEvent] = useState(false)
+  const {
+    getEvents,
+    filterEvents,
+    currentKey,
+    createEvent,
+    saveEvent,
+    getClinicSettings,
+    getClinicRemaining,
+    getUsers,
+    setSelectedEvent,
+    selectedEvent,
+    selectedEventId,
+    editingEvent,
+    events,
+    remaining,
+    isRemainingLoaded,
+    users,
+  } = props;
+  const [expanding, setExpanding] = useState(false);
+  const [hasEvent, setHasEvent] = useState(false);
 
   useEffect(() => {
-    setExpanding(false)
-  }, [currentKey])
-
+    setExpanding(false);
+  }, [currentKey]);
 
   useEffect(() => {
-    getUsers()
-    getClinicSettings()
-    getEvents()
-    getClinicRemaining()
+    getUsers();
+    getClinicSettings();
+    getEvents();
+    getClinicRemaining();
     // eslint-disable-next-line
-  }, [])
+  }, []);
 
   useLayoutEffect(() => {
-    setHasEvent(selectedEvent !== null)
-  }, [selectedEvent])
+    setHasEvent(selectedEvent !== null);
+  }, [selectedEvent]);
 
   const isDiff = (o1, o2) => {
-    if (o1 === null || o2 === null) return false
-    if (o1.metadata.template !== o2.metadata.template) return true
-   
-    const newApp = o1.metadata.selectedAppointments.map(app => app.id)
-    const oldApp = o2.metadata.selectedAppointments.map(app => app.id)
+    if (o1 === null || o2 === null) return false;
+    if (o1.metadata.template !== o2.metadata.template) return true;
 
-    if (!isEqual(newApp, oldApp)) return true
-    if (o1.title !== o2.title) return true
-    
-    return false
-  }
+    const newApp = o1.metadata.selectedAppointments.map(app => app.id);
+    const oldApp = o2.metadata.selectedAppointments.map(app => app.id);
+
+    if (!isEqual(newApp, oldApp)) return true;
+    if (o1.title !== o2.title) return true;
+
+    return false;
+  };
 
   const handleSelectionChanging = item => {
     // if current(previous) item is able to be posted or put
-    if (isDiff(editingEvent, selectedEvent) && editingEvent.metadata.template.length !== 0) saveEvent(editingEvent)
-
+    if (isDiff(editingEvent, selectedEvent) && editingEvent.metadata.template.length !== 0) saveEvent(editingEvent);
     // else just changing
-    else setSelectedEvent(item)
-  }
- 
+    else setSelectedEvent(item);
+  };
+
   return (
     <Container>
       <Helmet>
@@ -271,36 +290,38 @@ function SmsPage(props) {
         <OverallContainer expanding={expanding} hasEvent={hasEvent}>
           <CategoryContainer>
             <ButtonBox>
-              <StyledLargerButton 
-                className="styled-larger-btn" 
+              <StyledLargerButton
+                className="styled-larger-btn"
                 type="primary"
                 shape="round"
                 block
                 onClick={createEvent}
               >
-                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Edit2 />
                   <NoMarginText>CREATE</NoMarginText>
                 </div>
               </StyledLargerButton>
             </ButtonBox>
             {categories.map((category, i) => (
-              <MenuItem 
-                key={category} 
-                selected={currentKey === category}  
-                onClick={() => filterEvents(category)}>
+              <MenuItem key={category} selected={currentKey === category} onClick={() => filterEvents(category)}>
                 {categoryIcons[i]}
                 <MenuName>{categoriesChinese[i]}</MenuName>
-              </MenuItem>  
+              </MenuItem>
             ))}
           </CategoryContainer>
           {/* TODO: SMS: link update */}
           <RemainingActionSection>
-            <RemainingActionItem 
+            <RemainingActionItem
               style={{ visibility: isRemainingLoaded ? null : 'hidden' }}
-              onClick={() => window.open('https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b')}>
-              <GiftFill fill={remaining === 0 ? O1 : null}/>
-              <ActionName style={{color: remaining === 0 ? O1 : null}}>{`儲值 (剩餘 ${remaining} 封)`}</ActionName>
+              onClick={() =>
+                window.open(
+                  'https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b',
+                )
+              }
+            >
+              <GiftFill fill={remaining === 0 ? O1 : null} />
+              <ActionName style={{ color: remaining === 0 ? O1 : null }}>{`儲值 (剩餘 ${remaining} 封)`}</ActionName>
             </RemainingActionItem>
             <RemainingActionItem onClick={() => window.open('https://www.dentaltw.com/myOrders')}>
               <AwardFill />
@@ -315,34 +336,45 @@ function SmsPage(props) {
           <EventList>
             {events.map(item => {
               const user = users.find(user => user.login === item.createdBy);
-              const createdBy = user ? user.firstName : ''
+              const createdBy = user ? user.firstName : '';
 
               return (
                 <EventListItem
-                  eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}
+                  eventSelected={
+                    selectedEvent && (item.id !== null ? selectedEventId === item.id : selectedEventId === item.tempId)
+                  }
                   key={item.id !== null ? item.id : item.tempId}
                   onClick={() => handleSelectionChanging(item)}
                 >
-                  
-                  
-                  <Title style={{ gridRow: '1/2', gridColumn: '2/3'}}>{item.title}</Title>
-              
-                  
-                  <Caption eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)} isDraft={item.status === 'draft'}>
-                    {item.status === 'completed'? `${createdBy}已傳送${item.sms.length}則`: '草稿'}
+                  <Title style={{ gridRow: '1/2', gridColumn: '2/3' }}>{item.title}</Title>
+
+                  <Caption
+                    eventSelected={
+                      selectedEvent &&
+                      (item.id !== null ? selectedEventId === item.id : selectedEventId === item.tempId)
+                    }
+                    isDraft={item.status === 'draft'}
+                  >
+                    {item.status === 'completed' ? `${createdBy}已傳送${item.sms.length}則` : '草稿'}
                   </Caption>
-                  
-                  <TinyBold eventSelected={selectedEvent && (item.id !== null? selectedEventId === item.id : selectedEventId === item.tempId)}>
+
+                  <TinyBold
+                    eventSelected={
+                      selectedEvent &&
+                      (item.id !== null ? selectedEventId === item.id : selectedEventId === item.tempId)
+                    }
+                  >
                     {(() => {
-                      if (moment().isSame(item.modifiedDate  , 'day')) return moment(item.modifiedDate).format('HH:mm')
+                      if (moment().isSame(item.modifiedDate, 'day')) return moment(item.modifiedDate).format('HH:mm');
                       else {
-                        if(moment().startOf('date').add(-1, 'days').isSame(item.modifiedDate  , 'day')) return 'yesterday'
-                        else return moment(item.modifiedDate).format('MM/DD') 
+                        if (moment().startOf('date').add(-1, 'days').isSame(item.modifiedDate, 'day'))
+                          return 'yesterday';
+                        else return moment(item.modifiedDate).format('MM/DD');
                       }
                     })()}
                   </TinyBold>
                 </EventListItem>
-                )
+              );
             })}
           </EventList>
         </EventListContainer>
@@ -354,7 +386,7 @@ function SmsPage(props) {
   );
 }
 
-const mapStateToProps = ({smsPageReducer, homePageReducer}) => ({
+const mapStateToProps = ({ smsPageReducer }) => ({
   users: smsPageReducer.user.users,
   events: smsPageReducer.event.events,
   selectedEventId: smsPageReducer.event.selectedEventId,
@@ -364,7 +396,7 @@ const mapStateToProps = ({smsPageReducer, homePageReducer}) => ({
   remaining: smsPageReducer.event.remaining,
   isRemainingLoaded: smsPageReducer.event.isRemainingLoaded,
   currentKey: smsPageReducer.event.currentKey,
-})
+});
 
 // doctors: extractDoctorsFromUser(homePageReducer.user.users),
 const mapDispatchToProps = {

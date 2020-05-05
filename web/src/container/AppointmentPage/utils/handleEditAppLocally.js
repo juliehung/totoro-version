@@ -12,9 +12,7 @@ export function convertEditAppToEvt(appointment) {
     !appointment.requiredTreatmentTime || appointment.requiredTreatmentTime === 0
       ? 15
       : appointment.requiredTreatmentTime;
-  const end = moment(appointment.expectedArrivalTime)
-    .add(requiredTreatmentTime, 'minutes')
-    .toDate();
+  const end = moment(appointment.expectedArrivalTime).add(requiredTreatmentTime, 'minutes').toDate();
   const registrationStatus = appointment.registration ? appointment.registration.status : undefined;
   return {
     title: appointment.status === 'CANCEL' ? `[C] ${appointment.patient.name}` : appointment.patient.name,

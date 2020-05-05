@@ -5,7 +5,9 @@ import moment from 'moment';
 let sessionSelectedDate = null;
 try {
   sessionSelectedDate = JSON.parse(sessionStorage.getItem('selectedDate'));
-} catch (e) {}
+} catch (e) {
+  console.log(e);
+}
 
 const initState = {
   registrations: [],

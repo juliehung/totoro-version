@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import {togglePreviewingModal, saveEventAndSendImmediately} from './action'
-import moment from 'moment'
-import PaperPlane from './svg/PaperPlane'
-import { StyledMediumButton, StyledModal } from './StyledComponents'
+import { togglePreviewingModal, saveEventAndSendImmediately } from './action';
+import moment from 'moment';
+import PaperPlane from './svg/PaperPlane';
+import { StyledMediumButton, StyledModal } from './StyledComponents';
 
 const NoMarginText = styled.p`
   margin: auto 0;
@@ -50,7 +50,7 @@ const EventList = styled.div`
   overflow: scroll;
   height: 55vh;
   scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE 10+ */
+  -ms-overflow-style: none; /* IE 10+ */
   &::-webkit-scrollbar {
     width: 0px;
     background: transparent; /* Chrome/Safari/Webkit */
@@ -77,14 +77,14 @@ const EventPatientNameText = styled(NoMarginText)`
 
 const EventOccurText = styled(NoMarginText)`
   font-size: 12px;
-  color: #8f9bb3
+  color: #8f9bb3;
 `;
 
 const EventContentText = styled(NoMarginText)`
   font-size: 13px;
 `;
 
-const WarningContainer =  styled.div`
+const WarningContainer = styled.div`
   display: flex;
   align-items: center;
   height: 56px;
@@ -97,12 +97,10 @@ const Warning = styled(NoMarginText)`
   color: white;
 `;
 
-
 const Splitter = styled.div`
   height: 1px;
   border: solid 1px #dae1e7;
 `;
-
 
 const TemplatePlace = styled.div`
   min-height: 80px;
@@ -110,32 +108,30 @@ const TemplatePlace = styled.div`
   border: solid 1px #e4e9f2;
   padding: 16px 32px;
   margin: 16px 24px 0;
-  background: rgba(100,100,100,0.03);
+  background: rgba(100, 100, 100, 0.03);
 `;
 
 function EventPreviewingModal(props) {
-  const { togglePreviewingModal, saveEventAndSendImmediately, editingEvent, visible, isChargeFailed } = props
+  const { togglePreviewingModal, saveEventAndSendImmediately, editingEvent, visible, isChargeFailed } = props;
 
   const handleOk = () => {
-    saveEventAndSendImmediately(editingEvent)
-  }
+    saveEventAndSendImmediately(editingEvent);
+  };
   const handleClose = () => {
     togglePreviewingModal();
-  }
+  };
 
-  return ( 
+  return (
     <StyledModal
       width={856}
       centered
-      bodyStyle={{ padding: '0', margin: 'auto' }}  
+      bodyStyle={{ padding: '0', margin: 'auto' }}
       visible={visible}
       footer={null}
       onCancel={handleClose}
-      >
+    >
       <HeaderContainer>
-        <Header>
-          確認您將傳送 {editingEvent.sms.length} 則簡訊？
-        </Header>
+        <Header>確認您將傳送 {editingEvent.sms.length} 則簡訊？</Header>
       </HeaderContainer>
       <FieldContainer>
         <Title>範本</Title>
@@ -147,42 +143,46 @@ function EventPreviewingModal(props) {
           {editingEvent.sms.map(item => (
             <EventListItem key={item.phone}>
               <EventPatientNameText>{item.metadata.patientName}</EventPatientNameText>
-              <EventOccurText>{`${moment(item.metadata.appointmentDate).format('YYYY/MM/DD HH:mm')}的預約即將發送至${item.phone}`}</EventOccurText>
+              <EventOccurText>{`${moment(item.metadata.appointmentDate).format('YYYY/MM/DD HH:mm')}的預約即將發送至${
+                item.phone
+              }`}</EventOccurText>
               <Splitter />
               <EventContentText>{item.content}</EventContentText>
             </EventListItem>
           ))}
         </EventList>
       </FieldContainer>
-      {isChargeFailed? 
+      {isChargeFailed ? (
         <WarningContainer>
           <Warning>您的帳戶額度不足</Warning>
-        </WarningContainer> :
-         <ActionContainer>
-         <StyledMediumButton
-          className="styled-medium-btn"
-          style={{ border: 'solid 1px white', background: 'rgba(255,255,255,0.08)' }}
-          type="primary"
-          shape="round"  
-          onClick={handleOk}>
-          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', fill: 'white'}}>
-            <PaperPlane />
-            <NoMarginText>立即發送訊息</NoMarginText>
-          </div>
-         </StyledMediumButton>
-       </ActionContainer>
-      }
-  </StyledModal>
+        </WarningContainer>
+      ) : (
+        <ActionContainer>
+          <StyledMediumButton
+            className="styled-medium-btn"
+            style={{ border: 'solid 1px white', background: 'rgba(255,255,255,0.08)' }}
+            type="primary"
+            shape="round"
+            onClick={handleOk}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fill: 'white' }}>
+              <PaperPlane />
+              <NoMarginText>立即發送訊息</NoMarginText>
+            </div>
+          </StyledMediumButton>
+        </ActionContainer>
+      )}
+    </StyledModal>
   );
 }
 
 const mapStateToProps = ({ smsPageReducer }) => {
-  return { 
+  return {
     appointments: smsPageReducer.appointment.appointments,
     editingEvent: smsPageReducer.event.editingEvent,
     visible: smsPageReducer.event.visible,
     isChargeFailed: smsPageReducer.event.isChargeFailed,
-  }
+  };
 };
 
 const mapDispatchToProps = { togglePreviewingModal, saveEventAndSendImmediately };

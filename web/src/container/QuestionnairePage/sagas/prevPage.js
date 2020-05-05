@@ -8,6 +8,8 @@ export function* prevPage() {
       yield delay(0);
       yield put({ type: PREV_PAGE_DELAY });
       yield delay(500);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

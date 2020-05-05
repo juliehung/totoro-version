@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { setSelectedEvent, executeEvent, deleteEvent } from './action';
 import { parseAccountData } from '../NavHome/utils/parseAccountData';
-import moment from "moment";
+import moment from 'moment';
 import Trash from './svg/Trash';
-import PaperPlane from './svg/PaperPlane'
+import PaperPlane from './svg/PaperPlane';
 
 const RootContainer = styled.div`
   display: grid;
@@ -22,7 +22,7 @@ const HeaderContainer = styled.div`
   display: grid;
   grid-template-columns: auto auto;
   align-items: center;
-  padding: 0 32px 0 24px; 
+  padding: 0 32px 0 24px;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.04), inset 0 -1px 0 0 #eeeeee;
   background: white;
   border-radius: 0 10px 0 0;
@@ -47,10 +47,9 @@ const EventDetailContainer = styled.div`
   margin: 0 32px 8px;
 `;
 
-
 const SenderContainer = styled.div`
   display: grid;
-  grid-template: 24px 24px/ 48px auto; 
+  grid-template: 24px 24px/ 48px auto;
 `;
 
 const AvatarImg = styled.img`
@@ -74,7 +73,7 @@ const DateText = styled(NoMarginText)`
 const EventList = styled.div`
   overflow: scroll;
   scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE 10+ */
+  -ms-overflow-style: none; /* IE 10+ */
   &::-webkit-scrollbar {
     width: 0px;
     background: transparent; /* Chrome/Safari/Webkit */
@@ -101,7 +100,7 @@ const EventPatientNameText = styled(NoMarginText)`
 
 const EventOccurText = styled(NoMarginText)`
   font-size: 12px;
-  color: #8f9bb3
+  color: #8f9bb3;
 `;
 
 const EventContentText = styled(NoMarginText)`
@@ -114,19 +113,20 @@ const Splitter = styled.div`
 `;
 
 function EventReadOnly(props) {
-  const { selectedEvent, executeEvent, deleteEvent, account, users } = props
+  const { selectedEvent, executeEvent, deleteEvent, account, users } = props;
   const createdBy = users.find(user => user.login === selectedEvent.createdBy).firstName;
 
-  return ( 
+  return (
     <RootContainer>
       <HeaderContainer>
         <Header>{selectedEvent.title}</Header>
         <Button
           style={{ justifySelf: 'flex-end', display: selectedEvent.status === 'completed' ? 'none' : null }}
           danger
-          type="link" 
+          type="link"
           icon={<Trash />}
-          onClick={() => deleteEvent(selectedEvent.id)} />
+          onClick={() => deleteEvent(selectedEvent.id)}
+        />
       </HeaderContainer>
       <BoneContainer>
         <EventDetailContainer>
@@ -136,20 +136,25 @@ function EventReadOnly(props) {
             ) : (
               <AvatarImg alt={account.name[0]} src={null} style={{ textAlign: 'center' }} />
             )}
-            <NameText style={{ gridRow: '1/2', gridColumn: '2/3'}}>{createdBy}</NameText>
-            <DateText style={{ gridRow: '2/3', gridColumn: '2/3'}}>{moment(selectedEvent.modifiedDate).format('YYYY/MM/DD HH:mm')}</DateText>
+            <NameText style={{ gridRow: '1/2', gridColumn: '2/3' }}>{createdBy}</NameText>
+            <DateText style={{ gridRow: '2/3', gridColumn: '2/3' }}>
+              {moment(selectedEvent.modifiedDate).format('YYYY/MM/DD HH:mm')}
+            </DateText>
           </SenderContainer>
-            <Button
-              style={{ visibility: selectedEvent.status === 'draft' ? null : 'hidden' }}
-              icon={<PaperPlane />}
-              type="link"
-              onClick={() => executeEvent(selectedEvent)} />
+          <Button
+            style={{ visibility: selectedEvent.status === 'draft' ? null : 'hidden' }}
+            icon={<PaperPlane />}
+            type="link"
+            onClick={() => executeEvent(selectedEvent)}
+          />
         </EventDetailContainer>
         <EventList>
           {selectedEvent.sms.map(item => (
             <EventListItem key={item.phone + item.content}>
               <EventPatientNameText>{item.metadata.patientName}</EventPatientNameText>
-              <EventOccurText>{`${moment(item.metadata.appointmentDate).format('YYYY/MM/DD HH:mm')}的預約已發送至${item.phone}`}</EventOccurText>
+              <EventOccurText>{`${moment(item.metadata.appointmentDate).format('YYYY/MM/DD HH:mm')}的預約已發送至${
+                item.phone
+              }`}</EventOccurText>
               <Splitter />
               <EventContentText>{item.content}</EventContentText>
             </EventListItem>
@@ -159,12 +164,12 @@ function EventReadOnly(props) {
     </RootContainer>
   );
 }
-const mapStateToProps = ({ smsPageReducer, homePageReducer }) => ({ 
+const mapStateToProps = ({ smsPageReducer, homePageReducer }) => ({
   users: smsPageReducer.user.users,
   selectedEvent: smsPageReducer.event.selectedEvent,
   account: parseAccountData(homePageReducer.account.data),
 });
 
-const mapDispatchToProps = { setSelectedEvent, executeEvent, deleteEvent};
+const mapDispatchToProps = { setSelectedEvent, executeEvent, deleteEvent };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventReadOnly);

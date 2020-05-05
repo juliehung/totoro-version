@@ -1,5 +1,12 @@
 import { fork } from 'redux-saga/effects';
-import { getEvents, saveEvent, executeEvent, deleteEvent, saveEventAndSendImmediately, getClinicRemaining } from './event';
+import {
+  getEvents,
+  saveEvent,
+  executeEvent,
+  deleteEvent,
+  saveEventAndSendImmediately,
+  getClinicRemaining,
+} from './event';
 import { getAppointments } from './appointment';
 import { getSettings } from './settings';
 import { getUsers } from './user';

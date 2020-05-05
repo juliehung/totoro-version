@@ -36,9 +36,7 @@ export function mapStatusToColor(app) {
 export function convertAppToEvt(appointment) {
   const start = moment(appointment.expectedArrivalTime).toDate();
   const requiredTreatmentTime = appointment.requiredTreatmentTime;
-  const end = moment(appointment.expectedArrivalTime)
-    .add(requiredTreatmentTime, 'minutes')
-    .toDate();
+  const end = moment(appointment.expectedArrivalTime).add(requiredTreatmentTime, 'minutes').toDate();
 
   return {
     title: appointment.status === 'CANCEL' ? `[C] ${appointment.patientName}` : appointment.patientName,

@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 import { Default, Gray600 } from './colors';
 
-
 export const NoMarginText = styled.p`
   margin: auto 0;
-  color : ${Default};
+  color: ${Default};
 `;
 
 export const Title = styled(NoMarginText)`
@@ -16,7 +15,6 @@ export const Subtitle = styled(NoMarginText)`
   font-size: 15px;
   font-weight: 600;
 `;
-
 
 export const Caption = styled(NoMarginText)`
   font-size: 12px;

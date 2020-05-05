@@ -198,8 +198,7 @@ export function handleEventRender(info, func) {
         const contentMenu = (
           <Menu
             onClick={e => {
-              if (e.key === 'delete') {
-              } else if (e.key === 'edit') {
+              if (e.key === 'edit') {
                 func.edit(doctorDayOff);
               }
             }}

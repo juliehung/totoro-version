@@ -9,11 +9,7 @@ export default class Disposal {
     let requestURL = `${requestUrl}?createdDate.greaterOrEqualThan=${date
       .clone()
       .startOf('day')
-      .toISOString()}&createdDate.lessThan=${date
-      .clone()
-      .add(1, 'day')
-      .startOf('day')
-      .toISOString()}`;
+      .toISOString()}&createdDate.lessThan=${date.clone().add(1, 'day').startOf('day').toISOString()}`;
 
     const options = { signal };
     const result = await request(requestURL, options);

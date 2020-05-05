@@ -4,9 +4,9 @@ import appointment from './appointment';
 import user from './user';
 
 const smsPageReducer = combineReducers({
-    event,
-    appointment,
-    user
+  event,
+  appointment,
+  user,
 });
 
 export default smsPageReducer;

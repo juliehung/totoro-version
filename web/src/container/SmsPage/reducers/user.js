@@ -6,18 +6,18 @@ const initState = {
 };
 
 const initialState = {
-  ...initState
+  ...initState,
 };
 
 const user = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
       case GET_USERS_SUCCESS:
-        draft.users = action.users
-        break     
+        draft.users = action.users;
+        break;
       default:
-        break
+        break;
     }
-  })
+  });
 
 export default user;
