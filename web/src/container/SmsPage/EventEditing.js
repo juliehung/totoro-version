@@ -147,14 +147,13 @@ function EventEditing(props) {
     saveEvent,
     deleteEvent,
     isWrongNumberLength,
-    isWrongContentLength,
   } = props
 
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (editingEvent !== null && editingEvent.isEdit && editingEvent.metadata.template.length !== 0) {
-        if (isWrongContentLength || isWrongNumberLength) return
+        if (isWrongNumberLength) return
         if (isDiff(editingEvent, selectedEvent)) {
           saveEvent(editingEvent)
         }
@@ -258,7 +257,7 @@ function EventEditing(props) {
           <Warning style={{ visibility: isWrongNumberLength? null : 'hidden' }}>手機號碼格式錯誤</Warning>
           <StyledMediumButton
             className="styled-medium-btn"
-            disabled={editingEvent.sms.length === 0 || isWrongContentLength || isWrongNumberLength}
+            disabled={editingEvent.sms.length === 0 || isWrongNumberLength}
             shape="round"
             type="primary"
             onClick={()=> {
@@ -282,7 +281,6 @@ const mapStateToProps = ({ smsPageReducer }) => ({
   tags: smsPageReducer.event.tags,
   visible: smsPageReducer.appointment.visible,
   isWrongNumberLength: smsPageReducer.event.isWrongNumberLength,
-  isWrongContentLength: smsPageReducer.event.isWrongContentLength,
 });
 
 const mapDispatchToProps = { 

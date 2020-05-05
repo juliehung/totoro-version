@@ -38,7 +38,6 @@ const initState = {
   clinicId: null,
   remaining: 0,
   isWrongNumberLength: false,
-  isWrongContentLength: false,
   isChargeFailed: false,
   currentKey: 'ALL'
 };
@@ -225,20 +224,17 @@ const event = (state = initialState, action) =>
       case EDIT_TEMPLATE:
         draft.editingEvent.metadata.template = action.value
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent)
-        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70)
         break;
       case ADD_TAG:
         var adding = ' {{' + action.value + '}}'
         draft.editingEvent.metadata.template += adding
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent)
-        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70)
         break
       case ADD_CONTACT_APPOINTMENTS:
         const allApps = [...action.appointments, ...state.editingEvent.metadata.selectedAppointments]
         draft.editingEvent.metadata.selectedAppointments = allApps.filter(distinct)
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent)
         draft.isWrongNumberLength = draft.editingEvent.sms.some(m => checkPhoneFormat(m.phone))
-        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70)
         break
       case UNSELECT_APPOINTMENT: {
         const newArr = [...state.editingEvent.metadata.selectedAppointments]
@@ -247,7 +243,6 @@ const event = (state = initialState, action) =>
         draft.editingEvent.metadata.selectedAppointments = newArr;
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent)
         draft.isWrongNumberLength = draft.editingEvent.sms.some(m => checkPhoneFormat(m.phone))
-        draft.isWrongContentLength = draft.editingEvent.sms.some(m => m.content.length > 70)
         break
       }
       //#endregion
