@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { connect } from 'react-redux';
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -16,13 +16,56 @@ import { changeDate, getShift, editShift, shiftDrop, changeResourceColor, delete
 import { handleEventDrop } from './utils/handleEventDrop';
 import { handleEventRender } from './utils/handleEventRender';
 import moment from 'moment';
+import styled from 'styled-components';
+import ArrowRight from '../../images/two-arrow-right.svg';
+import ArrowLeft from '../../images/two-arrow-left.svg';
+
+//#region
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 25px 0;
+  position: relative;
+`;
+
+const TitleContainer = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  color: #222b45;
+  & > img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+  & > :nth-child(2) {
+    margin-right: 16px;
+  }
+`;
+
+const CalendarContainer = styled.div`
+  flex-grow: 1;
+  flex-shrink: 1;
+`;
+//#endregion
 
 function Calendar(props) {
   const { shiftDrop, setClickInfo, setPopoverVisible, deleteShift, popoverSize } = props;
+  const calendarRef = useRef(null);
 
   const datesRender = ({ view }) => {
     const start = view.activeStart;
     const end = view.activeEnd;
+
+    console.log(2222, end);
+
     props.changeDate({ start, end });
   };
 
@@ -81,37 +124,59 @@ function Calendar(props) {
     handleEventRender(info, { deleteShift });
   };
 
+  const prevClick = () => {
+    let calendarApi = calendarRef.current.getApi();
+    if (calendarApi) {
+      calendarApi.prev();
+    }
+  };
+
+  const nextClick = () => {
+    let calendarApi = calendarRef.current.getApi();
+    if (calendarApi) {
+      calendarApi.next();
+    }
+  };
+
   return (
-    <FullCalendar
-      locales={zhTW}
-      locale="zh-tw"
-      height="parent"
-      resources={props.resource}
-      resourceRender={resourceRender}
-      slotWidth={150}
-      events={events}
-      eventRender={eventRender}
-      plugins={[interactionPlugin, resourceTimelinePlugin]}
-      defaultView={'resourceTimelineMonth'}
-      editable={true}
-      eventDurationEditable={false}
-      resourceLabelText={'Doctor'}
-      header={{
-        left: 'today prev',
-        center: 'title',
-        right: 'next',
-      }}
-      resourceAreaWidth={'20%'}
-      datesRender={datesRender}
-      dateClick={dateClick}
-      eventDrop={eventDrop}
-      eventResize={eventResize}
-      drop={drop}
-      slotLabelFormat={{ day: 'numeric', weekday: 'short' }}
-      displayEventTime={false}
-      selectable
-      selectLongPressDelay={500}
-    />
+    <Container>
+      <Header>
+        <TitleContainer>
+          <img src={ArrowLeft} alt="arrow-left" onClick={prevClick} />
+          <span> {moment(props.range.start).format('MMM YYYY')}</span>
+          <img src={ArrowRight} alt="arrow-right" onClick={nextClick} />
+        </TitleContainer>
+      </Header>
+      <CalendarContainer>
+        <FullCalendar
+          ref={calendarRef}
+          header={false}
+          locales={zhTW}
+          locale="zh-tw"
+          height="parent"
+          resources={props.resource}
+          resourceRender={resourceRender}
+          slotWidth={150}
+          events={events}
+          eventRender={eventRender}
+          plugins={[interactionPlugin, resourceTimelinePlugin]}
+          defaultView={'resourceTimelineMonth'}
+          editable={true}
+          eventDurationEditable={false}
+          resourceLabelText={'Doctor'}
+          resourceAreaWidth={'20%'}
+          datesRender={datesRender}
+          dateClick={dateClick}
+          eventDrop={eventDrop}
+          eventResize={eventResize}
+          drop={drop}
+          slotLabelFormat={{ day: 'numeric', weekday: 'short' }}
+          displayEventTime={false}
+          selectable
+          selectLongPressDelay={500}
+        />
+      </CalendarContainer>
+    </Container>
   );
 }
 
