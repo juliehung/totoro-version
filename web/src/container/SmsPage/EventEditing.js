@@ -17,6 +17,7 @@ import AppointmentsModal from './AppointmentsModal';
 import EventPreviewingModal from './EventPreviewingModal';
 import moment from 'moment';
 import PersonalAddFill from './svg/PersonalAddFill';
+import Close from './svg/Close';
 import Trash from './svg/Trash';
 import { StyledMediumButton, StyledTag } from './StyledComponents';
 import { P2, Caption, Subtitle, Title, NoMarginText } from '../../utils/textComponents';
@@ -220,12 +221,16 @@ function EventEditing(props) {
                       }
                     >
                       <StyledTag
-                        closable
-                        onClose={() => {
-                          unselectAppointment(app);
-                        }}
                       >
                         {`${app.patientName}(${app.phone})`}
+                        {<Button 
+                          type="link"  
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            unselectAppointment(app)
+                          }}>
+                          <Close />
+                        </Button>}
                       </StyledTag>
                     </Popover>
                   );
