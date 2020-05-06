@@ -19,6 +19,7 @@ import {
   DELETE_EVENT,
   SAVE_EVENT_SUCCESS,
   DELETE_EVENT_SUCCESS,
+  SET_CARET_POSITION,
 } from '../constant';
 
 import produce from 'immer';
@@ -41,6 +42,8 @@ const initState = {
   isWrongNumberLength: false,
   isChargeFailed: false,
   currentKey: 'ALL',
+  caretPosition: -1,
+  caretChangedBy: 'keydown'
 };
 
 const initialState = {
@@ -187,6 +190,7 @@ const event = (state = initialState, action) =>
           draft.selectedEventId = selection.id !== null ? selection.id : selection.tempId;
           draft.editingEvent = selection.isEdit ? selection : null;
           sessionStorage.setItem('eventKey', draft.selectedEventId);
+          draft.caretPosition = -1;
         }
         break;
       }
@@ -252,8 +256,15 @@ const event = (state = initialState, action) =>
         break;
       case ADD_TAG:
         var adding = ' {{' + action.value + '}}';
-        draft.editingEvent.metadata.template += adding;
-        draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
+        const currentTemplate = state.editingEvent.metadata.template;
+        if (draft.caretPosition !== -1) {
+          if (draft.caretChangedBy === 'keydown') draft.caretPosition += 1
+          draft.editingEvent.metadata.template =  currentTemplate.slice(0, draft.caretPosition) + adding + currentTemplate.slice(draft.caretPosition)
+          // moving caret position to adding-end-position
+          draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
+          draft.caretPosition += adding.length;
+          draft.caretChangedBy = null;
+        }
         break;
       case ADD_CONTACT_APPOINTMENTS:
         const allApps = [...action.appointments, ...state.editingEvent.metadata.selectedAppointments];
@@ -306,7 +317,10 @@ const event = (state = initialState, action) =>
               });
         break;
       }
-
+      case SET_CARET_POSITION:
+        draft.caretPosition = action.payload.idx
+        draft.caretChangedBy = action.payload.by
+        break
       default:
         break;
     }
