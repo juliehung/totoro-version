@@ -16,7 +16,7 @@ import EventCard from './EventCard';
 import moment from 'moment';
 import InboxFill from './svg/InboxFill';
 import Edit from './svg/Edit';
-import Edit2 from './svg/Edit2';
+import edit2Icon from '../../images/icon-edit-2-fill.svg';
 import PaperPlane from './svg/PaperPlane';
 import GiftFill from './svg/GiftFill';
 import AwardFill from './svg/AwardFill';
@@ -297,8 +297,8 @@ function SmsPage(props) {
                 onClick={createEvent}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Edit2 />
-                  <NoMarginText>CREATE</NoMarginText>
+                  <img src={edit2Icon} alt={'edit'} style={{ marginRight: '4px' }} />
+                  <NoMarginText style={{ fontWeight: 'bold', width: '68px' }}>撰寫</NoMarginText>
                 </div>
               </StyledLargerButton>
             </ButtonBox>

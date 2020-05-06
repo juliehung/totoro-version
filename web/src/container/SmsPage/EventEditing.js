@@ -220,17 +220,19 @@ function EventEditing(props) {
                         </div>
                       }
                     >
-                      <StyledTag
-                      >
+                      <StyledTag>
                         {`${app.patientName}(${app.phone})`}
-                        {<Button 
-                          type="link"  
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            unselectAppointment(app)
-                          }}>
-                          <Close />
-                        </Button>}
+                        {
+                          <Button
+                            type="link"
+                            onClick={e => {
+                              e.stopPropagation();
+                              unselectAppointment(app);
+                            }}
+                          >
+                            <Close />
+                          </Button>
+                        }
                       </StyledTag>
                     </Popover>
                   );
