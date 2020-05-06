@@ -143,7 +143,7 @@ function EventPreviewingModal(props) {
           {editingEvent.sms.map(item => (
             <EventListItem key={item.phone}>
               <EventPatientNameText>{item.metadata.patientName}</EventPatientNameText>
-              <EventOccurText>{`${moment(item.metadata.appointmentDate).format('YYYY/MM/DD HH:mm')}的預約即將發送至${
+              <EventOccurText>{`${moment(item.metadata.appointmentDate).format('YYYY/MM/DD HH:mm')}的預約即將發送${Math.ceil(item.content.length / 70)}封至${
                 item.phone
               }`}</EventOccurText>
               <Splitter />
