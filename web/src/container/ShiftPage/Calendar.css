@@ -1,0 +1,8 @@
+.savedTransition-enter-active,
+.savedTransition-enter,
+.savedTransition-exit-active {
+  opacity: 1;
+}
+.savedTransition-exit {
+  opacity: 0;
+}

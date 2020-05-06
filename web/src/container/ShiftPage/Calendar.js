@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -19,6 +19,8 @@ import moment from 'moment';
 import styled from 'styled-components';
 import ArrowRight from '../../images/two-arrow-right.svg';
 import ArrowLeft from '../../images/two-arrow-left.svg';
+import { CSSTransition } from 'react-transition-group';
+import './Calendar.css';
 
 //#region
 const Container = styled.div`
@@ -29,7 +31,8 @@ const Container = styled.div`
 
 const Header = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
+  align-items: center;
   padding: 25px 0;
   position: relative;
 `;
@@ -50,22 +53,77 @@ const TitleContainer = styled.div`
   }
 `;
 
+const SavedIndicator = styled.span`
+  position: absolute;
+  left: 3%;
+  font-weight: 600;
+  font-size: 12px;
+  color: #8992a3;
+  user-select: none;
+`;
+
 const CalendarContainer = styled.div`
   flex-grow: 1;
   flex-shrink: 1;
 `;
 //#endregion
 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 function Calendar(props) {
-  const { shiftDrop, setClickInfo, setPopoverVisible, deleteShift, popoverSize } = props;
+  const {
+    shiftDrop,
+    setClickInfo,
+    setPopoverVisible,
+    deleteShift,
+    popoverSize,
+    createShiftSuccess,
+    deleteSuccess,
+    editShiftSuccess,
+    changeColorSuccess,
+  } = props;
   const calendarRef = useRef(null);
+
+  const [showSaved, setShowSaved] = useState(false);
+
+  const prevCreateShiftSuccess = usePrevious(createShiftSuccess);
+  const prevDeleteSuccess = usePrevious(deleteSuccess);
+  const prevEditShiftSuccess = usePrevious(editShiftSuccess);
+  const prevChangeColorSuccess = usePrevious(changeColorSuccess);
+
+  useEffect(() => {
+    if (
+      (createShiftSuccess && !prevCreateShiftSuccess) ||
+      (editShiftSuccess && !prevEditShiftSuccess) ||
+      (deleteSuccess && !prevDeleteSuccess) ||
+      (changeColorSuccess && !prevChangeColorSuccess)
+    ) {
+      setShowSaved(true);
+      requestAnimationFrame(() => {
+        setShowSaved(false);
+      });
+    }
+  }, [
+    createShiftSuccess,
+    deleteSuccess,
+    editShiftSuccess,
+    changeColorSuccess,
+    prevCreateShiftSuccess,
+    prevDeleteSuccess,
+    prevEditShiftSuccess,
+    prevChangeColorSuccess,
+    setShowSaved,
+  ]);
 
   const datesRender = ({ view }) => {
     const start = view.activeStart;
     const end = view.activeEnd;
-
-    console.log(2222, end);
-
     props.changeDate({ start, end });
   };
 
@@ -141,7 +199,10 @@ function Calendar(props) {
   return (
     <Container>
       <Header>
-        <TitleContainer>
+        <CSSTransition className="savedTransition" timeout={3000} in={showSaved} unmountOnExit>
+          <SavedIndicator>已儲存!</SavedIndicator>
+        </CSSTransition>
+        <TitleContainer className="fc-center">
           <img src={ArrowLeft} alt="arrow-left" onClick={prevClick} />
           <span> {moment(props.range.start).format('MMM YYYY')}</span>
           <img src={ArrowRight} alt="arrow-right" onClick={nextClick} />
@@ -190,6 +251,10 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   defaultShift: shiftPageReducer.defaultShift.shift,
   event: convertShiftToEvent(shiftPageReducer.shift.shift, shiftPageReducer.resourceColor.color),
   resourceColor: shiftPageReducer.resourceColor.color,
+  createShiftSuccess: shiftPageReducer.shift.createShiftSuccess,
+  deleteSuccess: shiftPageReducer.shift.deleteSuccess,
+  editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
+  changeColorSuccess: shiftPageReducer.resourceColor.changeColorSuccess,
 });
 
 const mapDispatchToProps = {
