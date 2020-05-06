@@ -26,6 +26,7 @@ import {
   DELETE_EVENT_SUCCESS,
   GET_USERS,
   GET_USERS_SUCCESS,
+  SET_CARET_POSITION,
 } from './constant';
 
 export function getEvents() {
@@ -134,4 +135,8 @@ export function getUsers() {
 
 export function getUsersSuccess(users) {
   return { type: GET_USERS_SUCCESS, users };
+}
+
+export function setCaretPosition(idx, by) {
+  return { type: SET_CARET_POSITION, payload: {idx, by} };
 }
