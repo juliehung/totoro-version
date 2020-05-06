@@ -7,6 +7,7 @@ import { parseAccountData } from '../NavHome/utils/parseAccountData';
 import moment from 'moment';
 import Trash from './svg/Trash';
 import PaperPlane from './svg/PaperPlane';
+import { P1, Small } from '../../utils/textComponents';
 
 const RootContainer = styled.div`
   display: grid;
@@ -49,25 +50,26 @@ const EventDetailContainer = styled.div`
 
 const SenderContainer = styled.div`
   display: grid;
-  grid-template: 24px 24px/ 48px auto;
+  grid-template: 32px 16px/ 48px auto;
+
+  & div {
+    display: flex;
+    flex-direction: column;
+    grid-row: 1/3;
+    height: 30px;
+    margin-top: 4px;
+  }
 `;
 
 const AvatarImg = styled.img`
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   grid-row: 1/3;
   box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.12);
   justify-self: center;
   align-self: center;
-`;
-
-const NameText = styled(NoMarginText)`
-  font-size: 15px;
-`;
-const DateText = styled(NoMarginText)`
-  font-size: 10px;
-  font-weight: bold;
+  object-fit: cover;
 `;
 
 const EventList = styled.div`
@@ -115,7 +117,7 @@ const Splitter = styled.div`
 function EventReadOnly(props) {
   const { selectedEvent, executeEvent, deleteEvent, account, users } = props;
   const createdBy = users.find(user => user.login === selectedEvent.createdBy).firstName;
-
+  moment.locale('en')
   return (
     <RootContainer>
       <HeaderContainer>
@@ -134,12 +136,14 @@ function EventReadOnly(props) {
             {account.avatar ? (
               <AvatarImg alt="avatar" src={`data:image/png;base64,${account.avatar}`} />
             ) : (
-              <AvatarImg alt={account.name[0]} src={null} style={{ textAlign: 'center' }} />
+              <AvatarImg alt={account.name[0]} src={null} style={{ textAlign: 'center', lineHeight: '30px' }} />
             )}
-            <NameText style={{ gridRow: '1/2', gridColumn: '2/3' }}>{createdBy}</NameText>
-            <DateText style={{ gridRow: '2/3', gridColumn: '2/3' }}>
-              {moment(selectedEvent.modifiedDate).format('YYYY/MM/DD HH:mm')}
-            </DateText>
+            <div>
+              <P1>{createdBy}</P1>
+              <Small style={{marginTop: '-2px'}}>
+                {moment(selectedEvent.modifiedDate).format('dddd, MMM DD, HH:mm')}
+              </Small>
+            </div>
           </SenderContainer>
           <Button
             style={{ visibility: selectedEvent.status === 'draft' ? null : 'hidden' }}
