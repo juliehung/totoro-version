@@ -6,7 +6,6 @@ import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
-import io.dentall.totoro.config.ImageRepositoryConfiguration;
 import io.dentall.totoro.service.dto.SmsChargeDTO;
 import io.dentall.totoro.service.dto.SmsEventDTO;
 import io.dentall.totoro.web.rest.vm.SmsInfoVM;
@@ -25,6 +24,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static io.dentall.totoro.business.service.GcpConstants.SERVICE_ACCOUNT;
 
 @Profile("saas")
 @Service
@@ -116,12 +117,7 @@ public class CloudFunctionService {
     }
 
     private String getIdTokenWithAudience(String audience) throws IOException {
-        String clinic = ImageRepositoryConfiguration.BASIC_FOLDER_PATH;
-        BlobId blobId = BlobId.of(
-            GcpConstants.BUCKET_NAME,
-            // ex: rakumi/dentall-saas-rakumi.json
-            clinic.concat("/").concat(GcpConstants.SERVICE_ACCOUNT_PREFIX).concat(clinic).concat(".json")
-        );
+        BlobId blobId = BlobId.of(GcpConstants.BUCKET_NAME, SERVICE_ACCOUNT);
         ServiceAccountCredentials credentials = ServiceAccountCredentials.fromStream(
             new ByteArrayInputStream(storage.readAllBytes(blobId))
         );
