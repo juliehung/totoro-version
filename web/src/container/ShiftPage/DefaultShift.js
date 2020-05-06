@@ -59,7 +59,6 @@ const CardContainer = styled.div`
   border-radius: 8px;
   border: solid 1px #c5cee0;
   transition: all 300ms ease;
-  z-index: 200;
   cursor: pointer;
   &:hover {
     box-shadow: 0 8px 25px -8px rgba(255, 38, 68, 0.5);

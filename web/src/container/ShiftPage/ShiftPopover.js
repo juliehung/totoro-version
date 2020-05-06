@@ -18,11 +18,10 @@ const Container = styled.div`
   position: fixed;
   border-radius: 5px;
   padding: 0 30px 10px;
-  z-index: 400;
   top: ${props => (props.position ? props.position.y : 0)}px;
   left: ${props => (props.position ? props.position.x : 0)}px;
   visibility: ${props => (props.visible ? 'visible' : 'hidden')};
-  z-index: ${props => (props.visible ? 1 : -100)};
+  z-index: ${props => (props.visible ? 400 : -100)};
   flex-direction: column;
   transition: all ease-in-out 200ms;
   & > * {
