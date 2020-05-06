@@ -15,6 +15,7 @@ import {
   SAVE_EVENT,
   EXECUTE_EVENT,
   SAVE_EVENT_AND_SEND_IMMEDIATELY,
+  EXECUTE_EVENT_SUCCESS,
   EXECUTE_EVENT_FAILED,
   DELETE_EVENT,
   SAVE_EVENT_SUCCESS,
@@ -40,7 +41,7 @@ const initState = {
   remaining: 0,
   isRemainingLoaded: false,
   isWrongNumberLength: false,
-  isChargeFailed: false,
+  isSentFailed: null,
   currentKey: 'ALL',
   caretPosition: -1,
   caretChangedBy: 'keydown'
@@ -61,10 +62,18 @@ const event = (state = initialState, action) =>
         draft.isLoaded = false;
         break;
       case SAVE_EVENT:
-      case DELETE_EVENT:
-      case EXECUTE_EVENT:
-      case SAVE_EVENT_AND_SEND_IMMEDIATELY:
         draft.isLoaded = false;
+        break;
+      case DELETE_EVENT:
+        draft.isLoaded = false;
+        break;
+      case EXECUTE_EVENT:
+        draft.isLoaded = false;
+        break;
+        case SAVE_EVENT_AND_SEND_IMMEDIATELY:
+        draft.isLoaded = false;
+        // init for checking
+        draft.isSentFailed = null;
         break;
 
       case GET_EVENTS_SUCCESS: {
@@ -144,8 +153,16 @@ const event = (state = initialState, action) =>
         break;
       }
 
+      case EXECUTE_EVENT_SUCCESS: {
+        draft.isSentFailed = false;
+        draft.visible = false;
+        draft.isLoaded = true;
+        break;
+      }
+
       case EXECUTE_EVENT_FAILED: {
-        draft.isChargeFailed = true;
+        draft.isSentFailed = true;
+        draft.visible = false;
         draft.isLoaded = true;
         break;
       }
@@ -243,6 +260,8 @@ const event = (state = initialState, action) =>
         draft.selectedEvent = newEvent;
         draft.selectedEventId = newEvent.tempId;
         draft.editingEvent = newEvent;
+        // if we don't set here, if send a new event it'll get the previous editing item.
+        sessionStorage.setItem('eventKey', draft.selectedEventId);
         break;
       }
 
@@ -285,8 +304,6 @@ const event = (state = initialState, action) =>
 
       case TOGGLE_PREVIEWING_MODAL:
         draft.visible = !state.visible;
-        // just init
-        draft.isChargeFailed = false;
         break;
 
       case FILTER_EVENTS: {

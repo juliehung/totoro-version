@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { togglePreviewingModal, saveEventAndSendImmediately } from './action';
 import moment from 'moment';
 import PaperPlane from './svg/PaperPlane';
+import CreditCardFill from './svg/CreditCardFill';
+import AlertCircleFill from './svg/AlertCircleFill';
 import { StyledMediumButton, StyledModal } from './StyledComponents';
+import { message } from 'antd';
 
 const NoMarginText = styled.p`
   margin: auto 0;
@@ -87,14 +90,16 @@ const EventContentText = styled(NoMarginText)`
 const WarningContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 56px;
   background: #fe9f43;
   padding: 0 24px;
 `;
 
-const Warning = styled(NoMarginText)`
+const Warning = styled.div`
   font-size: 13px;
   color: white;
+  display: flex;
 `;
 
 const Splitter = styled.div`
@@ -111,15 +116,34 @@ const TemplatePlace = styled.div`
   background: rgba(100, 100, 100, 0.03);
 `;
 
+const Styled2MediumButton = styled(StyledMediumButton)`
+  & svg {
+    margin-right: 8px;
+  }
+`;
+
+
 function EventPreviewingModal(props) {
-  const { togglePreviewingModal, saveEventAndSendImmediately, editingEvent, visible, isChargeFailed } = props;
+
+  const { togglePreviewingModal, saveEventAndSendImmediately, editingEvent, visible, isSentFailed, remaining } = props;
 
   const handleOk = () => {
     saveEventAndSendImmediately(editingEvent);
+    message.loading({ content: '正在發送中...' });
   };
+
   const handleClose = () => {
     togglePreviewingModal();
   };
+
+  useEffect(() => {
+    if (isSentFailed === null) return;
+    if (isSentFailed) message.error({ content: '簡訊發送出現問題，請重新嘗試。' })
+    else message.success({ content: '簡訊已發送完成！' })
+  }, [isSentFailed]);
+
+  const total = editingEvent.sms.map(m => Math.ceil(m.content.length / 70)).reduce((a, b) => a + b, 0)
+  const isEnableSend = total <= remaining
 
   return (
     <StyledModal
@@ -131,7 +155,7 @@ function EventPreviewingModal(props) {
       onCancel={handleClose}
     >
       <HeaderContainer>
-        <Header>確認您將傳送 {editingEvent.sms.length} 則簡訊？</Header>
+        <Header>{isEnableSend ? `確認您將傳送 ${total} 則簡訊？`: `不足寄送 ${total} 封簡訊 ( 帳戶餘額 ${remaining} )`}</Header>
       </HeaderContainer>
       <FieldContainer>
         <Title>範本</Title>
@@ -152,13 +176,31 @@ function EventPreviewingModal(props) {
           ))}
         </EventList>
       </FieldContainer>
-      {isChargeFailed ? (
+      {!isEnableSend ? (
         <WarningContainer>
-          <Warning>您的帳戶額度不足</Warning>
+          <Warning>
+            <AlertCircleFill />
+            {`由於您的帳戶額度不足(剩餘${remaining}則)，簡訊無法發送。請前往儲值後重新操作！`}
+          </Warning>
+          <Styled2MediumButton
+            className="styled-medium-btn"
+            style={{ border: 'solid 1px white', background: 'rgba(255,255,255,0.08)' }}
+            type="primary"
+            shape="round"
+            onClick={() =>
+              window.open(
+                'https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b',
+              )}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fill: 'white' }}>
+              <CreditCardFill />
+              <NoMarginText>前往購買簡訊額度</NoMarginText>
+            </div>
+          </Styled2MediumButton>
         </WarningContainer>
       ) : (
         <ActionContainer>
-          <StyledMediumButton
+          <Styled2MediumButton
             className="styled-medium-btn"
             style={{ border: 'solid 1px white', background: 'rgba(255,255,255,0.08)' }}
             type="primary"
@@ -169,7 +211,7 @@ function EventPreviewingModal(props) {
               <PaperPlane />
               <NoMarginText>立即發送訊息</NoMarginText>
             </div>
-          </StyledMediumButton>
+          </Styled2MediumButton>
         </ActionContainer>
       )}
     </StyledModal>
@@ -181,8 +223,9 @@ const mapStateToProps = ({ smsPageReducer }) => {
     appointments: smsPageReducer.appointment.appointments,
     editingEvent: smsPageReducer.event.editingEvent,
     visible: smsPageReducer.event.visible,
-    isChargeFailed: smsPageReducer.event.isChargeFailed,
-  };
+    isSentFailed: smsPageReducer.event.isSentFailed,
+    remaining: smsPageReducer.event.remaining,
+};
 };
 
 const mapDispatchToProps = { togglePreviewingModal, saveEventAndSendImmediately };
