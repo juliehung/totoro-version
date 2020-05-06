@@ -2,14 +2,14 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
-import { changeDate, getShift, createShift, editShift, changeResourceColor, getResourceColor } from './actions';
+import { getShift, createShift, editShift, changeResourceColor, getResourceColor } from './actions';
 import ShiftPopover from './ShiftPopover';
 import { message } from 'antd';
 import Calendar from './Calendar';
 
 //#region
 const Container = styled.div`
-  width: 100%;
+  flex: 1;
   margin: 10px;
   .fc-license-message {
     display: none;
@@ -148,7 +148,6 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
 });
 
 const mapDispatchToProps = {
-  changeDate,
   getShift,
   createShift,
   editShift,

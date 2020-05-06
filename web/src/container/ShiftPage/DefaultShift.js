@@ -17,15 +17,18 @@ const { RangePicker } = TimePicker;
 
 //#region
 const Container = styled.div`
-  width: 300px;
-  margin: 10px;
+  width: 260px;
   display: flex;
   flex-direction: column;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.05);
+  padding: 29px 20px;
 
   & > :first-child {
     display: flex;
     align-items: baseline;
+    font-size: 18px;
+    font-weight: 600;
+
     & > :first-child {
       margin-right: 10px;
     }
@@ -40,6 +43,11 @@ const ShiftsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   overflow-y: scroll;
+  margin-top: 18px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
 `;
 
 const CardContent = styled.span`
@@ -94,9 +102,9 @@ const ButtonContainer = styled.div`
 const gridStyle = {
   cursor: 'pointer',
   width: '100%',
-  margin: '10px 5px',
+  margin: '8px 1px',
   borderRadius: '8px',
-  padding: '9px 15px',
+  padding: '15px 10px',
 };
 
 function DefaultShift(props) {
@@ -148,7 +156,7 @@ function DefaultShift(props) {
   return (
     <Container>
       <div>
-        <h2>班別</h2>
+        <span>班別</span>
         <Popover
           trigger="click"
           content={

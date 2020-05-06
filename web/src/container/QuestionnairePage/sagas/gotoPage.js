@@ -8,6 +8,8 @@ export function* gotoPage() {
       const page = data.page;
       yield delay(0);
       yield put({ type: GOTO_PAGE_DELAY, page });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

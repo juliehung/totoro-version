@@ -31,12 +31,6 @@ const Container = styled.div`
 //#endregion
 
 class PrintModal extends React.Component {
-  state = {
-    selectedDate: moment(),
-    appointments: [],
-    printButtonDisable: true,
-  };
-
   async componentDidUpdate(prevProps) {
     if (this.props.visible && !prevProps.visible) {
       this.props.changePrintDate(moment());
@@ -99,7 +93,7 @@ class PrintModal extends React.Component {
             ref={el => (this.PrintAppListRef = el)}
             appointmentList={this.props.appointmentList}
             doctorList={this.props.doctorList}
-            date={this.state.selectedDate}
+            date={this.props.date}
             clinicName={this.props.clinicName}
           />
         </div>

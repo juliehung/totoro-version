@@ -112,10 +112,7 @@ export default class PrintAppList extends React.Component {
             <span>預約表</span>
             <span>
               日期:
-              {moment(this.props.date)
-                .add(-1911, 'y')
-                .format('YYYY-MM-DD')
-                .replace(/^0+/, '')}
+              {moment(this.props.date).add(-1911, 'y').format('YYYY-MM-DD').replace(/^0+/, '')}
             </span>
           </div>
           <Table
@@ -146,10 +143,7 @@ export default class PrintAppList extends React.Component {
                   <span>預約表</span>
                   <span>
                     日期:
-                    {moment(this.props.date)
-                      .add(-1911, 'y')
-                      .format('YYYY-MM-DD')
-                      .replace(/^0+/, '')}
+                    {moment(this.props.date).add(-1911, 'y').format('YYYY-MM-DD').replace(/^0+/, '')}
                   </span>
                 </div>
                 <Table

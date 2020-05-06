@@ -1,14 +1,6 @@
-import {
-  GET_APPOINTMENTS
-} from '../constant';
-import {
-  call,
-  take,
-  put
-} from 'redux-saga/effects';
-import {
-  getAppointmentsSuccess
-} from '../action';
+import { GET_APPOINTMENTS } from '../constant';
+import { call, take, put } from 'redux-saga/effects';
+import { getAppointmentsSuccess } from '../action';
 import Appointment from '../../../models/appointment';
 
 export function* getAppointments() {

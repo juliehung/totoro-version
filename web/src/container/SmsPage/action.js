@@ -45,11 +45,11 @@ export function createEvent() {
 }
 
 export function editTitle(e) {
-  return { type: EDIT_TITLE, value: e.target.value};
+  return { type: EDIT_TITLE, value: e.target.value };
 }
 
 export function editTemplate(e) {
-  return { type: EDIT_TEMPLATE, value: e.target.value};
+  return { type: EDIT_TEMPLATE, value: e.target.value };
 }
 
 export function filterEvents(key) {
@@ -65,7 +65,7 @@ export function saveEvent(event) {
 }
 
 export function saveEventSuccess(result, identity) {
-  return { type: SAVE_EVENT_SUCCESS, payload: {result, identity} };
+  return { type: SAVE_EVENT_SUCCESS, payload: { result, identity } };
 }
 
 export function executeEvent(event) {
@@ -88,7 +88,6 @@ export function saveEventAndSendImmediately(event) {
   return { type: SAVE_EVENT_AND_SEND_IMMEDIATELY, event };
 }
 
-
 export function getAppointments(range) {
   return { type: GET_APPOINTMENTS, range };
 }
@@ -97,35 +96,35 @@ export function getAppointmentsSuccess(appointments) {
   return { type: GET_APPOINTMENTS_SUCCESS, appointments };
 }
 
-export function toggleAppointmentModal(){
+export function toggleAppointmentModal() {
   return { type: TOGGLE_APPOINTMENT_MODAL };
 }
 
-export function addContactAppointments(appointments){
+export function addContactAppointments(appointments) {
   return { type: ADD_CONTACT_APPOINTMENTS, appointments };
 }
 
-export function unselectAppointment(key){
+export function unselectAppointment(key) {
   return { type: UNSELECT_APPOINTMENT, key };
 }
 
-export function togglePreviewingModal(){
+export function togglePreviewingModal() {
   return { type: TOGGLE_PREVIEWING_MODAL };
 }
 
-export function getClinicSettings(){
+export function getClinicSettings() {
   return { type: GET_CLINIC_SETTINGS };
 }
 
-export function getClinicSettingsSuccess(settings){
+export function getClinicSettingsSuccess(settings) {
   return { type: GET_CLINIC_SETTINGS_SUCCESS, settings };
 }
 
-export function getClinicRemaining(){
+export function getClinicRemaining() {
   return { type: GET_CLINIC_REMAINING };
 }
 
-export function getClinicRemainingSuccess(remaining){
+export function getClinicRemainingSuccess(remaining) {
   return { type: GET_CLINIC_REMAINING_SUCCESS, remaining };
 }
 

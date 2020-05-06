@@ -18,9 +18,7 @@ export default function convertCalendarToEvent(calendarEvents) {
         try {
           const cronObj = interval.next();
           const start = cronObj.value.toDate();
-          const end = moment(cronObj.value.toDate())
-            .add(e.duration, 'm')
-            .toDate();
+          const end = moment(cronObj.value.toDate()).add(e.duration, 'm').toDate();
           const title = e.doctor ? e.doctor.user.firstName : '診所休假';
           const resourceId = e.doctor ? e.doctor.user.id : null;
 

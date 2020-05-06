@@ -1,25 +1,27 @@
 import styled from 'styled-components';
 import { Button, Modal, Tag } from 'antd';
-import { Gray700, Gray100 } from '../../utils/colors'
+import { Gray700, Gray100 } from '../../utils/colors';
 
 export const StyledButton = styled(Button)`
   padding: 0 16px;
-  &.ant-btn:active, &.ant-btn.active {
+  &.ant-btn:active,
+  &.ant-btn.active {
     background: transparent;
   }
-
 
   &.ant-btn-primary {
     background-color: #3266ff;
     border-color: #3266ff;
   }
 
-  &.ant-btn-primary:hover, &.ant-btn-primary:focus, &.ant-btn-primary:active  {
+  &.ant-btn-primary:hover,
+  &.ant-btn-primary:focus,
+  &.ant-btn-primary:active {
     background-color: #3266ff;
     border-color: transparent;
   }
 
-  &.ant-btn-primary:disabled  {
+  &.ant-btn-primary:disabled {
     color: ${Gray700};
     border: ${Gray700} 1px solid;
     background: ${Gray100};
@@ -30,13 +32,12 @@ export const StyledButton = styled(Button)`
     }
   }
 
-
-
   &.ant-btn-link {
     color: #3266ff;
   }
 
-  &.ant-btn-link:hover, &.ant-btn-link:focus {
+  &.ant-btn-link:hover,
+  &.ant-btn-link:focus {
     color: #3266ff;
     & > svg:hover {
       fill: #3266ff;
@@ -76,8 +77,7 @@ export const StyledModal = styled(Modal)`
     right: -10px;
     background: #ffffff;
     border-radius: 8px;
-    box-shadow: 0 5px 20px 0 rgba(0,0,0,.1);
-
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
   }
   & .ant-modal-close-icon {
     display: grid;
@@ -90,7 +90,6 @@ export const StyledModal = styled(Modal)`
   }
 `;
 
-
 export const StyledTag = styled(Tag)`
   &.ant-tag {
     color: #8f9bb3;
@@ -99,7 +98,23 @@ export const StyledTag = styled(Tag)`
     font-weight: 600;
     padding: 0 16px;
     height: 24px;
-    background: rgba(143, 155, 179,.08);
+    background: rgba(143, 155, 179, 0.08);
     margin: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & button {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    & svg {
+      width: 16px;
+      height: 16px;
+      margin: 2.5px 0;
+      & path {
+        fill: #8f9bb3;
+      }
+    }
   }
 `;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { RedEnvelopeOutlined } from '@ant-design/icons';
+import EmailIcon from '../../images/email.svg';
 
 const RootContainer = styled.div`
   display: flex;
@@ -17,11 +17,11 @@ const BoneContainer = styled.div`
   justify-content: center;
 `;
 
-function EventCardEmpty(props) {
-  return ( 
+function EventCardEmpty() {
+  return (
     <RootContainer>
       <BoneContainer>
-        <RedEnvelopeOutlined style={{ fontSize: '100px' }}/>
+        <img src={EmailIcon} alt="empty icon" />
       </BoneContainer>
     </RootContainer>
   );

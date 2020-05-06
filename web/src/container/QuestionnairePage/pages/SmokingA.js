@@ -7,6 +7,8 @@ import ConfirmButton from './ConfirmButton';
 import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
 
+export const checkSmokingAmountValidation = smokingAmount => !smokingAmount || smokingAmount < 0;
+
 function SmokingA(props) {
   const onInputChange = e => {
     props.changeSmokingAmount(e.target.value);
@@ -36,7 +38,7 @@ function SmokingA(props) {
         nextPage={() => {
           props.gotoPage(18);
         }}
-        disabled={!props.smokingAmount || props.smokingAmount.length === 0}
+        disabled={checkSmokingAmountValidation(props.smokingAmount)}
       />
       <PageControllContainer
         pre={() => {

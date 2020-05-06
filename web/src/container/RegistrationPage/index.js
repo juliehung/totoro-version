@@ -138,7 +138,9 @@ function RegistrationPage(props) {
       let sessionSelectedDate = null;
       try {
         sessionSelectedDate = JSON.parse(sessionStorage.getItem('selectedDate'));
-      } catch (e) {}
+      } catch (e) {
+        console.log(e);
+      }
       const date = sessionSelectedDate ? moment(sessionSelectedDate) : moment();
 
       if (arrival && !arrival.startOf('day').isSame(date.startOf('day'))) {

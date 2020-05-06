@@ -9,8 +9,8 @@ const remaining_requestUrl = `${apiUrl}/${REMAINING_LOCATION}`;
 
 export default class SmsEvent {
   static get = async () => {
-    return await request(requestUrl)
-  }
+    return await request(requestUrl);
+  };
 
   // POST/UPDATE
   static post = async event => {
@@ -18,9 +18,10 @@ export default class SmsEvent {
       id: event.id,
       clinic: event.clinicName,
       title: event.title,
+      status: event.status,
       metadata: {
         template: event.metadata.template,
-        selectedAppointments: event.metadata.selectedAppointments
+        selectedAppointments: event.metadata.selectedAppointments,
       },
       sms: event.sms.map((mes, i) => {
         var newM = {
@@ -29,13 +30,13 @@ export default class SmsEvent {
           metadata: {
             patientId: mes.metadata.patientId,
             patientName: mes.metadata.patientName,
-            appointmentDate: event.metadata.selectedAppointments[i].expectedArrivalTime
+            appointmentDate: event.metadata.selectedAppointments[i].expectedArrivalTime,
           },
-        }
+        };
 
-        return newM
-      })
-    }
+        return newM;
+      }),
+    };
 
     const options = {
       headers: {
@@ -51,7 +52,7 @@ export default class SmsEvent {
   // delete
   static delete = async id => {
     const options = {
-      method: 'DELETE'
+      method: 'DELETE',
     };
     const result = await requestNoParse(`${requestUrl}/${id}`, options);
     return result.status === 200;
@@ -60,19 +61,19 @@ export default class SmsEvent {
   // send
   static execute = async id => {
     const options = {
-      method: 'POST'
+      method: 'POST',
     };
     const result = await requestNoParse(`${requestUrl}/${id}/execute`, options);
     return result;
   };
 
   // get remaining
-  static getRemaining = async id => {
+  static getRemaining = async () => {
     const options = {
-      method: 'GET'
+      method: 'GET',
     };
 
     const result = await request(remaining_requestUrl, options);
-    return result
+    return result;
   };
 }

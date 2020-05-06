@@ -1,6 +1,19 @@
-import { GET_EVENTS, SAVE_EVENT, SAVE_EVENT_AND_SEND_IMMEDIATELY, GET_CLINIC_REMAINING, EXECUTE_EVENT, DELETE_EVENT } from '../constant';
+import {
+  GET_EVENTS,
+  SAVE_EVENT,
+  SAVE_EVENT_AND_SEND_IMMEDIATELY,
+  GET_CLINIC_REMAINING,
+  EXECUTE_EVENT,
+  DELETE_EVENT,
+} from '../constant';
 import { call, take, put } from 'redux-saga/effects';
-import { getEventsSuccess, getClinicRemainingSuccess, executeEventFailed, saveEventSuccess, deleteEventSuccess } from '../action';
+import {
+  getEventsSuccess,
+  getClinicRemainingSuccess,
+  executeEventFailed,
+  saveEventSuccess,
+  deleteEventSuccess,
+} from '../action';
 import SmsEvent from '../../../models/smsEvent';
 
 export function* getEvents() {
@@ -21,10 +34,10 @@ export function* saveEvent() {
   while (true) {
     try {
       // 1. create
-      const action = yield take(SAVE_EVENT)
-      const identity = action.event.id !== null ? action.event.id : action.event.tempId
-      const result = yield call(SmsEvent.post, action.event)
-      yield put(saveEventSuccess(result, identity))
+      const action = yield take(SAVE_EVENT);
+      const identity = action.event.id !== null ? action.event.id : action.event.tempId;
+      const result = yield call(SmsEvent.post, action.event);
+      yield put(saveEventSuccess(result, identity));
     } catch (err) {
       //  ignore
       console.log(err);
@@ -44,14 +57,13 @@ export function* executeEvent() {
         const remaining = yield call(SmsEvent.getRemaining);
         yield put(getClinicRemainingSuccess(remaining));
         const events = yield call(SmsEvent.get);
-        yield put(getEventsSuccess(events))
+        yield put(getEventsSuccess(events));
       }
     } catch {
-      yield put(executeEventFailed())
+      yield put(executeEventFailed());
     }
   }
 }
-
 
 // future support
 export function* deleteEvent() {
@@ -60,13 +72,12 @@ export function* deleteEvent() {
       const action = yield take(DELETE_EVENT);
       const isSucess = yield call(SmsEvent.delete, action.id);
       // 2. reload
-      if (isSucess) yield put(deleteEventSuccess(action.id))
+      if (isSucess) yield put(deleteEventSuccess(action.id));
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   }
 }
-
 
 // current support
 export function* saveEventAndSendImmediately() {
@@ -82,10 +93,10 @@ export function* saveEventAndSendImmediately() {
         const remaining = yield call(SmsEvent.getRemaining);
         yield put(getClinicRemainingSuccess(remaining));
         const events = yield call(SmsEvent.get);
-        yield put(getEventsSuccess(events))
+        yield put(getEventsSuccess(events));
       }
     } catch {
-      yield put(executeEventFailed())
+      yield put(executeEventFailed());
     }
   }
 }

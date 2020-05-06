@@ -107,9 +107,12 @@ const TitleContainer = styled.div`
     height: 24px;
     cursor: pointer;
   }
-  & > span {
-    margin-right: 20px;
+  & > :nth-child(1),
+  & > :nth-child(2),
+  & > :nth-child(3) {
+    margin-right: 16px;
   }
+
   @media (max-width: 1180px) {
     display: none;
   }
@@ -176,6 +179,39 @@ const CalendarContainer = styled.div`
   .fc-time-grid .fc-slats td {
     height: 3em;
     border-bottom: 0;
+  }
+
+  .fc-unthemed thead,
+  .fc-unthemed tbody {
+    /* border-color: red !important; */
+  }
+
+  .fc-axis.fc-time {
+    color: #8f9bb3;
+  }
+
+  .fc-day-header.fc-widget-header {
+    & > a {
+      color: #222b45;
+      font-weight: 600;
+    }
+  }
+
+  .fc-widget-header,
+  .fc-widget-content {
+    border: 1px solid #d7e3f1;
+  }
+
+  .fc-bgevent {
+    color: rgba(0, 0, 0, 0.1);
+    background-image: repeating-linear-gradient(
+      45deg,
+      currentColor 0,
+      currentColor 1px,
+      transparent 0,
+      transparent 50%
+    );
+    background-size: 20px 20px;
   }
 `;
 //#endregion
@@ -494,7 +530,7 @@ class AppCalendar extends React.Component {
               return this.props.selectedDoctors.includes(d.id.toString());
             }
           })
-          .map(d => ({ id: d.id, title: d.name }));
+          .map(d => ({ id: d.id, title: d.name, avatar: d.avatar }));
 
     return (
       <Container>
@@ -542,8 +578,6 @@ class AppCalendar extends React.Component {
               momentPlugin,
             ]}
             header={false}
-            titleRangeSeparator=" ~ "
-            titleFormat={{ year: 'numeric', month: 'numeric', day: 'numeric' }}
             eventTimeFormat={{
               hour: '2-digit',
               minute: '2-digit',

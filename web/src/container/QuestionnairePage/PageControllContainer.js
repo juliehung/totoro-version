@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { nextPage, prevPage, gotoPage } from './actions';
 import { connect } from 'react-redux';
+import { checkBirthValidation } from './pages/Birth';
+import { checkSmokingAmountValidation } from './pages/SmokingA';
+import { checkPregnantDateValidation } from './pages/PregnantA';
+import { checkDrugValidation } from './pages/DoDrugA';
 
 const Container = styled.div`
   display: flex;
@@ -38,7 +42,16 @@ function PageControllContainer(props) {
   const [disable, setDisable] = useState(false);
   const { patient } = props;
   useEffect(() => {
-    setDisable(!patient.name || patient.name.length === 0 || !patient.phone || patient.phone.length === 0);
+    setDisable(
+      !patient.name ||
+        patient.name.length === 0 ||
+        !patient.phone ||
+        patient.phone.length === 0 ||
+        checkBirthValidation(patient.birth) ||
+        (patient.smoking === 'A' && checkSmokingAmountValidation(patient.smokingAmount)) ||
+        (patient.pregnant === 'A' && checkPregnantDateValidation(patient.pregnantDate)) ||
+        (patient.doDrug === 'A' && checkDrugValidation(patient.drug)),
+    );
   }, [disable, setDisable, patient]);
 
   return (

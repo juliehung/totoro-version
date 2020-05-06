@@ -18,6 +18,9 @@ export const StyledInput = styled(Input)`
 
 //#endregion
 
+export const checkBirthValidation = birth =>
+  !birth || moment().isBefore(moment(birth)) || moment('1911-01-01').isAfter(moment(birth));
+
 function Birth(props) {
   const onChange = e => {
     props.changeBirth(e.target.value);
@@ -35,12 +38,9 @@ function Birth(props) {
         value={props.birth}
         onChange={onChange}
         max={moment().format('YYYY-MM-DD')}
-        min={moment()
-          .add(-150, 'year')
-          .format('YYYY-MM-DD')}
       />
       <br />
-      <ConfirmButton nextPage={props.nextPage} disabled={!props.birth} />
+      <ConfirmButton nextPage={props.nextPage} disabled={checkBirthValidation(props.birth)} />
       <PageControllContainer />
     </Container>
   );

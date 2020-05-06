@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Button, Calendar, Row, Col, Select, Divider } from 'antd';
+import { Button, Calendar, Row, Col, Select, Divider, message } from 'antd';
 import {
   changeCalDate,
   changePrintModalVisible,
@@ -22,6 +22,10 @@ import { putSettings } from '../Home/actions';
 import { GAevent } from '../../ga';
 import { appointmentPage } from './';
 import FloatingActionButton from './FloatingActionButton';
+
+const maxSlotDuration = 30;
+const minSlotDuration = 10;
+const slotDurationStep = 5;
 
 //#region
 const Container = styled.div`
@@ -56,6 +60,7 @@ const ItemContainer = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid #edf1f7;
   padding: 0 22px;
+  font-weight: bold;
   & img {
     width: 20px;
   }
@@ -68,10 +73,16 @@ const ItemContainer = styled.div`
     background: transparent;
     cursor: pointer;
     color: #3366ff;
+    font-weight: bold;
   }
 
   & button:active {
     color: red;
+  }
+
+  & button:disabled {
+    color: #8f9bb3;
+    cursor: not-allowed;
   }
 
   & > :nth-child(1) {
@@ -124,10 +135,26 @@ const StyledSelect = styled(Select)`
 //#endregion
 
 function AppRight(props) {
-  const { calendarDate, changeCalDate, selectedDoctors, settings, showShiftCalc, putSettings } = props;
+  const {
+    calendarDate,
+    changeCalDate,
+    selectedDoctors,
+    settings,
+    showShiftCalc,
+    putSettings,
+    putSettingSuccess,
+  } = props;
 
   const [expand, setExpand] = useState(false);
   const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (putSettingSuccess && showShiftCalc) {
+      message.success('班表啟用成功!');
+    } else if (putSettingSuccess && !showShiftCalc) {
+      message.warning('班表已關閉。');
+    }
+  }, [putSettingSuccess, showShiftCalc]);
 
   const handleDoctorChange = d => {
     if (props.selectedDoctors.includes('dayOff') !== d.includes('dayOff')) {
@@ -160,23 +187,20 @@ function AppRight(props) {
   };
 
   const onSlotDurationChange = value => {
-    const max = 30;
-    const min = 10;
-    const step = 5;
     const title = document.querySelector('.fc-center');
     if (title) {
       simulateMouseClick(title);
       if (value) {
-        if (props.slotDuration + step > max) {
-          props.changeCalSlotDuration(max);
+        if (props.slotDuration + slotDurationStep > maxSlotDuration) {
+          props.changeCalSlotDuration(maxSlotDuration);
         } else {
-          props.changeCalSlotDuration(props.slotDuration + step);
+          props.changeCalSlotDuration(props.slotDuration + slotDurationStep);
         }
       } else {
-        if (props.slotDuration - step < min) {
-          props.changeCalSlotDuration(min);
+        if (props.slotDuration - slotDurationStep < minSlotDuration) {
+          props.changeCalSlotDuration(minSlotDuration);
         } else {
-          props.changeCalSlotDuration(props.slotDuration - step);
+          props.changeCalSlotDuration(props.slotDuration - slotDurationStep);
         }
       }
     }
@@ -286,6 +310,7 @@ function AppRight(props) {
         </div>
         <div>
           <button
+            disabled={props.slotDuration >= maxSlotDuration}
             onClick={() => {
               onSlotDurationChange(true);
               GAevent(appointmentPage, 'Smaller slot size');
@@ -295,6 +320,7 @@ function AppRight(props) {
           </button>
           <Divider type="vertical" />
           <button
+            disabled={props.slotDuration <= minSlotDuration}
             onClick={() => {
               onSlotDurationChange(false);
               GAevent(appointmentPage, 'Bigger slot size');
@@ -308,7 +334,7 @@ function AppRight(props) {
         <div>
           <div>
             <img src={SettingsIcon} alt="排班" />
-            <StatusIncdicator on={showShiftCalc} />
+            <StatusIncdicator on={showShiftCalc ? 1 : 0} />
           </div>
           <span>排班</span>
         </div>
@@ -362,6 +388,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   generalSetting: homePageReducer.settings.generalSetting,
   settings: homePageReducer.settings.settings,
   showShiftCalc: homePageReducer.settings.generalSetting && homePageReducer.settings.generalSetting.showShift,
+  putSettingSuccess: homePageReducer.settings.putSuccess,
 });
 
 const mapDispatchToProps = {
