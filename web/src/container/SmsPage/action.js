@@ -21,6 +21,7 @@ import {
   GET_CLINIC_REMAINING,
   GET_CLINIC_REMAINING_SUCCESS,
   EXECUTE_EVENT,
+  EXECUTE_EVENT_SUCCESS,
   EXECUTE_EVENT_FAILED,
   DELETE_EVENT,
   DELETE_EVENT_SUCCESS,
@@ -71,6 +72,10 @@ export function saveEventSuccess(result, identity) {
 
 export function executeEvent(event) {
   return { type: EXECUTE_EVENT, event };
+}
+
+export function executeEventSuccess() {
+  return { type: EXECUTE_EVENT_SUCCESS };
 }
 
 export function executeEventFailed() {
