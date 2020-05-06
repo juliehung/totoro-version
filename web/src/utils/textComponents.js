@@ -21,6 +21,16 @@ export const Caption = styled(NoMarginText)`
   color: ${Gray600};
 `;
 
+export const P1 = styled(NoMarginText)`
+  font-size: 15px;
+`;
+
 export const P2 = styled(NoMarginText)`
   font-size: 13px;
+`;
+
+export const Small = styled(NoMarginText)`
+  font-size: 10px;
+  font-weight: 600;
+  color: ${Gray600};
 `;
