@@ -30,7 +30,10 @@ buildByGradle:
 testRegular:
     stage: test
     only:
-        - merge_requests
+        refs:
+            - merge_requests
+        changes:
+            - src/**/*
     image: openjdk:8-jdk-stretch
     services:
         - postgres:10.4
@@ -48,7 +51,10 @@ testRegular:
 testFTP:
     stage: test
     only:
-        - merge_requests
+        refs:
+            - merge_requests
+        changes:
+            - src/**/*
     image: openjdk:8-jdk-stretch
     services:
         - postgres:10.4
