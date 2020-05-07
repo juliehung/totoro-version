@@ -73,7 +73,9 @@ const NoPageTable = styled(Table)`
   }
 
   & .ant-table-tbody {
-    height: ${props => (props.dataSource.length === 0 ? props.minHeight + 'px' : null)};
+    & .ant-table-placeholder {
+      height: ${props => (props.dataSource.length === 0 ? props.minHeight + 'px' : null)};
+    }
   }
 `;
 
