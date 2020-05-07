@@ -87,7 +87,7 @@ export function* saveEventAndSendImmediately() {
       // 1. create
       const action = yield take(SAVE_EVENT_AND_SEND_IMMEDIATELY);
       const createdResult = yield call(SmsEvent.post, action.event);
-      
+
       // 2. send
       const executedResult = yield call(SmsEvent.execute, createdResult.id);
 
@@ -100,7 +100,7 @@ export function* saveEventAndSendImmediately() {
         yield put(getClinicRemainingSuccess(remaining));
         const events = yield call(SmsEvent.get);
         yield put(getEventsSuccess(events));
-      // or failed
+        // or failed
       } else {
         throw new Error();
       }

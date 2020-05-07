@@ -122,9 +122,7 @@ const Styled2MediumButton = styled(StyledMediumButton)`
   }
 `;
 
-
 function EventPreviewingModal(props) {
-
   const { togglePreviewingModal, saveEventAndSendImmediately, editingEvent, visible, isSentFailed, remaining } = props;
 
   const handleOk = () => {
@@ -138,12 +136,12 @@ function EventPreviewingModal(props) {
 
   useEffect(() => {
     if (isSentFailed === null) return;
-    if (isSentFailed) message.error({ content: '簡訊發送出現問題，請重新嘗試。' })
-    else message.success({ content: '簡訊已發送完成！' })
+    if (isSentFailed) message.error({ content: '簡訊發送出現問題，請重新嘗試。' });
+    else message.success({ content: '簡訊已發送完成！' });
   }, [isSentFailed]);
 
-  const total = editingEvent.sms.map(m => Math.ceil(m.content.length / 70)).reduce((a, b) => a + b, 0)
-  const isEnableSend = total <= remaining
+  const total = editingEvent.sms.map(m => Math.ceil(m.content.length / 70)).reduce((a, b) => a + b, 0);
+  const isEnableSend = total <= remaining;
 
   return (
     <StyledModal
@@ -155,7 +153,9 @@ function EventPreviewingModal(props) {
       onCancel={handleClose}
     >
       <HeaderContainer>
-        <Header>{isEnableSend ? `確認您將傳送 ${total} 則簡訊？`: `不足寄送 ${total} 封簡訊 ( 帳戶餘額 ${remaining} )`}</Header>
+        <Header>
+          {isEnableSend ? `確認您將傳送 ${total} 則簡訊？` : `不足寄送 ${total} 封簡訊 ( 帳戶餘額 ${remaining} )`}
+        </Header>
       </HeaderContainer>
       <FieldContainer>
         <Title>範本</Title>
@@ -188,9 +188,8 @@ function EventPreviewingModal(props) {
             type="primary"
             shape="round"
             onClick={() =>
-              window.open(
-                'https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b',
-              )}
+              window.open('https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b')
+            }
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fill: 'white' }}>
               <CreditCardFill />
@@ -225,7 +224,7 @@ const mapStateToProps = ({ smsPageReducer }) => {
     visible: smsPageReducer.event.visible,
     isSentFailed: smsPageReducer.event.isSentFailed,
     remaining: smsPageReducer.event.remaining,
-};
+  };
 };
 
 const mapDispatchToProps = { togglePreviewingModal, saveEventAndSendImmediately };
