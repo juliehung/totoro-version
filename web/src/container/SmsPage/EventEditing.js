@@ -12,6 +12,7 @@ import {
   togglePreviewingModal,
   saveEvent,
   deleteEvent,
+  setCaretPosition,
 } from './action';
 import AppointmentsModal from './AppointmentsModal';
 import EventPreviewingModal from './EventPreviewingModal';
@@ -155,6 +156,7 @@ function EventEditing(props) {
     togglePreviewingModal,
     saveEvent,
     deleteEvent,
+    setCaretPosition,
     isWrongNumberLength,
   } = props;
 
@@ -220,17 +222,19 @@ function EventEditing(props) {
                         </div>
                       }
                     >
-                      <StyledTag
-                      >
+                      <StyledTag>
                         {`${app.patientName}(${app.phone})`}
-                        {<Button 
-                          type="link"  
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            unselectAppointment(app)
-                          }}>
-                          <Close />
-                        </Button>}
+                        {
+                          <Button
+                            type="link"
+                            onClick={e => {
+                              e.stopPropagation();
+                              unselectAppointment(app);
+                            }}
+                          >
+                            <Close />
+                          </Button>
+                        }
                       </StyledTag>
                     </Popover>
                   );
@@ -245,6 +249,8 @@ function EventEditing(props) {
             placeholder="填寫簡訊寄送內容，至多 70 字"
             style={{ background: '#f8fafb' }}
             autoSize={{ minRows: 6 }}
+            onClick={e => setCaretPosition(e.target.selectionStart, 'click')}
+            onKeyDown={e => setCaretPosition(e.target.selectionStart, 'keydown')}
             onChange={editTemplate}
             value={editingEvent.metadata?.template}
           />
@@ -299,6 +305,7 @@ const mapDispatchToProps = {
   togglePreviewingModal,
   saveEvent,
   deleteEvent,
+  setCaretPosition,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventEditing);

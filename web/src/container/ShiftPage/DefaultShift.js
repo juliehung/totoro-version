@@ -8,7 +8,7 @@ import {
   createDefaultShift,
   deleteDefaultShift,
 } from './actions';
-import { Card, Button, TimePicker, Input, Popover, message } from 'antd';
+import { Button, TimePicker, Input, Popover, message } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 import { Draggable } from '@fullcalendar/interaction';
 import { convertRangeToRangePickerValue } from './utils/convertRangeToRangePickerValue';
@@ -22,6 +22,11 @@ const Container = styled.div`
   flex-direction: column;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.05);
   padding: 29px 20px;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
 
   & > :first-child {
     display: flex;
@@ -42,19 +47,29 @@ const Container = styled.div`
 const ShiftsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  overflow-y: scroll;
   margin-top: 18px;
-  &::-webkit-scrollbar {
-    display: none;
+`;
+
+const CardContainer = styled.div`
+  font-size: 15px;
+  width: 220px;
+  padding: 10px 10px;
+  margin: 8px auto;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: solid 1px #c5cee0;
+  transition: all 300ms ease;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 0 8px 25px -8px rgba(255, 38, 68, 0.5);
+    border: solid 1px #fd444d;
   }
-  scrollbar-width: none;
 `;
 
 const CardContent = styled.span`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  font-size: 14px;
   color: rgba(0, 0, 0, 0.45);
   & > div:first-child {
     display: flex;
@@ -79,7 +94,7 @@ const IconContainer = styled.div`
   opacity: 0;
   transition: all ease-in-out 400ms;
   margin-left: 15px;
-  ${CardContent}:hover & {
+  ${CardContainer}:hover & {
     opacity: 1;
   }
 `;
@@ -98,14 +113,6 @@ const ButtonContainer = styled.div`
 `;
 
 //#endregion
-
-const gridStyle = {
-  cursor: 'pointer',
-  width: '100%',
-  margin: '8px 1px',
-  borderRadius: '8px',
-  padding: '15px 10px',
-};
 
 function DefaultShift(props) {
   const simulateMouseClick = element => {
@@ -194,8 +201,7 @@ function DefaultShift(props) {
       </div>
       <ShiftsContainer id={'external-events'}>
         {props.defaultShift.map(s => (
-          <Card.Grid
-            style={gridStyle}
+          <CardContainer
             key={s.origin.id}
             className={'external-event'}
             data-start={s.origin.range.start}
@@ -219,7 +225,7 @@ function DefaultShift(props) {
                 />
               </IconContainer>
             </CardContent>
-          </Card.Grid>
+          </CardContainer>
         ))}
       </ShiftsContainer>
     </Container>

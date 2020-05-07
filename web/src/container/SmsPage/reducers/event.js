@@ -15,10 +15,12 @@ import {
   SAVE_EVENT,
   EXECUTE_EVENT,
   SAVE_EVENT_AND_SEND_IMMEDIATELY,
+  EXECUTE_EVENT_SUCCESS,
   EXECUTE_EVENT_FAILED,
   DELETE_EVENT,
   SAVE_EVENT_SUCCESS,
   DELETE_EVENT_SUCCESS,
+  SET_CARET_POSITION,
 } from '../constant';
 
 import produce from 'immer';
@@ -39,8 +41,10 @@ const initState = {
   remaining: 0,
   isRemainingLoaded: false,
   isWrongNumberLength: false,
-  isChargeFailed: false,
+  isSentFailed: null,
   currentKey: 'ALL',
+  caretPosition: -1,
+  caretChangedBy: 'keydown'
 };
 
 const initialState = {
@@ -58,10 +62,18 @@ const event = (state = initialState, action) =>
         draft.isLoaded = false;
         break;
       case SAVE_EVENT:
-      case DELETE_EVENT:
-      case EXECUTE_EVENT:
-      case SAVE_EVENT_AND_SEND_IMMEDIATELY:
         draft.isLoaded = false;
+        break;
+      case DELETE_EVENT:
+        draft.isLoaded = false;
+        break;
+      case EXECUTE_EVENT:
+        draft.isLoaded = false;
+        break;
+        case SAVE_EVENT_AND_SEND_IMMEDIATELY:
+        draft.isLoaded = false;
+        // init for checking
+        draft.isSentFailed = null;
         break;
 
       case GET_EVENTS_SUCCESS: {
@@ -93,13 +105,13 @@ const event = (state = initialState, action) =>
         const snapShot = [...state.staticEvents];
         const identity = action.payload.identity;
         var toBePlaced = action.payload.result;
-        // stilling editing ?
-        if (identity === state.editingEvent.id || identity === state.editingEvent.tempId) {
-          toBePlaced = { ...state.editingEvent, ...toBePlaced };
-        }
         const replaceIdx = snapShot.indexOf(
           snapShot.find(ev => (ev.id !== null ? identity === ev.id : identity === ev.tempId)),
         );
+        // stilling editing ? merge current
+        if (identity === state.selectedEventId) {
+          toBePlaced = { ...state.editingEvent, ...toBePlaced };
+        }
         snapShot[replaceIdx] = toBePlaced;
         draft.staticEvents = snapShot;
         draft.events =
@@ -109,7 +121,9 @@ const event = (state = initialState, action) =>
                 var sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
                 return sta === state.currentKey.toLowerCase();
               });
-        if (draft.selectedEventId === toBePlaced.id) {
+
+        // still editing
+        if (identity === state.selectedEventId) {
           draft.selectedEvent = draft.staticEvents[replaceIdx];
           draft.selectedEventId = toBePlaced.id;
           draft.editingEvent = toBePlaced;
@@ -139,8 +153,16 @@ const event = (state = initialState, action) =>
         break;
       }
 
+      case EXECUTE_EVENT_SUCCESS: {
+        draft.isSentFailed = false;
+        draft.visible = false;
+        draft.isLoaded = true;
+        break;
+      }
+
       case EXECUTE_EVENT_FAILED: {
-        draft.isChargeFailed = true;
+        draft.isSentFailed = true;
+        draft.visible = false;
         draft.isLoaded = true;
         break;
       }
@@ -185,6 +207,7 @@ const event = (state = initialState, action) =>
           draft.selectedEventId = selection.id !== null ? selection.id : selection.tempId;
           draft.editingEvent = selection.isEdit ? selection : null;
           sessionStorage.setItem('eventKey', draft.selectedEventId);
+          draft.caretPosition = -1;
         }
         break;
       }
@@ -237,6 +260,8 @@ const event = (state = initialState, action) =>
         draft.selectedEvent = newEvent;
         draft.selectedEventId = newEvent.tempId;
         draft.editingEvent = newEvent;
+        // if we don't set here, if send a new event it'll get the previous editing item.
+        sessionStorage.setItem('eventKey', draft.selectedEventId);
         break;
       }
 
@@ -250,8 +275,15 @@ const event = (state = initialState, action) =>
         break;
       case ADD_TAG:
         var adding = ' {{' + action.value + '}}';
-        draft.editingEvent.metadata.template += adding;
-        draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
+        const currentTemplate = state.editingEvent.metadata.template;
+        if (draft.caretPosition !== -1) {
+          if (draft.caretChangedBy === 'keydown') draft.caretPosition += 1
+          draft.editingEvent.metadata.template =  currentTemplate.slice(0, draft.caretPosition) + adding + currentTemplate.slice(draft.caretPosition)
+          // moving caret position to adding-end-position
+          draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
+          draft.caretPosition += adding.length;
+          draft.caretChangedBy = null;
+        }
         break;
       case ADD_CONTACT_APPOINTMENTS:
         const allApps = [...action.appointments, ...state.editingEvent.metadata.selectedAppointments];
@@ -272,8 +304,6 @@ const event = (state = initialState, action) =>
 
       case TOGGLE_PREVIEWING_MODAL:
         draft.visible = !state.visible;
-        // just init
-        draft.isChargeFailed = false;
         break;
 
       case FILTER_EVENTS: {
@@ -304,7 +334,10 @@ const event = (state = initialState, action) =>
               });
         break;
       }
-
+      case SET_CARET_POSITION:
+        draft.caretPosition = action.payload.idx
+        draft.caretChangedBy = action.payload.by
+        break
       default:
         break;
     }

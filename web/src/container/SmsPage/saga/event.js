@@ -10,6 +10,7 @@ import { call, take, put } from 'redux-saga/effects';
 import {
   getEventsSuccess,
   getClinicRemainingSuccess,
+  executeEventSuccess,
   executeEventFailed,
   saveEventSuccess,
   deleteEventSuccess,
@@ -86,14 +87,22 @@ export function* saveEventAndSendImmediately() {
       // 1. create
       const action = yield take(SAVE_EVENT_AND_SEND_IMMEDIATELY);
       const createdResult = yield call(SmsEvent.post, action.event);
+      
       // 2. send
       const executedResult = yield call(SmsEvent.execute, createdResult.id);
+
+      // success
       if (executedResult.status === 200) {
-        // 3-1. reload:
+        yield put(executeEventSuccess());
+
+        // and reload
         const remaining = yield call(SmsEvent.getRemaining);
         yield put(getClinicRemainingSuccess(remaining));
         const events = yield call(SmsEvent.get);
         yield put(getEventsSuccess(events));
+      // or failed
+      } else {
+        throw new Error();
       }
     } catch {
       yield put(executeEventFailed());

@@ -21,11 +21,13 @@ import {
   GET_CLINIC_REMAINING,
   GET_CLINIC_REMAINING_SUCCESS,
   EXECUTE_EVENT,
+  EXECUTE_EVENT_SUCCESS,
   EXECUTE_EVENT_FAILED,
   DELETE_EVENT,
   DELETE_EVENT_SUCCESS,
   GET_USERS,
   GET_USERS_SUCCESS,
+  SET_CARET_POSITION,
 } from './constant';
 
 export function getEvents() {
@@ -70,6 +72,10 @@ export function saveEventSuccess(result, identity) {
 
 export function executeEvent(event) {
   return { type: EXECUTE_EVENT, event };
+}
+
+export function executeEventSuccess() {
+  return { type: EXECUTE_EVENT_SUCCESS };
 }
 
 export function executeEventFailed() {
@@ -134,4 +140,8 @@ export function getUsers() {
 
 export function getUsersSuccess(users) {
   return { type: GET_USERS_SUCCESS, users };
+}
+
+export function setCaretPosition(idx, by) {
+  return { type: SET_CARET_POSITION, payload: {idx, by} };
 }
