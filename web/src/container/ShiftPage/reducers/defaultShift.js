@@ -8,6 +8,7 @@ import {
   CREATE_DEFAULT_SHIFT_SUCCESS,
   DELETE_DEFAULT_SHIFT_START,
   DELETE_DEFAULT_SHIFT_SUCCESS,
+  LEAVE_PAGE,
 } from '../constant';
 import { parseShiftConfigToShift } from '../utils/parseShiftConfigToShift';
 
@@ -47,6 +48,10 @@ const defaultShift = (state = initialState, action) =>
       case DELETE_DEFAULT_SHIFT_SUCCESS:
         draft.deleteSuccess = true;
         draft.shift = state.shift.filter(s => s.origin.id !== action.id);
+        break;
+      case LEAVE_PAGE:
+        draft.createSuccess = initialState.createSuccess;
+        draft.deleteSuccess = initialState.deleteSuccess;
         break;
       default:
         break;
