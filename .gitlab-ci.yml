@@ -21,10 +21,26 @@ before_script:
 buildByGradle:
     stage: build
     only:
-        - merge_requests
+        refs:
+            - merge_requests
+        changes:
+            - src/**/*
     image: openjdk:8-jdk-stretch
     script:
         - ./gradlew compileJava -x check --no-daemon
+
+buildByWebpack:
+    stage: build
+    only:
+        refs:
+            - merge_requests
+        changes:
+            - web/**/*
+    image: openjdk:8-jdk-stretch
+    script:
+        - apt-get install -y --no-install-recommends curl unzip
+        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
+        - ./gradlew webpack -Pprod -x check -PnodeInstall --no-daemon
 
 # test stage
 testRegular:
