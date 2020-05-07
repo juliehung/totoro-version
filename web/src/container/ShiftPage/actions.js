@@ -22,6 +22,7 @@ import {
   GET_RESOURCE_COLOR_SUCCESS,
   CHANGE_RESOURCE_COLOR_START,
   CHANGE_RESOURCE_COLOR_SUCCESS,
+  LEAVE_PAGE,
 } from './constant';
 
 export const changeDate = range => {
@@ -114,4 +115,8 @@ export const changeResourceColor = (id, color) => {
 
 export const changeResourceColorSuccess = (id, color) => {
   return { type: CHANGE_RESOURCE_COLOR_SUCCESS, id, color };
+};
+
+export const leavePage = () => {
+  return { type: LEAVE_PAGE };
 };

@@ -10,6 +10,7 @@ import {
   EDIT_SHIFT_SUCCESS,
   SHIFT_DROP_START,
   SHIFT_DROP_SUCCESS,
+  LEAVE_PAGE,
 } from '../constant';
 import moment from 'moment';
 
@@ -54,6 +55,11 @@ const shift = (state = initialState, action) =>
       case EDIT_SHIFT_SUCCESS:
         draft.shift = [...state.shift.filter(s => s.id !== action.shift.id), action.shift];
         draft.editShiftSuccess = true;
+        break;
+      case LEAVE_PAGE:
+        draft.createShiftSuccess = initialState.createShiftSuccess;
+        draft.editShiftSuccess = initialState.editShiftSuccess;
+        draft.deleteSuccess = initialState.deleteSuccess;
         break;
       default:
         break;

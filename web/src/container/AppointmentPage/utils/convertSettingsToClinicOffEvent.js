@@ -124,7 +124,7 @@ function generateBackgroundEvent(allDay, start, end) {
       start: start.format('YYYY-MM-DD'),
       allDay: true,
       rendering: 'background',
-      color: '#ddd',
+      color: 'rgba(143,155,179,0.24)',
       eventType: 'clinicOff',
     };
   }
@@ -132,7 +132,7 @@ function generateBackgroundEvent(allDay, start, end) {
     start: start.format('YYYY-MM-DD HH:mm'),
     end: end.format('YYYY-MM-DD HH:mm'),
     rendering: 'background',
-    color: '#ddd',
+    color: 'rgba(143,155,179,0.24)',
     eventType: 'clinicOff',
   };
 }

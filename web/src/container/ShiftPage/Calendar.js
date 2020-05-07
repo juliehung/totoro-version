@@ -21,6 +21,7 @@ import ArrowRight from '../../images/two-arrow-right.svg';
 import ArrowLeft from '../../images/two-arrow-left.svg';
 import { CSSTransition } from 'react-transition-group';
 import './Calendar.css';
+import { usePrevious } from '../../utils/hooks/usePrevious';
 
 //#region
 const Container = styled.div`
@@ -67,14 +68,6 @@ const CalendarContainer = styled.div`
   flex-shrink: 1;
 `;
 //#endregion
-
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
 
 function Calendar(props) {
   const {

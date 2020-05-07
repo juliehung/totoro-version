@@ -22,7 +22,7 @@ export function reverseEvents(shiftEvents, viewType, range) {
           allDay: true,
           rendering: 'background',
           eventType: 'doctorShift',
-          backgroundColor: '#ccc',
+          backgroundColor: 'rgba(143,155,179,0.24)',
         }));
     } else if (viewType === 'timeGridWeek' || viewType === 'listWeek') {
       const allTimeEvent = [generateRangeEvent(range)];
@@ -81,7 +81,7 @@ function generateRangeEvent(range, resourceId) {
     start: moment(range.start).format('YYYY-MM-DD HH:mm'),
     end: moment(range.end).format('YYYY-MM-DD HH:mm'),
     rendering: 'background',
-    backgroundColor: '#ccc',
+    backgroundColor: 'rgba(143,155,179,0.24)',
     resourceId,
   };
 }
