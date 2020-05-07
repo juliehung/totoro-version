@@ -44,7 +44,7 @@ const initState = {
   isSentFailed: null,
   currentKey: 'ALL',
   caretPosition: -1,
-  caretChangedBy: 'keydown'
+  caretChangedBy: 'keydown',
 };
 
 const initialState = {
@@ -70,7 +70,7 @@ const event = (state = initialState, action) =>
       case EXECUTE_EVENT:
         draft.isLoaded = false;
         break;
-        case SAVE_EVENT_AND_SEND_IMMEDIATELY:
+      case SAVE_EVENT_AND_SEND_IMMEDIATELY:
         draft.isLoaded = false;
         // init for checking
         draft.isSentFailed = null;
@@ -277,8 +277,9 @@ const event = (state = initialState, action) =>
         var adding = ' {{' + action.value + '}}';
         const currentTemplate = state.editingEvent.metadata.template;
         if (draft.caretPosition !== -1) {
-          if (draft.caretChangedBy === 'keydown') draft.caretPosition += 1
-          draft.editingEvent.metadata.template =  currentTemplate.slice(0, draft.caretPosition) + adding + currentTemplate.slice(draft.caretPosition)
+          if (draft.caretChangedBy === 'keydown') draft.caretPosition += 1;
+          draft.editingEvent.metadata.template =
+            currentTemplate.slice(0, draft.caretPosition) + adding + currentTemplate.slice(draft.caretPosition);
           // moving caret position to adding-end-position
           draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
           draft.caretPosition += adding.length;
@@ -335,9 +336,9 @@ const event = (state = initialState, action) =>
         break;
       }
       case SET_CARET_POSITION:
-        draft.caretPosition = action.payload.idx
-        draft.caretChangedBy = action.payload.by
-        break
+        draft.caretPosition = action.payload.idx;
+        draft.caretChangedBy = action.payload.by;
+        break;
       default:
         break;
     }

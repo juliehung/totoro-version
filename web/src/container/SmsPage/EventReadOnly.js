@@ -117,7 +117,7 @@ const Splitter = styled.div`
 function EventReadOnly(props) {
   const { selectedEvent, executeEvent, deleteEvent, account, users } = props;
   const createdBy = users.find(user => user.login === selectedEvent.createdBy).firstName;
-  moment.locale('en')
+  moment.locale('en');
   return (
     <RootContainer>
       <HeaderContainer>
@@ -140,7 +140,7 @@ function EventReadOnly(props) {
             )}
             <div>
               <P1>{createdBy}</P1>
-              <Small style={{marginTop: '-2px'}}>
+              <Small style={{ marginTop: '-2px' }}>
                 {moment(selectedEvent.modifiedDate).format('dddd, MMM DD, HH:mm')}
               </Small>
             </div>
