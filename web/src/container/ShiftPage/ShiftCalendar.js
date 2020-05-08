@@ -17,6 +17,9 @@ const Container = styled.div`
   .fc-no-scrollbars {
     overflow: hidden !important;
   }
+  .fc-resource-area .fc-scroller {
+    overflow: hidden !important;
+  }
 `;
 //#endregion
 
