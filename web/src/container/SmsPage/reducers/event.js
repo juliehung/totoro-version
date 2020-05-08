@@ -40,7 +40,6 @@ const initState = {
   clinicId: null,
   remaining: 0,
   isRemainingLoaded: false,
-  isWrongNumberLength: false,
   isSentFailed: null,
   currentKey: 'ALL',
   caretPosition: -1,
@@ -290,7 +289,6 @@ const event = (state = initialState, action) =>
         const allApps = [...action.appointments, ...state.editingEvent.metadata.selectedAppointments];
         draft.editingEvent.metadata.selectedAppointments = allApps.filter(distinct);
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
-        draft.isWrongNumberLength = draft.editingEvent.sms.some(m => checkPhoneFormat(m.phone));
         break;
       case UNSELECT_APPOINTMENT: {
         const newArr = [...state.editingEvent.metadata.selectedAppointments];
@@ -298,7 +296,6 @@ const event = (state = initialState, action) =>
         newArr.splice(removeIdx, 1);
         draft.editingEvent.metadata.selectedAppointments = newArr;
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
-        draft.isWrongNumberLength = draft.editingEvent.sms.some(m => checkPhoneFormat(m.phone));
         break;
       }
       //#endregion
@@ -382,7 +379,5 @@ const decodeTemplate = (clinicName, appointment, template) => {
 };
 
 const distinct = (element, idx, array) => array.map(e => e.id).indexOf(element.id) === idx;
-
-const checkPhoneFormat = phone => !phone.startsWith('+8869') || phone.length !== 13;
 
 export default event;

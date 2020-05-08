@@ -138,12 +138,6 @@ const VariablesContainer = styled.div`
   }
 `;
 
-const Warning = styled(NoMarginText)`
-  font-weight: 600;
-  color: red;
-  margin-right: 16px;
-`;
-
 const isDiff = (o1, o2) => {
   if (o1.metadata.template !== o2.metadata.template) return true;
 
@@ -171,13 +165,11 @@ function EventEditing(props) {
     saveEvent,
     deleteEvent,
     setCaretPosition,
-    isWrongNumberLength,
   } = props;
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (editingEvent !== null && editingEvent.isEdit && editingEvent.metadata.template.length !== 0) {
-        if (isWrongNumberLength) return;
         if (isDiff(editingEvent, selectedEvent)) {
           saveEvent(editingEvent);
         }
@@ -281,10 +273,9 @@ function EventEditing(props) {
         </FieldsContainer>
 
         <ActionContainer>
-          <Warning style={{ visibility: isWrongNumberLength ? null : 'hidden' }}>手機號碼格式錯誤</Warning>
           <StyledMediumButton
             className="styled-medium-btn"
-            disabled={editingEvent.sms.length === 0 || isWrongNumberLength}
+            disabled={editingEvent.sms.length === 0}
             shape="round"
             type="primary"
             onClick={() => {
@@ -306,7 +297,6 @@ const mapStateToProps = ({ smsPageReducer }) => ({
   appointments: smsPageReducer.appointment.appointments,
   tags: smsPageReducer.event.tags,
   visible: smsPageReducer.appointment.visible,
-  isWrongNumberLength: smsPageReducer.event.isWrongNumberLength,
 });
 
 const mapDispatchToProps = {
