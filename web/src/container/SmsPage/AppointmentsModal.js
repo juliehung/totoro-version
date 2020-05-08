@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { getAppointments, toggleAppointmentModal, addContactAppointments } from './action';
 import { StyledMediumButton, StyledModal } from './StyledComponents';
+import { P2 } from '../../utils/textComponents';
+import { Default, O1 } from '../../utils/colors';
 
 const NoMarginText = styled.p`
   margin: auto 0;
@@ -62,6 +64,19 @@ const NoPageTable = styled(Table)`
   & ul {
     display: none;
   }
+
+  & colgroup {
+    & col:first-child {
+      width: ${props => (props.selctionPlaceWidth + 'px')};
+    }
+  }
+
+  & .ant-checkbox-input {
+    &:hover {
+      border-color: #36f;
+    }
+  }
+
   & .ant-table-body {
     min-height: ${props => (props.minHeight === null ? null : props.minHeight + 'px')};
     scrollbar-width: none; /* Firefox */
@@ -72,9 +87,67 @@ const NoPageTable = styled(Table)`
     }
   }
 
+  /*checkbox hover*/
+  & .ant-checkbox:hover .ant-checkbox-inner, 
+  & .ant-checkbox-checked:hover .ant-checkbox-inner {
+    border-color: #36f;
+  }
+
+  & .ant-checkbox-checked {
+    &::after {
+      border-color: #36f;
+      border-radius: 3px;
+    }
+  }
+  
+  & .ant-checkbox-checked .ant-checkbox-inner {
+    background: #36f;
+    border-color: #36f;
+    border-radius: 3px;
+
+    &::after {
+      transform: rotate(45deg) scale(.7) translate(-50%, -50%) translateY(-2px) translateX(-1.5px);
+    }
+  }
+
+  & .ant-checkbox-disabled .ant-checkbox-inner {
+    border-color: rgba(143, 155, 179, 0.4);
+    background-color: rgba(143, 155, 179, 0.2);
+  }
+
+  & .ant-checkbox-indeterminate .ant-checkbox-inner {
+    background: #36f;
+    border-color: #36f;
+    border-radius: 3px;
+    
+    &::after {
+      background: white;
+      height: 1px;
+      width: 6px;
+    }
+  }
+
   & .ant-table-tbody {
     & .ant-table-placeholder {
       height: ${props => (props.dataSource.length === 0 ? props.minHeight + 'px' : null)};
+    }
+
+    & > tr > td {}
+
+    & > tr.ant-table-row {
+      & > td {
+        color: ${Default};
+      }
+      &:hover > td {
+        background: rgba(51, 102, 255, 0.08);
+      }
+    }
+
+    & > tr.ant-table-row-selected {
+      & > td {
+        background: rgba(51, 102, 255, 0.08);
+        color: #3366ff;
+      }
     }
   }
 `;
@@ -106,9 +179,15 @@ function AppointmentsModal(props) {
   const rowSelection = {
     onChange: selectChange,
     hideDefaultSelections: true,
-    selections: [Table.SELECTION_ALL],
     selectedRowKeys: tempAppointments.map(app => app.id),
+    getCheckboxProps: record => ({
+      disabled: isUnvalidPhone(record.phone)
+    }),
   };
+
+  const isUnvalidPhone = phone => {
+    return phone.trim().length !== 10 || phone.trim().substring(0, 2) !== '09'
+  }
 
   const onRow = record => ({
     onClick: () => {
@@ -131,10 +210,13 @@ function AppointmentsModal(props) {
       title: '時間',
       dataIndex: 'expectedArrivalTime',
       render: time => moment(time).format('HH:mm'),
-      width: 100,
+      width: 70,
       sorter: (a, b) => a.expectedArrivalTime.localeCompare(b.expectedArrivalTime),
     },
-    { title: '號碼', dataIndex: 'phone', width: 100, sorter: (a, b) => a.phone.localeCompare(b.phone) },
+    { title: '號碼', dataIndex: 'phone', width: 130,
+      sorter: (a, b) => a.phone.localeCompare(b.phone),
+      render: phone => <P2 style={{color: isUnvalidPhone(phone) ? O1 : Default}}>{phone}</P2>
+    },
     {
       title: '醫生',
       dataIndex: 'doctor',
@@ -143,7 +225,6 @@ function AppointmentsModal(props) {
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.doctor.user.firstName.localeCompare(b.doctor.user.firstName),
     },
-    // { title: '上次寄發', dataIndex: 'note', render: note => '?', width: 140},
     {
       title: '預約內容',
       dataIndex: 'note',
@@ -176,6 +257,7 @@ function AppointmentsModal(props) {
         <RightOutlined onClick={() => setDate(moment(date).add(1, 'days'))} />
       </DateContainer>
       <NoPageTable
+        selctionPlaceWidth={60}
         minHeight={300}
         size="small"
         scroll={{ y: 300 }}
