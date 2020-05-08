@@ -181,11 +181,6 @@ const CalendarContainer = styled.div`
     border-bottom: 0;
   }
 
-  .fc-unthemed thead,
-  .fc-unthemed tbody {
-    /* border-color: red !important; */
-  }
-
   .fc-axis.fc-time {
     color: #8f9bb3;
   }
@@ -211,8 +206,18 @@ const CalendarContainer = styled.div`
       transparent 0,
       transparent 50%
     );
-    background-size: 20px 20px;
+    background-size: 10px 10px;
   }
+
+  ${props =>
+    props.noResourseAndShiftOpen
+      ? `.fc-day.fc-widget-content {
+    color: rgba(0, 0, 0, 0.1);
+    background-image: repeating-linear-gradient(45deg,currentColor 0,currentColor 1px,transparent 0,transparent 50%);
+    background-size: 10px 10px;
+    background-color: rgba(143, 155, 179, 0.08);
+  }`
+      : ''}
 `;
 //#endregion
 
@@ -563,7 +568,9 @@ class AppCalendar extends React.Component {
             </ViewItem>
           </ViewContainer>
         </Header>
-        <CalendarContainer>
+        <CalendarContainer
+          noResourseAndShiftOpen={!resource.length && shiftOpen && this.state.viewType === 'resourceTimeGridDay'}
+        >
           <FullCalendar
             ref={this.calendarComponentRef}
             height="parent"
