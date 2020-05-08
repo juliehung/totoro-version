@@ -353,7 +353,7 @@ const processingEventSms = (clinicName, event) => {
         patientName: app.patientName,
         appointmentDate: app.expectedArrivalTime,
       },
-      phone: app.phone.replace(/^09/, '+8869'),
+      phone: app.phone.trim().replace(/^09/, '+8869'),
       content,
     };
   });

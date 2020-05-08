@@ -223,7 +223,7 @@ function EventEditing(props) {
                       }
                     >
                       <StyledTag>
-                        {`${app.patientName}(${app.phone})`}
+                        {`${app.patientName}(${app.phone.trim()})`}
                         {
                           <Button
                             type="link"
