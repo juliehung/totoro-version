@@ -169,7 +169,7 @@ const routes = {
   sms: '/sms',
   shift: '/shift',
   setting: '/setting',
-}
+};
 
 function NavHome(props) {
   const { account } = props;
@@ -194,7 +194,7 @@ function NavHome(props) {
   useEffect(() => {
     const route = location.pathname.split('/')[1];
     if (route !== currentLocation) {
-      setCurrentLocation( '/' + route);
+      setCurrentLocation('/' + route);
     }
   }, [location, currentLocation]);
 
