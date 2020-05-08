@@ -145,7 +145,7 @@ const MenuName = styled.div`
 `;
 
 const EventList = styled.div`
-  overflow: scroll;
+  overflow-y: scroll;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
   &::-webkit-scrollbar {

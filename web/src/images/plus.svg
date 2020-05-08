@@ -11,7 +11,7 @@
             </feMerge>
         </filter>
     </defs>
-    <g fill="#FFF" fill-rule="evenodd" filter="url(#prefix__a)" transform="translate(-14 -14)">
+    <g fill="#fff" fill-rule="evenodd" filter="url(#prefix__a)" transform="translate(-14 -14)">
         <path d="M36.167 26.833h-7v-7c0-.645-.523-1.166-1.167-1.166s-1.167.521-1.167 1.166v7h-7c-.644 0-1.166.522-1.166 1.167s.522 1.167 1.166 1.167h7v7c0 .645.523 1.166 1.167 1.166s1.167-.521 1.167-1.166v-7h7c.644 0 1.166-.522 1.166-1.167s-.522-1.167-1.166-1.167"/>
     </g>
 </svg>

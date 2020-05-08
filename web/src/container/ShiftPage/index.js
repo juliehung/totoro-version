@@ -6,6 +6,7 @@ import ShiftCalendar from './ShiftCalendar';
 import DefaultShift from './DefaultShift';
 import { GApageView } from '../../ga';
 import './index.css';
+import { leavePage } from './actions';
 
 //#region
 const Container = styled.div`
@@ -15,10 +16,15 @@ const Container = styled.div`
 `;
 //#endregion
 
-function ShiftPage() {
+function ShiftPage(props) {
+  const { leavePage } = props;
+
   useEffect(() => {
     GApageView();
-  }, []);
+    return () => {
+      leavePage();
+    };
+  }, [leavePage]);
   return (
     <Container>
       <Helmet>
@@ -30,6 +36,6 @@ function ShiftPage() {
   );
 }
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { leavePage };
 
 export default connect(null, mapDispatchToProps)(ShiftPage);

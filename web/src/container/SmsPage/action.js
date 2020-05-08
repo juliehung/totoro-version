@@ -143,5 +143,5 @@ export function getUsersSuccess(users) {
 }
 
 export function setCaretPosition(idx, by) {
-  return { type: SET_CARET_POSITION, payload: {idx, by} };
+  return { type: SET_CARET_POSITION, payload: { idx, by } };
 }

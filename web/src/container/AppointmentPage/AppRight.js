@@ -22,6 +22,7 @@ import { putSettings } from '../Home/actions';
 import { GAevent } from '../../ga';
 import { appointmentPage } from './';
 import FloatingActionButton from './FloatingActionButton';
+import { useIsFirstRender } from '../../utils/hooks/useIsFirstRender';
 
 const maxSlotDuration = 30;
 const minSlotDuration = 10;
@@ -148,12 +149,17 @@ function AppRight(props) {
   const [expand, setExpand] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
+  const isFirstRender = useIsFirstRender();
   useEffect(() => {
+    if (isFirstRender) {
+      return;
+    }
     if (putSettingSuccess && showShiftCalc) {
       message.success('班表啟用成功!');
     } else if (putSettingSuccess && !showShiftCalc) {
       message.warning('班表已關閉。');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [putSettingSuccess, showShiftCalc]);
 
   const handleDoctorChange = d => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import {
@@ -13,6 +13,8 @@ import { DeleteTwoTone } from '@ant-design/icons';
 import { Draggable } from '@fullcalendar/interaction';
 import { convertRangeToRangePickerValue } from './utils/convertRangeToRangePickerValue';
 import { orderDefaultShiftByStartTime } from './utils/orderDefaultShiftByStartTime';
+import { PlusOutlined } from '@ant-design/icons';
+
 const { RangePicker } = TimePicker;
 
 //#region
@@ -100,11 +102,23 @@ const IconContainer = styled.div`
 `;
 
 const PopoverContainer = styled.div`
-  width: 200px;
+  width: 274px;
   display: flex;
   flex-direction: column;
+  margin: 8px 6px 0px;
   & > * {
     margin: 5px 0 !important;
+  }
+  & > :nth-child(2) {
+    margin-top: 12px !important;
+  }
+  & > :last-child {
+    margin-top: 11px !important;
+  }
+  & > span {
+    font-size: 18px;
+    font-weight: 600;
+    color: #222b45;
   }
 `;
 
@@ -112,9 +126,36 @@ const ButtonContainer = styled.div`
   align-self: flex-end;
 `;
 
+const MidButton = styled(Button)`
+  border-radius: 34px !important;
+  background-color: rgba(51, 102, 255, 0.08) !important;
+  border-color: #3366ff !important;
+  color: #3366ff !important;
+
+  &:active {
+    color: #8f9bb3 !important;
+    background-color: rgba(143, 155, 179, 0.08) !important;
+    border-color: #8f9bb3 !important;
+  }
+
+  &:disabled {
+    color: #8f9bb3 !important;
+    background-color: rgba(143, 155, 179, 0.08) !important;
+    border-color: #8f9bb3 !important;
+  }
+`;
+
+const BigButton = styled(MidButton)`
+  font-size: 14px !important;
+  padding-right: 25px !important;
+  padding-left: 25px !important;
+`;
+
 //#endregion
 
 function DefaultShift(props) {
+  const [popoverVisible, setPopoverVisible] = useState(false);
+
   const simulateMouseClick = element => {
     const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
     mouseClickEvents.forEach(mouseEventType =>
@@ -130,7 +171,7 @@ function DefaultShift(props) {
   };
 
   const clickTitle = useCallback(() => {
-    const title = document.querySelector('h2');
+    const title = document.querySelector('.fc-center');
     if (title) {
       simulateMouseClick(title);
     }
@@ -166,9 +207,15 @@ function DefaultShift(props) {
         <span>班別</span>
         <Popover
           trigger="click"
+          visible={popoverVisible}
+          onVisibleChange={() => {
+            setPopoverVisible(!popoverVisible);
+          }}
           content={
             <PopoverContainer>
+              <span>新增班別</span>
               <Input
+                size="large"
                 placeholder={'班別名稱'}
                 onChange={e => {
                   props.changeDefaultShiftName(e.target.value);
@@ -176,6 +223,7 @@ function DefaultShift(props) {
                 value={props.newShift.name}
               />
               <RangePicker
+                size="large"
                 format={'HH:mm'}
                 allowClear={false}
                 placeholder={['開始時間', '結束時間']}
@@ -185,18 +233,21 @@ function DefaultShift(props) {
                 value={convertRangeToRangePickerValue(props.newShift.range)}
               />
               <ButtonContainer>
-                <Button
+                <BigButton
+                  size="large"
                   onClick={props.createDefaultShift}
                   disabled={!props.newShift.name || !props.newShift.range.start || !props.newShift.range.end}
                 >
                   確認
-                </Button>
+                </BigButton>
               </ButtonContainer>
             </PopoverContainer>
           }
           placement="bottomLeft"
         >
-          <Button>新增</Button>
+          <MidButton disabled={popoverVisible} icon={<PlusOutlined />}>
+            新增
+          </MidButton>
         </Popover>
       </div>
       <ShiftsContainer id={'external-events'}>
