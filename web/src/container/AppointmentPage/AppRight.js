@@ -144,6 +144,7 @@ function AppRight(props) {
     showShiftCalc,
     putSettings,
     putSettingSuccess,
+    viewType,
   } = props;
 
   const [expand, setExpand] = useState(false);
@@ -316,7 +317,9 @@ function AppRight(props) {
         </div>
         <div>
           <button
-            disabled={props.slotDuration >= maxSlotDuration}
+            disabled={
+              props.slotDuration >= maxSlotDuration || !['resourceTimeGridDay', 'timeGridWeek'].includes(viewType)
+            }
             onClick={() => {
               onSlotDurationChange(true);
               GAevent(appointmentPage, 'Smaller slot size');
@@ -326,7 +329,9 @@ function AppRight(props) {
           </button>
           <Divider type="vertical" />
           <button
-            disabled={props.slotDuration <= minSlotDuration}
+            disabled={
+              props.slotDuration <= minSlotDuration || !['resourceTimeGridDay', 'timeGridWeek'].includes(viewType)
+            }
             onClick={() => {
               onSlotDurationChange(false);
               GAevent(appointmentPage, 'Bigger slot size');

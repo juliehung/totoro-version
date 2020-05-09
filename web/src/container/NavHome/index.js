@@ -276,7 +276,7 @@ function NavHome(props) {
           setDrawerVisible(false);
         }}
       >
-        <div to="/" style={{ marginBottom: '30px' }}>
+        <div style={{ marginBottom: '30px' }}>
           <img src={DentallHisLogo} alt="dentallHis" />
         </div>
         <DrawerItem to={routes.registration}>
