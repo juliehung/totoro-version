@@ -41,7 +41,6 @@ import { convertSettingsToClinicOffEvent } from './utils/convertSettingsToClinic
 import { message } from 'antd';
 import MqttHelper from '../../utils/mqtt';
 import { calFirstDay } from './reducers/calendar';
-import MobileDetect from 'mobile-detect';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
 import { reverseEvents } from './utils/reverseEvents';
@@ -194,7 +193,7 @@ const CalendarContainer = styled.div`
 
   .fc-widget-header,
   .fc-widget-content {
-    border: 1px solid #d7e3f1;
+    border-color: #d7e3f1;
   }
 
   .fc-bgevent {
@@ -221,12 +220,7 @@ const CalendarContainer = styled.div`
 `;
 //#endregion
 
-const md = new MobileDetect(window.navigator.userAgent);
-const phone = md.phone();
-const defaultView = phone ? 'resourceTimeGridDay' : 'timeGridWeek';
-
 class AppCalendar extends React.Component {
-  state = { viewType: defaultView };
   calendarComponentRef = React.createRef();
 
   componentDidMount() {
@@ -277,7 +271,7 @@ class AppCalendar extends React.Component {
 
     //select self on mobile
     const id = this.props.account ? this.props.account.id : undefined;
-    if (phone && id) {
+    if (this.props.phone && id) {
       if (this.props.doctors.length !== 0 && this.props.selectedDoctors.length === 0) {
         this.props.changeSelectedDoctors([id.toString()]);
       }
@@ -497,7 +491,7 @@ class AppCalendar extends React.Component {
   };
 
   viewSkeletonRender = info => {
-    this.setState({ viewType: info.view.type });
+    this.props.setViewType(info.view.type);
   };
 
   navLinkDayClick = date => {
@@ -520,7 +514,7 @@ class AppCalendar extends React.Component {
           })),
       ...this.props.calendarEvents.filter(() => this.props.showCalEvt),
       ...(shiftOpen
-        ? reverseEvents(this.props.backgroundEvent, this.state.viewType, this.props.calendarRange)
+        ? reverseEvents(this.props.backgroundEvent, this.props.viewType, this.props.calendarRange)
         : this.generalSetting),
     ];
 
@@ -554,22 +548,22 @@ class AppCalendar extends React.Component {
             <img src={TwoArrowRight} alt="two-arrow-right" onClick={this.nextMonthClick} />
           </TitleContainer>
           <ViewContainer>
-            <ViewItem onClick={this.onDayClick} selected={this.state.viewType === 'resourceTimeGridDay'}>
+            <ViewItem onClick={this.onDayClick} selected={this.props.viewType === 'resourceTimeGridDay'}>
               <span>天</span>
             </ViewItem>
-            <ViewItem onClick={this.onWeekClick} selected={this.state.viewType === 'timeGridWeek'}>
+            <ViewItem onClick={this.onWeekClick} selected={this.props.viewType === 'timeGridWeek'}>
               <span>周</span>
             </ViewItem>
-            <ViewItem onClick={this.onMonthClick} selected={this.state.viewType === 'dayGridMonth'}>
+            <ViewItem onClick={this.onMonthClick} selected={this.props.viewType === 'dayGridMonth'}>
               <span>月</span>
             </ViewItem>
-            <ViewItem onClick={this.onListClick} selected={this.state.viewType === 'listWeek'}>
+            <ViewItem onClick={this.onListClick} selected={this.props.viewType === 'listWeek'}>
               <span>周列表</span>
             </ViewItem>
           </ViewContainer>
         </Header>
         <CalendarContainer
-          noResourseAndShiftOpen={!resource.length && shiftOpen && this.state.viewType === 'resourceTimeGridDay'}
+          noResourseAndShiftOpen={!resource.length && shiftOpen && this.props.viewType === 'resourceTimeGridDay'}
         >
           <FullCalendar
             ref={this.calendarComponentRef}
@@ -622,7 +616,7 @@ class AppCalendar extends React.Component {
             eventResizeStop={this.eventEditStop}
             timeGridEventMinHeight={15}
             eventAllow={this.eventAllow}
-            defaultView={defaultView}
+            defaultView={this.props.defaultView}
             viewSkeletonRender={this.viewSkeletonRender}
           />
         </CalendarContainer>
