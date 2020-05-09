@@ -92,25 +92,24 @@ const SubButton = styled(FloatingButton)`
 
 //#endregion
 
+const useOutsideDetector = (ref, callbacks = []) => {
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        callbacks.map(c => c());
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [ref, callbacks]);
+};
+
 function FloatingActionButton(props) {
   const { expand, loaded, toggleExpand, closeExpand, moonClick, calClick } = props;
-  const useOutsideDetector = ref => {
-    useEffect(() => {
-      const handleClickOutside = event => {
-        if (ref.current && !ref.current.contains(event.target)) {
-          closeExpand();
-        }
-      };
-
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, [ref]);
-  };
-
   const wrapperRef = useRef(null);
-  useOutsideDetector(wrapperRef);
+  useOutsideDetector(wrapperRef, [closeExpand]);
 
   return (
     <Container ref={wrapperRef}>
