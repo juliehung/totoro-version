@@ -23,6 +23,7 @@ import AwardFill from './svg/AwardFill';
 import { StyledLargerButton } from './StyledComponents';
 import isEqual from 'lodash.isequal';
 import { O1 } from '../../utils/colors';
+import { Spin } from 'antd';
 
 const Container = styled.div`
   display: flex;
@@ -93,6 +94,7 @@ const ActionName = styled(NoMarginText)`
 
 const CategoryTitleContainer = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 0 24px;
   color: #222b45;
@@ -219,6 +221,10 @@ const EventCardContainer = styled.div`
   }
 `;
 
+const EventSpinner = styled(Spin)`
+  font-size: 1px !important;
+`;
+
 const categories = ['ALL', 'DRAFT', 'SENT'];
 const categoriesChinese = ['全部', '草稿', '寄送備份'];
 const categoryIcons = [<InboxFill key={1} />, <Edit key={2} />, <PaperPlane key={3} />];
@@ -241,6 +247,7 @@ function SmsPage(props) {
     remaining,
     isRemainingLoaded,
     users,
+    isEventsLoading,
   } = props;
   const [expanding, setExpanding] = useState(false);
   const [hasEvent, setHasEvent] = useState(false);
@@ -254,8 +261,7 @@ function SmsPage(props) {
     getClinicSettings();
     getEvents();
     getClinicRemaining();
-    // eslint-disable-next-line
-  }, []);
+  }, [getUsers, getClinicSettings, getEvents, getClinicRemaining]);
 
   useLayoutEffect(() => {
     setHasEvent(selectedEvent !== null);
@@ -309,7 +315,6 @@ function SmsPage(props) {
               </MenuItem>
             ))}
           </CategoryContainer>
-          {/* TODO: SMS: link update */}
           <RemainingActionSection>
             <RemainingActionItem
               style={{ visibility: isRemainingLoaded ? null : 'hidden' }}
@@ -331,6 +336,7 @@ function SmsPage(props) {
         <EventListContainer expanding={expanding} hasEvent={hasEvent}>
           <CategoryTitleContainer>
             <CategoryTitle>{categoriesChinese[categories.indexOf(currentKey)]}</CategoryTitle>
+            <EventSpinner spinning={isEventsLoading} />
           </CategoryTitleContainer>
           <EventList>
             {events.map(item => {
@@ -395,9 +401,9 @@ const mapStateToProps = ({ smsPageReducer }) => ({
   remaining: smsPageReducer.event.remaining,
   isRemainingLoaded: smsPageReducer.event.isRemainingLoaded,
   currentKey: smsPageReducer.event.currentKey,
+  isEventsLoading: smsPageReducer.event.isEventsLoading,
 });
 
-// doctors: extractDoctorsFromUser(homePageReducer.user.users),
 const mapDispatchToProps = {
   getEvents,
   getClinicRemaining,

@@ -109,7 +109,7 @@ const TagsContainer = styled.div`
 const VariableText = styled(NoMarginText)`
   font-size: 13px;
   color: #8f9bb3;
-  margin-right: 6px
+  margin-right: 6px;
 `;
 
 const VariablesContainer = styled.div`
@@ -165,6 +165,7 @@ function EventEditing(props) {
     saveEvent,
     deleteEvent,
     setCaretPosition,
+    isDeletingEvent,
   } = props;
 
   useEffect(() => {
@@ -188,6 +189,7 @@ function EventEditing(props) {
           danger
           type="link"
           icon={<Trash />}
+          loading={isDeletingEvent}
           onClick={() => {
             if (editingEvent.id !== null) deleteEvent(editingEvent.id);
             else setSelectedEvent(null);
@@ -297,6 +299,7 @@ const mapStateToProps = ({ smsPageReducer }) => ({
   appointments: smsPageReducer.appointment.appointments,
   tags: smsPageReducer.event.tags,
   visible: smsPageReducer.appointment.visible,
+  isDeletingEvent: smsPageReducer.event.isDeletingEvent,
 });
 
 const mapDispatchToProps = {

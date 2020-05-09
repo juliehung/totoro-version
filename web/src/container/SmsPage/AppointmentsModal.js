@@ -67,7 +67,7 @@ const NoPageTable = styled(Table)`
 
   & colgroup {
     & col:first-child {
-      width: ${props => (props.selctionPlaceWidth + 'px')};
+      width: ${props => props.selctionPlaceWidth + 'px'};
     }
   }
 
@@ -88,7 +88,7 @@ const NoPageTable = styled(Table)`
   }
 
   /*checkbox hover*/
-  & .ant-checkbox:hover .ant-checkbox-inner, 
+  & .ant-checkbox:hover .ant-checkbox-inner,
   & .ant-checkbox-checked:hover .ant-checkbox-inner {
     border-color: #36f;
   }
@@ -99,14 +99,14 @@ const NoPageTable = styled(Table)`
       border-radius: 3px;
     }
   }
-  
+
   & .ant-checkbox-checked .ant-checkbox-inner {
     background: #36f;
     border-color: #36f;
     border-radius: 3px;
 
     &::after {
-      transform: rotate(45deg) scale(.7) translate(-50%, -50%) translateY(-2px) translateX(-1.5px);
+      transform: rotate(45deg) scale(0.7) translate(-50%, -50%) translateY(-2px) translateX(-1.5px);
     }
   }
 
@@ -119,7 +119,7 @@ const NoPageTable = styled(Table)`
     background: #36f;
     border-color: #36f;
     border-radius: 3px;
-    
+
     &::after {
       background: white;
       height: 1px;
@@ -132,7 +132,8 @@ const NoPageTable = styled(Table)`
       height: ${props => (props.dataSource.length === 0 ? props.minHeight + 'px' : null)};
     }
 
-    & > tr > td {}
+    & > tr > td {
+    }
 
     & > tr.ant-table-row {
       & > td {
@@ -181,13 +182,13 @@ function AppointmentsModal(props) {
     hideDefaultSelections: true,
     selectedRowKeys: tempAppointments.map(app => app.id),
     getCheckboxProps: record => ({
-      disabled: isUnvalidPhone(record.phone)
+      disabled: isUnvalidPhone(record.phone),
     }),
   };
 
   const isUnvalidPhone = phone => {
-    return phone.trim().length !== 10 || phone.trim().substring(0, 2) !== '09'
-  }
+    return phone.trim().length !== 10 || phone.trim().substring(0, 2) !== '09';
+  };
 
   const onRow = record => ({
     onClick: () => {
@@ -213,9 +214,12 @@ function AppointmentsModal(props) {
       width: 70,
       sorter: (a, b) => a.expectedArrivalTime.localeCompare(b.expectedArrivalTime),
     },
-    { title: '號碼', dataIndex: 'phone', width: 130,
+    {
+      title: '號碼',
+      dataIndex: 'phone',
+      width: 130,
       sorter: (a, b) => a.phone.localeCompare(b.phone),
-      render: phone => <P2 style={{color: isUnvalidPhone(phone) ? O1 : Default}}>{phone}</P2>
+      render: phone => <P2 style={{ color: isUnvalidPhone(phone) ? O1 : Default }}>{phone}</P2>,
     },
     {
       title: '醫生',

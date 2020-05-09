@@ -268,6 +268,11 @@ function AppRight(props) {
     GAevent(appointmentPage, 'Click add event button');
   };
 
+  const closeExpand = () => {
+    setLoaded(true);
+    setExpand(false);
+  };
+
   const fabMoonClick = () => {
     GAevent(appointmentPage, 'Click show create calendar event modal button');
     props.changeCreateCalModalVisible(true);
@@ -383,6 +388,7 @@ function AppRight(props) {
       <FloatingActionButton
         expand={expand}
         toggleExpand={toggleExpand}
+        closeExpand={closeExpand}
         loaded={loaded}
         moonClick={fabMoonClick}
         calClick={fabCalClick}
