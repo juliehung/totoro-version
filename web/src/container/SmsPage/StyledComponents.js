@@ -119,10 +119,10 @@ export const StyledTag = styled(Tag)`
   }
 `;
 
-
 export const StyledInput = styled(Input)`
-  &.ant-input, &.ant-input-affix-wrapper .ant-input{
-    background:#f8fafb;
+  &.ant-input,
+  &.ant-input-affix-wrapper .ant-input {
+    background: #f8fafb;
     border-radius: 8px;
     font-weight: 600;
     font-size: 15px;
@@ -136,7 +136,7 @@ export const StyledInput = styled(Input)`
 
 export const StyledInputArea = styled(Input.TextArea)`
   &.textarea-input {
-    background:#f8fafb;
+    background: #f8fafb;
     border-radius: 8px 8px 0 0;
     font-weight: 600;
     font-size: 15px;

@@ -26,28 +26,17 @@ class MqttHelper {
 
     this.client = mqtt.connect(mqttUrl, options);
     this.client.on('error', err => {
-      console.log(err);
+      console.err(err);
       this.client.end();
-    });
-
-    this.client.on('connect', () => {
-      console.log('client connected:' + clientId);
-    });
-
-    this.client.on('close', () => {
-      console.log(clientId + ' disconnected');
     });
 
     this.client.subscribe('totoro/appointment', { qos: 0 });
     this.client.subscribe('totoro/patient', { qos: 0 });
     this.client.subscribe('totoro/message', { qos: 0 });
 
-    // This is a demo of receiving message
-    // eslint-disable-next-line no-unused-vars
-    this.client.on('message', (topic, message, packet) => {
+    this.client.on('message', (topic, message) => {
       const payload = message.toString();
 
-      console.log('Received Message:= ' + payload + '\nOn topic:= ' + topic);
       if (topic === 'totoro/appointment') {
         const keys = Object.keys(appointmentCallbacks);
         for (let i = 0; i < keys.length; i++) {
