@@ -119,8 +119,8 @@ const event = (state = initialState, action) =>
         if (identity === state.selectedEventId) {
           draft.selectedEvent = draft.staticEvents[replaceIdx];
           draft.selectedEventId = toBePlaced.id;
-          toBePlaced.isEdit = true
-          draft.editingEvent = { ...state.editingEvent, id: toBePlaced.id };;
+          toBePlaced.isEdit = true;
+          draft.editingEvent = { ...state.editingEvent, id: toBePlaced.id };
         }
         draft.isLoaded = true;
         break;

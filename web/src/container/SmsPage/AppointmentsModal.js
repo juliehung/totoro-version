@@ -257,7 +257,7 @@ function AppointmentsModal(props) {
       <DateContainer>
         <TitleText>約診日期：</TitleText>
         <LeftOutlined onClick={() => setDate(moment(date).add(-1, 'days'))} />
-        <DatePicker value={date} onChange={setDate} />
+        <DatePicker value={date} onChange={setDate} allowClear={false} />
         <RightOutlined onClick={() => setDate(moment(date).add(1, 'days'))} />
       </DateContainer>
       <NoPageTable
