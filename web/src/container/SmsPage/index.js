@@ -263,6 +263,28 @@ function SmsPage(props) {
     getClinicRemaining();
   }, [getUsers, getClinicSettings, getEvents, getClinicRemaining]);
 
+  useEffect(() => {
+    var params = window.location.href.split('?')[1]
+    if (params) {
+        var key = params.split('=')[0]
+        var id = params.split('=')[1]
+        if (key === 'se_id' && id !== '') {
+          var prevItem = events.find(e => e.id === id)
+          if (prevItem && editingEvent === null) {
+            setSelectedEvent(prevItem)
+          }
+        }
+    }
+  }, [events, setSelectedEvent, editingEvent]);
+
+  // detect the new event has been saved and its tempId and id exist 
+  useEffect(() => {
+    if (editingEvent && editingEvent.tempId && editingEvent.id) {
+      window.history.pushState( {}, 'set', `#/sms?se_id=${editingEvent.id}`);
+    }
+  }, [editingEvent]);
+
+
   useLayoutEffect(() => {
     setHasEvent(selectedEvent !== null);
   }, [selectedEvent]);
@@ -284,6 +306,7 @@ function SmsPage(props) {
     // if current(previous) item is able to be posted or put
     if (isDiff(editingEvent, selectedEvent) && editingEvent.metadata.template.length !== 0) saveEvent(editingEvent);
     setSelectedEvent(item);
+    window.history.pushState( {}, 'set', `#/sms?se_id=${item.id}`);
   };
 
   return (
@@ -300,7 +323,10 @@ function SmsPage(props) {
                 type="primary"
                 shape="round"
                 block
-                onClick={createEvent}
+                onClick={() => {
+                  window.history.pushState({}, '', `#/sms?creating=true`)
+                  createEvent()
+                }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <img src={edit2Icon} alt={'edit'} style={{ marginRight: '4px' }} />
@@ -309,7 +335,10 @@ function SmsPage(props) {
               </StyledLargerButton>
             </ButtonBox>
             {categories.map((category, i) => (
-              <MenuItem key={category} selected={currentKey === category} onClick={() => filterEvents(category)}>
+              <MenuItem key={category} selected={currentKey === category} onClick={() => {
+                window.history.pushState( {}, '', `#/sms`);
+                filterEvents(category)
+              }}>
                 {categoryIcons[i]}
                 <MenuName>{categoriesChinese[i]}</MenuName>
               </MenuItem>
