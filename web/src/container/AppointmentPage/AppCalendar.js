@@ -239,6 +239,7 @@ const SpinContainer = styled.div`
 //#endregion
 
 class AppCalendar extends React.Component {
+  state = { currentTime: moment() };
   calendarComponentRef = React.createRef();
 
   componentDidMount() {
@@ -265,6 +266,13 @@ class AppCalendar extends React.Component {
       if (expectedArrivalTime.isBetween(start, end)) {
         // TODO: find a better way to update appointments
       }
+    });
+    this.intervalID = setInterval(() => this.tick(), 1000);
+  }
+
+  tick() {
+    this.setState({
+      currentTime: moment(),
     });
   }
 
@@ -302,6 +310,7 @@ class AppCalendar extends React.Component {
 
   componentWillUnmount() {
     MqttHelper.unsubscribeAppointment(AppCalendar.name);
+    clearInterval(this.intervalID);
   }
 
   simulateMouseClick = element => {
@@ -554,7 +563,7 @@ class AppCalendar extends React.Component {
       <Container>
         <Header>
           <TodayContainer>
-            <span>{moment().format('LLLL')}</span>
+            <span>{this.state.currentTime.format('LLLL')}</span>
             <div onClick={this.todayClick}>
               <span>今日</span>
             </div>
