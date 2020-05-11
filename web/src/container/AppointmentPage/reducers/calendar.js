@@ -46,12 +46,12 @@ const calendar = (state = initialState, action) =>
         break;
       case GET_APPOINTMENTS_START:
         draft.range = action.range;
-        draft.getSuccess = false;
+        draft.getSuccess = initState.getSuccess;
         break;
       case GET_APPOINTMENTS_SUCCESS:
         draft.appointments = convertAppsToEvt(action.appData);
         draft.doctorAppCount = handleCountDocApp(draft.appointments);
-        draft.getSuccess = initState.getSuccess;
+        draft.getSuccess = true;
         break;
       case CHANGE_CAL_FIRST_DAY:
         draft.calendarFirstDay = action.firstDay % 7;
