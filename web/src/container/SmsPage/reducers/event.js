@@ -112,10 +112,6 @@ const event = (state = initialState, action) =>
         const replaceIdx = snapShot.indexOf(
           snapShot.find(ev => (ev.id !== null ? identity === ev.id : identity === ev.tempId)),
         );
-        // stilling editing ? merge current
-        if (identity === state.selectedEventId) {
-          toBePlaced = { ...state.editingEvent, ...toBePlaced };
-        }
         snapShot[replaceIdx] = toBePlaced;
         draft.staticEvents = snapShot;
         draft.events =
@@ -130,7 +126,8 @@ const event = (state = initialState, action) =>
         if (identity === state.selectedEventId) {
           draft.selectedEvent = draft.staticEvents[replaceIdx];
           draft.selectedEventId = toBePlaced.id;
-          draft.editingEvent = toBePlaced;
+          toBePlaced.isEdit = true
+          draft.editingEvent = { ...state.editingEvent, id: toBePlaced.id };;
         }
         draft.isLoaded = true;
         break;
