@@ -93,13 +93,6 @@ const event = (state = initialState, action) =>
         draft.selectedEventId = null;
         draft.editingEvent = null;
 
-        if (draft.staticEvents.find(e => e.id === sessionStorage.getItem('eventKey'))) {
-          const selection = draft.staticEvents.find(e => e.id === sessionStorage.getItem('eventKey'));
-          if (selection.status === 'draft') selection.isEdit = true;
-          draft.selectedEvent = selection;
-          draft.selectedEventId = selection.id === null ? selection.tempId : selection.id;
-          draft.editingEvent = selection;
-        }
         draft.isLoaded = true;
         draft.isEventsLoading = false;
         break;
@@ -208,7 +201,6 @@ const event = (state = initialState, action) =>
           draft.selectedEvent = selection;
           draft.selectedEventId = selection.id !== null ? selection.id : selection.tempId;
           draft.editingEvent = selection.isEdit ? selection : null;
-          sessionStorage.setItem('eventKey', draft.selectedEventId);
           draft.caretPosition = -1;
         }
         break;
@@ -262,8 +254,6 @@ const event = (state = initialState, action) =>
         draft.selectedEvent = newEvent;
         draft.selectedEventId = newEvent.tempId;
         draft.editingEvent = newEvent;
-        // if we don't set here, if send a new event it'll get the previous editing item.
-        sessionStorage.setItem('eventKey', draft.selectedEventId);
         break;
       }
 

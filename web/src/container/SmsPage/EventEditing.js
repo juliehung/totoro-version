@@ -193,6 +193,7 @@ function EventEditing(props) {
           onClick={() => {
             if (editingEvent.id !== null) deleteEvent(editingEvent.id);
             else setSelectedEvent(null);
+            window.history.pushState( {}, 'set', `#/sms`);
           }}
         />
       </HeaderContainer>
