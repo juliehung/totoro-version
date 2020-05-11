@@ -2,12 +2,15 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.business.service.CloudFunctionService;
 import io.dentall.totoro.config.ImageRepositoryConfiguration;
+import io.dentall.totoro.domain.SmsView;
 import io.dentall.totoro.security.SecurityUtils;
+import io.dentall.totoro.service.SmsViewService;
 import io.dentall.totoro.service.dto.SmsChargeDTO;
 import io.dentall.totoro.service.dto.SmsEventDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.errors.InternalServerErrorException;
 import io.dentall.totoro.web.rest.vm.SmsInfoVM;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -19,6 +22,7 @@ import org.zalando.problem.ThrowableProblem;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 
 @Profile("saas")
@@ -32,8 +36,11 @@ public class MessageResource {
 
     private final CloudFunctionService cloudFunctionService;
 
-    public MessageResource(CloudFunctionService cloudFunctionService) {
+    private final SmsViewService smsViewService;
+
+    public MessageResource(CloudFunctionService cloudFunctionService, SmsViewService smsViewService) {
         this.cloudFunctionService = cloudFunctionService;
+        this.smsViewService = smsViewService;
     }
 
     @PostMapping("/messages/sms/events/{eventId}/execute")
@@ -145,5 +152,16 @@ public class MessageResource {
         });
 
         return result;
+    }
+
+    @PostMapping("/messages/sms/views/{patientId}")
+    public ResponseEntity<SmsView> createSmsView(@PathVariable Long patientId) {
+        return ResponseEntity.ok().body(smsViewService.save(patientId));
+    }
+
+    @GetMapping("/messages/sms/views/{patientId}")
+    public ResponseEntity<SmsView> getSmsView(@PathVariable Long patientId) {
+        Optional<SmsView> smsView = smsViewService.findOne(patientId);
+        return ResponseUtil.wrapOrNotFound(smsView);
     }
 }

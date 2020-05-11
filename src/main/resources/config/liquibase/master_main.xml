@@ -64,6 +64,7 @@
     <include file="config/liquibase/changelog/createTable/20190522.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2019/07/20190720-createTable.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2020/01/20200110_createTable.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2020/05/20200508_createTable.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom columns -->
     <include file="config/liquibase/changelog/addColumn/20190404.xml" relativeToChangelogFile="false"/>
