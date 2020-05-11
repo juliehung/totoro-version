@@ -82,6 +82,7 @@ const TodayContainer = styled.div`
   font-size: 13px;
   display: flex;
   color: #8f9bb3;
+  font-weight: bold;
   & > div {
     font-size: 10px;
     padding: 5px 10px;
@@ -89,6 +90,11 @@ const TodayContainer = styled.div`
     border-radius: 34px;
     margin-left: 7px;
     cursor: pointer;
+    background-color: rgba(143, 155, 179, 0.08);
+    transition: all 300ms ease-in-out;
+    &:hover {
+      background-color: rgba(143, 155, 179, 0.4);
+    }
   }
   @media (max-width: 850px) {
     display: none;
@@ -233,6 +239,7 @@ const SpinContainer = styled.div`
 //#endregion
 
 class AppCalendar extends React.Component {
+  state = { currentTime: moment() };
   calendarComponentRef = React.createRef();
 
   componentDidMount() {
@@ -259,6 +266,13 @@ class AppCalendar extends React.Component {
       if (expectedArrivalTime.isBetween(start, end)) {
         // TODO: find a better way to update appointments
       }
+    });
+    this.intervalID = setInterval(() => this.tick(), 1000);
+  }
+
+  tick() {
+    this.setState({
+      currentTime: moment(),
     });
   }
 
@@ -296,6 +310,7 @@ class AppCalendar extends React.Component {
 
   componentWillUnmount() {
     MqttHelper.unsubscribeAppointment(AppCalendar.name);
+    clearInterval(this.intervalID);
   }
 
   simulateMouseClick = element => {
@@ -548,7 +563,7 @@ class AppCalendar extends React.Component {
       <Container>
         <Header>
           <TodayContainer>
-            <span>{moment().format('LLLL')}</span>
+            <span>{this.state.currentTime.format('LLLL')}</span>
             <div onClick={this.todayClick}>
               <span>今日</span>
             </div>
