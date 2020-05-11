@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import PlusIcon from '../../images/plus.svg';
 import CalendarIcon from '../../images/calendar-fill.svg';
@@ -92,11 +92,27 @@ const SubButton = styled(FloatingButton)`
 
 //#endregion
 
+const useOutsideDetector = (ref, callbacks = []) => {
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        callbacks.map(c => c());
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [ref, callbacks]);
+};
+
 function FloatingActionButton(props) {
-  const { expand, loaded, toggleExpand, moonClick, calClick } = props;
+  const { expand, loaded, toggleExpand, closeExpand, moonClick, calClick } = props;
+  const wrapperRef = useRef(null);
+  useOutsideDetector(wrapperRef, [closeExpand]);
 
   return (
-    <Container>
+    <Container ref={wrapperRef}>
       <SubButton expand={expand} distance={130}>
         <span>醫師與院所休診</span>
         <div onClick={moonClick}>

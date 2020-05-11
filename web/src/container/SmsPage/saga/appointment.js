@@ -6,7 +6,7 @@ import Appointment from '../../../models/appointment';
 export function* getAppointments() {
   while (true) {
     try {
-      var data = yield take(GET_APPOINTMENTS);
+      const data = yield take(GET_APPOINTMENTS);
       const result = yield call(Appointment.getBetween, data.range);
       yield put(getAppointmentsSuccess(result));
     } catch (err) {

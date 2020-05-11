@@ -212,12 +212,12 @@ $env:SPRING_PROFILES_ACTIVE="dev,embedded-postgres"; $env:TZ="UTC"; .\gradlew.ba
 
 #### test
 ```
-SPRING_PROFILES_ACTIVE=embedded-postgres TZ=UTC ./gradlew clean test -x webpackBuildDev
+SPRING_PROFILES_ACTIVE=embedded-postgres TZ=UTC ./gradlew clean test
 ```
 ##### windows
 ```
 # powershell
-$env:SPRING_PROFILES_ACTIVE="embedded-postgres"; $env:TZ="UTC"; .\gradlew.bat clean test -x webpackBuildDev
+$env:SPRING_PROFILES_ACTIVE="embedded-postgres"; $env:TZ="UTC"; .\gradlew.bat clean test
 ```
 
 #### cleanup

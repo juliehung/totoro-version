@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Button, Modal, Tag } from 'antd';
-import { Gray700, Gray100 } from '../../utils/colors';
+import { Button, Modal, Tag, Input } from 'antd';
+import { Gray700, Gray100, Default } from '../../utils/colors';
 
 export const StyledButton = styled(Button)`
   padding: 0 16px;
@@ -116,5 +116,32 @@ export const StyledTag = styled(Tag)`
         fill: #8f9bb3;
       }
     }
+  }
+`;
+
+export const StyledInput = styled(Input)`
+  &.ant-input,
+  &.ant-input-affix-wrapper .ant-input {
+    background: #f8fafb;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    color: ${Default};
+  }
+  &.ant-input-affix-wrapper {
+    background: #f8fafb;
+    border-radius: 8px;
+  }
+`;
+
+export const StyledInputArea = styled(Input.TextArea)`
+  &.textarea-input {
+    background: #f8fafb;
+    border-radius: 8px 8px 0 0;
+    font-weight: 600;
+    font-size: 15px;
+    scrollbar-width: none; /* Firefox */
+    resize: none;
+    color: ${Default};
   }
 `;

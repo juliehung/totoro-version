@@ -23,19 +23,15 @@ export default class SmsEvent {
         template: event.metadata.template,
         selectedAppointments: event.metadata.selectedAppointments,
       },
-      sms: event.sms.map((mes, i) => {
-        var newM = {
-          phone: mes.phone,
-          content: mes.content,
-          metadata: {
-            patientId: mes.metadata.patientId,
-            patientName: mes.metadata.patientName,
-            appointmentDate: event.metadata.selectedAppointments[i].expectedArrivalTime,
-          },
-        };
-
-        return newM;
-      }),
+      sms: event.sms.map((mes, i) => ({
+        phone: mes.phone,
+        content: mes.content,
+        metadata: {
+          patientId: mes.metadata.patientId,
+          patientName: mes.metadata.patientName,
+          appointmentDate: event.metadata.selectedAppointments[i].expectedArrivalTime,
+        },
+      })),
     };
 
     const options = {
@@ -45,8 +41,7 @@ export default class SmsEvent {
       method: processedEvent.id == null ? 'POST' : 'PUT',
       body: JSON.stringify(processedEvent),
     };
-    const result = await request(requestUrl, options);
-    return result;
+    return await request(requestUrl, options);
   };
 
   // delete
@@ -63,8 +58,7 @@ export default class SmsEvent {
     const options = {
       method: 'POST',
     };
-    const result = await requestNoParse(`${requestUrl}/${id}/execute`, options);
-    return result;
+    return await requestNoParse(`${requestUrl}/${id}/execute`, options);
   };
 
   // get remaining
@@ -73,7 +67,6 @@ export default class SmsEvent {
       method: 'GET',
     };
 
-    const result = await request(remaining_requestUrl, options);
-    return result;
+    return await request(remaining_requestUrl, options);
   };
 }

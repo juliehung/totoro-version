@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import AppointmentPage from '../AppointmentPage';
 import RegistrationPage from '../RegistrationPage';
-import { Switch, Route, Link, useLocation } from 'react-router-dom';
+import { Switch, Route, Link, Redirect, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import ShiftPage from '../ShiftPage';
 import SettingPage from '../SettingPage';
@@ -163,6 +163,14 @@ const ContentContainer = styled.div`
 `;
 //#endregion
 
+const routes = {
+  appointment: '/appointment',
+  registration: '/registration',
+  sms: '/sms',
+  shift: '/shift',
+  setting: '/setting',
+};
+
 function NavHome(props) {
   const { account } = props;
 
@@ -170,7 +178,7 @@ function NavHome(props) {
 
   const logout = () => {
     removeCookie('token', { path: '/' });
-    window.location.reload();
+    window.location = '/';
   };
 
   const [currentLocation, setCurrentLocation] = useState(undefined);
@@ -186,7 +194,7 @@ function NavHome(props) {
   useEffect(() => {
     const route = location.pathname.split('/')[1];
     if (route !== currentLocation) {
-      setCurrentLocation(route);
+      setCurrentLocation('/' + route);
     }
   }, [location, currentLocation]);
 
@@ -206,8 +214,8 @@ function NavHome(props) {
         </Link>
         <div>
           <ul>
-            <NavItem focus={currentLocation === 'registration'}>
-              <Link to="/registration">
+            <NavItem focus={currentLocation === routes.registration}>
+              <Link to={routes.registration}>
                 <div>
                   <img src={IconBookOpenFill} alt="bookIcon" />
                   <img src={IconBookOpen} alt="bookIcon" />
@@ -215,8 +223,8 @@ function NavHome(props) {
                 </div>
               </Link>
             </NavItem>
-            <NavItem focus={currentLocation === 'sms'}>
-              <Link to="/sms">
+            <NavItem focus={currentLocation === routes.sms}>
+              <Link to={routes.sms}>
                 <div>
                   <img src={MessageCircleFill} alt="smsIcon" />
                   <img src={MessageCircle} alt="smsIcon" />
@@ -224,8 +232,8 @@ function NavHome(props) {
                 </div>
               </Link>
             </NavItem>
-            <NavItem focus={currentLocation === ''}>
-              <Link to="/">
+            <NavItem focus={currentLocation === routes.appointment}>
+              <Link to={routes.appointment}>
                 <div>
                   <img src={IconCalendarFill} alt="calendarIcon" />
                   <img src={IconCalendar} alt="calendarIcon" />
@@ -268,22 +276,22 @@ function NavHome(props) {
           setDrawerVisible(false);
         }}
       >
-        <div to="/" style={{ marginBottom: '30px' }}>
+        <div style={{ marginBottom: '30px' }}>
           <img src={DentallHisLogo} alt="dentallHis" />
         </div>
-        <DrawerItem to="/registration">
+        <DrawerItem to={routes.registration}>
           <div>
             <BookOpen />
             <span>就診列表</span>
           </div>
         </DrawerItem>
-        <DrawerItem to="/sms">
+        <DrawerItem to={routes.sms}>
           <div>
             <Message />
             <span>SMS</span>
           </div>
         </DrawerItem>
-        <DrawerItem to="/">
+        <DrawerItem to={routes.appointment}>
           <div>
             <CalendarFill />
             <span>約診排程</span>
@@ -292,23 +300,23 @@ function NavHome(props) {
       </Drawer>
       <ContentContainer>
         <Switch>
-          <Route exact path="/shift">
-            <ShiftPage />
-          </Route>
-          <Route exact path="/">
+          <Route exact path={routes.appointment}>
             <AppointmentPage />
           </Route>
-          <Route exact path="/registration">
+          <Route exact path={routes.registration}>
             <RegistrationPage />
           </Route>
-          <Route path="/setting">
-            <SettingPage />
-          </Route>
-          <Route path="/sms">
+          <Route path={routes.sms}>
             <SmsPage />
           </Route>
-          <Route path="*">
-            <AppointmentPage />
+          <Route exact path={routes.shift}>
+            <ShiftPage />
+          </Route>
+          <Route path={routes.setting}>
+            <SettingPage />
+          </Route>
+          <Route path="/">
+            <Redirect to={routes.appointment} />
           </Route>
         </Switch>
       </ContentContainer>

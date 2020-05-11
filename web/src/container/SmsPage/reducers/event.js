@@ -40,11 +40,12 @@ const initState = {
   clinicId: null,
   remaining: 0,
   isRemainingLoaded: false,
-  isWrongNumberLength: false,
   isSentFailed: null,
   currentKey: 'ALL',
   caretPosition: -1,
   caretChangedBy: 'keydown',
+  isEventsLoading: false,
+  isDeletingEvent: false,
 };
 
 const initialState = {
@@ -60,12 +61,14 @@ const event = (state = initialState, action) =>
         draft.selectedEventId = null;
         draft.editingEvent = null;
         draft.isLoaded = false;
+        draft.isEventsLoading = true;
         break;
       case SAVE_EVENT:
         draft.isLoaded = false;
         break;
       case DELETE_EVENT:
         draft.isLoaded = false;
+        draft.isDeletingEvent = true;
         break;
       case EXECUTE_EVENT:
         draft.isLoaded = false;
@@ -77,13 +80,13 @@ const event = (state = initialState, action) =>
         break;
 
       case GET_EVENTS_SUCCESS: {
-        var sorted = action.events.slice().sort((a, b) => (a.modifiedDate > b.modifiedDate ? -1 : 1));
+        const sorted = action.events.slice().sort((a, b) => (a.modifiedDate > b.modifiedDate ? -1 : 1));
         draft.staticEvents = sorted;
         draft.events =
           state.currentKey === 'ALL'
             ? sorted
             : sorted.filter(event => {
-                var sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
+                const sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
                 return sta === state.currentKey.toLowerCase();
               });
         draft.selectedEvent = null;
@@ -98,13 +101,14 @@ const event = (state = initialState, action) =>
           draft.editingEvent = selection;
         }
         draft.isLoaded = true;
+        draft.isEventsLoading = false;
         break;
       }
 
       case SAVE_EVENT_SUCCESS: {
         const snapShot = [...state.staticEvents];
         const identity = action.payload.identity;
-        var toBePlaced = action.payload.result;
+        let toBePlaced = action.payload.result;
         const replaceIdx = snapShot.indexOf(
           snapShot.find(ev => (ev.id !== null ? identity === ev.id : identity === ev.tempId)),
         );
@@ -118,7 +122,7 @@ const event = (state = initialState, action) =>
           state.currentKey === 'ALL'
             ? draft.staticEvents
             : draft.staticEvents.filter(event => {
-                var sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
+                const sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
                 return sta === state.currentKey.toLowerCase();
               });
 
@@ -142,7 +146,7 @@ const event = (state = initialState, action) =>
           state.currentKey === 'ALL'
             ? draft.staticEvents
             : draft.staticEvents.filter(event => {
-                var sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
+                const sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
                 return sta === state.currentKey.toLowerCase();
               });
 
@@ -150,6 +154,7 @@ const event = (state = initialState, action) =>
         draft.selectedEventId = null;
         draft.editingEvent = null;
         draft.isLoaded = true;
+        draft.isDeletingEvent = false;
         break;
       }
 
@@ -188,7 +193,7 @@ const event = (state = initialState, action) =>
           // if it doesn't have id, delete locally here.
           // if it has id => go saga > event > deleteEvent
           if (state.selectedEvent.id === null) {
-            var newArr = state.staticEvents.filter(event => state.selectedEventId !== event.tempId);
+            const newArr = state.staticEvents.filter(event => state.selectedEventId !== event.tempId);
             draft.staticEvents = newArr;
             draft.events =
               state.currentKey === 'ALL'
@@ -201,7 +206,7 @@ const event = (state = initialState, action) =>
           // 2. changing the view
         } else if (action.event !== null) {
           // 2-2.
-          var selection = { ...action.event };
+          const selection = { ...action.event };
           if (selection.status === 'draft') selection.isEdit = true;
           draft.selectedEvent = selection;
           draft.selectedEventId = selection.id !== null ? selection.id : selection.tempId;
@@ -227,18 +232,18 @@ const event = (state = initialState, action) =>
             state.currentKey === 'ALL'
               ? draft.staticEvents
               : draft.staticEvents.filter(event => {
-                  var sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
+                  const sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
                   return sta === state.currentKey.toLowerCase();
                 });
         }
         // 2. add new one
-        var newEvent = {
+        const newEvent = {
           tempId: uuid(),
           clinicName: state.clinicName,
           isEdit: true,
           template: '',
           selectedAppointments: [
-            // appointmnets
+            // appointments
           ],
           id: null,
           title: '無主旨',
@@ -249,7 +254,7 @@ const event = (state = initialState, action) =>
             selectedAppointments: [],
           },
         };
-        var allEvents = [newEvent, ...snapShot];
+        const allEvents = [newEvent, ...snapShot];
 
         // 3. go to ALL section
         draft.currentKey = 'ALL';
@@ -274,7 +279,7 @@ const event = (state = initialState, action) =>
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
         break;
       case ADD_TAG:
-        var adding = ' {{' + action.value + '}}';
+        const adding = ' {{' + action.value + '}}';
         const currentTemplate = state.editingEvent.metadata.template;
         if (draft.caretPosition !== -1) {
           if (draft.caretChangedBy === 'keydown') draft.caretPosition += 1;
@@ -290,15 +295,13 @@ const event = (state = initialState, action) =>
         const allApps = [...action.appointments, ...state.editingEvent.metadata.selectedAppointments];
         draft.editingEvent.metadata.selectedAppointments = allApps.filter(distinct);
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
-        draft.isWrongNumberLength = draft.editingEvent.sms.some(m => checkPhoneFormat(m.phone));
         break;
       case UNSELECT_APPOINTMENT: {
         const newArr = [...state.editingEvent.metadata.selectedAppointments];
-        var removeIdx = state.editingEvent.metadata.selectedAppointments.indexOf(action.key);
+        const removeIdx = state.editingEvent.metadata.selectedAppointments.indexOf(action.key);
         newArr.splice(removeIdx, 1);
         draft.editingEvent.metadata.selectedAppointments = newArr;
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
-        draft.isWrongNumberLength = draft.editingEvent.sms.some(m => checkPhoneFormat(m.phone));
         break;
       }
       //#endregion
@@ -330,7 +333,7 @@ const event = (state = initialState, action) =>
           action.key === 'ALL'
             ? snapShot
             : snapShot.filter(event => {
-                var sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
+                const sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
                 return sta === action.key.toLowerCase();
               });
         break;
@@ -346,24 +349,24 @@ const event = (state = initialState, action) =>
 
 const processingEventSms = (clinicName, event) => {
   return event.metadata.selectedAppointments.map(app => {
-    var content = decodeTemplate(clinicName, app, event.metadata.template);
+    const content = decodeTemplate(clinicName, app, event.metadata.template);
     return {
       metadata: {
         patientId: app.patientId,
         patientName: app.patientName,
         appointmentDate: app.expectedArrivalTime,
       },
-      phone: app.phone.replace(/^09/, '+8869'),
+      phone: app.phone.trim().replace(/^09/, '+8869'),
       content,
     };
   });
 };
 
 const decodeTemplate = (clinicName, appointment, template) => {
-  var content = template;
+  let content = template;
   initialState.tags.forEach(tag => {
-    var word = '{{' + tag + '}}';
-    var replaceable = new RegExp(word, 'g');
+    const word = '{{' + tag + '}}';
+    const replaceable = new RegExp(word, 'g');
     if (tag === '約診日期') {
       content = content.replace(replaceable, moment(appointment.expectedArrivalTime).format('MM/DD'));
     } else if (tag === '約診時間') {
@@ -382,7 +385,5 @@ const decodeTemplate = (clinicName, appointment, template) => {
 };
 
 const distinct = (element, idx, array) => array.map(e => e.id).indexOf(element.id) === idx;
-
-const checkPhoneFormat = phone => !phone.startsWith('+8869') || phone.length !== 13;
 
 export default event;

@@ -28,6 +28,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  .fc-widget-header,
+  .fc-widget-content {
+    border-color: #d7e3f1;
+  }
 `;
 
 const Header = styled.div`
