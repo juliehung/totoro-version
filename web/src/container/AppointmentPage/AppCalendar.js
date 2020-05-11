@@ -38,7 +38,7 @@ import styled from 'styled-components';
 import { handleEventRender } from './utils/handleEventRender';
 import { handleResourceRender } from './utils/handleResourceRender';
 import { convertSettingsToClinicOffEvent } from './utils/convertSettingsToClinicOffEvent';
-import { message } from 'antd';
+import { message, Spin } from 'antd';
 import MqttHelper from '../../utils/mqtt';
 import { calFirstDay } from './reducers/calendar';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
@@ -146,6 +146,7 @@ const ViewItem = styled.div`
 `;
 
 const CalendarContainer = styled.div`
+  position: relative;
   flex: 1;
   overflow: scroll;
   .eventCard {
@@ -217,6 +218,17 @@ const CalendarContainer = styled.div`
     background-color: rgba(143, 155, 179, 0.08);
   }`
       : ''}
+`;
+
+const SpinContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.08);
+  position: absolute;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 //#endregion
 
@@ -458,6 +470,7 @@ class AppCalendar extends React.Component {
   };
 
   eventEditStop = () => {
+    this.clickTitle();
     this.scrollListener = document.querySelector('.fc-scroller');
     this.scrollListener.addEventListener('scroll', this.clickTitle);
   };
@@ -565,6 +578,11 @@ class AppCalendar extends React.Component {
         <CalendarContainer
           noResourseAndShiftOpen={!resource.length && shiftOpen && this.props.viewType === 'resourceTimeGridDay'}
         >
+          {this.props.loading && (
+            <SpinContainer>
+              <Spin spinning={this.props.loading} />
+            </SpinContainer>
+          )}
           <FullCalendar
             ref={this.calendarComponentRef}
             height="parent"
@@ -641,6 +659,10 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   account: homePageReducer.account.data,
   backgroundEvent: convertShitToBackgroundEvent(appointmentPageReducer.shift.shift),
   getShiftSuccess: appointmentPageReducer.shift.getShiftSuccess,
+  loading:
+    !appointmentPageReducer.shift.getShiftSuccess ||
+    !appointmentPageReducer.calendar.getSuccess ||
+    !homePageReducer.user.getSuccess,
 });
 
 const mapDispatchToProps = {

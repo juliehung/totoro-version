@@ -32,6 +32,7 @@ const initState = {
   slotDuration: 15,
   range: { start: undefined, end: undefined },
   cancelApp: false,
+  getSuccess: false,
 };
 
 export const initialState = { ...initState };
@@ -45,10 +46,12 @@ const calendar = (state = initialState, action) =>
         break;
       case GET_APPOINTMENTS_START:
         draft.range = action.range;
+        draft.getSuccess = false;
         break;
       case GET_APPOINTMENTS_SUCCESS:
         draft.appointments = convertAppsToEvt(action.appData);
         draft.doctorAppCount = handleCountDocApp(draft.appointments);
+        draft.getSuccess = initState.getSuccess;
         break;
       case CHANGE_CAL_FIRST_DAY:
         draft.calendarFirstDay = action.firstDay % 7;
