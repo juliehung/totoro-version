@@ -82,6 +82,7 @@ const TodayContainer = styled.div`
   font-size: 13px;
   display: flex;
   color: #8f9bb3;
+  font-weight: bold;
   & > div {
     font-size: 10px;
     padding: 5px 10px;
@@ -89,6 +90,11 @@ const TodayContainer = styled.div`
     border-radius: 34px;
     margin-left: 7px;
     cursor: pointer;
+    background-color: rgba(143, 155, 179, 0.08);
+    transition: all 300ms ease-in-out;
+    &:hover {
+      background-color: rgba(143, 155, 179, 0.4);
+    }
   }
   @media (max-width: 850px) {
     display: none;
