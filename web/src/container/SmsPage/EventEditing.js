@@ -97,7 +97,7 @@ const TagsContainer = styled.div`
   margin: 4px;
   background: transparent;
   max-height: 60px;
-  overflow: scroll;
+  overflow-y: scroll;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
   &::-webkit-scrollbar {
