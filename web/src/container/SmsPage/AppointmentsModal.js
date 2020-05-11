@@ -59,6 +59,12 @@ const TitleText = styled(NoMarginText)`
   font-weight: 600;
 `;
 
+const PhoneText = styled(P2)`
+  &::before {
+    content: ${props => (props.isInvalid ? '"📵"' : '')};
+  }
+`;
+
 const NoPageTable = styled(Table)`
   margin: 0 24px 24px 24px;
   & ul {
@@ -182,16 +188,19 @@ function AppointmentsModal(props) {
     hideDefaultSelections: true,
     selectedRowKeys: tempAppointments.map(app => app.id),
     getCheckboxProps: record => ({
-      disabled: isUnvalidPhone(record.phone),
+      disabled: isInvalidPhone(record.phone),
     }),
   };
 
-  const isUnvalidPhone = phone => {
+  const isInvalidPhone = phone => {
     return phone.trim().length !== 10 || phone.trim().substring(0, 2) !== '09';
   };
 
   const onRow = record => ({
     onClick: () => {
+      if (isInvalidPhone(record.phone)) {
+        return;
+      }
       if (tempAppointments.find(t => t.id === record.id)) {
         setTempAppointments(tempAppointments.filter(t => t.id !== record.id));
       } else {
@@ -219,7 +228,14 @@ function AppointmentsModal(props) {
       dataIndex: 'phone',
       width: 130,
       sorter: (a, b) => a.phone.localeCompare(b.phone),
-      render: phone => <P2 style={{ color: isUnvalidPhone(phone) ? O1 : Default }}>{phone}</P2>,
+      render: phone => {
+        const isInvalid = isInvalidPhone(phone);
+        return (
+          <PhoneText style={{ color: isInvalid ? O1 : Default }} isInvalid={isInvalid}>
+            {phone}
+          </PhoneText>
+        );
+      },
     },
     {
       title: '醫生',
