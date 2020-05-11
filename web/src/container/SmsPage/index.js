@@ -264,26 +264,25 @@ function SmsPage(props) {
   }, [getUsers, getClinicSettings, getEvents, getClinicRemaining]);
 
   useEffect(() => {
-    var params = window.location.href.split('?')[1]
+    var params = window.location.href.split('?')[1];
     if (params) {
-        var key = params.split('=')[0]
-        var id = params.split('=')[1]
-        if (key === 'se_id' && id !== '') {
-          var prevItem = events.find(e => e.id === id)
-          if (prevItem && editingEvent === null) {
-            setSelectedEvent(prevItem)
-          }
+      var key = params.split('=')[0];
+      var id = params.split('=')[1];
+      if (key === 'se_id' && id !== '') {
+        var prevItem = events.find(e => e.id === id);
+        if (prevItem && editingEvent === null) {
+          setSelectedEvent(prevItem);
         }
+      }
     }
   }, [events, setSelectedEvent, editingEvent]);
 
-  // detect the new event has been saved and its tempId and id exist 
+  // detect the new event has been saved and its tempId and id exist
   useEffect(() => {
     if (editingEvent && editingEvent.tempId && editingEvent.id) {
-      window.history.pushState( {}, 'set', `#/sms?se_id=${editingEvent.id}`);
+      window.history.pushState({}, 'set', `#/sms?se_id=${editingEvent.id}`);
     }
   }, [editingEvent]);
-
 
   useLayoutEffect(() => {
     setHasEvent(selectedEvent !== null);
@@ -306,7 +305,7 @@ function SmsPage(props) {
     // if current(previous) item is able to be posted or put
     if (isDiff(editingEvent, selectedEvent) && editingEvent.metadata.template.length !== 0) saveEvent(editingEvent);
     setSelectedEvent(item);
-    window.history.pushState( {}, 'set', `#/sms?se_id=${item.id}`);
+    window.history.pushState({}, 'set', `#/sms?se_id=${item.id}`);
   };
 
   return (
@@ -324,8 +323,8 @@ function SmsPage(props) {
                 shape="round"
                 block
                 onClick={() => {
-                  window.history.pushState({}, '', `#/sms?creating=true`)
-                  createEvent()
+                  window.history.pushState({}, '', `#/sms?creating=true`);
+                  createEvent();
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -335,10 +334,14 @@ function SmsPage(props) {
               </StyledLargerButton>
             </ButtonBox>
             {categories.map((category, i) => (
-              <MenuItem key={category} selected={currentKey === category} onClick={() => {
-                window.history.pushState( {}, '', `#/sms`);
-                filterEvents(category)
-              }}>
+              <MenuItem
+                key={category}
+                selected={currentKey === category}
+                onClick={() => {
+                  window.history.pushState({}, '', `#/sms`);
+                  filterEvents(category);
+                }}
+              >
                 {categoryIcons[i]}
                 <MenuName>{categoriesChinese[i]}</MenuName>
               </MenuItem>
