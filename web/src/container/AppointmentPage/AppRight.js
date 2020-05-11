@@ -60,7 +60,7 @@ const ItemContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #edf1f7;
-  padding: 0 22px;
+  padding: 0 16px;
   font-weight: bold;
   & img {
     width: 20px;
@@ -89,6 +89,8 @@ const ItemContainer = styled.div`
   & > :nth-child(1) {
     display: flex;
     & > div {
+      display: flex;
+      align-items: center;
       margin-right: 16px;
       position: relative;
     }
