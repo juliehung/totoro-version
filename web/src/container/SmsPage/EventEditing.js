@@ -170,7 +170,7 @@ function EventEditing(props) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (editingEvent !== null && editingEvent.isEdit && editingEvent.metadata.template.length !== 0) {
+      if (editingEvent !== null && editingEvent.isEdit) {
         if (isDiff(editingEvent, selectedEvent)) {
           saveEvent(editingEvent);
         }
