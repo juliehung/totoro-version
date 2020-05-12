@@ -38,7 +38,7 @@ import styled from 'styled-components';
 import { handleEventRender } from './utils/handleEventRender';
 import { handleResourceRender } from './utils/handleResourceRender';
 import { convertSettingsToClinicOffEvent } from './utils/convertSettingsToClinicOffEvent';
-import { message, Spin } from 'antd';
+import { message, Spin, Popover } from 'antd';
 import MqttHelper from '../../utils/mqtt';
 import { calFirstDay } from './reducers/calendar';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
@@ -51,7 +51,11 @@ import TwoArrowLeft from '../../images/arrow-left.svg';
 import TwoArrowRight from '../../images/arrow-right.svg';
 import ArrowLeft from '../../images/two-arrow-left.svg';
 import ArrowRight from '../../images/two-arrow-right.svg';
+import EyeFill from '../../images/eye-fill.svg';
+import EyeFillWhite from '../../images/eye-fill-white.svg';
+import EyeOffFill from '../../images/eye-off-fill.svg';
 import { parseDisplayRange } from './utils/parseDisplayRange';
+import TimeDisplay from './TimeDisplay';
 
 //#region
 const Container = styled.div`
@@ -123,6 +127,11 @@ const TitleContainer = styled.div`
   }
 `;
 
+const HeaderRight = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const ViewContainer = styled.div`
   font-size: 12px;
   display: flex;
@@ -149,6 +158,68 @@ const ViewItem = styled.div`
 
   background: ${props => (props.selected ? '#3366ff' : '#fff')};
   color: ${props => (props.selected ? '#fff' : '#3366ff')};
+`;
+
+const DoctorControlContainer = styled.div`
+  width: 40px;
+  height: 40px;
+  background-color: #edf1f7;
+  margin-left: 11px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+`;
+
+const DoctorControl = styled.div`
+  width: 300px;
+  max-height: 500px;
+
+  & > :first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 13px;
+    color: #222b45;
+    & > :first-child {
+      font-size: 18px;
+    }
+  }
+
+  & > :nth-child(2) {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+`;
+
+const DoctorControlItem = styled.div`
+  font-weight: bold;
+  font-size: 12px;
+  margin: 4px 5px;
+  padding: 8px 12px;
+  border-radius: 34px;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+  color: ${props => (props.selected ? '#fff' : '#8f9bb3')};
+  background-color: ${props => (props.selected ? '#00e096' : 'rgba(143, 155, 179, 0.08)')};
+  border: ${props => (props.selected ? ' 1px solid #00e096' : '1px solid #8f9bb3')};
+  & > img {
+    color: red;
+    width: 16px;
+    margin-right: 6px;
+  }
+  .on {
+    display: ${props => (props.selected ? 'block' : 'none')};
+  }
+  .off {
+    display: ${props => (props.selected ? 'none' : 'block')};
+  }
 `;
 
 const CalendarContainer = styled.div`
@@ -215,15 +286,17 @@ const CalendarContainer = styled.div`
     background-size: 10px 10px;
   }
 
-  ${props =>
-    props.noResourseAndShiftOpen
-      ? `.fc-day.fc-widget-content {
-    color: rgba(0, 0, 0, 0.1);
-    background-image: repeating-linear-gradient(45deg,currentColor 0,currentColor 1px,transparent 0,transparent 50%);
-    background-size: 10px 10px;
-    background-color: rgba(143, 155, 179, 0.08);
-  }`
-      : ''}
+  .fc-day.fc-widget-content {
+    ${props =>
+      props.noResourceAndShiftOpen
+        ? `
+            color: rgba(0, 0, 0, 0.1);
+            background-image: repeating-linear-gradient(45deg,currentColor 0,currentColor 1px,transparent 0,transparent 50%);
+            background-size: 10px 10px;
+            background-color: rgba(143, 155, 179, 0.08);
+          `
+        : ''}
+  }
 `;
 
 const SpinContainer = styled.div`
@@ -239,7 +312,6 @@ const SpinContainer = styled.div`
 //#endregion
 
 class AppCalendar extends React.Component {
-  state = { currentTime: moment() };
   calendarComponentRef = React.createRef();
 
   componentDidMount() {
@@ -266,13 +338,6 @@ class AppCalendar extends React.Component {
       if (expectedArrivalTime.isBetween(start, end)) {
         // TODO: find a better way to update appointments
       }
-    });
-    this.intervalID = setInterval(() => this.tick(), 1000);
-  }
-
-  tick() {
-    this.setState({
-      currentTime: moment(),
     });
   }
 
@@ -528,6 +593,14 @@ class AppCalendar extends React.Component {
     calendarApi.changeView('resourceTimeGridDay');
   };
 
+  handleDoctorChange = id => {
+    if (this.props.selectedDoctors.includes(id)) {
+      this.props.changeSelectedDoctors(this.props.selectedDoctors.filter(s => s !== id));
+    } else {
+      this.props.changeSelectedDoctors([...this.props.selectedDoctors, id]);
+    }
+  };
+
   render() {
     const shiftOpen = this.props.generalSetting && this.props.generalSetting.showShift;
 
@@ -538,9 +611,9 @@ class AppCalendar extends React.Component {
             if (this.props.selectedAllDoctors) {
               return a;
             }
-            return this.props.selectedDoctors.includes(a.appointment.doctor.user.id.toString());
+            return this.props.selectedDoctors.includes(a.appointment.doctor.user.id);
           })),
-      ...this.props.calendarEvents.filter(() => this.props.showCalEvt),
+      ...this.props.calendarEvents,
       ...(shiftOpen
         ? reverseEvents(this.props.backgroundEvent, this.props.viewType, this.props.calendarRange)
         : this.generalSetting),
@@ -554,16 +627,42 @@ class AppCalendar extends React.Component {
             if (this.props.selectedAllDoctors) {
               return d;
             } else {
-              return this.props.selectedDoctors.includes(d.id.toString());
+              return this.props.selectedDoctors.includes(d.id);
             }
           })
           .map(d => ({ id: d.id, title: d.name, avatar: d.avatar }));
+
+    const doctorControl = (
+      <DoctorControl>
+        <div>
+          <span>檢視</span>
+        </div>
+        <div>
+          {this.props.doctors.map(d => {
+            const selected = this.props.selectedDoctors.includes(d.id);
+            return (
+              <DoctorControlItem
+                key={d.id}
+                selected={selected}
+                onClick={() => {
+                  this.handleDoctorChange(d.id);
+                }}
+              >
+                <img className="off" src={EyeOffFill} alt="icon" />
+                <img className="on" src={EyeFillWhite} alt="icon" />
+                <span>{`${d.name}(${this.props.doctorAppCount[d.id] ? this.props.doctorAppCount[d.id] : 0})`}</span>
+              </DoctorControlItem>
+            );
+          })}
+        </div>
+      </DoctorControl>
+    );
 
     return (
       <Container>
         <Header>
           <TodayContainer>
-            <span>{this.state.currentTime.format('LLLL')}</span>
+            <TimeDisplay />
             <div onClick={this.todayClick}>
               <span>今日</span>
             </div>
@@ -575,23 +674,32 @@ class AppCalendar extends React.Component {
             <img src={ArrowRight} alt="arrow-right" onClick={this.nextClick} />
             <img src={TwoArrowRight} alt="two-arrow-right" onClick={this.nextMonthClick} />
           </TitleContainer>
-          <ViewContainer>
-            <ViewItem onClick={this.onDayClick} selected={this.props.viewType === 'resourceTimeGridDay'}>
-              <span>天</span>
-            </ViewItem>
-            <ViewItem onClick={this.onWeekClick} selected={this.props.viewType === 'timeGridWeek'}>
-              <span>周</span>
-            </ViewItem>
-            <ViewItem onClick={this.onMonthClick} selected={this.props.viewType === 'dayGridMonth'}>
-              <span>月</span>
-            </ViewItem>
-            <ViewItem onClick={this.onListClick} selected={this.props.viewType === 'listWeek'}>
-              <span>周列表</span>
-            </ViewItem>
-          </ViewContainer>
+          <HeaderRight>
+            <ViewContainer>
+              <ViewItem onClick={this.onDayClick} selected={this.props.viewType === 'resourceTimeGridDay'}>
+                <span>天</span>
+              </ViewItem>
+              <ViewItem onClick={this.onWeekClick} selected={this.props.viewType === 'timeGridWeek'}>
+                <span>周</span>
+              </ViewItem>
+              <ViewItem onClick={this.onMonthClick} selected={this.props.viewType === 'dayGridMonth'}>
+                <span>月</span>
+              </ViewItem>
+              <ViewItem onClick={this.onListClick} selected={this.props.viewType === 'listWeek'}>
+                <span>周列表</span>
+              </ViewItem>
+            </ViewContainer>
+            {!this.props.loading && !shiftOpen && (
+              <Popover placement="bottomLeft" trigger="click" content={doctorControl}>
+                <DoctorControlContainer>
+                  <img src={EyeFill} alt={'select doctor'} />
+                </DoctorControlContainer>
+              </Popover>
+            )}
+          </HeaderRight>
         </Header>
         <CalendarContainer
-          noResourseAndShiftOpen={!resource.length && shiftOpen && this.props.viewType === 'resourceTimeGridDay'}
+          noResourceAndShiftOpen={!resource.length && shiftOpen && this.props.viewType === 'resourceTimeGridDay'}
         >
           {this.props.loading && (
             <SpinContainer>
@@ -665,9 +773,9 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   selectedDoctors: appointmentPageReducer.calendar.selectedDoctors,
   selectedAllDoctors: appointmentPageReducer.calendar.selectedAllDoctors,
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
+  doctorAppCount: appointmentPageReducer.calendar.doctorAppCount,
   calendarEvents: appointmentPageReducer.calendar.calendarEvents,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
-  showCalEvt: appointmentPageReducer.calendar.showCalEvt,
   generalSetting: homePageReducer.settings.generalSetting,
   calendarRange: appointmentPageReducer.calendar.range,
   cancelApp: appointmentPageReducer.calendar.cancelApp,
