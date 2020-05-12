@@ -9,11 +9,15 @@ import io.dentall.totoro.service.dto.SmsChargeDTO;
 import io.dentall.totoro.service.dto.SmsEventDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.errors.InternalServerErrorException;
+import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.SmsInfoVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -113,11 +117,19 @@ public class MessageResource {
     }
 
     @GetMapping("/messages/sms/events")
-    public DeferredResult<ResponseEntity<List<SmsEventDTO>>> getSmsEvents() {
+    public DeferredResult<ResponseEntity<List<SmsEventDTO>>> getSmsEvents(
+        @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+        @RequestParam(value = "size", defaultValue = "10", required = false) Integer size
+    ) {
         DeferredResult<ResponseEntity<List<SmsEventDTO>>> result = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             try {
-                result.setResult(ResponseEntity.ok(cloudFunctionService.getSmsEvents(ImageRepositoryConfiguration.BASIC_FOLDER_PATH)));
+                Page<SmsEventDTO> events = cloudFunctionService.getSmsEvents(ImageRepositoryConfiguration.BASIC_FOLDER_PATH, PageRequest.of(page, size));
+                HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(
+                    events, "/messages/sms/events"
+                );
+
+                result.setResult(ResponseEntity.ok().headers(headers).body(events.getContent()));
             } catch (IOException | ThrowableProblem e) {
                 result.setErrorResult(e);
             }
