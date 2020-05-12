@@ -27,7 +27,6 @@ const initState = {
   selectedDoctors: doctors || ['all'],
   doctorAppCount: {},
   selectedAllDoctors: doctors ? doctors.includes('all') : true,
-  showCalEvt: doctors ? doctors.includes('dayOff') : false,
   calendarFirstDay: calFirstDay,
   slotDuration: 15,
   range: { start: undefined, end: undefined },
@@ -62,11 +61,6 @@ const calendar = (state = initialState, action) =>
           draft.selectedAllDoctors = true;
         } else {
           draft.selectedAllDoctors = false;
-        }
-        if (draft.selectedDoctors.includes('dayOff')) {
-          draft.showCalEvt = true;
-        } else {
-          draft.showCalEvt = false;
         }
         localStorage.setItem('selectedDoctors', JSON.stringify(draft.selectedDoctors));
         break;
