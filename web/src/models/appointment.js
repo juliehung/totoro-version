@@ -26,13 +26,13 @@ export default class Appointment {
   };
 
   static getAppointmentsByPatientId = async id => {
-    let requestURL = `${requestUrl}?patientId.equals=${id}`;
+    const requestURL = `${requestUrl}?patientId.equals=${id}`;
     const result = await request(requestURL);
     return result;
   };
 
   static editAppointment = async app => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',
@@ -45,7 +45,7 @@ export default class Appointment {
   };
 
   static create = async app => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',
@@ -58,7 +58,7 @@ export default class Appointment {
   };
 
   static delete = async id => {
-    let requestURL = `${requestUrl}/${id}`;
+    const requestURL = `${requestUrl}/${id}`;
     const options = {
       headers: {
         'content-type': 'application/json',

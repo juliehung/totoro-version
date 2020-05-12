@@ -243,7 +243,7 @@ class AppCalendar extends React.Component {
   calendarComponentRef = React.createRef();
 
   componentDidMount() {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     calendarApi.gotoDate(this.props.calendarDate.format('YYYY-MM-DD'));
 
     // XD just delete the message
@@ -279,7 +279,7 @@ class AppCalendar extends React.Component {
   generalSetting = [];
   componentDidUpdate(prevProps) {
     if (prevProps.calendarDate.format('YYYY-MM-DD') !== this.props.calendarDate.format('YYYY-MM-DD')) {
-      let calendarApi = this.calendarComponentRef.current.getApi();
+      const calendarApi = this.calendarComponentRef.current.getApi();
       calendarApi.gotoDate(this.props.calendarDate.format('YYYY-MM-DD'));
     }
 
@@ -303,7 +303,7 @@ class AppCalendar extends React.Component {
       }
     }
     if (this.calendarComponentRef.current) {
-      let calendarApi = this.calendarComponentRef.current.getApi();
+      const calendarApi = this.calendarComponentRef.current.getApi();
       calendarApi.updateSize();
     }
   }
@@ -342,7 +342,7 @@ class AppCalendar extends React.Component {
     }
 
     if (this.calendarComponentRef.current) {
-      let calendarApi = this.calendarComponentRef.current.getApi();
+      const calendarApi = this.calendarComponentRef.current.getApi();
       const fullcalendarDate = moment(calendarApi.getDate());
       if (this.props.calendarDate.format('YYYY-MM-DD') !== fullcalendarDate.format('YYYY-MM-DD')) {
         this.props.changeCalDate(moment(fullcalendarDate));
@@ -363,7 +363,7 @@ class AppCalendar extends React.Component {
   };
 
   nextClick = () => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     const currentViewType = calendarApi.state.viewType;
     if (currentViewType === 'timeGridWeek') {
       this.props.changeCalFirstDay(this.props.firstDay + 1);
@@ -374,7 +374,7 @@ class AppCalendar extends React.Component {
   };
 
   prevClick = () => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     const currentViewType = calendarApi.state.viewType;
     if (currentViewType === 'timeGridWeek') {
       this.props.changeCalFirstDay(this.props.firstDay - 1);
@@ -385,7 +385,7 @@ class AppCalendar extends React.Component {
   };
 
   nextMonthClick = () => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     const currentViewType = calendarApi.state.viewType;
     if (currentViewType === 'dayGridMonth') {
       calendarApi.nextYear();
@@ -395,7 +395,7 @@ class AppCalendar extends React.Component {
   };
 
   prevMonthClick = () => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     const currentViewType = calendarApi.state.viewType;
     if (currentViewType === 'dayGridMonth') {
       calendarApi.prevYear();
@@ -405,7 +405,7 @@ class AppCalendar extends React.Component {
   };
 
   todayClick = () => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     calendarApi.gotoDate(moment().format('YYYY-MM-DD'));
   };
 
@@ -514,7 +514,7 @@ class AppCalendar extends React.Component {
   };
 
   changeView = view => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     calendarApi.changeView(view);
   };
 
@@ -524,7 +524,7 @@ class AppCalendar extends React.Component {
 
   navLinkDayClick = date => {
     this.props.changeCalDate(moment(date));
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     calendarApi.changeView('resourceTimeGridDay');
   };
 

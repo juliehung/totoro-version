@@ -2,7 +2,7 @@ import { set, get } from 'dot-prop';
 import { shiftResourceColorConfigPrefix } from '../../../models/configuration';
 
 export function parseColorConfigToColor(colorConfig) {
-  let object = {};
+  const object = {};
   colorConfig.forEach(r => {
     set(object, r.configKey, r.configValue);
   });

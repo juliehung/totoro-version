@@ -80,7 +80,7 @@ function handleGenerateBackgroundEvent(date, daySetting, timeSetting) {
 }
 
 function calculateBackgroundEvent(date, daySetting, timeSetting) {
-  let backgroundEvent = [];
+  const backgroundEvent = [];
   const {
     morningStartTime,
     morningEndTime,

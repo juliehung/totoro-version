@@ -38,7 +38,7 @@ export function handlePatientForApi(patientEntity, patient) {
   const otherOption = TagOption.filter(t => t.jhi_type === 'OTHER');
   const other = patient.other.map(o => mapOptionToText(o, otherOption));
 
-  let tags = [...disease, ...allergy, ...other].filter(t => t).map(id => ({ id }));
+  const tags = [...disease, ...allergy, ...other].filter(t => t).map(id => ({ id }));
   if (pregnant) {
     tags.push({ id: 25 });
   }

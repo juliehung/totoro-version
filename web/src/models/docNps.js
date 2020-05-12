@@ -7,21 +7,21 @@ const requestUrl = `${apiUrl}/${LOCATION}`;
 export default class DocNps {
   // get by pid
   static getByPid = async pid => {
-    let requestURL = `${apiUrl}/business/${LOCATION}?patientId=${pid}`;
+    const requestURL = `${apiUrl}/business/${LOCATION}?patientId=${pid}`;
     const result = await request(requestURL);
     return result;
   };
 
   // get by id
   static getById = async id => {
-    let requestURL = `${requestUrl}/${id}`;
+    const requestURL = `${requestUrl}/${id}`;
     const result = await request(requestURL);
     return result;
   };
 
   // POST
   static post = async doc => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',

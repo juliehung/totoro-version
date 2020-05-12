@@ -191,7 +191,7 @@ function DefaultShift(props) {
   }, [createSuccess, getDefaultShift, clickTitle]);
 
   useEffect(() => {
-    let draggableEl = document.getElementById('external-events');
+    const draggableEl = document.getElementById('external-events');
     new Draggable(draggableEl, {
       itemSelector: '.external-event',
       eventData: function (eventEl) {

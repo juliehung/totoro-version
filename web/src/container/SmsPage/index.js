@@ -264,12 +264,12 @@ function SmsPage(props) {
   }, [getUsers, getClinicSettings, getEvents, getClinicRemaining]);
 
   useEffect(() => {
-    var params = window.location.href.split('?')[1];
+    const params = window.location.href.split('?')[1];
     if (params) {
-      var key = params.split('=')[0];
-      var id = params.split('=')[1];
+      const key = params.split('=')[0];
+      const id = params.split('=')[1];
       if (key === 'se_id' && id !== '') {
-        var prevItem = events.find(e => e.id === id);
+        const prevItem = events.find(e => e.id === id);
         if (prevItem && editingEvent === null) {
           setSelectedEvent(prevItem);
         }

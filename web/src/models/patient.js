@@ -7,20 +7,20 @@ const requestUrl = `${apiUrl}/${LOCATION}`;
 export default class Patient {
   // GET
   static getById = async id => {
-    let requestURL = `${requestUrl}/${id}`;
+    const requestURL = `${requestUrl}/${id}`;
     const result = await request(requestURL);
     return result;
   };
 
   static search = async searchText => {
-    let requestURL = `${requestUrl}?search.contains=${searchText}`;
+    const requestURL = `${requestUrl}?search.contains=${searchText}`;
     const result = await request(requestURL);
     return result;
   };
 
   // POST
   static create = async patient => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',
@@ -34,7 +34,7 @@ export default class Patient {
 
   // parseUWPBase64Token
   static put = async patient => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',

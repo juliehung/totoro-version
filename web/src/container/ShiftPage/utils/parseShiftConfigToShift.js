@@ -2,7 +2,7 @@ import { set, get } from 'dot-prop';
 import { defaultShiftConfigPrefix } from '../../../models/configuration';
 
 export function parseShiftConfigToShift(shiftConfig) {
-  let object = {};
+  const object = {};
   shiftConfig.forEach(r => {
     set(object, r.configKey, r.configValue);
   });

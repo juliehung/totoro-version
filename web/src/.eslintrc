@@ -6,7 +6,9 @@
     "no-case-declarations": "off",
     "react/display-name": "off",
     "semi": ["error", "always"],
-    "no-constant-condition": "off"
+    "no-constant-condition": "off",
+    "no-var": "error",
+    "prefer-const": "error"
   },
   "parser": "babel-eslint",
   "plugins": ["babel", "import", "jsx-a11y", "react", "prettier"],
