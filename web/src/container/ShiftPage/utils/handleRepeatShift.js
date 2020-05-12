@@ -5,7 +5,7 @@ export const generateApiObj = (userId, date, timeRange, repeatWeek) => {
   if (!repeatWeek) {
     shift = [...shift, { userId, ...combineDateAndRange(date, timeRange) }];
   } else if (repeatWeek > 0) {
-    let currentDate = moment(date);
+    const currentDate = moment(date);
     const lastDayOfMonth = moment(date).endOf('month');
     while (currentDate.isBefore(lastDayOfMonth)) {
       shift = [...shift, { userId, ...combineDateAndRange(currentDate, timeRange) }];

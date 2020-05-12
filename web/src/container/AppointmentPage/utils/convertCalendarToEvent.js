@@ -3,7 +3,7 @@ import parser from 'cron-parser';
 import isAllDay from './isAllDay';
 
 export default function convertCalendarToEvent(calendarEvents) {
-  let events = [];
+  const events = [];
   const color = '#787878';
 
   calendarEvents.forEach(e => {

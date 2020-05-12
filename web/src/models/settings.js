@@ -11,13 +11,13 @@ export default class Settings {
     const minor = 0;
     const major = 0;
     const id = major * 1000000 + minor * 10000 + build * 100 + revision;
-    let requestURL = `${requestUrl}/${id}`;
+    const requestURL = `${requestUrl}/${id}`;
     const result = await request(requestURL);
     return result;
   };
 
   static put = async body => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',

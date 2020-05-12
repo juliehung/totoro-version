@@ -7,7 +7,7 @@ const requestUrl = `${apiUrl}/${LOCATION}`;
 
 export default class Calendar {
   static create = async calEvt => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',
@@ -30,7 +30,7 @@ export default class Calendar {
   };
 
   static edit = async calEvt => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',
@@ -43,7 +43,7 @@ export default class Calendar {
   };
 
   static delete = async id => {
-    let requestURL = `${requestUrl}/${id}`;
+    const requestURL = `${requestUrl}/${id}`;
     const options = {
       method: 'DELETE',
     };

@@ -6,7 +6,7 @@ const requestUrl = `${apiUrl}/${LOCATION}`;
 
 export default class Disposal {
   static getByDate = async (date, signal) => {
-    let requestURL = `${requestUrl}?createdDate.greaterOrEqualThan=${date
+    const requestURL = `${requestUrl}?createdDate.greaterOrEqualThan=${date
       .clone()
       .startOf('day')
       .toISOString()}&createdDate.lessThan=${date.clone().add(1, 'day').startOf('day').toISOString()}`;
@@ -17,7 +17,7 @@ export default class Disposal {
   };
 
   static put = async disposal => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',

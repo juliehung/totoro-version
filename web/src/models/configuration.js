@@ -14,7 +14,7 @@ export default class Configuration {
   };
 
   static post = async body => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',
@@ -27,7 +27,7 @@ export default class Configuration {
   };
 
   static createMultiple = async body => {
-    let requestURL = `${requestUrl}/multiple`;
+    const requestURL = `${requestUrl}/multiple`;
     const options = {
       headers: {
         'content-type': 'application/json',
@@ -40,7 +40,7 @@ export default class Configuration {
   };
 
   static updateMultiple = async body => {
-    let requestURL = `${requestUrl}/multiple`;
+    const requestURL = `${requestUrl}/multiple`;
     const options = {
       headers: {
         'content-type': 'application/json',
@@ -53,7 +53,7 @@ export default class Configuration {
   };
 
   static deleteMultiple = async body => {
-    let requestURL = `${requestUrl}/multiple`;
+    const requestURL = `${requestUrl}/multiple`;
     const options = {
       headers: {
         'content-type': 'application/json',

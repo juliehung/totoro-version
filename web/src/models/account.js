@@ -6,7 +6,7 @@ const requestUrl = `${apiUrl}/${LOCATION}`;
 
 export default class Account {
   static get = async () => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',

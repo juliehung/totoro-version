@@ -9,7 +9,7 @@ export function reverseEvents(shiftEvents, viewType, range) {
 
       let firstDayOfMonth = moment(range.start).startOf('d');
       const endDayOfMonth = moment(range.end).endOf('d');
-      let datesOfMonth = [];
+      const datesOfMonth = [];
       while (firstDayOfMonth.isBefore(endDayOfMonth)) {
         datesOfMonth.push(firstDayOfMonth.format('YYYY-MM-DD HH:mm'));
         firstDayOfMonth = moment(firstDayOfMonth).add(1, 'd');
@@ -30,7 +30,7 @@ export function reverseEvents(shiftEvents, viewType, range) {
       const events = subtractEvent(allTimeEvent, mergedEvent);
       return events;
     } else if (viewType === 'resourceTimeGridDay') {
-      let classifiedEvents = {};
+      const classifiedEvents = {};
       shiftEvents.forEach(s => {
         if (classifiedEvents[s.resourceId]) {
           classifiedEvents[s.resourceId] = [...classifiedEvents[s.resourceId], s];

@@ -7,8 +7,8 @@ import Shift from '../../../models/shift';
 function* dropShift(shiftObj) {
   try {
     const shifts = generateApiObj(shiftObj.resourceId, shiftObj.date, shiftObj.timeRange);
-    let createdShifts = [];
-    for (let shift of shifts) {
+    const createdShifts = [];
+    for (const shift of shifts) {
       const createdShift = yield call(Shift.post, shift);
       createdShifts.push(createdShift);
     }

@@ -7,13 +7,13 @@ const requestUrl = `${apiUrl}/${LOCATION}`;
 export default class User {
   // GET
   static getAll = async () => {
-    let requestURL = `${requestUrl}?size=100`;
+    const requestURL = `${requestUrl}?size=100`;
     const result = await request(requestURL);
     return result;
   };
 
   static getByLogin = async login => {
-    let requestURL = `${requestUrl}/${login}`;
+    const requestURL = `${requestUrl}/${login}`;
     const result = await request(requestURL);
     return result;
   };

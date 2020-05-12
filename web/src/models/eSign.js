@@ -7,14 +7,14 @@ const requestUrl = `${apiUrl}/${LOCATION}`;
 export default class ESign {
   // GET by id
   static getById = async id => {
-    let requestURL = `${requestUrl}?id.equals=${id}`;
+    const requestURL = `${requestUrl}?id.equals=${id}`;
     const result = await request(requestURL);
     return result;
   };
 
   // POST
   static create = async esign => {
-    let requestURL = `${requestUrl}/string64`;
+    const requestURL = `${requestUrl}/string64`;
     const options = {
       headers: {
         'content-type': 'application/json',

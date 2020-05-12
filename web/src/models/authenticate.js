@@ -8,7 +8,7 @@ const requestUrl = `${apiUrl}/${LOCATION}`;
 export default class Authenticate {
   // GET
   static get = async () => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const result = await requestNoParse(requestURL).then(response => response.text());
     if (result && result.length !== 0) {
       return result;
@@ -18,7 +18,7 @@ export default class Authenticate {
 
   // POST
   static post = async account => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',

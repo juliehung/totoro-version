@@ -101,7 +101,7 @@ const event = (state = initialState, action) =>
       case SAVE_EVENT_SUCCESS: {
         const snapShot = [...state.staticEvents];
         const identity = action.payload.identity;
-        let toBePlaced = action.payload.result;
+        const toBePlaced = action.payload.result;
         const replaceIdx = snapShot.indexOf(
           snapShot.find(ev => (ev.id !== null ? identity === ev.id : identity === ev.tempId)),
         );
@@ -189,7 +189,7 @@ const event = (state = initialState, action) =>
               state.currentKey === 'ALL'
                 ? draft.staticEvents
                 : draft.staticEvents.filter(event => {
-                    var sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
+                    const sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
                     return sta === state.currentKey.toLowerCase();
                   });
           }

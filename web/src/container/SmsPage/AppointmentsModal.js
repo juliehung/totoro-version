@@ -251,8 +251,8 @@ function AppointmentsModal(props) {
       render: note => note,
       width: 250,
       sorter: (a, b) => {
-        var aNote = a.note ?? '';
-        var bNote = b.note ?? '';
+        const aNote = a.note ?? '';
+        const bNote = b.note ?? '';
         return aNote.localeCompare(bNote);
       },
     },

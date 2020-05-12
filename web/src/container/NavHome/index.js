@@ -190,7 +190,7 @@ function NavHome(props) {
     }
   };
 
-  let location = useLocation();
+  const location = useLocation();
   useEffect(() => {
     const route = location.pathname.split('/')[1];
     if (route !== currentLocation) {
