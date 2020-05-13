@@ -20,11 +20,6 @@ code {
 }
 
 /* since popover is same level as #root in body */
-.ant-popover-inner {
-  border-radius: 8px !important;
-}
-
-/* since popover is same level as #root in body */
 .ant-message {
   top: 80px !important;
   right: 100px !important;
