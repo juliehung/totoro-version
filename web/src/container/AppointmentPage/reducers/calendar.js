@@ -26,7 +26,6 @@ const initState = {
   calendarEvents: [],
   selectedDoctors: doctors || ['all'],
   doctorAppCount: {},
-  selectedAllDoctors: doctors ? doctors.includes('all') : true,
   calendarFirstDay: calFirstDay,
   slotDuration: 15,
   range: { start: undefined, end: undefined },
@@ -57,11 +56,6 @@ const calendar = (state = initialState, action) =>
         break;
       case CHANGE_SELECTED_DOCTORS:
         draft.selectedDoctors = action.selectedDoctors;
-        if (draft.selectedDoctors.includes('all')) {
-          draft.selectedAllDoctors = true;
-        } else {
-          draft.selectedAllDoctors = false;
-        }
         localStorage.setItem('selectedDoctors', JSON.stringify(draft.selectedDoctors));
         break;
       case GET_CALENDAR_EVENT_SUCCESS:

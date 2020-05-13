@@ -64,7 +64,7 @@ const Container = styled.div`
   width: 85%;
   @media (max-width: 800px) {
     width: 100%;
-    height: 600px;
+    min-height: 600px;
   }
 `;
 
@@ -372,7 +372,7 @@ class AppCalendar extends React.Component {
     const id = this.props.account ? this.props.account.id : undefined;
     if (this.props.phone && id) {
       if (this.props.doctors.length !== 0 && this.props.selectedDoctors.length === 0) {
-        this.props.changeSelectedDoctors([id.toString()]);
+        this.props.changeSelectedDoctors([id]);
       }
     }
     if (this.calendarComponentRef.current) {
@@ -616,9 +616,6 @@ class AppCalendar extends React.Component {
       ...(shiftOpen
         ? this.props.appointments
         : this.props.appointments.filter(a => {
-            if (this.props.selectedAllDoctors) {
-              return a;
-            }
             return this.props.selectedDoctors.includes(a.appointment.doctor.user.id);
           })),
       ...this.props.calendarEvents,
@@ -631,13 +628,7 @@ class AppCalendar extends React.Component {
       ? handleResources(this.props.doctors, this.props.backgroundEvent, this.props.getShiftSuccess)
       : this.props.doctors
           .filter(d => d.activated)
-          .filter(d => {
-            if (this.props.selectedAllDoctors) {
-              return d;
-            } else {
-              return this.props.selectedDoctors.includes(d.id);
-            }
-          })
+          .filter(d => this.props.selectedDoctors.includes(d.id))
           .map(d => ({ id: d.id, title: d.name, avatar: d.avatar }));
 
     const doctorControl = (
@@ -646,22 +637,24 @@ class AppCalendar extends React.Component {
           <span>檢視</span>
         </div>
         <div>
-          {this.props.doctors.map(d => {
-            const selected = this.props.selectedDoctors.includes(d.id);
-            return (
-              <DoctorControlItem
-                key={d.id}
-                selected={selected}
-                onClick={() => {
-                  this.handleDoctorChange(d.id);
-                }}
-              >
-                <img className="off" src={EyeOffFill} alt="icon" />
-                <img className="on" src={EyeFillWhite} alt="icon" />
-                <span>{`${d.name}(${this.props.doctorAppCount[d.id] ? this.props.doctorAppCount[d.id] : 0})`}</span>
-              </DoctorControlItem>
-            );
-          })}
+          {this.props.doctors
+            .filter(d => d.activated)
+            .map(d => {
+              const selected = this.props.selectedDoctors.includes(d.id);
+              return (
+                <DoctorControlItem
+                  key={d.id}
+                  selected={selected}
+                  onClick={() => {
+                    this.handleDoctorChange(d.id);
+                  }}
+                >
+                  <img className="off" src={EyeOffFill} alt="icon" />
+                  <img className="on" src={EyeFillWhite} alt="icon" />
+                  <span>{`${d.name}(${this.props.doctorAppCount[d.id] ? this.props.doctorAppCount[d.id] : 0})`}</span>
+                </DoctorControlItem>
+              );
+            })}
         </div>
       </DoctorControl>
     );
@@ -697,7 +690,7 @@ class AppCalendar extends React.Component {
                 <span>周列表</span>
               </ViewItem>
             </ViewContainer>
-            {!this.props.loading && !shiftOpen && (
+            {this.props.generalSetting && !shiftOpen && (
               <Popover placement="bottomLeft" trigger="click" content={doctorControl}>
                 <DoctorControlContainer>
                   <img src={EyeFill} alt={'select doctor'} />
@@ -779,7 +772,6 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   appointments: appointmentPageReducer.calendar.appointments,
   firstDay: appointmentPageReducer.calendar.calendarFirstDay,
   selectedDoctors: appointmentPageReducer.calendar.selectedDoctors,
-  selectedAllDoctors: appointmentPageReducer.calendar.selectedAllDoctors,
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
   doctorAppCount: appointmentPageReducer.calendar.doctorAppCount,
   calendarEvents: appointmentPageReducer.calendar.calendarEvents,
