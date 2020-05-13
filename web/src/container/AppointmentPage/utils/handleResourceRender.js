@@ -19,6 +19,12 @@ const ResourceContainer = styled.div`
     user-select: none;
     object-fit: cover;
   }
+  & > span {
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 export const handleResourceRender = ({ resource, el }) => {

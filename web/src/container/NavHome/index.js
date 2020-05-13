@@ -118,6 +118,7 @@ const UserContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    min-width: 100px;
     & > :nth-child(2) {
       font-size: 12px;
       color: rgba(0, 0, 0, 0.45);
