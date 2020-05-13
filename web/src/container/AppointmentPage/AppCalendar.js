@@ -197,15 +197,17 @@ const DoctorControl = styled.div`
 `;
 
 const DoctorControlItem = styled.div`
+  width: 45%;
   font-weight: bold;
   font-size: 12px;
-  margin: 4px 5px;
+  margin: 4px 2.5%;
   padding: 8px 12px;
   border-radius: 34px;
   display: flex;
   align-items: center;
   user-select: none;
   cursor: pointer;
+  transition: all ease 300ms;
   color: ${props => (props.selected ? '#fff' : '#8f9bb3')};
   background-color: ${props => (props.selected ? '#00e096' : 'rgba(143, 155, 179, 0.08)')};
   border: ${props => (props.selected ? ' 1px solid #00e096' : '1px solid #8f9bb3')};
@@ -219,6 +221,12 @@ const DoctorControlItem = styled.div`
   }
   .off {
     display: ${props => (props.selected ? 'none' : 'block')};
+  }
+  & > span {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 
