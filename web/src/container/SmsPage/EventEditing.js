@@ -1,6 +1,9 @@
 import { Button, Radio, Popover } from 'antd';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import ManPng from '../../static/images/man.png';
+import WomanPng from '../../static/images/woman.png';
+import DefaultPng from '../../static/images/default.png';
 import styled from 'styled-components';
 import {
   setSelectedEvent,
@@ -138,6 +141,39 @@ const VariablesContainer = styled.div`
   }
 `;
 
+const AvatarImg = styled.img`
+  width: 40px;
+  height: 40px;
+  margin-right: 24px;
+  flex-shrink: 0;
+`;
+
+const PopoverTitleBox = styled.div`
+  display: grid;
+  grid-template-columns: 64px auto;
+  grid-template-rows: 24px 20px;
+  border-bottom: #edf1f7 1px solid;
+  margin: 0 16px;
+  padding: 20px 0 12px;
+  min-width: 200px;
+
+  & :nth-child(2) {
+    grid-row: 1/2;
+    grid-column: 2/3;
+  }
+
+  & :nth-child(3) {
+    grid-row: 2/3;
+    grid-column: 2/3;
+  }
+`;
+
+const renderAvatarImg = gender => {
+  if (gender === 'MALE') return <AvatarImg src={ManPng} alt="male" />;
+  if (gender === 'FEMALE') return <AvatarImg src={WomanPng} alt="female" />;
+  return <AvatarImg src={DefaultPng} alt="default" />;
+};
+
 const isDiff = (o1, o2) => {
   if (o1.metadata.template !== o2.metadata.template) return true;
 
@@ -219,10 +255,11 @@ function EventEditing(props) {
                     <Popover
                       key={app.id}
                       title={
-                        <div style={{ margin: '7px 0' }}>
+                        <PopoverTitleBox>
+                          {renderAvatarImg(app.gender)}
                           <Subtitle>{app.patientName}</Subtitle>
                           <P2>{app.phone}</P2>
-                        </div>
+                        </PopoverTitleBox>
                       }
                       content={
                         <div>

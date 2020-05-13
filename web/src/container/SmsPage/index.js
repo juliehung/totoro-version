@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import {
   getEvents,
@@ -24,6 +24,26 @@ import { StyledLargerButton } from './StyledComponents';
 import isEqual from 'lodash.isequal';
 import { O1 } from '../../utils/colors';
 import { Spin } from 'antd';
+
+export const GlobalStyle = createGlobalStyle`
+  .ant-popover-inner {
+    border-radius: 8px !important;
+  }
+  .ant-popover-content {
+    box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  .ant-popover-title {
+    padding: 0 !important;
+    border-bottom: transparent !important;
+  }
+  .ant-popover-inner-content {
+    padding: 6px 16px 16px;
+  }
+  .ant-popover-arrow {
+    display: none !important;
+  }
+`;
 
 const Container = styled.div`
   display: flex;
@@ -313,6 +333,7 @@ function SmsPage(props) {
       <Helmet>
         <title>簡訊</title>
       </Helmet>
+      <GlobalStyle />
       <RootConatiner>
         <OverallContainer expanding={expanding} hasEvent={hasEvent}>
           <CategoryContainer>

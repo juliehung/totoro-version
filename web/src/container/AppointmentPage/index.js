@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import AppCalendar from './AppCalendar';
 import AppRight from './AppRight';
 import PrintModal from './PrintModal';
@@ -16,6 +16,15 @@ import MobileDetect from 'mobile-detect';
 export const appointmentPage = 'Appointment page';
 
 //#region
+export const GlobalStyle = createGlobalStyle`
+  .ant-popover-inner {
+    border-radius: 8px !important;
+  }
+  .ant-popover-content {
+    box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+  }
+`;
+
 const Container = styled.div`
   height: 100%;
   display: flex;
@@ -49,6 +58,7 @@ function AppointmentPage() {
       <Helmet>
         <title>預約</title>
       </Helmet>
+      <GlobalStyle />
       <AppCalendar viewType={viewType} setViewType={setViewType} defaultView={defaultView} phone={phone} />
       <AppRight viewType={viewType} />
       <PrintModal />
