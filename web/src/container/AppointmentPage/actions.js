@@ -115,8 +115,8 @@ export function getPrintAppointmentsSuccess(appData) {
   return { type: GET_PRINT_APP_LIST_SUCCESS, appData };
 }
 
-export function changeSelectedDoctors(selectedDoctors, mobileFirstRrender) {
-  return { type: CHANGE_SELECTED_DOCTORS, selectedDoctors, mobileFirstRrender };
+export function changeSelectedDoctors(selectedDoctors) {
+  return { type: CHANGE_SELECTED_DOCTORS, selectedDoctors };
 }
 
 export function changeConfirmModalVisible(visible) {
