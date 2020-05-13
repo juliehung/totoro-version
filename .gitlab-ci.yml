@@ -41,7 +41,6 @@ buildByWebpack:
         - apt-get install -y --no-install-recommends curl unzip
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
         - ./gradlew webpack -Pprod -x check -PnodeInstall --no-daemon
-        - ./gradlew npm_run_lint
 
 # test stage
 testRegular:
