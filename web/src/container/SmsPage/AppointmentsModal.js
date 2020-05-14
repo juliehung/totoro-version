@@ -59,6 +59,12 @@ const TitleText = styled(NoMarginText)`
   font-weight: 600;
 `;
 
+const PhoneText = styled(P2)`
+  &::before {
+    content: ${props => (props.isInvalid ? '"📵"' : '')};
+  }
+`;
+
 const NoPageTable = styled(Table)`
   margin: 0 24px 24px 24px;
   & ul {
@@ -182,16 +188,19 @@ function AppointmentsModal(props) {
     hideDefaultSelections: true,
     selectedRowKeys: tempAppointments.map(app => app.id),
     getCheckboxProps: record => ({
-      disabled: isUnvalidPhone(record.phone),
+      disabled: isInvalidPhone(record.phone),
     }),
   };
 
-  const isUnvalidPhone = phone => {
+  const isInvalidPhone = phone => {
     return phone.trim().length !== 10 || phone.trim().substring(0, 2) !== '09';
   };
 
   const onRow = record => ({
     onClick: () => {
+      if (isInvalidPhone(record.phone)) {
+        return;
+      }
       if (tempAppointments.find(t => t.id === record.id)) {
         setTempAppointments(tempAppointments.filter(t => t.id !== record.id));
       } else {
@@ -219,7 +228,14 @@ function AppointmentsModal(props) {
       dataIndex: 'phone',
       width: 130,
       sorter: (a, b) => a.phone.localeCompare(b.phone),
-      render: phone => <P2 style={{ color: isUnvalidPhone(phone) ? O1 : Default }}>{phone}</P2>,
+      render: phone => {
+        const isInvalid = isInvalidPhone(phone);
+        return (
+          <PhoneText style={{ color: isInvalid ? O1 : Default }} isInvalid={isInvalid}>
+            {phone}
+          </PhoneText>
+        );
+      },
     },
     {
       title: '醫生',
@@ -235,8 +251,8 @@ function AppointmentsModal(props) {
       render: note => note,
       width: 250,
       sorter: (a, b) => {
-        var aNote = a.note ?? '';
-        var bNote = b.note ?? '';
+        const aNote = a.note ?? '';
+        const bNote = b.note ?? '';
         return aNote.localeCompare(bNote);
       },
     },
@@ -257,7 +273,7 @@ function AppointmentsModal(props) {
       <DateContainer>
         <TitleText>約診日期：</TitleText>
         <LeftOutlined onClick={() => setDate(moment(date).add(-1, 'days'))} />
-        <DatePicker value={date} onChange={setDate} />
+        <DatePicker value={date} onChange={setDate} allowClear={false} />
         <RightOutlined onClick={() => setDate(moment(date).add(1, 'days'))} />
       </DateContainer>
       <NoPageTable

@@ -6,14 +6,19 @@ import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import io.dentall.totoro.business.dto.SmsEventsPagination;
 import io.dentall.totoro.service.dto.SmsChargeDTO;
 import io.dentall.totoro.service.dto.SmsEventDTO;
 import io.dentall.totoro.web.rest.vm.SmsInfoVM;
 import io.github.jhipster.config.JHipsterConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -30,6 +35,8 @@ import static io.dentall.totoro.business.service.GcpConstants.SERVICE_ACCOUNT;
 @Profile("saas")
 @Service
 public class CloudFunctionService {
+
+    private final Logger log = LoggerFactory.getLogger(CloudFunctionService.class);
 
     private final ObjectMapper mapper;
 
@@ -75,18 +82,24 @@ public class CloudFunctionService {
         return restTemplate.postForObject(function, request, SmsEventDTO.class);
     }
 
-    public List<SmsEventDTO> getSmsEvents(String clinic) throws IOException, ThrowableProblem {
+    public Page<SmsEventDTO> getSmsEvents(String clinic, Pageable pageable) throws IOException, ThrowableProblem {
+        int size = pageable.getPageSize();
+        int offset = pageable.getPageNumber() * pageable.getPageSize();
+
         String function = GcpConstants.GET_SMS_EVENTS_FUNCTION + functionSuffix;
         String token = getIdTokenWithAudience(function);
-        HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(Collections.singletonMap("clinic", clinic)), getRequestHeaderBearer(token));
-        ResponseEntity<List<SmsEventDTO>> response = restTemplate.exchange(
-            function,
-            HttpMethod.POST,
-            request,
-            new ParameterizedTypeReference<List<SmsEventDTO>>() {}
-            );
+        Map<String, Object> map = Stream.of(
+            new AbstractMap.SimpleEntry<>("clinic", clinic),
+            new AbstractMap.SimpleEntry<>("size", size),
+            new AbstractMap.SimpleEntry<>("offset", offset))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(map), getRequestHeaderBearer(token));
+        SmsEventsPagination response = restTemplate.postForObject(function, request, SmsEventsPagination.class);
+        if (response == null) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
 
-        return response.getBody();
+        return new PageImpl<>(response.getEvents(), pageable, response.getTotal());
     }
 
     public SmsInfoVM getSmsInfo(String clinic) throws IOException, ThrowableProblem {

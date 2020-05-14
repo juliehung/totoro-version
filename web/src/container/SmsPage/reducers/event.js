@@ -93,13 +93,6 @@ const event = (state = initialState, action) =>
         draft.selectedEventId = null;
         draft.editingEvent = null;
 
-        if (draft.staticEvents.find(e => e.id === sessionStorage.getItem('eventKey'))) {
-          const selection = draft.staticEvents.find(e => e.id === sessionStorage.getItem('eventKey'));
-          if (selection.status === 'draft') selection.isEdit = true;
-          draft.selectedEvent = selection;
-          draft.selectedEventId = selection.id === null ? selection.tempId : selection.id;
-          draft.editingEvent = selection;
-        }
         draft.isLoaded = true;
         draft.isEventsLoading = false;
         break;
@@ -108,14 +101,10 @@ const event = (state = initialState, action) =>
       case SAVE_EVENT_SUCCESS: {
         const snapShot = [...state.staticEvents];
         const identity = action.payload.identity;
-        let toBePlaced = action.payload.result;
+        const toBePlaced = action.payload.result;
         const replaceIdx = snapShot.indexOf(
           snapShot.find(ev => (ev.id !== null ? identity === ev.id : identity === ev.tempId)),
         );
-        // stilling editing ? merge current
-        if (identity === state.selectedEventId) {
-          toBePlaced = { ...state.editingEvent, ...toBePlaced };
-        }
         snapShot[replaceIdx] = toBePlaced;
         draft.staticEvents = snapShot;
         draft.events =
@@ -130,7 +119,8 @@ const event = (state = initialState, action) =>
         if (identity === state.selectedEventId) {
           draft.selectedEvent = draft.staticEvents[replaceIdx];
           draft.selectedEventId = toBePlaced.id;
-          draft.editingEvent = toBePlaced;
+          toBePlaced.isEdit = true;
+          draft.editingEvent = { ...state.editingEvent, id: toBePlaced.id };
         }
         draft.isLoaded = true;
         break;
@@ -199,7 +189,7 @@ const event = (state = initialState, action) =>
               state.currentKey === 'ALL'
                 ? draft.staticEvents
                 : draft.staticEvents.filter(event => {
-                    var sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
+                    const sta = event.status.toLowerCase() === 'completed' ? 'sent' : 'draft';
                     return sta === state.currentKey.toLowerCase();
                   });
           }
@@ -211,7 +201,6 @@ const event = (state = initialState, action) =>
           draft.selectedEvent = selection;
           draft.selectedEventId = selection.id !== null ? selection.id : selection.tempId;
           draft.editingEvent = selection.isEdit ? selection : null;
-          sessionStorage.setItem('eventKey', draft.selectedEventId);
           draft.caretPosition = -1;
         }
         break;
@@ -265,8 +254,6 @@ const event = (state = initialState, action) =>
         draft.selectedEvent = newEvent;
         draft.selectedEventId = newEvent.tempId;
         draft.editingEvent = newEvent;
-        // if we don't set here, if send a new event it'll get the previous editing item.
-        sessionStorage.setItem('eventKey', draft.selectedEventId);
         break;
       }
 

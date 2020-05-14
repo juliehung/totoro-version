@@ -3,18 +3,16 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Button, Calendar, Row, Col, Select, Divider, message } from 'antd';
+import { Button, Calendar, Row, Col, Divider, message } from 'antd';
 import {
   changeCalDate,
   changePrintModalVisible,
-  changeSelectedDoctors,
   changeCreateAppModalVisible,
   changeCreateCalModalVisible,
   changeCalSlotDuration,
 } from './actions';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
-import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import GridIcon from '../../images/grid.svg';
 import PointerIcon from '../../images/printer.svg';
 import SettingsIcon from '../../images/settings.svg';
@@ -60,7 +58,7 @@ const ItemContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #edf1f7;
-  padding: 0 22px;
+  padding: 0 16px;
   font-weight: bold;
   & img {
     width: 20px;
@@ -89,6 +87,8 @@ const ItemContainer = styled.div`
   & > :nth-child(1) {
     display: flex;
     & > div {
+      display: flex;
+      align-items: center;
       margin-right: 16px;
       position: relative;
     }
@@ -117,35 +117,10 @@ const DateTitleContainer = styled(Col)`
   }
 `;
 
-const SelectDoctorContainer = styled.div`
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  & > span {
-    font-weight: bold;
-    margin-right: 10px;
-    white-space: nowrap;
-  }
-`;
-
-const StyledSelect = styled(Select)`
-  margin-top: 15px;
-  width: 100%;
-`;
-
 //#endregion
 
 function AppRight(props) {
-  const {
-    calendarDate,
-    changeCalDate,
-    selectedDoctors,
-    settings,
-    showShiftCalc,
-    putSettings,
-    putSettingSuccess,
-    viewType,
-  } = props;
+  const { calendarDate, changeCalDate, settings, showShiftCalc, putSettings, putSettingSuccess, viewType } = props;
 
   const [expand, setExpand] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -162,22 +137,6 @@ function AppRight(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [putSettingSuccess, showShiftCalc]);
-
-  const handleDoctorChange = d => {
-    if (props.selectedDoctors.includes('dayOff') !== d.includes('dayOff')) {
-      props.changeSelectedDoctors(d);
-    } else {
-      if (props.selectedDoctors.includes('all')) {
-        props.changeSelectedDoctors(d.filter(d => d !== 'all'));
-      } else {
-        if (d.includes('all')) {
-          props.changeSelectedDoctors(d.filter(d => ['all', 'dayOff'].includes(d)));
-        } else {
-          props.changeSelectedDoctors(d);
-        }
-      }
-    }
-  };
 
   const simulateMouseClick = element => {
     const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
@@ -369,22 +328,6 @@ function AppRight(props) {
           </Link>
         </div>
       </ItemContainer>
-      <SelectDoctorContainer>
-        <span>顯示</span>
-        <StyledSelect onChange={handleDoctorChange} mode="tags" allowClear maxTagCount={1} value={selectedDoctors}>
-          {[
-            <Select.Option key={'all'}>{`全部醫師`}</Select.Option>,
-            ...props.doctors
-              .filter(d => d.activated)
-              .map(d => (
-                <Select.Option key={d.id}>
-                  {`${d.name} (${props.doctorAppCount[d.id] ? props.doctorAppCount[d.id] : 0})`}
-                </Select.Option>
-              )),
-            <Select.Option key={'dayOff'}>{`休假`}</Select.Option>,
-          ]}
-        </StyledSelect>
-      </SelectDoctorContainer>
       <FloatingActionButton
         expand={expand}
         toggleExpand={toggleExpand}
@@ -398,9 +341,6 @@ function AppRight(props) {
 }
 const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   calendarDate: appointmentPageReducer.calendar.calendarDate,
-  doctors: extractDoctorsFromUser(homePageReducer.user.users),
-  selectedDoctors: appointmentPageReducer.calendar.selectedDoctors,
-  doctorAppCount: appointmentPageReducer.calendar.doctorAppCount,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
   generalSetting: homePageReducer.settings.generalSetting,
   settings: homePageReducer.settings.settings,
@@ -411,7 +351,6 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
 const mapDispatchToProps = {
   changeCalDate,
   changePrintModalVisible,
-  changeSelectedDoctors,
   changeCreateAppModalVisible,
   changeCreateCalModalVisible,
   changeCalSlotDuration,

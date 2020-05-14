@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import {
   getEvents,
@@ -24,6 +24,26 @@ import { StyledLargerButton } from './StyledComponents';
 import isEqual from 'lodash.isequal';
 import { O1 } from '../../utils/colors';
 import { Spin } from 'antd';
+
+export const GlobalStyle = createGlobalStyle`
+  .ant-popover-inner {
+    border-radius: 8px !important;
+  }
+  .ant-popover-content {
+    box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  .ant-popover-title {
+    padding: 0 !important;
+    border-bottom: transparent !important;
+  }
+  .ant-popover-inner-content {
+    padding: 6px 16px 16px;
+  }
+  .ant-popover-arrow {
+    display: none !important;
+  }
+`;
 
 const Container = styled.div`
   display: flex;
@@ -263,6 +283,27 @@ function SmsPage(props) {
     getClinicRemaining();
   }, [getUsers, getClinicSettings, getEvents, getClinicRemaining]);
 
+  useEffect(() => {
+    const params = window.location.href.split('?')[1];
+    if (params) {
+      const key = params.split('=')[0];
+      const id = params.split('=')[1];
+      if (key === 'se_id' && id !== '') {
+        const prevItem = events.find(e => e.id === id);
+        if (prevItem && editingEvent === null) {
+          setSelectedEvent(prevItem);
+        }
+      }
+    }
+  }, [events, setSelectedEvent, editingEvent]);
+
+  // detect the new event has been saved and its tempId and id exist
+  useEffect(() => {
+    if (editingEvent && editingEvent.tempId && editingEvent.id) {
+      window.history.pushState({}, 'set', `#/sms?se_id=${editingEvent.id}`);
+    }
+  }, [editingEvent]);
+
   useLayoutEffect(() => {
     setHasEvent(selectedEvent !== null);
   }, [selectedEvent]);
@@ -284,6 +325,7 @@ function SmsPage(props) {
     // if current(previous) item is able to be posted or put
     if (isDiff(editingEvent, selectedEvent) && editingEvent.metadata.template.length !== 0) saveEvent(editingEvent);
     setSelectedEvent(item);
+    window.history.pushState({}, 'set', `#/sms?se_id=${item.id}`);
   };
 
   return (
@@ -291,6 +333,7 @@ function SmsPage(props) {
       <Helmet>
         <title>簡訊</title>
       </Helmet>
+      <GlobalStyle />
       <RootConatiner>
         <OverallContainer expanding={expanding} hasEvent={hasEvent}>
           <CategoryContainer>
@@ -300,7 +343,10 @@ function SmsPage(props) {
                 type="primary"
                 shape="round"
                 block
-                onClick={createEvent}
+                onClick={() => {
+                  window.history.pushState({}, '', `#/sms?creating=true`);
+                  createEvent();
+                }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <img src={edit2Icon} alt={'edit'} style={{ marginRight: '4px' }} />
@@ -309,7 +355,14 @@ function SmsPage(props) {
               </StyledLargerButton>
             </ButtonBox>
             {categories.map((category, i) => (
-              <MenuItem key={category} selected={currentKey === category} onClick={() => filterEvents(category)}>
+              <MenuItem
+                key={category}
+                selected={currentKey === category}
+                onClick={() => {
+                  window.history.pushState({}, '', `#/sms`);
+                  filterEvents(category);
+                }}
+              >
                 {categoryIcons[i]}
                 <MenuName>{categoriesChinese[i]}</MenuName>
               </MenuItem>

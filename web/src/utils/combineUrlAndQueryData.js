@@ -1,5 +1,5 @@
 const combineUrlAndQueryData = (url, data) => {
-  let requestURL = url;
+  const requestURL = url;
   if (data) {
     const searchParams = new URLSearchParams(data);
     const querystring = searchParams.toString();

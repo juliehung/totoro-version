@@ -38,7 +38,7 @@ import styled from 'styled-components';
 import { handleEventRender } from './utils/handleEventRender';
 import { handleResourceRender } from './utils/handleResourceRender';
 import { convertSettingsToClinicOffEvent } from './utils/convertSettingsToClinicOffEvent';
-import { message } from 'antd';
+import { message, Spin, Popover } from 'antd';
 import MqttHelper from '../../utils/mqtt';
 import { calFirstDay } from './reducers/calendar';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
@@ -51,7 +51,11 @@ import TwoArrowLeft from '../../images/arrow-left.svg';
 import TwoArrowRight from '../../images/arrow-right.svg';
 import ArrowLeft from '../../images/two-arrow-left.svg';
 import ArrowRight from '../../images/two-arrow-right.svg';
+import EyeFill from '../../images/eye-fill.svg';
+import EyeFillWhite from '../../images/eye-fill-white.svg';
+import EyeOffFill from '../../images/eye-off-fill.svg';
 import { parseDisplayRange } from './utils/parseDisplayRange';
+import TimeDisplay from './TimeDisplay';
 
 //#region
 const Container = styled.div`
@@ -60,7 +64,7 @@ const Container = styled.div`
   width: 85%;
   @media (max-width: 800px) {
     width: 100%;
-    height: 600px;
+    min-height: 600px;
   }
 `;
 
@@ -82,6 +86,7 @@ const TodayContainer = styled.div`
   font-size: 13px;
   display: flex;
   color: #8f9bb3;
+  font-weight: bold;
   & > div {
     font-size: 10px;
     padding: 5px 10px;
@@ -89,6 +94,11 @@ const TodayContainer = styled.div`
     border-radius: 34px;
     margin-left: 7px;
     cursor: pointer;
+    background-color: rgba(143, 155, 179, 0.08);
+    transition: all 300ms ease-in-out;
+    &:hover {
+      background-color: rgba(143, 155, 179, 0.4);
+    }
   }
   @media (max-width: 850px) {
     display: none;
@@ -115,6 +125,11 @@ const TitleContainer = styled.div`
   @media (max-width: 1180px) {
     display: none;
   }
+`;
+
+const HeaderRight = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const ViewContainer = styled.div`
@@ -145,7 +160,78 @@ const ViewItem = styled.div`
   color: ${props => (props.selected ? '#fff' : '#3366ff')};
 `;
 
+const DoctorControlContainer = styled.div`
+  width: 40px;
+  height: 40px;
+  background-color: #edf1f7;
+  margin-left: 11px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+`;
+
+const DoctorControl = styled.div`
+  width: 300px;
+  max-height: 500px;
+
+  & > :first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 13px;
+    color: #222b45;
+    & > :first-child {
+      font-size: 18px;
+    }
+  }
+
+  & > :nth-child(2) {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+`;
+
+const DoctorControlItem = styled.div`
+  width: 45%;
+  font-weight: bold;
+  font-size: 12px;
+  margin: 4px 2.5%;
+  padding: 8px 12px;
+  border-radius: 34px;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+  transition: all ease 300ms;
+  color: ${props => (props.selected ? '#fff' : '#8f9bb3')};
+  background-color: ${props => (props.selected ? '#00e096' : 'rgba(143, 155, 179, 0.08)')};
+  border: ${props => (props.selected ? ' 1px solid #00e096' : '1px solid #8f9bb3')};
+  & > img {
+    color: red;
+    width: 16px;
+    margin-right: 6px;
+  }
+  .on {
+    display: ${props => (props.selected ? 'block' : 'none')};
+  }
+  .off {
+    display: ${props => (props.selected ? 'none' : 'block')};
+  }
+  & > span {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`;
+
 const CalendarContainer = styled.div`
+  position: relative;
   flex: 1;
   overflow: scroll;
   .eventCard {
@@ -208,15 +294,28 @@ const CalendarContainer = styled.div`
     background-size: 10px 10px;
   }
 
-  ${props =>
-    props.noResourseAndShiftOpen
-      ? `.fc-day.fc-widget-content {
-    color: rgba(0, 0, 0, 0.1);
-    background-image: repeating-linear-gradient(45deg,currentColor 0,currentColor 1px,transparent 0,transparent 50%);
-    background-size: 10px 10px;
-    background-color: rgba(143, 155, 179, 0.08);
-  }`
-      : ''}
+  .fc-day.fc-widget-content {
+    ${props =>
+      props.noResourceAndShiftOpen
+        ? `
+            color: rgba(0, 0, 0, 0.1);
+            background-image: repeating-linear-gradient(45deg,currentColor 0,currentColor 1px,transparent 0,transparent 50%);
+            background-size: 10px 10px;
+            background-color: rgba(143, 155, 179, 0.08);
+          `
+        : ''}
+  }
+`;
+
+const SpinContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.08);
+  position: absolute;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 //#endregion
 
@@ -224,7 +323,7 @@ class AppCalendar extends React.Component {
   calendarComponentRef = React.createRef();
 
   componentDidMount() {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     calendarApi.gotoDate(this.props.calendarDate.format('YYYY-MM-DD'));
 
     // XD just delete the message
@@ -253,7 +352,7 @@ class AppCalendar extends React.Component {
   generalSetting = [];
   componentDidUpdate(prevProps) {
     if (prevProps.calendarDate.format('YYYY-MM-DD') !== this.props.calendarDate.format('YYYY-MM-DD')) {
-      let calendarApi = this.calendarComponentRef.current.getApi();
+      const calendarApi = this.calendarComponentRef.current.getApi();
       calendarApi.gotoDate(this.props.calendarDate.format('YYYY-MM-DD'));
     }
 
@@ -273,17 +372,18 @@ class AppCalendar extends React.Component {
     const id = this.props.account ? this.props.account.id : undefined;
     if (this.props.phone && id) {
       if (this.props.doctors.length !== 0 && this.props.selectedDoctors.length === 0) {
-        this.props.changeSelectedDoctors([id.toString()]);
+        this.props.changeSelectedDoctors([id]);
       }
     }
     if (this.calendarComponentRef.current) {
-      let calendarApi = this.calendarComponentRef.current.getApi();
+      const calendarApi = this.calendarComponentRef.current.getApi();
       calendarApi.updateSize();
     }
   }
 
   componentWillUnmount() {
     MqttHelper.unsubscribeAppointment(AppCalendar.name);
+    clearInterval(this.intervalID);
   }
 
   simulateMouseClick = element => {
@@ -315,7 +415,7 @@ class AppCalendar extends React.Component {
     }
 
     if (this.calendarComponentRef.current) {
-      let calendarApi = this.calendarComponentRef.current.getApi();
+      const calendarApi = this.calendarComponentRef.current.getApi();
       const fullcalendarDate = moment(calendarApi.getDate());
       if (this.props.calendarDate.format('YYYY-MM-DD') !== fullcalendarDate.format('YYYY-MM-DD')) {
         this.props.changeCalDate(moment(fullcalendarDate));
@@ -336,7 +436,7 @@ class AppCalendar extends React.Component {
   };
 
   nextClick = () => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     const currentViewType = calendarApi.state.viewType;
     if (currentViewType === 'timeGridWeek') {
       this.props.changeCalFirstDay(this.props.firstDay + 1);
@@ -347,7 +447,7 @@ class AppCalendar extends React.Component {
   };
 
   prevClick = () => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     const currentViewType = calendarApi.state.viewType;
     if (currentViewType === 'timeGridWeek') {
       this.props.changeCalFirstDay(this.props.firstDay - 1);
@@ -358,7 +458,7 @@ class AppCalendar extends React.Component {
   };
 
   nextMonthClick = () => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     const currentViewType = calendarApi.state.viewType;
     if (currentViewType === 'dayGridMonth') {
       calendarApi.nextYear();
@@ -368,7 +468,7 @@ class AppCalendar extends React.Component {
   };
 
   prevMonthClick = () => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     const currentViewType = calendarApi.state.viewType;
     if (currentViewType === 'dayGridMonth') {
       calendarApi.prevYear();
@@ -378,7 +478,7 @@ class AppCalendar extends React.Component {
   };
 
   todayClick = () => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     calendarApi.gotoDate(moment().format('YYYY-MM-DD'));
   };
 
@@ -458,6 +558,7 @@ class AppCalendar extends React.Component {
   };
 
   eventEditStop = () => {
+    this.clickTitle();
     this.scrollListener = document.querySelector('.fc-scroller');
     this.scrollListener.addEventListener('scroll', this.clickTitle);
   };
@@ -486,7 +587,7 @@ class AppCalendar extends React.Component {
   };
 
   changeView = view => {
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     calendarApi.changeView(view);
   };
 
@@ -496,8 +597,16 @@ class AppCalendar extends React.Component {
 
   navLinkDayClick = date => {
     this.props.changeCalDate(moment(date));
-    let calendarApi = this.calendarComponentRef.current.getApi();
+    const calendarApi = this.calendarComponentRef.current.getApi();
     calendarApi.changeView('resourceTimeGridDay');
+  };
+
+  handleDoctorChange = id => {
+    if (this.props.selectedDoctors.includes(id)) {
+      this.props.changeSelectedDoctors(this.props.selectedDoctors.filter(s => s !== id));
+    } else {
+      this.props.changeSelectedDoctors([...this.props.selectedDoctors, id]);
+    }
   };
 
   render() {
@@ -507,12 +616,9 @@ class AppCalendar extends React.Component {
       ...(shiftOpen
         ? this.props.appointments
         : this.props.appointments.filter(a => {
-            if (this.props.selectedAllDoctors) {
-              return a;
-            }
-            return this.props.selectedDoctors.includes(a.appointment.doctor.user.id.toString());
+            return this.props.selectedDoctors.includes(a.appointment.doctor.user.id);
           })),
-      ...this.props.calendarEvents.filter(() => this.props.showCalEvt),
+      ...this.props.calendarEvents,
       ...(shiftOpen
         ? reverseEvents(this.props.backgroundEvent, this.props.viewType, this.props.calendarRange)
         : this.generalSetting),
@@ -522,20 +628,42 @@ class AppCalendar extends React.Component {
       ? handleResources(this.props.doctors, this.props.backgroundEvent, this.props.getShiftSuccess)
       : this.props.doctors
           .filter(d => d.activated)
-          .filter(d => {
-            if (this.props.selectedAllDoctors) {
-              return d;
-            } else {
-              return this.props.selectedDoctors.includes(d.id.toString());
-            }
-          })
+          .filter(d => this.props.selectedDoctors.includes(d.id))
           .map(d => ({ id: d.id, title: d.name, avatar: d.avatar }));
+
+    const doctorControl = (
+      <DoctorControl>
+        <div>
+          <span>檢視</span>
+        </div>
+        <div>
+          {this.props.doctors
+            .filter(d => d.activated)
+            .map(d => {
+              const selected = this.props.selectedDoctors.includes(d.id);
+              return (
+                <DoctorControlItem
+                  key={d.id}
+                  selected={selected}
+                  onClick={() => {
+                    this.handleDoctorChange(d.id);
+                  }}
+                >
+                  <img className="off" src={EyeOffFill} alt="icon" />
+                  <img className="on" src={EyeFillWhite} alt="icon" />
+                  <span>{`${d.name}(${this.props.doctorAppCount[d.id] ? this.props.doctorAppCount[d.id] : 0})`}</span>
+                </DoctorControlItem>
+              );
+            })}
+        </div>
+      </DoctorControl>
+    );
 
     return (
       <Container>
         <Header>
           <TodayContainer>
-            <span>{moment().format('LLLL')}</span>
+            <TimeDisplay />
             <div onClick={this.todayClick}>
               <span>今日</span>
             </div>
@@ -547,24 +675,38 @@ class AppCalendar extends React.Component {
             <img src={ArrowRight} alt="arrow-right" onClick={this.nextClick} />
             <img src={TwoArrowRight} alt="two-arrow-right" onClick={this.nextMonthClick} />
           </TitleContainer>
-          <ViewContainer>
-            <ViewItem onClick={this.onDayClick} selected={this.props.viewType === 'resourceTimeGridDay'}>
-              <span>天</span>
-            </ViewItem>
-            <ViewItem onClick={this.onWeekClick} selected={this.props.viewType === 'timeGridWeek'}>
-              <span>周</span>
-            </ViewItem>
-            <ViewItem onClick={this.onMonthClick} selected={this.props.viewType === 'dayGridMonth'}>
-              <span>月</span>
-            </ViewItem>
-            <ViewItem onClick={this.onListClick} selected={this.props.viewType === 'listWeek'}>
-              <span>周列表</span>
-            </ViewItem>
-          </ViewContainer>
+          <HeaderRight>
+            <ViewContainer>
+              <ViewItem onClick={this.onDayClick} selected={this.props.viewType === 'resourceTimeGridDay'}>
+                <span>天</span>
+              </ViewItem>
+              <ViewItem onClick={this.onWeekClick} selected={this.props.viewType === 'timeGridWeek'}>
+                <span>周</span>
+              </ViewItem>
+              <ViewItem onClick={this.onMonthClick} selected={this.props.viewType === 'dayGridMonth'}>
+                <span>月</span>
+              </ViewItem>
+              <ViewItem onClick={this.onListClick} selected={this.props.viewType === 'listWeek'}>
+                <span>周列表</span>
+              </ViewItem>
+            </ViewContainer>
+            {this.props.generalSetting && !shiftOpen && (
+              <Popover placement="bottomLeft" trigger="click" content={doctorControl}>
+                <DoctorControlContainer>
+                  <img src={EyeFill} alt={'select doctor'} />
+                </DoctorControlContainer>
+              </Popover>
+            )}
+          </HeaderRight>
         </Header>
         <CalendarContainer
-          noResourseAndShiftOpen={!resource.length && shiftOpen && this.props.viewType === 'resourceTimeGridDay'}
+          noResourceAndShiftOpen={!resource.length && shiftOpen && this.props.viewType === 'resourceTimeGridDay'}
         >
+          {this.props.loading && (
+            <SpinContainer>
+              <Spin spinning={this.props.loading} />
+            </SpinContainer>
+          )}
           <FullCalendar
             ref={this.calendarComponentRef}
             height="parent"
@@ -630,17 +772,20 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   appointments: appointmentPageReducer.calendar.appointments,
   firstDay: appointmentPageReducer.calendar.calendarFirstDay,
   selectedDoctors: appointmentPageReducer.calendar.selectedDoctors,
-  selectedAllDoctors: appointmentPageReducer.calendar.selectedAllDoctors,
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
+  doctorAppCount: appointmentPageReducer.calendar.doctorAppCount,
   calendarEvents: appointmentPageReducer.calendar.calendarEvents,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
-  showCalEvt: appointmentPageReducer.calendar.showCalEvt,
   generalSetting: homePageReducer.settings.generalSetting,
   calendarRange: appointmentPageReducer.calendar.range,
   cancelApp: appointmentPageReducer.calendar.cancelApp,
   account: homePageReducer.account.data,
   backgroundEvent: convertShitToBackgroundEvent(appointmentPageReducer.shift.shift),
   getShiftSuccess: appointmentPageReducer.shift.getShiftSuccess,
+  loading:
+    !appointmentPageReducer.shift.getShiftSuccess ||
+    !appointmentPageReducer.calendar.getSuccess ||
+    !homePageReducer.user.getSuccess,
 });
 
 const mapDispatchToProps = {

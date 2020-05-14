@@ -316,7 +316,7 @@ function RegistrationPage(props) {
         <StyledTitle level={3}>就診列表</StyledTitle>
         {withMargin(10)}
         <StyledLeftOutlined onClick={moveDate(-1)} />
-        <StyledDatePicker onChange={onDatePickerChange} value={props.selectedDate} />
+        <StyledDatePicker onChange={onDatePickerChange} value={props.selectedDate} allowClear={false} />
         <StyledRightOutlined onClick={moveDate(1)} />
         {withMargin(10)}
         {renderDoctorSelect()}

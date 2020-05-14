@@ -14,7 +14,7 @@ export default class Shift {
   };
 
   static post = async body => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',
@@ -27,7 +27,7 @@ export default class Shift {
   };
 
   static put = async body => {
-    let requestURL = `${requestUrl}`;
+    const requestURL = `${requestUrl}`;
     const options = {
       headers: {
         'content-type': 'application/json',
@@ -40,7 +40,7 @@ export default class Shift {
   };
 
   static delete = async id => {
-    let requestURL = `${requestUrl}/${id}`;
+    const requestURL = `${requestUrl}/${id}`;
     const options = {
       headers: {
         'content-type': 'application/json',

@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 export function generateDefaultTime() {
-  let start = moment().startOf('d');
+  const start = moment().startOf('d');
   const end = moment().add(1, 'd').startOf('d');
   const defaultTime = [];
   while (start.isBefore(end)) {

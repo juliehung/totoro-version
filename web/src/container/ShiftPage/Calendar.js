@@ -181,14 +181,14 @@ function Calendar(props) {
   };
 
   const prevClick = () => {
-    let calendarApi = calendarRef.current.getApi();
+    const calendarApi = calendarRef.current.getApi();
     if (calendarApi) {
       calendarApi.prev();
     }
   };
 
   const nextClick = () => {
-    let calendarApi = calendarRef.current.getApi();
+    const calendarApi = calendarRef.current.getApi();
     if (calendarApi) {
       calendarApi.next();
     }

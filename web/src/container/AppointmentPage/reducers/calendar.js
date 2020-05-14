@@ -26,12 +26,11 @@ const initState = {
   calendarEvents: [],
   selectedDoctors: doctors || ['all'],
   doctorAppCount: {},
-  selectedAllDoctors: doctors ? doctors.includes('all') : true,
-  showCalEvt: doctors ? doctors.includes('dayOff') : false,
   calendarFirstDay: calFirstDay,
   slotDuration: 15,
   range: { start: undefined, end: undefined },
   cancelApp: false,
+  getSuccess: false,
 };
 
 export const initialState = { ...initState };
@@ -45,26 +44,18 @@ const calendar = (state = initialState, action) =>
         break;
       case GET_APPOINTMENTS_START:
         draft.range = action.range;
+        draft.getSuccess = initState.getSuccess;
         break;
       case GET_APPOINTMENTS_SUCCESS:
         draft.appointments = convertAppsToEvt(action.appData);
         draft.doctorAppCount = handleCountDocApp(draft.appointments);
+        draft.getSuccess = true;
         break;
       case CHANGE_CAL_FIRST_DAY:
         draft.calendarFirstDay = action.firstDay % 7;
         break;
       case CHANGE_SELECTED_DOCTORS:
         draft.selectedDoctors = action.selectedDoctors;
-        if (draft.selectedDoctors.includes('all')) {
-          draft.selectedAllDoctors = true;
-        } else {
-          draft.selectedAllDoctors = false;
-        }
-        if (draft.selectedDoctors.includes('dayOff')) {
-          draft.showCalEvt = true;
-        } else {
-          draft.showCalEvt = false;
-        }
         localStorage.setItem('selectedDoctors', JSON.stringify(draft.selectedDoctors));
         break;
       case GET_CALENDAR_EVENT_SUCCESS:
