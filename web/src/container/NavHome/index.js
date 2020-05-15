@@ -8,12 +8,10 @@ import { useCookies } from 'react-cookie';
 import ShiftPage from '../ShiftPage';
 import SettingPage from '../SettingPage';
 import SmsPage from '../SmsPage';
-import BookOpen from './svg/BookOpen';
-import CalendarFill from './svg/CalendarFill';
-import Message from './svg/Message';
 import DentallHisLogo from '../../images/DentallHisLogo.svg';
 import { Menu, Dropdown, Drawer } from 'antd';
 import { parseAccountData } from './utils/parseAccountData';
+import { determineRouteShow } from './utils/determineRouteShow';
 import IconBookOpen from '../../images/icon-book-open.svg';
 import IconBookOpenFill from '../../images/icon-book-open-fill.svg';
 import IconCalendar from '../../images/icon-calendar.svg';
@@ -169,13 +167,38 @@ const ContentContainer = styled.div`
 `;
 //#endregion
 
-const routes = {
-  appointment: '/appointment',
-  registration: '/registration',
-  sms: '/sms',
-  shift: '/shift',
-  setting: '/setting',
-};
+const route = [
+  {
+    key: 'registration',
+    name: '就診列表',
+    icon: { on: IconBookOpenFill, off: IconBookOpen },
+    navigation: true,
+    exact: true,
+    component: <RegistrationPage />,
+    localVersion: true,
+  },
+  {
+    key: 'sms',
+    name: 'SMS',
+    icon: { on: MessageCircleFill, off: MessageCircle },
+    navigation: true,
+    exact: true,
+    component: <SmsPage />,
+    localVersion: false,
+  },
+  {
+    key: 'appointment',
+    name: '約診排程',
+    icon: { on: IconCalendarFill, off: IconCalendar },
+    navigation: true,
+    exact: true,
+    component: <AppointmentPage />,
+    localVersion: true,
+  },
+  { key: 'shift', navigation: false, exact: true, component: <ShiftPage />, localVersion: true },
+  { key: 'setting', navigation: false, exact: true, component: <SettingPage />, localVersion: true },
+  { key: '', navigation: false, exact: false, component: <Redirect to="/appointment" />, localVersion: true },
+];
 
 function NavHome(props) {
   const { account } = props;
@@ -220,39 +243,21 @@ function NavHome(props) {
         </Link>
         <div>
           <ul>
-            <NavItem focus={currentLocation === routes.registration}>
-              <Link to={routes.registration}>
-                <div>
-                  <div>
-                    <img src={IconBookOpenFill} alt="bookIcon" />
-                    <img src={IconBookOpen} alt="bookIcon" />
-                  </div>
-                  <span className="svg">就診列表</span>
-                </div>
-              </Link>
-            </NavItem>
-            <NavItem focus={currentLocation === routes.sms}>
-              <Link to={routes.sms}>
-                <div>
-                  <div>
-                    <img src={MessageCircleFill} alt="smsIcon" />
-                    <img src={MessageCircle} alt="smsIcon" />
-                  </div>
-                  <span className="svg">SMS</span>
-                </div>
-              </Link>
-            </NavItem>
-            <NavItem focus={currentLocation === routes.appointment}>
-              <Link to={routes.appointment}>
-                <div>
-                  <div>
-                    <img src={IconCalendarFill} alt="calendarIcon" />
-                    <img src={IconCalendar} alt="calendarIcon" />
-                  </div>
-                  <span className="svg">約診排程</span>
-                </div>
-              </Link>
-            </NavItem>
+            {route
+              .filter(r => r.navigation && determineRouteShow(r.localVersion))
+              .map(n => (
+                <NavItem key={n.key} focus={currentLocation === `/${n.key}`}>
+                  <Link to={`/${n.key}`}>
+                    <div>
+                      <div>
+                        <img src={n.icon.on} alt="bookIcon" />
+                        <img src={n.icon.off} alt="bookIcon" />
+                      </div>
+                      <span className="svg">{n.name}</span>
+                    </div>
+                  </Link>
+                </NavItem>
+              ))}
           </ul>
         </div>
         <Dropdown
@@ -291,45 +296,26 @@ function NavHome(props) {
         <div style={{ marginBottom: '30px' }}>
           <img src={DentallHisLogo} alt="dentallHis" />
         </div>
-        <DrawerItem to={routes.registration}>
-          <div>
-            <BookOpen />
-            <span>就診列表</span>
-          </div>
-        </DrawerItem>
-        <DrawerItem to={routes.sms}>
-          <div>
-            <Message />
-            <span>SMS</span>
-          </div>
-        </DrawerItem>
-        <DrawerItem to={routes.appointment}>
-          <div>
-            <CalendarFill />
-            <span>約診排程</span>
-          </div>
-        </DrawerItem>
+        {route
+          .filter(r => r.navigation && determineRouteShow(r.localVersion))
+          .map(n => (
+            <DrawerItem key={n.key} to={`/${n.key}`}>
+              <div>
+                <img src={n.icon.off} height="16px" alt="icon" />
+                <span>{n.name}</span>
+              </div>
+            </DrawerItem>
+          ))}
       </Drawer>
       <ContentContainer>
         <Switch>
-          <Route exact path={routes.appointment}>
-            <AppointmentPage />
-          </Route>
-          <Route exact path={routes.registration}>
-            <RegistrationPage />
-          </Route>
-          <Route path={routes.sms}>
-            <SmsPage />
-          </Route>
-          <Route exact path={routes.shift}>
-            <ShiftPage />
-          </Route>
-          <Route path={routes.setting}>
-            <SettingPage />
-          </Route>
-          <Route path="/">
-            <Redirect to={routes.appointment} />
-          </Route>
+          {route
+            .filter(r => determineRouteShow(r.localVersion))
+            .map(r => (
+              <Route key={r.key} exact={r.exact} path={`/${r.key}`}>
+                {r.component}
+              </Route>
+            ))}
         </Switch>
       </ContentContainer>
     </Container>
