@@ -342,6 +342,10 @@ if (project.hasProperty('nodeInstall')) {
     }
 }
 
+task npmLint(type: NpmTask, dependsOn: 'npm_install') {
+    args = ['run', 'lint']
+}
+
 compileJava.dependsOn processResources
 processResources.dependsOn cleanResources,bootBuildInfo,autoGenVersion
 bootBuildInfo.mustRunAfter cleanResources

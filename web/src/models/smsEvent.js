@@ -13,8 +13,8 @@ export default class SmsEvent {
     const data = await requestNoParse(`${requestUrl}?page=${page}&size=${size}`).then(res => {
       total = res.headers.get('x-total-count');
       return res.json();
-    })
-    return {data, total}
+    });
+    return {data, total};
   };
 
   // POST/UPDATE
