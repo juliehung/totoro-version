@@ -11,7 +11,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { initGA } from './ga';
 import 'antd/dist/antd.css';
 
-const sagaMiddleware = createSagaMiddleware()
+const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootReducer, /* preloadedState, */ composeEnhancers(applyMiddleware(sagaMiddleware)));
 sagaMiddleware.run(rootSaga);
