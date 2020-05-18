@@ -30,12 +30,12 @@ import {
   SET_CARET_POSITION,
 } from './constant';
 
-export function getEvents() {
-  return { type: GET_EVENTS };
+export function getEvents(page = 0, size = 10) {
+  return { type: GET_EVENTS, params: {page, size} };
 }
 
-export function getEventsSuccess(events) {
-  return { type: GET_EVENTS_SUCCESS, events };
+export function getEventsSuccess(result) {
+  return { type: GET_EVENTS_SUCCESS, result };
 }
 
 export function setSelectedEvent(event) {

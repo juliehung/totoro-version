@@ -46,6 +46,7 @@ const initState = {
   caretChangedBy: 'keydown',
   isEventsLoading: false,
   isDeletingEvent: false,
+  total: 0,
 };
 
 const initialState = {
@@ -80,7 +81,8 @@ const event = (state = initialState, action) =>
         break;
 
       case GET_EVENTS_SUCCESS: {
-        const sorted = action.events.slice().sort((a, b) => (a.modifiedDate > b.modifiedDate ? -1 : 1));
+        const sorted = action.result.data.slice().sort((a, b) => (a.modifiedDate > b.modifiedDate ? -1 : 1));
+        draft.total = action.result.total;
         draft.staticEvents = sorted;
         draft.events =
           state.currentKey === 'ALL'

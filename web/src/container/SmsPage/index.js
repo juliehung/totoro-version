@@ -23,7 +23,7 @@ import AwardFill from './svg/AwardFill';
 import { StyledLargerButton } from './StyledComponents';
 import isEqual from 'lodash.isequal';
 import { O1 } from '../../utils/colors';
-import { Spin } from 'antd';
+import { Spin, Pagination } from 'antd';
 
 export const GlobalStyle = createGlobalStyle`
   .ant-popover-inner {
@@ -195,13 +195,16 @@ const EventListItem = styled.div`
 const EventListContainer = styled.div`
   display: grid;
   overflow: hidden;
-  grid-template-rows: 70px 1fr;
+  grid-template-rows: 70px 1fr 40px;
   grid-row: 1/2;
   grid-column: 2/3;
-  flex-direction: column;
   box-shadow: 1px 0 0 0 rgba(209, 209, 209, 0.5);
   background: white;
   z-index: 2;
+  & > *:last-child {
+    align-self: center;
+    justify-self: center;
+  }
   @media (max-width: 480px) {
     grid-column: 1/2;
     width: 100vw;
@@ -268,6 +271,7 @@ function SmsPage(props) {
     isRemainingLoaded,
     users,
     isEventsLoading,
+    total,
   } = props;
   const [expanding, setExpanding] = useState(false);
   const [hasEvent, setHasEvent] = useState(false);
@@ -279,7 +283,7 @@ function SmsPage(props) {
   useEffect(() => {
     getUsers();
     getClinicSettings();
-    getEvents();
+    getEvents(0, 10);
     getClinicRemaining();
   }, [getUsers, getClinicSettings, getEvents, getClinicRemaining]);
 
@@ -435,6 +439,12 @@ function SmsPage(props) {
               );
             })}
           </EventList>
+          <Pagination
+            size="small" 
+            total={total}
+            defaultCurrent={1}
+            onChange={page => getEvents(page - 1, 10)} 
+            disabled={isEventsLoading} />
         </EventListContainer>
         <EventCardContainer hasEvent={hasEvent}>
           <EventCard />
@@ -455,6 +465,7 @@ const mapStateToProps = ({ smsPageReducer }) => ({
   isRemainingLoaded: smsPageReducer.event.isRemainingLoaded,
   currentKey: smsPageReducer.event.currentKey,
   isEventsLoading: smsPageReducer.event.isEventsLoading,
+  total: smsPageReducer.event.total,
 });
 
 const mapDispatchToProps = {
