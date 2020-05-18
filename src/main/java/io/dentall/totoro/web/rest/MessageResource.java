@@ -166,14 +166,14 @@ public class MessageResource {
         return result;
     }
 
-    @PostMapping("/messages/sms/views/{patientId}")
-    public ResponseEntity<SmsView> createSmsView(@PathVariable Long patientId) {
-        return ResponseEntity.ok().body(smsViewService.save(patientId));
+    @PostMapping("/messages/sms/views/{appointmentId}")
+    public ResponseEntity<SmsView> createSmsView(@PathVariable Long appointmentId) {
+        return ResponseEntity.ok().body(smsViewService.save(appointmentId));
     }
 
-    @GetMapping("/messages/sms/views/{patientId}")
-    public ResponseEntity<SmsView> getSmsView(@PathVariable Long patientId) {
-        Optional<SmsView> smsView = smsViewService.findOne(patientId);
+    @GetMapping("/messages/sms/views/{appointmentId}")
+    public ResponseEntity<SmsView> getSmsView(@PathVariable Long appointmentId) {
+        Optional<SmsView> smsView = smsViewService.findOne(appointmentId);
         return ResponseUtil.wrapOrNotFound(smsView);
     }
 }
