@@ -6,6 +6,7 @@ cache:
         - .gradle/caches
 
 stages:
+    - check
     - build
     - test
     - package
@@ -16,6 +17,19 @@ stages:
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x gradlew
+
+# coding style check
+checkLint:
+    stage: check
+    only:
+        refs:
+            - merge_requests
+        changes:
+            - web/**/*
+    image: node:12.16.3-stretch
+    script:
+        - npm install
+        - npm run lint
 
 # build stage
 buildByGradle:
@@ -43,18 +57,6 @@ buildByWebpack:
         - ./gradlew webpack -Pprod -x check -PnodeInstall --no-daemon
 
 # test stage
-testLint:
-    stage: build
-    only:
-        refs:
-            - merge_requests
-        changes:
-            - web/**/*
-    image: node:12.16.3-stretch
-    script:
-        - npm install
-        - npm run lint
-
 testRegular:
     stage: test
     only:
