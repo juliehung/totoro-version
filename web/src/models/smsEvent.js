@@ -8,8 +8,13 @@ const requestUrl = `${apiUrl}/${LOCATION}`;
 const remaining_requestUrl = `${apiUrl}/${REMAINING_LOCATION}`;
 
 export default class SmsEvent {
-  static get = async () => {
-    return await request(requestUrl);
+  static get = async (page, size) => {
+    let total = 0;
+    const data = await requestNoParse(`${requestUrl}?page=${page}&size=${size}`).then(res => {
+      total = res.headers.get('x-total-count');
+      return res.json();
+    });
+    return {data, total};
   };
 
   // POST/UPDATE

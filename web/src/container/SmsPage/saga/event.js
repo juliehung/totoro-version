@@ -20,8 +20,8 @@ import SmsEvent from '../../../models/smsEvent';
 export function* getEvents() {
   while (true) {
     try {
-      yield take(GET_EVENTS);
-      const result = yield call(SmsEvent.get);
+      const action = yield take(GET_EVENTS);
+      const result = yield call(SmsEvent.get, action.params.page, action.params.size);
       yield put(getEventsSuccess(result));
     } catch (err) {
       //  ignore

@@ -1,6 +1,6 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.Appointment;
 import io.dentall.totoro.domain.SmsView;
 import io.dentall.totoro.repository.SmsViewRepository;
 import io.dentall.totoro.service.util.ProblemUtil;
@@ -35,13 +35,13 @@ public class SmsViewService {
     /**
      * Save a smsView.
      *
-     * @param id the patientId
+     * @param id the appointmentId
      * @return the persisted entity
      */
     public SmsView save(Long id) {
-        log.debug("Request to save patientId[{}] of SmsView", id);
-        if (entityManager.find(Patient.class, id) == null) {
-            throw ProblemUtil.notFoundException("patient");
+        log.debug("Request to save appointmentId[{}] of SmsView", id);
+        if (entityManager.find(Appointment.class, id) == null) {
+            throw ProblemUtil.notFoundException("appointment");
         }
 
         SmsView smsView = smsViewRepository.findById(id).orElse(new SmsView().id(id));
