@@ -14,7 +14,6 @@ import {
   GET_CLINIC_REMAINING_SUCCESS,
   SAVE_EVENT,
   EXECUTE_EVENT,
-  SAVE_EVENT_AND_SEND_IMMEDIATELY,
   EXECUTE_EVENT_SUCCESS,
   EXECUTE_EVENT_FAILED,
   DELETE_EVENT,
@@ -73,10 +72,6 @@ const event = (state = initialState, action) =>
         break;
       case EXECUTE_EVENT:
         draft.isLoaded = false;
-        break;
-      case SAVE_EVENT_AND_SEND_IMMEDIATELY:
-        draft.isLoaded = false;
-        // init for checking
         draft.isSentFailed = null;
         break;
 
@@ -344,6 +339,7 @@ const processingEventSms = (clinicName, event) => {
         patientId: app.patientId,
         patientName: app.patientName,
         appointmentDate: app.expectedArrivalTime,
+        appointmentId: app.id,
       },
       phone: app.phone.trim().replace(/^09/, '+8869'),
       content,

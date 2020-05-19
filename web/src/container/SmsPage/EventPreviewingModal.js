@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { togglePreviewingModal, saveEventAndSendImmediately } from './action';
+import { togglePreviewingModal, executeEvent } from './action';
 import moment from 'moment';
 import PaperPlane from './svg/PaperPlane';
 import CreditCardFill from './svg/CreditCardFill';
@@ -123,10 +123,10 @@ const Styled2MediumButton = styled(StyledMediumButton)`
 `;
 
 function EventPreviewingModal(props) {
-  const { togglePreviewingModal, saveEventAndSendImmediately, editingEvent, visible, isSentFailed, remaining } = props;
+  const { togglePreviewingModal, executeEvent, editingEvent, visible, isSentFailed, remaining } = props;
 
   const handleOk = () => {
-    saveEventAndSendImmediately(editingEvent);
+    executeEvent(editingEvent);
     message.loading({ content: '正在發送中...' });
   };
 
@@ -227,6 +227,6 @@ const mapStateToProps = ({ smsPageReducer }) => {
   };
 };
 
-const mapDispatchToProps = { togglePreviewingModal, saveEventAndSendImmediately };
+const mapDispatchToProps = { togglePreviewingModal, executeEvent };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventPreviewingModal);
