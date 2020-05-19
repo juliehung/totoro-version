@@ -14,7 +14,7 @@ export default class SmsEvent {
       total = res.headers.get('x-total-count');
       return res.json();
     });
-    return {data, total};
+    return { data, total };
   };
 
   // POST/UPDATE

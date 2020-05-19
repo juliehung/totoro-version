@@ -440,11 +440,12 @@ function SmsPage(props) {
             })}
           </EventList>
           <Pagination
-            size="small" 
+            size="small"
             total={total}
             defaultCurrent={1}
-            onChange={page => getEvents(page - 1, 10)} 
-            disabled={isEventsLoading} />
+            onChange={page => getEvents(page - 1, 10)}
+            disabled={isEventsLoading}
+          />
         </EventListContainer>
         <EventCardContainer hasEvent={hasEvent}>
           <EventCard />
