@@ -28,7 +28,7 @@ export default class SmsEvent {
         template: event.metadata.template,
         selectedAppointments: event.metadata.selectedAppointments,
       },
-      sms: event.sms
+      sms: event.sms,
     };
 
     const options = {

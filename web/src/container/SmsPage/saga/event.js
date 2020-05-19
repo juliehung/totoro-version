@@ -1,10 +1,4 @@
-import {
-  GET_EVENTS,
-  SAVE_EVENT,
-  GET_CLINIC_REMAINING,
-  EXECUTE_EVENT,
-  DELETE_EVENT,
-} from '../constant';
+import { GET_EVENTS, SAVE_EVENT, GET_CLINIC_REMAINING, EXECUTE_EVENT, DELETE_EVENT } from '../constant';
 import { call, take, put, all } from 'redux-saga/effects';
 import {
   getEventsSuccess,
@@ -49,7 +43,7 @@ export function* executeEvent() {
     try {
       // 1. send
       const action = yield take(EXECUTE_EVENT);
-      const appIds = action.event.sms.map(m => m.metadata.appointmentId)
+      const appIds = action.event.sms.map(m => m.metadata.appointmentId);
       const executedResult = yield call(SmsEvent.execute, action.event.id);
       if (executedResult.status === 200) {
         // remeber lastSent

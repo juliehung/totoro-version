@@ -247,7 +247,7 @@ function AppointmentsModal(props) {
     {
       title: '上次寄發',
       dataIndex: 'lastSent',
-      render: lastSent => lastSent? moment(lastSent).format('YYYY/MM/DD HH:mm') : '',
+      render: lastSent => (lastSent ? moment(lastSent).format('YYYY/MM/DD HH:mm') : ''),
       width: 150,
       sortDirections: ['descend', 'ascend'],
       sorter: (a, b) => a.lastSent.localeCompare(b.lastSent),
