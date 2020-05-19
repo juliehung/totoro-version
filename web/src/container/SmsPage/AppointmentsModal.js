@@ -166,8 +166,7 @@ function AppointmentsModal(props) {
 
   useEffect(() => {
     if (visible) getAppointments({ start: moment(date), end: moment(date).add(1, 'days').add(1, 'seconds') });
-    // eslint-disable-next-line
-  }, [date]);
+  }, [date, visible, getAppointments]);
 
   const handleOk = () => {
     addContactAppointments(tempAppointments);
