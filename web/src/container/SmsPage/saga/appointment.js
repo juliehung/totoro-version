@@ -11,8 +11,8 @@ export function* getAppointments() {
       const result = yield call(Appointment.getBetween, data.range);
       const lastSents = yield all(result.map(a => call(SmsView.getById, a.id)));
       const processed = result.map((a, i) => {
-        return {...a, lastSent: lastSents[i]? lastSents[i].lastTime : ''}
-      })
+        return { ...a, lastSent: lastSents[i] ? lastSents[i].lastTime : '' };
+      });
       yield put(getAppointmentsSuccess(processed));
     } catch (err) {
       //  ignore

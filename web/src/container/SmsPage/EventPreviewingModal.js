@@ -188,7 +188,11 @@ function EventPreviewingModal(props) {
             type="primary"
             shape="round"
             onClick={() =>
-              window.open('https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b')
+              window.open(
+                'https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b',
+                '_blank',
+                'noopener',
+              )
             }
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fill: 'white' }}>

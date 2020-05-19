@@ -8,14 +8,14 @@ const requestUrl = `${apiUrl}/${LOCATION}`;
 export default class SmsView {
   static getById = async appointmentId => {
     return await requestNoParse(`${requestUrl}/${appointmentId}`)
-                            .then(res => res.json())
-                            .catch(() => null)
+      .then(res => res.json())
+      .catch(() => null);
   };
 
   static post = async appointmentId => {
     const options = {
-        method: 'POST',
-      };
-    return await request(`${requestUrl}/${appointmentId}`, options)
+      method: 'POST',
+    };
+    return await request(`${requestUrl}/${appointmentId}`, options);
   };
 }
