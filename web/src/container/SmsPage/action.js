@@ -17,7 +17,6 @@ import {
   TOGGLE_PREVIEWING_MODAL,
   GET_CLINIC_SETTINGS,
   GET_CLINIC_SETTINGS_SUCCESS,
-  SAVE_EVENT_AND_SEND_IMMEDIATELY,
   GET_CLINIC_REMAINING,
   GET_CLINIC_REMAINING_SUCCESS,
   EXECUTE_EVENT,
@@ -88,10 +87,6 @@ export function deleteEvent(id) {
 
 export function deleteEventSuccess(identity) {
   return { type: DELETE_EVENT_SUCCESS, identity };
-}
-
-export function saveEventAndSendImmediately(event) {
-  return { type: SAVE_EVENT_AND_SEND_IMMEDIATELY, event };
 }
 
 export function getAppointments(range) {

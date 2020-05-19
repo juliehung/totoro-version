@@ -4,7 +4,6 @@ import {
   saveEvent,
   executeEvent,
   deleteEvent,
-  saveEventAndSendImmediately,
   getClinicRemaining,
 } from './event';
 import { getAppointments } from './appointment';
@@ -18,7 +17,6 @@ export default function* smsPage() {
   yield fork(saveEvent);
   yield fork(executeEvent);
   yield fork(deleteEvent);
-  yield fork(saveEventAndSendImmediately);
   yield fork(getClinicRemaining);
   yield fork(getUsers);
 }

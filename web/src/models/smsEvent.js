@@ -28,15 +28,7 @@ export default class SmsEvent {
         template: event.metadata.template,
         selectedAppointments: event.metadata.selectedAppointments,
       },
-      sms: event.sms.map((mes, i) => ({
-        phone: mes.phone,
-        content: mes.content,
-        metadata: {
-          patientId: mes.metadata.patientId,
-          patientName: mes.metadata.patientName,
-          appointmentDate: event.metadata.selectedAppointments[i].expectedArrivalTime,
-        },
-      })),
+      sms: event.sms
     };
 
     const options = {
