@@ -31,7 +31,7 @@ import {
 } from './constant';
 
 export function getEvents(page = 0, size = 10) {
-  return { type: GET_EVENTS, params: {page, size} };
+  return { type: GET_EVENTS, params: { page, size } };
 }
 
 export function getEventsSuccess(result) {

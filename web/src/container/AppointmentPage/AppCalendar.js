@@ -122,7 +122,7 @@ const TitleContainer = styled.div`
     margin-right: 16px;
   }
 
-  @media (max-width: 1180px) {
+  @media (max-width: 1250px) {
     display: none;
   }
 `;
