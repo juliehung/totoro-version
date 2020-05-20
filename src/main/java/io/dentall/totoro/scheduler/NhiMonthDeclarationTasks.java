@@ -30,7 +30,7 @@ public class NhiMonthDeclarationTasks {
     public void createYearMonth() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         String ym = OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).format(formatter);
-        Optional o = nhiMonthDeclarationService.findByYM(ym);
+        Optional<NhiMonthDeclaration> o = nhiMonthDeclarationService.findByYM(ym);
         if (!o.isPresent()) {
             nhiMonthDeclarationService.save(new NhiMonthDeclaration().yearMonth(ym));
         }

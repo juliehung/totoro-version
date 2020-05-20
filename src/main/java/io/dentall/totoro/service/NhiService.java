@@ -79,7 +79,12 @@ public class NhiService {
     @Value("${nhi.rule:#{null}}")
     private String ruleFile;
 
-    public NhiService(NhiExtendDisposalRepository nhiExtendDisposalRepository, NhiExtendPatientRepository nhiExtendPatientRepository, TreatmentQueryService treatmentQueryService, SettingRepository settingRepository) {
+    public NhiService(
+        NhiExtendDisposalRepository nhiExtendDisposalRepository,
+        NhiExtendPatientRepository nhiExtendPatientRepository,
+        TreatmentQueryService treatmentQueryService,
+        SettingRepository settingRepository
+    ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
         this.treatmentQueryService = treatmentQueryService;
@@ -165,31 +170,39 @@ public class NhiService {
         LongFilter lf = new LongFilter();
         lf.setEquals(patientId);
         treatmentCriteria.setPatientId(lf);
-        Optional<Treatment> optionalTreatment = treatmentQueryService.findByCriteria(treatmentCriteria).stream().findFirst();
 
-        if (optionalTreatment.isPresent()) {
-            Treatment treatment = optionalTreatment.get();
+        Function<TreatmentCriteria, Set<NhiExtendTreatmentProcedure>> personalAllNhiTxProcFunction = criteria -> treatmentQueryService.findByCriteria(criteria)
+            .stream()
+            .filter(treatment -> treatment.getTreatmentPlans() != null)
+            .flatMap(treatment ->
+                treatment.getTreatmentPlans()
+                    .stream()
+                    .filter(treatmentPlan -> treatmentPlan.getTreatmentTasks() != null)
+                    .flatMap(treatmentPlan -> treatmentPlan.getTreatmentTasks().stream())
+                    .filter(treatmentTask -> treatmentTask.getTreatmentProcedures() != null)
+            )
+            .findAny()
+            .map(treatmentTask ->
+                treatmentTask.getTreatmentProcedures()
+                    .stream()
+                    .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
+                    .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure != null &&
+                        !nhiExtendTreatmentProcedure.getId().equals(targetNhiExtendTreatmentProcedure.getId()))
+                    .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getTreatmentProcedure() != null &&
+                        nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal() != null &&
+                        nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime() != null)
+                    .filter(nhiExtendTreatmentProcedure ->
+                        !nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS)
+                            .isAfter(targetNhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS))
+                    )
+                    .collect(Collectors.toSet())
+            )
+            .orElse(Collections.emptySet());
 
-            // Create map which personal all nhi treatment procedure record with key as a73(nhi procedure code)
-            Set<NhiExtendTreatmentProcedure> peronalAllNhiTxProc = treatment.getTreatmentPlans().iterator().next()
-                .getTreatmentTasks().iterator().next()
-                .getTreatmentProcedures().stream()
-                .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
-                .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure != null &&
-                    !nhiExtendTreatmentProcedure.getId().equals(targetNhiExtendTreatmentProcedure.getId()))
-                .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getTreatmentProcedure() != null &&
-                    nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal() != null &&
-                    nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime() != null &&
-                    !nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS)
-                        .isAfter(targetNhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS)))
-                .collect(Collectors.toSet());
+        // Create map which personal all nhi treatment procedure record with key as a73(nhi procedure code)
+        Set<NhiExtendTreatmentProcedure> personalAllNhiTxProc = personalAllNhiTxProcFunction.apply(treatmentCriteria);
 
-            return new PersonalNhiExtendTreatmentProcedureMap().nhiExtendTreatmentProcedure(peronalAllNhiTxProc);
-
-        } else {
-            return null;
-        }
-
+        return new PersonalNhiExtendTreatmentProcedureMap().nhiExtendTreatmentProcedure(personalAllNhiTxProc);
     }
 
     public Consumer<NhiExtendTreatmentProcedure> checkInfectionControl = nhiExtendTreatmentProcedure -> {
@@ -260,55 +273,64 @@ public class NhiService {
     /**
      * Checking nhi treatment procedure main entrance
      *
-     * @param nhiExtendTreatmentProcedures
+     * @param disposal the patient disposal
      */
-    public void checkNhiExtendTreatmentProcedures(Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures) {
-        if (!rules.isEmpty()) {
-
-            Long patientId = nhiExtendTreatmentProcedures.iterator().next()
-                .getTreatmentProcedure()
-                .getTreatmentTask()
-                .getTreatmentPlan()
-                .getTreatment()
-                .getPatient()
-                .getId();
-
+    public void checkNhiExtendTreatmentProcedures(Disposal disposal) {
+        if (!rules.isEmpty() && disposal.getTreatmentProcedures() != null && disposal.getTreatmentProcedures().size() > 0) {
             this.getInfectionDate();
 
-            nhiExtendTreatmentProcedures.forEach(targetNhiExtendTreatmentProcedure -> {
-                if (rules.getOrDefault(targetNhiExtendTreatmentProcedure.getA73(), Rule.allPass()).getCode() != null) {
-                    targetNhiExtendTreatmentProcedure.setCheck("");
+            Long patientId = disposal.getTreatmentProcedures()
+                .stream()
+                .filter(anyTreatmentProcedure -> anyTreatmentProcedure.getTreatmentTask() != null &&
+                    anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan() != null &&
+                    anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment() != null &&
+                    anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment().getPatient() != null
+                )
+                .findAny()
+                .map(anyTreatmentProcedure -> anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId())
+                .orElse(null);
 
-                    PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap =
-                        getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(patientId, targetNhiExtendTreatmentProcedure);
+            if (patientId != null) {
+                Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = disposal.getTreatmentProcedures()
+                    .stream()
+                    .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
+                    .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
+                    .collect(Collectors.toSet());
 
-                    // Wrappers
-                    Consumer<NhiExtendTreatmentProcedure> wrapCheckExclude = nhiExtendTxP -> checkExclude.accept(nhiExtendTxP, nhiExtendTreatmentProcedures);
-                    Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherCodeDeclarationConflict = nhiExtendTxP ->
-                        checkOtherCodeDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
-                    Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherToothDeclarationConflict = nhiExtendTxP ->
-                        checkOtherToothDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
-                    Consumer<NhiExtendTreatmentProcedure> wrapCheckIdentityLimit = nhiExtendTxP ->
-                        checkIdentityLimit.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
-                    Consumer<NhiExtendTreatmentProcedure> wrapCheckDependOn = nhiExtendTxP ->
-                        checkDependOn.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+                nhiExtendTreatmentProcedures.forEach(targetNhiExtendTreatmentProcedure -> {
+                    if (rules.getOrDefault(targetNhiExtendTreatmentProcedure.getA73(), Rule.allPass()).getCode() != null) {
+                        targetNhiExtendTreatmentProcedure.setCheck("");
 
-                    checkXRay
-                        .andThen(wrapCheckExclude)
-                        .andThen(wrapCheckOtherCodeDeclarationConflict)
-                        .andThen(wrapCheckOtherToothDeclarationConflict)
-                        .andThen(wrapCheckIdentityLimit)
-                        .andThen(wrapCheckDependOn)
-                        .andThen(checkAlwaysMessage)
-                        .andThen(checkMedicalRecord)
-                        .andThen(checkInterval)
-                        .andThen(checkPositionLimit)
-                        .andThen(checkSurfaceLimit)
-                        .andThen(checkInfectionControl)
-                        .accept(targetNhiExtendTreatmentProcedure);
+                        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap = getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(patientId, targetNhiExtendTreatmentProcedure);
 
-                }
-            });
+                        // Wrappers
+                        Consumer<NhiExtendTreatmentProcedure> wrapCheckExclude = nhiExtendTxP -> checkExclude.accept(nhiExtendTxP, nhiExtendTreatmentProcedures);
+                        Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherCodeDeclarationConflict = nhiExtendTxP ->
+                            checkOtherCodeDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+                        Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherToothDeclarationConflict = nhiExtendTxP ->
+                            checkOtherToothDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+                        Consumer<NhiExtendTreatmentProcedure> wrapCheckIdentityLimit = nhiExtendTxP ->
+                            checkIdentityLimit.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+                        Consumer<NhiExtendTreatmentProcedure> wrapCheckDependOn = nhiExtendTxP ->
+                            checkDependOn.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+
+                        checkXRay
+                            .andThen(wrapCheckExclude)
+                            .andThen(wrapCheckOtherCodeDeclarationConflict)
+                            .andThen(wrapCheckOtherToothDeclarationConflict)
+                            .andThen(wrapCheckIdentityLimit)
+                            .andThen(wrapCheckDependOn)
+                            .andThen(checkAlwaysMessage)
+                            .andThen(checkMedicalRecord)
+                            .andThen(checkInterval)
+                            .andThen(checkPositionLimit)
+                            .andThen(checkSurfaceLimit)
+                            .andThen(checkInfectionControl)
+                            .accept(targetNhiExtendTreatmentProcedure);
+
+                    }
+                });
+            }
         }
     }
 
@@ -636,7 +658,7 @@ public class NhiService {
                                                 ChronoUnit.DAYS.between(localDate, targetDate) +
                                                 " 天前)" +
                                                 "\n");
-                                            })
+                                        })
                                     );
                                 }
                             } else if (r.getRange() == null) {

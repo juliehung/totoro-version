@@ -2,7 +2,6 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Disposal;
-import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.service.DisposalQueryService;
 import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.NhiService;
@@ -16,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Disposal.
@@ -163,21 +162,14 @@ public class DisposalResource {
     public ResponseEntity<Disposal> getDisposalWithRulesCheckedNhiExtTxProc(@PathVariable Long id) {
         log.debug("REST request to get contain rules checked nhi-ext-tx-proc Disposal with id : {}", id);
         Optional<Disposal> optDisposal = disposalService.findOneWithEagerRelationships(id);
-        if (optDisposal.isPresent() &&
-            optDisposal.get().getTreatmentProcedures() != null &&
-            optDisposal.get().getTreatmentProcedures().size() > 0
-        ) {
-            try {
-                Disposal disposal = optDisposal.get();
-                nhiService.checkNhiExtendTreatmentProcedures(disposal.getTreatmentProcedures().stream()
-                    .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
-                    .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
-                    .collect(Collectors.toSet())
-                );
-            } catch(Exception e) {
-                log.error(e.getMessage());
-            }
+        if (optDisposal.isPresent()) {
+            Disposal disposal = optDisposal.get();
+            nhiService.checkNhiExtendTreatmentProcedures(disposal);
+
+            return ResponseEntity.ok().body(disposal);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return ResponseUtil.wrapOrNotFound(optDisposal);
     }
+
 }
