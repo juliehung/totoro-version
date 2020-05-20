@@ -15,34 +15,36 @@ public class PersonalNhiExtendTreatmentProcedureMap {
     private Map<String, PersonalNhiExtendTreatmentProcedure> personalNhiExtendTreatmentProcedures = new HashMap<>();
 
     public PersonalNhiExtendTreatmentProcedureMap nhiExtendTreatmentProcedure(Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures) {
-        nhiExtendTreatmentProcedures.stream().forEach(nhiExtendTreatmentProcedure -> {
-            String key = nhiExtendTreatmentProcedure.getA73();
-            List<String> teeth = NhiService.splitToothFromA74(nhiExtendTreatmentProcedure.getA74()).collect(Collectors.toList());
-            if (nhiExtendTreatmentProcedure != null &&
-                nhiExtendTreatmentProcedure.getTreatmentProcedure() != null &&
-                nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal() != null &&
-                nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals() != null &&
-                nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().size() > 0
-            ) {
-                NhiExtendDisposal nhiExtendDisposal = nhiExtendTreatmentProcedure.getTreatmentProcedure()
-                    .getDisposal()
-                    .getNhiExtendDisposals().iterator().next();
-                LocalDate declarationDate = nhiExtendDisposal.getReplenishmentDate() == null
-                    ? nhiExtendDisposal.getDate()
-                    : nhiExtendDisposal.getReplenishmentDate();
+        if (nhiExtendTreatmentProcedures != null && nhiExtendTreatmentProcedures.size() > 0) {
+            nhiExtendTreatmentProcedures.forEach(nhiExtendTreatmentProcedure -> {
+                String key = nhiExtendTreatmentProcedure.getA73();
+                List<String> teeth = NhiService.splitToothFromA74(nhiExtendTreatmentProcedure.getA74()).collect(Collectors.toList());
+                if (nhiExtendTreatmentProcedure.getTreatmentProcedure() != null &&
+                    nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal() != null &&
+                    nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals() != null &&
+                    nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().size() > 0
+                ) {
+                    NhiExtendDisposal nhiExtendDisposal = nhiExtendTreatmentProcedure.getTreatmentProcedure()
+                        .getDisposal()
+                        .getNhiExtendDisposals().iterator().next();
+                    LocalDate declarationDate = nhiExtendDisposal.getReplenishmentDate() == null
+                        ? nhiExtendDisposal.getDate()
+                        : nhiExtendDisposal.getReplenishmentDate();
 
-                if (personalNhiExtendTreatmentProcedures.containsKey(key)) {
-                    this.personalNhiExtendTreatmentProcedures.get(key).pushDeclarationDateAndTooth(declarationDate, teeth);
-                    this.personalNhiExtendTreatmentProcedures.get(key).pushDeclarationDate(declarationDate);
-                } else {
-                    this.personalNhiExtendTreatmentProcedures.put(key,
-                        new PersonalNhiExtendTreatmentProcedure().code(key)
-                            .declarationDate(declarationDate)
-                    );
-                    this.personalNhiExtendTreatmentProcedures.get(key).pushDeclarationDateAndTooth(declarationDate, teeth);
+                    if (personalNhiExtendTreatmentProcedures.containsKey(key)) {
+                        this.personalNhiExtendTreatmentProcedures.get(key).pushDeclarationDateAndTooth(declarationDate, teeth);
+                        this.personalNhiExtendTreatmentProcedures.get(key).pushDeclarationDate(declarationDate);
+                    } else {
+                        this.personalNhiExtendTreatmentProcedures.put(key,
+                            new PersonalNhiExtendTreatmentProcedure().code(key)
+                                .declarationDate(declarationDate)
+                        );
+                        this.personalNhiExtendTreatmentProcedures.get(key).pushDeclarationDateAndTooth(declarationDate, teeth);
+                    }
                 }
-            }
-        });
+            });
+        }
+
         return this;
     }
 

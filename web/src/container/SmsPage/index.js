@@ -378,13 +378,15 @@ function SmsPage(props) {
               onClick={() =>
                 window.open(
                   'https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b',
+                  '_blank',
+                  'noopener',
                 )
               }
             >
               <GiftFill fill={remaining === 0 ? O1 : null} />
               <ActionName style={{ color: remaining === 0 ? O1 : null }}>{`儲值 (剩餘 ${remaining} 封)`}</ActionName>
             </RemainingActionItem>
-            <RemainingActionItem onClick={() => window.open('https://www.dentaltw.com/myOrders')}>
+            <RemainingActionItem onClick={() => window.open('https://www.dentaltw.com/myOrders', '_blank', 'noopener')}>
               <AwardFill />
               <ActionName>購買紀錄</ActionName>
             </RemainingActionItem>
@@ -440,11 +442,12 @@ function SmsPage(props) {
             })}
           </EventList>
           <Pagination
-            size="small" 
+            size="small"
             total={total}
             defaultCurrent={1}
-            onChange={page => getEvents(page - 1, 10)} 
-            disabled={isEventsLoading} />
+            onChange={page => getEvents(page - 1, 10)}
+            disabled={isEventsLoading}
+          />
         </EventListContainer>
         <EventCardContainer hasEvent={hasEvent}>
           <EventCard />

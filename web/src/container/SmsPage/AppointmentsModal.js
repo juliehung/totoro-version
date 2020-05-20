@@ -166,8 +166,7 @@ function AppointmentsModal(props) {
 
   useEffect(() => {
     if (visible) getAppointments({ start: moment(date), end: moment(date).add(1, 'days').add(1, 'seconds') });
-    // eslint-disable-next-line
-  }, [date]);
+  }, [date, visible, getAppointments]);
 
   const handleOk = () => {
     addContactAppointments(tempAppointments);
@@ -246,6 +245,14 @@ function AppointmentsModal(props) {
       sorter: (a, b) => a.doctor.user.firstName.localeCompare(b.doctor.user.firstName),
     },
     {
+      title: '上次寄發',
+      dataIndex: 'lastSent',
+      render: lastSent => (lastSent ? moment(lastSent).format('YYYY/MM/DD HH:mm') : ''),
+      width: 150,
+      sortDirections: ['descend', 'ascend'],
+      sorter: (a, b) => a.lastSent.localeCompare(b.lastSent),
+    },
+    {
       title: '預約內容',
       dataIndex: 'note',
       render: note => note,
@@ -260,7 +267,7 @@ function AppointmentsModal(props) {
 
   return (
     <StyledModal
-      width={900}
+      width={1100}
       centered
       bodyStyle={{ padding: '0' }}
       visible={visible}

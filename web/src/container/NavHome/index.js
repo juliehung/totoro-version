@@ -11,13 +11,15 @@ import SmsPage from '../SmsPage';
 import DentallHisLogo from '../../images/DentallHisLogo.svg';
 import { Menu, Dropdown, Drawer } from 'antd';
 import { parseAccountData } from './utils/parseAccountData';
-import { determineRouteShow } from './utils/determineRouteShow';
+import { determineRouteOrLinkShow } from './utils/determineRouteShow';
 import IconBookOpen from '../../images/icon-book-open.svg';
 import IconBookOpenFill from '../../images/icon-book-open-fill.svg';
 import IconCalendar from '../../images/icon-calendar.svg';
 import IconCalendarFill from '../../images/icon-calendar-fill.svg';
 import MessageCircle from '../../images/message-circle.svg';
 import MessageCircleFill from '../../images/message-circle-fill.svg';
+import Pantone from '../../images/pantone.svg';
+import Cube from '../../images/cube.svg';
 
 //#region
 const Container = styled.div`
@@ -57,7 +59,7 @@ const NavContainer = styled.nav`
     }
   }
 
-  @media (max-width: 960px) {
+  @media (max-width: 1100px) {
     & > :nth-child(1) {
       display: block;
     }
@@ -153,6 +155,22 @@ const DrawerItem = styled(Link)`
   }
 `;
 
+const LaboDrawerItem = styled.a`
+  text-decoration: none;
+  font-size: 14px;
+  color: #222b45;
+  font-weight: bold;
+  padding: 15px;
+  margin: 15px 0;
+  & > div {
+    display: flex;
+    align-items: center;
+    & > :first-child {
+      margin-right: 10px;
+    }
+  }
+`;
+
 const ContentContainer = styled.div`
   height: 100%;
   margin: 0 1% 15px;
@@ -178,15 +196,6 @@ const route = [
     localVersion: true,
   },
   {
-    key: 'sms',
-    name: 'SMS',
-    icon: { on: MessageCircleFill, off: MessageCircle },
-    navigation: true,
-    exact: true,
-    component: <SmsPage />,
-    localVersion: false,
-  },
-  {
     key: 'appointment',
     name: '約診排程',
     icon: { on: IconCalendarFill, off: IconCalendar },
@@ -195,9 +204,35 @@ const route = [
     component: <AppointmentPage />,
     localVersion: true,
   },
+  {
+    key: 'sms',
+    name: 'SMS',
+    icon: { on: MessageCircleFill, off: MessageCircle },
+    navigation: true,
+    exact: true,
+    component: <SmsPage />,
+    localVersion: false,
+  },
   { key: 'shift', navigation: false, exact: true, component: <ShiftPage />, localVersion: true },
   { key: 'setting', navigation: false, exact: true, component: <SettingPage />, localVersion: true },
   { key: '', navigation: false, exact: false, component: <Redirect to="/appointment" />, localVersion: true },
+];
+
+const navLink = [
+  {
+    key: 'labo',
+    name: 'LABO',
+    href: 'https://docs.google.com/spreadsheets/d/1LiCYNyCO2nx91g1VIke_DlZP8gqt3qEHTrKg1z7JT7k/edit?usp=sharing',
+    icon: Pantone,
+    clinic: ['pin-cui', 'rakumi'],
+  },
+  {
+    key: 'material',
+    name: '牙材管理',
+    href: 'https://docs.google.com/spreadsheets/d/1TpdSnYV0LOCirS2i9u4-QZToMyiEIMyxOWoOkeU0x3k/edit?usp=sharing',
+    icon: Cube,
+    clinic: ['pin-cui', 'rakumi'],
+  },
 ];
 
 function NavHome(props) {
@@ -243,21 +278,38 @@ function NavHome(props) {
         </Link>
         <div>
           <ul>
-            {route
-              .filter(r => r.navigation && determineRouteShow(r.localVersion))
-              .map(n => (
-                <NavItem key={n.key} focus={currentLocation === `/${n.key}`}>
-                  <Link to={`/${n.key}`}>
-                    <div>
+            {[
+              ...route
+                .filter(r => r.navigation && determineRouteOrLinkShow(r))
+                .map(n => (
+                  <NavItem key={n.key} focus={currentLocation === `/${n.key}`}>
+                    <Link to={`/${n.key}`}>
                       <div>
-                        <img src={n.icon.on} alt="bookIcon" />
-                        <img src={n.icon.off} alt="bookIcon" />
+                        <div>
+                          <img src={n.icon.on} alt="bookIcon" />
+                          <img src={n.icon.off} alt="bookIcon" />
+                        </div>
+                        <span className="svg">{n.name}</span>
                       </div>
-                      <span className="svg">{n.name}</span>
-                    </div>
-                  </Link>
-                </NavItem>
-              ))}
+                    </Link>
+                  </NavItem>
+                )),
+              ...navLink
+                .filter(n => determineRouteOrLinkShow(n))
+                .map(n => (
+                  <NavItem key={n.key}>
+                    <a href={n.href} target="_blank" rel="noopener noreferrer">
+                      <div>
+                        <div>
+                          <img src={n.icon} alt={n.name} />
+                          <img src={n.icon} alt={n.name} />
+                        </div>
+                        <span className="svg">{n.name}</span>
+                      </div>
+                    </a>
+                  </NavItem>
+                )),
+            ]}
           </ul>
         </div>
         <Dropdown
@@ -296,21 +348,33 @@ function NavHome(props) {
         <div style={{ marginBottom: '30px' }}>
           <img src={DentallHisLogo} alt="dentallHis" />
         </div>
-        {route
-          .filter(r => r.navigation && determineRouteShow(r.localVersion))
-          .map(n => (
-            <DrawerItem key={n.key} to={`/${n.key}`}>
-              <div>
-                <img src={n.icon.off} height="16px" alt="icon" />
-                <span>{n.name}</span>
-              </div>
-            </DrawerItem>
-          ))}
+        {[
+          ...route
+            .filter(r => r.navigation && determineRouteOrLinkShow(r))
+            .map(n => (
+              <DrawerItem key={n.key} to={`/${n.key}`}>
+                <div>
+                  <img src={n.icon.off} height="16px" alt="icon" />
+                  <span>{n.name}</span>
+                </div>
+              </DrawerItem>
+            )),
+          ...navLink
+            .filter(n => determineRouteOrLinkShow(n))
+            .map(n => (
+              <LaboDrawerItem key={n.key} href={n.href} target="_blank" rel="noopener noreferrer">
+                <div>
+                  <img src={n.icon} alt={n.name} />
+                  <span>{n.name}</span>
+                </div>
+              </LaboDrawerItem>
+            )),
+        ]}
       </Drawer>
       <ContentContainer>
         <Switch>
           {route
-            .filter(r => determineRouteShow(r.localVersion))
+            .filter(r => determineRouteOrLinkShow(r))
             .map(r => (
               <Route key={r.key} exact={r.exact} path={`/${r.key}`}>
                 {r.component}

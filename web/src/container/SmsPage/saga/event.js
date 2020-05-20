@@ -1,12 +1,5 @@
-import {
-  GET_EVENTS,
-  SAVE_EVENT,
-  SAVE_EVENT_AND_SEND_IMMEDIATELY,
-  GET_CLINIC_REMAINING,
-  EXECUTE_EVENT,
-  DELETE_EVENT,
-} from '../constant';
-import { call, take, put } from 'redux-saga/effects';
+import { GET_EVENTS, SAVE_EVENT, GET_CLINIC_REMAINING, EXECUTE_EVENT, DELETE_EVENT } from '../constant';
+import { call, take, put, all } from 'redux-saga/effects';
 import {
   getEventsSuccess,
   getClinicRemainingSuccess,
@@ -16,6 +9,7 @@ import {
   deleteEventSuccess,
 } from '../action';
 import SmsEvent from '../../../models/smsEvent';
+import SmsView from '../../../models/smsView';
 
 export function* getEvents() {
   while (true) {
@@ -30,7 +24,6 @@ export function* getEvents() {
   }
 }
 
-// auto save usage
 export function* saveEvent() {
   while (true) {
     try {
@@ -45,20 +38,24 @@ export function* saveEvent() {
     }
   }
 }
-
-// future support
 export function* executeEvent() {
   while (true) {
     try {
       // 1. send
       const action = yield take(EXECUTE_EVENT);
+      const appIds = action.event.sms.map(m => m.metadata.appointmentId);
       const executedResult = yield call(SmsEvent.execute, action.event.id);
       if (executedResult.status === 200) {
-        // 3-1. reload:
+        // remeber lastSent
+        yield all(appIds.map(a => call(SmsView.post, a)));
+        yield put(executeEventSuccess());
+
         const remaining = yield call(SmsEvent.getRemaining);
         yield put(getClinicRemainingSuccess(remaining));
-        const events = yield call(SmsEvent.get);
+        const events = yield call(SmsEvent.get, 0, 10);
         yield put(getEventsSuccess(events));
+      } else {
+        throw new Error();
       }
     } catch {
       yield put(executeEventFailed());
@@ -66,7 +63,6 @@ export function* executeEvent() {
   }
 }
 
-// future support
 export function* deleteEvent() {
   while (true) {
     try {
@@ -76,36 +72,6 @@ export function* deleteEvent() {
       if (isSucess) yield put(deleteEventSuccess(action.id));
     } catch (err) {
       console.log(err);
-    }
-  }
-}
-
-// current support
-export function* saveEventAndSendImmediately() {
-  while (true) {
-    try {
-      // 1. create
-      const action = yield take(SAVE_EVENT_AND_SEND_IMMEDIATELY);
-      const createdResult = yield call(SmsEvent.post, action.event);
-
-      // 2. send
-      const executedResult = yield call(SmsEvent.execute, createdResult.id);
-
-      // success
-      if (executedResult.status === 200) {
-        yield put(executeEventSuccess());
-
-        // and reload
-        const remaining = yield call(SmsEvent.getRemaining);
-        yield put(getClinicRemainingSuccess(remaining));
-        const events = yield call(SmsEvent.get);
-        yield put(getEventsSuccess(events));
-        // or failed
-      } else {
-        throw new Error();
-      }
-    } catch {
-      yield put(executeEventFailed());
     }
   }
 }

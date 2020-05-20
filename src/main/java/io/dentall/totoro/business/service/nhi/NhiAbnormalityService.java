@@ -42,8 +42,14 @@ public class NhiAbnormalityService {
         // 01: 自行調劑, 02: 交付調劑
         nhiExtendTreatmentDrug.getA78().equals("01") || nhiExtendTreatmentDrug.getA78().equals("02");
 
-    private final Function<NhiExtendTreatmentDrug, Double> nhiExtendTreatmentDrugPoint = nhiExtendTreatmentDrug ->
-        nhiExtendTreatmentDrug.getTreatmentDrug().getDrug().getPrice() * Double.parseDouble(nhiExtendTreatmentDrug.getA77());
+    private final Function<NhiExtendTreatmentDrug, Double> nhiExtendTreatmentDrugPoint = nhiExtendTreatmentDrug -> {
+        Double price = nhiExtendTreatmentDrug.getTreatmentDrug().getDrug().getPrice();
+        if (price == null) {
+            return 0.0;
+        } else {
+            return price * Double.parseDouble(nhiExtendTreatmentDrug.getA77());
+        }
+    };
 
     private final Function<NhiExtendDisposal, LocalDate> nhiExtendDisposalDate = nhiExtendDisposal ->
         nhiExtendDisposal.getReplenishmentDate() == null ? nhiExtendDisposal.getDate() : nhiExtendDisposal.getReplenishmentDate();

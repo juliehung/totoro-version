@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Service Implementation for managing NhiExtendTreatmentProcedure.
@@ -30,16 +29,12 @@ public class NhiExtendTreatmentProcedureService {
 
     private final TreatmentProcedureRepository treatmentProcedureRepository;
 
-    private final NhiService nhiService;
-
     public NhiExtendTreatmentProcedureService(
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
-        TreatmentProcedureRepository treatmentProcedureRepository,
-        NhiService nhiService
+        TreatmentProcedureRepository treatmentProcedureRepository
     ) {
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
         this.treatmentProcedureRepository = treatmentProcedureRepository;
-        this.nhiService = nhiService;
     }
 
     /**
@@ -115,13 +110,5 @@ public class NhiExtendTreatmentProcedureService {
                 return nhiExtendTreatmentProcedure;
             })
             .get();
-    }
-
-    public Set<NhiExtendTreatmentProcedure> findRuleCheckedNhiTxByDisposalId(Long disposalId) {
-        Set<NhiExtendTreatmentProcedure> nhiTxSet =
-            nhiExtendTreatmentProcedureRepository.findNhiExtendTreatmentProcedureByTreatmentProcedure_Disposal_Id(disposalId);
-        nhiService.checkNhiExtendTreatmentProcedures(nhiTxSet);
-
-        return nhiTxSet;
     }
 }
