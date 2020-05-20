@@ -18,6 +18,7 @@ logging:
         ROOT: DEBUG
         io.github.jhipster: DEBUG
         io.dentall.totoro: DEBUG
+        org.eclipse.paho.client.mqttv3: OFF
 
 spring:
     profiles:
