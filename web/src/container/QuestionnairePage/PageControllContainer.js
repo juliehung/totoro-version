@@ -16,6 +16,7 @@ const Container = styled.div`
   position: absolute;
   right: 0;
   bottom: 0px;
+  user-select: none;
   & > div {
     border: 1px solid rgb(208, 215, 223);
     box-shadow: 0px 2px 9px 0px rgba(23, 104, 172, 0.13);
