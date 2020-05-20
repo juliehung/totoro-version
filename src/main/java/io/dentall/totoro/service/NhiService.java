@@ -276,60 +276,63 @@ public class NhiService {
      * @param disposal the patient disposal
      */
     public void checkNhiExtendTreatmentProcedures(Disposal disposal) {
-        if (!rules.isEmpty() && disposal.getTreatmentProcedures() != null && disposal.getTreatmentProcedures().size() > 0) {
-            this.getInfectionDate();
+        if (!rules.isEmpty()) {
+            Set<TreatmentProcedure> treatmentProcedures = disposal.getTreatmentProcedures();
+            if (treatmentProcedures != null && treatmentProcedures.size() > 0) {
+                this.getInfectionDate();
 
-            Long patientId = disposal.getTreatmentProcedures()
-                .stream()
-                .filter(anyTreatmentProcedure -> anyTreatmentProcedure.getTreatmentTask() != null &&
-                    anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan() != null &&
-                    anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment() != null &&
-                    anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment().getPatient() != null
-                )
-                .findAny()
-                .map(anyTreatmentProcedure -> anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId())
-                .orElse(null);
-
-            if (patientId != null) {
-                Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = disposal.getTreatmentProcedures()
+                Long patientId = treatmentProcedures
                     .stream()
-                    .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
-                    .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
-                    .collect(Collectors.toSet());
+                    .filter(anyTreatmentProcedure -> anyTreatmentProcedure.getTreatmentTask() != null &&
+                        anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan() != null &&
+                        anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment() != null &&
+                        anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment().getPatient() != null
+                    )
+                    .findAny()
+                    .map(anyTreatmentProcedure -> anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId())
+                    .orElse(null);
 
-                nhiExtendTreatmentProcedures.forEach(targetNhiExtendTreatmentProcedure -> {
-                    if (rules.getOrDefault(targetNhiExtendTreatmentProcedure.getA73(), Rule.allPass()).getCode() != null) {
-                        targetNhiExtendTreatmentProcedure.setCheck("");
+                if (patientId != null) {
+                    Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = treatmentProcedures
+                        .stream()
+                        .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
+                        .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
+                        .collect(Collectors.toSet());
 
-                        PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap = getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(patientId, targetNhiExtendTreatmentProcedure);
+                    nhiExtendTreatmentProcedures.forEach(targetNhiExtendTreatmentProcedure -> {
+                        if (rules.getOrDefault(targetNhiExtendTreatmentProcedure.getA73(), Rule.allPass()).getCode() != null) {
+                            targetNhiExtendTreatmentProcedure.setCheck("");
 
-                        // Wrappers
-                        Consumer<NhiExtendTreatmentProcedure> wrapCheckExclude = nhiExtendTxP -> checkExclude.accept(nhiExtendTxP, nhiExtendTreatmentProcedures);
-                        Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherCodeDeclarationConflict = nhiExtendTxP ->
-                            checkOtherCodeDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
-                        Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherToothDeclarationConflict = nhiExtendTxP ->
-                            checkOtherToothDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
-                        Consumer<NhiExtendTreatmentProcedure> wrapCheckIdentityLimit = nhiExtendTxP ->
-                            checkIdentityLimit.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
-                        Consumer<NhiExtendTreatmentProcedure> wrapCheckDependOn = nhiExtendTxP ->
-                            checkDependOn.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+                            PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap = getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(patientId, targetNhiExtendTreatmentProcedure);
 
-                        checkXRay
-                            .andThen(wrapCheckExclude)
-                            .andThen(wrapCheckOtherCodeDeclarationConflict)
-                            .andThen(wrapCheckOtherToothDeclarationConflict)
-                            .andThen(wrapCheckIdentityLimit)
-                            .andThen(wrapCheckDependOn)
-                            .andThen(checkAlwaysMessage)
-                            .andThen(checkMedicalRecord)
-                            .andThen(checkInterval)
-                            .andThen(checkPositionLimit)
-                            .andThen(checkSurfaceLimit)
-                            .andThen(checkInfectionControl)
-                            .accept(targetNhiExtendTreatmentProcedure);
+                            // Wrappers
+                            Consumer<NhiExtendTreatmentProcedure> wrapCheckExclude = nhiExtendTxP -> checkExclude.accept(nhiExtendTxP, nhiExtendTreatmentProcedures);
+                            Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherCodeDeclarationConflict = nhiExtendTxP ->
+                                checkOtherCodeDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+                            Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherToothDeclarationConflict = nhiExtendTxP ->
+                                checkOtherToothDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+                            Consumer<NhiExtendTreatmentProcedure> wrapCheckIdentityLimit = nhiExtendTxP ->
+                                checkIdentityLimit.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
+                            Consumer<NhiExtendTreatmentProcedure> wrapCheckDependOn = nhiExtendTxP ->
+                                checkDependOn.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
 
-                    }
-                });
+                            checkXRay
+                                .andThen(wrapCheckExclude)
+                                .andThen(wrapCheckOtherCodeDeclarationConflict)
+                                .andThen(wrapCheckOtherToothDeclarationConflict)
+                                .andThen(wrapCheckIdentityLimit)
+                                .andThen(wrapCheckDependOn)
+                                .andThen(checkAlwaysMessage)
+                                .andThen(checkMedicalRecord)
+                                .andThen(checkInterval)
+                                .andThen(checkPositionLimit)
+                                .andThen(checkSurfaceLimit)
+                                .andThen(checkInfectionControl)
+                                .accept(targetNhiExtendTreatmentProcedure);
+
+                        }
+                    });
+                }
             }
         }
     }
