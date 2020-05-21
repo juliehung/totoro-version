@@ -242,7 +242,7 @@ function NavHome(props) {
 
   const logout = () => {
     removeCookie('token', { path: '/' });
-    window.location = '/';
+    location.reload();
   };
 
   const [currentLocation, setCurrentLocation] = useState(undefined);
