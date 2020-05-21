@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { setSelectedEvent, executeEvent, deleteEvent } from './action';
-import { parseAccountData } from '../NavHome/utils/parseAccountData';
 import moment from 'moment';
 import Trash from './svg/Trash';
 import PaperPlane from './svg/PaperPlane';
@@ -115,8 +114,8 @@ const Splitter = styled.div`
 `;
 
 function EventReadOnly(props) {
-  const { selectedEvent, executeEvent, deleteEvent, account, users } = props;
-  const createdBy = users.find(user => user.login === selectedEvent.createdBy).firstName;
+  const { selectedEvent, executeEvent, deleteEvent, users } = props;
+  const createdBy = users.find(user => user.login === selectedEvent.createdBy);
   moment.locale('en');
   return (
     <RootContainer>
@@ -133,13 +132,13 @@ function EventReadOnly(props) {
       <BoneContainer>
         <EventDetailContainer>
           <SenderContainer>
-            {account.avatar ? (
-              <AvatarImg alt="avatar" src={`data:image/png;base64,${account.avatar}`} />
+            {createdBy.extendUser.avatar ? (
+              <AvatarImg alt="avatar" src={`data:image/png;base64,${createdBy.extendUser.avatar}`} />
             ) : (
-              <AvatarImg alt={account.name[0]} src={null} style={{ textAlign: 'center', lineHeight: '30px' }} />
+              <AvatarImg alt={createdBy.firstName[0]} src={null} style={{ textAlign: 'center', lineHeight: '30px' }} />
             )}
             <div>
-              <P1>{createdBy}</P1>
+              <P1>{createdBy.firstName}</P1>
               <Small style={{ marginTop: '-2px' }}>
                 {moment(selectedEvent.modifiedDate).format('dddd, MMM DD, HH:mm')}
               </Small>
@@ -168,10 +167,9 @@ function EventReadOnly(props) {
     </RootContainer>
   );
 }
-const mapStateToProps = ({ smsPageReducer, homePageReducer }) => ({
+const mapStateToProps = ({ smsPageReducer }) => ({
   users: smsPageReducer.user.users,
   selectedEvent: smsPageReducer.event.selectedEvent,
-  account: parseAccountData(homePageReducer.account.data),
 });
 
 const mapDispatchToProps = { setSelectedEvent, executeEvent, deleteEvent };
