@@ -92,6 +92,7 @@ const event = (state = initialState, action) =>
 
         draft.isLoaded = true;
         draft.isEventsLoading = false;
+        draft.isSentFailed = null;
         break;
       }
 
