@@ -598,9 +598,9 @@ public class NhiService {
                                 if (d.isAfter(targetDate) || d.isEqual(targetDate)) {
                                     targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
                                         r.getMessage() +
+                                        "。 上次申報時間：" +
+                                        formatter.format(localDate) +
                                         " ( " +
-                                        r.getDependOn() +
-                                        " 日期 " +
                                         ChronoUnit.DAYS.between(localDate, targetDate) +
                                         " 天前 )\n");
                                 }

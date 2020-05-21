@@ -1,4 +1,4 @@
-﻿code,x_ray,medical_record,exclude,interval,position_limit,surface_limit,other_code_declaration_interval,other_tooth_declaration_interval,identity_limit,always_message,depend_on,infection_control
+code,x_ray,medical_record,exclude,interval,position_limit,surface_limit,other_code_declaration_interval,other_tooth_declaration_interval,identity_limit,always_message,depend_on,infection_control
 00121C,,,,,BLANK_ONLY,@type=SURFACE_BLANK_ONLY,,,,,,
 00122C,,,,,BLANK_ONLY,@type=SURFACE_BLANK_ONLY,,,,,,
 00123C,,,,,BLANK_ONLY,@type=SURFACE_BLANK_ONLY,,,,,,
@@ -14,6 +14,9 @@
 00302C,,,,,BLANK_ONLY,@type=SURFACE_BLANK_ONLY,,,,,,
 00303C,,,,,BLANK_ONLY,@type=SURFACE_BLANK_ONLY,,,,,,
 00304C,,y,,,BLANK_ONLY,@type=SURFACE_BLANK_ONLY,,,,,,
+00315C,y,y,,,,,,,,,,
+00316C,y,y,,,,,,,,,,
+00317C,y,y,,,,,,,,,,
 01001C,,,,,FM_ONLY,@type=SURFACE_BLANK_ONLY,,,,,,
 01271C,Y,y,,<=1095,FM_ONLY,@type=SURFACE_BLANK_ONLY,"@interval=365@code=01272C,01273C;@code=91021C@interval=180",,,,,@message=2020/4/1 起針對符合加強感染管制診所可改報 00315C(635點)
 01272C,y,y,,<=730,FM_ONLY,@type=SURFACE_BLANK_ONLY,"@interval=365@code=01271C,01272C;@code=91021C@interval=180",,,,,@message=2020/4/1 起針對符合加強感染管制診所可改報 00316C(635點)
