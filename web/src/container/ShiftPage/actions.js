@@ -23,6 +23,12 @@ import {
   CHANGE_RESOURCE_COLOR_START,
   CHANGE_RESOURCE_COLOR_SUCCESS,
   LEAVE_PAGE,
+  COPY_SHIFT,
+  ON_COPY_SHIFT_START,
+  ON_COPY_SHIFT_SUCCESS,
+  CHANGE_DELETE_CURRENT,
+  CHANGE_COPY_MODAL_VISIBLE,
+  CHANGE_SELECT_ALL_DOCTOR,
 } from './constant';
 
 export const changeDate = range => {
@@ -119,4 +125,28 @@ export const changeResourceColorSuccess = (id, color) => {
 
 export const leavePage = () => {
   return { type: LEAVE_PAGE };
+};
+
+export const copyShift = (doctor, range) => {
+  return { type: COPY_SHIFT, doctor, range };
+};
+
+export const onCopyShift = () => {
+  return { type: ON_COPY_SHIFT_START };
+};
+
+export const onCopyShiftSuccess = () => {
+  return { type: ON_COPY_SHIFT_SUCCESS };
+};
+
+export const changeDeleteCurrent = value => {
+  return { type: CHANGE_DELETE_CURRENT, value };
+};
+
+export const changeCopyModalVisible = visible => {
+  return { type: CHANGE_COPY_MODAL_VISIBLE, visible };
+};
+
+export const changeSelectAllDoctor = selectAllDoctor => {
+  return { type: CHANGE_SELECT_ALL_DOCTOR, selectAllDoctor };
 };

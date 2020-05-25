@@ -196,7 +196,7 @@ function DefaultShift(props) {
       itemSelector: '.external-event',
       eventData: function (eventEl) {
         const title = eventEl.dataset.title;
-        return { title, create: false };
+        return { title, create: false, duration: '24:00' };
       },
     });
   }, []);
