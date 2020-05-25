@@ -162,12 +162,23 @@ function ShiftPopover(props) {
     [setVisible],
   );
 
+  const escKeyCallback = useCallback(
+    e => {
+      if (e.keyCode === 27) {
+        setVisible(false);
+      }
+    },
+    [setVisible],
+  );
+
   useEffect(() => {
     window.addEventListener('mousedown', mousedownCallback);
+    window.addEventListener('keydown', escKeyCallback);
     return () => {
       window.removeEventListener('mousedown', mousedownCallback);
+      window.removeEventListener('keydown', escKeyCallback);
     };
-  }, [visible, mousedownCallback]);
+  }, [visible, mousedownCallback, escKeyCallback]);
 
   useEffect(() => {
     const height = ref.current.clientHeight;

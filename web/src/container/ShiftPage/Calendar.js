@@ -12,18 +12,40 @@ import convertShiftToEvent from './utils/convertShiftToEvent';
 import handlePopoverPosition from './utils/handlePopoverPosition';
 import handleShiftEvtTitle from './utils/handleShiftEvtTitle';
 import { handleResourceRender } from './utils/handleResourceRender';
-import { changeDate, getShift, editShift, shiftDrop, changeResourceColor, deleteShift } from './actions';
+import {
+  changeDate,
+  getShift,
+  editShift,
+  shiftDrop,
+  changeResourceColor,
+  deleteShift,
+  copyShift,
+  changeCopyModalVisible,
+  changeSelectAllDoctor,
+} from './actions';
 import { handleEventDrop } from './utils/handleEventDrop';
 import { handleEventRender } from './utils/handleEventRender';
 import moment from 'moment';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import ArrowRight from '../../images/two-arrow-right.svg';
 import ArrowLeft from '../../images/two-arrow-left.svg';
 import { CSSTransition } from 'react-transition-group';
 import './Calendar.css';
 import { usePrevious } from '../../utils/hooks/usePrevious';
+import { weekOfMonth } from './utils/weekOfMonth';
+import CopyModal from './CopyModal';
+import { addAllDay } from './utils/addAllDay';
 
 //#region
+const GlobalStyle = createGlobalStyle`
+  .fc-no-scrollbars {
+    overflow: hidden !important;
+  }
+  .fc-resource-area .fc-scroller {
+    overflow: hidden !important;
+  }
+`;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -61,7 +83,7 @@ const TitleContainer = styled.div`
 
 const SavedIndicator = styled.span`
   position: absolute;
-  left: 3%;
+  right: 3%;
   font-weight: 600;
   font-size: 12px;
   color: #8992a3;
@@ -72,6 +94,17 @@ const CalendarContainer = styled.div`
   flex-grow: 1;
   flex-shrink: 1;
 `;
+
+const CopyAllShiftContainer = styled.div`
+  position: absolute;
+  left: 3%;
+  font-weight: 600;
+  font-size: 14px;
+  color: #8992a3;
+  user-select: none;
+  cursor: pointer;
+`;
+
 //#endregion
 
 function Calendar(props) {
@@ -85,6 +118,10 @@ function Calendar(props) {
     deleteSuccess,
     editShiftSuccess,
     changeColorSuccess,
+    range,
+    copySuccess,
+    getShift,
+    changeCopyModalVisible,
   } = props;
   const calendarRef = useRef(null);
 
@@ -118,6 +155,13 @@ function Calendar(props) {
     prevChangeColorSuccess,
     setShowSaved,
   ]);
+
+  useEffect(() => {
+    if (copySuccess) {
+      getShift(range);
+      changeCopyModalVisible(false);
+    }
+  }, [copySuccess, range, getShift, changeCopyModalVisible]);
 
   const datesRender = ({ view }) => {
     const start = view.activeStart;
@@ -167,14 +211,27 @@ function Calendar(props) {
   };
 
   const resourceRender = info => {
-    handleResourceRender(info, { colorClick: handleResourceColorClick, resourceColor: props.resourceColor });
+    handleResourceRender(info, {
+      copyShiftClick: handleCopyShiftClick,
+      colorClick: handleResourceColorClick,
+      resourceColor: props.resourceColor,
+    });
   };
 
   const handleResourceColorClick = (id, color) => {
     props.changeResourceColor(id, color);
   };
 
-  const events = handleShiftEvtTitle(props.event, props.defaultShift);
+  const handleCopyShiftClick = doctor => {
+    changeCopyModalVisible(true);
+    props.copyShift(doctor, range);
+  };
+
+  const handleCopyAllShiftClick = () => {
+    changeCopyModalVisible(true);
+    props.changeSelectAllDoctor(true);
+    props.copyShift(null, range);
+  };
 
   const eventRender = info => {
     handleEventRender(info, { deleteShift });
@@ -196,13 +253,16 @@ function Calendar(props) {
 
   return (
     <Container>
+      <GlobalStyle />
+      <CopyModal />
       <Header>
         <CSSTransition className="savedTransition" timeout={3000} in={showSaved} unmountOnExit>
           <SavedIndicator>已儲存!</SavedIndicator>
         </CSSTransition>
+        <CopyAllShiftContainer onClick={handleCopyAllShiftClick}>複製全醫師班表</CopyAllShiftContainer>
         <TitleContainer className="fc-center">
           <img src={ArrowLeft} alt="arrow-left" onClick={prevClick} />
-          <span> {moment(props.range.start).format('MMM YYYY')}</span>
+          <span>{`${moment(range.start).format('YYYY 第 w 週, MMM')} 第 ${weekOfMonth(moment(range.start))} 週`}</span>
           <img src={ArrowRight} alt="arrow-right" onClick={nextClick} />
         </TitleContainer>
       </Header>
@@ -215,24 +275,26 @@ function Calendar(props) {
           height="parent"
           resources={props.resource}
           resourceRender={resourceRender}
-          slotWidth={150}
-          events={events}
+          slotWidth={250}
+          events={props.event}
           eventRender={eventRender}
           plugins={[interactionPlugin, resourceTimelinePlugin]}
-          defaultView={'resourceTimelineMonth'}
+          defaultView={'resourceTimelineWeek'}
           editable={true}
           eventDurationEditable={false}
           resourceLabelText={'Doctor'}
-          resourceAreaWidth={'20%'}
+          resourceAreaWidth={'250px'}
           datesRender={datesRender}
           dateClick={dateClick}
           eventDrop={eventDrop}
           eventResize={eventResize}
           drop={drop}
           slotLabelFormat={{ day: 'numeric', weekday: 'short' }}
+          slotDuration="24:00:00"
           displayEventTime={false}
           selectable
           selectLongPressDelay={500}
+          scrollTime="00:00:00"
         />
       </CalendarContainer>
     </Container>
@@ -244,15 +306,19 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
     id: d.id,
     title: d.name,
     avatar: d.avatar,
+    doctor: d,
   })),
   range: shiftPageReducer.shift.range,
-  defaultShift: shiftPageReducer.defaultShift.shift,
-  event: convertShiftToEvent(shiftPageReducer.shift.shift, shiftPageReducer.resourceColor.color),
+  event: handleShiftEvtTitle(
+    convertShiftToEvent(shiftPageReducer.shift.shift, shiftPageReducer.resourceColor.color),
+    shiftPageReducer.defaultShift.shift,
+  ).map(addAllDay),
   resourceColor: shiftPageReducer.resourceColor.color,
   createShiftSuccess: shiftPageReducer.shift.createShiftSuccess,
   deleteSuccess: shiftPageReducer.shift.deleteSuccess,
   editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
   changeColorSuccess: shiftPageReducer.resourceColor.changeColorSuccess,
+  copySuccess: shiftPageReducer.copy.success,
 });
 
 const mapDispatchToProps = {
@@ -262,6 +328,9 @@ const mapDispatchToProps = {
   shiftDrop,
   changeResourceColor,
   deleteShift,
+  copyShift,
+  changeCopyModalVisible,
+  changeSelectAllDoctor,
 };
 
 export default connect(
