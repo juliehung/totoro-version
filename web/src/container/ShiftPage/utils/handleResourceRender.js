@@ -1,12 +1,49 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import { Popover, Button } from 'antd';
+import { Popover, Button, Tooltip } from 'antd';
+import Copy from '../../../images/copy-fill.svg';
 
 //#region
+const CopyContainer = styled.div`
+  width: 24px;
+  height: 24px;
+  background-color: rgba(143, 155, 179, 0.08);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: all 200ms ease-in-out;
+  cursor: pointer;
+
+  &:active {
+    background-color: rgba(143, 155, 179, 0.16);
+  }
+`;
+
 const Container = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 200px;
+
+  &:hover ${CopyContainer} {
+    opacity: 1;
+  }
+`;
+
+const LeftContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  & > span {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 const AvatarContainer = styled.div`
@@ -72,6 +109,7 @@ const ColorContainer = styled.div`
   width: 16px;
   height: 16px;
 `;
+
 //#endregion
 
 export const eventColors = [
@@ -127,15 +165,30 @@ export const handleResourceRender = ({ resource, el }, utils) => {
 
   const content = (
     <Container>
-      <Popover content={colorPlate} trigger="click" placement="right">
-        <AvatarContainer>
-          <div>
-            {avatar ? <img alt="avatar" src={`data:image/png;base64,${avatar}`}></img> : <div>{resource.title[0]}</div>}
-          </div>
-          <Color color={color}></Color>
-        </AvatarContainer>
-      </Popover>
-      <span>{resource.title}</span>
+      <LeftContainer>
+        <Popover content={colorPlate} trigger="click" placement="right">
+          <AvatarContainer>
+            <div>
+              {avatar ? (
+                <img alt="avatar" src={`data:image/png;base64,${avatar}`}></img>
+              ) : (
+                <div>{resource.title.trim()[0]}</div>
+              )}
+            </div>
+            <Color color={color}></Color>
+          </AvatarContainer>
+        </Popover>
+        <span>{resource.title}</span>
+      </LeftContainer>
+      <Tooltip title="套用上週班表" trigger="hover" placement="top">
+        <CopyContainer
+          onClick={() => {
+            utils.copyShiftClick(resource.extendedProps.doctor);
+          }}
+        >
+          <img src={Copy} alt={'copy'} />
+        </CopyContainer>
+      </Tooltip>
     </Container>
   );
 

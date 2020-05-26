@@ -27,8 +27,8 @@ const shift = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
       case CHANGE_DATE:
-        draft.range.start = moment(action.range.start).startOf('d');
-        draft.range.end = moment(action.range.end).endOf('d');
+        draft.range.start = moment(action.range.start);
+        draft.range.end = moment(action.range.end);
         break;
       case GET_SHIFT_SUCCESS:
         draft.shift = action.shift;

@@ -4,7 +4,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  width: 140px;
+  width: 240px;
   display: flex;
   justify-content: space-between;
 `;
