@@ -44,6 +44,17 @@ const GlobalStyle = createGlobalStyle`
   .fc-resource-area .fc-scroller {
     overflow: hidden !important;
   }
+  .fc-title.fc-sticky {
+    width: 100%;
+  }
+
+  .fc-view-container * {
+    scrollbar-width: none;
+  }
+
+  .fc-view-container *::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Container = styled.div`
@@ -279,7 +290,6 @@ function Calendar(props) {
           height="parent"
           resources={props.resource}
           resourceRender={resourceRender}
-          slotWidth={250}
           events={props.event}
           eventRender={eventRender}
           plugins={[interactionPlugin, resourceTimelinePlugin]}
@@ -306,7 +316,7 @@ function Calendar(props) {
 }
 
 const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
-  resource: extractDoctorsFromUser(homePageReducer.user.users).map(d => ({
+  resource: extractDoctorsFromUser(homePageReducer.user.users.filter(u => u.activated)).map(d => ({
     id: d.id,
     title: d.name,
     avatar: d.avatar,
