@@ -131,13 +131,15 @@ function Calendar(props) {
   const prevDeleteSuccess = usePrevious(deleteSuccess);
   const prevEditShiftSuccess = usePrevious(editShiftSuccess);
   const prevChangeColorSuccess = usePrevious(changeColorSuccess);
+  const prevCopySuccess = usePrevious(copySuccess);
 
   useEffect(() => {
     if (
       (createShiftSuccess && !prevCreateShiftSuccess) ||
       (editShiftSuccess && !prevEditShiftSuccess) ||
       (deleteSuccess && !prevDeleteSuccess) ||
-      (changeColorSuccess && !prevChangeColorSuccess)
+      (changeColorSuccess && !prevChangeColorSuccess) ||
+      (copySuccess && !prevCopySuccess)
     ) {
       setShowSaved(true);
       requestAnimationFrame(() => {
@@ -149,10 +151,12 @@ function Calendar(props) {
     deleteSuccess,
     editShiftSuccess,
     changeColorSuccess,
+    copySuccess,
     prevCreateShiftSuccess,
     prevDeleteSuccess,
     prevEditShiftSuccess,
     prevChangeColorSuccess,
+    prevCopySuccess,
     setShowSaved,
   ]);
 
