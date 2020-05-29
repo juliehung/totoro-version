@@ -8,7 +8,7 @@ export function determineRouteOrLinkShow(route) {
 }
 
 function isLocalChecker() {
-  return !window.location.href.includes('his.dentall.io') && !window.location.href.includes('dentall.pw/rakumi');
+  return !window.location.href.includes('his.dentall.io') && !window.location.href.includes('dentall.pw');
 }
 
 function clinicChecker(clinics) {
