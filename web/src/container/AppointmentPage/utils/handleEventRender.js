@@ -153,33 +153,27 @@ export function handleEventRender(info, func) {
         }
       }
     } else if (info.view.type === 'listWeek') {
-      const regex = /<a>(.*?)<\/a>/;
       const { patientId, patientName, phone, doctor, note, status } = appointment;
-
-      let HTMLContent;
-      if (status === 'CANCEL') {
-        HTMLContent = info.el.innerHTML.replace(
-          regex,
-          `<a style='color:rgba(0,0,0,0.2)'>${patientId}, '[C]'${patientName}, ${phone ? phone + `,` : ''} ${
-            doctor.user.firstName
-          }${note ? ', ' + note : ''}</a>`,
-        );
-      } else {
-        HTMLContent = info.el.innerHTML.replace(
-          regex,
-          `<a>${`No. ` + patientId}, ${patientName}, ${phone ? phone + `,` : ''} ${doctor.user.firstName}${
-            note ? ', ' + note : ''
-          }</a>`,
-        );
-      }
-
-      info.el.innerHTML = HTMLContent;
-
-      if (!appointment.registrationStatus) {
-        info.el.addEventListener('dblclick', () => {
-          func.edit(appointment);
-        });
-      }
+      const isCanceled = status === 'CANCEL';
+      render(
+        <div
+          style={{ color: isCanceled ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.65)' }}
+          onDoubleClick={
+            isCanceled
+              ? null
+              : () => {
+                  func.edit(appointment);
+                }
+          }
+        >
+          <span>
+            {`${'No. ' + patientId}, ${isCanceled ? '[C]' : ''}${patientName}, ${phone ? phone + `,` : ''} ${
+              doctor.user.firstName
+            } ${note ? ', ' + note : ''}`}
+          </span>
+        </div>,
+        info.el.querySelector('a'),
+      );
     }
   } else if (info.event.extendedProps.eventType === 'doctorDayOff') {
     const doctorDayOff = info.event.extendedProps.doctorDayOff;
