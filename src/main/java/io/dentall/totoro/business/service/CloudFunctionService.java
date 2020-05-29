@@ -30,6 +30,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.dentall.totoro.business.service.GcpConstants.CLOUD_FUNCTION_BASE_URL;
 import static io.dentall.totoro.business.service.GcpConstants.SERVICE_ACCOUNT;
 
 @Profile("saas")
@@ -44,7 +45,7 @@ public class CloudFunctionService {
 
     private RestTemplate restTemplate;
 
-    private String functionSuffix = "";
+    private String smsEndpoint = CLOUD_FUNCTION_BASE_URL + "sms";
 
     public CloudFunctionService(ObjectMapper mapper, RestTemplateBuilder restTemplateBuilder, Environment env) {
         this.mapper = mapper;
@@ -53,12 +54,12 @@ public class CloudFunctionService {
             .build();
         Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
         if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT)) {
-            functionSuffix = "Dev";
+            smsEndpoint = CLOUD_FUNCTION_BASE_URL + "smsDev";
         }
     }
 
     public String executeSmsEvent(String clinic, String eventId) throws IOException, ThrowableProblem {
-        String function = GcpConstants.EXECUTE_SMS_EVENT_FUNCTION + functionSuffix;
+        String function = smsEndpoint + GcpConstants.EXECUTE_SMS_EVENT_API;
         String token = getIdTokenWithAudience(function);
         Map<String, String> map = Stream.of(
             new AbstractMap.SimpleEntry<>("clinic", clinic),
@@ -69,14 +70,14 @@ public class CloudFunctionService {
     }
 
     public String chargeSms(SmsChargeDTO dto) throws IOException, ThrowableProblem {
-        String function = GcpConstants.CHARGE_SMS_FUNCTION + functionSuffix;
+        String function = smsEndpoint + GcpConstants.CHARGE_SMS_API;
         String token = getIdTokenWithAudience(function);
         HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(dto), getRequestHeaderBearer(token));
         return restTemplate.postForObject(function, request, String.class);
     }
 
     public SmsEventDTO upsertSmsEvent(SmsEventDTO dto) throws IOException, ThrowableProblem {
-        String function = GcpConstants.UPSERT_SMS_EVENT_FUNCTION + functionSuffix;
+        String function = smsEndpoint + GcpConstants.UPSERT_SMS_EVENT_API;
         String token = getIdTokenWithAudience(function);
         HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(dto), getRequestHeaderBearer(token));
         return restTemplate.postForObject(function, request, SmsEventDTO.class);
@@ -86,7 +87,7 @@ public class CloudFunctionService {
         int size = pageable.getPageSize();
         int offset = pageable.getPageNumber() * pageable.getPageSize();
 
-        String function = GcpConstants.GET_SMS_EVENTS_FUNCTION + functionSuffix;
+        String function = smsEndpoint + GcpConstants.GET_SMS_EVENTS_API;
         String token = getIdTokenWithAudience(function);
         Map<String, Object> map = Stream.of(
             new AbstractMap.SimpleEntry<>("clinic", clinic),
@@ -103,14 +104,14 @@ public class CloudFunctionService {
     }
 
     public SmsInfoVM getSmsInfo(String clinic) throws IOException, ThrowableProblem {
-        String function = GcpConstants.GET_SMS_INFO_FUNCTION + functionSuffix;
+        String function = smsEndpoint + GcpConstants.GET_SMS_INFO_API;
         String token = getIdTokenWithAudience(function);
         HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(Collections.singletonMap("clinic", clinic)), getRequestHeaderBearer(token));
         return restTemplate.postForObject(function, request, SmsInfoVM.class);
     }
 
     public String deleteSmsEvent(String clinic, String eventId) throws IOException, ThrowableProblem {
-        String function = GcpConstants.DELETE_SMS_EVENT_FUNCTION + functionSuffix;
+        String function = smsEndpoint + GcpConstants.DELETE_SMS_EVENT_API;
         String token = getIdTokenWithAudience(function);
         Map<String, String> map = Stream.of(
             new AbstractMap.SimpleEntry<>("clinic", clinic),
