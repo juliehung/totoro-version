@@ -22,7 +22,7 @@ function NationalId(props) {
     <Container>
       <div>
         <StyleRightCircleTwoTone />
-        <span>身分證字號*</span>
+        <span>身分證字號</span>
       </div>
       <TransparentInput
         size="large"
