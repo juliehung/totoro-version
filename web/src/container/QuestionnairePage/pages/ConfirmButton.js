@@ -5,7 +5,6 @@ import { Button } from 'antd';
 
 const StyledButton = styled(Button)`
   font-size: 16px !important;
-  visibility: ${props => (props.disabled ? 'hidden' : 'show')};
 `;
 
 export default function ConfirmButton(props) {
