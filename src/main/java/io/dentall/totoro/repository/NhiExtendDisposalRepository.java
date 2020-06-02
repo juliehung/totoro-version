@@ -2,6 +2,7 @@ package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
+import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 
 /**
@@ -20,6 +23,10 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long>, JpaSpecificationExecutor<NhiExtendDisposal> {
+
+    Set<NhiExtendDisposalTable> findNhiExtendDisposalByDate(LocalDate date);
+
+    Optional<NhiExtendDisposalTable> findNhiExtendDisposalByDisposal_Id(Long id);
 
     String dateBetween = "((nhiExtendDisposal.date between :start and :end and nhiExtendDisposal.replenishmentDate is null) or " +
         "(nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate between :start and :end)) ";

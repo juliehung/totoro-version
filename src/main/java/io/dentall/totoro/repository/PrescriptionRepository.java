@@ -1,8 +1,12 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.Prescription;
-import org.springframework.data.jpa.repository.*;
+import io.dentall.totoro.service.dto.table.PrescriptionTable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 
 /**
@@ -11,5 +15,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface PrescriptionRepository extends JpaRepository<Prescription, Long>, JpaSpecificationExecutor<Prescription> {
-
+    Optional<PrescriptionTable> findPrescriptionById(Long id);
 }

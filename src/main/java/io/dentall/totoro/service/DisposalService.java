@@ -2,7 +2,9 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
-import io.dentall.totoro.repository.DisposalRepository;
+import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.dto.table.*;
+import io.dentall.totoro.service.mapper.*;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -38,7 +41,47 @@ public class DisposalService {
 
     private final RegistrationService registrationService;
 
-    private final NhiExtendDisposalService nhiExtendDisposalService;
+    private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
+
+    private final PrescriptionRepository prescriptionRepository;
+
+    private final TreatmentProcedureRepository treatmentProcedureRepository;
+
+    private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
+
+    private final TreatmentDrugRepository treatmentDrugRepository;
+
+    private final ToothRepository toothRepository;
+
+    private final RegistrationRepository registrationRepository;
+
+    private final AccountingRepository accountingRepository;
+
+    private final NhiProcedureRepository nhiProcedureRepository;
+
+    private final NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository;
+
+    private final DrugRepository drugRepository;
+
+    private final TreatmentProcedureMapper treatmentProcedureMapper;
+
+    private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
+
+    private final ToothMapper toothMapper;
+
+    private final DisposalMapper disposalMapper;
+
+    private final RegistrationMapper registrationMapper;
+
+    private final AccountingMapper accountingMapper;
+
+    private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
+
+    private final PrescriptionMapper prescriptionMapper;
+
+    private final TreatmentDrugMapper treatmentDrugMapper;
+
+    private final NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper;
 
     public DisposalService(
         DisposalRepository disposalRepository,
@@ -46,13 +89,54 @@ public class DisposalService {
         TodoService todoService,
         RelationshipService relationshipService,
         RegistrationService registrationService,
-        NhiExtendDisposalService nhiExtendDisposalService) {
+        NhiExtendDisposalService nhiExtendDisposalService,
+        NhiExtendDisposalRepository nhiExtendDisposalRepository,
+        PrescriptionRepository prescriptionRepository,
+        TreatmentProcedureRepository treatmentProcedureRepository,
+        NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
+        TreatmentDrugRepository treatmentDrugRepository,
+        ToothRepository toothRepository,
+        RegistrationRepository registrationRepository,
+        AccountingRepository accountingRepository,
+        NhiProcedureRepository nhiProcedureRepository,
+        NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository,
+        DrugRepository drugRepository,
+        TreatmentProcedureMapper treatmentProcedureMapper,
+        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
+        ToothMapper toothMapper,
+        DisposalMapper disposalMapper,
+        RegistrationMapper registrationMapper,
+        AccountingMapper accountingMapper,
+        NhiExtendDisposalMapper nhiExtendDisposalMapper,
+        PrescriptionMapper prescriptionMapper,
+        TreatmentDrugMapper treatmentDrugMapper,
+        NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper) {
         this.disposalRepository = disposalRepository;
         this.prescriptionService = prescriptionService;
         this.todoService = todoService;
         this.relationshipService = relationshipService;
         this.registrationService = registrationService;
-        this.nhiExtendDisposalService = nhiExtendDisposalService;
+        this.nhiExtendTreatmentDrugRepository = nhiExtendTreatmentDrugRepository;
+        this.drugRepository = drugRepository;
+        this.nhiExtendTreatmentDrugMapper = nhiExtendTreatmentDrugMapper;
+        this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
+        this.prescriptionRepository = prescriptionRepository;
+        this.treatmentProcedureRepository = treatmentProcedureRepository;
+        this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
+        this.treatmentDrugRepository = treatmentDrugRepository;
+        this.toothRepository = toothRepository;
+        this.registrationRepository = registrationRepository;
+        this.accountingRepository = accountingRepository;
+        this.nhiProcedureRepository = nhiProcedureRepository;
+        this.treatmentProcedureMapper = treatmentProcedureMapper;
+        this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
+        this.toothMapper = toothMapper;
+        this.disposalMapper = disposalMapper;
+        this.registrationMapper = registrationMapper;
+        this.accountingMapper = accountingMapper;
+        this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
+        this.prescriptionMapper = prescriptionMapper;
+        this.treatmentDrugMapper = treatmentDrugMapper;
     }
 
     /**
@@ -285,5 +369,112 @@ public class DisposalService {
         }
 
         return todo;
+    }
+
+    public Disposal getDisposalByProjection(Long id) {
+        Optional<DisposalTable> optionalDisposalTable = disposalRepository.findDisposalById(id);
+        if (!optionalDisposalTable.isPresent()) {
+            return null;
+        }
+
+        // Init object
+        Disposal disposal = disposalMapper.disposalTableToDisposal(optionalDisposalTable.get());
+        Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = new HashSet<>();
+        Prescription prescription = new Prescription();
+
+        // Disposal.TreatmentProcedure...
+        Set<TreatmentProcedure> treatmentProcedures = treatmentProcedureRepository.findTreatmentProceduresByDisposal_Id(id).stream()
+            .map(treatmentProcedureMapper::TreatmentProcedureTableToTreatmentProcedure)
+            .map(treatmentProcedure -> {
+                if (treatmentProcedure.getNhiExtendTreatmentProcedure() != null &&
+                    treatmentProcedure.getNhiExtendTreatmentProcedure().getId() != null &&
+                    treatmentProcedure.getNhiProcedure() != null &&
+                    treatmentProcedure.getNhiProcedure().getId() != null
+                ) {
+                    Optional<NhiProcedure> optionalNhiProcedure = nhiProcedureRepository.findById(treatmentProcedure.getNhiProcedure().getId());
+                    if (optionalNhiProcedure.isPresent()) {
+                        treatmentProcedure.setNhiProcedure(optionalNhiProcedure.get());
+                    }
+
+                    // Add nhi treament procedure
+                    Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable =
+                        nhiExtendTreatmentProcedureRepository.findNhiExtendTreatmentProcedureByTreatmentProcedure_Id(treatmentProcedure.getNhiExtendTreatmentProcedure().getId());
+                    if (optionalNhiExtendTreatmentProcedureTable.isPresent()) {
+                        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure =
+                            nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
+                                optionalNhiExtendTreatmentProcedureTable.get()
+                            );
+                        nhiExtendTreatmentProcedures.add(nhiExtendTreatmentProcedure);
+                        treatmentProcedure.setNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure);
+                    }
+
+                    // Add tooth
+                    treatmentProcedure.setTeeth(toothMapper.toothSetToToothSet(toothRepository.findToothByTreatmentProcedure_Id(treatmentProcedure.getId())));
+                }
+
+                return treatmentProcedure;
+            })
+            .collect(Collectors.toSet());
+
+        // Disposal.Registration
+        Registration registration = registrationMapper.registrationTableToRegistration(registrationRepository.findRegistrationByDisposal_Id(id).get());
+        if (registration.getAccounting() != null &&
+            registration.getAccounting().getId() != null
+        ) {
+            registration.setAccounting(
+                accountingMapper.accountingTableToAccounting(accountingRepository.findAccountingById(registration.getAccounting().getId()).get()));
+            registration.setDisposal(disposal);
+        }
+
+        // Disposal.Prescription
+        Optional<PrescriptionTable> optionalPrescriptionTable = prescriptionRepository.findPrescriptionById(disposal.getPrescription().getId());
+        if (optionalPrescriptionTable.isPresent()) {
+            prescription = prescriptionMapper.prescriptionTableToPrescription(optionalPrescriptionTable.get());
+            Set<TreatmentDrug> treatmentDrugs =
+                treatmentDrugRepository.findTreatmentDrugByPrescription_Id(disposal.getPrescription().getId())
+                    .stream()
+                    .map(treatmentDrugMapper::treatmentDrugTableToTreatmentDrug)
+                    .collect(Collectors.toSet());
+            treatmentDrugs.forEach(treatmentDrug -> {
+                // Disposal.Prescription.TreatmentDrug.NhiExtendTreatmentDrug
+                if (treatmentDrug.getId() != null) {
+                    Optional<NhiExtendTreatmentDrugTable> optionalNhiExtendTreatmentDrug =
+                        nhiExtendTreatmentDrugRepository.findNhiExtendTreatmentDrugByTreatmentDrug_Id(treatmentDrug.getId());
+                    if (optionalNhiExtendTreatmentDrug.isPresent()) {
+                        treatmentDrug.setNhiExtendTreatmentDrug(
+                            nhiExtendTreatmentDrugMapper.nhiExtendTreatmentDrugTableToNhiExtendTreatmentDrug(optionalNhiExtendTreatmentDrug.get()));
+                    }
+                }
+                // Disposal.Prescription.TreatmentDrug.Drug
+                if (treatmentDrug.getDrug() != null &&
+                    treatmentDrug.getDrug().getId() != null
+                ) {
+                   Optional<Drug> optionalDrug = drugRepository.findById(treatmentDrug.getDrug().getId());
+                   if (optionalDrug.isPresent()) {
+                       treatmentDrug.setDrug(optionalDrug.get());
+                   }
+                }
+            });
+            prescription.treatmentDrugs(treatmentDrugs);
+            disposal.setPrescription(prescription);
+        }
+
+        // Disposal.NhiExtendDisposal
+        Optional<NhiExtendDisposalTable> optionalNhiExtendDisposalTable = nhiExtendDisposalRepository.findNhiExtendDisposalByDisposal_Id(id);
+        Set<NhiExtendDisposal> nhiExtendDisposals = new HashSet<>();
+        if (optionalNhiExtendDisposalTable.isPresent()) {
+            NhiExtendDisposal nhiExtendDisposal = nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(optionalNhiExtendDisposalTable.get());
+            nhiExtendDisposal.setDisposal(disposal);
+            nhiExtendDisposals.add(nhiExtendDisposal);
+            nhiExtendDisposal.setNhiExtendTreatmentProcedures(nhiExtendTreatmentProcedures);
+        }
+
+        // Assemble query result
+        disposal.treatmentProcedures(treatmentProcedures)
+            .registration(registration)
+            .nhiExtendDisposals(nhiExtendDisposals)
+            .prescription(prescription);
+
+        return disposal;
     }
 }
