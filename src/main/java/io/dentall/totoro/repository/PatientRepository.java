@@ -2,11 +2,16 @@ package io.dentall.totoro.repository;
 
 import io.dentall.totoro.business.vm.PatientSearchVM;
 import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.service.dto.table.PatientTable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 /**
  * Spring Data  repository for the Patient entity.
@@ -14,6 +19,8 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpecificationExecutor<Patient> {
+
+    Optional<PatientTable> findPatientById(Long id);
 
     @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth) " +
         "FROM Patient patient WHERE to_char(patient.birth, 'yyyyMMdd') like '%'||:search||'%' " +

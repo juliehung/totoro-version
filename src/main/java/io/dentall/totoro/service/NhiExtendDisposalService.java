@@ -1,13 +1,13 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.Disposal;
-import io.dentall.totoro.domain.NhiExtendDisposal;
-import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
-import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
-import io.dentall.totoro.repository.DisposalRepository;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
+import io.dentall.totoro.repository.*;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
+import io.dentall.totoro.service.dto.table.AppointmentTable;
+import io.dentall.totoro.service.dto.table.PatientTable;
+import io.dentall.totoro.service.dto.table.RegistrationTable;
+import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
@@ -41,14 +41,34 @@ public class NhiExtendDisposalService {
 
     private final DisposalRepository disposalRepository;
 
+    private final PatientRepository patientRepository;
+
+    private final RegistrationRepository registrationRepository;
+
+    private final AppointmentRepository appointmentRepository;
+
+    private final ExtendUserRepository extendUserRepository;
+
+    private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
+
     public NhiExtendDisposalService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         RelationshipService relationshipService,
-        DisposalRepository disposalRepository
+        DisposalRepository disposalRepository,
+        PatientRepository patientRepository,
+        RegistrationRepository registrationRepository,
+        AppointmentRepository appointmentRepository,
+        ExtendUserRepository extendUserRepository,
+        NhiExtendDisposalMapper nhiExtendDisposalMapper
     ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.relationshipService = relationshipService;
         this.disposalRepository = disposalRepository;
+        this.patientRepository = patientRepository;
+        this.registrationRepository = registrationRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.extendUserRepository = extendUserRepository;
+        this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
     }
 
     /**
@@ -124,9 +144,37 @@ public class NhiExtendDisposalService {
         log.debug("Request to get all NhiExtendDisposalVMs by date({})", date);
 
         return nhiExtendDisposalRepository
-            .findByDate(date)
+            .findNhiExtendDisposalByDate(date)
             .stream()
-            .map(NhiExtendDisposalVM::new)
+            .map(nhiExtendDisposalTable -> {
+                NhiExtendDisposalVM vm = new NhiExtendDisposalVM();
+                Long patientId = nhiExtendDisposalTable.getPatientId();
+                Long disposalId = nhiExtendDisposalTable.getDisposal_Id();
+
+                // Assemble patient
+                Optional<PatientTable> optionalPatientTable = patientRepository.findPatientById(patientId);
+                if (optionalPatientTable.isPresent()) {
+                    vm.setMedicalId(optionalPatientTable.get().getMedicalId());
+                    vm.setName(optionalPatientTable.get().getName());
+                }
+
+                // Assemble doctor
+                Optional<RegistrationTable> optionalRegistrationTable  = registrationRepository.findRegistrationByDisposal_Id(disposalId);
+                if (optionalRegistrationTable.isPresent()) {
+                    Optional<AppointmentTable> optionalAppointmentTable = appointmentRepository.findAppointmentByRegistration_Id(optionalRegistrationTable.get().getId());
+                    if (optionalAppointmentTable.isPresent()) {
+                        Optional<ExtendUser> optionalExtendUser = extendUserRepository.findById(optionalAppointmentTable.get().getDoctorUser_Id());
+                        if (optionalExtendUser.isPresent()) {
+                            vm.setDoctor(optionalExtendUser.get().getUser().getFirstName());
+                        }
+                    }
+                }
+
+                // Assemble nhi_ext_disp
+                vm.setNhiExtendDisposal(nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(nhiExtendDisposalTable));
+
+                return vm;
+            })
             .collect(Collectors.toList());
     }
 

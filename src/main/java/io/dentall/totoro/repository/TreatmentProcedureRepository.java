@@ -1,6 +1,7 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.service.dto.table.TreatmentProcedureTable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.Set;
 
 
 /**
@@ -16,6 +18,9 @@ import java.time.Instant;
 @SuppressWarnings("unused")
 @Repository
 public interface TreatmentProcedureRepository extends JpaRepository<TreatmentProcedure, Long>, JpaSpecificationExecutor<TreatmentProcedure> {
+
+    Set<TreatmentProcedureTable> findTreatmentProceduresByDisposal_Id(Long id);
+
     @Query(
         nativeQuery = true,
         value =

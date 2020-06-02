@@ -1,12 +1,16 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.NhiExtendDisposalService;
+import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -17,14 +21,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing NhiExtendDisposal.
@@ -39,10 +40,18 @@ public class NhiExtendDisposalResource {
 
     private final NhiExtendDisposalService nhiExtendDisposalService;
 
+    private final DisposalService disposalService;
+
+    private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
+
     public NhiExtendDisposalResource(
-        NhiExtendDisposalService nhiExtendDisposalService
+        NhiExtendDisposalService nhiExtendDisposalService,
+        DisposalService disposalService,
+        NhiExtendDisposalMapper nhiExtendDisposalMapper
     ) {
         this.nhiExtendDisposalService = nhiExtendDisposalService;
+        this.disposalService = disposalService;
+        this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
     }
 
     /**
@@ -102,7 +111,49 @@ public class NhiExtendDisposalResource {
         log.debug("REST request to get all NhiExtendDisposalVMs");
 
         if (date != null) {
-            return nhiExtendDisposalService.findByDate(date);
+            return nhiExtendDisposalService.findByDate(date)
+                .stream()
+                .map(nhiExtendDisposalVM -> {
+                    // Query and assemble disposal.* to nhi_ext_disposal
+                    if (nhiExtendDisposalVM.getNhiExtendDisposal() != null &&
+                        nhiExtendDisposalVM.getNhiExtendDisposal().getDisposal() != null &&
+                        nhiExtendDisposalVM.getNhiExtendDisposal().getDisposal().getId() != null
+                    ) {
+                        Disposal disposal = disposalService.getDisposalByProjection(nhiExtendDisposalVM.getNhiExtendDisposal().getDisposal().getId());
+                        if (disposal != null) {
+                            nhiExtendDisposalVM.getNhiExtendDisposal().setDisposal(disposal);
+                        }
+
+                        Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = new HashSet<>();
+                        Set<NhiExtendTreatmentDrug> nhiExtendTreatmentDrugs = new HashSet<>();
+                        if (disposal.getTreatmentProcedures() != null) {
+                            // Assemble nhi_treatment_procedure
+                            disposal.getTreatmentProcedures()
+                                .stream()
+                                .forEach(treatmentProcedure -> {
+                                    if (treatmentProcedure.getNhiExtendTreatmentProcedure() !=  null) {
+                                        nhiExtendTreatmentProcedures.add(treatmentProcedure.getNhiExtendTreatmentProcedure());
+                                    }
+                                });
+                            nhiExtendDisposalVM.getNhiExtendDisposal().setNhiExtendTreatmentProcedures(nhiExtendTreatmentProcedures);
+
+                            // Assemble nhi_treatment_drug
+                            disposal.getPrescription().getTreatmentDrugs()
+                                .stream()
+                                .forEach(treatmentDrug -> {
+                                    if (treatmentDrug.getNhiExtendTreatmentDrug() != null) {
+                                        nhiExtendTreatmentDrugs.add(treatmentDrug.getNhiExtendTreatmentDrug());
+                                    }
+                                });
+                            nhiExtendDisposalVM.getNhiExtendDisposal().setNhiExtendTreatmentDrugs(nhiExtendTreatmentDrugs);
+
+                        }
+                    }
+
+                    return nhiExtendDisposalVM;
+                })
+                .collect(Collectors.toList());
+
         } else if (yyyymm != null) {
             return nhiExtendDisposalService.findByYearMonth(yyyymm);
         } else if (patientId != null) {

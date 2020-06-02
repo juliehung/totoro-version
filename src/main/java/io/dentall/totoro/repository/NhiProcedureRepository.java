@@ -1,10 +1,11 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.NhiProcedure;
-import org.springframework.data.jpa.repository.*;
+import io.dentall.totoro.service.dto.table.NhiProcedureTable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -12,4 +13,6 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface NhiProcedureRepository extends JpaRepository<NhiProcedure, Long> { }
+public interface NhiProcedureRepository extends JpaRepository<NhiProcedure, Long> {
+    Optional<NhiProcedureTable> findNhiProcedureById(Long id);
+}

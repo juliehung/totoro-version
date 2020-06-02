@@ -1,9 +1,11 @@
 package io.dentall.totoro.service;
 
-import java.util.List;
-
-import javax.persistence.criteria.JoinType;
-
+import io.dentall.totoro.domain.NhiDayUpload;
+import io.dentall.totoro.domain.NhiDayUploadDetails_;
+import io.dentall.totoro.domain.NhiDayUpload_;
+import io.dentall.totoro.repository.NhiDayUploadRepository;
+import io.dentall.totoro.service.dto.NhiDayUploadCriteria;
+import io.github.jhipster.service.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,12 +14,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
-import io.dentall.totoro.domain.NhiDayUpload;
-import io.dentall.totoro.domain.*; // for static metamodels
-import io.dentall.totoro.repository.NhiDayUploadRepository;
-import io.dentall.totoro.service.dto.NhiDayUploadCriteria;
+import javax.persistence.criteria.JoinType;
+import java.util.List;
 
 /**
  * Service for executing complex queries for NhiDayUpload entities in the database.
