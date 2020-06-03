@@ -5,9 +5,12 @@ import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.table.AppointmentTable;
+import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
 import io.dentall.totoro.service.dto.table.PatientTable;
 import io.dentall.totoro.service.dto.table.RegistrationTable;
 import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
+import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
+import io.dentall.totoro.service.mapper.TreatmentProcedureMapper;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -51,6 +55,14 @@ public class NhiExtendDisposalService {
 
     private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
 
+    private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
+
+    private final TreatmentProcedureRepository treatmentProcedureRepository;
+
+    private final TreatmentProcedureMapper treatmentProcedureMapper;
+
+    private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
+
     public NhiExtendDisposalService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         RelationshipService relationshipService,
@@ -59,7 +71,11 @@ public class NhiExtendDisposalService {
         RegistrationRepository registrationRepository,
         AppointmentRepository appointmentRepository,
         ExtendUserRepository extendUserRepository,
-        NhiExtendDisposalMapper nhiExtendDisposalMapper
+        NhiExtendDisposalMapper nhiExtendDisposalMapper,
+        NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
+        TreatmentProcedureRepository treatmentProcedureRepository,
+        TreatmentProcedureMapper treatmentProcedureMapper,
+        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper
     ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.relationshipService = relationshipService;
@@ -69,6 +85,10 @@ public class NhiExtendDisposalService {
         this.appointmentRepository = appointmentRepository;
         this.extendUserRepository = extendUserRepository;
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
+        this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
+        this.treatmentProcedureRepository = treatmentProcedureRepository;
+        this.treatmentProcedureMapper = treatmentProcedureMapper;
+        this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
     }
 
     /**
@@ -203,8 +223,74 @@ public class NhiExtendDisposalService {
         log.debug("Request to get paged NhiExtendDisposalVMs by yyyymm({})", yyyymm);
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
         return nhiExtendDisposalRepository
-            .findByDateBetween(ym.atDay(1), ym.atEndOfMonth(), pageable)
-            .map(NhiExtendDisposalVM::new);
+            .findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
+                ym.atDay(1),
+                ym.atEndOfMonth(),
+                ym.atDay(1),
+                ym.atEndOfMonth(),
+                "2",
+                pageable)
+            .map(nhiExtendDisposalTable -> {
+                NhiExtendDisposalVM vm = new NhiExtendDisposalVM();
+                Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = new HashSet<>();
+                Long patientId = nhiExtendDisposalTable.getPatientId();
+                Long disposalId = nhiExtendDisposalTable.getDisposal_Id();
+
+                // Assemble patient
+                Optional<PatientTable> optionalPatientTable = patientRepository.findPatientById(patientId);
+                if (optionalPatientTable.isPresent()) {
+                    vm.setMedicalId(optionalPatientTable.get().getMedicalId());
+                    vm.setName(optionalPatientTable.get().getName());
+                }
+
+                // Assemble doctor
+                Optional<RegistrationTable> optionalRegistrationTable  = registrationRepository.findRegistrationByDisposal_Id(disposalId);
+                if (optionalRegistrationTable.isPresent()) {
+                    Optional<AppointmentTable> optionalAppointmentTable = appointmentRepository.findAppointmentByRegistration_Id(optionalRegistrationTable.get().getId());
+                    if (optionalAppointmentTable.isPresent()) {
+                        Optional<ExtendUser> optionalExtendUser = extendUserRepository.findById(optionalAppointmentTable.get().getDoctorUser_Id());
+                        if (optionalExtendUser.isPresent()) {
+                            vm.setDoctor(optionalExtendUser.get().getUser().getFirstName());
+                        }
+                    }
+                }
+
+                // Assemble treatment procedure
+                Set<TreatmentProcedure> treatmentProcedures = treatmentProcedureRepository.findTreatmentProceduresByDisposal_Id(nhiExtendDisposalTable.getDisposal_Id()).stream()
+                    .map(treatmentProcedureMapper::TreatmentProcedureTableToTreatmentProcedure)
+                    .map(treatmentProcedure -> {
+                        if (treatmentProcedure.getNhiExtendTreatmentProcedure() != null &&
+                            treatmentProcedure.getNhiExtendTreatmentProcedure().getId() != null &&
+                            treatmentProcedure.getNhiProcedure() != null &&
+                            treatmentProcedure.getNhiProcedure().getId() != null
+                        ) {
+                            // Add nhi treament procedure
+                            Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable =
+                                nhiExtendTreatmentProcedureRepository.
+                                    findNhiExtendTreatmentProcedureByTreatmentProcedure_Id(treatmentProcedure.getNhiExtendTreatmentProcedure().getId());
+                            if (optionalNhiExtendTreatmentProcedureTable.isPresent()) {
+                                NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure =
+                                    nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
+                                        optionalNhiExtendTreatmentProcedureTable.get()
+                                    );
+                                nhiExtendTreatmentProcedures.add(nhiExtendTreatmentProcedure);
+                                treatmentProcedure.setNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure);
+                            }
+                        }
+
+                        return treatmentProcedure;
+                    })
+                    .collect(Collectors.toSet());
+
+                // Fit frontend export monthly xml format
+                NhiExtendDisposal nhiExtendDisposal = nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(nhiExtendDisposalTable);
+                nhiExtendDisposal.setNhiExtendTreatmentProcedures(nhiExtendTreatmentProcedures);
+                nhiExtendDisposal.setDisposal(new Disposal().treatmentProcedures(treatmentProcedures));
+
+                vm.setNhiExtendDisposal(nhiExtendDisposal);
+
+                return vm;
+            });
     }
 
     @Transactional(readOnly = true)
