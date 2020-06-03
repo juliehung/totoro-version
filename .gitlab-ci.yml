@@ -221,6 +221,49 @@ depolyAppEngine:
         - 'echo "service: ${CI_COMMIT_REF_SLUG}" >> src/main/appengine/app.yaml'
         - gcloud --quiet app deploy src/main/appengine/app.yaml --version $versionMajor-$versionMinor-$commitCount --image-url asia.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$versionMajor.$versionMinor.$commitCount --promote --stop-previous-version
 
+deployDevDentall8082:
+    only:
+        - tags
+    stage: deploy
+    image: ubuntu
+    before_script:
+        # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
+        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+        - eval $(ssh-agent -s)
+        - echo "$WEICHEN_DEV_DENTALL_SITE_SSH_KEY" | tr -d '\r' | ssh-add -
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - ssh-keyscan dev.dentall.site >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+    script:
+        - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro /home/weichen/dentall/bin/totoro.admin.update.war.latest.sh"
+        - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro ls /home/weichen/dentall/bin/war | sort -r | head -n 1 > /home/weichen/dentall/bin/conf/totoro.admin.version"
+        - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro /home/weichen/dentall/bin/totoro.admin.service.dev.sh stop"
+        # this script will call `nohup` it will run on foreground. Therefore, you need to wait enough time to nohup run whole procedures and turn into background. Here you can disconnect from tty now.
+        - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro /home/weichen/dentall/bin/totoro.admin.service.dev.sh start && sleep 30"
+
+deployDevDentall8084:
+    only:
+        - tags
+    when: manual
+    stage: deploy
+    image: ubuntu
+    before_script:
+        # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
+        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+        - eval $(ssh-agent -s)
+        - echo "$WEICHEN_DEV_DENTALL_SITE_SSH_KEY" | tr -d '\r' | ssh-add -
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - ssh-keyscan dev.dentall.site >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+    script:
+        - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro /home/weichen/dentall/bin/totoro.admin.update.war.latest.sh"
+        - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro ls /home/weichen/dentall/bin/war | sort -r | head -n 1 > /home/weichen/dentall/bin/conf/totoro.admin.version"
+        - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro /home/weichen/dentall/bin/totoro.admin.service.yu.sh stop"
+        # this script will call `nohup` it will run on foreground. Therefore, you need to wait enough time to nohup run whole procedures and turn into background. Here you can disconnect from tty now.
+        - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro /home/weichen/dentall/bin/totoro.admin.service.yu.sh start && sleep 30"
+
 # operation stage
 stopAppEngine:
     tags:
