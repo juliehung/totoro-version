@@ -159,16 +159,15 @@ public class DisposalResource {
     @GetMapping("/disposals/rules-checked/{id}")
     @Timed
     @Transactional
-    public ResponseEntity<Disposal> getDisposalWithRulesCheckedNhiExtTxProc(@PathVariable Long id) {
-        log.debug("REST request to get contain rules checked nhi-ext-tx-proc Disposal with id : {}", id);
-        Optional<Disposal> optDisposal = disposalService.findOneWithEagerRelationships(id);
-        if (optDisposal.isPresent()) {
-            Disposal disposal = optDisposal.get();
-            nhiService.checkNhiExtendTreatmentProcedures(disposal);
+    public ResponseEntity<Disposal> getDisposalWithRulesCheckedNhiExtTxProc2(@PathVariable Long id) {
+        // Origin useing -> findOneWithEagerRelationships
+        Disposal disposal = disposalService.getDisposalByProjection(id);
 
-            return ResponseEntity.ok().body(disposal);
-        } else {
+        if (disposal == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            nhiService.checkNhiExtendTreatmentProcedures(disposal);
+            return ResponseEntity.ok(disposal);
         }
     }
 
