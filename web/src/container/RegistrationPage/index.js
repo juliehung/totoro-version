@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { getRegistrations, updateSelectedDate, onSelectPatient } from './actions';
-import { DatePicker, Empty, Select, Table, Tooltip, Typography } from 'antd';
-import ManPng from '../../static/images/man.png';
-import WomanPng from '../../static/images/woman.png';
-import DefaultPng from '../../static/images/default.png';
+import { getRegistrations, updateSelectedDate, onSelectPatient, openXray } from './actions';
+import { DatePicker, Empty, Select, Table, Typography, message } from 'antd';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Helmet } from 'react-helmet-async';
-import { B1, G1, Gray700 } from '../../utils/colors';
 import MqttHelper from '../../utils/mqtt';
 import RegistDrawer from './RegistDrawer';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { GAevent, GApageView } from '../../ga';
+import { columns } from './utils/columns';
+import { convertToTableSource, allDoctors } from './utils/convertToTableSource';
 
 export const registrationPage = 'Registration page';
 
 const { Title } = Typography;
 const { Option } = Select;
 
+//#region
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -33,42 +32,10 @@ const DatePickerContainer = styled.div`
   height: 70px;
   padding: 10px;
 `;
-const NameContainer = styled.div`
-  display: flex;
-  align-items: center;
-  & > div {
-    flex: 1 1;
-    width: 5px;
-    & > * {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-  @media (max-width: 768px) {
-    & img {
-      display: none;
-    }
-  }
-`;
 const StyledTable = styled(Table)`
   flex-grow: 1;
   height: 80vh;
   touch-action: pan-y;
-`;
-const RowIndexContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: start;
-`;
-const Status = styled.div`
-  width: 6px;
-  height: 50px;
-  border-radius: 25px;
-  margin-right: 10px;
-`;
-const StyledTitle = styled(Title)`
-  margin: 0 !important;
 `;
 const StyledRightOutlined = styled(RightOutlined)`
   font-size: 36px;
@@ -79,143 +46,28 @@ const StyledLeftOutlined = styled(LeftOutlined)`
 const StyledDatePicker = styled(DatePicker)`
   margin-top: 5px;
 `;
-const AvatarImg = styled.img`
-  width: 48px;
-  height: 48px;
-  margin-right: 10px;
-  flex-shrink: 0;
+const StyledTitle = styled(Title)`
+  margin: 0 !important;
 `;
 
-const renderAvatarImg = gender => {
-  if (gender === 'MALE') return <AvatarImg src={ManPng} alt="male" />;
-  if (gender === 'FEMALE') return <AvatarImg src={WomanPng} alt="female" />;
-  return <AvatarImg src={DefaultPng} alt="default" />;
-};
-
-const renderName = patient => {
-  return (
-    <Tooltip title={patient.name}>
-      <NameContainer>
-        {renderAvatarImg(patient.gender)}
-        <div>
-          <span>{patient.medicalId}</span>
-          <Title level={4}>{patient.name}</Title>
-        </div>
-      </NameContainer>
-    </Tooltip>
-  );
-};
-
-const renderRowIndex = (rowIndex, status) => {
-  let c = Gray700;
-  if (status === 'IN_PROGRESS') c = G1;
-  if (status === 'PENDING') c = B1;
-  return (
-    <RowIndexContainer>
-      <Status style={{ background: c }} />
-      <StyledTitle level={3}>{rowIndex}</StyledTitle>
-    </RowIndexContainer>
-  );
-};
-
-const renderSubject = (subject, note) => {
-  if ((!subject || subject === '') && (!note || note === '')) {
-    return '無';
-  }
-  return subject && subject !== '' ? subject + ',' + note : note;
-};
-
-const convertToTableSource = (registrations, selectedDoctor) => {
-  const tableSource = registrations
-    // Don't show cancel appointment and no registration
-    .filter(appt => appt.status !== 'CANCEL' && appt.registration && appt.registration.id)
-    .filter(appt => {
-      if (!selectedDoctor || !appt.doctor.user || selectedDoctor === allDoctors) {
-        return true;
-      }
-      return appt.doctor.user.login === selectedDoctor;
-    })
-    .slice()
-    .sort((a, b) => moment(a.registration.arrivalTime).unix() - moment(b.registration.arrivalTime).unix());
-
-  let i = 1;
-  return tableSource.map(appt => {
-    return {
-      key: appt.id,
-      rowIndex: renderRowIndex(i++, appt.registration.status),
-      name: renderName(appt.patient),
-      patient: appt.patient,
-      arrivalTime:
-        appt.registration.arrivalTime && moment(appt.registration.arrivalTime).local().format('YYYY-MM-DD HH:mm'),
-      expectedArrivalTime:
-        appt.expectedArrivalTime && moment(appt.expectedArrivalTime).local().format('YYYY-MM-DD HH:mm'),
-      age: moment().diff(appt.patient.birth, 'years') + 'Y',
-      type: appt.registration.type,
-      doctor: appt.doctor.user.firstName,
-      subject: renderSubject(appt.subject, appt.note),
-    };
-  });
-};
-
-const columns = [
-  {
-    title: '序位',
-    dataIndex: 'rowIndex',
-    key: 'rowIndex',
-    width: 40,
-    fixed: 'left',
-  },
-  { title: '姓名', dataIndex: 'name', key: 'name', width: 100, fixed: 'left' },
-  {
-    title: '年齡',
-    dataIndex: 'age',
-    key: 'age',
-    sorter: (a, b) => a.age.replace('Y', '') - b.age.replace('Y', ''),
-    width: 50,
-  },
-  {
-    title: '掛號時間',
-    dataIndex: 'arrivalTime',
-    key: 'arrivalTime',
-    defaultSortOrder: 'ascend',
-    sorter: (a, b) => moment(a.arrivalTime).unix() - moment(b.arrivalTime).unix(),
-    width: 70,
-    render: date => moment(date).format('HH:mm'),
-  },
-  {
-    title: '預約時間',
-    dataIndex: 'expectedArrivalTime',
-    key: 'expectedArrivalTime',
-    sorter: (a, b) => moment(a.expectedArrivalTime).unix() - moment(b.expectedArrivalTime).unix(),
-    width: 70,
-    render: date => moment(date).format('HH:mm'),
-  },
-  {
-    title: '掛號類別',
-    dataIndex: 'type',
-    key: 'type',
-    filters: [
-      { text: '健保', value: '健保' },
-      { text: '自費', value: '自費' },
-    ],
-    filterMultiple: false,
-    onFilter: (value, record) => record.type.indexOf(value) === 0,
-    width: 60,
-  },
-  { title: '醫師', dataIndex: 'doctor', key: 'doctor', width: 70 },
-  { title: '治療事項', dataIndex: 'subject', key: 'subject', ellipsis: true, width: 200 },
-];
-
-const allDoctors = 'THESE_ARE_ALL_DOCTORS';
+//#endregion
 
 function RegistrationPage(props) {
-  const { getRegistrations, updateSelectedDate } = props;
+  const { getRegistrations, updateSelectedDate, openXray, xrayServerState, xrayServerError, settings } = props;
 
   const [selectedDoctor, setSelectedDoctor] = useState();
 
   useEffect(() => {
     GApageView();
   }, []);
+
+  useEffect(() => {
+    if (xrayServerState && !xrayServerError) {
+      message.success('開啟 xray 軟體中...');
+    } else if (!xrayServerState && xrayServerError) {
+      message.error('請確認開啟 middleman...');
+    }
+  }, [xrayServerState, xrayServerError]);
 
   useEffect(() => {
     const updateRegistrations = arrival => {
@@ -322,14 +174,25 @@ function RegistrationPage(props) {
         {renderDoctorSelect()}
       </DatePickerContainer>
       <StyledTable
-        columns={columns}
+        columns={columns(settings)}
         allowClear={true}
         pagination={false}
         loading={props.loading}
         locale={{ emptyText: <Empty description="無掛號" /> }}
         onRow={row => {
           return {
-            onClick: () => {
+            onClick: e => {
+              if (e.target.className && e.target.className.includes('xray')) {
+                const vendor = e.target.className
+                  .split(' ')
+                  .find(c => c.includes('XRAYVENDORS'))
+                  .split('_')[1];
+
+                const { patient } = row;
+                openXray({ vendor, patient });
+                return;
+              }
+
               props.onSelectPatient(row.patient);
               GAevent(registrationPage, 'Click patient');
             },
@@ -348,12 +211,16 @@ const mapStateToProps = ({ registrationPageReducer, homePageReducer }) => ({
   loading: registrationPageReducer.registration.loading,
   selectedDate: registrationPageReducer.registration.selectedDate,
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
+  xrayServerState: registrationPageReducer.xray.serverState,
+  xrayServerError: registrationPageReducer.xray.serverError,
+  settings: homePageReducer.settings.settings,
 });
 
 const mapDispatchToProps = {
   getRegistrations,
   updateSelectedDate,
   onSelectPatient,
+  openXray,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegistrationPage);

@@ -11,6 +11,7 @@ import { editCalendarEvent } from './editCalendarEvent';
 import { deleteCalendarEvent } from './deleteCalendarEvent';
 import { popoverCancelApp } from './popoverCancelApp';
 import { watchGetShift } from './watchGetShift';
+import { watchOpenXray } from './watchOpenXray';
 
 export default function* appointmentPage() {
   yield fork(watchGetAppointments);
@@ -29,4 +30,5 @@ export default function* appointmentPage() {
   yield fork(deleteCalendarEvent);
   yield fork(popoverCancelApp);
   yield fork(watchGetShift);
+  yield fork(watchOpenXray);
 }

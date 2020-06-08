@@ -316,6 +316,9 @@ function NavHome(props) {
           trigger="click"
           overlay={
             <Menu onClick={menuClick}>
+              <Menu.Item key="settings">
+                <Link to="/setting">設定</Link>
+              </Menu.Item>
               <Menu.Item key="logout">登出</Menu.Item>
             </Menu>
           }
