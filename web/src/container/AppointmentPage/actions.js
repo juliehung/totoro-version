@@ -89,6 +89,7 @@ import {
   XRAY_GREETING,
   XRAY_GREETING_SUCCESS,
   XRAY_GREETING_FAILURE,
+  ON_LEAVE_PAGE,
 } from './constant';
 
 export function changeCalDate(date) {
@@ -450,4 +451,8 @@ export function xrayGreetingSuccess() {
 
 export function xrayGreetingFailure() {
   return { type: XRAY_GREETING_FAILURE };
+}
+
+export function onLeavePage() {
+  return { type: ON_LEAVE_PAGE };
 }
