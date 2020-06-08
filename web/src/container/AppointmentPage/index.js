@@ -12,6 +12,7 @@ import EditCalendarEventModal from './EditCalendarEventModal';
 import { Helmet } from 'react-helmet-async';
 import { GApageView } from '../../ga';
 import MobileDetect from 'mobile-detect';
+import { message } from 'antd';
 
 export const appointmentPage = 'Appointment page';
 
@@ -46,12 +47,21 @@ const md = new MobileDetect(window.navigator.userAgent);
 const phone = md.phone();
 const defaultView = phone ? 'resourceTimeGridDay' : 'timeGridWeek';
 
-function AppointmentPage() {
+function AppointmentPage(props) {
+  const { xrayServerState, xrayServerError } = props;
   const [viewType, setViewType] = useState(defaultView);
 
   useEffect(() => {
     GApageView();
   }, []);
+
+  useEffect(() => {
+    if (xrayServerState && !xrayServerError) {
+      message.success('開啟 xray 軟體中...');
+    } else if (!xrayServerState && xrayServerError) {
+      message.error('請確認開啟 middleman...');
+    }
+  }, [xrayServerState, xrayServerError]);
 
   return (
     <Container>
@@ -71,7 +81,10 @@ function AppointmentPage() {
   );
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = ({ appointmentPageReducer }) => ({
+  xrayServerState: appointmentPageReducer.xray.serverState,
+  xrayServerError: appointmentPageReducer.xray.serverError,
+});
 
 // const mapDispatchToProps = {};
 

@@ -32,6 +32,7 @@ import {
   popoverCancelApp,
   changeSelectedDoctors,
   getShift,
+  openXray,
 } from './actions';
 import zhTW from '@fullcalendar/core/locales/zh-tw';
 import styled from 'styled-components';
@@ -349,7 +350,7 @@ class AppCalendar extends React.Component {
     });
   }
 
-  generalSetting = [];
+  generalSettingEvents = [];
   componentDidUpdate(prevProps) {
     if (prevProps.calendarDate.format('YYYY-MM-DD') !== this.props.calendarDate.format('YYYY-MM-DD')) {
       const calendarApi = this.calendarComponentRef.current.getApi();
@@ -360,7 +361,7 @@ class AppCalendar extends React.Component {
       prevProps.generalSetting !== this.props.generalSetting ||
       prevProps.calendarRange !== this.props.calendarRange
     ) {
-      this.generalSetting = convertSettingsToClinicOffEvent(this.props.generalSetting, this.props.calendarRange);
+      this.generalSettingEvents = convertSettingsToClinicOffEvent(this.props.generalSetting, this.props.calendarRange);
     }
 
     if (prevProps.cancelApp !== this.props.cancelApp) {
@@ -526,10 +527,15 @@ class AppCalendar extends React.Component {
 
   eventRender = info => {
     if (info.event.extendedProps.eventType === 'appointment') {
-      handleEventRender(info, {
-        edit: this.handleAppointmentDblClick,
-        cancel: this.handlePopoverCancelApp,
-      });
+      handleEventRender(
+        info,
+        {
+          edit: this.handleAppointmentDblClick,
+          cancel: this.handlePopoverCancelApp,
+          xray: this.handleXrayClick,
+        },
+        { settings: this.props.settings },
+      );
     } else if (info.event.extendedProps.eventType === 'doctorDayOff') {
       handleEventRender(info, { edit: this.handleCalEvtDblClick });
     }
@@ -549,6 +555,10 @@ class AppCalendar extends React.Component {
 
   handlePopoverCancelApp = apptData => {
     this.props.popoverCancelApp(apptData);
+  };
+
+  handleXrayClick = data => {
+    this.props.openXray(data);
   };
 
   eventEditStart = () => {
@@ -621,7 +631,7 @@ class AppCalendar extends React.Component {
       ...this.props.calendarEvents,
       ...(shiftOpen
         ? reverseEvents(this.props.backgroundEvent, this.props.viewType, this.props.calendarRange)
-        : this.generalSetting),
+        : this.generalSettingEvents),
     ];
 
     const resource = shiftOpen
@@ -776,7 +786,8 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   doctorAppCount: appointmentPageReducer.calendar.doctorAppCount,
   calendarEvents: appointmentPageReducer.calendar.calendarEvents,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
-  generalSetting: homePageReducer.settings.generalSetting,
+  settings: homePageReducer.settings.settings,
+  generalSetting: homePageReducer.settings.settings?.preferences?.generalSetting,
   calendarRange: appointmentPageReducer.calendar.range,
   cancelApp: appointmentPageReducer.calendar.cancelApp,
   account: homePageReducer.account.data,
@@ -808,6 +819,7 @@ const mapDispatchToProps = {
   popoverCancelApp,
   changeSelectedDoctors,
   getShift,
+  openXray,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppCalendar);

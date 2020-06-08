@@ -169,7 +169,7 @@ function CreateAppModal({
   changeCreateAppPatientBirth,
   createPatient,
   getAllEvents,
-  setting,
+  requiredTreatmentTime,
   account,
   loading,
 }) {
@@ -188,10 +188,10 @@ function CreateAppModal({
   }, [appointment, patient, checkConfirmButtonDisable]);
 
   useEffect(() => {
-    if (setting) {
-      changeCreateAppDefaultDuration(setting.requiredTreatmentTime);
+    if (requiredTreatmentTime) {
+      changeCreateAppDefaultDuration(requiredTreatmentTime);
     }
-  }, [setting, changeCreateAppDefaultDuration]);
+  }, [requiredTreatmentTime, changeCreateAppDefaultDuration]);
 
   useEffect(() => {
     if (account.data && account.data.authorities) {
@@ -462,7 +462,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   patient: appointmentPageReducer.createApp.patient,
   createAppSuccess: appointmentPageReducer.createApp.createAppSuccess,
   disabled: appointmentPageReducer.createApp.disabled,
-  setting: homePageReducer.settings.generalSetting,
+  requiredTreatmentTime: homePageReducer.settings.settings?.preferences?.generalSetting?.requiredTreatmentTime,
   account: homePageReducer.account,
   loading: appointmentPageReducer.createApp.loading,
 });

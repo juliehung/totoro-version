@@ -209,8 +209,8 @@ function AppRight(props) {
   };
 
   const onShiftButtonClick = () => {
-    const showShift = !showShiftCalc;
-    if (settings.id) {
+    if (settings?.id) {
+      const showShift = !showShiftCalc;
       const generalSetting = {
         ...{ ...(settings.preferences ? settings.preferences.generalSetting : {}) },
         showShift,
@@ -342,9 +342,8 @@ function AppRight(props) {
 const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   calendarDate: appointmentPageReducer.calendar.calendarDate,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
-  generalSetting: homePageReducer.settings.generalSetting,
   settings: homePageReducer.settings.settings,
-  showShiftCalc: homePageReducer.settings.generalSetting && homePageReducer.settings.generalSetting.showShift,
+  showShiftCalc: homePageReducer.settings.settings?.preferences?.generalSetting?.showShift,
   putSettingSuccess: homePageReducer.settings.putSuccess,
 });
 
