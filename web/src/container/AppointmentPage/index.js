@@ -13,6 +13,7 @@ import { Helmet } from 'react-helmet-async';
 import { GApageView } from '../../ga';
 import MobileDetect from 'mobile-detect';
 import { message } from 'antd';
+import { onLeavePage } from './actions';
 
 export const appointmentPage = 'Appointment page';
 
@@ -48,7 +49,7 @@ const phone = md.phone();
 const defaultView = phone ? 'resourceTimeGridDay' : 'timeGridWeek';
 
 function AppointmentPage(props) {
-  const { xrayServerState, xrayServerError } = props;
+  const { xrayServerState, xrayServerError, onLeavePage } = props;
   const [viewType, setViewType] = useState(defaultView);
 
   useEffect(() => {
@@ -61,7 +62,10 @@ function AppointmentPage(props) {
     } else if (!xrayServerState && xrayServerError) {
       message.error('請確認開啟 middleman...');
     }
-  }, [xrayServerState, xrayServerError]);
+    return () => {
+      onLeavePage();
+    };
+  }, [xrayServerState, xrayServerError, onLeavePage]);
 
   return (
     <Container>
@@ -86,6 +90,6 @@ const mapStateToProps = ({ appointmentPageReducer }) => ({
   xrayServerError: appointmentPageReducer.xray.serverError,
 });
 
-// const mapDispatchToProps = {};
+const mapDispatchToProps = { onLeavePage };
 
-export default connect(mapStateToProps)(AppointmentPage);
+export default connect(mapStateToProps, mapDispatchToProps)(AppointmentPage);

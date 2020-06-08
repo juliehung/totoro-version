@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { getRegistrations, updateSelectedDate, onSelectPatient, openXray } from './actions';
+import { getRegistrations, updateSelectedDate, onSelectPatient, openXray, onLeavePage } from './actions';
 import { DatePicker, Empty, Select, Table, Typography, message } from 'antd';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -53,7 +53,15 @@ const StyledTitle = styled(Title)`
 //#endregion
 
 function RegistrationPage(props) {
-  const { getRegistrations, updateSelectedDate, openXray, xrayServerState, xrayServerError, settings } = props;
+  const {
+    getRegistrations,
+    updateSelectedDate,
+    openXray,
+    xrayServerState,
+    xrayServerError,
+    settings,
+    onLeavePage,
+  } = props;
 
   const [selectedDoctor, setSelectedDoctor] = useState();
 
@@ -67,7 +75,10 @@ function RegistrationPage(props) {
     } else if (!xrayServerState && xrayServerError) {
       message.error('請確認開啟 middleman...');
     }
-  }, [xrayServerState, xrayServerError]);
+    return () => {
+      onLeavePage();
+    };
+  }, [xrayServerState, xrayServerError, onLeavePage]);
 
   useEffect(() => {
     const updateRegistrations = arrival => {
@@ -221,6 +232,7 @@ const mapDispatchToProps = {
   updateSelectedDate,
   onSelectPatient,
   openXray,
+  onLeavePage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegistrationPage);

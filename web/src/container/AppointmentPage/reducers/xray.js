@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { XRAY_GREETING, XRAY_GREETING_SUCCESS, XRAY_GREETING_FAILURE } from '../constant';
+import { XRAY_GREETING, XRAY_GREETING_SUCCESS, XRAY_GREETING_FAILURE, ON_LEAVE_PAGE } from '../constant';
 
 const initialState = {
   serverState: false,
@@ -10,6 +10,7 @@ const initialState = {
 const xray = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case ON_LEAVE_PAGE:
       case XRAY_GREETING:
         draft.serverState = false;
         draft.serverError = false;
