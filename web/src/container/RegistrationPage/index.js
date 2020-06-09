@@ -73,7 +73,7 @@ function RegistrationPage(props) {
     if (xrayServerState && !xrayServerError) {
       message.success('開啟 xray 軟體中...');
     } else if (!xrayServerState && xrayServerError) {
-      message.error('請確認開啟 middleman...');
+      message.error('開啟錯誤，請串接X光機。');
     }
     return () => {
       onLeavePage();

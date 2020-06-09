@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Switch } from 'antd';
+import { Switch, message } from 'antd';
 import Poye from '../../images/POYE@4x.png';
 import Ray from '../../images/Ray@4x.png';
 import { XRAY_VENDORS } from '../AppointmentPage/constant';
@@ -52,13 +52,19 @@ const IconContainer = styled.div`
 function Xray({ settings, getSettings, xrayVender }) {
   const onChange = async vendor => {
     if (settings?.id) {
-      let x_rayVendor = settings?.preferences?.generalSetting?.x_rayVendor ?? [];
-      x_rayVendor = x_rayVendor.includes(vendor) ? x_rayVendor.filter(v => v !== vendor) : [...x_rayVendor, vendor];
+      const prev_x_rayVendor = settings?.preferences?.generalSetting?.x_rayVendor ?? [];
+      const isDeactivate = prev_x_rayVendor.includes(vendor);
+      const x_rayVendor = isDeactivate ? prev_x_rayVendor.filter(v => v !== vendor) : [...prev_x_rayVendor, vendor];
       const generalSetting = { ...(settings?.preferences?.generalSetting ?? {}), x_rayVendor };
       const preferences = { ...(settings?.preferences ?? {}), generalSetting };
       const newSettings = { ...(settings ?? {}), preferences };
       await Settings.put(newSettings);
       getSettings();
+      if (isDeactivate) {
+        message.success('X 光已關閉');
+      } else {
+        message.success('X 光開啟成功');
+      }
     }
   };
 
