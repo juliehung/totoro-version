@@ -25,6 +25,14 @@ export const GlobalStyle = createGlobalStyle`
   .ant-popover-content {
     box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
   }
+  .fc-list-item{
+    &:hover{
+      &>.fc-widget-content{
+        background-color:#f7f9fc!important;
+      }
+    }
+
+  }
 `;
 
 const Container = styled.div`
@@ -60,7 +68,7 @@ function AppointmentPage(props) {
     if (xrayServerState && !xrayServerError) {
       message.success('開啟 xray 軟體中...');
     } else if (!xrayServerState && xrayServerError) {
-      message.error('請確認開啟 middleman...');
+      message.error('開啟錯誤，請串接X光機。');
     }
     return () => {
       onLeavePage();

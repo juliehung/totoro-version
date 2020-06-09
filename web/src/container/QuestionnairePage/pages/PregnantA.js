@@ -60,7 +60,7 @@ function PregnantA(props) {
         <DatePickerContainer>
           <StyledDatePicker
             selected={props.date ? moment(props.date).toDate() : props.date}
-            placeholderText="填寫生日"
+            placeholderText="填寫日期"
             dateFormat="yyyy-MM-dd"
             showPopperArrow={true}
             maxDate={moment().add(1, 'y').toDate()}
