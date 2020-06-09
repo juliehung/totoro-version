@@ -1,7 +1,7 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.domain.Disposal;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.service.DisposalQueryService;
 import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.NhiService;
@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing Disposal.
@@ -166,6 +168,34 @@ public class DisposalResource {
         if (disposal == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
+            // Assemble treatment family for check rule
+            Treatment treatment = new Treatment();
+            TreatmentPlan treatmentPlan = new TreatmentPlan();
+            TreatmentTask treatmentTask = new TreatmentTask();
+            Patient patient = new Patient();
+
+            // two way relationship no. 1
+            treatmentTask.setTreatmentPlan(treatmentPlan);
+            treatmentPlan.setTreatment(treatment);
+            treatment.setPatient(patient);
+            patient.setId(disposal.getNhiExtendDisposals().iterator().next().getPatientId());
+
+            // two way relationship no. 2
+            Set<TreatmentTask> treatmentTaskSet = new HashSet<>();
+            Set<TreatmentPlan> treatmentPlanSet = new HashSet<>();
+            treatmentTaskSet.add(treatmentTask);
+            treatmentPlanSet.add(treatmentPlan);
+            treatmentPlan.setTreatmentTasks(treatmentTaskSet);
+            treatment.setTreatmentPlans(treatmentPlanSet);
+
+            // Add back to disposal
+            disposal.getTreatmentProcedures().forEach(treatmentProcedure -> {
+                treatmentProcedure.setTreatmentTask(treatmentTask);
+                treatmentProcedure.setDisposal(disposal);
+                treatmentProcedure.getNhiExtendTreatmentProcedure().setTreatmentProcedure(treatmentProcedure);
+            });
+
+
             nhiService.checkNhiExtendTreatmentProcedures(disposal);
             return ResponseEntity.ok(disposal);
         }
