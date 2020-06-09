@@ -303,7 +303,7 @@ function Calendar(props) {
           eventDrop={eventDrop}
           eventResize={eventResize}
           drop={drop}
-          slotLabelFormat={{ day: 'numeric', weekday: 'short' }}
+          slotLabelFormat={{ day: 'numeric', weekday: 'short', month: 'numeric' }}
           slotDuration="24:00:00"
           displayEventTime={false}
           selectable
