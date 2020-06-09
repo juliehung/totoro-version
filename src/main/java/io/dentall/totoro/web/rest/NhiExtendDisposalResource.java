@@ -68,6 +68,22 @@ public class NhiExtendDisposalResource {
         if (nhiExtendDisposal.getId() != null) {
             throw new BadRequestAlertException("A new nhiExtendDisposal cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        if (nhiExtendDisposal.getDisposal() != null &&
+            nhiExtendDisposal.getDisposal().getId() != null
+        ) {
+            Optional<Disposal> optionalDisposal = disposalService.findOne(nhiExtendDisposal.getDisposal().getId());
+            if (optionalDisposal.isPresent() &&
+                optionalDisposal.get().getNhiExtendDisposals().size() > 0
+            ) {
+
+                throw new BadRequestAlertException(
+                    "Already exist nhi_extend_disposal with disposal id " + nhiExtendDisposal.getDisposal().getId(),
+                    ENTITY_NAME,
+                    "notonetoonerelationship");
+            }
+        }
+
         NhiExtendDisposal result = nhiExtendDisposalService.save(nhiExtendDisposal);
         return ResponseEntity.created(new URI("/api/nhi-extend-disposals/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -205,5 +221,5 @@ public class NhiExtendDisposalResource {
         nhiExtendDisposalService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-
+    
 }
