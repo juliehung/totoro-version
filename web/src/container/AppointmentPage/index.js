@@ -17,6 +17,8 @@ import { onLeavePage } from './actions';
 
 export const appointmentPage = 'Appointment page';
 
+const XRAY_GREETING_MESSAGE = 'XRAY_GREETING_MESSAGE';
+
 //#region
 export const GlobalStyle = createGlobalStyle`
   .ant-popover-inner {
@@ -57,7 +59,7 @@ const phone = md.phone();
 const defaultView = phone ? 'resourceTimeGridDay' : 'timeGridWeek';
 
 function AppointmentPage(props) {
-  const { xrayServerState, xrayServerError, onLeavePage } = props;
+  const { xrayServerState, xrayServerError, onLeavePage, xrayOnRequest } = props;
   const [viewType, setViewType] = useState(defaultView);
 
   useEffect(() => {
@@ -65,15 +67,31 @@ function AppointmentPage(props) {
   }, []);
 
   useEffect(() => {
-    if (xrayServerState && !xrayServerError) {
-      message.success('開啟 xray 軟體中...');
-    } else if (!xrayServerState && xrayServerError) {
-      message.error('開啟錯誤，請串接X光機。');
+    if (xrayOnRequest) {
+      message.loading({ content: '載入中...', key: XRAY_GREETING_MESSAGE, duration: 10 });
+    } else {
+      if (xrayServerState && !xrayServerError) {
+        message.success({ content: '開啟 xray 軟體中...', key: XRAY_GREETING_MESSAGE });
+      } else if (!xrayServerState && xrayServerError) {
+        message.error({
+          content: (
+            <div>
+              <span>開啟錯誤，請串接X光機。</span>
+              <br />
+              <a href="dentall://" rel="noopener noreferrer" target="_blank">
+                點擊開啟介接軟體
+              </a>
+            </div>
+          ),
+          key: XRAY_GREETING_MESSAGE,
+        });
+      }
     }
+
     return () => {
       onLeavePage();
     };
-  }, [xrayServerState, xrayServerError, onLeavePage]);
+  }, [xrayServerState, xrayServerError, onLeavePage, xrayOnRequest]);
 
   return (
     <Container>
@@ -96,6 +114,7 @@ function AppointmentPage(props) {
 const mapStateToProps = ({ appointmentPageReducer }) => ({
   xrayServerState: appointmentPageReducer.xray.serverState,
   xrayServerError: appointmentPageReducer.xray.serverError,
+  xrayOnRequest: appointmentPageReducer.xray.onRequest,
 });
 
 const mapDispatchToProps = { onLeavePage };
