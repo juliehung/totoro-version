@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Switch, message } from 'antd';
@@ -7,6 +7,7 @@ import Ray from '../../images/Ray@4x.png';
 import { XRAY_VENDORS } from '../AppointmentPage/constant';
 import Settings from '../../models/settings';
 import { getSettings } from '../Home/actions';
+import VixWinPathSettingModal from './VixWinPathSettingModal';
 
 //#region
 const Title = styled.span`
@@ -47,15 +48,23 @@ const IconContainer = styled.div`
     height: 19px;
   }
 `;
+
+const SettingButton = styled.a`
+  margin-left: 27px;
+  color: #3366ff;
+  font-size: 12px;
+`;
 //#endregion
 
 function Xray({ settings, getSettings, xrayVender }) {
+  const [vixWinPathSettingModalVisible, setVixWinPathSettingModalVisible] = useState(false);
+
   const onChange = async vendor => {
     if (settings?.id) {
-      const prev_x_rayVendor = settings?.preferences?.generalSetting?.x_rayVendor ?? [];
-      const isDeactivate = prev_x_rayVendor.includes(vendor);
-      const x_rayVendor = isDeactivate ? prev_x_rayVendor.filter(v => v !== vendor) : [...prev_x_rayVendor, vendor];
-      const generalSetting = { ...(settings?.preferences?.generalSetting ?? {}), x_rayVendor };
+      const prevXrayVendorWeb = settings?.preferences?.generalSetting?.xrayVenderWeb ?? [];
+      const isDeactivate = prevXrayVendorWeb.includes(vendor);
+      const xrayVenderWeb = isDeactivate ? prevXrayVendorWeb.filter(v => v !== vendor) : [...prevXrayVendorWeb, vendor];
+      const generalSetting = { ...(settings?.preferences?.generalSetting ?? {}), xrayVenderWeb };
       const preferences = { ...(settings?.preferences ?? {}), generalSetting };
       const newSettings = { ...(settings ?? {}), preferences };
       await Settings.put(newSettings);
@@ -69,7 +78,11 @@ function Xray({ settings, getSettings, xrayVender }) {
   };
 
   return (
-    <>
+    <React.Fragment>
+      <VixWinPathSettingModal
+        visible={vixWinPathSettingModalVisible}
+        changeModalVisible={setVixWinPathSettingModalVisible}
+      />
       <Title>串接 X 光機</Title>
       <SettingItemsContainer>
         <div>
@@ -78,6 +91,13 @@ function Xray({ settings, getSettings, xrayVender }) {
               <img src={Poye} alt="Poye" />
             </IconContainer>
             <span>ExamVision</span>
+            <SettingButton
+              onClick={() => {
+                setVixWinPathSettingModalVisible(true);
+              }}
+            >
+              設定路徑
+            </SettingButton>
           </div>
           <div>
             <Switch
@@ -109,12 +129,12 @@ function Xray({ settings, getSettings, xrayVender }) {
           </div>
         </div>
       </SettingItemsContainer>
-    </>
+    </React.Fragment>
   );
 }
 
 const mapStateToProps = ({ homePageReducer }) => ({
-  xrayVender: homePageReducer.settings.settings?.preferences?.generalSetting?.x_rayVendor ?? [],
+  xrayVender: homePageReducer.settings.settings?.preferences?.generalSetting?.xrayVenderWeb ?? [],
   settings: homePageReducer.settings.settings,
 });
 
