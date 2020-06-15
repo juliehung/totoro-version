@@ -49,6 +49,8 @@ public class MonthAppointmentVM {
 
     private final String patientLastModifiedBy;
 
+    private final String medicalId;
+
     public MonthAppointmentVM(AppointmentDTO appointmentDTO) {
         this.patientId = appointmentDTO.getPatientId();
         this.patientName = appointmentDTO.getPatientName();
@@ -69,6 +71,7 @@ public class MonthAppointmentVM {
         this.registrationStatus = appointmentDTO.getRegistrationStatus();
         this.patientLastModifiedDate = appointmentDTO.getPatientLastModifiedDate();
         this.patientLastModifiedBy = appointmentDTO.getPatientLastModifiedBy();
+        this.medicalId = appointmentDTO.getPatientMedicalId();
     }
 
     public Long getPatientId() {
@@ -145,5 +148,9 @@ public class MonthAppointmentVM {
 
     public String getPatientLastModifiedBy() {
         return patientLastModifiedBy;
+    }
+
+    public String getMedicalId() {
+        return medicalId;
     }
 }
