@@ -82,7 +82,7 @@ function RegistrationPage(props) {
         message.error({
           content: (
             <div>
-              <span>開啟錯誤，請串接X光機。</span>
+              <span>開啟錯誤，請重新嘗試。</span>
               <br />
               <a href="dentall://" rel="noopener noreferrer" target="_blank">
                 點擊開啟介接軟體
