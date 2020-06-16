@@ -20,7 +20,7 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "husky": "^4.2.5",
-    "lint-staged": "^10.2.2",
+    "lint-staged": "^10.2.10",
     "prettier": "^2.0.5",
     "serve": "^11.3.0"
   },
@@ -43,8 +43,7 @@
   "lint-staged": {
     "**/*.{js,jsx}": [
       "npm run format",
-      "npm run lint:fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "dependencies": {}
