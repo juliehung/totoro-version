@@ -145,9 +145,9 @@ function VixWinPathSettingModal(props) {
         const imagePath = newImagePath ?? preImagePath ?? '';
         const applicationPath = newApplicationPath ?? preApplicationPath ?? '';
         const vixwin = { imagePath, applicationPath };
-        const preXrayVenderSettingWeb = settings?.preferences?.generalSetting?.xrayVenderSettingWeb ?? {};
-        const xrayVenderSettingWeb = { ...preXrayVenderSettingWeb, vixwin };
-        const generalSetting = { ...(settings?.preferences?.generalSetting ?? {}), xrayVenderSettingWeb };
+        const preXrayVendorSettingWeb = settings?.preferences?.generalSetting?.xrayVenderSettingWeb ?? {};
+        const xRayVendorSettingWeb = { ...preXrayVendorSettingWeb, vixwin };
+        const generalSetting = { ...(settings?.preferences?.generalSetting ?? {}), xRayVendorSettingWeb };
         const preferences = { ...(settings?.preferences ?? {}), generalSetting };
         const newSettings = { ...(settings ?? {}), preferences };
         await Settings.put(newSettings);
@@ -215,7 +215,6 @@ function VixWinPathSettingModal(props) {
 }
 
 const mapStateToProps = ({ homePageReducer }) => ({
-  xrayVender: homePageReducer.settings.settings?.preferences?.generalSetting?.xrayVenderWeb ?? [],
   preImagePath: homePageReducer.settings.settings?.preferences?.generalSetting?.xrayVenderSettingWeb?.vixwin?.imagePath,
   preApplicationPath:
     homePageReducer.settings.settings?.preferences?.generalSetting?.xrayVenderSettingWeb?.vixwin.applicationPath,

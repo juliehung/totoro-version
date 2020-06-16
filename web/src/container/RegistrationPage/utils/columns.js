@@ -2,8 +2,8 @@ import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
 import { XRAY_VENDORS } from '../../AppointmentPage/constant';
-import Poye from '../../../images/POYE@4x.png';
-import Ray from '../../../images/Ray@4x.png';
+import VisionImg from '../../../component/VisionImg';
+import VixWinImg from '../../../component/VixWinImg';
 
 const XrayContainer = styled.div`
   display: flex;
@@ -87,14 +87,14 @@ export const columns = settings => [
     render: () => {
       return (
         <XrayContainer>
-          {settings?.preferences?.generalSetting?.x_rayVendor?.includes(XRAY_VENDORS.vision) && (
+          {settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vision) && (
             <div className={`xray XRAYVENDORS_${XRAY_VENDORS.vision}`}>
-              <img src={Poye} alt="POYE" width="25" />
+              <VisionImg width="23" />
             </div>
           )}
-          {settings?.preferences?.generalSetting?.x_rayVendor?.includes(XRAY_VENDORS.vixwin) && (
+          {settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vixwin) && (
             <div className={`xray XRAYVENDORS_${XRAY_VENDORS.vixwin}`}>
-              <img src={Ray} alt="Ray" width="25" />
+              <VixWinImg width="23" />
             </div>
           )}
         </XrayContainer>
