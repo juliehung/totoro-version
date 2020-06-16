@@ -14,27 +14,6 @@ const GlobalStyle = createGlobalStyle`
   *{
     user-select: none;
   }
-  .ant-switch{
-    background:#C5CEE0!important;
-  }
-  .ant-switch.ant-switch-checked{
-    background:#3266FF!important;
-  }
-  .ant-menu-item{
-    &:active{
-      background-color:#fff!important;
-    }
-  }
-  .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
-    background-color:#e4eaff!important;
-    color:#3167fa!important;
-  }
-  .ant-menu-item-active{
-    &:active{
-      background-color:#e4eaff!important;
-      color:#3167fa!important;
-    }
-  }
   .ant-menu-inline .ant-menu-selected::after, .ant-menu-inline .ant-menu-item-selected::after{
     border-right:3px solid #3266ff!important;
     z-index:999;
