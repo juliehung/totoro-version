@@ -4,8 +4,9 @@ import { render } from 'react-dom';
 import styled from 'styled-components';
 import convertMrnTo5Digits from './convertMrnTo5Digits';
 import { PhoneOutlined, UserOutlined, SolutionOutlined, EditOutlined } from '@ant-design/icons';
-import Poye from '../../../images/POYE@4x.png';
-import Ray from '../../../images/Ray@4x.png';
+import VisionImg from '../../../component/VisionImg';
+import VixWinImg from '../../../component/VixWinImg';
+
 import { XRAY_VENDORS } from '../constant';
 
 //#region
@@ -135,25 +136,23 @@ export function handleEventRender(info, func, params) {
             </BreakP>
             {status !== 'CANCEL' && (
               <XrayContainer>
-                {params.settings?.preferences?.generalSetting?.x_rayVendor?.includes(XRAY_VENDORS.vision) && (
+                {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vision) && (
                   <div>
-                    <img
-                      src={Poye}
-                      alt="Poye"
-                      width="25"
+                    <VisionImg
+                      width="23"
                       onClick={() => {
                         func.xray({ vendor: XRAY_VENDORS.vision, appointment });
                       }}
                     />
                   </div>
                 )}
-                {params.settings?.preferences?.generalSetting?.x_rayVendor?.includes(XRAY_VENDORS.vixwin) && (
+                {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vixwin) && (
                   <div
                     onClick={() => {
                       func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
                     }}
                   >
-                    <img src={Ray} alt="Ray" width="25" />
+                    <VixWinImg width="23" />
                   </div>
                 )}
               </XrayContainer>
@@ -251,13 +250,10 @@ export function handleEventRender(info, func, params) {
           </span>
           {!isCanceled && (
             <XrayContainerListView>
-              {params.settings?.preferences?.generalSetting?.x_rayVendor?.includes(XRAY_VENDORS.vision) && (
+              {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vision) && (
                 <div>
-                  <img
-                    src={Poye}
-                    alt="Poye"
-                    width="22"
-                    heufht="22"
+                  <VisionImg
+                    width="23"
                     onClick={() => {
                       func.xray({ vendor: XRAY_VENDORS.vision, appointment });
                     }}
@@ -265,13 +261,10 @@ export function handleEventRender(info, func, params) {
                   />
                 </div>
               )}
-              {params.settings?.preferences?.generalSetting?.x_rayVendor?.includes(XRAY_VENDORS.vixwin) && (
+              {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vixwin) && (
                 <div>
-                  <img
-                    src={Ray}
-                    alt="Ray"
-                    width="22"
-                    heufht="22"
+                  <VixWinImg
+                    width="23"
                     onClick={() => {
                       func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
                     }}
