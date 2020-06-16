@@ -118,7 +118,7 @@ const StyledButton = styled(Button)`
 `;
 
 const NoStyleButton = styled(Button)`
-  background-color: rgba(249, 249, 249, 1);
+  background-color: #fff;
   color: #8f9bb3;
   &:hover {
     background-color: rgba(143, 155, 179, 0.08);
