@@ -51,7 +51,6 @@ const IconContainer = styled.div`
 
 const SettingButton = styled.a`
   margin-left: 27px;
-  color: #3366ff;
   font-size: 12px;
 `;
 //#endregion
