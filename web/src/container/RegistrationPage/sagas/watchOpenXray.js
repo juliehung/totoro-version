@@ -26,7 +26,7 @@ function* openXray(action) {
     } = action;
     console.log(vendor, patient);
 
-    const patient_id = patient.id;
+    const patient_id = patient.medicalId;
     const patient_name = patient.name;
     const birthday = patient.birth ? moment(patient.birth).format('DD/MM/YYYY') : null;
     const gender = patient.gender ? patient.gender[0] : null;

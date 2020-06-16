@@ -37,6 +37,7 @@ export function convertAppToEvt(appointment) {
   const start = moment(appointment.expectedArrivalTime).toDate();
   const requiredTreatmentTime = appointment.requiredTreatmentTime;
   const end = moment(appointment.expectedArrivalTime).add(requiredTreatmentTime, 'minutes').toDate();
+  const medicalId = appointment.medicalId;
 
   return {
     title: appointment.status === 'CANCEL' ? `[C] ${appointment.patientName}` : appointment.patientName,
@@ -48,5 +49,6 @@ export function convertAppToEvt(appointment) {
     eventType: 'appointment',
     editable: appointment.registrationStatus ? false : true,
     resourceEditable: appointment.registrationStatus ? false : true,
+    medicalId,
   };
 }
