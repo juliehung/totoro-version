@@ -23,7 +23,8 @@ function* openXray(action) {
     const {
       data: { vendor, appointment },
     } = action;
-    const patient_id = appointment.patientId;
+
+    const patient_id = appointment.medicalId;
     const patient_name = appointment.patientName;
     const birthday = appointment.birth ? moment(appointment.birth).format('DD/MM/YYYY') : null;
     const gender = appointment.gender ? appointment.gender[0] : null;
