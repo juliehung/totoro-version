@@ -372,13 +372,12 @@ public class DisposalService {
     }
 
     public Disposal getDisposalByProjection(Long id) {
-        Optional<DisposalTable> optionalDisposalTable = disposalRepository.findDisposalById(id);
-        if (!optionalDisposalTable.isPresent()) {
+        Disposal disposal = getDisposalProjectionById(id).orElse(null);
+        if (disposal == null) {
             return null;
         }
 
         // Init object
-        Disposal disposal = disposalMapper.disposalTableToDisposal(optionalDisposalTable.get());
         Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = new HashSet<>();
         Prescription prescription = new Prescription();
 
@@ -417,13 +416,19 @@ public class DisposalService {
             .collect(Collectors.toSet());
 
         // Disposal.Registration
-        Registration registration = registrationMapper.registrationTableToRegistration(registrationRepository.findRegistrationByDisposal_Id(id).get());
-        if (registration.getAccounting() != null &&
-            registration.getAccounting().getId() != null
-        ) {
-            registration.setAccounting(
-                accountingMapper.accountingTableToAccounting(accountingRepository.findAccountingById(registration.getAccounting().getId()).get()));
-            registration.setDisposal(disposal);
+        Registration registration = null;
+        Optional<RegistrationTable> optionalRegistrationTable = registrationRepository.findRegistrationByDisposal_Id(id);
+        if (optionalRegistrationTable.isPresent()) {
+            registration = registrationMapper.registrationTableToRegistration(optionalRegistrationTable.get());
+            if (registration.getAccounting() != null &&
+                registration.getAccounting().getId() != null
+            ) {
+                Optional<AccountingTable> optionalAccountingTable = accountingRepository.findAccountingById(registration.getAccounting().getId());
+                if (optionalAccountingTable.isPresent()) {
+                    registration.setAccounting(accountingMapper.accountingTableToAccounting(optionalAccountingTable.get()));
+                    registration.setDisposal(disposal);
+                }
+            }
         }
 
         // Disposal.Prescription
@@ -476,5 +481,10 @@ public class DisposalService {
             .prescription(prescription);
 
         return disposal;
+    }
+
+    public Optional<Disposal> getDisposalProjectionById(Long id) {
+        return disposalRepository.findDisposalById(id)
+            .map(disposalMapper::disposalTableToDisposal);
     }
 }

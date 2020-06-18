@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.service.DisposalQueryService;
 import io.dentall.totoro.service.DisposalService;
+import io.dentall.totoro.service.NhiExtendDisposalService;
 import io.dentall.totoro.service.NhiService;
 import io.dentall.totoro.service.dto.DisposalCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
@@ -43,14 +44,18 @@ public class DisposalResource {
 
     private final NhiService nhiService;
 
+    private final NhiExtendDisposalService nhiExtendDisposalService;
+
     public DisposalResource(
         DisposalService disposalService,
         DisposalQueryService disposalQueryService,
-        NhiService nhiService
+        NhiService nhiService,
+        NhiExtendDisposalService nhiExtendDisposalService
     ) {
         this.disposalService = disposalService;
         this.disposalQueryService = disposalQueryService;
         this.nhiService = nhiService;
+        this.nhiExtendDisposalService = nhiExtendDisposalService;
     }
 
     /**
@@ -140,8 +145,19 @@ public class DisposalResource {
     @Timed
     public ResponseEntity<Disposal> getDisposal(@PathVariable Long id) {
         log.debug("REST request to get Disposal : {}", id);
-        Optional<Disposal> disposal = disposalService.findOneWithEagerRelationships(id);
-        return ResponseUtil.wrapOrNotFound(disposal);
+        Optional<Disposal> optionalDisposal = disposalService.getDisposalProjectionById(id)
+            .map(disposal -> {
+                Set<NhiExtendDisposal> nhiExtendDisposals = new HashSet<>();
+                nhiExtendDisposalService.getNhiExtendDisposalProjectionByDisposalId(disposal.getId())
+                    .ifPresent(nhiExtendDisposal -> {
+                        nhiExtendDisposal.setDisposal(disposal);
+                        nhiExtendDisposals.add(nhiExtendDisposal);
+                    });
+
+                return disposal.nhiExtendDisposals(nhiExtendDisposals);
+            });
+
+        return ResponseUtil.wrapOrNotFound(optionalDisposal);
     }
 
     /**
