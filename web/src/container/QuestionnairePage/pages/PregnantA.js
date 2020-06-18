@@ -5,12 +5,11 @@ import styled from 'styled-components';
 import { gotoPage, changePregnantDate } from '../actions';
 import { Input } from 'antd';
 import { Container } from './Name';
-import ConfirmButton from './ConfirmButton';
-import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
 import MobileDatePicker from 'react-mobile-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { DateContainer, DatePickerContainer, StyledDatePicker } from './Birth';
+import ErrorMessage from './ErrorMessage';
 
 //#region
 export const StyledInput = styled(Input)`
@@ -24,6 +23,8 @@ export const checkPregnantDateValidation = date =>
   !date || moment().add(1, 'y').isBefore(moment(date)) || moment().add(-1, 'y').isAfter(moment(date));
 
 function PregnantA(props) {
+  const { patient, validationError } = props;
+
   const [mobileDateInputOpen, setMobileDateInputOpen] = useState(false);
 
   return (
@@ -40,7 +41,7 @@ function PregnantA(props) {
               setMobileDateInputOpen(true);
             }}
           >
-            <span> {props.date ? props.date : '填寫日期'}</span>
+            <span> {patient.pregnantDate ? patient.pregnantDate : '填寫日期'}</span>
           </DateContainer>
           <MobileDatePicker
             isOpen={mobileDateInputOpen}
@@ -59,7 +60,7 @@ function PregnantA(props) {
       ) : (
         <DatePickerContainer>
           <StyledDatePicker
-            selected={props.date ? moment(props.date).toDate() : props.date}
+            selected={props.date ? moment(patient.pregnantDate).toDate() : patient.pregnantDate}
             placeholderText="填寫日期"
             dateFormat="yyyy-MM-dd"
             showPopperArrow={true}
@@ -72,25 +73,15 @@ function PregnantA(props) {
         </DatePickerContainer>
       )}
       <br />
-      <ConfirmButton
-        nextPage={() => {
-          props.gotoPage(19);
-        }}
-        disabled={checkPregnantDateValidation(props.date)}
-      />
-      <PageControllContainer
-        pre={() => {
-          props.gotoPage(16);
-        }}
-        next={() => {
-          props.gotoPage(16);
-        }}
-      />
+      {validationError.includes(24) && <ErrorMessage errorText={`日期錯誤，若無懷孕請回上頁選取"無"`} />}
     </Container>
   );
 }
 
-const mapStateToProps = state => ({ date: state.questionnairePageReducer.data.patient.pregnantDate });
+const mapStateToProps = ({ questionnairePageReducer }) => ({
+  patient: questionnairePageReducer.data.patient,
+  validationError: questionnairePageReducer.flow.validationError,
+});
 
 const mapDispatchToProps = { gotoPage, changePregnantDate };
 

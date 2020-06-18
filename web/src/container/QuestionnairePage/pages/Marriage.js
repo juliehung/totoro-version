@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { preChangeMarriage } from '../actions';
 import { MarriageOption } from '../constant_options';
 import { Container } from './Name';
-import PageControllContainer from '../PageControllContainer';
 import { OptionsContainer, Option, CheckedIcon, OptionContainer } from './BloodType';
 import { StyleRightCircleTwoTone } from './Address';
 
@@ -32,7 +31,6 @@ function Marriage(props) {
           );
         })}
       </OptionsContainer>
-      <PageControllContainer />
     </Container>
   );
 }

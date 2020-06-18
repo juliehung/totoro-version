@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { nextPage, changeBirth } from '../actions';
 import { Container } from './Name';
-import ConfirmButton from './ConfirmButton';
-import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
 import MobileDatePicker from 'react-mobile-datepicker';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import ErrorMessage from './ErrorMessage';
 
 //#region
 
@@ -38,6 +37,7 @@ export const checkBirthValidation = birth =>
   !birth || moment().isBefore(moment(birth)) || moment('1911-01-01').isAfter(moment(birth));
 
 function Birth(props) {
+  const { validationError, patient, changeBirth } = props;
   const [mobileBirthInputOpen, setMobileBirthInputOpen] = useState(false);
 
   return (
@@ -48,50 +48,49 @@ function Birth(props) {
       </div>
       {window.navigator.userAgent.match(/^((?!chrome|android).)*safari/i) &&
       (window.navigator.userAgent.match(/iPhone/i) || window.navigator.userAgent.match(/iPad/i)) ? (
-        <>
+        <Fragment>
           <DateContainer
             onClick={() => {
               setMobileBirthInputOpen(true);
             }}
           >
-            <span> {props.birth ? props.birth : '填寫生日'}</span>
+            <span> {patient.birth ? patient.birth : '填寫生日'}</span>
           </DateContainer>
           <MobileDatePicker
             isOpen={mobileBirthInputOpen}
             theme="ios"
             onSelect={date => {
-              props.changeBirth(moment(date).format('YYYY-MM-DD'));
+              changeBirth(moment(date).format('YYYY-MM-DD'));
               setMobileBirthInputOpen(false);
             }}
             onCancel={() => {
               setMobileBirthInputOpen(false);
             }}
-            max={moment().toDate()}
-            min={moment('1911-01-01').toDate()}
           />
-        </>
+        </Fragment>
       ) : (
         <DatePickerContainer>
           <StyledDatePicker
-            selected={props.birth ? moment(props.birth).toDate() : props.birth}
+            selected={patient.birth ? moment(patient.birth).toDate() : patient.birth}
             placeholderText="填寫生日"
             dateFormat="yyyy-MM-dd"
             showPopperArrow={true}
-            maxDate={moment().toDate()}
-            minDate={moment('1911-01-01').toDate()}
             onChange={date => {
-              props.changeBirth(moment(date).format('YYYY-MM-DD'));
+              changeBirth(moment(date).format('YYYY-MM-DD'));
             }}
           />
         </DatePickerContainer>
       )}
-      <ConfirmButton nextPage={props.nextPage} disabled={true} />
-      <PageControllContainer />
+      {validationError.includes(2) && <ErrorMessage errorText={'日期錯誤'} />}
     </Container>
   );
 }
 
-const mapStateToProps = state => ({ birth: state.questionnairePageReducer.data.patient.birth });
+const mapStateToProps = ({ questionnairePageReducer }) => ({
+  patient: questionnairePageReducer.data.patient,
+  birth: questionnairePageReducer.data.patient.birth,
+  validationError: questionnairePageReducer.flow.validationError,
+});
 
 const mapDispatchToProps = { nextPage, changeBirth };
 

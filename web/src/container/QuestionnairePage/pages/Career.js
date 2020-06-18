@@ -5,7 +5,6 @@ import { preChangeCareer } from '../actions';
 import { CareerOption } from '../constant_options';
 import { Container } from './Name';
 import { OptionsContainer, Option, CheckedIcon } from './BloodType';
-import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
 
 //#region
@@ -57,7 +56,6 @@ function Career(props) {
           );
         })}
       </OptionsContainer>
-      <PageControllContainer />
     </Container>
   );
 }

@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { nextPage, changeNationalId } from '../actions';
 import { Container } from './Name';
 import { TransparentInput } from './Name';
-import ConfirmButton from './ConfirmButton';
-import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
 
 function NationalId(props) {
@@ -31,8 +29,6 @@ function NationalId(props) {
         onPressEnter={onPressEnter}
         value={props.nationalId}
       />
-      <ConfirmButton nextPage={props.nextPage} disabled={!props.nationalId || props.nationalId.length === 0} />
-      <PageControllContainer />
     </Container>
   );
 }

@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import { nextPage, changeAddress } from '../actions';
 import { Container } from './Name';
 import { TransparentInput } from './Name';
-import ConfirmButton from './ConfirmButton';
-import PageControllContainer from '../PageControllContainer';
 import { RightCircleTwoTone } from '@ant-design/icons';
 
 //#region
@@ -40,8 +38,6 @@ function Address(props) {
         value={props.address}
         onPressEnter={onPressEnter}
       />
-      <ConfirmButton nextPage={props.nextPage} disabled={!props.address || props.address.length === 0} />
-      <PageControllContainer />
     </Container>
   );
 }

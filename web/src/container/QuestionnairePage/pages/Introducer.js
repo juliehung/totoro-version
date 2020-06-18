@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { nextPage, changeIntroducer } from '../actions';
 import { Container } from './Name';
 import { TransparentInput } from './Name';
-import ConfirmButton from './ConfirmButton';
-import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
 
 function Introducer(props) {
@@ -31,8 +29,6 @@ function Introducer(props) {
         value={props.introducer}
         onPressEnter={onPressEnter}
       />
-      <ConfirmButton nextPage={props.nextPage} disabled={!props.introducer || props.introducer.length === 0} />
-      <PageControllContainer />
     </Container>
   );
 }

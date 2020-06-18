@@ -7,7 +7,7 @@ export function* nextPage() {
       yield take(NEXT_PAGE);
       yield delay(0);
       yield put({ type: NEXT_PAGE_DELAY });
-      yield delay(500);
+      yield delay(600);
     } catch (error) {
       console.log(error);
     }
