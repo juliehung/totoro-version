@@ -42,6 +42,8 @@ import {
   INIT_PAGE,
   GET_DOC_START,
   GET_DOC_SUCCESS,
+  VALIDATE_SUCCESS,
+  VALIDATE_FAIL,
 } from './constant';
 
 export function nextPage() {
@@ -214,4 +216,12 @@ export function getDoc(id) {
 
 export function getDocSuccess(doc) {
   return { type: GET_DOC_SUCCESS, doc };
+}
+
+export function validateSuccess(page) {
+  return { type: VALIDATE_SUCCESS, page };
+}
+
+export function valitationFail(page) {
+  return { type: VALIDATE_FAIL, page };
 }

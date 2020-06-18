@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { preChangeBloodType } from '../actions';
 import { BloodTypeOption } from '../constant_options';
 import { Container } from './Name';
-import PageControllContainer from '../PageControllContainer';
 import { CheckOutlined } from '@ant-design/icons';
 import { StyleRightCircleTwoTone } from './Address';
 
@@ -84,7 +83,6 @@ function BloodType(props) {
           );
         })}
       </OptionsContainer>
-      <PageControllContainer />
     </Container>
   );
 }

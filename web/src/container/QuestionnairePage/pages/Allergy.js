@@ -2,13 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { changeAllergy, nextPage } from '../actions';
-import { CheckOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 import { tags } from '../constant_options';
 import { Container } from './Name';
 import { OptionsContainer, Option, CheckedIcon } from './BloodType';
 import { OptionContainer } from './Career';
-import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
 
 //#region
@@ -48,13 +45,6 @@ function Allergy(props) {
             );
           })}
       </OptionsContainer>
-      <Button type="primary" onClick={props.nextPage}>
-        <span>
-          確認
-          <CheckOutlined />
-        </span>
-      </Button>
-      <PageControllContainer />
     </Container>
   );
 }

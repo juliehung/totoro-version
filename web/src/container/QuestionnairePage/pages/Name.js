@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { nextPage, changeName } from '../actions';
+import { nextPage, changeName, valitationFail } from '../actions';
 import { Input } from 'antd';
 import { withRouter } from 'react-router-dom';
-import ConfirmButton from './ConfirmButton';
-import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
+import { nameValidator } from '../utils/validators';
+import ErrorMessagess from './ErrorMessage';
 
 //#region
 
@@ -29,14 +29,18 @@ export const TransparentInput = styled(Input)`
 //#endregion
 
 function Name(props) {
+  const { validationError, patient, changeName, nextPage, valitationFail } = props;
+
   const onInputChange = e => {
-    props.changeName(e.target.value);
+    changeName(e.target.value);
   };
 
   const onPressEnter = () => {
-    if (props.name && props.name.length !== 0) {
-      props.nextPage();
+    if (!nameValidator(patient)) {
+      valitationFail(1);
+      return;
     }
+    nextPage();
   };
 
   return (
@@ -49,17 +53,19 @@ function Name(props) {
         size="large"
         placeholder="請在此鍵入答案"
         onChange={onInputChange}
-        value={props.name}
+        value={patient.name}
         onPressEnter={onPressEnter}
       />
-      <ConfirmButton nextPage={props.nextPage} disabled={!props.name || props.name.length === 0} />
-      <PageControllContainer />
+      {validationError.includes(1) && <ErrorMessagess errorText="必填項目" />}
     </Container>
   );
 }
 
-const mapStateToProps = state => ({ name: state.questionnairePageReducer.data.patient.name });
+const mapStateToProps = ({ questionnairePageReducer }) => ({
+  patient: questionnairePageReducer.data.patient,
+  validationError: questionnairePageReducer.flow.validationError,
+});
 
-const mapDispatchToProps = { nextPage, changeName };
+const mapDispatchToProps = { nextPage, changeName, valitationFail };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Name));

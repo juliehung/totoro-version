@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { nextPage, changeEmergencyPhone } from '../actions';
 import { Container } from './Name';
 import { TransparentInput } from './Name';
-import ConfirmButton from './ConfirmButton';
-import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
 
 function EmergencyContactPhone(props) {
@@ -31,8 +29,6 @@ function EmergencyContactPhone(props) {
         onChange={onInputChange}
         onPressEnter={onPressEnter}
       />
-      <ConfirmButton nextPage={props.nextPage} disabled={!props.phone || props.phone.length === 0} />
-      <PageControllContainer />
     </Container>
   );
 }

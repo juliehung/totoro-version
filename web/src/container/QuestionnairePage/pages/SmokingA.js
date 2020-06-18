@@ -1,23 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { gotoPage, changeSmokingAmount } from '../actions';
-import { Container } from './Name';
-import { TransparentInput } from './Name';
-import ConfirmButton from './ConfirmButton';
-import PageControllContainer from '../PageControllContainer';
+import { gotoPage, changeSmokingAmount, valitationFail } from '../actions';
+import { Container, TransparentInput } from './Name';
 import { StyleRightCircleTwoTone } from './Address';
+import ErrorMessage from './ErrorMessage';
 
 export const checkSmokingAmountValidation = smokingAmount => !smokingAmount || smokingAmount < 0;
 
 function SmokingA(props) {
+  const { patient, validationError, valitationFail } = props;
+
   const onInputChange = e => {
     props.changeSmokingAmount(e.target.value);
   };
 
   const onPressEnter = () => {
     if (props.smokingAmount && props.smokingAmount.length !== 0) {
-      props.gotoPage(18);
+      valitationFail(23);
+      return;
     }
+    props.gotoPage(18);
   };
 
   return (
@@ -32,28 +34,18 @@ function SmokingA(props) {
         type="number"
         onChange={onInputChange}
         onPressEnter={onPressEnter}
-        value={props.smokingAmount}
+        value={patient.smokingAmount}
       />
-      <ConfirmButton
-        nextPage={() => {
-          props.gotoPage(18);
-        }}
-        disabled={checkSmokingAmountValidation(props.smokingAmount)}
-      />
-      <PageControllContainer
-        pre={() => {
-          props.gotoPage(16);
-        }}
-        next={() => {
-          props.gotoPage(16);
-        }}
-      />
+      {validationError.includes(23) && <ErrorMessage errorText={`數字必須大於零，若無吸菸請回上頁選取"無"`} />}
     </Container>
   );
 }
 
-const mapStateToProps = state => ({ smokingAmount: state.questionnairePageReducer.data.patient.smokingAmount });
+const mapStateToProps = ({ questionnairePageReducer }) => ({
+  patient: questionnairePageReducer.data.patient,
+  validationError: questionnairePageReducer.flow.validationError,
+});
 
-const mapDispatchToProps = { gotoPage, changeSmokingAmount };
+const mapDispatchToProps = { gotoPage, changeSmokingAmount, valitationFail };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SmokingA);

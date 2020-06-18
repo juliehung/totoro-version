@@ -4,7 +4,6 @@ import { preChangePregnant } from '../actions';
 import { Container } from './Name';
 import { Option, CheckedIcon } from './BloodType';
 import { OptionContainer } from './Career';
-import PageControllContainer from '../PageControllContainer';
 import { OptionsContainer } from './DoDrugQ';
 import { StyleRightCircleTwoTone } from './Address';
 
@@ -39,7 +38,6 @@ function PregnantQ(props) {
           <CheckedIcon type="check" selected={props.pregnant === 'B'} />
         </OptionContainer>
       </OptionsContainer>
-      <PageControllContainer />
     </Container>
   );
 }

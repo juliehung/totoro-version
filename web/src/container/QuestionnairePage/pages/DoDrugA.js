@@ -1,23 +1,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { gotoPage, changeDrug } from '../actions';
+import { gotoPage, changeDrug, valitationFail } from '../actions';
 import { Container } from './Name';
 import { TransparentInput } from './Name';
-import ConfirmButton from './ConfirmButton';
-import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
+import { drugValidator } from '../utils/validators';
+import ErrorMessage from './ErrorMessage';
 
 export const checkDrugValidation = drug => !drug || drug.length === 0;
 
 function DoDrugA(props) {
+  const { validationError, patient, valitationFail } = props;
+
   const onInputChange = e => {
     props.changeDrug(e.target.value);
   };
 
   const onPressEnter = () => {
-    if (props.drug && props.drug.length !== 0) {
-      props.gotoPage(17);
+    if (!drugValidator(patient)) {
+      valitationFail(22);
+      return;
     }
+    props.gotoPage(17);
   };
 
   return (
@@ -30,29 +34,19 @@ function DoDrugA(props) {
         size="large"
         placeholder="請在此鍵入答案"
         onChange={onInputChange}
-        value={props.drug}
+        value={patient.drug}
         onPressEnter={onPressEnter}
       />
-      <ConfirmButton
-        nextPage={() => {
-          props.gotoPage(17);
-        }}
-        disabled={checkDrugValidation(props.drug)}
-      />
-      <PageControllContainer
-        pre={() => {
-          props.gotoPage(16);
-        }}
-        next={() => {
-          props.gotoPage(16);
-        }}
-      />
+      {validationError.includes(22) && <ErrorMessage errorText={`需填內容，若無用藥請回上頁選取"無"`} />}
     </Container>
   );
 }
 
-const mapStateToProps = state => ({ drug: state.questionnairePageReducer.data.patient.drug });
+const mapStateToProps = ({ questionnairePageReducer }) => ({
+  patient: questionnairePageReducer.data.patient,
+  validationError: questionnairePageReducer.flow.validationError,
+});
 
-const mapDispatchToProps = { gotoPage, changeDrug };
+const mapDispatchToProps = { gotoPage, changeDrug, valitationFail };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DoDrugA);
