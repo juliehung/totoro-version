@@ -1,14 +1,14 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
-
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.DisposalQueryService;
 import io.dentall.totoro.service.DisposalService;
+import io.dentall.totoro.service.NhiExtendDisposalService;
 import io.dentall.totoro.service.NhiService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
-import io.dentall.totoro.service.DisposalQueryService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,14 +30,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 
-
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import io.dentall.totoro.domain.enumeration.DisposalStatus;
 /**
  * Test class for the DisposalResource REST controller.
  *
@@ -70,6 +67,9 @@ public class DisposalResourceIntTest {
 
     @Autowired
     private DisposalQueryService disposalQueryService;
+
+    @Autowired
+    private NhiExtendDisposalService nhiExtendDisposalService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -111,7 +111,7 @@ public class DisposalResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final DisposalResource disposalResource = new DisposalResource(disposalService, disposalQueryService, nhiService);
+        final DisposalResource disposalResource = new DisposalResource(disposalService, disposalQueryService, nhiService, nhiExtendDisposalService);
         this.restDisposalMockMvc = MockMvcBuilders.standaloneSetup(disposalResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
