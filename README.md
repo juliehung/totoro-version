@@ -284,3 +284,8 @@ Add `no-liquibase` in `SPRING_PROFILES_ACTIVE`
 [Protractor]: https://angular.github.io/protractor/
 [Leaflet]: http://leafletjs.com/
 [DefinitelyTyped]: http://definitelytyped.org/
+
+Spring JPA Projection
+---
+- 由於 projection 目前不支援 jsonb 這種形態的資料，且加入此項後會導致 treatmentProcedure_Id 這種 nested 
+類型的功能失效，因此此需利用 EsPL 去取得該資料 Ref: https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#projections.interfaces.open
