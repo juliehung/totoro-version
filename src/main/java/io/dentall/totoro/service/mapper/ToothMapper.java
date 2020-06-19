@@ -1,7 +1,5 @@
 package io.dentall.totoro.service.mapper;
 
-import io.dentall.totoro.domain.Disposal;
-import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Tooth;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.service.dto.table.ToothTable;
@@ -28,17 +26,11 @@ public class ToothMapper {
         tooth.setSurface(toothTable.getSurface());
         tooth.setStatus(toothTable.getStatus());
 
+        toothTable.getMetadata().forEach(tooth::setMetadata);
+
         TreatmentProcedure treatmentProcedure = new TreatmentProcedure();
         treatmentProcedure.setId(toothTable.getTreatmentProcedure_Id());
         tooth.setTreatmentProcedure(treatmentProcedure);
-
-        Disposal disposal = new Disposal();
-        disposal.setId(toothTable.getDisposal_Id());
-        tooth.setDisposal(disposal);
-
-        Patient patient = new Patient();
-        patient.setId(toothTable.getPatient_Id());
-        tooth.setPatient(patient);
 
         return tooth;
     }
