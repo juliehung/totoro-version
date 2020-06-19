@@ -8,6 +8,7 @@ import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiProcedureRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import org.springframework.stereotype.Service;
@@ -59,26 +60,35 @@ public class NhiAbnormalityService {
 
     private Map<String, String> nhiProcedureSpecificCode;
 
+    private final DisposalService disposalService;
+
     public NhiAbnormalityService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         PatientRepository patientRepository,
         UserRepository userRepository,
-        NhiProcedureRepository nhiProcedureRepository
+        NhiProcedureRepository nhiProcedureRepository,
+        DisposalService disposalService
     ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.patientRepository = patientRepository;
         this.userRepository = userRepository;
         this.nhiProcedureRepository = nhiProcedureRepository;
+        this.disposalService = disposalService;
     }
 
     @Transactional(readOnly = true)
     public NhiAbnormality getNhiAbnormality(int yyyymm) {
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
-        List<NhiExtendDisposal> monthlyNhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetween(
+        List<NhiExtendDisposal> monthlyNhiExtendDisposals =
+            nhiExtendDisposalRepository.findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
                 ym.atDay(1),
-                ym.atEndOfMonth()
-            );
+                ym.atEndOfMonth(),
+                ym.atDay(1),
+                ym.atEndOfMonth(),
+                "2"
+            ).stream()
+                .map(nhiExtendDisposalTable -> disposalService.getDisposalByProjection(nhiExtendDisposalTable.getDisposal_Id()).getNhiExtendDisposals().iterator().next())
+                .collect(Collectors.toList());
 
         NhiAbnormality nhiAbnormality = new NhiAbnormality();
 

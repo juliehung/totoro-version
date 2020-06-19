@@ -6,32 +6,50 @@ import io.dentall.totoro.domain.NhiProcedure;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.service.DisposalService;
+import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.service.util.StreamUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class NhiStatisticService {
-    private NhiExtendDisposalRepository nhiExtendDisposalRepository;
+    private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
+
+    private final DisposalService disposalService;
 
     public NhiStatisticService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
-        UserRepository userRepository
+        UserRepository userRepository,
+        NhiExtendDisposalMapper nhiExtendDisposalMapper,
+        DisposalService disposalService
     ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.userRepository = userRepository;
+        this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
+        this.disposalService = disposalService;
     }
 
+    @Transactional
     public List<NhiStatisticDashboard> calculate(YearMonth ym) {
-        List<NhiExtendDisposal> nhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetween(
+        List<NhiExtendDisposal> nhiExtendDisposals =
+            nhiExtendDisposalRepository.findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
                 ym.atDay(1),
-                ym.atEndOfMonth()
-            );
+                ym.atEndOfMonth(),
+                ym.atDay(1),
+                ym.atEndOfMonth(),
+                "2"
+            ).stream()
+                .map(nhiExtendDisposalTable -> disposalService.getDisposalByProjection(nhiExtendDisposalTable.getDisposal_Id()).getNhiExtendDisposals().iterator().next())
+                .collect(Collectors.toList());
 
         Map<String, Long> docMap = new HashMap<>();
         NhiStatisticDashboard summaryDashboard = new NhiStatisticDashboard();

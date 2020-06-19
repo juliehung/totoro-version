@@ -404,12 +404,14 @@ public class DisposalService {
                                 optionalNhiExtendTreatmentProcedureTable.get()
                             );
                         nhiExtendTreatmentProcedures.add(nhiExtendTreatmentProcedure);
+                        nhiExtendTreatmentProcedure.setTreatmentProcedure(treatmentProcedure);
                         treatmentProcedure.setNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure);
                     }
 
                     // Add tooth
                     treatmentProcedure.setTeeth(toothMapper.toothSetToToothSet(toothRepository.findToothByTreatmentProcedure_Id(treatmentProcedure.getId())));
                 }
+                treatmentProcedure.setDisposal(disposal);
 
                 return treatmentProcedure;
             })
@@ -472,6 +474,9 @@ public class DisposalService {
             nhiExtendDisposal.setDisposal(disposal);
             nhiExtendDisposals.add(nhiExtendDisposal);
             nhiExtendDisposal.setNhiExtendTreatmentProcedures(nhiExtendTreatmentProcedures);
+            nhiExtendTreatmentProcedures.forEach(nhiExtendTreatmentProcedure -> {
+                nhiExtendTreatmentProcedure.setNhiExtendDisposal(nhiExtendDisposal);
+            });
         }
 
         // Assemble query result
