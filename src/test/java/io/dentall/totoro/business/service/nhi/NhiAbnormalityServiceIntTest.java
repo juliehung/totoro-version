@@ -10,6 +10,7 @@ import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.web.rest.PatientResourceIntTest;
 import io.dentall.totoro.web.rest.UserResourceIntTest;
@@ -76,6 +77,9 @@ public class NhiAbnormalityServiceIntTest {
 
     private NhiAbnormalityService nhiAbnormalityService;
 
+    @Autowired
+    private DisposalService disposalService;
+
     private Patient patient1;
 
     private User user1;
@@ -88,7 +92,7 @@ public class NhiAbnormalityServiceIntTest {
 
     @Before
     public void setup() {
-        nhiAbnormalityService = new NhiAbnormalityService(nhiExtendDisposalRepository, patientRepository, userRepository, nhiProcedureRepository);
+        nhiAbnormalityService = new NhiAbnormalityService(nhiExtendDisposalRepository, patientRepository, userRepository, nhiProcedureRepository, disposalService);
 
         user1 = UserResourceIntTest.createEntity(em);
         user1.setLogin("abc");

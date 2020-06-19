@@ -17,6 +17,10 @@ public class DisposalMapper {
         disposal.setDateTime(disposalTable.getDateTime());
         disposal.setDateTimeEnd(disposalTable.getDateTimeEnd());
         disposal.setChiefComplaint(disposalTable.getChiefComplaint());
+        disposal.setCreatedBy(disposalTable.getCreatedBy());
+        disposal.setCreatedDate(disposalTable.getCreatedDate());
+        disposal.setLastModifiedBy(disposalTable.getLastModifiedBy());
+        disposal.setLastModifiedDate(disposalTable.getLastModifiedDate());
 
         Prescription prescription = new Prescription();
         prescription.setId(disposalTable.getPrescription_Id());

@@ -24,6 +24,13 @@ import java.util.Set;
 @Repository
 public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long>, JpaSpecificationExecutor<NhiExtendDisposal> {
 
+    List<NhiExtendDisposalTable> findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
+        LocalDate start,
+        LocalDate end,
+        LocalDate rstart,
+        LocalDate rend,
+        String a19);
+
     Page<NhiExtendDisposalTable> findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
         LocalDate start,
         LocalDate end,
