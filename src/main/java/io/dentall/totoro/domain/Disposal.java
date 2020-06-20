@@ -48,6 +48,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @Column(name = "roundabout_content")
     private String roundaboutContent;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "roundabout_interval")
     private DisposalRoundaboutInterval roundaboutInterval;
 

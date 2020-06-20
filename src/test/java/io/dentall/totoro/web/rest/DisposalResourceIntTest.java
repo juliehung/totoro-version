@@ -240,7 +240,7 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.[*].chiefComplaint").value(hasItem(DEFAULT_CHIEF_COMPLAINT.toString())))
             .andExpect(jsonPath("$.[*].roundaboutContent").value(hasItem(DEFAULT_ROUNDABOUT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].roundaboutInterval").value(hasItem(DEFAULT_ROUNDABOUT_INTERVAL.toString())))
-            .andExpect(jsonPath("$.[*].roundaboutTreatmentTime").value(hasItem(DEFAULT_ROUNDABOUT_TREATMENT_TIME.toString())))
+            .andExpect(jsonPath("$.[*].roundaboutTreatmentTime").value(hasItem(DEFAULT_ROUNDABOUT_TREATMENT_TIME.intValue())))
             .andExpect(jsonPath("$.[*].roundaboutComment").value(hasItem(DEFAULT_ROUNDABOUT_COMMENT.toString())))
         ;
     }
@@ -263,7 +263,7 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.chiefComplaint").value(DEFAULT_CHIEF_COMPLAINT.toString()))
             .andExpect(jsonPath("$.roundaboutContent").value(DEFAULT_ROUNDABOUT_CONTENT.toString()))
             .andExpect(jsonPath("$.roundaboutInterval").value(DEFAULT_ROUNDABOUT_INTERVAL.toString()))
-            .andExpect(jsonPath("$.roundaboutTreatmentTime").value(DEFAULT_ROUNDABOUT_TREATMENT_TIME.toString()))
+            .andExpect(jsonPath("$.roundaboutTreatmentTime").value(DEFAULT_ROUNDABOUT_TREATMENT_TIME.intValue()))
             .andExpect(jsonPath("$.roundaboutComment").value(DEFAULT_ROUNDABOUT_COMMENT.toString()))
         ;
     }
@@ -510,7 +510,7 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.[*].chiefComplaint").value(hasItem(DEFAULT_CHIEF_COMPLAINT.toString())))
             .andExpect(jsonPath("$.[*].roundaboutContent").value(hasItem(DEFAULT_ROUNDABOUT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].roundaboutInterval").value(hasItem(DEFAULT_ROUNDABOUT_INTERVAL.toString())))
-            .andExpect(jsonPath("$.[*].roundaboutTreatmentTime").value(hasItem(DEFAULT_ROUNDABOUT_TREATMENT_TIME.toString())))
+            .andExpect(jsonPath("$.[*].roundaboutTreatmentTime").value(hasItem(DEFAULT_ROUNDABOUT_TREATMENT_TIME.intValue())))
             .andExpect(jsonPath("$.[*].roundaboutComment").value(hasItem(DEFAULT_ROUNDABOUT_COMMENT.toString())))
 
         ;
