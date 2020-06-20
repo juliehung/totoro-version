@@ -1,5 +1,6 @@
 package io.dentall.totoro.service.dto.table;
 
+import io.dentall.totoro.domain.enumeration.DisposalRoundaboutInterval;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
 
 import java.time.Instant;
@@ -11,6 +12,10 @@ public interface DisposalTable extends AuditingElement {
     Instant getDateTime();
     Instant getDateTimeEnd();
     String getChiefComplaint();
+    String getRoundaboutContent();
+    DisposalRoundaboutInterval getRoundaboutInterval();
+    Integer getRoundaboutTreatmentTime();
+    String getRoundaboutComment();
 
     // Relationship
     Long getPrescription_Id();

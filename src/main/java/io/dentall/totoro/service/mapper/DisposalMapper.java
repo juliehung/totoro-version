@@ -21,6 +21,10 @@ public class DisposalMapper {
         disposal.setCreatedDate(disposalTable.getCreatedDate());
         disposal.setLastModifiedBy(disposalTable.getLastModifiedBy());
         disposal.setLastModifiedDate(disposalTable.getLastModifiedDate());
+        disposal.setRoundaboutContent(disposalTable.getRoundaboutContent());
+        disposal.setRoundaboutInterval(disposalTable.getRoundaboutInterval());
+        disposal.setRoundaboutTreatmentTime(disposalTable.getRoundaboutTreatmentTime());
+        disposal.setRoundaboutComment(disposalTable.getRoundaboutComment());
 
         Prescription prescription = new Prescription();
         prescription.setId(disposalTable.getPrescription_Id());
