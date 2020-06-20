@@ -394,6 +394,10 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
             ", total=" + getTotal() +
             ", dateTime='" + getDateTime() + "'" +
             ", chiefComplaint='" + getChiefComplaint() + "'" +
+            ", roundaboutContent='" + getRoundaboutContent() + "'" +
+            ", roundaboutInterval='" + getRoundaboutInterval() + "'" +
+            ", roundaboutTreatmentTime='" + getRoundaboutTreatmentTime() + "'" +
+            ", roundaboutComment='" + getRoundaboutComment() + "'" +
             "}";
     }
 }

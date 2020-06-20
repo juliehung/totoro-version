@@ -305,7 +305,7 @@ public class DisposalService {
                 if (updateDisposal.getRoundaboutContent() != null) {
                     disposal.setRoundaboutContent(updateDisposal.getRoundaboutContent());
                 }
-                
+
                 if (updateDisposal.getRoundaboutInterval() != null) {
                     disposal.setRoundaboutInterval(updateDisposal.getRoundaboutInterval());
                 }
