@@ -2,19 +2,18 @@ package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dentall.totoro.domain.enumeration.DisposalRoundaboutInterval;
+import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedBy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Set;
 import java.util.Objects;
-
-import io.dentall.totoro.domain.enumeration.DisposalStatus;
-import org.springframework.data.annotation.CreatedBy;
+import java.util.Set;
 
 /**
  * A Disposal.
@@ -45,6 +44,19 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "chief_complaint")
     private String chiefComplaint;
+
+    @Column(name = "roundabout_content")
+    private String roundaboutContent;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "roundabout_interval")
+    private DisposalRoundaboutInterval roundaboutInterval;
+
+    @Column(name = "roundabout_treatment_time")
+    private Integer roundaboutTreatmentTime;
+
+    @Column(name = "roundabout_comment")
+    private String roundaboutComment;
 
     @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -77,6 +89,26 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "date_time_end")
     private Instant dateTimeEnd;
+
+    public Disposal roundaboutContent(String roundaboutContent) {
+        this.roundaboutContent = roundaboutContent;
+        return this;
+    }
+
+    public Disposal roundaboutInterval(DisposalRoundaboutInterval roundaboutInterval) {
+        this.roundaboutInterval = roundaboutInterval;
+        return this;
+    }
+
+    public Disposal roundaboutTreatmentTime(Integer roundaboutTreatmentTime) {
+        this.roundaboutTreatmentTime = roundaboutTreatmentTime;
+        return this;
+    }
+
+    public Disposal roundaboutComment(String roundaboutComment) {
+        this.roundaboutComment = roundaboutComment;
+        return this;
+    }
 
     public Disposal dateTimeEnd(Instant dateTimeEnd) {
         this.dateTimeEnd = dateTimeEnd;
@@ -299,6 +331,42 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
         return super.getLastModifiedDate();
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getRoundaboutContent() {
+        return roundaboutContent;
+    }
+
+    public void setRoundaboutContent(String roundaboutContent) {
+        this.roundaboutContent = roundaboutContent;
+    }
+
+    public DisposalRoundaboutInterval getRoundaboutInterval() {
+        return roundaboutInterval;
+    }
+
+    public void setRoundaboutInterval(DisposalRoundaboutInterval roundaboutInterval) {
+        this.roundaboutInterval = roundaboutInterval;
+    }
+
+    public Integer getRoundaboutTreatmentTime() {
+        return roundaboutTreatmentTime;
+    }
+
+    public void setRoundaboutTreatmentTime(Integer roundaboutTreatmentTime) {
+        this.roundaboutTreatmentTime = roundaboutTreatmentTime;
+    }
+
+    public String getRoundaboutComment() {
+        return roundaboutComment;
+    }
+
+    public void setRoundaboutComment(String roundaboutComment) {
+        this.roundaboutComment = roundaboutComment;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -327,6 +395,10 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
             ", total=" + getTotal() +
             ", dateTime='" + getDateTime() + "'" +
             ", chiefComplaint='" + getChiefComplaint() + "'" +
+            ", roundaboutContent='" + getRoundaboutContent() + "'" +
+            ", roundaboutInterval='" + getRoundaboutInterval() + "'" +
+            ", roundaboutTreatmentTime='" + getRoundaboutTreatmentTime() + "'" +
+            ", roundaboutComment='" + getRoundaboutComment() + "'" +
             "}";
     }
 }

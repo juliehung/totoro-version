@@ -302,6 +302,22 @@ public class DisposalService {
                     disposal.setChiefComplaint(updateDisposal.getChiefComplaint());
                 }
 
+                if (updateDisposal.getRoundaboutContent() != null) {
+                    disposal.setRoundaboutContent(updateDisposal.getRoundaboutContent());
+                }
+
+                if (updateDisposal.getRoundaboutInterval() != null) {
+                    disposal.setRoundaboutInterval(updateDisposal.getRoundaboutInterval());
+                }
+
+                if (updateDisposal.getRoundaboutTreatmentTime() != null) {
+                    disposal.setRoundaboutTreatmentTime(updateDisposal.getRoundaboutTreatmentTime());
+                }
+
+                if (updateDisposal.getRoundaboutComment() != null) {
+                    disposal.setRoundaboutComment(updateDisposal.getRoundaboutComment());
+                }
+
                 if (updateDisposal.getPrescription() != null) {
                     disposal.setPrescription(getPrescription(updateDisposal));
                 }
