@@ -2,32 +2,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { Menu, Layout } from 'antd';
+import { Layout, Tabs } from 'antd';
 import { getSettings } from '../Home/actions';
 import Xray from './Xray';
+import { useWindowSize } from '../../utils/hooks/useWindowSize';
 
-const { Content, Sider } = Layout;
-const { Item } = Menu;
+const { Content } = Layout;
+const { TabPane } = Tabs;
 
 //#region
 const GlobalStyle = createGlobalStyle`
   *{
     user-select: none;
   }
-  .ant-menu-inline .ant-menu-selected::after, .ant-menu-inline .ant-menu-item-selected::after{
-    border-right:3px solid #3266ff!important;
-    z-index:999;
+  .ant-tabs.ant-tabs-left{
+    height: 100%!important;
   }
-  .ant-menu-inline{
-    border:none!important;
-    &::after{
-      position:absolute;
-      border-right:2px solid #edf1f7;
-      height: 100%;
-      top:0;
-      right:0;
-      z-index:998;
-    }
+  .ant-tabs-ink-bar.ant-tabs-ink-bar-animated{
+    width:3px;
   }
 `;
 
@@ -37,49 +29,38 @@ const StyledLayout = styled(Layout)`
   background: #fff !important;
 `;
 
-const StyledSider = styled(Sider)`
-  height: 100% !important;
-`;
-
-const StyledMenu = styled(Menu)`
-  height: 100% !important;
-  overflow-y: scroll !important;
-  scrollbar-width: none !important;
-  &::-webkit-scrollbar {
-    display: none !important;
-  }
-`;
-
 const StyledContent = styled(Content)`
   background-color: #fff;
-  padding: 10px 70px;
+  padding: 10px;
 `;
 
-const StyleMenuItem = styled(Item)`
-  & > span {
-    letter-spacing: 0.8px;
-  }
+const TabText = styled.span`
+  padding: 0 50px;
+  text-align: center;
+  letter-spacing: 0.8px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 //#endregion
 
 function SettingPage() {
+  const size = useWindowSize();
+
   return (
     <StyledLayout>
       <GlobalStyle />
       <Helmet>
         <title>設定</title>
       </Helmet>
-      <StyledSider breakpoint="lg" collapsedWidth="0" theme="light">
-        <StyledMenu theme="light" mode="inline" defaultSelectedKeys={'xray'}>
-          <StyleMenuItem key="xray">
-            <span>X 光軟體設定</span>
-          </StyleMenuItem>
-        </StyledMenu>
-      </StyledSider>
-      <StyledContent>
-        <Xray />
-      </StyledContent>
+      <Tabs defaultActiveKey="1" tabPosition={size.width >= 1100 ? 'left' : 'top'}>
+        <TabPane tab={<TabText>X 光軟體設定</TabText>}>
+          <StyledContent>
+            <Xray />
+          </StyledContent>
+        </TabPane>
+      </Tabs>
     </StyledLayout>
   );
 }
