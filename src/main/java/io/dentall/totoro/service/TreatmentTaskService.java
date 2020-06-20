@@ -6,10 +6,10 @@ import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 import io.dentall.totoro.repository.TreatmentPlanRepository;
 import io.dentall.totoro.repository.TreatmentTaskRepository;
+import io.dentall.totoro.service.mapper.TreatmentTaskMapper;
 import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing TreatmentTask.
@@ -33,14 +34,18 @@ public class TreatmentTaskService {
 
     private final TreatmentPlanRepository treatmentPlanRepository;
 
+    private final TreatmentTaskMapper treatmentTaskMapper;
+
     public TreatmentTaskService(
         TreatmentTaskRepository treatmentTaskRepository,
         RelationshipService relationshipService,
-        TreatmentPlanRepository treatmentPlanRepository
+        TreatmentPlanRepository treatmentPlanRepository,
+        TreatmentTaskMapper treatmentTaskMapper
     ) {
         this.treatmentTaskRepository = treatmentTaskRepository;
         this.relationshipService = relationshipService;
         this.treatmentPlanRepository = treatmentPlanRepository;
+        this.treatmentTaskMapper = treatmentTaskMapper;
     }
 
     /**
@@ -138,5 +143,13 @@ public class TreatmentTaskService {
                 return treatmentTask;
             })
             .get();
+    }
+
+    @Transactional(readOnly = true)
+    public Set<TreatmentTask> getTreatmentTaskProjectionByTreatmentPlanId(Long id) {
+        return treatmentTaskRepository.findByTreatmentPlan_Id(id)
+            .stream()
+            .map(treatmentTaskMapper::treatmentTaskTableToTreatmentTask)
+            .collect(Collectors.toSet());
     }
 }

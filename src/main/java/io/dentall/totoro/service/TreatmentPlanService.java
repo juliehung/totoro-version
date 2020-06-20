@@ -5,11 +5,11 @@ import io.dentall.totoro.domain.TreatmentPlan;
 import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.repository.TreatmentPlanRepository;
 import io.dentall.totoro.repository.TreatmentRepository;
+import io.dentall.totoro.service.mapper.TreatmentPlanMapper;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
@@ -17,6 +17,7 @@ import org.zalando.problem.Status;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing TreatmentPlan.
@@ -33,14 +34,18 @@ public class TreatmentPlanService {
 
     private final TreatmentRepository treatmentRepository;
 
+    private final TreatmentPlanMapper treatmentPlanMapper;
+
     public TreatmentPlanService(
         TreatmentPlanRepository treatmentPlanRepository,
         RelationshipService relationshipService,
-        TreatmentRepository treatmentRepository
+        TreatmentRepository treatmentRepository,
+        TreatmentPlanMapper treatmentPlanMapper
     ) {
         this.treatmentPlanRepository = treatmentPlanRepository;
         this.relationshipService = relationshipService;
         this.treatmentRepository = treatmentRepository;
+        this.treatmentPlanMapper = treatmentPlanMapper;
     }
 
     /**
@@ -138,5 +143,13 @@ public class TreatmentPlanService {
                 return treatmentPlan;
             })
             .get();
+    }
+
+    @Transactional(readOnly = true)
+    public Set<TreatmentPlan> getTreatmentPlanProjectionByTreatmentId(Long id) {
+        return treatmentPlanRepository.findByTreatment_Id(id)
+            .stream()
+            .map(treatmentPlanMapper::treatmentPlanTableToTreatmentPlan)
+            .collect(Collectors.toSet());
     }
 }

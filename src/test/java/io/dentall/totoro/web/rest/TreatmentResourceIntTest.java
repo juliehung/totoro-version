@@ -1,16 +1,14 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
-
-import io.dentall.totoro.domain.Treatment;
 import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.Treatment;
 import io.dentall.totoro.repository.TreatmentRepository;
 import io.dentall.totoro.service.TreatmentPlanService;
-import io.dentall.totoro.service.TreatmentService;
-import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
-import io.dentall.totoro.service.dto.TreatmentCriteria;
 import io.dentall.totoro.service.TreatmentQueryService;
-
+import io.dentall.totoro.service.TreatmentService;
+import io.dentall.totoro.service.TreatmentTaskService;
+import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +26,6 @@ import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-
 
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,6 +84,9 @@ public class TreatmentResourceIntTest {
     @Autowired
     private TreatmentPlanService treatmentPlanService;
 
+    @Autowired
+    private TreatmentTaskService treatmentTaskService;
+
     private MockMvc restTreatmentMockMvc;
 
     private Treatment treatment;
@@ -94,7 +94,7 @@ public class TreatmentResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TreatmentResource treatmentResource = new TreatmentResource(treatmentService, treatmentQueryService, treatmentPlanService);
+        final TreatmentResource treatmentResource = new TreatmentResource(treatmentService, treatmentQueryService, treatmentPlanService, treatmentTaskService);
         this.restTreatmentMockMvc = MockMvcBuilders.standaloneSetup(treatmentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -200,7 +200,7 @@ public class TreatmentResourceIntTest {
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].finding").value(hasItem(DEFAULT_FINDING.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getTreatment() throws Exception {
