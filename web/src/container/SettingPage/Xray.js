@@ -15,6 +15,7 @@ const Title = styled.span`
 `;
 
 const SettingItemsContainer = styled.div`
+  padding: 0 5vw;
   margin-top: 10px;
   & > div {
     height: 90px;
@@ -68,8 +69,8 @@ function Xray({ settings, getSettings, xrayVender }) {
         visible={vixWinPathSettingModalVisible}
         changeModalVisible={setVixWinPathSettingModalVisible}
       />
-      <Title>串接 X 光機</Title>
       <SettingItemsContainer>
+        <Title>串接 X 光機</Title>
         <div>
           <div>
             <VisionImg width={33} />
