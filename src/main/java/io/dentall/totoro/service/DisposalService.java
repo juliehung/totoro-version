@@ -488,6 +488,7 @@ public class DisposalService {
         return disposal;
     }
 
+    @Transactional(readOnly = true)
     public Optional<Disposal> getDisposalProjectionById(Long id) {
         return disposalRepository.findDisposalById(id)
             .map(disposalMapper::disposalTableToDisposal);

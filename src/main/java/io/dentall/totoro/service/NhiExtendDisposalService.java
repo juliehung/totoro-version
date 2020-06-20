@@ -508,6 +508,7 @@ public class NhiExtendDisposalService {
         return nhiExtendDisposalRepository.countByDateBetween(ym.atDay(1), ym.atEndOfMonth());
     }
 
+    @Transactional(readOnly = true)
     public Optional<NhiExtendDisposal> getNhiExtendDisposalProjectionByDisposalId(Long id) {
         return nhiExtendDisposalRepository.findNhiExtendDisposalByDisposal_Id(id)
             .map(nhiExtendDisposalMapper::nhiExtendDisposalTableToNhiExtendDisposal);

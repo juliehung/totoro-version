@@ -1,12 +1,12 @@
 package io.dentall.totoro.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
-import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the Treatment entity. This class is used in TreatmentResource to
@@ -204,4 +204,18 @@ public class TreatmentCriteria implements Serializable {
             "}";
     }
 
+    public boolean isOnlyPatientId() {
+        return id == null &&
+            name == null &&
+            chiefComplaint == null &&
+            goal == null &&
+            note == null &&
+            finding == null &&
+            type == null &&
+            patientId != null &&
+            treatmentPlanId == null &&
+            !ignoreTodo &&
+            !eagerload &&
+            !tpCompleted;
+    }
 }

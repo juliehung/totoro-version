@@ -2,17 +2,21 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Treatment;
+import io.dentall.totoro.domain.TreatmentPlan;
+import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.service.TreatmentPlanService;
+import io.dentall.totoro.service.TreatmentQueryService;
 import io.dentall.totoro.service.TreatmentService;
+import io.dentall.totoro.service.TreatmentTaskService;
+import io.dentall.totoro.service.dto.TreatmentCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.dentall.totoro.service.dto.TreatmentCriteria;
-import io.dentall.totoro.service.TreatmentQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +25,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing Treatment.
@@ -42,10 +47,18 @@ public class TreatmentResource {
 
     private final TreatmentPlanService treatmentPlanService;
 
-    public TreatmentResource(TreatmentService treatmentService, TreatmentQueryService treatmentQueryService, TreatmentPlanService treatmentPlanService) {
+    private final TreatmentTaskService treatmentTaskService;
+
+    public TreatmentResource(
+        TreatmentService treatmentService,
+        TreatmentQueryService treatmentQueryService,
+        TreatmentPlanService treatmentPlanService,
+        TreatmentTaskService treatmentTaskService
+    ) {
         this.treatmentService = treatmentService;
         this.treatmentQueryService = treatmentQueryService;
         this.treatmentPlanService = treatmentPlanService;
+        this.treatmentTaskService = treatmentTaskService;
     }
 
     /**
@@ -103,7 +116,29 @@ public class TreatmentResource {
     @Timed
     public ResponseEntity<List<Treatment>> getAllTreatments(TreatmentCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Treatments by criteria: {}", criteria);
-        Page<Treatment> page = treatmentQueryService.findByCriteria(criteria, pageable);
+        Page<Treatment> page;
+        if (criteria.isOnlyPatientId()) {
+            List<Treatment> treatments = treatmentService.getTreatmentProjectionByPatientId(criteria.getPatientId().getEquals())
+                .stream()
+                .findFirst()
+                .map(treatment -> {
+                    Set<TreatmentPlan> treatmentPlans = treatmentPlanService.getTreatmentPlanProjectionByTreatmentId(treatment.getId());
+                    treatment.setTreatmentPlans(treatmentPlans);
+                    treatmentPlans.forEach(treatmentPlan -> {
+                        Set<TreatmentTask> treatmentTasks = treatmentTaskService.getTreatmentTaskProjectionByTreatmentPlanId(treatmentPlan.getId());
+                        treatmentPlan.setTreatmentTasks(treatmentTasks);
+                    });
+
+                    return treatment;
+                })
+                .map(Collections::singletonList)
+                .orElse(Collections.emptyList());
+
+            page = new PageImpl<>(treatments, pageable, treatments.size());
+        } else {
+            page = treatmentQueryService.findByCriteria(criteria, pageable);
+        }
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/treatments");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
