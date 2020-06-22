@@ -13,6 +13,7 @@ import io.dentall.totoro.web.rest.vm.SmsInfoVM;
 import io.github.jhipster.config.JHipsterConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
@@ -41,17 +42,25 @@ public class CloudFunctionService {
 
     private final ObjectMapper mapper;
 
-    private Storage storage = StorageOptions.getDefaultInstance().getService();
+    private final Storage storage = StorageOptions.getDefaultInstance().getService();
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+
+    private final String BUCKET_NAME;
 
     private String smsFunction = CLOUD_FUNCTION_BASE_URL + "smsDev";
 
-    public CloudFunctionService(ObjectMapper mapper, RestTemplateBuilder restTemplateBuilder, Environment env) {
+    public CloudFunctionService(
+        ObjectMapper mapper,
+        RestTemplateBuilder restTemplateBuilder,
+        Environment env,
+        @Value("${gcp.bucket-name}") String bucketName
+    ) {
         this.mapper = mapper;
         restTemplate = restTemplateBuilder
             .errorHandler(new RestTemplateResponseErrorHandler())
             .build();
+        BUCKET_NAME = bucketName;
         Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
         if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_PRODUCTION)) {
             smsFunction = CLOUD_FUNCTION_BASE_URL + "sms";
@@ -131,7 +140,7 @@ public class CloudFunctionService {
     }
 
     private String getIdTokenWithAudience(String audience) throws IOException {
-        BlobId blobId = BlobId.of(GcpConstants.BUCKET_NAME, SERVICE_ACCOUNT);
+        BlobId blobId = BlobId.of(BUCKET_NAME, SERVICE_ACCOUNT);
         ServiceAccountCredentials credentials = ServiceAccountCredentials.fromStream(
             new ByteArrayInputStream(storage.readAllBytes(blobId))
         );

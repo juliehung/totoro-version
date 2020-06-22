@@ -6,6 +6,7 @@ import io.dentall.totoro.repository.ImageRepository;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +23,24 @@ import java.util.stream.Collectors;
 @Service
 public class ImageGcsBusinessService extends ImageBusinessService {
 
-    private Logger logger = LoggerFactory.getLogger(ImageGcsBusinessService.class);
+    private final Logger logger = LoggerFactory.getLogger(ImageGcsBusinessService.class);
 
-    private Storage storage = StorageOptions.getDefaultInstance().getService();
+    private final Storage storage = StorageOptions.getDefaultInstance().getService();
 
-    public ImageGcsBusinessService(ImageRepository imageRepository) {
+    private final String BUCKET_NAME;
+
+    private final String GCS_BASE_URL;
+
+    public ImageGcsBusinessService(ImageRepository imageRepository, @Value("${gcp.bucket-name}") String bucketName) {
         super(imageRepository);
+        BUCKET_NAME = bucketName;
+        GCS_BASE_URL = "https://storage.googleapis.com/" + bucketName + "/";
     }
 
     @Override
     public Map<String, String> getImageThumbnailsBySize(String host, Long id, String size) {
         Image image = getImageById(id);
-        String url = GcpConstants.GCS_BASE_URL
+        String url = GCS_BASE_URL
             .concat(image.getFilePath())
             .concat(image.getFileName());
 
@@ -53,12 +60,12 @@ public class ImageGcsBusinessService extends ImageBusinessService {
 
     @Override
     public String getImageThumbnailUrl(String host) {
-        return GcpConstants.GCS_BASE_URL;
+        return GCS_BASE_URL;
     }
 
     @Override
     public void uploadFile(String remotePath, String remoteFileName, InputStream inputStream, String contentType) throws IOException {
-        BlobId blobId = BlobId.of(GcpConstants.BUCKET_NAME, remotePath.concat(remoteFileName));
+        BlobId blobId = BlobId.of(BUCKET_NAME, remotePath.concat(remoteFileName));
         BlobInfo blobInfo = BlobInfo
             .newBuilder(blobId)
             .setContentType(contentType)
