@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import { Layout, Tabs } from 'antd';
 import { getSettings } from '../Home/actions';
 import Xray from './Xray';
+import Link from './Link';
 import { useWindowSize } from '../../utils/hooks/useWindowSize';
 
 const { Content } = Layout;
@@ -31,7 +32,7 @@ const StyledLayout = styled(Layout)`
 
 const StyledContent = styled(Content)`
   background-color: #fff;
-  padding: 10px;
+  padding: 40px 5vw;
 `;
 
 const TabText = styled.span`
@@ -54,10 +55,15 @@ function SettingPage() {
       <Helmet>
         <title>設定</title>
       </Helmet>
-      <Tabs defaultActiveKey="1" tabPosition={size.width >= 1100 ? 'left' : 'top'}>
-        <TabPane tab={<TabText>X 光軟體設定</TabText>}>
+      <Tabs defaultActiveKey="link" tabPosition={size.width >= 1100 ? 'left' : 'top'}>
+        <TabPane tab={<TabText>X 光軟體設定</TabText>} key="xray">
           <StyledContent>
             <Xray />
+          </StyledContent>
+        </TabPane>
+        <TabPane tab={<TabText>指定連結管理</TabText>} key="link">
+          <StyledContent>
+            <Link />
           </StyledContent>
         </TabPane>
       </Tabs>

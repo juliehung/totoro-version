@@ -14,25 +14,22 @@ const Title = styled.span`
   font-size: 22px;
 `;
 
-const SettingItemsContainer = styled.div`
-  padding: 0 5vw;
-  margin-top: 10px;
-  & > div {
-    height: 90px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    & > div:first-child {
-      display: flex;
-      align-items: center;
-      font-size: 18px;
-      font-weight: 500;
-      color: #4d4d4d;
-      & > :first-child {
-        margin-right: 25px;
-      }
-    }
+const SettingItemContainer = styled.div`
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+`;
+
+const TitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: #4d4d4d;
+  & > :first-child {
+    margin-right: 25px;
   }
 `;
 
@@ -47,7 +44,7 @@ function Xray({ settings, getSettings, xrayVender }) {
 
   const onChange = async vendor => {
     if (settings?.id) {
-      const prevXrayVendorWeb = settings?.preferences?.generalSetting?.xRayVendorWeb ?? [];
+      const prevXrayVendorWeb = settings?.preferences?.generalSetting?.xRayVendorWeb;
       const isDeactivate = prevXrayVendorWeb.includes(vendor);
       const xRayVendorWeb = isDeactivate ? prevXrayVendorWeb.filter(v => v !== vendor) : [...prevXrayVendorWeb, vendor];
       const generalSetting = { ...(settings?.preferences?.generalSetting ?? {}), xRayVendorWeb };
@@ -69,13 +66,13 @@ function Xray({ settings, getSettings, xrayVender }) {
         visible={vixWinPathSettingModalVisible}
         changeModalVisible={setVixWinPathSettingModalVisible}
       />
-      <SettingItemsContainer>
+      <div>
         <Title>串接 X 光機</Title>
-        <div>
-          <div>
+        <SettingItemContainer>
+          <TitleContainer>
             <VisionImg width={33} />
             <span>eXamVision</span>
-          </div>
+          </TitleContainer>
           <div>
             <Switch
               checked={xrayVender.includes(XRAY_VENDORS.vision)}
@@ -86,9 +83,9 @@ function Xray({ settings, getSettings, xrayVender }) {
               }}
             />
           </div>
-        </div>
-        <div>
-          <div>
+        </SettingItemContainer>
+        <SettingItemContainer>
+          <TitleContainer>
             <VixWinImg width={33} />
             <span>VixWin</span>
             <SettingButton
@@ -98,7 +95,7 @@ function Xray({ settings, getSettings, xrayVender }) {
             >
               設定路徑
             </SettingButton>
-          </div>
+          </TitleContainer>
           <div>
             <Switch
               checked={xrayVender.includes(XRAY_VENDORS.vixwin)}
@@ -109,8 +106,8 @@ function Xray({ settings, getSettings, xrayVender }) {
               }}
             />
           </div>
-        </div>
-      </SettingItemsContainer>
+        </SettingItemContainer>
+      </div>
     </React.Fragment>
   );
 }
