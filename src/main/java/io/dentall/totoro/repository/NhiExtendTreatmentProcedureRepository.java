@@ -19,4 +19,6 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
     Set<NhiExtendTreatmentProcedure> findNhiExtendTreatmentProcedureByTreatmentProcedure_Disposal_Id(@Param(value = "disposalId") Long disposalId);
 
     Optional<NhiExtendTreatmentProcedureTable> findNhiExtendTreatmentProcedureByTreatmentProcedure_Id(Long id);
+
+    <T> Optional<T> findById(Long id, Class<T> type);
 }

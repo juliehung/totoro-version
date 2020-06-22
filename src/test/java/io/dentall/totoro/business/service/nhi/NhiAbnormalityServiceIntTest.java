@@ -92,7 +92,14 @@ public class NhiAbnormalityServiceIntTest {
 
     @Before
     public void setup() {
-        nhiAbnormalityService = new NhiAbnormalityService(nhiExtendDisposalRepository, patientRepository, userRepository, nhiProcedureRepository, disposalService);
+        nhiAbnormalityService = new NhiAbnormalityService(
+            nhiExtendDisposalRepository,
+            patientRepository,
+            userRepository,
+            nhiProcedureRepository,
+            disposalService,
+            nhiExtendTreatmentProcedureRepository
+        );
 
         user1 = UserResourceIntTest.createEntity(em);
         user1.setLogin("abc");

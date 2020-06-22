@@ -4,10 +4,7 @@ import io.dentall.totoro.business.vm.nhi.NhiAbnormality;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormalityDoctor;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormalityPatient;
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import io.dentall.totoro.repository.NhiProcedureRepository;
-import io.dentall.totoro.repository.PatientRepository;
-import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
@@ -36,6 +33,8 @@ public class NhiAbnormalityService {
     private final UserRepository userRepository;
 
     private final NhiProcedureRepository nhiProcedureRepository;
+
+    private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
 
     private final List<String> composeToothPosition = Arrays.asList("99", "FM", "UB", "LB", "UR", "UL", "LR", "LL", "UA", "LA");
 
@@ -67,13 +66,15 @@ public class NhiAbnormalityService {
         PatientRepository patientRepository,
         UserRepository userRepository,
         NhiProcedureRepository nhiProcedureRepository,
-        DisposalService disposalService
+        DisposalService disposalService,
+        NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository
     ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.patientRepository = patientRepository;
         this.userRepository = userRepository;
         this.nhiProcedureRepository = nhiProcedureRepository;
         this.disposalService = disposalService;
+        this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
     }
 
     @Transactional(readOnly = true)
@@ -312,7 +313,7 @@ public class NhiAbnormalityService {
     }
 
     private List<NhiExtendDisposal> filterRatioOf90004cTo90015c(List<NhiExtendDisposal> nhiExtendDisposals) {
-        Map<String, Integer> doctorTeethCount = getDoctorTeethCountByCode(nhiExtendDisposals, "90015C");
+        Map<String, Integer> doctorTeethCount = getDoctorTeethCountByCode(nhiExtendDisposals, "90015C", nhiExtendTreatmentProcedureRepository);
         List<String> ratioOf90004cTo90015cIncludeDoctors = doctorTeethCount
             .entrySet()
             .stream()
