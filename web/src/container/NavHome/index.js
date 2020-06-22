@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import AppointmentPage from '../AppointmentPage';
 import RegistrationPage from '../RegistrationPage';
 import { Switch, Route, Link, Redirect, useLocation } from 'react-router-dom';
@@ -9,7 +9,7 @@ import ShiftPage from '../ShiftPage';
 import SettingPage from '../SettingPage';
 import SmsPage from '../SmsPage';
 import DentallHisLogo from '../../images/DentallHisLogo.svg';
-import { Menu, Dropdown, Drawer } from 'antd';
+import { Menu, Dropdown, Drawer, Popover } from 'antd';
 import { parseAccountData } from './utils/parseAccountData';
 import { determineRouteOrLinkShow } from './utils/determineRouteShow';
 import IconBookOpen from '../../images/icon-book-open.svg';
@@ -20,6 +20,7 @@ import MessageCircle from '../../images/message-circle.svg';
 import MessageCircleFill from '../../images/message-circle-fill.svg';
 import Pantone from '../../images/pantone.svg';
 import Cube from '../../images/cube.svg';
+import FileText from '../../images/file-text.svg';
 
 //#region
 const Container = styled.div`
@@ -27,6 +28,22 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #f8fafb;
+`;
+
+export const GlobalStyle = createGlobalStyle`
+  .linkPopover {
+    .ant-popover-content {
+      box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .ant-popover-inner {
+      width: 124px;
+    }
+
+    .ant-popover-arrow {
+      display: none !important;
+    }
+}
 `;
 
 const Banner = styled.div`
@@ -97,6 +114,11 @@ const NavItem = styled.li`
           & > :first-child {
             display: ${props => (props.focus ? 'block' : 'none')};
           }
+
+          & .oneModeimg {
+            display: block;
+          }
+
           & > :nth-child(2) {
             display: ${props => (props.focus ? 'none' : 'block')};
           }
@@ -108,6 +130,10 @@ const NavItem = styled.li`
       }
     }
   }
+`;
+
+const LinkNavItem = styled(NavItem)`
+  margin: 0;
 `;
 
 const UserContainer = styled.div`
@@ -183,6 +209,7 @@ const ContentContainer = styled.div`
     display: none;
   }
 `;
+
 //#endregion
 
 const route = [
@@ -221,14 +248,14 @@ const route = [
 const navLink = [
   {
     key: 'labo',
-    name: 'LABO',
+    name: '技工',
     href: 'https://docs.google.com/spreadsheets/d/1LiCYNyCO2nx91g1VIke_DlZP8gqt3qEHTrKg1z7JT7k/edit?usp=sharing',
     icon: Pantone,
     clinic: ['pin-cui', 'rakumi'],
   },
   {
     key: 'material',
-    name: '牙材管理',
+    name: '牙材',
     href: 'https://docs.google.com/spreadsheets/d/1TpdSnYV0LOCirS2i9u4-QZToMyiEIMyxOWoOkeU0x3k/edit?usp=sharing',
     icon: Cube,
     clinic: ['pin-cui', 'rakumi'],
@@ -265,6 +292,7 @@ function NavHome(props) {
   return (
     <Container>
       <Banner />
+      <GlobalStyle />
       <NavContainer>
         <span
           onClick={() => {
@@ -294,21 +322,41 @@ function NavHome(props) {
                     </Link>
                   </NavItem>
                 )),
-              ...navLink
-                .filter(n => determineRouteOrLinkShow(n))
-                .map(n => (
-                  <NavItem key={n.key}>
-                    <a href={n.href} target="_blank" rel="noopener noreferrer">
+              <Popover
+                overlayClassName="linkPopover"
+                placement="bottomLeft"
+                key="web"
+                content={
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {navLink
+                      .filter(n => determineRouteOrLinkShow(n))
+                      .map(n => (
+                        <LinkNavItem key={n.key}>
+                          <a href={n.href} target="_blank" rel="noopener noreferrer">
+                            <div>
+                              <div>
+                                <img src={n.icon} alt="bookIcon" />
+                                <img src={n.icon} alt="bookIcon" />
+                              </div>
+                              <span className="svg">{n.name}</span>
+                            </div>
+                          </a>
+                        </LinkNavItem>
+                      ))}
+                  </div>
+                }
+              >
+                <NavItem key={'web'}>
+                  <a href>
+                    <div>
                       <div>
-                        <div>
-                          <img src={n.icon} alt={n.name} />
-                          <img src={n.icon} alt={n.name} />
-                        </div>
-                        <span className="svg">{n.name}</span>
+                        <img className="oneModeimg" src={FileText} alt="管理表" />
                       </div>
-                    </a>
-                  </NavItem>
-                )),
+                      <span className="svg">管理表</span>
+                    </div>
+                  </a>
+                </NavItem>
+              </Popover>,
             ]}
           </ul>
         </div>
