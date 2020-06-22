@@ -2,7 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.domain.enumeration.DisposalRoundaboutInterval;
+import io.dentall.totoro.domain.enumeration.DisposalRevisitInterval;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.DisposalQueryService;
@@ -48,8 +48,8 @@ public class DisposalResourceIntTest {
     private static final DisposalStatus DEFAULT_STATUS = DisposalStatus.TEMPORARY;
     private static final DisposalStatus UPDATED_STATUS = DisposalStatus.PERMANENT;
 
-    private static final DisposalRoundaboutInterval DEFAULT_ROUNDABOUT_INTERVAL = DisposalRoundaboutInterval.NONE;
-    private static final DisposalRoundaboutInterval UPDATED_ROUNDABOUT_INTERVAL = DisposalRoundaboutInterval.FOUR_WEEK;
+    private static final DisposalRevisitInterval DEFAULT_REVISIT_INTERVAL = DisposalRevisitInterval.NONE;
+    private static final DisposalRevisitInterval UPDATED_REVISIT_INTERVAL = DisposalRevisitInterval.FOUR_WEEK;
 
     private static final Double DEFAULT_TOTAL = 1D;
     private static final Double UPDATED_TOTAL = 2D;
@@ -63,14 +63,14 @@ public class DisposalResourceIntTest {
     private static final String DEFAULT_CHIEF_COMPLAINT = "AAAAAAAAAA";
     private static final String UPDATED_CHIEF_COMPLAINT = "BBBBBBBBBB";
 
-    private static final String DEFAULT_ROUNDABOUT_CONTENT = "AAAAAAAAAA";
-    private static final String UPDATED_ROUNDABOUT_CONTENT = "BBBBBBBBBB";
+    private static final String DEFAULT_REVISIT_CONTENT = "AAAAAAAAAA";
+    private static final String UPDATED_REVISIT_CONTENT = "BBBBBBBBBB";
 
-    private static final Integer DEFAULT_ROUNDABOUT_TREATMENT_TIME = 10;
-    private static final Integer UPDATED_ROUNDABOUT_TREATMENT_TIME = 20;
+    private static final Integer DEFAULT_REVISIT_TREATMENT_TIME = 10;
+    private static final Integer UPDATED_REVISIT_TREATMENT_TIME = 20;
 
-    private static final String DEFAULT_ROUNDABOUT_COMMENT = "AAAAAAAAAA";
-    private static final String UPDATED_ROUNDABOUT_COMMENT = "BBBBBBBBBB";
+    private static final String DEFAULT_REVISIT_COMMENT = "AAAAAAAAAA";
+    private static final String UPDATED_REVISIT_COMMENT = "BBBBBBBBBB";
 
     @Autowired
     private DisposalRepository disposalRepository;
@@ -146,10 +146,10 @@ public class DisposalResourceIntTest {
             .dateTime(DEFAULT_DATE_TIME)
             .dateTimeEnd(DEFAULT_DATE_TIME_END)
             .chiefComplaint(DEFAULT_CHIEF_COMPLAINT)
-            .roundaboutContent(DEFAULT_ROUNDABOUT_CONTENT)
-            .roundaboutInterval(DEFAULT_ROUNDABOUT_INTERVAL)
-            .roundaboutTreatmentTime(DEFAULT_ROUNDABOUT_TREATMENT_TIME)
-            .roundaboutComment(DEFAULT_ROUNDABOUT_COMMENT);
+            .revisitContent(DEFAULT_REVISIT_CONTENT)
+            .revisitInterval(DEFAULT_REVISIT_INTERVAL)
+            .revisitTreatmentTime(DEFAULT_REVISIT_TREATMENT_TIME)
+            .revisitComment(DEFAULT_REVISIT_COMMENT);
         return disposal;
     }
 
@@ -238,10 +238,10 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.[*].dateTime").value(hasItem(DEFAULT_DATE_TIME.toString())))
             .andExpect(jsonPath("$.[*].dateTimeEnd").value(hasItem(DEFAULT_DATE_TIME_END.toString())))
             .andExpect(jsonPath("$.[*].chiefComplaint").value(hasItem(DEFAULT_CHIEF_COMPLAINT.toString())))
-            .andExpect(jsonPath("$.[*].roundaboutContent").value(hasItem(DEFAULT_ROUNDABOUT_CONTENT.toString())))
-            .andExpect(jsonPath("$.[*].roundaboutInterval").value(hasItem(DEFAULT_ROUNDABOUT_INTERVAL.toString())))
-            .andExpect(jsonPath("$.[*].roundaboutTreatmentTime").value(hasItem(DEFAULT_ROUNDABOUT_TREATMENT_TIME.intValue())))
-            .andExpect(jsonPath("$.[*].roundaboutComment").value(hasItem(DEFAULT_ROUNDABOUT_COMMENT.toString())))
+            .andExpect(jsonPath("$.[*].revisitContent").value(hasItem(DEFAULT_REVISIT_CONTENT.toString())))
+            .andExpect(jsonPath("$.[*].revisitInterval").value(hasItem(DEFAULT_REVISIT_INTERVAL.toString())))
+            .andExpect(jsonPath("$.[*].revisitTreatmentTime").value(hasItem(DEFAULT_REVISIT_TREATMENT_TIME.intValue())))
+            .andExpect(jsonPath("$.[*].revisitComment").value(hasItem(DEFAULT_REVISIT_COMMENT.toString())))
         ;
     }
 
@@ -261,10 +261,10 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.dateTime").value(DEFAULT_DATE_TIME.toString()))
             .andExpect(jsonPath("$.dateTimeEnd").value(DEFAULT_DATE_TIME_END.toString()))
             .andExpect(jsonPath("$.chiefComplaint").value(DEFAULT_CHIEF_COMPLAINT.toString()))
-            .andExpect(jsonPath("$.roundaboutContent").value(DEFAULT_ROUNDABOUT_CONTENT.toString()))
-            .andExpect(jsonPath("$.roundaboutInterval").value(DEFAULT_ROUNDABOUT_INTERVAL.toString()))
-            .andExpect(jsonPath("$.roundaboutTreatmentTime").value(DEFAULT_ROUNDABOUT_TREATMENT_TIME.intValue()))
-            .andExpect(jsonPath("$.roundaboutComment").value(DEFAULT_ROUNDABOUT_COMMENT.toString()))
+            .andExpect(jsonPath("$.revisitContent").value(DEFAULT_REVISIT_CONTENT.toString()))
+            .andExpect(jsonPath("$.revisitInterval").value(DEFAULT_REVISIT_INTERVAL.toString()))
+            .andExpect(jsonPath("$.revisitTreatmentTime").value(DEFAULT_REVISIT_TREATMENT_TIME.intValue()))
+            .andExpect(jsonPath("$.revisitComment").value(DEFAULT_REVISIT_COMMENT.toString()))
         ;
     }
 
@@ -508,10 +508,10 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.[*].dateTime").value(hasItem(DEFAULT_DATE_TIME.toString())))
             .andExpect(jsonPath("$.[*].dateTimeEnd").value(hasItem(DEFAULT_DATE_TIME_END.toString())))
             .andExpect(jsonPath("$.[*].chiefComplaint").value(hasItem(DEFAULT_CHIEF_COMPLAINT.toString())))
-            .andExpect(jsonPath("$.[*].roundaboutContent").value(hasItem(DEFAULT_ROUNDABOUT_CONTENT.toString())))
-            .andExpect(jsonPath("$.[*].roundaboutInterval").value(hasItem(DEFAULT_ROUNDABOUT_INTERVAL.toString())))
-            .andExpect(jsonPath("$.[*].roundaboutTreatmentTime").value(hasItem(DEFAULT_ROUNDABOUT_TREATMENT_TIME.intValue())))
-            .andExpect(jsonPath("$.[*].roundaboutComment").value(hasItem(DEFAULT_ROUNDABOUT_COMMENT.toString())))
+            .andExpect(jsonPath("$.[*].revisitContent").value(hasItem(DEFAULT_REVISIT_CONTENT.toString())))
+            .andExpect(jsonPath("$.[*].revisitInterval").value(hasItem(DEFAULT_REVISIT_INTERVAL.toString())))
+            .andExpect(jsonPath("$.[*].revisitTreatmentTime").value(hasItem(DEFAULT_REVISIT_TREATMENT_TIME.intValue())))
+            .andExpect(jsonPath("$.[*].revisitComment").value(hasItem(DEFAULT_REVISIT_COMMENT.toString())))
 
         ;
 
@@ -565,10 +565,10 @@ public class DisposalResourceIntTest {
             .total(UPDATED_TOTAL)
             .dateTime(UPDATED_DATE_TIME)
             .chiefComplaint(UPDATED_CHIEF_COMPLAINT)
-            .roundaboutContent(UPDATED_ROUNDABOUT_CONTENT)
-            .roundaboutInterval(UPDATED_ROUNDABOUT_INTERVAL)
-            .roundaboutTreatmentTime(UPDATED_ROUNDABOUT_TREATMENT_TIME)
-            .roundaboutComment(UPDATED_ROUNDABOUT_COMMENT)
+            .revisitContent(UPDATED_REVISIT_CONTENT)
+            .revisitInterval(UPDATED_REVISIT_INTERVAL)
+            .revisitTreatmentTime(UPDATED_REVISIT_TREATMENT_TIME)
+            .revisitComment(UPDATED_REVISIT_COMMENT)
         ;
 
         restDisposalMockMvc.perform(put("/api/disposals")
@@ -584,10 +584,10 @@ public class DisposalResourceIntTest {
         assertThat(testDisposal.getTotal()).isEqualTo(UPDATED_TOTAL);
         assertThat(testDisposal.getDateTime()).isEqualTo(UPDATED_DATE_TIME);
         assertThat(testDisposal.getChiefComplaint()).isEqualTo(UPDATED_CHIEF_COMPLAINT);
-        assertThat(testDisposal.getRoundaboutContent()).isEqualTo(UPDATED_ROUNDABOUT_CONTENT);
-        assertThat(testDisposal.getRoundaboutInterval()).isEqualTo(UPDATED_ROUNDABOUT_INTERVAL);
-        assertThat(testDisposal.getRoundaboutTreatmentTime()).isEqualTo(UPDATED_ROUNDABOUT_TREATMENT_TIME);
-        assertThat(testDisposal.getRoundaboutComment()).isEqualTo(UPDATED_ROUNDABOUT_COMMENT);
+        assertThat(testDisposal.getRevisitContent()).isEqualTo(UPDATED_REVISIT_CONTENT);
+        assertThat(testDisposal.getRevisitInterval()).isEqualTo(UPDATED_REVISIT_INTERVAL);
+        assertThat(testDisposal.getRevisitTreatmentTime()).isEqualTo(UPDATED_REVISIT_TREATMENT_TIME);
+        assertThat(testDisposal.getRevisitComment()).isEqualTo(UPDATED_REVISIT_COMMENT);
     }
 
     @Test

@@ -302,20 +302,20 @@ public class DisposalService {
                     disposal.setChiefComplaint(updateDisposal.getChiefComplaint());
                 }
 
-                if (updateDisposal.getRoundaboutContent() != null) {
-                    disposal.setRoundaboutContent(updateDisposal.getRoundaboutContent());
+                if (updateDisposal.getRevisitContent() != null) {
+                    disposal.setRevisitContent(updateDisposal.getRevisitContent());
                 }
 
-                if (updateDisposal.getRoundaboutInterval() != null) {
-                    disposal.setRoundaboutInterval(updateDisposal.getRoundaboutInterval());
+                if (updateDisposal.getRevisitInterval() != null) {
+                    disposal.setRevisitInterval(updateDisposal.getRevisitInterval());
                 }
 
-                if (updateDisposal.getRoundaboutTreatmentTime() != null) {
-                    disposal.setRoundaboutTreatmentTime(updateDisposal.getRoundaboutTreatmentTime());
+                if (updateDisposal.getRevisitTreatmentTime() != null) {
+                    disposal.setRevisitTreatmentTime(updateDisposal.getRevisitTreatmentTime());
                 }
 
-                if (updateDisposal.getRoundaboutComment() != null) {
-                    disposal.setRoundaboutComment(updateDisposal.getRoundaboutComment());
+                if (updateDisposal.getRevisitComment() != null) {
+                    disposal.setRevisitComment(updateDisposal.getRevisitComment());
                 }
 
                 if (updateDisposal.getPrescription() != null) {

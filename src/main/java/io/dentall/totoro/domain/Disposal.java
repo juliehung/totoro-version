@@ -2,7 +2,7 @@ package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.dentall.totoro.domain.enumeration.DisposalRoundaboutInterval;
+import io.dentall.totoro.domain.enumeration.DisposalRevisitInterval;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -45,18 +45,18 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @Column(name = "chief_complaint")
     private String chiefComplaint;
 
-    @Column(name = "roundabout_content")
-    private String roundaboutContent;
+    @Column(name = "revisit_content")
+    private String revisitContent;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "roundabout_interval")
-    private DisposalRoundaboutInterval roundaboutInterval;
+    @Column(name = "revisit_interval")
+    private DisposalRevisitInterval revisitInterval;
 
-    @Column(name = "roundabout_treatment_time")
-    private Integer roundaboutTreatmentTime;
+    @Column(name = "revisit_treatment_time")
+    private Integer revisitTreatmentTime;
 
-    @Column(name = "roundabout_comment")
-    private String roundaboutComment;
+    @Column(name = "revisit_comment")
+    private String revisitComment;
 
     @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -90,23 +90,23 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @Column(name = "date_time_end")
     private Instant dateTimeEnd;
 
-    public Disposal roundaboutContent(String roundaboutContent) {
-        this.roundaboutContent = roundaboutContent;
+    public Disposal revisitContent(String revisitContent) {
+        this.revisitContent = revisitContent;
         return this;
     }
 
-    public Disposal roundaboutInterval(DisposalRoundaboutInterval roundaboutInterval) {
-        this.roundaboutInterval = roundaboutInterval;
+    public Disposal revisitInterval(DisposalRevisitInterval revisitInterval) {
+        this.revisitInterval = revisitInterval;
         return this;
     }
 
-    public Disposal roundaboutTreatmentTime(Integer roundaboutTreatmentTime) {
-        this.roundaboutTreatmentTime = roundaboutTreatmentTime;
+    public Disposal revisitTreatmentTime(Integer revisitTreatmentTime) {
+        this.revisitTreatmentTime = revisitTreatmentTime;
         return this;
     }
 
-    public Disposal roundaboutComment(String roundaboutComment) {
-        this.roundaboutComment = roundaboutComment;
+    public Disposal revisitComment(String revisitComment) {
+        this.revisitComment = revisitComment;
         return this;
     }
 
@@ -335,36 +335,36 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
         return serialVersionUID;
     }
 
-    public String getRoundaboutContent() {
-        return roundaboutContent;
+    public String getRevisitContent() {
+        return revisitContent;
     }
 
-    public void setRoundaboutContent(String roundaboutContent) {
-        this.roundaboutContent = roundaboutContent;
+    public void setRevisitContent(String revisitContent) {
+        this.revisitContent = revisitContent;
     }
 
-    public DisposalRoundaboutInterval getRoundaboutInterval() {
-        return roundaboutInterval;
+    public DisposalRevisitInterval getRevisitInterval() {
+        return revisitInterval;
     }
 
-    public void setRoundaboutInterval(DisposalRoundaboutInterval roundaboutInterval) {
-        this.roundaboutInterval = roundaboutInterval;
+    public void setRevisitInterval(DisposalRevisitInterval revisitInterval) {
+        this.revisitInterval = revisitInterval;
     }
 
-    public Integer getRoundaboutTreatmentTime() {
-        return roundaboutTreatmentTime;
+    public Integer getRevisitTreatmentTime() {
+        return revisitTreatmentTime;
     }
 
-    public void setRoundaboutTreatmentTime(Integer roundaboutTreatmentTime) {
-        this.roundaboutTreatmentTime = roundaboutTreatmentTime;
+    public void setRevisitTreatmentTime(Integer revisitTreatmentTime) {
+        this.revisitTreatmentTime = revisitTreatmentTime;
     }
 
-    public String getRoundaboutComment() {
-        return roundaboutComment;
+    public String getRevisitComment() {
+        return revisitComment;
     }
 
-    public void setRoundaboutComment(String roundaboutComment) {
-        this.roundaboutComment = roundaboutComment;
+    public void setRevisitComment(String revisitComment) {
+        this.revisitComment = revisitComment;
     }
 
     @Override
@@ -395,10 +395,10 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
             ", total=" + getTotal() +
             ", dateTime='" + getDateTime() + "'" +
             ", chiefComplaint='" + getChiefComplaint() + "'" +
-            ", roundaboutContent='" + getRoundaboutContent() + "'" +
-            ", roundaboutInterval='" + getRoundaboutInterval() + "'" +
-            ", roundaboutTreatmentTime='" + getRoundaboutTreatmentTime() + "'" +
-            ", roundaboutComment='" + getRoundaboutComment() + "'" +
+            ", revisitContent='" + getRevisitContent() + "'" +
+            ", revisitInterval='" + getRevisitInterval() + "'" +
+            ", revisitTreatmentTime='" + getRevisitTreatmentTime() + "'" +
+            ", revisitComment='" + getRevisitComment() + "'" +
             "}";
     }
 }
