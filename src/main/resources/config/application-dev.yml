@@ -114,3 +114,6 @@ jhipster:
 # ===================================================================
 
 # application:
+
+gcp:
+    bucket-name: totoro-admin-dev
