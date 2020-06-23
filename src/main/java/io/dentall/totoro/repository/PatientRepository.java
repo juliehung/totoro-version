@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -21,6 +22,10 @@ import java.util.Optional;
 public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpecificationExecutor<Patient> {
 
     Optional<PatientTable> findPatientById(Long id);
+
+    <T> Collection<T> findByParentsId(Long id, Class<T> type);
+
+    <T> Collection<T> findBySpouse1SId(Long id, Class<T> type);
 
     @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth) " +
         "FROM Patient patient WHERE to_char(patient.birth, 'yyyyMMdd') like '%'||:search||'%' " +
