@@ -25,6 +25,7 @@ import isEqual from 'lodash.isequal';
 import { O1 } from '../../utils/colors';
 import { Spin, Pagination } from 'antd';
 
+//#region
 export const GlobalStyle = createGlobalStyle`
   .ant-popover-inner {
     border-radius: 8px !important;
@@ -247,6 +248,7 @@ const EventCardContainer = styled.div`
 const EventSpinner = styled(Spin)`
   font-size: 1px !important;
 `;
+//#endregion
 
 const categories = ['ALL', 'DRAFT', 'SENT'];
 const categoriesChinese = ['全部', '草稿', '寄送備份'];

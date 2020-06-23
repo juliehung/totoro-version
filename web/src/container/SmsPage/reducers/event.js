@@ -8,7 +8,6 @@ import {
   UNSELECT_APPOINTMENT,
   EDIT_TEMPLATE,
   FILTER_EVENTS,
-  ADD_TAG,
   TOGGLE_PREVIEWING_MODAL,
   GET_CLINIC_SETTINGS_SUCCESS,
   GET_CLINIC_REMAINING_SUCCESS,
@@ -19,7 +18,7 @@ import {
   DELETE_EVENT,
   SAVE_EVENT_SUCCESS,
   DELETE_EVENT_SUCCESS,
-  SET_CARET_POSITION,
+  tags,
 } from '../constant';
 
 import produce from 'immer';
@@ -33,7 +32,7 @@ const initState = {
   selectedEventId: null,
   selectedEvent: null,
   editingEvent: null,
-  tags: ['約診日期', '約診時間', '病患姓名', '診所名稱', '約診醫師', '約診內容'],
+  tags,
   visible: false,
   clinicName: '',
   clinicId: null,
@@ -263,19 +262,6 @@ const event = (state = initialState, action) =>
         draft.editingEvent.metadata.template = action.value;
         draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
         break;
-      case ADD_TAG:
-        const adding = ' {{' + action.value + '}}';
-        const currentTemplate = state.editingEvent.metadata.template;
-        if (draft.caretPosition !== -1) {
-          if (draft.caretChangedBy === 'keydown') draft.caretPosition += 1;
-          draft.editingEvent.metadata.template =
-            currentTemplate.slice(0, draft.caretPosition) + adding + currentTemplate.slice(draft.caretPosition);
-          // moving caret position to adding-end-position
-          draft.editingEvent.sms = processingEventSms(draft.clinicName, draft.editingEvent);
-          draft.caretPosition += adding.length;
-          draft.caretChangedBy = null;
-        }
-        break;
       case ADD_CONTACT_APPOINTMENTS:
         const allApps = [...action.appointments, ...state.editingEvent.metadata.selectedAppointments];
         draft.editingEvent.metadata.selectedAppointments = allApps.filter(distinct);
@@ -323,10 +309,6 @@ const event = (state = initialState, action) =>
               });
         break;
       }
-      case SET_CARET_POSITION:
-        draft.caretPosition = action.payload.idx;
-        draft.caretChangedBy = action.payload.by;
-        break;
       default:
         break;
     }

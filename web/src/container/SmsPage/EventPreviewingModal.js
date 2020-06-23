@@ -164,8 +164,8 @@ function EventPreviewingModal(props) {
       <FieldContainer>
         <Title>發送預覽</Title>
         <EventList>
-          {editingEvent.sms.map(item => (
-            <EventListItem key={item.phone}>
+          {editingEvent.sms.map((item, index) => (
+            <EventListItem key={`${item.phone}${index}`}>
               <EventPatientNameText>{item.metadata.patientName}</EventPatientNameText>
               <EventOccurText>{`${moment(item.metadata.appointmentDate).format(
                 'YYYY/MM/DD HH:mm',

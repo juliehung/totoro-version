@@ -1,4 +1,4 @@
-import { Button, Radio, Popover } from 'antd';
+import { Button, Popover } from 'antd';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import ManPng from '../../static/images/man.png';
@@ -9,13 +9,11 @@ import {
   setSelectedEvent,
   editTitle,
   editTemplate,
-  addTag,
   toggleAppointmentModal,
   unselectAppointment,
   togglePreviewingModal,
   saveEvent,
   deleteEvent,
-  setCaretPosition,
 } from './action';
 import AppointmentsModal from './AppointmentsModal';
 import EventPreviewingModal from './EventPreviewingModal';
@@ -23,10 +21,12 @@ import moment from 'moment';
 import PersonalAddFill from './svg/PersonalAddFill';
 import Close from './svg/Close';
 import Trash from './svg/Trash';
-import { StyledMediumButton, StyledTag, StyledInput, StyledInputArea } from './StyledComponents';
-import { P2, Caption, Subtitle, Title, NoMarginText } from '../../utils/textComponents';
+import { StyledMediumButton, StyledTag, StyledInput } from './StyledComponents';
+import { P2, Caption, Subtitle, Title } from '../../utils/textComponents';
 import isEqual from 'lodash.isequal';
+import MixTagTextArea from './MixTagTextArea';
 
+//#region
 const RootContainer = styled.div`
   display: grid;
   grid-template-rows: 70px 1fr;
@@ -109,38 +109,6 @@ const TagsContainer = styled.div`
   }
 `;
 
-const VariableText = styled(NoMarginText)`
-  font-size: 13px;
-  color: #8f9bb3;
-  margin-right: 6px;
-`;
-
-const VariablesContainer = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  border: solid 1px #e4e9f2;
-  border-top: 0px;
-  border-radius: 0 0 5px 5px;
-  padding: 4px 16px;
-  min-height: 36px;
-  & .ant-radio-button-wrapper {
-    border: 0;
-    border-right: 1px;
-    border-left: 1px;
-    color: #222b45;
-    padding: 0 16px !important;
-    &::before {
-      height: 18px !important;
-      margin-top: 2px !important;
-    }
-  }
-
-  & .ant-radio-button-wrapper:first-child {
-    border-left: 0;
-  }
-`;
-
 const AvatarImg = styled.img`
   width: 40px;
   height: 40px;
@@ -168,6 +136,8 @@ const PopoverTitleBox = styled.div`
   }
 `;
 
+//#endregion
+
 const renderAvatarImg = gender => {
   if (gender === 'MALE') return <AvatarImg src={ManPng} alt="male" />;
   if (gender === 'FEMALE') return <AvatarImg src={WomanPng} alt="female" />;
@@ -190,17 +160,14 @@ function EventEditing(props) {
   const {
     editingEvent,
     selectedEvent,
-    tags,
     setSelectedEvent,
     editTitle,
     editTemplate,
-    addTag,
     toggleAppointmentModal,
     unselectAppointment,
     togglePreviewingModal,
     saveEvent,
     deleteEvent,
-    setCaretPosition,
     isDeletingEvent,
   } = props;
 
@@ -291,27 +258,12 @@ function EventEditing(props) {
           <FieldContainer>
             <FieldLabel>訊息內容：</FieldLabel>
           </FieldContainer>
-          <StyledInputArea
-            className="textarea-input"
-            placeholder="填寫簡訊寄送內容，至多 70 字"
-            autoSize={{ minRows: 6, maxRows: 6 }}
-            onClick={e => setCaretPosition(e.target.selectionStart, 'click')}
-            onKeyDown={e => setCaretPosition(e.target.selectionStart, 'keydown')}
+          <MixTagTextArea
+            value={editingEvent.metadata?.template ?? ''}
             onChange={editTemplate}
-            value={editingEvent.metadata?.template}
+            id={selectedEvent?.id}
           />
-          <VariablesContainer>
-            <VariableText>加入變數：</VariableText>
-            <Radio.Group value={null} size="small">
-              {tags.map(tag => (
-                <Radio.Button key={tag} value={tag} onClick={() => addTag(tag)}>
-                  {tag}
-                </Radio.Button>
-              ))}
-            </Radio.Group>
-          </VariablesContainer>
         </FieldsContainer>
-
         <ActionContainer>
           <StyledMediumButton
             className="styled-medium-btn"
@@ -335,7 +287,6 @@ const mapStateToProps = ({ smsPageReducer }) => ({
   editingEvent: smsPageReducer.event.editingEvent,
   selectedEvent: smsPageReducer.event.selectedEvent,
   appointments: smsPageReducer.appointment.appointments,
-  tags: smsPageReducer.event.tags,
   visible: smsPageReducer.appointment.visible,
   isDeletingEvent: smsPageReducer.event.isDeletingEvent,
 });
@@ -344,13 +295,11 @@ const mapDispatchToProps = {
   setSelectedEvent,
   editTitle,
   editTemplate,
-  addTag,
   toggleAppointmentModal,
   unselectAppointment,
   togglePreviewingModal,
   saveEvent,
   deleteEvent,
-  setCaretPosition,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventEditing);
