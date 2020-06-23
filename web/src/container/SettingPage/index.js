@@ -55,7 +55,7 @@ function SettingPage() {
       <Helmet>
         <title>設定</title>
       </Helmet>
-      <Tabs defaultActiveKey="link" tabPosition={size.width >= 1100 ? 'left' : 'top'}>
+      <Tabs defaultActiveKey="xray" tabPosition={size.width >= 1100 ? 'left' : 'top'}>
         <TabPane tab={<TabText>X 光軟體設定</TabText>} key="xray">
           <StyledContent>
             <Xray />
