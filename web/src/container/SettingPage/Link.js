@@ -29,6 +29,7 @@ const ItemContainer = styled.div`
   align-items: center;
   font-size: 15px;
   color: #222b45;
+  font-weight: 600;
   width: 100%;
   overflow: hidden;
   & > :first-child {

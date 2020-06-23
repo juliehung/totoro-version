@@ -43,7 +43,12 @@ export const GlobalStyle = createGlobalStyle`
     .ant-popover-arrow {
       display: none !important;
     }
-}
+  }
+
+  .ant-dropdown-menu {
+    border-radius: 10px !important;
+  }
+
 `;
 
 const Banner = styled.div`
@@ -98,7 +103,8 @@ const NavItem = styled.li`
   font-weight: bold;
   border-radius: 34px;
   & {
-    a {
+    a,
+    span {
       text-decoration: none;
       & > div {
         display: flex;
@@ -347,20 +353,21 @@ function NavHome(props) {
                 }
               >
                 <NavItem key={'web'}>
-                  <a href>
+                  <span>
                     <div>
                       <div>
                         <img className="oneModeimg" src={FileText} alt="管理表" />
                       </div>
                       <span className="svg">管理表</span>
                     </div>
-                  </a>
+                  </span>
                 </NavItem>
               </Popover>,
             ]}
           </ul>
         </div>
         <Dropdown
+          style={{ borderRadius: '10px' }}
           trigger="click"
           overlay={
             <Menu onClick={menuClick}>

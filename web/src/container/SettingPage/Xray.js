@@ -25,9 +25,9 @@ const SettingItemContainer = styled.div`
 const TitleContainer = styled.div`
   display: flex;
   align-items: center;
-  font-size: 18px;
-  font-weight: 500;
-  color: #4d4d4d;
+  font-size: 15px;
+  color: #222b45;
+  font-weight: 600;
   & > :first-child {
     margin-right: 25px;
   }

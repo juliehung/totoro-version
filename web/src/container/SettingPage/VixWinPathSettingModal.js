@@ -44,7 +44,7 @@ const HeaderContainer = styled.div`
   height: 56px;
   padding: 0 15px;
   border-radius: 4px 4px 0 0;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: bold;
   color: #222b45;
   border-top-left-radius: 8px;
