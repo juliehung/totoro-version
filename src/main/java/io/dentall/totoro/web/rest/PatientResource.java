@@ -197,6 +197,8 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals parent_id not allow", ENTITY_NAME, "patient_id_equal_parent_id");
         }
 
+        checkKinship(id, parent_id);
+
         Function<Patient, Patient> func = patient ->
             getPatientCRUDResult(patient, getPatientCRUDTarget(parent_id, patientRepository), Patient::addParent);
         return ResponseEntity.ok().body(getPatient(id, func).getParents());
@@ -304,6 +306,8 @@ public class PatientResource {
         if (id.equals(spouse1_id)) {
             throw new BadRequestAlertException("patient_id equals spouse1_id not allow", ENTITY_NAME, "patient_id_equal_spouse1_id");
         }
+
+        checkKinship(id, spouse1_id);
 
         Function<Patient, Patient> func = patient ->
             getPatientCRUDResult(patient, getPatientCRUDTarget(spouse1_id, patientRepository), Patient::addSpouse1);
@@ -522,5 +526,26 @@ public class PatientResource {
             tagRepository.findById(id).ifPresent(tag -> crud.accept(patient, tag));
             return patientRepository.save(patient);
         };
+    }
+
+    private void checkKinship(Long id, Long targetId) {
+        if (patientRepository.findByParentsId(id, PatientKinship.class)
+            .stream()
+            .anyMatch(patientKinship -> patientKinship.getId().equals(targetId))
+        ) {
+            throw new BadRequestAlertException("parent relation cycle", ENTITY_NAME, "parent_relation_cycle");
+        }
+
+        if (patientRepository.findBySpouse1SId(id, PatientKinship.class)
+            .stream()
+            .anyMatch(patientKinship -> patientKinship.getId().equals(targetId))
+        ) {
+            throw new BadRequestAlertException("spouse relation cycle", ENTITY_NAME, "spouse_relation_cycle");
+        }
+    }
+
+    public interface PatientKinship {
+
+        Long getId();
     }
 }
