@@ -6,7 +6,6 @@ import {
   EDIT_TITLE,
   EDIT_TEMPLATE,
   FILTER_EVENTS,
-  ADD_TAG,
   SAVE_EVENT,
   SAVE_EVENT_SUCCESS,
   GET_APPOINTMENTS,
@@ -26,7 +25,6 @@ import {
   DELETE_EVENT_SUCCESS,
   GET_USERS,
   GET_USERS_SUCCESS,
-  SET_CARET_POSITION,
 } from './constant';
 
 export function getEvents(page = 0, size = 10) {
@@ -55,10 +53,6 @@ export function editTemplate(e) {
 
 export function filterEvents(key) {
   return { type: FILTER_EVENTS, key };
-}
-
-export function addTag(value) {
-  return { type: ADD_TAG, value };
 }
 
 export function saveEvent(event) {
@@ -135,8 +129,4 @@ export function getUsers() {
 
 export function getUsersSuccess(users) {
   return { type: GET_USERS_SUCCESS, users };
-}
-
-export function setCaretPosition(idx, by) {
-  return { type: SET_CARET_POSITION, payload: { idx, by } };
 }
