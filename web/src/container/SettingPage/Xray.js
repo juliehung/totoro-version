@@ -44,7 +44,7 @@ function Xray({ settings, getSettings, xrayVender }) {
 
   const onChange = async vendor => {
     if (settings?.id) {
-      const prevXrayVendorWeb = settings?.preferences?.generalSetting?.xRayVendorWeb;
+      const prevXrayVendorWeb = xrayVender ?? [];
       const isDeactivate = prevXrayVendorWeb.includes(vendor);
       const xRayVendorWeb = isDeactivate ? prevXrayVendorWeb.filter(v => v !== vendor) : [...prevXrayVendorWeb, vendor];
       const generalSetting = { ...(settings?.preferences?.generalSetting ?? {}), xRayVendorWeb };
@@ -53,7 +53,7 @@ function Xray({ settings, getSettings, xrayVender }) {
       await Settings.put(newSettings);
       getSettings();
       if (isDeactivate) {
-        message.success('X 光已關閉');
+        message.warning('X 光已關閉');
       } else {
         message.success('X 光開啟成功');
       }

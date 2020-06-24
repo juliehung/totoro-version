@@ -111,18 +111,15 @@ const PathItemContainer = styled.div`
   & > :nth-child(2) {
     display: flex;
     margin-top: 12px;
-    & input {
-      padding: 0 10px;
-      flex: 1;
-      height: 40px;
-      border-radius: 2px;
-    }
-  }
-
-  & input {
-    border: 1px solid #ccc;
   }
 `;
+
+const StyleInput = styled(Input)`
+  font-size: 16px !important;
+  border-radius: 8px !important;
+  background-color: rgba(228, 233, 242, 0.24) !important;
+`;
+
 //#endregion
 
 function VixWinPathSettingModal(props) {
@@ -179,7 +176,7 @@ function VixWinPathSettingModal(props) {
           <PathItemContainer>
             <span>軟體路徑</span>
             <div>
-              <Input
+              <StyleInput
                 type="text"
                 placeholder="請貼上路徑"
                 defaultValue={defaultImagePath}
@@ -193,7 +190,7 @@ function VixWinPathSettingModal(props) {
           <PathItemContainer>
             <span>影像路徑</span>
             <div>
-              <Input
+              <StyleInput
                 type="text"
                 placeholder="請貼上路徑"
                 defaultValue={defaultApplicationPath}

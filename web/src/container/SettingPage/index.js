@@ -22,6 +22,13 @@ const GlobalStyle = createGlobalStyle`
   .ant-tabs-ink-bar.ant-tabs-ink-bar-animated{
     width:3px;
   }
+  .ant-tabs-tab{
+    margin: 0!important;
+  }
+  .ant-tabs-tab:active,
+  .ant-tabs-tab.ant-tabs-tab-active{
+    background-color: #e4eaff;
+  }
 `;
 
 const StyledLayout = styled(Layout)`

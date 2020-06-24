@@ -34,6 +34,7 @@ const ItemContainer = styled.div`
   overflow: hidden;
   & > :first-child {
     margin-right: 22px;
+    flex-shrink: 0;
   }
   & > :nth-child(2) {
     margin-right: 26px;
@@ -52,7 +53,9 @@ const ItemContainer = styled.div`
 `;
 
 const StyleInput = styled(Input)`
-  font-size: 16px;
+  font-size: 16px !important;
+  border-radius: 8px !important;
+  background-color: rgba(228, 233, 242, 0.24) !important;
 `;
 //#endregion
 
@@ -101,6 +104,8 @@ function Link({ settings, getSettings, linkManagement }) {
             <span>技工管理表</span>
             {settingMode ? (
               <StyleInput
+                placeholder="貼入網址"
+                size="large"
                 onChange={e => setTechnicianSheet(e.target.value)}
                 defaultValue={linkManagement.technicianSheet}
               />
@@ -117,6 +122,8 @@ function Link({ settings, getSettings, linkManagement }) {
             <span>牙材管理表</span>
             {settingMode ? (
               <StyleInput
+                placeholder="貼入網址"
+                size="large"
                 onChange={e => setToothMaterialSheet(e.target.value)}
                 defaultValue={linkManagement.toothMaterialSheet}
               />
