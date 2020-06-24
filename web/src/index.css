@@ -41,3 +41,8 @@ code {
 .ant-message-custom-content span {
   text-align: left;
 }
+
+.ant-input:hover,
+.ant-input:focus {
+  border-color: #3362ff !important;
+}
