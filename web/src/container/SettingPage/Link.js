@@ -31,6 +31,7 @@ const ItemContainer = styled.div`
   color: #222b45;
   font-weight: 600;
   width: 100%;
+  padding: 3px;
   overflow: hidden;
   & > :first-child {
     margin-right: 22px;
