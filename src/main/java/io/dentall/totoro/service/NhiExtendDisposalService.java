@@ -4,10 +4,7 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
-import io.dentall.totoro.service.dto.table.AppointmentTable;
-import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
-import io.dentall.totoro.service.dto.table.PatientTable;
-import io.dentall.totoro.service.dto.table.RegistrationTable;
+import io.dentall.totoro.service.dto.table.*;
 import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.mapper.TreatmentProcedureMapper;
@@ -510,7 +507,10 @@ public class NhiExtendDisposalService {
 
     @Transactional(readOnly = true)
     public Optional<NhiExtendDisposal> getNhiExtendDisposalProjectionByDisposalId(Long id) {
-        return nhiExtendDisposalRepository.findNhiExtendDisposalByDisposal_Id(id)
+        List<NhiExtendDisposalTable> nhiExtendDisposalTables = nhiExtendDisposalRepository.findNhiExtendDisposalByDisposal_IdOrderById(id);
+        return nhiExtendDisposalTables.stream()
+            .skip(nhiExtendDisposalTables.size() > 1? nhiExtendDisposalTables.size() - 1: 0)
+            .findFirst()
             .map(nhiExtendDisposalMapper::nhiExtendDisposalTableToNhiExtendDisposal);
     }
 }
