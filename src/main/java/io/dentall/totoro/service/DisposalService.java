@@ -83,6 +83,10 @@ public class DisposalService {
 
     private final NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper;
 
+    private final AppointmentRepository appointmentRepository;
+
+    private final AppointmentMapper appointmentMapper;
+
     public DisposalService(
         DisposalRepository disposalRepository,
         PrescriptionService prescriptionService,
@@ -110,7 +114,10 @@ public class DisposalService {
         NhiExtendDisposalMapper nhiExtendDisposalMapper,
         PrescriptionMapper prescriptionMapper,
         TreatmentDrugMapper treatmentDrugMapper,
-        NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper) {
+        NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper,
+        AppointmentRepository appointmentRepository,
+        AppointmentMapper appointmentMapper
+    ) {
         this.disposalRepository = disposalRepository;
         this.prescriptionService = prescriptionService;
         this.todoService = todoService;
@@ -137,6 +144,8 @@ public class DisposalService {
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
         this.prescriptionMapper = prescriptionMapper;
         this.treatmentDrugMapper = treatmentDrugMapper;
+        this.appointmentRepository = appointmentRepository;
+        this.appointmentMapper = appointmentMapper;
     }
 
     /**
@@ -406,12 +415,13 @@ public class DisposalService {
                     treatmentProcedure.getNhiProcedure() != null &&
                     treatmentProcedure.getNhiProcedure().getId() != null
                 ) {
+                    // TreatmentProcedure.nhiProcedure
                     Optional<NhiProcedure> optionalNhiProcedure = nhiProcedureRepository.findById(treatmentProcedure.getNhiProcedure().getId());
                     if (optionalNhiProcedure.isPresent()) {
                         treatmentProcedure.setNhiProcedure(optionalNhiProcedure.get());
                     }
 
-                    // Add nhi treament procedure
+                    // TreatmentProcedure.nhiTreatmentProcedure
                     Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable =
                         nhiExtendTreatmentProcedureRepository.findNhiExtendTreatmentProcedureByTreatmentProcedure_Id(treatmentProcedure.getNhiExtendTreatmentProcedure().getId());
                     if (optionalNhiExtendTreatmentProcedureTable.isPresent()) {
@@ -437,6 +447,7 @@ public class DisposalService {
         Registration registration = null;
         Optional<RegistrationTable> optionalRegistrationTable = registrationRepository.findRegistrationByDisposal_Id(id);
         if (optionalRegistrationTable.isPresent()) {
+            // Registration.Accounting
             registration = registrationMapper.registrationTableToRegistration(optionalRegistrationTable.get());
             if (registration.getAccounting() != null &&
                 registration.getAccounting().getId() != null
@@ -446,6 +457,13 @@ public class DisposalService {
                     registration.setAccounting(accountingMapper.accountingTableToAccounting(optionalAccountingTable.get()));
                     registration.setDisposal(disposal);
                 }
+
+            }
+            // Registration.Appointment
+            Optional<AppointmentTable> optionalAppointmentTable = appointmentRepository.findAppointmentByRegistration_Id(registration.getId());
+            if (optionalAppointmentTable.isPresent()) {
+                registration.setAppointment(appointmentMapper.appointmentTableToAppointment(optionalAppointmentTable.get()));
+                // no appointment.registration because of FE required not seeing this data in vm.
             }
         }
 
