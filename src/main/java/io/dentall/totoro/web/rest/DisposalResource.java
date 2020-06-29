@@ -145,17 +145,8 @@ public class DisposalResource {
     @Timed
     public ResponseEntity<Disposal> getDisposal(@PathVariable Long id) {
         log.debug("REST request to get Disposal : {}", id);
-        Optional<Disposal> optionalDisposal = disposalService.getDisposalProjectionById(id)
-            .map(disposal -> {
-                Set<NhiExtendDisposal> nhiExtendDisposals = new HashSet<>();
-                nhiExtendDisposalService.getNhiExtendDisposalProjectionByDisposalId(disposal.getId())
-                    .ifPresent(nhiExtendDisposal -> {
-                        nhiExtendDisposal.setDisposal(disposal);
-                        nhiExtendDisposals.add(nhiExtendDisposal);
-                    });
 
-                return disposal.nhiExtendDisposals(nhiExtendDisposals);
-            });
+        Optional<Disposal> optionalDisposal = Optional.ofNullable(disposalService.getDisposalByProjection(id));
 
         return ResponseUtil.wrapOrNotFound(optionalDisposal);
     }
