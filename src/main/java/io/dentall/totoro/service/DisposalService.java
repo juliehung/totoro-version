@@ -483,10 +483,11 @@ public class DisposalService {
         }
 
         // Disposal.NhiExtendDisposal
-        Optional<NhiExtendDisposalTable> optionalNhiExtendDisposalTable = nhiExtendDisposalRepository.findNhiExtendDisposalByDisposal_Id(id);
+        List<NhiExtendDisposalTable> nhiExtendDisposalTables = nhiExtendDisposalRepository.findNhiExtendDisposalByDisposal_IdOrderById(id);
         Set<NhiExtendDisposal> nhiExtendDisposals = new HashSet<>();
-        if (optionalNhiExtendDisposalTable.isPresent()) {
-            NhiExtendDisposal nhiExtendDisposal = nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(optionalNhiExtendDisposalTable.get());
+        if (nhiExtendDisposalTables.size() > 0) {
+            NhiExtendDisposal nhiExtendDisposal =
+                nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(nhiExtendDisposalTables.get(nhiExtendDisposalTables.size() - 1));
             nhiExtendDisposal.setDisposal(disposal);
             nhiExtendDisposals.add(nhiExtendDisposal);
             nhiExtendDisposal.setNhiExtendTreatmentProcedures(nhiExtendTreatmentProcedures);
