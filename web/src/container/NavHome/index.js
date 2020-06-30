@@ -28,6 +28,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #f8fafb;
+  user-select: none;
 `;
 
 export const GlobalStyle = createGlobalStyle`
