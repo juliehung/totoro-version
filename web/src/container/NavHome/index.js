@@ -139,7 +139,10 @@ const NavItem = styled.li`
 `;
 
 const LinkNavItem = styled(NavItem)`
-  margin: 0;
+  margin: 16px 0 0 0;
+  &:first-child {
+    margin: 0;
+  }
 `;
 
 const UserContainer = styled.div`
