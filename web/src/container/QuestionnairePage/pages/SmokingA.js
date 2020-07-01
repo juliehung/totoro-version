@@ -15,7 +15,7 @@ function SmokingA(props) {
   };
 
   const onPressEnter = () => {
-    if (props.smokingAmount && props.smokingAmount.length !== 0) {
+    if (!props.smokingAmount) {
       valitationFail(23);
       return;
     }
