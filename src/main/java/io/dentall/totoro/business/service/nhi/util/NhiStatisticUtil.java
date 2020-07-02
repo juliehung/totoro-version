@@ -36,7 +36,7 @@ public class NhiStatisticUtil {
             .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getA73().equals(code))
             .collect(
                 groupingBy(
-                    nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId(),
+                    nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getNhiExtendDisposal().getPatientId(),
                     teethCounter
                 )
             );
