@@ -1,7 +1,6 @@
 package io.dentall.totoro.business.vm.nhi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.dentall.totoro.domain.Patient;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -36,12 +35,12 @@ public class NhiAbnormalityPatient implements Serializable {
     @JsonProperty
     private Double code92013cPoint;
 
-    public NhiAbnormalityPatient(Patient patient) {
-        id = patient.getId();
-        name = patient.getName();
-        birth = patient.getBirth();
-        medicalId = patient.getMedicalId();
-        cardNumber = patient.getNhiExtendPatient().getCardNumber();
+    public NhiAbnormalityPatient(Long id, String name, LocalDate birth, String medicalId, String cardNumber) {
+        this.id = id;
+        this.name = name;
+        this.birth = birth;
+        this.medicalId = medicalId;
+        this.cardNumber = cardNumber;
     }
 
     public Long getId() {

@@ -119,9 +119,13 @@ public class NhiAbnormalityService {
                 nhiExtDisposals.forEach(nhiExtendDisposal -> {
                     String login = nhiExtendDisposal.getDisposal().getCreatedBy();
                     NhiAbnormalityDoctor nhiAbnormalityDoctor = getNhiAbnormalityDoctor(doctors, login);
-                    NhiAbnormalityPatient nhiAbnormalityPatient = new NhiAbnormalityPatient(patient)
-                        .date(nhiExtendDisposalDate.apply(nhiExtendDisposal))
-                        .count(count);
+                    NhiAbnormalityPatient nhiAbnormalityPatient = new NhiAbnormalityPatient(
+                        patient.getId(),
+                        patient.getName(),
+                        patient.getBirth(),
+                        patient.getMedicalId(),
+                        patient.getNhiExtendPatient().getCardNumber()
+                    ).date(nhiExtendDisposalDate.apply(nhiExtendDisposal)).count(count);
                     nhiAbnormalityDoctor.getPatients().add(nhiAbnormalityPatient);
                 });
             }
@@ -176,7 +180,13 @@ public class NhiAbnormalityService {
                         .mapToDouble(nhiExtendTreatmentDrugPoint::apply)
                         .sum();
 
-                    patients.add(new NhiAbnormalityPatient(patient).date(patientDate.getValue()).code92013cPoint(sum));
+                    patients.add(new NhiAbnormalityPatient(
+                        patient.getId(),
+                        patient.getName(),
+                        patient.getBirth(),
+                        patient.getMedicalId(),
+                        patient.getNhiExtendPatient().getCardNumber()
+                    ).date(patientDate.getValue()).code92013cPoint(sum));
                 });
 
                 doctor.setPatients(patients);
@@ -216,7 +226,13 @@ public class NhiAbnormalityService {
                             .filter(p -> p.getId().equals(patient.getId()) && p.getDate() == entry.getValue())
                             .findFirst()
                             .orElseGet(() -> {
-                                NhiAbnormalityPatient p = new NhiAbnormalityPatient(patient).date(entry.getValue()).ratioOf90004cTo90015c(new HashMap<>());
+                                NhiAbnormalityPatient p = new NhiAbnormalityPatient(
+                                    patient.getId(),
+                                    patient.getName(),
+                                    patient.getBirth(),
+                                    patient.getMedicalId(),
+                                    patient.getNhiExtendPatient().getCardNumber()
+                                ).date(entry.getValue()).ratioOf90004cTo90015c(new HashMap<>());
                                 nhiAbnormalityDoctor.getPatients().add(p);
 
                                 return p;
@@ -261,7 +277,13 @@ public class NhiAbnormalityService {
                 .map(nhiExtendDisposal -> {
                     Patient patient = getPatient(nhiExtendDisposal.getPatientId());
 
-                    return new NhiAbnormalityPatient(patient).date(nhiExtendDisposalDate.apply(nhiExtendDisposal));
+                    return new NhiAbnormalityPatient(
+                        patient.getId(),
+                        patient.getName(),
+                        patient.getBirth(),
+                        patient.getMedicalId(),
+                        patient.getNhiExtendPatient().getCardNumber()
+                    ).date(nhiExtendDisposalDate.apply(nhiExtendDisposal));
                 })
                 .collect(Collectors.toList());
 
@@ -446,7 +468,14 @@ public class NhiAbnormalityService {
             .collect(groupingBy(PatTooth::getPatientId, summingInt(PatTooth::getCount)));
 
         patCountMap.forEach((pat, count) -> {
-            NhiAbnormalityPatient abPat = new NhiAbnormalityPatient(getPatient(pat)).count(count);
+            Patient patient = getPatient(pat);
+            NhiAbnormalityPatient abPat = new NhiAbnormalityPatient(
+                patient.getId(),
+                patient.getName(),
+                patient.getBirth(),
+                patient.getMedicalId(),
+                patient.getNhiExtendPatient().getCardNumber()
+            ).count(count);
             Long docId = patDocMap.get(abPat.getId());
             if (!abDocIdMap.containsKey(docId)) {
                 NhiAbnormalityDoctor doc =
