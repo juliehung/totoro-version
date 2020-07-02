@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Switch, message } from 'antd';
@@ -61,7 +61,7 @@ function Xray({ settings, getSettings, xrayVender }) {
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <VixWinPathSettingModal
         visible={vixWinPathSettingModalVisible}
         changeModalVisible={setVixWinPathSettingModalVisible}
@@ -108,7 +108,7 @@ function Xray({ settings, getSettings, xrayVender }) {
           </div>
         </SettingItemContainer>
       </div>
-    </React.Fragment>
+    </Fragment>
   );
 }
 
