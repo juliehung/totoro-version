@@ -12,6 +12,10 @@ const Title = styled.span`
   font-size: 22px;
 `;
 
+const Header = styled.div`
+  display: flex;
+`;
+
 const SettingItemContainer = styled.div`
   height: 90px;
   display: flex;
@@ -88,7 +92,7 @@ function Link({ settings, getSettings, linkManagement }) {
 
   return (
     <React.Fragment>
-      <div>
+      <Header>
         <Title>指定連結管理</Title>
         {settingMode ? (
           <StyledButton shape="round" type="primary" onClick={onSave}>
@@ -99,43 +103,43 @@ function Link({ settings, getSettings, linkManagement }) {
             編輯
           </StyledButton>
         )}
-        <SettingItemContainer>
-          <ItemContainer>
-            <img src={Pantone} width="24" alt="Pantone" />
-            <span>技工管理表</span>
-            {settingMode ? (
-              <StyleInput
-                placeholder="貼入網址"
-                size="large"
-                onChange={e => setTechnicianSheet(e.target.value)}
-                defaultValue={linkManagement.technicianSheet}
-              />
-            ) : (
-              <Tooltip placement="bottom" title={linkManagement.technicianSheet} arrowPointAtCenter>
-                <span>{linkManagement.technicianSheet} </span>
-              </Tooltip>
-            )}
-          </ItemContainer>
-        </SettingItemContainer>
-        <SettingItemContainer>
-          <ItemContainer>
-            <img src={Cube} width="24" alt="Cube" />
-            <span>牙材管理表</span>
-            {settingMode ? (
-              <StyleInput
-                placeholder="貼入網址"
-                size="large"
-                onChange={e => setToothMaterialSheet(e.target.value)}
-                defaultValue={linkManagement.toothMaterialSheet}
-              />
-            ) : (
-              <Tooltip placement="bottom" title={linkManagement.toothMaterialSheet} arrowPointAtCenter>
-                <span>{linkManagement.toothMaterialSheet} </span>
-              </Tooltip>
-            )}
-          </ItemContainer>
-        </SettingItemContainer>
-      </div>
+      </Header>
+      <SettingItemContainer>
+        <ItemContainer>
+          <img src={Pantone} width="24" alt="Pantone" />
+          <span>技工管理表</span>
+          {settingMode ? (
+            <StyleInput
+              placeholder="貼入網址"
+              size="large"
+              onChange={e => setTechnicianSheet(e.target.value)}
+              defaultValue={linkManagement.technicianSheet}
+            />
+          ) : (
+            <Tooltip placement="bottom" title={linkManagement.technicianSheet} arrowPointAtCenter>
+              <span>{linkManagement.technicianSheet} </span>
+            </Tooltip>
+          )}
+        </ItemContainer>
+      </SettingItemContainer>
+      <SettingItemContainer>
+        <ItemContainer>
+          <img src={Cube} width="24" alt="Cube" />
+          <span>牙材管理表</span>
+          {settingMode ? (
+            <StyleInput
+              placeholder="貼入網址"
+              size="large"
+              onChange={e => setToothMaterialSheet(e.target.value)}
+              defaultValue={linkManagement.toothMaterialSheet}
+            />
+          ) : (
+            <Tooltip placement="bottom" title={linkManagement.toothMaterialSheet} arrowPointAtCenter>
+              <span>{linkManagement.toothMaterialSheet} </span>
+            </Tooltip>
+          )}
+        </ItemContainer>
+      </SettingItemContainer>
     </React.Fragment>
   );
 }
