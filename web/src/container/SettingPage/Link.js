@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { message, Button, Tooltip, Input } from 'antd';
@@ -17,6 +17,7 @@ const Header = styled.div`
 `;
 
 const SettingItemContainer = styled.div`
+  position: relative;
   height: 90px;
   display: flex;
   align-items: center;
@@ -57,19 +58,36 @@ const ItemContainer = styled.div`
   }
 `;
 
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  & > span {
+    position: absolute;
+    bottom: 5px;
+    color: #ff4948;
+    font-size: 10px;
+  }
+`;
+
 const StyleInput = styled(Input)`
   font-size: 16px !important;
   border-radius: 8px !important;
   background-color: rgba(228, 233, 242, 0.24) !important;
 `;
+
 //#endregion
+
+const checkLinkRegex = new RegExp('^$|^(http|https)://', 'i');
 
 function Link({ settings, getSettings, linkManagement }) {
   const [settingMode, setSettingMode] = useState(false);
   const [technicianSheet, setTechnicianSheet] = useState(undefined);
   const [toothMaterialSheet, setToothMaterialSheet] = useState(undefined);
+  const [errorLinks, setErrorLinks] = useState([]);
 
   const onSave = async () => {
+    if (errorLinks.length > 0) return;
     if (settings?.id) {
       try {
         const newLinkManagement = {
@@ -90,12 +108,32 @@ function Link({ settings, getSettings, linkManagement }) {
     }
   };
 
+  const onToothMaterialSheetChange = e => {
+    setToothMaterialSheet(e.target.value);
+    const valid = checkLinkRegex.test(e.target.value);
+    if (valid) {
+      setErrorLinks(prevErrorLinks => prevErrorLinks.filter(p => p !== 'toothMaterialSheet'));
+    } else {
+      setErrorLinks(prevErrorLinks => [...new Set([...prevErrorLinks, 'toothMaterialSheet'])]);
+    }
+  };
+
+  const onTechnicianSheetChange = e => {
+    setTechnicianSheet(e.target.value);
+    const valid = checkLinkRegex.test(e.target.value);
+    if (valid) {
+      setErrorLinks(prevErrorLinks => prevErrorLinks.filter(p => p !== 'technicianSheet'));
+    } else {
+      setErrorLinks(prevErrorLinks => [...new Set([...prevErrorLinks, 'technicianSheet'])]);
+    }
+  };
+
   return (
-    <React.Fragment>
+    <Fragment>
       <Header>
         <Title>指定連結管理</Title>
         {settingMode ? (
-          <StyledButton shape="round" type="primary" onClick={onSave}>
+          <StyledButton shape="round" type="primary" onClick={onSave} disabled={errorLinks.length > 0}>
             儲存
           </StyledButton>
         ) : (
@@ -109,12 +147,15 @@ function Link({ settings, getSettings, linkManagement }) {
           <img src={Pantone} width="24" alt="Pantone" />
           <span>技工管理表</span>
           {settingMode ? (
-            <StyleInput
-              placeholder="貼入網址"
-              size="large"
-              onChange={e => setTechnicianSheet(e.target.value)}
-              defaultValue={linkManagement.technicianSheet}
-            />
+            <InputContainer>
+              <StyleInput
+                placeholder="貼入網址"
+                size="large"
+                onChange={onTechnicianSheetChange}
+                defaultValue={linkManagement.technicianSheet}
+              />
+              {errorLinks.includes('technicianSheet') && <span>請輸入正確的網址</span>}
+            </InputContainer>
           ) : (
             <Tooltip placement="bottom" title={linkManagement.technicianSheet} arrowPointAtCenter>
               <span>{linkManagement.technicianSheet} </span>
@@ -127,12 +168,15 @@ function Link({ settings, getSettings, linkManagement }) {
           <img src={Cube} width="24" alt="Cube" />
           <span>牙材管理表</span>
           {settingMode ? (
-            <StyleInput
-              placeholder="貼入網址"
-              size="large"
-              onChange={e => setToothMaterialSheet(e.target.value)}
-              defaultValue={linkManagement.toothMaterialSheet}
-            />
+            <InputContainer>
+              <StyleInput
+                placeholder="貼入網址"
+                size="large"
+                onChange={onToothMaterialSheetChange}
+                defaultValue={linkManagement.toothMaterialSheet}
+              />
+              {errorLinks.includes('toothMaterialSheet') && <span>請輸入正確的網址</span>}
+            </InputContainer>
           ) : (
             <Tooltip placement="bottom" title={linkManagement.toothMaterialSheet} arrowPointAtCenter>
               <span>{linkManagement.toothMaterialSheet} </span>
@@ -140,7 +184,7 @@ function Link({ settings, getSettings, linkManagement }) {
           )}
         </ItemContainer>
       </SettingItemContainer>
-    </React.Fragment>
+    </Fragment>
   );
 }
 

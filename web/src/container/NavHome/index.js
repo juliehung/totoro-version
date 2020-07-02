@@ -220,6 +220,11 @@ const ContentContainer = styled.div`
   }
 `;
 
+const PopoverContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 //#endregion
 
 const route = [
@@ -255,25 +260,8 @@ const route = [
   { key: '', navigation: false, exact: false, component: <Redirect to="/appointment" />, localVersion: true },
 ];
 
-const navLink = [
-  {
-    key: 'labo',
-    name: '技工',
-    href: 'https://docs.google.com/spreadsheets/d/1LiCYNyCO2nx91g1VIke_DlZP8gqt3qEHTrKg1z7JT7k/edit?usp=sharing',
-    icon: Pantone,
-    clinic: ['pin-cui', 'rakumi'],
-  },
-  {
-    key: 'material',
-    name: '牙材',
-    href: 'https://docs.google.com/spreadsheets/d/1TpdSnYV0LOCirS2i9u4-QZToMyiEIMyxOWoOkeU0x3k/edit?usp=sharing',
-    icon: Cube,
-    clinic: ['pin-cui', 'rakumi'],
-  },
-];
-
 function NavHome(props) {
-  const { account } = props;
+  const { account, settings } = props;
 
   const [, , removeCookie] = useCookies(['token']);
 
@@ -298,6 +286,25 @@ function NavHome(props) {
       setCurrentLocation('/' + route);
     }
   }, [location, currentLocation]);
+
+  const linkManagement = settings?.preferences?.generalSetting?.linkManagement ?? {};
+  const technicianSheet = linkManagement.technicianSheet ?? '#/setting';
+  const toothMaterialSheet = linkManagement.toothMaterialSheet ?? '#/setting';
+
+  const navLink = [
+    {
+      key: 'labo',
+      name: '技工',
+      href: technicianSheet,
+      icon: Pantone,
+    },
+    {
+      key: 'material',
+      name: '牙材',
+      href: toothMaterialSheet,
+      icon: Cube,
+    },
+  ];
 
   return (
     <Container>
@@ -332,15 +339,14 @@ function NavHome(props) {
                     </Link>
                   </NavItem>
                 )),
-              <Popover
-                overlayClassName="linkPopover"
-                placement="bottomLeft"
-                key="web"
-                content={
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    {navLink
-                      .filter(n => determineRouteOrLinkShow(n))
-                      .map(n => (
+              determineRouteOrLinkShow({ localVersion: false }) && (
+                <Popover
+                  overlayClassName="linkPopover"
+                  placement="bottomLeft"
+                  key="web"
+                  content={
+                    <PopoverContent>
+                      {navLink.map(n => (
                         <LinkNavItem key={n.key}>
                           <a href={n.href} target="_blank" rel="noopener noreferrer">
                             <div>
@@ -353,20 +359,21 @@ function NavHome(props) {
                           </a>
                         </LinkNavItem>
                       ))}
-                  </div>
-                }
-              >
-                <NavItem key={'web'}>
-                  <span>
-                    <div>
+                    </PopoverContent>
+                  }
+                >
+                  <NavItem key={'web'}>
+                    <span>
                       <div>
-                        <img className="oneModeimg" src={FileText} alt="管理表" />
+                        <div>
+                          <img className="oneModeimg" src={FileText} alt="管理表" />
+                        </div>
+                        <span className="svg">管理表</span>
                       </div>
-                      <span className="svg">管理表</span>
-                    </div>
-                  </span>
-                </NavItem>
-              </Popover>,
+                    </span>
+                  </NavItem>
+                </Popover>
+              ),
             ]}
           </ul>
         </div>
@@ -450,6 +457,7 @@ function NavHome(props) {
 
 const mapStateToProps = ({ homePageReducer }) => ({
   account: parseAccountData(homePageReducer.account.data),
+  settings: homePageReducer.settings.settings,
 });
 
 const mapDispatchToProps = {};
