@@ -28,8 +28,8 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
         "select new io.dentall.totoro.service.dto.StatisticSpDTO(d.createdBy, np.specificCode, np.point) " +
         "from NhiExtendDisposal nhiExtendDisposal " +
         "left join Disposal d on nhiExtendDisposal.disposal.id = d.id " +
-        "left join NhiExtendTreatmentProcedure nt on nhiExtendDisposal.id = nt.nhiExtendDisposal.id " +
-        "left join TreatmentProcedure t on nt.treatmentProcedure.id = t.id " +
+        "left join TreatmentProcedure t on d.id = t.disposal.id " +
+        "left join NhiExtendTreatmentProcedure nt on t.id = nt.treatmentProcedure.id " +
         "left join NhiProcedure np on t.nhiProcedure.id = np.id " +
         "where np.id is not null and nhiExtendDisposal.date between :start and :end and nhiExtendDisposal.replenishmentDate is null " +
         "or np.id is not null and nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate between :start and :end"
