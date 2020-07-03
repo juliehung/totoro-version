@@ -1,53 +1,83 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { Switch } from 'antd';
-import Settings from '../../models/settings';
+import { Layout, Tabs } from 'antd';
 import { getSettings } from '../Home/actions';
+import Xray from './Xray';
+import Link from './Link';
+import { useWindowSize } from '../../utils/hooks/useWindowSize';
+
+const { Content } = Layout;
+const { TabPane } = Tabs;
 
 //#region
-const Container = styled.div`
-  padding: 30px;
-`;
-
-const Item = styled.div`
-  & > span {
-    margin-right: 10px;
+const GlobalStyle = createGlobalStyle`
+  *{
+    user-select: none;
+  }
+  .ant-tabs.ant-tabs-left{
+    height: 100%!important;
+  }
+  .ant-tabs-ink-bar.ant-tabs-ink-bar-animated{
+    width:3px;
+  }
+  .ant-tabs-tab{
+    margin: 0!important;
+  }
+  .ant-tabs-tab:active,
+  .ant-tabs-tab.ant-tabs-tab-active{
+    background-color: #e4eaff;
   }
 `;
+
+const StyledLayout = styled(Layout)`
+  padding-top: 30px !important;
+  height: 100%;
+  background: #fff !important;
+`;
+
+const StyledContent = styled(Content)`
+  background-color: #fff;
+  padding: 40px 5vw;
+`;
+
+const TabText = styled.span`
+  padding: 0 50px;
+  text-align: center;
+  letter-spacing: 0.8px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+`;
+
 //#endregion
 
-function SettingPage({ generalSetting, settings, getSettings }) {
-  const shift = generalSetting && generalSetting.showShift;
-  const onChange = async () => {
-    const showShift = !shift;
-    if (settings.id) {
-      const generalSetting = { ...{ ...(settings.preferences ? settings.preferences.generalSetting : {}) }, showShift };
-      const preferences = { ...settings.preferences, generalSetting };
-      const newSettings = { ...settings, preferences };
-      await Settings.put(newSettings);
-      getSettings();
-    }
-  };
+function SettingPage() {
+  const size = useWindowSize();
+
   return (
-    <Container>
+    <StyledLayout>
+      <GlobalStyle />
       <Helmet>
         <title>設定</title>
       </Helmet>
-      <Item>
-        <span>排班</span>
-        <Switch onChange={onChange} checked={shift} />
-      </Item>
-    </Container>
+      <Tabs defaultActiveKey="xray" tabPosition={size.width >= 1100 ? 'left' : 'top'}>
+        <TabPane tab={<TabText>X 光軟體設定</TabText>} key="xray">
+          <StyledContent>
+            <Xray />
+          </StyledContent>
+        </TabPane>
+        <TabPane tab={<TabText>指定連結管理</TabText>} key="link">
+          <StyledContent>
+            <Link />
+          </StyledContent>
+        </TabPane>
+      </Tabs>
+    </StyledLayout>
   );
 }
 
-const mapStateToProps = ({ homePageReducer }) => ({
-  generalSetting: homePageReducer.settings.generalSetting,
-  settings: homePageReducer.settings.settings,
-});
-
 const mapDispatchToProps = { getSettings };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SettingPage);
+export default connect(null, mapDispatchToProps)(SettingPage);

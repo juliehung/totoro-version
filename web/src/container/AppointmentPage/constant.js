@@ -19,6 +19,13 @@ export const DisposalStatus = {
   MADE_APPT: 'MADE_APPT',
 };
 
+export const XRAY_VENDORS = {
+  Poye: 1,
+  Ray: 2,
+  vision: 'vision',
+  vixwin: 'vixwin',
+};
+
 export const APPOINTMENT_PAGE = 'totoro-web-appointmentPage/';
 
 export const CHANGE_CAL_DATE = `${APPOINTMENT_PAGE}CHANGE_CAL_DATE`;
@@ -192,3 +199,13 @@ export const POPOVER_CANCEL_APP_SUCCESS = `${APPOINTMENT_PAGE}POPOVER_CANCEL_APP
 export const GET_SHIFT_START = `${APPOINTMENT_PAGE}GET_SHIFT_START`;
 
 export const GET_SHIFT_SUCCESS = `${APPOINTMENT_PAGE}GET_SHIFT_SUCCESS`;
+
+export const OPEN_XRAY = `${APPOINTMENT_PAGE}OPEN_XRAY`;
+
+export const XRAY_GREETING = `${APPOINTMENT_PAGE}XRAY_GREETING`;
+
+export const XRAY_GREETING_SUCCESS = `${APPOINTMENT_PAGE}XRAY_GREETING_SUCCESS`;
+
+export const XRAY_GREETING_FAILURE = `${APPOINTMENT_PAGE}XRAY_GREETING_FAILURE`;
+
+export const ON_LEAVE_PAGE = `${APPOINTMENT_PAGE}ON_LEAVE_PAGE`;

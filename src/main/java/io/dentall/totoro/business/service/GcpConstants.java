@@ -4,10 +4,6 @@ class GcpConstants {
 
     static final String CLOUD_FUNCTION_BASE_URL = "https://asia-east2-dentall-saas.cloudfunctions.net/";
 
-    static final String BUCKET_NAME = "totoro-admin";
-
-    static final String GCS_BASE_URL = "https://storage.googleapis.com/" + BUCKET_NAME + "/";
-
     static final String SERVICE_ACCOUNT = "dentall-saas-cloud-functions.json";
 
     static final String EXECUTE_SMS_EVENT_API = "/executeSmsEvent";

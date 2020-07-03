@@ -3,6 +3,7 @@ package io.dentall.totoro.repository;
 import io.dentall.totoro.domain.Appointment;
 import io.dentall.totoro.repository.dao.AppointmentDAO;
 import io.dentall.totoro.service.dto.AppointmentDTO;
+import io.dentall.totoro.service.dto.table.AppointmentTable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -19,6 +21,8 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long>, JpaSpecificationExecutor<Appointment> {
+
+    Optional<AppointmentTable> findAppointmentByRegistration_Id(Long id);
 
     List<Appointment> findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end);
 
@@ -44,7 +48,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.patient.newPatient, " +
             "registration.status, " +
             "appointment.patient.lastModifiedDate, " +
-            "appointment.patient.lastModifiedBy " +
+            "appointment.patient.lastModifiedBy, " +
+            "appointment.patient.medicalId " +
             ") " +
             "from Appointment as appointment left outer join appointment.registration as registration " +
             "where appointment.expectedArrivalTime between :beginDate and :endDate ")

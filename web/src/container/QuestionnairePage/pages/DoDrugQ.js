@@ -5,7 +5,6 @@ import { preChangeDoDrug } from '../actions';
 import { Container } from './Name';
 import { Option, CheckedIcon } from './BloodType';
 import { OptionContainer } from './Career';
-import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
 
 //#region
@@ -50,7 +49,6 @@ function DoDrugQ(props) {
           <CheckedIcon type="check" selected={props.doDrug === 'B'} />
         </OptionContainer>
       </OptionsContainer>
-      <PageControllContainer />
     </Container>
   );
 }

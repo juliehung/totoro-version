@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20200620-addColumn" author="WeiChen">
+        <addColumn tableName="disposal">
+            <column name="revisit_content" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="revisit_interval" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="revisit_treatment_time" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="revisit_comment" type="varchar(5100)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

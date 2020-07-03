@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { message } from 'antd';
@@ -20,6 +20,9 @@ import {
   initQuestionnaire,
   getPatient,
   initPage,
+  validateSuccess,
+  valitationFail,
+  gotoPage,
 } from './actions';
 import './index.css';
 import QutContent from './QutContent';
@@ -29,7 +32,9 @@ import { handleKeyEvent } from './utils/handleKeyEvent';
 import { withRouter } from 'react-router-dom';
 import Background from '../../images/questionnaire_bg.svg';
 import { GApageView } from '../../ga';
+import pages from './pages';
 
+//#region
 const Container = styled.div`
   position: fixed;
   height: 100%;
@@ -44,11 +49,18 @@ const Container = styled.div`
   background-size: contain;
 `;
 
+const ZeroAreaDiv = styled.div`
+  width: 0;
+  height: 0;
+  overflow: hidden;
+`;
+//#endregion
+
 function QuestionnairePage(props) {
   const {
     nextPage,
     prevPage,
-    page,
+    currentPage,
     preChangeGender,
     preChangeBloodType,
     preChangeCareer,
@@ -64,7 +76,16 @@ function QuestionnairePage(props) {
     getPatient,
     createQSuccess,
     initPage,
+    goNextPage,
+    goPrevPage,
+    validator,
+    validateSuccess,
+    valitationFail,
+    gotoPage,
+    patient,
   } = props;
+
+  const focusRef = useRef(null);
 
   useEffect(() => {
     GApageView();
@@ -72,21 +93,29 @@ function QuestionnairePage(props) {
 
   useEffect(() => {
     function keyFunction(keyEvent) {
-      handleKeyEvent(page, keyEvent, {
-        prevPage,
-        nextPage,
-        preChangeGender,
-        preChangeBloodType,
-        preChangeCareer,
-        preChangeMarriage,
-        preChangeEmergencyRelationship,
-        changeDisease,
-        changeAllergy,
-        preChangeDoDrug,
-        preChangePregnant,
-        preChangeSmoking,
-        changeOther,
-      });
+      handleKeyEvent(
+        currentPage,
+        keyEvent,
+        {
+          goPrevPage,
+          goNextPage,
+          preChangeGender,
+          preChangeBloodType,
+          preChangeCareer,
+          preChangeMarriage,
+          preChangeEmergencyRelationship,
+          changeDisease,
+          changeAllergy,
+          preChangeDoDrug,
+          preChangePregnant,
+          preChangeSmoking,
+          changeOther,
+          gotoPage,
+          validateSuccess,
+          valitationFail,
+        },
+        { patient },
+      );
     }
 
     document.addEventListener('keydown', keyFunction, false);
@@ -95,9 +124,9 @@ function QuestionnairePage(props) {
       document.removeEventListener('keydown', keyFunction, false);
     };
   }, [
-    nextPage,
-    prevPage,
-    page,
+    goNextPage,
+    goPrevPage,
+    currentPage,
     preChangeGender,
     preChangeBloodType,
     preChangeCareer,
@@ -109,6 +138,10 @@ function QuestionnairePage(props) {
     preChangeDoDrug,
     preChangePregnant,
     changeOther,
+    gotoPage,
+    patient,
+    validateSuccess,
+    valitationFail,
   ]);
 
   useEffect(() => {
@@ -127,25 +160,50 @@ function QuestionnairePage(props) {
     };
   }, [createQSuccess, initPage, props.history]);
 
+  const onSwipedUp = () => {
+    focusRef.current.focus();
+    if (validator) {
+      const validation = validator(patient);
+      if (!validation) {
+        valitationFail(currentPage);
+        return;
+      }
+      validateSuccess(currentPage);
+    }
+    nextPage ? gotoPage(nextPage) : goNextPage();
+  };
+
+  const onSwipedDown = () => {
+    focusRef.current.focus();
+    prevPage ? gotoPage(prevPage) : goPrevPage();
+  };
+
   return (
-    <Swipeable onSwipedUp={nextPage} onSwipedDown={prevPage}>
+    <Swipeable onSwipedUp={onSwipedUp} onSwipedDown={onSwipedDown}>
       <Container>
-        {props.page !== 20 && props.page !== 21 && <QutContent />}
-        {props.page === 20 && <Form />}
-        {props.page === 21 && <Signature />}
+        {currentPage !== 20 && currentPage !== 21 && <QutContent />}
+        {currentPage === 20 && <Form />}
+        {currentPage === 21 && <Signature />}
+        <ZeroAreaDiv>
+          <button ref={focusRef}></button>
+        </ZeroAreaDiv>
       </Container>
     </Swipeable>
   );
 }
 
-const mapStateToProps = state => ({
-  page: state.questionnairePageReducer.flow.page,
-  createQSuccess: state.questionnairePageReducer.flow.createQSuccess,
+const mapStateToProps = ({ questionnairePageReducer }) => ({
+  currentPage: questionnairePageReducer.flow.page,
+  validator: pages.find(p => p.page === questionnairePageReducer.flow.page)?.validator,
+  createQSuccess: questionnairePageReducer.flow.createQSuccess,
+  nextPage: pages.find(p => p.page === questionnairePageReducer.flow.page)?.nextPage,
+  prevPage: pages.find(p => p.page === questionnairePageReducer.flow.page)?.prevPage,
+  patient: questionnairePageReducer.data.patient,
 });
 
 const mapDispatchToProps = {
-  nextPage,
-  prevPage,
+  goNextPage: nextPage,
+  goPrevPage: prevPage,
   preChangeGender,
   preChangeBloodType,
   preChangeCareer,
@@ -160,6 +218,9 @@ const mapDispatchToProps = {
   initQuestionnaire,
   getPatient,
   initPage,
+  validateSuccess,
+  valitationFail,
+  gotoPage,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(QuestionnairePage));

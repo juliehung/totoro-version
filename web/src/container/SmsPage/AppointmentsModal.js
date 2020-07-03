@@ -61,7 +61,7 @@ const TitleText = styled(NoMarginText)`
 
 const PhoneText = styled(P2)`
   &::before {
-    content: ${props => (props.isInvalid ? '"📵"' : '')};
+    content: ${props => (props.isInvalid ? '"📵 "' : '')};
   }
 `;
 

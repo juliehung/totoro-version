@@ -1,8 +1,11 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.Accounting;
-import org.springframework.data.jpa.repository.*;
+import io.dentall.totoro.service.dto.table.AccountingTable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 
 /**
@@ -12,4 +15,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccountingRepository extends JpaRepository<Accounting, Long> {
 
+    Optional<AccountingTable> findAccountingById(Long id);
 }

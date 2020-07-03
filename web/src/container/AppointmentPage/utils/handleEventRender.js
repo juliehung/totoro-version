@@ -4,6 +4,10 @@ import { render } from 'react-dom';
 import styled from 'styled-components';
 import convertMrnTo5Digits from './convertMrnTo5Digits';
 import { PhoneOutlined, UserOutlined, SolutionOutlined, EditOutlined } from '@ant-design/icons';
+import VisionImg from '../../../component/VisionImg';
+import VixWinImg from '../../../component/VixWinImg';
+
+import { XRAY_VENDORS } from '../constant';
 
 //#region
 const PopoverContainer = styled.div`
@@ -40,21 +44,71 @@ const HightLightSpan = styled.span`
   font-weight: bold;
   font-style: italic;
 `;
+
+const XrayContainer = styled.div`
+  margin: 5px 0 10px;
+  display: flex;
+  & > div {
+    cursor: pointer;
+    margin-right: 10px;
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    background: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: box-shadow 200ms ease-in-out;
+    & > img {
+      opacity: 0.4;
+      transition: opacity 200ms ease-in-out;
+    }
+    &:hover {
+      box-shadow: 0 2px 13px 0 rgba(50, 102, 255, 0.3), 0 1px 3px 0 rgba(0, 0, 0, 0.18);
+      & > img {
+        opacity: 1;
+      }
+    }
+  }
+`;
+
+const XrayContainerListView = styled.div`
+  margin: 0;
+  display: flex;
+  & > div {
+    margin-left: 10px;
+    & > img {
+      opacity: 0.4;
+      transition: opacity ease-in-out 200ms;
+    }
+    &:hover {
+      & > img {
+        opacity: 1;
+      }
+    }
+  }
+`;
+
+const ListWeekContainer = styled.div`
+  color: ${props => (props.isCanceled ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.65)')};
+  display: flex;
+  justify-content: space-between;
+`;
 //#endregion
 
-export function handleEventRender(info, func) {
+export function handleEventRender(info, func, params) {
   if (info.event.extendedProps.eventType === 'appointment') {
     const appointment = info.event.extendedProps.appointment;
     if (info.view.type.indexOf('Grid') !== -1) {
+      const { id, patientId, patientName, phone, doctor, note, status, registrationStatus } = appointment;
+
       if (info.view.type !== 'dayGridMonth') {
         const fcTitle = info.el.querySelector('.fc-title');
         if (fcTitle) {
           const fcTitleClone = fcTitle.innerHTML;
-          fcTitle.innerHTML = appointment.note
-            ? `<div><b>${fcTitleClone}(${convertMrnTo5Digits(appointment.patientId)})</b><br /><span>${
-                appointment.note
-              }</span></div>`
-            : `<div><b>${fcTitleClone}(${convertMrnTo5Digits(appointment.patientId)})</b><br /></div>`;
+          fcTitle.innerHTML = note
+            ? `<div><b>${fcTitleClone}(${convertMrnTo5Digits(patientId)})</b><br /><span>${note}</span></div>`
+            : `<div><b>${fcTitleClone}(${convertMrnTo5Digits(patientId)})</b><br /></div>`;
         }
 
         const fcContent = info.el.querySelector('.fc-content');
@@ -65,28 +119,51 @@ export function handleEventRender(info, func) {
         const popoverContent = (
           <PopoverContainer>
             <HightLightSpan>
-              {appointment.status === 'CANCEL' ? '[C]' : null} {appointment.patientName}
+              {status === 'CANCEL' ? '[C]' : null} {patientName}
             </HightLightSpan>
-            <HightLightSpan>{convertMrnTo5Digits(appointment.patientId)}</HightLightSpan>
+            <HightLightSpan>{convertMrnTo5Digits(patientId)}</HightLightSpan>
             <BreakP>
               <StyledPhoneOutlined />
-              {appointment.phone}
+              {phone}
             </BreakP>
             <BreakP>
               <StyledUserOutlined />
-              {appointment.doctor.user.firstName}
+              {doctor.user.firstName}
             </BreakP>
             <BreakP>
               <StyledSolutionOutlined />
-              {appointment.note}
+              {note}
             </BreakP>
-            {!appointment.registrationStatus ? (
-              appointment.status === 'CANCEL' ? (
+            {status !== 'CANCEL' && (
+              <XrayContainer>
+                {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vision) && (
+                  <div>
+                    <VisionImg
+                      width="23"
+                      onClick={() => {
+                        func.xray({ vendor: XRAY_VENDORS.vision, appointment });
+                      }}
+                    />
+                  </div>
+                )}
+                {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vixwin) && (
+                  <div
+                    onClick={() => {
+                      func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
+                    }}
+                  >
+                    <VixWinImg width="23" />
+                  </div>
+                )}
+              </XrayContainer>
+            )}
+            {!registrationStatus ? (
+              status === 'CANCEL' ? (
                 <Popconfirm
                   trigger="click"
                   title="確定恢復預約"
                   onConfirm={() => {
-                    func.cancel({ id: appointment.id, status: 'CONFIRMED' });
+                    func.cancel({ id: id, status: 'CONFIRMED' });
                   }}
                 >
                   <Button size="small">恢復預約</Button>
@@ -96,14 +173,14 @@ export function handleEventRender(info, func) {
                   trigger="click"
                   title="確定取消預約"
                   onConfirm={() => {
-                    func.cancel({ id: appointment.id, status: 'CANCEL' });
+                    func.cancel({ id: id, status: 'CANCEL' });
                   }}
                 >
                   <Button size="small">取消預約</Button>
                 </Popconfirm>
               )
             ) : null}
-            {!appointment.registrationStatus ? (
+            {!registrationStatus ? (
               <span>
                 <StyledEditOutlined
                   onClick={() => {
@@ -115,7 +192,7 @@ export function handleEventRender(info, func) {
           </PopoverContainer>
         );
 
-        const contextMenu = !appointment.registrationStatus ? (
+        const contextMenu = !registrationStatus ? (
           <Menu
             onClick={() => {
               func.edit(appointment);
@@ -134,7 +211,7 @@ export function handleEventRender(info, func) {
                 style={{ height: '100%' }}
                 dangerouslySetInnerHTML={{ __html: info.el.innerHTML }}
                 onDoubleClick={
-                  !appointment.registrationStatus
+                  !registrationStatus
                     ? () => {
                         func.edit(appointment);
                       }
@@ -146,7 +223,7 @@ export function handleEventRender(info, func) {
           info.el,
         );
       } else if (info.view.type === 'dayGridMonth') {
-        if (!appointment.registrationStatus) {
+        if (!registrationStatus) {
           info.el.addEventListener('dblclick', () => {
             func.edit(appointment);
           });
@@ -156,8 +233,8 @@ export function handleEventRender(info, func) {
       const { patientId, patientName, phone, doctor, note, status } = appointment;
       const isCanceled = status === 'CANCEL';
       render(
-        <div
-          style={{ color: isCanceled ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.65)' }}
+        <ListWeekContainer
+          isCanceled={isCanceled}
           onDoubleClick={
             isCanceled
               ? null
@@ -171,7 +248,33 @@ export function handleEventRender(info, func) {
               doctor.user.firstName
             } ${note ? ', ' + note : ''}`}
           </span>
-        </div>,
+          {!isCanceled && (
+            <XrayContainerListView>
+              {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vision) && (
+                <div>
+                  <VisionImg
+                    width="23"
+                    onClick={() => {
+                      func.xray({ vendor: XRAY_VENDORS.vision, appointment });
+                    }}
+                    onDoubleClick={e => e.stopPropagation()}
+                  />
+                </div>
+              )}
+              {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vixwin) && (
+                <div>
+                  <VixWinImg
+                    width="23"
+                    onClick={() => {
+                      func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
+                    }}
+                    onDoubleClick={e => e.stopPropagation()}
+                  />
+                </div>
+              )}
+            </XrayContainerListView>
+          )}
+        </ListWeekContainer>,
         info.el.querySelector('a'),
       );
     }

@@ -133,15 +133,3 @@ export const StyledInput = styled(Input)`
     border-radius: 8px;
   }
 `;
-
-export const StyledInputArea = styled(Input.TextArea)`
-  &.textarea-input {
-    background: #f8fafb;
-    border-radius: 8px 8px 0 0;
-    font-weight: 600;
-    font-size: 15px;
-    scrollbar-width: none; /* Firefox */
-    resize: none;
-    color: ${Default};
-  }
-`;

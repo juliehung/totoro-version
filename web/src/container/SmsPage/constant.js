@@ -1,3 +1,5 @@
+export const tags = ['約診日期', '約診時間', '病患姓名', '診所名稱', '約診醫師', '約診內容'];
+
 export const SMS_PAGE = 'totoro-web-smsPage/';
 
 export const GET_EVENTS = `${SMS_PAGE}GET_EVENTS`;
@@ -11,7 +13,6 @@ export const EDIT_TITLE = `${SMS_PAGE}EDIT_TITLE`;
 export const EDIT_TEMPLATE = `${SMS_PAGE}EDIT_TEMPLATE`;
 
 export const FILTER_EVENTS = `${SMS_PAGE}FILTER_EVENTS`;
-export const ADD_TAG = `${SMS_PAGE}ADD_TAG`;
 
 export const SAVE_EVENT = `${SMS_PAGE}SAVE_EVENT`;
 export const SAVE_EVENT_SUCCESS = `${SMS_PAGE}SAVE_EVENT_SUCCESS`;
@@ -37,5 +38,3 @@ export const GET_CLINIC_REMAINING_SUCCESS = `${SMS_PAGE}GET_CLINIC_REMAINING_SUC
 
 export const GET_USERS = `${SMS_PAGE}GET_USERS`;
 export const GET_USERS_SUCCESS = `${SMS_PAGE}GET_USERS_SUCCESS`;
-
-export const SET_CARET_POSITION = `${SMS_PAGE}SET_CARET_POSITION`;

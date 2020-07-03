@@ -3,7 +3,6 @@ import { GET_SETTINGS_START, GET_SETTINGS_SUCCESS, PUT_SETTINGS_START, PUT_SETTI
 
 const initState = {
   settings: undefined,
-  generalSetting: undefined,
   loading: false,
   putSuccess: false,
 };
@@ -19,7 +18,6 @@ const settings = (state = initialState, action) =>
         break;
       case GET_SETTINGS_SUCCESS:
         draft.settings = action.settings;
-        draft.generalSetting = action.settings.preferences.generalSetting;
         draft.loading = initState.loading;
         break;
       case PUT_SETTINGS_START:
@@ -27,7 +25,7 @@ const settings = (state = initialState, action) =>
         break;
       case PUT_SETTINGS_SUCCESS:
         draft.putSuccess = true;
-        draft.generalSetting = action.settings.preferences.generalSetting;
+        draft.settings = action.settings;
         break;
       default:
         break;

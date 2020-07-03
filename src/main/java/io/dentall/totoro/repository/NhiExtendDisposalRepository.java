@@ -2,6 +2,7 @@ package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
+import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -20,6 +22,27 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long>, JpaSpecificationExecutor<NhiExtendDisposal> {
+
+    List<NhiExtendDisposalTable> findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
+        LocalDate start,
+        LocalDate end,
+        LocalDate rstart,
+        LocalDate rend,
+        String a19);
+
+    Page<NhiExtendDisposalTable> findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
+        LocalDate start,
+        LocalDate end,
+        LocalDate rstart,
+        LocalDate rend,
+        String a19,
+        Pageable pageable);
+
+    Set<NhiExtendDisposalTable> findNhiExtendDisposalByDate(LocalDate date);
+
+    // 實際上我們系統中，nhi_ext_disp - disp 的關係是 many-to-one，實際上系統確實也有這種類型的資料，因此 當有多個時 便不適用於 Optional 這種情境（因為這帶有 0 | 1）多個則不合法
+    // 會出 exception。使用這個 repository 的邏輯便會是 取得 List by disposal_id 且 order by Id，取最後一筆資料
+    List<NhiExtendDisposalTable> findNhiExtendDisposalByDisposal_IdOrderById(Long id);
 
     String dateBetween = "((nhiExtendDisposal.date between :start and :end and nhiExtendDisposal.replenishmentDate is null) or " +
         "(nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate between :start and :end)) ";

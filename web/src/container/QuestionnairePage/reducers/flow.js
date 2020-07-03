@@ -11,6 +11,8 @@ import {
   INIT_PAGE,
   CREATE_Q_WITH_SIGN,
   CREATE_Q_WITHOUT_SIGN,
+  VALIDATE_SUCCESS,
+  VALIDATE_FAIL,
 } from '../constant';
 
 const initState = {
@@ -19,6 +21,7 @@ const initState = {
   sendLoading: false,
   isSigEmpty: true,
   createQSuccess: false,
+  validationError: [],
 };
 
 export const initialState = { ...initState };
@@ -35,6 +38,7 @@ const flow = (state = initialState, action) =>
         break;
       case NEXT_PAGE:
         draft.reverse = false;
+        draft.validationError = initState.validationError;
         break;
       case PREV_PAGE:
         draft.reverse = true;
@@ -64,6 +68,14 @@ const flow = (state = initialState, action) =>
       case CREATE_Q_WITH_SIGN:
       case CREATE_Q_WITHOUT_SIGN:
         draft.sendLoading = true;
+        break;
+      case VALIDATE_SUCCESS:
+        draft.validationError = state.validationError.filter(s => s === action.page);
+        break;
+      case VALIDATE_FAIL:
+        if (!state.validationError.find(e => e === action.page)) {
+          draft.validationError = [...state.validationError, action.page];
+        }
         break;
       default:
         break;

@@ -2,6 +2,7 @@ package io.dentall.totoro.business.service.nhi.util;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.service.util.StreamUtil;
 
 import java.util.List;
@@ -41,14 +42,21 @@ public class NhiStatisticUtil {
             );
     }
 
-    public static Map<String, Integer> getDoctorTeethCountByCode(List<NhiExtendDisposal> nhiExtendDisposals, String code) {
+    public static Map<String, Integer> getDoctorTeethCountByCode(
+        List<NhiExtendDisposal> nhiExtendDisposals,
+        String code,
+        NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository
+    ) {
         return nhiExtendDisposals
             .stream()
             .flatMap(nhiExtendDisposal -> StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures()))
             .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getA73().equals(code))
             .collect(
                 groupingBy(
-                    nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getCreatedBy(),
+                    nhiExtendTreatmentProcedure ->
+                        nhiExtendTreatmentProcedureRepository.findById(nhiExtendTreatmentProcedure.getId(), NhiExtendTreatmentProcedureCreatedBy.class)
+                            .map(NhiExtendTreatmentProcedureCreatedBy::getTreatmentProcedure_Disposal_CreatedBy)
+                            .orElse(""),
                     teethCounter
                 )
             );
@@ -65,4 +73,11 @@ public class NhiStatisticUtil {
         },
         a -> a[0]
     );
+
+    public interface NhiExtendTreatmentProcedureCreatedBy {
+
+        Long getId();
+
+        String getTreatmentProcedure_Disposal_CreatedBy();
+    }
 }

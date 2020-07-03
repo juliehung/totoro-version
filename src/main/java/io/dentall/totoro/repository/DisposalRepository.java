@@ -1,6 +1,7 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.Disposal;
+import io.dentall.totoro.service.dto.table.DisposalTable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,8 @@ import java.util.stream.Stream;
 @SuppressWarnings("unused")
 @Repository
 public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSpecificationExecutor<Disposal> {
+
+    Optional<DisposalTable> findDisposalById(Long id);
 
     @Query("select disposal from Disposal disposal left join fetch disposal.prescription prescription " +
         "left join fetch prescription.treatmentDrugs left join fetch disposal.todo " +

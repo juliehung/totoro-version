@@ -2,19 +2,18 @@ package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dentall.totoro.domain.enumeration.DisposalRevisitInterval;
+import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedBy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Set;
 import java.util.Objects;
-
-import io.dentall.totoro.domain.enumeration.DisposalStatus;
-import org.springframework.data.annotation.CreatedBy;
+import java.util.Set;
 
 /**
  * A Disposal.
@@ -45,6 +44,19 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "chief_complaint")
     private String chiefComplaint;
+
+    @Column(name = "revisit_content")
+    private String revisitContent;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "revisit_interval")
+    private DisposalRevisitInterval revisitInterval;
+
+    @Column(name = "revisit_treatment_time")
+    private Integer revisitTreatmentTime;
+
+    @Column(name = "revisit_comment")
+    private String revisitComment;
 
     @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -77,6 +89,26 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "date_time_end")
     private Instant dateTimeEnd;
+
+    public Disposal revisitContent(String revisitContent) {
+        this.revisitContent = revisitContent;
+        return this;
+    }
+
+    public Disposal revisitInterval(DisposalRevisitInterval revisitInterval) {
+        this.revisitInterval = revisitInterval;
+        return this;
+    }
+
+    public Disposal revisitTreatmentTime(Integer revisitTreatmentTime) {
+        this.revisitTreatmentTime = revisitTreatmentTime;
+        return this;
+    }
+
+    public Disposal revisitComment(String revisitComment) {
+        this.revisitComment = revisitComment;
+        return this;
+    }
 
     public Disposal dateTimeEnd(Instant dateTimeEnd) {
         this.dateTimeEnd = dateTimeEnd;
@@ -299,6 +331,42 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
         return super.getLastModifiedDate();
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getRevisitContent() {
+        return revisitContent;
+    }
+
+    public void setRevisitContent(String revisitContent) {
+        this.revisitContent = revisitContent;
+    }
+
+    public DisposalRevisitInterval getRevisitInterval() {
+        return revisitInterval;
+    }
+
+    public void setRevisitInterval(DisposalRevisitInterval revisitInterval) {
+        this.revisitInterval = revisitInterval;
+    }
+
+    public Integer getRevisitTreatmentTime() {
+        return revisitTreatmentTime;
+    }
+
+    public void setRevisitTreatmentTime(Integer revisitTreatmentTime) {
+        this.revisitTreatmentTime = revisitTreatmentTime;
+    }
+
+    public String getRevisitComment() {
+        return revisitComment;
+    }
+
+    public void setRevisitComment(String revisitComment) {
+        this.revisitComment = revisitComment;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -327,6 +395,10 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
             ", total=" + getTotal() +
             ", dateTime='" + getDateTime() + "'" +
             ", chiefComplaint='" + getChiefComplaint() + "'" +
+            ", revisitContent='" + getRevisitContent() + "'" +
+            ", revisitInterval='" + getRevisitInterval() + "'" +
+            ", revisitTreatmentTime='" + getRevisitTreatmentTime() + "'" +
+            ", revisitComment='" + getRevisitComment() + "'" +
             "}";
     }
 }

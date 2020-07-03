@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { preChangeGender } from '../actions';
 import { GenderOption } from '../constant_options';
 import { Container } from './Name';
-import PageControllContainer from '../PageControllContainer';
 import { StyleRightCircleTwoTone } from './Address';
 
 //#region
@@ -88,7 +87,6 @@ function Gender(props) {
           );
         })}
       </CardContainer>
-      <PageControllContainer />
     </Container>
   );
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20200630-Sql-2" author="WeiChen">
+        <sql dbms="postgresql" splitStatements="true">
+            UPDATE nhi_procedure SET specific_code = null WHERE code = '8P';
+            UPDATE nhi_procedure SET specific_code = 'P1' WHERE code = '90011C';
+            UPDATE nhi_procedure SET specific_code = 'P1' WHERE code = '90017C';
+            UPDATE nhi_procedure SET specific_code = 'P1' WHERE code = '90018C';
+            UPDATE nhi_procedure SET specific_code = 'P1' WHERE code = '90019C';
+            UPDATE nhi_procedure SET specific_code = 'P1' WHERE code = '90020C';
+            UPDATE nhi_procedure SET specific_code = null WHERE code = '91021C';
+            UPDATE nhi_procedure SET specific_code = null WHERE code = '91022C';
+            UPDATE nhi_procedure SET specific_code = null WHERE code = '91023C';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

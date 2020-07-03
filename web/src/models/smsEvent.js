@@ -26,7 +26,10 @@ export default class SmsEvent {
       status: event.status,
       metadata: {
         template: event.metadata.template,
-        selectedAppointments: event.metadata.selectedAppointments,
+        selectedAppointments: event.metadata.selectedAppointments?.map(a => {
+          const app = { ...a, doctor: { id: a.doctor.id, user: { firstName: a.doctor.user.firstName } } };
+          return app;
+        }),
       },
       sms: event.sms,
     };

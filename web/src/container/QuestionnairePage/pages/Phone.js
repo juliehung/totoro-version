@@ -1,21 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { nextPage, changePhone } from '../actions';
-import { Container } from './Name';
-import { TransparentInput } from './Name';
-import ConfirmButton from './ConfirmButton';
-import PageControllContainer from '../PageControllContainer';
+import { nextPage, changePhone, valitationFail } from '../actions';
+import { Container, TransparentInput } from './Name';
 import { StyleRightCircleTwoTone } from './Address';
+import { phoneValidator } from '../utils/validators';
+import ErrorMessage from './ErrorMessage';
 
 function Phone(props) {
+  const { patient, nextPage, validationError, valitationFail } = props;
   const onInputChange = e => {
     props.changePhone(e.target.value);
   };
 
   const onPressEnter = () => {
-    if (props.phone && props.phone.length !== 0) {
-      props.nextPage();
+    if (!phoneValidator(patient)) {
+      valitationFail(6);
+      return;
     }
+    nextPage();
   };
 
   return (
@@ -28,17 +30,19 @@ function Phone(props) {
         size="large"
         placeholder="請在此鍵入答案"
         onChange={onInputChange}
-        value={props.phone}
+        value={patient.phone}
         onPressEnter={onPressEnter}
       />
-      <ConfirmButton nextPage={props.nextPage} disabled={!props.phone || props.phone.length === 0} />
-      <PageControllContainer />
+      {validationError.includes(6) && <ErrorMessage errorText="電話格式錯誤" />}
     </Container>
   );
 }
 
-const mapStateToProps = state => ({ phone: state.questionnairePageReducer.data.patient.phone });
+const mapStateToProps = ({ questionnairePageReducer }) => ({
+  patient: questionnairePageReducer.data.patient,
+  validationError: questionnairePageReducer.flow.validationError,
+});
 
-const mapDispatchToProps = { nextPage, changePhone };
+const mapDispatchToProps = { nextPage, changePhone, valitationFail };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Phone);

@@ -4,10 +4,8 @@ import io.dentall.totoro.business.vm.nhi.NhiAbnormality;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormalityDoctor;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormalityPatient;
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import io.dentall.totoro.repository.NhiProcedureRepository;
-import io.dentall.totoro.repository.PatientRepository;
-import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import org.springframework.stereotype.Service;
@@ -36,6 +34,8 @@ public class NhiAbnormalityService {
 
     private final NhiProcedureRepository nhiProcedureRepository;
 
+    private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
+
     private final List<String> composeToothPosition = Arrays.asList("99", "FM", "UB", "LB", "UR", "UL", "LR", "LL", "UA", "LA");
 
     private final Predicate<NhiExtendTreatmentDrug> checkNhiExtendTreatmentDrug = nhiExtendTreatmentDrug ->
@@ -59,26 +59,37 @@ public class NhiAbnormalityService {
 
     private Map<String, String> nhiProcedureSpecificCode;
 
+    private final DisposalService disposalService;
+
     public NhiAbnormalityService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         PatientRepository patientRepository,
         UserRepository userRepository,
-        NhiProcedureRepository nhiProcedureRepository
+        NhiProcedureRepository nhiProcedureRepository,
+        DisposalService disposalService,
+        NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository
     ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.patientRepository = patientRepository;
         this.userRepository = userRepository;
         this.nhiProcedureRepository = nhiProcedureRepository;
+        this.disposalService = disposalService;
+        this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
     }
 
     @Transactional(readOnly = true)
     public NhiAbnormality getNhiAbnormality(int yyyymm) {
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
-        List<NhiExtendDisposal> monthlyNhiExtendDisposals = nhiExtendDisposalRepository
-            .findByDateBetween(
+        List<NhiExtendDisposal> monthlyNhiExtendDisposals =
+            nhiExtendDisposalRepository.findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
                 ym.atDay(1),
-                ym.atEndOfMonth()
-            );
+                ym.atEndOfMonth(),
+                ym.atDay(1),
+                ym.atEndOfMonth(),
+                "2"
+            ).stream()
+                .map(nhiExtendDisposalTable -> disposalService.getDisposalByProjection(nhiExtendDisposalTable.getDisposal_Id()).getNhiExtendDisposals().iterator().next())
+                .collect(Collectors.toList());
 
         NhiAbnormality nhiAbnormality = new NhiAbnormality();
 
@@ -302,7 +313,7 @@ public class NhiAbnormalityService {
     }
 
     private List<NhiExtendDisposal> filterRatioOf90004cTo90015c(List<NhiExtendDisposal> nhiExtendDisposals) {
-        Map<String, Integer> doctorTeethCount = getDoctorTeethCountByCode(nhiExtendDisposals, "90015C");
+        Map<String, Integer> doctorTeethCount = getDoctorTeethCountByCode(nhiExtendDisposals, "90015C", nhiExtendTreatmentProcedureRepository);
         List<String> ratioOf90004cTo90015cIncludeDoctors = doctorTeethCount
             .entrySet()
             .stream()
