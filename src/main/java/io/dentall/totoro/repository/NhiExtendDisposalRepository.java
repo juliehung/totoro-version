@@ -2,6 +2,7 @@ package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
+import io.dentall.totoro.service.dto.StatisticSpDTO;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,18 @@ import java.util.Set;
 @SuppressWarnings("unused")
 @Repository
 public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long>, JpaSpecificationExecutor<NhiExtendDisposal> {
+
+    @Query(
+        "select new io.dentall.totoro.service.dto.StatisticSpDTO(d.createdBy, np.specificCode, np.point) " +
+        "from NhiExtendDisposal nhiExtendDisposal " +
+        "left join Disposal d on nhiExtendDisposal.disposal.id = d.id " +
+        "left join TreatmentProcedure t on d.id = t.disposal.id " +
+        "left join NhiExtendTreatmentProcedure nt on t.id = nt.treatmentProcedure.id " +
+        "left join NhiProcedure np on t.nhiProcedure.id = np.id " +
+        "where np.id is not null and nhiExtendDisposal.date between :start and :end and nhiExtendDisposal.replenishmentDate is null " +
+        "or np.id is not null and nhiExtendDisposal.a19 = '2' and nhiExtendDisposal.replenishmentDate between :start and :end"
+    )
+    List<StatisticSpDTO> findSp(@Param("start") LocalDate start, @Param("end") LocalDate end);
 
     List<NhiExtendDisposalTable> findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
         LocalDate start,
