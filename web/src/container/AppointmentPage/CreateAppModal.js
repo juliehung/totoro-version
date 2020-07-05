@@ -26,7 +26,6 @@ import {
 } from './actions';
 import styled from 'styled-components';
 import { requiredTreatmentTimeDefault } from './constant';
-import convertMrnTo5Digits from './utils/convertMrnTo5Digits';
 import { GAevent } from '../../ga';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { defaultTimeOption } from './utils/generateDefaultTime';
@@ -283,9 +282,9 @@ function CreateAppModal({
           onSelect={onPatientSelect}
           notFoundContent={<Empty description="沒有資料" />}
         >
-          {patients.map(({ id, name }) => (
-            <Select.Option key={id} value={id}>
-              {`${name}, ${convertMrnTo5Digits(id)}`}
+          {patients.map(({ medicalId, name }) => (
+            <Select.Option key={medicalId} value={medicalId}>
+              {`${name}, ${medicalId}`}
             </Select.Option>
           ))}
         </StyledSearchSelect>
