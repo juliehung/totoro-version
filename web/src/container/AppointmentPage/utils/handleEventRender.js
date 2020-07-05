@@ -137,13 +137,12 @@ export function handleEventRender(info, func, params) {
             {status !== 'CANCEL' && (
               <XrayContainer>
                 {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vision) && (
-                  <div>
-                    <VisionImg
-                      width="23"
-                      onClick={() => {
-                        func.xray({ vendor: XRAY_VENDORS.vision, appointment });
-                      }}
-                    />
+                  <div
+                    onClick={() => {
+                      func.xray({ vendor: XRAY_VENDORS.vision, appointment });
+                    }}
+                  >
+                    <VisionImg width="23" />
                   </div>
                 )}
                 {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vixwin) && (
@@ -251,25 +250,23 @@ export function handleEventRender(info, func, params) {
           {!isCanceled && (
             <XrayContainerListView>
               {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vision) && (
-                <div>
-                  <VisionImg
-                    width="23"
-                    onClick={() => {
-                      func.xray({ vendor: XRAY_VENDORS.vision, appointment });
-                    }}
-                    onDoubleClick={e => e.stopPropagation()}
-                  />
+                <div
+                  onClick={() => {
+                    func.xray({ vendor: XRAY_VENDORS.vision, appointment });
+                  }}
+                  onDoubleClick={e => e.stopPropagation()}
+                >
+                  <VisionImg width="23" />
                 </div>
               )}
               {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vixwin) && (
-                <div>
-                  <VixWinImg
-                    width="23"
-                    onClick={() => {
-                      func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
-                    }}
-                    onDoubleClick={e => e.stopPropagation()}
-                  />
+                <div
+                  onClick={() => {
+                    func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
+                  }}
+                  onDoubleClick={e => e.stopPropagation()}
+                >
+                  <VixWinImg width="23" />
                 </div>
               )}
             </XrayContainerListView>
