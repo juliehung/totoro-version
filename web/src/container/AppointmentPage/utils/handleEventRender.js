@@ -2,7 +2,6 @@ import { Popover, Dropdown, Menu, Button, Popconfirm } from 'antd';
 import React from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
-import convertMrnTo5Digits from './convertMrnTo5Digits';
 import { PhoneOutlined, UserOutlined, SolutionOutlined, EditOutlined } from '@ant-design/icons';
 import VisionImg from '../../../component/VisionImg';
 import VixWinImg from '../../../component/VixWinImg';
@@ -100,15 +99,15 @@ export function handleEventRender(info, func, params) {
   if (info.event.extendedProps.eventType === 'appointment') {
     const appointment = info.event.extendedProps.appointment;
     if (info.view.type.indexOf('Grid') !== -1) {
-      const { id, patientId, patientName, phone, doctor, note, status, registrationStatus } = appointment;
+      const { id, medicalId, patientName, phone, doctor, note, status, registrationStatus } = appointment;
 
       if (info.view.type !== 'dayGridMonth') {
         const fcTitle = info.el.querySelector('.fc-title');
         if (fcTitle) {
           const fcTitleClone = fcTitle.innerHTML;
           fcTitle.innerHTML = note
-            ? `<div><b>${fcTitleClone}(${convertMrnTo5Digits(patientId)})</b><br /><span>${note}</span></div>`
-            : `<div><b>${fcTitleClone}(${convertMrnTo5Digits(patientId)})</b><br /></div>`;
+            ? `<div><b>${fcTitleClone}(${medicalId})</b><br /><span>${note}</span></div>`
+            : `<div><b>${fcTitleClone}(${medicalId})</b><br /></div>`;
         }
 
         const fcContent = info.el.querySelector('.fc-content');
@@ -121,7 +120,7 @@ export function handleEventRender(info, func, params) {
             <HightLightSpan>
               {status === 'CANCEL' ? '[C]' : null} {patientName}
             </HightLightSpan>
-            <HightLightSpan>{convertMrnTo5Digits(patientId)}</HightLightSpan>
+            <HightLightSpan>{medicalId}</HightLightSpan>
             <BreakP>
               <StyledPhoneOutlined />
               {phone}
@@ -229,7 +228,7 @@ export function handleEventRender(info, func, params) {
         }
       }
     } else if (info.view.type === 'listWeek') {
-      const { patientId, patientName, phone, doctor, note, status } = appointment;
+      const { medicalId, patientName, phone, doctor, note, status } = appointment;
       const isCanceled = status === 'CANCEL';
       render(
         <ListWeekContainer
@@ -243,7 +242,7 @@ export function handleEventRender(info, func, params) {
           }
         >
           <span>
-            {`${'No. ' + patientId}, ${isCanceled ? '[C]' : ''}${patientName}, ${phone ? phone + `,` : ''} ${
+            {`${medicalId}, ${isCanceled ? '[C]' : ''}${patientName}, ${phone ? phone + `,` : ''} ${
               doctor.user.firstName
             } ${note ? ', ' + note : ''}`}
           </span>
