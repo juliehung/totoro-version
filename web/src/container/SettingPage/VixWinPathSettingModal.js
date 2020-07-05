@@ -212,9 +212,9 @@ function VixWinPathSettingModal(props) {
 }
 
 const mapStateToProps = ({ homePageReducer }) => ({
-  preImagePath: homePageReducer.settings.settings?.preferences?.generalSetting?.xrayVenderSettingWeb?.vixwin?.imagePath,
+  preImagePath: homePageReducer.settings.settings?.preferences?.generalSetting?.xRayVendorSettingWeb?.vixwin?.imagePath,
   preApplicationPath:
-    homePageReducer.settings.settings?.preferences?.generalSetting?.xrayVenderSettingWeb?.vixwin.applicationPath,
+    homePageReducer.settings.settings?.preferences?.generalSetting?.xRayVendorSettingWeb?.vixwin.applicationPath,
   settings: homePageReducer.settings.settings,
 });
 
