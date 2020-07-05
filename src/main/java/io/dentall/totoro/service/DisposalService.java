@@ -87,6 +87,14 @@ public class DisposalService {
 
     private final AppointmentMapper appointmentMapper;
 
+    private final ProcedureRepository procedureRepository;
+
+    private final ProcedureTypeRepository procedureTypeRepository;
+
+    private final ProcedureMapper procedureMapper;
+
+    private final ProcedureTypeMapper procedureTypeMapper;
+
     public DisposalService(
         DisposalRepository disposalRepository,
         PrescriptionService prescriptionService,
@@ -116,8 +124,11 @@ public class DisposalService {
         TreatmentDrugMapper treatmentDrugMapper,
         NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper,
         AppointmentRepository appointmentRepository,
-        AppointmentMapper appointmentMapper
-    ) {
+        AppointmentMapper appointmentMapper,
+        ProcedureRepository procedureRepository,
+        ProcedureTypeRepository procedureTypeRepository,
+        ProcedureMapper procedureMapper,
+        ProcedureTypeMapper procedureTypeMapper) {
         this.disposalRepository = disposalRepository;
         this.prescriptionService = prescriptionService;
         this.todoService = todoService;
@@ -146,6 +157,10 @@ public class DisposalService {
         this.treatmentDrugMapper = treatmentDrugMapper;
         this.appointmentRepository = appointmentRepository;
         this.appointmentMapper = appointmentMapper;
+        this.procedureRepository = procedureRepository;
+        this.procedureTypeRepository = procedureTypeRepository;
+        this.procedureMapper = procedureMapper;
+        this.procedureTypeMapper = procedureTypeMapper;
     }
 
     /**
@@ -410,6 +425,7 @@ public class DisposalService {
         Set<TreatmentProcedure> treatmentProcedures = treatmentProcedureRepository.findTreatmentProceduresByDisposal_Id(id).stream()
             .map(treatmentProcedureMapper::TreatmentProcedureTableToTreatmentProcedure)
             .map(treatmentProcedure -> {
+                // Nhi procedure
                 if (treatmentProcedure.getNhiExtendTreatmentProcedure() != null &&
                     treatmentProcedure.getNhiExtendTreatmentProcedure().getId() != null &&
                     treatmentProcedure.getNhiProcedure() != null &&
@@ -432,6 +448,19 @@ public class DisposalService {
                         nhiExtendTreatmentProcedures.add(nhiExtendTreatmentProcedure);
                         nhiExtendTreatmentProcedure.setTreatmentProcedure(treatmentProcedure);
                         treatmentProcedure.setNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure);
+                    }
+
+                    // Add tooth
+                    treatmentProcedure.setTeeth(toothMapper.toothSetToToothSet(toothRepository.findToothByTreatmentProcedure_Id(treatmentProcedure.getId())));
+                }
+                // None Nhi procedure
+                else if (treatmentProcedure.getProcedure() != null &&
+                    treatmentProcedure.getProcedure().getId() != null
+                ) {
+                    // TreatmentProcedure.Procedure
+                    Optional<ProcedureTable> optionalProcedureTable = procedureRepository.findProcedureById(treatmentProcedure.getProcedure().getId());
+                    if (optionalProcedureTable.isPresent()) {
+                        treatmentProcedure.setProcedure(procedureMapper.procedureTableToProcedure(optionalProcedureTable.get()));
                     }
 
                     // Add tooth
