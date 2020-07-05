@@ -26,15 +26,16 @@ function* openXray(action) {
     } = action;
     console.log(vendor, patient);
 
-    const patient_id = patient.medicalId;
     const patient_name = patient.name;
     const birthday = patient.birth ? moment(patient.birth).format('DD/MM/YYYY') : null;
     const gender = patient.gender ? patient.gender[0] : null;
     console.log(vendor);
 
     if (vendor === XRAY_VENDORS.vision) {
+      const patient_id = patient.medicalId;
       yield call(Xray.get, { vendor, patient_id, patient_name, birthday, gender });
     } else if (vendor === XRAY_VENDORS.vixwin) {
+      const patient_id = patient.nationalId;
       yield call(Xray.get, { vendor, patient_id, patient_name });
     }
   } catch (err) {
