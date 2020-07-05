@@ -440,8 +440,9 @@ class AppCalendar extends React.Component {
     const calendarApi = this.calendarComponentRef.current.getApi();
     const currentViewType = calendarApi.state.viewType;
     if (currentViewType === 'timeGridWeek') {
+      const nextDay = this.props.calendarDate.clone().add(1, 'd').format('YYYY-MM-DD');
+      calendarApi.gotoDate(nextDay);
       this.props.changeCalFirstDay(this.props.firstDay + 1);
-      this.props.changeCalDate(moment(calendarApi.getDate()).add(1, 'day'));
       return;
     }
     calendarApi.next();
@@ -451,8 +452,9 @@ class AppCalendar extends React.Component {
     const calendarApi = this.calendarComponentRef.current.getApi();
     const currentViewType = calendarApi.state.viewType;
     if (currentViewType === 'timeGridWeek') {
+      const prevDay = this.props.calendarDate.add(-1, 'd').format('YYYY-MM-DD');
+      calendarApi.gotoDate(prevDay);
       this.props.changeCalFirstDay(this.props.firstDay - 1);
-      this.props.changeCalDate(moment(calendarApi.getDate()).add(-1, 'day'));
       return;
     }
     calendarApi.prev();
