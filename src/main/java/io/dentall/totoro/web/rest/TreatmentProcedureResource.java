@@ -145,10 +145,10 @@ public class TreatmentProcedureResource {
     // Business API, for recent treatment
     @GetMapping("/treatment-procedures/by/{patientId}/recently")
     @Timed
-    public ResponseEntity<TreatmentProcedure> getRecent6Treatments(@PathVariable Long patientId) {
+    public ResponseEntity<List<TreatmentProcedure>> getRecent6Treatments(@PathVariable Long patientId) {
         log.debug("REST request to get recent 6 TreatmentProcedures : {}", patientId);
         // query recent 6 Treatment procedures
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(treatmentProcedureService.findRecent6TreatmentProceduresByPatient(patientId));
     }
 
 }

@@ -5,6 +5,11 @@ import io.dentall.totoro.domain.Todo;
 import io.dentall.totoro.domain.Tooth;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.dto.table.AppointmentTable;
+import io.dentall.totoro.service.dto.table.DisposalTable;
+import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
+import io.dentall.totoro.service.dto.table.ProcedureTable;
+import io.dentall.totoro.service.mapper.*;
 import io.dentall.totoro.service.util.StreamUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -15,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -45,6 +51,22 @@ public class TreatmentProcedureService {
 
     private final NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService;
 
+    private final TreatmentProcedureMapper treatmentProcedureMapper;
+
+    private final NhiProcedureMapper nhiProcedureMapper;
+
+    private final ProcedureMapper procedureMapper;
+
+    private final ToothMapper toothMapper;
+
+    private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
+
+    private final ExtendUserRepository extendUserRepository;
+
+    private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
+
+    private final ToothRepository toothRepository;
+
     static Predicate<TreatmentProcedure> isDeletable = treatmentProcedure -> {
         if (treatmentProcedure.getProcedure() == null && treatmentProcedure.getNhiProcedure() == null) {
             return true;
@@ -69,8 +91,15 @@ public class TreatmentProcedureService {
         TreatmentTaskRepository treatmentTaskRepository,
         DisposalRepository disposalRepository,
         NhiProcedureRepository nhiProcedureRepository,
-        NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService
-    ) {
+        NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService,
+        TreatmentProcedureMapper treatmentProcedureMapper,
+        NhiProcedureMapper nhiProcedureMapper,
+        ProcedureMapper procedureMapper,
+        ToothMapper toothMapper,
+        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
+        ExtendUserRepository extendUserRepository,
+        NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
+        ToothRepository toothRepository) {
         this.treatmentProcedureRepository = treatmentProcedureRepository;
         this.procedureRepository = procedureRepository;
         this.appointmentRepository = appointmentRepository;
@@ -79,6 +108,14 @@ public class TreatmentProcedureService {
         this.disposalRepository = disposalRepository;
         this.nhiProcedureRepository = nhiProcedureRepository;
         this.nhiExtendTreatmentProcedureService = nhiExtendTreatmentProcedureService;
+        this.treatmentProcedureMapper = treatmentProcedureMapper;
+        this.nhiProcedureMapper = nhiProcedureMapper;
+        this.procedureMapper = procedureMapper;
+        this.toothMapper = toothMapper;
+        this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
+        this.extendUserRepository = extendUserRepository;
+        this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
+        this.toothRepository = toothRepository;
     }
 
     /**
@@ -297,5 +334,62 @@ public class TreatmentProcedureService {
 
     private NhiExtendTreatmentProcedure getNhiExtendTreatmentProcedure(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         return nhiExtendTreatmentProcedure.getId() == null ? nhiExtendTreatmentProcedureService.save(nhiExtendTreatmentProcedure) : nhiExtendTreatmentProcedureService.update(nhiExtendTreatmentProcedure);
+    }
+
+    public List<TreatmentProcedure> findRecent6TreatmentProceduresByPatient(Long patient) {
+        return treatmentProcedureRepository.findTop6ByAppointment_Patient_IdOrderByCreatedDateDesc(patient).stream()
+            .map(treatmentProcedureMapper::TreatmentProcedureTableToTreatmentProcedure)
+            .map(treatmentProcedure -> {
+                // NhiProcedure
+                if (treatmentProcedure.getNhiProcedure() != null &&
+                    treatmentProcedure.getNhiProcedure().getId() != null
+                ) {
+                    // TreatmentProcedure.nhiProcedure
+                    Optional<NhiProcedure> optionalNhiProcedure = nhiProcedureRepository.findById(treatmentProcedure.getNhiProcedure().getId());
+                    if (optionalNhiProcedure.isPresent()) {
+                        treatmentProcedure.setNhiProcedure(optionalNhiProcedure.get());
+                    }
+
+                    // TreatmentProcedure.nhiTreatmentProcedure
+                    Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable =
+                        nhiExtendTreatmentProcedureRepository.findNhiExtendTreatmentProcedureByTreatmentProcedure_Id(treatmentProcedure.getId());
+                    if (optionalNhiExtendTreatmentProcedureTable.isPresent()) {
+                        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure =
+                            nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
+                                optionalNhiExtendTreatmentProcedureTable.get()
+                            );
+                        nhiExtendTreatmentProcedure.setTreatmentProcedure(treatmentProcedure);
+                        treatmentProcedure.setNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure);
+                    }
+
+                }
+                // TreatmentProcedure.Procedure
+                else if (treatmentProcedure.getProcedure() != null &&
+                    treatmentProcedure.getProcedure().getId() != null
+                ) {
+                    Optional<ProcedureTable> optionalProcedureTable = procedureRepository.findProcedureById(treatmentProcedure.getProcedure().getId());
+                    if (optionalProcedureTable.isPresent()) {
+                        treatmentProcedure.setProcedure(procedureMapper.procedureTableToProcedure(optionalProcedureTable.get()));
+                    }
+                }
+
+                // TreatmentProcedure.Tooth
+                treatmentProcedure.setTeeth(toothMapper.toothSetToToothSet(toothRepository.findToothByTreatmentProcedure_Id(treatmentProcedure.getId())));
+                // Treatment.Disposal.Doctor
+                if (treatmentProcedure.getDisposal() != null &&
+                    treatmentProcedure.getDisposal().getId() != null
+                ) {
+                    Optional<DisposalTable> optionalDisposalTable = disposalRepository.findDisposalById(treatmentProcedure.getDisposal().getId());
+                    if (optionalDisposalTable.isPresent()) {
+                        Optional<AppointmentTable> optionalAppointmentTable = appointmentRepository
+                            .findAppointmentByRegistration_Id(optionalDisposalTable.get().getRegistration_Id());
+
+                        treatmentProcedure.setDoctor(extendUserRepository.findById(optionalAppointmentTable.get().getDoctorUser_Id()).orElse(null));
+                    }
+                }
+
+                return treatmentProcedure;
+            })
+            .collect(Collectors.toList());
     }
 }
