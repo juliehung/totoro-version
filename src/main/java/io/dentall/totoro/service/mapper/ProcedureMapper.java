@@ -34,7 +34,7 @@ public class ProcedureMapper {
         // Procedure.ProcedureType
         if (procedureTable.getProcedureType_Id() != null) {
             ProcedureType procedureType = new ProcedureType();
-            procedure.setId(procedureTable.getProcedureType_Id());
+            procedureType.setId(procedureTable.getProcedureType_Id());
 
             procedure.setProcedureType(procedureType);
         }
