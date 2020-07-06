@@ -7,5 +7,5 @@ export function parseColorConfigToColor(colorConfig) {
     set(object, r.configKey, r.configValue);
   });
   const parsedShiftConfig = get(object, shiftResourceColorConfigPrefix);
-  return parsedShiftConfig.colorHex ? parsedShiftConfig.colorHex : {};
+  return parsedShiftConfig?.colorHex ? parsedShiftConfig.colorHex : {};
 }

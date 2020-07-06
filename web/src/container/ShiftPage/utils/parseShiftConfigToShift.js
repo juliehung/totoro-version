@@ -6,7 +6,7 @@ export function parseShiftConfigToShift(shiftConfig) {
   shiftConfig.forEach(r => {
     set(object, r.configKey, r.configValue);
   });
-  const parsedShiftConfig = get(object, defaultShiftConfigPrefix);
+  const parsedShiftConfig = get(object, defaultShiftConfigPrefix) ?? {};
   const defaultShift = Object.keys(parsedShiftConfig)
     .map(k => {
       const name = parsedShiftConfig[k].name;
