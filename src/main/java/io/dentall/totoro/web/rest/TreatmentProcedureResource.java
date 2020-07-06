@@ -2,26 +2,24 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.service.TreatmentProcedureQueryService;
 import io.dentall.totoro.service.TreatmentProcedureService;
+import io.dentall.totoro.service.dto.TreatmentProcedureCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.dentall.totoro.service.dto.TreatmentProcedureCriteria;
-import io.dentall.totoro.service.TreatmentProcedureQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -143,4 +141,14 @@ public class TreatmentProcedureResource {
         treatmentProcedureService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
+
+    // Business API, for recent treatment
+    @GetMapping("/treatment-procedures/by/{patientId}/recently")
+    @Timed
+    public ResponseEntity<List<TreatmentProcedure>> getRecent6Treatments(@PathVariable Long patientId) {
+        log.debug("REST request to get recent 6 TreatmentProcedures : {}", patientId);
+        // query recent 6 Treatment procedures
+        return ResponseEntity.ok().body(treatmentProcedureService.findRecent6TreatmentProceduresByPatient(patientId));
+    }
+
 }
