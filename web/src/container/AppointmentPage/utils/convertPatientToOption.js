@@ -4,5 +4,6 @@ export default function convertPatientToOption(patients) {
     .map(p => ({
       name: p.name,
       medicalId: p.medicalId,
+      id: p.id,
     }));
 }

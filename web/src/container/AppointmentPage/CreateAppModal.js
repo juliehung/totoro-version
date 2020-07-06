@@ -282,8 +282,8 @@ function CreateAppModal({
           onSelect={onPatientSelect}
           notFoundContent={<Empty description="沒有資料" />}
         >
-          {patients.map(({ medicalId, name }) => (
-            <Select.Option key={medicalId} value={medicalId}>
+          {patients.map(({ medicalId, name, id }) => (
+            <Select.Option key={medicalId} value={id}>
               {`${name}, ${medicalId}`}
             </Select.Option>
           ))}
