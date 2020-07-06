@@ -1,18 +1,19 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.Patient;
-import io.dentall.totoro.domain.Registration;
-import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.AppointmentRepository;
+import io.dentall.totoro.repository.DisposalRepository;
 import io.dentall.totoro.repository.ExtendUserRepository;
 import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
+import io.dentall.totoro.service.mapper.AppointmentMapper;
+import io.dentall.totoro.service.util.MapperUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,18 +43,26 @@ public class AppointmentService {
 
     private final RelationshipService relationshipService;
 
+    private final AppointmentMapper appointmentMapper;
+
+    private final DisposalRepository disposalRepository;
+
     public AppointmentService(
         AppointmentRepository appointmentRepository,
         ExtendUserRepository extendUserRepository,
         PatientService patientService,
         @Lazy RegistrationService registrationService,
-        RelationshipService relationshipService
+        RelationshipService relationshipService,
+        AppointmentMapper appointmentMapper,
+        DisposalRepository disposalRepository
     ) {
         this.appointmentRepository = appointmentRepository;
         this.extendUserRepository = extendUserRepository;
         this.patientService = patientService;
         this.registrationService = registrationService;
         this.relationshipService = relationshipService;
+        this.appointmentMapper = appointmentMapper;
+        this.disposalRepository = disposalRepository;
     }
 
     /**
@@ -248,5 +257,36 @@ public class AppointmentService {
         return appointmentRepository.findAppointmentWithRelationshipBetween(beginDate, endDate).stream()
             .map(AppointmentSplitRelationshipDTO::new)
             .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Appointment> getAppointmentProjectionByPatientId(Long id, Pageable page) {
+        List<Appointment> appointments = appointmentRepository.findByPatient_Id(id, page)
+            .stream()
+            .map(appointmentMapper::appointmentTableToAppointment)
+            .map(appointment -> {
+                Registration registration = appointment.getRegistration();
+                if (registration != null && registration.getId() != null) {
+                    disposalRepository
+                        .findByRegistration_Id(registration.getId())
+                        .ifPresent(appointmentRegistrationDisposal -> {
+                            Disposal disposal = new Disposal();
+                            disposal.setId(appointmentRegistrationDisposal.getId());
+                            MapperUtil.setNullAuditing(disposal);
+
+                            registration.setDisposal(disposal);
+                        });
+                }
+
+                return appointment;
+            })
+            .collect(Collectors.toList());
+
+        return new PageImpl<>(appointments, page, appointments.size());
+    }
+
+    public interface AppointmentRegistrationDisposal {
+
+        Long getId();
     }
 }

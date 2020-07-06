@@ -120,7 +120,13 @@ public class AppointmentResource {
     @Timed
     public ResponseEntity<List<Appointment>> getAllAppointments(AppointmentCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Appointments by criteria: {}", criteria);
-        Page<Appointment> page = appointmentQueryService.findByCriteria(criteria, pageable);
+        Page<Appointment> page;
+        if (criteria.isOnlyPatientId()) {
+            page = appointmentService.getAppointmentProjectionByPatientId(criteria.getPatientId().getEquals(), pageable);
+        } else {
+            page = appointmentQueryService.findByCriteria(criteria, pageable);
+        }
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/appointments");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

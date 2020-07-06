@@ -18,6 +18,7 @@ logging:
         ROOT: INFO
         io.dentall.totoro: INFO
         io.github.jhipster: INFO
+        io.moquette.broker.metrics: OFF
 
 spring:
     devtools:
