@@ -9,13 +9,13 @@ export function mapStatusToColor(app) {
 
   if (app.registrationStatus) {
     if (app.registrationStatus === 'PENDING') {
-      return '#0085fe ';
+      return '#009788 ';
     }
     if (app.registrationStatus === 'IN_PROGRESS') {
       return '#00c49e';
     }
     if (app.registrationStatus === 'FINISHED') {
-      return '#7886CA';
+      return '#616161';
     }
   }
 
@@ -30,7 +30,7 @@ export function mapStatusToColor(app) {
     return '#F09300';
   }
 
-  return '#7886CA';
+  return '#e67c73';
 }
 
 export function convertAppToEvt(appointment) {
