@@ -1,18 +1,18 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.Todo;
+import io.dentall.totoro.domain.Tooth;
+import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.*;
-import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.zalando.problem.Status;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -93,10 +93,8 @@ public class TreatmentProcedureService {
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = treatmentProcedure.getNhiExtendTreatmentProcedure();
         Set<Tooth> teeth = treatmentProcedure.getTeeth();
         Instant createdDate = treatmentProcedure.getCreatedDate();
-        Set<Todo> todos = treatmentProcedure.getTodos();
         TreatmentProcedure txP = treatmentProcedureRepository.save(treatmentProcedure.teeth(null).nhiExtendTreatmentProcedure(null).todos(null));
         relationshipService.addRelationshipWithTeeth(txP.teeth(teeth));
-        relationshipService.addRelationshipWithTodos(txP, todos);
 
         if (nhiExtendTreatmentProcedure != null) {
             txP.setNhiExtendTreatmentProcedure(getNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure.treatmentProcedure(txP)));
@@ -111,7 +109,7 @@ public class TreatmentProcedureService {
         }
 
         if (txP.getTreatmentTask() != null && txP.getTreatmentTask().getId() != null) {
-            treatmentTaskRepository.findById(txP.getTreatmentTask().getId()).ifPresent(treatmentTask -> treatmentTask.getTreatmentProcedures().add(txP));
+//            treatmentTaskRepository.findById(txP.getTreatmentTask().getId()).ifPresent(treatmentTask -> treatmentTask.getTreatmentProcedures().add(txP));
         }
 
         if (txP.getDisposal() != null && txP.getDisposal().getId() != null) {
