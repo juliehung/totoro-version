@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 
@@ -18,6 +19,8 @@ import java.util.Set;
 @SuppressWarnings("unused")
 @Repository
 public interface TreatmentProcedureRepository extends JpaRepository<TreatmentProcedure, Long>, JpaSpecificationExecutor<TreatmentProcedure> {
+
+    List<TreatmentProcedureTable> findTop6ByAppointment_Patient_IdOrderByCreatedDateDesc(Long patientId);
 
     Set<TreatmentProcedureTable> findTreatmentProceduresByDisposal_Id(Long id);
 
