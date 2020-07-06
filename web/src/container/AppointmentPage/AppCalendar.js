@@ -40,7 +40,6 @@ import { handleEventRender } from './utils/handleEventRender';
 import { handleResourceRender } from './utils/handleResourceRender';
 import { convertSettingsToClinicOffEvent } from './utils/convertSettingsToClinicOffEvent';
 import { message, Spin, Popover } from 'antd';
-import MqttHelper from '../../utils/mqtt';
 import { calFirstDay } from './reducers/calendar';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
@@ -332,22 +331,6 @@ class AppCalendar extends React.Component {
     if (msg) {
       msg.parentNode.removeChild(msg);
     }
-
-    // mqtt
-    MqttHelper.subscribeAppointment(AppCalendar.name, message => {
-      let messageObj;
-      try {
-        messageObj = JSON.parse(message);
-      } catch (e) {
-        return;
-      }
-
-      const { start, end } = this.props.calendarRange;
-      const expectedArrivalTime = moment(messageObj.expectedArrivalTime);
-      if (expectedArrivalTime.isBetween(start, end)) {
-        // TODO: find a better way to update appointments
-      }
-    });
   }
 
   generalSettingEvents = [];
@@ -383,7 +366,6 @@ class AppCalendar extends React.Component {
   }
 
   componentWillUnmount() {
-    MqttHelper.unsubscribeAppointment(AppCalendar.name);
     clearInterval(this.intervalID);
   }
 
