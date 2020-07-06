@@ -1,14 +1,10 @@
 package io.dentall.totoro.service.dto;
 
+import io.dentall.totoro.domain.enumeration.AppointmentStatus;
+import io.github.jhipster.service.filter.*;
+
 import java.io.Serializable;
 import java.util.Objects;
-import io.dentall.totoro.domain.enumeration.AppointmentStatus;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.IntegerFilter;
-import io.github.jhipster.service.filter.LongFilter;
-import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.InstantFilter;
 
 /**
  * Criteria class for the Appointment entity. This class is used in AppointmentResource to
@@ -297,4 +293,25 @@ public class AppointmentCriteria implements Serializable {
             "}";
     }
 
+    public boolean isOnlyPatientId() {
+        return id == null &&
+            status == null &&
+            subject == null &&
+            note == null &&
+            expectedArrivalTime == null &&
+            requiredTreatmentTime == null &&
+            microscope == null &&
+            baseFloor == null &&
+            colorId == null &&
+            archived == null &&
+            contacted == null &&
+            patientId != null &&
+            registrationId == null &&
+            registrationType == null &&
+            doctorId == null &&
+            treatmentProcedureId == null &&
+            disposalId == null &&
+            noCard == null &&
+            arrivalTime == null;
+    }
 }

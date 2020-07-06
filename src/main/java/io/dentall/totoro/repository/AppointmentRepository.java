@@ -4,6 +4,8 @@ import io.dentall.totoro.domain.Appointment;
 import io.dentall.totoro.repository.dao.AppointmentDAO;
 import io.dentall.totoro.service.dto.AppointmentDTO;
 import io.dentall.totoro.service.dto.table.AppointmentTable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +25,8 @@ import java.util.Optional;
 public interface AppointmentRepository extends JpaRepository<Appointment, Long>, JpaSpecificationExecutor<Appointment> {
 
     Optional<AppointmentTable> findAppointmentByRegistration_Id(Long id);
+
+    Page<AppointmentTable> findByPatient_Id(Long id, Pageable page);
 
     List<Appointment> findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end);
 
