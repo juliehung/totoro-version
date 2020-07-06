@@ -173,7 +173,7 @@ function AppRight(props) {
   };
 
   const headerRender = ({ value }) => {
-    const month = value.format('MMMM');
+    const month = value.locale('zh-tw').format('MMMM');
     const year = value.year();
     return (
       <div>
