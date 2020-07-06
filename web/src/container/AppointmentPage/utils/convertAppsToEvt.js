@@ -15,7 +15,7 @@ export function mapStatusToColor(app) {
       return '#00c49e';
     }
     if (app.registrationStatus === 'FINISHED') {
-      return '#c2cbd5';
+      return '#7886CA';
     }
   }
 
@@ -23,14 +23,14 @@ export function mapStatusToColor(app) {
   const status = app.status;
 
   if (status === 'CANCEL') {
-    return '#c2cbd5';
+    return '#7886CA';
   }
 
   if (isBefore) {
-    return '#fcb34c';
+    return '#F09300';
   }
 
-  return '#c2cbd5';
+  return '#7886CA';
 }
 
 export function convertAppToEvt(appointment) {
