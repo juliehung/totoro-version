@@ -4,7 +4,9 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.DisposalRepository;
 import io.dentall.totoro.repository.ExtendUserRepository;
+import io.dentall.totoro.repository.RegistrationRepository;
 import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
+import io.dentall.totoro.service.dto.table.AppointmentTable;
 import io.dentall.totoro.service.mapper.AppointmentMapper;
 import io.dentall.totoro.service.util.MapperUtil;
 import io.dentall.totoro.service.util.StreamUtil;
@@ -47,6 +49,8 @@ public class AppointmentService {
 
     private final DisposalRepository disposalRepository;
 
+    private final RegistrationRepository registrationRepository;
+
     public AppointmentService(
         AppointmentRepository appointmentRepository,
         ExtendUserRepository extendUserRepository,
@@ -54,7 +58,8 @@ public class AppointmentService {
         @Lazy RegistrationService registrationService,
         RelationshipService relationshipService,
         AppointmentMapper appointmentMapper,
-        DisposalRepository disposalRepository
+        DisposalRepository disposalRepository,
+        RegistrationRepository registrationRepository
     ) {
         this.appointmentRepository = appointmentRepository;
         this.extendUserRepository = extendUserRepository;
@@ -63,6 +68,7 @@ public class AppointmentService {
         this.relationshipService = relationshipService;
         this.appointmentMapper = appointmentMapper;
         this.disposalRepository = disposalRepository;
+        this.registrationRepository = registrationRepository;
     }
 
     /**
@@ -261,7 +267,8 @@ public class AppointmentService {
 
     @Transactional(readOnly = true)
     public Page<Appointment> getAppointmentProjectionByPatientId(Long id, Pageable page) {
-        List<Appointment> appointments = appointmentRepository.findByPatient_Id(id, page)
+        Page<AppointmentTable> appointmentTables = appointmentRepository.findByPatient_Id(id, page);
+        List<Appointment> appointments = appointmentTables
             .stream()
             .map(appointmentMapper::appointmentTableToAppointment)
             .map(appointment -> {
@@ -276,17 +283,25 @@ public class AppointmentService {
 
                             registration.setDisposal(disposal);
                         });
+
+                    registrationRepository.findById(registration.getId(), AppointmentRegistration.class)
+                        .ifPresent(appointmentRegistration -> registration.setArrivalTime(appointmentRegistration.getArrivalTime()));
                 }
 
                 return appointment;
             })
             .collect(Collectors.toList());
 
-        return new PageImpl<>(appointments, page, appointments.size());
+        return new PageImpl<>(appointments, page, appointmentTables.getTotalElements());
     }
 
     public interface AppointmentRegistrationDisposal {
 
         Long getId();
+    }
+
+    public interface AppointmentRegistration {
+
+        Instant getArrivalTime();
     }
 }

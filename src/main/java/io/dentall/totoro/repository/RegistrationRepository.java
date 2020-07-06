@@ -20,4 +20,6 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
     List<Registration> findByArrivalTimeBetweenOrderByArrivalTimeAsc(Instant start, Instant end);
 
     Optional<RegistrationTable> findRegistrationByDisposal_Id(Long id);
+
+    <T> Optional<T> findById(Long id, Class<T> type);
 }
