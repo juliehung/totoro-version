@@ -10,7 +10,7 @@ export default function convertAppToPrintItem(appointments) {
         const key = p.id;
         const time = moment(p.expectedArrivalTime).format('HH:mm');
         const name = p.patientName;
-        const mrn = p.patientId;
+        const mrn = p.medicalId;
         const birth = p.birth;
         const gender = p.gender;
         const phone = p.phone;
