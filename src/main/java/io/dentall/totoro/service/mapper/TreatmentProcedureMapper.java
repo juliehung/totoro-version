@@ -48,6 +48,12 @@ public class TreatmentProcedureMapper {
             treatmentProcedure.setNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure);
         }
 
+        if (treatmentProcedureTable.getDisposal_Id() != null) {
+            Disposal disposal = new Disposal();
+            disposal.setId(treatmentProcedureTable.getDisposal_Id());
+            treatmentProcedure.setDisposal(disposal);
+        }
+
         return treatmentProcedure;
     }
 }
