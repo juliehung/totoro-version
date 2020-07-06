@@ -376,7 +376,6 @@ function SmsPage(props) {
           </CategoryContainer>
           <RemainingActionSection>
             <RemainingActionItem
-              style={{ visibility: isRemainingLoaded ? null : 'hidden' }}
               onClick={() =>
                 window.open(
                   'https://www.dentaltw.com/market/5ea67d0f3b81210000fed79c?vip_token=5ea67de24b169a000084252b',
@@ -385,8 +384,16 @@ function SmsPage(props) {
                 )
               }
             >
-              <GiftFill fill={remaining === 0 ? O1 : null} />
-              <ActionName style={{ color: remaining === 0 ? O1 : null }}>{`儲值 (剩餘 ${remaining} 封)`}</ActionName>
+              {isRemainingLoaded ? (
+                <>
+                  <GiftFill fill={remaining === 0 ? O1 : null} />
+                  <ActionName
+                    style={{ color: remaining === 0 ? O1 : null }}
+                  >{`儲值 (剩餘 ${remaining} 封)`}</ActionName>
+                </>
+              ) : (
+                <EventSpinner spinning={true} />
+              )}
             </RemainingActionItem>
             <RemainingActionItem onClick={() => window.open('https://www.dentaltw.com/myOrders', '_blank', 'noopener')}>
               <AwardFill />
