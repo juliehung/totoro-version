@@ -226,7 +226,7 @@ public class TreatmentProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].nhiDescription").value(hasItem(DEFAULT_NHI_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].nhiIcd10Cm").value(hasItem(DEFAULT_NHI_ICD_10_CM.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getTreatmentProcedure() throws Exception {
@@ -720,31 +720,6 @@ public class TreatmentProcedureResourceIntTest {
         // Get all the treatmentProcedureList where tooth equals to toothId + 1
         defaultTreatmentProcedureShouldNotBeFound("toothId.equals=" + (toothId + 1));
     }
-
-
-    @Test
-    @Transactional
-    public void getAllTreatmentProceduresByTodoIsEqualToSomething() throws Exception {
-        // Initialize the database
-        Todo todo = TodoResourceIntTest.createEntity(em);
-        em.persist(todo);
-        em.flush();
-
-        if (treatmentProcedure.getTodos() == null) {
-            treatmentProcedure.todos(new HashSet<>());
-        }
-
-        treatmentProcedure.getTodos().add(todo);
-        treatmentProcedureService.save(treatmentProcedure);
-        Long todoId = todo.getId();
-
-        // Get all the treatmentProcedureList where todo equals to todoId
-        defaultTreatmentProcedureShouldBeFound("todoId.equals=" + todoId);
-
-        // Get all the treatmentProcedureList where todo equals to todoId + 1
-        defaultTreatmentProcedureShouldNotBeFound("todoId.equals=" + (todoId + 1));
-    }
-
 
     @Test
     @Transactional
