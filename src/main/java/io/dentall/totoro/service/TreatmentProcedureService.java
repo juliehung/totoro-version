@@ -1,9 +1,6 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
-import io.dentall.totoro.domain.Todo;
-import io.dentall.totoro.domain.Tooth;
-import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.table.AppointmentTable;
 import io.dentall.totoro.service.dto.table.DisposalTable;
