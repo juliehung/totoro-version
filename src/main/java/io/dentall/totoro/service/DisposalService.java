@@ -101,7 +101,6 @@ public class DisposalService {
         TodoService todoService,
         RelationshipService relationshipService,
         RegistrationService registrationService,
-        NhiExtendDisposalService nhiExtendDisposalService,
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         PrescriptionRepository prescriptionRepository,
         TreatmentProcedureRepository treatmentProcedureRepository,
@@ -460,7 +459,15 @@ public class DisposalService {
                     // TreatmentProcedure.Procedure
                     Optional<ProcedureTable> optionalProcedureTable = procedureRepository.findProcedureById(treatmentProcedure.getProcedure().getId());
                     if (optionalProcedureTable.isPresent()) {
-                        treatmentProcedure.setProcedure(procedureMapper.procedureTableToProcedure(optionalProcedureTable.get()));
+                        Procedure procedure = procedureMapper.procedureTableToProcedure(optionalProcedureTable.get());
+                        treatmentProcedure.setProcedure(procedure);
+                        if (procedure.getProcedureType() != null &&
+                            procedure.getProcedureType().getId() != null
+                        ) {
+                            procedureTypeRepository
+                                .findProcedureTypeById(procedure.getProcedureType().getId())
+                                .ifPresent(procedureTypeTable -> procedure.setProcedureType(procedureTypeMapper.procedureTypeTableToProcedureType(procedureTypeTable)));
+                        }
                     }
 
                     // Add tooth
