@@ -22,6 +22,7 @@ import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { defaultTimeOption } from './utils/generateDefaultTime';
 import { GAevent } from '../../ga';
 import { appointmentPage } from './';
+import { DeleteOutlined } from '@ant-design/icons';
 
 //#region
 const Container = styled.div`
@@ -318,7 +319,7 @@ function EditAppModal({
         </InfoRowContainer>
         <BottomContainer>
           {confirmDelete ? (
-            <DeleteButton icon="delete" loading={deleteLoading} onClick={onDeleteConfirm}>
+            <DeleteButton icon={<DeleteOutlined />} loading={deleteLoading} onClick={onDeleteConfirm}>
               確定刪除?
             </DeleteButton>
           ) : (
