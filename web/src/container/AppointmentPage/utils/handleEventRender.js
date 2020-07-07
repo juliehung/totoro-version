@@ -58,15 +58,9 @@ const XrayContainer = styled.div`
     justify-content: center;
     align-items: center;
     transition: box-shadow 200ms ease-in-out;
-    & > img {
-      opacity: 0.4;
-      transition: opacity 200ms ease-in-out;
-    }
     &:hover {
+      background-color: rgba(50, 102, 255, 0.2);
       box-shadow: 0 2px 13px 0 rgba(50, 102, 255, 0.3), 0 1px 3px 0 rgba(0, 0, 0, 0.18);
-      & > img {
-        opacity: 1;
-      }
     }
   }
 `;
@@ -75,15 +69,19 @@ const XrayContainerListView = styled.div`
   margin: 0;
   display: flex;
   & > div {
-    margin-left: 10px;
-    & > img {
-      opacity: 0.4;
-      transition: opacity ease-in-out 200ms;
-    }
+    cursor: pointer;
+    margin-right: 10px;
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    background: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: box-shadow 200ms ease-in-out;
     &:hover {
-      & > img {
-        opacity: 1;
-      }
+      background-color: rgba(50, 102, 255, 0.2);
+      box-shadow: 0 2px 13px 0 rgba(50, 102, 255, 0.3), 0 1px 3px 0 rgba(0, 0, 0, 0.18);
     }
   }
 `;
