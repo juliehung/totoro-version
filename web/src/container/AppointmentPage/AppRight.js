@@ -21,8 +21,9 @@ import { GAevent } from '../../ga';
 import { appointmentPage } from './';
 import FloatingActionButton from './FloatingActionButton';
 import { useIsFirstRender } from '../../utils/hooks/useIsFirstRender';
+import { useCookies } from 'react-cookie';
 
-const maxSlotDuration = 30;
+const maxSlotDuration = 60;
 const minSlotDuration = 10;
 const slotDurationStep = 5;
 
@@ -120,10 +121,27 @@ const DateTitleContainer = styled(Col)`
 //#endregion
 
 function AppRight(props) {
-  const { calendarDate, changeCalDate, settings, showShiftCalc, putSettings, putSettingSuccess, viewType } = props;
+  const {
+    calendarDate,
+    changeCalDate,
+    settings,
+    showShiftCalc,
+    putSettings,
+    putSettingSuccess,
+    viewType,
+    changeCalSlotDuration,
+  } = props;
 
   const [expand, setExpand] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [cookies, setCookie] = useCookies(['token']);
+
+  useEffect(() => {
+    const slotDuration = cookies.slotDuration;
+    if (slotDuration) {
+      changeCalSlotDuration(slotDuration);
+    }
+  }, [cookies, changeCalSlotDuration]);
 
   const isFirstRender = useIsFirstRender();
   useEffect(() => {
@@ -156,20 +174,28 @@ function AppRight(props) {
     const title = document.querySelector('.fc-center');
     if (title) {
       simulateMouseClick(title);
+      let slotDuration;
       if (value) {
         if (props.slotDuration + slotDurationStep > maxSlotDuration) {
-          props.changeCalSlotDuration(maxSlotDuration);
+          slotDuration = maxSlotDuration;
         } else {
-          props.changeCalSlotDuration(props.slotDuration + slotDurationStep);
+          slotDuration = props.slotDuration + slotDurationStep;
         }
       } else {
         if (props.slotDuration - slotDurationStep < minSlotDuration) {
-          props.changeCalSlotDuration(minSlotDuration);
+          slotDuration = minSlotDuration;
         } else {
-          props.changeCalSlotDuration(props.slotDuration - slotDurationStep);
+          slotDuration = props.slotDuration - slotDurationStep;
         }
       }
+      setCookie('slotDuration', slotDuration);
+      changeCalSlotDuration(slotDuration);
     }
+  };
+
+  const onFullHeightClick = () => {
+    setCookie('slotDuration', maxSlotDuration);
+    changeCalSlotDuration(maxSlotDuration);
   };
 
   const headerRender = ({ value }) => {
@@ -280,6 +306,15 @@ function AppRight(props) {
           <span>密度</span>
         </div>
         <div>
+          <button
+            onClick={() => {
+              onFullHeightClick();
+              GAevent(appointmentPage, 'Full height size');
+            }}
+          >
+            完整
+          </button>
+          <Divider type="vertical" />
           <button
             disabled={
               props.slotDuration >= maxSlotDuration || !['resourceTimeGridDay', 'timeGridWeek'].includes(viewType)
