@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @Repository
 public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSpecificationExecutor<Disposal> {
 
-    List<DisposalTable> findDisposalByPatient_Id(Long patientId);
+    List<DisposalTable> findDisposalByRegistration_Appointment_Patient_Id(Long patientId);
 
     Optional<DisposalTable> findDisposalById(Long id);
 

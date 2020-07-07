@@ -561,9 +561,11 @@ public class DisposalService {
 
     @Transactional(readOnly = true)
     public Page<Disposal> getDisposalProjectionByPatientId(Long patientId, Pageable page) {
-        List<Disposal> disposals = disposalRepository.findDisposalByPatient_Id(patientId)
+        List<Disposal> disposals = disposalRepository.findDisposalByRegistration_Appointment_Patient_Id(patientId)
             .stream()
-            .map(DisposalMapper::disposalTableToDisposal)
+            .map(disposalTable -> {
+                return this.getDisposalByProjection(disposalTable.getId());
+            })
             .collect(Collectors.toList());
 
         return  new PageImpl<>(disposals, page, disposals.size());
