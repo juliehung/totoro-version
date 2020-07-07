@@ -4,6 +4,8 @@ import apiUrl from '../utils/apiUrl';
 const LOCATION = `patients`;
 const requestUrl = `${apiUrl}/${LOCATION}`;
 
+const businessRequestUrl = `${apiUrl}/business/${LOCATION}`;
+
 export default class Patient {
   // GET
   static getById = async id => {
@@ -14,6 +16,36 @@ export default class Patient {
 
   static search = async searchText => {
     const requestURL = `${requestUrl}?search.contains=${searchText}`;
+    const result = await request(requestURL);
+    return result;
+  };
+
+  static searchByName = async searchText => {
+    const requestURL = `${businessRequestUrl}/name?search=${searchText}`;
+    const result = await request(requestURL);
+    return result;
+  };
+
+  static searchByBirth = async searchText => {
+    const requestURL = `${businessRequestUrl}/birth?search=${searchText}&format=ROC`;
+    const result = await request(requestURL);
+    return result;
+  };
+
+  static searchByPhone = async searchText => {
+    const requestURL = `${businessRequestUrl}/phone?search=${searchText}`;
+    const result = await request(requestURL);
+    return result;
+  };
+
+  static searchByMedicalId = async searchText => {
+    const requestURL = `${businessRequestUrl}/medical-id?search=${searchText}`;
+    const result = await request(requestURL);
+    return result;
+  };
+
+  static searchByNationalId = async searchText => {
+    const requestURL = `${businessRequestUrl}/national-id?search=${searchText}`;
     const result = await request(requestURL);
     return result;
   };
