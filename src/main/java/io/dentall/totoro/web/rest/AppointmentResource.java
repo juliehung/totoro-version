@@ -2,11 +2,13 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.repository.TagRepository;
 import io.dentall.totoro.service.AppointmentQueryService;
 import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.service.BroadcastService;
 import io.dentall.totoro.service.dto.AppointmentCriteria;
+import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -25,6 +27,8 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Appointment.
@@ -181,8 +185,24 @@ public class AppointmentResource {
     @Timed
     public ResponseEntity<List<Appointment>> getAppointmentsWithRelationshipBetween(
         @RequestParam Instant beginDate,
-        @RequestParam Instant endDate
+        @RequestParam Instant endDate,
+        @RequestParam(defaultValue = "false") Boolean web
     ) {
-        return ResponseEntity.ok().body(appointmentService.getAppointmentProjectionBetween(beginDate, endDate));
+        if (web) {
+            return ResponseEntity.ok().body(appointmentService.getAppointmentProjectionBetween(beginDate, endDate));
+        }
+
+        return ResponseEntity.ok().body(appointmentService.findAppointmentWithRelationshipBetween(beginDate, endDate).stream()
+            .map(AppointmentSplitRelationshipDTO::getAppointment)
+            .map(appointment -> {
+                if (appointment.getPatient() != null &&
+                    appointment.getPatient().getId() != null
+                ) {
+                    Set<Tag> tags = tagRepository.findByPatientId(appointment.getPatient().getId());
+                    appointment.getPatient().setTags(tags);
+                }
+                return appointment;
+            })
+            .collect(Collectors.toList()));
     }
 }
