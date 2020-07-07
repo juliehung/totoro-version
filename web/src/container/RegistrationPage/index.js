@@ -5,7 +5,6 @@ import { DatePicker, Empty, Select, Table, Typography, message } from 'antd';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Helmet } from 'react-helmet-async';
-import MqttHelper from '../../utils/mqtt';
 import RegistDrawer from './RegistDrawer';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
@@ -119,26 +118,6 @@ function RegistrationPage(props) {
     };
 
     updateRegistrations();
-
-    MqttHelper.subscribeAppointment(RegistrationPage.name, message => {
-      let messageObj;
-      try {
-        messageObj = JSON.parse(message);
-      } catch (e) {
-        return;
-      }
-      if (messageObj.registration) {
-        const arrivalTime = moment(messageObj.registration.arrivalTime);
-        if (arrivalTime) {
-          // TODO: refactoring with better registration update mechanism
-          updateRegistrations(arrivalTime);
-        }
-      }
-    });
-
-    return () => {
-      MqttHelper.unsubscribeAppointment(RegistrationPage.name);
-    };
   }, [getRegistrations]);
 
   const fetchRegistrations = date => {
