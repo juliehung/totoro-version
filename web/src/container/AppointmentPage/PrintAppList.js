@@ -3,6 +3,18 @@ import moment from 'moment';
 import { Table } from 'antd';
 import convertBirthToROCBirth from './utils/convertBirthToROCBirth';
 import { Gender } from './utils/convertPatientToPatientDetail';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+ .printTableRow {
+    & tr,
+    & td {
+      border: 1px solid #808080 !important;
+      border-collapse: collapse !important;
+      border-spacing: 0 !important;
+    }
+  }
+`;
 
 const headerData = [
   {
@@ -18,12 +30,24 @@ const headerData = [
   },
 ];
 
+const headerStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  marginBottom: '20px',
+  fontSize: '1.5em',
+  fontWeight: 'bold',
+  color: '#000',
+  fontFamily: 'Microsoft JhengHei',
+};
+
 export default class PrintAppList extends React.Component {
   render() {
     const style = {
       whiteSpace: 'nowrap',
       margin: 0,
       color: '#000',
+      fontSize: '1.25em',
+      fontFamily: 'Microsoft JhengHei',
     };
     const columns = [
       {
@@ -91,23 +115,15 @@ export default class PrintAppList extends React.Component {
         title: '備註',
         dataIndex: 'note',
         key: 'note',
-        render: note => <span style={{ color: '#000' }}>{note}</span>,
+        render: note => <span style={style}>{note}</span>,
       },
     ];
 
     return (
       <div>
+        <GlobalStyle />
         <div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginBottom: '20px',
-              fontSize: '18px',
-              fontWeight: 'bold',
-              color: '#000',
-            }}
-          >
+          <div style={headerStyle}>
             <span>{this.props.clinicName}</span>
             <span>預約表</span>
             <span>
@@ -116,6 +132,8 @@ export default class PrintAppList extends React.Component {
             </span>
           </div>
           <Table
+            style={{ border: '2px solid #808080' }}
+            rowClassName={'printTableRow'}
             columns={columns}
             dataSource={[...headerData, ...this.props.appointmentList]}
             pagination={false}
@@ -130,13 +148,8 @@ export default class PrintAppList extends React.Component {
               <div key={d}>
                 <div
                   style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '20px',
-                    fontSize: '18px',
-                    fontWeight: 'bold',
+                    ...headerStyle,
                     pageBreakBefore: 'always',
-                    color: '#000',
                   }}
                 >
                   <span>{this.props.clinicName}</span>
@@ -147,6 +160,7 @@ export default class PrintAppList extends React.Component {
                   </span>
                 </div>
                 <Table
+                  rowClassName={'printTableRow'}
                   columns={columns}
                   dataSource={[
                     ...headerData.map(header => ({
