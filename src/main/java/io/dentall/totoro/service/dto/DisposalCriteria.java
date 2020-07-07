@@ -1,14 +1,13 @@
 package io.dentall.totoro.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.InstantFilter;
 import io.github.jhipster.service.filter.LongFilter;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the Disposal entity. This class is used in DisposalResource to
@@ -206,4 +205,17 @@ public class DisposalCriteria implements Serializable {
             "}";
     }
 
+    public boolean isOnlyPatientId() {
+        return this.id == null &&
+            this.status == null &&
+            this.total == null &&
+            this.dateTime == null &&
+            this.treatmentProcedureId == null &&
+            this.prescriptionId == null &&
+            this.todoId == null &&
+            this.registrationId == null &&
+            this.createdDate == null &&
+            this.toothId == null &&
+            this.dateTimeEnd == null;
+    }
 }
