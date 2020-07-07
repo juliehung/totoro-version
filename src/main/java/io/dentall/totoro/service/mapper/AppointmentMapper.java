@@ -6,11 +6,10 @@ import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.service.dto.table.AppointmentTable;
 import io.dentall.totoro.service.util.MapperUtil;
-import org.springframework.stereotype.Service;
 
-@Service
 public class AppointmentMapper {
-    public Appointment appointmentTableToAppointment(AppointmentTable appointmentTable) {
+
+    public static Appointment appointmentTableToAppointment(AppointmentTable appointmentTable) {
         Appointment appointment = new Appointment();
 
         appointment.setId(appointmentTable.getId());

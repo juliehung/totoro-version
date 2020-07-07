@@ -6,7 +6,7 @@ import io.dentall.totoro.domain.enumeration.Gender;
 import java.time.Instant;
 import java.time.LocalDate;
 
-public interface PatientTable {
+public interface PatientTable extends AuditingElement {
     Long getId();
     String getName();
     String getPhone();
@@ -22,7 +22,7 @@ public interface PatientTable {
     String getEmergencyName();
     String getEmergencyPhone();
     Instant getDeleteDate();
-    String getScaling();
+    LocalDate getScaling();
     String getLineId();
     String getFbId();
     String getNote();

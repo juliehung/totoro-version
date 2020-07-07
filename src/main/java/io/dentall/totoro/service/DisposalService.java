@@ -71,8 +71,6 @@ public class DisposalService {
 
     private final DisposalMapper disposalMapper;
 
-    private final RegistrationMapper registrationMapper;
-
     private final AccountingMapper accountingMapper;
 
     private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
@@ -84,8 +82,6 @@ public class DisposalService {
     private final NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper;
 
     private final AppointmentRepository appointmentRepository;
-
-    private final AppointmentMapper appointmentMapper;
 
     private final ProcedureRepository procedureRepository;
 
@@ -116,18 +112,17 @@ public class DisposalService {
         NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
         ToothMapper toothMapper,
         DisposalMapper disposalMapper,
-        RegistrationMapper registrationMapper,
         AccountingMapper accountingMapper,
         NhiExtendDisposalMapper nhiExtendDisposalMapper,
         PrescriptionMapper prescriptionMapper,
         TreatmentDrugMapper treatmentDrugMapper,
         NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper,
         AppointmentRepository appointmentRepository,
-        AppointmentMapper appointmentMapper,
         ProcedureRepository procedureRepository,
         ProcedureTypeRepository procedureTypeRepository,
         ProcedureMapper procedureMapper,
-        ProcedureTypeMapper procedureTypeMapper) {
+        ProcedureTypeMapper procedureTypeMapper
+    ) {
         this.disposalRepository = disposalRepository;
         this.prescriptionService = prescriptionService;
         this.todoService = todoService;
@@ -149,13 +144,11 @@ public class DisposalService {
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
         this.toothMapper = toothMapper;
         this.disposalMapper = disposalMapper;
-        this.registrationMapper = registrationMapper;
         this.accountingMapper = accountingMapper;
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
         this.prescriptionMapper = prescriptionMapper;
         this.treatmentDrugMapper = treatmentDrugMapper;
         this.appointmentRepository = appointmentRepository;
-        this.appointmentMapper = appointmentMapper;
         this.procedureRepository = procedureRepository;
         this.procedureTypeRepository = procedureTypeRepository;
         this.procedureMapper = procedureMapper;
@@ -484,7 +477,7 @@ public class DisposalService {
         Optional<RegistrationTable> optionalRegistrationTable = registrationRepository.findRegistrationByDisposal_Id(id);
         if (optionalRegistrationTable.isPresent()) {
             // Registration.Accounting
-            registration = registrationMapper.registrationTableToRegistration(optionalRegistrationTable.get());
+            registration = RegistrationMapper.registrationTableToRegistration(optionalRegistrationTable.get());
             if (registration.getAccounting() != null &&
                 registration.getAccounting().getId() != null
             ) {
@@ -498,7 +491,7 @@ public class DisposalService {
             // Registration.Appointment
             Optional<AppointmentTable> optionalAppointmentTable = appointmentRepository.findAppointmentByRegistration_Id(registration.getId());
             if (optionalAppointmentTable.isPresent()) {
-                registration.setAppointment(appointmentMapper.appointmentTableToAppointment(optionalAppointmentTable.get()));
+                registration.setAppointment(AppointmentMapper.appointmentTableToAppointment(optionalAppointmentTable.get()));
                 // no appointment.registration because of FE required not seeing this data in vm.
             }
         }
