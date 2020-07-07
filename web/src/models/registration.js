@@ -13,7 +13,7 @@ export default class Registration {
 
   static getBetween = async range => {
     let requestURL = `${requestUrl}/with-relationship/between`;
-    const query = `?web=true&beginDate=${range.start.toISOString()}&endDate=${range.end.toISOString()}`;
+    const query = '?beginDate=' + range.start.toISOString() + '&endDate=' + range.end.toISOString();
     requestURL += query;
     return await request(requestURL);
   };
