@@ -127,10 +127,8 @@ public class TreatmentProcedureService {
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = treatmentProcedure.getNhiExtendTreatmentProcedure();
         Set<Tooth> teeth = treatmentProcedure.getTeeth();
         Instant createdDate = treatmentProcedure.getCreatedDate();
-        Set<Todo> todos = treatmentProcedure.getTodos();
         TreatmentProcedure txP = treatmentProcedureRepository.save(treatmentProcedure.teeth(null).nhiExtendTreatmentProcedure(null).todos(null));
         relationshipService.addRelationshipWithTeeth(txP.teeth(teeth));
-        relationshipService.addRelationshipWithTodos(txP, todos);
 
         if (nhiExtendTreatmentProcedure != null) {
             txP.setNhiExtendTreatmentProcedure(getNhiExtendTreatmentProcedure(nhiExtendTreatmentProcedure.treatmentProcedure(txP)));
@@ -145,7 +143,7 @@ public class TreatmentProcedureService {
         }
 
         if (txP.getTreatmentTask() != null && txP.getTreatmentTask().getId() != null) {
-            treatmentTaskRepository.findById(txP.getTreatmentTask().getId()).ifPresent(treatmentTask -> treatmentTask.getTreatmentProcedures().add(txP));
+//            treatmentTaskRepository.findById(txP.getTreatmentTask().getId()).ifPresent(treatmentTask -> treatmentTask.getTreatmentProcedures().add(txP));
         }
 
         if (txP.getDisposal() != null && txP.getDisposal().getId() != null) {
