@@ -1,13 +1,13 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.repository.AppointmentRepository;
-import io.dentall.totoro.repository.DisposalRepository;
-import io.dentall.totoro.repository.ExtendUserRepository;
-import io.dentall.totoro.repository.RegistrationRepository;
+import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
 import io.dentall.totoro.service.dto.table.AppointmentTable;
+import io.dentall.totoro.service.dto.table.RegistrationTable;
 import io.dentall.totoro.service.mapper.AppointmentMapper;
+import io.dentall.totoro.service.mapper.PatientMapper;
+import io.dentall.totoro.service.mapper.RegistrationMapper;
 import io.dentall.totoro.service.util.MapperUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;
@@ -45,11 +45,11 @@ public class AppointmentService {
 
     private final RelationshipService relationshipService;
 
-    private final AppointmentMapper appointmentMapper;
-
     private final DisposalRepository disposalRepository;
 
     private final RegistrationRepository registrationRepository;
+
+    private final PatientRepository patientRepository;
 
     public AppointmentService(
         AppointmentRepository appointmentRepository,
@@ -57,18 +57,18 @@ public class AppointmentService {
         PatientService patientService,
         @Lazy RegistrationService registrationService,
         RelationshipService relationshipService,
-        AppointmentMapper appointmentMapper,
         DisposalRepository disposalRepository,
-        RegistrationRepository registrationRepository
+        RegistrationRepository registrationRepository,
+        PatientRepository patientRepository
     ) {
         this.appointmentRepository = appointmentRepository;
         this.extendUserRepository = extendUserRepository;
         this.patientService = patientService;
         this.registrationService = registrationService;
         this.relationshipService = relationshipService;
-        this.appointmentMapper = appointmentMapper;
         this.disposalRepository = disposalRepository;
         this.registrationRepository = registrationRepository;
+        this.patientRepository = patientRepository;
     }
 
     /**
@@ -270,7 +270,7 @@ public class AppointmentService {
         Page<AppointmentTable> appointmentTables = appointmentRepository.findByPatient_Id(id, page);
         List<Appointment> appointments = appointmentTables
             .stream()
-            .map(appointmentMapper::appointmentTableToAppointment)
+            .map(AppointmentMapper::appointmentTableToAppointment)
             .map(appointment -> {
                 Registration registration = appointment.getRegistration();
                 if (registration != null && registration.getId() != null) {
@@ -295,6 +295,43 @@ public class AppointmentService {
         return new PageImpl<>(appointments, page, appointmentTables.getTotalElements());
     }
 
+    @Transactional(readOnly = true)
+    public List<Appointment> getAppointmentProjectionBetween(Instant start, Instant end) {
+        return appointmentRepository.findByExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end)
+            .stream()
+            .map(AppointmentMapper::appointmentTableToAppointment)
+            .map(appointment -> {
+                Patient patient = appointment.getPatient();
+                if (patient != null && patient.getId() != null) {
+                    patientRepository.findPatientById(patient.getId())
+                        .ifPresent(patientTable -> appointment.setPatient(PatientMapper.patientTableToPatient(patientTable)));
+                }
+
+                Registration registration = appointment.getRegistration();
+                if (registration != null && registration.getId() != null) {
+                    registrationRepository.findById(registration.getId(), RegistrationTable.class)
+                        .ifPresent(registrationTable -> appointment.setRegistration(RegistrationMapper.registrationTableToRegistration(registrationTable)));
+                }
+
+                ExtendUser extendUser = appointment.getDoctor();
+                if (extendUser != null && extendUser.getId() != null) {
+                    extendUserRepository
+                        .findById(extendUser.getId(), AppointmentDoctor.class)
+                        .ifPresent(appointmentDoctor -> {
+                            User user = new User();
+                            user.setId(appointmentDoctor.getUser_Id());
+                            user.setFirstName(appointmentDoctor.getUser_FirstName());
+                            MapperUtil.setNullAuditing(user);
+
+                            extendUser.setUser(user);
+                        });
+                }
+
+                return appointment;
+            })
+            .collect(Collectors.toList());
+    }
+
     public interface AppointmentRegistrationDisposal {
 
         Long getId();
@@ -303,5 +340,14 @@ public class AppointmentService {
     public interface AppointmentRegistration {
 
         Instant getArrivalTime();
+    }
+
+    public interface AppointmentDoctor {
+
+        Long getId();
+
+        Long getUser_Id();
+
+        String getUser_FirstName();
     }
 }

@@ -185,8 +185,13 @@ public class AppointmentResource {
     @Timed
     public ResponseEntity<List<Appointment>> getAppointmentsWithRelationshipBetween(
         @RequestParam Instant beginDate,
-        @RequestParam Instant endDate
+        @RequestParam Instant endDate,
+        @RequestParam(defaultValue = "false") Boolean web
     ) {
+        if (web) {
+            return ResponseEntity.ok().body(appointmentService.getAppointmentProjectionBetween(beginDate, endDate));
+        }
+
         return ResponseEntity.ok().body(appointmentService.findAppointmentWithRelationshipBetween(beginDate, endDate).stream()
             .map(AppointmentSplitRelationshipDTO::getAppointment)
             .map(appointment -> {
