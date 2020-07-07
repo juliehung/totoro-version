@@ -18,16 +18,12 @@ const XrayContainer = styled.div`
     justify-content: center;
     align-items: center;
     transition: box-shadow 200ms ease-in-out;
-    & > img {
-      opacity: 0.4;
-      transition: opacity 200ms ease-in-out;
-      pointer-events: none;
-    }
     &:hover {
+      background-color: rgba(50, 102, 255, 0.2);
       box-shadow: 0 2px 13px 0 rgba(50, 102, 255, 0.3), 0 1px 3px 0 rgba(0, 0, 0, 0.13);
-      & > img {
-        opacity: 1;
-      }
+    }
+    & > img {
+      pointer-events: none;
     }
   }
 `;
