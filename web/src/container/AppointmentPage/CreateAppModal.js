@@ -207,10 +207,10 @@ function CreateAppModal({
 
   useEffect(() => {
     const lastDoctor = selectedPatient?.appointmentsAnalysis?.lastDoctorId;
-    if (lastDoctor) {
+    if (!appointment.doctorId && lastDoctor) {
       changeCreateAppDoctor(lastDoctor);
     }
-  }, [selectedPatient, changeCreateAppDoctor]);
+  }, [selectedPatient, changeCreateAppDoctor, appointment.doctorId]);
 
   const closeModal = () => {
     changeCreateAppModalVisible(false);
