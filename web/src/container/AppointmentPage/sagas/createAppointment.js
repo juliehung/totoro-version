@@ -1,4 +1,10 @@
-import { CREATE_APPOINTMENT, SEARCH_PATIENTS_START, GET_PATIENT_START_CREATE_APP, CREATE_PATIENT } from '../constant';
+import {
+  CREATE_APPOINTMENT,
+  SEARCH_PATIENTS_START,
+  GET_PATIENT_START_CREATE_APP,
+  CREATE_PATIENT,
+  patientSearchMode,
+} from '../constant';
 import { call, put, take, select } from 'redux-saga/effects';
 import Appointment from '../../../models/appointment';
 import Patient from '../../../models/patient';
@@ -51,8 +57,29 @@ export function* searchPatients() {
         );
         result = convertPatientToOption(filteredPatients);
       } else {
-        const patient = yield call(Patient.search, data.searchText);
-        result = convertPatientToOption(patient);
+        const getSearchMode = state => state.appointmentPageReducer.createApp.searchMode;
+        const searchMode = yield select(getSearchMode);
+        let patients = [];
+        switch (searchMode) {
+          case patientSearchMode.name:
+            patients = yield call(Patient.searchByName, data.searchText);
+            break;
+          case patientSearchMode.birth:
+            patients = yield call(Patient.searchByBirth, data.searchText);
+            break;
+          case patientSearchMode.phone:
+            patients = yield call(Patient.searchByPhone, data.searchText);
+            break;
+          case patientSearchMode.medical_id:
+            patients = yield call(Patient.searchByMedicalId, data.searchText);
+            break;
+          case patientSearchMode.national_id:
+            patients = yield call(Patient.searchByNationalId, data.searchText);
+            break;
+          default:
+            break;
+        }
+        result = convertPatientToOption(patients);
       }
       yield put(searchPatientsSuccess(result));
     } catch (error) {

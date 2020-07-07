@@ -23,13 +23,16 @@ import {
   changeCreateAppPatientBirth,
   createPatient,
   getAllEvents,
+  changePatientSearchMode,
 } from './actions';
 import styled from 'styled-components';
-import { requiredTreatmentTimeDefault } from './constant';
+import { requiredTreatmentTimeDefault, patientSearchMode } from './constant';
 import { GAevent } from '../../ga';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { defaultTimeOption } from './utils/generateDefaultTime';
 import { appointmentPage } from './';
+
+const { Option } = Select;
 
 //#region
 const Container = styled.div`
@@ -73,7 +76,7 @@ const RequiredCol = styled.span`
 `;
 
 const StyledSearchSelect = styled(Select)`
-  width: 100%;
+  flex-grow: 1;
 `;
 
 const NewPatientContainer = styled.div`
@@ -171,6 +174,8 @@ function CreateAppModal({
   requiredTreatmentTime,
   account,
   loading,
+  searchMode,
+  changePatientSearchMode,
 }) {
   const [expectedTimeOption, setExpectedTimeOption] = useState(defaultTimeOption);
 
@@ -273,21 +278,31 @@ function CreateAppModal({
       destroyOnClose
     >
       <Container>
-        <StyledSearchSelect
-          showSearch
-          placeholder="請輸入複診病患病歷編號或姓名"
-          filterOption={false}
-          onSearch={onSearchTextChange}
-          onFocus={onSearchTextFocus}
-          onSelect={onPatientSelect}
-          notFoundContent={<Empty description="沒有資料" />}
-        >
-          {patients.map(({ medicalId, name, id }) => (
-            <Select.Option key={medicalId} value={id}>
-              {`${name}, ${medicalId}`}
-            </Select.Option>
-          ))}
-        </StyledSearchSelect>
+        <div style={{ display: 'flex' }}>
+          <StyledSearchSelect
+            showSearch
+            placeholder="請輸入複診病患病歷編號或姓名"
+            filterOption={false}
+            onSearch={onSearchTextChange}
+            onFocus={onSearchTextFocus}
+            onSelect={onPatientSelect}
+            notFoundContent={<Empty description="沒有資料" />}
+          >
+            {patients.map(({ medicalId, name, id }) => (
+              <Select.Option key={medicalId} value={id}>
+                {`${name}, ${medicalId}`}
+              </Select.Option>
+            ))}
+          </StyledSearchSelect>
+          <Select value={searchMode} style={{ width: 120 }} onChange={changePatientSearchMode}>
+            <Option value={patientSearchMode.name}>姓名</Option>
+            <Option value={patientSearchMode.birth}>生日</Option>
+            <Option value={patientSearchMode.phone}>聯絡電話</Option>
+            <Option value={patientSearchMode.medical_id}>病歷編號</Option>
+            <Option value={patientSearchMode.national_id}>身分證號</Option>
+          </Select>
+        </div>
+
         {!patientSelected && (
           <NewPatientContainer>
             <NewPatientRow>
@@ -453,6 +468,7 @@ function CreateAppModal({
 }
 const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   visible: appointmentPageReducer.createApp.visible,
+  searchMode: appointmentPageReducer.createApp.searchMode,
   patients: appointmentPageReducer.createApp.searchPatients,
   patientSelected: appointmentPageReducer.createApp.patientSelected,
   selectedPatient: appointmentPageReducer.createApp.selectedPatient,
@@ -487,6 +503,7 @@ const mapDispatchToProps = {
   changeCreateAppPatientBirth,
   createPatient,
   getAllEvents,
+  changePatientSearchMode,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateAppModal);
