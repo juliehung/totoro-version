@@ -117,9 +117,20 @@ public class DisposalResource {
     @Timed
     public ResponseEntity<List<Disposal>> getAllDisposals(DisposalCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Disposals by criteria: {}", criteria);
-        Page<Disposal> page = disposalQueryService.findByCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/disposals");
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        Page<Disposal> page = null;
+        HttpHeaders headers = null;
+
+        if (criteria.isOnlyPatientId()) {
+            page = disposalService.getDisposalProjectionByPatientId(criteria.getPatientId().getEquals(), pageable);
+        } else {
+            page = disposalQueryService.findByCriteria(criteria, pageable);
+        }
+
+        if (page != null) {
+            headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/disposals");
+        }
+
+        return ResponseEntity.ok().headers(headers).body(page != null? page.getContent(): null);
     }
 
     /**
