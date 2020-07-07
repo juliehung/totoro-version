@@ -20,7 +20,11 @@ import {
   CHANGE_CREATE_APP_PATIENT_NATIONAL_ID,
   CHANGE_CREATE_APP_PATIENT_BIRTH,
   CREATE_PATIENT_SUCCESS,
+  CHANGE_PATIENT_SEARCH_MODE,
+  patientSearchMode,
 } from '../constant';
+
+const defaultSearchMode = patientSearchMode.birth;
 
 const initState = {
   loading: false,
@@ -29,6 +33,7 @@ const initState = {
   patientSelected: false,
   searchPatients: [],
   selectedPatient: undefined,
+  searchMode: defaultSearchMode,
   createAppSuccess: false,
   appointment: {
     patientId: undefined,
@@ -159,6 +164,9 @@ const createApp = (state = initialState, action) =>
         break;
       case CREATE_PATIENT_SUCCESS:
         draft.appointment.patientId = action.id;
+        break;
+      case CHANGE_PATIENT_SEARCH_MODE:
+        draft.searchMode = action.mode;
         break;
       default:
         break;
