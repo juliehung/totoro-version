@@ -2,7 +2,6 @@ package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
-import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
 import io.dentall.totoro.service.dto.table.AppointmentTable;
 import io.dentall.totoro.service.dto.table.RegistrationTable;
 import io.dentall.totoro.service.mapper.AppointmentMapper;
@@ -256,15 +255,6 @@ public class AppointmentService {
                 .collect(Collectors.toList());
     }
 
-    public List<AppointmentSplitRelationshipDTO> findAppointmentWithRelationshipBetween(
-        Instant beginDate,
-        Instant endDate
-    ) {
-        return appointmentRepository.findAppointmentWithRelationshipBetween(beginDate, endDate).stream()
-            .map(AppointmentSplitRelationshipDTO::new)
-            .collect(Collectors.toList());
-    }
-
     @Transactional(readOnly = true)
     public Page<Appointment> getAppointmentProjectionByPatientId(Long id, Pageable page) {
         Page<AppointmentTable> appointmentTables = appointmentRepository.findByPatient_Id(id, page);
@@ -274,16 +264,7 @@ public class AppointmentService {
             .map(appointment -> {
                 Registration registration = appointment.getRegistration();
                 if (registration != null && registration.getId() != null) {
-                    disposalRepository
-                        .findByRegistration_Id(registration.getId())
-                        .ifPresent(appointmentRegistrationDisposal -> {
-                            Disposal disposal = new Disposal();
-                            disposal.setId(appointmentRegistrationDisposal.getId());
-                            MapperUtil.setNullAuditing(disposal);
-
-                            registration.setDisposal(disposal);
-                        });
-
+                    setDisposal(registration);
                     registrationRepository.findById(registration.getId(), AppointmentRegistration.class)
                         .ifPresent(appointmentRegistration -> registration.setArrivalTime(appointmentRegistration.getArrivalTime()));
                 }
@@ -307,10 +288,14 @@ public class AppointmentService {
                         .ifPresent(patientTable -> appointment.setPatient(PatientMapper.patientTableToPatient(patientTable)));
                 }
 
-                Registration registration = appointment.getRegistration();
-                if (registration != null && registration.getId() != null) {
-                    registrationRepository.findById(registration.getId(), RegistrationTable.class)
-                        .ifPresent(registrationTable -> appointment.setRegistration(RegistrationMapper.registrationTableToRegistration(registrationTable)));
+                Registration reg = appointment.getRegistration();
+                if (reg != null && reg.getId() != null) {
+                    registrationRepository.findById(reg.getId(), RegistrationTable.class)
+                        .ifPresent(registrationTable -> {
+                            Registration registration = RegistrationMapper.registrationTableToRegistration(registrationTable);
+                            setDisposal(registration);
+                            appointment.setRegistration(registration);
+                        });
                 }
 
                 ExtendUser extendUser = appointment.getDoctor();
@@ -330,6 +315,18 @@ public class AppointmentService {
                 return appointment;
             })
             .collect(Collectors.toList());
+    }
+
+    private void setDisposal(Registration registration) {
+        disposalRepository
+            .findByRegistration_Id(registration.getId())
+            .ifPresent(appointmentRegistrationDisposal -> {
+                Disposal disposal = new Disposal();
+                disposal.setId(appointmentRegistrationDisposal.getId());
+                MapperUtil.setNullAuditing(disposal);
+
+                registration.setDisposal(disposal);
+            });
     }
 
     public interface AppointmentRegistrationDisposal {
