@@ -90,6 +90,7 @@ import {
   XRAY_GREETING_SUCCESS,
   XRAY_GREETING_FAILURE,
   ON_LEAVE_PAGE,
+  CHANGE_PATIENT_SEARCH_MODE,
 } from './constant';
 
 export function changeCalDate(date) {
@@ -455,4 +456,8 @@ export function xrayGreetingFailure() {
 
 export function onLeavePage() {
   return { type: ON_LEAVE_PAGE };
+}
+
+export function changePatientSearchMode(mode) {
+  return { type: CHANGE_PATIENT_SEARCH_MODE, mode };
 }

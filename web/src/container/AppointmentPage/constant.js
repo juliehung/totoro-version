@@ -26,6 +26,14 @@ export const XRAY_VENDORS = {
   vixwin: 'vixwin',
 };
 
+export const patientSearchMode = {
+  name: 'name',
+  phone: 'phone',
+  birth: 'birth',
+  medical_id: 'medical_id',
+  national_id: 'national_id',
+};
+
 export const APPOINTMENT_PAGE = 'totoro-web-appointmentPage/';
 
 export const CHANGE_CAL_DATE = `${APPOINTMENT_PAGE}CHANGE_CAL_DATE`;
@@ -209,3 +217,5 @@ export const XRAY_GREETING_SUCCESS = `${APPOINTMENT_PAGE}XRAY_GREETING_SUCCESS`;
 export const XRAY_GREETING_FAILURE = `${APPOINTMENT_PAGE}XRAY_GREETING_FAILURE`;
 
 export const ON_LEAVE_PAGE = `${APPOINTMENT_PAGE}ON_LEAVE_PAGE`;
+
+export const CHANGE_PATIENT_SEARCH_MODE = `${APPOINTMENT_PAGE}CHANGE_PATIENT_SEARCH_MODE`;
