@@ -80,6 +80,9 @@ public class BroadcastTasks {
         appointments.removeAll(sentAppointments);
 
         for (Appointment appointment : appointments) {
+            if (appointment.getPatient() == null) {
+                continue;
+            }
             broadcastService.broadcastAppointmentStatus(appointment.getPatient().getName(), message);
             sentAppointments.add(appointment);
         }

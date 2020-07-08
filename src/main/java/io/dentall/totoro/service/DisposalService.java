@@ -10,6 +10,7 @@ import io.dentall.totoro.service.util.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -556,5 +557,17 @@ public class DisposalService {
     public Optional<Disposal> getDisposalProjectionById(Long id) {
         return disposalRepository.findDisposalById(id)
             .map(disposalMapper::disposalTableToDisposal);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Disposal> getDisposalProjectionByPatientId(Long patientId, Pageable page) {
+        List<Disposal> disposals = disposalRepository.findDisposalByRegistration_Appointment_Patient_Id(patientId)
+            .stream()
+            .map(disposalTable -> {
+                return this.getDisposalByProjection(disposalTable.getId());
+            })
+            .collect(Collectors.toList());
+
+        return  new PageImpl<>(disposals, page, disposals.size());
     }
 }
