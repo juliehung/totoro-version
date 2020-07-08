@@ -151,16 +151,6 @@ public class DisposalResource {
         return ResponseUtil.wrapOrNotFound(optionalDisposal);
     }
 
-    @GetMapping("/disposals/simple/{id}")
-    @Timed
-    public ResponseEntity<Disposal> getSimpleDisposal(@PathVariable Long id) {
-        log.debug("REST request to get simple Disposal : {}", id);
-
-        Optional<Disposal> optionalDisposal = Optional.ofNullable(disposalService.getSimpleDisposalProjectionById(id));
-
-        return ResponseUtil.wrapOrNotFound(optionalDisposal);
-    }
-
     /**
      * DELETE  /disposals/:id : delete the "id" disposal.
      *

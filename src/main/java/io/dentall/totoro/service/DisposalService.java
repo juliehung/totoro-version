@@ -69,6 +69,8 @@ public class DisposalService {
 
     private final ToothMapper toothMapper;
 
+    private final DisposalMapper disposalMapper;
+
     private final AccountingMapper accountingMapper;
 
     private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
@@ -109,6 +111,7 @@ public class DisposalService {
         TreatmentProcedureMapper treatmentProcedureMapper,
         NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
         ToothMapper toothMapper,
+        DisposalMapper disposalMapper,
         AccountingMapper accountingMapper,
         NhiExtendDisposalMapper nhiExtendDisposalMapper,
         PrescriptionMapper prescriptionMapper,
@@ -140,6 +143,7 @@ public class DisposalService {
         this.treatmentProcedureMapper = treatmentProcedureMapper;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
         this.toothMapper = toothMapper;
+        this.disposalMapper = disposalMapper;
         this.accountingMapper = accountingMapper;
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
         this.prescriptionMapper = prescriptionMapper;
@@ -551,24 +555,6 @@ public class DisposalService {
     @Transactional(readOnly = true)
     public Optional<Disposal> getDisposalProjectionById(Long id) {
         return disposalRepository.findDisposalById(id)
-            .map(DisposalMapper::disposalTableToDisposal);
-    }
-
-    @Transactional(readOnly = true)
-    public Disposal getSimpleDisposalProjectionById(Long id) {
-        Disposal disposal = getDisposalProjectionById(id).orElse(null);
-        if (disposal == null) {
-            return null;
-        }
-
-        List<NhiExtendDisposalTable> nhiExtendDisposalTables = nhiExtendDisposalRepository.findNhiExtendDisposalByDisposal_IdOrderById(disposal.getId());
-        Set<NhiExtendDisposal> nhiExtendDisposals = new HashSet<>();
-        if (nhiExtendDisposalTables.size() > 0) {
-            NhiExtendDisposal nhiExtendDisposal =
-                nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(nhiExtendDisposalTables.get(nhiExtendDisposalTables.size() - 1));
-            nhiExtendDisposals.add(nhiExtendDisposal);
-        }
-
-        return disposal.nhiExtendDisposals(nhiExtendDisposals);
+            .map(disposalMapper::disposalTableToDisposal);
     }
 }
