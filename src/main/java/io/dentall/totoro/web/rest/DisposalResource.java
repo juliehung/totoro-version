@@ -37,14 +37,14 @@ import java.util.Set;
 public class DisposalResource {
 
     private static final String ENTITY_NAME = "disposal";
+
     private final Logger log = LoggerFactory.getLogger(DisposalResource.class);
+
     private final DisposalService disposalService;
 
     private final DisposalQueryService disposalQueryService;
 
     private final NhiService nhiService;
-
-    private final NhiExtendDisposalService nhiExtendDisposalService;
 
     public DisposalResource(
         DisposalService disposalService,
@@ -55,7 +55,6 @@ public class DisposalResource {
         this.disposalService = disposalService;
         this.disposalQueryService = disposalQueryService;
         this.nhiService = nhiService;
-        this.nhiExtendDisposalService = nhiExtendDisposalService;
     }
 
     /**
@@ -161,6 +160,17 @@ public class DisposalResource {
 
         return ResponseUtil.wrapOrNotFound(optionalDisposal);
     }
+
+    @GetMapping("/disposals/simple/{id}")
+    @Timed
+    public ResponseEntity<Disposal> getSimpleDisposal(@PathVariable Long id) {
+        log.debug("REST request to get simple Disposal : {}", id);
+
+        Optional<Disposal> optionalDisposal = Optional.ofNullable(disposalService.getSimpleDisposalProjectionById(id));
+
+        return ResponseUtil.wrapOrNotFound(optionalDisposal);
+    }
+
 
     /**
      * DELETE  /disposals/:id : delete the "id" disposal.

@@ -3,11 +3,8 @@ package io.dentall.totoro.service;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
-import io.dentall.totoro.service.dto.table.AppointmentTable;
 import io.dentall.totoro.service.dto.table.RegistrationTable;
-import io.dentall.totoro.service.mapper.AppointmentMapper;
-import io.dentall.totoro.service.mapper.PatientMapper;
-import io.dentall.totoro.service.mapper.RegistrationMapper;
+import io.dentall.totoro.service.mapper.*;
 import io.dentall.totoro.service.util.MapperUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;
@@ -15,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +47,10 @@ public class AppointmentService {
 
     private final PatientRepository patientRepository;
 
+    private final TagRepository tagRepository;
+
+    private final AccountingRepository accountingRepository;
+
     public AppointmentService(
         AppointmentRepository appointmentRepository,
         ExtendUserRepository extendUserRepository,
@@ -59,7 +59,9 @@ public class AppointmentService {
         RelationshipService relationshipService,
         DisposalRepository disposalRepository,
         RegistrationRepository registrationRepository,
-        PatientRepository patientRepository
+        PatientRepository patientRepository,
+        TagRepository tagRepository,
+        AccountingRepository accountingRepository
     ) {
         this.appointmentRepository = appointmentRepository;
         this.extendUserRepository = extendUserRepository;
@@ -69,6 +71,8 @@ public class AppointmentService {
         this.disposalRepository = disposalRepository;
         this.registrationRepository = registrationRepository;
         this.patientRepository = patientRepository;
+        this.tagRepository = tagRepository;
+        this.accountingRepository = accountingRepository;
     }
 
     /**
@@ -267,70 +271,107 @@ public class AppointmentService {
 
     @Transactional(readOnly = true)
     public Page<Appointment> getAppointmentProjectionByPatientId(Long id, Pageable page) {
-        Page<AppointmentTable> appointmentTables = appointmentRepository.findByPatient_Id(id, page);
-        List<Appointment> appointments = appointmentTables
-            .stream()
+        return appointmentRepository.findByPatient_Id(id, page)
             .map(AppointmentMapper::appointmentTableToAppointment)
             .map(appointment -> {
                 Registration registration = appointment.getRegistration();
                 if (registration != null && registration.getId() != null) {
-                    disposalRepository
-                        .findByRegistration_Id(registration.getId())
-                        .ifPresent(appointmentRegistrationDisposal -> {
-                            Disposal disposal = new Disposal();
-                            disposal.setId(appointmentRegistrationDisposal.getId());
-                            MapperUtil.setNullAuditing(disposal);
-
-                            registration.setDisposal(disposal);
-                        });
+                    getDisposalByRegistrationId(registration.getId())
+                        .ifPresent(registration::setDisposal);
 
                     registrationRepository.findById(registration.getId(), AppointmentRegistration.class)
                         .ifPresent(appointmentRegistration -> registration.setArrivalTime(appointmentRegistration.getArrivalTime()));
                 }
 
                 return appointment;
-            })
-            .collect(Collectors.toList());
-
-        return new PageImpl<>(appointments, page, appointmentTables.getTotalElements());
+            });
     }
 
     @Transactional(readOnly = true)
-    public List<Appointment> getAppointmentProjectionBetween(Instant start, Instant end) {
+    public List<Appointment> getBasicAppointmentProjectionByExpectedArrivalTime(Instant start, Instant end) {
         return appointmentRepository.findByExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end)
             .stream()
             .map(AppointmentMapper::appointmentTableToAppointment)
-            .map(appointment -> {
-                Patient patient = appointment.getPatient();
-                if (patient != null && patient.getId() != null) {
-                    patientRepository.findPatientById(patient.getId())
-                        .ifPresent(patientTable -> appointment.setPatient(PatientMapper.patientTableToPatient(patientTable)));
-                }
+            .map(this::getBasicAppointment)
+            .collect(Collectors.toList());
+    }
 
+    @Transactional(readOnly = true)
+    public List<Appointment> getAppointmentProjectionByExpectedArrivalTime(Instant start, Instant end) {
+        return appointmentRepository.findByExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end)
+            .stream()
+            .map(AppointmentMapper::appointmentTableToAppointment)
+            .map(this::getBasicAppointment)
+            .map(appointment -> {
                 Registration registration = appointment.getRegistration();
                 if (registration != null && registration.getId() != null) {
-                    registrationRepository.findById(registration.getId(), RegistrationTable.class)
-                        .ifPresent(registrationTable -> appointment.setRegistration(RegistrationMapper.registrationTableToRegistration(registrationTable)));
+                    getDisposalByRegistrationId(registration.getId())
+                        .ifPresent(registration::setDisposal);
+
+                    Accounting accounting = registration.getAccounting();
+                    if (accounting != null && accounting.getId() != null) {
+                        accountingRepository.findAccountingById(accounting.getId())
+                            .ifPresent(accountingTable -> registration.setAccounting(AccountingMapper.accountingTableToAccounting(accountingTable)));
+                    }
                 }
 
-                ExtendUser extendUser = appointment.getDoctor();
-                if (extendUser != null && extendUser.getId() != null) {
-                    extendUserRepository
-                        .findById(extendUser.getId(), AppointmentDoctor.class)
-                        .ifPresent(appointmentDoctor -> {
-                            User user = new User();
-                            user.setId(appointmentDoctor.getUser_Id());
-                            user.setFirstName(appointmentDoctor.getUser_FirstName());
-                            MapperUtil.setNullAuditing(user);
+                Patient patient = appointment.getPatient();
+                if (patient != null && patient.getId() != null) {
+                    Set<Tag> tags = tagRepository.findByPatientsId(patient.getId())
+                        .stream()
+                        .map(TagMapper::tagTableToTag)
+                        .collect(Collectors.toSet());
 
-                            extendUser.setUser(user);
-                        });
+                    patient.setTags(tags);
                 }
 
                 return appointment;
             })
             .collect(Collectors.toList());
     }
+
+    private Appointment getBasicAppointment(Appointment appointment) {
+        Patient patient = appointment.getPatient();
+        if (patient != null && patient.getId() != null) {
+            patientRepository.findPatientById(patient.getId())
+                .ifPresent(patientTable -> appointment.setPatient(PatientMapper.patientTableToPatient(patientTable)));
+        }
+
+        Registration registration = appointment.getRegistration();
+        if (registration != null && registration.getId() != null) {
+            registrationRepository.findById(registration.getId(), RegistrationTable.class)
+                .ifPresent(registrationTable -> appointment.setRegistration(RegistrationMapper.registrationTableToRegistration(registrationTable)));
+        }
+
+        ExtendUser extendUser = appointment.getDoctor();
+        if (extendUser != null && extendUser.getId() != null) {
+            extendUserRepository
+                .findById(extendUser.getId(), AppointmentDoctor.class)
+                .ifPresent(appointmentDoctor -> {
+                    User user = new User();
+                    user.setId(appointmentDoctor.getUser_Id());
+                    user.setFirstName(appointmentDoctor.getUser_FirstName());
+                    MapperUtil.setNullAuditing(user);
+
+                    extendUser.setUser(user);
+                });
+        }
+
+        return appointment;
+    }
+
+    private Optional<Disposal> getDisposalByRegistrationId(Long id) {
+        return disposalRepository
+            .findByRegistration_Id(id)
+            .map(appointmentRegistrationDisposal -> {
+                Disposal disposal = new Disposal();
+                disposal.setId(appointmentRegistrationDisposal.getId());
+                MapperUtil.setNullAuditing(disposal);
+
+                return disposal;
+            });
+    }
+
 
     public interface AppointmentRegistrationDisposal {
 

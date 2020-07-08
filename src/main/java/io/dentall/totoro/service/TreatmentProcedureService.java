@@ -389,4 +389,16 @@ public class TreatmentProcedureService {
             })
             .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public boolean isNhi(Long id) {
+        return treatmentProcedureRepository.findById(id, TreatmentProcedureNhiProcedure.class)
+            .map(treatmentProcedureNhiProcedure -> treatmentProcedureNhiProcedure.getNhiProcedure_Id() != null)
+            .orElse(false);
+    }
+
+    public interface TreatmentProcedureNhiProcedure {
+
+        Long getNhiProcedure_Id();
+    }
 }

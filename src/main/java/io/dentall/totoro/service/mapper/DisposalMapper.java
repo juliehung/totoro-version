@@ -4,11 +4,11 @@ import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.domain.Prescription;
 import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.service.dto.table.DisposalTable;
-import org.springframework.stereotype.Service;
+import io.dentall.totoro.service.util.MapperUtil;
 
-@Service
 public class DisposalMapper {
-    public Disposal disposalTableToDisposal(DisposalTable disposalTable) {
+
+    public static Disposal disposalTableToDisposal(DisposalTable disposalTable) {
         Disposal disposal = new Disposal();
 
         disposal.setId(disposalTable.getId());
@@ -32,6 +32,7 @@ public class DisposalMapper {
 
         Registration registration = new Registration();
         registration.setId(disposalTable.getRegistration_Id());
+        MapperUtil.setNullAuditing(registration);
         disposal.setRegistration(registration);
 
         return disposal;

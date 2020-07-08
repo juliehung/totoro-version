@@ -3,11 +3,10 @@ package io.dentall.totoro.service.mapper;
 import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.domain.Hospital;
 import io.dentall.totoro.service.dto.table.AccountingTable;
-import org.springframework.stereotype.Service;
 
-@Service
 public class AccountingMapper {
-    public Accounting accountingTableToAccounting(AccountingTable accountingTable) {
+
+    public static Accounting accountingTableToAccounting(AccountingTable accountingTable) {
         Accounting accounting = new Accounting();
 
         accounting.setId(accountingTable.getId());

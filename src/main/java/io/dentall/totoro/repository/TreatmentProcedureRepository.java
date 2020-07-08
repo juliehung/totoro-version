@@ -9,7 +9,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -23,6 +25,10 @@ public interface TreatmentProcedureRepository extends JpaRepository<TreatmentPro
     List<TreatmentProcedureTable> findTop6ByAppointment_Patient_IdOrderByCreatedDateDesc(Long patientId);
 
     Set<TreatmentProcedureTable> findTreatmentProceduresByDisposal_Id(Long id);
+
+    <T> Collection<T> findByDisposal_Id(Long id, Class<T> type);
+
+    <T> Optional<T> findById(Long id, Class<T> type);
 
     @Query(
         nativeQuery = true,
