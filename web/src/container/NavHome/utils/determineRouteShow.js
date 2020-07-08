@@ -8,7 +8,11 @@ export function determineRouteOrLinkShow(route) {
 }
 
 function isLocalChecker() {
-  return !window.location.href.includes('his.dentall.io') && !window.location.href.includes('dentall.pw');
+  return (
+    !window.location.href.includes('his.dentall.io') &&
+    !window.location.href.includes('dentall.pw') &&
+    !window.location.href.includes('dev.dentall.site')
+  );
 }
 
 function clinicChecker(clinics) {
