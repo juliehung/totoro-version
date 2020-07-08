@@ -189,7 +189,7 @@ public class AppointmentResource {
         @RequestParam(defaultValue = "false") Boolean web
     ) {
         if (web) {
-            return ResponseEntity.ok().body(appointmentService.getAppointmentProjectionBetween(beginDate, endDate));
+            return ResponseEntity.ok().body(appointmentService.getBasicAppointmentProjectionByExpectedArrivalTime(beginDate, endDate));
         }
 
         return ResponseEntity.ok().body(appointmentService.findAppointmentWithRelationshipBetween(beginDate, endDate).stream()
@@ -204,5 +204,14 @@ public class AppointmentResource {
                 return appointment;
             })
             .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/appointments/expected-arrival-time")
+    @Timed
+    public ResponseEntity<List<Appointment>> getAppointmentsWithRelationshipBetween(
+        @RequestParam Instant beginDate,
+        @RequestParam Instant endDate
+    ) {
+        return ResponseEntity.ok().body(appointmentService.getAppointmentProjectionByExpectedArrivalTime(beginDate, endDate));
     }
 }
