@@ -334,7 +334,7 @@ public class TreatmentProcedureService {
     }
 
     public List<TreatmentProcedure> findRecent6TreatmentProceduresByPatient(Long patient) {
-        return treatmentProcedureRepository.findTop6ByAppointment_Patient_IdOrderByCreatedDateDesc(patient).stream()
+        return treatmentProcedureRepository.findTop6ByDisposal_Registration_Appointment_Patient_IdOrderByCreatedDateDesc(patient).stream()
             .map(treatmentProcedureMapper::TreatmentProcedureTableToTreatmentProcedure)
             .map(treatmentProcedure -> {
                 // NhiProcedure
