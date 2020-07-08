@@ -22,7 +22,7 @@ public interface PatientTable {
     String getEmergencyName();
     String getEmergencyPhone();
     Instant getDeleteDate();
-    String getScaling();
+    LocalDate getScaling();
     String getLineId();
     String getFbId();
     String getNote();
