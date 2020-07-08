@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -17,6 +18,8 @@ import java.util.stream.Stream;
 @SuppressWarnings("unused")
 @Repository
 public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSpecificationExecutor<Disposal> {
+
+    List<DisposalTable> findDisposalByRegistration_Appointment_Patient_Id(Long patientId);
 
     Optional<DisposalTable> findDisposalById(Long id);
 
