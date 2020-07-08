@@ -206,7 +206,8 @@ public class DisposalCriteria implements Serializable {
     }
 
     public boolean isOnlyPatientId() {
-        return this.id == null &&
+        return this.patientId != null &&
+            this.id == null &&
             this.status == null &&
             this.total == null &&
             this.dateTime == null &&
