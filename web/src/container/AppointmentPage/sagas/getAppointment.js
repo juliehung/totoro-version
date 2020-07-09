@@ -1,11 +1,14 @@
-import { call, put, takeLatest, cancelled } from 'redux-saga/effects';
+import { call, put, takeLatest, cancelled, select } from 'redux-saga/effects';
 import { GET_APPOINTMENTS_START } from '../constant';
 import { getAppointmentsSuccess } from '../actions';
 import appointment from '../../../models/appointment';
 
-export function* getAppointments({ range }) {
+const getCalendarRange = state => state.appointmentPageReducer.calendar.range;
+
+export function* getAppointments() {
   const abortController = new AbortController();
   try {
+    const range = yield select(getCalendarRange);
     const result = yield call(appointment.getBetween, range, abortController.signal);
     yield put(getAppointmentsSuccess(result));
   } catch (err) {

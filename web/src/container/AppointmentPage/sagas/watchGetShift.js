@@ -1,13 +1,16 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, select } from 'redux-saga/effects';
 import { GET_SHIFT_START } from '../constant';
 import Shift from '../../../models/shift';
 import { getShiftSuccess } from '../actions';
 
-function* getShift({ start, end }) {
+const getCalendarRange = state => state.appointmentPageReducer.calendar.range;
+
+function* getShift() {
   try {
+    const range = yield select(getCalendarRange);
     const result = yield call(Shift.get, {
-      'toDate.greaterOrEqualThan': start.toISOString(),
-      'fromDate.lessThan': end.toISOString(),
+      'toDate.greaterOrEqualThan': range.start.toISOString(),
+      'fromDate.lessThan': range.end.toISOString(),
     });
 
     yield put(getShiftSuccess(result));

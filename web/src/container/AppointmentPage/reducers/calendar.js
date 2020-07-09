@@ -14,6 +14,7 @@ import {
   CHANGE_CAL_SLOT_DURATION,
   POPOVER_CANCEL_APP_SUCCESS,
   EDIT_APPOINTMENT_SUCCESS,
+  CHANGE_CALENADR_RANGE,
 } from '../constant';
 
 const doctors = JSON.parse(localStorage.getItem('selectedDoctors'));
@@ -43,8 +44,10 @@ const calendar = (state = initialState, action) =>
         draft.calendarDate = action.date;
         break;
       case GET_APPOINTMENTS_START:
-        draft.range = action.range;
         draft.getSuccess = initState.getSuccess;
+        break;
+      case CHANGE_CALENADR_RANGE:
+        draft.range = action.range;
         break;
       case GET_APPOINTMENTS_SUCCESS:
         draft.appointments = convertAppsToEvt(action.appData);
