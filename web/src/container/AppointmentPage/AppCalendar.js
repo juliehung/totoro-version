@@ -33,6 +33,7 @@ import {
   changeSelectedDoctors,
   getShift,
   openXray,
+  changeCalendarRange,
 } from './actions';
 import zhTW from '@fullcalendar/core/locales/zh-tw';
 import styled from 'styled-components';
@@ -333,11 +334,22 @@ class AppCalendar extends React.Component {
     }
   }
 
+  debounceFetch;
   generalSettingEvents = [];
   componentDidUpdate(prevProps) {
     if (prevProps.calendarDate.format('YYYY-MM-DD') !== this.props.calendarDate.format('YYYY-MM-DD')) {
       const calendarApi = this.calendarComponentRef.current.getApi();
       calendarApi.gotoDate(this.props.calendarDate.format('YYYY-MM-DD'));
+    }
+
+    if (
+      !this.props.calendarRange.start.isSame(prevProps.calendarRange.start) ||
+      !this.props.calendarRange.end.isSame(prevProps.calendarRange.end)
+    ) {
+      clearTimeout(this.debounceFetch);
+      this.debounceFetch = setTimeout(() => {
+        this.getAllEvent();
+      }, 100);
     }
 
     if (
@@ -363,6 +375,12 @@ class AppCalendar extends React.Component {
       const calendarApi = this.calendarComponentRef.current.getApi();
       calendarApi.updateSize();
     }
+  }
+
+  getAllEvent() {
+    this.props.getCalendarEvent();
+    this.props.getShift();
+    this.props.getAppointments();
   }
 
   componentWillUnmount() {
@@ -404,11 +422,10 @@ class AppCalendar extends React.Component {
         this.props.changeCalDate(moment(fullcalendarDate));
       }
     }
+
     const start = moment(info.view.activeStart);
     const end = moment(info.view.activeEnd);
-    this.props.getAppointments(start, end);
-    this.props.getCalendarEvent(start, end);
-    this.props.getShift(start, end);
+    this.props.changeCalendarRange(start, end);
 
     // listen fullcalendar scroll event
     if (this.scrollListener) {
@@ -434,7 +451,7 @@ class AppCalendar extends React.Component {
     const calendarApi = this.calendarComponentRef.current.getApi();
     const currentViewType = calendarApi.state.viewType;
     if (currentViewType === 'timeGridWeek') {
-      const prevDay = this.props.calendarDate.add(-1, 'd').format('YYYY-MM-DD');
+      const prevDay = this.props.calendarDate.clone().add(-1, 'd').format('YYYY-MM-DD');
       calendarApi.gotoDate(prevDay);
       this.props.changeCalFirstDay(this.props.firstDay - 1);
       return;
@@ -804,6 +821,7 @@ const mapDispatchToProps = {
   changeSelectedDoctors,
   getShift,
   openXray,
+  changeCalendarRange,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppCalendar);
