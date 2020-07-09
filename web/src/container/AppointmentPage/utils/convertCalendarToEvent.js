@@ -4,7 +4,7 @@ import isAllDay from './isAllDay';
 
 export default function convertCalendarToEvent(calendarEvents) {
   const events = [];
-  const color = '#787878';
+  const color = 'rgb(230, 124, 115)';
 
   calendarEvents.forEach(e => {
     if (e.dayOffCron && e.dayOffCron.length !== 0) {
