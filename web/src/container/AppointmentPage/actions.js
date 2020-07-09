@@ -91,6 +91,7 @@ import {
   XRAY_GREETING_FAILURE,
   ON_LEAVE_PAGE,
   CHANGE_PATIENT_SEARCH_MODE,
+  CHANGE_CALENADR_RANGE,
 } from './constant';
 
 export function changeCalDate(date) {
@@ -101,8 +102,8 @@ export function changeCalFirstDay(firstDay) {
   return { type: CHANGE_CAL_FIRST_DAY, firstDay };
 }
 
-export function getAppointments(start, end) {
-  return { type: GET_APPOINTMENTS_START, range: { start, end } };
+export function getAppointments() {
+  return { type: GET_APPOINTMENTS_START };
 }
 
 export function getAppointmentsSuccess(appData) {
@@ -286,8 +287,8 @@ export function checkEditAppConfirmButtonDisable() {
   return { type: CHECK_EDIT_APP_CONFIRM_MODAL_BUTTON_DISABLE };
 }
 
-export function getCalendarEvent(start, end) {
-  return { type: GET_CALENDAR_EVENT_START, range: { start, end } };
+export function getCalendarEvent() {
+  return { type: GET_CALENDAR_EVENT_START };
 }
 
 export function getCalendarEventSuccess(calendarEvents) {
@@ -430,8 +431,8 @@ export function popoverCancelAppSuccess(appointment) {
   return { type: POPOVER_CANCEL_APP_SUCCESS, appointment };
 }
 
-export function getShift(start, end) {
-  return { type: GET_SHIFT_START, start, end };
+export function getShift() {
+  return { type: GET_SHIFT_START };
 }
 
 export function getShiftSuccess(shift) {
@@ -460,4 +461,8 @@ export function onLeavePage() {
 
 export function changePatientSearchMode(mode) {
   return { type: CHANGE_PATIENT_SEARCH_MODE, mode };
+}
+
+export function changeCalendarRange(start, end) {
+  return { type: CHANGE_CALENADR_RANGE, range: { start, end } };
 }
