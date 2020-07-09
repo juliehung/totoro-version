@@ -263,8 +263,15 @@ const CalendarContainer = styled.div`
   }
 
   .fc-time-grid .fc-slats td {
-    height: 3em;
+    height: ${props => {
+      return props.slotHeight ? props.slotHeight + 'px' : '1em';
+    }};
     border-bottom: 0;
+    font-size: 10px !important;
+  }
+
+  .fc-highlight {
+    background-color: #3266ff;
   }
 
   .fc-axis.fc-time {
@@ -322,6 +329,7 @@ const SpinContainer = styled.div`
 
 class AppCalendar extends React.Component {
   calendarComponentRef = React.createRef();
+  calendarContainerRef = React.createRef();
 
   componentDidMount() {
     const calendarApi = this.calendarComponentRef.current.getApi();
@@ -336,6 +344,7 @@ class AppCalendar extends React.Component {
 
   debounceFetch;
   generalSettingEvents = [];
+
   componentDidUpdate(prevProps) {
     if (prevProps.calendarDate.format('YYYY-MM-DD') !== this.props.calendarDate.format('YYYY-MM-DD')) {
       const calendarApi = this.calendarComponentRef.current.getApi();
@@ -670,6 +679,12 @@ class AppCalendar extends React.Component {
       </DoctorControl>
     );
 
+    let slotHeight;
+    if (this.calendarContainerRef.current) {
+      slotHeight = this.calendarContainerRef.current.clientHeight / 36;
+    }
+
+    console.log('slotheight', slotHeight);
     return (
       <Container>
         <Header>
@@ -712,6 +727,8 @@ class AppCalendar extends React.Component {
         </Header>
         <CalendarContainer
           noResourceAndShiftOpen={!resource.length && shiftOpen && this.props.viewType === 'resourceTimeGridDay'}
+          ref={this.calendarContainerRef}
+          slotHeight={slotHeight}
         >
           {this.props.loading && (
             <SpinContainer>
@@ -744,7 +761,7 @@ class AppCalendar extends React.Component {
             }}
             minTime="08:00:00"
             scrollTime="08:30:00"
-            slotLabelInterval={{ hours: 0.5 }}
+            slotLabelInterval={{ hours: 1 }}
             slotDuration={`00:${this.props.slotDuration}:00`}
             locales={zhTW}
             locale="zh-tw"
