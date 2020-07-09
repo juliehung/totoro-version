@@ -12,10 +12,10 @@ export function mapStatusToColor(app) {
       return '#009788 ';
     }
     if (app.registrationStatus === 'IN_PROGRESS') {
-      return '#00c49e';
+      return 'rgb(0, 151, 136)';
     }
     if (app.registrationStatus === 'FINISHED') {
-      return '#616161';
+      return 'rgb(0, 151, 136)';
     }
   }
 
@@ -23,14 +23,14 @@ export function mapStatusToColor(app) {
   const status = app.status;
 
   if (status === 'CANCEL') {
-    return '#7886CA';
+    return 'rgb(240, 147, 0)';
   }
 
   if (isBefore) {
-    return '#F09300';
+    return 'rgb(240, 147, 0)';
   }
 
-  return '#e67c73';
+  return 'rgb(240, 147, 0)';
 }
 
 export function convertAppToEvt(appointment) {
