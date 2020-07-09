@@ -397,7 +397,17 @@ public class TreatmentProcedureService {
             .orElse(false);
     }
 
+    @Transactional(readOnly = true)
+    public List<Integer> getTreatmentProcedureTypesByDisposalId(Long id) {
+        return treatmentProcedureRepository.findByDisposal_Id(id, TreatmentProcedureNhiProcedure.class)
+            .stream()
+            .map(treatmentProcedureNhiProcedure -> treatmentProcedureNhiProcedure.getNhiProcedure_Id() == null ? 0 : 1)
+            .collect(Collectors.toList());
+    }
+
     public interface TreatmentProcedureNhiProcedure {
+
+        Long getId();
 
         Long getNhiProcedure_Id();
     }

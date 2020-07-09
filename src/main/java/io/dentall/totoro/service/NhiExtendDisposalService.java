@@ -513,4 +513,24 @@ public class NhiExtendDisposalService {
             .findFirst()
             .map(nhiExtendDisposalMapper::nhiExtendDisposalTableToNhiExtendDisposal);
     }
+
+    @Transactional(readOnly = true)
+    public Optional<NhiExtendDisposalSimple> getSimpleByDisposalId(Long id) {
+        return nhiExtendDisposalRepository.findByDisposal_IdOrderByIdDesc(id, NhiExtendDisposalSimple.class)
+            .stream()
+            .findFirst();
+    }
+
+    public interface NhiExtendDisposalSimple {
+
+        Long getId();
+
+        String getA17();
+
+        String getA18();
+
+        String getA23();
+
+        String getA54();
+    }
 }

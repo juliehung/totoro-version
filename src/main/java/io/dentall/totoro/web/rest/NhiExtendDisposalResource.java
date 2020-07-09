@@ -7,7 +7,6 @@ import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.NhiExtendDisposalService;
-import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -24,7 +23,10 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -42,16 +44,12 @@ public class NhiExtendDisposalResource {
 
     private final DisposalService disposalService;
 
-    private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
-
     public NhiExtendDisposalResource(
         NhiExtendDisposalService nhiExtendDisposalService,
-        DisposalService disposalService,
-        NhiExtendDisposalMapper nhiExtendDisposalMapper
+        DisposalService disposalService
     ) {
         this.nhiExtendDisposalService = nhiExtendDisposalService;
         this.disposalService = disposalService;
-        this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
     }
 
     /**
@@ -221,5 +219,12 @@ public class NhiExtendDisposalResource {
         nhiExtendDisposalService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-    
+
+    @GetMapping("/nhi-extend-disposals/simple/disposals/{id}")
+    @Timed
+    public ResponseEntity<NhiExtendDisposalService.NhiExtendDisposalSimple> getSimpleByDisposalId(@PathVariable Long id) {
+        log.debug("REST request to get NhiExtendDisposalSimple by Disposal[{}]", id);
+
+        return ResponseUtil.wrapOrNotFound(nhiExtendDisposalService.getSimpleByDisposalId(id));
+    }
 }
