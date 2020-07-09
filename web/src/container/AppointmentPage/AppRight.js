@@ -23,7 +23,7 @@ import FloatingActionButton from './FloatingActionButton';
 import { useIsFirstRender } from '../../utils/hooks/useIsFirstRender';
 import { useCookies } from 'react-cookie';
 
-const maxSlotDuration = 60;
+const maxSlotDuration = 30;
 const minSlotDuration = 10;
 const slotDurationStep = 5;
 
