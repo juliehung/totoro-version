@@ -8,6 +8,8 @@ import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.service.PatientService;
+import io.dentall.totoro.service.dto.table.PatientTable;
+import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.ProblemUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -42,14 +44,14 @@ public class PatientBusinessService {
     }
 
     public Patient validatePatientExistence(Long patientId) {
-        Optional<Patient> patient = patientRepository.findById(patientId);
+        Optional<PatientTable> patient = patientRepository.findPatientById(patientId);
         if (!patient.isPresent()) {
             throw new ProblemUtil(
                 String.format("Not found patient(id: %s)", patientId),
                 Status.NOT_FOUND);
         }
 
-        return patient.get();
+        return PatientMapper.patientTableToPatient(patient.get());
     }
 
     public TeethGraphConfigVM updateTeethGraphConfig(Patient patient, TeethGraphConfigDTO dto) {
@@ -59,12 +61,14 @@ public class PatientBusinessService {
                 Status.BAD_REQUEST);
         }
 
-        patient.setTeethGraphPermanentSwitch(
+        Patient updatePatient = new Patient();
+        updatePatient.setId(patient.getId());
+        updatePatient.setTeethGraphPermanentSwitch(
             dto.getIsPermanent()
                 .stream()
                 .collect(Collectors.joining("")));
 
-        patientService.update(patient);
+        patientService.update(updatePatient);
 
         return getTeethGraphConfig(patient);
     }
