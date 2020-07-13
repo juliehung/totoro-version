@@ -33,6 +33,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
 
     Collection<AppointmentTable> findByExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end);
 
+    <T> Collection<T> findByExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end, Class<T> type);
+
     @Query(value =
         "select new io.dentall.totoro.service.dto.AppointmentDTO( " +
             "appointment.patient.id, " +
