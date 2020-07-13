@@ -208,10 +208,19 @@ public class AppointmentResource {
 
     @GetMapping("/appointments/expected-arrival-time")
     @Timed
-    public ResponseEntity<List<Appointment>> getAppointmentsWithRelationshipBetween(
+    public ResponseEntity<List<Appointment>> getAppointmentProjectionByExpectedArrivalTime(
         @RequestParam Instant beginDate,
         @RequestParam Instant endDate
     ) {
         return ResponseEntity.ok().body(appointmentService.getAppointmentProjectionByExpectedArrivalTime(beginDate, endDate));
+    }
+
+    @GetMapping("/appointments/simple/expected-arrival-time")
+    @Timed
+    public ResponseEntity<List<Appointment>> getSimpleAppointmentProjectionByExpectedArrivalTime(
+        @RequestParam Instant beginDate,
+        @RequestParam Instant endDate
+    ) {
+        return ResponseEntity.ok().body(appointmentService.getSimpleAppointmentProjectionByExpectedArrivalTime(beginDate, endDate));
     }
 }
