@@ -23,7 +23,7 @@ export function mapStatusToColor(app) {
   const status = app.status;
 
   if (status === 'CANCEL') {
-    return 'rgb(240, 147, 0)';
+    return '#616161';
   }
 
   if (isBefore) {
