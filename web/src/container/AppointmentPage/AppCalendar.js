@@ -684,7 +684,6 @@ class AppCalendar extends React.Component {
       slotHeight = this.calendarContainerRef.current.clientHeight / 36;
     }
 
-    console.log('slotheight', slotHeight);
     return (
       <Container>
         <Header>
