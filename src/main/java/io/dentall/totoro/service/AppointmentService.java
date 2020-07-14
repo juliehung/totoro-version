@@ -341,60 +341,23 @@ public class AppointmentService {
     public List<Appointment> getSimpleAppointmentProjectionByExpectedArrivalTime(Instant start, Instant end) {
         return appointmentRepository.findByExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end, Appointment1To1.class)
             .stream()
-            .map(appointment1To1 -> {
-                Appointment appointment = AppointmentMapper.appointmentTableToAppointment(appointment1To1);
+            .map(this::getSimpleAppointment)
+            .collect(Collectors.toList());
+    }
 
-                // patient
-                if (appointment1To1.getPatient_Id() != null) {
-                    Patient patient = PatientMapper.patientTableToPatient(getPatientTable(appointment1To1));
-                    appointment.setPatient(patient);
+    @Transactional(readOnly = true)
+    public List<Appointment> getSimpleAppointmentProjectionByExpectedArrivalTimeAndRegIsNull(Instant start, Instant end) {
+        return appointmentRepository.findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end, Appointment1To1.class)
+            .stream()
+            .map(this::getSimpleAppointment)
+            .collect(Collectors.toList());
+    }
 
-                    // tag
-                    Set<Tag> tags = tagRepository.findByPatientsId(patient.getId())
-                        .stream()
-                        .map(TagMapper::tagTableToTag)
-                        .collect(Collectors.toSet());
-
-                    patient.setTags(tags);
-                }
-
-                // registration
-                if (appointment1To1.getRegistration_Id() != null) {
-                    Registration registration = RegistrationMapper.registrationTableToRegistration(getRegistrationTable(appointment1To1));
-                    appointment.setRegistration(registration);
-
-                    // disposal
-                    if (appointment1To1.getRegistration_Disposal_Id() != null) {
-                        Disposal disposal = new Disposal();
-                        disposal.setId(appointment1To1.getRegistration_Disposal_Id());
-                        MapperUtil.setNullAuditing(disposal);
-
-                        registration.setDisposal(disposal);
-                    }
-
-                    // accounting
-                    if (appointment1To1.getRegistration_Accounting_Id() != null) {
-                        Accounting accounting = AccountingMapper.accountingTableToAccounting(getAccountingTable(appointment1To1));
-                        registration.setAccounting(accounting);
-                    }
-                }
-
-                // doctor
-                if (appointment1To1.getDoctorUser_Id() != null) {
-                    ExtendUser extendUser = new ExtendUser();
-                    extendUser.setId(appointment1To1.getDoctorUser_Id());
-
-                    User user = new User();
-                    user.setId(appointment1To1.getDoctor_User_Id());
-                    user.setFirstName(appointment1To1.getDoctor_User_FirstName());
-                    MapperUtil.setNullAuditing(user);
-
-                    extendUser.setUser(user);
-                    appointment.setDoctor(extendUser);
-                }
-
-                return appointment;
-            })
+    @Transactional(readOnly = true)
+    public List<Appointment> getSimpleAppointmentProjectionByExpectedArrivalTimeAndRegIsNotNull(Instant start, Instant end) {
+        return appointmentRepository.findByRegistrationIsNotNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(start, end, Appointment1To1.class)
+            .stream()
+            .map(this::getSimpleAppointment)
             .collect(Collectors.toList());
     }
 
@@ -423,6 +386,61 @@ public class AppointmentService {
 
                     extendUser.setUser(user);
                 });
+        }
+
+        return appointment;
+    }
+
+    private Appointment getSimpleAppointment(Appointment1To1 appointment1To1) {
+        Appointment appointment = AppointmentMapper.appointmentTableToAppointment(appointment1To1);
+
+        // patient
+        if (appointment1To1.getPatient_Id() != null) {
+            Patient patient = PatientMapper.patientTableToPatient(getPatientTable(appointment1To1));
+            appointment.setPatient(patient);
+
+            // tag
+            Set<Tag> tags = tagRepository.findByPatientsId(patient.getId())
+                .stream()
+                .map(TagMapper::tagTableToTag)
+                .collect(Collectors.toSet());
+
+            patient.setTags(tags);
+        }
+
+        // registration
+        if (appointment1To1.getRegistration_Id() != null) {
+            Registration registration = RegistrationMapper.registrationTableToRegistration(getRegistrationTable(appointment1To1));
+            appointment.setRegistration(registration);
+
+            // disposal
+            if (appointment1To1.getRegistration_Disposal_Id() != null) {
+                Disposal disposal = new Disposal();
+                disposal.setId(appointment1To1.getRegistration_Disposal_Id());
+                MapperUtil.setNullAuditing(disposal);
+
+                registration.setDisposal(disposal);
+            }
+
+            // accounting
+            if (appointment1To1.getRegistration_Accounting_Id() != null) {
+                Accounting accounting = AccountingMapper.accountingTableToAccounting(getAccountingTable(appointment1To1));
+                registration.setAccounting(accounting);
+            }
+        }
+
+        // doctor
+        if (appointment1To1.getDoctorUser_Id() != null) {
+            ExtendUser extendUser = new ExtendUser();
+            extendUser.setId(appointment1To1.getDoctorUser_Id());
+
+            User user = new User();
+            user.setId(appointment1To1.getDoctor_User_Id());
+            user.setFirstName(appointment1To1.getDoctor_User_FirstName());
+            MapperUtil.setNullAuditing(user);
+
+            extendUser.setUser(user);
+            appointment.setDoctor(extendUser);
         }
 
         return appointment;
