@@ -7,6 +7,7 @@ import { getSettings } from '../Home/actions';
 import Xray from './Xray';
 import Link from './Link';
 import { useWindowSize } from '../../utils/hooks/useWindowSize';
+import { withRouter } from 'react-router-dom';
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
@@ -53,7 +54,14 @@ const TabText = styled.span`
 
 //#endregion
 
-function SettingPage() {
+function SettingPage(props) {
+  const { match } = props;
+  const defaultActiveKey = match.params.section;
+
+  const onTabsChange = key => {
+    window.history.pushState({}, '', `#/setting/${key}`);
+  };
+
   const size = useWindowSize();
 
   return (
@@ -62,7 +70,11 @@ function SettingPage() {
       <Helmet>
         <title>設定</title>
       </Helmet>
-      <Tabs defaultActiveKey="xray" tabPosition={size.width >= 1100 ? 'left' : 'top'}>
+      <Tabs
+        defaultActiveKey={defaultActiveKey}
+        tabPosition={size.width >= 1100 ? 'left' : 'top'}
+        onChange={onTabsChange}
+      >
         <TabPane tab={<TabText>X 光軟體設定</TabText>} key="xray">
           <StyledContent>
             <Xray />
@@ -80,4 +92,4 @@ function SettingPage() {
 
 const mapDispatchToProps = { getSettings };
 
-export default connect(null, mapDispatchToProps)(SettingPage);
+export default withRouter(connect(null, mapDispatchToProps)(SettingPage));

@@ -256,7 +256,7 @@ const route = [
     localVersion: false,
   },
   { key: 'shift', navigation: false, exact: true, component: <ShiftPage />, localVersion: true },
-  { key: 'setting', navigation: false, exact: true, component: <SettingPage />, localVersion: true },
+  { key: 'setting/:section', navigation: false, component: <SettingPage />, localVersion: true },
   { key: '', navigation: false, exact: false, component: <Redirect to="/appointment" />, localVersion: true },
 ];
 
@@ -288,8 +288,8 @@ function NavHome(props) {
   }, [location, currentLocation]);
 
   const linkManagement = settings?.preferences?.generalSetting?.linkManagement ?? {};
-  const technicianSheet = linkManagement.technicianSheet ?? '#/setting';
-  const toothMaterialSheet = linkManagement.toothMaterialSheet ?? '#/setting';
+  const technicianSheet = linkManagement.technicianSheet ?? '#/setting/link';
+  const toothMaterialSheet = linkManagement.toothMaterialSheet ?? '#/setting/link';
 
   const navLink = [
     {
@@ -383,7 +383,7 @@ function NavHome(props) {
           overlay={
             <Menu onClick={menuClick}>
               <Menu.Item key="settings">
-                <Link to="/setting">設定</Link>
+                <Link to="/setting/xray">設定</Link>
               </Menu.Item>
               <Menu.Item key="logout">登出</Menu.Item>
             </Menu>
