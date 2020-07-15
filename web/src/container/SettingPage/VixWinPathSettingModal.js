@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Input, message } from 'antd';
+import { Modal, Input, message, Button } from 'antd';
 import styled from 'styled-components';
 import { getSettings } from '../Home/actions';
 import Settings from '../../models/settings';
@@ -62,42 +62,6 @@ const FooterContainer = styled.div`
 
   & > :not(:last-child) {
     margin-right: 16px;
-  }
-`;
-
-const Button = styled.button`
-  font-size: 14px;
-  height: 40px;
-  border: 0;
-  outline: 0;
-  padding-right: 20px !important;
-  padding-left: 20px !important;
-  border-radius: 34px !important;
-  cursor: pointer;
-  transition: box-shadow 200ms ease;
-  font-weight: bold;
-`;
-
-const StyledButton = styled(Button)`
-  background-color: #3266ff;
-  color: #ffffff;
-  &:hover {
-    background-color: #3266ff;
-    box-shadow: 0 8px 12px -8px rgba(50, 102, 255, 0.3);
-  }
-  &:active {
-    background-color: #244edb;
-  }
-`;
-
-const NoStyleButton = styled(Button)`
-  background-color: #fff;
-  color: #8f9bb3;
-  &:hover {
-    background-color: rgba(143, 155, 179, 0.08);
-  }
-  &:active {
-    background-color: rgba(143, 155, 179, 0.16);
   }
 `;
 
@@ -203,8 +167,12 @@ function VixWinPathSettingModal(props) {
           </PathItemContainer>
         </div>
         <FooterContainer>
-          <NoStyleButton onClick={onCancel}>取消</NoStyleButton>
-          <StyledButton onClick={onOk}>確認</StyledButton>
+          <Button onClick={onCancel} shape="round" size="large" type="text">
+            取消
+          </Button>
+          <Button onClick={onOk} shape="round" type="primary" size="large">
+            確認
+          </Button>
         </FooterContainer>
       </ContentContainer>
     </StyledModal>
