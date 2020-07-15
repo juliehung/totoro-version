@@ -4,6 +4,7 @@ import io.dentall.totoro.domain.Appointment;
 import io.dentall.totoro.repository.dao.AppointmentDAO;
 import io.dentall.totoro.service.dto.AppointmentDTO;
 import io.dentall.totoro.service.dto.table.AppointmentTable;
+import io.dentall.totoro.web.rest.vm.UWPRegistrationPageVM;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,6 +25,63 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long>, JpaSpecificationExecutor<Appointment> {
+
+    @Query(
+        nativeQuery = true,
+        value = "select" +
+            "       p.id as patientId," +
+            "       p.name as patientName," +
+            "       p.birth as patientBirth," +
+            "       p.medical_id as patientMedicalId," +
+            "       p.gender as patientGender," +
+            "       d.id as disposalId," +
+            "       a.id as appointmentId," +
+            "       a.note as appointmentNote," +
+            "       a.expected_arrival_time as appointmentExpectedArrivalTime," +
+            "       r.id as registrationId," +
+            "       r.arrival_time as registrationArrivalTime," +
+            "       r.status as registrationStatus," +
+            "       u.first_name as userFirstName," +
+            "       u.last_name as userLastName," +
+            "       ned.A17 as nhiExtendDisposalA17," +
+            "       ned.A18 as nhiExtendDisposalA18," +
+            "       ned.A23 as nhiExtendDisposalA23," +
+            "       ned.A54 as nhiExtendDisposalA54," +
+            "       replace(replace(cast(array(select tags_id from patient_tag pt where pt.patients_id = p.id) as varchar), '{', ''), '}', '') as patientTags," +
+            "       count(procedure_id) filter ( where procedure_id is not null )         as procedureCounter," +
+            "       count(nhi_procedure_id) filter ( where nhi_procedure_id is not null ) as nhiProcedureCounter" +
+            " from appointment a" +
+            "         left join registration r on a.registration_id = r.id" +
+            "         left join disposal d on r.id = d.registration_id" +
+            "         left join treatment_procedure tp on d.id = tp.disposal_id" +
+            "         left join patient p on a.patient_id = p.id" +
+            "         left join jhi_user u on a.doctor_user_id = u.id" +
+            "         left join (select max(id) as mxId, disposal_id from nhi_extend_disposal group by disposal_id) mned on d.id = mned.disposal_id" +
+            "         left join nhi_extend_disposal ned on mned.mxId = ned.id" +
+            " where a.expected_arrival_time between ?1 and ?2 " +
+            "  and a.status <> 'CANCEL'" +
+            "group by tp.disposal_id," +
+            "         p.id," +
+            "         p.name," +
+            "         p.birth," +
+            "         p.medical_id," +
+            "         p.gender," +
+            "         d.id," +
+            "         a.id," +
+            "         a.note," +
+            "         a.expected_arrival_time," +
+            "         r.id," +
+            "         r.arrival_time," +
+            "         r.status," +
+            "         u.first_name," +
+            "         u.last_name," +
+            "         ned.A17," +
+            "         ned.A18," +
+            "         ned.A23," +
+            "         ned.A54" +
+            " order by a.expected_arrival_time;"
+    )
+    List<UWPRegistrationPageVM> findAppointmentWithTonsOfDataForUWPRegistrationPage(Instant start, Instant end);
 
     Optional<AppointmentTable> findAppointmentByRegistration_Id(Long id);
 

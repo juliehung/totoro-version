@@ -13,6 +13,7 @@ import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;
+import io.dentall.totoro.web.rest.vm.UWPRegistrationPageVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -231,5 +232,15 @@ public class AppointmentResource {
         } else {
             return ResponseEntity.ok().body(appointmentService.getSimpleAppointmentProjectionByExpectedArrivalTimeAndRegIsNull(beginDate, endDate));
         }
+    }
+
+    // Just fit view of UWP at version 1.12.10
+    @GetMapping("/appointments/for-registration-page")
+    @Timed
+    public ResponseEntity<List<UWPRegistrationPageVM>> getAppointmentWithTonsOfDataForUWPRegistrationPage(
+        @RequestParam Instant beginDate,
+        @RequestParam Instant endDate
+    ) {
+        return ResponseEntity.ok().body(appointmentService.findAppointmentWithTonsOfDataForUWPRegistrationPage(beginDate, endDate));
     }
 }
