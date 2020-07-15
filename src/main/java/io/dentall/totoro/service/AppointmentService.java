@@ -14,6 +14,7 @@ import io.dentall.totoro.service.mapper.*;
 import io.dentall.totoro.service.util.MapperUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;
+import io.dentall.totoro.web.rest.vm.UWPRegistrationPageVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -249,6 +250,13 @@ public class AppointmentService {
         }
 
         return registration;
+    }
+
+    public List<UWPRegistrationPageVM> findAppointmentWithTonsOfDataForUWPRegistrationPage(
+        Instant beginDate,
+        Instant endDate
+    ) {
+        return appointmentRepository.findAppointmentWithTonsOfDataForUWPRegistrationPage(beginDate, endDate);
     }
 
     public List<MonthAppointmentVM> findAppointmentBetween(

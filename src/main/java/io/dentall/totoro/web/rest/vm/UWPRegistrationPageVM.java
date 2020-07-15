@@ -1,0 +1,45 @@
+package io.dentall.totoro.web.rest.vm;
+
+import io.dentall.totoro.domain.enumeration.Gender;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
+
+import java.time.Instant;
+import java.time.LocalDate;
+
+public interface UWPRegistrationPageVM {
+
+    // patient
+    Long getPatientId();
+    String getPatientName();
+    LocalDate getPatientBirth();
+    String getPatientMedicalId();
+    Gender getPatientGender();
+
+    // disposal
+    Long getDisposalId();
+
+    // apointment
+    Long getAppointmentId();
+    String getAppointmentNote();
+    Instant getAppointmentExpectedArrivalTime();
+
+    // registration
+    Long getRegistrationId();
+    Instant getRegistrationArrivalTime();
+    RegistrationStatus getRegistrationStatus();
+
+    // User
+    String getUserFirstName();
+    String getUserLastName();
+
+    // nhi extend disposal
+    String getNhiExtendDisposalA17();
+    String getNhiExtendDisposalA18();
+    String getNhiExtendDisposalA23();
+    String getNhiExtendDisposalA54();
+
+    // other needed
+    String getPatientTags();
+    Long getProcedureCounter();
+    Long getNhiProcedureCounter();
+}
