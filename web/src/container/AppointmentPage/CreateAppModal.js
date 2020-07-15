@@ -266,6 +266,29 @@ function CreateAppModal({
     changeCreateAppPatientPhone(e.target.value);
   };
 
+  const searchPlaceholderBase = '搜尋複診病患';
+  let searchPlaceholder;
+  switch (searchMode) {
+    case patientSearchMode.name:
+      searchPlaceholder = `${searchPlaceholderBase}姓名`;
+      break;
+    case patientSearchMode.birth:
+      searchPlaceholder = `${searchPlaceholderBase}生日民國年月日`;
+      break;
+    case patientSearchMode.phone:
+      searchPlaceholder = `${searchPlaceholderBase}聯絡電話`;
+      break;
+    case patientSearchMode.medical_id:
+      searchPlaceholder = `${searchPlaceholderBase}病歷編號`;
+      break;
+    case patientSearchMode.national_id:
+      searchPlaceholder = `${searchPlaceholderBase}身分證號`;
+      break;
+    default:
+      searchPlaceholder = searchPlaceholderBase;
+      break;
+  }
+
   return (
     <Modal
       centered
@@ -281,7 +304,7 @@ function CreateAppModal({
         <div style={{ display: 'flex' }}>
           <StyledSearchSelect
             showSearch
-            placeholder="請輸入複診病患病歷編號或姓名"
+            placeholder={searchPlaceholder}
             filterOption={false}
             onSearch={onSearchTextChange}
             onFocus={onSearchTextFocus}
