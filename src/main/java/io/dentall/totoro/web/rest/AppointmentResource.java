@@ -219,8 +219,17 @@ public class AppointmentResource {
     @Timed
     public ResponseEntity<List<Appointment>> getSimpleAppointmentProjectionByExpectedArrivalTime(
         @RequestParam Instant beginDate,
-        @RequestParam Instant endDate
+        @RequestParam Instant endDate,
+        @RequestParam(required = false) Boolean hasReg
     ) {
-        return ResponseEntity.ok().body(appointmentService.getSimpleAppointmentProjectionByExpectedArrivalTime(beginDate, endDate));
+        if (hasReg == null) {
+            return ResponseEntity.ok().body(appointmentService.getSimpleAppointmentProjectionByExpectedArrivalTime(beginDate, endDate));
+        }
+
+        if (hasReg) {
+            return ResponseEntity.ok().body(appointmentService.getSimpleAppointmentProjectionByExpectedArrivalTimeAndRegIsNotNull(beginDate, endDate));
+        } else {
+            return ResponseEntity.ok().body(appointmentService.getSimpleAppointmentProjectionByExpectedArrivalTimeAndRegIsNull(beginDate, endDate));
+        }
     }
 }
