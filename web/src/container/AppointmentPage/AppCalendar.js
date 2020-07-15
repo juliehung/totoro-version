@@ -210,8 +210,8 @@ const DoctorControlItem = styled.div`
   cursor: pointer;
   transition: all ease 300ms;
   color: ${props => (props.selected ? '#fff' : '#8f9bb3')};
-  background-color: ${props => (props.selected ? '#00e096' : 'rgba(143, 155, 179, 0.08)')};
-  border: ${props => (props.selected ? ' 1px solid #00e096' : '1px solid #8f9bb3')};
+  background-color: ${props => (props.selected ? '#008F72' : 'rgba(143, 155, 179, 0.08)')};
+  border: ${props => (props.selected ? ' 1px solid #008F72' : '1px solid #8f9bb3')};
   & > img {
     color: red;
     width: 16px;
