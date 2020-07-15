@@ -61,7 +61,7 @@ function RegistrationPage(props) {
     openXray,
     xrayServerState,
     xrayServerError,
-    settings,
+    xRayVendors,
     onLeavePage,
     xrayOnRequest,
     changeXrayModalVisible,
@@ -175,7 +175,7 @@ function RegistrationPage(props) {
         {renderDoctorSelect()}
       </DatePickerContainer>
       <StyledTable
-        columns={columns(settings)}
+        columns={columns(xRayVendors)}
         allowClear={true}
         pagination={false}
         loading={props.loading}
@@ -214,14 +214,14 @@ function RegistrationPage(props) {
   );
 }
 
-const mapStateToProps = ({ registrationPageReducer, homePageReducer }) => ({
+const mapStateToProps = ({ registrationPageReducer, homePageReducer, settingPageReducer }) => ({
   registrations: registrationPageReducer.registration.registrations,
   loading: registrationPageReducer.registration.loading,
   selectedDate: registrationPageReducer.registration.selectedDate,
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
   xrayServerState: homePageReducer.xray.serverState,
   xrayServerError: homePageReducer.xray.serverError,
-  settings: homePageReducer.settings.settings,
+  xRayVendors: settingPageReducer.configurations.config.xRayVendors,
   xrayOnRequest: homePageReducer.xray.onRequest,
 });
 

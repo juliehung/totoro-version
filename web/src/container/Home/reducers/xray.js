@@ -4,7 +4,12 @@ import { CHANGE_XRAY_MODAL_VISIBLE, XRAY_GREETING, XRAY_GREETING_SUCCESS, XRAY_G
 import { ON_LEAVE_PAGE as ON_LEAVE_PAGE_REGISTRATION_PAGE } from '../../RegistrationPage/constant';
 import { ON_LEAVE_PAGE as ON_LEAVE_PAGE_APPOINTMENT_PAGE } from '../../AppointmentPage/constant';
 
-const initialState = { modalVisible: false, onRequest: false, serverState: false, serverError: false };
+const initialState = {
+  modalVisible: false,
+  onRequest: false,
+  serverState: false,
+  serverError: false,
+};
 
 /* eslint-disable default-case, no-param-reassign */
 const xray = (state = initialState, action) =>

@@ -2,6 +2,7 @@ import React, { useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { getAccount, getUserStart, getSettings, changeXrayModalVisible } from './actions';
+import { getConfig } from '../SettingPage/actions';
 import QuestionnairePage from '../QuestionnairePage';
 import LoginPage from '../LoginPage';
 import { Switch, Route } from 'react-router-dom';
@@ -17,15 +18,24 @@ const Container = styled.div`
 //#endregion
 
 function Home(props) {
-  const { loginSuccess, getAccount, getUserStart, getSettings, xrayModalVisible, changeXrayModalVisible } = props;
+  const {
+    loginSuccess,
+    getAccount,
+    getUserStart,
+    getSettings,
+    xrayModalVisible,
+    changeXrayModalVisible,
+    getConfig,
+  } = props;
 
   useEffect(() => {
     if (loginSuccess) {
       getAccount();
       getSettings();
       getUserStart();
+      getConfig();
     }
-  }, [loginSuccess, getAccount, getSettings, getUserStart]);
+  }, [loginSuccess, getAccount, getSettings, getUserStart, getConfig]);
 
   if (!loginSuccess)
     return (
@@ -57,6 +67,6 @@ const mapStateToProps = ({ loginPageReducer, homePageReducer }) => ({
   xrayModalVisible: homePageReducer.xray.modalVisible,
 });
 
-const mapDispatchToProps = { getAccount, getUserStart, getSettings, changeXrayModalVisible };
+const mapDispatchToProps = { getAccount, getUserStart, getSettings, changeXrayModalVisible, getConfig };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

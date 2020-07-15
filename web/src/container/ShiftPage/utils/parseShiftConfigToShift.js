@@ -1,12 +1,8 @@
-import { set, get } from 'dot-prop';
 import { defaultShiftConfigPrefix } from '../../../models/configuration';
+import parseConfigToObject from '../../../utils/parseConfigToObject';
 
-export function parseShiftConfigToShift(shiftConfig) {
-  const object = {};
-  shiftConfig.forEach(r => {
-    set(object, r.configKey, r.configValue);
-  });
-  const parsedShiftConfig = get(object, defaultShiftConfigPrefix) ?? {};
+export function parseShiftConfigToShift(defaultShiftConfig) {
+  const parsedShiftConfig = parseConfigToObject(defaultShiftConfig, defaultShiftConfigPrefix);
   const defaultShift = Object.keys(parsedShiftConfig)
     .map(k => {
       const name = parsedShiftConfig[k].name;

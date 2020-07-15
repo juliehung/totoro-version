@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import { Layout, Tabs } from 'antd';
 import { getSettings } from '../Home/actions';
+import { onLeavePage, getConfig } from './actions';
 import Xray from './Xray';
 import Link from './Link';
 import { useWindowSize } from '../../utils/hooks/useWindowSize';
@@ -55,12 +56,20 @@ const TabText = styled.span`
 //#endregion
 
 function SettingPage(props) {
-  const { match } = props;
+  const { match, onLeavePage, putSuccess, getConfig } = props;
+
   const defaultActiveKey = match.params.section;
 
   const onTabsChange = key => {
     window.history.pushState({}, '', `#/setting/${key}`);
   };
+
+  useEffect(() => {
+    if (putSuccess) {
+      getConfig();
+    }
+    return onLeavePage;
+  }, [onLeavePage, putSuccess, getConfig]);
 
   const size = useWindowSize();
 
@@ -90,6 +99,10 @@ function SettingPage(props) {
   );
 }
 
-const mapDispatchToProps = { getSettings };
+const mapStateToProps = ({ settingPageReducer }) => ({
+  putSuccess: settingPageReducer.configurations.putSuccess,
+});
 
-export default withRouter(connect(null, mapDispatchToProps)(SettingPage));
+const mapDispatchToProps = { getSettings, onLeavePage, getConfig };
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SettingPage));
