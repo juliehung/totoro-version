@@ -32,9 +32,9 @@ import {
   popoverCancelApp,
   changeSelectedDoctors,
   getShift,
-  openXray,
   changeCalendarRange,
 } from './actions';
+import { openXray } from '../Home/actions';
 import zhTW from '@fullcalendar/core/locales/zh-tw';
 import styled from 'styled-components';
 import { handleEventRender } from './utils/handleEventRender';

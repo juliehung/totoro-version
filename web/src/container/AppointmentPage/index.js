@@ -14,6 +14,7 @@ import { GApageView } from '../../ga';
 import MobileDetect from 'mobile-detect';
 import { message } from 'antd';
 import { onLeavePage } from './actions';
+import { changeXrayModalVisible } from '../Home/actions';
 
 export const appointmentPage = 'Appointment page';
 
@@ -59,7 +60,7 @@ const phone = md.phone();
 const defaultView = phone ? 'resourceTimeGridDay' : 'timeGridWeek';
 
 function AppointmentPage(props) {
-  const { xrayServerState, xrayServerError, onLeavePage, xrayOnRequest } = props;
+  const { xrayServerState, xrayServerError, onLeavePage, xrayOnRequest, changeXrayModalVisible } = props;
   const [viewType, setViewType] = useState(defaultView);
 
   useEffect(() => {
@@ -73,25 +74,15 @@ function AppointmentPage(props) {
       if (xrayServerState && !xrayServerError) {
         message.success({ content: '開啟 xray 軟體中...', key: XRAY_GREETING_MESSAGE });
       } else if (!xrayServerState && xrayServerError) {
-        message.error({
-          content: (
-            <div>
-              <span>開啟錯誤，請重新嘗試。</span>
-              <br />
-              <a href="dentall://" rel="noopener noreferrer" target="_blank">
-                點擊開啟介接軟體
-              </a>
-            </div>
-          ),
-          key: XRAY_GREETING_MESSAGE,
-        });
+        message.destroy();
+        changeXrayModalVisible(true);
       }
     }
 
     return () => {
       onLeavePage();
     };
-  }, [xrayServerState, xrayServerError, onLeavePage, xrayOnRequest]);
+  }, [xrayServerState, xrayServerError, onLeavePage, xrayOnRequest, changeXrayModalVisible]);
 
   return (
     <Container>
@@ -111,12 +102,12 @@ function AppointmentPage(props) {
   );
 }
 
-const mapStateToProps = ({ appointmentPageReducer }) => ({
-  xrayServerState: appointmentPageReducer.xray.serverState,
-  xrayServerError: appointmentPageReducer.xray.serverError,
-  xrayOnRequest: appointmentPageReducer.xray.onRequest,
+const mapStateToProps = ({ homePageReducer }) => ({
+  xrayServerState: homePageReducer.xray.serverState,
+  xrayServerError: homePageReducer.xray.serverError,
+  xrayOnRequest: homePageReducer.xray.onRequest,
 });
 
-const mapDispatchToProps = { onLeavePage };
+const mapDispatchToProps = { onLeavePage, changeXrayModalVisible };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppointmentPage);

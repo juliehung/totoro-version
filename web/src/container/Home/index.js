@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { getAccount, getUserStart, getSettings } from './actions';
+import { getAccount, getUserStart, getSettings, changeXrayModalVisible } from './actions';
 import QuestionnairePage from '../QuestionnairePage';
 import LoginPage from '../LoginPage';
 import { Switch, Route } from 'react-router-dom';
 import NavHome from '../NavHome';
 import Form from '../QuestionnairePage/Form';
+import XrayModal from './XrayModal';
 
 //#region
 const Container = styled.div`
@@ -16,7 +17,7 @@ const Container = styled.div`
 //#endregion
 
 function Home(props) {
-  const { loginSuccess, getAccount, getUserStart, getSettings } = props;
+  const { loginSuccess, getAccount, getUserStart, getSettings, xrayModalVisible, changeXrayModalVisible } = props;
 
   useEffect(() => {
     if (loginSuccess) {
@@ -34,24 +35,28 @@ function Home(props) {
     );
 
   return (
-    <Switch>
-      <Route path="/q/history/:id">
-        <Form />
-      </Route>
-      <Route path="/q/:pid">
-        <QuestionnairePage />
-      </Route>
-      <Route path="/">
-        <NavHome />
-      </Route>
-    </Switch>
+    <Fragment>
+      <Switch>
+        <Route path="/q/history/:id">
+          <Form />
+        </Route>
+        <Route path="/q/:pid">
+          <QuestionnairePage />
+        </Route>
+        <Route path="/">
+          <NavHome />
+        </Route>
+      </Switch>
+      <XrayModal changeVisible={changeXrayModalVisible} visible={xrayModalVisible} />
+    </Fragment>
   );
 }
 
-const mapStateToProps = ({ loginPageReducer }) => ({
+const mapStateToProps = ({ loginPageReducer, homePageReducer }) => ({
   loginSuccess: loginPageReducer.login.loginSuccess,
+  xrayModalVisible: homePageReducer.xray.modalVisible,
 });
 
-const mapDispatchToProps = { getAccount, getUserStart, getSettings };
+const mapDispatchToProps = { getAccount, getUserStart, getSettings, changeXrayModalVisible };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

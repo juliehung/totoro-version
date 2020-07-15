@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { getRegistrations, updateSelectedDate, onSelectPatient, openXray, onLeavePage } from './actions';
+import { getRegistrations, updateSelectedDate, onSelectPatient, onLeavePage } from './actions';
 import { DatePicker, Empty, Select, Table, Typography, message } from 'antd';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -11,6 +11,7 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { GAevent, GApageView } from '../../ga';
 import { columns } from './utils/columns';
 import { convertToTableSource, allDoctors } from './utils/convertToTableSource';
+import { openXray, changeXrayModalVisible } from '../Home/actions';
 
 export const registrationPage = 'Registration page';
 
@@ -63,6 +64,7 @@ function RegistrationPage(props) {
     settings,
     onLeavePage,
     xrayOnRequest,
+    changeXrayModalVisible,
   } = props;
 
   const [selectedDoctor, setSelectedDoctor] = useState();
@@ -78,25 +80,15 @@ function RegistrationPage(props) {
       if (xrayServerState && !xrayServerError) {
         message.success({ content: '開啟 xray 軟體中...', key: XRAY_GREETING_MESSAGE });
       } else if (!xrayServerState && xrayServerError) {
-        message.error({
-          content: (
-            <div>
-              <span>開啟錯誤，請重新嘗試。</span>
-              <br />
-              <a href="dentall://" rel="noopener noreferrer" target="_blank">
-                點擊開啟介接軟體
-              </a>
-            </div>
-          ),
-          key: XRAY_GREETING_MESSAGE,
-        });
+        message.destroy();
+        changeXrayModalVisible(true);
       }
     }
 
     return () => {
       onLeavePage();
     };
-  }, [xrayServerState, xrayServerError, onLeavePage, xrayOnRequest]);
+  }, [xrayServerState, xrayServerError, onLeavePage, xrayOnRequest, changeXrayModalVisible]);
 
   useEffect(() => {
     const updateRegistrations = arrival => {
@@ -196,9 +188,16 @@ function RegistrationPage(props) {
                   .split(' ')
                   .find(c => c.includes('XRAYVENDORS'))
                   .split('_')[1];
-
                 const { patient } = row;
-                openXray({ vendor, patient });
+
+                const appointment = {
+                  medicalId: patient.medicalId,
+                  nationalId: patient.nationalId,
+                  patientName: patient.name,
+                  birth: patient.birth,
+                  gender: patient.gender,
+                };
+                openXray({ vendor, appointment });
                 return;
               }
 
@@ -220,10 +219,10 @@ const mapStateToProps = ({ registrationPageReducer, homePageReducer }) => ({
   loading: registrationPageReducer.registration.loading,
   selectedDate: registrationPageReducer.registration.selectedDate,
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
-  xrayServerState: registrationPageReducer.xray.serverState,
-  xrayServerError: registrationPageReducer.xray.serverError,
+  xrayServerState: homePageReducer.xray.serverState,
+  xrayServerError: homePageReducer.xray.serverError,
   settings: homePageReducer.settings.settings,
-  xrayOnRequest: registrationPageReducer.xray.onRequest,
+  xrayOnRequest: homePageReducer.xray.onRequest,
 });
 
 const mapDispatchToProps = {
@@ -232,6 +231,7 @@ const mapDispatchToProps = {
   onSelectPatient,
   openXray,
   onLeavePage,
+  changeXrayModalVisible,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegistrationPage);

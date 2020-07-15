@@ -85,10 +85,6 @@ import {
   POPOVER_CANCEL_APP_SUCCESS,
   GET_SHIFT_START,
   GET_SHIFT_SUCCESS,
-  OPEN_XRAY,
-  XRAY_GREETING,
-  XRAY_GREETING_SUCCESS,
-  XRAY_GREETING_FAILURE,
   ON_LEAVE_PAGE,
   CHANGE_PATIENT_SEARCH_MODE,
   CHANGE_CALENADR_RANGE,
@@ -437,22 +433,6 @@ export function getShift() {
 
 export function getShiftSuccess(shift) {
   return { type: GET_SHIFT_SUCCESS, shift };
-}
-
-export function openXray(data = {}) {
-  return { type: OPEN_XRAY, data };
-}
-
-export function xrayGreeting() {
-  return { type: XRAY_GREETING };
-}
-
-export function xrayGreetingSuccess() {
-  return { type: XRAY_GREETING_SUCCESS };
-}
-
-export function xrayGreetingFailure() {
-  return { type: XRAY_GREETING_FAILURE };
 }
 
 export function onLeavePage() {
