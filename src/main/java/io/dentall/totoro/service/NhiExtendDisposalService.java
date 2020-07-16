@@ -216,7 +216,7 @@ public class NhiExtendDisposalService {
     ) {
         log.debug("Request to get paged NhiExtendDisposalVMs by yyyymm({})", yyyymm);
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
-        HashMap<Long, Long> a = new HashMap<>();
+        
         return nhiExtendDisposalRepository
             .findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
                 ym.atDay(1),
@@ -283,12 +283,6 @@ public class NhiExtendDisposalService {
                 nhiExtendDisposal.setDisposal(new Disposal().treatmentProcedures(treatmentProcedures));
 
                 vm.setNhiExtendDisposal(nhiExtendDisposal);
-
-                if (!a.containsKey(vm.getNhiExtendDisposal().getId())) {
-                    a.put(vm.getNhiExtendDisposal().getId(), 0L);
-                } else {
-                    log.error(vm.getNhiExtendDisposal().getId().toString());
-                }
 
                 return vm;
             });
