@@ -65,11 +65,14 @@ function SettingPage(props) {
   };
 
   useEffect(() => {
+    return onLeavePage;
+  }, [onLeavePage]);
+
+  useEffect(() => {
     if (putSuccess) {
       getConfig();
     }
-    return onLeavePage;
-  }, [onLeavePage, putSuccess, getConfig]);
+  }, [putSuccess, getConfig]);
 
   const size = useWindowSize();
 

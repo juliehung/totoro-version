@@ -1,8 +1,8 @@
 import { fork } from 'redux-saga/effects';
-import { setXrayVendor } from './setXrayVendor';
+import { setConfigs } from './setConfigs';
 import { watchGetConfig } from './watchGetConfig';
 
 export default function* settingPage() {
-  yield fork(setXrayVendor);
+  yield fork(setConfigs);
   yield fork(watchGetConfig);
 }

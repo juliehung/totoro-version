@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Input, message, Button } from 'antd';
+import { Modal, Input, Button } from 'antd';
 import styled from 'styled-components';
-import { getSettings } from '../Home/actions';
-import Settings from '../../models/settings';
+import { vixwinPathPrefix } from '../../models/configuration';
+import { setConfigs } from './actions';
 
 //#region
 const StyledModal = styled(Modal)`
@@ -87,40 +87,49 @@ const StyleInput = styled(Input)`
 //#endregion
 
 function VixWinPathSettingModal(props) {
-  const { visible, changeModalVisible, preImagePath, preApplicationPath, settings } = props;
+  const { visible, changeModalVisible, path, setConfigs, putSuccess } = props;
 
   const [newImagePath, setNewImagePath] = useState(undefined);
   const [newApplicationPath, setNewApplicationPath] = useState(undefined);
 
-  const defaultImagePath = preImagePath;
+  const defaultImagePath = path.image ?? '';
 
-  const defaultApplicationPath = preApplicationPath;
+  const defaultApplicationPath = path.application ?? '';
 
   const onCancel = () => {
     changeModalVisible(false);
   };
 
-  const onOk = async () => {
-    try {
-      if (settings?.id) {
-        const imagePath = newImagePath ?? preImagePath ?? '';
-        const applicationPath = newApplicationPath ?? preApplicationPath ?? '';
-        const vixwin = { imagePath, applicationPath };
-        const preXrayVendorSettingWeb = settings?.preferences?.generalSetting?.xrayVenderSettingWeb ?? {};
-        const xRayVendorSettingWeb = { ...preXrayVendorSettingWeb, vixwin };
-        const generalSetting = { ...(settings?.preferences?.generalSetting ?? {}), xRayVendorSettingWeb };
-        const preferences = { ...(settings?.preferences ?? {}), generalSetting };
-        const newSettings = { ...(settings ?? {}), preferences };
-        await Settings.put(newSettings);
-        getSettings();
-        message.success('VixWin 路徑設定成功');
-        changeModalVisible(false);
+  const onOk = () => {
+    const imagePath = newImagePath ?? defaultImagePath;
+    const applicationPath = newApplicationPath ?? defaultApplicationPath;
+    const imageKey = `${vixwinPathPrefix}.image`;
+    const imageValue = imagePath;
+    const applicationKey = `${vixwinPathPrefix}.application`;
+    const applicationValue = applicationPath;
+    const items = [
+      { name: 'application', configKey: applicationKey, configValue: applicationValue },
+      { name: 'image', configKey: imageKey, configValue: imageValue },
+    ];
+    let update = [];
+    let create = [];
+
+    items.forEach(i => {
+      if (Object.keys(path).includes(i.name)) {
+        update = [...update, { configKey: i.configKey, configValue: i.configValue }];
+      } else {
+        create = [...create, { configKey: i.configKey, configValue: i.configValue }];
       }
-    } catch (error) {
-      console.log(error);
-      message.error('VixWin 路徑設定失敗');
-    }
+    });
+
+    setConfigs({ create, update });
   };
+
+  useEffect(() => {
+    if (putSuccess) {
+      changeModalVisible(false);
+    }
+  }, [putSuccess, changeModalVisible]);
 
   return (
     <StyledModal
@@ -179,13 +188,11 @@ function VixWinPathSettingModal(props) {
   );
 }
 
-const mapStateToProps = ({ homePageReducer }) => ({
-  preImagePath: homePageReducer.settings.settings?.preferences?.generalSetting?.xRayVendorSettingWeb?.vixwin?.imagePath,
-  preApplicationPath:
-    homePageReducer.settings.settings?.preferences?.generalSetting?.xRayVendorSettingWeb?.vixwin.applicationPath,
-  settings: homePageReducer.settings.settings,
+const mapStateToProps = ({ settingPageReducer }) => ({
+  path: settingPageReducer.configurations.config.vixwinPath,
+  putSuccess: settingPageReducer.configurations.putSuccess,
 });
 
-const mapDispatchToProps = { getSettings };
+const mapDispatchToProps = { setConfigs };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VixWinPathSettingModal);

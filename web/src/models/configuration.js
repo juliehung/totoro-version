@@ -69,4 +69,5 @@ export default class Configuration {
 export const defaultShiftConfigPrefix = 'web.shift.defaultShift';
 export const shiftResourceColorConfigPrefix = 'web.shift.resourceColor';
 export const xRayVendorPrefix = 'web.xray.vendor';
+export const vixwinPathPrefix = 'web.xray.vixwin.path';
 export const linkManagmentPrefix = 'web.link.managment';

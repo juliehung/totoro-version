@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Switch } from 'antd';
 import { XRAY_VENDORS } from '../AppointmentPage/constant';
-import { setXrayVendor } from './actions';
+import { setConfigs } from './actions';
 import VixWinPathSettingModal from './VixWinPathSettingModal';
 import VisionImg from '../../component/VisionImg';
 import VixWinImg from '../../component/VixWinImg';
+import { xRayVendorPrefix } from '../../models/configuration';
 
 //#region
 const Title = styled.span`
@@ -39,13 +40,20 @@ const SettingButton = styled.a`
 //#endregion
 
 function Xray(props) {
-  const { xRayVendors, setXrayVendor } = props;
+  const { xRayVendors, setConfigs } = props;
 
   const [vixWinPathSettingModalVisible, setVixWinPathSettingModalVisible] = useState(false);
-
-  const onChange = async vendor => {
-    const value = !(xRayVendors?.[vendor] === 'true');
-    setXrayVendor({ vendor, value });
+  const onChange = vendor => {
+    const configKey = `${xRayVendorPrefix}.${vendor}`;
+    const configValue = !(xRayVendors?.[vendor] === 'true');
+    let update = [];
+    let create = [];
+    if (Object.keys(xRayVendors).includes(vendor)) {
+      update = [...update, { configKey, configValue }];
+    } else {
+      create = [...create, { configKey, configValue }];
+    }
+    setConfigs({ update, create });
   };
 
   return (
@@ -104,6 +112,6 @@ const mapStateToProps = ({ settingPageReducer }) => ({
   xRayVendors: settingPageReducer.configurations.config.xRayVendors,
 });
 
-const mapDispatchToProps = { setXrayVendor };
+const mapDispatchToProps = { setConfigs };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Xray);
