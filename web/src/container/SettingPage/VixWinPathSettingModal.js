@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Input, message } from 'antd';
+import { Modal, Input, Button } from 'antd';
 import styled from 'styled-components';
-import { getSettings } from '../Home/actions';
-import Settings from '../../models/settings';
+import { vixwinPathPrefix } from '../../models/configuration';
+import { setConfigs } from './actions';
 
 //#region
 const StyledModal = styled(Modal)`
@@ -65,42 +65,6 @@ const FooterContainer = styled.div`
   }
 `;
 
-const Button = styled.button`
-  font-size: 14px;
-  height: 40px;
-  border: 0;
-  outline: 0;
-  padding-right: 20px !important;
-  padding-left: 20px !important;
-  border-radius: 34px !important;
-  cursor: pointer;
-  transition: box-shadow 200ms ease;
-  font-weight: bold;
-`;
-
-const StyledButton = styled(Button)`
-  background-color: #3266ff;
-  color: #ffffff;
-  &:hover {
-    background-color: #3266ff;
-    box-shadow: 0 8px 12px -8px rgba(50, 102, 255, 0.3);
-  }
-  &:active {
-    background-color: #244edb;
-  }
-`;
-
-const NoStyleButton = styled(Button)`
-  background-color: #fff;
-  color: #8f9bb3;
-  &:hover {
-    background-color: rgba(143, 155, 179, 0.08);
-  }
-  &:active {
-    background-color: rgba(143, 155, 179, 0.16);
-  }
-`;
-
 const PathItemContainer = styled.div`
   margin-top: 26px;
   display: flex;
@@ -123,40 +87,50 @@ const StyleInput = styled(Input)`
 //#endregion
 
 function VixWinPathSettingModal(props) {
-  const { visible, changeModalVisible, preImagePath, preApplicationPath, settings } = props;
+  const { visible, changeModalVisible, path, setConfigs, putSuccess } = props;
 
   const [newImagePath, setNewImagePath] = useState(undefined);
   const [newApplicationPath, setNewApplicationPath] = useState(undefined);
 
-  const defaultImagePath = preImagePath;
+  const defaultImagePath = path.image ?? '';
 
-  const defaultApplicationPath = preApplicationPath;
+  const defaultApplicationPath = path.application ?? '';
 
   const onCancel = () => {
     changeModalVisible(false);
   };
 
-  const onOk = async () => {
-    try {
-      if (settings?.id) {
-        const imagePath = newImagePath ?? preImagePath ?? '';
-        const applicationPath = newApplicationPath ?? preApplicationPath ?? '';
-        const vixwin = { imagePath, applicationPath };
-        const preXrayVendorSettingWeb = settings?.preferences?.generalSetting?.xrayVenderSettingWeb ?? {};
-        const xRayVendorSettingWeb = { ...preXrayVendorSettingWeb, vixwin };
-        const generalSetting = { ...(settings?.preferences?.generalSetting ?? {}), xRayVendorSettingWeb };
-        const preferences = { ...(settings?.preferences ?? {}), generalSetting };
-        const newSettings = { ...(settings ?? {}), preferences };
-        await Settings.put(newSettings);
-        getSettings();
-        message.success('VixWin 路徑設定成功');
-        changeModalVisible(false);
+  const onOk = () => {
+    const imagePath = newImagePath ?? defaultImagePath;
+    const applicationPath = newApplicationPath ?? defaultApplicationPath;
+    const imageKey = `${vixwinPathPrefix}.image`;
+    const imageValue = imagePath;
+    const applicationKey = `${vixwinPathPrefix}.application`;
+    const applicationValue = applicationPath;
+    const items = [
+      { name: 'application', configKey: applicationKey, configValue: applicationValue },
+      { name: 'image', configKey: imageKey, configValue: imageValue },
+    ];
+    let update = [];
+    let create = [];
+
+    items.forEach(i => {
+      const item = { configKey: i.configKey, configValue: i.configValue };
+      if (Object.keys(path).includes(i.name)) {
+        update = [...update, item];
+      } else {
+        create = [...create, item];
       }
-    } catch (error) {
-      console.log(error);
-      message.error('VixWin 路徑設定失敗');
-    }
+    });
+
+    setConfigs({ create, update });
   };
+
+  useEffect(() => {
+    if (putSuccess) {
+      changeModalVisible(false);
+    }
+  }, [putSuccess, changeModalVisible]);
 
   return (
     <StyledModal
@@ -203,21 +177,23 @@ function VixWinPathSettingModal(props) {
           </PathItemContainer>
         </div>
         <FooterContainer>
-          <NoStyleButton onClick={onCancel}>取消</NoStyleButton>
-          <StyledButton onClick={onOk}>確認</StyledButton>
+          <Button onClick={onCancel} shape="round" size="large" type="text">
+            取消
+          </Button>
+          <Button onClick={onOk} shape="round" type="primary" size="large">
+            確認
+          </Button>
         </FooterContainer>
       </ContentContainer>
     </StyledModal>
   );
 }
 
-const mapStateToProps = ({ homePageReducer }) => ({
-  preImagePath: homePageReducer.settings.settings?.preferences?.generalSetting?.xRayVendorSettingWeb?.vixwin?.imagePath,
-  preApplicationPath:
-    homePageReducer.settings.settings?.preferences?.generalSetting?.xRayVendorSettingWeb?.vixwin.applicationPath,
-  settings: homePageReducer.settings.settings,
+const mapStateToProps = ({ settingPageReducer }) => ({
+  path: settingPageReducer.configurations.config.vixwinPath,
+  putSuccess: settingPageReducer.configurations.putSuccess,
 });
 
-const mapDispatchToProps = { getSettings };
+const mapDispatchToProps = { setConfigs };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VixWinPathSettingModal);

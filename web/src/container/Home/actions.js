@@ -7,6 +7,11 @@ import {
   GET_SETTINGS_SUCCESS,
   PUT_SETTINGS_START,
   PUT_SETTINGS_SUCCESS,
+  OPEN_XRAY,
+  CHANGE_XRAY_MODAL_VISIBLE,
+  XRAY_GREETING,
+  XRAY_GREETING_SUCCESS,
+  XRAY_GREETING_FAILURE,
 } from './constant';
 
 export function getAccount() {
@@ -39,4 +44,24 @@ export function putSettings(settings) {
 
 export function putSettingsSuccess(settings) {
   return { type: PUT_SETTINGS_SUCCESS, settings };
+}
+
+export function openXray(data = {}) {
+  return { type: OPEN_XRAY, data };
+}
+
+export function xrayGreeting() {
+  return { type: XRAY_GREETING };
+}
+
+export function xrayGreetingSuccess() {
+  return { type: XRAY_GREETING_SUCCESS };
+}
+
+export function xrayGreetingFailure() {
+  return { type: XRAY_GREETING_FAILURE };
+}
+
+export function changeXrayModalVisible(visible) {
+  return { type: CHANGE_XRAY_MODAL_VISIBLE, visible };
 }

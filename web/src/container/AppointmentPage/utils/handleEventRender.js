@@ -133,7 +133,7 @@ export function handleEventRender(info, func, params) {
             </BreakP>
             {status !== 'CANCEL' && (
               <XrayContainer>
-                {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vision) && (
+                {params.xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
                   <div
                     onClick={() => {
                       func.xray({ vendor: XRAY_VENDORS.vision, appointment });
@@ -142,7 +142,7 @@ export function handleEventRender(info, func, params) {
                     <VisionImg width="23" />
                   </div>
                 )}
-                {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vixwin) && (
+                {params.xRayVendors?.[XRAY_VENDORS.vixwin] === 'true' && (
                   <div
                     onClick={() => {
                       func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
@@ -246,7 +246,7 @@ export function handleEventRender(info, func, params) {
           </span>
           {!isCanceled && (
             <XrayContainerListView>
-              {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vision) && (
+              {params.xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
                 <div
                   onClick={() => {
                     func.xray({ vendor: XRAY_VENDORS.vision, appointment });
@@ -256,7 +256,7 @@ export function handleEventRender(info, func, params) {
                   <VisionImg width="23" />
                 </div>
               )}
-              {params.settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vixwin) && (
+              {params.xRayVendors?.[XRAY_VENDORS.vixwin] === 'true' && (
                 <div
                   onClick={() => {
                     func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });

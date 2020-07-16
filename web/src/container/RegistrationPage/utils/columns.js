@@ -28,7 +28,7 @@ const XrayContainer = styled.div`
   }
 `;
 
-export const columns = settings => [
+export const columns = xRayVendors => [
   {
     title: '序位',
     dataIndex: 'rowIndex',
@@ -83,12 +83,12 @@ export const columns = settings => [
     render: () => {
       return (
         <XrayContainer>
-          {settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vision) && (
+          {xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
             <div className={`xray XRAYVENDORS_${XRAY_VENDORS.vision}`}>
               <VisionImg width="23" />
             </div>
           )}
-          {settings?.preferences?.generalSetting?.xRayVendorWeb?.includes(XRAY_VENDORS.vixwin) && (
+          {xRayVendors?.[XRAY_VENDORS.vixwin] === 'true' && (
             <div className={`xray XRAYVENDORS_${XRAY_VENDORS.vixwin}`}>
               <VixWinImg width="23" />
             </div>
