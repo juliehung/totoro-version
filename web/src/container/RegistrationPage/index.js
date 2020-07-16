@@ -122,7 +122,7 @@ function RegistrationPage(props) {
     if (props.doctors) {
       const options = props.doctors.map(doctor => {
         return (
-          <Option key={doctor.id} value={doctor.login}>
+          <Option key={doctor.id} value={doctor.id}>
             {doctor.name}
           </Option>
         );
