@@ -6,6 +6,7 @@ import registrationPage from './container/RegistrationPage/sagas';
 import questionnairePage from './container/QuestionnairePage/sagas';
 import shiftPage from './container/ShiftPage/sagas';
 import smsPage from './container/SmsPage/saga';
+import settingPage from './container/SettingPage/sagas';
 
 export function* rootSaga() {
   yield fork(homePage);
@@ -15,4 +16,5 @@ export function* rootSaga() {
   yield fork(questionnairePage);
   yield fork(shiftPage);
   yield fork(smsPage);
+  yield fork(settingPage);
 }

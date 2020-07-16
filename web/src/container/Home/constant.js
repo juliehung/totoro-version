@@ -1,3 +1,10 @@
+export const XRAY_VENDORS = {
+  Poye: 1,
+  Ray: 2,
+  vision: 'vision',
+  vixwin: 'vixwin',
+};
+
 export const HOME_PAGE = 'totoro-web-homepage/';
 
 export const ADD_COUNT = `${HOME_PAGE}ADD_COUNT`;
@@ -19,3 +26,13 @@ export const GET_SETTINGS_SUCCESS = `${HOME_PAGE}GET_SETTINGS_SUCCESS`;
 export const PUT_SETTINGS_START = `${HOME_PAGE}PUT_SETTINGS_START`;
 
 export const PUT_SETTINGS_SUCCESS = `${HOME_PAGE}PUT_SETTINGS_SUCCESS`;
+
+export const OPEN_XRAY = `${HOME_PAGE}OPEN_XRAY`;
+
+export const CHANGE_XRAY_MODAL_VISIBLE = `${HOME_PAGE}CHANGE_XRAY_MODAL_VISIBLE`;
+
+export const XRAY_GREETING = `${HOME_PAGE}XRAY_GREETING`;
+
+export const XRAY_GREETING_SUCCESS = `${HOME_PAGE}XRAY_GREETING_SUCCESS`;
+
+export const XRAY_GREETING_FAILURE = `${HOME_PAGE}XRAY_GREETING_FAILURE`;

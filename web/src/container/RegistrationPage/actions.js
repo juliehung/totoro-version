@@ -6,10 +6,6 @@ import {
   ON_SELECT_PATIENT,
   GET_DOC_START,
   GET_DOC_SUCCESS,
-  OPEN_XRAY,
-  XRAY_GREETING,
-  XRAY_GREETING_SUCCESS,
-  XRAY_GREETING_FAILURE,
   ON_LEAVE_PAGE,
 } from './constant';
 
@@ -39,22 +35,6 @@ export function getDoc(pid) {
 
 export function getDocSuccess(docs) {
   return { type: GET_DOC_SUCCESS, docs };
-}
-
-export function openXray(data = {}) {
-  return { type: OPEN_XRAY, data };
-}
-
-export function xrayGreeting() {
-  return { type: XRAY_GREETING };
-}
-
-export function xrayGreetingSuccess() {
-  return { type: XRAY_GREETING_SUCCESS };
-}
-
-export function xrayGreetingFailure() {
-  return { type: XRAY_GREETING_FAILURE };
 }
 
 export function onLeavePage() {

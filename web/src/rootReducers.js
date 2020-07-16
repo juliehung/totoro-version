@@ -6,6 +6,7 @@ import questionnairePageReducer from './container/QuestionnairePage/reducers';
 import registrationPageReducer from './container/RegistrationPage/reducers';
 import shiftPageReducer from './container/ShiftPage/reducers';
 import smsPageReducer from './container/SmsPage/reducers';
+import settingPageReducer from './container/SettingPage/reducers';
 
 const rootReducer = combineReducers({
   homePageReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   registrationPageReducer,
   shiftPageReducer,
   smsPageReducer,
+  settingPageReducer,
 });
 
 export default rootReducer;

@@ -7,7 +7,6 @@ import editApp from './editApp';
 import createCalendarEvt from './createCalendarEvt';
 import editCalendarEvt from './editCalendarEvt';
 import shift from './shift';
-import xray from './xray';
 
 const appointmentPageReducer = combineReducers({
   calendar,
@@ -18,7 +17,6 @@ const appointmentPageReducer = combineReducers({
   createCalendarEvt,
   editCalendarEvt,
   shift,
-  xray,
 });
 
 export default appointmentPageReducer;
