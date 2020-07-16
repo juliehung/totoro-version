@@ -105,7 +105,7 @@ export const convertToTableSource = (registrations, selectedDoctor) => {
       if (!selectedDoctor || !appt.doctor.user || selectedDoctor === allDoctors) {
         return true;
       }
-      return appt.doctor.user.login === selectedDoctor;
+      return appt.doctor.user.id === selectedDoctor;
     })
     .slice()
     .sort((a, b) => moment(a.registration.arrivalTime).unix() - moment(b.registration.arrivalTime).unix());
