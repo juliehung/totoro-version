@@ -10,8 +10,9 @@ export function* getConfig() {
     const xRayVendors = parseConfigToObject(xRayVendorConfig, xRayVendorPrefix);
     const vixwinPathConfig = yield call(Configuration.get, { 'configKey.contains': vixwinPathPrefix });
     const vixwinPath = parseConfigToObject(vixwinPathConfig, vixwinPathPrefix);
-    const linkManagment = yield call(Configuration.get, { 'configKey.contains': linkManagmentPrefix });
-    const config = { xRayVendors, vixwinPath, linkManagment };
+    const linkManagmentConfig = yield call(Configuration.get, { 'configKey.contains': linkManagmentPrefix });
+    const linkManagement = parseConfigToObject(linkManagmentConfig, linkManagmentPrefix);
+    const config = { xRayVendors, vixwinPath, linkManagement };
     yield put(getConfigSuccess(config));
   } catch (err) {
     //  ignore

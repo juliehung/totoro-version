@@ -115,10 +115,11 @@ function VixWinPathSettingModal(props) {
     let create = [];
 
     items.forEach(i => {
+      const item = { configKey: i.configKey, configValue: i.configValue };
       if (Object.keys(path).includes(i.name)) {
-        update = [...update, { configKey: i.configKey, configValue: i.configValue }];
+        update = [...update, item];
       } else {
-        create = [...create, { configKey: i.configKey, configValue: i.configValue }];
+        create = [...create, item];
       }
     });
 
