@@ -1,11 +1,12 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { message, Button, Tooltip, Input } from 'antd';
-import Settings from '../../models/settings';
+import { Button, Tooltip, Input } from 'antd';
 import { getSettings } from '../Home/actions';
 import Pantone from '../../images/pantone.svg';
 import Cube from '../../images/cube.svg';
+import { linkManagmentPrefix } from '../../models/configuration';
+import { setConfigs } from './actions';
 
 //#region
 const Title = styled.span`
@@ -80,32 +81,48 @@ const StyleInput = styled(Input)`
 
 const checkLinkRegex = new RegExp('^$|^(http|https)://', 'i');
 
-function Link({ settings, getSettings, linkManagement }) {
+function Link({ linkManagement, setConfigs, putSuccess }) {
   const [settingMode, setSettingMode] = useState(false);
   const [technicianSheet, setTechnicianSheet] = useState(undefined);
   const [toothMaterialSheet, setToothMaterialSheet] = useState(undefined);
   const [errorLinks, setErrorLinks] = useState([]);
 
-  const onSave = async () => {
-    if (errorLinks.length > 0) return;
-    if (settings?.id) {
-      try {
-        const newLinkManagement = {
-          ...linkManagement,
-          ...(technicianSheet && { technicianSheet }),
-          ...(toothMaterialSheet && { toothMaterialSheet }),
-        };
-        const generalSetting = { ...(settings?.preferences?.generalSetting ?? {}), linkManagement: newLinkManagement };
-        const preferences = { ...(settings?.preferences ?? {}), generalSetting };
-        const newSettings = { ...(settings ?? {}), preferences };
-        await Settings.put(newSettings);
-        getSettings();
-        setSettingMode(false);
-        message.success('連結更新成功');
-      } catch (error) {
-        message.error('請在試一次');
-      }
+  useEffect(() => {
+    if (putSuccess) {
+      setSettingMode(false);
     }
+  }, [putSuccess]);
+
+  const onSave = () => {
+    if (errorLinks.length > 0) return;
+
+    const technicianSheetConfig = {
+      name: 'technicianSheet',
+      configKey: `${linkManagmentPrefix}.technicianSheet`,
+      configValue: technicianSheet,
+    };
+    const toothMaterialSheetConfig = {
+      name: 'toothMaterialSheet',
+      configKey: `${linkManagmentPrefix}.toothMaterialSheet`,
+      configValue: toothMaterialSheet,
+    };
+
+    let update = [];
+    let create = [];
+
+    const items = [technicianSheetConfig, toothMaterialSheetConfig];
+    items
+      .filter(i => i.configValue)
+      .forEach(i => {
+        const item = { configKey: i.configKey, configValue: i.configValue };
+        if (Object.keys(linkManagement).includes(i.name)) {
+          update = [...update, item];
+        } else {
+          create = [...create, item];
+        }
+      });
+
+    setConfigs({ update, create });
   };
 
   const onToothMaterialSheetChange = e => {
@@ -188,11 +205,11 @@ function Link({ settings, getSettings, linkManagement }) {
   );
 }
 
-const mapStateToProps = ({ homePageReducer }) => ({
-  linkManagement: homePageReducer.settings.settings?.preferences?.generalSetting?.linkManagement ?? {},
-  settings: homePageReducer.settings.settings,
+const mapStateToProps = ({ settingPageReducer }) => ({
+  linkManagement: settingPageReducer.configurations.config.linkManagement,
+  putSuccess: settingPageReducer.configurations.putSuccess,
 });
 
-const mapDispatchToProps = { getSettings };
+const mapDispatchToProps = { getSettings, setConfigs };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Link);

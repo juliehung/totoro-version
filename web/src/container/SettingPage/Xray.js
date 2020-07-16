@@ -1,13 +1,13 @@
 import React, { useState, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Switch, message } from 'antd';
+import { Switch } from 'antd';
 import { XRAY_VENDORS } from '../AppointmentPage/constant';
-import Settings from '../../models/settings';
-import { getSettings } from '../Home/actions';
+import { setConfigs } from './actions';
 import VixWinPathSettingModal from './VixWinPathSettingModal';
 import VisionImg from '../../component/VisionImg';
 import VixWinImg from '../../component/VixWinImg';
+import { xRayVendorPrefix } from '../../models/configuration';
 
 //#region
 const Title = styled.span`
@@ -39,25 +39,21 @@ const SettingButton = styled.a`
 `;
 //#endregion
 
-function Xray({ settings, getSettings, xrayVender }) {
-  const [vixWinPathSettingModalVisible, setVixWinPathSettingModalVisible] = useState(false);
+function Xray(props) {
+  const { xRayVendors, setConfigs } = props;
 
-  const onChange = async vendor => {
-    if (settings?.id) {
-      const prevXrayVendorWeb = xrayVender ?? [];
-      const isDeactivate = prevXrayVendorWeb.includes(vendor);
-      const xRayVendorWeb = isDeactivate ? prevXrayVendorWeb.filter(v => v !== vendor) : [...prevXrayVendorWeb, vendor];
-      const generalSetting = { ...(settings?.preferences?.generalSetting ?? {}), xRayVendorWeb };
-      const preferences = { ...(settings?.preferences ?? {}), generalSetting };
-      const newSettings = { ...(settings ?? {}), preferences };
-      await Settings.put(newSettings);
-      getSettings();
-      if (isDeactivate) {
-        message.warning('X 光已關閉');
-      } else {
-        message.success('X 光開啟成功');
-      }
+  const [vixWinPathSettingModalVisible, setVixWinPathSettingModalVisible] = useState(false);
+  const onChange = vendor => {
+    const configKey = `${xRayVendorPrefix}.${vendor}`;
+    const configValue = !(xRayVendors?.[vendor] === 'true');
+    let update = [];
+    let create = [];
+    if (Object.keys(xRayVendors).includes(vendor)) {
+      update = [...update, { configKey, configValue }];
+    } else {
+      create = [...create, { configKey, configValue }];
     }
+    setConfigs({ update, create });
   };
 
   return (
@@ -75,7 +71,7 @@ function Xray({ settings, getSettings, xrayVender }) {
           </TitleContainer>
           <div>
             <Switch
-              checked={xrayVender.includes(XRAY_VENDORS.vision)}
+              checked={xRayVendors?.[XRAY_VENDORS.vision] === 'true'}
               checkedChildren="開啟"
               unCheckedChildren="關閉"
               onChange={() => {
@@ -98,7 +94,7 @@ function Xray({ settings, getSettings, xrayVender }) {
           </TitleContainer>
           <div>
             <Switch
-              checked={xrayVender.includes(XRAY_VENDORS.vixwin)}
+              checked={xRayVendors?.[XRAY_VENDORS.vixwin] === 'true'}
               checkedChildren="開啟"
               unCheckedChildren="關閉"
               onChange={() => {
@@ -112,11 +108,10 @@ function Xray({ settings, getSettings, xrayVender }) {
   );
 }
 
-const mapStateToProps = ({ homePageReducer }) => ({
-  xrayVender: homePageReducer.settings.settings?.preferences?.generalSetting?.xRayVendorWeb ?? [],
-  settings: homePageReducer.settings.settings,
+const mapStateToProps = ({ settingPageReducer }) => ({
+  xRayVendors: settingPageReducer.configurations.config.xRayVendors,
 });
 
-const mapDispatchToProps = { getSettings };
+const mapDispatchToProps = { setConfigs };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Xray);

@@ -544,7 +544,7 @@ class AppCalendar extends React.Component {
           cancel: this.handlePopoverCancelApp,
           xray: this.handleXrayClick,
         },
-        { settings: this.props.settings },
+        { xRayVendors: this.props.xRayVendors },
       );
     } else if (info.event.extendedProps.eventType === 'doctorDayOff') {
       handleEventRender(info, { edit: this.handleCalEvtDblClick });
@@ -794,7 +794,7 @@ class AppCalendar extends React.Component {
   }
 }
 
-const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
+const mapStateToProps = ({ homePageReducer, appointmentPageReducer, settingPageReducer }) => ({
   calendarDate: appointmentPageReducer.calendar.calendarDate,
   appointments: appointmentPageReducer.calendar.appointments,
   firstDay: appointmentPageReducer.calendar.calendarFirstDay,
@@ -803,7 +803,7 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer }) => ({
   doctorAppCount: appointmentPageReducer.calendar.doctorAppCount,
   calendarEvents: appointmentPageReducer.calendar.calendarEvents,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
-  settings: homePageReducer.settings.settings,
+  xRayVendors: settingPageReducer.configurations.config.xRayVendors,
   generalSetting: homePageReducer.settings.settings?.preferences?.generalSetting,
   calendarRange: appointmentPageReducer.calendar.range,
   cancelApp: appointmentPageReducer.calendar.cancelApp,
