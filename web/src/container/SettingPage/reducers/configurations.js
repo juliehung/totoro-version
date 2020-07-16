@@ -1,9 +1,17 @@
 import produce from 'immer';
-import { GET_CONFIG_START, GET_CONFIG_SUCCESS, SET_CONFIG_SUCCESS, SET_CONFIGS, ON_LEAVE_PAGE } from '../constant';
+import {
+  GET_CONFIG_START,
+  GET_CONFIG_SUCCESS,
+  SET_CONFIGS_SUCCESS,
+  SET_CONFIGS_FAILURE,
+  SET_CONFIGS,
+  ON_LEAVE_PAGE,
+} from '../constant';
 
 const initState = {
   loading: false,
   putSuccess: false,
+  putFailure: false,
   config: { xRayVendors: {}, vixwinPath: {}, linkManagement: {} },
 };
 
@@ -22,13 +30,20 @@ const configurations = (state = initState, action) =>
         break;
       case SET_CONFIGS:
         draft.putSuccess = initState.putSuccess;
+        draft.putFailure = initState.putFailure;
         break;
-      case SET_CONFIG_SUCCESS:
+      case SET_CONFIGS_SUCCESS:
         draft.putSuccess = true;
+        draft.putFailure = initState.putFailure;
+        break;
+      case SET_CONFIGS_FAILURE:
+        draft.putSuccess = initState.putSuccess;
+        draft.putFailure = true;
         break;
       case ON_LEAVE_PAGE:
         draft.putSuccess = initState.putSuccess;
         draft.loading = initState.loading;
+        draft.putFailure = initState.putFailure;
         break;
       default:
         break;

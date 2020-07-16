@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { Layout, Tabs } from 'antd';
+import { Layout, Tabs, message } from 'antd';
 import { getSettings } from '../Home/actions';
 import { onLeavePage, getConfig } from './actions';
 import Xray from './Xray';
@@ -56,7 +56,7 @@ const TabText = styled.span`
 //#endregion
 
 function SettingPage(props) {
-  const { match, onLeavePage, putSuccess, getConfig } = props;
+  const { match, onLeavePage, putSuccess, putFailure, getConfig } = props;
 
   const defaultActiveKey = match.params.section;
 
@@ -71,8 +71,12 @@ function SettingPage(props) {
   useEffect(() => {
     if (putSuccess) {
       getConfig();
+      message.success('儲存成功!');
     }
-  }, [putSuccess, getConfig]);
+    if (putFailure) {
+      message.error('儲存失敗，請在試一次');
+    }
+  }, [putSuccess, putFailure, getConfig]);
 
   const size = useWindowSize();
 
@@ -104,6 +108,7 @@ function SettingPage(props) {
 
 const mapStateToProps = ({ settingPageReducer }) => ({
   putSuccess: settingPageReducer.configurations.putSuccess,
+  putFailure: settingPageReducer.configurations.putFailure,
 });
 
 const mapDispatchToProps = { getSettings, onLeavePage, getConfig };

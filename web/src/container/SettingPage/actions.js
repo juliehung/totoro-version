@@ -1,4 +1,11 @@
-import { SET_CONFIGS, SET_CONFIG_SUCCESS, GET_CONFIG_START, GET_CONFIG_SUCCESS, ON_LEAVE_PAGE } from './constant';
+import {
+  SET_CONFIGS,
+  SET_CONFIGS_SUCCESS,
+  GET_CONFIG_START,
+  GET_CONFIG_SUCCESS,
+  ON_LEAVE_PAGE,
+  SET_CONFIGS_FAILURE,
+} from './constant';
 
 export function getConfig() {
   return { type: GET_CONFIG_START };
@@ -13,7 +20,11 @@ export const setConfigs = ({ update, create }) => {
 };
 
 export const setConfigSuccess = () => {
-  return { type: SET_CONFIG_SUCCESS };
+  return { type: SET_CONFIGS_SUCCESS };
+};
+
+export const setConfigsFailure = () => {
+  return { type: SET_CONFIGS_FAILURE };
 };
 
 export const onLeavePage = () => {

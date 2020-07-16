@@ -1,7 +1,7 @@
 import { call, take, put } from 'redux-saga/effects';
 import Configuration from '../../../models/configuration';
 import { SET_CONFIGS } from '../constant';
-import { setConfigSuccess } from '../actions';
+import { setConfigSuccess, setConfigsFailure } from '../actions';
 
 export function* setConfigs() {
   while (true) {
@@ -24,6 +24,7 @@ export function* setConfigs() {
       yield put(setConfigSuccess());
     } catch (err) {
       console.log(err);
+      yield put(setConfigsFailure());
     }
   }
 }
