@@ -129,7 +129,7 @@ repackageByGradle:
             - build/*
 
 # release stage
-releaseWarToFirebaseStorage:
+releaseWarAndStaticFilesToGCS:
     stage: release
     only:
         - tags
@@ -140,6 +140,7 @@ releaseWarToFirebaseStorage:
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
         - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
         - gsutil cp build/libs/* gs://dentall-admin-auto-update/
+        - gsutil -m cp -r build/resources/main/public/** gs://totoro-admin-static
 
 releaseImageToGitlabRegistry:
     stage: release
@@ -188,11 +189,6 @@ releaseImageToGCPRegistry:
         - docker build --cache-from asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:cache -t asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:$CI_COMMIT_TAG -t asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:cache -f src/main/docker/Dockerfile src/main/docker
         - docker push asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:$CI_COMMIT_TAG
         - docker push asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:cache
-        - mv build/resources/main/public/ src/main/docker/nginx/
-        - docker pull asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME/nginx:cache || true
-        - docker build --cache-from asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME/nginx:cache -t asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME/nginx:$CI_COMMIT_TAG -t asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME/nginx:cache -f src/main/docker/nginx/Dockerfile src/main/docker/nginx
-        - docker push asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME/nginx:$CI_COMMIT_TAG
-        - docker push asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME/nginx:cache
 
 # deploy stage
 depolyAppEngine:
