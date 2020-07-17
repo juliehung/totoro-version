@@ -81,6 +81,7 @@ import {
   DELETE_CAL_EVT_START,
   DELETE_CAL_EVT_SUCCESS,
   CHANGE_CAL_SLOT_DURATION,
+  CHANGE_CALENDAR_FULLSCREEN,
   POPOVER_CANCEL_APP_START,
   POPOVER_CANCEL_APP_SUCCESS,
   GET_SHIFT_START,
@@ -417,6 +418,10 @@ export function deleteCalEvtSuccess() {
 
 export function changeCalSlotDuration(duration) {
   return { type: CHANGE_CAL_SLOT_DURATION, duration };
+}
+
+export function changeCalendarFullscreen(calendarFullScreen) {
+  return { type: CHANGE_CALENDAR_FULLSCREEN, calendarFullScreen };
 }
 
 export function popoverCancelApp(appData) {
