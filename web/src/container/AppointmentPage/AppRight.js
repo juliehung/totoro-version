@@ -10,6 +10,7 @@ import {
   changeCreateAppModalVisible,
   changeCreateCalModalVisible,
   changeCalSlotDuration,
+  changeCalendarFullscreen,
 } from './actions';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
@@ -22,10 +23,6 @@ import { appointmentPage } from './';
 import FloatingActionButton from './FloatingActionButton';
 import { useIsFirstRender } from '../../utils/hooks/useIsFirstRender';
 import { useCookies } from 'react-cookie';
-
-const maxSlotDuration = 30;
-const minSlotDuration = 10;
-const slotDurationStep = 5;
 
 //#region
 const Container = styled.div`
@@ -128,8 +125,8 @@ function AppRight(props) {
     showShiftCalc,
     putSettings,
     putSettingSuccess,
-    viewType,
     changeCalSlotDuration,
+    changeCalendarFullscreen,
   } = props;
 
   const [expand, setExpand] = useState(false);
@@ -138,10 +135,14 @@ function AppRight(props) {
 
   useEffect(() => {
     const slotDuration = cookies.slotDuration;
+    const calendarFullScreen = cookies.calendarFullScreen;
     if (slotDuration) {
       changeCalSlotDuration(slotDuration);
     }
-  }, [cookies, changeCalSlotDuration]);
+    if (calendarFullScreen) {
+      changeCalendarFullscreen(calendarFullScreen);
+    }
+  }, [cookies, changeCalSlotDuration, changeCalendarFullscreen]);
 
   const isFirstRender = useIsFirstRender();
   useEffect(() => {
@@ -174,28 +175,22 @@ function AppRight(props) {
     const title = document.querySelector('.fc-center');
     if (title) {
       simulateMouseClick(title);
-      let slotDuration;
-      if (value) {
-        if (props.slotDuration + slotDurationStep > maxSlotDuration) {
-          slotDuration = maxSlotDuration;
-        } else {
-          slotDuration = props.slotDuration + slotDurationStep;
-        }
-      } else {
-        if (props.slotDuration - slotDurationStep < minSlotDuration) {
-          slotDuration = minSlotDuration;
-        } else {
-          slotDuration = props.slotDuration - slotDurationStep;
-        }
-      }
-      setCookie('slotDuration', slotDuration);
-      changeCalSlotDuration(slotDuration);
+      changeCalendarFullscreen(false);
+      changeCalSlotDuration(value);
+      setCookie('slotDuration', value);
+      setCookie('calendarFullScreen', false);
     }
   };
 
   const onFullHeightClick = () => {
-    setCookie('slotDuration', maxSlotDuration);
-    changeCalSlotDuration(maxSlotDuration);
+    const title = document.querySelector('.fc-center');
+    if (title) {
+      simulateMouseClick(title);
+      changeCalendarFullscreen(true);
+      changeCalSlotDuration(30);
+      setCookie('slotDuration', 30);
+      setCookie('calendarFullScreen', true);
+    }
   };
 
   const headerRender = ({ value }) => {
@@ -309,34 +304,37 @@ function AppRight(props) {
           <button
             onClick={() => {
               onFullHeightClick();
-              GAevent(appointmentPage, 'Full height size');
+              GAevent(appointmentPage, 'slot full screen clicked');
             }}
           >
-            完整
+            天
           </button>
           <Divider type="vertical" />
           <button
-            disabled={
-              props.slotDuration >= maxSlotDuration || !['resourceTimeGridDay', 'timeGridWeek'].includes(viewType)
-            }
             onClick={() => {
-              onSlotDurationChange(true);
-              GAevent(appointmentPage, 'Smaller slot size');
+              onSlotDurationChange(30);
+              GAevent(appointmentPage, 'slot duration 30 clicked');
             }}
           >
-            縮小
+            30
           </button>
           <Divider type="vertical" />
           <button
-            disabled={
-              props.slotDuration <= minSlotDuration || !['resourceTimeGridDay', 'timeGridWeek'].includes(viewType)
-            }
             onClick={() => {
-              onSlotDurationChange(false);
-              GAevent(appointmentPage, 'Bigger slot size');
+              onSlotDurationChange(15);
+              GAevent(appointmentPage, 'slot duration 15 clicked');
             }}
           >
-            放大
+            15
+          </button>
+          <Divider type="vertical" />
+          <button
+            onClick={() => {
+              onSlotDurationChange(10);
+              GAevent(appointmentPage, 'slot duration 10 clicked');
+            }}
+          >
+            10
           </button>
         </div>
       </ItemContainer>
@@ -388,6 +386,7 @@ const mapDispatchToProps = {
   changeCreateAppModalVisible,
   changeCreateCalModalVisible,
   changeCalSlotDuration,
+  changeCalendarFullscreen,
   putSettings,
 };
 
