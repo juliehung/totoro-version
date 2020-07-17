@@ -57,6 +57,7 @@ import EyeFillWhite from '../../images/eye-fill-white.svg';
 import EyeOffFill from '../../images/eye-off-fill.svg';
 import { parseDisplayRange } from './utils/parseDisplayRange';
 import TimeDisplay from './TimeDisplay';
+import MqttHelper from '../../utils/mqtt';
 
 //#region
 const Container = styled.div`
@@ -340,6 +341,23 @@ class AppCalendar extends React.Component {
     if (msg) {
       msg.parentNode.removeChild(msg);
     }
+
+    // mqtt
+    MqttHelper.subscribeAppointment(AppCalendar.name, message => {
+      let messageObj;
+      try {
+        messageObj = JSON.parse(message);
+      } catch (e) {
+        return;
+      }
+
+      const { start, end } = this.props.calendarRange;
+      const expectedArrivalTime = moment(messageObj.expectedArrivalTime);
+      if (expectedArrivalTime.isBetween(start, end)) {
+        // TODO: find a better way to update appointments
+        this.getAllEvent();
+      }
+    });
   }
 
   debounceFetch;
@@ -393,6 +411,7 @@ class AppCalendar extends React.Component {
   }
 
   componentWillUnmount() {
+    MqttHelper.unsubscribeAppointment(AppCalendar.name);
     clearInterval(this.intervalID);
   }
 
