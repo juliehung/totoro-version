@@ -261,7 +261,7 @@ const route = [
 ];
 
 function NavHome(props) {
-  const { account, settings } = props;
+  const { account, linkManagement } = props;
 
   const [, , removeCookie] = useCookies(['token']);
 
@@ -287,7 +287,6 @@ function NavHome(props) {
     }
   }, [location, currentLocation]);
 
-  const linkManagement = settings?.preferences?.generalSetting?.linkManagement ?? {};
   const technicianSheet = linkManagement.technicianSheet ?? '#/setting/link';
   const toothMaterialSheet = linkManagement.toothMaterialSheet ?? '#/setting/link';
 
@@ -455,9 +454,9 @@ function NavHome(props) {
   );
 }
 
-const mapStateToProps = ({ homePageReducer }) => ({
+const mapStateToProps = ({ homePageReducer, settingPageReducer }) => ({
   account: parseAccountData(homePageReducer.account.data),
-  settings: homePageReducer.settings.settings,
+  linkManagement: settingPageReducer.configurations.config.linkManagement,
 });
 
 const mapDispatchToProps = {};
