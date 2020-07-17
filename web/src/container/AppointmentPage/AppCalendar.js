@@ -264,10 +264,11 @@ const CalendarContainer = styled.div`
 
   .fc-time-grid .fc-slats td {
     height: ${props => {
-      return props.slotHeight ? props.slotHeight + 'px' : '1em';
+      return props.fullScreen ? props.slotHeight + 'px' : '4em';
     }};
     border-bottom: 0;
     font-size: 10px !important;
+    font-size: ${props => (props.fullScreen ? '10px !important' : '')};
   }
 
   .fc-highlight {
@@ -683,7 +684,6 @@ class AppCalendar extends React.Component {
     if (this.calendarContainerRef.current) {
       slotHeight = this.calendarContainerRef.current.clientHeight / 36;
     }
-
     return (
       <Container>
         <Header>
@@ -728,6 +728,7 @@ class AppCalendar extends React.Component {
           noResourceAndShiftOpen={!resource.length && shiftOpen && this.props.viewType === 'resourceTimeGridDay'}
           ref={this.calendarContainerRef}
           slotHeight={slotHeight}
+          fullScreen={this.props.calendarFullScreen}
         >
           {this.props.loading && (
             <SpinContainer>
@@ -787,6 +788,7 @@ class AppCalendar extends React.Component {
             eventAllow={this.eventAllow}
             defaultView={this.props.defaultView}
             viewSkeletonRender={this.viewSkeletonRender}
+            displayEventTime={false}
           />
         </CalendarContainer>
       </Container>
@@ -803,6 +805,7 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer, settingPageR
   doctorAppCount: appointmentPageReducer.calendar.doctorAppCount,
   calendarEvents: appointmentPageReducer.calendar.calendarEvents,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
+  calendarFullScreen: appointmentPageReducer.calendar.calendarFullScreen,
   xRayVendors: settingPageReducer.configurations.config.xRayVendors,
   generalSetting: homePageReducer.settings.settings?.preferences?.generalSetting,
   calendarRange: appointmentPageReducer.calendar.range,

@@ -12,6 +12,7 @@ import {
   CHANGE_SELECTED_DOCTORS,
   GET_CALENDAR_EVENT_SUCCESS,
   CHANGE_CAL_SLOT_DURATION,
+  CHANGE_CALENDAR_FULLSCREEN,
   POPOVER_CANCEL_APP_SUCCESS,
   EDIT_APPOINTMENT_SUCCESS,
   CHANGE_CALENADR_RANGE,
@@ -29,6 +30,7 @@ const initState = {
   doctorAppCount: {},
   calendarFirstDay: calFirstDay,
   slotDuration: 15,
+  calendarFullScreen: false,
   range: { start: undefined, end: undefined },
   cancelApp: false,
   getSuccess: false,
@@ -66,6 +68,9 @@ const calendar = (state = initialState, action) =>
         break;
       case CHANGE_CAL_SLOT_DURATION:
         draft.slotDuration = action.duration;
+        break;
+      case CHANGE_CALENDAR_FULLSCREEN:
+        draft.calendarFullScreen = action.calendarFullScreen;
         break;
       case POPOVER_CANCEL_APP_SUCCESS:
         draft.cancelApp = !state.cancelApp;
