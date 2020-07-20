@@ -412,6 +412,7 @@ class AppCalendar extends React.Component {
   }
 
   componentWillUnmount() {
+    MqttHelper.unsubscribeAppointment(AppCalendar.name);
     clearInterval(this.intervalID);
   }
 
