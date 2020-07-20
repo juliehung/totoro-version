@@ -38,9 +38,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "       a.id as appointmentId," +
             "       a.note as appointmentNote," +
             "       a.expected_arrival_time as appointmentExpectedArrivalTime," +
+            "       a.microscope as appointmentMicroscope," +
+            "       a.base_floor as appointmentBaseFloor," +
             "       r.id as registrationId," +
             "       r.arrival_time as registrationArrivalTime," +
             "       r.status as registrationStatus," +
+            "       r.abnormal_code as registrationAbnormalCode," +
+            "       r.jhi_type as registrationType," +
+            "       r.no_card as registrationNoCard," +
             "       u.first_name as userFirstName," +
             "       u.last_name as userLastName," +
             "       ned.A17 as nhiExtendDisposalA17," +
@@ -70,9 +75,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "         a.id," +
             "         a.note," +
             "         a.expected_arrival_time," +
+            "         a.microscope," +
+            "         a.base_floor," +
             "         r.id," +
             "         r.arrival_time," +
             "         r.status," +
+            "         r.abnormal_code," +
+            "         r.jhi_type," +
+            "         r.no_card," +
             "         u.first_name," +
             "         u.last_name," +
             "         ned.A17," +

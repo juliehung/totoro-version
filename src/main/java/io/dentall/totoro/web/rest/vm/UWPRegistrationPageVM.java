@@ -22,11 +22,16 @@ public interface UWPRegistrationPageVM {
     Long getAppointmentId();
     String getAppointmentNote();
     Instant getAppointmentExpectedArrivalTime();
+    Boolean getAppointmentMicroscope();
+    Boolean getAppointmentBaseFloor();
 
     // registration
     Long getRegistrationId();
     Instant getRegistrationArrivalTime();
     RegistrationStatus getRegistrationStatus();
+    String getRegistrationAbnormalCode();
+    String getRegistrationType();
+    Boolean getRegistrationNoCard();
 
     // User
     String getUserFirstName();
