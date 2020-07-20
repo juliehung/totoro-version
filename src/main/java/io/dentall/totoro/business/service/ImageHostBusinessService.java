@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,7 +45,7 @@ public class ImageHostBusinessService extends ImageBusinessService {
         Image image = getImageById(id);
         String url = getImageThumbnailUrl(host)
             .concat("path=")
-            .concat(image.getFilePath())
+            .concat(UriUtils.encode(image.getFilePath(), StandardCharsets.UTF_8))
             .concat(image.getFileName())
             .concat("&size=");
 

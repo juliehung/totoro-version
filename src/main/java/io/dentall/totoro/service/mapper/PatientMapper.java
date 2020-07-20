@@ -1,12 +1,13 @@
 package io.dentall.totoro.service.mapper;
 
-import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.PatientIdentity;
 import io.dentall.totoro.domain.Questionnaire;
 import io.dentall.totoro.service.dto.table.PatientTable;
+import io.dentall.totoro.service.util.MapperUtil;
 
 public class PatientMapper {
+
     public static Patient patientTableToPatient(PatientTable patientTable) {
         Patient patient = new Patient();
 
@@ -31,7 +32,7 @@ public class PatientMapper {
         patient.setNote(patientTable.getNote());
         patient.setClinicNote(patientTable.getClinicNote());
         patient.setWriteIcTime(patientTable.getWriteIcTime());
-//        patient.setAvata(patientTable.getAvata());
+//    byte[] getAvatar();
         patient.setAvatarContentType(patientTable.getAvatarContentType());
         patient.setNewPatient(patientTable.getNewPatient());
         patient.setEmergencyAddress(patientTable.getEmergencyAddress());
@@ -47,22 +48,19 @@ public class PatientMapper {
         if (patientTable.getQuestionnaire_Id() != null) {
             Questionnaire questionnaire = new Questionnaire();
             questionnaire.setId(patientTable.getQuestionnaire_Id());
+            MapperUtil.setNullAuditing(questionnaire);
+
+            patient.setQuestionnaire(questionnaire);
         }
 
         if (patientTable.getPatientIdentity_Id() != null) {
-            PatientIdentity patientidentity = new PatientIdentity();
-            patientidentity.setId(patientTable.getPatientIdentity_Id());
+            PatientIdentity patientIdentity = new PatientIdentity();
+            patientIdentity.setId(patientTable.getPatientIdentity_Id());
+
+            patient.setPatientIdentity(patientIdentity);
         }
 
-        if (patientTable.getLastDoctorUser_Id() != null) {
-            ExtendUser lastdoctoruser = new ExtendUser();
-            lastdoctoruser.setId(patientTable.getLastDoctorUser_Id());
-        }
-
-        if (patientTable.getFirstDoctorUser_Id() != null) {
-            ExtendUser firstdoctoruser = new ExtendUser();
-            firstdoctoruser.setId(patientTable.getFirstDoctorUser_Id());
-        }
+        MapperUtil.setAuditing(patient, patientTable);
 
         return patient;
     }

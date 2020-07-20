@@ -4,12 +4,10 @@ import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Treatment;
 import io.dentall.totoro.service.dto.table.TreatmentTable;
 import io.dentall.totoro.service.util.MapperUtil;
-import org.springframework.stereotype.Service;
 
-@Service
 public class TreatmentMapper {
 
-    public Treatment treatmentTableToTreatment(TreatmentTable treatmentTable) {
+    public static Treatment treatmentTableToTreatment(TreatmentTable treatmentTable) {
         Treatment treatment = new Treatment();
 
         treatment.setId(treatmentTable.getId());

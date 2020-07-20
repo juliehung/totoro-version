@@ -4,12 +4,10 @@ import io.dentall.totoro.domain.TreatmentPlan;
 import io.dentall.totoro.domain.TreatmentTask;
 import io.dentall.totoro.service.dto.table.TreatmentTaskTable;
 import io.dentall.totoro.service.util.MapperUtil;
-import org.springframework.stereotype.Service;
 
-@Service
 public class TreatmentTaskMapper {
 
-    public TreatmentTask treatmentTaskTableToTreatmentTask(TreatmentTaskTable treatmentTaskTable) {
+    public static TreatmentTask treatmentTaskTableToTreatmentTask(TreatmentTaskTable treatmentTaskTable) {
         TreatmentTask treatmentTask = new TreatmentTask();
 
         treatmentTask.setId(treatmentTaskTable.getId());

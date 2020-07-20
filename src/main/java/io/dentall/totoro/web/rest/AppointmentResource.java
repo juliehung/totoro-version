@@ -13,6 +13,7 @@ import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;
+import io.dentall.totoro.web.rest.vm.UWPRegistrationPageVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,7 +121,13 @@ public class AppointmentResource {
     @Timed
     public ResponseEntity<List<Appointment>> getAllAppointments(AppointmentCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Appointments by criteria: {}", criteria);
-        Page<Appointment> page = appointmentQueryService.findByCriteria(criteria, pageable);
+        Page<Appointment> page;
+        if (criteria.isOnlyPatientId()) {
+            page = appointmentService.getAppointmentProjectionByPatientId(criteria.getPatientId().getEquals(), pageable);
+        } else {
+            page = appointmentQueryService.findByCriteria(criteria, pageable);
+        }
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/appointments");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -179,8 +186,13 @@ public class AppointmentResource {
     @Timed
     public ResponseEntity<List<Appointment>> getAppointmentsWithRelationshipBetween(
         @RequestParam Instant beginDate,
-        @RequestParam Instant endDate
+        @RequestParam Instant endDate,
+        @RequestParam(defaultValue = "false") Boolean web
     ) {
+        if (web) {
+            return ResponseEntity.ok().body(appointmentService.getBasicAppointmentProjectionByExpectedArrivalTime(beginDate, endDate));
+        }
+
         return ResponseEntity.ok().body(appointmentService.findAppointmentWithRelationshipBetween(beginDate, endDate).stream()
             .map(AppointmentSplitRelationshipDTO::getAppointment)
             .map(appointment -> {
@@ -193,5 +205,42 @@ public class AppointmentResource {
                 return appointment;
             })
             .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/appointments/expected-arrival-time")
+    @Timed
+    public ResponseEntity<List<Appointment>> getAppointmentProjectionByExpectedArrivalTime(
+        @RequestParam Instant beginDate,
+        @RequestParam Instant endDate
+    ) {
+        return ResponseEntity.ok().body(appointmentService.getAppointmentProjectionByExpectedArrivalTime(beginDate, endDate));
+    }
+
+    @GetMapping("/appointments/simple/expected-arrival-time")
+    @Timed
+    public ResponseEntity<List<Appointment>> getSimpleAppointmentProjectionByExpectedArrivalTime(
+        @RequestParam Instant beginDate,
+        @RequestParam Instant endDate,
+        @RequestParam(required = false) Boolean hasReg
+    ) {
+        if (hasReg == null) {
+            return ResponseEntity.ok().body(appointmentService.getSimpleAppointmentProjectionByExpectedArrivalTime(beginDate, endDate));
+        }
+
+        if (hasReg) {
+            return ResponseEntity.ok().body(appointmentService.getSimpleAppointmentProjectionByExpectedArrivalTimeAndRegIsNotNull(beginDate, endDate));
+        } else {
+            return ResponseEntity.ok().body(appointmentService.getSimpleAppointmentProjectionByExpectedArrivalTimeAndRegIsNull(beginDate, endDate));
+        }
+    }
+
+    // Just fit view of UWP at version 1.12.10
+    @GetMapping("/appointments/for-registration-page")
+    @Timed
+    public ResponseEntity<List<UWPRegistrationPageVM>> getAppointmentWithTonsOfDataForUWPRegistrationPage(
+        @RequestParam Instant beginDate,
+        @RequestParam Instant endDate
+    ) {
+        return ResponseEntity.ok().body(appointmentService.findAppointmentWithTonsOfDataForUWPRegistrationPage(beginDate, endDate));
     }
 }
