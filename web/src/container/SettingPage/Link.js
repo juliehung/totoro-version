@@ -112,7 +112,7 @@ function Link({ linkManagement, setConfigs, putSuccess }) {
 
     const items = [technicianSheetConfig, toothMaterialSheetConfig];
     items
-      .filter(i => i.configValue)
+      .filter(i => i.configValue !== undefined)
       .forEach(i => {
         const item = { configKey: i.configKey, configValue: i.configValue };
         if (Object.keys(linkManagement).includes(i.name)) {
