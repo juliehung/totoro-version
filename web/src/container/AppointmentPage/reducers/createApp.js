@@ -11,6 +11,7 @@ import {
   CHANGE_CREATE_APP_DEFAULT_DOCTOR,
   CHANGE_CREATE_APP_EXPECTED_ARRIVAL_DATE,
   CHANGE_CREATE_APP_EXPECTED_ARRIVAL_TIME,
+  CHANGE_CREATE_APP_COLOR_ID,
   CHANGE_CREATE_APP_SPECIAL_NOTE,
   CREATE_APPOINTMENT,
   CREATE_APPOINTMENT_SUCCESS,
@@ -43,6 +44,7 @@ const initState = {
     duration: undefined,
     note: undefined,
     specialNote: [],
+    colorId: 0,
   },
   patient: {
     name: undefined,
@@ -118,6 +120,9 @@ const createApp = (state = initialState, action) =>
         break;
       case CHANGE_CREATE_APP_EXPECTED_ARRIVAL_TIME:
         draft.appointment.expectedArrivalTime = action.time;
+        break;
+      case CHANGE_CREATE_APP_COLOR_ID:
+        draft.appointment.colorId = action.colorId;
         break;
       case CHANGE_CREATE_APP_SPECIAL_NOTE:
         draft.appointment.specialNote = action.value;

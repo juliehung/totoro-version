@@ -10,6 +10,7 @@ import {
   CHANGE_EDIT_APP_CONFIRM_DELETE,
   CHANGE_EDIT_APP_EXPECTED_ARRIVAL_DATE,
   CHANGE_EDIT_APP_EXPECTED_ARRIVAL_TIME,
+  CHANGE_EDIT_APP_COLOR_ID,
   CHANGE_EDIT_APP_DOCTOR,
   CHANGE_EDIT_APP_DURATION,
   CHANGE_EDIT_APP_NOTE,
@@ -35,6 +36,7 @@ const initState = {
     requiredTreatmentTime: undefined,
     note: undefined,
     specialNote: [],
+    colorId: 0,
   },
   patient: undefined,
 };
@@ -73,6 +75,7 @@ const editApp = (state = initialState, action) =>
         if (action.app.baseFloor) {
           draft.appointment.specialNote.push('baseFloor');
         }
+        draft.appointment.colorId = action.app.colorId;
         break;
       case GET_PATIENT_SUCCESS_EDIT_APP:
         draft.patient = action.patient;
@@ -98,10 +101,12 @@ const editApp = (state = initialState, action) =>
       case CHANGE_EDIT_APP_EXPECTED_ARRIVAL_TIME:
         draft.appointment.expectedArrivalTime = action.time;
         break;
+      case CHANGE_EDIT_APP_COLOR_ID:
+        draft.appointment.colorId = action.colorId;
+        break;
       case CHANGE_EDIT_APP_SPECIAL_NOTE:
         draft.appointment.specialNote = action.value;
         break;
-
       case CHECK_EDIT_APP_CONFIRM_MODAL_BUTTON_DISABLE:
         if (
           state.appointment.expectedArrivalDate &&
