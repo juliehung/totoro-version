@@ -21,6 +21,7 @@ import {
   CHANGE_PATIENT_SELECTED,
   CHANGE_CREATE_APP_EXPECTED_ARRIVAL_DATE,
   CHANGE_CREATE_APP_EXPECTED_ARRIVAL_TIME,
+  CHANGE_CREATE_APP_COLOR_ID,
   CHANGE_CREATE_APP_DOCTOR,
   CHANGE_CREATE_APP_DEFAULT_DOCTOR,
   CHANGE_CREATE_APP_DURATION,
@@ -42,6 +43,7 @@ import {
   CHANGE_EDIT_APP_CONFIRM_DELETE,
   CHANGE_EDIT_APP_EXPECTED_ARRIVAL_DATE,
   CHANGE_EDIT_APP_EXPECTED_ARRIVAL_TIME,
+  CHANGE_EDIT_APP_COLOR_ID,
   CHANGE_EDIT_APP_DOCTOR,
   CHANGE_EDIT_APP_DURATION,
   CHANGE_EDIT_APP_NOTE,
@@ -179,6 +181,10 @@ export function changeCreateAppExpectedArrivalTime(time) {
   return { type: CHANGE_CREATE_APP_EXPECTED_ARRIVAL_TIME, time };
 }
 
+export function changeCreateAppColor(colorId) {
+  return { type: CHANGE_CREATE_APP_COLOR_ID, colorId };
+}
+
 export function changeCreateAppDoctor(doctorId) {
   return { type: CHANGE_CREATE_APP_DOCTOR, doctorId };
 }
@@ -262,6 +268,10 @@ export function changeEditAppExpectedArrivalDate(date) {
 
 export function changeEditAppExpectedArrivalTime(time) {
   return { type: CHANGE_EDIT_APP_EXPECTED_ARRIVAL_TIME, time };
+}
+
+export function changeEditAppColor(colorId) {
+  return { type: CHANGE_EDIT_APP_COLOR_ID, colorId };
 }
 
 export function changeEditAppDoctor(doctorId) {

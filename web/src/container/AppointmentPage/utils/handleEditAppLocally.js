@@ -23,11 +23,13 @@ export function convertEditAppToEvt(appointment) {
       registrationStatus,
       expectedArrivalTime: appointment.expectedArrivalTime,
       status: appointment.status,
+      colorId: appointment.colorId,
     }),
     appointment: {
       ...appointment,
       medicalId: appointment.patient.medicalId,
       patientName: appointment.patient.name,
+      patientId: appointment.patient.id,
       phone: appointment.patient.phone,
       registrationStatus,
     },

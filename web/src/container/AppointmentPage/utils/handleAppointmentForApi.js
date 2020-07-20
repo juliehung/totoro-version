@@ -13,5 +13,6 @@ export function handleAppointmentForApi(appointment) {
     microscope: appointment.specialNote.includes('micro'),
     baseFloor: appointment.specialNote.includes('baseFloor'),
     status: 'CONFIRMED',
+    colorId: appointment.colorId,
   };
 }
