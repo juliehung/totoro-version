@@ -389,4 +389,26 @@ public class TreatmentProcedureService {
             })
             .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public boolean isNhi(Long id) {
+        return treatmentProcedureRepository.findById(id, TreatmentProcedureNhiProcedure.class)
+            .map(treatmentProcedureNhiProcedure -> treatmentProcedureNhiProcedure.getNhiProcedure_Id() != null)
+            .orElse(false);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Integer> getTreatmentProcedureTypesByDisposalId(Long id) {
+        return treatmentProcedureRepository.findByDisposal_Id(id, TreatmentProcedureNhiProcedure.class)
+            .stream()
+            .map(treatmentProcedureNhiProcedure -> treatmentProcedureNhiProcedure.getNhiProcedure_Id() == null ? 0 : 1)
+            .collect(Collectors.toList());
+    }
+
+    public interface TreatmentProcedureNhiProcedure {
+
+        Long getId();
+
+        Long getNhiProcedure_Id();
+    }
 }

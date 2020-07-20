@@ -21,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -219,6 +216,7 @@ public class NhiExtendDisposalService {
     ) {
         log.debug("Request to get paged NhiExtendDisposalVMs by yyyymm({})", yyyymm);
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
+        
         return nhiExtendDisposalRepository
             .findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
                 ym.atDay(1),
@@ -512,5 +510,25 @@ public class NhiExtendDisposalService {
             .skip(nhiExtendDisposalTables.size() > 1? nhiExtendDisposalTables.size() - 1: 0)
             .findFirst()
             .map(nhiExtendDisposalMapper::nhiExtendDisposalTableToNhiExtendDisposal);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<NhiExtendDisposalSimple> getSimpleByDisposalId(Long id) {
+        return nhiExtendDisposalRepository.findByDisposal_IdOrderByIdDesc(id, NhiExtendDisposalSimple.class)
+            .stream()
+            .findFirst();
+    }
+
+    public interface NhiExtendDisposalSimple {
+
+        Long getId();
+
+        String getA17();
+
+        String getA18();
+
+        String getA23();
+
+        String getA54();
     }
 }

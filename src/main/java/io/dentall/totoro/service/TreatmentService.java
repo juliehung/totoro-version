@@ -31,12 +31,9 @@ public class TreatmentService {
 
     private final RelationshipService relationshipService;
 
-    private final TreatmentMapper treatmentMapper;
-
-    public TreatmentService(TreatmentRepository treatmentRepository, RelationshipService relationshipService, TreatmentMapper treatmentMapper) {
+    public TreatmentService(TreatmentRepository treatmentRepository, RelationshipService relationshipService) {
         this.treatmentRepository = treatmentRepository;
         this.relationshipService = relationshipService;
-        this.treatmentMapper = treatmentMapper;
     }
 
     /**
@@ -111,7 +108,7 @@ public class TreatmentService {
     public Set<Treatment> getTreatmentProjectionByPatientId(Long id) {
         return treatmentRepository.findByPatient_Id(id)
             .stream()
-            .map(treatmentMapper::treatmentTableToTreatment)
+            .map(TreatmentMapper::treatmentTableToTreatment)
             .collect(Collectors.toSet());
     }
 }

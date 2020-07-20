@@ -1,8 +1,11 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.Disposal;
+import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.service.dto.table.DisposalTable;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +25,8 @@ public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSp
     List<DisposalTable> findDisposalByRegistration_Appointment_Patient_Id(Long patientId);
 
     Optional<DisposalTable> findDisposalById(Long id);
+
+    Optional<AppointmentService.AppointmentRegistrationDisposal> findByRegistration_Id(Long id);
 
     @Query("select disposal from Disposal disposal left join fetch disposal.prescription prescription " +
         "left join fetch prescription.treatmentDrugs left join fetch disposal.todo " +

@@ -4,7 +4,7 @@ import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 
 import java.time.Instant;
 
-public interface AppointmentTable {
+public interface AppointmentTable extends AuditingElement {
     Long getId();
     AppointmentStatus getStatus();
     String getSubject();

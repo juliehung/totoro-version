@@ -41,6 +41,8 @@ public class ImageResource {
     @Value("classpath:chrome.png")
     private Resource testImageFile;
 
+    private Instant syncNow;
+
     private final ImageBusinessService imageBusinessService;
 
     private final ImageQueryService imageQueryService;
@@ -70,9 +72,9 @@ public class ImageResource {
                 logger.debug("patientId: {}", patientId);
                 String remotePath = imageBusinessService.createImagePath(patientId);
 
-                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").withZone(TimeConfig.ZONE_OFF_SET);
-                String remoteFileName = dateTimeFormatter.format(Instant.now());
-                logger.debug("Instant.now() format: {}", remoteFileName);
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").withZone(TimeConfig.ZONE_OFF_SET);
+                String remoteFileName = dateTimeFormatter.format(getSyncNow());
+                logger.debug("remoteFileName: {}", remoteFileName);
                 remoteFileName = file.getOriginalFilename() == null ? remoteFileName : remoteFileName.concat("_").concat(file.getOriginalFilename().replace(" ", "+"));
 
                 // upload origin
@@ -161,5 +163,11 @@ public class ImageResource {
         });
 
         return result;
+    }
+
+    private synchronized Instant getSyncNow() {
+        syncNow = Instant.now();
+
+        return syncNow;
     }
 }

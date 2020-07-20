@@ -70,12 +70,6 @@ public class DisposalService {
 
     private final ToothMapper toothMapper;
 
-    private final DisposalMapper disposalMapper;
-
-    private final RegistrationMapper registrationMapper;
-
-    private final AccountingMapper accountingMapper;
-
     private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
 
     private final PrescriptionMapper prescriptionMapper;
@@ -85,8 +79,6 @@ public class DisposalService {
     private final NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper;
 
     private final AppointmentRepository appointmentRepository;
-
-    private final AppointmentMapper appointmentMapper;
 
     private final ProcedureRepository procedureRepository;
 
@@ -102,7 +94,6 @@ public class DisposalService {
         TodoService todoService,
         RelationshipService relationshipService,
         RegistrationService registrationService,
-        NhiExtendDisposalService nhiExtendDisposalService,
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         PrescriptionRepository prescriptionRepository,
         TreatmentProcedureRepository treatmentProcedureRepository,
@@ -117,19 +108,16 @@ public class DisposalService {
         TreatmentProcedureMapper treatmentProcedureMapper,
         NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
         ToothMapper toothMapper,
-        DisposalMapper disposalMapper,
-        RegistrationMapper registrationMapper,
-        AccountingMapper accountingMapper,
         NhiExtendDisposalMapper nhiExtendDisposalMapper,
         PrescriptionMapper prescriptionMapper,
         TreatmentDrugMapper treatmentDrugMapper,
         NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper,
         AppointmentRepository appointmentRepository,
-        AppointmentMapper appointmentMapper,
         ProcedureRepository procedureRepository,
         ProcedureTypeRepository procedureTypeRepository,
         ProcedureMapper procedureMapper,
-        ProcedureTypeMapper procedureTypeMapper) {
+        ProcedureTypeMapper procedureTypeMapper
+    ) {
         this.disposalRepository = disposalRepository;
         this.prescriptionService = prescriptionService;
         this.todoService = todoService;
@@ -150,14 +138,10 @@ public class DisposalService {
         this.treatmentProcedureMapper = treatmentProcedureMapper;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
         this.toothMapper = toothMapper;
-        this.disposalMapper = disposalMapper;
-        this.registrationMapper = registrationMapper;
-        this.accountingMapper = accountingMapper;
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
         this.prescriptionMapper = prescriptionMapper;
         this.treatmentDrugMapper = treatmentDrugMapper;
         this.appointmentRepository = appointmentRepository;
-        this.appointmentMapper = appointmentMapper;
         this.procedureRepository = procedureRepository;
         this.procedureTypeRepository = procedureTypeRepository;
         this.procedureMapper = procedureMapper;
@@ -461,7 +445,15 @@ public class DisposalService {
                     // TreatmentProcedure.Procedure
                     Optional<ProcedureTable> optionalProcedureTable = procedureRepository.findProcedureById(treatmentProcedure.getProcedure().getId());
                     if (optionalProcedureTable.isPresent()) {
-                        treatmentProcedure.setProcedure(procedureMapper.procedureTableToProcedure(optionalProcedureTable.get()));
+                        Procedure procedure = procedureMapper.procedureTableToProcedure(optionalProcedureTable.get());
+                        treatmentProcedure.setProcedure(procedure);
+                        if (procedure.getProcedureType() != null &&
+                            procedure.getProcedureType().getId() != null
+                        ) {
+                            procedureTypeRepository
+                                .findProcedureTypeById(procedure.getProcedureType().getId())
+                                .ifPresent(procedureTypeTable -> procedure.setProcedureType(procedureTypeMapper.procedureTypeTableToProcedureType(procedureTypeTable)));
+                        }
                     }
 
                     // Add tooth
@@ -478,13 +470,13 @@ public class DisposalService {
         Optional<RegistrationTable> optionalRegistrationTable = registrationRepository.findRegistrationByDisposal_Id(id);
         if (optionalRegistrationTable.isPresent()) {
             // Registration.Accounting
-            registration = registrationMapper.registrationTableToRegistration(optionalRegistrationTable.get());
+            registration = RegistrationMapper.registrationTableToRegistration(optionalRegistrationTable.get());
             if (registration.getAccounting() != null &&
                 registration.getAccounting().getId() != null
             ) {
                 Optional<AccountingTable> optionalAccountingTable = accountingRepository.findAccountingById(registration.getAccounting().getId());
                 if (optionalAccountingTable.isPresent()) {
-                    registration.setAccounting(accountingMapper.accountingTableToAccounting(optionalAccountingTable.get()));
+                    registration.setAccounting(AccountingMapper.accountingTableToAccounting(optionalAccountingTable.get()));
                     registration.setDisposal(disposal);
                 }
 
@@ -492,7 +484,7 @@ public class DisposalService {
             // Registration.Appointment
             Optional<AppointmentTable> optionalAppointmentTable = appointmentRepository.findAppointmentByRegistration_Id(registration.getId());
             if (optionalAppointmentTable.isPresent()) {
-                registration.setAppointment(appointmentMapper.appointmentTableToAppointment(optionalAppointmentTable.get()));
+                registration.setAppointment(AppointmentMapper.appointmentTableToAppointment(optionalAppointmentTable.get()));
                 // no appointment.registration because of FE required not seeing this data in vm.
             }
         }
@@ -556,7 +548,7 @@ public class DisposalService {
     @Transactional(readOnly = true)
     public Optional<Disposal> getDisposalProjectionById(Long id) {
         return disposalRepository.findDisposalById(id)
-            .map(disposalMapper::disposalTableToDisposal);
+            .map(DisposalMapper::disposalTableToDisposal);
     }
 
     @Transactional(readOnly = true)
@@ -569,5 +561,38 @@ public class DisposalService {
             .collect(Collectors.toList());
 
         return  new PageImpl<>(disposals, page, disposals.size());
+    }
+
+    @Transactional(readOnly = true)
+    public Disposal getSimpleDisposalProjectionById(Long id) {
+        Disposal disposal = getDisposalProjectionById(id).orElse(null);
+        if (disposal == null) {
+            return null;
+        }
+
+        Set<TreatmentProcedure> treatmentProcedures = treatmentProcedureRepository.findByDisposal_Id(disposal.getId(), DisposalTreatmentProcedure.class)
+            .stream()
+            .map(disposalTreatmentProcedure -> {
+                TreatmentProcedure treatmentProcedure = new TreatmentProcedure();
+                treatmentProcedure.setId(disposalTreatmentProcedure.getId());
+
+                return treatmentProcedure;
+            })
+            .collect(Collectors.toSet());
+
+        List<NhiExtendDisposalTable> nhiExtendDisposalTables = nhiExtendDisposalRepository.findNhiExtendDisposalByDisposal_IdOrderById(disposal.getId());
+        Set<NhiExtendDisposal> nhiExtendDisposals = new HashSet<>();
+        if (nhiExtendDisposalTables.size() > 0) {
+            NhiExtendDisposal nhiExtendDisposal =
+                nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(nhiExtendDisposalTables.get(nhiExtendDisposalTables.size() - 1));
+            nhiExtendDisposals.add(nhiExtendDisposal);
+        }
+
+        return disposal.treatmentProcedures(treatmentProcedures).nhiExtendDisposals(nhiExtendDisposals);
+    }
+
+    public interface DisposalTreatmentProcedure {
+
+        Long getId();
     }
 }

@@ -3,11 +3,10 @@ package io.dentall.totoro.service.mapper;
 import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.service.dto.table.RegistrationTable;
-import org.springframework.stereotype.Service;
 
-@Service
 public class RegistrationMapper {
-    public Registration registrationTableToRegistration(RegistrationTable registrationTable) {
+
+    public static Registration registrationTableToRegistration(RegistrationTable registrationTable) {
         Registration registration = new Registration();
 
         registration.setId(registrationTable.getId());

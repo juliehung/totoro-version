@@ -151,4 +151,19 @@ public class TreatmentProcedureResource {
         return ResponseEntity.ok().body(treatmentProcedureService.findRecent6TreatmentProceduresByPatient(patientId));
     }
 
+    @GetMapping("/treatment-procedures/isNhi/{id}")
+    @Timed
+    public ResponseEntity<Boolean> isNhi(@PathVariable Long id) {
+        log.debug("REST request to check is NHI TreatmentProcedure[{}]", id);
+
+        return ResponseEntity.ok().body(treatmentProcedureService.isNhi(id));
+    }
+
+    @GetMapping("/treatment-procedures/types/disposals/{id}")
+    @Timed
+    public ResponseEntity<List<Integer>> getTreatmentProcedureTypesByDisposalId(@PathVariable Long id) {
+        log.debug("REST request to get treatment procedure types by Disposal[{}]", id);
+
+        return ResponseEntity.ok().body(treatmentProcedureService.getTreatmentProcedureTypesByDisposalId(id));
+    }
 }
