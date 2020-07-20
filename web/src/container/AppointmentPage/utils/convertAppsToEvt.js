@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { APPT_CUSTOM_COLORS } from '../constant';
 
 export default function convertAppsToEvt(appointments) {
   return appointments.filter(a => a.registerArrivalTime !== a.expectedArrivalTime).map(a => convertAppToEvt(a));
@@ -21,7 +22,10 @@ export function mapStatusToColor(app) {
 
   const isBefore = now.isBefore(moment(app.expectedArrivalTime));
   const status = app.status;
-
+  const color = APPT_CUSTOM_COLORS.find(c => c.id === app.colorId);
+  if (color) {
+    return color.color;
+  }
   if (status === 'CANCEL') {
     return '#616161';
   }

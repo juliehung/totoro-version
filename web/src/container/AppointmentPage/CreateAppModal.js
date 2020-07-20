@@ -14,6 +14,7 @@ import {
   changeCreateAppDefaultDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,
+  changeCreateAppColor,
   createAppointment,
   changeCreateAppSpecialNote,
   checkConfirmButtonDisable,
@@ -26,7 +27,7 @@ import {
   changePatientSearchMode,
 } from './actions';
 import styled from 'styled-components';
-import { requiredTreatmentTimeDefault, patientSearchMode } from './constant';
+import { requiredTreatmentTimeDefault, patientSearchMode, APPT_CUSTOM_COLORS } from './constant';
 import { GAevent } from '../../ga';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { defaultTimeOption } from './utils/generateDefaultTime';
@@ -57,15 +58,24 @@ const StyledButton = styled(Button)`
 const InfoRowContainer = styled.div`
   & > div {
     margin: 10px 0;
+    display: flex;
+    align-items: center;
+    & > span {
+      flex-shrink: 0;
+      width: 86px;
+    }
   }
 `;
 
 const StyledDatePicker = styled(DatePicker)`
-  margin-right: 15px !important;
+  margin-right: 10px !important;
 `;
 
 const StyledSelect = styled(Select)`
   min-width: 150px !important;
+  &:not(:last-child) {
+    margin-right: 10px !important;
+  }
 `;
 
 const RequiredCol = styled.span`
@@ -139,6 +149,18 @@ const PatientDetailElement = styled.div`
   width: 100%;
 `;
 
+const ColorOptionContainer = styled.div`
+  display: flex;
+  align-items: center;
+  & > div:first-child {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: ${props => props.color};
+    margin-right: 5px;
+  }
+`;
+
 //#endregion
 
 function CreateAppModal({
@@ -162,6 +184,7 @@ function CreateAppModal({
   changeCreateAppDefaultDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,
+  changeCreateAppColor,
   createAppointment,
   changeCreateAppSpecialNote,
   checkConfirmButtonDisable,
@@ -299,6 +322,7 @@ function CreateAppModal({
       maskClosable={false}
       closable={false}
       destroyOnClose
+      width={620}
     >
       <Container>
         <div style={{ display: 'flex' }}>
@@ -391,90 +415,88 @@ function CreateAppModal({
         <InfoRowContainer>
           <div>
             <RequiredCol>預約時間：</RequiredCol>
-            <span>
-              <StyledDatePicker
-                onChange={changeCreateAppExpectedArrivalDate}
-                value={appointment.expectedArrivalDate}
-                placeholder="請選擇日期"
-              />
-              <StyledSelect
-                placeholder="請選擇時間"
-                value={appointment.expectedArrivalTime && moment(appointment.expectedArrivalTime).format('HHmm')}
-                onChange={t => {
-                  changeCreateAppExpectedArrivalTime(moment(t, 'HH:mm'));
-                }}
-                showSearch
-                onSearch={e => {
-                  if (e.length === 4) {
-                    const time = moment(e, 'HHmm');
-                    if (time.isValid()) {
-                      if (expectedTimeOption.map(et => et.format('HHmm')).includes(time.format('HHmm'))) {
-                        return;
-                      }
-                      setExpectedTimeOption([...defaultTimeOption, time]);
+            <StyledDatePicker
+              onChange={changeCreateAppExpectedArrivalDate}
+              value={appointment.expectedArrivalDate}
+              placeholder="請選擇日期"
+            />
+            <StyledSelect
+              placeholder="請選擇時間"
+              value={appointment.expectedArrivalTime && moment(appointment.expectedArrivalTime).format('HHmm')}
+              onChange={t => {
+                changeCreateAppExpectedArrivalTime(moment(t, 'HH:mm'));
+              }}
+              showSearch
+              onSearch={e => {
+                if (e.length === 4) {
+                  const time = moment(e, 'HHmm');
+                  if (time.isValid()) {
+                    if (expectedTimeOption.map(et => et.format('HHmm')).includes(time.format('HHmm'))) {
+                      return;
                     }
+                    setExpectedTimeOption([...defaultTimeOption, time]);
                   }
-                }}
-              >
-                {expectedTimeOption.map(t => {
-                  const time24 = t.format('HHmm');
-                  const time12 = t.format('hh:mm');
-                  const prefix = t.locale('en-US').format('a') === 'am' ? '上午' : '下午';
+                }
+              }}
+            >
+              {expectedTimeOption.map(t => {
+                const time24 = t.format('HHmm');
+                const time12 = t.format('hh:mm');
+                const prefix = t.locale('en-US').format('a') === 'am' ? '上午' : '下午';
 
-                  return (
-                    <Select.Option key={time24} value={time24}>
-                      {prefix} {time12}
-                    </Select.Option>
-                  );
-                })}
-              </StyledSelect>
-            </span>
+                return (
+                  <Select.Option key={time24} value={time24}>
+                    {prefix} {time12}
+                  </Select.Option>
+                );
+              })}
+            </StyledSelect>
+            <StyledSelect defaultValue={0} onChange={changeCreateAppColor}>
+              {APPT_CUSTOM_COLORS.map(c => {
+                return (
+                  <Select.Option key={c.id} value={c.id}>
+                    <ColorOptionContainer color={c.color}>
+                      <div />
+                      <span> {c.text}</span>
+                    </ColorOptionContainer>
+                  </Select.Option>
+                );
+              })}
+            </StyledSelect>
           </div>
           <div>
             <RequiredCol>主治醫師：</RequiredCol>
-            <span>
-              <StyledSelect placeholder="請選擇醫師" onSelect={changeCreateAppDoctor} value={appointment.doctorId}>
-                {doctors
-                  .filter(d => d.activated)
-                  .map(d => (
-                    <Select.Option key={d.id} value={d.id}>
-                      {d.name}
-                    </Select.Option>
-                  ))}
-              </StyledSelect>
-            </span>
+            <StyledSelect placeholder="請選擇醫師" onSelect={changeCreateAppDoctor} value={appointment.doctorId}>
+              {doctors
+                .filter(d => d.activated)
+                .map(d => (
+                  <Select.Option key={d.id} value={d.id}>
+                    {d.name}
+                  </Select.Option>
+                ))}
+            </StyledSelect>
           </div>
           <div>
             <RequiredCol>治療長度：</RequiredCol>
-            <span>
-              <StyledSelect
-                placeholder="請選擇治療長度"
-                onSelect={changeCreateAppDuration}
-                value={appointment.duration}
-              >
-                {requiredTreatmentTimeDefault.map(t => (
-                  <Select.Option key={t} value={t}>
-                    {t}
-                  </Select.Option>
-                ))}
-              </StyledSelect>
-            </span>
+            <StyledSelect placeholder="請選擇治療長度" onSelect={changeCreateAppDuration} value={appointment.duration}>
+              {requiredTreatmentTimeDefault.map(t => (
+                <Select.Option key={t} value={t}>
+                  {t}
+                </Select.Option>
+              ))}
+            </StyledSelect>
           </div>
           <div>
             <span>預約內容：</span>
-            <span>
-              <Input.TextArea
-                autoSize={{ minRows: 3, maxRows: 3 }}
-                onChange={changeCreateAppNote}
-                value={appointment.note}
-              />
-            </span>
+            <Input.TextArea
+              autoSize={{ minRows: 3, maxRows: 3 }}
+              onChange={changeCreateAppNote}
+              value={appointment.note}
+            />
           </div>
           <div>
             <span>特殊註記：</span>
-            <span>
-              <Checkbox.Group options={options} value={appointment.specialNote} onChange={onSpecialNoteChange} />
-            </span>
+            <Checkbox.Group options={options} value={appointment.specialNote} onChange={onSpecialNoteChange} />
           </div>
         </InfoRowContainer>
         <BottomContainer>
@@ -517,6 +539,7 @@ const mapDispatchToProps = {
   changeCreateAppDefaultDoctor,
   changeCreateAppExpectedArrivalDate,
   changeCreateAppExpectedArrivalTime,
+  changeCreateAppColor,
   createAppointment,
   changeCreateAppSpecialNote,
   checkConfirmButtonDisable,
