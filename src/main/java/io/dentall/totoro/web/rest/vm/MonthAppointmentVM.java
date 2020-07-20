@@ -51,6 +51,8 @@ public class MonthAppointmentVM {
 
     private final String medicalId;
 
+    private final Integer colorId;
+
     public MonthAppointmentVM(AppointmentDTO appointmentDTO) {
         this.patientId = appointmentDTO.getPatientId();
         this.patientName = appointmentDTO.getPatientName();
@@ -72,6 +74,11 @@ public class MonthAppointmentVM {
         this.patientLastModifiedDate = appointmentDTO.getPatientLastModifiedDate();
         this.patientLastModifiedBy = appointmentDTO.getPatientLastModifiedBy();
         this.medicalId = appointmentDTO.getPatientMedicalId();
+        this.colorId = appointmentDTO.getColorId();
+    }
+
+    public Integer getColorId() {
+        return colorId;
     }
 
     public Long getPatientId() {
