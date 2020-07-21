@@ -64,7 +64,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "         left join jhi_user u on a.doctor_user_id = u.id" +
             "         left join (select max(id) as mxId, disposal_id from nhi_extend_disposal group by disposal_id) mned on d.id = mned.disposal_id" +
             "         left join nhi_extend_disposal ned on mned.mxId = ned.id" +
-            "         left join accounting acc on r.accounting_id = a.id " +
+            "         left join accounting acc on r.accounting_id = acc.id " +
             " where a.expected_arrival_time between ?1 and ?2 " +
             "  and a.status <> 'CANCEL'" +
             "group by tp.disposal_id," +
