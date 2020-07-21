@@ -136,12 +136,10 @@ function AppRight(props) {
   useEffect(() => {
     const slotDuration = cookies.slotDuration;
     const calendarFullScreen = cookies.calendarFullScreen;
-    if (slotDuration) {
-      changeCalSlotDuration(slotDuration);
+    if (!isNaN(Number(slotDuration))) {
+      changeCalSlotDuration(Number(slotDuration));
     }
-    if (calendarFullScreen) {
-      changeCalendarFullscreen(calendarFullScreen);
-    }
+    changeCalendarFullscreen(calendarFullScreen === 'true');
   }, [cookies, changeCalSlotDuration, changeCalendarFullscreen]);
 
   const isFirstRender = useIsFirstRender();
