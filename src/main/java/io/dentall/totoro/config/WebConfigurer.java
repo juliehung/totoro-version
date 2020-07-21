@@ -197,6 +197,8 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         this.metricRegistry = metricRegistry;
     }
 
+    // Spring 會將 Pagination 這一行為，轉換至對等的原生 SQL ，並使用到 limit, offset 這兩個語法。而在 Postgres 中，這兩個語法，若不搭配 order by ，則會出現不可預期的問題。
+    // 因此 在這邊加上客製化的 default 值，且 inject 回 對應的函式中。當前端有給予 sort 在 query string 時，則會取代 default 值。
     @Bean
     public SortHandlerMethodArgumentResolverCustomizer sortCustomizer() {
         return s -> s.setFallbackSort(Sort.by("id"));
