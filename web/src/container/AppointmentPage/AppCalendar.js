@@ -265,10 +265,15 @@ const CalendarContainer = styled.div`
 
   .fc-time-grid .fc-slats td {
     height: ${props => {
-      return props.fullScreen ? props.slotHeight + 'px' : '4em';
+      return props.fullScreen
+        ? props.slotHeight + 'px'
+        : props.slotDuration === 30
+        ? '8em'
+        : props.slotDuration === 15
+        ? '4em'
+        : '2em';
     }};
     border-bottom: 0;
-    font-size: 10px !important;
     font-size: ${props => (props.fullScreen ? '10px !important' : '')};
   }
 
@@ -747,6 +752,7 @@ class AppCalendar extends React.Component {
           noResourceAndShiftOpen={!resource.length && shiftOpen && this.props.viewType === 'resourceTimeGridDay'}
           ref={this.calendarContainerRef}
           slotHeight={slotHeight}
+          slotDuration={this.props.slotDuration}
           fullScreen={this.props.calendarFullScreen}
         >
           {this.props.loading && (
@@ -807,7 +813,6 @@ class AppCalendar extends React.Component {
             eventAllow={this.eventAllow}
             defaultView={this.props.defaultView}
             viewSkeletonRender={this.viewSkeletonRender}
-            displayEventTime={false}
           />
         </CalendarContainer>
       </Container>
