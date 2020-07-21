@@ -467,13 +467,11 @@ function CreateAppModal({
           <div>
             <RequiredCol>主治醫師：</RequiredCol>
             <StyledSelect placeholder="請選擇醫師" onSelect={changeCreateAppDoctor} value={appointment.doctorId}>
-              {doctors
-                .filter(d => d.activated)
-                .map(d => (
-                  <Select.Option key={d.id} value={d.id}>
-                    {d.name}
-                  </Select.Option>
-                ))}
+              {doctors.map(d => (
+                <Select.Option key={d.id} value={d.id} disabled={!d.activated}>
+                  {d.name}
+                </Select.Option>
+              ))}
             </StyledSelect>
           </div>
           <div>
