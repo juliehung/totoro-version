@@ -44,7 +44,7 @@ public interface UWPRegistrationPageVM {
     String getNhiExtendDisposalA54();
 
     // accounting
-    Instant getTransactionTime();
+    Instant getAccountingTransactionTime();
 
     // other needed
     String getPatientTags();

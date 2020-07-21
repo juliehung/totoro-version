@@ -52,7 +52,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "       ned.A18 as nhiExtendDisposalA18," +
             "       ned.A23 as nhiExtendDisposalA23," +
             "       ned.A54 as nhiExtendDisposalA54," +
-            "       acc.transaction_time as accountingTransationTime," +
+            "       acc.transaction_time as accountingTransactionTime," +
             "       replace(replace(cast(array(select tags_id from patient_tag pt where pt.patients_id = p.id) as varchar), '{', ''), '}', '') as patientTags," +
             "       count(procedure_id) filter ( where procedure_id is not null )         as procedureCounter," +
             "       count(nhi_procedure_id) filter ( where nhi_procedure_id is not null ) as nhiProcedureCounter" +
@@ -63,7 +63,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "         left join patient p on a.patient_id = p.id" +
             "         left join jhi_user u on a.doctor_user_id = u.id" +
             "         left join (select max(id) as mxId, disposal_id from nhi_extend_disposal group by disposal_id) mned on d.id = mned.disposal_id" +
-            "         left join nhi_extend_disposal ned on mned.mxId = ned.id," +
+            "         left join nhi_extend_disposal ned on mned.mxId = ned.id" +
             "         left join accounting acc on r.accounting_id = a.id " +
             " where a.expected_arrival_time between ?1 and ?2 " +
             "  and a.status <> 'CANCEL'" +
