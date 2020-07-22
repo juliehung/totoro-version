@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Button, Table, Drawer } from 'antd';
 import ManPng from '../../static/images/man.png';
 import WomanPng from '../../static/images/woman.png';
@@ -55,7 +54,11 @@ const columns = [
     title: '操作',
     dataIndex: 'id',
     key: 'id',
-    render: id => <Link to={`/q/history/${id}`}>檢視</Link>,
+    render: id => (
+      <a href={`#/q/history/${id}`} target="_blank" rel="noopener noreferrer">
+        檢視
+      </a>
+    ),
   },
 ];
 
@@ -87,9 +90,9 @@ function RegistDrawer(props) {
           </div>
         </PatientContainer>
         <Table columns={columns} dataSource={props.docs} pagination={false} />
-        <Link to={`/q/${patient.id}`}>
+        <a href={`/#/q/${patient.id}`} target="_blank" rel="noopener noreferrer">
           <StyledButton type="primary">新增病歷首頁</StyledButton>
-        </Link>
+        </a>
       </DrawerContainer>
     </Drawer>
   );

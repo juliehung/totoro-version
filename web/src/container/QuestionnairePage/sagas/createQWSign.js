@@ -2,7 +2,7 @@ import { CREATE_Q_WITH_SIGN } from '../constant';
 import { call, select, put, delay, take } from 'redux-saga/effects';
 import ESign from '../../../models/eSign';
 import { getPatientEntity, getPatient } from './createQWOSign';
-import { changeCreateQSuccess } from '../actions';
+import { changeCreateQSuccess, changeCreateQFailure } from '../actions';
 import Patient from '../../../models/patient';
 import DocNps from '../../../models/docNps';
 import { handlePatientForApi } from '../utils/handlePatientForApi';
@@ -17,11 +17,13 @@ export function* createQWSign() {
       const patient = yield select(getPatient);
       const patientForApi = handlePatientForApi(patientEntity, patient);
       const responsePatient = yield call(Patient.put, patientForApi);
-      yield call(DocNps.post, { esignId, patientId: responsePatient.id, patient: responsePatient });
+      const result = yield call(DocNps.post, { esignId, patientId: responsePatient.id, patient: responsePatient });
+      const { id } = result;
       yield delay(500);
-      yield put(changeCreateQSuccess());
+      yield put(changeCreateQSuccess(id));
     } catch (error) {
       console.log(error);
+      yield put(changeCreateQFailure());
     }
   }
 }
