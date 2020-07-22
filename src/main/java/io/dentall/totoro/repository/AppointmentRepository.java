@@ -66,7 +66,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "         left join nhi_extend_disposal ned on mned.mxId = ned.id" +
             "         left join accounting acc on r.accounting_id = acc.id " +
             " where a.expected_arrival_time between ?1 and ?2 " +
-            "  and a.status <> 'CANCEL'" +
+            "  and a.status <> 'CANCEL' " +
+            "  and r.id is not null " +
             "group by tp.disposal_id," +
             "         p.id," +
             "         p.name," +
