@@ -39,6 +39,7 @@ import {
   GET_PATIENT_START,
   GET_PATIENT_SUCCESS,
   CREATE_Q_SUCCESS,
+  CREATE_Q_FAILURE,
   INIT_PAGE,
   GET_DOC_START,
   GET_DOC_SUCCESS,
@@ -194,8 +195,12 @@ export function createQWOSign() {
   return { type: CREATE_Q_WITHOUT_SIGN };
 }
 
-export function changeCreateQSuccess() {
-  return { type: CREATE_Q_SUCCESS };
+export function changeCreateQSuccess(id) {
+  return { type: CREATE_Q_SUCCESS, id };
+}
+
+export function changeCreateQFailure(id) {
+  return { type: CREATE_Q_FAILURE, id };
 }
 
 export function getPatient(pid) {

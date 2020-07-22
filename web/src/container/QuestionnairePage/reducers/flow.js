@@ -8,6 +8,7 @@ import {
   GOTO_PAGE_DELAY,
   CHANGE_IS_SIG_EMPTY,
   CREATE_Q_SUCCESS,
+  CREATE_Q_FAILURE,
   INIT_PAGE,
   CREATE_Q_WITH_SIGN,
   CREATE_Q_WITHOUT_SIGN,
@@ -21,6 +22,8 @@ const initState = {
   sendLoading: false,
   isSigEmpty: true,
   createQSuccess: false,
+  createQFailure: false,
+  createdQId: undefined,
   validationError: [],
 };
 
@@ -35,6 +38,8 @@ const flow = (state = initialState, action) =>
         draft.sendLoading = initialState.sendLoading;
         draft.isSigEmpty = initialState.isSigEmpty;
         draft.createQSuccess = initialState.createQSuccess;
+        draft.createQFailure = initialState.createQFailure;
+        draft.createdQId = initialState.createdQId;
         break;
       case NEXT_PAGE:
         draft.reverse = false;
@@ -62,12 +67,20 @@ const flow = (state = initialState, action) =>
       case CHANGE_IS_SIG_EMPTY:
         draft.isSigEmpty = action.isEmpty;
         break;
-      case CREATE_Q_SUCCESS:
-        draft.createQSuccess = true;
-        break;
       case CREATE_Q_WITH_SIGN:
       case CREATE_Q_WITHOUT_SIGN:
+        draft.createQSuccess = initialState.createQSuccess;
+        draft.createQFailure = initialState.createQFailure;
         draft.sendLoading = true;
+        break;
+      case CREATE_Q_SUCCESS:
+        draft.sendLoading = initialState.sendLoading;
+        draft.createQSuccess = true;
+        draft.createdQId = action.id;
+        break;
+      case CREATE_Q_FAILURE:
+        draft.sendLoading = initialState.sendLoading;
+        draft.createQFailure = true;
         break;
       case VALIDATE_SUCCESS:
         draft.validationError = state.validationError.filter(s => s === action.page);
