@@ -44,6 +44,10 @@ const HightLightSpan = styled.span`
   font-style: italic;
 `;
 
+const NameSpan = styled.span`
+  font-size: 24px;
+`;
+
 const XrayContainer = styled.div`
   margin: 5px 0 10px;
   display: flex;
@@ -115,9 +119,9 @@ export function handleEventRender(info, func, params) {
 
         const popoverContent = (
           <PopoverContainer>
-            <HightLightSpan>
+            <NameSpan>
               {status === 'CANCEL' ? '[C]' : null} {patientName}
-            </HightLightSpan>
+            </NameSpan>
             <HightLightSpan>{medicalId}</HightLightSpan>
             <BreakP>
               <StyledPhoneOutlined />
@@ -201,7 +205,7 @@ export function handleEventRender(info, func, params) {
         );
 
         render(
-          <Popover content={popoverContent} trigger="click" placement="right">
+          <Popover content={popoverContent} trigger="hover" placement="top">
             <Dropdown overlay={contextMenu} trigger={['contextMenu']}>
               <div
                 style={{ height: '100%' }}
