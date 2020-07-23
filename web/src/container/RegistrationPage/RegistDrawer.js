@@ -47,7 +47,7 @@ const StyledButton = styled(Button)`
 
 //#endregion
 
-const columns = [
+const columns = changeDrawerVisible => [
   {
     title: '產生日期',
     dataIndex: 'createDate',
@@ -59,7 +59,14 @@ const columns = [
     dataIndex: 'id',
     key: 'id',
     render: id => (
-      <a href={`${getUrl()}#/q/history/${id}`} target="_blank" rel="noopener noreferrer">
+      <a
+        href={`${getUrl()}#/q/history/${id}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => {
+          changeDrawerVisible(false);
+        }}
+      >
         檢視
       </a>
     ),
@@ -93,8 +100,15 @@ function RegistDrawer(props) {
             <span>{patient.name}</span>
           </div>
         </PatientContainer>
-        <Table columns={columns} dataSource={props.docs} pagination={false} />
-        <a href={`${getUrl()}#/q/${patient.id}`} target="_blank" rel="noopener noreferrer">
+        <Table columns={columns(changeDrawerVisible)} dataSource={props.docs} pagination={false} />
+        <a
+          href={`${getUrl()}#/q/${patient.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => {
+            changeDrawerVisible(false);
+          }}
+        >
           <StyledButton type="primary">新增病歷首頁</StyledButton>
         </a>
       </DrawerContainer>
