@@ -8,6 +8,10 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { changeDrawerVisible, getDoc } from './actions';
 
+const getUrl = () => {
+  return window.location.origin + window.location.pathname;
+};
+
 //#region
 const DrawerContainer = styled.div`
   margin: 20px 0px;
@@ -55,7 +59,7 @@ const columns = [
     dataIndex: 'id',
     key: 'id',
     render: id => (
-      <a href={`#/q/history/${id}`} target="_blank" rel="noopener noreferrer">
+      <a href={`${getUrl()}#/q/history/${id}`} target="_blank" rel="noopener noreferrer">
         檢視
       </a>
     ),
@@ -90,7 +94,7 @@ function RegistDrawer(props) {
           </div>
         </PatientContainer>
         <Table columns={columns} dataSource={props.docs} pagination={false} />
-        <a href={`/#/q/${patient.id}`} target="_blank" rel="noopener noreferrer">
+        <a href={`${getUrl()}#/q/${patient.id}`} target="_blank" rel="noopener noreferrer">
           <StyledButton type="primary">新增病歷首頁</StyledButton>
         </a>
       </DrawerContainer>
