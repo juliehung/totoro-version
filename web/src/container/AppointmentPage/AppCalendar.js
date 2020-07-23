@@ -239,7 +239,7 @@ const CalendarContainer = styled.div`
   .eventCard {
     font-weight: 500;
     letter-spacing: 2px;
-    padding: 5px;
+    padding: ${props => (props.fullScreen ? '0 5px' : '5px')};
     font-size: 12px !important;
     font-weight: normal !important;
     & b {
