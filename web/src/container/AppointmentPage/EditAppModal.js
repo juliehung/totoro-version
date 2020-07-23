@@ -281,13 +281,12 @@ function EditAppModal({
               }}
             >
               {expectedTimeOption.map(t => {
-                const time24 = t.format('HHmm');
-                const time12 = t.format('hh:mm');
-                const prefix = t.locale('en-US').format('a') === 'am' ? '上午' : '下午';
+                const key = t.format('HHmm');
+                const time = t.format('HH:mm');
 
                 return (
-                  <Select.Option key={time24} value={time24}>
-                    {prefix} {time12}
+                  <Select.Option key={key} value={key}>
+                    {time}
                   </Select.Option>
                 );
               })}
