@@ -424,7 +424,7 @@ public class DisposalService {
 
                     // TreatmentProcedure.nhiTreatmentProcedure
                     Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable =
-                        nhiExtendTreatmentProcedureRepository.findNhiExtendTreatmentProcedureByTreatmentProcedure_Id(treatmentProcedure.getNhiExtendTreatmentProcedure().getId());
+                        nhiExtendTreatmentProcedureRepository.findNhiExtendTreatmentProcedureByTreatmentProcedure_Id(treatmentProcedure.getId());
                     if (optionalNhiExtendTreatmentProcedureTable.isPresent()) {
                         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure =
                             nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(

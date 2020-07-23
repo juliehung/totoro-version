@@ -220,7 +220,9 @@ public class DisposalResource {
             disposal.getTreatmentProcedures().forEach(treatmentProcedure -> {
                 treatmentProcedure.setTreatmentTask(treatmentTask);
                 treatmentProcedure.setDisposal(disposal);
-                treatmentProcedure.getNhiExtendTreatmentProcedure().setTreatmentProcedure(treatmentProcedure);
+                if (treatmentProcedure.getNhiProcedure() != null) {
+                    treatmentProcedure.getNhiExtendTreatmentProcedure().setTreatmentProcedure(treatmentProcedure);
+                }
             });
 
 
