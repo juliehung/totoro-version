@@ -240,7 +240,11 @@ const CalendarContainer = styled.div`
     font-weight: 500;
     letter-spacing: 2px;
     padding: 5px;
-    font-size: 14px;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    & b {
+      font-weight: normal !important;
+    }
   }
 
   .fc-license-message {
