@@ -6,6 +6,7 @@ import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.util.DomainGenerator;
 import io.dentall.totoro.web.rest.PatientResourceIntTest;
 import io.dentall.totoro.web.rest.TreatmentProcedureResourceIntTest;
@@ -94,11 +95,21 @@ public class NhiServiceIntTest {
     @Autowired
     private DomainGenerator domainGenerator;
 
+    @Autowired
+    private NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
+
     private NhiService nhiService;
 
     @Before
     public void setup() {
-        nhiService = new NhiService(nhiExtendDisposalRepository, nhiExtendPatientRepository, treatmentQueryService, settingRepository);
+        nhiService = new NhiService(
+            nhiExtendDisposalRepository,
+            nhiExtendTreatmentProcedureRepository,
+            nhiExtendPatientRepository,
+            treatmentQueryService,
+            settingRepository,
+            nhiExtendTreatmentProcedureMapper
+        );
         List<Setting> ss = new ArrayList<>();
         Setting s = new Setting();
         LinkedHashMap<String, Object> oo = new LinkedHashMap<>();
