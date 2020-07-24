@@ -70,7 +70,7 @@ public class PatientBusinessService {
 
         patientService.update(updatePatient);
 
-        return getTeethGraphConfig(patient);
+        return getTeethGraphConfig(updatePatient);
     }
 
     public TeethGraphConfigVM getTeethGraphConfig(Patient patient) {
