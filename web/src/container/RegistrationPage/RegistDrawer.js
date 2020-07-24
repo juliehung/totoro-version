@@ -7,10 +7,7 @@ import DefaultPng from '../../static/images/default.png';
 import styled from 'styled-components';
 import moment from 'moment';
 import { changeDrawerVisible, getDoc } from './actions';
-
-const getUrl = () => {
-  return window.location.origin + window.location.pathname;
-};
+import { getBaseUrl } from '../../utils/getBaseUrl';
 
 //#region
 const DrawerContainer = styled.div`
@@ -60,7 +57,7 @@ const columns = changeDrawerVisible => [
     key: 'id',
     render: id => (
       <a
-        href={`${getUrl()}#/q/history/${id}`}
+        href={`${getBaseUrl()}#/q/history/${id}`}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => {
@@ -102,7 +99,7 @@ function RegistDrawer(props) {
         </PatientContainer>
         <Table columns={columns(changeDrawerVisible)} dataSource={props.docs} pagination={false} />
         <a
-          href={`${getUrl()}#/q/${patient.id}`}
+          href={`${getBaseUrl()}#/q/${patient.id}`}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => {

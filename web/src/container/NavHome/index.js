@@ -21,6 +21,7 @@ import MessageCircleFill from '../../images/message-circle-fill.svg';
 import Pantone from '../../images/pantone.svg';
 import Cube from '../../images/cube.svg';
 import FileText from '../../images/file-text.svg';
+import { getBaseUrl } from '../../utils/getBaseUrl';
 
 //#region
 const Container = styled.div`
@@ -287,8 +288,12 @@ function NavHome(props) {
     }
   }, [location, currentLocation]);
 
-  const technicianSheet = linkManagement.technicianSheet ?? '#/setting/link';
-  const toothMaterialSheet = linkManagement.toothMaterialSheet ?? '#/setting/link';
+  const technicianSheet = linkManagement.technicianSheet
+    ? linkManagement.technicianSheet
+    : `${getBaseUrl()}#/setting/link`;
+  const toothMaterialSheet = linkManagement.toothMaterialSheet
+    ? linkManagement.toothMaterialSheet
+    : `${getBaseUrl()}#/setting/link`;
 
   const navLink = [
     {
