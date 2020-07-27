@@ -37,6 +37,7 @@ public interface NhiExtendDisposalTable {
     LocalDate getReplenishmentDate();
     Boolean getCheckedMonthDeclaration();
     Boolean getCheckedAuditing();
+    String getSerialNumber();
 
     // Relationship
     Long getDisposal_Id();
