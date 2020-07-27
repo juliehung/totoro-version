@@ -84,6 +84,7 @@ function XrayModal(props) {
 
   const onOk = async () => {
     window.open('dentall://');
+    changeVisible(false);
   };
 
   return (
