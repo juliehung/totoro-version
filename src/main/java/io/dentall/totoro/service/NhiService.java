@@ -165,6 +165,7 @@ public class NhiService {
     }
 
     public static Stream<String> splitToothFromA74(String a74) {
+        a74 = StringUtils.isBlank(a74) ?"" :a74;
         return Arrays.stream(a74.split("(?<=\\G..)"));
     }
 
