@@ -91,6 +91,7 @@ import {
   ON_LEAVE_PAGE,
   CHANGE_PATIENT_SEARCH_MODE,
   CHANGE_CALENADR_RANGE,
+  CHANGE_SHIFT_OPEN,
 } from './constant';
 
 export function changeCalDate(date) {
@@ -460,4 +461,8 @@ export function changePatientSearchMode(mode) {
 
 export function changeCalendarRange(start, end) {
   return { type: CHANGE_CALENADR_RANGE, range: { start, end } };
+}
+
+export function changeShiftOpen(shiftOpen) {
+  return { type: CHANGE_SHIFT_OPEN, shiftOpen };
 }
