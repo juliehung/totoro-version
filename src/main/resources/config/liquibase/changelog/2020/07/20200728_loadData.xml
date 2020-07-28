@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20200728-loadData" author="WeiChen">
+        <sql>
+            DELETE FROM hospital WHERE 1=1;
+        </sql>
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/hospitals_20200728.csv"
+                  separator=","
+                  tableName="hospital">
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>
