@@ -267,7 +267,7 @@ function EventEditing(props) {
         <ActionContainer>
           <StyledMediumButton
             className="styled-medium-btn"
-            disabled={editingEvent.sms.length === 0}
+            disabled={editingEvent.sms.length === 0 || editingEvent.metadata?.template.trim() === ''}
             shape="round"
             type="primary"
             onClick={() => {
