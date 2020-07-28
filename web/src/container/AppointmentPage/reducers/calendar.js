@@ -18,7 +18,7 @@ import {
   CHANGE_CALENADR_RANGE,
 } from '../constant';
 
-const doctors = JSON.parse(localStorage.getItem('selectedDoctors'));
+const doctors = JSON.parse(localStorage.getItem('selectedDoctors')) ?? [];
 
 export const calFirstDay = 0;
 
@@ -26,7 +26,7 @@ const initState = {
   calendarDate: moment(),
   appointments: [],
   calendarEvents: [],
-  selectedDoctors: doctors || ['all'],
+  selectedDoctors: doctors,
   doctorAppCount: {},
   calendarFirstDay: calFirstDay,
   slotDuration: 15,
