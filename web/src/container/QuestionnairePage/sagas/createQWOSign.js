@@ -2,7 +2,7 @@ import { CREATE_Q_WITHOUT_SIGN } from '../constant';
 import { call, take, select, put, delay } from 'redux-saga/effects';
 import Patient from '../../../models/patient';
 import DocNps from '../../../models/docNps';
-import { changeCreateQSuccess } from '../actions';
+import { changeCreateQSuccess, changeCreateQFailure } from '../actions';
 import { handlePatientForApi } from '../utils/handlePatientForApi';
 
 export const getPatientEntity = state => state.questionnairePageReducer.data.patientEntity;
@@ -17,12 +17,13 @@ export function* createQWOSign() {
       const patient = yield select(getPatient);
       const patientForApi = handlePatientForApi(patientEntity, patient);
       const responsePatient = yield call(Patient.put, patientForApi);
-      yield call(DocNps.post, { patientId: responsePatient.id, patient: responsePatient });
+      const result = yield call(DocNps.post, { patientId: responsePatient.id, patient: responsePatient });
+      const { id } = result;
       yield delay(500);
-      yield put(changeCreateQSuccess());
+      yield put(changeCreateQSuccess(id));
     } catch (error) {
-      // ignore
       console.log(error);
+      yield put(changeCreateQFailure());
     }
   }
 }

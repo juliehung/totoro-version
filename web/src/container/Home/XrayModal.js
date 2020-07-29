@@ -84,6 +84,7 @@ function XrayModal(props) {
 
   const onOk = async () => {
     window.open('dentall://');
+    changeVisible(false);
   };
 
   return (
@@ -112,7 +113,7 @@ function XrayModal(props) {
           </div>
           <div>
             <span>
-              2. 進入新頁面後，點擊按鈕「<BlueText>開啟「totoro-middleman</BlueText>」
+              2. 進入新頁面後，點擊按鈕「<BlueText>開啟「totoro-middleman」</BlueText>」
             </span>
           </div>
           <div>

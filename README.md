@@ -1,4 +1,5 @@
-# totoro
+TOTORO
+===
 This application was generated using JHipster 5.4.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v5.4.0](https://www.jhipster.tech/documentation-archive/v5.4.0).
 
 ## Development
@@ -262,6 +263,25 @@ docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml 
 ## Test with completed(in clinic) data
 Add `no-liquibase` in `SPRING_PROFILES_ACTIVE`
 
+Spring JPA, Select data with Projection
+---
+- 由於 projection 目前不支援 jsonb 這種形態的資料，且加入此項後會導致 treatmentProcedure_Id 這種 nested 
+類型的功能失效，因此此需利用 EsPL 去取得該資料參考 [here](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#projections.interfaces.open)
+
+Spring JPA, Pagination
+---
+- Duplicated data while using pagination， Spring 會將 Pagination 這一行為，轉換至對等的原生 SQL ，並使用到 limit, offset 這兩個語法。而在 Postgres 中，這兩個語法，若不搭配 order by ，
+則會出現不可預期的問題。因此 在這邊加上客製化的 default 值，且 inject 回 對應的函式中。當前端有給予 sort 在 query string 時，則會取代 default 值。
+
+Spring Security, Login
+---
+- DomainUserDetailsService 會將帳號轉製成小寫，在這種情境下，db 若因轉換，或其他原因導致，login 包含大寫，在這裡則會有找不到 user 而導致登入失敗。
+
+Business Logic
+---
+- 自動生成次月月申報列表，由 `NhiMonthDeclarationTasks.createYearMonth` 的 annotation 註記來控制(cron)。
+- 影像，必須設定 Java 變數 `spring-active-profiles`，環境變數 `IMAGE_BASIC_FOLDER_PATH`。而檔案儲存的實體位置，可能在本機，可能在雲端，由 `spring-active-profiles` 決定；
+位置取決於 `IMAGE_BASIC_FOLDER_PATH` 。其他細節由本專案 Gitlab Wiki 提供。
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0
@@ -284,8 +304,3 @@ Add `no-liquibase` in `SPRING_PROFILES_ACTIVE`
 [Protractor]: https://angular.github.io/protractor/
 [Leaflet]: http://leafletjs.com/
 [DefinitelyTyped]: http://definitelytyped.org/
-
-Spring JPA Projection
----
-- 由於 projection 目前不支援 jsonb 這種形態的資料，且加入此項後會導致 treatmentProcedure_Id 這種 nested 
-類型的功能失效，因此此需利用 EsPL 去取得該資料 Ref: https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#projections.interfaces.open

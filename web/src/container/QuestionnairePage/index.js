@@ -75,6 +75,8 @@ function QuestionnairePage(props) {
     match,
     getPatient,
     createQSuccess,
+    createQFailure,
+    createdQid,
     initPage,
     goNextPage,
     goPrevPage,
@@ -83,6 +85,7 @@ function QuestionnairePage(props) {
     valitationFail,
     gotoPage,
     patient,
+    history,
   } = props;
 
   const focusRef = useRef(null);
@@ -145,20 +148,25 @@ function QuestionnairePage(props) {
   ]);
 
   useEffect(() => {
+    initPage();
     const pid = match.params.pid;
     getPatient(pid);
-  }, [match.params.pid, getPatient]);
+  }, [match.params.pid, getPatient, initPage]);
 
+  useEffect(() => {
+    if (createQFailure) {
+      message.error('請再試一次');
+    }
+  }, [createQFailure]);
   useEffect(() => {
     if (createQSuccess) {
       message.success('新增初診單成功');
-      props.history.replace('/registration');
+      history.replace(`/q/history/${createdQid}`);
     }
-
     return () => {
       initPage();
     };
-  }, [createQSuccess, initPage, props.history]);
+  }, [createQSuccess, initPage, history, createdQid]);
 
   const onSwipedUp = () => {
     focusRef.current.focus();
@@ -196,6 +204,8 @@ const mapStateToProps = ({ questionnairePageReducer }) => ({
   currentPage: questionnairePageReducer.flow.page,
   validator: pages.find(p => p.page === questionnairePageReducer.flow.page)?.validator,
   createQSuccess: questionnairePageReducer.flow.createQSuccess,
+  createQFailure: questionnairePageReducer.flow.createQFailure,
+  createdQid: questionnairePageReducer.flow.createdQId,
   nextPage: pages.find(p => p.page === questionnairePageReducer.flow.page)?.nextPage,
   prevPage: pages.find(p => p.page === questionnairePageReducer.flow.page)?.prevPage,
   patient: questionnairePageReducer.data.patient,

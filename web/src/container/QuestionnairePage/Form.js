@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Background from '../../images/questionnaire_bg.svg';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { getDoc } from './actions';
 import { Button } from 'antd';
 import { GApageView } from '../../ga';
@@ -23,16 +23,13 @@ const Container = styled.div`
   background-size: contain;
 `;
 
-const GoBackButton = styled(Button)`
-  margin: 20px 0;
-`;
-
 const FormContainer = styled.div`
   max-width: 600px;
   width: 95%;
   max-height: 85vh;
   font-size: 20px;
   overflow-y: scroll;
+  margin-bottom: 20px;
 `;
 
 const Label = styled.p`
@@ -210,9 +207,14 @@ function Form(props) {
           </ImageContainer>
         )}
       </FormContainer>
-      <Link to="/registration">
-        <GoBackButton type="primary">返回列表</GoBackButton>
-      </Link>
+      <Button
+        type="primary"
+        onClick={() => {
+          window.close();
+        }}
+      >
+        關閉分頁
+      </Button>
     </Container>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
@@ -11,18 +11,21 @@ import {
   changeCreateCalModalVisible,
   changeCalSlotDuration,
   changeCalendarFullscreen,
+  changeShiftOpen,
+  changeSelectedDoctors,
 } from './actions';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
 import GridIcon from '../../images/grid.svg';
 import PointerIcon from '../../images/printer.svg';
 import SettingsIcon from '../../images/settings.svg';
-import { putSettings } from '../Home/actions';
 import { GAevent } from '../../ga';
 import { appointmentPage } from './';
 import FloatingActionButton from './FloatingActionButton';
-import { useIsFirstRender } from '../../utils/hooks/useIsFirstRender';
 import { useCookies } from 'react-cookie';
+import { handleResources } from './utils/handleResources';
+import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
+import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 //#region
 const Container = styled.div`
@@ -121,12 +124,14 @@ function AppRight(props) {
   const {
     calendarDate,
     changeCalDate,
-    settings,
-    showShiftCalc,
-    putSettings,
-    putSettingSuccess,
     changeCalSlotDuration,
     changeCalendarFullscreen,
+    shiftOpen,
+    changeShiftOpen,
+    calendarFullScreen,
+    changeSelectedDoctors,
+    backgroundEvent,
+    doctors,
   } = props;
 
   const [expand, setExpand] = useState(false);
@@ -136,26 +141,20 @@ function AppRight(props) {
   useEffect(() => {
     const slotDuration = cookies.slotDuration;
     const calendarFullScreen = cookies.calendarFullScreen;
-    if (slotDuration) {
-      changeCalSlotDuration(slotDuration);
-    }
-    if (calendarFullScreen) {
-      changeCalendarFullscreen(calendarFullScreen);
-    }
-  }, [cookies, changeCalSlotDuration, changeCalendarFullscreen]);
+    const shiftOpen = cookies.shiftOpen;
 
-  const isFirstRender = useIsFirstRender();
-  useEffect(() => {
-    if (isFirstRender) {
-      return;
+    if (!isNaN(Number(slotDuration))) {
+      changeCalSlotDuration(Number(slotDuration));
     }
-    if (putSettingSuccess && showShiftCalc) {
-      message.success('班表啟用成功!');
-    } else if (putSettingSuccess && !showShiftCalc) {
-      message.warning('班表已關閉。');
+
+    if (calendarFullScreen) {
+      changeCalendarFullscreen(calendarFullScreen === 'true');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [putSettingSuccess, showShiftCalc]);
+
+    if (shiftOpen) {
+      changeShiftOpen(shiftOpen === 'true');
+    }
+  }, [cookies, changeCalSlotDuration, changeCalendarFullscreen, changeShiftOpen]);
 
   const simulateMouseClick = element => {
     const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
@@ -175,8 +174,15 @@ function AppRight(props) {
     const title = document.querySelector('.fc-center');
     if (title) {
       simulateMouseClick(title);
+      if (value === 30 && calendarFullScreen === true) {
+        changeCalSlotDuration(20);
+        requestAnimationFrame(() => {
+          changeCalSlotDuration(30);
+        });
+      } else {
+        changeCalSlotDuration(value);
+      }
       changeCalendarFullscreen(false);
-      changeCalSlotDuration(value);
       setCookie('slotDuration', value);
       setCookie('calendarFullScreen', false);
     }
@@ -194,7 +200,7 @@ function AppRight(props) {
   };
 
   const headerRender = ({ value }) => {
-    const month = value.format('MMMM');
+    const month = value.locale('zh-tw').format('MMMM');
     const year = value.year();
     return (
       <div>
@@ -230,15 +236,14 @@ function AppRight(props) {
   };
 
   const onShiftButtonClick = () => {
-    if (settings?.id) {
-      const showShift = !showShiftCalc;
-      const generalSetting = {
-        ...{ ...(settings.preferences ? settings.preferences.generalSetting : {}) },
-        showShift,
-      };
-      const preferences = { ...settings.preferences, generalSetting };
-      const newSettings = { ...settings, preferences };
-      putSettings(newSettings);
+    setCookie('shiftOpen', !shiftOpen);
+    changeShiftOpen(!shiftOpen);
+    if (!shiftOpen) {
+      const selectedDoctors = handleResources(doctors, backgroundEvent);
+      changeSelectedDoctors(selectedDoctors.map(d => d.id));
+      message.success('班表啟用成功!');
+    } else {
+      message.warning('班表已關閉。');
     }
   };
 
@@ -309,40 +314,26 @@ function AppRight(props) {
           >
             天
           </button>
-          <Divider type="vertical" />
-          <button
-            onClick={() => {
-              onSlotDurationChange(30);
-              GAevent(appointmentPage, 'slot duration 30 clicked');
-            }}
-          >
-            30
-          </button>
-          <Divider type="vertical" />
-          <button
-            onClick={() => {
-              onSlotDurationChange(15);
-              GAevent(appointmentPage, 'slot duration 15 clicked');
-            }}
-          >
-            15
-          </button>
-          <Divider type="vertical" />
-          <button
-            onClick={() => {
-              onSlotDurationChange(10);
-              GAevent(appointmentPage, 'slot duration 10 clicked');
-            }}
-          >
-            10
-          </button>
+          {[30, 15, 10].map(n => (
+            <Fragment key={n}>
+              <Divider type="vertical" />
+              <button
+                onClick={() => {
+                  onSlotDurationChange(n);
+                  GAevent(appointmentPage, `slot duration ${n} clicked`);
+                }}
+              >
+                {n}
+              </button>
+            </Fragment>
+          ))}
         </div>
       </ItemContainer>
       <ItemContainer>
         <div>
           <div>
             <img src={SettingsIcon} alt="排班" />
-            <StatusIncdicator on={showShiftCalc ? 1 : 0} />
+            <StatusIncdicator on={shiftOpen ? 1 : 0} />
           </div>
           <span>排班</span>
         </div>
@@ -353,7 +344,7 @@ function AppRight(props) {
               GAevent(appointmentPage, 'Turn on/off shift');
             }}
           >
-            {showShiftCalc ? '停用' : '啟用'}
+            {shiftOpen ? '停用' : '啟用'}
           </button>
           <Divider type="vertical" />
           <Link to="/shift">
@@ -375,9 +366,10 @@ function AppRight(props) {
 const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   calendarDate: appointmentPageReducer.calendar.calendarDate,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
-  settings: homePageReducer.settings.settings,
-  showShiftCalc: homePageReducer.settings.settings?.preferences?.generalSetting?.showShift,
-  putSettingSuccess: homePageReducer.settings.putSuccess,
+  shiftOpen: appointmentPageReducer.shift.shiftOpen,
+  calendarFullScreen: appointmentPageReducer.calendar.calendarFullScreen,
+  backgroundEvent: convertShitToBackgroundEvent(appointmentPageReducer.shift.shift),
+  doctors: extractDoctorsFromUser(homePageReducer.user.users),
 });
 
 const mapDispatchToProps = {
@@ -387,7 +379,8 @@ const mapDispatchToProps = {
   changeCreateCalModalVisible,
   changeCalSlotDuration,
   changeCalendarFullscreen,
-  putSettings,
+  changeShiftOpen,
+  changeSelectedDoctors,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRight);

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Button, Table, Drawer } from 'antd';
 import ManPng from '../../static/images/man.png';
 import WomanPng from '../../static/images/woman.png';
@@ -8,6 +7,7 @@ import DefaultPng from '../../static/images/default.png';
 import styled from 'styled-components';
 import moment from 'moment';
 import { changeDrawerVisible, getDoc } from './actions';
+import { getBaseUrl } from '../../utils/getBaseUrl';
 
 //#region
 const DrawerContainer = styled.div`
@@ -44,7 +44,7 @@ const StyledButton = styled(Button)`
 
 //#endregion
 
-const columns = [
+const columns = changeDrawerVisible => [
   {
     title: '產生日期',
     dataIndex: 'createDate',
@@ -55,7 +55,18 @@ const columns = [
     title: '操作',
     dataIndex: 'id',
     key: 'id',
-    render: id => <Link to={`/q/history/${id}`}>檢視</Link>,
+    render: id => (
+      <a
+        href={`${getBaseUrl()}#/q/history/${id}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => {
+          changeDrawerVisible(false);
+        }}
+      >
+        檢視
+      </a>
+    ),
   },
 ];
 
@@ -86,10 +97,17 @@ function RegistDrawer(props) {
             <span>{patient.name}</span>
           </div>
         </PatientContainer>
-        <Table columns={columns} dataSource={props.docs} pagination={false} />
-        <Link to={`/q/${patient.id}`}>
+        <Table columns={columns(changeDrawerVisible)} dataSource={props.docs} pagination={false} />
+        <a
+          href={`${getBaseUrl()}#/q/${patient.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => {
+            changeDrawerVisible(false);
+          }}
+        >
           <StyledButton type="primary">新增病歷首頁</StyledButton>
-        </Link>
+        </a>
       </DrawerContainer>
     </Drawer>
   );
