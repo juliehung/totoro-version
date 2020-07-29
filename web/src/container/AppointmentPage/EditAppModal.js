@@ -23,6 +23,7 @@ import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { defaultTimeOption } from './utils/generateDefaultTime';
 import { GAevent } from '../../ga';
 import { appointmentPage } from './';
+import { DeleteOutlined } from '@ant-design/icons';
 
 //#region
 const Container = styled.div`
@@ -280,13 +281,12 @@ function EditAppModal({
               }}
             >
               {expectedTimeOption.map(t => {
-                const time24 = t.format('HHmm');
-                const time12 = t.format('hh:mm');
-                const prefix = t.locale('en-US').format('a') === 'am' ? '上午' : '下午';
+                const key = t.format('HHmm');
+                const time = t.format('HH:mm');
 
                 return (
-                  <Select.Option key={time24} value={time24}>
-                    {prefix} {time12}
+                  <Select.Option key={key} value={key}>
+                    {time}
                   </Select.Option>
                 );
               })}
@@ -307,13 +307,11 @@ function EditAppModal({
           <div>
             <RequiredCol>主治醫師：</RequiredCol>
             <StyledSelect placeholder="請選擇醫師" onSelect={changeEditAppDoctor} value={appointment.doctorId}>
-              {doctors
-                .filter(d => d.activated)
-                .map(d => (
-                  <Select.Option key={d.id} value={d.id}>
-                    {d.name}
-                  </Select.Option>
-                ))}
+              {doctors.map(d => (
+                <Select.Option key={d.id} value={d.id} disabled={!d.activated}>
+                  {d.name}
+                </Select.Option>
+              ))}
             </StyledSelect>
           </div>
           <div>
@@ -345,7 +343,7 @@ function EditAppModal({
         </InfoRowContainer>
         <BottomContainer>
           {confirmDelete ? (
-            <DeleteButton icon="delete" loading={deleteLoading} onClick={onDeleteConfirm}>
+            <DeleteButton icon={<DeleteOutlined />} loading={deleteLoading} onClick={onDeleteConfirm}>
               確定刪除?
             </DeleteButton>
           ) : (

@@ -29,7 +29,7 @@ const Container = styled.div`
     font-size: 20px;
     width: 35px;
     height: 35px;
-    margin: 0 10px;
+    margin: 0 36px;
   }
 `;
 

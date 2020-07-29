@@ -40,12 +40,11 @@ import styled from 'styled-components';
 import { handleEventRender } from './utils/handleEventRender';
 import { handleResourceRender } from './utils/handleResourceRender';
 import { convertSettingsToClinicOffEvent } from './utils/convertSettingsToClinicOffEvent';
-import { message, Spin, Popover } from 'antd';
+import { message, Spin, Popover, Button } from 'antd';
 import { calFirstDay } from './reducers/calendar';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
 import { reverseEvents } from './utils/reverseEvents';
-import { handleResources } from './utils/handleResources';
 import { GAevent } from '../../ga';
 import { appointmentPage } from './';
 import TwoArrowLeft from '../../images/arrow-left.svg';
@@ -57,6 +56,9 @@ import EyeFillWhite from '../../images/eye-fill-white.svg';
 import EyeOffFill from '../../images/eye-off-fill.svg';
 import { parseDisplayRange } from './utils/parseDisplayRange';
 import TimeDisplay from './TimeDisplay';
+import MqttHelper from '../../utils/mqtt';
+import { RedoOutlined, StopOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { handleResources } from './utils/handleResources';
 
 //#region
 const Container = styled.div`
@@ -179,6 +181,7 @@ const DoctorControl = styled.div`
   max-height: 500px;
 
   & > :first-child {
+    height: 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -238,8 +241,12 @@ const CalendarContainer = styled.div`
   .eventCard {
     font-weight: 500;
     letter-spacing: 2px;
-    padding: 5px;
-    font-size: 14px;
+    padding: ${props => (props.fullScreen ? '0 5px' : '5px')};
+    font-size: 12px !important;
+    font-weight: normal !important;
+    & b {
+      font-weight: normal !important;
+    }
   }
 
   .fc-license-message {
@@ -264,10 +271,15 @@ const CalendarContainer = styled.div`
 
   .fc-time-grid .fc-slats td {
     height: ${props => {
-      return props.fullScreen ? props.slotHeight + 'px' : '4em';
+      return props.fullScreen
+        ? props.slotHeight + 'px'
+        : props.slotDuration === 30
+        ? '8em'
+        : props.slotDuration === 15
+        ? '4em'
+        : '2em';
     }};
     border-bottom: 0;
-    font-size: 10px !important;
     font-size: ${props => (props.fullScreen ? '10px !important' : '')};
   }
 
@@ -331,6 +343,7 @@ const SpinContainer = styled.div`
 class AppCalendar extends React.Component {
   calendarComponentRef = React.createRef();
   calendarContainerRef = React.createRef();
+  state = { pauseShift: false };
 
   componentDidMount() {
     const calendarApi = this.calendarComponentRef.current.getApi();
@@ -341,6 +354,25 @@ class AppCalendar extends React.Component {
     if (msg) {
       msg.parentNode.removeChild(msg);
     }
+
+    // mqtt
+    MqttHelper.subscribeAppointment(AppCalendar.name, message => {
+      let messageObj;
+      try {
+        messageObj = JSON.parse(message);
+      } catch (e) {
+        return;
+      }
+
+      const { start, end } = this.props.calendarRange;
+      const expectedArrivalTime = moment(messageObj.expectedArrivalTime);
+      if (expectedArrivalTime.isBetween(start, end)) {
+        // TODO: find a better way to update appointments
+        this.getAllEvent();
+      }
+    });
+
+    this.setState({ pauseShift: false });
   }
 
   debounceFetch;
@@ -385,6 +417,10 @@ class AppCalendar extends React.Component {
       const calendarApi = this.calendarComponentRef.current.getApi();
       calendarApi.updateSize();
     }
+
+    if (prevProps.shiftOpen !== this.props.shiftOpen && this.props.shiftOpen) {
+      this.setState({ pauseShift: false });
+    }
   }
 
   getAllEvent() {
@@ -394,6 +430,7 @@ class AppCalendar extends React.Component {
   }
 
   componentWillUnmount() {
+    MqttHelper.unsubscribeAppointment(AppCalendar.name);
     clearInterval(this.intervalID);
   }
 
@@ -623,45 +660,86 @@ class AppCalendar extends React.Component {
   };
 
   handleDoctorChange = id => {
-    if (this.props.selectedDoctors.includes(id)) {
-      this.props.changeSelectedDoctors(this.props.selectedDoctors.filter(s => s !== id));
+    const selectedDoctors =
+      this.props.shiftOpen && !this.state.pauseShift
+        ? handleResources(this.props.doctors, this.props.backgroundEvent).map(d => d.id)
+        : this.props.selectedDoctors;
+
+    if (selectedDoctors.includes(id)) {
+      this.props.changeSelectedDoctors(selectedDoctors.filter(s => s !== id));
     } else {
-      this.props.changeSelectedDoctors([...this.props.selectedDoctors, id]);
+      this.props.changeSelectedDoctors([...selectedDoctors, id]);
     }
+    this.setState({ pauseShift: true });
+  };
+
+  handleRemoveAllDoctors = () => {
+    this.props.changeSelectedDoctors([]);
+    this.setState({ pauseShift: true });
+  };
+
+  handleSelectAllDoctor = () => {
+    const doctors = this.props.doctors.filter(d => d.activated).map(d => d.id);
+    this.props.changeSelectedDoctors(doctors);
+    this.setState({ pauseShift: true });
+  };
+
+  handleResetSelectedDoctor = () => {
+    const selectedDoctors = handleResources(this.props.doctors, this.props.backgroundEvent);
+    this.props.changeSelectedDoctors(selectedDoctors.map(d => d.id));
+    this.setState({ pauseShift: false });
   };
 
   render() {
-    const shiftOpen = this.props.generalSetting && this.props.generalSetting.showShift;
+    const shiftOpen = this.props.shiftOpen;
+
+    const doctorsFromShift = shiftOpen ? handleResources(this.props.doctors, this.props.backgroundEvent) : [];
 
     const event = [
-      ...(shiftOpen
-        ? this.props.appointments
-        : this.props.appointments.filter(a => {
-            return this.props.selectedDoctors.includes(a.appointment.doctor.user.id);
-          })),
+      ...(shiftOpen && !this.state.pauseShift
+        ? this.props.appointments.filter(a => doctorsFromShift.map(d => d.id).includes(a.appointment.doctor.user.id))
+        : this.props.appointments.filter(a => this.props.selectedDoctors.includes(a.appointment.doctor.user.id))),
       ...this.props.calendarEvents,
       ...(shiftOpen
         ? reverseEvents(this.props.backgroundEvent, this.props.viewType, this.props.calendarRange)
         : this.generalSettingEvents),
     ];
 
-    const resource = shiftOpen
-      ? handleResources(this.props.doctors, this.props.backgroundEvent, this.props.getShiftSuccess)
-      : this.props.doctors
-          .filter(d => d.activated)
-          .filter(d => this.props.selectedDoctors.includes(d.id))
-          .map(d => ({ id: d.id, title: d.name, avatar: d.avatar }));
+    const resource =
+      shiftOpen && !this.state.pauseShift
+        ? doctorsFromShift
+        : this.props.doctors
+            .filter(d => d.activated)
+            .filter(d => this.props.selectedDoctors.includes(d.id))
+            .map(d => ({ id: d.id, title: d.name, avatar: d.avatar }));
 
     const doctorControl = (
       <DoctorControl>
         <div>
           <span>檢視</span>
+          {this.props.shiftOpen && this.state.pauseShift && (
+            <Button icon={<RedoOutlined />} shape={'round'} onClick={this.handleResetSelectedDoctor}>
+              重設為班表醫師
+            </Button>
+          )}
+          {resource.length !== 0 ? (
+            <Button icon={<StopOutlined />} shape={'round'} onClick={this.handleRemoveAllDoctors}>
+              全不選
+            </Button>
+          ) : (
+            <Button icon={<CheckCircleOutlined />} shape={'round'} onClick={this.handleSelectAllDoctor}>
+              全選
+            </Button>
+          )}
         </div>
         <div>
           {this.props.doctors
             .filter(d => d.activated)
             .map(d => {
-              const selected = this.props.selectedDoctors.includes(d.id);
+              const selected =
+                shiftOpen && !this.state.pauseShift
+                  ? doctorsFromShift.map(d => d.id).includes(d.id)
+                  : this.props.selectedDoctors.includes(d.id);
               return (
                 <DoctorControlItem
                   key={d.id}
@@ -672,7 +750,7 @@ class AppCalendar extends React.Component {
                 >
                   <img className="off" src={EyeOffFill} alt="icon" />
                   <img className="on" src={EyeFillWhite} alt="icon" />
-                  <span>{`${d.name}(${this.props.doctorAppCount[d.id] ? this.props.doctorAppCount[d.id] : 0})`}</span>
+                  <span>{`${d.name}(${this.props.doctorAppCount[d.id] ?? 0})`}</span>
                 </DoctorControlItem>
               );
             })}
@@ -715,19 +793,18 @@ class AppCalendar extends React.Component {
                 <span>周列表</span>
               </ViewItem>
             </ViewContainer>
-            {this.props.generalSetting && !shiftOpen && (
-              <Popover placement="bottomLeft" trigger="click" content={doctorControl}>
-                <DoctorControlContainer>
-                  <img src={EyeFill} alt={'select doctor'} />
-                </DoctorControlContainer>
-              </Popover>
-            )}
+            <Popover placement="bottomLeft" trigger="click" content={doctorControl}>
+              <DoctorControlContainer>
+                <img src={EyeFill} alt={'select doctor'} />
+              </DoctorControlContainer>
+            </Popover>
           </HeaderRight>
         </Header>
         <CalendarContainer
           noResourceAndShiftOpen={!resource.length && shiftOpen && this.props.viewType === 'resourceTimeGridDay'}
           ref={this.calendarContainerRef}
           slotHeight={slotHeight}
+          slotDuration={this.props.slotDuration}
           fullScreen={this.props.calendarFullScreen}
         >
           {this.props.loading && (
@@ -788,7 +865,6 @@ class AppCalendar extends React.Component {
             eventAllow={this.eventAllow}
             defaultView={this.props.defaultView}
             viewSkeletonRender={this.viewSkeletonRender}
-            displayEventTime={false}
           />
         </CalendarContainer>
       </Container>
@@ -817,6 +893,7 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer, settingPageR
     !appointmentPageReducer.shift.getShiftSuccess ||
     !appointmentPageReducer.calendar.getSuccess ||
     !homePageReducer.user.getSuccess,
+  shiftOpen: appointmentPageReducer.shift.shiftOpen,
 });
 
 const mapDispatchToProps = {

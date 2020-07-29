@@ -7,12 +7,12 @@ import io.dentall.totoro.business.dto.*;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendPatientRepository;
+import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.repository.SettingRepository;
 import io.dentall.totoro.service.dto.InfectionControlDuration;
-import io.dentall.totoro.service.dto.TreatmentCriteria;
+import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.StreamUtil;
-import io.github.jhipster.service.filter.LongFilter;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -55,11 +55,15 @@ public class NhiService {
 
     private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
 
+    private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
+
     private final NhiExtendPatientRepository nhiExtendPatientRepository;
 
     private final TreatmentQueryService treatmentQueryService;
 
     private final SettingRepository settingRepository;
+
+    private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
 
     private static Map<String, Rule> rules;
 
@@ -81,14 +85,17 @@ public class NhiService {
 
     public NhiService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
+        NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
         NhiExtendPatientRepository nhiExtendPatientRepository,
         TreatmentQueryService treatmentQueryService,
-        SettingRepository settingRepository
-    ) {
+        SettingRepository settingRepository,
+        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
+        this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
         this.treatmentQueryService = treatmentQueryService;
         this.settingRepository = settingRepository;
+        this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
 
         positionLimitMap.put("VALIDATED_ONLY", "11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,19,29,39,49,99,UB,LB,UR,UL,LR,LL,UA,LA,FM,");
         positionLimitMap.put("BLANK_ONLY", "");
@@ -158,6 +165,7 @@ public class NhiService {
     }
 
     public static Stream<String> splitToothFromA74(String a74) {
+        a74 = StringUtils.isBlank(a74) ?"" :a74;
         return Arrays.stream(a74.split("(?<=\\G..)"));
     }
 
@@ -165,44 +173,14 @@ public class NhiService {
         Long patientId,
         NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure
     ) {
-        // Query patient's all nhi treatment procedures
-        TreatmentCriteria treatmentCriteria = new TreatmentCriteria();
-        LongFilter lf = new LongFilter();
-        lf.setEquals(patientId);
-        treatmentCriteria.setPatientId(lf);
 
-        Function<TreatmentCriteria, Set<NhiExtendTreatmentProcedure>> personalAllNhiTxProcFunction = criteria -> treatmentQueryService.findByCriteria(criteria)
-            .stream()
-            .filter(treatment -> treatment.getTreatmentPlans() != null)
-            .flatMap(treatment ->
-                treatment.getTreatmentPlans()
-                    .stream()
-                    .filter(treatmentPlan -> treatmentPlan.getTreatmentTasks() != null)
-                    .flatMap(treatmentPlan -> treatmentPlan.getTreatmentTasks().stream())
-                    .filter(treatmentTask -> treatmentTask.getTreatmentProcedures() != null)
-            )
-            .findAny()
-            .map(treatmentTask ->
-                treatmentTask.getTreatmentProcedures()
-                    .stream()
-                    .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
-                    .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure != null &&
-                        !nhiExtendTreatmentProcedure.getId().equals(targetNhiExtendTreatmentProcedure.getId()))
-                    .filter(nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getTreatmentProcedure() != null &&
-                        nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal() != null &&
-                        nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime() != null)
-                    .filter(nhiExtendTreatmentProcedure ->
-                        !nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS)
-                            .isAfter(targetNhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS))
-                    )
-                    .collect(Collectors.toSet())
-            )
-            .orElse(Collections.emptySet());
-
-        // Create map which personal all nhi treatment procedure record with key as a73(nhi procedure code)
-        Set<NhiExtendTreatmentProcedure> personalAllNhiTxProc = personalAllNhiTxProcFunction.apply(treatmentCriteria);
-
-        return new PersonalNhiExtendTreatmentProcedureMap().nhiExtendTreatmentProcedure(personalAllNhiTxProc);
+        return new PersonalNhiExtendTreatmentProcedureMap().nhiExtendTreatmentProcedure(
+            nhiExtendTreatmentProcedureRepository.findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(patientId,
+                targetNhiExtendTreatmentProcedure.getId(),
+                targetNhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS)
+            ).stream()
+            .map(nhiExtendTreatmentProcedureMapper::nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable)
+            .collect(Collectors.toSet()));
     }
 
     public Consumer<NhiExtendTreatmentProcedure> checkInfectionControl = nhiExtendTreatmentProcedure -> {

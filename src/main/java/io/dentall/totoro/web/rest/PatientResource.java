@@ -11,6 +11,8 @@ import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.service.dto.CustomGroup;
 import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.dto.PatientDTO;
+import io.dentall.totoro.service.dto.table.PatientTable;
+import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.errors.InternalServerErrorException;
 import io.dentall.totoro.web.rest.util.AvatarUtil;
@@ -547,5 +549,15 @@ public class PatientResource {
     public interface PatientKinship {
 
         Long getId();
+    }
+
+    @GetMapping("/patients/{id}/without/relationship")
+    @Timed
+    public ResponseEntity<Patient> getPatientByIdWithoutRelationship(@PathVariable Long id) {
+        log.debug("REST request to get Patient : {}", id);
+        Optional<PatientTable> patient = patientRepository.findPatientById(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(patient.isPresent()
+            ? PatientMapper.patientTableToPatient(patient.get())
+            : null));
     }
 }

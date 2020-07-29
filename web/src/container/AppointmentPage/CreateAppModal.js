@@ -440,13 +440,12 @@ function CreateAppModal({
               }}
             >
               {expectedTimeOption.map(t => {
-                const time24 = t.format('HHmm');
-                const time12 = t.format('hh:mm');
-                const prefix = t.locale('en-US').format('a') === 'am' ? '上午' : '下午';
+                const key = t.format('HHmm');
+                const time = t.format('HH:mm');
 
                 return (
-                  <Select.Option key={time24} value={time24}>
-                    {prefix} {time12}
+                  <Select.Option key={key} value={key}>
+                    {time}
                   </Select.Option>
                 );
               })}
@@ -467,13 +466,11 @@ function CreateAppModal({
           <div>
             <RequiredCol>主治醫師：</RequiredCol>
             <StyledSelect placeholder="請選擇醫師" onSelect={changeCreateAppDoctor} value={appointment.doctorId}>
-              {doctors
-                .filter(d => d.activated)
-                .map(d => (
-                  <Select.Option key={d.id} value={d.id}>
-                    {d.name}
-                  </Select.Option>
-                ))}
+              {doctors.map(d => (
+                <Select.Option key={d.id} value={d.id} disabled={!d.activated}>
+                  {d.name}
+                </Select.Option>
+              ))}
             </StyledSelect>
           </div>
           <div>
