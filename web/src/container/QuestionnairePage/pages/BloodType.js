@@ -13,13 +13,13 @@ export const OptionContainer = styled.div`
   position: relative;
   box-sizing: border-box;
   width: 20%;
-  padding: 8px 15px;
+  padding: 8px 20px 8px 15px;
   align-items: center;
   margin: 10px 2.5%;
   font-size: 16px;
   color: ${props => (props.selected ? '#1890ff' : '#000')};
   display: flex;
-  border: ${props => (props.selected ? '3px solid #1890ff' : '2px solid transparent')};
+  border: ${props => (props.selected ? '3px solid #1890ff' : '3px solid transparent')};
   box-shadow: ${props => (props.selected ? '0px 0px 0 2px rgb(0, 145, 255, 0.33)' : '0px transparent')};
   border-radius: 2px;
   cursor: pointer;
@@ -35,7 +35,7 @@ export const Option = styled.div`
   background: ${props => (props.selected ? 'rgb(0, 145, 255)' : 'rgb(245, 246, 250)')};
   color: ${props => (props.selected ? '#fff' : '#000')};
   height: 22px;
-  width: 22px;
+  min-width: 22px;
   font-size: 14px;
   display: flex;
   justify-content: center;
