@@ -128,7 +128,6 @@ function AppRight(props) {
     changeCalendarFullscreen,
     shiftOpen,
     changeShiftOpen,
-    calendarFullScreen,
     changeSelectedDoctors,
     backgroundEvent,
     doctors,
@@ -174,14 +173,7 @@ function AppRight(props) {
     const title = document.querySelector('.fc-center');
     if (title) {
       simulateMouseClick(title);
-      if (value === 30 && calendarFullScreen === true) {
-        changeCalSlotDuration(20);
-        requestAnimationFrame(() => {
-          changeCalSlotDuration(30);
-        });
-      } else {
-        changeCalSlotDuration(value);
-      }
+      changeCalSlotDuration(value);
       changeCalendarFullscreen(false);
       setCookie('slotDuration', value);
       setCookie('calendarFullScreen', false);
@@ -314,7 +306,7 @@ function AppRight(props) {
           >
             天
           </button>
-          {[30, 15, 10].map(n => (
+          {[15, 10].map(n => (
             <Fragment key={n}>
               <Divider type="vertical" />
               <button
@@ -323,7 +315,7 @@ function AppRight(props) {
                   GAevent(appointmentPage, `slot duration ${n} clicked`);
                 }}
               >
-                {n}
+                {`${n} 分`}
               </button>
             </Fragment>
           ))}
@@ -367,7 +359,6 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   calendarDate: appointmentPageReducer.calendar.calendarDate,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
   shiftOpen: appointmentPageReducer.shift.shiftOpen,
-  calendarFullScreen: appointmentPageReducer.calendar.calendarFullScreen,
   backgroundEvent: convertShitToBackgroundEvent(appointmentPageReducer.shift.shift),
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
 });
