@@ -62,7 +62,7 @@ export const tags = [
   { id: 10, key: 'B', jhi_type: 'DISEASE', value: '高血壓', code: 10 },
   { id: 11, key: 'C', jhi_type: 'DISEASE', value: '低血壓', code: 11 },
   { id: 12, key: 'D', jhi_type: 'DISEASE', value: '氣喘', code: 12 },
-  { id: 13, key: 'E', jhi_type: 'DISEASE', value: '心臟雜音', code: 13 },
+  { id: 13, key: 'E', jhi_type: 'DISEASE', value: '心臟病', code: 13 },
   { id: 14, key: 'F', jhi_type: 'DISEASE', value: '糖尿病', code: 14 },
   { id: 15, key: 'G', jhi_type: 'DISEASE', value: '肺炎', code: 15 },
   { id: 16, key: 'H', jhi_type: 'DISEASE', value: '肺結核', code: 16 },
