@@ -22,12 +22,14 @@ export function mapStatusToColor(app) {
 
   const isBefore = now.isBefore(moment(app.expectedArrivalTime));
   const status = app.status;
+
+  if (status === 'CANCEL') {
+    return '#616161';
+  }
+
   const color = APPT_CUSTOM_COLORS.find(c => c.id === app.colorId);
   if (color) {
     return color.color;
-  }
-  if (status === 'CANCEL') {
-    return '#616161';
   }
 
   if (isBefore) {
