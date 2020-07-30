@@ -271,13 +271,7 @@ const CalendarContainer = styled.div`
 
   .fc-time-grid .fc-slats td {
     height: ${props => {
-      return props.fullScreen
-        ? props.slotHeight + 'px'
-        : props.slotDuration === 30
-        ? '8em'
-        : props.slotDuration === 15
-        ? '4em'
-        : '2em';
+      return props.fullScreen ? props.slotHeight + 'px' : '2em';
     }};
     border-bottom: 0;
     font-size: ${props => (props.fullScreen ? '10px !important' : '')};
