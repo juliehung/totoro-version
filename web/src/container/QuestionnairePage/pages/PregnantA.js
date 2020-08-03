@@ -23,7 +23,7 @@ export const checkPregnantDateValidation = date =>
   !date || moment().add(1, 'y').isBefore(moment(date)) || moment().add(-1, 'y').isAfter(moment(date));
 
 function PregnantA(props) {
-  const { patient, validationError } = props;
+  const { pregnantDate, validationError } = props;
 
   const [mobileDateInputOpen, setMobileDateInputOpen] = useState(false);
 
@@ -41,7 +41,7 @@ function PregnantA(props) {
               setMobileDateInputOpen(true);
             }}
           >
-            <span> {patient.pregnantDate ? patient.pregnantDate : '填寫日期'}</span>
+            <span> {pregnantDate ? pregnantDate : '填寫日期'}</span>
           </DateContainer>
           <MobileDatePicker
             isOpen={mobileDateInputOpen}
@@ -60,7 +60,7 @@ function PregnantA(props) {
       ) : (
         <DatePickerContainer>
           <StyledDatePicker
-            selected={props.date ? moment(patient.pregnantDate).toDate() : patient.pregnantDate}
+            selected={pregnantDate ? moment(pregnantDate).toDate() : pregnantDate}
             placeholderText="填寫日期"
             dateFormat="yyyy-MM-dd"
             showPopperArrow={true}
@@ -79,7 +79,7 @@ function PregnantA(props) {
 }
 
 const mapStateToProps = ({ questionnairePageReducer }) => ({
-  patient: questionnairePageReducer.data.patient,
+  pregnantDate: questionnairePageReducer.data.patient?.pregnantDate,
   validationError: questionnairePageReducer.flow.validationError,
 });
 
