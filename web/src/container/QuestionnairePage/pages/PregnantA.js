@@ -26,7 +26,6 @@ function PregnantA(props) {
   const { pregnantDate, validationError } = props;
 
   const [mobileDateInputOpen, setMobileDateInputOpen] = useState(false);
-
   return (
     <Container>
       <div>
@@ -61,7 +60,7 @@ function PregnantA(props) {
         <DatePickerContainer>
           <StyledDatePicker
             selected={pregnantDate ? moment(pregnantDate).toDate() : pregnantDate}
-            placeholderText="填寫日期"
+            placeholderText="填寫日期 格式(年-月-日)"
             dateFormat="yyyy-MM-dd"
             showPopperArrow={true}
             maxDate={moment().add(1, 'y').toDate()}
