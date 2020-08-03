@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <!--
+        Added the entity UserSpecialist.
+    -->
+    <changeSet id="202007300000-2" author="WeiChen">
+        <createTable tableName="user_specialist">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="specialist_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="user_specialist"
+            baseColumnNames="user_id"
+            constraintName="fk_user_specialist_user_id"
+            referencedTableName="jhi_user"
+            referencedColumnNames="id" />
+
+        <addForeignKeyConstraint
+            baseTableName="user_specialist"
+            baseColumnNames="specialist_id"
+            constraintName="fk_user_specialist_specialist_id"
+            referencedTableName="specialist"
+            referencedColumnNames="id" />
+
+        <addPrimaryKey tableName="user_specialist" columnNames="user_id,specialist_id" />
+    </changeSet>
+
+</databaseChangeLog>
