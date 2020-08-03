@@ -72,7 +72,7 @@ function Birth(props) {
         <DatePickerContainer>
           <StyledDatePicker
             selected={patient.birth ? moment(patient.birth).toDate() : patient.birth}
-            placeholderText="填寫生日"
+            placeholderText="填寫生日 格式(年-月-日)"
             dateFormat="yyyy-MM-dd"
             showPopperArrow={true}
             onChange={date => {
