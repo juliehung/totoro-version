@@ -282,6 +282,7 @@ Business Logic
 - 自動生成次月月申報列表，由 `NhiMonthDeclarationTasks.createYearMonth` 的 annotation 註記來控制(cron)。
 - 影像，必須設定 Java 變數 `spring-active-profiles`，環境變數 `IMAGE_BASIC_FOLDER_PATH`。而檔案儲存的實體位置，可能在本機，可能在雲端，由 `spring-active-profiles` 決定；
 位置取決於 `IMAGE_BASIC_FOLDER_PATH` 。其他細節由本專案 Gitlab Wiki 提供。
+- 專科，只能在更新 user 的時候才能被增加，新增時不支援，且僅在 `/api/v2` 支援。
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0
