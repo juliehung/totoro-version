@@ -6,6 +6,7 @@ public interface TreatmentDrugsTable {
     String getFrequency();
     String getWay();
     Double getQuantity();
+    Double getTotalAmount();
 
     // Relationship
     Long getPrescription_Id();

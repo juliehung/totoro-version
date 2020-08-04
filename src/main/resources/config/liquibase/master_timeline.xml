@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!-- After 2020/08/03, any liquibase modification must add here -->
+    <include file="config/liquibase/changelog/2020/08/20200803_addColumn.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2020/08/20200803_sql.xml" relativeToChangelogFile="false"/>
+
+</databaseChangeLog>

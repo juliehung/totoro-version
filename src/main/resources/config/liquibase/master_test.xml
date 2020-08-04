@@ -18,4 +18,7 @@
     <!-- sequence -->
     <include file="config/liquibase/master_sequence.xml" relativeToChangelogFile="false"/>
 
+    <!-- After 2020/08/03, any liquibase modification must add here -->
+    <include file="config/liquibase/master_timeline.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>
