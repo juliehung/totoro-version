@@ -16,6 +16,7 @@ public class TreatmentDrugMapper {
         treatmentDrug.setFrequency(treatmentDrugsTable.getFrequency());
         treatmentDrug.setWay(treatmentDrugsTable.getWay());
         treatmentDrug.setQuantity(treatmentDrugsTable.getQuantity());
+        treatmentDrug.setTotalAmount(treatmentDrugsTable.getTotalAmount());
 
         if (treatmentDrugsTable.getDrug_Id() != null) {
             Drug drug = new Drug();
