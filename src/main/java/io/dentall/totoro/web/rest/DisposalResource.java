@@ -10,6 +10,7 @@ import io.dentall.totoro.service.dto.DisposalCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.web.rest.vm.SameTreatmentVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -229,6 +231,17 @@ public class DisposalResource {
             nhiService.checkNhiExtendTreatmentProcedures(disposal);
             return ResponseEntity.ok(disposal);
         }
+    }
+
+    @GetMapping("/disposals/same-treatment")
+    @Timed
+    @Transactional
+    public List<SameTreatmentVM> findSameTreatment(
+        @RequestParam(name = "patientId") Long patientId,
+        @RequestParam(name = "begin") Instant begin,
+        @RequestParam(name = "end") Instant end
+    ) {
+       return disposalService.findSameTreatment(patientId, begin, end);
     }
 
 }

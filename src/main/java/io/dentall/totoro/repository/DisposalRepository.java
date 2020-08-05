@@ -3,6 +3,7 @@ package io.dentall.totoro.repository;
 import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.service.dto.table.DisposalTable;
+import io.dentall.totoro.web.rest.vm.SameTreatmentVM;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +22,8 @@ import java.util.stream.Stream;
 @SuppressWarnings("unused")
 @Repository
 public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSpecificationExecutor<Disposal> {
+
+    List<SameTreatmentVM> findByRegistration_Appointment_Patient_IdAndDateTimeBetween(Long patientId, Instant begin, Instant end);
 
     List<DisposalTable> findDisposalByRegistration_Appointment_Patient_Id(Long patientId);
 
