@@ -72,6 +72,9 @@ public class DisposalResourceIntTest {
     private static final String DEFAULT_REVISIT_COMMENT = "AAAAAAAAAA";
     private static final String UPDATED_REVISIT_COMMENT = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_REVISIT_WILL_NOT_HAPPEN = false;
+    private static final Boolean UPDATED_REVISIT_WILL_NOT_HAPPEN = true;
+
     @Autowired
     private DisposalRepository disposalRepository;
 
@@ -149,7 +152,8 @@ public class DisposalResourceIntTest {
             .revisitContent(DEFAULT_REVISIT_CONTENT)
             .revisitInterval(DEFAULT_REVISIT_INTERVAL)
             .revisitTreatmentTime(DEFAULT_REVISIT_TREATMENT_TIME)
-            .revisitComment(DEFAULT_REVISIT_COMMENT);
+            .revisitComment(DEFAULT_REVISIT_COMMENT)
+            .revisitWillNotHappen(DEFAULT_REVISIT_WILL_NOT_HAPPEN);
         return disposal;
     }
 
@@ -242,6 +246,7 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.[*].revisitInterval").value(hasItem(DEFAULT_REVISIT_INTERVAL.toString())))
             .andExpect(jsonPath("$.[*].revisitTreatmentTime").value(hasItem(DEFAULT_REVISIT_TREATMENT_TIME.intValue())))
             .andExpect(jsonPath("$.[*].revisitComment").value(hasItem(DEFAULT_REVISIT_COMMENT.toString())))
+            .andExpect(jsonPath("$.[*].revisitWillNotHappen").value(hasItem(DEFAULT_REVISIT_WILL_NOT_HAPPEN.booleanValue())))
         ;
     }
 
@@ -265,6 +270,7 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.revisitInterval").value(DEFAULT_REVISIT_INTERVAL.toString()))
             .andExpect(jsonPath("$.revisitTreatmentTime").value(DEFAULT_REVISIT_TREATMENT_TIME.intValue()))
             .andExpect(jsonPath("$.revisitComment").value(DEFAULT_REVISIT_COMMENT.toString()))
+            .andExpect(jsonPath("$.revisitWillNotHappen").value(DEFAULT_REVISIT_WILL_NOT_HAPPEN.booleanValue()))
         ;
     }
 
@@ -512,7 +518,7 @@ public class DisposalResourceIntTest {
             .andExpect(jsonPath("$.[*].revisitInterval").value(hasItem(DEFAULT_REVISIT_INTERVAL.toString())))
             .andExpect(jsonPath("$.[*].revisitTreatmentTime").value(hasItem(DEFAULT_REVISIT_TREATMENT_TIME.intValue())))
             .andExpect(jsonPath("$.[*].revisitComment").value(hasItem(DEFAULT_REVISIT_COMMENT.toString())))
-
+            .andExpect(jsonPath("$.[*].revisitWillNotHappen").value(hasItem(DEFAULT_REVISIT_WILL_NOT_HAPPEN.booleanValue())))
         ;
 
         // Check, that the count call also returns 1
@@ -569,6 +575,7 @@ public class DisposalResourceIntTest {
             .revisitInterval(UPDATED_REVISIT_INTERVAL)
             .revisitTreatmentTime(UPDATED_REVISIT_TREATMENT_TIME)
             .revisitComment(UPDATED_REVISIT_COMMENT)
+            .revisitWillNotHappen(UPDATED_REVISIT_WILL_NOT_HAPPEN)
         ;
 
         restDisposalMockMvc.perform(put("/api/disposals")
@@ -588,6 +595,7 @@ public class DisposalResourceIntTest {
         assertThat(testDisposal.getRevisitInterval()).isEqualTo(UPDATED_REVISIT_INTERVAL);
         assertThat(testDisposal.getRevisitTreatmentTime()).isEqualTo(UPDATED_REVISIT_TREATMENT_TIME);
         assertThat(testDisposal.getRevisitComment()).isEqualTo(UPDATED_REVISIT_COMMENT);
+        assertThat(testDisposal.getRevisitWillNotHappen()).isEqualTo(UPDATED_REVISIT_WILL_NOT_HAPPEN);
     }
 
     @Test

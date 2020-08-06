@@ -7,5 +7,6 @@
     <!-- After 2020/08/03, any liquibase modification must add here -->
     <include file="config/liquibase/changelog/2020/08/20200803_addColumn.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2020/08/20200803_sql.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2020/08/20200806_addColumn.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

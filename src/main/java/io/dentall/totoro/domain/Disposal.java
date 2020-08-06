@@ -58,6 +58,9 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @Column(name = "revisit_comment")
     private String revisitComment;
 
+    @Column(name = "revisit_will_not_happen")
+    private Boolean revisitWillNotHappen;
+
     @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = null;
@@ -89,6 +92,19 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "date_time_end")
     private Instant dateTimeEnd;
+
+    public Disposal revisitWillNotHappen(Boolean revisitWillNotHappen) {
+        this.revisitWillNotHappen = revisitWillNotHappen;
+        return this;
+    }
+
+    public Boolean getRevisitWillNotHappen() {
+        return revisitWillNotHappen;
+    }
+
+    public void setRevisitWillNotHappen(Boolean revisitWillNotHappen) {
+        this.revisitWillNotHappen = revisitWillNotHappen;
+    }
 
     public Disposal revisitContent(String revisitContent) {
         this.revisitContent = revisitContent;

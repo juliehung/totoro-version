@@ -25,6 +25,7 @@ public class DisposalMapper {
         disposal.setRevisitInterval(disposalTable.getRevisitInterval());
         disposal.setRevisitTreatmentTime(disposalTable.getRevisitTreatmentTime());
         disposal.setRevisitComment(disposalTable.getRevisitComment());
+        disposal.setRevisitWillNotHappen(disposalTable.getRevisitWillNotHappen());
 
         Prescription prescription = new Prescription();
         prescription.setId(disposalTable.getPrescription_Id());
