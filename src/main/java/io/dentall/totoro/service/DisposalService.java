@@ -329,6 +329,10 @@ public class DisposalService {
                     disposal.setRevisitComment(updateDisposal.getRevisitComment());
                 }
 
+                if (updateDisposal.getRevisitWillNotHappen() != null) {
+                    disposal.setRevisitWillNotHappen(updateDisposal.getRevisitWillNotHappen());
+                }
+
                 if (updateDisposal.getPrescription() != null) {
                     disposal.setPrescription(getPrescription(updateDisposal));
                 }
