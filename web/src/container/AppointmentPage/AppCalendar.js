@@ -44,7 +44,7 @@ import { message, Spin, Popover, Button } from 'antd';
 import { calFirstDay } from './reducers/calendar';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
-import { reverseEvents } from './utils/reverseEvents';
+import { reverseEvents, generateRangeEvent } from './utils/reverseEvents';
 import { GAevent } from '../../ga';
 import { appointmentPage } from './';
 import TwoArrowLeft from '../../images/arrow-left.svg';
@@ -686,17 +686,22 @@ class AppCalendar extends React.Component {
 
   render() {
     const shiftOpen = this.props.shiftOpen;
-
     const doctorsFromShift = shiftOpen ? handleResources(this.props.doctors, this.props.backgroundEvent) : [];
-
+    let shiftEvents = reverseEvents(this.props.backgroundEvent, this.props.viewType, this.props.calendarRange);
+    if (this.state.pauseShift && this.props.viewType === 'resourceTimeGridDay') {
+      const shiftDoctorsId = [...new Set(shiftEvents.map(s => s.resourceId))];
+      this.props.selectedDoctors.forEach(d => {
+        if (!shiftDoctorsId.find(id => id === d)) {
+          shiftEvents = [...shiftEvents, generateRangeEvent(this.props.calendarRange, d)];
+        }
+      });
+    }
     const event = [
       ...(shiftOpen && !this.state.pauseShift
         ? this.props.appointments.filter(a => doctorsFromShift.map(d => d.id).includes(a.appointment.doctor.user.id))
         : this.props.appointments.filter(a => this.props.selectedDoctors.includes(a.appointment.doctor.user.id))),
       ...this.props.calendarEvents,
-      ...(shiftOpen
-        ? reverseEvents(this.props.backgroundEvent, this.props.viewType, this.props.calendarRange)
-        : this.generalSettingEvents),
+      ...(shiftOpen ? shiftEvents : this.generalSettingEvents),
     ];
 
     const resource =
