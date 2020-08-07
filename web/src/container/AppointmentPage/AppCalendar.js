@@ -792,7 +792,7 @@ class AppCalendar extends React.Component {
                 <span>周列表</span>
               </ViewItem>
             </ViewContainer>
-            <Popover placement="bottomLeft" trigger="click" content={doctorControl}>
+            <Popover placement="bottomLeft" trigger="hover" content={doctorControl}>
               <DoctorControlContainer>
                 <img src={EyeFill} alt={'select doctor'} />
               </DoctorControlContainer>
