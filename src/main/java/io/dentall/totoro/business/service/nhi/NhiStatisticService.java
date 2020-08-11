@@ -5,6 +5,8 @@ import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,7 @@ import java.time.YearMonth;
 import java.util.*;
 
 @Service
+@Transactional
 public class NhiStatisticService {
     private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
 
@@ -26,12 +29,6 @@ public class NhiStatisticService {
         this.userRepository = userRepository;
     }
 
-    @Transactional
-    public List<NhiIndexOdVM> calculateOdIndex(Instant begin, Instant end) {
-       return nhiExtendDisposalRepository.calculateOdIndex(begin, end);
-    }
-
-    @Transactional
     public List<NhiStatisticDashboard> calculate(YearMonth ym) {
 
         Map<String, Long> docMap = new HashMap<>();
@@ -100,5 +97,17 @@ public class NhiStatisticService {
         docDashboardMap.forEach((k, v) -> v.calculateRatio());
 
         return new ArrayList<>(docDashboardMap.values());
+    }
+
+    public List<NhiIndexOdVM> calculateOdIndex(Instant begin, Instant end) {
+        return nhiExtendDisposalRepository.calculateOdIndex(begin, end);
+    }
+
+    public List<NhiDoctorTxVM> calculateDoctorTx(Instant begin, Instant end) {
+       return nhiExtendDisposalRepository.calculateDoctorNhiTx(begin, end);
+    }
+
+    public List<NhiDoctorExamVM> calculateDoctorNhiExam(Instant begin, Instant end) {
+        return nhiExtendDisposalRepository.calculateDoctorNhiExam(begin, end);
     }
 }

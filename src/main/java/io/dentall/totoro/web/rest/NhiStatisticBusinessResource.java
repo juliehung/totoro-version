@@ -6,6 +6,8 @@ import io.dentall.totoro.business.service.nhi.NhiStatisticService;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormality;
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -58,5 +60,16 @@ public class NhiStatisticBusinessResource {
     @Timed
     public ResponseEntity<List<NhiIndexOdVM>> getOdIndex(@RequestParam Instant begin, @RequestParam Instant end) {
         return new ResponseEntity<>(nhiStatisticService.calculateOdIndex(begin, end), HttpStatus.OK);
+    }
+
+    @GetMapping("/doctor-nhi-exam")
+    @Timed
+    public ResponseEntity<List<NhiDoctorExamVM>> calculateDoctorNhiExam(@RequestParam Instant begin, @RequestParam Instant end) {
+        return new ResponseEntity<>(nhiStatisticService.calculateDoctorNhiExam(begin, end), HttpStatus.OK);
+    }
+
+    @GetMapping("/doctor-nhi-tx")
+    public ResponseEntity<List<NhiDoctorTxVM>> calculateDoctorTx(@RequestParam Instant begin, @RequestParam Instant end) {
+        return new ResponseEntity<>(nhiStatisticService.calculateDoctorTx(begin, end), HttpStatus.OK);
     }
 }

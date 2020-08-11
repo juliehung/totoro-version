@@ -5,6 +5,8 @@ import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.StatisticSpDTO;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -123,6 +125,62 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
             "order by od_total_pat.did "
     )
     List<NhiIndexOdVM> calculateOdIndex(Instant begin, Instant end);
+
+    @Query(
+        nativeQuery = true,
+        value = "with nhi_tx_base as (select a.*, ned.*, netp.*, p.id as pid, p.name as pname, ju.id as did, ju.first_name as dname " +
+            "                     from disposal d " +
+            "                              left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "                              left join registration r on d.registration_id = r.id " +
+            "                              left join appointment a on r.id = a.registration_id " +
+            "                              left join patient p on a.patient_id = p.id " +
+            "                              left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "                              left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "                              left join jhi_user ju on ju.id = a.doctor_user_id " +
+            "                     where a19 <> '2' and date_time between ?1 and ?2 " +
+            "                        or a19 = '2' and replenishment_date between ?1 and ?2) " +
+            "select did as did, " +
+            "       examination_code as nhiExamCode, " +
+            "       examination_point as nhiExamPoint, " +
+            "       count(*) as totalNumber, " +
+            "       sum(examination_point) as totalPoint " +
+            "from nhi_tx_base " +
+            "where examination_code is not null " +
+            "and trim(examination_code) <> '' " +
+            "group by did, nhi_extend_disposal_id, examination_code, examination_point " +
+            "order by did, examination_code;"
+    )
+    List<NhiDoctorExamVM> calculateDoctorNhiExam(Instant begin, Instant end);
+
+    @Query(
+        nativeQuery = true,
+        value = "with nhi_tx_base as (select a.*, ned.*, netp.*, p.id as pid, p.name as pname, ju.id as did, ju.first_name as dname " +
+            "                     from disposal d " +
+            "                              left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "                              left join registration r on d.registration_id = r.id " +
+            "                              left join appointment a on r.id = a.registration_id " +
+            "                              left join patient p on a.patient_id = p.id " +
+            "                              left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "                              left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "                              left join jhi_user ju on ju.id = a.doctor_user_id " +
+            "                     where a19 <> '2' and date_time between ?1 and ?2 " +
+            "                        or a19 = '2' and replenishment_date between ?1 and ?2), " +
+            "     nhi_doctor_tx as ( " +
+            "        select did, a73, np.name as nhiTxName, np.point as nhiTxPoint, count(*) as totalCount, count(*) * np.point as totalPoint " +
+            "        from nhi_tx_base " +
+            "        left join nhi_procedure np on a73 = code " +
+            "        group by did, treatment_procedure_id, a73, np.name, np.point " +
+            "        order by did, a73 " +
+            "     ) " +
+            "select did, " +
+            "       a73 as nhiTxCode, " +
+            "       nhiTxName, " +
+            "       nhiTxPoint, " +
+            "       count(*) as totalNumber, " +
+            "       count(*) * nhiTxPoint as totalPoint " +
+            "from nhi_doctor_tx group by did, a73, nhiTxName, nhiTxPoint order by did, a73"
+    )
+    List<NhiDoctorTxVM> calculateDoctorNhiTx(Instant begin, Instant end);
 
     @Query(
         "select new io.dentall.totoro.service.dto.StatisticSpDTO(d.createdBy, np.specificCode, np.point) " +
