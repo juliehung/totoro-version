@@ -263,6 +263,12 @@ docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml 
 ## Test with completed(in clinic) data
 Add `no-liquibase` in `SPRING_PROFILES_ACTIVE`
 
+Build
+---
+- 有時候 build 遇到找不到 `Treatment_` 這種情形，你可以做以下處理
+    - 檢查 IDE, build tool 是否有開啟 annotation processor
+    - 檢查是否 compile error 是否有提示，除了缺少這類的檔案所造成的錯誤，因為 gradle build 的過程中，假設 code 裡面有造成 compile fail 的因素，就不會執行 annotation proceesor。
+
 Liquibase
 ---
 - 進入點為 `main/resources/config/liquibase/master.xml`。

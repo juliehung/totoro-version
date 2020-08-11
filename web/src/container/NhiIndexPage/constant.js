@@ -1,0 +1,7 @@
+export const NHI_INDEX_PAGE = 'totoro-web-nhiIndexPage/';
+
+export const GET_OD_INDEXES = `${NHI_INDEX_PAGE}GET_OD_INDEXES`;
+
+export const GET_OD_INDEXES_SUCCESS = `${NHI_INDEX_PAGE}GET_OD_INDEXES_SUCCESS`;
+
+export const GET_OD_INDEXES_FAIL = `${NHI_INDEX_PAGE}GET_OD_INDEXES_FAIL`;

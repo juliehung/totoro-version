@@ -4,9 +4,11 @@ import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.YearMonth;
 import java.util.*;
 
@@ -22,6 +24,11 @@ public class NhiStatisticService {
     ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.userRepository = userRepository;
+    }
+
+    @Transactional
+    public List<NhiIndexOdVM> calculateOdIndex(Instant begin, Instant end) {
+       return nhiExtendDisposalRepository.calculateOdIndex(begin, end);
     }
 
     @Transactional
