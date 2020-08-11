@@ -9,6 +9,7 @@ import { Switch, Route } from 'react-router-dom';
 import NavHome from '../NavHome';
 import Form from '../QuestionnairePage/Form';
 import XrayModal from './XrayModal';
+import NhiIndexPage from '../NhiIndexPage';
 
 //#region
 const Container = styled.div`
@@ -52,6 +53,9 @@ function Home(props) {
         </Route>
         <Route path="/q/:pid">
           <QuestionnairePage />
+        </Route>
+        <Route path="/nhi-index">
+          <NhiIndexPage />
         </Route>
         <Route path="/">
           <NavHome />

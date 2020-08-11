@@ -4,6 +4,7 @@ import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.StatisticSpDTO;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
+import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -24,6 +26,103 @@ import java.util.Set;
 @SuppressWarnings("unused")
 @Repository
 public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long>, JpaSpecificationExecutor<NhiExtendDisposal> {
+    @Query(
+        nativeQuery = true,
+        value = "with " +
+            "     nhi_tx_base as ( " +
+            "        select " +
+            "            ned.*, " +
+            "            netp.*, " +
+            "            p.id as pid, " +
+            "            p.name as pname, " +
+            "            ju.id as did, " +
+            "            ju.first_name as dname " +
+            "        from disposal d " +
+            "        left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "        left join registration r on d.registration_id = r.id " +
+            "        left join appointment a on r.id = a.registration_id " +
+            "        left join patient p on a.patient_id = p.id " +
+            "        left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "        left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "        left join jhi_user ju on ju.id = a.doctor_user_id " +
+            "        where a19 <> '2' and date_time between ?1 and ?2 " +
+            "           or a19 = '2' and replenishment_date between ?1 and ?2" +
+            "    ), " +
+            "    od_total_pat as ( " +
+            "        select did, count(*) as total_pat " +
+            "        from ( " +
+            "                 select did, pid " +
+            "                 from nhi_tx_base ntb " +
+            "                 where a73 like '89%C' " +
+            "             ) as tmp_total_pat " +
+            "        group by did " +
+            "    ), " +
+            "    od_distinct_total_pat as ( " +
+            "        select did, count(*) as distinct_total_pat " +
+            "        from ( " +
+            "                 select distinct did, pid " +
+            "                 from nhi_tx_base ntb " +
+            "                 where a73 like '89%C' " +
+            "                 group by did, pid " +
+            "             ) as tmp_total_pat " +
+            "        group by did " +
+            "    ), " +
+            "    od_total_tooth as ( " +
+            "        select did, sum(length(a74)/2) as total_tooth " +
+            "        from nhi_tx_base " +
+            "        where a73 like '89%C' " +
+            "        group by did " +
+            "    ), " +
+            "    od_total_surface as ( " +
+            "        select did, sum(surface_count) as total_surface " +
+            "        from ( " +
+            "                 select did, count(*) as surface_count " +
+            "                 from nhi_tx_base " +
+            "                 where a73 in ('89001C', '89004C', '89008C', '89011C', '89013C') " +
+            "                 group by did " +
+            "                 union " +
+            "                 select did, count(*) * 2 as surface_count " +
+            "                 from nhi_tx_base " +
+            "                 where a73 in ('89002C', '89005C', '89009C') " +
+            "                 group by did " +
+            "                 union " +
+            "                 select did, count(*) * 3 as surface_count " +
+            "                 from nhi_tx_base " +
+            "                 where a73 in ('89003C', '89010C', '89012C') " +
+            "                 group by did " +
+            "                 union " +
+            "                 select did, count(*) * 4 as surface_count " +
+            "                 from nhi_tx_base " +
+            "                 where a73 in ('89014C', '89015C') " +
+            "                 group by did " +
+            "             ) as tmp_surface " +
+            "        group by did " +
+            "        order by did " +
+            "    ) " +
+            "select od_total_pat.did as did,  " +
+            "       total_pat as totalPat,  " +
+            "       distinct_total_pat as distinctTotalPat,  " +
+            "       total_tooth as totalTooth,  " +
+            "       total_surface as totalSurface,  " +
+            "       case  " +
+            "           when total_tooth > 0 then total_surface/total_tooth  " +
+            "           else 0  " +
+            "       end as surfaceToothRate,  " +
+            "       case  " +
+            "           when cast(total_pat as float8) > 0 then total_tooth/cast(total_pat as float8)  " +
+            "           else 0  " +
+            "       end as toothPeopleRate,  " +
+            "       case  " +
+            "           when total_pat > 0 then total_surface/total_pat  " +
+            "           else 0  " +
+            "       end as surfacePeopleRate " +
+            "from od_total_pat " +
+            "left join od_distinct_total_pat on od_total_pat.did = od_distinct_total_pat.did " +
+            "left join od_total_tooth on od_total_pat.did = od_total_tooth.did " +
+            "left join od_total_surface on od_total_pat.did = od_total_surface.did " +
+            "order by od_total_pat.did "
+    )
+    List<NhiIndexOdVM> calculateOdIndex(Instant begin, Instant end);
 
     @Query(
         "select new io.dentall.totoro.service.dto.StatisticSpDTO(d.createdBy, np.specificCode, np.point) " +
