@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { getDoc } from './actions';
 import { Button } from 'antd';
 import { GApageView } from '../../ga';
+import { parseDateToString } from './utils/parseDateToString';
 
 //#region
 
@@ -83,7 +84,7 @@ const ImageContainer = styled.div`
 //#endregion
 
 function Form(props) {
-  const { match, getDoc } = props;
+  const { match, getDoc, isRoc, patient } = props;
   useEffect(() => {
     GApageView();
   }, []);
@@ -105,7 +106,7 @@ function Form(props) {
             </div>
             <div>
               <InfoLabel>生日:</InfoLabel>
-              <Info>{props.patient.birth}</Info>
+              <Info>{parseDateToString(patient.birth, isRoc)}</Info>
             </div>
             <div>
               <InfoLabel>身分證字號:</InfoLabel>
@@ -219,9 +220,10 @@ function Form(props) {
   );
 }
 
-const mapStateToProps = state => ({
-  patient: state.questionnairePageReducer.form.patient,
-  esign: state.questionnairePageReducer.form.esign,
+const mapStateToProps = ({ questionnairePageReducer, homePageReducer }) => ({
+  patient: questionnairePageReducer.form.patient,
+  esign: questionnairePageReducer.form.esign,
+  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = { getDoc };

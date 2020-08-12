@@ -1,4 +1,4 @@
-import { Modal, Button, DatePicker, Select, Input, Spin, message, Checkbox, Empty } from 'antd';
+import { Modal, Button, Select, Input, Spin, message, Checkbox, Empty } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -32,6 +32,8 @@ import { GAevent } from '../../ga';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { defaultTimeOption } from './utils/generateDefaultTime';
 import { appointmentPage } from './';
+import parseDateToString from './utils/parseDateToString';
+import DatePicker from '../../component/DatePicker';
 
 const { Option } = Select;
 
@@ -65,10 +67,6 @@ const InfoRowContainer = styled.div`
       width: 86px;
     }
   }
-`;
-
-const StyledDatePicker = styled(DatePicker)`
-  margin-right: 10px !important;
 `;
 
 const StyledSelect = styled(Select)`
@@ -199,6 +197,7 @@ function CreateAppModal({
   loading,
   searchMode,
   changePatientSearchMode,
+  isRoc,
 }) {
   const [expectedTimeOption, setExpectedTimeOption] = useState(defaultTimeOption);
 
@@ -359,7 +358,12 @@ function CreateAppModal({
               </NewPatientElement>
               <NewPatientElement>
                 <span>生日：</span>
-                <DatePicker allowClear onChange={changeCreateAppPatientBirth} value={patient.birth} placeholder="" />
+                <DatePicker
+                  onDateChange={changeCreateAppPatientBirth}
+                  date={patient.birth}
+                  placeholder="請輸入生日"
+                  readOnly
+                />
               </NewPatientElement>
             </NewPatientRow>
             <NewPatientRow>
@@ -382,7 +386,7 @@ function CreateAppModal({
                   <span>{selectedPatient && selectedPatient.name}</span>
                 </PatientDetailElement>
                 <PatientDetailElement>
-                  <span>{selectedPatient && (selectedPatient.birth ? selectedPatient.birth : '')}</span>
+                  <span>{selectedPatient && parseDateToString(selectedPatient.birth, isRoc)}</span>
                   <span>{selectedPatient && selectedPatient.birth ? ', ' : ''}</span>
                   <span>{selectedPatient && selectedPatient.age}</span>
                   <span>{selectedPatient && (selectedPatient.age ? (selectedPatient.gender ? ', ' : '') : '')}</span>
@@ -400,12 +404,14 @@ function CreateAppModal({
               <PatientDetailCol>
                 <PatientDetailElement>
                   <span>
-                    {selectedPatient && `最近治療:  ${selectedPatient.appointmentsAnalysis.recentRegistration}`}
+                    {selectedPatient &&
+                      `最近治療:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentRegistration, isRoc)}`}
                   </span>
                 </PatientDetailElement>
                 <PatientDetailElement>
                   <span>
-                    {selectedPatient && `最近預約:  ${selectedPatient.appointmentsAnalysis.recentAppointment}`}
+                    {selectedPatient &&
+                      `最近預約:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentAppointment, isRoc)}`}
                   </span>
                 </PatientDetailElement>
               </PatientDetailCol>
@@ -415,11 +421,14 @@ function CreateAppModal({
         <InfoRowContainer>
           <div>
             <RequiredCol>預約時間：</RequiredCol>
-            <StyledDatePicker
-              onChange={changeCreateAppExpectedArrivalDate}
-              value={appointment.expectedArrivalDate}
-              placeholder="請選擇日期"
-            />
+            <div style={{ marginRight: '10px' }}>
+              <DatePicker
+                date={appointment.expectedArrivalDate}
+                onDateChange={changeCreateAppExpectedArrivalDate}
+                size="small"
+                readOnly
+              />
+            </div>
             <StyledSelect
               placeholder="請選擇時間"
               value={appointment.expectedArrivalTime && moment(appointment.expectedArrivalTime).format('HHmm')}
@@ -522,6 +531,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   requiredTreatmentTime: homePageReducer.settings.settings?.preferences?.generalSetting?.requiredTreatmentTime,
   account: homePageReducer.account,
   loading: appointmentPageReducer.createApp.loading,
+  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = {

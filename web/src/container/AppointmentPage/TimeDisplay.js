@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import moment from 'moment';
 
-function TimeDisplay() {
+function TimeDisplay(props) {
+  const { isRoc } = props;
+
   const [currentTime, setCurrentTime] = useState(moment());
   const timeout = useRef(undefined);
 
@@ -14,7 +16,16 @@ function TimeDisplay() {
     };
   }, [setCurrentTime, currentTime]);
 
-  return <span>{currentTime.format('LLLL')}</span>;
+  let year = currentTime.year();
+  if (isRoc) {
+    year = year - 1911;
+  }
+  const month = currentTime.month();
+  const date = currentTime.date();
+  const day = currentTime.format('dddd');
+  const time = currentTime.format('LT');
+
+  return <span>{`${year}年${month + 1}月${date}日${day} ${time}`}</span>;
 }
 
 export default TimeDisplay;
