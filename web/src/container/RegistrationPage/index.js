@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { getRegistrations, updateSelectedDate, onSelectPatient, onLeavePage } from './actions';
-import { DatePicker, Empty, Select, Table, Typography, message } from 'antd';
+import { Empty, Select, Table, Typography, message } from 'antd';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Helmet } from 'react-helmet-async';
@@ -12,6 +12,7 @@ import { GAevent, GApageView } from '../../ga';
 import { columns } from './utils/columns';
 import { convertToTableSource, allDoctors } from './utils/convertToTableSource';
 import { openXray, changeXrayModalVisible } from '../Home/actions';
+import DatePicker from '../../component/DatePicker';
 
 export const registrationPage = 'Registration page';
 
@@ -45,9 +46,6 @@ const StyledRightOutlined = styled(RightOutlined)`
 const StyledLeftOutlined = styled(LeftOutlined)`
   font-size: 36px;
 `;
-const StyledDatePicker = styled(DatePicker)`
-  margin-top: 5px;
-`;
 const StyledTitle = styled(Title)`
   margin: 0 !important;
 `;
@@ -65,6 +63,7 @@ function RegistrationPage(props) {
     onLeavePage,
     xrayOnRequest,
     changeXrayModalVisible,
+    selectedDate,
   } = props;
 
   const [selectedDoctor, setSelectedDoctor] = useState();
@@ -153,7 +152,7 @@ function RegistrationPage(props) {
   };
 
   const moveDate = days => () => {
-    const date = props.selectedDate.clone().add(days, 'day');
+    const date = selectedDate.clone().add(days, 'day');
     onDatePickerChange(date);
     GAevent(registrationPage, 'Change date');
   };
@@ -169,7 +168,7 @@ function RegistrationPage(props) {
         <StyledTitle level={3}>就診列表</StyledTitle>
         {withMargin(10)}
         <StyledLeftOutlined onClick={moveDate(-1)} />
-        <StyledDatePicker onChange={onDatePickerChange} value={props.selectedDate} allowClear={false} />
+        <DatePicker onDateChange={onDatePickerChange} date={selectedDate} readOnly />
         <StyledRightOutlined onClick={moveDate(1)} />
         {withMargin(10)}
         {renderDoctorSelect()}

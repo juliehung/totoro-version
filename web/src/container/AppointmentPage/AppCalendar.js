@@ -760,7 +760,7 @@ class AppCalendar extends React.Component {
       <Container>
         <Header>
           <TodayContainer>
-            <TimeDisplay />
+            <TimeDisplay isRoc={this.props.isRoc} />
             <div onClick={this.todayClick}>
               <span>今日</span>
             </div>
@@ -768,7 +768,7 @@ class AppCalendar extends React.Component {
           <TitleContainer className="fc-center">
             <img src={TwoArrowLeft} alt="two-arrow-left" onClick={this.prevMonthClick} />
             <img src={ArrowLeft} alt="arrow-left" onClick={this.prevClick} />
-            <span>{parseDisplayRange(this.props.calendarRange)}</span>
+            <span>{parseDisplayRange(this.props.calendarRange, this.props.isRoc)}</span>
             <img src={ArrowRight} alt="arrow-right" onClick={this.nextClick} />
             <img src={TwoArrowRight} alt="two-arrow-right" onClick={this.nextMonthClick} />
           </TitleContainer>
@@ -859,6 +859,7 @@ class AppCalendar extends React.Component {
             eventAllow={this.eventAllow}
             defaultView={this.props.defaultView}
             viewSkeletonRender={this.viewSkeletonRender}
+            listDayAltFormat={'MMMDo'}
           />
         </CalendarContainer>
       </Container>
@@ -878,6 +879,7 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer, settingPageR
   calendarFullScreen: appointmentPageReducer.calendar.calendarFullScreen,
   xRayVendors: settingPageReducer.configurations.config.xRayVendors,
   generalSetting: homePageReducer.settings.settings?.preferences?.generalSetting,
+  isRoc: homePageReducer.settings.isRoc,
   calendarRange: appointmentPageReducer.calendar.range,
   cancelApp: appointmentPageReducer.calendar.cancelApp,
   account: homePageReducer.account.data,

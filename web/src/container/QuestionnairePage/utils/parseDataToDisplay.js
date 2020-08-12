@@ -7,10 +7,11 @@ import {
   RelationshipOption,
   tags,
 } from '../constant_options';
+import { parseDateToString } from './parseDateToString';
 
-export function parseDataToDisplay(data) {
+export function parseDataToDisplay(data, isRoc) {
   const name = data.name;
-  const birth = data.birth ? moment(data.birth).format('YYYY-MM-DD') : undefined;
+  const birth = parseDateToString(data.birth, isRoc);
   const nationalId = data.nationalId;
   const gender = parseKeyToValue(data.gender, GenderOption);
   const bloodType = parseKeyToValue(data.bloodType, BloodTypeOption);

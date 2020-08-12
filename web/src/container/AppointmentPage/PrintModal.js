@@ -1,4 +1,4 @@
-import { Modal, DatePicker, Button } from 'antd';
+import { Modal, Button } from 'antd';
 import React from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -6,6 +6,7 @@ import ReactToPrint from 'react-to-print';
 import PrintAppList from './PrintAppList';
 import styled from 'styled-components';
 import { changePrintModalVisible, changePrintDate } from './actions';
+import DatePicker from '../../component/DatePicker';
 
 //#region
 const CancelButton = styled(Button)`
@@ -44,6 +45,7 @@ class PrintModal extends React.Component {
   render() {
     return (
       <Modal
+        // visible={true}
         visible={this.props.visible}
         footer={null}
         onCancel={this.props.changePrintModalVisible}
@@ -56,14 +58,7 @@ class PrintModal extends React.Component {
           <Header>列印預約表</Header>
           <Container>
             <span>預約日期：</span>
-            <DatePicker
-              size="large"
-              style={{ width: '280px' }}
-              today
-              value={this.props.date}
-              onChange={this.onDateChange}
-              allowClear={false}
-            />
+            <DatePicker date={this.props.date} onDateChange={this.onDateChange} readOnly />
           </Container>
           <div
             style={{
@@ -95,6 +90,7 @@ class PrintModal extends React.Component {
             doctorList={this.props.doctorList}
             date={this.props.date}
             clinicName={this.props.clinicName}
+            isRoc={this.props.isRoc}
           />
         </div>
       </Modal>
@@ -102,12 +98,13 @@ class PrintModal extends React.Component {
   }
 }
 
-const mapStateToProps = ({ appointmentPageReducer }) => ({
+const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   visible: appointmentPageReducer.print.visible,
   date: appointmentPageReducer.print.date,
   printButtonDisable: appointmentPageReducer.print.printButtonDisable,
   appointmentList: appointmentPageReducer.print.appData.appointmentList,
   doctorList: appointmentPageReducer.print.appData.doctorList,
+  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = { changePrintModalVisible, changePrintDate };

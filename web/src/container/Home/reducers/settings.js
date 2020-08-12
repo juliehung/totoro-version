@@ -3,6 +3,8 @@ import { GET_SETTINGS_START, GET_SETTINGS_SUCCESS, PUT_SETTINGS_START, PUT_SETTI
 
 const initState = {
   settings: undefined,
+  // isRoc should always be true by system  default
+  isRoc: true,
   loading: false,
   putSuccess: false,
 };
