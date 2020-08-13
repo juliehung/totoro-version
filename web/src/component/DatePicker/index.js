@@ -5,7 +5,6 @@ import 'react-dates/lib/css/_datepicker.css';
 import { renderMonthElement } from './utils';
 import styled, { createGlobalStyle } from 'styled-components';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import moment from 'moment';
 
 //#region
 export const GlobalStyle = createGlobalStyle`
@@ -61,7 +60,7 @@ const NavButtonL = styled(NavButton)`
 //#endregion
 
 function DatePicker(props) {
-  const { date, onDateChange, readOnly, placeholder, size, disabled } = props;
+  const { date, onDateChange, readOnly, placeholder, size, disabled, upperYearLimit, lowerYearLimit } = props;
   const [focused, setFocused] = useState(false);
 
   return (
@@ -69,7 +68,6 @@ function DatePicker(props) {
       <GlobalStyle />
       <SingleDatePickerContainer size={size}>
         <SingleDatePicker
-          style={{ width: '200px' }}
           numberOfMonths={1}
           onDateChange={onDateChange}
           onFocusChange={({ focused }) => setFocused(focused)}
@@ -78,7 +76,9 @@ function DatePicker(props) {
           hideKeyboardShortcutsPanel
           // withPortal
           withFullScreenPortal={window.innerWidth < 500}
-          renderMonthElement={renderMonthElement}
+          renderMonthElement={({ month, onMonthSelect, onYearSelect }) =>
+            renderMonthElement(month, onMonthSelect, onYearSelect, upperYearLimit, lowerYearLimit)
+          }
           enableOutsideDays
           isOutsideRange={() => false}
           readOnly={readOnly}
@@ -86,8 +86,6 @@ function DatePicker(props) {
           disabled={disabled}
           displayFormat={() => {
             if (date) {
-              console.log('date', date);
-              console.log('Mdate', moment(date));
               const year = date.year() - 1911;
               return year + '年' + date.format('MMMDo');
             }
