@@ -363,6 +363,8 @@ function CreateAppModal({
                   date={patient.birth}
                   placeholder="請輸入生日"
                   readOnly
+                  upperYearLimit={0}
+                  lowerYearLimit={120}
                 />
               </NewPatientElement>
             </NewPatientRow>

@@ -17,12 +17,12 @@ const StyledOption = styled.option``;
 
 //#endregion
 
-function renderMonthElement({ month, onMonthSelect, onYearSelect }) {
+function renderMonthElement(month, onMonthSelect, onYearSelect, upperYearLimit, lowerYearLimit) {
   return (
     <Container>
       <div>
         <StyledSelect value={month.year()} onChange={e => onYearSelect(month, e.target.value)}>
-          {returnYears()}
+          {returnYears(upperYearLimit, lowerYearLimit)}
         </StyledSelect>
       </div>
       <div>
@@ -45,9 +45,9 @@ function renderMonthElement({ month, onMonthSelect, onYearSelect }) {
   );
 }
 
-function returnYears() {
+function returnYears(upperYearLimit = 15, lowerYearLimit = 15) {
   const years = [];
-  for (let i = moment().year() - 100; i <= moment().year() + 50; i++) {
+  for (let i = moment().year() - lowerYearLimit; i <= moment().year() + upperYearLimit; i++) {
     years.push(
       <StyledOption key={i} value={i}>
         {i - 1911}年

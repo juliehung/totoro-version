@@ -34,6 +34,8 @@ function Birth(props) {
           placeholderText="請選擇生日"
           readOnly
           size="large"
+          upperYearLimit={0}
+          lowerYearLimit={120}
         />
         {validationError.includes(2) && <ErrorMessage errorText={'日期錯誤'} />}
       </CalendarContainer>
