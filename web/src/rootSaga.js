@@ -7,6 +7,7 @@ import questionnairePage from './container/QuestionnairePage/sagas';
 import shiftPage from './container/ShiftPage/sagas';
 import smsPage from './container/SmsPage/saga';
 import settingPage from './container/SettingPage/sagas';
+import nhiIndexPage from './container/NhiIndexPage/sagas';
 
 export function* rootSaga() {
   yield fork(homePage);
@@ -17,4 +18,5 @@ export function* rootSaga() {
   yield fork(shiftPage);
   yield fork(smsPage);
   yield fork(settingPage);
+  yield fork(nhiIndexPage);
 }

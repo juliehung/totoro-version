@@ -128,10 +128,10 @@ function AppRight(props) {
     changeCalendarFullscreen,
     shiftOpen,
     changeShiftOpen,
-    calendarFullScreen,
     changeSelectedDoctors,
     backgroundEvent,
     doctors,
+    isRoc,
   } = props;
 
   const [expand, setExpand] = useState(false);
@@ -174,14 +174,7 @@ function AppRight(props) {
     const title = document.querySelector('.fc-center');
     if (title) {
       simulateMouseClick(title);
-      if (value === 30 && calendarFullScreen === true) {
-        changeCalSlotDuration(20);
-        requestAnimationFrame(() => {
-          changeCalSlotDuration(30);
-        });
-      } else {
-        changeCalSlotDuration(value);
-      }
+      changeCalSlotDuration(value);
       changeCalendarFullscreen(false);
       setCookie('slotDuration', value);
       setCookie('calendarFullScreen', false);
@@ -201,7 +194,10 @@ function AppRight(props) {
 
   const headerRender = ({ value }) => {
     const month = value.locale('zh-tw').format('MMMM');
-    const year = value.year();
+    let year = value.year();
+    if (isRoc) {
+      year = year - 1911;
+    }
     return (
       <div>
         <Row type="flex" justify="space-between">
@@ -217,7 +213,7 @@ function AppRight(props) {
           </Col>
           <DateTitleContainer>
             <h4>
-              {month} {year}
+              {year}年 {month}
             </h4>
           </DateTitleContainer>
           <Col>
@@ -314,7 +310,7 @@ function AppRight(props) {
           >
             天
           </button>
-          {[30, 15, 10].map(n => (
+          {[15, 10].map(n => (
             <Fragment key={n}>
               <Divider type="vertical" />
               <button
@@ -323,7 +319,7 @@ function AppRight(props) {
                   GAevent(appointmentPage, `slot duration ${n} clicked`);
                 }}
               >
-                {n}
+                {`${n} 分`}
               </button>
             </Fragment>
           ))}
@@ -367,9 +363,9 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   calendarDate: appointmentPageReducer.calendar.calendarDate,
   slotDuration: appointmentPageReducer.calendar.slotDuration,
   shiftOpen: appointmentPageReducer.shift.shiftOpen,
-  calendarFullScreen: appointmentPageReducer.calendar.calendarFullScreen,
   backgroundEvent: convertShitToBackgroundEvent(appointmentPageReducer.shift.shift),
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
+  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = {

@@ -52,6 +52,22 @@ public class TreatmentDrug implements Serializable {
     @OneToOne(mappedBy = "treatmentDrug", cascade = CascadeType.ALL)
     private NhiExtendTreatmentDrug nhiExtendTreatmentDrug;
 
+    @Column(name = "total_amount")
+    private Double totalAmount;
+
+    public TreatmentDrug totalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+        return this;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
     public Long getId() {
         return id;
     }

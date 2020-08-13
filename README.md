@@ -263,6 +263,24 @@ docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml 
 ## Test with completed(in clinic) data
 Add `no-liquibase` in `SPRING_PROFILES_ACTIVE`
 
+Build
+---
+- 有時候 build 遇到找不到 `Treatment_` 這種情形，你可以做以下處理
+    - 檢查 IDE, build tool 是否有開啟 annotation processor
+    - 檢查是否 compile error 是否有提示，除了缺少這類的檔案所造成的錯誤，因為 gradle build 的過程中，假設 code 裡面有造成 compile fail 的因素，就不會執行 annotation proceesor。
+
+Liquibase
+---
+- 進入點為 `main/resources/config/liquibase/master.xml`。
+- `2020/08/03` 之後的紀錄，不分類。僅依時間續加入異動於 `main/resources/config/liquibase/master_timeline.xml`
+- `2020/08/03` 之前的紀錄，會在 `main/resources/config/liquibase/master_<type>.xml` 依照操作類型紀錄實際操作內容。
+
+如何操作 Liquibase data migration
+1. 確認需要加入的操作，並把該操作(a.k.a changeSet)，寫在 `main/resources/config/liquibase/<year>/<monty>/<year-month-modification-type>.xml`
+2. 將上面的檔案位置加回進入點 `main/resources/config/liquibase/master_timeline.xml`。
+3. 測試 migration 是否能正常運作。終端機在 project root 下執行 `./gradlew updateLiquibase` 便會依序執行 migration。詳細執行對象之設定 `build.gradle` 的 `liquibase` 設定段可以找到，
+預設值為 `totoro:totoro@localhost:5432/totoro` 。
+
 Spring JPA, Select data with Projection
 ---
 - 由於 projection 目前不支援 jsonb 這種形態的資料，且加入此項後會導致 treatmentProcedure_Id 這種 nested 
@@ -282,6 +300,7 @@ Business Logic
 - 自動生成次月月申報列表，由 `NhiMonthDeclarationTasks.createYearMonth` 的 annotation 註記來控制(cron)。
 - 影像，必須設定 Java 變數 `spring-active-profiles`，環境變數 `IMAGE_BASIC_FOLDER_PATH`。而檔案儲存的實體位置，可能在本機，可能在雲端，由 `spring-active-profiles` 決定；
 位置取決於 `IMAGE_BASIC_FOLDER_PATH` 。其他細節由本專案 Gitlab Wiki 提供。
+- 專科，只能在更新 user 的時候才能被增加，新增時不支援，且僅在 `/api/v2` 支援。
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0

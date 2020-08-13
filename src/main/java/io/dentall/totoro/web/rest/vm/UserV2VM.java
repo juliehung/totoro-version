@@ -1,6 +1,7 @@
 package io.dentall.totoro.web.rest.vm;
 
 import io.dentall.totoro.config.Constants;
+import io.dentall.totoro.domain.Specialist;
 import io.dentall.totoro.service.dto.UserDTO;
 
 import javax.validation.constraints.Email;
@@ -51,6 +52,8 @@ public class UserV2VM  {
 
     private String nationalId;
 
+    private Set<Specialist> specialists;
+
     public UserV2VM() {
         // Empty constructor needed for Jackson.
     }
@@ -72,6 +75,11 @@ public class UserV2VM  {
             this.firstLogin = userDto.getExtendUser().isFirstLogin();
             this.nationalId = userDto.getExtendUser().getNationalId();
         }
+        this.specialists = userDto.getSpecialists();
+    }
+
+    public void setSpecialists(Set<Specialist> specialists) {
+        this.specialists = specialists;
     }
 
     public Long getId() {
@@ -156,6 +164,10 @@ public class UserV2VM  {
 
     public String getNationalId() {
         return nationalId;
+    }
+
+    public Set<Specialist> getSpecialists() {
+        return specialists;
     }
 
     @Override

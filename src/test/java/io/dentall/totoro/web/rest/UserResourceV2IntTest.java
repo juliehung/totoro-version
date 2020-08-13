@@ -3,7 +3,9 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.Authority;
 import io.dentall.totoro.domain.ExtendUser;
+import io.dentall.totoro.domain.Specialist;
 import io.dentall.totoro.domain.User;
+import io.dentall.totoro.repository.SpecialistRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.AuthoritiesConstants;
 import io.dentall.totoro.service.UserServiceV2;
@@ -28,7 +30,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -85,17 +89,25 @@ public class UserResourceV2IntTest {
     @Autowired
     private WebApplicationContext context;
 
+    @Autowired
+    private SpecialistRepository specialistRepository;
+
     private MockMvc restUserMockMvc;
 
     private MockMvc restIntegrationUserMockMvc;
 
     private User user;
 
+    private Specialist s1;
+
     @Before
     public void setup() {
         cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
         cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
         UserResourceV2 userResource = new UserResourceV2(userService, userRepository);
+        s1 = new Specialist();
+        s1.setId(1L);
+        s1.setName("TestSpecialist1");
 
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -296,6 +308,7 @@ public class UserResourceV2IntTest {
     public void updateUser() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
+        specialistRepository.saveAndFlush(s1);
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
         // Update the user
@@ -307,6 +320,8 @@ public class UserResourceV2IntTest {
         user.setFirstName(UPDATED_FIRSTNAME);
         user.setLastName(UPDATED_LASTNAME);
         user.setEmail(UPDATED_EMAIL);
+        HashSet ss = new HashSet<>(Arrays.asList(s1));
+        user.setSpecialists(ss);
 
         restUserMockMvc.perform(put("/api/v2/users")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -320,6 +335,70 @@ public class UserResourceV2IntTest {
         assertThat(testUser.getFirstName()).isEqualTo(UPDATED_FIRSTNAME);
         assertThat(testUser.getLastName()).isEqualTo(UPDATED_LASTNAME);
         assertThat(testUser.getEmail()).isEqualTo(UPDATED_EMAIL);
+        assertThat(testUser.getSpecialists()).isEqualTo(ss);
+    }
+
+    @Test
+    @Transactional
+    public void updatedUserWithNotExistSpecialist() throws Exception {
+        // Initialize the database
+        userRepository.saveAndFlush(user);
+        specialistRepository.saveAndFlush(s1);
+
+        // Update the user
+        User updatedUser = userRepository.findById(user.getId()).get();
+
+        // FE json object
+        UserV2VM user = new UserV2VM();
+        user.setId(updatedUser.getId());
+        s1.setId(999L);
+        HashSet ss = new HashSet<>(Arrays.asList(s1));
+        user.setLogin(DEFAULT_LOGIN);
+        user.setFirstName(DEFAULT_FIRSTNAME);
+        user.setLastName(DEFAULT_LASTNAME);
+        user.setEmail(DEFAULT_EMAIL);
+        user.setSpecialists(ss);
+
+        restUserMockMvc.perform(put("/api/v2/users")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(user)))
+            .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void updatedUserSpecialist() throws Exception {
+        // Initialize the database
+        userRepository.saveAndFlush(user);
+        specialistRepository.saveAndFlush(s1);
+
+        // Update the user
+        User updatedUser = userRepository.findById(user.getId()).get();
+
+        // FE json object
+        UserV2VM user = new UserV2VM();
+        user.setId(updatedUser.getId());
+        HashSet ss = new HashSet<>(Arrays.asList(s1));
+        user.setLogin(DEFAULT_LOGIN);
+        user.setFirstName(DEFAULT_FIRSTNAME);
+        user.setLastName(DEFAULT_LASTNAME);
+        user.setEmail(DEFAULT_EMAIL);
+        user.setSpecialists(ss);
+
+        restUserMockMvc.perform(put("/api/v2/users")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(user)))
+            .andExpect(status().isOk());
+
+        // Validate the User in the database
+        List<User> userList = userRepository.findAll();
+        User testUser = userList.get(userList.size() - 1);
+        assertThat(testUser.getLogin()).isEqualTo(DEFAULT_LOGIN);
+        assertThat(testUser.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
+        assertThat(testUser.getLastName()).isEqualTo(DEFAULT_LASTNAME);
+        assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
+        assertThat(testUser.getSpecialists()).isEqualTo(ss);
     }
 
     @Test

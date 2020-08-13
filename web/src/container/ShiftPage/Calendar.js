@@ -32,7 +32,7 @@ import ArrowLeft from '../../images/two-arrow-left.svg';
 import { CSSTransition } from 'react-transition-group';
 import './Calendar.css';
 import { usePrevious } from '../../utils/hooks/usePrevious';
-import { weekOfMonth } from './utils/weekOfMonth';
+import { parseDateToString } from './utils/parseDateToString';
 import CopyModal from './CopyModal';
 import { addAllDay } from './utils/addAllDay';
 
@@ -133,6 +133,7 @@ function Calendar(props) {
     copySuccess,
     getShift,
     changeCopyModalVisible,
+    isRoc,
   } = props;
   const calendarRef = useRef(null);
 
@@ -277,7 +278,7 @@ function Calendar(props) {
         <CopyAllShiftContainer onClick={handleCopyAllShiftClick}>複製全醫師班表</CopyAllShiftContainer>
         <TitleContainer className="fc-center">
           <img src={ArrowLeft} alt="arrow-left" onClick={prevClick} />
-          <span>{`${moment(range.start).format('YYYY 第 w 週, MMM')} 第 ${weekOfMonth(moment(range.start))} 週`}</span>
+          <span>{parseDateToString(range.start, isRoc)}</span>
           <img src={ArrowRight} alt="arrow-right" onClick={nextClick} />
         </TitleContainer>
       </Header>
@@ -333,6 +334,7 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
   changeColorSuccess: shiftPageReducer.resourceColor.changeColorSuccess,
   copySuccess: shiftPageReducer.copy.success,
+  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = {

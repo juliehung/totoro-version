@@ -5,6 +5,9 @@ import io.dentall.totoro.business.service.nhi.NhiAbnormalityService;
 import io.dentall.totoro.business.service.nhi.NhiStatisticService;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormality;
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
+import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -50,5 +54,22 @@ public class NhiStatisticBusinessResource {
     public ResponseEntity<List<NhiStatisticDashboard>> getDashboard(@RequestParam int yyyymm) {
         log.debug("REST request to get Dashboard by year month: {}", yyyymm);
         return new ResponseEntity<>(nhiStatisticService.calculate(YearMonth.of(yyyymm / 100, yyyymm % 100)), HttpStatus.OK);
+    }
+
+    @GetMapping("/index/od")
+    @Timed
+    public ResponseEntity<List<NhiIndexOdVM>> getOdIndex(@RequestParam Instant begin, @RequestParam Instant end) {
+        return new ResponseEntity<>(nhiStatisticService.calculateOdIndex(begin, end), HttpStatus.OK);
+    }
+
+    @GetMapping("/doctor-nhi-exam")
+    @Timed
+    public ResponseEntity<List<NhiDoctorExamVM>> calculateDoctorNhiExam(@RequestParam Instant begin, @RequestParam Instant end) {
+        return new ResponseEntity<>(nhiStatisticService.calculateDoctorNhiExam(begin, end), HttpStatus.OK);
+    }
+
+    @GetMapping("/doctor-nhi-tx")
+    public ResponseEntity<List<NhiDoctorTxVM>> calculateDoctorTx(@RequestParam Instant begin, @RequestParam Instant end) {
+        return new ResponseEntity<>(nhiStatisticService.calculateDoctorTx(begin, end), HttpStatus.OK);
     }
 }

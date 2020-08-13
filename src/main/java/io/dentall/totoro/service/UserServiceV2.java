@@ -3,11 +3,15 @@ package io.dentall.totoro.service;
 import io.dentall.totoro.config.Constants;
 import io.dentall.totoro.domain.Authority;
 import io.dentall.totoro.domain.ExtendUser;
+import io.dentall.totoro.domain.Specialist;
 import io.dentall.totoro.domain.User;
+import io.dentall.totoro.domain.enumeration.TotoroErrorKey;
 import io.dentall.totoro.repository.AuthorityRepository;
+import io.dentall.totoro.repository.SpecialistRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.dto.UserDTO;
 import io.dentall.totoro.service.util.CacheUtil;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.vm.UserV2VM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,12 +45,21 @@ public class UserServiceV2 {
 
     private final AuthorityRepository authorityRepository;
 
+    private final SpecialistRepository specialistRepository;
+
     private final CacheManager cacheManager;
 
-    public UserServiceV2(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    public UserServiceV2(
+        UserRepository userRepository,
+        PasswordEncoder passwordEncoder,
+        AuthorityRepository authorityRepository,
+        SpecialistRepository specialistRepository,
+        CacheManager cacheManager
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
+        this.specialistRepository = specialistRepository;
         this.cacheManager = cacheManager;
     }
 
@@ -118,6 +131,17 @@ public class UserServiceV2 {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .forEach(managedAuthorities::add);
+                }
+                if (userV2VM.getSpecialists() != null) {
+                    user.setSpecialists(
+                        userV2VM.getSpecialists().stream()
+                            .filter(specialist -> specialist != null && specialist.getId() != null)
+                            .map(Specialist::getId)
+                            .map(specialistId -> specialistRepository.findById(specialistId)
+                                    .orElseThrow(() -> new BadRequestAlertException("Not exist this specialist", "specialist", TotoroErrorKey.NOT_FOUND_DATA.toString()))
+                            )
+                            .collect(Collectors.toSet())
+                    );
                 }
 
                 updateExtendUser(user.getExtendUser(), userV2VM);
