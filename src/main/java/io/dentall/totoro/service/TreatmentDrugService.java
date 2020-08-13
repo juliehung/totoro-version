@@ -145,6 +145,10 @@ public class TreatmentDrugService {
                     treatmentDrug.setQuantity(updateTreatmentDrug.getQuantity());
                 }
 
+                if (updateTreatmentDrug.getTotalAmount() != null) {
+                    treatmentDrug.setTotalAmount(updateTreatmentDrug.getTotalAmount());
+                }
+
                 if (updateTreatmentDrug.getDrug() != null && updateTreatmentDrug.getDrug().getId() != null) {
                     drugRepository.findById(updateTreatmentDrug.getDrug().getId()).ifPresent(treatmentDrug::setDrug);
                 }

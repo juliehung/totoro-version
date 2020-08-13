@@ -1,4 +1,4 @@
-import { Modal, Button, TimePicker, DatePicker, Select, Input, message, Checkbox } from 'antd';
+import { Modal, Button, TimePicker, Select, Input, message, Checkbox } from 'antd';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -19,6 +19,7 @@ import {
   changeCreateCalEvtRepeatEndDate,
 } from './actions';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
+import DatePicker from '../../component/DatePicker';
 
 //#region
 const Container = styled.div`
@@ -57,8 +58,8 @@ const DateContainer = styled.div`
   margin-bottom: 10px;
 `;
 
-const StyledDatePicker = styled(DatePicker)`
-  margin-right: 15px !important;
+const DatePickerContainer = styled.div`
+  margin-right: 15px;
 `;
 
 const StyledTimePicker = styled(TimePicker)`
@@ -144,12 +145,15 @@ function CreateCalendarEventModal({
             <RequiredCol>時間：</RequiredCol>
             <div>
               <DateContainer>
-                <StyledDatePicker
-                  value={calendarEvt.startDate}
-                  onChange={changeCreateCalEvtStartDate}
-                  allowClear
-                  placeholder="請選擇日期"
-                />
+                <DatePickerContainer>
+                  <DatePicker
+                    date={calendarEvt.startDate}
+                    onDateChange={changeCreateCalEvtStartDate}
+                    readOnly
+                    placeholder="請選擇日期"
+                    size="small"
+                  />
+                </DatePickerContainer>
                 <StyledTimePicker
                   format="HH:mm"
                   value={calendarEvt.startTime}
@@ -161,12 +165,15 @@ function CreateCalendarEventModal({
                 <Checkbox onChange={onAllDayChange}>全天</Checkbox>
               </DateContainer>
               <DateContainer>
-                <StyledDatePicker
-                  value={calendarEvt.endDate}
-                  onChange={changeCreateCalEvtEndDate}
-                  allowClear
-                  placeholder="請選擇日期"
-                />
+                <DatePickerContainer>
+                  <DatePicker
+                    date={calendarEvt.endDate}
+                    onDateChange={changeCreateCalEvtEndDate}
+                    readOnly
+                    placeholder="請選擇日期"
+                    size="small"
+                  />
+                </DatePickerContainer>
                 <StyledTimePicker
                   format="HH:mm"
                   value={calendarEvt.endTime}
@@ -209,8 +216,11 @@ function CreateCalendarEventModal({
             <MarginSpan>至</MarginSpan>
             <DatePicker
               disabled={calendarEvt.repeat === 'none'}
-              value={calendarEvt.repeatEndDate}
-              onChange={changeCreateCalEvtRepeatEndDate}
+              date={calendarEvt.repeatEndDate}
+              onDateChange={changeCreateCalEvtRepeatEndDate}
+              readOnly
+              placeholder="請選擇日期"
+              size="small"
             />
           </RowContainer>
           <div>

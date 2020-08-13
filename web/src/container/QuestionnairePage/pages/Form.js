@@ -77,8 +77,8 @@ const StyledButton = styled(Button)`
 //#endregion
 
 function Form(props) {
-  const { patient } = props;
-  const displayData = parseDataToDisplay(props.patient);
+  const { patient, isRoc } = props;
+  const displayData = parseDataToDisplay(props.patient, isRoc);
 
   const disabled =
     !patient.name ||
@@ -225,8 +225,9 @@ function Form(props) {
   );
 }
 
-const mapStateToProps = state => ({
-  patient: state.questionnairePageReducer.data.patient,
+const mapStateToProps = ({ questionnairePageReducer, homePageReducer }) => ({
+  patient: questionnairePageReducer.data.patient,
+  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = { gotoPage, nextPage };

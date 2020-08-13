@@ -7,6 +7,7 @@ import registrationPageReducer from './container/RegistrationPage/reducers';
 import shiftPageReducer from './container/ShiftPage/reducers';
 import smsPageReducer from './container/SmsPage/reducers';
 import settingPageReducer from './container/SettingPage/reducers';
+import nhiIndexPageReducer from './container/NhiIndexPage/reducers';
 
 const rootReducer = combineReducers({
   homePageReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   shiftPageReducer,
   smsPageReducer,
   settingPageReducer,
+  nhiIndexPageReducer,
 });
 
 export default rootReducer;

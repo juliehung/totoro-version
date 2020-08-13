@@ -46,3 +46,9 @@ code {
 .ant-input:focus {
   border-color: #3362ff !important;
 }
+
+*,
+*:focus,
+*:hover {
+  outline: none;
+}

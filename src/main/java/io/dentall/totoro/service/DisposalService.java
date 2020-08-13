@@ -7,6 +7,7 @@ import io.dentall.totoro.service.dto.table.*;
 import io.dentall.totoro.service.mapper.*;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.vm.SameTreatmentVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -327,6 +329,10 @@ public class DisposalService {
                     disposal.setRevisitComment(updateDisposal.getRevisitComment());
                 }
 
+                if (updateDisposal.getRevisitWillNotHappen() != null) {
+                    disposal.setRevisitWillNotHappen(updateDisposal.getRevisitWillNotHappen());
+                }
+
                 if (updateDisposal.getPrescription() != null) {
                     disposal.setPrescription(getPrescription(updateDisposal));
                 }
@@ -594,5 +600,9 @@ public class DisposalService {
     public interface DisposalTreatmentProcedure {
 
         Long getId();
+    }
+
+    public List<SameTreatmentVM> findSameTreatment(Long patientId, Instant begin, Instant end) {
+        return disposalRepository.findByRegistration_Appointment_Patient_IdAndDateTimeBetween(patientId, begin, end);
     }
 }

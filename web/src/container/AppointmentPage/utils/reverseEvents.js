@@ -76,7 +76,7 @@ function mergeEvents(shiftEvents) {
   return mergedEvent;
 }
 
-function generateRangeEvent(range, resourceId) {
+export function generateRangeEvent(range, resourceId) {
   return {
     start: moment(range.start).format('YYYY-MM-DD HH:mm'),
     end: moment(range.end).format('YYYY-MM-DD HH:mm'),

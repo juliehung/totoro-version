@@ -16,6 +16,7 @@ public interface DisposalTable extends AuditingElement {
     DisposalRevisitInterval getRevisitInterval();
     Integer getRevisitTreatmentTime();
     String getRevisitComment();
+    Boolean getRevisitWillNotHappen();
 
     // Relationship
     Long getPrescription_Id();

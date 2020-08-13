@@ -98,6 +98,20 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ExtendUser extendUser;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_specialist",
+        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "specialist_id", referencedColumnName = "id"))
+    private Set<Specialist> specialists;
+
+    public Set<Specialist> getSpecialists() {
+        return specialists;
+    }
+
+    public void setSpecialists(Set<Specialist> specialists) {
+        this.specialists = specialists;
+    }
+
     public Long getId() {
         return id;
     }

@@ -59,6 +59,9 @@
     <include file="config/liquibase/changelog/20200319025446_added_entity_UserShift.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200319030046_added_entity_UserDayOff.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200324074554_added_entity_ConfigurationMap.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200324074554_added_entity_ConfigurationMap.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2020/07/20200730_added_entity_Specialist.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2020/07/20200730_added_entity_UserSpecialist.xml" relativeToChangelogFile="false"/>
 
     <!-- add custom tables -->
     <include file="config/liquibase/changelog/createTable/20190522.xml" relativeToChangelogFile="false"/>

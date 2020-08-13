@@ -44,12 +44,19 @@ const StyledButton = styled(Button)`
 
 //#endregion
 
-const columns = changeDrawerVisible => [
+const columns = (changeDrawerVisible, isRoc) => [
   {
     title: '產生日期',
     dataIndex: 'createDate',
     key: 'createDate',
-    render: date => moment(date).format('YYYY-MM-DD HH:mm'),
+    render: date => {
+      const momentDate = moment(date);
+      let year = momentDate.year();
+      if (isRoc) {
+        year = year - 1911;
+      }
+      return `${year}-${momentDate.format('MM-DD HH:mm')}`;
+    },
   },
   {
     title: '操作',
@@ -71,7 +78,7 @@ const columns = changeDrawerVisible => [
 ];
 
 function RegistDrawer(props) {
-  const { changeDrawerVisible, getDoc, drawerVisible, patient } = props;
+  const { changeDrawerVisible, getDoc, drawerVisible, patient, isRoc } = props;
 
   useEffect(() => {
     if (drawerVisible) {
@@ -97,7 +104,7 @@ function RegistDrawer(props) {
             <span>{patient.name}</span>
           </div>
         </PatientContainer>
-        <Table columns={columns(changeDrawerVisible)} dataSource={props.docs} pagination={false} />
+        <Table columns={columns(changeDrawerVisible, isRoc)} dataSource={props.docs} pagination={false} />
         <a
           href={`${getBaseUrl()}#/q/${patient.id}`}
           target="_blank"
@@ -113,10 +120,11 @@ function RegistDrawer(props) {
   );
 }
 
-const mapStateToProps = ({ registrationPageReducer }) => ({
+const mapStateToProps = ({ registrationPageReducer, homePageReducer }) => ({
   drawerVisible: registrationPageReducer.drawer.visible,
   patient: registrationPageReducer.drawer.patient,
   docs: registrationPageReducer.drawer.docs,
+  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = { changeDrawerVisible, getDoc };

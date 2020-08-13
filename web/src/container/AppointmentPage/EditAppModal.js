@@ -1,4 +1,4 @@
-import { Modal, Button, DatePicker, Select, Input, Spin, message, Checkbox } from 'antd';
+import { Modal, Button, Select, Input, Spin, message, Checkbox } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import {
@@ -24,6 +24,8 @@ import { defaultTimeOption } from './utils/generateDefaultTime';
 import { GAevent } from '../../ga';
 import { appointmentPage } from './';
 import { DeleteOutlined } from '@ant-design/icons';
+import parseDateToString from './utils/parseDateToString';
+import DatePicker from '../../component/DatePicker';
 
 //#region
 const Container = styled.div`
@@ -68,10 +70,6 @@ const InfoRowContainer = styled.div`
       width: 86px;
     }
   }
-`;
-
-const StyledDatePicker = styled(DatePicker)`
-  margin-right: 10px !important;
 `;
 
 const StyledSelect = styled(Select)`
@@ -144,6 +142,7 @@ function EditAppModal({
   editAppointment,
   getAllEvents,
   changeEditAppointmentConformDelete,
+  isRoc,
 }) {
   const [expectedTimeOption, setExpectedTimeOption] = useState(defaultTimeOption);
 
@@ -228,7 +227,7 @@ function EditAppModal({
                 <span>{patient && patient.name}</span>
               </PatientDetailElement>
               <PatientDetailElement>
-                <span>{patient && (patient.birth ? patient.birth : '')}</span>
+                <span>{parseDateToString(patient?.birth, isRoc)}</span>
                 <span>{patient && patient.birth ? ', ' : ''}</span>
                 <span>{patient && patient.age}</span>
                 <span>{patient && (patient.age ? (patient.gender ? ', ' : '') : '')}</span>
@@ -245,10 +244,14 @@ function EditAppModal({
             </PatientDetailCol>
             <PatientDetailCol>
               <PatientDetailElement>
-                <span>{patient && `最近治療:  ${patient.appointmentsAnalysis.recentRegistration}`}</span>
+                <span>
+                  {patient && `最近治療:  ${parseDateToString(patient.appointmentsAnalysis.recentRegistration, isRoc)}`}
+                </span>
               </PatientDetailElement>
               <PatientDetailElement>
-                <span>{patient && `最近預約:  ${patient.appointmentsAnalysis.recentAppointment}`}</span>
+                <span>
+                  {patient && `最近預約:  ${parseDateToString(patient.appointmentsAnalysis.recentAppointment, isRoc)}`}
+                </span>
               </PatientDetailElement>
             </PatientDetailCol>
           </PatientDetail>
@@ -256,11 +259,14 @@ function EditAppModal({
         <InfoRowContainer>
           <div>
             <RequiredCol>預約時間：</RequiredCol>
-            <StyledDatePicker
-              onChange={changeEditAppExpectedArrivalDate}
-              value={appointment.expectedArrivalDate}
-              allowClear={false}
-            />
+            <div style={{ marginRight: '10px' }}>
+              <DatePicker
+                date={appointment.expectedArrivalDate}
+                onDateChange={changeEditAppExpectedArrivalDate}
+                size="small"
+                readOnly
+              />
+            </div>
             <StyledSelect
               placeholder="請選擇時間"
               value={appointment.expectedArrivalTime && moment(appointment.expectedArrivalTime).format('HHmm')}
@@ -371,6 +377,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   loading: appointmentPageReducer.editApp.loading,
   editAppSuccess: appointmentPageReducer.editApp.editAppSuccess,
   confirmDelete: appointmentPageReducer.editApp.confirmDelete,
+  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = {
