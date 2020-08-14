@@ -32,8 +32,8 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
             "left join appointment a on r.id = a.registration_id " +
             "left join treatment_procedure tp on d.id = tp.disposal_id " +
             "left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
-            "where patient_id = ?1 and ned.a19 <> '2' and ned.jhi_date <= ?2 " +
-            "or patient_id = ?1 and ned.a19 = '2' and ned.replenishment_date <= ?2 "
+            "where a.patient_id = ?1 and ned.a19 <> '2' and ned.jhi_date <= ?2 " +
+            "or a.patient_id = ?1 and ned.a19 = '2' and ned.replenishment_date <= ?2 "
     )
     List<HistoricalNhiTxDispInfoDTO> findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(Long patientId, Instant date);
 
