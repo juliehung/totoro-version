@@ -1,6 +1,7 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.service.dto.HistoricalNhiTxDispInfoDTO;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,7 +35,7 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
             "where patient_id = ?1 and ned.a19 <> '2' and ned.jhi_date <= ?2 " +
             "or patient_id = ?1 and ned.a19 = '2' and ned.replenishment_date <= ?2 "
     )
-    List<NhiExtendTreatmentProcedureTable> findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(Long patientId, Instant date);
+    List<HistoricalNhiTxDispInfoDTO> findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(Long patientId, Instant date);
 
     Set<NhiExtendTreatmentProcedure> findNhiExtendTreatmentProcedureByTreatmentProcedure_Disposal_Id(@Param(value = "disposalId") Long disposalId);
 

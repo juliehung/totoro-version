@@ -9,6 +9,7 @@ import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendPatientRepository;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.repository.SettingRepository;
+import io.dentall.totoro.service.dto.HistoricalNhiTxDispInfoDTO;
 import io.dentall.totoro.service.dto.InfectionControlDuration;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
@@ -173,14 +174,15 @@ public class NhiService {
         Long patientId,
         NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure
     ) {
+        return new PersonalNhiExtendTreatmentProcedureMap();
 
-        return new PersonalNhiExtendTreatmentProcedureMap().nhiExtendTreatmentProcedure(
-            nhiExtendTreatmentProcedureRepository.findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(patientId,
-                targetNhiExtendTreatmentProcedure.getId(),
-                targetNhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS)
-            ).stream()
-            .map(nhiExtendTreatmentProcedureMapper::nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable)
-            .collect(Collectors.toSet()));
+//        return new PersonalNhiExtendTreatmentProcedureMap().nhiExtendTreatmentProcedure(
+//            nhiExtendTreatmentProcedureRepository.findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(patientId,
+//                targetNhiExtendTreatmentProcedure.getId(),
+//                targetNhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS)
+//            ).stream()
+//            .map(nhiExtendTreatmentProcedureMapper::nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable)
+//            .collect(Collectors.toSet()));
     }
 
     public Consumer<NhiExtendTreatmentProcedure> checkInfectionControl = nhiExtendTreatmentProcedure -> {
@@ -248,12 +250,49 @@ public class NhiService {
         }
     }
 
+    public void checkNhiExtendTreatmentProcedures(Disposal disposal) {
+
+        // 沒有 treatments 的 disposal 則略過
+        Set<TreatmentProcedure> treatmentProcedures = disposal.getTreatmentProcedures();
+        if (treatmentProcedures == null || treatmentProcedures.isEmpty()) {
+            return;
+        }
+
+        // 取得感染管制日期 from setting (a.k.a 舊的設定存取的表    )
+        this.getInfectionDate();
+
+        // 取得 patient id 以取得過往診療資料
+        Long patientId = treatmentProcedures
+            .stream()
+            .filter(anyTreatmentProcedure -> anyTreatmentProcedure.getTreatmentTask() != null &&
+                anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan() != null &&
+                anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment() != null &&
+                anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment().getPatient() != null
+            )
+            .findAny()
+            .map(anyTreatmentProcedure -> anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId())
+            .orElse(null);
+
+
+        // 取得 過往診療紀錄 及其對應的時間 (a.k.a 取得 nhi ext tx，為了取得診療紀錄；nhi ext disp，為了申報時間)
+        if (patientId == null) {
+            return;
+        }
+        if (disposal == null || disposal.getDateTime() == null) {
+            return;
+        }
+        List<HistoricalNhiTxDispInfoDTO> h = nhiExtendTreatmentProcedureRepository.findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(
+            patientId,
+            disposal.getDateTime()
+        );
+        // 跑 rule checks
+    }
     /**
      * Checking nhi treatment procedure main entrance
      *
      * @param disposal the patient disposal
      */
-    public void checkNhiExtendTreatmentProcedures(Disposal disposal) {
+    public void checkNhiExtendTreatmentProcedures2(Disposal disposal) {
         if (!rules.isEmpty()) {
             Set<TreatmentProcedure> treatmentProcedures = disposal.getTreatmentProcedures();
             if (treatmentProcedures != null && treatmentProcedures.size() > 0) {
