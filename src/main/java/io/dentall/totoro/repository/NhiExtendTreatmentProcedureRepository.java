@@ -25,7 +25,9 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
     @Query(
         nativeQuery = true,
         value =
-            "select netp.* " +
+            "select netp.*, " +
+            "ned.jhi_date, " +
+            "ned.replenishment_date " +
             "from disposal d " +
             "left join nhi_extend_disposal ned on ned.disposal_id = d.id " +
             "left join registration r on d.registration_id = r.id " +
