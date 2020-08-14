@@ -281,10 +281,32 @@ public class NhiService {
         if (disposal == null || disposal.getDateTime() == null) {
             return;
         }
-        List<HistoricalNhiTxDispInfoDTO> h = nhiExtendTreatmentProcedureRepository.findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(
+        List<NhiExtendTreatmentProcedure> h = nhiExtendTreatmentProcedureRepository.findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(
             patientId,
             disposal.getDateTime()
-        );
+        ).stream()
+            .map(htxd -> {
+                // Source is HistoricalNhiTxDispInfoDTO
+                Disposal d = new Disposal();
+                NhiExtendDisposal ned = new NhiExtendDisposal();
+                TreatmentProcedure tp = new TreatmentProcedure();
+                NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+                Set<NhiExtendDisposal> neds = new HashSet<>();
+
+                // 設定 relationship for personal nhi ext tx map 使用的格式
+                netp.setTreatmentProcedure(tp);
+                tp.setDisposal(d);
+                neds.add(ned);
+                d.setNhiExtendDisposals(neds);
+
+                // Query result 轉換至 domain
+                netp = nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(htxd);
+                ned.a17(htxd.getA17())
+                    .a54(htxd.getA54());
+
+                return netp;
+            })
+            .collect(Collectors.toList());
         // 跑 rule checks
     }
     /**
