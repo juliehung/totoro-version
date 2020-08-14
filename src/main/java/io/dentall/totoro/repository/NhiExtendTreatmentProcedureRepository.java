@@ -34,7 +34,7 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
             "where patient_id = ?1 and ned.a19 <> '2' and ned.jhi_date <= ?2 " +
             "or patient_id = ?1 and ned.a19 = '2' and ned.replenishment_date <= ?2 "
     )
-    List<NhiExtendTreatmentProcedureTable> findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(Long patientId, Long targetNhiTxId, Instant targetNhiTxDate);
+    List<NhiExtendTreatmentProcedureTable> findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(Long patientId, Instant date);
 
     Set<NhiExtendTreatmentProcedure> findNhiExtendTreatmentProcedureByTreatmentProcedure_Disposal_Id(@Param(value = "disposalId") Long disposalId);
 
