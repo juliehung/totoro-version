@@ -250,6 +250,11 @@ public class NhiService {
         }
     }
 
+    /**
+     * Checking nhi treatment procedure main entrance
+     *
+     * @param disposal the patient disposal
+     */
     public void checkNhiExtendTreatmentProcedures(Disposal disposal) {
 
         // 沒有 treatments 的 disposal 則略過
@@ -266,7 +271,7 @@ public class NhiService {
         // 取得感染管制日期 from setting (a.k.a 舊的設定存取的表    )
         this.getInfectionDate();
 
-        // 取得 patient id 以取得過往診療資料
+        // 取得 patient id 以取得過往診療資料，並過濾掉此次處置單的診療項目
         Long patientId = treatmentProcedures
             .stream()
             .filter(anyTreatmentProcedure -> anyTreatmentProcedure.getTreatmentTask() != null &&
@@ -353,72 +358,6 @@ public class NhiService {
 
             }
         });
-    }
-    /**
-     * Checking nhi treatment procedure main entrance
-     *
-     * @param disposal the patient disposal
-     */
-    public void checkNhiExtendTreatmentProcedures2(Disposal disposal) {
-        if (!rules.isEmpty()) {
-            Set<TreatmentProcedure> treatmentProcedures = disposal.getTreatmentProcedures();
-            if (treatmentProcedures != null && treatmentProcedures.size() > 0) {
-                this.getInfectionDate();
-
-                Long patientId = treatmentProcedures
-                    .stream()
-                    .filter(anyTreatmentProcedure -> anyTreatmentProcedure.getTreatmentTask() != null &&
-                        anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan() != null &&
-                        anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment() != null &&
-                        anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment().getPatient() != null
-                    )
-                    .findAny()
-                    .map(anyTreatmentProcedure -> anyTreatmentProcedure.getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId())
-                    .orElse(null);
-
-                if (patientId != null) {
-                    Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = treatmentProcedures
-                        .stream()
-                        .filter(treatmentProcedure -> treatmentProcedure.getNhiExtendTreatmentProcedure() != null)
-                        .map(TreatmentProcedure::getNhiExtendTreatmentProcedure)
-                        .collect(Collectors.toSet());
-
-                    nhiExtendTreatmentProcedures.forEach(targetNhiExtendTreatmentProcedure -> {
-                        if (rules.getOrDefault(targetNhiExtendTreatmentProcedure.getA73(), Rule.allPass()).getCode() != null) {
-                            targetNhiExtendTreatmentProcedure.setCheck("");
-
-                            PersonalNhiExtendTreatmentProcedureMap finalPersonalNhiExtendTreatmentProcedureMap = getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(patientId, targetNhiExtendTreatmentProcedure);
-
-                            // Wrappers
-                            Consumer<NhiExtendTreatmentProcedure> wrapCheckExclude = nhiExtendTxP -> checkExclude.accept(nhiExtendTxP, nhiExtendTreatmentProcedures);
-                            Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherCodeDeclarationConflict = nhiExtendTxP ->
-                                checkOtherCodeDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
-                            Consumer<NhiExtendTreatmentProcedure> wrapCheckOtherToothDeclarationConflict = nhiExtendTxP ->
-                                checkOtherToothDeclarationConflict.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
-                            Consumer<NhiExtendTreatmentProcedure> wrapCheckIdentityLimit = nhiExtendTxP ->
-                                checkIdentityLimit.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
-                            Consumer<NhiExtendTreatmentProcedure> wrapCheckDependOn = nhiExtendTxP ->
-                                checkDependOn.accept(nhiExtendTxP, finalPersonalNhiExtendTreatmentProcedureMap);
-
-                            checkXRay
-                                .andThen(wrapCheckExclude)
-                                .andThen(wrapCheckOtherCodeDeclarationConflict)
-                                .andThen(wrapCheckOtherToothDeclarationConflict)
-                                .andThen(wrapCheckIdentityLimit)
-                                .andThen(wrapCheckDependOn)
-                                .andThen(checkAlwaysMessage)
-                                .andThen(checkMedicalRecord)
-                                .andThen(checkInterval)
-                                .andThen(checkPositionLimit)
-                                .andThen(checkSurfaceLimit)
-                                .andThen(checkInfectionControl)
-                                .accept(targetNhiExtendTreatmentProcedure);
-
-                        }
-                    });
-                }
-            }
-        }
     }
 
     public Consumer<NhiExtendTreatmentProcedure> checkSurfaceLimit = targetNhiExtendTreatmentProcedure -> {
