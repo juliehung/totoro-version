@@ -258,6 +258,11 @@ public class NhiService {
             return;
         }
 
+        // 記錄此次 處置的所有 tx id
+        List<Long> targetTx = treatmentProcedures.stream()
+            .map(tx -> tx.getId())
+            .collect(Collectors.toList());
+
         // 取得感染管制日期 from setting (a.k.a 舊的設定存取的表    )
         this.getInfectionDate();
 
@@ -285,16 +290,16 @@ public class NhiService {
             patientId,
             disposal.getDateTime()
         ).stream()
+            .filter(htxd -> !targetTx.contains(htxd.getTreatmentProcedure_Id()))
             .map(htxd -> {
                 // Source is HistoricalNhiTxDispInfoDTO
                 Disposal d = new Disposal();
                 NhiExtendDisposal ned = new NhiExtendDisposal();
                 TreatmentProcedure tp = new TreatmentProcedure();
-                NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
                 Set<NhiExtendDisposal> neds = new HashSet<>();
 
                 // Query result 轉換至 domain
-                netp = nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(htxd);
+                NhiExtendTreatmentProcedure netp = nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(htxd);
                 ned.a17(htxd.getA17())
                     .a54(htxd.getA54());
 
