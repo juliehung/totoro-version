@@ -170,21 +170,6 @@ public class NhiService {
         return Arrays.stream(a74.split("(?<=\\G..)"));
     }
 
-    public PersonalNhiExtendTreatmentProcedureMap getSelfExcludedPersonalNhiExtendTreatmentProcedureMap(
-        Long patientId,
-        NhiExtendTreatmentProcedure targetNhiExtendTreatmentProcedure
-    ) {
-        return new PersonalNhiExtendTreatmentProcedureMap();
-
-//        return new PersonalNhiExtendTreatmentProcedureMap().nhiExtendTreatmentProcedure(
-//            nhiExtendTreatmentProcedureRepository.findHistoricalNhiTxByPatientIdAndExcludeTargetNhiTxId(patientId,
-//                targetNhiExtendTreatmentProcedure.getId(),
-//                targetNhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getDateTime().truncatedTo(DAYS)
-//            ).stream()
-//            .map(nhiExtendTreatmentProcedureMapper::nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable)
-//            .collect(Collectors.toSet()));
-    }
-
     public Consumer<NhiExtendTreatmentProcedure> checkInfectionControl = nhiExtendTreatmentProcedure -> {
         String code = nhiExtendTreatmentProcedure.getA73();
         LocalDate targetDate = nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().getDate() != null
