@@ -7,6 +7,7 @@ import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
 import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
 import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,6 +29,58 @@ import java.util.Set;
 @SuppressWarnings("unused")
 @Repository
 public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long>, JpaSpecificationExecutor<NhiExtendDisposal> {
+
+    @Query(
+        nativeQuery = true,
+        value = "with   " +
+            "     nhi_tx_base as ( " +
+            "        select " +
+            "            ned.*, " +
+            "            netp.*, " +
+            "            p.id as pid, " +
+            "            p.name as pname, " +
+            "            ju.id as did, " +
+            "            ju.first_name as dname " +
+            "        from disposal d " +
+            "        left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "        left join registration r on d.registration_id = r.id " +
+            "        left join appointment a on r.id = a.registration_id " +
+            "        left join patient p on a.patient_id = p.id " +
+            "        left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "        left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "        left join jhi_user ju on ju.id = a.doctor_user_id " +
+            "                    where a19 <> '2' and date_time between ?1 and ?2 " +
+            "                       or a19 = '2' and replenishment_date between ?1 and ?2 " +
+            "    ), " +
+            "    tooth_clean_total_time as ( " +
+            "        select did, count(*) as total_times " +
+            "        from nhi_tx_base " +
+            "        where a73 in ('91004C','91017C','91018C','91104C','91005C') " +
+            "        group by did " +
+            "    ), " +
+            "    tooth_clean_distinct_pat as ( " +
+            "        select did, count(*) as total_pat " +
+            "        from ( " +
+            "            select did, patient_id " +
+            "            from nhi_tx_base " +
+            "            where a73 in ('91004C','91017C','91018C','91104C','91005C') " +
+            "            group by did, patient_id " +
+            "        ) as tx_pat " +
+            "        group by did " +
+            "    ) " +
+            "    select tctt.did as did, " +
+            "        total_times as totalTime, " +
+            "        total_pat as totalPat, " +
+            "        case " +
+            "            when total_pat > 0 " +
+            "            then cast(total_times as float8) / cast(total_pat as float8) " +
+            "        end as timePatRate " +
+            "    from tooth_clean_total_time tctt " +
+            "    left join tooth_clean_distinct_pat tcdp on tctt.did = tcdp.did " +
+            "    order by did "
+    )
+    List<NhiIndexToothCleanVM> calculateToothCleanIndex(Instant begin, Instant end);
+
     @Query(
         nativeQuery = true,
         value = "with " +
