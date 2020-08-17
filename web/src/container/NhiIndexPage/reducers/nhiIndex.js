@@ -1,10 +1,14 @@
 import produce from 'immer';
-import moment from 'moment';
-import { GET_OD_INDEXES, GET_OD_INDEXES_SUCCESS, GET_OD_INDEXES_FAIL } from '../constant';
+import {
+  GET_OD_INDEXES_SUCCESS,
+  GET_OD_INDEXES_FAIL,
+  GET_DOCTOR_NHI_EXAM_SUCCESS,
+  GET_DOCTOR_NHI_EXAM_FAIL,
+  GET_DOCTOR_NHI_TX_SUCCESS,
+  GET_DOCTOR_NHI_TX_FAIL,
+} from '../constant';
 
 const initState = {
-  begin: moment().startOf('month').format('YYYY-MM-DD'),
-  end: moment().format('YYYY-MM-DD'),
   odIndexes: [
     // Od object
     // {
@@ -18,6 +22,27 @@ const initState = {
     //   surfacePeopleRate: ''
     // }
   ],
+  doctorNhiExam: [
+    // doctorNhiExam object
+    // {
+    //   did: '',
+    //   nhiExamCode: '',
+    //   nhiExamPoint: '',
+    //   totalNumber: '',
+    //   totalPoint: ''
+    // }
+  ],
+  doctorNhiTx: [
+    // doctorNhiTx object
+    // {
+    //   did: '',
+    //   nhiTxCode: '',
+    //   nhiTxName: '',
+    //   nhiTxPoint: '',
+    //   totalNumber: '',
+    //   totalPoint: ''
+    // }
+  ],
 };
 
 export const initialState = { ...initState };
@@ -26,14 +51,20 @@ export const initialState = { ...initState };
 export default (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case GET_OD_INDEXES:
-        draft.begin = action.begin;
-        draft.end = action.end;
-        break;
       case GET_OD_INDEXES_SUCCESS:
         draft.odIndexes = action.odIndexes;
         break;
       case GET_OD_INDEXES_FAIL:
+        break;
+      case GET_DOCTOR_NHI_EXAM_SUCCESS:
+        draft.doctorNhiExam = action.doctorNhiExam;
+        break;
+      case GET_DOCTOR_NHI_EXAM_FAIL:
+        break;
+      case GET_DOCTOR_NHI_TX_SUCCESS:
+        draft.doctorNhiTx = action.doctorNhiTx;
+        break;
+      case GET_DOCTOR_NHI_TX_FAIL:
         break;
       default:
         break;
