@@ -7,6 +7,7 @@ import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
 import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
 import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,6 +102,10 @@ public class NhiStatisticService {
 
     public List<NhiIndexOdVM> calculateOdIndex(Instant begin, Instant end) {
         return nhiExtendDisposalRepository.calculateOdIndex(begin, end);
+    }
+
+    public List<NhiIndexToothCleanVM> calculateToothCleanIndex(Instant begin, Instant end) {
+        return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end);
     }
 
     public List<NhiDoctorTxVM> calculateDoctorTx(Instant begin, Instant end) {

@@ -8,6 +8,7 @@ import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
 import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
 import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -60,6 +61,12 @@ public class NhiStatisticBusinessResource {
     @Timed
     public ResponseEntity<List<NhiIndexOdVM>> getOdIndex(@RequestParam Instant begin, @RequestParam Instant end) {
         return new ResponseEntity<>(nhiStatisticService.calculateOdIndex(begin, end), HttpStatus.OK);
+    }
+
+    @GetMapping("/index/tooth-clean")
+    @Timed
+    public ResponseEntity<List<NhiIndexToothCleanVM>> getToothCleanIndex(@RequestParam Instant begin, @RequestParam Instant end) {
+        return new ResponseEntity<>(nhiStatisticService.calculateToothCleanIndex(begin, end), HttpStatus.OK);
     }
 
     @GetMapping("/doctor-nhi-exam")
