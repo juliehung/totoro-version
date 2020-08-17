@@ -191,16 +191,24 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
             "                              left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "                              left join jhi_user ju on ju.id = a.doctor_user_id " +
             "                     where a19 <> '2' and date_time between ?1 and ?2 " +
-            "                        or a19 = '2' and replenishment_date between ?1 and ?2) " +
-            "select did as did, " +
-            "       examination_code as nhiExamCode, " +
-            "       examination_point as nhiExamPoint, " +
-            "       count(*) as totalNumber, " +
+            "                        or a19 = '2' and replenishment_date between ?1 and ?2), " +
+            "     nhi_doc_exam as ( " +
+            "         select did as did, " +
+            "                examination_code, " +
+            "                examination_point, " +
+            "                sum(examination_point) " +
+            "         from nhi_tx_base " +
+            "         where examination_code is not null " +
+            "           and trim(examination_code) <> '' " +
+            "         group by did, disposal_id, examination_code, examination_point " +
+            "     ) " +
+            "select did                    as did, " +
+            "       examination_code       as nhiExamCode, " +
+            "       examination_point      as nhiExamPoint, " +
+            "       count(*)               as totalNumber, " +
             "       sum(examination_point) as totalPoint " +
-            "from nhi_tx_base " +
-            "where examination_code is not null " +
-            "and trim(examination_code) <> '' " +
-            "group by did, nhi_extend_disposal_id, examination_code, examination_point " +
+            "from nhi_doc_exam " +
+            "group by did, examination_code, examination_point " +
             "order by did, examination_code;"
     )
     List<NhiDoctorExamVM> calculateDoctorNhiExam(Instant begin, Instant end);
