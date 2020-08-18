@@ -7,10 +7,13 @@ import {
   getDoctorNhiExamFail,
   getDoctorNhiTxSuccess,
   getDoctorNhiTxFail,
+  getToothCleanFail,
+  getToothCleanSuccess,
 } from '../actions';
 import OdIndexes from '../../../models/odIndexes';
 import DoctorNhiExam from '../../../models/doctorNhiExam';
 import DoctorNhiTx from '../../../models/doctorNhiTx';
+import ToothClean from '../../../models/toothClean';
 
 export function* getOdIndexes() {
   while (true) {
@@ -59,6 +62,22 @@ export function* getDoctorNhiTx() {
     } catch (error) {
       console.error(error);
       yield put(getDoctorNhiTxFail([]));
+    }
+  }
+}
+
+export function* getToothClean() {
+  while (true) {
+    try {
+      const { begin, end } = yield take(GET_DOCTOR_NHI_TX);
+      const params = {
+        begin: begin.startOf('day').toISOString(),
+        end: end.endOf('day').toISOString(),
+      };
+      const result = yield call(ToothClean.get, params);
+      yield put(getToothCleanSuccess(result));
+    } catch (error) {
+      yield put(getToothCleanFail([]));
     }
   }
 }
