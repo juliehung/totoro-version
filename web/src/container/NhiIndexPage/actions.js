@@ -8,6 +8,9 @@ import {
   GET_OD_INDEXES,
   GET_OD_INDEXES_FAIL,
   GET_OD_INDEXES_SUCCESS,
+  GET_TOOTH_CLEAN,
+  GET_TOOTH_CLEAN_FAIL,
+  GET_TOOTH_CLEAN_SUCCESS,
 } from './constant';
 
 export function getOdIndexes(begin, end) {
@@ -44,4 +47,16 @@ export function getDoctorNhiTxSuccess(doctorNhiTx) {
 
 export function getDoctorNhiTxFail(doctorNhiTx) {
   return { type: GET_DOCTOR_NHI_TX_FAIL, doctorNhiTx };
+}
+
+export function getToothClean(begin, end) {
+  return { type: GET_TOOTH_CLEAN, begin, end };
+}
+
+export function getToothCleanSuccess(toothClean) {
+  return { type: GET_TOOTH_CLEAN_SUCCESS, toothClean };
+}
+
+export function getToothCleanFail(toothClean) {
+  return { type: GET_TOOTH_CLEAN_FAIL, toothClean };
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DatePicker, Table, Tabs, Button } from 'antd';
 import { connect } from 'react-redux';
-import { getDoctorNhiExam, getDoctorNhiTx, getOdIndexes } from './actions';
+import { getDoctorNhiExam, getDoctorNhiTx, getOdIndexes, getToothClean } from './actions';
 import moment from 'moment';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
@@ -71,6 +71,24 @@ const odColumns = doctors => [
     key: 'odColumns-toothPeopleRate',
     render: renderFloat2Position,
   },
+];
+
+const toothCleanColumns = doctors => [
+  {
+    title: '醫生',
+    dataIndex: 'did',
+    key: 'did',
+    filters: doctors.map(d => ({ value: d?.id, text: d?.firstName })),
+    onFilter: (value, record) => value === record.did,
+    render: did => doctors.find(d => d.id === did)?.firstName ?? did,
+  },
+  { title: '總件數', dataIndex: 'totalTime', key: 'timePatRate' },
+  {
+    title: '總人數',
+    dataIndex: 'totalPat',
+    key: 'totalPat',
+  },
+  { title: '洗牙人數比率', dataIndex: 'timePatRate', key: 'timePatRate', render: t => renderFloat2Position(t) },
 ];
 
 const doctorNhiExamColumns = doctors => [
@@ -148,6 +166,8 @@ function NhiIndexPage({
   getOdIndexes,
   getDoctorNhiExam,
   getDoctorNhiTx,
+  getToothClean,
+  toothClean,
 }) {
   const [range, setRange] = useState([moment().startOf('month'), moment()]);
   const [tabNumb, setTabNumb] = useState(1);
@@ -159,6 +179,7 @@ function NhiIndexPage({
     getOdIndexes(begin, end);
     getDoctorNhiExam(begin, end);
     getDoctorNhiTx(begin, end);
+    getToothClean(begin, end);
   };
 
   return (
@@ -184,10 +205,20 @@ function NhiIndexPage({
                 showHeader={true}
                 tableLayout="fixed"
                 rowKey={record => `${record.did} ${record.distinctTotalPat}`}
-                y={'100%'}
               />
             </TabPane>
-            <TabPane tab="診察總覽" key="2">
+            <TabPane tab="洗牙指標" key="2">
+              <Table
+                columns={toothCleanColumns(doctors)}
+                dataSource={toothClean}
+                pagination
+                bordered
+                showHeader={true}
+                tableLayout="fixed"
+                rowKey={record => `${record.did} ${record.distinctTotalPat}`}
+              />
+            </TabPane>
+            <TabPane tab="診察總覽" key="3">
               <Table
                 columns={doctorNhiExamColumns(doctors)}
                 dataSource={doctorNhiExam}
@@ -196,19 +227,17 @@ function NhiIndexPage({
                 showHeader={true}
                 tableLayout="fixed"
                 rowKey={record => `${record.did} ${record.nhiExamCode}`}
-                y={'100%'}
               />
             </TabPane>
-            <TabPane tab="診療總覽" key="3">
+            <TabPane tab="診療總覽" key="4">
               <Table
                 columns={doctorNhiTxColumns(doctors)}
                 dataSource={doctorNhiTx}
-                // pagination
+                pagination
                 bordered
                 showHeader={true}
                 tableLayout="fixed"
                 rowKey={record => `${record.did} ${record.nhiTxCode}`}
-                y={'100%'}
               />
             </TabPane>
           </Tabs>
@@ -222,6 +251,7 @@ const mapStateToProps = ({ nhiIndexPageReducer, homePageReducer }) => ({
   odIndexes: nhiIndexPageReducer.nhiIndex.odIndexes,
   doctorNhiExam: nhiIndexPageReducer.nhiIndex.doctorNhiExam,
   doctorNhiTx: nhiIndexPageReducer.nhiIndex.doctorNhiTx,
+  toothClean: nhiIndexPageReducer.nhiIndex.toothClean,
   doctors: homePageReducer.user.users,
 });
 
@@ -230,6 +260,7 @@ const mapDispatchToProps = {
   getOdIndexes,
   getDoctorNhiExam,
   getDoctorNhiTx,
+  getToothClean,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NhiIndexPage);

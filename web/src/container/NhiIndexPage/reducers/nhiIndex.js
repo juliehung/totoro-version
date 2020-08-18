@@ -6,6 +6,8 @@ import {
   GET_DOCTOR_NHI_EXAM_FAIL,
   GET_DOCTOR_NHI_TX_SUCCESS,
   GET_DOCTOR_NHI_TX_FAIL,
+  GET_TOOTH_CLEAN_SUCCESS,
+  GET_TOOTH_CLEAN_FAIL,
 } from '../constant';
 
 const initState = {
@@ -43,6 +45,7 @@ const initState = {
     //   totalPoint: ''
     // }
   ],
+  toothClean: [],
 };
 
 export const initialState = { ...initState };
@@ -54,17 +57,20 @@ export default (state = initialState, action) =>
       case GET_OD_INDEXES_SUCCESS:
         draft.odIndexes = action.odIndexes;
         break;
-      case GET_OD_INDEXES_FAIL:
-        break;
       case GET_DOCTOR_NHI_EXAM_SUCCESS:
         draft.doctorNhiExam = action.doctorNhiExam;
-        break;
-      case GET_DOCTOR_NHI_EXAM_FAIL:
         break;
       case GET_DOCTOR_NHI_TX_SUCCESS:
         draft.doctorNhiTx = action.doctorNhiTx;
         break;
       case GET_DOCTOR_NHI_TX_FAIL:
+        break;
+      case GET_TOOTH_CLEAN_SUCCESS:
+        draft.toothClean = action.toothClean;
+        break;
+      case GET_OD_INDEXES_FAIL:
+      case GET_DOCTOR_NHI_EXAM_FAIL:
+      case GET_TOOTH_CLEAN_FAIL:
         break;
       default:
         break;
