@@ -6,6 +6,7 @@ import io.dentall.totoro.repository.*;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.table.*;
 import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
+import io.dentall.totoro.service.mapper.NhiExtendTreatmentDrugMapper;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.mapper.TreatmentProcedureMapper;
 import io.dentall.totoro.service.util.StreamUtil;
@@ -57,6 +58,10 @@ public class NhiExtendDisposalService {
 
     private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
 
+    private final NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository;
+
+    private final NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper;
+
     public NhiExtendDisposalService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         RelationshipService relationshipService,
@@ -69,7 +74,9 @@ public class NhiExtendDisposalService {
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
         TreatmentProcedureRepository treatmentProcedureRepository,
         TreatmentProcedureMapper treatmentProcedureMapper,
-        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper
+        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
+        NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository,
+        NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper
     ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.relationshipService = relationshipService;
@@ -83,6 +90,8 @@ public class NhiExtendDisposalService {
         this.treatmentProcedureRepository = treatmentProcedureRepository;
         this.treatmentProcedureMapper = treatmentProcedureMapper;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
+        this.nhiExtendTreatmentDrugRepository = nhiExtendTreatmentDrugRepository;
+        this.nhiExtendTreatmentDrugMapper = nhiExtendTreatmentDrugMapper;
     }
 
     /**
@@ -216,7 +225,7 @@ public class NhiExtendDisposalService {
     ) {
         log.debug("Request to get paged NhiExtendDisposalVMs by yyyymm({})", yyyymm);
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
-        
+
         return nhiExtendDisposalRepository
             .findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
                 ym.atDay(1),
@@ -277,10 +286,31 @@ public class NhiExtendDisposalService {
                     })
                     .collect(Collectors.toSet());
 
+                // Assembel througth disposal
+                Disposal d = new Disposal().treatmentProcedures(treatmentProcedures);
+
+                // Assemble treatment drug
+                Set<NhiExtendTreatmentDrugTable> nhiExtendTreatmentDrugTableSet =
+                    nhiExtendTreatmentDrugRepository.findNhiExtendTreatmentDrugsByTreatmentDrug_Prescription_Disposal_Id(disposalId);
+                if (!nhiExtendTreatmentDrugTableSet.isEmpty()) {
+                    Set<TreatmentDrug> tds = nhiExtendTreatmentDrugTableSet.stream()
+                        .map(nhiExtendTreatmentDrugMapper::nhiExtendTreatmentDrugTableToNhiExtendTreatmentDrug)
+                        .map(netd -> {
+                            TreatmentDrug td = new TreatmentDrug();
+                            td.setNhiExtendTreatmentDrug(netd);
+
+                            return td;
+                        })
+                        .collect(Collectors.toSet());
+
+                    Prescription p = new Prescription().treatmentDrugs(tds);
+                    d.setPrescription(p);
+                }
+
                 // Fit frontend export monthly xml format
                 NhiExtendDisposal nhiExtendDisposal = nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(nhiExtendDisposalTable);
                 nhiExtendDisposal.setNhiExtendTreatmentProcedures(nhiExtendTreatmentProcedures);
-                nhiExtendDisposal.setDisposal(new Disposal().treatmentProcedures(treatmentProcedures));
+                nhiExtendDisposal.setDisposal(d);
 
                 vm.setNhiExtendDisposal(nhiExtendDisposal);
 
