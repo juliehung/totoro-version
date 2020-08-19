@@ -798,6 +798,11 @@ public class AppointmentService {
             public Long getHospital_Id() {
                 return appointment1To1.getRegistration_Accounting_Hospital_Id();
             }
+
+            @Override
+            public Boolean getCopaymentExemption() {
+                return appointment1To1.getRegistration_Accounting_CopaymentExemption();
+            }
         };
     }
 
@@ -891,6 +896,7 @@ public class AppointmentService {
         Instant getRegistration_Accounting_TransactionTime();
         String getRegistration_Accounting_Staff();
         Long getRegistration_Accounting_Hospital_Id();
+        Boolean getRegistration_Accounting_CopaymentExemption();
 
         // Doctor
         Long getDoctor_User_Id();
