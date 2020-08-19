@@ -76,6 +76,9 @@ public class AccountingResourceIntTest {
     private static final String DEFAULT_STAFF = "AAAAAAAAAA";
     private static final String UPDATED_STAFF = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_COPAYMENT_EXEMPTION = Boolean.FALSE;
+    private static final Boolean UPDATED_COPAYMENT_EXEMPTION = Boolean.TRUE;
+
     @Autowired
     private AccountingRepository accountingRepository;
 
@@ -131,7 +134,8 @@ public class AccountingResourceIntTest {
             .discount(DEFAULT_DISCOUNT)
             .withdrawal(DEFAULT_WITHDRAWAL)
             .transactionTime(DEFAULT_TRANSACTION_TIME)
-            .staff(DEFAULT_STAFF);
+            .staff(DEFAULT_STAFF)
+            .copaymentExemption(DEFAULT_COPAYMENT_EXEMPTION);
         return accounting;
     }
 
@@ -166,6 +170,7 @@ public class AccountingResourceIntTest {
         assertThat(testAccounting.getWithdrawal()).isEqualTo(DEFAULT_WITHDRAWAL);
         assertThat(testAccounting.getTransactionTime()).isEqualTo(DEFAULT_TRANSACTION_TIME);
         assertThat(testAccounting.getStaff()).isEqualTo(DEFAULT_STAFF);
+        assertThat(testAccounting.isCopaymentExemption()).isEqualTo(DEFAULT_COPAYMENT_EXEMPTION);
     }
 
     @Test
@@ -226,9 +231,10 @@ public class AccountingResourceIntTest {
             .andExpect(jsonPath("$.[*].discount").value(hasItem(DEFAULT_DISCOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].withdrawal").value(hasItem(DEFAULT_WITHDRAWAL.doubleValue())))
             .andExpect(jsonPath("$.[*].transactionTime").value(hasItem(DEFAULT_TRANSACTION_TIME.toString())))
-            .andExpect(jsonPath("$.[*].staff").value(hasItem(DEFAULT_STAFF.toString())));
+            .andExpect(jsonPath("$.[*].staff").value(hasItem(DEFAULT_STAFF.toString())))
+            .andExpect(jsonPath("$.[*].copaymentExemption").value(hasItem(DEFAULT_COPAYMENT_EXEMPTION.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getAccounting() throws Exception {
@@ -250,7 +256,8 @@ public class AccountingResourceIntTest {
             .andExpect(jsonPath("$.discount").value(DEFAULT_DISCOUNT.doubleValue()))
             .andExpect(jsonPath("$.withdrawal").value(DEFAULT_WITHDRAWAL.doubleValue()))
             .andExpect(jsonPath("$.transactionTime").value(DEFAULT_TRANSACTION_TIME.toString()))
-            .andExpect(jsonPath("$.staff").value(DEFAULT_STAFF.toString()));
+            .andExpect(jsonPath("$.staff").value(DEFAULT_STAFF.toString()))
+            .andExpect(jsonPath("$.copaymentExemption").value(DEFAULT_COPAYMENT_EXEMPTION.booleanValue()));
     }
 
     @Test
@@ -284,7 +291,8 @@ public class AccountingResourceIntTest {
             .discount(UPDATED_DISCOUNT)
             .withdrawal(UPDATED_WITHDRAWAL)
             .transactionTime(UPDATED_TRANSACTION_TIME)
-            .staff(UPDATED_STAFF);
+            .staff(UPDATED_STAFF)
+            .copaymentExemption(UPDATED_COPAYMENT_EXEMPTION);
 
         restAccountingMockMvc.perform(put("/api/accountings")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -306,6 +314,7 @@ public class AccountingResourceIntTest {
         assertThat(testAccounting.getWithdrawal()).isEqualTo(UPDATED_WITHDRAWAL);
         assertThat(testAccounting.getTransactionTime()).isEqualTo(UPDATED_TRANSACTION_TIME);
         assertThat(testAccounting.getStaff()).isEqualTo(UPDATED_STAFF);
+        assertThat(testAccounting.isCopaymentExemption()).isEqualTo(UPDATED_COPAYMENT_EXEMPTION);
     }
 
     @Test

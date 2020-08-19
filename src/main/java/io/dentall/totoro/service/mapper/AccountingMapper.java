@@ -21,6 +21,7 @@ public class AccountingMapper {
         accounting.setWithdrawal(accountingTable.getWithdrawal());
         accounting.setTransactionTime(accountingTable.getTransactionTime());
         accounting.setStaff(accountingTable.getStaff());
+        accounting.setCopaymentExemption(accountingTable.getCopaymentExemption());
 
         Hospital hospital = new Hospital();
         hospital.setId(accountingTable.getHospital_Id());
