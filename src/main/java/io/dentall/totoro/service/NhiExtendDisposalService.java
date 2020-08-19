@@ -480,8 +480,12 @@ public class NhiExtendDisposalService {
                 }
 
                 if (updateNhiExtendDisposal.getNhiExtendTreatmentProcedures() != null) {
-                    Set<Long> updateIds = updateNhiExtendDisposal.getNhiExtendTreatmentProcedures().stream().map(NhiExtendTreatmentProcedure::getId).collect(Collectors.toSet());
+                    Set<Long> updateIds = updateNhiExtendDisposal.getNhiExtendTreatmentProcedures().stream()
+                        .filter(Objects::nonNull)
+                        .map(NhiExtendTreatmentProcedure::getId)
+                        .collect(Collectors.toSet());
                     StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures())
+                        .filter(Objects::nonNull)
                         .filter(nhiExtendTreatmentProcedure -> !updateIds.contains(nhiExtendTreatmentProcedure.getId()))
                         .forEach(nhiExtendTreatmentProcedure -> {
                             nhiExtendTreatmentProcedure.getTreatmentProcedure().setDisposal(null);
