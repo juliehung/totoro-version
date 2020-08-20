@@ -16,7 +16,6 @@ export const GlobalStyle = createGlobalStyle`
     color: #fff;
   }
   .CalendarDay__today {
-    box-shadow: inset 0 0 2px 1px rgb(230, 124, 115);
 	  font-weight: bold;
   }
 `;

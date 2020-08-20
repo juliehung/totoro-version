@@ -1,16 +1,44 @@
 import React, { useState } from 'react';
-import { DatePicker, Table, Tabs, Button } from 'antd';
+import { Table, Tabs, Button, Popover } from 'antd';
 import { connect } from 'react-redux';
 import { getDoctorNhiExam, getDoctorNhiTx, getOdIndexes, getToothClean } from './actions';
 import moment from 'moment';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-
-const { RangePicker } = DatePicker;
+import { DayPickerRangeController } from 'react-dates';
 
 const { TabPane } = Tabs;
 
+const FOCUSINPUT = { startDate: 'startDate', endDate: 'endDate' };
+
 //#region
+const GlobalStyle = createGlobalStyle`
+  .CalendarDay__selected,
+  .CalendarDay__selected:active,
+  .CalendarDay__selected:hover {
+    background: #3266ff !important;
+    border: 1px transparent solid !important;
+    color: #fff !important;
+    font-weight:bold !important;
+  }
+
+  .CalendarDay__selected_span {
+    background: rgba(50, 102, 255, 0.1) !important;
+    border: 1px double rgba(50, 102, 255, 0.1) !important;
+    color: #444 !important;
+    font-weight:bold !important;
+  }
+
+  .CalendarDay__hovered_span,
+  .CalendarDay__hovered_span:hover {
+    background: rgba(50, 102, 255, 0.1) !important;
+    border: 1px double rgba(50, 102, 255, 0.1) !important;
+    color: #444 !important;
+    font-weight:bold !important;
+
+  }
+`;
+
 const TabsContainer = styled.div`
   width: 90%;
   margin: 0 auto;
@@ -20,6 +48,13 @@ const InputDiv = styled.div`
   margin: 35px 0px 10px;
   display: flex;
   justify-content: center;
+  align-items: center;
+
+  & > span {
+    font-size: 18px;
+    border: 1px solid #ccc;
+    padding: 2px 5px;
+  }
 `;
 //#endregion
 
@@ -169,17 +204,26 @@ function NhiIndexPage({
   getToothClean,
   toothClean,
 }) {
-  const [range, setRange] = useState([moment().startOf('month'), moment()]);
   const [tabNumb, setTabNumb] = useState(1);
+  const [startDate, setStartDate] = useState(moment().startOf('month'));
+  const [endDate, setEndDate] = useState(moment());
+  const [focusedInput, setFocusedInput] = useState(FOCUSINPUT.startDate);
 
   const calculateHandler = () => {
-    if (!range) return;
-    const begin = range[0];
-    const end = range[1];
-    getOdIndexes(begin, end);
-    getDoctorNhiExam(begin, end);
-    getDoctorNhiTx(begin, end);
-    getToothClean(begin, end);
+    if (!startDate || !endDate) return;
+    getOdIndexes(startDate, endDate);
+    getDoctorNhiExam(startDate, endDate);
+    getDoctorNhiTx(startDate, endDate);
+    getToothClean(startDate, endDate);
+  };
+
+  const toRocDate = date => {
+    if (date?._isAMomentObject) {
+      const year = date.year() - 1911;
+      const dateString = date.format('MMM Do');
+      return `${year}年${dateString}`;
+    }
+    return date;
   };
 
   return (
@@ -187,10 +231,34 @@ function NhiIndexPage({
       <Helmet>
         <title>健保</title>
       </Helmet>
+      <GlobalStyle />
       <div>
         <InputDiv>
-          <RangePicker placeholder={['起始日', '結束日']} onChange={setRange} value={range} allowClear={false} />
-          <Button value="計算" onClick={calculateHandler} disabled={!range} type="primary">
+          <Popover
+            trigger="click"
+            placement="bottom"
+            content={
+              <DayPickerRangeController
+                startDate={startDate}
+                endDate={endDate}
+                focusedInput={focusedInput}
+                onFocusChange={focusedInput => {
+                  setFocusedInput(!focusedInput ? FOCUSINPUT.startDate : focusedInput);
+                }}
+                onDatesChange={({ startDate, endDate }) => {
+                  setStartDate(startDate);
+                  setEndDate(endDate);
+                }}
+                numberOfMonths={2}
+                hideKeyboardShortcutsPanel
+              />
+            }
+          >
+            <span type="primary">
+              {toRocDate(startDate)} → {toRocDate(endDate)}
+            </span>
+          </Popover>
+          <Button value="計算" onClick={calculateHandler} disabled={!startDate || !endDate} type="primary">
             計算
           </Button>
         </InputDiv>
