@@ -281,6 +281,14 @@ Liquibase
 3. 測試 migration 是否能正常運作。終端機在 project root 下執行 `./gradlew updateLiquibase` 便會依序執行 migration。詳細執行對象之設定 `build.gradle` 的 `liquibase` 設定段可以找到，
 預設值為 `totoro:totoro@localhost:5432/totoro` 。
 
+Java8 lambda
+---
+- Stream map 假設對象是 array 裡面有可能有 null ([Object1, null, Object2])，若做類似這種的操作就會產生 null point exception
+```
+array.stream()
+    .map(Some::getId)
+```
+
 Spring JPA, Select data with Projection
 ---
 - 由於 projection 目前不支援 jsonb 這種形態的資料，且加入此項後會導致 treatmentProcedure_Id 這種 nested 
