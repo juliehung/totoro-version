@@ -86,7 +86,7 @@ function DatePicker(props) {
           displayFormat={() => {
             if (date) {
               const year = date.year() - 1911;
-              return year + '年' + date.format('MMMDo');
+              return `${year}年${date.format('MMMDo')}`;
             }
           }}
           navPrev={

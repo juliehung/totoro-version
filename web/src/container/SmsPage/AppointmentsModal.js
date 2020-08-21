@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CloseOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { DatePicker, Table } from 'antd';
+import { Table } from 'antd';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -8,6 +8,7 @@ import { getAppointments, toggleAppointmentModal, addContactAppointments } from 
 import { StyledMediumButton, StyledModal } from './StyledComponents';
 import { P2 } from '../../utils/textComponents';
 import { Default, O1 } from '../../utils/colors';
+import DatePicker from '../../component/DatePicker';
 
 const NoMarginText = styled.p`
   margin: auto 0;
@@ -32,7 +33,7 @@ const DateContainer = styled.div`
   align-items: center;
   height: 60px;
   margin: 0 24px;
-  & *:not(:first-child) {
+  & > *:not(:first-child) {
     margin-right: 8px;
   }
 `;
@@ -280,7 +281,7 @@ function AppointmentsModal(props) {
       <DateContainer>
         <TitleText>約診日期：</TitleText>
         <LeftOutlined onClick={() => setDate(moment(date).add(-1, 'days'))} />
-        <DatePicker value={date} onChange={setDate} allowClear={false} />
+        <DatePicker date={date} onDateChange={setDate} readOnly />
         <RightOutlined onClick={() => setDate(moment(date).add(1, 'days'))} />
       </DateContainer>
       <NoPageTable
