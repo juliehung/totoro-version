@@ -251,6 +251,12 @@ function NhiIndexPage({
                 }}
                 numberOfMonths={2}
                 hideKeyboardShortcutsPanel
+                renderMonthElement={data => {
+                  const date = data.month;
+                  const year = date.year() - 1911;
+                  const month = date.format('MMM');
+                  return year + '年' + month;
+                }}
               />
             }
           >

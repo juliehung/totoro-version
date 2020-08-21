@@ -7,6 +7,7 @@ import moment from 'moment';
 import Trash from './svg/Trash';
 import PaperPlane from './svg/PaperPlane';
 import { P1, Small } from '../../utils/textComponents';
+import { momentToRocString } from './utils';
 
 const RootContainer = styled.div`
   display: grid;
@@ -155,7 +156,7 @@ function EventReadOnly(props) {
           {selectedEvent.sms.map(item => (
             <EventListItem key={item.phone + item.content}>
               <EventPatientNameText>{item.metadata.patientName}</EventPatientNameText>
-              <EventOccurText>{`${moment(item.metadata.appointmentDate).format('YYYY/MM/DD HH:mm')}的預約已發送至${
+              <EventOccurText>{`${momentToRocString(item.metadata.appointmentDate)}的預約已發送至${
                 item.phone
               }`}</EventOccurText>
               <Splitter />

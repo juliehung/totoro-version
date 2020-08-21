@@ -2,13 +2,14 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { togglePreviewingModal, executeEvent } from './action';
-import moment from 'moment';
 import PaperPlane from './svg/PaperPlane';
 import CreditCardFill from './svg/CreditCardFill';
 import AlertCircleFill from './svg/AlertCircleFill';
 import { StyledMediumButton, StyledModal } from './StyledComponents';
 import { message } from 'antd';
+import { momentToRocString } from './utils';
 
+//#region
 const NoMarginText = styled.p`
   margin: auto 0;
 `;
@@ -121,6 +122,7 @@ const Styled2MediumButton = styled(StyledMediumButton)`
     margin-right: 8px;
   }
 `;
+//#endregion
 
 function EventPreviewingModal(props) {
   const { togglePreviewingModal, executeEvent, editingEvent, visible, isSentFailed, remaining } = props;
@@ -167,9 +169,9 @@ function EventPreviewingModal(props) {
           {editingEvent.sms.map((item, index) => (
             <EventListItem key={`${item.phone}${index}`}>
               <EventPatientNameText>{item.metadata.patientName}</EventPatientNameText>
-              <EventOccurText>{`${moment(item.metadata.appointmentDate).format(
-                'YYYY/MM/DD HH:mm',
-              )}的預約即將發送${Math.ceil(item.content.length / 70)}封至${item.phone}`}</EventOccurText>
+              <EventOccurText>{`${momentToRocString(item.metadata.appointmentDate)}的預約即將發送${Math.ceil(
+                item.content.length / 70,
+              )}封至${item.phone}`}</EventOccurText>
               <Splitter />
               <EventContentText>{item.content}</EventContentText>
             </EventListItem>
