@@ -255,11 +255,6 @@ docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml 
 docker-compose -f src/main/docker/postgresql.yml -f src/main/docker/app-dev.yml -f src/main/docker/app-cp.yml down --rmi all
 ```
 
-## deploy to GAE
-```
-./gradlew clean appengineDeploy -Pgae -Pprod
-```
-
 ## Test with completed(in clinic) data
 Add `no-liquibase` in `SPRING_PROFILES_ACTIVE`
 
@@ -268,6 +263,32 @@ Build
 - 有時候 build 遇到找不到 `Treatment_` 這種情形，你可以做以下處理
     - 檢查 IDE, build tool 是否有開啟 annotation processor
     - 檢查是否 compile error 是否有提示，除了缺少這類的檔案所造成的錯誤，因為 gradle build 的過程中，假設 code 裡面有造成 compile fail 的因素，就不會執行 annotation proceesor。
+    
+Deploy local machine with SMS service
+---
+### Preparation
+1. 建立一個 service account 且擁有 cloud storage, function caller 的權限(ref [here](https://gitlab.com/dentall/totoro-admin/-/wikis/GCP/Create-service-account))
+2. 產生該 service account 對應的 credential.json，並放置於 將運作這些服務的機器上指定位置，並設定環境變數 `GOOGLE_APPLICATION_CREDENTIALS=指定位置`。
+    ```bash
+    export GOOGLE_APPLICATION_CREDENTIALS=/home/totoro-admin/dentall-saas.json
+   
+    # or
+   
+    GOOGLE_APPLICATION_CREDENTIALS=/home/totoro-admin/dentall-saas.json java -jar ...審略
+    ``` 
+3. 至 firebase firestore `clinic-dev` 集合，新增一組資料如下
+    ```
+    {
+      name: "dev",
+      sms: {
+        activated: true,
+        remaining: 0,
+        total: 0,
+        vendor: "TwSMS"
+      }
+    }
+    ``` 
+
 
 Liquibase
 ---
