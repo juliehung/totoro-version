@@ -27,14 +27,14 @@ if (window) {
 
 if (process.env.NODE_ENV !== 'production') {
   // Use dev.dentall.site
-  // host = 'dev.dentall.site';
-  // apiPort = 8082;
+  host = 'dev.dentall.site';
+  apiPort = 8082;
 
   // Use dentall.pw/rakumi
-  clinic = '/cp';
-  host = 'dentall.pw';
-  apiPort = 443;
-  apiProtocol = 'https';
+  // clinic = '/cp';
+  // host = 'dentall.pw';
+  // apiPort = 443;
+  apiProtocol = 'http';
   mqttProtocol = 'wss';
   mqttPort = apiPort;
 }
