@@ -1,6 +1,7 @@
 import request from '../utils/request';
 import requestNoParse from '../utils/requestNoParse';
 import apiUrl from '../utils/apiUrl';
+import combineUrlAndQueryData from '../utils/combineUrlAndQueryData';
 
 const LOCATION = `appointments`;
 const requestUrl = `${apiUrl}/${LOCATION}`;
@@ -18,8 +19,8 @@ export default class Appointment {
 
   static getBetween = async (range, signal) => {
     let requestURL = `${requestUrl}/between`;
-    const query = '?beginDate=' + range.start.toISOString() + '&endDate=' + range.end.toISOString();
-    requestURL += query;
+    const params = { beginDate: range.start.toISOString(), endDate: range.end.toISOString() };
+    requestURL = combineUrlAndQueryData(requestURL, params);
     const options = { signal };
     const result = await request(requestURL, options);
     return result;

@@ -1,6 +1,7 @@
 import request from '../utils/request';
 import requestNoParse from '../utils/requestNoParse';
 import apiUrl from '../utils/apiUrl';
+import combineUrlAndQueryData from '../utils/combineUrlAndQueryData';
 
 const LOCATION = 'messages/sms/events';
 const REMAINING_LOCATION = 'messages/sms';
@@ -10,7 +11,9 @@ const remaining_requestUrl = `${apiUrl}/${REMAINING_LOCATION}`;
 export default class SmsEvent {
   static get = async (page, size) => {
     let total = 0;
-    const data = await requestNoParse(`${requestUrl}?page=${page}&size=${size}`).then(res => {
+    const params = { page: page, size: size };
+    const requestURL = combineUrlAndQueryData(requestUrl, params);
+    const data = await requestNoParse(requestURL).then(res => {
       total = res.headers.get('x-total-count');
       return res.json();
     });
