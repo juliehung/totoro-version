@@ -1,5 +1,6 @@
 import request from '../utils/request';
 import apiUrl from '../utils/apiUrl';
+import combineUrlAndQueryData from '../utils/combineUrlAndQueryData';
 
 const LOCATION = `appointments`;
 const requestUrl = `${apiUrl}/${LOCATION}`;
@@ -13,8 +14,8 @@ export default class Registration {
 
   static getBetween = async range => {
     let requestURL = `${requestUrl}/with-relationship/between`;
-    const query = `?web=true&beginDate=${range.start.toISOString()}&endDate=${range.end.toISOString()}`;
-    requestURL += query;
+    const params = { web: true, beginDate: range.start.toISOString(), endDate: range.end.toISOString() };
+    requestURL = combineUrlAndQueryData(requestURL, params);
     return await request(requestURL);
   };
 }

@@ -1,6 +1,7 @@
 import request from '../utils/request';
 import requestNoParse from '../utils/requestNoParse';
 import apiUrl from '../utils/apiUrl';
+import combineUrlAndQueryData from '../utils/combineUrlAndQueryData';
 
 const LOCATION = `calendars`;
 const requestUrl = `${apiUrl}/${LOCATION}`;
@@ -20,10 +21,11 @@ export default class Calendar {
   };
 
   static getBetween = async (range, signal) => {
-    let requestURL = `${requestUrl}`;
-    const query =
-      '?end.greaterOrEqualThan=' + range.start.toISOString() + '&start.lessOrEqualThan=' + range.end.toISOString();
-    requestURL += query;
+    const params = {
+      'end.greaterOrEqualThan': range.start.toISOString(),
+      'start.lessOrEqualThan': range.end.toISOString(),
+    };
+    const requestURL = combineUrlAndQueryData(requestUrl, params);
     const option = { signal };
     const result = await request(requestURL, option);
     return result;
