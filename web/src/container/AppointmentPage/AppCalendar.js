@@ -415,6 +415,12 @@ class AppCalendar extends React.Component {
     if (prevProps.shiftOpen !== this.props.shiftOpen && this.props.shiftOpen) {
       this.setState({ pauseShift: false });
     }
+
+    // before geting xRayVendors, events have been rendered, so we need rerender here
+    if (prevProps.xRayVendors !== this.props.xRayVendors) {
+      const calendarApi = this.calendarComponentRef.current.getApi();
+      calendarApi.rerenderEvents();
+    }
   }
 
   getAllEvent() {
@@ -425,7 +431,6 @@ class AppCalendar extends React.Component {
 
   componentWillUnmount() {
     MqttHelper.unsubscribeAppointment(AppCalendar.name);
-    clearInterval(this.intervalID);
   }
 
   simulateMouseClick = element => {
