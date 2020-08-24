@@ -270,13 +270,14 @@ Deploy local machine with SMS service
 1. 建立一個 service account 且擁有 cloud storage, function caller 的權限(ref [here](https://gitlab.com/dentall/totoro-admin/-/wikis/GCP/Create-service-account))
 2. 產生該 service account 對應的 credential.json，並放置於 將運作這些服務的機器上指定位置，並設定環境變數 `GOOGLE_APPLICATION_CREDENTIALS=指定位置`。
     ```bash
-    export GOOGLE_APPLICATION_CREDENTIALS=/home/totoro-admin/dentall-saas.json
+    # credential.json 即是上述 wiki 最後步驟產生的 json ，名字則依照下載的結果為主，當然你也可以改成你想要的名稱
+    export GOOGLE_APPLICATION_CREDENTIALS=/home/totoro-admin/credential.json
    
     # or
    
     GOOGLE_APPLICATION_CREDENTIALS=/home/totoro-admin/dentall-saas.json java -jar ...審略
     ``` 
-3. 至 firebase firestore `clinic-dev` 集合，新增一組資料如下
+3. 至 firebase firestore `clinic-dev` 集合，新增一組資料如下， name 需要匹配當初命名的規則且一至
     ```
     {
       name: "dev",
