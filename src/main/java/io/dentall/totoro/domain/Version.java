@@ -1,6 +1,5 @@
 package io.dentall.totoro.domain;
 
-import com.google.api.client.util.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -19,7 +18,6 @@ public class Version {
 
     private String version = "build-project-first";
 
-    @Value("${spring.profiles.active}")
     private String springProfilesActive;
 
     private Version(
