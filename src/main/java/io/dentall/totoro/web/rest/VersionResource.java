@@ -21,8 +21,14 @@ public class VersionResource {
     @GetMapping("/version")
     @Timed
     public ResponseEntity<String> getVersion() {
-        log.debug("REST request to get Version by criteria");
+        log.debug("REST request to get version");
         return ResponseEntity.ok().body(Version.versionSingleton().getVersion());
     }
 
+    @GetMapping("/spring-profiles-active")
+    @Timed
+    public ResponseEntity<String> getSpringProfilesActive() {
+        log.debug("REST request to get spring profiles active");
+        return ResponseEntity.ok().body(Version.versionSingleton().getSpringProfilesActive());
+    }
 }
