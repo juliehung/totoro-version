@@ -15,5 +15,8 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 @Repository
 public interface PrescriptionRepository extends JpaRepository<Prescription, Long>, JpaSpecificationExecutor<Prescription> {
+
+    Optional<PrescriptionTable> findPrescriptionByDisposal_Id(Long disposalId);
+
     Optional<PrescriptionTable> findPrescriptionById(Long id);
 }
