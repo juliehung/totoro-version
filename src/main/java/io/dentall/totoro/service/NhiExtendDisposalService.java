@@ -5,10 +5,7 @@ import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.table.*;
-import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
-import io.dentall.totoro.service.mapper.NhiExtendTreatmentDrugMapper;
-import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
-import io.dentall.totoro.service.mapper.TreatmentProcedureMapper;
+import io.dentall.totoro.service.mapper.*;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
@@ -62,6 +59,10 @@ public class NhiExtendDisposalService {
 
     private final NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper;
 
+    private final PrescriptionRepository prescriptionRepository;
+
+    private final PrescriptionMapper prescriptionMapper;
+
     public NhiExtendDisposalService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         RelationshipService relationshipService,
@@ -76,8 +77,9 @@ public class NhiExtendDisposalService {
         TreatmentProcedureMapper treatmentProcedureMapper,
         NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
         NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository,
-        NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper
-    ) {
+        NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper,
+        PrescriptionRepository prescriptionRepository,
+        PrescriptionMapper prescriptionMapper) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.relationshipService = relationshipService;
         this.disposalRepository = disposalRepository;
@@ -92,6 +94,8 @@ public class NhiExtendDisposalService {
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
         this.nhiExtendTreatmentDrugRepository = nhiExtendTreatmentDrugRepository;
         this.nhiExtendTreatmentDrugMapper = nhiExtendTreatmentDrugMapper;
+        this.prescriptionRepository = prescriptionRepository;
+        this.prescriptionMapper = prescriptionMapper;
     }
 
     /**
@@ -303,8 +307,15 @@ public class NhiExtendDisposalService {
                         })
                         .collect(Collectors.toSet());
 
-                    Prescription p = new Prescription().treatmentDrugs(tds);
-                    d.setPrescription(p);
+                    Prescription p = prescriptionRepository.findPrescriptionByDisposal_Id(disposalId)
+                        .map(prescriptionMapper::prescriptionTableToPrescription)
+                        .filter(Objects::nonNull)
+                        .get()
+                        .treatmentDrugs(tds);
+
+                    if (p != null) {
+                        d.setPrescription(p);
+                    }
                 }
 
                 // Fit frontend export monthly xml format
