@@ -10,6 +10,7 @@ import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -186,7 +187,7 @@ public class NhiExtendDisposalService {
                 }
 
                 // Assemble doctor
-                Optional<RegistrationTable> optionalRegistrationTable  = registrationRepository.findRegistrationByDisposal_Id(disposalId);
+                Optional<RegistrationTable> optionalRegistrationTable = registrationRepository.findRegistrationByDisposal_Id(disposalId);
                 if (optionalRegistrationTable.isPresent()) {
                     Optional<AppointmentTable> optionalAppointmentTable = appointmentRepository.findAppointmentByRegistration_Id(optionalRegistrationTable.get().getId());
                     if (optionalAppointmentTable.isPresent()) {
@@ -252,7 +253,7 @@ public class NhiExtendDisposalService {
                 }
 
                 // Assemble doctor
-                Optional<RegistrationTable> optionalRegistrationTable  = registrationRepository.findRegistrationByDisposal_Id(disposalId);
+                Optional<RegistrationTable> optionalRegistrationTable = registrationRepository.findRegistrationByDisposal_Id(disposalId);
                 if (optionalRegistrationTable.isPresent()) {
                     Optional<AppointmentTable> optionalAppointmentTable = appointmentRepository.findAppointmentByRegistration_Id(optionalRegistrationTable.get().getId());
                     if (optionalAppointmentTable.isPresent()) {
@@ -332,6 +333,8 @@ public class NhiExtendDisposalService {
     @Transactional(readOnly = true)
     public List<MonthDisposalVM> findByYearMonthForLazyNhiExtDis(YearMonth ym) {
         return nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(ym.atDay(1), ym.atEndOfMonth()).stream()
+            .filter(Objects::nonNull)
+            .filter(monthDisposalDAO -> StringUtils.isNotBlank(monthDisposalDAO.getA18()))
             .collect(Collectors.groupingBy(MonthDisposalDAO::getDisposalId))
             .entrySet()
             .stream()
@@ -552,7 +555,7 @@ public class NhiExtendDisposalService {
     public Optional<NhiExtendDisposal> getNhiExtendDisposalProjectionByDisposalId(Long id) {
         List<NhiExtendDisposalTable> nhiExtendDisposalTables = nhiExtendDisposalRepository.findNhiExtendDisposalByDisposal_IdOrderById(id);
         return nhiExtendDisposalTables.stream()
-            .skip(nhiExtendDisposalTables.size() > 1? nhiExtendDisposalTables.size() - 1: 0)
+            .skip(nhiExtendDisposalTables.size() > 1 ? nhiExtendDisposalTables.size() - 1 : 0)
             .findFirst()
             .map(nhiExtendDisposalMapper::nhiExtendDisposalTableToNhiExtendDisposal);
     }
