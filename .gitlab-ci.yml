@@ -192,7 +192,8 @@ releaseImageToGCPRegistry:
 # deploy stage
 deployDevDentall8082:
     only:
-        - tags
+      refs:
+        - merge_requests
     stage: deploy
     image: ubuntu
     before_script:
