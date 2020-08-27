@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.time.Instant;
 import java.util.List;
 
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
@@ -39,6 +40,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TotoroApp.class)
 public class LedgerResourceIntTest {
+
+    private static final Instant testTime = Instant.now();
 
     private static final Double DEFAULT_AMOUNT = 1D;
     private static final Double UPDATED_AMOUNT = 2D;
@@ -60,6 +63,12 @@ public class LedgerResourceIntTest {
 
     private static final String DEFAULT_DISPLAY_NAME = "AAAAAAAAAA";
     private static final String UPDATED_DISPLAY_NAME = "BBBBBBBBBB";
+
+    private static final Boolean DEFAULT_INCLUDE_STAMP_TAX = true;
+    private static final Boolean UPDATED_INCLUDE_STAMP_TAX = false;
+
+    private static final Instant DEFAULT_PRINT_TIME = testTime;
+    private static final Instant UPDATED_PRINT_TIME = testTime.plusSeconds(5);
 
     @Autowired
     private LedgerRepository ledgerRepository;
@@ -115,7 +124,9 @@ public class LedgerResourceIntTest {
             .note(DEFAULT_NOTE)
             .doctor(DEFAULT_DOCTOR)
             .gid(DEFAULT_GID)
-            .displayName(DEFAULT_DISPLAY_NAME);
+            .displayName(DEFAULT_DISPLAY_NAME)
+            .includeStampTax(DEFAULT_INCLUDE_STAMP_TAX)
+            .printTime(DEFAULT_PRINT_TIME);
         return ledger;
     }
 
@@ -146,6 +157,8 @@ public class LedgerResourceIntTest {
         assertThat(testLedger.getDoctor()).isEqualTo(DEFAULT_DOCTOR);
         assertThat(testLedger.getGid()).isEqualTo(DEFAULT_GID);
         assertThat(testLedger.getDisplayName()).isEqualTo(DEFAULT_DISPLAY_NAME);
+        assertThat(testLedger.getIncludeStampTax()).isEqualTo(DEFAULT_INCLUDE_STAMP_TAX);
+        assertThat(testLedger.getPrintTime()).isEqualTo(DEFAULT_PRINT_TIME);
     }
 
     @Test
@@ -238,9 +251,12 @@ public class LedgerResourceIntTest {
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].doctor").value(hasItem(DEFAULT_DOCTOR.toString())))
             .andExpect(jsonPath("$.[*].gid").value(hasItem(DEFAULT_GID.intValue())))
-            .andExpect(jsonPath("$.[*].displayName").value(hasItem(DEFAULT_DISPLAY_NAME.toString())));
+            .andExpect(jsonPath("$.[*].displayName").value(hasItem(DEFAULT_DISPLAY_NAME.toString())))
+            .andExpect(jsonPath("$.[*].includeStampTax").value(hasItem(DEFAULT_INCLUDE_STAMP_TAX.booleanValue())))
+            .andExpect(jsonPath("$.[*].printTime").value(hasItem(DEFAULT_PRINT_TIME.toString())))
+        ;
     }
-    
+
     @Test
     @Transactional
     public void getLedger() throws Exception {
@@ -258,7 +274,10 @@ public class LedgerResourceIntTest {
             .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
             .andExpect(jsonPath("$.doctor").value(DEFAULT_DOCTOR.toString()))
             .andExpect(jsonPath("$.gid").value(DEFAULT_GID.intValue()))
-            .andExpect(jsonPath("$.displayName").value(DEFAULT_DISPLAY_NAME.toString()));
+            .andExpect(jsonPath("$.displayName").value(DEFAULT_DISPLAY_NAME.toString()))
+            .andExpect(jsonPath("$.includeStampTax").value(DEFAULT_INCLUDE_STAMP_TAX.booleanValue()))
+            .andExpect(jsonPath("$.printTime").value(DEFAULT_PRINT_TIME.toString()))
+        ;
     }
 
     @Test
@@ -619,7 +638,10 @@ public class LedgerResourceIntTest {
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].doctor").value(hasItem(DEFAULT_DOCTOR.toString())))
             .andExpect(jsonPath("$.[*].gid").value(hasItem(DEFAULT_GID.intValue())))
-            .andExpect(jsonPath("$.[*].displayName").value(hasItem(DEFAULT_DISPLAY_NAME.toString())));
+            .andExpect(jsonPath("$.[*].displayName").value(hasItem(DEFAULT_DISPLAY_NAME.toString())))
+            .andExpect(jsonPath("$.[*].includeStampTax").value(hasItem(DEFAULT_INCLUDE_STAMP_TAX.booleanValue())))
+            .andExpect(jsonPath("$.[*].printTime").value(hasItem(DEFAULT_PRINT_TIME.toString())))
+        ;
 
         // Check, that the count call also returns 1
         restLedgerMockMvc.perform(get("/api/ledgers/count?sort=id,desc&" + filter))
@@ -673,7 +695,10 @@ public class LedgerResourceIntTest {
             .note(UPDATED_NOTE)
             .doctor(UPDATED_DOCTOR)
             .gid(UPDATED_GID)
-            .displayName(UPDATED_DISPLAY_NAME);
+            .displayName(UPDATED_DISPLAY_NAME)
+            .includeStampTax(UPDATED_INCLUDE_STAMP_TAX)
+            .printTime(UPDATED_PRINT_TIME)
+        ;
 
         restLedgerMockMvc.perform(put("/api/ledgers")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -691,6 +716,8 @@ public class LedgerResourceIntTest {
         assertThat(testLedger.getDoctor()).isEqualTo(UPDATED_DOCTOR);
         assertThat(testLedger.getGid()).isEqualTo(UPDATED_GID);
         assertThat(testLedger.getDisplayName()).isEqualTo(UPDATED_DISPLAY_NAME);
+        assertThat(testLedger.getIncludeStampTax()).isEqualTo(UPDATED_INCLUDE_STAMP_TAX);
+        assertThat(testLedger.getPrintTime()).isEqualTo(UPDATED_PRINT_TIME);
     }
 
     @Test
