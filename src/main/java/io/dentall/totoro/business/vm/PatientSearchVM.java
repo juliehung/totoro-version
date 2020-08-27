@@ -12,12 +12,34 @@ public class PatientSearchVM {
 
     private LocalDate birth;
 
+    private String phone;
 
-    public PatientSearchVM(Long id, String name, String medicalId, LocalDate birth) {
+    private String nationalId;
+
+
+    public PatientSearchVM(Long id, String name, String medicalId, LocalDate birth, String phone, String nationalId) {
         this.id = id;
         this.name = name;
         this.medicalId = medicalId;
         this.birth = birth;
+        this.phone = phone;
+        this.nationalId = nationalId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getNationalId() {
+        return nationalId;
+    }
+
+    public void setNationalId(String nationalId) {
+        this.nationalId = nationalId;
     }
 
     public Long getId() {
