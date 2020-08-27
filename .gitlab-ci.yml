@@ -234,7 +234,9 @@ deployDevDentall8084:
         - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro /home/weichen/dentall/bin/totoro.admin.service.yu.sh start && sleep 30"
 
 deployGcpDev:
+    stage: deploy
     image: google/cloud-sdk:alpine
+    when: manual
     only:
         - tags
     script:
