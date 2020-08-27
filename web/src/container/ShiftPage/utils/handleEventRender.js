@@ -38,7 +38,7 @@ export function handleEventRender({ el, event }, { deleteShift }) {
       <HoverSpan
         ref={HoverSpanRef}
         onClick={() => {
-          deleteShift(event.id);
+          deleteShift(event.extendedProps.event);
         }}
       >
         <CloseOutlined style={{ pointerEvents: 'none' }} />

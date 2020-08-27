@@ -12,6 +12,7 @@ import convertShiftToEvent from './utils/convertShiftToEvent';
 import handlePopoverPosition from './utils/handlePopoverPosition';
 import handleShiftEvtTitle from './utils/handleShiftEvtTitle';
 import { handleResourceRender } from './utils/handleResourceRender';
+import { removeDuplicate } from './utils/removeDuplicate';
 import {
   changeDate,
   getShift,
@@ -325,7 +326,7 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   })),
   range: shiftPageReducer.shift.range,
   event: handleShiftEvtTitle(
-    convertShiftToEvent(shiftPageReducer.shift.shift, shiftPageReducer.resourceColor.color),
+    convertShiftToEvent(removeDuplicate(shiftPageReducer.shift.shift), shiftPageReducer.resourceColor.color),
     shiftPageReducer.defaultShift.shift,
   ).map(addAllDay),
   resourceColor: shiftPageReducer.resourceColor.color,
