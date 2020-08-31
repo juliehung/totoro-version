@@ -32,7 +32,7 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
         nativeQuery = true,
         value =
             "select " +
-            "    ned.disposal_id, a17, a18, a19, a23, a31, a32, a54," +
+            "    ned.disposal_id as disposalId, a17, a18, a19, a23, a31, a32, a54," +
             "    patient_identity as patientIdentity, serial_number as serialNumber, examination_code as examinationCode, examination_point as examinationPoint, " +
             "    netp.treatment_procedure_id as treatmentProcedureId, a71, a72, a73, a74, a75, a76, a77, a78, " +
             "    p.id as pid, p.name as pname, ju.id as did, ju.first_name as dname " +
