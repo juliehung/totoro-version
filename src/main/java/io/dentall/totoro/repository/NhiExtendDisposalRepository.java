@@ -4,10 +4,8 @@ import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.StatisticSpDTO;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
-import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
-import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
-import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
+import io.dentall.totoro.web.rest.vm.*;
+import org.hibernate.annotations.Parameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,6 +27,27 @@ import java.util.Set;
 @SuppressWarnings("unused")
 @Repository
 public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long>, JpaSpecificationExecutor<NhiExtendDisposal> {
+
+    @Query(
+        nativeQuery = true,
+        value =
+            "select " +
+            "    ned.disposal_id, a17, a18, a19, a23, a31, a32, a54," +
+            "    patient_identity as patientIdentity, serial_number as serialNumber, examination_code as examinationCode, examination_point as examinationPoint, " +
+            "    netp.treatment_procedure_id as treatmentProcedureId, a71, a72, a73, a74, a75, a76, a77, a78, " +
+            "    p.id as pid, p.name as pname, ju.id as did, ju.first_name as dname " +
+            "from disposal d " +
+            "         left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "         left join registration r on d.registration_id = r.id " +
+            "         left join appointment a on r.id = a.registration_id " +
+            "         left join patient p on a.patient_id = p.id " +
+            "         left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "         left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "         left join jhi_user ju on ju.id = a.doctor_user_id " +
+            "where a19 <> '2' and date_time between ?1 and ?2 and a18 is not null and trim(a18) <> '' " +
+            "   or a19 = '2' and replenishment_date between ?1 and ?2 and a18 is not null and trim(a18) <> '';"
+    )
+    List<NhiIndexTreatmentProcedureVM> findNhiIndexTreatmentProcedures(Instant begin, Instant end);
 
     @Query(
         nativeQuery = true,

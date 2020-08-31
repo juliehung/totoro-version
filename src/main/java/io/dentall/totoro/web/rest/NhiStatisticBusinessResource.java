@@ -5,10 +5,7 @@ import io.dentall.totoro.business.service.nhi.NhiAbnormalityService;
 import io.dentall.totoro.business.service.nhi.NhiStatisticService;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormality;
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
-import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
-import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
-import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
+import io.dentall.totoro.web.rest.vm.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -78,5 +75,10 @@ public class NhiStatisticBusinessResource {
     @GetMapping("/doctor-nhi-tx")
     public ResponseEntity<List<NhiDoctorTxVM>> calculateDoctorTx(@RequestParam Instant begin, @RequestParam Instant end) {
         return new ResponseEntity<>(nhiStatisticService.calculateDoctorTx(begin, end), HttpStatus.OK);
+    }
+
+    @GetMapping("/index-treatment-procedures")
+    public ResponseEntity<List<NhiIndexTreatmentProcedureVM>> getNhiIndexTreatmentProcedures(@RequestParam Instant begin, @RequestParam Instant end) {
+        return new ResponseEntity<>(nhiStatisticService.getNhiIndexTreatmentProcedures(begin, end), HttpStatus.OK);
     }
 }
