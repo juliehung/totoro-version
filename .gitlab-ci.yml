@@ -114,6 +114,9 @@ testPackage:
 repackageByGradle:
     stage: package
     only:
+        - master
+        - develop
+        - release
         - tags
     except:
         - /^(\d)+-.*$/
@@ -192,10 +195,14 @@ releaseImageToGCPRegistry:
 # deploy stage
 deployDevDentall8082:
     only:
-      refs:
-        - merge_requests
+      - master
+      - develop
+      - release
+      - tags
     stage: deploy
     image: ubuntu
+    dependencies:
+      - repackageByGradle
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
@@ -206,8 +213,9 @@ deployDevDentall8082:
         - ssh-keyscan dev.dentall.site >> ~/.ssh/known_hosts
         - chmod 644 ~/.ssh/known_hosts
     script:
+        - scp ./build/libs/*.war weichen@dev.dentall.site:/home/weichen/dentall/bin/war/dev.war
         - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro /home/weichen/dentall/bin/totoro.admin.update.war.latest.sh"
-        - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro ls /home/weichen/dentall/bin/war | sort -r | head -n 1 > /home/weichen/dentall/bin/conf/totoro.admin.version"
+        - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro echo dev.war > /home/weichen/dentall/bin/conf/totoro.admin.version"
         - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro /home/weichen/dentall/bin/totoro.admin.service.dev.sh stop"
         # this script will call `nohup` it will run on foreground. Therefore, you need to wait enough time to nohup run whole procedures and turn into background. Here you can disconnect from tty now.
         - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro /home/weichen/dentall/bin/totoro.admin.service.dev.sh start && sleep 30"
