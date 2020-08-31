@@ -11,6 +11,25 @@ const { TabPane } = Tabs;
 
 const FOCUSINPUT = { startDate: 'startDate', endDate: 'endDate' };
 
+const onFilterSerialNumber = (value, record) => {
+  if (value) {
+    return record.serialNumber;
+  } else {
+    return !record.serialNumber;
+  }
+};
+
+const serialNumber = {
+  title: '申報序號',
+  dataIndex: 'serialNumber',
+  key: 'serialNumber',
+  filters: [
+    { text: '未申報', value: false },
+    { text: '已申報', value: true },
+  ],
+  onFilter: onFilterSerialNumber,
+};
+
 //#region
 const GlobalStyle = createGlobalStyle`
   .CalendarDay__selected,
@@ -155,6 +174,7 @@ const doctorNhiExamColumns = doctors => [
     dataIndex: 'totalPoint',
     key: 'doctorNhiExamColumns-totalPoint',
   },
+  serialNumber,
 ];
 
 const doctorNhiTxColumns = doctors => [
@@ -191,6 +211,7 @@ const doctorNhiTxColumns = doctors => [
     dataIndex: 'totalPoint',
     key: 'doctorNhiTxColumns-did',
   },
+  serialNumber,
 ];
 
 function NhiIndexPage({
