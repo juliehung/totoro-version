@@ -12,4 +12,6 @@ public interface NhiDoctorTxVM {
     Integer getTotalNumber();
 
     Integer getTotalPoint();
+
+    String getSerialNumber();
 }
