@@ -49,14 +49,14 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
             "        left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "        left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "        left join jhi_user ju on ju.id = a.doctor_user_id " +
-            "                    where a19 <> '2' and date_time between ?1 and ?2 " +
-            "                       or a19 = '2' and replenishment_date between ?1 and ?2 " +
+            "                    where a19 <> '2' and date_time between ?1 and ?2  and a18 is not null and trim(a19) <> ''" +
+            "                       or a19 = '2' and replenishment_date between ?1 and ?2  and a18 is not null and trim(a19) <> ''" +
             "    ), " +
             "    tooth_clean_total_time as ( " +
-            "        select did, count(*) as total_times " +
+            "        select did, count(*) as total_times, serial_number " +
             "        from nhi_tx_base " +
             "        where a73 in ('91004C','91017C','91018C','91104C','91005C') " +
-            "        group by did " +
+            "        group by did, serial_number " +
             "    ), " +
             "    tooth_clean_distinct_pat as ( " +
             "        select did, count(*) as total_pat " +
@@ -71,6 +71,7 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
             "    select tctt.did as did, " +
             "        total_times as totalTime, " +
             "        total_pat as totalPat, " +
+            "        serial_number as serialNumber, " +
             "        case " +
             "            when total_pat > 0 " +
             "            then cast(total_times as float8) / cast(total_pat as float8) " +
@@ -100,17 +101,17 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
             "        left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "        left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "        left join jhi_user ju on ju.id = a.doctor_user_id " +
-            "        where a19 <> '2' and date_time between ?1 and ?2 " +
-            "           or a19 = '2' and replenishment_date between ?1 and ?2" +
+            "        where a19 <> '2' and date_time between ?1 and ?2  and a18 is not null and trim(a19) <> ''" +
+            "           or a19 = '2' and replenishment_date between ?1 and ?2 and a18 is not null and trim(a19) <> ''" +
             "    ), " +
             "    od_total_pat as ( " +
-            "        select did, count(*) as total_pat " +
+            "        select did, count(*) as total_pat, serial_number " +
             "        from ( " +
-            "                 select did, pid " +
+            "                 select did, pid, serial_number " +
             "                 from nhi_tx_base ntb " +
             "                 where a73 like '89%C' " +
             "             ) as tmp_total_pat " +
-            "        group by did " +
+            "        group by did, serial_number " +
             "    ), " +
             "    od_distinct_total_pat as ( " +
             "        select did, count(*) as distinct_total_pat " +
@@ -159,6 +160,7 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
             "       distinct_total_pat as distinctTotalPat,  " +
             "       total_tooth as totalTooth,  " +
             "       total_surface as totalSurface,  " +
+            "       serial_number as serialNumber, " +
             "       case  " +
             "           when total_tooth > 0 then total_surface/total_tooth  " +
             "           else 0  " +
@@ -190,25 +192,27 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
             "                              left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "                              left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "                              left join jhi_user ju on ju.id = a.doctor_user_id " +
-            "                     where a19 <> '2' and date_time between ?1 and ?2 " +
-            "                        or a19 = '2' and replenishment_date between ?1 and ?2), " +
+            "                     where a19 <> '2' and date_time between ?1 and ?2 and a18 is not null and trim(a19) <> '' " +
+            "                        or a19 = '2' and replenishment_date between ?1 and ?2 and a18 is not null and trim(a19) <> ''), " +
             "     nhi_doc_exam as ( " +
             "         select did as did, " +
             "                examination_code, " +
             "                examination_point, " +
-            "                sum(examination_point) " +
+            "                sum(examination_point), " +
+            "                serial_number " +
             "         from nhi_tx_base " +
             "         where examination_code is not null " +
             "           and trim(examination_code) <> '' " +
-            "         group by did, disposal_id, examination_code, examination_point " +
+            "         group by did, disposal_id, examination_code, examination_point, serial_number " +
             "     ) " +
             "select did                    as did, " +
             "       examination_code       as nhiExamCode, " +
             "       examination_point      as nhiExamPoint, " +
             "       count(*)               as totalNumber, " +
-            "       sum(examination_point) as totalPoint " +
+            "       sum(examination_point) as totalPoint, " +
+            "       serial_number as serialNumber " +
             "from nhi_doc_exam " +
-            "group by did, examination_code, examination_point " +
+            "group by did, examination_code, examination_point, serial_number " +
             "order by did, examination_code;"
     )
     List<NhiDoctorExamVM> calculateDoctorNhiExam(Instant begin, Instant end);
@@ -224,13 +228,13 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
             "                              left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "                              left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "                              left join jhi_user ju on ju.id = a.doctor_user_id " +
-            "                     where a19 <> '2' and date_time between ?1 and ?2 " +
-            "                        or a19 = '2' and replenishment_date between ?1 and ?2), " +
+            "                     where a19 <> '2' and date_time between ?1 and ?2 and a18 is not null and trim(a19) <> '' " +
+            "                        or a19 = '2' and replenishment_date between ?1 and ?2 and a18 is not null and trim(a19) <> ''), " +
             "     nhi_doctor_tx as ( " +
-            "        select did, a73, np.name as nhiTxName, np.point as nhiTxPoint, count(*) as totalCount, count(*) * np.point as totalPoint " +
+            "        select did, serial_number, a73, np.name as nhiTxName, np.point as nhiTxPoint, count(*) as totalCount, count(*) * np.point as totalPoint " +
             "        from nhi_tx_base " +
             "        left join nhi_procedure np on a73 = code " +
-            "        group by did, treatment_procedure_id, a73, np.name, np.point " +
+            "        group by did, treatment_procedure_id, a73, np.name, np.point, serial_number " +
             "        order by did, a73 " +
             "     ) " +
             "select did, " +
@@ -238,8 +242,9 @@ public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisp
             "       nhiTxName, " +
             "       nhiTxPoint, " +
             "       count(*) as totalNumber, " +
-            "       count(*) * nhiTxPoint as totalPoint " +
-            "from nhi_doctor_tx group by did, a73, nhiTxName, nhiTxPoint order by did, a73"
+            "       count(*) * nhiTxPoint as totalPoint, " +
+            "       serial_number as serialNumber " +
+            "from nhi_doctor_tx group by did, a73, nhiTxName, nhiTxPoint, serial_number order by did, a73"
     )
     List<NhiDoctorTxVM> calculateDoctorNhiTx(Instant begin, Instant end);
 
