@@ -12,7 +12,6 @@ stages:
     - package
     - release
     - deploy
-    - operation
 
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
@@ -191,32 +190,6 @@ releaseImageToGCPRegistry:
         - docker push asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:cache
 
 # deploy stage
-depolyAppEngine:
-    tags:
-        - dentall
-    stage: deploy
-    only:
-        - tags
-    except:
-        - /^(\d)+-.*$/
-    environment:
-        name: staging/$CI_COMMIT_REF_SLUG
-        url: https://$CI_COMMIT_REF_SLUG-dot-$GCP_PROJECT_ID.appspot.com
-        on_stop: stopAppEngine
-    when: manual
-    dependencies:
-        - repackageByGradle
-    image: google/cloud-sdk:alpine
-    script:
-        - versionMajor="$(grep 'versionMajor' build/generated/semver.properties | cut -d'=' -f2)"
-        - versionMinor="$(grep -w 'versionMinor' build/generated/semver.properties | cut -d'=' -f2)"
-        - commitCount="$(grep 'commitCount' build/generated/semver.properties | cut -d'=' -f2)"
-        - gcloud --quiet components update
-        - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-        - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
-        - 'echo "service: ${CI_COMMIT_REF_SLUG}" >> src/main/appengine/app.yaml'
-        - gcloud --quiet app deploy src/main/appengine/app.yaml --version $versionMajor-$versionMinor-$commitCount --image-url asia.gcr.io/$GCP_PROJECT_ID/$CI_COMMIT_REF_SLUG:$versionMajor.$versionMinor.$commitCount --promote --stop-previous-version
-
 deployDevDentall8082:
     only:
         - tags
@@ -260,22 +233,16 @@ deployDevDentall8084:
         # this script will call `nohup` it will run on foreground. Therefore, you need to wait enough time to nohup run whole procedures and turn into background. Here you can disconnect from tty now.
         - ssh -tt weichen@dev.dentall.site "TOTORO_ADMIN_WORKSPACE=/home/weichen/dentall PGPASSWORD=$DEV_DENTALL_DB_PASS PGHOST=localhost PGUSER=totoro /home/weichen/dentall/bin/totoro.admin.service.yu.sh start && sleep 30"
 
-# operation stage
-stopAppEngine:
-    tags:
-        - dentall
-    stage: operation
+deployGcpDev:
+    image: google/cloud-sdk:alpine
     only:
         - tags
-    except:
-        - /^(\d)+-.*$/
-    environment:
-        name: staging/$CI_COMMIT_REF_SLUG
-        action: stop
-    when: manual
-    image: google/cloud-sdk:alpine
     script:
-        - gcloud --quiet components update
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
         - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
-        - gcloud --quiet app services delete $CI_COMMIT_REF_SLUG
+        - curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+        - curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl
+        - chmod +x ./kubectl
+        - mv ./kubectl /usr/local/bin/kubectl
+        - gcloud container clusters get-credentials dev-cluster --region asia-east1
+        - kubectl get pod -l run=totoro-cp -o yaml | sed 's/\(asia.gcr.io\/dentall-saas\/totoro-admin\):.*$/\1:'"$CI_COMMIT_TAG"'/' | kubectl replace -f -

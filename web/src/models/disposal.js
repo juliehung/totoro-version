@@ -1,16 +1,17 @@
 import request from '../utils/request';
 import apiUrl from '../utils/apiUrl';
+import combineUrlAndQueryData from '../utils/combineUrlAndQueryData';
 
 const LOCATION = `disposals`;
 const requestUrl = `${apiUrl}/${LOCATION}`;
 
 export default class Disposal {
   static getByDate = async (date, signal) => {
-    const requestURL = `${requestUrl}?createdDate.greaterOrEqualThan=${date
-      .clone()
-      .startOf('day')
-      .toISOString()}&createdDate.lessThan=${date.clone().add(1, 'day').startOf('day').toISOString()}`;
-
+    const params = {
+      'createdDate.greaterOrEqualThan': date.clone().startOf('day').toISOString(),
+      'createdDate.lessThan': date.clone().add(1, 'day').startOf('day').toISOString(),
+    };
+    const requestURL = combineUrlAndQueryData(requestUrl, params);
     const options = { signal };
     const result = await request(requestURL, options);
     return result;

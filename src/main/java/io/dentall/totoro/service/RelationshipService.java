@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -191,7 +192,9 @@ public class RelationshipService {
     void addRelationshipWithNhiExtendTreatmentProcedures(NhiExtendDisposal nhiExtendDisposal, Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures) {
         if (nhiExtendTreatmentProcedures != null) {
             nhiExtendTreatmentProcedures = getRelationshipWithOwners(
-                nhiExtendTreatmentProcedures.stream().map(this::getNhiExtendTreatmentProcedure),
+                nhiExtendTreatmentProcedures.stream()
+                    .filter(Objects::nonNull)
+                    .map(this::getNhiExtendTreatmentProcedure),
                 nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.nhiExtendDisposal(nhiExtendDisposal)
             );
 

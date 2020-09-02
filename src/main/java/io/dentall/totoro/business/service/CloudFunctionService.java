@@ -105,7 +105,11 @@ public class CloudFunctionService {
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(map), getRequestHeaderBearer(token));
         SmsEventsPagination response = restTemplate.postForObject(api, request, SmsEventsPagination.class);
-        if (response == null) {
+
+        if (response == null ||
+            response.getEvents() == null ||
+            response.getEvents().size() == 0
+        ) {
             return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
 

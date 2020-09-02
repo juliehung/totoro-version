@@ -23,8 +23,7 @@ const LoginFormContainer = styled.div`
   align-items: center;
   flex-direction: column;
 `;
-const FullHeightSVG = styled(SVG)`
-  height: 100%;
+const StyledImg = styled(SVG)`
   margin-bottom: 20px;
 `;
 
@@ -90,7 +89,7 @@ function LoginPage({
         </SpinContainer>
       ) : (
         <LoginFormContainer>
-          <FullHeightSVG src={DentallLogo} />
+          <StyledImg src={DentallLogo} />
           <LoginForm />
         </LoginFormContainer>
       )}

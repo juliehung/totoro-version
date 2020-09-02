@@ -5,13 +5,12 @@ import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.table.*;
-import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
-import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
-import io.dentall.totoro.service.mapper.TreatmentProcedureMapper;
+import io.dentall.totoro.service.mapper.*;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -57,6 +56,14 @@ public class NhiExtendDisposalService {
 
     private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
 
+    private final NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository;
+
+    private final NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper;
+
+    private final PrescriptionRepository prescriptionRepository;
+
+    private final PrescriptionMapper prescriptionMapper;
+
     public NhiExtendDisposalService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         RelationshipService relationshipService,
@@ -69,8 +76,11 @@ public class NhiExtendDisposalService {
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
         TreatmentProcedureRepository treatmentProcedureRepository,
         TreatmentProcedureMapper treatmentProcedureMapper,
-        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper
-    ) {
+        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
+        NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository,
+        NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper,
+        PrescriptionRepository prescriptionRepository,
+        PrescriptionMapper prescriptionMapper) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.relationshipService = relationshipService;
         this.disposalRepository = disposalRepository;
@@ -83,6 +93,10 @@ public class NhiExtendDisposalService {
         this.treatmentProcedureRepository = treatmentProcedureRepository;
         this.treatmentProcedureMapper = treatmentProcedureMapper;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
+        this.nhiExtendTreatmentDrugRepository = nhiExtendTreatmentDrugRepository;
+        this.nhiExtendTreatmentDrugMapper = nhiExtendTreatmentDrugMapper;
+        this.prescriptionRepository = prescriptionRepository;
+        this.prescriptionMapper = prescriptionMapper;
     }
 
     /**
@@ -173,7 +187,7 @@ public class NhiExtendDisposalService {
                 }
 
                 // Assemble doctor
-                Optional<RegistrationTable> optionalRegistrationTable  = registrationRepository.findRegistrationByDisposal_Id(disposalId);
+                Optional<RegistrationTable> optionalRegistrationTable = registrationRepository.findRegistrationByDisposal_Id(disposalId);
                 if (optionalRegistrationTable.isPresent()) {
                     Optional<AppointmentTable> optionalAppointmentTable = appointmentRepository.findAppointmentByRegistration_Id(optionalRegistrationTable.get().getId());
                     if (optionalAppointmentTable.isPresent()) {
@@ -216,7 +230,7 @@ public class NhiExtendDisposalService {
     ) {
         log.debug("Request to get paged NhiExtendDisposalVMs by yyyymm({})", yyyymm);
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
-        
+
         return nhiExtendDisposalRepository
             .findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
                 ym.atDay(1),
@@ -239,7 +253,7 @@ public class NhiExtendDisposalService {
                 }
 
                 // Assemble doctor
-                Optional<RegistrationTable> optionalRegistrationTable  = registrationRepository.findRegistrationByDisposal_Id(disposalId);
+                Optional<RegistrationTable> optionalRegistrationTable = registrationRepository.findRegistrationByDisposal_Id(disposalId);
                 if (optionalRegistrationTable.isPresent()) {
                     Optional<AppointmentTable> optionalAppointmentTable = appointmentRepository.findAppointmentByRegistration_Id(optionalRegistrationTable.get().getId());
                     if (optionalAppointmentTable.isPresent()) {
@@ -277,10 +291,38 @@ public class NhiExtendDisposalService {
                     })
                     .collect(Collectors.toSet());
 
+                // Assembel througth disposal
+                Disposal d = new Disposal().treatmentProcedures(treatmentProcedures);
+
+                // Assemble treatment drug
+                Set<NhiExtendTreatmentDrugTable> nhiExtendTreatmentDrugTableSet =
+                    nhiExtendTreatmentDrugRepository.findNhiExtendTreatmentDrugsByTreatmentDrug_Prescription_Disposal_Id(disposalId);
+                if (!nhiExtendTreatmentDrugTableSet.isEmpty()) {
+                    Set<TreatmentDrug> tds = nhiExtendTreatmentDrugTableSet.stream()
+                        .map(nhiExtendTreatmentDrugMapper::nhiExtendTreatmentDrugTableToNhiExtendTreatmentDrug)
+                        .map(netd -> {
+                            TreatmentDrug td = new TreatmentDrug();
+                            td.setNhiExtendTreatmentDrug(netd);
+
+                            return td;
+                        })
+                        .collect(Collectors.toSet());
+
+                    Prescription p = prescriptionRepository.findPrescriptionByDisposal_Id(disposalId)
+                        .map(prescriptionMapper::prescriptionTableToPrescription)
+                        .filter(Objects::nonNull)
+                        .get()
+                        .treatmentDrugs(tds);
+
+                    if (p != null) {
+                        d.setPrescription(p);
+                    }
+                }
+
                 // Fit frontend export monthly xml format
                 NhiExtendDisposal nhiExtendDisposal = nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(nhiExtendDisposalTable);
                 nhiExtendDisposal.setNhiExtendTreatmentProcedures(nhiExtendTreatmentProcedures);
-                nhiExtendDisposal.setDisposal(new Disposal().treatmentProcedures(treatmentProcedures));
+                nhiExtendDisposal.setDisposal(d);
 
                 vm.setNhiExtendDisposal(nhiExtendDisposal);
 
@@ -291,6 +333,8 @@ public class NhiExtendDisposalService {
     @Transactional(readOnly = true)
     public List<MonthDisposalVM> findByYearMonthForLazyNhiExtDis(YearMonth ym) {
         return nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(ym.atDay(1), ym.atEndOfMonth()).stream()
+            .filter(Objects::nonNull)
+            .filter(monthDisposalDAO -> StringUtils.isNotBlank(monthDisposalDAO.getA18()))
             .collect(Collectors.groupingBy(MonthDisposalDAO::getDisposalId))
             .entrySet()
             .stream()
@@ -450,8 +494,12 @@ public class NhiExtendDisposalService {
                 }
 
                 if (updateNhiExtendDisposal.getNhiExtendTreatmentProcedures() != null) {
-                    Set<Long> updateIds = updateNhiExtendDisposal.getNhiExtendTreatmentProcedures().stream().map(NhiExtendTreatmentProcedure::getId).collect(Collectors.toSet());
+                    Set<Long> updateIds = updateNhiExtendDisposal.getNhiExtendTreatmentProcedures().stream()
+                        .filter(Objects::nonNull)
+                        .map(NhiExtendTreatmentProcedure::getId)
+                        .collect(Collectors.toSet());
                     StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures())
+                        .filter(Objects::nonNull)
                         .filter(nhiExtendTreatmentProcedure -> !updateIds.contains(nhiExtendTreatmentProcedure.getId()))
                         .forEach(nhiExtendTreatmentProcedure -> {
                             nhiExtendTreatmentProcedure.getTreatmentProcedure().setDisposal(null);
@@ -507,7 +555,7 @@ public class NhiExtendDisposalService {
     public Optional<NhiExtendDisposal> getNhiExtendDisposalProjectionByDisposalId(Long id) {
         List<NhiExtendDisposalTable> nhiExtendDisposalTables = nhiExtendDisposalRepository.findNhiExtendDisposalByDisposal_IdOrderById(id);
         return nhiExtendDisposalTables.stream()
-            .skip(nhiExtendDisposalTables.size() > 1? nhiExtendDisposalTables.size() - 1: 0)
+            .skip(nhiExtendDisposalTables.size() > 1 ? nhiExtendDisposalTables.size() - 1 : 0)
             .findFirst()
             .map(nhiExtendDisposalMapper::nhiExtendDisposalTableToNhiExtendDisposal);
     }

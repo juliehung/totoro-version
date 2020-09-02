@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.SpringProperties;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.FileNotFoundException;
@@ -17,11 +18,16 @@ public class Version {
 
     private String version = "build-project-first";
 
-    private Version() {
+    private String springProfilesActive;
+
+    private Version(
+
+    ) {
         try {
             Properties p = new Properties();
             p.load(new ClassPathResource("totoro.properties").getInputStream());
             this.version = p.getProperty("version");
+            this.springProfilesActive = SpringProperties.getProperty("spring.profiles.active");
         } catch (FileNotFoundException e) {
             logger.error("Can not found totoro.properties. " + e.getMessage());
         } catch (IOException e) {
@@ -37,6 +43,10 @@ public class Version {
 
     public String getVersion() {
         return version;
+    }
+
+    public String getSpringProfilesActive() {
+        return springProfilesActive;
     }
 
 }

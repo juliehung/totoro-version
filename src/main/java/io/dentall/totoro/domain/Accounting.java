@@ -70,6 +70,9 @@ public class Accounting implements Serializable {
     @JsonIgnore
     private Registration registration;
 
+    @Column(name = "copayment_exemption")
+    private Boolean copaymentExemption;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -248,6 +251,20 @@ public class Accounting implements Serializable {
     public void setRegistration(Registration registration) {
         this.registration = registration;
     }
+
+    public Boolean isCopaymentExemption() {
+        return copaymentExemption;
+    }
+
+    public Accounting copaymentExemption(Boolean copaymentExemption) {
+        this.copaymentExemption = copaymentExemption;
+        return this;
+    }
+
+    public void setCopaymentExemption(Boolean copaymentExemption) {
+        this.copaymentExemption = copaymentExemption;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -285,6 +302,7 @@ public class Accounting implements Serializable {
             ", withdrawal=" + getWithdrawal() +
             ", transactionTime='" + getTransactionTime() + "'" +
             ", staff='" + getStaff() + "'" +
+            ", copaymentExemption='" + isCopaymentExemption() + "'" +
             "}";
     }
 }

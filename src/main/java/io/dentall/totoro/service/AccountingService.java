@@ -97,6 +97,10 @@ public class AccountingService {
                     hospitalRepository.findById(updateAccounting.getHospital().getId()).ifPresent(accounting::setHospital);
                 }
 
+                if (updateAccounting.isCopaymentExemption() != null) {
+                    accounting.setCopaymentExemption(updateAccounting.isCopaymentExemption());
+                }
+
                 return accounting;
             })
             .get();

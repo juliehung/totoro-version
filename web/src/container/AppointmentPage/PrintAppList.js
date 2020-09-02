@@ -34,7 +34,7 @@ const headerStyle = {
   display: 'flex',
   justifyContent: 'space-between',
   marginBottom: '20px',
-  fontSize: '1.5em',
+  fontSize: '24px',
   fontWeight: 'bold',
   color: '#000',
   fontFamily: 'Microsoft JhengHei',
@@ -44,7 +44,7 @@ const style = {
   whiteSpace: 'nowrap',
   margin: 0,
   color: '#000',
-  fontSize: '1.25em',
+  fontSize: '18px',
   fontFamily: 'Microsoft JhengHei',
 };
 

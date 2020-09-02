@@ -15,6 +15,7 @@ public interface AccountingTable {
     Double getWithdrawal();
     Instant getTransactionTime();
     String getStaff();
+    Boolean getCopaymentExemption();
 
     // Relationship
     Long getHospital_Id();

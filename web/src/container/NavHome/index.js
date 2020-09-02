@@ -18,10 +18,12 @@ import IconCalendar from '../../images/icon-calendar.svg';
 import IconCalendarFill from '../../images/icon-calendar-fill.svg';
 import MessageCircle from '../../images/message-circle.svg';
 import MessageCircleFill from '../../images/message-circle-fill.svg';
+import NhiIcon from '../../images/nhi-icon.svg';
 import Pantone from '../../images/pantone.svg';
 import Cube from '../../images/cube.svg';
 import FileText from '../../images/file-text.svg';
 import { getBaseUrl } from '../../utils/getBaseUrl';
+import NhiIndexPage from '../NhiIndexPage';
 
 //#region
 const Container = styled.div`
@@ -204,6 +206,7 @@ const LaboDrawerItem = styled.a`
     align-items: center;
     & > :first-child {
       margin-right: 10px;
+      height: 16px;
     }
   }
 `;
@@ -258,6 +261,7 @@ const route = [
   },
   { key: 'shift', navigation: false, exact: true, component: <ShiftPage />, localVersion: true },
   { key: 'setting/:section', navigation: false, component: <SettingPage />, localVersion: true },
+  { key: 'nhi-index', navigation: false, exact: true, component: <NhiIndexPage />, localVersion: true },
   { key: '', navigation: false, exact: false, component: <Redirect to="/appointment" />, localVersion: true },
 ];
 
@@ -294,6 +298,7 @@ function NavHome(props) {
   const toothMaterialSheet = linkManagement.toothMaterialSheet
     ? linkManagement.toothMaterialSheet
     : `${getBaseUrl()}#/setting/link`;
+  const nhiINdex = `${getBaseUrl()}#/nhi-index`;
 
   const navLink = [
     {
@@ -301,12 +306,21 @@ function NavHome(props) {
       name: '技工',
       href: technicianSheet,
       icon: Pantone,
+      newTab: true,
     },
     {
       key: 'material',
       name: '牙材',
       href: toothMaterialSheet,
       icon: Cube,
+      newTab: true,
+    },
+    {
+      key: 'nhi',
+      name: '健保',
+      href: nhiINdex,
+      icon: NhiIcon,
+      newTab: false,
     },
   ];
 
@@ -335,8 +349,8 @@ function NavHome(props) {
                     <Link to={`/${n.key}`}>
                       <div>
                         <div>
-                          <img src={n.icon.on} alt="bookIcon" />
-                          <img src={n.icon.off} alt="bookIcon" />
+                          <img src={n.icon.on} alt={n.name} />
+                          <img src={n.icon.off} alt={n.name} />
                         </div>
                         <span className="svg">{n.name}</span>
                       </div>
@@ -352,11 +366,11 @@ function NavHome(props) {
                     <PopoverContent>
                       {navLink.map(n => (
                         <LinkNavItem key={n.key}>
-                          <a href={n.href} target="_blank" rel="noopener noreferrer">
+                          <a href={n.href} target={n.newTab ? '_blank' : '_top'} rel="noopener noreferrer">
                             <div>
                               <div>
-                                <img src={n.icon} alt="bookIcon" />
-                                <img src={n.icon} alt="bookIcon" />
+                                <span />
+                                <img src={n.icon} alt={n.name} />
                               </div>
                               <span className="svg">{n.name}</span>
                             </div>
@@ -435,7 +449,7 @@ function NavHome(props) {
           ...navLink
             .filter(n => determineRouteOrLinkShow(n))
             .map(n => (
-              <LaboDrawerItem key={n.key} href={n.href} target="_blank" rel="noopener noreferrer">
+              <LaboDrawerItem key={n.key} href={n.href} target={n.newTab ? '_blank' : '_top'} rel="noopener noreferrer">
                 <div>
                   <img src={n.icon} alt={n.name} />
                   <span>{n.name}</span>

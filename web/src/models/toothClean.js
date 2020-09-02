@@ -2,9 +2,9 @@ import request from '../utils/request';
 import apiUrl from '../utils/apiUrl';
 import combineUrlAndQueryData from '../utils/combineUrlAndQueryData';
 
-const LOCATION = `business/nhi/statistics/index/od`;
+const LOCATION = `business/nhi/statistics/index/tooth-clean`;
 
-export default class OdIndexes {
+export default class ToothClean {
   static get = async params => {
     const options = {
       headers: {
