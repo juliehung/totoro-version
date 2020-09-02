@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Table, Tabs, Button, Popover } from 'antd';
 import { connect } from 'react-redux';
-import { getDoctorNhiExam, getDoctorNhiTx, getOdIndexes, getToothClean } from './actions';
+import { getDoctorNhiExam, getDoctorNhiTx, getOdIndexes, getToothClean, getIndexTreatmentProcedure } from './actions';
 import moment from 'moment';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import { DayPickerRangeController } from 'react-dates';
+import { parseIndexTreatmentProcedureToTableObject } from './utils/parseIndexTreatmentProcedureToTableObject';
 
 const { TabPane } = Tabs;
 
@@ -214,6 +215,89 @@ const doctorNhiTxColumns = doctors => [
   serialNumber,
 ];
 
+const treatmentProcedureColumn = doctors => [
+  {
+    title: '醫生',
+    dataIndex: 'did',
+    filters: doctors.map(d => ({ value: d?.id, text: d?.firstName })),
+    onFilter: (value, record) => value === record.did,
+    key: 'treatmentProcedure-did',
+    render: did => doctors.find(d => d.id === did)?.firstName ?? did,
+    sorter: {
+      compare: (a, b) => a.did - b.did,
+    },
+  },
+  {
+    title: '檢查點數',
+    dataIndex: 'examinationPoint',
+    key: 'treatmentProcedure-examinationPoint',
+  },
+  {
+    title: '檢查碼',
+    dataIndex: 'examinationCode',
+    key: 'treatmentProcedure-examinationCode',
+  },
+  {
+    title: 'a31',
+    dataIndex: 'a31',
+    key: 'treatmentProcedure-a31',
+  },
+  {
+    title: 'a32',
+    dataIndex: 'a32',
+    key: 'treatmentProcedure-a32',
+  },
+  {
+    ...serialNumber,
+    sorter: {
+      compare: (a, b) => a.serialNumber - b.serialNumber,
+    },
+  },
+];
+
+const treatmentColumn = [
+  {
+    title: 'a71',
+    dataIndex: 'a71',
+    key: 'treatment-a71',
+  },
+  {
+    title: 'a72',
+    dataIndex: 'a72',
+    key: 'treatment-a72',
+  },
+  {
+    title: 'a73',
+    dataIndex: 'a73',
+    key: 'treatment-a73',
+  },
+  {
+    title: 'a74',
+    dataIndex: 'a74',
+    key: 'treatment-a74',
+  },
+  {
+    title: 'a75',
+    dataIndex: 'a75',
+    key: 'treatment-a75',
+  },
+  {
+    title: 'a76',
+    dataIndex: 'a76',
+    key: 'treatment-a76',
+  },
+  {
+    title: 'a77',
+    dataIndex: 'a77',
+    key: 'treatment-a77',
+  },
+  {
+    title: 'a78',
+    dataIndex: 'a78',
+    key: 'treatment-a78',
+  },
+];
+
 function NhiIndexPage({
   doctors,
   odIndexes,
@@ -224,6 +308,8 @@ function NhiIndexPage({
   getDoctorNhiTx,
   getToothClean,
   toothClean,
+  getIndexTreatmentProcedure,
+  groupedIndexTreatmentProcedure,
 }) {
   const [tabNumb, setTabNumb] = useState(1);
   const [startDate, setStartDate] = useState(moment().startOf('month'));
@@ -236,6 +322,7 @@ function NhiIndexPage({
     getDoctorNhiExam(startDate, endDate);
     getDoctorNhiTx(startDate, endDate);
     getToothClean(startDate, endDate);
+    getIndexTreatmentProcedure(startDate, endDate);
   };
 
   const toRocDate = date => {
@@ -245,6 +332,13 @@ function NhiIndexPage({
       return `${year}年${dateString}`;
     }
     return date;
+  };
+
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+    getCheckboxProps: () => ({}),
   };
 
   return (
@@ -335,6 +429,31 @@ function NhiIndexPage({
                 rowKey={record => `${record.did} ${record.nhiTxCode}`}
               />
             </TabPane>
+            <TabPane tab="健保統計" key="5">
+              <Table
+                columns={treatmentProcedureColumn(doctors)}
+                dataSource={groupedIndexTreatmentProcedure}
+                pagination
+                bordered
+                showHeader={true}
+                tableLayout="fixed"
+                rowKey={record => `${record.disposalId}`}
+                expandable={{
+                  expandedRowRender: record => (
+                    <Table
+                      dataSource={record.treatments}
+                      columns={treatmentColumn}
+                      pagination={false}
+                      rowKey={rowData => `${rowData.treatmentProcedureId}`}
+                    />
+                  ),
+                }}
+                rowSelection={{
+                  type: 'checkbox',
+                  ...rowSelection,
+                }}
+              />
+            </TabPane>
           </Tabs>
         </TabsContainer>
       </div>
@@ -348,6 +467,9 @@ const mapStateToProps = ({ nhiIndexPageReducer, homePageReducer }) => ({
   doctorNhiTx: nhiIndexPageReducer.nhiIndex.doctorNhiTx,
   toothClean: nhiIndexPageReducer.nhiIndex.toothClean,
   doctors: homePageReducer.user.users,
+  groupedIndexTreatmentProcedure: parseIndexTreatmentProcedureToTableObject(
+    nhiIndexPageReducer.nhiIndex.indexTreatmentProcedure,
+  ),
 });
 
 // map to actions
@@ -356,6 +478,7 @@ const mapDispatchToProps = {
   getDoctorNhiExam,
   getDoctorNhiTx,
   getToothClean,
+  getIndexTreatmentProcedure,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NhiIndexPage);
