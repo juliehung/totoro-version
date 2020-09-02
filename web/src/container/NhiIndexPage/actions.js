@@ -11,6 +11,9 @@ import {
   GET_TOOTH_CLEAN,
   GET_TOOTH_CLEAN_FAIL,
   GET_TOOTH_CLEAN_SUCCESS,
+  GET_INDEX_TREATMENT_PRECEDURE,
+  GET_INDEX_TREATMENT_PRECEDURE_SUCCESS,
+  GET_INDEX_TREATMENT_PRECEDURE_FAIL,
 } from './constant';
 
 export function getOdIndexes(begin, end) {
@@ -59,4 +62,16 @@ export function getToothCleanSuccess(toothClean) {
 
 export function getToothCleanFail(toothClean) {
   return { type: GET_TOOTH_CLEAN_FAIL, toothClean };
+}
+
+export function getIndexTreatmentProcedure(begin, end) {
+  return { type: GET_INDEX_TREATMENT_PRECEDURE, begin, end };
+}
+
+export function getIndexTreatmentProcedureSuccess(indexTreatmentProcedure) {
+  return { type: GET_INDEX_TREATMENT_PRECEDURE_SUCCESS, indexTreatmentProcedure };
+}
+
+export function getIndexTreatmentProcedureFail(indexTreatmentProcedure) {
+  return { type: GET_INDEX_TREATMENT_PRECEDURE_FAIL, indexTreatmentProcedure };
 }
