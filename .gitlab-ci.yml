@@ -146,7 +146,7 @@ releaseWarToFirebase:
 releaseStaticFilesToGCS:
     stage: release
     only:
-        - release
+        - tags
     dependencies:
         - repackageByGradle
     image: google/cloud-sdk:alpine
