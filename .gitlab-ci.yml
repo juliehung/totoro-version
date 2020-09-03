@@ -131,7 +131,19 @@ repackageByGradle:
             - build/*
 
 # release stage
-releaseWarAndStaticFilesToGCS:
+releaseWarToFirebase:
+    stage: release
+    only:
+        - release
+    dependencies:
+        - repackageByGradle
+    image: google/cloud-sdk:alpine
+    script:
+        - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+        - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
+        - gsutil cp build/libs/* gs://dentall-admin-auto-update/
+
+releaseStaticFilesToGCS:
     stage: release
     only:
         - tags
@@ -141,7 +153,6 @@ releaseWarAndStaticFilesToGCS:
     script:
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
         - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
-        - gsutil cp build/libs/* gs://dentall-admin-auto-update/
         - gsutil -m cp -r build/resources/main/public/** gs://totoro-admin-static
 
 releaseImageToGitlabRegistry:
@@ -195,10 +206,7 @@ releaseImageToGCPRegistry:
 # deploy stage
 deployDevDentall8082:
     only:
-      - master
       - develop
-      - release
-      - tags
     stage: deploy
     image: ubuntu
     dependencies:
@@ -222,7 +230,7 @@ deployDevDentall8082:
 
 deployDevDentall8084:
     only:
-        - tags
+        - develop
     when: manual
     stage: deploy
     image: ubuntu
