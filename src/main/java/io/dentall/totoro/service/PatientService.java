@@ -4,9 +4,11 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.PatientCriteria;
+import io.dentall.totoro.service.dto.table.PatientTable;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.FilterUtil;
 import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.service.QueryService;
 import io.github.jhipster.service.filter.InstantFilter;
 import org.slf4j.Logger;
@@ -18,8 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.*;
-import java.time.*;
-import java.util.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -429,5 +433,9 @@ public class PatientService extends QueryService<Patient> {
 
     private String wrapPostfixLikeQuery(String txt) {
         return txt.toUpperCase() + '%';
+    }
+
+    public PatientTable findPatientById(Long patientId) {
+        return patientRepository.findPatientById(patientId).orElseThrow(() -> new BadRequestAlertException("", "", ""));
     }
 }
