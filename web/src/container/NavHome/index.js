@@ -271,7 +271,7 @@ function NavHome(props) {
   const [, , removeCookie] = useCookies(['token']);
 
   const logout = () => {
-    removeCookie('token', { path: '/' });
+    removeCookie('token');
     window.location = window.location.pathname;
   };
 
