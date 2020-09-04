@@ -58,8 +58,8 @@ public class NhiRuleCheckUtil {
         ) {
             LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
 
-            return nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(dto.getPatient().getId()
-                , codes).stream()
+            return nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(dto.getPatient().getId(),
+                codes).stream()
                 .filter(Objects::nonNull)
                 .anyMatch(netpt -> {
                     LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
