@@ -15,6 +15,12 @@ import java.util.Objects;
 @Service
 public class NhiRuleCheckUtil {
 
+    public static final Period nhiMonth = Period.ofDays(30);
+
+    public static final Period nhiMonthAndHalf = Period.ofDays(90);
+
+    public static final Period nhiHalfYear = Period.ofDays(180);
+
     private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
 
     public NhiRuleCheckUtil(NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository) {
