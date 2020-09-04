@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi;
 
-public interface NhiRuleCheck {
+public interface NhiRuleCheckService {
     // 910***
     boolean validate91003C(NhiRuleCheckDTO dto);
     boolean validate91004C(NhiRuleCheckDTO dto);

@@ -1,13 +1,16 @@
 package io.dentall.totoro.business.service.nhi;
 
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
+import org.springframework.stereotype.Service;
+
 import java.util.Arrays;
 
-public class NhiRuleCheck20200901Impl implements NhiRuleCheck {
+@Service
+public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
 
     private final NhiRuleCheckUtil nhiRuleCheckUtil;
 
-    public NhiRuleCheck20200901Impl(NhiRuleCheckUtil nhiRuleCheckUtil) {
+    public NhiRuleCheckService20200901Impl(NhiRuleCheckUtil nhiRuleCheckUtil) {
         this.nhiRuleCheckUtil = nhiRuleCheckUtil;
     }
 
