@@ -88,7 +88,7 @@ jhipster:
                 base64-secret: NDY1ZDY2NzEzMjFlZjgyM2Q5MmEyYTRkMTA0YjQyMGUwYzhlNDMzNjRiOTAyNzI3NzI2OGM1MzA3Y2Y1ZGZjNGQ4NzI3MzRiNDkwYjI1ZTQ4NTE3NjI2ZGRiZjUxMDMxMmNjMjYzZDU0NjIxZDBmZjAxNDA2MWM3OWFkNzhmMDM=
                 # Token is valid 24 hours
                 token-validity-in-seconds: 86400
-                token-validity-in-seconds-for-remember-me: 2592000
+                token-validity-in-seconds-for-remember-me: 31536000
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: totoro@localhost
         base-url: http://127.0.0.1:8080
