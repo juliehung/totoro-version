@@ -61,7 +61,7 @@ public class NhiRuleCheckUtil {
                 .filter(Objects::nonNull)
                 .filter(netp -> StringUtils.isNotBlank(netp.getA71()) && netp.getTreatmentProcedure_Id() != null)
                 .filter(netp -> !netp.getTreatmentProcedure_Id().equals(dto.getNhiExtendTreatmentProcedure().getId()))
-                .filter(netp -> Integer.parseInt(dto.getNhiExtendTreatmentProcedure().getA71()) > Integer.parseInt(netp.getA71()))
+                .filter(netp -> Long.parseLong(dto.getNhiExtendTreatmentProcedure().getA71()) > Long.parseLong(netp.getA71()))
                 .anyMatch(netpt -> {
                     LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
                     return pastTxDate.plus(limitDays).isAfter(currentTxDate);
