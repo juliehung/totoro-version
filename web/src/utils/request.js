@@ -13,6 +13,11 @@ export function checkStatus(response) {
     return response;
   }
 
+  if (response.status === 401) {
+    cookies.remove('token');
+    window.location.reload();
+  }
+
   const error = new Error(response.statusText);
   error.response = response;
   throw error;
