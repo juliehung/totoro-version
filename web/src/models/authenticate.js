@@ -8,8 +8,7 @@ const requestUrl = `${apiUrl}/${LOCATION}`;
 export default class Authenticate {
   // GET
   static get = async () => {
-    const requestURL = `${requestUrl}`;
-    const result = await requestNoParse(requestURL).then(response => response.text());
+    const result = await requestNoParse(requestUrl).then(response => response.text());
     if (result && result.length !== 0) {
       return result;
     }
@@ -18,15 +17,15 @@ export default class Authenticate {
 
   // POST
   static post = async account => {
-    const requestURL = `${requestUrl}`;
+    const body = { ...account, rememberMe: true };
     const options = {
       headers: {
         'content-type': 'application/json',
       },
       method: 'POST',
-      body: JSON.stringify(account),
+      body: JSON.stringify(body),
     };
-    const result = await request(requestURL, options);
+    const result = await request(requestUrl, options);
     return result;
   };
 }

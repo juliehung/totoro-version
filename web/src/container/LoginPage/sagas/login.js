@@ -6,8 +6,8 @@ import { loginSuccess, changeLoginFail } from '../actions';
 export function* login() {
   while (true) {
     try {
-      const login = yield take(LOGIN_START);
-      const token = yield call(Authenticate.post, login.data);
+      const action = yield take(LOGIN_START);
+      const token = yield call(Authenticate.post, action.data);
       yield put(loginSuccess(token));
     } catch (error) {
       yield put(changeLoginFail(true));
