@@ -39,5 +39,6 @@ public class NhiRuleCheckResource {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO().patient(patientService.findPatientById(vm.getPatientId()))
             .nhiExtendTreatmentProcedure(nhiExtendTreatmentProcedureService.findNhiExtendTreatmentProcedureById(vm.getTreatmentId()));
         return new ResponseEntity<>(nhiRuleCheckService.validate91003C(dto), HttpStatus.OK);
+
     }
 }

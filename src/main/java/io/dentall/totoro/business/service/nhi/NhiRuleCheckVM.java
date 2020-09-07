@@ -7,10 +7,7 @@ public class NhiRuleCheckVM {
     @NotNull
     private Long patientId;
 
-    // nhi_extend_treatment_procedure.a73
     @NotNull
-    private String code;
-
     private Long treatmentId;
 
     public Long getPatientId() {
@@ -19,14 +16,6 @@ public class NhiRuleCheckVM {
 
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public Long getTreatmentId() {
