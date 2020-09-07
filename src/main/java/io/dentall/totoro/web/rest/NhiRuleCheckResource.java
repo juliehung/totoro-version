@@ -5,8 +5,8 @@ import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckService;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckVM;
+import io.dentall.totoro.service.NhiExtendTreatmentProcedureService;
 import io.dentall.totoro.service.PatientService;
-import io.dentall.totoro.service.dto.table.PatientTable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,19 +21,23 @@ public class NhiRuleCheckResource {
 
     private final PatientService patientService;
 
-    public NhiRuleCheckResource(NhiRuleCheckService nhiRuleCheckService,
-        PatientService patientService
+    private final NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService;
+
+    public NhiRuleCheckResource(
+        NhiRuleCheckService nhiRuleCheckService,
+        PatientService patientService,
+        NhiExtendTreatmentProcedureService nhiExtendTreatmentProcedureService
     ) {
         this.nhiRuleCheckService = nhiRuleCheckService;
         this.patientService = patientService;
+        this.nhiExtendTreatmentProcedureService = nhiExtendTreatmentProcedureService;
     }
 
     @GetMapping("/validate/91003C")
     @Timed
     public ResponseEntity<Boolean> validate91003C(NhiRuleCheckVM vm) {
-        PatientTable pt = patientService.findPatientById(vm.getPatientId());
-        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
-        dto.setPatient(pt);
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO().patient(patientService.findPatientById(vm.getPatientId()))
+            .nhiExtendTreatmentProcedure(nhiExtendTreatmentProcedureService.findNhiExtendTreatmentProcedureById(vm.getTreatmentId()));
         return new ResponseEntity<>(nhiRuleCheckService.validate91003C(dto), HttpStatus.OK);
     }
 }

@@ -1,39 +1,53 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
-import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
-import io.dentall.totoro.service.dto.table.PatientTable;
+import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.Patient;
 
 public class NhiRuleCheckDTO {
 
-    private PatientTable patient;
+    private Patient patient;
 
-    private NhiExtendDisposalTable nhiExtendDisposal;
+    private NhiExtendDisposal nhiExtendDisposal;
 
-    private NhiExtendTreatmentProcedureTable nhiExtendTreatmentProcedure;
+    private NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure;
 
-    public PatientTable getPatient() {
+    public NhiRuleCheckDTO patient(Patient patient) {
+        this.patient = patient;
+        return this;
+    }
+
+    public NhiRuleCheckDTO nhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal) {
+        this.nhiExtendDisposal = nhiExtendDisposal;
+        return this;
+    }
+
+    public NhiRuleCheckDTO nhiExtendTreatmentProcedure(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+        this.nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedure;
+        return this;
+    }
+
+    public Patient getPatient() {
         return patient;
     }
 
-    public void setPatient(PatientTable patient) {
+    public void setPatient(Patient patient) {
         this.patient = patient;
     }
 
-    public NhiExtendDisposalTable getNhiExtendDisposal() {
+    public NhiExtendDisposal getNhiExtendDisposal() {
         return nhiExtendDisposal;
     }
 
-    public void setNhiExtendDisposal(NhiExtendDisposalTable nhiExtendDisposal) {
+    public void setNhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal) {
         this.nhiExtendDisposal = nhiExtendDisposal;
     }
 
-    public NhiExtendTreatmentProcedureTable getNhiExtendTreatmentProcedure() {
+    public NhiExtendTreatmentProcedure getNhiExtendTreatmentProcedure() {
         return nhiExtendTreatmentProcedure;
     }
 
-    public void setNhiExtendTreatmentProcedure(NhiExtendTreatmentProcedureTable nhiExtendTreatmentProcedure) {
+    public void setNhiExtendTreatmentProcedure(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         this.nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedure;
     }
-
 }

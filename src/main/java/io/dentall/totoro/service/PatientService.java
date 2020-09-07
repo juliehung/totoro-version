@@ -4,11 +4,10 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.PatientCriteria;
-import io.dentall.totoro.service.dto.table.PatientTable;
+import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.FilterUtil;
 import io.dentall.totoro.service.util.StreamUtil;
-import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.service.QueryService;
 import io.github.jhipster.service.filter.InstantFilter;
 import org.slf4j.Logger;
@@ -16,8 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.criteria.*;
 import java.time.Instant;
@@ -435,7 +436,9 @@ public class PatientService extends QueryService<Patient> {
         return txt.toUpperCase() + '%';
     }
 
-    public PatientTable findPatientById(Long patientId) {
-        return patientRepository.findPatientById(patientId).orElseThrow(() -> new BadRequestAlertException("", "", ""));
+    public Patient findPatientById(Long patientId) {
+        return PatientMapper.patientTableToPatient(
+            patientRepository.findPatientById(patientId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to found resource")));
     }
 }

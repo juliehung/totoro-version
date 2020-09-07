@@ -1,6 +1,8 @@
 package io.dentall.totoro.business.service.nhi.util;
 
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -27,18 +29,14 @@ public class NhiRuleCheckUtil {
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
     }
 
-    public static int calculatePatientAge(NhiRuleCheckDTO dto) {
+    public static int calculatePatientAgeAtTreatmentDate(@NotNull Patient patient, @NotNull NhiExtendTreatmentProcedure targetTreatmentProcedure) {
         Integer age;
-        if (dto != null &&
-            dto.getPatient() != null &&
-            dto.getPatient().getBirth() != null &&
-            dto.getNhiExtendTreatmentProcedure() != null &&
-            StringUtils.isNotBlank(dto.getNhiExtendTreatmentProcedure().getA71())
+        if (patient.getBirth() != null &&
+            StringUtils.isNotBlank(targetTreatmentProcedure.getA71())
         ) {
-            age = Period.between(dto.getPatient().getBirth(),
-                    DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()))
+            age = Period.between(patient.getBirth(),
+                    DateTimeUtil.transformROCDateToLocalDate(targetTreatmentProcedure.getA71()))
                 .getYears();
-
         } else {
             throw new IllegalArgumentException("");
         }
@@ -46,7 +44,7 @@ public class NhiRuleCheckUtil {
         return age;
     }
 
-    public boolean equalsOrGreaterThanAge12(int age) {
+    public boolean equalsOrGreaterThanAge12(@NotNull int age) {
        return age > 12;
     }
 
