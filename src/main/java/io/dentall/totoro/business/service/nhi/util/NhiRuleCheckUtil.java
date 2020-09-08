@@ -78,7 +78,7 @@ public class NhiRuleCheckUtil {
                     .orElseThrow(() -> new ResourceNotFoundException("patient with " + nhiExtendTreatmentProcedureId))));
     }
 
-    public NhiRuleCheckDTO convertVmToDto(@NotNull String code, @NotNull NhiRuleCheckVM vm) {
+    public NhiRuleCheckDTO convertVmToDto(@NotNull String code, @NotNull NhiRuleCheckVM vm) throws BadRequestAlertException {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
 
         if (vm.getPatientId() != null) {
