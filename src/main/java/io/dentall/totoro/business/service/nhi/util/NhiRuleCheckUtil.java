@@ -21,7 +21,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -168,7 +167,7 @@ public class NhiRuleCheckUtil {
                     limitDays.getDays(),
                     match.getA73(),
                     matchDate,
-                    Duration.between(matchDate, currentTxDate).get(ChronoUnit.DAYS)
+                    Duration.between(matchDate, currentTxDate).toDays()
                 )
             );
         }
