@@ -167,7 +167,7 @@ public class NhiRuleCheckUtil {
                     limitDays.getDays(),
                     match.getA73(),
                     matchDate,
-                    Duration.between(matchDate, currentTxDate).toDays()
+                    Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
                 )
             );
         }
