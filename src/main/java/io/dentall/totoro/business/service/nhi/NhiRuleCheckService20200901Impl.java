@@ -27,7 +27,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         InvocationTargetException,
         IllegalAccessException {
         return (NhiRuleCheckResultVM) this.getClass()
-            .getMethod("".concat(code), NhiRuleCheckDTO.class)
+            .getMethod("validate".concat(code), NhiRuleCheckDTO.class)
             .invoke(this, convertVmToDto(vm));
     }
 
