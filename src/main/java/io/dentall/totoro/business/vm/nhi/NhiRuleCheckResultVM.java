@@ -7,7 +7,7 @@ import java.util.List;
 
 public class NhiRuleCheckResultVM {
 
-    private boolean validated;
+    private boolean validated = true;
 
     private List<String> messages = new ArrayList<>();
 
