@@ -17,9 +17,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -166,7 +168,7 @@ public class NhiRuleCheckUtil {
                     limitDays.getDays(),
                     match.getA73(),
                     matchDate,
-                    Period.between(matchDate, currentTxDate).getDays()
+                    Duration.between(matchDate, currentTxDate).get(ChronoUnit.DAYS)
                 )
             );
         }
