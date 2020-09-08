@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckService;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class NhiRuleCheckResource {
 
     @GetMapping("/validate/{code}")
     @Timed
-    public ResponseEntity<Boolean> validateCode(@PathVariable String code, NhiRuleCheckVM vm) throws
+    public ResponseEntity<NhiRuleCheckResultVM> validateCode(@PathVariable String code, NhiRuleCheckVM vm) throws
         InvocationTargetException,
         IllegalAccessException
     {
