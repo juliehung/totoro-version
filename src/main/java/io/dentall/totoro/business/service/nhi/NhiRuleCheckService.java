@@ -1,9 +1,10 @@
 package io.dentall.totoro.business.service.nhi;
 
+import java.lang.reflect.InvocationTargetException;
+
 public interface NhiRuleCheckService {
 
-    // convert FE input to this service basic communicating unit
-    NhiRuleCheckDTO convertVmToDto(NhiRuleCheckVM vm);
+    boolean dispatcher(String code, NhiRuleCheckVM vm) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
 
     // 910***
     boolean validate91003C(NhiRuleCheckDTO dto);

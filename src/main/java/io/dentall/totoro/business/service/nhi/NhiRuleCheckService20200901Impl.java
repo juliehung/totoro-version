@@ -3,6 +3,7 @@ package io.dentall.totoro.business.service.nhi;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 @Service
@@ -14,9 +15,19 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         this.nhiRuleCheckUtil = nhiRuleCheckUtil;
     }
 
-    @Override
-    public NhiRuleCheckDTO convertVmToDto(NhiRuleCheckVM vm) {
+    private NhiRuleCheckDTO convertVmToDto(NhiRuleCheckVM vm) {
         return nhiRuleCheckUtil.convertVmToDto(vm);
+    }
+
+    @Override
+    public boolean dispatcher(String code, NhiRuleCheckVM vm) throws
+        NoSuchMethodException,
+        InvocationTargetException,
+        IllegalAccessException
+    {
+        return (boolean) this.getClass()
+            .getMethod("validate".concat(code), NhiRuleCheckDTO.class)
+            .invoke(this, convertVmToDto(vm));
     }
 
     @Override

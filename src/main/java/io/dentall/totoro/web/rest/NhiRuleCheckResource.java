@@ -7,6 +7,7 @@ import io.dentall.totoro.business.service.nhi.NhiRuleCheckVM;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,13 +23,13 @@ public class NhiRuleCheckResource {
         this.nhiRuleCheckService = nhiRuleCheckService;
     }
 
-    @GetMapping("/validate/91003C")
+    @GetMapping("/validate/{code}")
     @Timed
-    public ResponseEntity<Boolean> validate91003C(NhiRuleCheckVM vm) {
+    public ResponseEntity<Boolean> validate91003C(@PathVariable String code, NhiRuleCheckVM vm) {
         return new ResponseEntity<>(
-            nhiRuleCheckService.validate91003C(
-                nhiRuleCheckService.convertVmToDto(vm)),
+            nhiRuleCheckService.dispatcher(code, vm),
             HttpStatus.OK);
 
     }
+
 }
