@@ -1,4 +1,4 @@
-package io.dentall.totoro.business.service.nhi;
+package io.dentall.totoro.business.vm.nhi;
 
 import javax.validation.constraints.NotNull;
 

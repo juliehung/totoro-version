@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.util;
 
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
-import io.dentall.totoro.business.service.nhi.NhiRuleCheckVM;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;

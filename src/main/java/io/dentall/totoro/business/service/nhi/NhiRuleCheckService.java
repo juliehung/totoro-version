@@ -1,5 +1,7 @@
 package io.dentall.totoro.business.service.nhi;
 
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
+
 import java.lang.reflect.InvocationTargetException;
 
 public interface NhiRuleCheckService {

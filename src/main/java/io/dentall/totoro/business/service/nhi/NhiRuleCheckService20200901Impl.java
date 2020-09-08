@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi;
 
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
