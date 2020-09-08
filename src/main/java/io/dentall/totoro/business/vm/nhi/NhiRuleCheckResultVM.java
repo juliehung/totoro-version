@@ -9,7 +9,7 @@ public class NhiRuleCheckResultVM {
 
     private boolean validated;
 
-    private List<String> messages;
+    private List<String> messages = new ArrayList<>();
 
     private List<NhiRuleCheckResultDTO> checkHistory = new ArrayList<>();
 
