@@ -17,8 +17,8 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         this.nhiRuleCheckUtil = nhiRuleCheckUtil;
     }
 
-    private NhiRuleCheckDTO convertVmToDto(NhiRuleCheckVM vm) {
-        return nhiRuleCheckUtil.convertVmToDto(vm);
+    private NhiRuleCheckDTO convertVmToDto(String code, NhiRuleCheckVM vm) {
+        return nhiRuleCheckUtil.convertVmToDto(code, vm);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         IllegalAccessException {
         return (NhiRuleCheckResultVM) this.getClass()
             .getMethod("validate".concat(code), NhiRuleCheckDTO.class)
-            .invoke(this, convertVmToDto(vm));
+            .invoke(this, convertVmToDto(code, vm));
     }
 
     @Override
