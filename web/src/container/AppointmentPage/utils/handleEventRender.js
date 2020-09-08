@@ -203,21 +203,25 @@ export function handleEventRender(info, func, params) {
         );
 
         render(
-          <Popover content={popoverContent} trigger="hover" placement="top">
-            <Dropdown overlay={contextMenu} trigger={['contextMenu']}>
-              <div
-                style={{ height: '100%' }}
-                dangerouslySetInnerHTML={{ __html: info.el.innerHTML }}
-                onDoubleClick={
-                  !registrationStatus
-                    ? () => {
-                        func.edit(appointment);
-                      }
-                    : null
-                }
-              />
-            </Dropdown>
-          </Popover>,
+          !info.isMirror ? (
+            <Popover content={popoverContent} trigger="hover" placement="top">
+              <Dropdown overlay={contextMenu} trigger={['contextMenu']}>
+                <div
+                  style={{ height: '100%' }}
+                  dangerouslySetInnerHTML={{ __html: info.el.innerHTML }}
+                  onDoubleClick={
+                    !registrationStatus
+                      ? () => {
+                          func.edit(appointment);
+                        }
+                      : null
+                  }
+                />
+              </Dropdown>
+            </Popover>
+          ) : (
+            <div style={{ height: '100%' }} dangerouslySetInnerHTML={{ __html: info.el.innerHTML }} />
+          ),
           info.el,
         );
       } else if (info.view.type === 'dayGridMonth') {
