@@ -45,21 +45,23 @@ public class NhiRuleCheckUtil {
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
     }
 
-    private void assignDtoByPatientId(@NotNull NhiRuleCheckDTO dto, Long patientId) {
+    private void assignDtoByPatientId(@NotNull NhiRuleCheckDTO dto, @NotNull Long patientId) {
         dto.setPatient(
             PatientMapper.patientTableToPatient(
                 patientRepository.findPatientById(patientId)
                     .orElseThrow(() -> new ResourceNotFoundException("patient with " + patientId))));
     }
 
-    private void assignDtoByNhiExtendTreatmentProcedureId(@NotNull NhiRuleCheckDTO dto, Long nhiExtendTreatmentProcedureId) {
+    private void assignDtoByNhiExtendTreatmentProcedureId(@NotNull NhiRuleCheckDTO dto, @NotNull Long nhiExtendTreatmentProcedureId) {
         dto.setNhiExtendTreatmentProcedure(
             nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
                 nhiExtendTreatmentProcedureRepository.findById(nhiExtendTreatmentProcedureId, NhiExtendTreatmentProcedureTable.class)
                     .orElseThrow(() -> new ResourceNotFoundException("patient with " + nhiExtendTreatmentProcedureId))));
     }
 
-    public void assignDtoDataFromDb(@NotNull NhiRuleCheckDTO dto, @NotNull NhiRuleCheckVM vm) {
+    public NhiRuleCheckDTO convertVmToDto(@NotNull NhiRuleCheckVM vm) {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+
         if (vm.getPatientId() != null) {
             assignDtoByPatientId(dto, vm.getPatientId());
         }
@@ -68,6 +70,7 @@ public class NhiRuleCheckUtil {
             assignDtoByNhiExtendTreatmentProcedureId(dto, vm.getTreatmentId());
         }
 
+        return dto;
     }
 
     public static int calculatePatientAgeAtTreatmentDate(@NotNull Patient patient, @NotNull NhiExtendTreatmentProcedure targetTreatmentProcedure) {

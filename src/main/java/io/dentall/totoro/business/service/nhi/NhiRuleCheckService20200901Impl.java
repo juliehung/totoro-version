@@ -15,6 +15,11 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
     }
 
     @Override
+    public NhiRuleCheckDTO convertVmToDto(NhiRuleCheckVM vm) {
+        return nhiRuleCheckUtil.convertVmToDto(vm);
+    }
+
+    @Override
     public boolean validate91003C(NhiRuleCheckDTO dto) {
         return
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(NhiRuleCheckUtil.calculatePatientAgeAtTreatmentDate(dto.getPatient(), dto.getNhiExtendTreatmentProcedure())) &&

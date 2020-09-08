@@ -1,6 +1,10 @@
 package io.dentall.totoro.business.service.nhi;
 
 public interface NhiRuleCheckService {
+
+    // convert FE input to this service basic communicating unit
+    NhiRuleCheckDTO convertVmToDto(NhiRuleCheckVM vm);
+
     // 910***
     boolean validate91003C(NhiRuleCheckDTO dto);
 
