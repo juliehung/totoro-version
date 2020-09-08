@@ -1,6 +1,8 @@
 package io.dentall.totoro.business.service.nhi.util;
 
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
+import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.Patient;
@@ -43,6 +45,21 @@ public class NhiRuleCheckUtil {
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
         this.patientRepository = patientRepository;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
+    }
+
+    public NhiRuleCheckResultVM addResultToVm(@NotNull NhiRuleCheckResultDTO dto, @NotNull NhiRuleCheckResultVM vm) {
+
+        vm.getCheckHistory().add(dto);
+
+        vm.setValidated(
+            vm.isValidated() && dto.isValidated()
+        );
+
+        if (StringUtils.isNotBlank(dto.getMessage())) {
+            vm.getMessages().add(dto.getMessage());
+        }
+
+        return vm;
     }
 
     private void assignDtoByPatientId(@NotNull NhiRuleCheckDTO dto, @NotNull Long patientId) {

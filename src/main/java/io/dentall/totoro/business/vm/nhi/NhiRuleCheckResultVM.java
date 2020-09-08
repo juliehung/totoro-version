@@ -2,6 +2,7 @@ package io.dentall.totoro.business.vm.nhi;
 
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NhiRuleCheckResultVM {
@@ -10,7 +11,7 @@ public class NhiRuleCheckResultVM {
 
     private List<String> messages;
 
-    private List<NhiRuleCheckResultDTO> checkHistory;
+    private List<NhiRuleCheckResultDTO> checkHistory = new ArrayList<>();
 
     public NhiRuleCheckResultVM validated(boolean validated) {
         this.validated = validated;
