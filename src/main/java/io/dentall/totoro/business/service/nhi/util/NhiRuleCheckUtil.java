@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -89,14 +90,13 @@ public class NhiRuleCheckUtil {
 
         // 產生暫時的 treatment 資料，在後續的檢驗中被檢核所需
         if (vm.getPatientId() != null && vm.getTreatmentId() == null) {
-            Assert.notNull(vm.getTmpTreatmentA71(), "A71 診療項目需輸入 民國日期");
             Assert.notNull(vm.getTmpTreatmentA73(), "A73 診療項目需輸入 健保代碼");
             Assert.notNull(vm.getTmpTreatmentA74(), "A74 診療項目需輸入 牙位");
             Assert.notNull(vm.getTmpTreatmentA75(), "A75 診療項目需輸入 牙面");
 
             dto.setNhiExtendTreatmentProcedure(
                 new NhiExtendTreatmentProcedure()
-                    .a71(vm.getTmpTreatmentA71())
+                    .a71(DateTimeUtil.transformLocalDateToRocDate(Instant.now()))
                     .a73(vm.getTmpTreatmentA73())
                     .a74(vm.getTmpTreatmentA74())
                     .a75(vm.getTmpTreatmentA75()));

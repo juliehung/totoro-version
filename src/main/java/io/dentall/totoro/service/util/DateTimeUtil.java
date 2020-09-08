@@ -3,6 +3,8 @@ package io.dentall.totoro.service.util;
 import io.dentall.totoro.config.TimeConfig;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.function.Supplier;
 
@@ -13,6 +15,14 @@ public final class DateTimeUtil {
 
     public static Supplier<LocalDate> localMonthFirstDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.firstDayOfMonth()).toLocalDate();
     public static Supplier<LocalDate> localMonthLastDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.lastDayOfMonth()).toLocalDate();
+
+    public static String transformLocalDateToRocDate(Instant dateTime) {
+        return dateTime
+            .minus(1911, ChronoUnit.YEARS)
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .format(
+                DateTimeFormatter.ofPattern("YYYYMMDDHHmm"));
+    }
 
     public static LocalDate transformROCDateToLocalDate(String rocDate) {
         int year = Integer.parseInt(rocDate.substring(0, 3)) + 1911;
