@@ -23,8 +23,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
     public boolean dispatcher(String code, NhiRuleCheckVM vm) throws
         NoSuchMethodException,
         InvocationTargetException,
-        IllegalAccessException
-    {
+        IllegalAccessException {
         return (boolean) this.getClass()
             .getMethod("validate".concat(code), NhiRuleCheckDTO.class)
             .invoke(this, convertVmToDto(vm));
