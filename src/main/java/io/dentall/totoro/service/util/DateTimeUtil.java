@@ -18,10 +18,11 @@ public final class DateTimeUtil {
 
     public static String transformLocalDateToRocDate(Instant dateTime) {
         return dateTime
-            .minus(1911, ChronoUnit.YEARS)
             .atOffset(TimeConfig.ZONE_OFF_SET)
+            .minus(1911, ChronoUnit.YEARS)
             .format(
-                DateTimeFormatter.ofPattern("YYYYMMDDHHmm"));
+                DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+            .substring(1);
     }
 
     public static LocalDate transformROCDateToLocalDate(String rocDate) {
