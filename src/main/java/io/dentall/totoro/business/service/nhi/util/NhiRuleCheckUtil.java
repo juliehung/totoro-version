@@ -144,13 +144,13 @@ public class NhiRuleCheckUtil {
 
             result.setMessage(
                 String.format(
-                    "%s 不可與 %s 在 %d 天內，再次申報，上次申報 %s (%s, %d 天前)",
-                    dto.getNhiExtendTreatmentProcedure().getA71(),
+                    "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
                     codes.toString(),
                     limitDays.getDays(),
                     match.getA73(),
                     matchDate,
-                    Period.between(currentTxDate, matchDate).getDays()
+                    Period.between(matchDate, currentTxDate).getDays()
                 )
             );
         }
