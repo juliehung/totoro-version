@@ -4,12 +4,16 @@ import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.Patient;
 
+import javax.validation.constraints.NotNull;
+
 public class NhiRuleCheckDTO {
 
+    @NotNull
     private Patient patient;
 
     private NhiExtendDisposal nhiExtendDisposal;
 
+    @NotNull
     private NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure;
 
     public NhiRuleCheckDTO patient(Patient patient) {

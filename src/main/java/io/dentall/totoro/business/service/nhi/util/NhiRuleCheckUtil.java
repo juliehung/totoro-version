@@ -1,10 +1,16 @@
 package io.dentall.totoro.business.service.nhi.util;
 
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
+import io.dentall.totoro.business.service.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
+import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
+import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
+import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
+import io.dentall.totoro.web.rest.errors.ResourceNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +31,43 @@ public class NhiRuleCheckUtil {
 
     private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
 
-    public NhiRuleCheckUtil(NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository) {
+    private final PatientRepository patientRepository;
+
+    private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
+
+    public NhiRuleCheckUtil(
+        NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
+        PatientRepository patientRepository,
+        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper
+    ) {
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
+        this.patientRepository = patientRepository;
+        this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
+    }
+
+    private void assignDtoByPatientId(@NotNull NhiRuleCheckDTO dto, Long patientId) {
+        dto.setPatient(
+            PatientMapper.patientTableToPatient(
+                patientRepository.findPatientById(patientId)
+                    .orElseThrow(() -> new ResourceNotFoundException("patient with " + patientId))));
+    }
+
+    private void assignDtoByNhiExtendTreatmentProcedureId(@NotNull NhiRuleCheckDTO dto, Long nhiExtendTreatmentProcedureId) {
+        dto.setNhiExtendTreatmentProcedure(
+            nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
+                nhiExtendTreatmentProcedureRepository.findById(nhiExtendTreatmentProcedureId, NhiExtendTreatmentProcedureTable.class)
+                    .orElseThrow(() -> new ResourceNotFoundException("patient with " + nhiExtendTreatmentProcedureId))));
+    }
+
+    public void assignDtoDataFromDb(@NotNull NhiRuleCheckDTO dto, @NotNull NhiRuleCheckVM vm) {
+        if (vm.getPatientId() != null) {
+            assignDtoByPatientId(dto, vm.getPatientId());
+        }
+
+        if (vm.getTreatmentId() != null) {
+            assignDtoByNhiExtendTreatmentProcedureId(dto, vm.getTreatmentId());
+        }
+
     }
 
     public static int calculatePatientAgeAtTreatmentDate(@NotNull Patient patient, @NotNull NhiExtendTreatmentProcedure targetTreatmentProcedure) {
@@ -35,7 +76,7 @@ public class NhiRuleCheckUtil {
             StringUtils.isNotBlank(targetTreatmentProcedure.getA71())
         ) {
             age = Period.between(patient.getBirth(),
-                    DateTimeUtil.transformROCDateToLocalDate(targetTreatmentProcedure.getA71()))
+                DateTimeUtil.transformROCDateToLocalDate(targetTreatmentProcedure.getA71()))
                 .getYears();
         } else {
             throw new IllegalArgumentException("");
@@ -45,10 +86,10 @@ public class NhiRuleCheckUtil {
     }
 
     public boolean equalsOrGreaterThanAge12(@NotNull int age) {
-       return age > 12;
+        return age > 12;
     }
 
-    public boolean hasCodeBeforeDate(NhiRuleCheckDTO dto, @NotNull List<String> codes, @NotNull Period limitDays) {
+    public boolean hasCodeBeforeDate(@NotNull NhiRuleCheckDTO dto, @NotNull List<String> codes, @NotNull Period limitDays) {
         if (dto != null &&
             dto.getPatient() != null &&
             dto.getPatient().getId() != null &&

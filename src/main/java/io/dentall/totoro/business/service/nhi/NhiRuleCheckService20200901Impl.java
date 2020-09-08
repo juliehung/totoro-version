@@ -16,7 +16,8 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
 
     @Override
     public boolean validate91003C(NhiRuleCheckDTO dto) {
-        return nhiRuleCheckUtil.equalsOrGreaterThanAge12(NhiRuleCheckUtil.calculatePatientAgeAtTreatmentDate(dto.getPatient(), dto.getNhiExtendTreatmentProcedure())) &&
+        return
+            nhiRuleCheckUtil.equalsOrGreaterThanAge12(NhiRuleCheckUtil.calculatePatientAgeAtTreatmentDate(dto.getPatient(), dto.getNhiExtendTreatmentProcedure())) &&
             !nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91003C"}.clone()),
                 NhiRuleCheckUtil.nhiHalfYear);
