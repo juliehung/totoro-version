@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.InvocationTargetException;
+
 @RestController
 @RequestMapping("/api")
 public class NhiRuleCheckResource {
@@ -25,7 +27,11 @@ public class NhiRuleCheckResource {
 
     @GetMapping("/validate/{code}")
     @Timed
-    public ResponseEntity<Boolean> validate91003C(@PathVariable String code, NhiRuleCheckVM vm) {
+    public ResponseEntity<Boolean> validateCode(@PathVariable String code, NhiRuleCheckVM vm) throws
+        NoSuchMethodException,
+        IllegalAccessException,
+        InvocationTargetException
+    {
         return new ResponseEntity<>(
             nhiRuleCheckService.dispatcher(code, vm),
             HttpStatus.OK);
