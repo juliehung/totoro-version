@@ -5,7 +5,6 @@ import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
-import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,7 +47,7 @@ public class NhiRuleCheckUtil {
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
     }
 
-    public NhiRuleCheckResultVM addResultToVm(@NotNull NhiRuleCheckResultDTO dto, @NotNull NhiRuleCheckResultVM vm) {
+    public void addResultToVm(@NotNull NhiRuleCheckResultDTO dto, @NotNull NhiRuleCheckResultVM vm) {
 
         vm.getCheckHistory().add(dto);
 
@@ -59,7 +59,6 @@ public class NhiRuleCheckUtil {
             vm.getMessages().add(dto.getMessage());
         }
 
-        return vm;
     }
 
     private void assignDtoByPatientId(@NotNull NhiRuleCheckDTO dto, @NotNull Long patientId) {
@@ -90,46 +89,73 @@ public class NhiRuleCheckUtil {
         return dto;
     }
 
-    public static int calculatePatientAgeAtTreatmentDate(@NotNull Patient patient, @NotNull NhiExtendTreatmentProcedure targetTreatmentProcedure) {
-        Integer age;
-        if (patient.getBirth() != null &&
-            StringUtils.isNotBlank(targetTreatmentProcedure.getA71())
-        ) {
-            age = Period.between(patient.getBirth(),
-                DateTimeUtil.transformROCDateToLocalDate(targetTreatmentProcedure.getA71()))
-                .getYears();
-        } else {
-            throw new IllegalArgumentException("");
+    public NhiRuleCheckResultDTO equalsOrGreaterThanAge12(@NotNull NhiRuleCheckDTO dto) {
+
+        Period p = Period.between(
+            dto.getPatient().getBirth(),
+            DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
+
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validated(p.getYears() > 12);
+
+        if (result.isValidated()) {
+
+            result.setMessage(
+                String.format(
+                    "%s 須在病患年滿 12 歲，方能申報",
+                    dto.getNhiExtendTreatmentProcedure().getA71()
+                )
+            );
         }
 
-        return age;
+        return result;
     }
 
-    public boolean equalsOrGreaterThanAge12(@NotNull int age) {
-        return age > 12;
-    }
+    public NhiRuleCheckResultDTO hasCodeBeforeDate(@NotNull NhiRuleCheckDTO dto, @NotNull List<String> codes, @NotNull Period limitDays) {
 
-    public boolean hasCodeBeforeDate(@NotNull NhiRuleCheckDTO dto, @NotNull List<String> codes, @NotNull Period limitDays) {
-        if (dto != null &&
-            dto.getPatient() != null &&
-            dto.getPatient().getId() != null &&
-            codes.size() > 0
-        ) {
-            LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+        List<NhiExtendTreatmentProcedure> matchedNhiExtendTreatmentProcedure = new ArrayList<>();
 
-            return nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(dto.getPatient().getId(),
-                codes).stream()
+        boolean hasCodeBeforeDate = nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+                dto.getPatient().getId(),
+                codes)
+                .stream()
                 .filter(Objects::nonNull)
                 .filter(netp -> StringUtils.isNotBlank(netp.getA71()) && netp.getTreatmentProcedure_Id() != null)
                 .filter(netp -> !netp.getTreatmentProcedure_Id().equals(dto.getNhiExtendTreatmentProcedure().getId()))
                 .filter(netp -> Long.parseLong(dto.getNhiExtendTreatmentProcedure().getA71()) > Long.parseLong(netp.getA71()))
                 .anyMatch(netpt -> {
                     LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
-                    return pastTxDate.plus(limitDays).isAfter(currentTxDate);
-                });
-        } else {
-            throw new IllegalArgumentException("");
+                    if (pastTxDate.plus(limitDays).isAfter(currentTxDate)) {
+                        matchedNhiExtendTreatmentProcedure.add(
+                            nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(netpt));
+                        return true;
+                    } else {
+                        return false;
+                    }
+                 });
+
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validated(!hasCodeBeforeDate);
+
+        if (result.isValidated()) {
+            NhiExtendTreatmentProcedure match = matchedNhiExtendTreatmentProcedure.get(0);
+            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
+
+            result.setMessage(
+                String.format(
+                    "%s 不可與 %s 在 %d 天內，再次申報，上次申報 %s (%s, %d 天前)",
+                    dto.getNhiExtendTreatmentProcedure().getA71(),
+                    codes.toString(),
+                    limitDays.getDays(),
+                    match.getA73(),
+                    matchDate,
+                    Period.between(currentTxDate, matchDate)
+                )
+            );
         }
 
+        return result;
     }
+
 }
