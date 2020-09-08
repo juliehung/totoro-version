@@ -98,7 +98,7 @@ public class NhiRuleCheckUtil {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(p.getYears() > 12);
 
-        if (result.isValidated()) {
+        if (!result.isValidated()) {
 
             result.setMessage(
                 String.format(
@@ -138,7 +138,7 @@ public class NhiRuleCheckUtil {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(!hasCodeBeforeDate);
 
-        if (result.isValidated()) {
+        if (!result.isValidated()) {
             NhiExtendTreatmentProcedure match = matchedNhiExtendTreatmentProcedure.get(0);
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
 
