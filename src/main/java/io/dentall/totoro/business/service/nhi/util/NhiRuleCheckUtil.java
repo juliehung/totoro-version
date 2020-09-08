@@ -150,7 +150,7 @@ public class NhiRuleCheckUtil {
                     limitDays.getDays(),
                     match.getA73(),
                     matchDate,
-                    Period.between(currentTxDate, matchDate)
+                    Period.between(currentTxDate, matchDate).getDays()
                 )
             );
         }
