@@ -4,6 +4,9 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckService;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckVM;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +20,8 @@ import java.lang.reflect.InvocationTargetException;
 @RequestMapping("/api")
 public class NhiRuleCheckResource {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     private final NhiRuleCheckService nhiRuleCheckService;
 
     public NhiRuleCheckResource(
@@ -28,14 +33,16 @@ public class NhiRuleCheckResource {
     @GetMapping("/validate/{code}")
     @Timed
     public ResponseEntity<Boolean> validateCode(@PathVariable String code, NhiRuleCheckVM vm) throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InvocationTargetException
+        InvocationTargetException,
+        IllegalAccessException
     {
-        return new ResponseEntity<>(
-            nhiRuleCheckService.dispatcher(code, vm),
-            HttpStatus.OK);
-
+        try {
+            return new ResponseEntity<>(
+                nhiRuleCheckService.dispatcher(code, vm),
+                HttpStatus.OK);
+        } catch (NoSuchMethodException e) {
+            throw new BadRequestAlertException("Not support ".concat(code).concat(" validation yet."), "not.specify", "not.specify");
+        }
     }
 
 }
