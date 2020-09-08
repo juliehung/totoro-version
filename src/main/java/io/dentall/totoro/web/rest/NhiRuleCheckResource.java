@@ -41,7 +41,9 @@ public class NhiRuleCheckResource {
                 nhiRuleCheckService.dispatcher(code, vm),
                 HttpStatus.OK);
         } catch (NoSuchMethodException e) {
-            throw new BadRequestAlertException("Not support ".concat(code).concat(" validation yet."), "not.specify", "not.specify");
+            throw new BadRequestAlertException("Not supported validation",
+                "Not support code(".concat(code).concat(") validation"),
+                "code");
         }
     }
 
