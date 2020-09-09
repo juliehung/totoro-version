@@ -132,13 +132,6 @@ public class NhiRuleCheckUtil {
 
         // 產生暫時的 treatment 資料，在後續的檢驗中被檢核所需
         if (vm.getPatientId() != null && vm.getTreatmentId() == null) {
-            if (StringUtils.isBlank(vm.getTmpTreatmentA74())) {
-                throw new BadRequestAlertException("輸入內容不得為空", "a74 牙齒面為空", "tmpTreatmentA74");
-            }
-            if (StringUtils.isBlank(vm.getTmpTreatmentA75())) {
-                throw new BadRequestAlertException("輸入內容不得為空", "a75 牙齒面為空", "tmpTreatmentA75");
-            }
-
             dto.setNhiExtendTreatmentProcedure(
                 new NhiExtendTreatmentProcedure()
                     .a71(DateTimeUtil.transformLocalDateToRocDate(Instant.now()))
