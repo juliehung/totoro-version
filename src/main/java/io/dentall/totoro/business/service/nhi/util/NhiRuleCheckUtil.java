@@ -27,6 +27,10 @@ import java.util.Objects;
 @Service
 public class NhiRuleCheckUtil {
 
+    // 申報時常用說明
+    public static final String DESC_MUST_FULFILL_SURFACE = "應於病歷詳列充填牙面部位";
+
+    // 申報時常用時間區間
     public static final Period NHI_1_MONTH = Period.ofDays(30);
 
     public static final Period NHI_1_MONTH_AND_HALF = Period.ofDays(90);
@@ -269,6 +273,18 @@ public class NhiRuleCheckUtil {
                 )
             );
         }
+
+        return result;
+    }
+
+    /**
+     * 回訊息作為提醒用，檢核狀況算審核通過
+     * @param message 作為提醒用訊息
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO generalNotification(String message) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validated(true);
 
         return result;
     }
