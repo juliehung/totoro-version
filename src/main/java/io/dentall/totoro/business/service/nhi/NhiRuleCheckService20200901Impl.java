@@ -31,11 +31,11 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
             .invoke(this, convertVmToDto(code, vm));
     }
 
+    // 910***
     @Override
     public NhiRuleCheckResultVM validate91003C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        // 半年內已做過 91003C 的治療
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91003C"}.clone()),
@@ -43,7 +43,6 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
             vm
         );
 
-        // 病患是否大於 12 歲
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
@@ -56,7 +55,6 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
     public NhiRuleCheckResultVM validate91004C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        // 半年內已做過 91003C 的治療
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91004C"}.clone()),
@@ -64,7 +62,6 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
             vm
         );
 
-        // 病患是否大於 12 歲
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
@@ -77,15 +74,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
     public NhiRuleCheckResultVM validate91005C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        // 半年內已做過 91003C 的治療
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91005C"}.clone()),
-                NhiRuleCheckUtil.nhiHalfYear),
+                NhiRuleCheckUtil.nhiMonthAndHalf),
             vm
         );
 
-        // 病患是否大於 12 歲
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
@@ -98,15 +93,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
     public NhiRuleCheckResultVM validate91015C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        // 半年內已做過 91003C 的治療
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91015C"}.clone()),
-                NhiRuleCheckUtil.nhiHalfYear),
+                NhiRuleCheckUtil.nhiMonthAndHalf),
             vm
         );
 
-        // 病患是否大於 12 歲
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
@@ -119,15 +112,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
     public NhiRuleCheckResultVM validate91016C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        // 半年內已做過 91003C 的治療
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91016C"}.clone()),
-                NhiRuleCheckUtil.nhiHalfYear),
+                NhiRuleCheckUtil.nhiMonthAndHalf),
             vm
         );
 
-        // 病患是否大於 12 歲
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
@@ -140,15 +131,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
     public NhiRuleCheckResultVM validate91017C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        // 半年內已做過 91003C 的治療
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91017C"}.clone()),
-                NhiRuleCheckUtil.nhiHalfYear),
+                NhiRuleCheckUtil.nhiMonthAndHalf),
             vm
         );
 
-        // 病患是否大於 12 歲
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
@@ -161,15 +150,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
     public NhiRuleCheckResultVM validate91018C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        // 半年內已做過 91003C 的治療
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91018C"}.clone()),
-                NhiRuleCheckUtil.nhiHalfYear),
+                NhiRuleCheckUtil.nhiMonthAndHalf),
             vm
         );
 
-        // 病患是否大於 12 歲
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
@@ -182,15 +169,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
     public NhiRuleCheckResultVM validate91103C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        // 半年內已做過 91003C 的治療
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91103C"}.clone()),
-                NhiRuleCheckUtil.nhiHalfYear),
+                NhiRuleCheckUtil.nhiMonthAndHalf),
             vm
         );
 
-        // 病患是否大於 12 歲
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
@@ -203,15 +188,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
     public NhiRuleCheckResultVM validate91104C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        // 半年內已做過 91003C 的治療
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91104C"}.clone()),
-                NhiRuleCheckUtil.nhiHalfYear),
+                NhiRuleCheckUtil.nhiMonthAndHalf),
             vm
         );
 
-        // 病患是否大於 12 歲
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
