@@ -168,6 +168,58 @@ public class NhiRuleCheckUtil {
     }
 
     /**
+     * 病患 是否在 診療 當下年紀 >= 12 歲
+     * @param dto 使用 patient.birth, nhiExtendTreatmentProcedure.A71
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO lessThanAge12(@NotNull NhiRuleCheckDTO dto) {
+
+        Period p = Period.between(
+            dto.getPatient().getBirth(),
+            DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
+
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validated(p.getYears() < 12);
+
+        if (!result.isValidated()) {
+            result.setMessage(
+                String.format(
+                    "%s 須在病患未滿 12 歲，方能申報",
+                    dto.getNhiExtendTreatmentProcedure().getA71()
+                )
+            );
+        }
+
+        return result;
+    }
+
+    /**
+     * 病患 是否在 診療 當下年紀 >= 6 歲
+     * @param dto 使用 patient.birth, nhiExtendTreatmentProcedure.A71
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO lessThanAge6(@NotNull NhiRuleCheckDTO dto) {
+
+        Period p = Period.between(
+            dto.getPatient().getBirth(),
+            DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
+
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validated(p.getYears() < 6);
+
+        if (!result.isValidated()) {
+            result.setMessage(
+                String.format(
+                    "%s 須在病患未滿 6 歲，方能申報",
+                    dto.getNhiExtendTreatmentProcedure().getA71()
+                )
+            );
+        }
+
+        return result;
+    }
+
+    /**
      * 指定的診療項目，在病患過去紀錄中，是否已經包含 codes，且未達間隔 limitDays
      * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
      * @param codes 被限制的健保代碼清單

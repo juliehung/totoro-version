@@ -29,4 +29,12 @@ public interface NhiRuleCheckService {
 
     NhiRuleCheckResultVM validate91104C(NhiRuleCheckDTO dto);
 
+    // ****8*
+    NhiRuleCheckResultVM validate81(NhiRuleCheckDTO dto);
+
+    NhiRuleCheckResultVM validate88(NhiRuleCheckDTO dto);
+
+    NhiRuleCheckResultVM validate87(NhiRuleCheckDTO dto);
+
+    NhiRuleCheckResultVM validate89(NhiRuleCheckDTO dto);
 }

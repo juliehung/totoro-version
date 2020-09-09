@@ -202,4 +202,80 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
 
         return vm;
     }
+
+    @Override
+    public NhiRuleCheckResultVM validate81(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"81"}.clone()),
+                NhiRuleCheckUtil.nhiMonthAndHalf),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.lessThanAge6(dto),
+            vm
+        );
+
+        return vm;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate87(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"87"}.clone()),
+                NhiRuleCheckUtil.nhiMonthAndHalf),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.lessThanAge12(dto),
+            vm
+        );
+
+        return vm;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate88(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"88"}.clone()),
+                NhiRuleCheckUtil.nhiMonthAndHalf),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.lessThanAge6(dto),
+            vm
+        );
+
+        return vm;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"89"}.clone()),
+                NhiRuleCheckUtil.nhiMonthAndHalf),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.lessThanAge12(dto),
+            vm
+        );
+
+        return vm;
+    }
 }
