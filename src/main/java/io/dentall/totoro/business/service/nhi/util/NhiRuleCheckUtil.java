@@ -159,7 +159,7 @@ public class NhiRuleCheckUtil {
             result.setMessage(
                 String.format(
                     "%s 須在病患年滿 12 歲，方能申報",
-                    dto.getNhiExtendTreatmentProcedure().getA71()
+                    dto.getNhiExtendTreatmentProcedure().getA73()
                 )
             );
         }
@@ -185,7 +185,7 @@ public class NhiRuleCheckUtil {
             result.setMessage(
                 String.format(
                     "%s 須在病患未滿 12 歲，方能申報",
-                    dto.getNhiExtendTreatmentProcedure().getA71()
+                    dto.getNhiExtendTreatmentProcedure().getA73()
                 )
             );
         }
@@ -211,7 +211,7 @@ public class NhiRuleCheckUtil {
             result.setMessage(
                 String.format(
                     "%s 須在病患未滿 6 歲，方能申報",
-                    dto.getNhiExtendTreatmentProcedure().getA71()
+                    dto.getNhiExtendTreatmentProcedure().getA73()
                 )
             );
         }

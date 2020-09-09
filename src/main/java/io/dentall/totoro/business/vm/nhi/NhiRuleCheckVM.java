@@ -9,10 +9,6 @@ public class NhiRuleCheckVM {
 
     private Long treatmentId;
 
-    private String tmpTreatmentA71;
-
-    private String tmpTreatmentA73;
-
     private String tmpTreatmentA74;
 
     private String tmpTreatmentA75;
@@ -31,22 +27,6 @@ public class NhiRuleCheckVM {
 
     public void setTreatmentId(Long treatmentId) {
         this.treatmentId = treatmentId;
-    }
-
-    public String getTmpTreatmentA71() {
-        return tmpTreatmentA71;
-    }
-
-    public void setTmpTreatmentA71(String tmpTreatmentA71) {
-        this.tmpTreatmentA71 = tmpTreatmentA71;
-    }
-
-    public String getTmpTreatmentA73() {
-        return tmpTreatmentA73;
-    }
-
-    public void setTmpTreatmentA73(String tmpTreatmentA73) {
-        this.tmpTreatmentA73 = tmpTreatmentA73;
     }
 
     public String getTmpTreatmentA74() {
