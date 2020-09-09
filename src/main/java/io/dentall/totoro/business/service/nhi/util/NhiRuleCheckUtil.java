@@ -116,7 +116,7 @@ public class NhiRuleCheckUtil {
      *
      * @param code 來源於 api path，及其預計想檢核的目標
      * @param vm 來自於前端的輸入
-     * @return
+     * @return 後續檢核統一 `輸入` 的介面
      * @throws BadRequestAlertException
      */
     public NhiRuleCheckDTO convertVmToDto(@NotNull String code, @NotNull NhiRuleCheckVM vm) throws BadRequestAlertException {
@@ -153,7 +153,7 @@ public class NhiRuleCheckUtil {
     /**
      * 病患 是否在 診療 當下年紀 >= 12 歲
      * @param dto 使用 patient.birth, nhiExtendTreatmentProcedure.A71
-     * @return
+     * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO equalsOrGreaterThanAge12(@NotNull NhiRuleCheckDTO dto) {
 
@@ -181,7 +181,7 @@ public class NhiRuleCheckUtil {
      * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
      * @param codes 被限制的健保代碼清單
      * @param limitDays 間隔時間
-     * @return
+     * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO hasCodeBeforeDate(@NotNull NhiRuleCheckDTO dto, @NotNull List<String> codes, @NotNull Period limitDays) {
 
