@@ -27,11 +27,11 @@ import java.util.Objects;
 @Service
 public class NhiRuleCheckUtil {
 
-    public static final Period nhiMonth = Period.ofDays(30);
+    public static final Period NHI_1_MONTH = Period.ofDays(30);
 
-    public static final Period nhiMonthAndHalf = Period.ofDays(90);
+    public static final Period NHI_1_MONTH_AND_HALF = Period.ofDays(90);
 
-    public static final Period nhiHalfYear = Period.ofDays(180);
+    public static final Period NHI_HALF_YEAR = Period.ofDays(180);
 
     private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
 

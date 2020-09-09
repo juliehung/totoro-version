@@ -39,7 +39,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91003C"}.clone()),
-                NhiRuleCheckUtil.nhiHalfYear),
+                NhiRuleCheckUtil.NHI_HALF_YEAR),
             vm
         );
 
@@ -58,7 +58,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91004C"}.clone()),
-                NhiRuleCheckUtil.nhiHalfYear),
+                NhiRuleCheckUtil.NHI_HALF_YEAR),
             vm
         );
 
@@ -77,7 +77,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91005C"}.clone()),
-                NhiRuleCheckUtil.nhiMonthAndHalf),
+                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
             vm
         );
 
@@ -96,7 +96,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91015C"}.clone()),
-                NhiRuleCheckUtil.nhiMonthAndHalf),
+                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
             vm
         );
 
@@ -115,7 +115,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91016C"}.clone()),
-                NhiRuleCheckUtil.nhiMonthAndHalf),
+                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
             vm
         );
 
@@ -134,7 +134,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91017C"}.clone()),
-                NhiRuleCheckUtil.nhiMonthAndHalf),
+                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
             vm
         );
 
@@ -153,7 +153,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91018C"}.clone()),
-                NhiRuleCheckUtil.nhiMonthAndHalf),
+                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
             vm
         );
 
@@ -172,7 +172,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91103C"}.clone()),
-                NhiRuleCheckUtil.nhiMonthAndHalf),
+                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
             vm
         );
 
@@ -191,7 +191,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91104C"}.clone()),
-                NhiRuleCheckUtil.nhiMonthAndHalf),
+                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
             vm
         );
 
@@ -210,7 +210,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"81"}.clone()),
-                NhiRuleCheckUtil.nhiMonthAndHalf),
+                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
             vm
         );
 
@@ -229,7 +229,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"87"}.clone()),
-                NhiRuleCheckUtil.nhiMonthAndHalf),
+                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
             vm
         );
 
@@ -248,7 +248,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"88"}.clone()),
-                NhiRuleCheckUtil.nhiMonthAndHalf),
+                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
             vm
         );
 
@@ -267,7 +267,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"89"}.clone()),
-                NhiRuleCheckUtil.nhiMonthAndHalf),
+                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
             vm
         );
 
