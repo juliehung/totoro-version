@@ -117,7 +117,7 @@ public class NhiRuleCheckUtil {
      * @param code 來源於 api path，及其預計想檢核的目標
      * @param vm 來自於前端的輸入
      * @return 後續檢核統一 `輸入` 的介面
-     * @throws BadRequestAlertException
+     * @throws BadRequestAlertException 套件會 handle bad request 並 response 對應資料
      */
     public NhiRuleCheckDTO convertVmToDto(@NotNull String code, @NotNull NhiRuleCheckVM vm) throws BadRequestAlertException {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
