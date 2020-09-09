@@ -11,6 +11,7 @@ import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.errors.ResourceNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,30 @@ public class NhiRuleCheckUtil {
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
         this.patientRepository = patientRepository;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
+    }
+
+    private boolean isDeciduousTeeth(String singleToothPosition) {
+        if (singleToothPosition.length() != 2) {
+            return false;
+        }
+
+        if (!singleToothPosition.matches("^[5|6|7|8][1-9]$")) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isPermanentTeeth(String singleToothPosition) {
+        if (singleToothPosition.length() != 2) {
+            return false;
+        }
+
+        if (!singleToothPosition.matches("^[1|2|3|4][1-9]$")) {
+            return false;
+        }
+
+        return true;
     }
 
     public void addResultToVm(@NotNull NhiRuleCheckResultDTO dto, @NotNull NhiRuleCheckResultVM vm) {
@@ -285,6 +310,40 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO generalNotification(String message) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(true);
+
+        return result;
+    }
+
+    /**
+     * 限制牙面在 limitNumberOfSurface 以下
+     * @param dto 使用 nhiExtendTreatmentProcedure.a75
+     * @param limitNumberOfSurface 申報最高牙面數
+     * @return
+     */
+    public NhiRuleCheckResultDTO hasLimitation(NhiRuleCheckDTO dto, Integer limitNumberOfSurface) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= limitNumberOfSurface);
+
+        if (!result.isValidated()) {
+            result.setMessage(
+                "申報面數最高以 "
+                .concat(limitNumberOfSurface.toString())
+                .concat(" 面為限，或是著排除是否前後有空格。"));
+        }
+
+        return result;
+    }
+
+    public NhiRuleCheckResultDTO deciduousTeethOnly(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() );
+
+        if (!result.isValidated()) {
+            result.setMessage(
+                "申報面數最高以 "
+                    .concat(limitNumberOfSurface.toString())
+                    .concat(" 面為限，或是著排除是否前後有空格。"));
+        }
 
         return result;
     }
