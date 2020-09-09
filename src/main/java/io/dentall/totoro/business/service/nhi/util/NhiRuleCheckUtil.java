@@ -66,8 +66,8 @@ public class NhiRuleCheckUtil {
 
     /**
      * 查詢 patient 並將取得資料塞入 dto 以利後續使用，或 response as not found
-     * @param dto
-     * @param patientId
+     * @param dto dto.patient 將會被 assign db data
+     * @param patientId 病患 id for query db
      */
     private void assignDtoByPatientId(@NotNull NhiRuleCheckDTO dto, @NotNull Long patientId) {
         dto.setPatient(
@@ -78,10 +78,10 @@ public class NhiRuleCheckUtil {
 
     /**
      * 檢核輸入 code(a73), patient, 是否存在且關係匹，並將取得資料塞入 dto 以利後續使用配，或 response as not found
-     * @param dto
-     * @param code
-     * @param nhiExtendTreatmentProcedureId
-     * @param patientId
+     * @param dto dto.nhiExtendTreatmentProcedure 將會被 assign db data
+     * @param code a.k.a a73 健保代碼
+     * @param nhiExtendTreatmentProcedureId 診療 id
+     * @param patientId 病患 id
      */
     private void assignDtoByNhiExtendTreatmentProcedureId(
         @NotNull NhiRuleCheckDTO dto,
@@ -115,7 +115,7 @@ public class NhiRuleCheckUtil {
      * 並查詢取得對應資料。
      *
      * @param code 來源於 api path，及其預計想檢核的目標
-     * @param vm
+     * @param vm 來自於前端的輸入
      * @return
      * @throws BadRequestAlertException
      */
