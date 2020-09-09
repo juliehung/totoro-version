@@ -46,5 +46,7 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
 
     Optional<NhiExtendTreatmentProcedureTable> findNhiExtendTreatmentProcedureByTreatmentProcedure_Id(Long id);
 
+    <T> Optional<T> findByIdAndA73AndTreatmentProcedure_Disposal_Registration_Appointment_Patient_Id(Long treatmentProcedureId, String a73, Long patientId, Class<T> type);
+
     <T> Optional<T> findById(Long id, Class<T> type);
 }

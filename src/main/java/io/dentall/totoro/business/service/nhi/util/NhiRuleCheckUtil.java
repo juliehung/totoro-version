@@ -64,6 +64,11 @@ public class NhiRuleCheckUtil {
 
     }
 
+    /**
+     * 查詢 patient 並將取得資料塞入 dto 以利後續使用，或 response as not found
+     * @param dto
+     * @param patientId
+     */
     private void assignDtoByPatientId(@NotNull NhiRuleCheckDTO dto, @NotNull Long patientId) {
         dto.setPatient(
             PatientMapper.patientTableToPatient(
@@ -71,13 +76,49 @@ public class NhiRuleCheckUtil {
                     .orElseThrow(() -> new ResourceNotFoundException("patient with " + patientId))));
     }
 
-    private void assignDtoByNhiExtendTreatmentProcedureId(@NotNull NhiRuleCheckDTO dto, @NotNull Long nhiExtendTreatmentProcedureId) {
+    /**
+     * 檢核輸入 code(a73), patient, 是否存在且關係匹，並將取得資料塞入 dto 以利後續使用配，或 response as not found
+     * @param dto
+     * @param code
+     * @param nhiExtendTreatmentProcedureId
+     * @param patientId
+     */
+    private void assignDtoByNhiExtendTreatmentProcedureId(
+        @NotNull NhiRuleCheckDTO dto,
+        @NotNull String code,
+        @NotNull Long nhiExtendTreatmentProcedureId,
+        @NotNull Long patientId
+    ) {
         dto.setNhiExtendTreatmentProcedure(
             nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
-                nhiExtendTreatmentProcedureRepository.findById(nhiExtendTreatmentProcedureId, NhiExtendTreatmentProcedureTable.class)
-                    .orElseThrow(() -> new ResourceNotFoundException("patient with " + nhiExtendTreatmentProcedureId))));
+                nhiExtendTreatmentProcedureRepository.findByIdAndA73AndTreatmentProcedure_Disposal_Registration_Appointment_Patient_Id(
+                    nhiExtendTreatmentProcedureId,
+                    code,
+                    patientId,
+                    NhiExtendTreatmentProcedureTable.class)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                        "Treatment Procedure Id with "
+                            .concat(nhiExtendTreatmentProcedureId.toString())
+                            .concat(", Patient Id with ")
+                            .concat(patientId.toString())
+                            .concat(", Code(a73 from api path) ")
+                            .concat(code)
+                    ))));
     }
 
+    /**
+     * 作用是轉化 vm 取得到的值，檢核、查詢對應 Nhi Treatment Procedure、Patient 資料，以利後續功能使用。
+     * 此 method 使用情境有二
+     * 1. 診療項目 尚未被產生，需要預先進行確認，所需資料會用到 patientId, a71, a73, a74, a75，a71, a73 不用給定是因為，a71 必然為今日，
+     * 這邊會自動計算帶入；a73 則是打 api 時就會認定想驗證的目標在 api path。
+     * 2. 診療項目 已被產生，需帶入 patientId, treatmentProcedureId(treatmentProcedureId === nhiExtendTreatmentProcedureId)，
+     * 並查詢取得對應資料。
+     *
+     * @param code 來源於 api path，及其預計想檢核的目標
+     * @param vm
+     * @return
+     * @throws BadRequestAlertException
+     */
     public NhiRuleCheckDTO convertVmToDto(@NotNull String code, @NotNull NhiRuleCheckVM vm) throws BadRequestAlertException {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
 
@@ -86,7 +127,7 @@ public class NhiRuleCheckUtil {
         }
 
         if (vm.getTreatmentId() != null) {
-            assignDtoByNhiExtendTreatmentProcedureId(dto, vm.getTreatmentId());
+            assignDtoByNhiExtendTreatmentProcedureId(dto, code, vm.getTreatmentId(), vm.getPatientId());
         }
 
         // 產生暫時的 treatment 資料，在後續的檢驗中被檢核所需
@@ -109,6 +150,11 @@ public class NhiRuleCheckUtil {
         return dto;
     }
 
+    /**
+     * 病患 是否在 診療 當下年紀 >= 12 歲
+     * @param dto 使用 patient.birth, nhiExtendTreatmentProcedure.A71
+     * @return
+     */
     public NhiRuleCheckResultDTO equalsOrGreaterThanAge12(@NotNull NhiRuleCheckDTO dto) {
 
         Period p = Period.between(
@@ -116,10 +162,9 @@ public class NhiRuleCheckUtil {
             DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validated(p.getYears() > 12);
+            .validated(p.getYears() >= 12);
 
         if (!result.isValidated()) {
-
             result.setMessage(
                 String.format(
                     "%s 須在病患年滿 12 歲，方能申報",
@@ -131,6 +176,13 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
+    /**
+     * 指定的診療項目，在病患過去紀錄中，是否已經包含 codes，且未達間隔 limitDays
+     * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
+     * @param codes 被限制的健保代碼清單
+     * @param limitDays 間隔時間
+     * @return
+     */
     public NhiRuleCheckResultDTO hasCodeBeforeDate(@NotNull NhiRuleCheckDTO dto, @NotNull List<String> codes, @NotNull Period limitDays) {
 
         LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
