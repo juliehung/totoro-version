@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest;
 
 
 import com.codahale.metrics.annotation.Timed;
+import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckService;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
@@ -23,7 +24,7 @@ public class NhiRuleCheckResource {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final NhiRuleCheckService nhiRuleCheckService;
+    private final NhiRuleCheckService<NhiRuleCheckVM, NhiRuleCheckDTO, NhiRuleCheckResultVM> nhiRuleCheckService;
 
     public NhiRuleCheckResource(
         NhiRuleCheckService nhiRuleCheckService

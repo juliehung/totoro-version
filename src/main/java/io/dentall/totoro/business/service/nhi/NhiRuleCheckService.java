@@ -1,40 +1,37 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
-
 import java.lang.reflect.InvocationTargetException;
 
-public interface NhiRuleCheckService {
+public interface NhiRuleCheckService<A, B, O> {
 
-    NhiRuleCheckResultVM dispatch(String code, NhiRuleCheckVM vm) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
+    O dispatch(String code, A vm) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
 
     // 910***
-    NhiRuleCheckResultVM validate91003C(NhiRuleCheckDTO dto);
+    O validate91003C(B dto);
 
-    NhiRuleCheckResultVM validate91004C(NhiRuleCheckDTO dto);
+    O validate91004C(B dto);
 
-    NhiRuleCheckResultVM validate91005C(NhiRuleCheckDTO dto);
+    O validate91005C(B dto);
 
-    NhiRuleCheckResultVM validate91015C(NhiRuleCheckDTO dto);
+    O validate91015C(B dto);
 
-    NhiRuleCheckResultVM validate91016C(NhiRuleCheckDTO dto);
+    O validate91016C(B dto);
 
-    NhiRuleCheckResultVM validate91017C(NhiRuleCheckDTO dto);
+    O validate91017C(B dto);
 
-    NhiRuleCheckResultVM validate91018C(NhiRuleCheckDTO dto);
+    O validate91018C(B dto);
 
     // 911***
-    NhiRuleCheckResultVM validate91103C(NhiRuleCheckDTO dto);
+    O validate91103C(B dto);
 
-    NhiRuleCheckResultVM validate91104C(NhiRuleCheckDTO dto);
+    O validate91104C(B dto);
 
     // ****8*
-    NhiRuleCheckResultVM validate81(NhiRuleCheckDTO dto);
+    O validate81(B dto);
 
-    NhiRuleCheckResultVM validate88(NhiRuleCheckDTO dto);
+    O validate88(B dto);
 
-    NhiRuleCheckResultVM validate87(NhiRuleCheckDTO dto);
+    O validate87(B dto);
 
-    NhiRuleCheckResultVM validate89(NhiRuleCheckDTO dto);
+    O validate89(B dto);
 }

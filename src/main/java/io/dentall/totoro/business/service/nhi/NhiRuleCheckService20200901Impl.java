@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 @Service
-public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
+public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiRuleCheckVM, NhiRuleCheckDTO, NhiRuleCheckResultVM> {
 
     private final NhiRuleCheckUtil nhiRuleCheckUtil;
 
