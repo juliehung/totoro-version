@@ -2,6 +2,12 @@ package io.dentall.totoro.business.service.nhi;
 
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * 健保代碼 檢核功能，會依照年分可以進行不同的實作 e.g. NhiRuleCheckService20200901Impl
+ * @param <A> 前端 vm 傳進來的內容格式
+ * @param <B> 後端運算互傳的格式
+ * @param <O> 後端運算結果回傳的格式
+ */
 public interface NhiRuleCheckService<A, B, O> {
 
     O dispatch(String code, A vm) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
