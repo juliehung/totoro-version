@@ -39,7 +39,7 @@ public class NhiRuleCheckResource {
     {
         try {
             return new ResponseEntity<>(
-                nhiRuleCheckService.dispatcher(code, vm),
+                nhiRuleCheckService.dispatch(code, vm),
                 HttpStatus.OK);
         } catch (NoSuchMethodException e) {
             throw new BadRequestAlertException("Not supported validation",

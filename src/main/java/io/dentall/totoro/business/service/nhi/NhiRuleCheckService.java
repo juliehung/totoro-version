@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public interface NhiRuleCheckService {
 
-    NhiRuleCheckResultVM dispatcher(String code, NhiRuleCheckVM vm) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
+    NhiRuleCheckResultVM dispatch(String code, NhiRuleCheckVM vm) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
 
     // 910***
     NhiRuleCheckResultVM validate91003C(NhiRuleCheckDTO dto);

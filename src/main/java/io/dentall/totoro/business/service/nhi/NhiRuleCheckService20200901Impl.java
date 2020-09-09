@@ -22,7 +22,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService {
     }
 
     @Override
-    public NhiRuleCheckResultVM dispatcher(String code, NhiRuleCheckVM vm) throws
+    public NhiRuleCheckResultVM dispatch(String code, NhiRuleCheckVM vm) throws
         NoSuchMethodException,
         InvocationTargetException,
         IllegalAccessException {
