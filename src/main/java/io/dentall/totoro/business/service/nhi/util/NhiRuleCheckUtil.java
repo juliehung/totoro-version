@@ -20,9 +20,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class NhiRuleCheckUtil {
@@ -353,9 +351,70 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
-    public NhiRuleCheckResultDTO hasPatientDeciduousToothAtCodeBeforePeriod(String deciduousToothPosition, String code, Period limitDays) {
+    /**
+     * 病患 牙齒 是否有 健保代碼 於某時間前已被申報過
+     * @param dto 使用 nhiExtendTreatmentProcedure.id/a71/a73/a74, patient.id,
+     * @param codes 被限制的健保代碼清單
+     * @param deciduousToothLimitDays 為乳牙時，所需時間間隔
+     * @param permanentToothLimitDays 為恆牙時，弱需時間間隔
+     * @return
+     */
+    public NhiRuleCheckResultDTO hasPatientToothAtCodesBeforePeriod(
+        NhiRuleCheckDTO dto,
+        List<String> codes,
+        Period deciduousToothLimitDays,
+        Period permanentToothLimitDays
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validated(true);
 
-        return null;
+        Stack<Period> usedPeriod = new Stack<>();
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+        String[] teeth = dto.getNhiExtendTreatmentProcedure().getA74().split("(?<=\\G..)");
+
+        Arrays.stream(teeth)
+            .map(tooth -> {
+
+                if (isDeciduousTeeth(tooth)) {
+                    usedPeriod.push(deciduousToothLimitDays);
+                }
+
+                if (isPermanentTeeth(tooth)) {
+                    usedPeriod.push(permanentToothLimitDays);
+                }
+
+                if (usedPeriod.empty()) {
+                    return null;
+                }
+
+                return this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+                    dto.getPatient().getId(),
+                    dto.getNhiExtendTreatmentProcedure().getId(),
+                    DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
+                    codes,
+                    usedPeriod.peek()
+                    );
+
+            })
+            .filter(Objects::nonNull)
+            .findFirst()
+            .ifPresent(match -> {
+                LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
+                result.setValidated(false);
+                result.setMessage(
+                    String.format(
+                        "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        codes.toString(),
+                        usedPeriod.peek(),
+                        match.getA73(),
+                        matchDate,
+                        Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
+                    )
+                );
+            });
+
+        return result;
     }
 
 }
