@@ -9,7 +9,6 @@ import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendPatientRepository;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.repository.SettingRepository;
-import io.dentall.totoro.service.dto.HistoricalNhiTxDispInfoDTO;
 import io.dentall.totoro.service.dto.InfectionControlDuration;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
@@ -814,7 +813,7 @@ public class NhiService {
             .stream()
             .flatMap(nhiExtendDisposal -> StreamUtil.asStream(nhiExtendDisposal.getNhiExtendTreatmentProcedures()))
             // exclude self
-            .filter(nhiExtTxP -> nhiExtTxP != nhiExtendTreatmentProcedure)
+            .filter(nhiExtTxP -> !nhiExtTxP.getId().equals(nhiExtendTreatmentProcedure.getId()))
             .filter(nhiExtTxP -> nhiExtTxP.getA73() != null && nhiExtTxP.getA73().equals(nhiExtendTreatmentProcedure.getA73()))
             .map(NhiExtTxPDate::new)
             // order by date desc
