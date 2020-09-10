@@ -286,13 +286,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
                 dto,
-                Arrays.asList(new String[]{}.clone()),
+                Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH),
             vm
         );
 
-        return null;
+        return vm;
     }
 
     @Override

@@ -70,6 +70,39 @@ public class NhiRuleCheckUtil {
         return true;
     }
 
+    // 解析 健保代碼 若是區間型態，則切分並產生，包含頭、尾、區間三個部位全部的代碼，目前僅支援
+    // <number-low><single-alphabet>~<number-high><single-alphabet> 這種格式，且 <single-alphabet> 需相同，且 <single-alphabet> 相同
+    private List<String> parseNhiCode(List<String> nhiCodes) {
+        List<String> result = new ArrayList<>();
+
+        nhiCodes.stream()
+            .filter(Objects::nonNull)
+            .forEach(code -> {
+                String[] tildeCodes = code.split("([0-9]*)([A-Z]?)~([0-9]*)([A-Z]?)");
+                try {
+                    int numberLow = Integer.parseInt(tildeCodes[0]);
+                    int numberHigh = Integer.parseInt(tildeCodes[2]);
+                    String alpha = tildeCodes[1];
+
+                    if (tildeCodes.length == 4 &&
+                        numberLow < numberHigh &&
+                        alpha.equals(tildeCodes[3])
+                    ) {
+                        for (int i = numberLow; i <= numberHigh; i++) {
+                            result.add(String.valueOf(i).concat(alpha));
+                        }
+                    } else {
+                        result.add(code);
+                    }
+
+                } catch (NumberFormatException e) {
+                    // do nothing
+                }
+            });
+
+        return result;
+    }
+
     /**
      * 用來把數個後端檢核結果總結，並以前端所需格式輸出
      * @param dto 後端檢驗後的結果
