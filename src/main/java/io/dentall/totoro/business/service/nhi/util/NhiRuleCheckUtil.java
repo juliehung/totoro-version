@@ -396,7 +396,7 @@ public class NhiRuleCheckUtil {
      * @param limitNumberOfSurface 申報最高牙面數
      * @return
      */
-    public NhiRuleCheckResultDTO hasLimitation(NhiRuleCheckDTO dto, Integer limitNumberOfSurface) {
+    public NhiRuleCheckResultDTO hasLimitedSurface(NhiRuleCheckDTO dto, Integer limitNumberOfSurface) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= limitNumberOfSurface);
 
