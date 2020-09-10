@@ -77,6 +77,11 @@ public class NhiRuleCheckUtil {
         return true;
     }
 
+    /**
+     * 用來把數個後端檢核結果總結，並以前端所需格式輸出
+     * @param dto 後端檢驗後的結果
+     * @param vm 前端檢驗後的結果
+     */
     public void addResultToVm(@NotNull NhiRuleCheckResultDTO dto, @NotNull NhiRuleCheckResultVM vm) {
 
         vm.getCheckHistory().add(dto);
