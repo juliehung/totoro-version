@@ -278,4 +278,134 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         return vm;
     }
+
+    @Override
+    public NhiRuleCheckResultVM validate89001C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89002C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89003C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89004C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89005C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89008C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89009C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89010C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89011C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89012C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89013C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89014C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89015C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89101C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89102C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89103C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89104C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89105C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89108C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89109C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89110C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89111C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89112C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89113C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89114C(NhiRuleCheckDTO dto) {
+        return null;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate89115C(NhiRuleCheckDTO dto) {
+        return null;
+    }
 }

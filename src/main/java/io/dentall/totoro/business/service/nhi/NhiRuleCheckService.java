@@ -40,4 +40,59 @@ public interface NhiRuleCheckService<A, B, O> {
     O validate87(B dto);
 
     O validate89(B dto);
+
+    // 890***
+    O validate89001C(B dto);
+
+    O validate89002C(B dto);
+
+    O validate89003C(B dto);
+
+    O validate89004C(B dto);
+
+    O validate89005C(B dto);
+
+    O validate89008C(B dto);
+
+    O validate89009C(B dto);
+
+    O validate89010C(B dto);
+
+    O validate89011C(B dto);
+
+    O validate89012C(B dto);
+
+    O validate89013C(B dto);
+
+    O validate89014C(B dto);
+
+    O validate89015C(B dto);
+
+    // 891***
+    O validate89101C(B dto);
+
+    O validate89102C(B dto);
+
+    O validate89103C(B dto);
+
+    O validate89104C(B dto);
+
+    O validate89105C(B dto);
+
+    O validate89108C(B dto);
+
+    O validate89109C(B dto);
+
+    O validate89110C(B dto);
+
+    O validate89111C(B dto);
+
+    O validate89112C(B dto);
+
+    O validate89113C(B dto);
+
+    O validate89114C(B dto);
+
+    O validate89115C(B dto);
+
 }
