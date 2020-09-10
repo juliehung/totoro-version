@@ -311,9 +311,11 @@ public class NhiRuleCheckUtil {
     ) {
         List<NhiExtendTreatmentProcedure> matchedNhiExtendTreatmentProcedure = new ArrayList<>();
 
+        List<String> parsedCodes = this.parseNhiCode(codes);
+
         nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
             patientId,
-            codes)
+            parsedCodes)
             .stream()
             .filter(Objects::nonNull)
             .filter(netp -> StringUtils.isNotBlank(netp.getA71()) && netp.getTreatmentProcedure_Id() != null)
