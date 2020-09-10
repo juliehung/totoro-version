@@ -107,7 +107,7 @@ export function* createPatient() {
       yield take(CREATE_PATIENT);
       const getPatient = state => state.appointmentPageReducer.createApp.patient;
       let patient = yield select(getPatient);
-      const birth = moment(patient.birth).format('YYYY-MM-DD');
+      const birth = patient.birth ? moment(patient.birth).format('YYYY-MM-DD') : undefined;
       patient = { ...patient, birth };
       const createdPatient = yield call(Patient.create, patient);
       yield put(createPatientSuccess(createdPatient.id));
