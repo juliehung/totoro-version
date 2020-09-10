@@ -3,6 +3,7 @@ package io.dentall.totoro.business.service.nhi;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
+import io.dentall.totoro.service.util.DateTimeUtil;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
@@ -39,7 +40,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91003C"}.clone()),
-                NhiRuleCheckUtil.NHI_HALF_YEAR),
+                DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
@@ -58,7 +59,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91004C"}.clone()),
-                NhiRuleCheckUtil.NHI_HALF_YEAR),
+                DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
@@ -77,7 +78,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91005C"}.clone()),
-                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
+                DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
@@ -96,7 +97,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91015C"}.clone()),
-                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
+                DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
@@ -115,7 +116,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91016C"}.clone()),
-                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
+                DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
@@ -134,7 +135,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91017C"}.clone()),
-                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
+                DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
@@ -153,7 +154,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91018C"}.clone()),
-                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
+                DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
@@ -172,7 +173,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91103C"}.clone()),
-                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
+                DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
@@ -191,7 +192,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91104C"}.clone()),
-                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
+                DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
@@ -210,7 +211,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"81"}.clone()),
-                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
+                DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
@@ -229,7 +230,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"87"}.clone()),
-                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
+                DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
@@ -248,7 +249,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"88"}.clone()),
-                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
+                DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
@@ -265,22 +266,32 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.hasCodeBeforeDate(
+                dto,
                 Arrays.asList(new String[]{"89"}.clone()),
-                NhiRuleCheckUtil.NHI_1_MONTH_AND_HALF),
-            vm
-        );
+                DateTimeUtil.NHI_3_MONTH),
+                vm);
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.lessThanAge12(dto),
-            vm
-        );
+            vm);
 
         return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89001C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+                dto,
+                Arrays.asList(new String[]{}.clone()),
+                DateTimeUtil.NHI_12_MONTH,
+                DateTimeUtil.NHI_18_MONTH),
+            vm
+        );
+
         return null;
     }
 
