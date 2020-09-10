@@ -51,6 +51,7 @@ public class NhiRuleCheckUtil {
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
     }
 
+    // 單顆牙齒是否為 乳牙（字串兩碼且為 51-59, 61-69, 71-79, 81-89）
     private boolean isDeciduousTeeth(String singleToothPosition) {
         if (singleToothPosition.length() != 2) {
             return false;
@@ -63,6 +64,7 @@ public class NhiRuleCheckUtil {
         return true;
     }
 
+    // 單顆牙齒是否為 恆牙（字串兩碼且為 11-19, 21-29, 31-39, 41-49）
     private boolean isPermanentTeeth(String singleToothPosition) {
         if (singleToothPosition.length() != 2) {
             return false;
