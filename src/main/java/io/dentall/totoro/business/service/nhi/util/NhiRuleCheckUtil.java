@@ -247,6 +247,37 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
+    private NhiExtendTreatmentProcedure findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+        Long patientId,
+        Long treatmentProcedureId,
+        LocalDate currentTreatmentProcedureDate,
+        @NotNull List<String> codes,
+        @NotNull Period limitDays
+    ) {
+        List<NhiExtendTreatmentProcedure> matchedNhiExtendTreatmentProcedure = new ArrayList<>();
+
+        nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+            patientId,
+            codes)
+            .stream()
+            .filter(Objects::nonNull)
+            .filter(netp -> StringUtils.isNotBlank(netp.getA71()) && netp.getTreatmentProcedure_Id() != null)
+            .filter(netp -> !netp.getTreatmentProcedure_Id().equals(treatmentProcedureId))
+            .filter(netp -> currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
+            .anyMatch(netpt -> {
+                LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
+                if (pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
+                    matchedNhiExtendTreatmentProcedure.add(
+                        nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(netpt));
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
+        return matchedNhiExtendTreatmentProcedure.size() > 0 ?matchedNhiExtendTreatmentProcedure.get(0) :null ;
+    }
+
     /**
      * 指定的診療項目，在病患過去紀錄中，是否已經包含 codes，且未達間隔 limitDays
      * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
@@ -257,32 +288,21 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO hasCodeBeforeDate(@NotNull NhiRuleCheckDTO dto, @NotNull List<String> codes, @NotNull Period limitDays) {
 
         LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-        List<NhiExtendTreatmentProcedure> matchedNhiExtendTreatmentProcedure = new ArrayList<>();
 
-        boolean hasCodeBeforeDate = nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+        NhiExtendTreatmentProcedure match =
+            findPatientTreatmentProcedureAtCodesAndBeforePeriod(
                 dto.getPatient().getId(),
-                codes)
-                .stream()
-                .filter(Objects::nonNull)
-                .filter(netp -> StringUtils.isNotBlank(netp.getA71()) && netp.getTreatmentProcedure_Id() != null)
-                .filter(netp -> !netp.getTreatmentProcedure_Id().equals(dto.getNhiExtendTreatmentProcedure().getId()))
-                .filter(netp -> Long.parseLong(dto.getNhiExtendTreatmentProcedure().getA71()) > Long.parseLong(netp.getA71()))
-                .anyMatch(netpt -> {
-                    LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
-                    if (pastTxDate.plus(limitDays).isAfter(currentTxDate)) {
-                        matchedNhiExtendTreatmentProcedure.add(
-                            nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(netpt));
-                        return true;
-                    } else {
-                        return false;
-                    }
-                 });
+                dto.getNhiExtendTreatmentProcedure().getId(),
+                currentTxDate,
+                codes,
+                limitDays);
+
+        boolean hasCodeBeforeDate = match == null;
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(!hasCodeBeforeDate);
 
         if (!result.isValidated()) {
-            NhiExtendTreatmentProcedure match = matchedNhiExtendTreatmentProcedure.get(0);
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
 
             result.setMessage(
@@ -331,6 +351,11 @@ public class NhiRuleCheckUtil {
         }
 
         return result;
+    }
+
+    public NhiRuleCheckResultDTO hasPatientDeciduousToothAtCodeBeforePeriod(String deciduousToothPosition, String code, Period limitDays) {
+
+        return null;
     }
 
 }
