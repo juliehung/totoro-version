@@ -32,6 +32,11 @@ public class NhiServiceMockTest {
     private final DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
     private final DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
 
+    // 增加虛擬 Id，用以測試非自身 treatment procedure 的內容是否通過檢核
+    private final Long fakeId1 = 1L;
+    private final Long fakeId2 = 2L;
+    private final Long fakeId3 = 3L;
+
     private final Function<Integer, LocalDate> getGreaterThanEqualDate = days ->
         OffsetDateTime.now(ZONE_OFF_SET).toLocalDate().minusDays(days);
 
@@ -78,6 +83,7 @@ public class NhiServiceMockTest {
         final String code = "LessOrEqualThan180";
 
         nhiExtendTreatmentProcedure.setA73(code);
+        nhiExtendTreatmentProcedure.setId(fakeId1);
 
         Rule rule = new Rule();
         rule.setInterval("<=180");
@@ -91,6 +97,7 @@ public class NhiServiceMockTest {
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureDateBefore100 = new NhiExtendTreatmentProcedure()
             .a73(code)
             .treatmentProcedure(treatmentProcedureDateBefore100);
+        nhiExtendTreatmentProcedureDateBefore100.setId(fakeId2);
         LocalDate dateBefore100 = getGreaterThanEqualDate.apply(100);
         NhiExtendDisposal nhiExtDisposalDateBefore100 = new NhiExtendDisposal()
             .a17(dateBefore100.getYear() - 1911 + monthFormatter.format(dateBefore100) + dayFormatter.format(dateBefore100))
@@ -103,6 +110,7 @@ public class NhiServiceMockTest {
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureDateBefore20 = new NhiExtendTreatmentProcedure()
             .a73(code)
             .treatmentProcedure(treatmentProcedureDateBefore20);
+        nhiExtendTreatmentProcedureDateBefore20.setId(fakeId3);
         LocalDate dateBefore20 = getGreaterThanEqualDate.apply(20);
         NhiExtendDisposal nhiExtDisposalDateBefore20 = new NhiExtendDisposal()
             .a19("2")
@@ -122,6 +130,7 @@ public class NhiServiceMockTest {
     public void testCheckIntervalMonth() {
         final String code = "Month1";
 
+        nhiExtendTreatmentProcedure.setId(fakeId1);
         nhiExtendTreatmentProcedure.setA73(code);
 
         Rule rule = new Rule();
@@ -136,6 +145,7 @@ public class NhiServiceMockTest {
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureMonthFirstDate = new NhiExtendTreatmentProcedure()
             .a73(code)
             .treatmentProcedure(treatmentProcedureMonthFirstDate);
+        nhiExtendTreatmentProcedureMonthFirstDate.setId(fakeId2);
         LocalDate monthFirstDate = today.with(TemporalAdjusters.firstDayOfMonth());
         NhiExtendDisposal nhiExtDisposalMonthFirstDate = new NhiExtendDisposal()
             .a17(monthFirstDate.getYear() - 1911 + monthFormatter.format(monthFirstDate) + dayFormatter.format(monthFirstDate))
@@ -156,6 +166,7 @@ public class NhiServiceMockTest {
     public void testCheckIntervalMonthWithQuadrants() {
         final String code = "Month2Q1";
 
+        nhiExtendTreatmentProcedure.setId(fakeId1);
         nhiExtendTreatmentProcedure.setA73(code);
         nhiExtendTreatmentProcedure.setA74("11");
 
@@ -172,6 +183,7 @@ public class NhiServiceMockTest {
             .a73(code)
             .a74("FM")
             .treatmentProcedure(treatmentProcedureMonthFirstDate1);
+        nhiExtendTreatmentProcedureMonthFirstDate1.setId(fakeId2);
         LocalDate monthFirstDate1 = today.with(TemporalAdjusters.firstDayOfMonth());
         NhiExtendDisposal nhiExtDisposalMonthFirstDate1 = new NhiExtendDisposal()
             .a17(monthFirstDate1.getYear() - 1911 + monthFormatter.format(monthFirstDate1) + dayFormatter.format(monthFirstDate1))
@@ -185,6 +197,7 @@ public class NhiServiceMockTest {
             .a73(code)
             .a74("FM")
             .treatmentProcedure(treatmentProcedureMonthFirstDate2);
+        nhiExtendTreatmentProcedureMonthFirstDate2.setId(fakeId3);
         LocalDate monthFirstDate = today.with(TemporalAdjusters.firstDayOfMonth());
         NhiExtendDisposal nhiExtDisposalMonthFirstDate2 = new NhiExtendDisposal()
             .a17(monthFirstDate.getYear() - 1911 + monthFormatter.format(monthFirstDate) + dayFormatter.format(monthFirstDate))
@@ -207,6 +220,7 @@ public class NhiServiceMockTest {
         final String code = "SameHospital";
         final String hospital = "XYZ";
 
+        nhiExtendTreatmentProcedure.setId(fakeId1);
         nhiExtendTreatmentProcedure.setA73(code);
         nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next().a14(hospital);
 
@@ -222,6 +236,7 @@ public class NhiServiceMockTest {
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureMonthFirstDate = new NhiExtendTreatmentProcedure()
             .a73(code)
             .treatmentProcedure(treatmentProcedureMonthFirstDate);
+        nhiExtendTreatmentProcedureMonthFirstDate.setId(fakeId2);
         LocalDate lastYearDate = today.minusYears(1);
         NhiExtendDisposal nhiExtDisposalLastYearDate = new NhiExtendDisposal()
             .a14(hospital)
