@@ -63,7 +63,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 單顆牙齒是否為 恆牙（字串兩碼且為 11-19, 21-29, 31-39, 41-49）
-     * @param singleToothPosition
+     * @param singleToothPosition 單一牙位
      * @return boolean 是否為恆牙
      */
     private boolean isPermanentTeeth(String singleToothPosition) {
@@ -293,6 +293,15 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
+    /**
+     * 尋找 患者 在 時間區間 內，屬於 建制的健保代碼清單中，且 未超過時間區間 的 nhiExtendTreatmentProcedure
+     * @param patientId 病患 id
+     * @param treatmentProcedureId 欲檢驗的處置 id
+     * @param currentTreatmentProcedureDate 當前處置的日期 a71 （此項是為了減少重複所加）
+     * @param codes 被限制的健保代碼清單
+     * @param limitDays 間隔時間
+     * @return null 或 有衝突的 nhiExtendTreatmentProcedure
+     */
     private NhiExtendTreatmentProcedure findPatientTreatmentProcedureAtCodesAndBeforePeriod(
         Long patientId,
         Long treatmentProcedureId,
