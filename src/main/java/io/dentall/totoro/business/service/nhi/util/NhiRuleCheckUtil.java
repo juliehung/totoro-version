@@ -44,7 +44,11 @@ public class NhiRuleCheckUtil {
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
     }
 
-    // 單顆牙齒是否為 乳牙（字串兩碼且為 51-59, 61-69, 71-79, 81-89）
+    /**
+     * 單顆牙齒是否為 乳牙（字串兩碼且為 51-59, 61-69, 71-79, 81-89）
+     * @param singleToothPosition 單一牙位
+     * @return boolean 是否為乳牙
+     */
     private boolean isDeciduousTeeth(String singleToothPosition) {
         if (singleToothPosition.length() != 2) {
             return false;
@@ -57,7 +61,11 @@ public class NhiRuleCheckUtil {
         return true;
     }
 
-    // 單顆牙齒是否為 恆牙（字串兩碼且為 11-19, 21-29, 31-39, 41-49）
+    /**
+     * 單顆牙齒是否為 恆牙（字串兩碼且為 11-19, 21-29, 31-39, 41-49）
+     * @param singleToothPosition
+     * @return boolean 是否為恆牙
+     */
     private boolean isPermanentTeeth(String singleToothPosition) {
         if (singleToothPosition.length() != 2) {
             return false;
@@ -70,8 +78,15 @@ public class NhiRuleCheckUtil {
         return true;
     }
 
-    // 解析 健保代碼 若是區間型態，則切分並產生，包含頭、尾、區間三個部位全部的代碼，目前僅支援
-    // <number-low><single-alphabet>~<number-high><single-alphabet> 這種格式，且 <single-alphabet> 需相同，且 <single-alphabet> 相同
+    /**
+     * 解析 健保代碼 若是區間型態，則切分並產生，包含頭、尾、區間三個部位全部的代碼，目前僅支援
+     * <number-low><single-alphabet>~<number-high><single-alphabet> 這種格式，且 <single-alphabet> 需相同，且 <single-alphabet> 相同
+     * e.g.
+     * 91001C~91020C 會被展開成 91001C, 91002C, 91003C, ..., 91020C
+     *
+     * @param nhiCodes 健保代碼，或健保代碼區間
+     * @return string list of 健保代碼，健保代碼區間也會被切割產生單一健保代碼
+     */
     private List<String> parseNhiCode(List<String> nhiCodes) {
         List<String> result = new ArrayList<>();
 
