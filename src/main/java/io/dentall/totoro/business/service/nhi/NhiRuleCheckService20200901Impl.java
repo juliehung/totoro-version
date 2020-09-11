@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi;
 
+import io.dentall.totoro.business.service.nhi.util.CopaymentCode;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.service.nhi.util.SurfaceConstraint;
 import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
@@ -693,11 +694,10 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
                 dto,
-                Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH),
+                CopaymentCode._001
+            ),
             vm
         );
 
