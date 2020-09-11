@@ -721,61 +721,345 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
     @Override
     public NhiRuleCheckResultVM validate89102C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MAX_3_SURFACES
+            ),
+            vm
+        );
+
+        return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89103C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MAX_3_SURFACES
+            ),
+            vm
+        );
+
+        return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89104C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MAX_2_SURFACES
+            ),
+            vm
+        );
+
+        return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89105C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MAX_2_SURFACES
+            ),
+            vm
+        );
+
+        return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89108C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MAX_3_SURFACES
+            ),
+            vm
+        );
+
+        return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89109C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MAX_3_SURFACES
+            ),
+            vm
+        );
+
+        return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89110C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MAX_3_SURFACES
+            ),
+            vm
+        );
+
+        return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89111C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89112C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MAX_3_SURFACES
+            ),
+            vm
+        );
+
+        return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89113C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH
+            ),
+            vm
+        );
+
+        return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89114C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        return vm;
     }
 
     @Override
     public NhiRuleCheckResultVM validate89115C(NhiRuleCheckDTO dto) {
-        return null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasPatientIdentityIs(
+                dto,
+                CopaymentCode._001
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MUST_HAVE_M_D_O
+            ),
+            vm
+        );
+
+        return vm;
     }
 }
