@@ -31,7 +31,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         IllegalAccessException {
         return (NhiRuleCheckResultVM) this.getClass()
             .getMethod("validate".concat(code), NhiRuleCheckDTO.class)
-            .invoke(this, convertVmToDto(code, vm));
+            .invoke(this, this.convertVmToDto(code, vm));
     }
 
     // 910***

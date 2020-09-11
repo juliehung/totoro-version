@@ -91,7 +91,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 解析 健保代碼 若是區間型態，則切分並產生，包含頭、尾、區間三個部位全部的代碼，目前僅支援
-     * <number-low><single-alphabet>~<number-high><single-alphabet> 這種格式，且 <single-alphabet> 需相同，且 <single-alphabet> 相同
+     * [number-low][single-alphabet]~[number-high][single-alphabet] 這種格式，且 [single-alphabet] 需相同，且 [single-alphabet] 相同
      * e.g.
      * 91001C~91020C 會被展開成 91001C, 91002C, 91003C, ..., 91020C
      *
@@ -225,6 +225,10 @@ public class NhiRuleCheckUtil {
             assignDtoByNhiExtendTreatmentProcedureId(dto, code, vm.getTreatmentId(), vm.getPatientId());
         }
 
+        if (vm.getDisposalId() != null) {
+            assignDtoByNhiExtendDisposalId(dto, vm.getDisposalId());
+        }
+
         // 產生暫時的 treatment 資料，在後續的檢驗中被檢核所需
         if (vm.getPatientId() != null && vm.getTreatmentId() == null) {
             dto.setNhiExtendTreatmentProcedure(
@@ -355,7 +359,7 @@ public class NhiRuleCheckUtil {
                 }
             });
 
-        return matchedNhiExtendTreatmentProcedure.size() > 0 ?matchedNhiExtendTreatmentProcedure.get(0) :null ;
+        return matchedNhiExtendTreatmentProcedure.size() > 0 ?matchedNhiExtendTreatmentProcedure.get(0) :null;
     }
 
     /**

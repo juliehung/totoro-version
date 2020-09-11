@@ -9,9 +9,19 @@ public class NhiRuleCheckVM {
 
     private Long treatmentId;
 
+    private Long disposalId;
+
     private String tmpTreatmentA74;
 
     private String tmpTreatmentA75;
+
+    public Long getDisposalId() {
+        return disposalId;
+    }
+
+    public void setDisposalId(Long disposalId) {
+        this.disposalId = disposalId;
+    }
 
     public Long getPatientId() {
         return patientId;
