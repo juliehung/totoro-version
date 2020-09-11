@@ -163,13 +163,16 @@ public class NhiRuleCheckUtil {
     /**
      * 查詢 patient 並將取得資料塞入 dto 以利後續使用，或 response as not found
      * @param dto dto.patient 將會被 assign db data
-     * @param nhiExtendDisposalId 健保資料處置單
+     * @param treatmentId 健保資料處置單
      */
-    private void assignDtoByNhiExtendDisposalId(@NotNull NhiRuleCheckDTO dto, @NotNull Long nhiExtendDisposalId) {
+    private void assignDtoByNhiExtendDisposalId(@NotNull NhiRuleCheckDTO dto, @NotNull Long treatmentId) {
         dto.setNhiExtendDisposal(
             nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(
-                nhiExtendDisposalRepository.findById(nhiExtendDisposalId, NhiExtendDisposalTable.class)
-                    .orElseThrow(() -> new ResourceNotFoundException("nhi Extend Disposal Id with " + nhiExtendDisposalId))));
+                nhiExtendDisposalRepository.findByDisposal_TreatmentProcedures_Id(treatmentId, NhiExtendDisposalTable.class)
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .findAny()
+                    .orElseThrow(() -> new ResourceNotFoundException("nhi Extend Disposal Id with treatment id " + treatmentId))));
     }
 
     /**
@@ -203,7 +206,7 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 作用是轉化 vm 取得到的值，檢核、查詢對應 Nhi Treatment Procedure、Patient 資料，以利後續功能使用。
+     * 作用是轉化 vm 取得到的值，檢核、查詢對應 Nhi Disposal, Nhi Treatment Procedure, Patient 資料，以利後續功能使用。
      * 此 method 使用情境有二
      * 1. 診療項目 尚未被產生，需要預先進行確認，所需資料會用到 patientId, a71, a73, a74, a75，a71, a73 不用給定是因為，a71 必然為今日，
      * 這邊會自動計算帶入；a73 則是打 api 時就會認定想驗證的目標在 api path。
@@ -223,10 +226,7 @@ public class NhiRuleCheckUtil {
 
         if (vm.getTreatmentId() != null) {
             assignDtoByNhiExtendTreatmentProcedureId(dto, code, vm.getTreatmentId(), vm.getPatientId());
-        }
-
-        if (vm.getDisposalId() != null) {
-            assignDtoByNhiExtendDisposalId(dto, vm.getDisposalId());
+            assignDtoByNhiExtendDisposalId(dto, dto.getNhiExtendTreatmentProcedure().getId());
         }
 
         // 產生暫時的 treatment 資料，在後續的檢驗中被檢核所需

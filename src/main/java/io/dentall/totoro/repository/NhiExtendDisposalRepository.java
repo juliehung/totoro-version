@@ -358,4 +358,5 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
     @Query("select count(nhiExtendDisposal) from NhiExtendDisposal nhiExtendDisposal where " + dateBetween)
     long countByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
 
+    <T> List<T> findByDisposal_TreatmentProcedures_Id(Long treatmentId, Class<T> clazz);
 }
