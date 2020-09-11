@@ -161,9 +161,9 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 查詢 patient 並將取得資料塞入 dto 以利後續使用，或 response as not found
-     * @param dto dto.patient 將會被 assign db data
-     * @param treatmentId 健保資料處置單
+     * 查詢 nhi extend disposal 並將取得資料塞入 dto 以利後續使用，或 response as not found
+     * @param dto dto.nhiExtendDisposal 將會被 assign db data
+     * @param treatmentId 診療 id
      */
     private void assignDtoByNhiExtendDisposalId(@NotNull NhiRuleCheckDTO dto, @NotNull Long treatmentId) {
         dto.setNhiExtendDisposal(

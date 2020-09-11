@@ -20,10 +20,6 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         this.nhiRuleCheckUtil = nhiRuleCheckUtil;
     }
 
-    private NhiRuleCheckDTO convertVmToDto(String code, NhiRuleCheckVM vm) {
-        return nhiRuleCheckUtil.convertVmToDto(code, vm);
-    }
-
     @Override
     public NhiRuleCheckResultVM dispatch(String code, NhiRuleCheckVM vm) throws
         NoSuchMethodException,
@@ -31,7 +27,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         IllegalAccessException {
         return (NhiRuleCheckResultVM) this.getClass()
             .getMethod("validate".concat(code), NhiRuleCheckDTO.class)
-            .invoke(this, this.convertVmToDto(code, vm));
+            .invoke(this, nhiRuleCheckUtil.convertVmToDto(code, vm));
     }
 
     // 910***
