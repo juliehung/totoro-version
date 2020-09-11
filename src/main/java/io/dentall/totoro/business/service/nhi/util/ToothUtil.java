@@ -2,6 +2,8 @@ package io.dentall.totoro.business.service.nhi.util;
 
 import com.google.common.collect.ImmutableMap;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class ToothUtil {
@@ -18,5 +20,10 @@ public class ToothUtil {
     public boolean validateToothConstraint(ToothConstraint tc, String tooth) {
         return tooth.matches(toothConstraints.get(tc));
     }
+
+    public List<String> splitA74(String a74) {
+        return Arrays.asList(a74.split("(?<=\\G..)"));
+    }
+
 }
 
