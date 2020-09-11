@@ -1,11 +1,11 @@
 package io.dentall.totoro.repository;
 
+import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.StatisticSpDTO;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.web.rest.vm.*;
-import org.hibernate.annotations.Parameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,7 +26,7 @@ import java.util.Set;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface NhiExtendDisposalRepository extends JpaRepository<NhiExtendDisposal, Long>, JpaSpecificationExecutor<NhiExtendDisposal> {
+public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRepository, JpaRepository<NhiExtendDisposal, Long>, JpaSpecificationExecutor<NhiExtendDisposal> {
 
     @Query(
         nativeQuery = true,

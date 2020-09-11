@@ -5,9 +5,12 @@ import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
+import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
@@ -28,19 +31,27 @@ public class NhiRuleCheckUtil {
     // 申報時常用說明
     public static final String DESC_MUST_FULFILL_SURFACE = "應於病歷詳列充填牙面部位";
 
+    private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
+
     private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
 
     private final PatientRepository patientRepository;
 
+    private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
+
     private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
 
     public NhiRuleCheckUtil(
+        NhiExtendDisposalRepository nhiExtendDisposalRepository,
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
         PatientRepository patientRepository,
+        NhiExtendDisposalMapper nhiExtendDisposalMapper,
         NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper
     ) {
+        this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
         this.patientRepository = patientRepository;
+        this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
     }
 
@@ -147,6 +158,18 @@ public class NhiRuleCheckUtil {
             PatientMapper.patientTableToPatient(
                 patientRepository.findPatientById(patientId)
                     .orElseThrow(() -> new ResourceNotFoundException("patient with " + patientId))));
+    }
+
+    /**
+     * 查詢 patient 並將取得資料塞入 dto 以利後續使用，或 response as not found
+     * @param dto dto.patient 將會被 assign db data
+     * @param nhiExtendDisposalId 健保資料處置單
+     */
+    private void assignDtoByNhiExtendDisposalId(@NotNull NhiRuleCheckDTO dto, @NotNull Long nhiExtendDisposalId) {
+        dto.setNhiExtendDisposal(
+            nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(
+                nhiExtendDisposalRepository.findById(nhiExtendDisposalId, NhiExtendDisposalTable.class)
+                    .orElseThrow(() -> new ResourceNotFoundException("nhi Extend Disposal Id with " + nhiExtendDisposalId))));
     }
 
     /**
