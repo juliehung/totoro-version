@@ -566,6 +566,12 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
+    /**
+     * 檢查 nhi extend disposal 是否被調整為 指定部分代碼
+     * @param dto 使用 nhiExtendDisposal.patientIdentity
+     * @param cc 部分負擔代碼 a.k.a patientIdentity
+     * @return 後續檢核統一 `回傳` 的介面
+     */
     public NhiRuleCheckResultDTO hasPatientIdentityIs(NhiRuleCheckDTO dto, CopaymentCode cc) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(dto.getNhiExtendDisposal().getPatientIdentity().equals(cc.getCode()));
