@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi;
 
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
+import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.service.util.DateTimeUtil;
@@ -382,6 +383,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH),
             vm
         );
 

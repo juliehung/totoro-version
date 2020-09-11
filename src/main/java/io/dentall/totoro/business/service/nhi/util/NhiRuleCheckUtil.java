@@ -411,9 +411,26 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
-    // TODO: limited tooth checking
-    public NhiRuleCheckResultDTO isAllLimitedTooth(NhiRuleCheckDTO dto, String limitPositionOfTooth) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO();
+    /**
+     * 傳入 a74 自動切分為單牙，並依照 給定的 ToothConstraint 來辦定是否為核可牙位
+     *
+     * @param dto 使用 nhiExtendTreatmentProcedure.a74
+     * @param tc 提供例如 前牙限定、後牙限定、FM限定⋯⋯等 regex
+     * @return
+     */
+    public NhiRuleCheckResultDTO isAllLimitedTooth(NhiRuleCheckDTO dto, ToothConstraint tc) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validated(true);
+
+        result.validated(
+            ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74())
+                .stream()
+                .anyMatch(tooth -> !ToothUtil.validatedToothConstraint(tc, tooth))
+        );
+
+        if (!result.isValidated()) {
+            result.setMessage(ToothUtil.getToothConstraintsFailureMessage(tc));
+        }
 
         return result;
     }
