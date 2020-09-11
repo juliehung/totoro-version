@@ -32,6 +32,7 @@ public class NhiRuleCheckResource {
         this.nhiRuleCheckService = nhiRuleCheckService;
     }
 
+    // 即便 vm validation 為 false ，仍有需要顯示的 message
     @GetMapping("/validate/{code}")
     @Timed
     public ResponseEntity<NhiRuleCheckResultVM> validateCode(@PathVariable String code, NhiRuleCheckVM vm) throws

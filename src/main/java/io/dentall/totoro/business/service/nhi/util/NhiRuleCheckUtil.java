@@ -383,9 +383,10 @@ public class NhiRuleCheckUtil {
      * @param message 作為提醒用訊息
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO generalNotification(String message) {
+    public NhiRuleCheckResultDTO addNotification(String message) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validated(true);
+            .validated(true)
+            .message(message);
 
         return result;
     }
@@ -396,7 +397,7 @@ public class NhiRuleCheckUtil {
      * @param limitNumberOfSurface 申報最高牙面數
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO hasLimitedSurface(NhiRuleCheckDTO dto, Integer limitNumberOfSurface) {
+    public NhiRuleCheckResultDTO isAllLimitedSurface(NhiRuleCheckDTO dto, Integer limitNumberOfSurface) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= limitNumberOfSurface);
 
@@ -410,7 +411,8 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
-    public NhiRuleCheckResultDTO hasLimitedSurface(NhiRuleCheckDTO dto, String limitPositionOfTooth) {
+    // TODO: limited tooth checking
+    public NhiRuleCheckResultDTO isAllLimitedTooth(NhiRuleCheckDTO dto, String limitPositionOfTooth) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO();
 
         return result;
