@@ -1,7 +1,9 @@
 package io.dentall.totoro.business.service.nhi.util;
 
 import com.google.common.collect.ImmutableMap;
+import org.apache.http.util.Asserts;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +15,7 @@ public class ToothUtil {
      */
     private static final Map<ToothConstraint, String> toothConstraintsFailureMessage =
         ImmutableMap.of(
-            ToothConstraint.FRONT_TOOTH, "限填前牙牙位，11-19, 21-29, 31-39, 41-49, 51-59, 61-69, 71-79, 81-89"
+            ToothConstraint.FRONT_TOOTH, "限填前牙牙位，11~19, 21~29, 31~39, 41~49, 51~59, 61~69, 71~79, 81~89"
         );
 
     /**
@@ -32,7 +34,7 @@ public class ToothUtil {
      * @param tooth 單牙牙位
      * @return true -> 核可的牙位， false -> 不允許的牙位
      */
-    public static boolean validatedToothConstraint(ToothConstraint tc, String tooth) {
+    public static boolean validatedToothConstraint(@NotNull ToothConstraint tc, @NotNull String tooth) {
         return tooth.matches(toothConstraints.get(tc));
     }
 
@@ -43,6 +45,8 @@ public class ToothUtil {
      * @return 解析 a74 並回傳 數個兩碼字串
      */
     public static List<String> splitA74(String a74) {
+        Asserts.notNull(a74, "a74");
+
         return Arrays.asList(a74.split("(?<=\\G..)"));
     }
 
@@ -52,7 +56,7 @@ public class ToothUtil {
      * @param tc 提供例如 前牙限定、後牙限定、FM限定⋯⋯等 regex
      * @return
      */
-    public static String getToothConstraintsFailureMessage(ToothConstraint tc) {
+    public static String getToothConstraintsFailureMessage(@NotNull ToothConstraint tc) {
         return toothConstraintsFailureMessage.get(tc);
     }
 
