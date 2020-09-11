@@ -394,7 +394,7 @@ public class NhiRuleCheckUtil {
      * 限制牙面在 limitNumberOfSurface 以下
      * @param dto 使用 nhiExtendTreatmentProcedure.a75
      * @param limitNumberOfSurface 申報最高牙面數
-     * @return
+     * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO hasLimitedSurface(NhiRuleCheckDTO dto, Integer limitNumberOfSurface) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
@@ -410,13 +410,19 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
+    public NhiRuleCheckResultDTO hasLimitedSurface(NhiRuleCheckDTO dto, String limitPositionOfTooth) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO();
+
+        return result;
+    }
+
     /**
      * 病患 牙齒 是否有 健保代碼 於某時間前已被申報過
      * @param dto 使用 nhiExtendTreatmentProcedure.id/a71/a73/a74, patient.id,
      * @param codes 被限制的健保代碼清單
      * @param deciduousToothLimitDays 為乳牙時，所需時間間隔
      * @param permanentToothLimitDays 為恆牙時，弱需時間間隔
-     * @return
+     * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO hasPatientToothAtCodesBeforePeriod(
         NhiRuleCheckDTO dto,
