@@ -15,7 +15,8 @@ public class ToothUtil {
      */
     private static final Map<ToothConstraint, String> toothConstraintsFailureMessage =
         ImmutableMap.of(
-            ToothConstraint.FRONT_TOOTH, "限填前牙牙位，11~19, 21~29, 31~39, 41~49, 51~59, 61~69, 71~79, 81~89"
+            ToothConstraint.FRONT_TOOTH, "限填前牙牙位，11~19, 21~29, 31~39, 41~49, 51~59, 61~69, 71~79, 81~89",
+            ToothConstraint.PERMANENT_TOOTH, "限填恆牙牙位，11~19, 21~29, 31~39, 41~49"
         );
 
     /**
@@ -23,7 +24,8 @@ public class ToothUtil {
      */
     private static final Map<ToothConstraint, String> toothConstraints =
         ImmutableMap.of(
-            ToothConstraint.FRONT_TOOTH, "^[1-8][1-3]$|^[1-9]9$"
+            ToothConstraint.FRONT_TOOTH, "^[1-8][1-3]$|^[1-9]9$",
+            ToothConstraint.PERMANENT_TOOTH, "^[1-4][1-9]$"
         );
 
 
@@ -54,7 +56,7 @@ public class ToothUtil {
      * 提供指定 ToothConstraint 檢核失敗時的錯誤訊息
      *
      * @param tc 提供例如 前牙限定、後牙限定、FM限定⋯⋯等 regex
-     * @return
+     * @return 檢核失敗錯誤訊息
      */
     public static String getToothConstraintsFailureMessage(@NotNull ToothConstraint tc) {
         return toothConstraintsFailureMessage.get(tc);
