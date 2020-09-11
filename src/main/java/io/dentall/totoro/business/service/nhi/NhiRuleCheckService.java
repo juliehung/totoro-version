@@ -3,7 +3,9 @@ package io.dentall.totoro.business.service.nhi;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * 健保代碼 檢核功能，會依照年分可以進行不同的實作 e.g. NhiRuleCheckService20200901Impl
+ * 健保代碼 檢核功能，會依照年分可以進行不同的實作 e.g. NhiRuleCheckService20200901Impl。在實作時，你可能會遇到多個檢查一樣的狀況，
+ * 但為了方便管理、除錯以及彈性，務必不要把相同的檢核，提出來作為 utils, method, etc,. 等方式使用，保持這裡面項目的簡單。
+ *
  * @param <A> 前端 vm 傳進來的內容格式
  * @param <B> 後端運算互傳的格式
  * @param <O> 後端運算結果回傳的格式
