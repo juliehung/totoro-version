@@ -104,18 +104,27 @@ public class NhiRuleCheckUtil {
         nhiCodes.stream()
             .filter(Objects::nonNull)
             .forEach(code -> {
-                String[] tildeCodes = code.split("([0-9]*)([A-Z]?)~([0-9]*)([A-Z]?)");
                 try {
-                    int numberLow = Integer.parseInt(tildeCodes[0]);
-                    int numberHigh = Integer.parseInt(tildeCodes[2]);
-                    String alpha = tildeCodes[1];
+                    String[] tildeCodes = code.split("~");
+                    if (tildeCodes.length != 2) {
+                        return;
+                    }
 
-                    if (tildeCodes.length == 4 &&
-                        numberLow < numberHigh &&
-                        alpha.equals(tildeCodes[3])
+                    String[] lowCode = tildeCodes[0].split("[A-Z]");
+                    String[] highCode = tildeCodes[1].split("[A-Z]");
+                    if (lowCode.length != 2 || highCode.length != 2) {
+                        return;
+                    }
+                    Integer lowCodeNumber = Integer.parseInt(lowCode[0]);
+                    String lowCodeAlpha = lowCode[1];
+                    Integer highCodeNumber = Integer.parseInt(highCode[0]);
+                    String highCodeAlpha = highCode[1];
+
+                    if (lowCodeAlpha.equals(highCodeAlpha) &&
+                        lowCodeNumber < highCodeNumber
                     ) {
-                        for (int i = numberLow; i <= numberHigh; i++) {
-                            result.add(String.valueOf(i).concat(alpha));
+                        for (int i = lowCodeNumber; i <= highCodeNumber; i++) {
+                            result.add(String.valueOf(i).concat(lowCodeAlpha));
                         }
                     } else {
                         result.add(code);
@@ -436,19 +445,26 @@ public class NhiRuleCheckUtil {
             case MAX_2_SURFACES:
                 maxSurfaces = 2;
                 result
-                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= maxSurfaces)
-                    .setMessage(String.format("申報面數最高以 %d 面為限", maxSurfaces));
+                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= maxSurfaces);
+                if (!result.isValidated()) {
+                    result.setMessage(String.format("申報面數最高以 %d 面為限", maxSurfaces));
+                }
+
                 break;
             case MAX_3_SURFACES:
                 maxSurfaces = 3;
                 result
-                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= maxSurfaces)
-                    .setMessage(String.format("申報面數最高以 %d 面為限", maxSurfaces));
+                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= maxSurfaces);
+                if (!result.isValidated()) {
+                    result.setMessage(String.format("申報面數最高以 %d 面為限", maxSurfaces));
+                }
                 break;
             case MUST_HAVE_M_D_O:
                 result
-                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().matches("[MOD]"))
-                    .setMessage("充填牙面部位應包含雙鄰接面(Mesial, M; Distal, D) 及咬合面(Occlusal, O)");
+                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().matches("[MOD]"));
+                if (!result.isValidated()) {
+                    result.setMessage("充填牙面部位應包含雙鄰接面(Mesial, M; Distal, D) 及咬合面(Occlusal, O)");
+                }
                 break;
             default:
                 break;
@@ -503,9 +519,9 @@ public class NhiRuleCheckUtil {
 
         Stack<Period> usedPeriod = new Stack<>();
         LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-        String[] teeth = dto.getNhiExtendTreatmentProcedure().getA74().split("(?<=\\G..)");
+        List<String> teeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
 
-        Arrays.stream(teeth)
+        teeth.stream()
             .map(tooth -> {
 
                 if (isDeciduousTeeth(tooth)) {
