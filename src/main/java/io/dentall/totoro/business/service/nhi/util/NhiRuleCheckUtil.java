@@ -347,7 +347,7 @@ public class NhiRuleCheckUtil {
         LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
 
         NhiExtendTreatmentProcedure match =
-            findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+            this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
                 dto.getPatient().getId(),
                 dto.getNhiExtendTreatmentProcedure().getId(),
                 currentTxDate,
