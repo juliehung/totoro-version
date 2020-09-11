@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi;
 
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
+import io.dentall.totoro.business.service.nhi.util.SurfaceConstraint;
 import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
@@ -303,7 +304,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
-                3
+                SurfaceConstraint.MAX_3_SURFACES
             ),
             vm
         );
@@ -334,7 +335,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
-                3
+                SurfaceConstraint.MAX_3_SURFACES
             ),
             vm
         );
@@ -365,7 +366,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
-                3
+                SurfaceConstraint.MAX_3_SURFACES
             ),
             vm
         );
@@ -403,7 +404,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
-                2
+                SurfaceConstraint.MAX_2_SURFACES
             ),
             vm
         );
@@ -441,7 +442,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
-                2
+                SurfaceConstraint.MAX_2_SURFACES
             ),
             vm
         );
@@ -472,7 +473,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
-                3
+                SurfaceConstraint.MAX_3_SURFACES
             ),
             vm
         );
@@ -503,7 +504,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
-                3
+                SurfaceConstraint.MAX_3_SURFACES
             ),
             vm
         );
@@ -534,7 +535,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
-                3
+                SurfaceConstraint.MAX_3_SURFACES
             ),
             vm
         );
@@ -589,7 +590,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
-                3
+                SurfaceConstraint.MAX_3_SURFACES
             ),
             vm
         );
@@ -628,7 +629,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
-                3
+                SurfaceConstraint.MAX_3_SURFACES
             ),
             vm
         );

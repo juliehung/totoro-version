@@ -392,20 +392,39 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 限制牙面在 limitNumberOfSurface 以下
+     * 限制牙面在 isAllLimitedSurface 以下
      * @param dto 使用 nhiExtendTreatmentProcedure.a75
-     * @param limitNumberOfSurface 申報最高牙面數
+     * @param sc 牙面限制
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO isAllLimitedSurface(NhiRuleCheckDTO dto, Integer limitNumberOfSurface) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= limitNumberOfSurface);
+    public NhiRuleCheckResultDTO isAllLimitedSurface(
+        NhiRuleCheckDTO dto,
+        SurfaceConstraint sc
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO();
 
-        if (!result.isValidated()) {
-            result.setMessage(
-                "申報面數最高以 "
-                .concat(limitNumberOfSurface.toString())
-                .concat(" 面為限，或是著排除是否前後有空格。"));
+        Integer maxSurfaces;
+
+        switch (sc) {
+            case MAX_2_SURFACES:
+                maxSurfaces = 2;
+                result
+                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= maxSurfaces)
+                    .setMessage(String.format("申報面數最高以 %d 面為限", maxSurfaces));
+                break;
+            case MAX_3_SURFACES:
+                maxSurfaces = 3;
+                result
+                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= maxSurfaces)
+                    .setMessage(String.format("申報面數最高以 %d 面為限", maxSurfaces));
+                break;
+            case MUST_HAVE_M_D_O:
+                result
+                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().matches("[MOD]"))
+                    .setMessage("充填牙面部位應包含雙鄰接面(Mesial, M; Distal, D) 及咬合面(Occlusal, O)");
+                break;
+            default:
+                break;
         }
 
         return result;
@@ -418,7 +437,10 @@ public class NhiRuleCheckUtil {
      * @param tc 提供例如 前牙限定、後牙限定、FM限定⋯⋯等 regex
      * @return
      */
-    public NhiRuleCheckResultDTO isAllLimitedTooth(NhiRuleCheckDTO dto, ToothConstraint tc) {
+    public NhiRuleCheckResultDTO isAllLimitedTooth(
+        NhiRuleCheckDTO dto,
+        ToothConstraint tc
+    ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(true);
 
