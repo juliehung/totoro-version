@@ -583,7 +583,7 @@ public class NhiRuleCheckUtil {
             .validated(true);
 
         result.validated(
-            ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74())
+            !ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74())
                 .stream()
                 .anyMatch(tooth -> !ToothUtil.validatedToothConstraint(tc, tooth))
         );
