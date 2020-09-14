@@ -44,6 +44,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+                Arrays.asList(new String[]{"91003C"}.clone()),
+                DateTimeUtil.NHI_6_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
         );
@@ -57,6 +64,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"91004C"}.clone()),
+                DateTimeUtil.NHI_6_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91004C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
@@ -82,6 +96,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+                Arrays.asList(new String[]{"91005C"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
         );
@@ -95,6 +116,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"91015C"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91015C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -120,6 +148,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+                Arrays.asList(new String[]{"91016C"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
         );
@@ -133,6 +168,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"91017C"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91017C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -158,6 +200,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+                Arrays.asList(new String[]{"91018C"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
         );
@@ -171,6 +220,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"91103C"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91103C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -196,6 +252,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+                Arrays.asList(new String[]{"91104C"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
         );
@@ -209,6 +272,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"81"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"81"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -234,6 +304,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+                Arrays.asList(new String[]{"87"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.lessThanAge12(dto),
             vm
         );
@@ -247,6 +324,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"88"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"88"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -270,6 +354,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                 Arrays.asList(new String[]{"89"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
                 vm);
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+                Arrays.asList(new String[]{"89"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.lessThanAge12(dto),
