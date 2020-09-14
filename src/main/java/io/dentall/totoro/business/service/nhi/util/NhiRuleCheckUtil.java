@@ -376,7 +376,6 @@ public class NhiRuleCheckUtil {
                 if (pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
                     matchedNhiExtendTreatmentProcedure.add(
                         nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(netpt));
-                } else {
                 }
             });
 
@@ -411,7 +410,6 @@ public class NhiRuleCheckUtil {
                 LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(nmr.getDate());
                 if (pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
                     matchedNhiMedicalRecord.add(nmr);
-                } else {
                 }
             });
 
