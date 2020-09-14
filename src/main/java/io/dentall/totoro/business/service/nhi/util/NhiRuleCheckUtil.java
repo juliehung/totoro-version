@@ -5,8 +5,10 @@ import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.NhiMedicalRecord;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
+import io.dentall.totoro.repository.NhiMedicalRecordRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
@@ -23,7 +25,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Stack;
 
 @Service
 public class NhiRuleCheckUtil {
@@ -37,6 +42,8 @@ public class NhiRuleCheckUtil {
 
     private final PatientRepository patientRepository;
 
+    private final NhiMedicalRecordRepository nhiMedicalRecordRepository;
+
     private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
 
     private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
@@ -45,12 +52,14 @@ public class NhiRuleCheckUtil {
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
         PatientRepository patientRepository,
+        NhiMedicalRecordRepository nhiMedicalRecordRepository,
         NhiExtendDisposalMapper nhiExtendDisposalMapper,
         NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper
     ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
         this.patientRepository = patientRepository;
+        this.nhiMedicalRecordRepository = nhiMedicalRecordRepository;
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
     }
@@ -357,18 +366,43 @@ public class NhiRuleCheckUtil {
             .filter(netp -> StringUtils.isNotBlank(netp.getA71()) && netp.getTreatmentProcedure_Id() != null)
             .filter(netp -> !netp.getTreatmentProcedure_Id().equals(treatmentProcedureId))
             .filter(netp -> currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
-            .anyMatch(netpt -> {
+            .forEach(netpt -> {
                 LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
                 if (pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
                     matchedNhiExtendTreatmentProcedure.add(
                         nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(netpt));
-                    return true;
                 } else {
-                    return false;
                 }
             });
 
         return matchedNhiExtendTreatmentProcedure.size() > 0 ?matchedNhiExtendTreatmentProcedure.get(0) :null;
+    }
+
+    private NhiMedicalRecord findPatientMediaRecordAtCodesAndBeforePeriod(
+        Long patientId,
+        LocalDate currentTreatmentProcedureDate,
+        @NotNull List<String> codes,
+        @NotNull Period limitDays
+    ) {
+        List<NhiMedicalRecord> matchedNhiMedicalRecord = new ArrayList<>();
+
+        List<String> parsedCodes = this.parseNhiCode(codes);
+
+        nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+            patientId,
+            parsedCodes)
+            .stream()
+            .filter(Objects::nonNull)
+            .filter(nmr -> currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(nmr.getDate())))
+            .forEach(nmr -> {
+                LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(nmr.getDate());
+                if (pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
+                    matchedNhiMedicalRecord.add(nmr);
+                } else {
+                }
+            });
+
+        return matchedNhiMedicalRecord.size() > 0 ?matchedNhiMedicalRecord.get(0) :null;
     }
 
     /**
@@ -378,8 +412,11 @@ public class NhiRuleCheckUtil {
      * @param limitDays 間隔時間
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO hasCodeBeforeDate(@NotNull NhiRuleCheckDTO dto, @NotNull List<String> codes, @NotNull Period limitDays) {
-
+    public NhiRuleCheckResultDTO hasCodeBeforeDate(
+        @NotNull NhiRuleCheckDTO dto,
+        @NotNull List<String> codes,
+        @NotNull Period limitDays
+    ) {
         LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
 
         NhiExtendTreatmentProcedure match =
