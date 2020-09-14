@@ -106,8 +106,10 @@ public class NhiRuleCheckUtil {
     /**
      * 解析 健保代碼 若是區間型態，則切分並產生，包含頭、尾、區間三個部位全部的代碼，目前僅支援
      * [number-low][single-alphabet]~[number-high][single-alphabet] 這種格式，且 [single-alphabet] 需相同，且 [single-alphabet] 相同
+     * 若不符合此項規則，則不分割，直接回傳。
      * e.g.
      * 91001C~91020C 會被展開成 91001C, 91002C, 91003C, ..., 91020C
+     * ["91001C~91003C", "ABCD123"] => ["91001C", "91002C", "91003C", "ABCD123"]
      *
      * @param nhiCodes 健保代碼，或健保代碼區間
      * @return string list of 健保代碼，健保代碼區間也會被切割產生單一健保代碼
@@ -121,14 +123,17 @@ public class NhiRuleCheckUtil {
                 try {
                     String[] tildeCodes = code.split("~");
                     if (tildeCodes.length != 2) {
+                        result.add(code);
                         return;
                     }
 
                     String[] lowCode = tildeCodes[0].split("[A-Z]");
                     String[] highCode = tildeCodes[1].split("[A-Z]");
                     if (lowCode.length != 2 || highCode.length != 2) {
+                        result.add(code);
                         return;
                     }
+
                     Integer lowCodeNumber = Integer.parseInt(lowCode[0]);
                     String lowCodeAlpha = lowCode[1];
                     Integer highCodeNumber = Integer.parseInt(highCode[0]);
