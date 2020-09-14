@@ -37,14 +37,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91003C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91003C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
@@ -63,14 +63,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91004C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91004C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
@@ -89,14 +89,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91005C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91005C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -115,14 +115,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91015C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91015C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -141,14 +141,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91016C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91016C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -167,14 +167,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91017C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91017C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -193,14 +193,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91018C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91018C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -219,14 +219,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91103C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91103C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -245,14 +245,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91104C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91104C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -271,14 +271,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"81"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"81"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -297,14 +297,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"87"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"87"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -323,14 +323,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"88"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"88"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -349,14 +349,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDate(
+            nhiRuleCheckUtil.isCodeBeforeDate(
                 dto,
                 Arrays.asList(new String[]{"89"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
                 vm);
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasCodeBeforeDateByNhiMedicalRecord(dto,
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"89"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
@@ -374,7 +374,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
@@ -405,7 +405,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
@@ -436,7 +436,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
@@ -467,7 +467,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
@@ -505,7 +505,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
@@ -543,7 +543,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
@@ -574,7 +574,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
@@ -605,7 +605,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
@@ -636,7 +636,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
@@ -660,7 +660,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
@@ -699,7 +699,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 null,
@@ -738,7 +738,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 null,
@@ -762,7 +762,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
                 DateTimeUtil.NHI_12_MONTH,
@@ -785,7 +785,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -815,7 +815,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -845,7 +845,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -875,7 +875,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -905,7 +905,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -935,7 +935,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -965,7 +965,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -995,7 +995,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -1025,7 +1025,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -1047,7 +1047,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -1077,7 +1077,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -1107,7 +1107,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),
@@ -1129,7 +1129,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.hasPatientIdentityIs(
+            nhiRuleCheckUtil.isPatientIdentityInclude(
                 dto,
                 CopaymentCode._001
             ),

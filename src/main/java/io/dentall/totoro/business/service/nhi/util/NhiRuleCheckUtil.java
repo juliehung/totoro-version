@@ -30,6 +30,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
 
+/**
+ * 共用的 rule check 邏輯會整合在這裡。
+ * naming rule,
+ * - find*: 表示會查詢 db 且回傳應有資料
+ */
 @Service
 public class NhiRuleCheckUtil {
 
@@ -420,7 +425,7 @@ public class NhiRuleCheckUtil {
      * @param limitDays 間隔時間
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO hasCodeBeforeDate(
+    public NhiRuleCheckResultDTO isCodeBeforeDate(
         @NotNull NhiRuleCheckDTO dto,
         @NotNull List<String> codes,
         @NotNull Period limitDays
@@ -466,7 +471,7 @@ public class NhiRuleCheckUtil {
      * @param limitDays 間隔時間
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO hasCodeBeforeDateByNhiMedicalRecord(
+    public NhiRuleCheckResultDTO isCodeBeforeDateByNhiMedicalRecord(
         @NotNull NhiRuleCheckDTO dto,
         @NotNull List<String> codes,
         @NotNull Period limitDays
@@ -602,7 +607,7 @@ public class NhiRuleCheckUtil {
      * @param permanentToothLimitDays 為恆牙時，弱需時間間隔
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO hasPatientToothAtCodesBeforePeriod(
+    public NhiRuleCheckResultDTO isPatientToothAtCodesBeforePeriod(
         NhiRuleCheckDTO dto,
         List<String> codes,
         Period deciduousToothLimitDays,
@@ -666,7 +671,7 @@ public class NhiRuleCheckUtil {
      * @param cc 部分負擔代碼 a.k.a patientIdentity
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO hasPatientIdentityIs(NhiRuleCheckDTO dto, CopaymentCode cc) {
+    public NhiRuleCheckResultDTO isPatientIdentityInclude(NhiRuleCheckDTO dto, CopaymentCode cc) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(dto.getNhiExtendDisposal().getPatientIdentity().equals(cc.getCode()));
 
