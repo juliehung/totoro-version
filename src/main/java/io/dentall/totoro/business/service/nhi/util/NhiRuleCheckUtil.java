@@ -482,8 +482,6 @@ public class NhiRuleCheckUtil {
             codes,
             limitDays);
 
-        LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getDate());
-
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(
                 this.findPatientMediaRecordAtCodesAndBeforePeriod(
@@ -495,6 +493,8 @@ public class NhiRuleCheckUtil {
             );
 
         if (!result.isValidated()) {
+            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getDate());
+
             result.setMessage(
                 String.format(
                     "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
