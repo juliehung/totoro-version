@@ -488,21 +488,14 @@ public class NhiRuleCheckUtil {
             limitDays);
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validated(
-                this.findPatientMediaRecordAtCodesAndBeforePeriod(
-                    dto.getPatient().getId(),
-                    currentTxDate,
-                    codes,
-                    limitDays)
-                == null
-            );
+            .validated(match == null);
 
         if (!result.isValidated()) {
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getDate());
 
             result.setMessage(
                 String.format(
-                    "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
+                    "%s 不可與 %s 在 %d 天內再次申報，上次在他院所申報 %s (%s, %d 天前)",
                     dto.getNhiExtendTreatmentProcedure().getA73(),
                     codes.toString(),
                     limitDays.getDays(),
