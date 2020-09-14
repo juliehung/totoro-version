@@ -669,7 +669,9 @@ public class NhiRuleCheckUtil {
      */
     public NhiRuleCheckResultDTO isPatientIdentityInclude(NhiRuleCheckDTO dto, CopaymentCode cc) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validated(dto.getNhiExtendDisposal().getPatientIdentity().equals(cc.getCode()));
+            .validated(
+                StringUtils.isNotBlank(dto.getNhiExtendDisposal().getPatientIdentity()) &&
+                dto.getNhiExtendDisposal().getPatientIdentity().equals(cc.getCode()));
 
         if (!result.isValidated()) {
             if (CopaymentCode._001.getCode().equals(cc.getCode())) {

@@ -12,6 +12,7 @@ import io.dentall.totoro.repository.NhiMedicalRecordRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
+import io.dentall.totoro.util.DataGenerator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,7 +80,7 @@ public class NhiRuleCheckUtilMockTest {
         dto.setNhiExtendTreatmentProcedure(netp);
 
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedTooth(dto, ToothConstraint.PERMANENT_TOOTH);
-        Assert.assertEquals(rdto.isValidated(), true);
+        Assert.assertEquals(true, rdto.isValidated());
         Assert.assertEquals(rdto.getMessage(), null);
     }
 
@@ -91,7 +92,7 @@ public class NhiRuleCheckUtilMockTest {
         dto.setNhiExtendTreatmentProcedure(netp);
 
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedTooth(dto, ToothConstraint.PERMANENT_TOOTH);
-        Assert.assertEquals(rdto.isValidated(), false);
+        Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(rdto.getMessage(), ToothUtil.getToothConstraintsFailureMessage(ToothConstraint.PERMANENT_TOOTH));
     }
 
@@ -103,7 +104,7 @@ public class NhiRuleCheckUtilMockTest {
         dto.setNhiExtendTreatmentProcedure(netp);
 
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedTooth(dto, ToothConstraint.PERMANENT_TOOTH);
-        Assert.assertEquals(rdto.isValidated(), false);
+        Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(rdto.getMessage(), ToothUtil.getToothConstraintsFailureMessage(ToothConstraint.PERMANENT_TOOTH));
     }
 
@@ -115,15 +116,39 @@ public class NhiRuleCheckUtilMockTest {
      * 3. F, 沒有指定代碼
      */
     @Test
-    public void isPatientIdentityInclude() {
+    public void isPatientIdentityInclude_1() {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
         NhiExtendDisposal ned = new NhiExtendDisposal();
-        ned.setPatientIdentity("001");
+        ned.setPatientIdentity(DataGenerator.patientIdentity_1);
         dto.setNhiExtendDisposal(ned);
 
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientIdentityInclude(dto, CopaymentCode._001);
-        Assert.assertEquals(rdto.isValidated(), true);
-        Assert.assertEquals(rdto.getMessage(), CopaymentCode._001.getNotification());
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isPatientIdentityInclude_2() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendDisposal ned = new NhiExtendDisposal();
+        ned.setPatientIdentity(DataGenerator.patientIdentity_2);
+        dto.setNhiExtendDisposal(ned);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientIdentityInclude(dto, CopaymentCode._001);
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(CopaymentCode._001.getNotification(), rdto.getMessage());
+    }
+
+    @Test
+    public void isPatientIdentityInclude_3() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendDisposal ned = new NhiExtendDisposal();
+        ned.setPatientIdentity(null);
+        dto.setNhiExtendDisposal(ned);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientIdentityInclude(dto, CopaymentCode._001);
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(CopaymentCode._001.getNotification(), rdto.getMessage());
     }
 
 }
