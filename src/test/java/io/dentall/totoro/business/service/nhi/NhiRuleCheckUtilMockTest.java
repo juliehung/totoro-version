@@ -1,8 +1,10 @@
 package io.dentall.totoro.business.service.nhi;
 
+import io.dentall.totoro.business.service.nhi.util.CopaymentCode;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
 import io.dentall.totoro.business.service.nhi.util.ToothUtil;
+import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
@@ -64,9 +66,10 @@ public class NhiRuleCheckUtilMockTest {
 
     /**
      * Test case for isAllLimitTooth
-     * 1. 複數個 恆牙牙位 ，條件為 恆牙，檢核失敗，並無錯誤訊息
-     * 2. 恆牙牙位 ＋ 乳牙牙位，條件為 恆牙，檢核失敗，並出現錯誤訊息
-     * 3. 牙位為空，檢核失敗，並出現錯誤訊息
+     * 牙位 必須符合給訂之牙位 regex 規則
+     * 1. T, 複數個 恆牙牙位 ，條件為 恆牙，並無錯誤訊息
+     * 2. F, 恆牙牙位 ＋ 乳牙牙位，條件為 恆牙，並出現錯誤訊息
+     * 3. F, 牙位為空，並出現錯誤訊息
      */
     @Test
     public void isAllLimitTooth_1() {
@@ -105,7 +108,22 @@ public class NhiRuleCheckUtilMockTest {
     }
 
     /**
-     *
+     * Test case for isPatientIdentityInclude
+     * 檢驗 選定的部分負擔代碼符合選定項目
+     * 1. T, 符合指定部分負擔代碼
+     * 2. F, 不符合指定不分代碼
+     * 3. F, 沒有指定代碼
      */
+    @Test
+    public void isPatientIdentityInclude() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendDisposal ned = new NhiExtendDisposal();
+        ned.setPatientIdentity("001");
+        dto.setNhiExtendDisposal(ned);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientIdentityInclude(dto, CopaymentCode._001);
+        Assert.assertEquals(rdto.isValidated(), true);
+        Assert.assertEquals(rdto.getMessage(), CopaymentCode._001.getNotification());
+    }
 
 }
