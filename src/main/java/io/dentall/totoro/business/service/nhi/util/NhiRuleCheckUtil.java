@@ -672,7 +672,7 @@ public class NhiRuleCheckUtil {
             .validated(dto.getNhiExtendDisposal().getPatientIdentity().equals(cc.getCode()));
 
         if (!result.isValidated()) {
-            if (cc.getCode().equals("001")) {
+            if (CopaymentCode._001.getCode().equals(cc.getCode())) {
                 result.setMessage("僅適用於全民健康保險牙醫門診總額特殊醫療服務計畫之適用對 象、化療、放射線治療患者之牙醫醫療服務申報。");
             }
         }
