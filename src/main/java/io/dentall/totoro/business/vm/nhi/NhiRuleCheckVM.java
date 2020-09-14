@@ -13,16 +13,6 @@ public class NhiRuleCheckVM {
 
     private String tmpTreatmentA75;
 
-    private Boolean includeNhiMedicalRecord = true;
-
-    public Boolean getIncludeNhiMedicalRecord() {
-        return includeNhiMedicalRecord;
-    }
-
-    public void setIncludeNhiMedicalRecord(Boolean includeNhiMedicalRecord) {
-        this.includeNhiMedicalRecord = includeNhiMedicalRecord;
-    }
-
     public Long getPatientId() {
         return patientId;
     }
