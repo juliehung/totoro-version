@@ -600,7 +600,7 @@ public class NhiRuleCheckUtil {
      * @param dto 使用 nhiExtendTreatmentProcedure.id/a71/a73/a74, patient.id,
      * @param codes 被限制的健保代碼清單
      * @param deciduousToothLimitDays 為乳牙時，所需時間間隔
-     * @param permanentToothLimitDays 為恆牙時，弱需時間間隔
+     * @param permanentToothLimitDays 為恆牙時，所需時間間隔
      * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO isPatientToothAtCodesBeforePeriod(

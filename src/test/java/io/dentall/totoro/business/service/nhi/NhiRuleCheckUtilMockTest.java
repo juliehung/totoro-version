@@ -104,4 +104,8 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(rdto.getMessage(), ToothUtil.getToothConstraintsFailureMessage(ToothConstraint.PERMANENT_TOOTH));
     }
 
+    /**
+     *
+     */
+
 }
