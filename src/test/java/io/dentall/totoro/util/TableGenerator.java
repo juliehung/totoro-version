@@ -11,10 +11,21 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 public class TableGenerator {
-    public static final NhiExtendDisposalTable nhiExtendDisposalTable = new NhiExtendDisposalTable() {
+
+    public static class NhiExtendDisposalTableGenerator implements NhiExtendDisposalTable {
+
+        private final Long id;
+
+        private final String patientIdentity;
+
+        public NhiExtendDisposalTableGenerator(Long id, String patientIdentity) {
+            this.id = id;
+            this.patientIdentity = patientIdentity;
+        }
+
         @Override
         public Long getId() {
-            return DataGenerator.ID_1;
+            return this.id;
         }
 
         @Override
@@ -144,7 +155,7 @@ public class TableGenerator {
 
         @Override
         public String getPatientIdentity() {
-            return null;
+            return this.patientIdentity;
         }
 
         @Override
@@ -181,17 +192,36 @@ public class TableGenerator {
         public Long getDisposal_Id() {
             return null;
         }
-    };
+    }
 
-    public static final NhiExtendTreatmentProcedureTable nhiExtendTreatmentProcedureTable = new NhiExtendTreatmentProcedureTable() {
+    public static class NhiExtendTreatmentProcedureTableGenerator implements NhiExtendTreatmentProcedureTable {
+
+        private final Long treatmentProcedureId;
+
+        private final String a71;
+
+        private final String a73;
+
+        private final String a74;
+
+        private final String a75;
+
+        public NhiExtendTreatmentProcedureTableGenerator(Long treatmentProcedureId, String a71, String a73, String a74, String a75) {
+            this.treatmentProcedureId = treatmentProcedureId;
+            this.a71 = a71;
+            this.a73 = a73;
+            this.a74 = a74;
+            this.a75 = a75;
+        }
+
         @Override
         public Long getTreatmentProcedure_Id() {
-            return DataGenerator.ID_1;
+            return this.treatmentProcedureId;
         }
 
         @Override
         public String getA71() {
-            return DataGenerator.NHI_TREATMENT_DATE_NOW;
+            return this.a71;
         }
 
         @Override
@@ -201,12 +231,12 @@ public class TableGenerator {
 
         @Override
         public String getA73() {
-            return null;
+            return this.a73;
         }
 
         @Override
         public String getA74() {
-            return null;
+            return this.a74;
         }
 
         @Override
@@ -243,12 +273,19 @@ public class TableGenerator {
         public Long getNhiExtendDisposal_Id() {
             return null;
         }
-    };
+    }
 
-    public static final PatientTable patientTable = new PatientTable() {
+    public static class PatientTableGenerator implements PatientTable {
+
+        private final Long id;
+
+        public PatientTableGenerator(Long id) {
+            this.id = id;
+        }
+
         @Override
         public Long getId() {
-            return DataGenerator.ID_1;
+            return this.id;
         }
 
         @Override

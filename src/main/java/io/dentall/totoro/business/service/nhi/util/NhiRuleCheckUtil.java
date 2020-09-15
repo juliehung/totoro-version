@@ -117,8 +117,12 @@ public class NhiRuleCheckUtil {
     private List<String> parseNhiCode(List<String> nhiCodes) {
         List<String> result = new ArrayList<>();
 
+        if (nhiCodes.size() == 1) {
+            result.add(nhiCodes.get(0));
+            return result;
+        }
+
         nhiCodes.stream()
-            .filter(Objects::nonNull)
             .forEach(code -> {
                 try {
                     String[] tildeCodes = code.split("~");
@@ -357,7 +361,7 @@ public class NhiRuleCheckUtil {
      * @param limitDays 間隔時間
      * @return null 或 有衝突的 NhiExtendTreatmentProcedure
      */
-    private NhiExtendTreatmentProcedure findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+    public NhiExtendTreatmentProcedure findPatientTreatmentProcedureAtCodesAndBeforePeriod(
         Long patientId,
         Long treatmentProcedureId,
         LocalDate currentTreatmentProcedureDate,
@@ -395,7 +399,7 @@ public class NhiRuleCheckUtil {
      * @param limitDays 間隔時間
      * @return  null 或 有衝突的 NhiMedicalRecord
      */
-    private NhiMedicalRecord findPatientMediaRecordAtCodesAndBeforePeriod(
+    public NhiMedicalRecord findPatientMediaRecordAtCodesAndBeforePeriod(
         Long patientId,
         LocalDate currentTreatmentProcedureDate,
         @NotNull List<String> codes,
