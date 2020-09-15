@@ -12,24 +12,25 @@ const { TabPane } = Tabs;
 
 const FOCUSINPUT = { startDate: 'startDate', endDate: 'endDate' };
 
-const onFilterSerialNumber = (value, record) => {
-  if (value) {
-    return record.serialNumber;
-  } else {
-    return !record.serialNumber;
-  }
-};
+// !TODO hide temperarily 1.2
+// const onFilterSerialNumber = (value, record) => {
+//   if (value) {
+//     return record.serialNumber;
+//   } else {
+//     return !record.serialNumber;
+//   }
+// };
 
-const serialNumber = {
-  title: '申報序號',
-  dataIndex: 'serialNumber',
-  key: 'serialNumber',
-  filters: [
-    { text: '未申報', value: false },
-    { text: '已申報', value: true },
-  ],
-  onFilter: onFilterSerialNumber,
-};
+// const serialNumber = {
+//   title: '申報序號',
+//   dataIndex: 'serialNumber',
+//   key: 'serialNumber',
+//   filters: [
+//     { text: '未申報', value: false },
+//     { text: '已申報', value: true },
+//   ],
+//   onFilter: onFilterSerialNumber,
+// };
 
 //#region
 const GlobalStyle = createGlobalStyle`
@@ -175,7 +176,8 @@ const doctorNhiExamColumns = doctors => [
     dataIndex: 'totalPoint',
     key: 'doctorNhiExamColumns-totalPoint',
   },
-  serialNumber,
+  // !TODO hide temperarily 1.2
+  // serialNumber,
 ];
 
 const doctorNhiTxColumns = doctors => [
@@ -212,91 +214,94 @@ const doctorNhiTxColumns = doctors => [
     dataIndex: 'totalPoint',
     key: 'doctorNhiTxColumns-did',
   },
-  serialNumber,
+  // !TODO hide temperarily 1.2
+  // serialNumber,
 ];
 
-const treatmentProcedureColumn = doctors => [
-  {
-    title: '醫生',
-    dataIndex: 'did',
-    filters: doctors.map(d => ({ value: d?.id, text: d?.firstName })),
-    onFilter: (value, record) => value === record.did,
-    key: 'treatmentProcedure-did',
-    render: did => doctors.find(d => d.id === did)?.firstName ?? did,
-    sorter: {
-      compare: (a, b) => a.did - b.did,
-    },
-  },
-  {
-    title: '檢查點數',
-    dataIndex: 'examinationPoint',
-    key: 'treatmentProcedure-examinationPoint',
-  },
-  {
-    title: '檢查碼',
-    dataIndex: 'examinationCode',
-    key: 'treatmentProcedure-examinationCode',
-  },
-  {
-    title: 'a31',
-    dataIndex: 'a31',
-    key: 'treatmentProcedure-a31',
-  },
-  {
-    title: 'a32',
-    dataIndex: 'a32',
-    key: 'treatmentProcedure-a32',
-  },
-  {
-    ...serialNumber,
-    sorter: {
-      compare: (a, b) => a.serialNumber - b.serialNumber,
-    },
-  },
-];
+// !TODO hide temperarily 1.2
+// const treatmentProcedureColumn = doctors => [
+//   {
+//     title: '醫生',
+//     dataIndex: 'did',
+//     filters: doctors.map(d => ({ value: d?.id, text: d?.firstName })),
+//     onFilter: (value, record) => value === record.did,
+//     key: 'treatmentProcedure-did',
+//     render: did => doctors.find(d => d.id === did)?.firstName ?? did,
+//     sorter: {
+//       compare: (a, b) => a.did - b.did,
+//     },
+//   },
+//   {
+//     title: '檢查點數',
+//     dataIndex: 'examinationPoint',
+//     key: 'treatmentProcedure-examinationPoint',
+//   },
+//   {
+//     title: '檢查碼',
+//     dataIndex: 'examinationCode',
+//     key: 'treatmentProcedure-examinationCode',
+//   },
+//   {
+//     title: 'a31',
+//     dataIndex: 'a31',
+//     key: 'treatmentProcedure-a31',
+//   },
+//   {
+//     title: 'a32',
+//     dataIndex: 'a32',
+//     key: 'treatmentProcedure-a32',
+//   },
+//   {
+//     ...serialNumber,
+//     sorter: {
+//       compare: (a, b) => a.serialNumber - b.serialNumber,
+//     },
+//   },
+// ];
 
-const treatmentColumn = [
-  {
-    title: 'a71',
-    dataIndex: 'a71',
-    key: 'treatment-a71',
-  },
-  {
-    title: 'a72',
-    dataIndex: 'a72',
-    key: 'treatment-a72',
-  },
-  {
-    title: 'a73',
-    dataIndex: 'a73',
-    key: 'treatment-a73',
-  },
-  {
-    title: 'a74',
-    dataIndex: 'a74',
-    key: 'treatment-a74',
-  },
-  {
-    title: 'a75',
-    dataIndex: 'a75',
-    key: 'treatment-a75',
-  },
-  {
-    title: 'a76',
-    dataIndex: 'a76',
-    key: 'treatment-a76',
-  },
-  {
-    title: 'a77',
-    dataIndex: 'a77',
-    key: 'treatment-a77',
-  },
-  {
-    title: 'a78',
-    dataIndex: 'a78',
-    key: 'treatment-a78',
-  },
-];
+// !TODO hide temperarily 1.2
+// const treatmentColumn = [
+//   {
+//     title: 'a71',
+//     dataIndex: 'a71',
+//     key: 'treatment-a71',
+//   },
+//   {
+//     title: 'a72',
+//     dataIndex: 'a72',
+//     key: 'treatment-a72',
+//   },
+//   {
+//     title: 'a73',
+//     dataIndex: 'a73',
+//     key: 'treatment-a73',
+//   },
+//   {
+//     title: 'a74',
+//     dataIndex: 'a74',
+//     key: 'treatment-a74',
+//   },
+//   {
+//     title: 'a75',
+//     dataIndex: 'a75',
+//     key: 'treatment-a75',
+//   },
+//   {
+//     title: 'a76',
+//     dataIndex: 'a76',
+//     key: 'treatment-a76',
+//   },
+//   {
+//     title: 'a77',
+//     dataIndex: 'a77',
+//     key: 'treatment-a77',
+//   },
+//   {
+//     title: 'a78',
+//     dataIndex: 'a78',
+//     key: 'treatment-a78',
+//   },
+// ];
 
 function NhiIndexPage({
   doctors,
@@ -309,7 +314,8 @@ function NhiIndexPage({
   getToothClean,
   toothClean,
   getIndexTreatmentProcedure,
-  groupedIndexTreatmentProcedure,
+  // !TODO hide temperarily 1.2
+  // groupedIndexTreatmentProcedure,
 }) {
   const [tabNumb, setTabNumb] = useState(1);
   const [startDate, setStartDate] = useState(moment().startOf('month'));
@@ -334,12 +340,13 @@ function NhiIndexPage({
     return date;
   };
 
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    getCheckboxProps: () => ({}),
-  };
+  // !TODO hide temperarily 1.2
+  // const rowSelection = {
+  //   onChange: (selectedRowKeys, selectedRows) => {
+  //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+  //   },
+  //   getCheckboxProps: () => ({}),
+  // };
 
   return (
     <div>
@@ -429,7 +436,9 @@ function NhiIndexPage({
                 rowKey={record => `${record.did} ${record.nhiTxCode}`}
               />
             </TabPane>
-            <TabPane tab="健保統計" key="5">
+
+            {/* !TODO hide temperarily 1.2 */}
+            {/* <TabPane tab="健保統計" key="5">
               <Table
                 columns={treatmentProcedureColumn(doctors)}
                 dataSource={groupedIndexTreatmentProcedure}
@@ -453,7 +462,7 @@ function NhiIndexPage({
                   ...rowSelection,
                 }}
               />
-            </TabPane>
+            </TabPane> */}
           </Tabs>
         </TabsContainer>
       </div>
