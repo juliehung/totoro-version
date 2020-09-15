@@ -14,7 +14,7 @@ public class TableGenerator {
     public static final NhiExtendDisposalTable nhiExtendDisposalTable = new NhiExtendDisposalTable() {
         @Override
         public Long getId() {
-            return DataGenerator.id_1;
+            return DataGenerator.ID_1;
         }
 
         @Override
@@ -186,12 +186,12 @@ public class TableGenerator {
     public static final NhiExtendTreatmentProcedureTable nhiExtendTreatmentProcedureTable = new NhiExtendTreatmentProcedureTable() {
         @Override
         public Long getTreatmentProcedure_Id() {
-            return DataGenerator.id_1;
+            return DataGenerator.ID_1;
         }
 
         @Override
         public String getA71() {
-            return DataGenerator.a71_1;
+            return DataGenerator.NHI_TREATMENT_DATE_NOW;
         }
 
         @Override
@@ -248,7 +248,7 @@ public class TableGenerator {
     public static final PatientTable patientTable = new PatientTable() {
         @Override
         public Long getId() {
-            return 1L;
+            return DataGenerator.ID_1;
         }
 
         @Override
