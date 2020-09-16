@@ -26,19 +26,23 @@ public class DataGenerator {
 
     public static final List<String> NHI_CODE_LIST_2 = Arrays.asList(NHI_CODE_1, NHI_CODE_2);
 
-    public static final String NHI_TREATMENT_DATE_MIN = "0010101";
+    public static final LocalDate NHI_TREATMENT_DATE_MIN = LocalDate.MIN;
 
-    public static final String NHI_TREATMENT_DATE_MAX = "9991231";
+    public static final String NHI_TREATMENT_DATE_MIN_STRING = "0010101";
+
+    public static final LocalDate NHI_TREATMENT_DATE_MAX = LocalDate.MAX;
+
+    public static final String NHI_TREATMENT_DATE_MAX_STRING = "9991231";
 
     public static final LocalDate NHI_TREATMENT_DATE_NOW = Instant.now().atZone(TimeConfig.ZONE_OFF_SET).toLocalDate();
 
     public static final String NHI_TREATMENT_DATE_NOW_STRING = DateTimeUtil.transformLocalDateToRocDate(Instant.now());
 
-    public static final LocalDate NHI_TREATMENT_DATE_NOW_PLUS_1_MONTH = Instant.now().plus(DateTimeUtil.NHI_1_MONTH).atZone(TimeConfig.ZONE_OFF_SET).toLocalDate();
+    public static final LocalDate NHI_TREATMENT_DATE_NOW_PLUS_1_MONTH = NHI_TREATMENT_DATE_NOW.plus(DateTimeUtil.NHI_1_MONTH);
 
     public static final String NHI_TREATMENT_DATE_NOW_PLUS_1_MONTH_STRING = DateTimeUtil.transformLocalDateToRocDate(Instant.now().plus(DateTimeUtil.NHI_1_MONTH));
 
-    public static final LocalDate NHI_TREATMENT_DATE_NOW_PLUS_3_MONTH = Instant.now().plus(DateTimeUtil.NHI_3_MONTH).atZone(TimeConfig.ZONE_OFF_SET).toLocalDate();
+    public static final LocalDate NHI_TREATMENT_DATE_NOW_PLUS_3_MONTH = NHI_TREATMENT_DATE_NOW.plus(DateTimeUtil.NHI_3_MONTH);
 
     public static final String NHI_TREATMENT_DATE_NOW_PLUS_3_MONTH_STRING = DateTimeUtil.transformLocalDateToRocDate(Instant.now().plus(DateTimeUtil.NHI_3_MONTH));
 
