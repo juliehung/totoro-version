@@ -473,7 +473,7 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(null, rdto.getMessage());
     }
 
-    @Test
+    //TODO
     public void isPatientToothAtCodesBeforePeriod_3() {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
         Patient p = new Patient();
@@ -505,4 +505,70 @@ public class NhiRuleCheckUtilMockTest {
                 DataGenerator.NHI_TREATMENT_DATE_NOW),
             rdto.getMessage());
     }
+
+    //TODO: ispatient rest
+
+    /**
+     * Test case for parseNhiCode
+     * 1. 單一個代碼
+     * 2. 單一組合代碼 e.g. 91001C~91002C
+     * 3. 多代碼，包含空白 e.g. "1234", "aasd8f71", "", "a19asdc"
+     * 4. 多組合代碼，e.g. "91001C~91002C", "90001C~90003C", "1~5"
+     * 5. 綜合且不含不被 parse 的內容 e.g. "90001C~90003C", "1234", "1234asdf", "1~4"
+     * 6. 綜合且包含不被 parse 的內容 e.g. "90001C-90003C", "90001C~90003C", "81~819C", "1234", "1234asdf", "1~4"
+     */
+    @Test
+    public void parseNhiCode_1() {
+        List<String> result = nhiRuleCheckUtil.parseNhiCode(Arrays.asList("91001C"));
+
+        Assert.assertEquals(
+            Arrays.asList("91001C").toString(),
+            result.toString());
+    }
+
+    @Test
+    public void parseNhiCode_2() {
+        List<String> result = nhiRuleCheckUtil.parseNhiCode(Arrays.asList("91001C~91002C"));
+
+        Assert.assertEquals(
+            Arrays.asList("91001C", "91002C").toString(),
+            result.toString());
+    }
+
+    @Test
+    public void parseNhiCode_3() {
+        List<String> result = nhiRuleCheckUtil.parseNhiCode(Arrays.asList("1234", "aasd8f71", "", "a19asdc"));
+
+        Assert.assertEquals(
+            Arrays.asList("1234", "aasd8f71", "", "a19asdc").toString(),
+                result.toString());
+    }
+
+    @Test
+    public void parseNhiCode_4() {
+        List<String> result = nhiRuleCheckUtil.parseNhiCode(Arrays.asList("91001C~91002C", "90001C~90003C", "1~5"));
+
+        Assert.assertEquals(
+            Arrays.asList("91001C", "91002C", "91003C", "90001C", "90002C", "90003C", "1", "2", "3", "4", "5").toString(),
+                result.toString());
+    }
+
+    @Test
+    public void parseNhiCode_5() {
+        List<String> result = nhiRuleCheckUtil.parseNhiCode(Arrays.asList("90001C~90003C", "1234", "1234asdf", "1~4"));
+
+        Assert.assertEquals(
+            Arrays.asList("90001C", "90002C", "90003C", "1234", "1234asdf", "1", "2", "3", "4").toString(),
+            result.toString());
+    }
+
+    @Test
+    public void parseNhiCode_6() {
+        List<String> result = nhiRuleCheckUtil.parseNhiCode(Arrays.asList("90001C-90003C", "90001C~90003C", "81~819C", "1234", "1234asdf", "1~4"));
+
+        Assert.assertEquals(
+            Arrays.asList("90001C-90003C", "90001C", "90002C", "90003C", "81~819C", "1234", "1234asdf", "1", "2", "3", "4").toString(),
+            result.toString());
+    }
+
 }

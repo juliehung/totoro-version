@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 共用的 rule check 邏輯會整合在這裡。
@@ -114,34 +116,33 @@ public class NhiRuleCheckUtil {
      * @param nhiCodes 健保代碼，或健保代碼區間
      * @return string list of 健保代碼，健保代碼區間也會被切割產生單一健保代碼
      */
-    private List<String> parseNhiCode(List<String> nhiCodes) {
+    public List<String> parseNhiCode(List<String> nhiCodes) {
         List<String> result = new ArrayList<>();
 
-        if (nhiCodes.size() == 1) {
-            result.add(nhiCodes.get(0));
-            return result;
-        }
+        for (String code : nhiCodes) {
+            try {
+                String[] tildeCodes = code.split("~");
+                if (tildeCodes.length != 2) {
+                    result.add(code);
+                    continue;
+                }
 
-        nhiCodes.stream()
-            .forEach(code -> {
-                try {
-                    String[] tildeCodes = code.split("~");
-                    if (tildeCodes.length != 2) {
-                        result.add(code);
-                        return;
-                    }
+                Pattern pattern = Pattern.compile("(^([1-9][0-9]{0,4})([A-Z])$|^([1-9][0-9]{0,5})$)");
 
-                    String[] lowCode = tildeCodes[0].split("[A-Z]");
-                    String[] highCode = tildeCodes[1].split("[A-Z]");
-                    if (lowCode.length != 2 || highCode.length != 2) {
-                        result.add(code);
-                        return;
-                    }
+                Matcher lowCodeMatcher = pattern.matcher(tildeCodes[0]);
+                Matcher highCodeMatcher = pattern.matcher(tildeCodes[1]);
 
-                    Integer lowCodeNumber = Integer.parseInt(lowCode[0]);
-                    String lowCodeAlpha = lowCode[1];
-                    Integer highCodeNumber = Integer.parseInt(highCode[0]);
-                    String highCodeAlpha = highCode[1];
+                if (lowCodeMatcher.matches() &&
+                    highCodeMatcher.matches() &&
+                    lowCodeMatcher.group(2) != null &&
+                    lowCodeMatcher.group(3) != null &&
+                    highCodeMatcher.group(2) != null &&
+                    highCodeMatcher.group(3) != null
+                ) {
+                    Integer lowCodeNumber = Integer.parseInt(lowCodeMatcher.group(2));
+                    String lowCodeAlpha = lowCodeMatcher.group(3);
+                    Integer highCodeNumber = Integer.parseInt(highCodeMatcher.group(2));
+                    String highCodeAlpha = highCodeMatcher.group(3);
 
                     if (lowCodeAlpha.equals(highCodeAlpha) &&
                         lowCodeNumber < highCodeNumber
@@ -153,10 +154,28 @@ public class NhiRuleCheckUtil {
                         result.add(code);
                     }
 
-                } catch (NumberFormatException e) {
-                    // do nothing
+                } else if (lowCodeMatcher.matches() &&
+                    highCodeMatcher.matches() &&
+                    lowCodeMatcher.group(4) != null &&
+                    highCodeMatcher.group(4) != null
+                ) {
+                    Integer lowCodeNumber = Integer.parseInt(lowCodeMatcher.group(4));
+                    Integer highCodeNumber = Integer.parseInt(highCodeMatcher.group(4));
+
+                    for (int i = lowCodeNumber; i <= highCodeNumber; i++) {
+                        result.add(String.valueOf(i));
+                    }
+
+                } else {
+                    result.add(code);
+                    continue;
                 }
-            });
+
+
+            } catch (NumberFormatException e) {
+                // do nothing
+            }
+        }
 
         return result;
     }
