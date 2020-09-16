@@ -11,6 +11,7 @@ import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.repository.NhiMedicalRecordRepository;
 import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
 import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
@@ -45,19 +46,18 @@ public class NhiRuleCheckUtilMockTest {
 
     private final Long treatmentProcedureId_2 = 2L;
 
-    @Mock
+    @Spy
     private NhiExtendDisposalRepository nhiExtendDisposalRepository;
 
     @Spy
     private NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
 
-    @Mock
+    @Spy
     private PatientRepository patientRepository;
 
-    @Mock
     private NhiMedicalRecordRepository nhiMedicalRecordRepository;
 
-    @Mock
+    @Spy
     private NhiExtendDisposalMapper nhiExtendDisposalMapper;
 
     @Mock
@@ -65,7 +65,6 @@ public class NhiRuleCheckUtilMockTest {
 
     @InjectMocks
     private NhiRuleCheckUtil nhiRuleCheckUtil;
-
 
     /**
      * 根據傳入的資料回傳對應錯誤訊息 for 在時間區間內，已經有診療項目
@@ -104,6 +103,43 @@ public class NhiRuleCheckUtilMockTest {
     }
 
     /**
+     * mocking 過去病患的診療紀錄 repo 部分
+     */
+    private void mockFindTxRepo() {
+        Mockito
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+                any(),
+                any()
+            ))
+            .thenReturn(new ArrayList<NhiExtendTreatmentProcedureTable>());
+    }
+
+    private void mockMappingData(NhiExtendTreatmentProcedure netp) {
+        Mockito
+            .when(nhiExtendTreatmentProcedureMapper
+                .nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(any()))
+            .thenReturn(netp);
+    }
+
+    /**
+     * mocking 過去病患的診療紀錄 repo 部分
+     */
+    private void mockFindTxRepoWithReturn(NhiExtendTreatmentProcedure netp) {
+        Mockito
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+                any(),
+                any()
+            ))
+            .thenReturn(Arrays.asList(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
+                netp.getId(),
+                netp.getA71(),
+                netp.getA73(),
+                netp.getA74(),
+                netp.getA75()
+            )));
+    }
+
+    /**
      * mocking 過去病患 無相符合 的診療紀錄
      */
     private void mockFindTxCodeReturnNull() {
@@ -130,9 +166,7 @@ public class NhiRuleCheckUtilMockTest {
                 ArgumentMatchers.any(),
                 ArgumentMatchers.any()
             ))
-            .thenReturn(
-                netp
-            );
+            .thenReturn(netp);
     }
 
     /**
@@ -293,26 +327,8 @@ public class NhiRuleCheckUtilMockTest {
             .a74(DataGenerator.TOOTH_PERMANENT_1)
             .a75(DataGenerator.SURFACE_BLANK);
 
-        Mockito
-            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
-                ArgumentMatchers.eq(DataGenerator.ID_1),
-                ArgumentMatchers.eq(DataGenerator.NHI_CODE_LIST_1)
-            ))
-            .thenReturn(
-                Arrays.asList(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
-                    DataGenerator.ID_2,
-                    DataGenerator.NHI_TREATMENT_DATE_NOW_STRING,
-                    DataGenerator.NHI_CODE_1,
-                    DataGenerator.TOOTH_PERMANENT_1,
-                    DataGenerator.SURFACE_BLANK
-                ))
-            );
-
-        Mockito
-            .when(nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
-                ArgumentMatchers.any()
-            ))
-            .thenReturn(netpMock);
+        this.mockMappingData(netpMock);
+        this.mockFindTxRepoWithReturn(netpMock);
 
         NhiExtendTreatmentProcedure netp = nhiRuleCheckUtil.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
             DataGenerator.ID_1,
@@ -436,7 +452,7 @@ public class NhiRuleCheckUtilMockTest {
         dto.setNhiExtendDisposal(ned);
         dto.setNhiExtendTreatmentProcedure(netp);
 
-        this.mockFindTxCodeReturnMatch(netp);
+//        this.mockFindTxCodeReturnMatch(netp);
 
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
             dto,
@@ -461,8 +477,6 @@ public class NhiRuleCheckUtilMockTest {
         dto.setPatient(p);
         dto.setNhiExtendDisposal(ned);
         dto.setNhiExtendTreatmentProcedure(netp);
-
-        this.mockFindTxCodeReturnNull();
 
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
             dto,
@@ -550,7 +564,7 @@ public class NhiRuleCheckUtilMockTest {
         List<String> result = nhiRuleCheckUtil.parseNhiCode(Arrays.asList("91001C~91002C", "90001C~90003C", "1~5"));
 
         Assert.assertEquals(
-            Arrays.asList("91001C", "91002C", "91003C", "90001C", "90002C", "90003C", "1", "2", "3", "4", "5").toString(),
+            Arrays.asList("91001C", "91002C", "90001C", "90002C", "90003C", "1", "2", "3", "4", "5").toString(),
                 result.toString());
     }
 
