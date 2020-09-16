@@ -95,6 +95,15 @@ public class NhiRuleCheckUtilMockTest {
     }
 
     /**
+     * mocking Parse code 回傳空值
+     */
+    private void mockIgnoreParseCode()  {
+        Mockito
+            .when(nhiRuleCheckUtil.parseNhiCode(any()))
+            .thenReturn(Arrays.asList(""));
+    }
+
+    /**
      * mocking 過去病患 無相符合 的診療紀錄
      */
     private void mockFindTxCodeReturnNull() {
@@ -427,15 +436,7 @@ public class NhiRuleCheckUtilMockTest {
         dto.setNhiExtendDisposal(ned);
         dto.setNhiExtendTreatmentProcedure(netp);
 
-        Mockito
-            .when(nhiRuleCheckUtil.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
-                ArgumentMatchers.any(),
-                ArgumentMatchers.any(),
-                ArgumentMatchers.any(),
-                ArgumentMatchers.any(),
-                ArgumentMatchers.any()
-            ))
-            .thenReturn(null);
+        this.mockFindTxCodeReturnMatch(netp);
 
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
             dto,

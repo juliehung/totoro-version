@@ -118,6 +118,10 @@ public class NhiRuleCheckUtil {
      */
     public List<String> parseNhiCode(List<String> nhiCodes) {
         List<String> result = new ArrayList<>();
+        
+        if (nhiCodes.isEmpty()) {
+            return result;
+        }
 
         for (String code : nhiCodes) {
             try {
