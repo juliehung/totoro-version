@@ -763,7 +763,7 @@ public class NhiRuleCheckUtilMockTest {
         List<NhiExtendTreatmentProcedureTable> l = new ArrayList<>();
         l.add(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
             DataGenerator.ID_2,
-            DataGenerator.NHI_TREATMENT_DATE_NOW_PLUS_1_MONTH_STRING,
+            DataGenerator.NHI_TREATMENT_DATE_NOW_STRING,
             DataGenerator.NHI_CODE_1,
             DataGenerator.TOOTH_DECIDUOUS_1,
             DataGenerator.SURFACE_BLANK
@@ -800,11 +800,12 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
+                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
                 dto.getNhiExtendTreatmentProcedure().getA73(),
                 Arrays.asList(DataGenerator.NHI_CODE_1),
                 DateTimeUtil.NHI_12_MONTH.getDays(),
                 DataGenerator.NHI_CODE_1,
+                DataGenerator.TOOTH_DECIDUOUS_1,
                 DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING),
                 Duration.between(
                     DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay(),
@@ -832,7 +833,7 @@ public class NhiRuleCheckUtilMockTest {
         List<NhiExtendTreatmentProcedureTable> l = new ArrayList<>();
         l.add(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
             DataGenerator.ID_2,
-            DataGenerator.NHI_TREATMENT_DATE_NOW_PLUS_1_MONTH_STRING,
+            DataGenerator.NHI_TREATMENT_DATE_NOW_STRING,
             DataGenerator.NHI_CODE_1,
             DataGenerator.TOOTH_PERMANENT_1,
             DataGenerator.SURFACE_BLANK
@@ -869,11 +870,12 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
+                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
                 dto.getNhiExtendTreatmentProcedure().getA73(),
                 Arrays.asList(DataGenerator.NHI_CODE_1),
-                DateTimeUtil.NHI_12_MONTH.getDays(),
+                DateTimeUtil.NHI_18_MONTH.getDays(),
                 DataGenerator.NHI_CODE_1,
+                DataGenerator.TOOTH_PERMANENT_1,
                 DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING),
                 Duration.between(
                     DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay(),

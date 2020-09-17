@@ -28,6 +28,7 @@ import java.time.Period;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 共用的 rule check 邏輯會整合在這裡。
@@ -639,39 +640,40 @@ public class NhiRuleCheckUtil {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(true);
 
-        Stack<Period> usedPeriod = new Stack<>();
+        Map<String, Period> toothUsedPeriod = new HashMap<>();
+
         LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
         List<String> teeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
 
-        teeth.stream()
+        List<NhiExtendTreatmentProcedure> matches = teeth.stream()
             .map(tooth -> {
-
                 if (isDeciduousTeeth(tooth)) {
-                    usedPeriod.push(deciduousToothLimitDays);
-                }
-
-                if (isPermanentTeeth(tooth)) {
-                    usedPeriod.push(permanentToothLimitDays);
-                }
-
-                if (usedPeriod.empty()) {
+                    toothUsedPeriod.put(tooth, deciduousToothLimitDays);
+                } else if (isPermanentTeeth(tooth)) {
+                    toothUsedPeriod.put(tooth, permanentToothLimitDays);
+                } else {
                     return null;
                 }
 
-                NhiExtendTreatmentProcedure netp = this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+                return this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
                     dto.getPatient().getId(),
                     dto.getNhiExtendTreatmentProcedure().getId(),
                     DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
                     codes,
-                    usedPeriod.peek()
+                    toothUsedPeriod.get(tooth)
                 );
-
-                return netp;
             })
+            .collect(Collectors.toList());
+
+        matches.stream()
             .filter(Objects::nonNull)
-            .filter(netp -> teeth.stream().anyMatch(t -> ToothUtil.splitA74(netp.getA74()).contains(t)))
+            .filter(netp -> ToothUtil.splitA74(netp.getA74()).stream().anyMatch(netpTooth -> teeth.contains(netpTooth)))
             .findFirst()
             .ifPresent(match -> {
+                if (match == null) {
+                    return;
+                }
+
                 LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
                 result.setValidated(false);
                 result.setMessage(
@@ -679,7 +681,7 @@ public class NhiRuleCheckUtil {
                         "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
                         dto.getNhiExtendTreatmentProcedure().getA73(),
                         codes.toString(),
-                        usedPeriod.peek().getDays(),
+                        toothUsedPeriod.get(match.getA74()).getDays(),
                         match.getA73(),
                         match.getA74(),
                         matchDate,
