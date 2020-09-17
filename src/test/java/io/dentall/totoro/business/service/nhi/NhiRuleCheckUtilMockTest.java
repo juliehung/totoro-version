@@ -546,7 +546,330 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-            "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
+                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                Arrays.asList(DataGenerator.NHI_CODE_1),
+                DateTimeUtil.NHI_12_MONTH.getDays(),
+                DataGenerator.NHI_CODE_1,
+                DataGenerator.TOOTH_DECIDUOUS_1,
+                DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING),
+                Duration.between(
+                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay(),
+                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay()).toDays()
+            ),
+            rdto.getMessage());
+    }
+
+    @Test
+    public void isPatientToothAtCodesBeforePeriod_4() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendDisposal ned = new NhiExtendDisposal();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        p.setId(DataGenerator.ID_1);
+        ned.setPatientIdentity(null);
+        netp.setId(DataGenerator.ID_1);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA74(DataGenerator.TOOTH_PERMANENT_2);
+        dto.setPatient(p);
+        dto.setNhiExtendDisposal(ned);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        List<NhiExtendTreatmentProcedureTable> l = new ArrayList<>();
+        l.add(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
+            DataGenerator.ID_2,
+            DataGenerator.NHI_TREATMENT_DATE_NOW_STRING,
+            DataGenerator.NHI_CODE_1,
+            DataGenerator.TOOTH_PERMANENT_1,
+            DataGenerator.SURFACE_BLANK
+        ));
+
+        NhiExtendTreatmentProcedure netpr = new NhiExtendTreatmentProcedure();
+        netpr.setId(DataGenerator.ID_2);
+        netpr.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netpr.setA73(DataGenerator.NHI_CODE_1);
+        netpr.setA74(DataGenerator.TOOTH_PERMANENT_1);
+        netpr.setA75(DataGenerator.SURFACE_BLANK);
+
+        Mockito
+            .when(
+                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+                    any(Long.class),
+                    anyList()
+                ))
+            .thenReturn(l);
+
+        Mockito
+            .when(
+                nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
+                    any(NhiExtendTreatmentProcedureTable.class)
+                ))
+            .thenReturn(netpr);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            dto,
+            Arrays.asList(DataGenerator.NHI_CODE_1),
+            DateTimeUtil.NHI_12_MONTH,
+            DateTimeUtil.NHI_18_MONTH);
+
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(
+            String.format(
+                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                Arrays.asList(DataGenerator.NHI_CODE_1),
+                DateTimeUtil.NHI_18_MONTH.getDays(),
+                DataGenerator.NHI_CODE_1,
+                DataGenerator.TOOTH_PERMANENT_1,
+                DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING),
+                Duration.between(
+                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay(),
+                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay()).toDays()
+            ),
+            rdto.getMessage());
+    }
+
+    @Test
+    public void isPatientToothAtCodesBeforePeriod_5() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendDisposal ned = new NhiExtendDisposal();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        p.setId(DataGenerator.ID_1);
+        ned.setPatientIdentity(null);
+        netp.setId(DataGenerator.ID_1);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA74(DataGenerator.TOOTH_DECIDUOUS_1);
+        dto.setPatient(p);
+        dto.setNhiExtendDisposal(ned);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        List<NhiExtendTreatmentProcedureTable> l = new ArrayList<>();
+        l.add(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
+            DataGenerator.ID_2,
+            DataGenerator.NHI_TREATMENT_DATE_NOW_STRING,
+            DataGenerator.NHI_CODE_1,
+            DataGenerator.TOOTH_PERMANENT_1,
+            DataGenerator.SURFACE_BLANK
+        ));
+
+        NhiExtendTreatmentProcedure netpr = new NhiExtendTreatmentProcedure();
+        netpr.setId(DataGenerator.ID_2);
+        netpr.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netpr.setA73(DataGenerator.NHI_CODE_1);
+        netpr.setA74(DataGenerator.TOOTH_PERMANENT_1);
+        netpr.setA75(DataGenerator.SURFACE_BLANK);
+
+        Mockito
+            .when(
+                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+                    any(Long.class),
+                    anyList()
+                ))
+            .thenReturn(l);
+
+        Mockito
+            .when(
+                nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
+                    any(NhiExtendTreatmentProcedureTable.class)
+                ))
+            .thenReturn(netpr);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            dto,
+            Arrays.asList(DataGenerator.NHI_CODE_1),
+            DateTimeUtil.NHI_12_MONTH,
+            DateTimeUtil.NHI_18_MONTH);
+
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isPatientToothAtCodesBeforePeriod_6() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendDisposal ned = new NhiExtendDisposal();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        p.setId(DataGenerator.ID_1);
+        ned.setPatientIdentity(null);
+        netp.setId(DataGenerator.ID_1);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA74(DataGenerator.TOOTH_PERMANENT_2);
+        dto.setPatient(p);
+        dto.setNhiExtendDisposal(ned);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        List<NhiExtendTreatmentProcedureTable> l = new ArrayList<>();
+        l.add(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
+            DataGenerator.ID_2,
+            DataGenerator.NHI_TREATMENT_DATE_NOW_PLUS_1_MONTH_STRING,
+            DataGenerator.NHI_CODE_1,
+            DataGenerator.TOOTH_PERMANENT_1,
+            DataGenerator.SURFACE_BLANK
+        ));
+
+        NhiExtendTreatmentProcedure netpr = new NhiExtendTreatmentProcedure();
+        netpr.setId(DataGenerator.ID_2);
+        netpr.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netpr.setA73(DataGenerator.NHI_CODE_1);
+        netpr.setA74(DataGenerator.TOOTH_PERMANENT_1);
+        netpr.setA75(DataGenerator.SURFACE_BLANK);
+
+        Mockito
+            .when(
+                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+                    any(Long.class),
+                    anyList()
+                ))
+            .thenReturn(l);
+
+        Mockito
+            .when(
+                nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
+                    any(NhiExtendTreatmentProcedureTable.class)
+                ))
+            .thenReturn(netpr);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            dto,
+            Arrays.asList(DataGenerator.NHI_CODE_1),
+            DateTimeUtil.NHI_12_MONTH,
+            DateTimeUtil.NHI_18_MONTH);
+
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isPatientToothAtCodesBeforePeriod_7() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendDisposal ned = new NhiExtendDisposal();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        p.setId(DataGenerator.ID_1);
+        ned.setPatientIdentity(null);
+        netp.setId(DataGenerator.ID_1);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA74(DataGenerator.TOOTH_PERMANENT_1.concat(DataGenerator.TOOTH_DECIDUOUS_1));
+        dto.setPatient(p);
+        dto.setNhiExtendDisposal(ned);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        List<NhiExtendTreatmentProcedureTable> l = new ArrayList<>();
+        l.add(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
+            DataGenerator.ID_2,
+            DataGenerator.NHI_TREATMENT_DATE_NOW_PLUS_1_MONTH_STRING,
+            DataGenerator.NHI_CODE_1,
+            DataGenerator.TOOTH_DECIDUOUS_1,
+            DataGenerator.SURFACE_BLANK
+        ));
+
+        NhiExtendTreatmentProcedure netpr = new NhiExtendTreatmentProcedure();
+        netpr.setId(DataGenerator.ID_2);
+        netpr.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netpr.setA73(DataGenerator.NHI_CODE_1);
+        netpr.setA74(DataGenerator.TOOTH_DECIDUOUS_1);
+        netpr.setA75(DataGenerator.SURFACE_BLANK);
+
+        Mockito
+            .when(
+                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+                    any(Long.class),
+                    anyList()
+                ))
+            .thenReturn(l);
+
+        Mockito
+            .when(
+                nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
+                    any(NhiExtendTreatmentProcedureTable.class)
+                ))
+            .thenReturn(netpr);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            dto,
+            Arrays.asList(DataGenerator.NHI_CODE_1),
+            DateTimeUtil.NHI_12_MONTH,
+            DateTimeUtil.NHI_18_MONTH);
+
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(
+            String.format(
+                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                Arrays.asList(DataGenerator.NHI_CODE_1),
+                DateTimeUtil.NHI_12_MONTH.getDays(),
+                DataGenerator.NHI_CODE_1,
+                DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING),
+                Duration.between(
+                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay(),
+                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay()).toDays()
+            ),
+            rdto.getMessage());
+    }
+
+    @Test
+    public void isPatientToothAtCodesBeforePeriod_8() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendDisposal ned = new NhiExtendDisposal();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        p.setId(DataGenerator.ID_1);
+        ned.setPatientIdentity(null);
+        netp.setId(DataGenerator.ID_1);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA74(DataGenerator.TOOTH_PERMANENT_1.concat(DataGenerator.TOOTH_DECIDUOUS_1));
+        dto.setPatient(p);
+        dto.setNhiExtendDisposal(ned);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        List<NhiExtendTreatmentProcedureTable> l = new ArrayList<>();
+        l.add(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
+            DataGenerator.ID_2,
+            DataGenerator.NHI_TREATMENT_DATE_NOW_PLUS_1_MONTH_STRING,
+            DataGenerator.NHI_CODE_1,
+            DataGenerator.TOOTH_PERMANENT_1,
+            DataGenerator.SURFACE_BLANK
+        ));
+
+        NhiExtendTreatmentProcedure netpr = new NhiExtendTreatmentProcedure();
+        netpr.setId(DataGenerator.ID_2);
+        netpr.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netpr.setA73(DataGenerator.NHI_CODE_1);
+        netpr.setA74(DataGenerator.TOOTH_PERMANENT_1);
+        netpr.setA75(DataGenerator.SURFACE_BLANK);
+
+        Mockito
+            .when(
+                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+                    any(Long.class),
+                    anyList()
+                ))
+            .thenReturn(l);
+
+        Mockito
+            .when(
+                nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
+                    any(NhiExtendTreatmentProcedureTable.class)
+                ))
+            .thenReturn(netpr);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            dto,
+            Arrays.asList(DataGenerator.NHI_CODE_1),
+            DateTimeUtil.NHI_12_MONTH,
+            DateTimeUtil.NHI_18_MONTH);
+
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(
+            String.format(
+                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
                 dto.getNhiExtendTreatmentProcedure().getA73(),
                 Arrays.asList(DataGenerator.NHI_CODE_1),
                 DateTimeUtil.NHI_12_MONTH.getDays(),

@@ -669,17 +669,19 @@ public class NhiRuleCheckUtil {
                 return netp;
             })
             .filter(Objects::nonNull)
+            .filter(netp -> teeth.stream().anyMatch(t -> ToothUtil.splitA74(netp.getA74()).contains(t)))
             .findFirst()
             .ifPresent(match -> {
                 LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
                 result.setValidated(false);
                 result.setMessage(
                     String.format(
-                        "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
+                        "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
                         dto.getNhiExtendTreatmentProcedure().getA73(),
                         codes.toString(),
                         usedPeriod.peek().getDays(),
                         match.getA73(),
+                        match.getA74(),
                         matchDate,
                         Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
                     )
