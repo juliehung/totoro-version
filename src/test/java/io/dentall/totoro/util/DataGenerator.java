@@ -36,7 +36,7 @@ public class DataGenerator {
 
     public static final LocalDate NHI_TREATMENT_DATE_NOW = Instant.now().atZone(TimeConfig.ZONE_OFF_SET).toLocalDate();
 
-    public static final String NHI_TREATMENT_DATE_NOW_STRING = DateTimeUtil.transformLocalDateToRocDate(Instant.now());
+    public static final String NHI_TREATMENT_DATE_NOW_STRING = DateTimeUtil.transformLocalDateToRocDate(NHI_TREATMENT_DATE_NOW.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET));
 
     public static final LocalDate NHI_TREATMENT_DATE_NOW_PLUS_1_MONTH = NHI_TREATMENT_DATE_NOW.plus(DateTimeUtil.NHI_1_MONTH);
 

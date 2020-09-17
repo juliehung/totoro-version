@@ -290,6 +290,9 @@ Deploy local machine with SMS service
     }
     ``` 
 
+Mockito
+---
+-  下中斷點時，不能下在 Mockito 的元件底下，會 exception
 
 Liquibase
 ---

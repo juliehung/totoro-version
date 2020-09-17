@@ -25,10 +25,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -408,7 +405,7 @@ public class NhiRuleCheckUtil {
                 currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
             .forEach(netpt -> {
                 LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
-                if (pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
+                if (pastTxDate.plus(limitDays).isEqual(currentTreatmentProcedureDate) || pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
                     matchedNhiExtendTreatmentProcedure.add(
                         nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(netpt));
                 }
@@ -661,14 +658,15 @@ public class NhiRuleCheckUtil {
                     return null;
                 }
 
-                return this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+                NhiExtendTreatmentProcedure netp = this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
                     dto.getPatient().getId(),
                     dto.getNhiExtendTreatmentProcedure().getId(),
                     DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
                     codes,
                     usedPeriod.peek()
-                    );
+                );
 
+                return netp;
             })
             .filter(Objects::nonNull)
             .findFirst()
@@ -680,7 +678,7 @@ public class NhiRuleCheckUtil {
                         "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
                         dto.getNhiExtendTreatmentProcedure().getA73(),
                         codes.toString(),
-                        usedPeriod.peek(),
+                        usedPeriod.peek().getDays(),
                         match.getA73(),
                         matchDate,
                         Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
