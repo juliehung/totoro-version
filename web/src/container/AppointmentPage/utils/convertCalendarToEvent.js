@@ -9,7 +9,7 @@ export default function convertCalendarToEvent(calendarEvents) {
   calendarEvents.forEach(e => {
     if (e.dayOffCron && e.dayOffCron.length !== 0) {
       const options = {
-        currentDate: moment(e.start).startOf('day'),
+        currentDate: moment(e.start).startOf('day').add(-1, 's'),
         endDate: moment(e.end).endOf('day'),
         iterator: true,
       };
@@ -18,9 +18,14 @@ export default function convertCalendarToEvent(calendarEvents) {
         try {
           const cronObj = interval.next();
           const start = cronObj.value.toDate();
-          const end = moment(cronObj.value.toDate()).add(e.duration, 'm').toDate();
+          let end = moment(cronObj.value.toDate()).add(e.duration, 'm').toDate();
+
           const title = e.doctor ? e.doctor.user.firstName : '診所休假';
           const resourceId = e.doctor ? e.doctor.user.id : null;
+          const allDay = isAllDay(start, end);
+          if (allDay) {
+            end = moment(end).add(1, 'm').toDate();
+          }
 
           events.push({
             start,
@@ -31,6 +36,7 @@ export default function convertCalendarToEvent(calendarEvents) {
             doctorDayOff: e,
             eventType: 'doctorDayOff',
             editable: false,
+            allDay,
           });
         } catch (e) {
           break;
@@ -38,11 +44,13 @@ export default function convertCalendarToEvent(calendarEvents) {
       }
     } else {
       const start = moment(e.start).toDate();
-      const end = moment(e.end).toDate();
+      let end = moment(e.end).toDate();
       const title = e.doctor ? e.doctor.user.firstName : '診所休假';
       const resourceId = e.doctor ? e.doctor.user.id : null;
       const allDay = isAllDay(start, end);
-
+      if (allDay) {
+        end = moment(end).add(1, 'm').toDate();
+      }
       events.push({
         start,
         end,
