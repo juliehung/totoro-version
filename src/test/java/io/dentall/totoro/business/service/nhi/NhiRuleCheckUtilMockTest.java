@@ -1476,4 +1476,218 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 6 歲，方能申報"), rdto.getMessage());
     }
+
+
+    /**
+     * Test case for isCodeBeforeDateByNhiMedicalRecord
+     * 1. T, 過去無資料
+     * 2. T, 過去有資料，且超過限制日期
+     * 3. T, 未來有資料
+     * 4. T, 有資料，但是與自己相同 tx
+     * 5. F, 過去有資料，且未超過限制日期
+     */
+    @Test
+    public void isCodeBeforeDateByNhiMedicalRecord_1() {
+        Patient p = new Patient();
+        p.setId(DataGenerator.ID_1);
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setId(DataGenerator.ID_1);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        netp.setA74(DataGenerator.TOOTH_PERMANENT_3);
+        netp.setA75(DataGenerator.SURFACE_BLANK);
+
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        Mockito
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+                DataGenerator.ID_1,
+                DataGenerator.NHI_CODE_LIST_1
+            ))
+            .thenReturn(
+                new ArrayList<>()
+            );
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(
+            dto,
+            DataGenerator.NHI_CODE_LIST_1,
+            DateTimeUtil.NHI_1_MONTH
+        );
+
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isCodeBeforeDateByNhiMedicalRecord_2() {
+        Patient p = new Patient();
+        p.setId(DataGenerator.ID_1);
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setId(DataGenerator.ID_1);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        netp.setA74(DataGenerator.TOOTH_PERMANENT_3);
+        netp.setA75(DataGenerator.SURFACE_BLANK);
+
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiMedicalRecord netpMocking = new NhiMedicalRecord();
+        netpMocking.setId(DataGenerator.ID_2);
+        netpMocking.setDate(DataGenerator.NHI_TREATMENT_DATE_MIN_STRING);
+        netpMocking.setNhiCode(DataGenerator.NHI_CODE_1);
+        netpMocking.setPart(DataGenerator.TOOTH_PERMANENT_3);
+
+        Mockito
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+                DataGenerator.ID_1,
+                DataGenerator.NHI_CODE_LIST_1
+            ))
+            .thenReturn(
+                Arrays.asList(netpMocking)
+            );
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(
+            dto,
+            DataGenerator.NHI_CODE_LIST_1,
+            DateTimeUtil.NHI_1_MONTH
+        );
+
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isCodeBeforeDateByNhiMedicalRecord_3() {
+        Patient p = new Patient();
+        p.setId(DataGenerator.ID_1);
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setId(DataGenerator.ID_1);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        netp.setA74(DataGenerator.TOOTH_PERMANENT_3);
+        netp.setA75(DataGenerator.SURFACE_BLANK);
+
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiMedicalRecord netpMocking = new NhiMedicalRecord();
+        netpMocking.setId(DataGenerator.ID_2);
+        netpMocking.setDate(DataGenerator.NHI_TREATMENT_DATE_MIN_STRING);
+        netpMocking.setNhiCode(DataGenerator.NHI_CODE_1);
+        netpMocking.setPart(DataGenerator.TOOTH_PERMANENT_3);
+
+        Mockito
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+                DataGenerator.ID_1,
+                DataGenerator.NHI_CODE_LIST_1
+            ))
+            .thenReturn(
+                Arrays.asList(netpMocking)
+            );
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(
+            dto,
+            DataGenerator.NHI_CODE_LIST_1,
+            DateTimeUtil.NHI_1_MONTH
+        );
+
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isCodeBeforeDateByNhiMedicalRecord_4() {
+        Patient p = new Patient();
+        p.setId(DataGenerator.ID_1);
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setId(DataGenerator.ID_1);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        netp.setA74(DataGenerator.TOOTH_PERMANENT_3);
+        netp.setA75(DataGenerator.SURFACE_BLANK);
+
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiMedicalRecord netpMocking = new NhiMedicalRecord();
+        netpMocking.setId(DataGenerator.ID_1);
+        netpMocking.setDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netpMocking.setNhiCode(DataGenerator.NHI_CODE_1);
+        netpMocking.setPart(DataGenerator.TOOTH_PERMANENT_3);
+
+        Mockito
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+                DataGenerator.ID_1,
+                DataGenerator.NHI_CODE_LIST_1
+            ))
+            .thenReturn(
+                Arrays.asList(netpMocking)
+            );
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(
+            dto,
+            DataGenerator.NHI_CODE_LIST_1,
+            DateTimeUtil.NHI_1_MONTH
+        );
+
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isCodeBeforeDateByNhiMedicalRecord_5() {
+        Patient p = new Patient();
+        p.setId(DataGenerator.ID_1);
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setId(DataGenerator.ID_1);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        netp.setA74(DataGenerator.TOOTH_PERMANENT_3);
+        netp.setA75(DataGenerator.SURFACE_BLANK);
+
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiMedicalRecord netpMocking = new NhiMedicalRecord();
+        netpMocking.setId(DataGenerator.ID_2);
+        netpMocking.setDate(DateTimeUtil.transformLocalDateToRocDate(
+            DataGenerator.NHI_TREATMENT_DATE_NOW.minus(5, ChronoUnit.DAYS).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)));
+        netpMocking.setNhiCode(DataGenerator.NHI_CODE_1);
+        netpMocking.setPart(DataGenerator.TOOTH_PERMANENT_3);
+
+        Mockito
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+                DataGenerator.ID_1,
+                DataGenerator.NHI_CODE_LIST_1
+            ))
+            .thenReturn(
+                Arrays.asList(netpMocking)
+            );
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(
+            dto,
+            DataGenerator.NHI_CODE_LIST_1,
+            DateTimeUtil.NHI_1_MONTH
+        );
+
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(
+            String.format(
+                "%s 不可與 %s 在 %d 天內再次申報，上次在他院所申報 %s (%s, %d 天前)",
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                DataGenerator.NHI_CODE_LIST_1,
+                DateTimeUtil.NHI_1_MONTH.getDays(),
+                DataGenerator.NHI_CODE_1,
+                DataGenerator.NHI_TREATMENT_DATE_NOW.minus(5, ChronoUnit.DAYS),
+                5
+            ),
+            rdto.getMessage());
+    }
 }
