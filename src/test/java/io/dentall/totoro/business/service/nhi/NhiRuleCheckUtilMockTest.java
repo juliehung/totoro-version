@@ -1397,4 +1397,83 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 12 歲，方能申報"), rdto.getMessage());
     }
 
+    /**
+     * Test for lessThanAge6
+     * F, > 6
+     * F, = 6
+     * T, < 6
+     * F, null
+     */
+    @Test
+    public void lessThanAge6_1() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+
+        p.setBirth(DataGenerator.NHI_TREATMENT_DATE_MIN);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge6(dto);
+
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 6 歲，方能申報"), rdto.getMessage());
+    }
+
+    @Test
+    public void lessThanAge6_2() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+
+        p.setBirth(DataGenerator.NHI_TREATMENT_DATE_MIN);
+        netp.setA71(DateTimeUtil.transformLocalDateToRocDate(
+            DataGenerator.NHI_TREATMENT_DATE_NOW.plus(5, ChronoUnit.YEARS).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)));
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge6(dto);
+
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 6 歲，方能申報"), rdto.getMessage());
+    }
+
+    @Test
+    public void lessThanAge6_3() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+
+        p.setBirth(DataGenerator.NHI_TREATMENT_DATE_NOW);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge6(dto);
+
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void lessThanAge6_4() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+
+        p.setBirth(null);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge6(dto);
+
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 6 歲，方能申報"), rdto.getMessage());
+    }
 }
