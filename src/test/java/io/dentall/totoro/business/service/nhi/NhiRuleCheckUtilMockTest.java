@@ -3,6 +3,7 @@ package io.dentall.totoro.business.service.nhi;
 import io.dentall.totoro.business.service.nhi.util.*;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.NhiMedicalRecord;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
@@ -15,6 +16,7 @@ import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.util.DataGenerator;
 import io.dentall.totoro.util.TableGenerator;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
@@ -31,8 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.*;
 
 
 @RunWith(SpringRunner.class)
@@ -56,6 +57,7 @@ public class NhiRuleCheckUtilMockTest {
     @Mock
     private PatientRepository patientRepository;
 
+    @Mock
     private NhiMedicalRecordRepository nhiMedicalRecordRepository;
 
     @Mock
@@ -179,7 +181,161 @@ public class NhiRuleCheckUtilMockTest {
         final String msg = "hello golang";
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.addNotification(msg);
 
-        Assert.assertEquals(rdto.getMessage(), msg);
+        Assert.assertEquals(msg, rdto.getMessage());
+    }
+
+    /**
+     * Test case for findPatientMediaRecordAtCodesAndBeforePeriod
+     * 1. T, 過去無資料
+     * 2. T, 過去有資料，且超過限制日期
+     * 3. T, 未來有資料
+     * <s>4. T, 過去有資料，但不同 code</s> query 如果 code 不同則不會被插出來，不應在此項檢驗
+     * 5. T, 有資料，但是與自己相同 tx
+     * 6. F, 過去有資料，且未超過限制日期
+     */
+    @Test
+    public void findPatientMediaRecordAtCodesAndBeforePeriod_1() {
+        Mockito
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+                eq(DataGenerator.ID_1),
+                anyList()
+            ))
+            .thenReturn(
+               new ArrayList<>()
+            );
+
+        NhiMedicalRecord nmr = nhiRuleCheckUtil.findPatientMediaRecordAtCodesAndBeforePeriod(
+            DataGenerator.ID_1,
+            DataGenerator.NHI_TREATMENT_DATE_NOW,
+            DataGenerator.NHI_CODE_LIST_1,
+            DateTimeUtil.NHI_1_MONTH);
+
+        Assert.assertEquals(null, nmr);
+    }
+
+    @Test
+    public void findPatientMediaRecordAtCodesAndBeforePeriod_2() {
+        NhiMedicalRecord fakeNmr = new NhiMedicalRecord();
+        fakeNmr.setId(DataGenerator.ID_2);
+        fakeNmr.setDate(DataGenerator.NHI_TREATMENT_DATE_MIN_STRING);
+        fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
+
+        Mockito
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+                eq(DataGenerator.ID_1),
+                anyList()
+            ))
+            .thenReturn(
+                Arrays.asList(fakeNmr)
+            );
+
+        NhiMedicalRecord nmr = nhiRuleCheckUtil.findPatientMediaRecordAtCodesAndBeforePeriod(
+            DataGenerator.ID_1,
+            DataGenerator.NHI_TREATMENT_DATE_NOW,
+            DataGenerator.NHI_CODE_LIST_1,
+            DateTimeUtil.NHI_1_MONTH);
+
+        Assert.assertEquals(null, nmr);
+    }
+
+    @Test
+    public void findPatientMediaRecordAtCodesAndBeforePeriod_3() {
+        NhiMedicalRecord fakeNmr = new NhiMedicalRecord();
+        fakeNmr.setId(DataGenerator.ID_1);
+        fakeNmr.setDate(DataGenerator.NHI_TREATMENT_DATE_MAX_STRING);
+        fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
+
+        Mockito
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+                eq(DataGenerator.ID_2),
+                anyList()
+            ))
+            .thenReturn(
+                Arrays.asList(fakeNmr)
+            );
+
+        NhiMedicalRecord nmr = nhiRuleCheckUtil.findPatientMediaRecordAtCodesAndBeforePeriod(
+            DataGenerator.ID_1,
+            DataGenerator.NHI_TREATMENT_DATE_NOW,
+            DataGenerator.NHI_CODE_LIST_1,
+            DateTimeUtil.NHI_1_MONTH);
+
+        Assert.assertEquals(null, nmr);
+    }
+
+    @Ignore
+    public void findPatientMediaRecordAtCodesAndBeforePeriod_4() {
+        NhiMedicalRecord fakeNmr = new NhiMedicalRecord();
+        fakeNmr.setId(DataGenerator.ID_2);
+        fakeNmr.setDate(DataGenerator.NHI_TREATMENT_DATE_MIN_STRING);
+        fakeNmr.setNhiCode(DataGenerator.NHI_CODE_2);
+
+        Mockito
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+                eq(DataGenerator.ID_1),
+                anyList()
+            ))
+            .thenReturn(
+                new ArrayList<>()
+            );
+
+        NhiMedicalRecord nmr = nhiRuleCheckUtil.findPatientMediaRecordAtCodesAndBeforePeriod(
+            DataGenerator.ID_1,
+            DataGenerator.NHI_TREATMENT_DATE_NOW,
+            DataGenerator.NHI_CODE_LIST_1,
+            DateTimeUtil.NHI_1_MONTH);
+
+        Assert.assertEquals(null, nmr);
+    }
+
+    @Test
+    public void findPatientMediaRecordAtCodesAndBeforePeriod_5() {
+        NhiMedicalRecord fakeNmr = new NhiMedicalRecord();
+        fakeNmr.setId(DataGenerator.ID_1);
+        fakeNmr.setDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
+
+        Mockito
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+                eq(DataGenerator.ID_1),
+                anyList()
+            ))
+            .thenReturn(
+                new ArrayList<>()
+            );
+
+        NhiMedicalRecord nmr = nhiRuleCheckUtil.findPatientMediaRecordAtCodesAndBeforePeriod(
+            DataGenerator.ID_1,
+            DataGenerator.NHI_TREATMENT_DATE_NOW,
+            DataGenerator.NHI_CODE_LIST_1,
+            DateTimeUtil.NHI_1_MONTH);
+
+        Assert.assertEquals(null, nmr);
+    }
+
+    @Test
+    public void findPatientMediaRecordAtCodesAndBeforePeriod_6() {
+        NhiMedicalRecord fakeNmr = new NhiMedicalRecord();
+        fakeNmr.setId(DataGenerator.ID_2);
+        fakeNmr.setDate(DataGenerator.NHI_TREATMENT_DATE_MIN_STRING);
+        fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
+
+        Mockito
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+                eq(DataGenerator.ID_1),
+                anyList()
+            ))
+            .thenReturn(
+                new ArrayList<>()
+            );
+
+        NhiMedicalRecord nmr = nhiRuleCheckUtil.findPatientMediaRecordAtCodesAndBeforePeriod(
+            DataGenerator.ID_1,
+            DataGenerator.NHI_TREATMENT_DATE_NOW,
+            DataGenerator.NHI_CODE_LIST_1,
+            DateTimeUtil.NHI_1_MONTH);
+
+        Assert.assertEquals(nmr, nmr);
     }
 
     /**
@@ -188,7 +344,7 @@ public class NhiRuleCheckUtilMockTest {
      * 1. T, 過去無資料
      * 2. T, 過去有資料，且超過限制日期
      * 3. T, 未來有資料
-     * 4. T, 過去有資料，但不同 code
+     * <s>4. T, 過去有資料，但不同 code</s> query 如果 code 不同則不會被插出來，不應在此項檢驗
      * 5. T, 有資料，但是與自己相同 tx
      * 6. F, 過去有資料，且未超過限制日期
      */
@@ -209,8 +365,8 @@ public class NhiRuleCheckUtilMockTest {
     public void findTxCode_2() {
         Mockito
             .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
-                ArgumentMatchers.eq(DataGenerator.ID_1),
-                ArgumentMatchers.eq(DataGenerator.NHI_CODE_LIST_1)
+                eq(DataGenerator.ID_1),
+                eq(DataGenerator.NHI_CODE_LIST_1)
             ))
             .thenReturn(
                 Arrays.asList(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
@@ -237,8 +393,8 @@ public class NhiRuleCheckUtilMockTest {
     public void findTxCode_3() {
         Mockito
             .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
-                ArgumentMatchers.eq(DataGenerator.ID_1),
-                ArgumentMatchers.eq(DataGenerator.NHI_CODE_LIST_1)
+                eq(DataGenerator.ID_1),
+                eq(DataGenerator.NHI_CODE_LIST_1)
             ))
             .thenReturn(
                 Arrays.asList(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
@@ -261,12 +417,12 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertNull(netp);
     }
 
-    @Test
+    @Ignore
     public void findTxCode_4() {
         Mockito
             .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
-                ArgumentMatchers.eq(DataGenerator.ID_1),
-                ArgumentMatchers.eq(DataGenerator.NHI_CODE_LIST_1)
+                eq(DataGenerator.ID_1),
+                eq(DataGenerator.NHI_CODE_LIST_1)
             ))
             .thenReturn(
                 new ArrayList<>()
@@ -291,8 +447,8 @@ public class NhiRuleCheckUtilMockTest {
 
         Mockito
             .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
-                ArgumentMatchers.eq(DataGenerator.ID_1),
-                ArgumentMatchers.eq(DataGenerator.NHI_CODE_LIST_1)
+                eq(DataGenerator.ID_1),
+                eq(DataGenerator.NHI_CODE_LIST_1)
             ))
             .thenReturn(
                 Arrays.asList(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(
