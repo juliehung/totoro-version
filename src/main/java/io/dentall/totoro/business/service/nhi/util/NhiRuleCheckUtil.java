@@ -336,12 +336,18 @@ public class NhiRuleCheckUtil {
      */
     public NhiRuleCheckResultDTO lessThanAge12(@NotNull NhiRuleCheckDTO dto) {
 
-        Period p = Period.between(
-            dto.getPatient().getBirth(),
-            DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
-
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validated(p.getYears() < 12);
+            .validated(true);
+
+        if (dto.getPatient().getBirth() == null) {
+            result.validated(false);
+        } else {
+            Period p = Period.between(
+                dto.getPatient().getBirth(),
+                DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
+
+            result.validated(p.getYears() < 12);
+        }
 
         if (!result.isValidated()) {
             result.setMessage(
@@ -362,12 +368,17 @@ public class NhiRuleCheckUtil {
      */
     public NhiRuleCheckResultDTO lessThanAge6(@NotNull NhiRuleCheckDTO dto) {
 
-        Period p = Period.between(
-            dto.getPatient().getBirth(),
-            DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
-
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validated(p.getYears() < 6);
+            .validated(true);
+
+        if (dto.getPatient().getBirth() == null) {
+            result.validated(false);
+        } else {
+            Period p = Period.between(
+                dto.getPatient().getBirth(),
+                DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
+            result.validated(p.getYears() < 6);
+        }
 
         if (!result.isValidated()) {
             result.setMessage(

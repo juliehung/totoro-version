@@ -73,9 +73,10 @@ public class NhiRuleCheckUtilMockTest {
 
     /**
      * 根據傳入的資料回傳對應錯誤訊息 for 在時間區間內，已經有診療項目
-     * @param codes limit codes
-     * @param p 時間區間
-     * @param netp mocking Nhi extend treatment procedure
+     *
+     * @param codes         limit codes
+     * @param p             時間區間
+     * @param netp          mocking Nhi extend treatment procedure
      * @param currentTxDate 待檢驗項目時間
      * @return 錯誤訊息
      */
@@ -101,7 +102,7 @@ public class NhiRuleCheckUtilMockTest {
     /**
      * mocking Parse code 回傳空值
      */
-    private void mockIgnoreParseCode()  {
+    private void mockIgnoreParseCode() {
         Mockito
             .when(nhiRuleCheckUtil.parseNhiCode(any()))
             .thenReturn(Arrays.asList(""));
@@ -203,7 +204,7 @@ public class NhiRuleCheckUtilMockTest {
                 anyList()
             ))
             .thenReturn(
-               new ArrayList<>()
+                new ArrayList<>()
             );
 
         NhiMedicalRecord nmr = nhiRuleCheckUtil.findPatientMediaRecordAtCodesAndBeforePeriod(
@@ -813,9 +814,9 @@ public class NhiRuleCheckUtilMockTest {
         Mockito
             .when(
                 nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
-                any(Long.class),
-                anyList()
-            ))
+                    any(Long.class),
+                    anyList()
+                ))
             .thenReturn(l);
 
         Mockito
@@ -1205,7 +1206,7 @@ public class NhiRuleCheckUtilMockTest {
 
         Assert.assertEquals(
             Arrays.asList("1234", "aasd8f71", "", "a19asdc").toString(),
-                result.toString());
+            result.toString());
     }
 
     @Test
@@ -1214,7 +1215,7 @@ public class NhiRuleCheckUtilMockTest {
 
         Assert.assertEquals(
             Arrays.asList("91001C", "91002C", "90001C", "90002C", "90003C", "1", "2", "3", "4", "5").toString(),
-                result.toString());
+            result.toString());
     }
 
     @Test
@@ -1313,6 +1314,87 @@ public class NhiRuleCheckUtilMockTest {
 
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患年滿 12 歲，方能申報"), rdto.getMessage());
+    }
+
+
+    /**
+     * Test for lessThanAge12
+     * F, > 12
+     * F, = 12
+     * T, < 12
+     * F, null
+     */
+    @Test
+    public void lessThanAge12_1() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+
+        p.setBirth(DataGenerator.NHI_TREATMENT_DATE_MIN);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge12(dto);
+
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 12 歲，方能申報"), rdto.getMessage());
+    }
+
+    @Test
+    public void lessThanAge12_2() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+
+        p.setBirth(DataGenerator.NHI_TREATMENT_DATE_MIN);
+        netp.setA71(DateTimeUtil.transformLocalDateToRocDate(
+            DataGenerator.NHI_TREATMENT_DATE_NOW.plus(12, ChronoUnit.YEARS).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)));
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge12(dto);
+
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 12 歲，方能申報"), rdto.getMessage());
+    }
+
+    @Test
+    public void lessThanAge12_3() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+
+        p.setBirth(DataGenerator.NHI_TREATMENT_DATE_NOW);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge12(dto);
+
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void lessThanAge12_4() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        Patient p = new Patient();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+
+        p.setBirth(null);
+        netp.setA71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING);
+        netp.setA73(DataGenerator.NHI_CODE_1);
+        dto.setPatient(p);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge12(dto);
+
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 12 歲，方能申報"), rdto.getMessage());
     }
 
 }
