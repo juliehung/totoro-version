@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi;
 
 import io.dentall.totoro.business.service.nhi.util.*;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
@@ -34,6 +35,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
 
@@ -1841,5 +1843,27 @@ public class NhiRuleCheckUtilMockTest {
                 5
             ),
             rdto.getMessage());
+    }
+
+    /**
+     * Test case for convertVmToDto
+     * 1. T, patient is not null and tmp not null
+     * 2. T, tx not null and tx's patient id == patient id
+     * 3. F, tx not null and tx's patient id != patient id
+     * 4. F, patient is null
+     * 5. F, patient is not null and tmp is null
+     */
+    @Test
+    public void convertVmToDto_1() {
+        NhiRuleCheckVM vm = new NhiRuleCheckVM();
+        vm.setPatientId(DataGenerator.ID_1);
+
+        Mockito
+            .when(patientRepository.findPatientById(anyLong()))
+            .thenReturn(Optional.of(new TableGenerator.PatientTableGenerator(DataGenerator.ID_1)));
+
+        NhiRuleCheckDTO dto = nhiRuleCheckUtil.convertVmToDto(DataGenerator.NHI_CODE_1, vm);
+
+        Assert.assertNotNull(dto.getPatient());
     }
 }
