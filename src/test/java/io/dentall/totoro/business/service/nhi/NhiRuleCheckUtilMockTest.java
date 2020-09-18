@@ -1,9 +1,6 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.business.service.nhi.util.CopaymentCode;
-import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
-import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
-import io.dentall.totoro.business.service.nhi.util.ToothUtil;
+import io.dentall.totoro.business.service.nhi.util.*;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.Patient;
@@ -386,6 +383,139 @@ public class NhiRuleCheckUtilMockTest {
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedTooth(dto, ToothConstraint.PERMANENT_TOOTH);
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(rdto.getMessage(), ToothUtil.getToothConstraintsFailureMessage(ToothConstraint.PERMANENT_TOOTH));
+    }
+
+    /**
+     * Test case for isAllLimitedSurface
+     * 1. T, 給定面數不大於 2
+     * 2. T, 給定面數不大於 3
+     * 3. T, 給定面數包含 MOD
+     * 4. T, 條件為面數最大為 2 ，給定 1
+     * 5. T, 條件為面數最大為 2 ，給定空
+     * 6. T, 條件為面數最大為 2 ，給定 null
+     * 7. F, 條件為面數最大為 2 ，給定 ABC
+     * 8. F, 條件為面數包含 MOD ，給定 ABC
+     * 9. F, 條件為面數包含 MOD ，給定空
+     * 10. F, 條件為面數包含 MOD ，給定 null
+     */
+    @Test
+    public void isAllLimitedSurface_1() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA75("AB");
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedSurface(dto, SurfaceConstraint.MAX_2_SURFACES);
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isAllLimitedSurface_2() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA75("ABC");
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedSurface(dto, SurfaceConstraint.MAX_3_SURFACES);
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isAllLimitedSurface_3() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA75("AOC");
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedSurface(dto, SurfaceConstraint.MUST_HAVE_M_D_O);
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isAllLimitedSurface_4() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA75("A");
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedSurface(dto, SurfaceConstraint.MAX_2_SURFACES);
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isAllLimitedSurface_5() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA75("");
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedSurface(dto, SurfaceConstraint.MAX_2_SURFACES);
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isAllLimitedSurface_6() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA75(null);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedSurface(dto, SurfaceConstraint.MAX_2_SURFACES);
+        Assert.assertEquals(true, rdto.isValidated());
+        Assert.assertEquals(null, rdto.getMessage());
+    }
+
+    @Test
+    public void isAllLimitedSurface_7() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA75("ABC");
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedSurface(dto, SurfaceConstraint.MAX_2_SURFACES);
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(SurfaceConstraint.MAX_2_SURFACES.getErrorMessage(), rdto.getMessage());
+    }
+
+    @Test
+    public void isAllLimitedSurface_8() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA75("ABC");
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedSurface(dto, SurfaceConstraint.MUST_HAVE_M_D_O);
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage(), rdto.getMessage());
+    }
+
+    @Test
+    public void isAllLimitedSurface_9() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA75("");
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedSurface(dto, SurfaceConstraint.MUST_HAVE_M_D_O);
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage(), rdto.getMessage());
+    }
+
+    @Test
+    public void isAllLimitedSurface_10() {
+        NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA75(null);
+        dto.setNhiExtendTreatmentProcedure(netp);
+
+        NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedSurface(dto, SurfaceConstraint.MUST_HAVE_M_D_O);
+        Assert.assertEquals(false, rdto.isValidated());
+        Assert.assertEquals(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage(), rdto.getMessage());
     }
 
     /**

@@ -562,31 +562,33 @@ public class NhiRuleCheckUtil {
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO();
 
-        Integer maxSurfaces;
-
         switch (sc) {
             case MAX_2_SURFACES:
-                maxSurfaces = 2;
                 result
-                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= maxSurfaces);
+                    .validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() == null ||
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_2_SURFACES.getLimitNumber());
                 if (!result.isValidated()) {
-                    result.setMessage(String.format("申報面數最高以 %d 面為限", maxSurfaces));
+                    result.setMessage(SurfaceConstraint.MAX_2_SURFACES.getErrorMessage());
                 }
 
                 break;
             case MAX_3_SURFACES:
-                maxSurfaces = 3;
                 result
-                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().length() <= maxSurfaces);
+                    .validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() == null ||
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_3_SURFACES.getLimitNumber());
                 if (!result.isValidated()) {
-                    result.setMessage(String.format("申報面數最高以 %d 面為限", maxSurfaces));
+                    result.setMessage(SurfaceConstraint.MAX_3_SURFACES.getErrorMessage());
                 }
                 break;
             case MUST_HAVE_M_D_O:
                 result
-                    .validated(dto.getNhiExtendTreatmentProcedure().getA75().matches("[MOD]"));
+                    .validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
+                        dto.getNhiExtendTreatmentProcedure().getA75().matches(SurfaceConstraint.MUST_HAVE_M_D_O.getLimitRegex()));
                 if (!result.isValidated()) {
-                    result.setMessage("充填牙面部位應包含雙鄰接面(Mesial, M; Distal, D) 及咬合面(Occlusal, O)");
+                    result.setMessage(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage());
                 }
                 break;
             default:
