@@ -1,5 +1,6 @@
 package io.dentall.totoro.util;
 
+import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.enumeration.Blood;
 import io.dentall.totoro.domain.enumeration.Gender;
@@ -18,6 +19,11 @@ public class TableGenerator {
         private final Long id;
 
         private final String patientIdentity;
+
+        public NhiExtendDisposalTableGenerator(NhiExtendDisposal ned) {
+            this.id = ned.getId();
+            this.patientIdentity = ned.getPatientIdentity();
+        }
 
         public NhiExtendDisposalTableGenerator(Long id, String patientIdentity) {
             this.id = id;

@@ -11,6 +11,7 @@ import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.repository.NhiMedicalRecordRepository;
 import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
 import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
@@ -1848,10 +1849,7 @@ public class NhiRuleCheckUtilMockTest {
     /**
      * Test case for convertVmToDto
      * 1. T, patient is not null and tmp not null
-     * 2. T, tx not null and tx's patient id == patient id
-     * 3. F, tx not null and tx's patient id != patient id
-     * 4. F, patient is null
-     * 5. F, patient is not null and tmp is null
+     * 2. T, patient is not null and tx not null
      */
     @Test
     public void convertVmToDto_1() {
@@ -1866,4 +1864,60 @@ public class NhiRuleCheckUtilMockTest {
 
         Assert.assertNotNull(dto.getPatient());
     }
+
+    @Test
+    public void convertVmToDto_2() {
+        NhiRuleCheckVM vm = new NhiRuleCheckVM();
+        vm.setPatientId(DataGenerator.ID_1);
+        vm.setTreatmentId(DataGenerator.ID_1);
+
+        Mockito
+            .when(patientRepository.findPatientById(anyLong()))
+            .thenReturn(Optional.of(new TableGenerator.PatientTableGenerator(DataGenerator.ID_1)));
+
+        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setId(DataGenerator.ID_1);
+        Mockito
+            .when(nhiExtendTreatmentProcedureRepository.findByIdAndA73AndTreatmentProcedure_Disposal_Registration_Appointment_Patient_Id(
+                eq(DataGenerator.ID_1),
+                eq(DataGenerator.NHI_CODE_1),
+                eq(DataGenerator.ID_1),
+                eq(NhiExtendTreatmentProcedureTable.class)
+            ))
+            .thenReturn(
+                Optional.of(new TableGenerator.NhiExtendTreatmentProcedureTableGenerator(netp))
+            );
+
+        Mockito
+            .when(nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
+                any(NhiExtendTreatmentProcedureTable.class)
+            ))
+            .thenReturn(
+                netp
+            );
+
+        NhiExtendDisposal ned = new NhiExtendDisposal();
+        ned.setId(DataGenerator.ID_1);
+        Mockito
+            .when(nhiExtendDisposalRepository.findByDisposal_TreatmentProcedures_Id(
+                eq(DataGenerator.ID_1),
+                eq(NhiExtendDisposalTable.class)
+            ))
+            .thenReturn(
+                Arrays.asList(new TableGenerator.NhiExtendDisposalTableGenerator(ned))
+            );
+        Mockito
+            .when(nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(
+                any(NhiExtendDisposalTable.class)
+            ))
+            .thenReturn(
+                ned
+            );
+
+        NhiRuleCheckDTO dto = nhiRuleCheckUtil.convertVmToDto(DataGenerator.NHI_CODE_1, vm);
+
+        Assert.assertNotNull(dto.getNhiExtendTreatmentProcedure());
+        Assert.assertNotNull(dto.getNhiExtendDisposal());
+    }
+
 }
