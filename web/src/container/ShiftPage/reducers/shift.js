@@ -56,7 +56,7 @@ const shift = (state = initialState, action) =>
         draft.editShiftSuccess = initialState.editShiftSuccess;
         break;
       case EDIT_SHIFT_SUCCESS:
-        draft.shift = [...state.shift.filter(s => s.id !== action.shift.id), action.shift];
+        draft.shift = [...state.shift.filter(s => !action.result.ids.find(id => id === s.id)), action.result.shift];
         draft.editShiftSuccess = true;
         break;
       case LEAVE_PAGE:

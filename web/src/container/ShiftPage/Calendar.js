@@ -213,10 +213,6 @@ function Calendar(props) {
     props.editShift(handleEventDrop(eventDropInfo));
   };
 
-  const eventResize = eventResizeInfo => {
-    props.editShift(handleEventDrop(eventResizeInfo));
-  };
-
   const drop = info => {
     const resourceId = info.resource.id;
     const date = info.date;
@@ -303,7 +299,6 @@ function Calendar(props) {
           datesRender={datesRender}
           dateClick={dateClick}
           eventDrop={eventDrop}
-          eventResize={eventResize}
           drop={drop}
           slotLabelFormat={{ day: 'numeric', weekday: 'short', month: 'numeric' }}
           slotDuration="24:00:00"
