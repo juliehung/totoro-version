@@ -10,4 +10,6 @@ public interface NhiDoctorExamVM {
     Integer getTotalNumber();
 
     Integer getTotalPoint();
+
+    String getSerialNumber();
 }

@@ -133,6 +133,14 @@ public class LedgerService {
                     ledger.setDisplayName(updateLedger.getDisplayName());
                 }
 
+                if (updateLedger.getIncludeStampTax() != null) {
+                    ledger.setIncludeStampTax(updateLedger.getIncludeStampTax());
+                }
+
+                if (updateLedger.getPrintTime() != null) {
+                    ledger.setPrintTime(updateLedger.getPrintTime());
+                }
+
                 if (updateLedger.getTreatmentPlan() != null && updateLedger.getTreatmentPlan().getId() != null) {
                     treatmentPlanRepository.findById(updateLedger.getTreatmentPlan().getId()).ifPresent(ledger::setTreatmentPlan);
                 }

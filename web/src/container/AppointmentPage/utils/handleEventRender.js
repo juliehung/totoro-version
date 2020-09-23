@@ -135,28 +135,26 @@ export function handleEventRender(info, func, params) {
               <StyledSolutionOutlined />
               {note}
             </BreakP>
-            {status !== 'CANCEL' && (
-              <XrayContainer>
-                {params.xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
-                  <div
-                    onClick={() => {
-                      func.xray({ vendor: XRAY_VENDORS.vision, appointment });
-                    }}
-                  >
-                    <VisionImg width="23" />
-                  </div>
-                )}
-                {params.xRayVendors?.[XRAY_VENDORS.vixwin] === 'true' && (
-                  <div
-                    onClick={() => {
-                      func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
-                    }}
-                  >
-                    <VixWinImg width="23" />
-                  </div>
-                )}
-              </XrayContainer>
-            )}
+            <XrayContainer>
+              {params.xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
+                <div
+                  onClick={() => {
+                    func.xray({ vendor: XRAY_VENDORS.vision, appointment });
+                  }}
+                >
+                  <VisionImg width="23" />
+                </div>
+              )}
+              {params.xRayVendors?.[XRAY_VENDORS.vixwin] === 'true' && (
+                <div
+                  onClick={() => {
+                    func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
+                  }}
+                >
+                  <VixWinImg width="23" />
+                </div>
+              )}
+            </XrayContainer>
             {!registrationStatus ? (
               status === 'CANCEL' ? (
                 <Popconfirm
@@ -205,21 +203,25 @@ export function handleEventRender(info, func, params) {
         );
 
         render(
-          <Popover content={popoverContent} trigger="hover" placement="top">
-            <Dropdown overlay={contextMenu} trigger={['contextMenu']}>
-              <div
-                style={{ height: '100%' }}
-                dangerouslySetInnerHTML={{ __html: info.el.innerHTML }}
-                onDoubleClick={
-                  !registrationStatus
-                    ? () => {
-                        func.edit(appointment);
-                      }
-                    : null
-                }
-              />
-            </Dropdown>
-          </Popover>,
+          !info.isMirror ? (
+            <Popover content={popoverContent} trigger="hover" placement="top">
+              <Dropdown overlay={contextMenu} trigger={['contextMenu']}>
+                <div
+                  style={{ height: '100%' }}
+                  dangerouslySetInnerHTML={{ __html: info.el.innerHTML }}
+                  onDoubleClick={
+                    !registrationStatus
+                      ? () => {
+                          func.edit(appointment);
+                        }
+                      : null
+                  }
+                />
+              </Dropdown>
+            </Popover>
+          ) : (
+            <div style={{ height: '100%' }} dangerouslySetInnerHTML={{ __html: info.el.innerHTML }} />
+          ),
           info.el,
         );
       } else if (info.view.type === 'dayGridMonth') {
@@ -248,30 +250,28 @@ export function handleEventRender(info, func, params) {
               doctor.user.firstName
             } ${note ? ', ' + note : ''}`}
           </span>
-          {!isCanceled && (
-            <XrayContainerListView>
-              {params.xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
-                <div
-                  onClick={() => {
-                    func.xray({ vendor: XRAY_VENDORS.vision, appointment });
-                  }}
-                  onDoubleClick={e => e.stopPropagation()}
-                >
-                  <VisionImg width="23" />
-                </div>
-              )}
-              {params.xRayVendors?.[XRAY_VENDORS.vixwin] === 'true' && (
-                <div
-                  onClick={() => {
-                    func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
-                  }}
-                  onDoubleClick={e => e.stopPropagation()}
-                >
-                  <VixWinImg width="23" />
-                </div>
-              )}
-            </XrayContainerListView>
-          )}
+          <XrayContainerListView>
+            {params.xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
+              <div
+                onClick={() => {
+                  func.xray({ vendor: XRAY_VENDORS.vision, appointment });
+                }}
+                onDoubleClick={e => e.stopPropagation()}
+              >
+                <VisionImg width="23" />
+              </div>
+            )}
+            {params.xRayVendors?.[XRAY_VENDORS.vixwin] === 'true' && (
+              <div
+                onClick={() => {
+                  func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
+                }}
+                onDoubleClick={e => e.stopPropagation()}
+              >
+                <VixWinImg width="23" />
+              </div>
+            )}
+          </XrayContainerListView>
         </ListWeekContainer>,
         info.el.querySelector('a'),
       );

@@ -1,4 +1,5 @@
-import { handleSendMultipleToken } from './handleSendMultipleToken';
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 
 export function parseJSON(response) {
   if (response.status === 204 || response.status === 205) {
@@ -12,13 +13,18 @@ export function checkStatus(response) {
     return response;
   }
 
+  if (response.status === 401) {
+    cookies.remove('token');
+    window.location.reload();
+  }
+
   const error = new Error(response.statusText);
   error.response = response;
   throw error;
 }
 
 export default function request(url, options) {
-  const token = handleSendMultipleToken();
+  const token = cookies.get('token');
   const headers = {
     Authorization: `Bearer ${token}`,
   };

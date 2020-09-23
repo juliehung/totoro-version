@@ -41,7 +41,10 @@ const shift = (state = initialState, action) =>
         draft.deleteSuccess = initialState.deleteSuccess;
         break;
       case DELETE_SHIFT_SUCCESS:
-        draft.shift = state.shift.filter(s => s.id.toString() !== action.id);
+        const { event } = action;
+        draft.shift = state.shift.filter(
+          s => s.userId !== event.userId || s.fromDate !== event.fromDate || s.toDate !== event.toDate,
+        );
         draft.deleteSuccess = true;
         break;
       case CREATE_SHIFT_SUCCESS:
@@ -53,7 +56,7 @@ const shift = (state = initialState, action) =>
         draft.editShiftSuccess = initialState.editShiftSuccess;
         break;
       case EDIT_SHIFT_SUCCESS:
-        draft.shift = [...state.shift.filter(s => s.id !== action.shift.id), action.shift];
+        draft.shift = [...state.shift.filter(s => !action.result.ids.find(id => id === s.id)), action.result.shift];
         draft.editShiftSuccess = true;
         break;
       case LEAVE_PAGE:

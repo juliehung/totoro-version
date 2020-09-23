@@ -72,6 +72,9 @@ public class Ledger implements Serializable {
     @Column(name = "include_stamp_tax")
     private Boolean includeStampTax;
 
+    @Column(name = "print_time")
+    private Instant printTime;
+
     @CreatedDate
     @Column(name = "created_date")
     private Instant createdDate;
@@ -92,6 +95,24 @@ public class Ledger implements Serializable {
     private TreatmentPlan treatmentPlan;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    public Ledger includeStampTax(Boolean includeStampTax) {
+        this.includeStampTax = includeStampTax;
+        return this;
+    }
+
+    public Ledger printTime(Instant printTime) {
+        this.printTime = printTime;
+        return this;
+    }
+
+    public Instant getPrintTime() {
+        return printTime;
+    }
+
+    public void setPrintTime(Instant printTime) {
+        this.printTime = printTime;
+    }
 
     public Ledger projectCode(String projectCode) {
         this.projectCode = projectCode;

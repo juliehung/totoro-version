@@ -12,6 +12,7 @@ import convertShiftToEvent from './utils/convertShiftToEvent';
 import handlePopoverPosition from './utils/handlePopoverPosition';
 import handleShiftEvtTitle from './utils/handleShiftEvtTitle';
 import { handleResourceRender } from './utils/handleResourceRender';
+import { removeDuplicate } from './utils/removeDuplicate';
 import {
   changeDate,
   getShift,
@@ -212,10 +213,6 @@ function Calendar(props) {
     props.editShift(handleEventDrop(eventDropInfo));
   };
 
-  const eventResize = eventResizeInfo => {
-    props.editShift(handleEventDrop(eventResizeInfo));
-  };
-
   const drop = info => {
     const resourceId = info.resource.id;
     const date = info.date;
@@ -302,7 +299,6 @@ function Calendar(props) {
           datesRender={datesRender}
           dateClick={dateClick}
           eventDrop={eventDrop}
-          eventResize={eventResize}
           drop={drop}
           slotLabelFormat={{ day: 'numeric', weekday: 'short', month: 'numeric' }}
           slotDuration="24:00:00"
@@ -325,7 +321,7 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   })),
   range: shiftPageReducer.shift.range,
   event: handleShiftEvtTitle(
-    convertShiftToEvent(shiftPageReducer.shift.shift, shiftPageReducer.resourceColor.color),
+    convertShiftToEvent(removeDuplicate(shiftPageReducer.shift.shift), shiftPageReducer.resourceColor.color),
     shiftPageReducer.defaultShift.shift,
   ).map(addAllDay),
   resourceColor: shiftPageReducer.resourceColor.color,

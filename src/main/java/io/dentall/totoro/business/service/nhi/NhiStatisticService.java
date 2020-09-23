@@ -4,10 +4,7 @@ import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
-import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
-import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
-import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
+import io.dentall.totoro.web.rest.vm.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -114,5 +111,9 @@ public class NhiStatisticService {
 
     public List<NhiDoctorExamVM> calculateDoctorNhiExam(Instant begin, Instant end) {
         return nhiExtendDisposalRepository.calculateDoctorNhiExam(begin, end);
+    }
+
+    public List<NhiIndexTreatmentProcedureVM> getNhiIndexTreatmentProcedures(Instant begin, Instant end) {
+        return nhiExtendDisposalRepository.findNhiIndexTreatmentProcedures(begin, end);
     }
 }

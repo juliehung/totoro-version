@@ -18,4 +18,6 @@ public interface NhiIndexOdVM {
 
     Double getSurfacePeopleRate();
 
+    String getSerialNumber();
+
 }

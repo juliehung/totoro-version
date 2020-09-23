@@ -9,7 +9,7 @@ import SVG from 'react-inlinesvg';
 import { message, Spin } from 'antd';
 import { parseUWPBase64Token } from './utils/parseUWPBase64Token';
 import { Helmet } from 'react-helmet-async';
-import { handleSaveMultipleToken } from './utils/handleSaveMultipleToken';
+import { cloudName } from '../../utils/cloudName';
 
 //#region
 const Container = styled.div`
@@ -52,7 +52,7 @@ function LoginPage({
     const tokenFromUrl = params.get('secret');
     if (tokenFromUrl) {
       const token = parseUWPBase64Token(tokenFromUrl);
-      setCookie('token', handleSaveMultipleToken(token), { path: '/' });
+      setCookie('token', token, { path: `/${cloudName ?? ''}` });
       const url = window.location.origin + window.location.pathname;
       window.location.replace(url);
     } else {
@@ -66,7 +66,7 @@ function LoginPage({
 
   useEffect(() => {
     if (id_token) {
-      setCookie('token', handleSaveMultipleToken(id_token), { path: '/' });
+      setCookie('token', id_token, { path: `/${cloudName ?? ''}` });
       changeLoginSuccess(true);
     }
   }, [id_token, changeLoginSuccess, setCookie]);

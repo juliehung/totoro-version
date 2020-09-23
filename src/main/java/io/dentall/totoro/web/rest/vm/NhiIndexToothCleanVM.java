@@ -10,4 +10,5 @@ public interface NhiIndexToothCleanVM {
 
     Double getTimePatRate();
 
+    String getSerialNumber();
 }

@@ -51,12 +51,12 @@ export const createShiftSuccess = shifts => {
   return { type: CREATE_SHIFT_SUCCESS, shifts };
 };
 
-export const deleteShift = id => {
-  return { type: DELETE_SHIFT_START, id };
+export const deleteShift = event => {
+  return { type: DELETE_SHIFT_START, event };
 };
 
-export const deleteShiftSuccess = id => {
-  return { type: DELETE_SHIFT_SUCCESS, id };
+export const deleteShiftSuccess = event => {
+  return { type: DELETE_SHIFT_SUCCESS, event };
 };
 
 export const getDefaultShift = () => {
@@ -67,12 +67,12 @@ export const getDefaultShiftSuccess = shift => {
   return { type: GET_DEFAULT_SHIFT_SUCCESS, shift };
 };
 
-export const editShift = shift => {
-  return { type: EDIT_SHIFT_START, shift };
+export const editShift = ({ oldShift, newShift }) => {
+  return { type: EDIT_SHIFT_START, oldShift, newShift };
 };
 
-export const editShiftSuccess = shift => {
-  return { type: EDIT_SHIFT_SUCCESS, shift };
+export const editShiftSuccess = result => {
+  return { type: EDIT_SHIFT_SUCCESS, result };
 };
 
 export const createDefaultShift = () => {

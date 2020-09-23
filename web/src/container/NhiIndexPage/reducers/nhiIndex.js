@@ -8,6 +8,8 @@ import {
   GET_DOCTOR_NHI_TX_FAIL,
   GET_TOOTH_CLEAN_SUCCESS,
   GET_TOOTH_CLEAN_FAIL,
+  GET_INDEX_TREATMENT_PRECEDURE_SUCCESS,
+  GET_INDEX_TREATMENT_PRECEDURE_FAIL,
 } from '../constant';
 
 const initState = {
@@ -46,6 +48,7 @@ const initState = {
     // }
   ],
   toothClean: [],
+  indexTreatmentProcedure: [],
 };
 
 export const initialState = { ...initState };
@@ -68,9 +71,13 @@ export default (state = initialState, action) =>
       case GET_TOOTH_CLEAN_SUCCESS:
         draft.toothClean = action.toothClean;
         break;
+      case GET_INDEX_TREATMENT_PRECEDURE_SUCCESS:
+        draft.indexTreatmentProcedure = action.indexTreatmentProcedure;
+        break;
       case GET_OD_INDEXES_FAIL:
       case GET_DOCTOR_NHI_EXAM_FAIL:
       case GET_TOOTH_CLEAN_FAIL:
+      case GET_INDEX_TREATMENT_PRECEDURE_FAIL:
         break;
       default:
         break;
