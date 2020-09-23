@@ -14,6 +14,7 @@ import {
   CREATE_Q_WITHOUT_SIGN,
   VALIDATE_SUCCESS,
   VALIDATE_FAIL,
+  CHANGE_FINISH_MODAL_VISIBLE,
 } from '../constant';
 
 const initState = {
@@ -25,6 +26,7 @@ const initState = {
   createQFailure: false,
   createdQId: undefined,
   validationError: [],
+  finishModalVisible: false,
 };
 
 export const initialState = { ...initState };
@@ -89,6 +91,9 @@ const flow = (state = initialState, action) =>
         if (!state.validationError.find(e => e === action.page)) {
           draft.validationError = [...state.validationError, action.page];
         }
+        break;
+      case CHANGE_FINISH_MODAL_VISIBLE:
+        draft.finishModalVisible = action.visible;
         break;
       default:
         break;

@@ -2,12 +2,17 @@ import { KeyCode } from '../constant_keyCode';
 import pages from '../pages';
 
 export function handleKeyEvent(currentPage, keyEvent, func, data) {
-  const nextPage = pages.find(p => p.page === currentPage)?.nextPage;
-  const prevPage = pages.find(p => p.page === currentPage)?.prevPage;
-  const validator = pages.find(p => p.page === currentPage)?.validator;
+  const currentPageObj = pages.find(p => p.page === currentPage);
+  const nextPage = currentPageObj?.nextPage;
+  const prevPage = currentPageObj?.prevPage;
+  const validator = currentPageObj?.validator;
+  const isLast = currentPageObj?.isLast;
 
   if (keyEvent.keyCode === KeyCode.down_arrow) {
-    if (validator) {
+    if (isLast) {
+      func.changeFinishModalVisible(true);
+      return;
+    } else if (validator) {
       const validation = validator(data.patient);
       if (!validation) {
         func.valitationFail(currentPage);

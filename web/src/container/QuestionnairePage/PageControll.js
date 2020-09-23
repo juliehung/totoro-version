@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
-import { nextPage, prevPage, gotoPage, validateSuccess, valitationFail } from './actions';
+import { nextPage, prevPage, gotoPage, validateSuccess, valitationFail, changeFinishModalVisible } from './actions';
 import { connect } from 'react-redux';
 import pages from './pages';
 import * as validators from './utils/validators';
+import { Button } from 'antd';
 
 //#region
 const Container = styled.div`
@@ -15,28 +16,15 @@ const Container = styled.div`
   color: #d0d7df;
   position: absolute;
   right: 0;
-  bottom: 0;
+  top: 0;
   user-select: none;
-  & > div {
-    border: 1px solid rgb(208, 215, 223);
-    box-shadow: 0px 2px 9px 0px rgba(23, 104, 172, 0.13);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  }
-  & > div:not(:nth-child(2)) {
-    font-size: 20px;
-    width: 35px;
-    height: 35px;
-    margin: 0 36px;
+  & > :last-child {
+    margin-left: 30px;
   }
 `;
 
-const ConfirmButton = styled.div`
-  font-size: 16px;
-  padding: 4px 20px;
-  color: ${props => (props.disabled ? ' #d0d7df' : 'rgb(77, 161, 255)')};
+const StyledButton = styled(Button)`
+  border-radius: 4px !important;
 `;
 //#endregion
 
@@ -52,6 +40,8 @@ function PageControll(props) {
     valitationFail,
     goPrevPage,
     goNextPage,
+    isLast,
+    changeFinishModalVisible,
   } = props;
 
   const [disable, setDisable] = useState(false);
@@ -84,35 +74,48 @@ function PageControll(props) {
 
   return (
     <Container>
-      <div onClick={prevPageClick}>
-        <UpOutlined />
-      </div>
-      <ConfirmButton
-        disabled={disable}
-        onClick={() => {
-          if (!disable) {
-            gotoPage(20);
-          }
-        }}
-      >
-        <span>完成送出</span>
-      </ConfirmButton>
-      <div onClick={nextPageClick}>
-        <DownOutlined />
-      </div>
+      <StyledButton icon={<UpOutlined />} onClick={prevPageClick} size="large">
+        上一題
+      </StyledButton>
+      {isLast ? (
+        <StyledButton
+          icon={<DownOutlined />}
+          type="primary"
+          onClick={() => changeFinishModalVisible(true)}
+          size="large"
+        >
+          完成
+        </StyledButton>
+      ) : (
+        <StyledButton icon={<DownOutlined />} type="primary" onClick={nextPageClick} size="large">
+          下一題
+        </StyledButton>
+      )}
     </Container>
   );
 }
 
-const mapStateToProps = ({ questionnairePageReducer }) => ({
-  currentPage: questionnairePageReducer.flow.page,
-  nextPage: pages.find(p => p.page === questionnairePageReducer.flow.page)?.nextPage,
-  prevPage: pages.find(p => p.page === questionnairePageReducer.flow.page)?.prevPage,
-  validator: pages.find(p => p.page === questionnairePageReducer.flow.page)?.validator,
-  patient: questionnairePageReducer.data.patient,
-  error: questionnairePageReducer.flow.validationError,
-});
+const mapStateToProps = ({ questionnairePageReducer }) => {
+  const currentPageObj = pages.find(p => p.page === questionnairePageReducer.flow.page);
 
-const mapDispatchToProps = { goNextPage: nextPage, goPrevPage: prevPage, gotoPage, validateSuccess, valitationFail };
+  return {
+    currentPage: questionnairePageReducer.flow.page,
+    nextPage: currentPageObj?.nextPage,
+    prevPage: currentPageObj?.prevPage,
+    validator: currentPageObj?.validator,
+    isLast: currentPageObj?.isLast,
+    patient: questionnairePageReducer.data.patient,
+    error: questionnairePageReducer.flow.validationError,
+  };
+};
+
+const mapDispatchToProps = {
+  goNextPage: nextPage,
+  goPrevPage: prevPage,
+  gotoPage,
+  validateSuccess,
+  valitationFail,
+  changeFinishModalVisible,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageControll);

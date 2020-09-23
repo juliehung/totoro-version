@@ -45,6 +45,7 @@ import {
   GET_DOC_SUCCESS,
   VALIDATE_SUCCESS,
   VALIDATE_FAIL,
+  CHANGE_FINISH_MODAL_VISIBLE,
 } from './constant';
 
 export function nextPage() {
@@ -229,4 +230,8 @@ export function validateSuccess(page) {
 
 export function valitationFail(page) {
   return { type: VALIDATE_FAIL, page };
+}
+
+export function changeFinishModalVisible(visible) {
+  return { type: CHANGE_FINISH_MODAL_VISIBLE, visible };
 }

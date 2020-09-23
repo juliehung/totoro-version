@@ -23,6 +23,7 @@ import {
   validateSuccess,
   valitationFail,
   gotoPage,
+  changeFinishModalVisible,
 } from './actions';
 import './index.css';
 import QutContent from './QutContent';
@@ -33,7 +34,7 @@ import { withRouter } from 'react-router-dom';
 import Background from '../../images/questionnaire_bg.svg';
 import { GApageView } from '../../ga';
 import pages from './pages';
-
+import FinishModal from './FinishModal';
 //#region
 const Container = styled.div`
   position: fixed;
@@ -86,6 +87,8 @@ function QuestionnairePage(props) {
     gotoPage,
     patient,
     history,
+    isLast,
+    changeFinishModalVisible,
   } = props;
 
   const focusRef = useRef(null);
@@ -116,6 +119,7 @@ function QuestionnairePage(props) {
           gotoPage,
           validateSuccess,
           valitationFail,
+          changeFinishModalVisible,
         },
         { patient },
       );
@@ -145,6 +149,7 @@ function QuestionnairePage(props) {
     patient,
     validateSuccess,
     valitationFail,
+    changeFinishModalVisible,
   ]);
 
   useEffect(() => {
@@ -178,7 +183,8 @@ function QuestionnairePage(props) {
       }
       validateSuccess(currentPage);
     }
-    nextPage ? gotoPage(nextPage) : goNextPage();
+
+    isLast ? changeFinishModalVisible(true) : nextPage ? gotoPage(nextPage) : goNextPage();
   };
 
   const onSwipedDown = () => {
@@ -195,21 +201,27 @@ function QuestionnairePage(props) {
         <ZeroAreaDiv>
           <button ref={focusRef}></button>
         </ZeroAreaDiv>
+        <FinishModal />
       </Container>
     </Swipeable>
   );
 }
 
-const mapStateToProps = ({ questionnairePageReducer }) => ({
-  currentPage: questionnairePageReducer.flow.page,
-  validator: pages.find(p => p.page === questionnairePageReducer.flow.page)?.validator,
-  createQSuccess: questionnairePageReducer.flow.createQSuccess,
-  createQFailure: questionnairePageReducer.flow.createQFailure,
-  createdQid: questionnairePageReducer.flow.createdQId,
-  nextPage: pages.find(p => p.page === questionnairePageReducer.flow.page)?.nextPage,
-  prevPage: pages.find(p => p.page === questionnairePageReducer.flow.page)?.prevPage,
-  patient: questionnairePageReducer.data.patient,
-});
+const mapStateToProps = ({ questionnairePageReducer }) => {
+  const currentPageObj = pages.find(p => p.page === questionnairePageReducer.flow.page);
+
+  return {
+    currentPage: questionnairePageReducer.flow.page,
+    createQSuccess: questionnairePageReducer.flow.createQSuccess,
+    createQFailure: questionnairePageReducer.flow.createQFailure,
+    createdQid: questionnairePageReducer.flow.createdQId,
+    patient: questionnairePageReducer.data.patient,
+    validator: currentPageObj?.validator,
+    nextPage: currentPageObj?.nextPage,
+    prevPage: currentPageObj?.prevPage,
+    isLast: currentPageObj?.isLast,
+  };
+};
 
 const mapDispatchToProps = {
   goNextPage: nextPage,
@@ -231,6 +243,7 @@ const mapDispatchToProps = {
   validateSuccess,
   valitationFail,
   gotoPage,
+  changeFinishModalVisible,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(QuestionnairePage));

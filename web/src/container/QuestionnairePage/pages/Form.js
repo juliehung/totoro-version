@@ -73,6 +73,7 @@ const ButtonsContainer = styled.div`
 
 const StyledButton = styled(Button)`
   margin: 10px;
+  border-radius: 4px !important;
 `;
 //#endregion
 
