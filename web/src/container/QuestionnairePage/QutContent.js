@@ -5,6 +5,7 @@ import { nextPage, prevPage } from './actions';
 import { CSSTransition } from 'react-transition-group';
 import { Helmet } from 'react-helmet-async';
 import PageControll from './PageControll';
+import PreviewControll from './PreviewControll';
 import pages from './pages';
 
 //#region
@@ -40,6 +41,7 @@ function QutContent(props) {
         </CSSTransition>
       ))}
       <PageControll />
+      <PreviewControll />
     </Container>
   );
 }

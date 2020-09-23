@@ -117,6 +117,7 @@ const pages = [
     key: 'Other',
     page: 19,
     component: <Other />,
+    isLast: true,
   },
   {
     key: 'DoDrugA',

@@ -81,6 +81,11 @@ const ImageContainer = styled.div`
   margin-top: 10px;
   border: 2px solid #eee;
 `;
+
+const StyledButton = styled(Button)`
+  border-radius: 4px !important;
+`;
+
 //#endregion
 
 function Form(props) {
@@ -208,14 +213,14 @@ function Form(props) {
           </ImageContainer>
         )}
       </FormContainer>
-      <Button
+      <StyledButton
         type="primary"
         onClick={() => {
           window.close();
         }}
       >
         關閉分頁
-      </Button>
+      </StyledButton>
     </Container>
   );
 }
