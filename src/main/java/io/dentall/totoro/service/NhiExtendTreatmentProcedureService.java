@@ -4,14 +4,18 @@ import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
+import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
+import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.util.MedicalAreaUtil;
 import io.dentall.totoro.service.util.ProblemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import org.zalando.problem.Status;
 
 import java.util.Optional;
@@ -29,12 +33,16 @@ public class NhiExtendTreatmentProcedureService {
 
     private final TreatmentProcedureRepository treatmentProcedureRepository;
 
+    private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
+
     public NhiExtendTreatmentProcedureService(
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
-        TreatmentProcedureRepository treatmentProcedureRepository
+        TreatmentProcedureRepository treatmentProcedureRepository,
+        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper
     ) {
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
         this.treatmentProcedureRepository = treatmentProcedureRepository;
+        this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
     }
 
     /**
@@ -110,5 +118,11 @@ public class NhiExtendTreatmentProcedureService {
                 return nhiExtendTreatmentProcedure;
             })
             .get();
+    }
+
+    public NhiExtendTreatmentProcedure findNhiExtendTreatmentProcedureById(Long id) {
+        return nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
+            nhiExtendTreatmentProcedureRepository.findById(id, NhiExtendTreatmentProcedureTable.class)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to found resource")));
     }
 }

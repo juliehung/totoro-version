@@ -21,6 +21,9 @@ import java.util.Set;
 @Repository
 public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<NhiExtendTreatmentProcedure, Long> {
 
+    // 查詢所有 nhi extend procedure，且包含輸入之健保代碼，且在指定病患下
+    List<NhiExtendTreatmentProcedureTable> findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(Long patientId, List<String> a73s);
+
     // 查詢這個 `病患(?1)` ，除了當下這個 `健保治療(?2)` 外，這項治療的 `發生時間(?3)` 之前的所有健保治療項目
     @Query(
         nativeQuery = true,
@@ -42,6 +45,8 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
     Set<NhiExtendTreatmentProcedure> findNhiExtendTreatmentProcedureByTreatmentProcedure_Disposal_Id(@Param(value = "disposalId") Long disposalId);
 
     Optional<NhiExtendTreatmentProcedureTable> findNhiExtendTreatmentProcedureByTreatmentProcedure_Id(Long id);
+
+    <T> Optional<T> findByIdAndA73AndTreatmentProcedure_Disposal_Registration_Appointment_Patient_Id(Long treatmentProcedureId, String a73, Long patientId, Class<T> type);
 
     <T> Optional<T> findById(Long id, Class<T> type);
 }

@@ -3,16 +3,41 @@ package io.dentall.totoro.service.util;
 import io.dentall.totoro.config.TimeConfig;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.function.Supplier;
 
 public final class DateTimeUtil {
+
+    public static final Period NHI_1_WEEK = Period.ofDays(7);
+
+    public static final Period NHI_1_MONTH = Period.ofDays(30);
+
+    public static final Period NHI_3_MONTH = Period.ofDays(90);
+
+    public static final Period NHI_6_MONTH = Period.ofDays(180);
+
+    public static final Period NHI_12_MONTH = Period.ofDays(365);
+
+    public static final Period NHI_18_MONTH = Period.ofDays(545);
+
+    public static final Period NHI_24_MONTH = Period.ofDays(730);
 
     public static Supplier<Instant> localTimeMin = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toZonedDateTime().with(LocalTime.MIN).toInstant();
     public static Supplier<Instant> localTimeMax = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toZonedDateTime().with(LocalTime.MAX).toInstant();
 
     public static Supplier<LocalDate> localMonthFirstDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.firstDayOfMonth()).toLocalDate();
     public static Supplier<LocalDate> localMonthLastDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.lastDayOfMonth()).toLocalDate();
+
+    public static String transformLocalDateToRocDate(Instant dateTime) {
+        return dateTime
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .minus(1911, ChronoUnit.YEARS)
+            .format(
+                DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+            .substring(1);
+    }
 
     public static LocalDate transformROCDateToLocalDate(String rocDate) {
         int year = Integer.parseInt(rocDate.substring(0, 3)) + 1911;
