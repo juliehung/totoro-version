@@ -58,6 +58,7 @@ public class TreatmentProcedureResource {
             throw new BadRequestAlertException("A new treatmentProcedure cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TreatmentProcedure result = treatmentProcedureService.save(treatmentProcedure);
+        log.debug("REST request to save TreatmentProcedure result : {}", result);
         return ResponseEntity.created(new URI("/api/treatment-procedures/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -80,6 +81,7 @@ public class TreatmentProcedureResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         TreatmentProcedure result = treatmentProcedureService.update(treatmentProcedure);
+        log.debug("REST request to update TreatmentProcedure result : {}", result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatmentProcedure.getId().toString()))
             .body(result);

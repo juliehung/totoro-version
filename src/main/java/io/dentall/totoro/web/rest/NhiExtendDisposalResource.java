@@ -84,6 +84,7 @@ public class NhiExtendDisposalResource {
         }
 
         NhiExtendDisposal result = nhiExtendDisposalService.save(nhiExtendDisposal);
+        log.debug("REST request to save NhiExtendDisposal result : {}", result);
         return ResponseEntity.created(new URI("/api/nhi-extend-disposals/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +107,7 @@ public class NhiExtendDisposalResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         NhiExtendDisposal result = nhiExtendDisposalService.update(nhiExtendDisposal);
+        log.debug("REST request to update NhiExtendDisposal result : {}", result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nhiExtendDisposal.getId().toString()))
             .body(result);
