@@ -77,6 +77,7 @@ public class DisposalResource {
             throw new BadRequestAlertException("Disposal and nhi extend disposal must be one-to-one relationship.", ENTITY_NAME, "relationconflict");
         }
         Disposal result = disposalService.save(disposal);
+        log.debug("REST request to save Disposal result : {}", result);
         return ResponseEntity.created(new URI("/api/disposals/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -102,6 +103,7 @@ public class DisposalResource {
             throw new BadRequestAlertException("Disposal and nhi extend disposal must be one-to-one relationship.", ENTITY_NAME, "relationconflict");
         }
         Disposal result = disposalService.update(disposal);
+        log.debug("REST request to update Disposal result : {}", result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, disposal.getId().toString()))
             .body(result);
@@ -192,6 +194,7 @@ public class DisposalResource {
     @Timed
     @Transactional
     public ResponseEntity<Disposal> getDisposalWithRulesCheckedNhiExtTxProc2(@PathVariable Long id) {
+        log.debug("REST request to get Disposal rules-checked : {}", id);
         // Origin useing -> findOneWithEagerRelationships
         Disposal disposal = disposalService.getDisposalByProjection(id);
 
