@@ -4,6 +4,7 @@ import {
   ON_COPY_SHIFT_START,
   CHANGE_DELETE_CURRENT,
   ON_COPY_SHIFT_SUCCESS,
+  ON_COPY_SHIFT_FAIL,
   CHANGE_COPY_MODAL_VISIBLE,
   CHANGE_SELECT_ALL_DOCTOR,
 } from '../constant';
@@ -19,6 +20,7 @@ const initialState = {
   loading: false,
   success: false,
   selectAllDoctor: false,
+  error: false,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -35,6 +37,7 @@ const copy = (state = initialState, action) =>
           draft.doctor = initialState.doctor;
           draft.range = initialState.range;
           draft.prevRange = initialState.prevRange;
+          draft.error = initialState.error;
         }
         break;
       case COPY_SHIFT:
@@ -47,6 +50,9 @@ const copy = (state = initialState, action) =>
         break;
       case ON_COPY_SHIFT_SUCCESS:
         draft.success = true;
+        break;
+      case ON_COPY_SHIFT_FAIL:
+        draft.error = true;
         break;
       case CHANGE_DELETE_CURRENT:
         if (action.value === 'delete') {

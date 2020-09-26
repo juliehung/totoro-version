@@ -26,6 +26,7 @@ import {
   COPY_SHIFT,
   ON_COPY_SHIFT_START,
   ON_COPY_SHIFT_SUCCESS,
+  ON_COPY_SHIFT_FAIL,
   CHANGE_DELETE_CURRENT,
   CHANGE_COPY_MODAL_VISIBLE,
   CHANGE_SELECT_ALL_DOCTOR,
@@ -137,6 +138,10 @@ export const onCopyShift = () => {
 
 export const onCopyShiftSuccess = () => {
   return { type: ON_COPY_SHIFT_SUCCESS };
+};
+
+export const onCopyShiftFail = () => {
+  return { type: ON_COPY_SHIFT_FAIL };
 };
 
 export const changeDeleteCurrent = value => {
