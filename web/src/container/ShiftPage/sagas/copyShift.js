@@ -1,6 +1,6 @@
 import { take, call, put, select, all } from 'redux-saga/effects';
 import { ON_COPY_SHIFT_START } from '../constant';
-import { onCopyShiftSuccess } from '../actions';
+import { onCopyShiftSuccess, onCopyShiftFail } from '../actions';
 import Shift from '../../../models/shift';
 import moment from 'moment';
 
@@ -35,6 +35,7 @@ export function* copyShift() {
       yield put(onCopyShiftSuccess());
     } catch (err) {
       console.log(err);
+      yield put(onCopyShiftFail());
     }
   }
 }

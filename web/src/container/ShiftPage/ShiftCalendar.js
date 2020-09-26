@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
@@ -27,6 +27,8 @@ function ShiftCalendar(props) {
     changeColorSuccess,
     deleteSuccess,
     deleteDefaultShiftSuccess,
+    copyShiftSuccess,
+    copyShiftFail,
   } = props;
 
   const [popoverVisible, setPopoverVisible] = useState(false);
@@ -39,25 +41,6 @@ function ShiftCalendar(props) {
   });
 
   const [popoverSize, setPopoverSize] = useState({ height: undefined, width: undefined });
-
-  const simulateMouseClick = element => {
-    const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
-    mouseClickEvents.forEach(mouseEventType =>
-      element.dispatchEvent(
-        new MouseEvent(mouseEventType, {
-          view: window,
-          bubbles: true,
-          cancelable: true,
-          buttons: 1,
-        }),
-      ),
-    );
-  };
-
-  const clickTitle = useCallback(() => {
-    const title = document.querySelector('.fc-center');
-    simulateMouseClick(title);
-  }, []);
 
   useEffect(() => {
     const msg = document.querySelector('.fc-license-message');
@@ -101,10 +84,20 @@ function ShiftCalendar(props) {
   useEffect(() => {
     if (changeColorSuccess) {
       message.success('更新成功');
-      clickTitle();
     }
-    // clickTitle();
-  }, [changeColorSuccess, clickTitle]);
+  }, [changeColorSuccess]);
+
+  useEffect(() => {
+    if (copyShiftSuccess) {
+      message.success('班表複製成功');
+    }
+  }, [copyShiftSuccess]);
+
+  useEffect(() => {
+    if (copyShiftFail) {
+      message.error('班表複製失敗，請檢查網路連線。');
+    }
+  }, [copyShiftFail]);
 
   return (
     <Container>
@@ -142,6 +135,8 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   changeColorSuccess: shiftPageReducer.resourceColor.changeColorSuccess,
   resourceColor: shiftPageReducer.resourceColor.color,
   deleteDefaultShiftSuccess: shiftPageReducer.defaultShift.deleteSuccess,
+  copyShiftSuccess: shiftPageReducer.copy.success,
+  copyShiftFail: shiftPageReducer.copy.error,
 });
 
 const mapDispatchToProps = {
