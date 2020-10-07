@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="70px" viewBox="0 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Icon/Fill/Check-Circle-Fill</title>
+    <g id="overview" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="病患管理/not-found" transform="translate(-685.000000, -269.000000)">
+            <g id="5.反馈/7.Result结果/亮色/警告-图标" transform="translate(440.000000, 264.000000)">
+                <g id="Icon/Fill/Check-Circle-Fill" transform="translate(240.000000, 0.000000)">
+                    <rect id="矩形" fill="#000000" fill-rule="nonzero" opacity="0" x="0" y="0" width="80" height="80"></rect>
+                    <path d="M40,5 C20.671875,5 5,20.671875 5,40 C5,59.328125 20.671875,75 40,75 C59.328125,75 75,59.328125 75,40 C75,20.671875 59.328125,5 40,5 Z M37.5,23.125 C37.5,22.78125 37.78125,22.5 38.125,22.5 L41.875,22.5 C42.21875,22.5 42.5,22.78125 42.5,23.125 L42.5,44.375 C42.5,44.71875 42.21875,45 41.875,45 L38.125,45 C37.78125,45 37.5,44.71875 37.5,44.375 L37.5,23.125 Z M40,57.5 C37.9296875,57.5 36.25,55.8203125 36.25,53.75 C36.25,51.6796875 37.9296875,50 40,50 C42.0703125,50 43.75,51.6796875 43.75,53.75 C43.75,55.8203125 42.0703125,57.5 40,57.5 Z" id="形状" fill="#EA5455"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

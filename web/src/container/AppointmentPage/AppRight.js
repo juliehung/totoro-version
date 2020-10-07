@@ -136,7 +136,7 @@ function AppRight(props) {
 
   const [expand, setExpand] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [cookies, setCookie] = useCookies(['token']);
+  const [cookies, setCookie] = useCookies([]);
 
   useEffect(() => {
     const slotDuration = cookies.slotDuration;

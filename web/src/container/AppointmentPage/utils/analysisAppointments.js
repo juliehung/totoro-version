@@ -1,9 +1,10 @@
 import moment from 'moment';
 
-export default function analysisAppointments(appointments) {
-  const currentDate = moment();
+export default function analysisAppointments(appointments = []) {
+  const appointmentsClone = JSON.parse(JSON.stringify(appointments));
 
-  const sortedAppointments = appointments.sort((a, b) =>
+  const currentDate = moment();
+  const sortedAppointments = appointmentsClone.sort((a, b) =>
     moment(a.expectedArrivalTime).diff(moment(b.expectedArrivalTime)),
   );
 

@@ -1,0 +1,138 @@
+import React from 'react';
+import styled from 'styled-components';
+import man from '../../images/Man.png';
+import woman from '../../images/Woman.png';
+import defaultAvatar from '../../images/Default.png';
+import VisionImg from '../../component/VisionImg';
+import VixWinImg from '../../component/VixWinImg';
+import { connect } from 'react-redux';
+import { convertPatientToHeaderObject } from './utils';
+import { openXray } from '../Home/actions';
+import { XRAY_VENDORS } from '../AppointmentPage/constant';
+import banner from '../../images/banner.svg';
+
+//#region
+const Container = styled.div`
+  overflow: hidden;
+  border-radius: 8px;
+  display: flex;
+  z-index: 400;
+  top: 0;
+  position: sticky;
+  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+`;
+
+const InfoContainer = styled.div`
+  flex-grow: 1;
+  height: 60px;
+  font-size: 20px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url(${banner});
+  background-blend-mode: lighten, multiply;
+
+  & > :first-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & > * {
+      margin: 0px 10px;
+    }
+  }
+`;
+
+const XrayContainer = styled.div`
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  & > div {
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+    & > img {
+      width: 29px;
+      cursor: pointer;
+    }
+  }
+  &:empty {
+    padding: 0;
+  }
+
+  @media (max-width: 1000px) {
+    display: none;
+  }
+`;
+//#endregion
+
+function PatientDetailHeader(props) {
+  const { patient, openXray, xRayVendors } = props;
+
+  const AvatarSrc = patient.gender === 'MALE' ? man : patient.gender === 'FEMALE' ? woman : defaultAvatar;
+
+  const handleXrayClick = (vender, xrayPatientObj) => {
+    openXray({ vender, appiontment: xrayPatientObj });
+  };
+
+  return (
+    <Container>
+      <InfoContainer>
+        <div>
+          <img src={AvatarSrc} height="30" alt="man" />
+          <span>{patient.name}</span>
+          <span>
+            {patient.birth} ({patient?.age?.year}Y{patient?.age?.month}M)
+          </span>
+        </div>
+      </InfoContainer>
+      <XrayContainer>
+        {xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
+          <div
+            onClick={() => {
+              const xrayPatientObj = {
+                medicalId: patient.medicalId,
+                nationalId: patient.nationalId,
+                patientName: patient.name,
+                birth: patient.birth,
+                gender: patient.gender,
+              };
+              handleXrayClick(XRAY_VENDORS.vision, xrayPatientObj);
+            }}
+          >
+            <VisionImg />
+          </div>
+        )}
+        {xRayVendors?.[XRAY_VENDORS.vixwin] === 'true' && (
+          <div
+            onClick={() => {
+              const xrayPatientObj = {
+                medicalId: patient.medicalId,
+                nationalId: patient.nationalId,
+                patientName: patient.name,
+                birth: patient.birth,
+                gender: patient.gender,
+              };
+              handleXrayClick(XRAY_VENDORS.vixwin, xrayPatientObj);
+            }}
+          >
+            <VixWinImg />
+          </div>
+        )}
+      </XrayContainer>
+    </Container>
+  );
+}
+
+const mapStateToProps = ({ patientPageReducer, settingPageReducer }) => ({
+  patient: convertPatientToHeaderObject(patientPageReducer.patient.patient),
+  xRayVendors: settingPageReducer.configurations.config.xRayVendors,
+});
+
+const mapDispatchToProps = { openXray };
+
+export default connect(mapStateToProps, mapDispatchToProps)(PatientDetailHeader);

@@ -1,7 +1,7 @@
 import React, { useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { getAccount, getUserStart, getSettings, changeXrayModalVisible } from './actions';
+import { getAccount, getUserStart, getSettings, changeXrayModalVisible, getNhiProcedure } from './actions';
 import { getConfig } from '../SettingPage/actions';
 import QuestionnairePage from '../QuestionnairePage';
 import LoginPage from '../LoginPage';
@@ -26,6 +26,7 @@ function Home(props) {
     xrayModalVisible,
     changeXrayModalVisible,
     getConfig,
+    getNhiProcedure,
   } = props;
 
   useEffect(() => {
@@ -34,8 +35,9 @@ function Home(props) {
       getSettings();
       getUserStart();
       getConfig();
+      getNhiProcedure();
     }
-  }, [loginSuccess, getAccount, getSettings, getUserStart, getConfig]);
+  }, [loginSuccess, getAccount, getSettings, getUserStart, getConfig, getNhiProcedure]);
 
   if (!loginSuccess)
     return (
@@ -67,6 +69,13 @@ const mapStateToProps = ({ loginPageReducer, homePageReducer }) => ({
   xrayModalVisible: homePageReducer.xray.modalVisible,
 });
 
-const mapDispatchToProps = { getAccount, getUserStart, getSettings, changeXrayModalVisible, getConfig };
+const mapDispatchToProps = {
+  getAccount,
+  getUserStart,
+  getSettings,
+  changeXrayModalVisible,
+  getConfig,
+  getNhiProcedure,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -12,6 +12,8 @@ import {
   XRAY_GREETING,
   XRAY_GREETING_SUCCESS,
   XRAY_GREETING_FAILURE,
+  GET_NHI_PROCEDURE,
+  GET_NHI_PROCEDURE_SUCCESS,
 } from './constant';
 
 export function getAccount() {
@@ -64,4 +66,12 @@ export function xrayGreetingFailure() {
 
 export function changeXrayModalVisible(visible) {
   return { type: CHANGE_XRAY_MODAL_VISIBLE, visible };
+}
+
+export function getNhiProcedure() {
+  return { type: GET_NHI_PROCEDURE };
+}
+
+export function getNhiProcedureSuccess(nhiProcedure) {
+  return { type: GET_NHI_PROCEDURE_SUCCESS, nhiProcedure };
 }
