@@ -141,13 +141,13 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @Column(name = "introducer")
     private String introducer;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "patient_parent",
                joinColumns = @JoinColumn(name = "patients_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "parents_id", referencedColumnName = "id"))
     private Set<Patient> parents = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "patient_spouse1",
                joinColumns = @JoinColumn(name = "patients_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "spouse1s_id", referencedColumnName = "id"))
