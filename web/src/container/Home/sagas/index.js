@@ -4,6 +4,7 @@ import { watchGetUsers } from './getUser';
 import { watchGetSettings } from './getSettings';
 import { putSettings } from './putSettings';
 import { watchOpenXray } from './watchOpenXray';
+import { getNhiProcedure } from './getNhiProcedure';
 
 export default function* homePage() {
   yield fork(getAccount);
@@ -11,4 +12,5 @@ export default function* homePage() {
   yield fork(watchGetSettings);
   yield fork(putSettings);
   yield fork(watchOpenXray);
+  yield fork(getNhiProcedure);
 }

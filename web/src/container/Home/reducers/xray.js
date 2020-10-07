@@ -3,6 +3,7 @@ import { CHANGE_XRAY_MODAL_VISIBLE, XRAY_GREETING, XRAY_GREETING_SUCCESS, XRAY_G
 
 import { ON_LEAVE_PAGE as ON_LEAVE_PAGE_REGISTRATION_PAGE } from '../../RegistrationPage/constant';
 import { ON_LEAVE_PAGE as ON_LEAVE_PAGE_APPOINTMENT_PAGE } from '../../AppointmentPage/constant';
+import { ON_LEAVE_PAGE as ON_LEAVE_PAGE_PATIENT_PAGE } from '../../PatientPage/constant';
 
 const initialState = {
   modalVisible: false,
@@ -20,6 +21,7 @@ const xray = (state = initialState, action) =>
         break;
       case ON_LEAVE_PAGE_APPOINTMENT_PAGE:
       case ON_LEAVE_PAGE_REGISTRATION_PAGE:
+      case ON_LEAVE_PAGE_PATIENT_PAGE:
         draft.onRequest = initialState.onRequest;
         draft.serverState = initialState.serverState;
         draft.serverError = initialState.serverError;

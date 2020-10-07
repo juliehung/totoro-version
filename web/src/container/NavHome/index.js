@@ -8,6 +8,7 @@ import { useCookies } from 'react-cookie';
 import ShiftPage from '../ShiftPage';
 import SettingPage from '../SettingPage';
 import SmsPage from '../SmsPage';
+import PatientPage from '../PatientPage';
 import DentallHisLogo from '../../images/DentallHisLogo.svg';
 import { Menu, Dropdown, Drawer, Popover } from 'antd';
 import { parseAccountData } from './utils/parseAccountData';
@@ -18,6 +19,8 @@ import IconCalendar from '../../images/icon-calendar.svg';
 import IconCalendarFill from '../../images/icon-calendar-fill.svg';
 import MessageCircle from '../../images/message-circle.svg';
 import MessageCircleFill from '../../images/message-circle-fill.svg';
+import People from '../../images/people.svg';
+import PeopleFill from '../../images/people-fill.svg';
 import NhiIcon from '../../images/nhi-icon.svg';
 import Pantone from '../../images/pantone.svg';
 import Cube from '../../images/cube.svg';
@@ -215,7 +218,7 @@ const ContentContainer = styled.div`
   height: 100%;
   margin: 0 1% 15px;
   border-radius: 8px;
-  background-color: #fff;
+  /* background-color: #f8fafb; */
   box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
   scrollbar-width: none;
@@ -234,6 +237,8 @@ const PopoverContent = styled.div`
 const route = [
   {
     key: 'registration',
+    path: 'registration',
+    link: 'registration',
     name: '就診列表',
     icon: { on: IconBookOpenFill, off: IconBookOpen },
     navigation: true,
@@ -243,6 +248,8 @@ const route = [
   },
   {
     key: 'appointment',
+    path: 'appointment',
+    link: 'appointment',
     name: '約診排程',
     icon: { on: IconCalendarFill, off: IconCalendar },
     navigation: true,
@@ -252,6 +259,8 @@ const route = [
   },
   {
     key: 'sms',
+    path: 'sms',
+    link: 'sms',
     name: 'SMS',
     icon: { on: MessageCircleFill, off: MessageCircle },
     navigation: true,
@@ -259,10 +268,51 @@ const route = [
     component: <SmsPage />,
     localVersion: false,
   },
-  { key: 'shift', navigation: false, exact: true, component: <ShiftPage />, localVersion: true },
-  { key: 'setting/:section', navigation: false, component: <SettingPage />, localVersion: true },
-  { key: 'nhi-index', navigation: false, exact: true, component: <NhiIndexPage />, localVersion: true },
-  { key: '', navigation: false, exact: false, component: <Redirect to="/appointment" />, localVersion: true },
+  {
+    key: 'patient',
+    path: 'patient/:id?',
+    link: 'patient',
+    name: '病患中心',
+    icon: { on: PeopleFill, off: People },
+    navigation: true,
+    exact: false,
+    component: <PatientPage />,
+    localVersion: true,
+  },
+  {
+    key: 'shift',
+    path: 'shift',
+    link: 'shift',
+    navigation: false,
+    exact: true,
+    component: <ShiftPage />,
+    localVersion: true,
+  },
+  {
+    key: 'setting',
+    path: 'setting/:section',
+    link: 'setting',
+    navigation: false,
+    component: <SettingPage />,
+    localVersion: true,
+  },
+  {
+    key: 'nhi-index',
+    path: 'nhi-index',
+    link: 'nhi-index',
+    navigation: false,
+    exact: true,
+    component: <NhiIndexPage />,
+    localVersion: true,
+  },
+  {
+    key: '',
+    path: '',
+    navigation: false,
+    exact: false,
+    component: <Redirect to="/appointment" />,
+    localVersion: true,
+  },
 ];
 
 function NavHome(props) {
@@ -345,8 +395,8 @@ function NavHome(props) {
               ...route
                 .filter(r => r.navigation && determineRouteOrLinkShow(r))
                 .map(n => (
-                  <NavItem key={n.key} focus={currentLocation === `/${n.key}`}>
-                    <Link to={`/${n.key}`}>
+                  <NavItem key={n.key} focus={currentLocation === `/${n.link}`}>
+                    <Link to={`/${n.link}`}>
                       <div>
                         <div>
                           <img src={n.icon.on} alt={n.name} />
@@ -439,7 +489,7 @@ function NavHome(props) {
           ...route
             .filter(r => r.navigation && determineRouteOrLinkShow(r))
             .map(n => (
-              <DrawerItem key={n.key} to={`/${n.key}`}>
+              <DrawerItem key={n.key} to={`/${n.link}`}>
                 <div>
                   <img src={n.icon.off} height="16px" alt="icon" />
                   <span>{n.name}</span>
@@ -458,12 +508,12 @@ function NavHome(props) {
             )),
         ]}
       </Drawer>
-      <ContentContainer>
+      <ContentContainer currentLocation={currentLocation}>
         <Switch>
           {route
             .filter(r => determineRouteOrLinkShow(r))
             .map(r => (
-              <Route key={r.key} exact={r.exact} path={`/${r.key}`}>
+              <Route key={r.key} exact={r.exact} path={`/${r.path}`}>
                 {r.component}
               </Route>
             ))}
