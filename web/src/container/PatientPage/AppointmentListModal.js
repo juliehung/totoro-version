@@ -87,7 +87,12 @@ const StyledModal = styled(Modal)`
   & .ant-modal-content {
     border-radius: 8px;
   }
-
+  & .ant-modal-header {
+    border-radius: 8px 8px 0 0;
+  }
+  & .ant-modal-body {
+    border-radius: 0 0 8px 8px;
+  }
   & .ant-modal-close {
     &:active {
       transform: translateY(2px) translateX(-2px);
@@ -112,6 +117,18 @@ const StyledModal = styled(Modal)`
       fill: black;
     }
   }
+  & .ant-modal-header {
+    background-color: #f8fafb;
+  }
+`;
+
+const StyledTable = styled(Table)`
+  & .ant-table-thead .ant-table-cell {
+    background-color: #f7f9fc;
+    &.ant-table-column-sort:hover {
+      background-color: #e8f0fc;
+    }
+  }
 `;
 
 const Container = styled.div`
@@ -121,13 +138,15 @@ const Container = styled.div`
 const Title = styled.div`
   font-size: 18px;
   font-weight: bold;
+  color: #222b45;
 `;
 
 const Sbutitle = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   display: flex;
   justify-content: space-between;
-  color: #ccc;
+  color: #8f9bb3;
+  font-size: 13px;
 `;
 
 const StyledSelect = styled(Select)`
@@ -165,7 +184,6 @@ function AppointmentListModal(props) {
     >
       <Container>
         <Sbutitle>
-          <span>共{filteredAppointmentAmount}筆預約</span>
           <StyledSelect placeholder="請選擇醫師" value={selectedDoctorId} onChange={setSelectedDoctorId}>
             {[
               <Option key={'all'} value={'all'}>
@@ -178,8 +196,9 @@ function AppointmentListModal(props) {
               )),
             ]}
           </StyledSelect>
+          <span>共{filteredAppointmentAmount}筆預約</span>
         </Sbutitle>
-        <Table
+        <StyledTable
           dataSource={filteredAppointments}
           columns={columns}
           pagination={false}
