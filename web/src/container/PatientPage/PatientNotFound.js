@@ -17,6 +17,7 @@ const Container = styled.div`
   & > div {
     display: flex;
     flex-direction: column;
+    align-items: center;
     & > :first-child {
       margin-bottom: 30px;
     }
@@ -51,7 +52,7 @@ function PatientNotFound(props) {
         <Button
           shape="round"
           icon={<SearchOutlined />}
-          style={{ backgroundColor: '#e4e9f2' }}
+          style={{ backgroundColor: '#e4e9f2', width: '117px' }}
           onClick={() => {
             changeDrawerVisible(true);
           }}
