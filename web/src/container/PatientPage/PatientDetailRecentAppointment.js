@@ -122,7 +122,7 @@ const mapStateToProps = ({ patientPageReducer, homePageReducer }) => ({
   futureAppointments: convertAppointmentToCardObject(
     patientPageReducer.appointment.appointment,
     homePageReducer.user.users,
-  ).filter(a => a.isFuture),
+  ).filter(a => a.isFuture && !a.isRegistration),
   appointmentsAnalysis: analysisAppointments(patientPageReducer.appointment.appointment),
 });
 
