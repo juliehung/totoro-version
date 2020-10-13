@@ -1,10 +1,12 @@
-import { Popover, Dropdown, Menu, Button, Popconfirm } from 'antd';
+import { Popover, Dropdown, Menu } from 'antd';
 import React from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
 import { PhoneOutlined, UserOutlined, SolutionOutlined, EditOutlined } from '@ant-design/icons';
 import VisionImg from '../../../component/VisionImg';
 import VixWinImg from '../../../component/VixWinImg';
+import CancelAppointmentButton from '../CancelAppointmentButton';
+import RestoreAppointmentButton from '../RestoreAppointmentButton';
 
 import { XRAY_VENDORS } from '../constant';
 
@@ -157,25 +159,9 @@ export function handleEventRender(info, func, params) {
             </XrayContainer>
             {!registrationStatus ? (
               status === 'CANCEL' ? (
-                <Popconfirm
-                  trigger="click"
-                  title="確定恢復預約"
-                  onConfirm={() => {
-                    func.cancel({ id: id, status: 'CONFIRMED' });
-                  }}
-                >
-                  <Button size="small">恢復預約</Button>
-                </Popconfirm>
+                <RestoreAppointmentButton id={id} onConfirm={func.cancel} />
               ) : (
-                <Popconfirm
-                  trigger="click"
-                  title="確定取消預約"
-                  onConfirm={() => {
-                    func.cancel({ id: id, status: 'CANCEL' });
-                  }}
-                >
-                  <Button size="small">取消預約</Button>
-                </Popconfirm>
+                <CancelAppointmentButton id={id} onConfirm={func.cancel} />
               )
             ) : null}
             {!registrationStatus ? (
