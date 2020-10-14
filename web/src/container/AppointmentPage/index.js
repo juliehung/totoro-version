@@ -57,7 +57,7 @@ const Container = styled.div`
 
 const md = new MobileDetect(window.navigator.userAgent);
 const phone = md.phone();
-const defaultView = phone ? 'resourceTimeGridDay' : 'timeGridWeek';
+const defaultView = 'resourceTimeGridDay';
 
 function AppointmentPage(props) {
   const { xrayServerState, xrayServerError, onLeavePage, xrayOnRequest, changeXrayModalVisible } = props;
