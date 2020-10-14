@@ -10,6 +10,7 @@ import { convertPatientToHeaderObject } from './utils';
 import { openXray } from '../Home/actions';
 import { XRAY_VENDORS } from '../AppointmentPage/constant';
 import banner from '../../images/banner.svg';
+import editIcon from '../../images/edit-2-fill.svg';
 
 //#region
 const Container = styled.div`
@@ -28,7 +29,6 @@ const InfoContainer = styled.div`
   font-size: 20px;
   color: #fff;
   display: flex;
-  justify-content: center;
   align-items: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -39,8 +39,30 @@ const InfoContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: 24px;
     & > * {
       margin: 0px 10px;
+    }
+  }
+
+  & > :nth-child(2) {
+    margin-left: auto;
+    margin-right: 21px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 16px;
+    background-color: #ff9ca8;
+    padding: 5px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & > img {
+      height: 14px;
+      margin-right: 8px;
+    }
+
+    @media (max-width: 600px) {
+      display: none;
     }
   }
 `;
@@ -64,7 +86,7 @@ const XrayContainer = styled.div`
     padding: 0;
   }
 
-  @media (max-width: 1000px) {
+  @media (max-width: 1100px) {
     display: none;
   }
 `;
@@ -88,6 +110,10 @@ function PatientDetailHeader(props) {
           <span>
             {patient.birth} ({patient?.age?.year}Y{patient?.age?.month}M)
           </span>
+        </div>
+        <div>
+          <img src={editIcon} alt="editIcon" />
+          <span>病歷表首頁</span>
         </div>
       </InfoContainer>
       <XrayContainer>
