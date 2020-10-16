@@ -196,6 +196,11 @@ public class TableGenerator {
         }
 
         @Override
+        public String getReferralHospitalCode() {
+            return null;
+        }
+
+        @Override
         public Long getDisposal_Id() {
             return null;
         }
