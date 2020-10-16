@@ -49,7 +49,7 @@ public class PatientBusinessServiceMockTest {
     public void testFindByMedicalId() {
         Mockito.when(mockPatientRepository.findByMedicalId("1-02", Pageable.unpaged())).thenReturn(
             new PageImpl<>(Collections.singletonList(
-                new PatientSearchVM(null, null, "00001-02", LocalDate.of(1999, 1, 1), null, null)
+                new PatientSearchVM(null, null, "00001-02", LocalDate.of(1999, 1, 1), null, null, null)
             ))
         );
 
