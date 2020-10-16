@@ -159,6 +159,10 @@ const ColorOptionContainer = styled.div`
   }
 `;
 
+const Width100 = styled.div`
+  width: 100%;
+`;
+
 //#endregion
 
 function CreateAppModal({
@@ -498,11 +502,13 @@ function CreateAppModal({
           </div>
           <div>
             <span>預約內容：</span>
-            <Input.TextArea
-              autoSize={{ minRows: 3, maxRows: 3 }}
-              onChange={changeCreateAppNote}
-              value={appointment.note}
-            />
+            <Width100>
+              <Input.TextArea
+                autoSize={{ minRows: 3, maxRows: 3 }}
+                onChange={changeCreateAppNote}
+                value={appointment.note}
+              />
+            </Width100>
           </div>
           <div>
             <span>特殊註記：</span>
