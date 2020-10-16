@@ -164,6 +164,9 @@ public class NhiExtendDisposal implements Serializable {
     @Column(name = "checked_auditing")
     private Boolean checkedAuditing;
 
+    @Column(name = "referral_hospital_code")
+    private String referralHospitalCode;
+
     @OneToMany(mappedBy = "nhiExtendDisposal", fetch = FetchType.EAGER)
     private Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = null;
 
@@ -174,6 +177,11 @@ public class NhiExtendDisposal implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonIgnore
     private Set<NhiDayUploadDetails> nhiDayUploadDetails = null;
+
+    public NhiExtendDisposal referralHospitalCode(String referralHospitalCode) {
+        this.referralHospitalCode = referralHospitalCode;
+        return this;
+    }
 
     public NhiExtendDisposal checkedMonthDeclaration(Boolean checkedMonthDeclaration) {
         this.checkedMonthDeclaration = checkedMonthDeclaration;
@@ -680,6 +688,14 @@ public class NhiExtendDisposal implements Serializable {
         }
     }
 
+    public String getReferralHospitalCode() {
+        return referralHospitalCode;
+    }
+
+    public void setReferralHospitalCode(String referralHospitalCode) {
+        this.referralHospitalCode = referralHospitalCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -734,6 +750,7 @@ public class NhiExtendDisposal implements Serializable {
             ", patientId='" + getPatientId() + "'" +
             ", category='" + getCategory() + "'" +
             ", replenishmentDate='" + getReplenishmentDate() + "'" +
+            ", referralHospitalCode='" + getReferralHospitalCode() + "'" +
             "}";
     }
 }

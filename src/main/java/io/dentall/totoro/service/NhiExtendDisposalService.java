@@ -493,6 +493,10 @@ public class NhiExtendDisposalService {
                     nhiExtendDisposal.setCheckedAuditing(updateNhiExtendDisposal.getCheckedAuditing());
                 }
 
+                if (updateNhiExtendDisposal.getReferralHospitalCode() != null) {
+                    nhiExtendDisposal.setReferralHospitalCode(updateNhiExtendDisposal.getReferralHospitalCode());
+                }
+
                 if (updateNhiExtendDisposal.getNhiExtendTreatmentProcedures() != null) {
                     Set<Long> updateIds = updateNhiExtendDisposal.getNhiExtendTreatmentProcedures().stream()
                         .filter(Objects::nonNull)
