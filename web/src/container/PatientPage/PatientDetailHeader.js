@@ -44,6 +44,16 @@ const InfoContainer = styled.div`
       margin: 0px 10px;
     }
   }
+  @media (max-width: 600px) {
+    font-size: 15px;
+    & > :first-child {
+      margin-left: 1%;
+      display: grid;
+      & > img {
+        display: none;
+      }
+    }
+  }
 
   & > :nth-child(2) {
     margin-left: auto;
@@ -60,9 +70,8 @@ const InfoContainer = styled.div`
       height: 14px;
       margin-right: 8px;
     }
-
     @media (max-width: 600px) {
-      display: none;
+      margin-right: 2%;
     }
   }
 `;

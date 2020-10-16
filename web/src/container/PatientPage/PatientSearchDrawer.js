@@ -56,7 +56,6 @@ function PatientSearchDrawer(props) {
           changeDrawerVisible(false);
         }}
         visible={drawerOpen}
-        // visible
         placement="top"
         height="80%"
       >

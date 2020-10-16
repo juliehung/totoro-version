@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { Input, Button } from 'antd';
 
@@ -15,20 +15,23 @@ const SearchContainer = styled.div`
 
 function PatientSearchInput(props) {
   const { searchPatient } = props;
-  const [searchText, setSearchText] = useState('');
+  const ref = useRef(null);
 
   return (
     <SearchContainer>
       <Input
         size="large"
         placeholder="搜尋病患"
-        value={searchText}
-        onChange={e => {
-          setSearchText(e.target.value);
-        }}
         allowClear
+        ref={ref}
+        onPressEnter={() => searchPatient(ref.current.state.value)}
       />
-      <Button size="large" type="primary" onClick={() => searchPatient(searchText)} icon={<SearchOutlined />} />
+      <Button
+        size="large"
+        type="primary"
+        onClick={() => searchPatient(ref.current.state.value)}
+        icon={<SearchOutlined />}
+      />
     </SearchContainer>
   );
 }
