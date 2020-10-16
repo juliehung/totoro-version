@@ -21,31 +21,31 @@ export default class Patient {
   };
 
   static searchByName = async searchText => {
-    const requestURL = `${businessRequestUrl}/name?search=${searchText}`;
+    const requestURL = `${businessRequestUrl}/name?search=${searchText}&size=50`;
     const result = await request(requestURL);
     return result;
   };
 
   static searchByBirth = async searchText => {
-    const requestURL = `${businessRequestUrl}/birth?search=${searchText}&format=ROC`;
+    const requestURL = `${businessRequestUrl}/birth?search=${searchText}&format=ROC&size=50`;
     const result = await request(requestURL);
     return result;
   };
 
   static searchByPhone = async searchText => {
-    const requestURL = `${businessRequestUrl}/phone?search=${searchText}`;
+    const requestURL = `${businessRequestUrl}/phone?search=${searchText}&size=50`;
     const result = await request(requestURL);
     return result;
   };
 
   static searchByMedicalId = async searchText => {
-    const requestURL = `${businessRequestUrl}/medical-id?search=${searchText}`;
+    const requestURL = `${businessRequestUrl}/medical-id?search=${searchText}&size=50`;
     const result = await request(requestURL);
     return result;
   };
 
   static searchByNationalId = async searchText => {
-    const requestURL = `${businessRequestUrl}/national-id?search=${searchText}`;
+    const requestURL = `${businessRequestUrl}/national-id?search=${searchText}&size=50`;
     const result = await request(requestURL);
     return result;
   };

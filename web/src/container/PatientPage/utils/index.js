@@ -6,6 +6,7 @@ import convertAppointmentToCardObject from './convertAppointmentToCardObject';
 import dateStringWithNewLine from './dateStringWithNewLine';
 import toRocString from './toRocString';
 import convertNhiExtendPatientToPatientStatus from './convertNhiExtendPatientToPatientStatus';
+import appendAmountOnTitle from './appendAmountOnTitle';
 
 export {
   convertTreatmentProcedureToTableObject,
@@ -16,4 +17,5 @@ export {
   dateStringWithNewLine,
   toRocString,
   convertNhiExtendPatientToPatientStatus,
+  appendAmountOnTitle,
 };

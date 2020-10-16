@@ -164,6 +164,6 @@ export function searchPatient(text) {
   return { type: SEARCH_PATIENTS_START, text };
 }
 
-export function searchPatientSuccess(patients) {
-  return { type: SEARCH_PATIENT_SUCCESS, patients };
+export function searchPatientSuccess(patients, searchText) {
+  return { type: SEARCH_PATIENT_SUCCESS, patients, searchText };
 }

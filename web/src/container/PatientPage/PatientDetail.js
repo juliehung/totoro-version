@@ -17,7 +17,7 @@ const Container = styled.div`
 //#endregion
 
 function PatientDetail(props) {
-  const { id, initPatientDetail, isPatientNotFound, spinning } = props;
+  const { id, initPatientDetail, isPatientNotFound, spinning, searchPatientDrawerOpen } = props;
 
   useEffect(() => {
     initPatientDetail(id);
@@ -32,7 +32,7 @@ function PatientDetail(props) {
         <PatientDetailContent />
         <CreateAppointmentModal />
         <AppointmentListModal />
-        <SarchPatientButton />
+        {!searchPatientDrawerOpen && <SarchPatientButton />}
       </Container>
     </Spin>
   );
@@ -41,6 +41,7 @@ function PatientDetail(props) {
 const mapStateToProps = ({ patientPageReducer }) => ({
   isPatientNotFound: patientPageReducer.common.isPatientNotFound,
   spinning: patientPageReducer.common.loading,
+  searchPatientDrawerOpen: patientPageReducer.common.drawerOpen,
 });
 
 const mapDispatchToProps = { initPatientDetail };
