@@ -3,7 +3,7 @@ import { GET_RECENT_TREATMENT_PROCEDURE, GET_RECENT_TREATMENT_PROCEDURE_SUCCESS 
 
 const initState = {
   loading: false,
-  treatmentProcedures: [],
+  recentTreatmentProcedures: [],
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -15,7 +15,7 @@ const treatmentProcedure = (state = initState, action) =>
         break;
       case GET_RECENT_TREATMENT_PROCEDURE_SUCCESS:
         draft.loading = false;
-        draft.treatmentProcedures = action.treatmentProcedures;
+        draft.recentTreatmentProcedures = action.treatmentProcedures;
         break;
       default:
         break;

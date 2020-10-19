@@ -15,8 +15,7 @@ const Container = styled.div`
   @media (min-width: 1000px) {
     display: grid;
     grid-template-columns: 20fr 10fr 30fr 5fr 10fr 25fr;
-    grid-template-row: 1fr 1fr;
-    grid-gap: 10px;
+    grid-gap: 15px;
 
     & > :nth-child(2) {
       grid-row: 1;

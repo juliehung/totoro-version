@@ -7,6 +7,7 @@ import dateStringWithNewLine from './dateStringWithNewLine';
 import toRocString from './toRocString';
 import convertNhiExtendPatientToPatientStatus from './convertNhiExtendPatientToPatientStatus';
 import appendAmountOnTitle from './appendAmountOnTitle';
+import convertDisposalsToTreatmentsAndPrescriptions from './convertDisposalsToTreatmentsAndPrescriptions';
 
 export {
   convertTreatmentProcedureToTableObject,
@@ -18,4 +19,5 @@ export {
   toRocString,
   convertNhiExtendPatientToPatientStatus,
   appendAmountOnTitle,
+  convertDisposalsToTreatmentsAndPrescriptions,
 };

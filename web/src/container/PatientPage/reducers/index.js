@@ -7,6 +7,8 @@ import nhiExtendPatient from './nhiExtendPatient';
 import appointment from './appointment';
 import createAppointment from './createAppointment';
 import searchPatient from './searchPatient';
+import disposal from './disposal';
+import docNpHistory from './docNpHistory';
 
 const patientPageReducer = combineReducers({
   common,
@@ -17,6 +19,8 @@ const patientPageReducer = combineReducers({
   appointment,
   createAppointment,
   searchPatient,
+  disposal,
+  docNpHistory,
 });
 
 export default patientPageReducer;

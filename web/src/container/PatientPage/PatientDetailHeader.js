@@ -61,6 +61,7 @@ const InfoContainer = styled.div`
     font-size: 14px;
     font-weight: 600;
     border-radius: 16px;
+    color: #fff;
     background-color: #ff9ca8;
     padding: 5px 15px;
     display: flex;
@@ -102,7 +103,7 @@ const XrayContainer = styled.div`
 //#endregion
 
 function PatientDetailHeader(props) {
-  const { patient, openXray, xRayVendors } = props;
+  const { patient, openXray, xRayVendors, lastestDocNpId } = props;
 
   const AvatarSrc = patient.gender === 'MALE' ? man : patient.gender === 'FEMALE' ? woman : defaultAvatar;
 
@@ -120,10 +121,14 @@ function PatientDetailHeader(props) {
             {patient.birth} ({patient?.age?.year}Y{patient?.age?.month}M)
           </span>
         </div>
-        <div>
+        <a
+          href={lastestDocNpId ? `/#/q/history/${lastestDocNpId}` : `/#/q/${patient.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <img src={editIcon} alt="editIcon" />
           <span>病歷表首頁</span>
-        </div>
+        </a>
       </InfoContainer>
       <XrayContainer>
         {xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
@@ -166,6 +171,11 @@ function PatientDetailHeader(props) {
 const mapStateToProps = ({ patientPageReducer, settingPageReducer }) => ({
   patient: convertPatientToHeaderObject(patientPageReducer.patient.patient),
   xRayVendors: settingPageReducer.configurations.config.xRayVendors,
+  lastestDocNpId: patientPageReducer.docNpHistory.docNps
+    ?.map?.(d => d.id)
+    ?.reduce?.((a, b) => {
+      return Math.max(a, b);
+    }, null),
 });
 
 const mapDispatchToProps = { openXray };

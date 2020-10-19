@@ -9,7 +9,6 @@ import { GApageView } from '../../ga';
 import { parseDateToString } from './utils/parseDateToString';
 
 //#region
-
 const Container = styled.div`
   position: fixed;
   height: 100%;
@@ -86,10 +85,17 @@ const StyledButton = styled(Button)`
   border-radius: 4px !important;
 `;
 
+const ButtonsContainer = styled.div`
+  & > * {
+    margin: 0 20px;
+  }
+`;
+
 //#endregion
 
 function Form(props) {
   const { match, getDoc, isRoc, patient } = props;
+
   useEffect(() => {
     GApageView();
   }, []);
@@ -213,14 +219,19 @@ function Form(props) {
           </ImageContainer>
         )}
       </FormContainer>
-      <StyledButton
-        type="primary"
-        onClick={() => {
-          window.close();
-        }}
-      >
-        關閉分頁
-      </StyledButton>
+      <ButtonsContainer>
+        <a href={`/#/q/${patient.id}`}>
+          <StyledButton>編輯內容</StyledButton>
+        </a>
+        <StyledButton
+          type="primary"
+          onClick={() => {
+            window.close();
+          }}
+        >
+          關閉分頁
+        </StyledButton>
+      </ButtonsContainer>
     </Container>
   );
 }

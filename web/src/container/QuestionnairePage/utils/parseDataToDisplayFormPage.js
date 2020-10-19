@@ -2,6 +2,7 @@ import moment from 'moment';
 import { GenderOption, CareerOption, MarriageOption, RelationshipOption } from '../constant_options';
 
 export function parseDataToDisplayFormPage(patient) {
+  const id = patient.id;
   const name = patient.name;
   const birth = patient.birth;
   const nationalId = patient.nationalId;
@@ -58,6 +59,7 @@ export function parseDataToDisplayFormPage(patient) {
   const special = [pregnantString, smokingString].filter(s => s).join(', ');
 
   const patientForDisplay = {
+    id,
     name,
     birth,
     nationalId,

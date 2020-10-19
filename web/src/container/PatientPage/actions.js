@@ -4,6 +4,8 @@ import {
   INIT_PATIENT_DETAIL,
   PATIENT_NOT_FOUND,
   GET_PATIENT_SUCCESS,
+  GET_DISPOSAL,
+  GET_DISPOSAL_SUCCESS,
   GET_RECENT_TREATMENT_PROCEDURE,
   GET_RECENT_TREATMENT_PROCEDURE_SUCCESS,
   GET_ACCUMULATED_MEDICAL_RECORD,
@@ -12,6 +14,8 @@ import {
   GET_NHI_EXTEND_PATIENT_SUCCESS,
   GET_APPOINTMENT,
   GET_APPOINTMENT_SUCCESS,
+  GET_DOC_NP_HISTORY,
+  GET_DOC_NP_HISTORY_SUCCESS,
   ON_LEAVE_PAGE,
   CHANGE_CLINIC_NOTE,
   ADD_DATE_TO_CLINIC_NOTE,
@@ -32,6 +36,7 @@ import {
   CHANGE_APPOINTMENT_LIST_MODAL_VISIBLE,
   SEARCH_PATIENTS_START,
   SEARCH_PATIENT_SUCCESS,
+  CHANGE_TREATMENT_LIST_MODAL_VISIBLE,
 } from './constant';
 
 export function changeDrawerVisible(visible) {
@@ -52,6 +57,14 @@ export function patientNotFound() {
 
 export function getPatientSuccess(patient) {
   return { type: GET_PATIENT_SUCCESS, patient };
+}
+
+export function getDisposal() {
+  return { type: GET_DISPOSAL };
+}
+
+export function getDisposalSuccess(disposals) {
+  return { type: GET_DISPOSAL_SUCCESS, disposals };
 }
 
 export function getRecentTreatmentProcedure() {
@@ -84,6 +97,14 @@ export function getAppointment() {
 
 export function getAppointmentSuccess(appointment) {
   return { type: GET_APPOINTMENT_SUCCESS, appointment };
+}
+
+export function getDocNpHistory() {
+  return { type: GET_DOC_NP_HISTORY };
+}
+
+export function getDocNpHistorySuccess(docNps) {
+  return { type: GET_DOC_NP_HISTORY_SUCCESS, docNps };
 }
 
 export function onLeavePage() {
@@ -166,4 +187,9 @@ export function searchPatient(text) {
 
 export function searchPatientSuccess(patients, searchText) {
   return { type: SEARCH_PATIENT_SUCCESS, patients, searchText };
+}
+
+// treatment list modal
+export function changeTreatmentListModalVisible(visible) {
+  return { type: CHANGE_TREATMENT_LIST_MODAL_VISIBLE, visible };
 }
