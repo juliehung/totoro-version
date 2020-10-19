@@ -4,7 +4,7 @@ import { Modal, Table, Badge } from 'antd';
 import styled from 'styled-components';
 import moment from 'moment';
 import { changeAppointmentListModalVisible } from './actions';
-import { convertAppointmentToCardObject } from './utils';
+import { convertAppointmentToCardObject, toRocString } from './utils';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 const appointmentStatus = { comming: 1, done: 2, cancel: 3, noShow: 4 };
@@ -17,19 +17,19 @@ const columns = doctors => [
     sorter: (a, b) => moment(a.expectedArrivalTime) - moment(b.expectedArrivalTime),
     sortDirections: ['descend', 'ascend'],
     defaultSortOrder: 'descend',
+    render: date => toRocString(date),
   },
   {
     title: '需時',
     dataIndex: 'requiredTreatmentTime',
     key: 'requiredTreatmentTime',
+    width: '10%',
   },
   {
     title: '主治醫師',
     dataIndex: 'doctor',
     key: 'doctor',
-    render: doctor => {
-      return doctor?.firstName;
-    },
+    render: doctor => doctor?.firstName ?? '',
     filters: doctors.map(d => ({ text: d.name, value: d.id })),
     onFilter: (value, record) => record?.doctor?.id === value,
   },
@@ -37,6 +37,7 @@ const columns = doctors => [
     title: '備註',
     dataIndex: 'note',
     key: 'note',
+    width: '40%',
   },
   {
     title: '狀態',
