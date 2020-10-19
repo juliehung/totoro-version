@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Modal, Table, Badge, Select } from 'antd';
+import { Modal, Table, Badge } from 'antd';
 import styled from 'styled-components';
 import moment from 'moment';
 import { changeAppointmentListModalVisible } from './actions';
 import { convertAppointmentToCardObject } from './utils';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
-const { Option } = Select;
-
 const appointmentStatus = { comming: 1, done: 2, cancel: 3, noShow: 4 };
 
-const columns = [
+const columns = doctors => [
   {
     title: '預約日期',
     dataIndex: 'expectedArrivalTime',
@@ -32,6 +30,8 @@ const columns = [
     render: doctor => {
       return doctor?.firstName;
     },
+    filters: doctors.map(d => ({ text: d.name, value: d.id })),
+    onFilter: (value, record) => record?.doctor?.id === value,
   },
   {
     title: '備註',
@@ -141,34 +141,21 @@ const Title = styled.div`
   color: #222b45;
 `;
 
-const Sbutitle = styled.div`
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: space-between;
-  color: #8f9bb3;
-  font-size: 13px;
-`;
-
-const StyledSelect = styled(Select)`
-  width: 250px;
-`;
 //#endregion
 
 function AppointmentListModal(props) {
   const { visible, appointments, patient, changeAppointmentListModalVisible, doctors } = props;
-  const [selectedDoctorId, setSelectedDoctorId] = useState('all');
+
+  const totalAppointmentAmount = appointments?.length ?? 0;
 
   const title = (
     <Title>
       <span>{patient?.name}</span>
-      <span> 的預約紀錄</span>
+      <span>
+        的預約紀錄 <span>(共{totalAppointmentAmount}筆預約)</span>
+      </span>
     </Title>
   );
-
-  const filteredAppointments =
-    selectedDoctorId === 'all' ? appointments : appointments?.filter(a => a.doctor.id === selectedDoctorId) ?? [];
-
-  const filteredAppointmentAmount = filteredAppointments?.length ?? 0;
 
   return (
     <StyledModal
@@ -183,24 +170,9 @@ function AppointmentListModal(props) {
       }}
     >
       <Container>
-        <Sbutitle>
-          <StyledSelect placeholder="請選擇醫師" value={selectedDoctorId} onChange={setSelectedDoctorId}>
-            {[
-              <Option key={'all'} value={'all'}>
-                全診所醫師
-              </Option>,
-              ...doctors.map(d => (
-                <Option key={d.id} value={d.id}>
-                  {d.name}
-                </Option>
-              )),
-            ]}
-          </StyledSelect>
-          <span>共{filteredAppointmentAmount}筆預約</span>
-        </Sbutitle>
         <StyledTable
-          dataSource={filteredAppointments}
-          columns={columns}
+          dataSource={appointments}
+          columns={columns(doctors)}
           pagination={false}
           scroll={{ y: 400 }}
           rowKey={record => record.id}
