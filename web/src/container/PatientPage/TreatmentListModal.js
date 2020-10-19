@@ -1,32 +1,49 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Modal, Table, Select } from 'antd';
+import { Modal, Table } from 'antd';
 import styled from 'styled-components';
 import moment from 'moment';
 import { changeTreatmentListModalVisible } from './actions';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
-import { convertDisposalsToTreatmentsAndPrescriptions } from './utils';
+import { convertDisposalsToTreatmentsAndPrescriptions, toRocString } from './utils';
 
-const { Option } = Select;
-
-const columns = [
+const columns = doctors => [
   {
-    title: '建立日期',
-    dataIndex: 'expectedArrivalTime',
-    key: 'expectedArrivalTime',
-    sorter: (a, b) => moment(a.expectedArrivalTime) - moment(b.expectedArrivalTime),
+    title: '治療日期',
+    dataIndex: 'createdDate',
+    key: 'createdDate',
+    sorter: (a, b) => moment(a.createdDate) - moment(b.createdDate),
     sortDirections: ['descend', 'ascend'],
     defaultSortOrder: 'descend',
+    render: date => toRocString(date),
   },
   {
     title: '醫師',
     dataIndex: 'doctor',
     key: 'doctor',
+    render: doctor => doctors.find(d => d.id === doctor.id)?.name ?? doctor.id,
+    filters: doctors.map(d => ({ text: d.name, value: d.id })),
+    onFilter: (value, record) => value === record.doctor.id,
   },
   {
     title: '類別',
     dataIndex: 'category',
     key: 'category',
+    filters: [
+      {
+        text: '健保',
+        value: '健保',
+      },
+      {
+        text: '自費',
+        value: '自費',
+      },
+      {
+        text: '藥品',
+        value: '藥品',
+      },
+    ],
+    onFilter: (value, record) => value === record.category,
   },
   {
     title: '牙位(面)',
@@ -35,13 +52,15 @@ const columns = [
   },
   {
     title: '處置/項目/處方',
-    dataIndex: 'disposal',
+    dataIndex: 'title',
     key: 'title',
+    width: '25%',
   },
   {
     title: '國際病碼/項目資訊/處方內容',
     dataIndex: 'content',
     key: 'content',
+    width: '25%',
   },
 ];
 
@@ -50,7 +69,12 @@ const StyledModal = styled(Modal)`
   & .ant-modal-content {
     border-radius: 8px;
   }
-
+  & .ant-modal-header {
+    border-radius: 8px 8px 0 0;
+  }
+  & .ant-modal-body {
+    border-radius: 0 0 8px 8px;
+  }
   & .ant-modal-close {
     &:active {
       transform: translateY(2px) translateX(-2px);
@@ -75,6 +99,9 @@ const StyledModal = styled(Modal)`
       fill: black;
     }
   }
+  & .ant-modal-header {
+    background-color: #f8fafb;
+  }
 `;
 
 const Container = styled.div`
@@ -86,27 +113,26 @@ const Title = styled.div`
   font-weight: bold;
 `;
 
-const Sbutitle = styled.div`
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  color: #ccc;
+const StyledTable = styled(Table)`
+  & .ant-table-thead .ant-table-cell {
+    background-color: #f7f9fc;
+    &.ant-table-column-sort:hover {
+      background-color: #e8f0fc;
+    }
+  }
 `;
 
-const StyledSelect = styled(Select)`
-  width: 250px;
-`;
 //#endregion
 
 function TreatmentListModal(props) {
-  const { visible, patient, changeTreatmentListModalVisible, doctors } = props;
+  const { visible, patient, changeTreatmentListModalVisible, doctors, treatmentsAndPrescriptions } = props;
 
-  const [selectedDoctorId, setSelectedDoctorId] = useState('all');
+  const totaltreatmentAndPrescriptionAmount = treatmentsAndPrescriptions?.length ?? 0;
 
   const title = (
     <Title>
       <span>{patient?.name}</span>
-      <span> 的處置歷史</span>
+      <span>的 {totaltreatmentAndPrescriptionAmount} 筆治療歷史</span>
     </Title>
   );
 
@@ -123,24 +149,9 @@ function TreatmentListModal(props) {
       }}
     >
       <Container>
-        <Sbutitle>
-          <span>共{123}筆預約</span>
-          <StyledSelect placeholder="請選擇醫師" value={selectedDoctorId} onChange={setSelectedDoctorId}>
-            {[
-              <Option key={'all'} value={'all'}>
-                全診所醫師
-              </Option>,
-              ...doctors.map(d => (
-                <Option key={d.id} value={d.id}>
-                  {d.name}
-                </Option>
-              )),
-            ]}
-          </StyledSelect>
-        </Sbutitle>
-        <Table
-          dataSource={[]}
-          columns={columns}
+        <StyledTable
+          dataSource={treatmentsAndPrescriptions}
+          columns={columns(doctors)}
           pagination={false}
           scroll={{ y: 400 }}
           rowKey={record => record.id}
@@ -156,7 +167,7 @@ const mapStateToProps = ({ patientPageReducer, homePageReducer }) => {
     patient: patientPageReducer.patient.patient,
     visible: patientPageReducer.disposal.treatmentListModalVisible,
     doctors: extractDoctorsFromUser(homePageReducer.user.users)?.filter(d => d.activated) ?? [],
-    treatmentProcedures: convertDisposalsToTreatmentsAndPrescriptions(patientPageReducer.disposal.disposals),
+    treatmentsAndPrescriptions: convertDisposalsToTreatmentsAndPrescriptions(patientPageReducer.disposal.disposals),
   };
 };
 const mapDispatchToProps = { changeTreatmentListModalVisible };
