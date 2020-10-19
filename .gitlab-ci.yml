@@ -134,6 +134,7 @@ repackageByGradle:
 releaseWarToFirebase:
     stage: release
     only:
+        - tags
         - release
     dependencies:
         - repackageByGradle
