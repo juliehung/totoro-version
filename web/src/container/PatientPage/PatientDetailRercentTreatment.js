@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Container, Header, Content, Count, BlueDottedUnderlineText } from './component';
 import { Table } from 'antd';
 import { convertTreatmentProcedureToTableObject } from './utils';
+import { changeTreatmentListModalVisible } from './actions';
 
 //#region
 //#endregion
@@ -31,7 +32,7 @@ const columns = [
 ];
 
 function PatientDetailRercentTreatment(props) {
-  const { treatmentProcedures, loading, treatmentProceduresAmount } = props;
+  const { treatmentProcedures, loading, treatmentProceduresAmount, changeTreatmentListModalVisible } = props;
 
   return (
     <Container>
@@ -40,7 +41,13 @@ function PatientDetailRercentTreatment(props) {
           <span>近期治療</span>
           <Count>{treatmentProceduresAmount}</Count>
         </div>
-        <BlueDottedUnderlineText text={'詳細資訊'} />
+        <div
+          onClick={() => {
+            changeTreatmentListModalVisible(true);
+          }}
+        >
+          <BlueDottedUnderlineText text={'詳細資訊'} />
+        </div>
       </Header>
       <Content>
         <Table columns={columns} dataSource={treatmentProcedures} pagination={false} loading={loading} size="small" />
@@ -51,14 +58,14 @@ function PatientDetailRercentTreatment(props) {
 
 const mapStateToProps = ({ patientPageReducer }) => ({
   treatmentProcedures: convertTreatmentProcedureToTableObject(
-    patientPageReducer.treatmentProcedure.treatmentProcedures,
+    patientPageReducer.treatmentProcedure.recentTreatmentProcedures,
   ),
-  treatmentProceduresAmount: patientPageReducer.treatmentProcedure.treatmentProcedures
-    ? patientPageReducer.treatmentProcedure.treatmentProcedures.length
+  treatmentProceduresAmount: patientPageReducer.treatmentProcedure.recentTreatmentProcedures
+    ? patientPageReducer.treatmentProcedure.recentTreatmentProcedures.length
     : 0,
   loading: patientPageReducer.treatmentProcedure.loading,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { changeTreatmentListModalVisible };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientDetailRercentTreatment);
