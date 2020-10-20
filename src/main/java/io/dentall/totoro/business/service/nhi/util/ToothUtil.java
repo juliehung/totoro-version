@@ -1,9 +1,10 @@
 package io.dentall.totoro.business.service.nhi.util;
 
 import com.google.common.collect.ImmutableMap;
-import org.apache.http.util.Asserts;
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +48,7 @@ public class ToothUtil {
      * @return 解析 a74 並回傳 數個兩碼字串
      */
     public static List<String> splitA74(String a74) {
-        Asserts.notNull(a74, "a74");
-
-        return Arrays.asList(a74.split("(?<=\\G..)"));
+        return StringUtils.isNotBlank(a74) ? Arrays.asList(a74.split("(?<=\\G..)")) : new ArrayList<>();
     }
 
     /**
