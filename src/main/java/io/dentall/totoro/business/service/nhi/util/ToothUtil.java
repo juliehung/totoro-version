@@ -16,7 +16,7 @@ public class ToothUtil {
      */
     private static final Map<ToothConstraint, String> toothConstraintsFailureMessage =
         ImmutableMap.of(
-            ToothConstraint.FRONT_TOOTH, "限填前牙牙位，11~19, 21~29, 31~39, 41~49, 51~59, 61~69, 71~79, 81~89",
+            ToothConstraint.FRONT_TOOTH, "限填前牙牙位，11~14, 21~24, 31~34, 41~44, 51~54, 61~64, 71~74, 81~84, 19, 29, 39, 49, 59, 69, 79, 89, 99",
             ToothConstraint.PERMANENT_TOOTH, "限填恆牙牙位，11~19, 21~29, 31~39, 41~49"
         );
 
