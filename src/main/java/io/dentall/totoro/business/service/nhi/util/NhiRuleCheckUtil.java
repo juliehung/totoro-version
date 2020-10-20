@@ -298,8 +298,8 @@ public class NhiRuleCheckUtil {
                 new NhiExtendTreatmentProcedure()
                     .a71(DateTimeUtil.transformLocalDateToRocDate(Instant.now()))
                     .a73(code)
-                    .a74(vm.getTmpTreatmentA74())
-                    .a75(vm.getTmpTreatmentA75()));
+                    .a74(vm.getA74())
+                    .a75(vm.getA75()));
         }
 
         return dto;
@@ -660,7 +660,7 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 傳入 a74 自動切分為單牙，並依照 給定的 ToothConstraint 來辦定是否為核可牙位
+     * 傳入 a74 自動切分為單牙，不可為空，並依照 給定的 ToothConstraint 來判定是否為核可牙位
      *
      * @param dto 使用 nhiExtendTreatmentProcedure.a74
      * @param tc  提供例如 前牙限定、後牙限定、FM限定⋯⋯等 regex
@@ -674,6 +674,7 @@ public class NhiRuleCheckUtil {
             .validated(true);
 
         result.validated(
+            StringUtils.isNotBlank(dto.getNhiExtendTreatmentProcedure().getA74()) &&
             !ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74())
                 .stream()
                 .anyMatch(tooth -> !ToothUtil.validatedToothConstraint(tc, tooth))
@@ -682,7 +683,7 @@ public class NhiRuleCheckUtil {
         if (!result.isValidated()) {
             result
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                .validateTitle("傳入 a74 自動切分為單牙，並依照 給定的 ToothConstraint 來辦定是否為核可牙位")
+                .validateTitle("傳入 a74 自動切分為單牙，不可為空，並依照 給定的 ToothConstraint 來判定是否為核可牙位")
                 .message(ToothUtil.getToothConstraintsFailureMessage(tc));
         }
 
