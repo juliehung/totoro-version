@@ -309,6 +309,11 @@ public class TableGenerator {
         }
 
         @Override
+        public String getDisplayName() {
+            return null;
+        }
+
+        @Override
         public String getName() {
             return null;
         }
