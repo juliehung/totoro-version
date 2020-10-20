@@ -34,6 +34,9 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @SequenceGenerator(name = "sequencePatientGenerator", sequenceName = "seq_patient", allocationSize = 1)
     private Long id;
 
+    @Column(name = "display_name")
+    private String displayName;
+
     @NotNull
     @Column(name = "name", nullable = false)
     private String name;
@@ -887,6 +890,19 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.teethGraphPermanentSwitch = teethGraphPermanentSwitch;
     }
 
+    public Patient displayName(String displayName) {
+        this.displayName = displayName;
+        return this;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -912,6 +928,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         return "Patient{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", displayName='" + getDisplayName() + "'" +
             ", phone='" + getPhone() + "'" +
             ", gender='" + getGender() + "'" +
             ", birth='" + getBirth() + "'" +
