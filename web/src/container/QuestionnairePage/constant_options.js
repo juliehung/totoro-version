@@ -83,4 +83,10 @@ export const tags = [
   { id: 30, key: 'D', jhi_type: 'OTHER', value: '曾住院或接受手術', code: 30 },
   { id: 31, key: 'E', jhi_type: 'OTHER', value: '一年內服長期藥物(含避孕藥)', code: 31 },
   { id: 32, key: 'F', jhi_type: 'OTHER', value: '曾經接受放射線治療或化學治療', code: 32 },
+  { id: 33, key: 'G', jhi_type: 'ALLERGY', value: 'Amoxicillin', code: 33 },
+  { id: 34, key: 'H', jhi_type: 'ALLERGY', value: 'Voren', code: 34 },
+  { id: 35, key: 'I', jhi_type: 'ALLERGY', value: '四環黴素', code: 35 },
+  { id: 36, key: 'J', jhi_type: 'ALLERGY', value: 'Ibuprofen', code: 36 },
+  { id: 37, key: 'K', jhi_type: 'ALLERGY', value: 'Ponstan', code: 37 },
+  { id: 38, key: 'L', jhi_type: 'ALLERGY', value: 'Acetaminopehn', code: 38 },
 ];
