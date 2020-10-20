@@ -1,5 +1,7 @@
 package io.dentall.totoro.business.service.nhi.util;
 
+import io.dentall.totoro.business.service.NhiRuleCheckInfoType;
+import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
@@ -71,6 +73,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 單顆牙齒是否為 乳牙（字串兩碼且為 51-59, 61-69, 71-79, 81-89）
+     *
      * @param singleToothPosition 單一牙位
      * @return boolean 是否為乳牙
      */
@@ -88,6 +91,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 單顆牙齒是否為 恆牙（字串兩碼且為 11-19, 21-29, 31-39, 41-49）
+     *
      * @param singleToothPosition 單一牙位
      * @return boolean 是否為恆牙
      */
@@ -186,8 +190,9 @@ public class NhiRuleCheckUtil {
 
     /**
      * 用來把數個後端檢核結果總結，並以前端所需格式輸出
+     *
      * @param dto 後端檢驗後的結果
-     * @param vm 前端檢驗後的結果
+     * @param vm  前端檢驗後的結果
      */
     public void addResultToVm(@NotNull NhiRuleCheckResultDTO dto, @NotNull NhiRuleCheckResultVM vm) {
 
@@ -205,7 +210,8 @@ public class NhiRuleCheckUtil {
 
     /**
      * 查詢 patient 並將取得資料塞入 dto 以利後續使用，或 response as not found
-     * @param dto dto.patient 將會被 assign db data
+     *
+     * @param dto       dto.patient 將會被 assign db data
      * @param patientId 病患 id for query db
      */
     private void assignDtoByPatientId(@NotNull NhiRuleCheckDTO dto, @NotNull Long patientId) {
@@ -217,7 +223,8 @@ public class NhiRuleCheckUtil {
 
     /**
      * 查詢 nhi extend disposal 並將取得資料塞入 dto 以利後續使用，或 response as not found
-     * @param dto dto.nhiExtendDisposal 將會被 assign db data
+     *
+     * @param dto         dto.nhiExtendDisposal 將會被 assign db data
      * @param treatmentId 診療 id
      */
     private void assignDtoByNhiExtendDisposalId(@NotNull NhiRuleCheckDTO dto, @NotNull Long treatmentId) {
@@ -232,10 +239,11 @@ public class NhiRuleCheckUtil {
 
     /**
      * 檢核輸入 code(a73), patient, 是否存在且關係匹，並將取得資料塞入 dto 以利後續使用配，或 response as not found
-     * @param dto dto.nhiExtendTreatmentProcedure 將會被 assign db data
-     * @param code a.k.a a73 健保代碼
+     *
+     * @param dto                           dto.nhiExtendTreatmentProcedure 將會被 assign db data
+     * @param code                          a.k.a a73 健保代碼
      * @param nhiExtendTreatmentProcedureId 診療 id
-     * @param patientId 病患 id
+     * @param patientId                     病患 id
      */
     private void assignDtoByNhiExtendTreatmentProcedureId(
         @NotNull NhiRuleCheckDTO dto,
@@ -269,7 +277,7 @@ public class NhiRuleCheckUtil {
      * 並查詢取得對應資料。
      *
      * @param code 來源於 api path，及其預計想檢核的目標
-     * @param vm 來自於前端的輸入
+     * @param vm   來自於前端的輸入
      * @return 後續檢核統一 `輸入` 的介面
      */
     public NhiRuleCheckDTO convertVmToDto(@NotNull String code, @NotNull NhiRuleCheckVM vm) {
@@ -290,8 +298,8 @@ public class NhiRuleCheckUtil {
                 new NhiExtendTreatmentProcedure()
                     .a71(DateTimeUtil.transformLocalDateToRocDate(Instant.now()))
                     .a73(code)
-                    .a74(vm.getTmpTreatmentA74())
-                    .a75(vm.getTmpTreatmentA75()));
+                    .a74(vm.getA74())
+                    .a75(vm.getA75()));
         }
 
         return dto;
@@ -299,6 +307,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 病患 是否在 診療 當下年紀 >= 12 歲
+     *
      * @param dto 使用 patient.birth, nhiExtendTreatmentProcedure.A71
      * @return 後續檢核統一 `回傳` 的介面
      */
@@ -318,12 +327,15 @@ public class NhiRuleCheckUtil {
         }
 
         if (!result.isValidated()) {
-            result.setMessage(
-                String.format(
-                    "%s 須在病患年滿 12 歲，方能申報",
-                    dto.getNhiExtendTreatmentProcedure().getA73()
-                )
-            );
+            result
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .validateTitle("病患是否在診療當下年紀小於 12 歲")
+                .message(
+                    String.format(
+                        "%s 須在病患年滿 12 歲，方能申報",
+                        dto.getNhiExtendTreatmentProcedure().getA73()
+                    )
+                );
         }
 
         return result;
@@ -331,6 +343,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 病患 是否在 診療 當下年紀 >= 12 歲
+     *
      * @param dto 使用 patient.birth, nhiExtendTreatmentProcedure.A71
      * @return 後續檢核統一 `回傳` 的介面
      */
@@ -350,12 +363,15 @@ public class NhiRuleCheckUtil {
         }
 
         if (!result.isValidated()) {
-            result.setMessage(
-                String.format(
-                    "%s 須在病患未滿 12 歲，方能申報",
-                    dto.getNhiExtendTreatmentProcedure().getA73()
-                )
-            );
+            result
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .validateTitle("病患是否在診療當下年紀大於 12 歲")
+                .message(
+                    String.format(
+                        "%s 須在病患未滿 12 歲，方能申報",
+                        dto.getNhiExtendTreatmentProcedure().getA73()
+                    )
+                );
         }
 
         return result;
@@ -363,6 +379,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 病患 是否在 診療 當下年紀 >= 6 歲
+     *
      * @param dto 使用 patient.birth, nhiExtendTreatmentProcedure.A71
      * @return 後續檢核統一 `回傳` 的介面
      */
@@ -381,12 +398,15 @@ public class NhiRuleCheckUtil {
         }
 
         if (!result.isValidated()) {
-            result.setMessage(
-                String.format(
-                    "%s 須在病患未滿 6 歲，方能申報",
-                    dto.getNhiExtendTreatmentProcedure().getA73()
-                )
-            );
+            result
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .validateTitle("病患是否在診療當下年紀大於等於 6 歲")
+                .message(
+                    String.format(
+                        "%s 須在病患未滿 6 歲，方能申報",
+                        dto.getNhiExtendTreatmentProcedure().getA73()
+                    )
+                );
         }
 
         return result;
@@ -394,11 +414,12 @@ public class NhiRuleCheckUtil {
 
     /**
      * 尋找 患者 在 時間區間 內，屬於 建制的健保代碼清單中，且 未超過時間區間 的 NhiExtendTreatmentProcedure
-     * @param patientId 病患 id
-     * @param treatmentProcedureId 欲檢驗的處置 id
+     *
+     * @param patientId                     病患 id
+     * @param treatmentProcedureId          欲檢驗的處置 id
      * @param currentTreatmentProcedureDate 當前處置的日期 a71 （此項是為了減少重複所加）
-     * @param codes 被限制的健保代碼清單
-     * @param limitDays 間隔時間
+     * @param codes                         被限制的健保代碼清單
+     * @param limitDays                     間隔時間
      * @return null 或 有衝突的 NhiExtendTreatmentProcedure
      */
     public NhiExtendTreatmentProcedure findPatientTreatmentProcedureAtCodesAndBeforePeriod(
@@ -429,16 +450,17 @@ public class NhiRuleCheckUtil {
                 }
             });
 
-        return matchedNhiExtendTreatmentProcedure.size() > 0 ?matchedNhiExtendTreatmentProcedure.get(0) :null;
+        return matchedNhiExtendTreatmentProcedure.size() > 0 ? matchedNhiExtendTreatmentProcedure.get(0) : null;
     }
 
     /**
      * 尋找 患者 在 時間區間 內，屬於 建制的健保代碼清單中，且 未超過時間區間 的 NhiMedicalRecord
-     * @param patientId 病患 id
+     *
+     * @param patientId                     病患 id
      * @param currentTreatmentProcedureDate 當前處置的日期 a71 （此項是為了減少重複所加）
-     * @param codes 被限制的健保代碼清單
-     * @param limitDays 間隔時間
-     * @return  null 或 有衝突的 NhiMedicalRecord
+     * @param codes                         被限制的健保代碼清單
+     * @param limitDays                     間隔時間
+     * @return null 或 有衝突的 NhiMedicalRecord
      */
     public NhiMedicalRecord findPatientMediaRecordAtCodesAndBeforePeriod(
         Long patientId,
@@ -463,13 +485,14 @@ public class NhiRuleCheckUtil {
                 }
             });
 
-        return matchedNhiMedicalRecord.size() > 0 ?matchedNhiMedicalRecord.get(0) :null;
+        return matchedNhiMedicalRecord.size() > 0 ? matchedNhiMedicalRecord.get(0) : null;
     }
 
     /**
      * 指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。
-     * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
-     * @param codes 被限制的健保代碼清單
+     *
+     * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
+     * @param codes     被限制的健保代碼清單
      * @param limitDays 間隔時間
      * @return 後續檢核統一 `回傳` 的介面
      */
@@ -496,17 +519,20 @@ public class NhiRuleCheckUtil {
         if (!result.isValidated()) {
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
 
-            result.setMessage(
-                String.format(
-                    "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
-                    dto.getNhiExtendTreatmentProcedure().getA73(),
-                    codes.toString(),
-                    limitDays.getDays(),
-                    match.getA73(),
-                    matchDate,
-                    Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
-                )
-            );
+            result
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
+                .message(
+                    String.format(
+                        "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        codes.toString(),
+                        limitDays.getDays(),
+                        match.getA73(),
+                        matchDate,
+                        Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
+                    )
+                );
         }
 
         return result;
@@ -514,8 +540,9 @@ public class NhiRuleCheckUtil {
 
     /**
      * 指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達間隔 limitDays。
-     * @param dto 使用 patient.id
-     * @param codes 被限制的健保代碼清單
+     *
+     * @param dto       使用 patient.id
+     * @param codes     被限制的健保代碼清單
      * @param limitDays 間隔時間
      * @return 後續檢核統一 `回傳` 的介面
      */
@@ -538,17 +565,21 @@ public class NhiRuleCheckUtil {
         if (!result.isValidated()) {
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getDate());
 
-            result.setMessage(
-                String.format(
-                    "%s 不可與 %s 在 %d 天內再次申報，上次在他院所申報 %s (%s, %d 天前)",
-                    dto.getNhiExtendTreatmentProcedure().getA73(),
-                    codes.toString(),
-                    limitDays.getDays(),
-                    match.getNhiCode(),
-                    matchDate,
-                    Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
-                )
-            );
+            result
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .nhiRuleCheckSourceType(NhiRuleCheckSourceType.NHI_CARD_RECORD)
+                .validateTitle("指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
+                .message(
+                    String.format(
+                        "%s 不可與 %s 在 %d 天內再次申報，上次在他院所申報 %s (%s, %d 天前)",
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        codes.toString(),
+                        limitDays.getDays(),
+                        match.getNhiCode(),
+                        matchDate,
+                        Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
+                    )
+                );
         }
 
         return result;
@@ -556,11 +587,14 @@ public class NhiRuleCheckUtil {
 
     /**
      * 回訊息作為提醒用，檢核狀況算審核通過
+     *
      * @param message 作為提醒用訊息
      * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO addNotification(String message) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.INFO)
+            .validateTitle("回訊息作為提醒用，檢核狀況算審核通過")
             .validated(true)
             .message(message);
 
@@ -569,8 +603,9 @@ public class NhiRuleCheckUtil {
 
     /**
      * 限制牙面在 isAllLimitedSurface 以下
+     *
      * @param dto 使用 nhiExtendTreatmentProcedure.a75
-     * @param sc 牙面限制
+     * @param sc  牙面限制
      * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO isAllLimitedSurface(
@@ -584,9 +619,12 @@ public class NhiRuleCheckUtil {
                 result
                     .validated(
                         dto.getNhiExtendTreatmentProcedure().getA75() == null ||
-                        dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_2_SURFACES.getLimitNumber());
+                            dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_2_SURFACES.getLimitNumber());
                 if (!result.isValidated()) {
-                    result.setMessage(SurfaceConstraint.MAX_2_SURFACES.getErrorMessage());
+                    result
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                        .validateTitle("限制牙面在 isAllLimitedSurface 以下")
+                        .message(SurfaceConstraint.MAX_2_SURFACES.getErrorMessage());
                 }
 
                 break;
@@ -594,18 +632,24 @@ public class NhiRuleCheckUtil {
                 result
                     .validated(
                         dto.getNhiExtendTreatmentProcedure().getA75() == null ||
-                        dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_3_SURFACES.getLimitNumber());
+                            dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_3_SURFACES.getLimitNumber());
                 if (!result.isValidated()) {
-                    result.setMessage(SurfaceConstraint.MAX_3_SURFACES.getErrorMessage());
+                    result
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                        .validateTitle("限制牙面在 isAllLimitedSurface 以下")
+                        .message(SurfaceConstraint.MAX_3_SURFACES.getErrorMessage());
                 }
                 break;
             case MUST_HAVE_M_D_O:
                 result
                     .validated(
                         dto.getNhiExtendTreatmentProcedure().getA75() != null &&
-                        dto.getNhiExtendTreatmentProcedure().getA75().matches(SurfaceConstraint.MUST_HAVE_M_D_O.getLimitRegex()));
+                            dto.getNhiExtendTreatmentProcedure().getA75().matches(SurfaceConstraint.MUST_HAVE_M_D_O.getLimitRegex()));
                 if (!result.isValidated()) {
-                    result.setMessage(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage());
+                    result
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                        .validateTitle("限制牙面在 isAllLimitedSurface 以下")
+                        .message(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage());
                 }
                 break;
             default:
@@ -616,10 +660,10 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 傳入 a74 自動切分為單牙，並依照 給定的 ToothConstraint 來辦定是否為核可牙位
+     * 傳入 a74 自動切分為單牙，不可為空，並依照 給定的 ToothConstraint 來判定是否為核可牙位
      *
      * @param dto 使用 nhiExtendTreatmentProcedure.a74
-     * @param tc 提供例如 前牙限定、後牙限定、FM限定⋯⋯等 regex
+     * @param tc  提供例如 前牙限定、後牙限定、FM限定⋯⋯等 regex
      * @return
      */
     public NhiRuleCheckResultDTO isAllLimitedTooth(
@@ -630,13 +674,17 @@ public class NhiRuleCheckUtil {
             .validated(true);
 
         result.validated(
+            StringUtils.isNotBlank(dto.getNhiExtendTreatmentProcedure().getA74()) &&
             !ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74())
                 .stream()
                 .anyMatch(tooth -> !ToothUtil.validatedToothConstraint(tc, tooth))
         );
 
         if (!result.isValidated()) {
-            result.setMessage(ToothUtil.getToothConstraintsFailureMessage(tc));
+            result
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .validateTitle("傳入 a74 自動切分為單牙，不可為空，並依照 給定的 ToothConstraint 來判定是否為核可牙位")
+                .message(ToothUtil.getToothConstraintsFailureMessage(tc));
         }
 
         return result;
@@ -644,8 +692,9 @@ public class NhiRuleCheckUtil {
 
     /**
      * 病患 牙齒 是否有 健保代碼 於某時間前已被申報過
-     * @param dto 使用 nhiExtendTreatmentProcedure.id/a71/a73/a74, patient.id,
-     * @param codes 被限制的健保代碼清單
+     *
+     * @param dto                     使用 nhiExtendTreatmentProcedure.id/a71/a73/a74, patient.id,
+     * @param codes                   被限制的健保代碼清單
      * @param deciduousToothLimitDays 為乳牙時，所需時間間隔
      * @param permanentToothLimitDays 為恆牙時，所需時間間隔
      * @return 後續檢核統一 `回傳` 的介面
@@ -694,19 +743,22 @@ public class NhiRuleCheckUtil {
                 }
 
                 LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
-                result.setValidated(false);
-                result.setMessage(
-                    String.format(
-                        "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
-                        dto.getNhiExtendTreatmentProcedure().getA73(),
-                        codes.toString(),
-                        toothUsedPeriod.get(match.getA74()).getDays(),
-                        match.getA73(),
-                        match.getA74(),
-                        matchDate,
-                        Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
-                    )
-                );
+                result
+                    .validated(false)
+                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                    .validateTitle("病患 牙齒 是否有 健保代碼 於某時間前已被申報過")
+                    .message(
+                        String.format(
+                            "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            codes.toString(),
+                            toothUsedPeriod.get(match.getA74()).getDays(),
+                            match.getA73(),
+                            match.getA74(),
+                            matchDate,
+                            Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
+                        )
+                    );
             });
 
         return result;
@@ -714,19 +766,23 @@ public class NhiRuleCheckUtil {
 
     /**
      * 檢查 nhi extend disposal 是否被調整為 指定部分代碼
+     *
      * @param dto 使用 nhiExtendDisposal.patientIdentity
-     * @param cc 部分負擔代碼 a.k.a patientIdentity
+     * @param cc  部分負擔代碼 a.k.a patientIdentity
      * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO isPatientIdentityInclude(NhiRuleCheckDTO dto, CopaymentCode cc) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validated(
                 StringUtils.isNotBlank(dto.getNhiExtendDisposal().getPatientIdentity()) &&
-                dto.getNhiExtendDisposal().getPatientIdentity().equals(cc.getCode()));
+                    dto.getNhiExtendDisposal().getPatientIdentity().equals(cc.getCode()));
 
         if (!result.isValidated()) {
             if (CopaymentCode._001.getCode().equals(cc.getCode())) {
-                result.setMessage(CopaymentCode._001.getNotification());
+                result
+                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                    .validateTitle("檢查 nhi extend disposal 是否被調整為 指定部分代碼")
+                    .message(CopaymentCode._001.getNotification());
             }
         }
 

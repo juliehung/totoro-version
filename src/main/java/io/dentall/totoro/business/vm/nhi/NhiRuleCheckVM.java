@@ -9,9 +9,9 @@ public class NhiRuleCheckVM {
 
     private Long treatmentId;
 
-    private String tmpTreatmentA74;
+    private String a74;
 
-    private String tmpTreatmentA75;
+    private String a75;
 
     public Long getPatientId() {
         return patientId;
@@ -29,19 +29,19 @@ public class NhiRuleCheckVM {
         this.treatmentId = treatmentId;
     }
 
-    public String getTmpTreatmentA74() {
-        return tmpTreatmentA74;
+    public String getA74() {
+        return a74;
     }
 
-    public void setTmpTreatmentA74(String tmpTreatmentA74) {
-        this.tmpTreatmentA74 = tmpTreatmentA74;
+    public void setA74(String a74) {
+        this.a74 = a74;
     }
 
-    public String getTmpTreatmentA75() {
-        return tmpTreatmentA75;
+    public String getA75() {
+        return a75;
     }
 
-    public void setTmpTreatmentA75(String tmpTreatmentA75) {
-        this.tmpTreatmentA75 = tmpTreatmentA75;
+    public void setA75(String a75) {
+        this.a75 = a75;
     }
 }
