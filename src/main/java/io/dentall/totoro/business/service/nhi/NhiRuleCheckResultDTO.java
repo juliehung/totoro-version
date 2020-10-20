@@ -9,10 +9,10 @@ public class NhiRuleCheckResultDTO {
     private boolean validated;
 
     @JsonProperty("infoType")
-    private NhiRuleCheckInfoType nhiRuleCheckInfoType;
+    private NhiRuleCheckInfoType nhiRuleCheckInfoType = NhiRuleCheckInfoType.NONE;
 
     @JsonProperty("sourceType")
-    private NhiRuleCheckSourceType nhiRuleCheckSourceType;
+    private NhiRuleCheckSourceType nhiRuleCheckSourceType = NhiRuleCheckSourceType.SYSTEM_RECORD;
 
     private String validateTitle;
 
