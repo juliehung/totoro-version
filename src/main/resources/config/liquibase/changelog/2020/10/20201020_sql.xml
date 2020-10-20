@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20201020-Sql" author="WeiChen">
+        <sql dbms="postgresql" splitStatements="true">
+            INSERT INTO career_options (id, code, name, jhi_order) VALUES (14, 'student', '學生', 14);
+            INSERT INTO career_options (id, code, name, jhi_order) VALUES (15, 'others', '其他', 15);
+            INSERT INTO tag (id, jhi_type, name, modifiable, jhi_order) VALUES (34, 'ALLERGY', 'Amoxicillin', false, null);
+            INSERT INTO tag (id, jhi_type, name, modifiable, jhi_order) VALUES (35, 'ALLERGY', 'Voren', false, null);
+            INSERT INTO tag (id, jhi_type, name, modifiable, jhi_order) VALUES (36, 'ALLERGY', '四環黴素', false, null);
+            INSERT INTO tag (id, jhi_type, name, modifiable, jhi_order) VALUES (37, 'ALLERGY', 'Ibuprofen', false, null);
+            INSERT INTO tag (id, jhi_type, name, modifiable, jhi_order) VALUES (38, 'ALLERGY', 'Ponstan', false, null);
+            INSERT INTO tag (id, jhi_type, name, modifiable, jhi_order) VALUES (39, 'ALLERGY', 'Acetaminopehn', false, null);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

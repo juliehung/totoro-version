@@ -35,6 +35,8 @@ export const CareerOption = [
   { key: 'K', value: '金融及保險', code: 'financial', jhi_order: 11 },
   { key: 'L', value: '職業運動人員', code: 'athlete', jhi_order: 12 },
   { key: 'M', value: '家庭管理', code: 'homeManagement', jhi_order: 13 },
+  { key: 'N', value: '學生', code: 'student', jhi_order: 14 },
+  { key: 'O', value: '其他', code: 'others', jhi_order: 15 },
 ];
 
 export const MarriageOption = [
