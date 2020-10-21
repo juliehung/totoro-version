@@ -43,7 +43,7 @@ function PatientDetail(props) {
 const mapStateToProps = ({ patientPageReducer }) => ({
   isPatientNotFound: patientPageReducer.common.isPatientNotFound,
   spinning: patientPageReducer.common.loading,
-  searchPatientDrawerOpen: patientPageReducer.common.drawerOpen,
+  searchPatientDrawerOpen: patientPageReducer.searchPatient.drawerOpen,
 });
 
 const mapDispatchToProps = { initPatientDetail };

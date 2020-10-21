@@ -14,7 +14,7 @@ const SearchContainer = styled.div`
 //#endregion
 
 function PatientSearchInput(props) {
-  const { searchPatient } = props;
+  const { searchPatient, getRegistrationToday } = props;
   const ref = useRef(null);
 
   return (
@@ -25,6 +25,11 @@ function PatientSearchInput(props) {
         allowClear
         ref={ref}
         onPressEnter={() => searchPatient(ref.current.state.value)}
+        onChange={e => {
+          if (e.type === 'click') {
+            getRegistrationToday();
+          }
+        }}
       />
       <Button
         size="large"

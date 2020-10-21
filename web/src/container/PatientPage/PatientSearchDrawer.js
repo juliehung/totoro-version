@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Drawer, Tabs } from 'antd';
-import { changeDrawerVisible, searchPatient } from './actions';
+import { changeDrawerVisible, searchPatient, getRegistrationToday } from './actions';
 import { appendAmountOnTitle } from './utils';
 import PatientSearchPatientList from './PatientSearchPatientList';
 import PatientSearchInput from './PatientSearchInput';
@@ -44,7 +44,14 @@ function PatientSearchDrawer(props) {
     patientsMatchedMrn,
     patientsMatchedNationalId,
     searchedText,
+    getRegistrationToday,
   } = props;
+
+  useEffect(() => {
+    if (drawerOpen) {
+      getRegistrationToday();
+    }
+  }, [drawerOpen, getRegistrationToday]);
 
   return (
     <Fragment>
@@ -60,7 +67,7 @@ function PatientSearchDrawer(props) {
         height="80%"
       >
         <Container>
-          <PatientSearchInput searchPatient={searchPatient} />
+          <PatientSearchInput searchPatient={searchPatient} getRegistrationToday={getRegistrationToday} />
           <TabContainer>
             <Tabs defaultActiveKey="1" centered>
               <TabPane tab={appendAmountOnTitle('全部', patients?.length)} key="1">
@@ -70,35 +77,55 @@ function PatientSearchDrawer(props) {
                   keyword={searchedText}
                 />
               </TabPane>
-              <TabPane tab={appendAmountOnTitle('姓名', patientsMatchedName?.length)} key="2">
+              <TabPane
+                tab={appendAmountOnTitle('姓名', patientsMatchedName?.length)}
+                key="2"
+                disabled={!patientsMatchedName.length}
+              >
                 <PatientSearchPatientList
                   patients={patientsMatchedName}
                   changeDrawerVisible={changeDrawerVisible}
                   keyword={searchedText}
                 />
               </TabPane>
-              <TabPane tab={appendAmountOnTitle('連絡電話', patientsMatchedPhone?.length)} key="3">
+              <TabPane
+                tab={appendAmountOnTitle('連絡電話', patientsMatchedPhone?.length)}
+                key="3"
+                disabled={!patientsMatchedPhone.length}
+              >
                 <PatientSearchPatientList
                   patients={patientsMatchedPhone}
                   changeDrawerVisible={changeDrawerVisible}
                   keyword={searchedText}
                 />
               </TabPane>
-              <TabPane tab={appendAmountOnTitle('生日', patientsMatchedBirth?.length)} key="4">
+              <TabPane
+                tab={appendAmountOnTitle('生日', patientsMatchedBirth?.length)}
+                key="4"
+                disabled={!patientsMatchedBirth.length}
+              >
                 <PatientSearchPatientList
                   patients={patientsMatchedBirth}
                   changeDrawerVisible={changeDrawerVisible}
                   keyword={searchedText}
                 />
               </TabPane>
-              <TabPane tab={appendAmountOnTitle('病例編號', patientsMatchedMrn?.length)} key="5">
+              <TabPane
+                tab={appendAmountOnTitle('病歷編號', patientsMatchedMrn?.length)}
+                key="5"
+                disabled={!patientsMatchedMrn.length}
+              >
                 <PatientSearchPatientList
                   patients={patientsMatchedMrn}
                   changeDrawerVisible={changeDrawerVisible}
                   keyword={searchedText}
                 />
               </TabPane>
-              <TabPane tab={appendAmountOnTitle('身分證號', patientsMatchedNationalId?.length)} key="6">
+              <TabPane
+                tab={appendAmountOnTitle('身分證號', patientsMatchedNationalId?.length)}
+                key="6"
+                disabled={!patientsMatchedNationalId.length}
+              >
                 <PatientSearchPatientList
                   patients={patientsMatchedNationalId}
                   changeDrawerVisible={changeDrawerVisible}
@@ -114,7 +141,7 @@ function PatientSearchDrawer(props) {
 }
 
 const mapStateToProps = ({ patientPageReducer }) => ({
-  drawerOpen: patientPageReducer.common.drawerOpen,
+  drawerOpen: patientPageReducer.searchPatient.drawerOpen,
   patients: patientPageReducer.searchPatient.total,
   patientsMatchedName: patientPageReducer.searchPatient.name,
   patientsMatchedPhone: patientPageReducer.searchPatient.phone,
@@ -124,6 +151,6 @@ const mapStateToProps = ({ patientPageReducer }) => ({
   searchedText: patientPageReducer.searchPatient.searchedText,
 });
 
-const mapDispatchToProps = { changeDrawerVisible, searchPatient };
+const mapDispatchToProps = { changeDrawerVisible, searchPatient, getRegistrationToday };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientSearchDrawer);
