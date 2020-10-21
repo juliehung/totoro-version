@@ -46,8 +46,17 @@ const HightLightSpan = styled.span`
   font-style: italic;
 `;
 
-const NameSpan = styled.span`
+const NameSpan = styled.a`
   font-size: 24px;
+  color: inherit;
+  text-decoration: inherit;
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+    color: inherit;
+  }
 `;
 
 const XrayContainer = styled.div`
@@ -103,7 +112,7 @@ export function handleEventRender(info, func, params) {
   if (info.event.extendedProps.eventType === 'appointment') {
     const appointment = info.event.extendedProps.appointment;
     if (info.view.type.indexOf('Grid') !== -1) {
-      const { id, medicalId, patientName, phone, doctor, note, status, registrationStatus } = appointment;
+      const { id, medicalId, patientId, patientName, phone, doctor, note, status, registrationStatus } = appointment;
 
       if (info.view.type !== 'dayGridMonth') {
         const fcTitle = info.el.querySelector('.fc-title');
@@ -121,7 +130,7 @@ export function handleEventRender(info, func, params) {
 
         const popoverContent = (
           <PopoverContainer>
-            <NameSpan>
+            <NameSpan href={`/#/patient/${patientId}`} target="_blank" rel="noopener noreferrer">
               {status === 'CANCEL' ? '[C]' : null} {patientName}
             </NameSpan>
             <HightLightSpan>{medicalId}</HightLightSpan>

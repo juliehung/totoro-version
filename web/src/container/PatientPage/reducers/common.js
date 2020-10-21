@@ -1,8 +1,6 @@
 import produce from 'immer';
-import { CHANGE_DRAWER_VISIBLE, INIT_PATIENT_DETAIL, PATIENT_NOT_FOUND, GET_PATIENT_SUCCESS } from '../constant';
-
+import { INIT_PATIENT_DETAIL, PATIENT_NOT_FOUND, GET_PATIENT_SUCCESS } from '../constant';
 const initState = {
-  drawerOpen: false,
   isPatientNotFound: false,
   loading: false,
 };
@@ -20,9 +18,6 @@ const common = (state = initState, action) =>
         break;
       case GET_PATIENT_SUCCESS:
         draft.loading = false;
-        break;
-      case CHANGE_DRAWER_VISIBLE:
-        draft.drawerOpen = action.visible;
         break;
       default:
         break;

@@ -16,6 +16,8 @@ import {
   GET_APPOINTMENT_SUCCESS,
   GET_DOC_NP_HISTORY,
   GET_DOC_NP_HISTORY_SUCCESS,
+  GET_REGISTRATION_TODAY,
+  GET_REGISTRATION_TODAY_SUCCESS,
   ON_LEAVE_PAGE,
   CHANGE_CLINIC_NOTE,
   ADD_DATE_TO_CLINIC_NOTE,
@@ -105,6 +107,14 @@ export function getDocNpHistory() {
 
 export function getDocNpHistorySuccess(docNps) {
   return { type: GET_DOC_NP_HISTORY_SUCCESS, docNps };
+}
+
+export function getRegistrationToday() {
+  return { type: GET_REGISTRATION_TODAY };
+}
+
+export function getRegistrationTodaySuccess(registrations) {
+  return { type: GET_REGISTRATION_TODAY_SUCCESS, registrations };
 }
 
 export function onLeavePage() {

@@ -80,7 +80,6 @@ function PatientPage(props) {
 }
 
 const mapStateToProps = ({ patientPageReducer, homePageReducer }) => ({
-  drawerOpen: patientPageReducer.common.drawerOpen,
   xrayOnRequest: homePageReducer.xray.onRequest,
   xrayServerState: homePageReducer.xray.serverState,
   xrayServerError: homePageReducer.xray.serverError,
