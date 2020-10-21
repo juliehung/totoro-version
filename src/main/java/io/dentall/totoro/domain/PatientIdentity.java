@@ -39,6 +39,11 @@ public class PatientIdentity implements Serializable {
     @Column(name = "free_burden", nullable = false)
     private Boolean freeBurden;
 
+    public PatientIdentity enable(boolean ennable) {
+        this.enabled = ennable;
+        return this;
+    }
+
     public Boolean getFreeBurden() {
         return freeBurden;
     }

@@ -91,6 +91,7 @@ public class PatientIdentityResourceIntTest {
      */
     public static PatientIdentity createEntity(EntityManager em) {
         PatientIdentity patientIdentity = new PatientIdentity()
+            .enable(true);
             .code(DEFAULT_CODE)
             .name(DEFAULT_NAME)
             .freeBurden(DEFAULT_FREE_BURDEN);
@@ -210,7 +211,7 @@ public class PatientIdentityResourceIntTest {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].freeBurden").value(hasItem(DEFAULT_FREE_BURDEN.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getPatientIdentity() throws Exception {
