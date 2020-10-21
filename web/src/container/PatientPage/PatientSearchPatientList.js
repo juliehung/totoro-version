@@ -33,12 +33,7 @@ const ListContainer = styled.div`
 `;
 
 const ItemContainer = styled(Link)`
-  &:nth-child(2n + 1) {
-    background-color: #f7f9fc;
-  }
-  &:nth-child(2n) {
-    background-color: #ffffff;
-  }
+  background-color: #ffffff;
   height: 55px;
   flex-grow: 1;
   display: flex;
@@ -72,6 +67,10 @@ const ItemContainer = styled(Link)`
       font-weight: 600;
       color: #222b45;
     }
+  }
+
+  &:hover {
+    background-color: #f7f9fc;
   }
 `;
 
