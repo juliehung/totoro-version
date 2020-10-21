@@ -273,6 +273,11 @@ public class PatientService extends QueryService<Patient> {
                     relationshipService.addRelationshipWithTeeth(patient.teeth(updatePatient.getTeeth()));
                 }
 
+                if (updatePatient.getDisplayName() != null) {
+                    log.debug("Update patientIdentity({}) of Patient(id: {})", updatePatient.getDisplayName(), updatePatient.getId());
+                    patient.setDisplayName(updatePatient.getDisplayName());
+                }
+
                 if (updatePatient.getTeethGraphPermanentSwitch() != null) {
                     log.debug("Update teethGraphPermanentSwitch({}) of Patient(id: {})", updatePatient.getTeethGraphPermanentSwitch(), updatePatient.getId());
                     patient.setTeethGraphPermanentSwitch(updatePatient.getTeethGraphPermanentSwitch());
