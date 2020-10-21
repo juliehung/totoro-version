@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing PatientIdentity.
@@ -86,7 +87,7 @@ public class PatientIdentityResource {
     @Timed
     public List<PatientIdentity> getAllPatientIdentities() {
         log.debug("REST request to get all PatientIdentities");
-        return patientIdentityRepository.findAll();
+        return patientIdentityRepository.findAll().stream().filter( pi -> pi.isEnabled()).collect(Collectors.toList());
     }
 
     /**
