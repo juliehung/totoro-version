@@ -24,6 +24,9 @@ public class PatientIdentity implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+
     @NotNull
     @Column(name = "code", nullable = false)
     private String code;
@@ -35,6 +38,18 @@ public class PatientIdentity implements Serializable {
     @NotNull
     @Column(name = "free_burden", nullable = false)
     private Boolean freeBurden;
+
+    public Boolean getFreeBurden() {
+        return freeBurden;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
