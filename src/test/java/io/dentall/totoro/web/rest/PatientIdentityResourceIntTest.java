@@ -91,7 +91,7 @@ public class PatientIdentityResourceIntTest {
      */
     public static PatientIdentity createEntity(EntityManager em) {
         PatientIdentity patientIdentity = new PatientIdentity()
-            .enable(true);
+            .enable(true)
             .code(DEFAULT_CODE)
             .name(DEFAULT_NAME)
             .freeBurden(DEFAULT_FREE_BURDEN);
