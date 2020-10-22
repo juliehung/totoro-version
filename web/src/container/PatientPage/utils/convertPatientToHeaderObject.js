@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { toRocString } from './';
 
 export default function convertPatientToHeaderObject(patient) {
   if (!patient) return {};
@@ -8,8 +9,7 @@ export default function convertPatientToHeaderObject(patient) {
   const ageMonths = moment().diff(birth, 'months', false);
   const age = { year: Math.floor(ageMonths / 12), month: ageMonths % 12 };
 
-  const ROCBirthYear = moment(birth).year() - 1911;
-  const ROCBirth = `${ROCBirthYear}${moment(birth).format('-MM-DD')}`;
+  const ROCBirth = toRocString(birth);
 
   return { id, name, gender, medicalId, nationalId, age, birth, ROCBirth };
 }
