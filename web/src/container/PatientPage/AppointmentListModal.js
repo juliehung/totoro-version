@@ -151,9 +151,8 @@ function AppointmentListModal(props) {
 
   const title = (
     <Title>
-      <span>{patient?.name}</span>
       <span>
-        的預約紀錄 <span>(共{totalAppointmentAmount}筆預約)</span>
+        {patient?.name} 的 {totalAppointmentAmount} 筆預約紀錄
       </span>
     </Title>
   );
