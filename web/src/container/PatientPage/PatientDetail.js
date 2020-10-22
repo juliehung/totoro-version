@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PatientDetailHeader from './PatientDetailHeader';
 import PatientDetailContent from './PatientDetailContent';
 import { Spin } from 'antd';
+import { useCookies } from 'react-cookie';
 import { initPatientDetail } from './actions';
 import PatientNotFound from './PatientNotFound';
 import AppointmentListModal from './AppointmentListModal';
@@ -18,10 +19,12 @@ const Container = styled.div`
 
 function PatientDetail(props) {
   const { id, initPatientDetail, isPatientNotFound, spinning, searchPatientDrawerOpen } = props;
+  const [, setCookie] = useCookies();
 
   useEffect(() => {
     initPatientDetail(id);
-  }, [initPatientDetail, id]);
+    setCookie('patient_center_pid', id);
+  }, [initPatientDetail, id, setCookie]);
 
   return isPatientNotFound ? (
     <PatientNotFound />
