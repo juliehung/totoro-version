@@ -6,7 +6,6 @@ import PatientDetailContent from './PatientDetailContent';
 import { Spin } from 'antd';
 import { initPatientDetail } from './actions';
 import PatientNotFound from './PatientNotFound';
-import CreateAppointmentModal from './CreateAppointmentModal';
 import AppointmentListModal from './AppointmentListModal';
 import TreatmentListModal from './TreatmentListModal';
 import SarchPatientButton from './SarchPatientButton';
@@ -31,7 +30,6 @@ function PatientDetail(props) {
       <Container>
         <PatientDetailHeader />
         <PatientDetailContent />
-        <CreateAppointmentModal />
         <AppointmentListModal />
         <TreatmentListModal />
         {!searchPatientDrawerOpen && <SarchPatientButton />}

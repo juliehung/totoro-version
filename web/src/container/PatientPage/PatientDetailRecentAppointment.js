@@ -5,7 +5,7 @@ import { Container, Header, Content, Count, BlueDottedUnderlineText } from './co
 import { Badge } from 'antd';
 import { convertAppointmentToCardObject } from './utils';
 import analysisAppointments from '../AppointmentPage/utils/analysisAppointments';
-import { changeCreateAppointmentModalVisible, changeAppointmentListModalVisible } from './actions';
+import { changeAppointmentListModalVisible } from './actions';
 
 //#region
 const Item = styled.div`
@@ -46,21 +46,11 @@ const EmptyString = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  & .blue {
-    color: #3366ff;
-    border-bottom: 1px solid #3366ff;
-    cursor: pointer;
-  }
 `;
 //#endregion
 
 function PatientDetailRecentAppointment(props) {
-  const {
-    futureAppointments,
-    appointmentsAnalysis,
-    changeCreateAppointmentModalVisible,
-    changeAppointmentListModalVisible,
-  } = props;
+  const { futureAppointments, appointmentsAnalysis, changeAppointmentListModalVisible } = props;
 
   const futureAppointmentsAmount = futureAppointments?.length ?? 0;
 
@@ -102,14 +92,9 @@ function PatientDetailRecentAppointment(props) {
           <EmptyString>
             <span>
               目前沒有約診! 立即{' '}
-              <span
-                className="blue"
-                onClick={() => {
-                  changeCreateAppointmentModalVisible(true);
-                }}
-              >
+              <a href="/#/appointment" target="_blank" rel="noopener noreferrer">
                 建立預約
-              </span>
+              </a>
             </span>
           </EmptyString>
         )}
@@ -126,6 +111,6 @@ const mapStateToProps = ({ patientPageReducer, homePageReducer }) => ({
   appointmentsAnalysis: analysisAppointments(patientPageReducer.appointment.appointment),
 });
 
-const mapDispatchToProps = { changeCreateAppointmentModalVisible, changeAppointmentListModalVisible };
+const mapDispatchToProps = { changeAppointmentListModalVisible };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientDetailRecentAppointment);
