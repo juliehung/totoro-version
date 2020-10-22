@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { toRocString } from './';
 
 export default function convertAppointmentToCardObject(appointments, users) {
   if (!appointments) return [];
@@ -9,7 +10,7 @@ export default function convertAppointmentToCardObject(appointments, users) {
     let isRegistration = false;
     const { id, note, expectedArrivalTime, requiredTreatmentTime } = a;
     const doctor = users.find(u => u.id === a.doctor.id);
-    const expectedArrivalTimeString = moment(expectedArrivalTime).format('YYYY/MM/DD HH:mm');
+    const expectedArrivalTimeString = toRocString(expectedArrivalTime) + moment(expectedArrivalTime).format(' HH:mm');
 
     if (a.status === 'CANCEL') {
       isCancel = true;
