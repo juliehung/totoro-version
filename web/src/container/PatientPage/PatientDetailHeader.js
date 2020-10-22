@@ -118,7 +118,7 @@ function PatientDetailHeader(props) {
           <img src={AvatarSrc} height="30" alt="man" />
           <span>{patient.name}</span>
           <span>
-            {patient.birth} ({patient?.age?.year}Y{patient?.age?.month}M)
+            {patient.ROCBirth} ({patient?.age?.year}Y{patient?.age?.month}M)
           </span>
         </div>
         <a
