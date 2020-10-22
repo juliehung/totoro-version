@@ -4,7 +4,7 @@ import { Modal, Table, Badge } from 'antd';
 import styled from 'styled-components';
 import moment from 'moment';
 import { changeAppointmentListModalVisible } from './actions';
-import { convertAppointmentToCardObject, toRocString } from './utils';
+import { convertAppointmentToCardObject } from './utils';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 
 const appointmentStatus = { comming: 1, done: 2, cancel: 3, noShow: 4 };
@@ -17,7 +17,6 @@ const columns = doctors => [
     sorter: (a, b) => moment(a.expectedArrivalTime) - moment(b.expectedArrivalTime),
     sortDirections: ['descend', 'ascend'],
     defaultSortOrder: 'descend',
-    render: date => toRocString(date),
   },
   {
     title: '需時',
