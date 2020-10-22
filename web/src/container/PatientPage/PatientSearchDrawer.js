@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Drawer, Tabs } from 'antd';
@@ -47,6 +47,12 @@ function PatientSearchDrawer(props) {
     getRegistrationToday,
   } = props;
 
+  const [activeKey, setActiveKey] = useState('1');
+
+  useEffect(() => {
+    setActiveKey('1');
+  }, [patients]);
+
   useEffect(() => {
     if (drawerOpen) {
       getRegistrationToday();
@@ -69,7 +75,7 @@ function PatientSearchDrawer(props) {
         <Container>
           <PatientSearchInput searchPatient={searchPatient} getRegistrationToday={getRegistrationToday} />
           <TabContainer>
-            <Tabs defaultActiveKey="1" centered>
+            <Tabs centered activeKey={activeKey} onTabClick={setActiveKey}>
               <TabPane tab={appendAmountOnTitle('全部', patients?.length)} key="1">
                 <PatientSearchPatientList
                   patients={patients}
@@ -89,7 +95,7 @@ function PatientSearchDrawer(props) {
                 />
               </TabPane>
               <TabPane
-                tab={appendAmountOnTitle('連絡電話', patientsMatchedPhone?.length)}
+                tab={appendAmountOnTitle('聯絡電話', patientsMatchedPhone?.length)}
                 key="3"
                 disabled={!patientsMatchedPhone.length}
               >

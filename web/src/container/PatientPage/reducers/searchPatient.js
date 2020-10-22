@@ -35,10 +35,12 @@ const searchPatient = (state = initState, action) =>
         draft.searchedText = action.searchText;
         break;
       case GET_REGISTRATION_TODAY_SUCCESS:
-        draft.total = action.registrations.map(r => {
-          const { patient } = r;
-          return patient;
-        });
+        draft.total = action.registrations
+          .map(r => {
+            const { patient } = r;
+            return patient;
+          })
+          .filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
         draft.name = [];
         draft.phone = [];
         draft.birth = [];
