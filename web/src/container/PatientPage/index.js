@@ -33,7 +33,6 @@ function PatientPage(props) {
     xrayServerError,
     changeXrayModalVisible,
     onLeavePage,
-    createAppointmentSuccess,
   } = props;
 
   useEffect(() => {
@@ -62,12 +61,6 @@ function PatientPage(props) {
     };
   }, [onLeavePage]);
 
-  useEffect(() => {
-    if (createAppointmentSuccess) {
-      message.success('新增預約成功');
-    }
-  }, [createAppointmentSuccess]);
-
   return (
     <Container>
       <Helmet>
@@ -79,11 +72,10 @@ function PatientPage(props) {
   );
 }
 
-const mapStateToProps = ({ patientPageReducer, homePageReducer }) => ({
+const mapStateToProps = ({ homePageReducer }) => ({
   xrayOnRequest: homePageReducer.xray.onRequest,
   xrayServerState: homePageReducer.xray.serverState,
   xrayServerError: homePageReducer.xray.serverError,
-  createAppointmentSuccess: patientPageReducer.createAppointment.createSuccess,
 });
 
 const mapDispatchToProps = { changeDrawerVisible, onLeavePage, changeXrayModalVisible };
