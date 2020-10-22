@@ -36,10 +36,10 @@ export default function analysisAppointments(appointments = []) {
       appointmentsAnalysis.lastDoctorId = a.doctor.id;
     }
 
-    if (!a.registration && expectedArrivalTime.isBefore(currentDate)) {
-      appointmentsAnalysis.noShow++;
-    } else if (a.status === 'CANCEL') {
+    if (a.status === 'CANCEL') {
       appointmentsAnalysis.cancel++;
+    } else if (!a.registration && expectedArrivalTime.isBefore(currentDate)) {
+      appointmentsAnalysis.noShow++;
     }
   });
 
