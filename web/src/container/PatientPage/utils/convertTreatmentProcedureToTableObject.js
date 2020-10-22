@@ -11,7 +11,7 @@ export default function convertTreatmentProcedureToTableObject(treatmentProcedur
 
     const teeth = t.teeth.map(te => te.position).join(', ');
 
-    const treatment = t?.nhiProcedure?.name;
+    const treatment = t?.nhiProcedure ? t.nhiProcedure.name : t?.procedure?.content;
 
     const doctor = t.doctor.user.firstName;
 
