@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Container, Header, Content, Count, Ic } from './component';
 import { Table } from 'antd';
-import { convertMedicalRecordsToTableObject } from './utils';
+import { convertMedicalRecordsToTableObject, renderYYYMMDDHHMMSS } from './utils';
 
 //#region
 const StyledTable = styled(Table)`
@@ -22,6 +22,7 @@ const columns = [
     title: '就醫日期',
     dataIndex: 'date',
     key: 'date',
+    render: renderYYYMMDDHHMMSS,
   },
   {
     title: '就醫類別',

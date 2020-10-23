@@ -9,6 +9,7 @@ import convertNhiExtendPatientToPatientStatus from './convertNhiExtendPatientToP
 import appendAmountOnTitle from './appendAmountOnTitle';
 import convertDisposalsToTreatmentsAndPrescriptions from './convertDisposalsToTreatmentsAndPrescriptions';
 import toSurfaceAbbrivation from './toSurfaceAbbrivation';
+import renderYYYMMDDHHMMSS from './renderYYYMMDDHHMMSS';
 
 export {
   convertTreatmentProcedureToTableObject,
@@ -22,4 +23,5 @@ export {
   appendAmountOnTitle,
   convertDisposalsToTreatmentsAndPrescriptions,
   toSurfaceAbbrivation,
+  renderYYYMMDDHHMMSS,
 };

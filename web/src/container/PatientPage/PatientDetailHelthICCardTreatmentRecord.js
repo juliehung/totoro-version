@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Container, Header, Content, Count, Ic } from './component';
 import { Switch, Table } from 'antd';
-import { convertNhiExtentPatientToTableObject } from './utils';
+import { convertNhiExtentPatientToTableObject, renderYYYMMDDHHMMSS } from './utils';
 
 //#region
 const StyledTable = styled(Table)`
@@ -21,6 +21,7 @@ const columns = [
     title: '日期',
     dataIndex: 'date',
     key: 'date',
+    render: renderYYYMMDDHHMMSS,
   },
   {
     title: '牙位',
