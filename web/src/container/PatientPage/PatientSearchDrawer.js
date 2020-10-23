@@ -6,6 +6,8 @@ import { changeDrawerVisible, searchPatient, getRegistrationToday } from './acti
 import { appendAmountOnTitle } from './utils';
 import PatientSearchPatientList from './PatientSearchPatientList';
 import PatientSearchInput from './PatientSearchInput';
+import close from '../../images/close-white.svg';
+
 const { TabPane } = Tabs;
 
 //#region
@@ -29,6 +31,29 @@ const Container = styled.div`
 const TabContainer = styled.div`
   width: 100%;
   flex-grow: 1;
+`;
+
+const CloseContainer = styled.div`
+  width: 100%;
+  height: 20%;
+  position: fixed;
+  bottom: ${props => (props.show ? '0px' : '-20%')};
+  right: 0px;
+  z-index: 10000;
+  color: #fff;
+  font-size: 26px;
+  font-weight: bold;
+  transition: all ease-in-out 300ms;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+
+  & > div {
+    margin-right: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
 `;
 //#endregion
 
@@ -63,7 +88,7 @@ function PatientSearchDrawer(props) {
     <Fragment>
       <GlobalStyle />
       <StyledDrawer
-        title="搜尋病患"
+        title={null}
         closable={false}
         onClose={() => {
           changeDrawerVisible(false);
@@ -142,6 +167,16 @@ function PatientSearchDrawer(props) {
           </TabContainer>
         </Container>
       </StyledDrawer>
+      <CloseContainer show={drawerOpen}>
+        <div
+          onClick={() => {
+            changeDrawerVisible(false);
+          }}
+        >
+          <img src={close} alt="close" />
+          <span>關閉</span>
+        </div>
+      </CloseContainer>
     </Fragment>
   );
 }
