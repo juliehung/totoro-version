@@ -10,6 +10,7 @@ import { watchGetAllEvents } from './getAllEvents';
 import { editCalendarEvent } from './editCalendarEvent';
 import { deleteCalendarEvent } from './deleteCalendarEvent';
 import { popoverCancelApp } from './popoverCancelApp';
+import { popoverRestoreApp } from './popoverRestoreApp';
 import { watchGetShift } from './watchGetShift';
 
 export default function* appointmentPage() {
@@ -28,5 +29,6 @@ export default function* appointmentPage() {
   yield fork(editCalendarEvent);
   yield fork(deleteCalendarEvent);
   yield fork(popoverCancelApp);
+  yield fork(popoverRestoreApp);
   yield fork(watchGetShift);
 }

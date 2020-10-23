@@ -30,6 +30,7 @@ import {
   deleteAppointment,
   deleteCalEvt,
   popoverCancelApp,
+  popoverRestoreApp,
   changeSelectedDoctors,
   getShift,
   changeCalendarRange,
@@ -397,7 +398,12 @@ class AppCalendar extends React.Component {
 
     if (prevProps.cancelApp !== this.props.cancelApp) {
       this.clickTitle();
-      message.success('取消/恢復預約成功');
+      message.success('取消預約成功');
+    }
+
+    if (prevProps.restoreApp !== this.props.restoreApp) {
+      this.clickTitle();
+      message.success('恢復預約成功');
     }
 
     //select self on mobile
@@ -580,6 +586,7 @@ class AppCalendar extends React.Component {
           edit: this.handleAppointmentDblClick,
           cancel: this.handlePopoverCancelApp,
           xray: this.handleXrayClick,
+          restore: this.handlePopoverRestoreApp,
         },
         { xRayVendors: this.props.xRayVendors },
       );
@@ -602,6 +609,10 @@ class AppCalendar extends React.Component {
 
   handlePopoverCancelApp = apptData => {
     this.props.popoverCancelApp(apptData);
+  };
+
+  handlePopoverRestoreApp = apptData => {
+    this.props.popoverRestoreApp(apptData);
   };
 
   handleXrayClick = data => {
@@ -892,6 +903,7 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer, settingPageR
   isRoc: homePageReducer.settings.isRoc,
   calendarRange: appointmentPageReducer.calendar.range,
   cancelApp: appointmentPageReducer.calendar.cancelApp,
+  restoreApp: appointmentPageReducer.calendar.restoreApp,
   account: homePageReducer.account.data,
   backgroundEvent: convertShitToBackgroundEvent(appointmentPageReducer.shift.shift),
   getShiftSuccess: appointmentPageReducer.shift.getShiftSuccess,
@@ -920,6 +932,7 @@ const mapDispatchToProps = {
   deleteAppointment,
   deleteCalEvt,
   popoverCancelApp,
+  popoverRestoreApp,
   changeSelectedDoctors,
   getShift,
   openXray,
