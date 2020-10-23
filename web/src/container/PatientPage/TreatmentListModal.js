@@ -16,6 +16,7 @@ const columns = doctors => [
     sortDirections: ['descend', 'ascend'],
     defaultSortOrder: 'descend',
     render: date => toRocString(date),
+    fixed: true,
   },
   {
     title: '醫師',
@@ -24,6 +25,7 @@ const columns = doctors => [
     render: doctor => doctors.find(d => d.id === doctor.id)?.name ?? doctor.id,
     filters: doctors.map(d => ({ text: d.name, value: d.id })),
     onFilter: (value, record) => value === record.doctor.id,
+    fixed: true,
   },
   {
     title: '類別',
@@ -61,6 +63,24 @@ const columns = doctors => [
     dataIndex: 'content',
     key: 'content',
     width: '25%',
+  },
+  {
+    title: '下次預約',
+    dataIndex: 'revisitContent',
+    key: 'revisitContent',
+    width: '100px',
+  },
+  {
+    title: '預約備註',
+    dataIndex: 'revisitComment',
+    key: 'revisitComment',
+    width: '100px',
+  },
+  {
+    title: '病歷紀錄',
+    dataIndex: 'chiefComplaint',
+    key: 'chiefComplaint',
+    width: '100px',
   },
 ];
 
@@ -153,7 +173,7 @@ function TreatmentListModal(props) {
           dataSource={treatmentsAndPrescriptions}
           columns={columns(doctors)}
           pagination={false}
-          scroll={{ y: 400 }}
+          scroll={{ y: 400, x: 'max-content' }}
           rowKey={record => record.id}
           showSorterTooltip={false}
         />

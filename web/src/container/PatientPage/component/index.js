@@ -31,7 +31,8 @@ export const Header = styled.div`
 `;
 
 export const Content = styled.div`
-  height: 400px;
+  max-height: 400px;
+  height: 100%;
   overflow-y: scroll;
   padding: ${props => (props.noPadding ? 0 : '10px')};
   scrollbar-width: none;

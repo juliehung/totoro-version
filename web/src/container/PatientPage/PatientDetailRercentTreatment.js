@@ -51,7 +51,14 @@ function PatientDetailRercentTreatment(props) {
         </div>
       </Header>
       <Content>
-        <Table columns={columns} dataSource={treatmentProcedures} pagination={false} loading={loading} size="small" />
+        <Table
+          columns={columns}
+          dataSource={treatmentProcedures}
+          pagination={false}
+          loading={loading}
+          size="small"
+          scroll={{ y: 300 }}
+        />
       </Content>
     </Container>
   );
