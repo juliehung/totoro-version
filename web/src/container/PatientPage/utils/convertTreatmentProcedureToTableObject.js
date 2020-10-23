@@ -17,7 +17,7 @@ export default function convertTreatmentProcedureToTableObject(treatmentProcedur
       })
       ?.join(', ');
 
-    const treatment = t?.nhiProcedure ? t.nhiProcedure.name : t?.procedure?.content;
+    const treatment = t?.nhiProcedure ? t.nhiProcedure.code + ' ' + t.nhiProcedure.name : t?.procedure?.content;
 
     const doctor = t.doctor.user.firstName;
 
