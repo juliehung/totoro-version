@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Container, Header, Content, Count, BlueDottedUnderlineText } from './component';
 import { Table } from 'antd';
-import { convertTreatmentProcedureToTableObject } from './utils';
+import { convertTreatmentProcedureToTableObject, toRocString } from './utils';
 import { changeTreatmentListModalVisible } from './actions';
 
 //#region
@@ -13,6 +13,7 @@ const columns = [
     title: '日期',
     dataIndex: 'date',
     key: 'date',
+    render: date => toRocString(date),
   },
   {
     title: '牙位',
