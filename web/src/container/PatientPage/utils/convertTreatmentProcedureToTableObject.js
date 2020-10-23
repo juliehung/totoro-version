@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { toSurfaceAbbrivation } from './';
 
 export default function convertTreatmentProcedureToTableObject(treatmentProcedures) {
@@ -7,8 +6,7 @@ export default function convertTreatmentProcedureToTableObject(treatmentProcedur
   return treatmentProcedures.map(t => {
     const key = t.id;
 
-    const year = moment(t.createdDate).year() - 1911;
-    const date = year + moment(t.createdDate).format('-MM-DD');
+    const date = t.completedDate;
 
     const teeth = t.teeth
       .map(te => {
