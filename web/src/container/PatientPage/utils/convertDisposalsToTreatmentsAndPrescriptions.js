@@ -1,3 +1,5 @@
+import { toSurfaceAbbrivation } from './';
+
 function convertDisposalsToTreatmentsAndPrescriptions(disposals) {
   if (!disposals) {
     return [];
@@ -32,7 +34,12 @@ function convertDisposalsToTreatmentsAndPrescriptions(disposals) {
           const discount = `折扣 ${d.registration.accounting.discount}`;
           content = [price, amount, discount].join(', ');
         }
-        const teeth = t.teeth?.map(teeth => teeth.position)?.join(', ') ?? '-';
+        const teeth = t.teeth
+          ?.map(te => {
+            const surface = toSurfaceAbbrivation(te.surface);
+            return `${te.position} ${surface}`;
+          })
+          ?.join(', ');
         returnTreatments.push({ ...template, id, category, teeth, title, content });
       });
 
