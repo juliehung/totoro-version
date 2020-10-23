@@ -8,6 +8,7 @@ import toRocString from './toRocString';
 import convertNhiExtendPatientToPatientStatus from './convertNhiExtendPatientToPatientStatus';
 import appendAmountOnTitle from './appendAmountOnTitle';
 import convertDisposalsToTreatmentsAndPrescriptions from './convertDisposalsToTreatmentsAndPrescriptions';
+import toSurfaceAbbrivation from './toSurfaceAbbrivation';
 
 export {
   convertTreatmentProcedureToTableObject,
@@ -20,4 +21,5 @@ export {
   convertNhiExtendPatientToPatientStatus,
   appendAmountOnTitle,
   convertDisposalsToTreatmentsAndPrescriptions,
+  toSurfaceAbbrivation,
 };

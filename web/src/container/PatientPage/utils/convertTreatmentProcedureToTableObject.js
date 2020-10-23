@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { toSurfaceAbbrivation } from './';
 
 export default function convertTreatmentProcedureToTableObject(treatmentProcedures) {
   if (!treatmentProcedures) return [];
@@ -9,7 +10,12 @@ export default function convertTreatmentProcedureToTableObject(treatmentProcedur
     const year = moment(t.createdDate).year() - 1911;
     const date = year + moment(t.createdDate).format('-MM-DD');
 
-    const teeth = t.teeth.map(te => te.position).join(', ');
+    const teeth = t.teeth
+      .map(te => {
+        const surface = toSurfaceAbbrivation(te.surface);
+        return `${te.position} ${surface}`;
+      })
+      ?.join(', ');
 
     const treatment = t?.nhiProcedure ? t.nhiProcedure.name : t?.procedure?.content;
 
