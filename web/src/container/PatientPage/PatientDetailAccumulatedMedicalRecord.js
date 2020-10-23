@@ -30,12 +30,12 @@ const columns = [
   },
   {
     title: '卡號',
-    dataIndex: 'cardNumber',
-    key: 'cardNumber',
+    dataIndex: 'seqNumber',
+    key: 'seqNumber',
   },
   {
     title: '院所',
-    dataIndex: 'clinic',
+    dataIndex: 'medicalInstitutionCode',
   },
 ];
 
