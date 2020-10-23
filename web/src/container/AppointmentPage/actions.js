@@ -86,6 +86,8 @@ import {
   CHANGE_CALENDAR_FULLSCREEN,
   POPOVER_CANCEL_APP_START,
   POPOVER_CANCEL_APP_SUCCESS,
+  POPOVER_RESTORE_APP_START,
+  POPOVER_RESTORE_APP_SUCCESS,
   GET_SHIFT_START,
   GET_SHIFT_SUCCESS,
   ON_LEAVE_PAGE,
@@ -441,6 +443,14 @@ export function popoverCancelApp(appData) {
 
 export function popoverCancelAppSuccess(appointment) {
   return { type: POPOVER_CANCEL_APP_SUCCESS, appointment };
+}
+
+export function popoverRestoreApp(appData) {
+  return { type: POPOVER_RESTORE_APP_START, appData };
+}
+
+export function popoverRestoreAppSuccess(appointment) {
+  return { type: POPOVER_RESTORE_APP_SUCCESS, appointment };
 }
 
 export function getShift() {

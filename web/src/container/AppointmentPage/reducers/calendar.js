@@ -14,6 +14,7 @@ import {
   CHANGE_CAL_SLOT_DURATION,
   CHANGE_CALENDAR_FULLSCREEN,
   POPOVER_CANCEL_APP_SUCCESS,
+  POPOVER_RESTORE_APP_SUCCESS,
   EDIT_APPOINTMENT_SUCCESS,
   CHANGE_CALENADR_RANGE,
 } from '../constant';
@@ -33,6 +34,7 @@ const initState = {
   calendarFullScreen: false,
   range: { start: undefined, end: undefined },
   cancelApp: false,
+  restoreApp: false,
   getSuccess: false,
 };
 
@@ -74,6 +76,11 @@ const calendar = (state = initialState, action) =>
         break;
       case POPOVER_CANCEL_APP_SUCCESS:
         draft.cancelApp = !state.cancelApp;
+        draft.appointments = handleEditAppLocally(state.appointments, action.appointment);
+        draft.doctorAppCount = handleCountDocApp(draft.appointments);
+        break;
+      case POPOVER_RESTORE_APP_SUCCESS:
+        draft.restoreApp = !state.restoreApp;
         draft.appointments = handleEditAppLocally(state.appointments, action.appointment);
         draft.doctorAppCount = handleCountDocApp(draft.appointments);
         break;

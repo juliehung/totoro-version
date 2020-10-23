@@ -168,7 +168,7 @@ export function handleEventRender(info, func, params) {
             </XrayContainer>
             {!registrationStatus ? (
               status === 'CANCEL' ? (
-                <RestoreAppointmentButton id={id} onConfirm={func.cancel} />
+                <RestoreAppointmentButton id={id} onConfirm={func.restore} />
               ) : (
                 <CancelAppointmentButton id={id} onConfirm={func.cancel} />
               )
