@@ -3,12 +3,8 @@ export default function convertMedicalRecordsToTableObject(medicalRecords) {
   return medicalRecords.map(t => {
     const key = t.id;
 
-    const date = t.date;
+    const { date, seqNumber, medicalCategory, medicalInstitutionCode } = t;
 
-    const medicalCategory = t.medicalCategory;
-
-    const clinic = t.medicalInstitutionCode;
-
-    return { key, date, medicalCategory, clinic };
+    return { key, date, medicalCategory, medicalInstitutionCode, seqNumber };
   });
 }
