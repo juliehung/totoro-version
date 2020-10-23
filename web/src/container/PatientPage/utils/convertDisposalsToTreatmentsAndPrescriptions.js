@@ -9,10 +9,10 @@ function convertDisposalsToTreatmentsAndPrescriptions(disposals) {
   const returnPrescriptions = [];
 
   disposals.forEach(d => {
-    const { createdDate, treatmentProcedures, prescription } = d;
+    const { createdDate, treatmentProcedures, prescription, revisitContent, revisitComment, chiefComplaint } = d;
     const doctor = d.registration?.appointment?.doctor;
 
-    const template = { createdDate, doctor };
+    const template = { createdDate, doctor, revisitContent, revisitComment, chiefComplaint };
 
     // treatmentProcedures
     treatmentProcedures?.forEach &&
