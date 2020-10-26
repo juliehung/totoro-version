@@ -1,4 +1,5 @@
 import produce from 'immer';
+import moment from 'moment';
 import { SEARCH_PATIENT_SUCCESS, CHANGE_DRAWER_VISIBLE, GET_REGISTRATION_TODAY_SUCCESS } from '../constant';
 
 const initState = {
@@ -36,6 +37,8 @@ const searchPatient = (state = initState, action) =>
         break;
       case GET_REGISTRATION_TODAY_SUCCESS:
         draft.total = action.registrations
+          .filter(a => a.registration)
+          .sort((a, b) => moment(a.registration.arrivalTime) - moment(b.registration.arrivalTime))
           .map(r => {
             const { patient } = r;
             return patient;
