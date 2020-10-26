@@ -78,11 +78,11 @@ function PatientDetailRecentAppointment(props) {
             <Item key={a.id} isCanceled={a.isCancel}>
               <div>{a.isCancel ? <Badge status="error" /> : <Badge status="processing" />}</div>
               <div>
-                <span>
+                <span style={{ fontWeight: 600 }}>
                   {a.isCancel ? '已取消' : '即將到來'} - {a.expectedArrivalTime}
                 </span>
               </div>
-              <span>{a?.doctor?.firstName}</span>
+              <span style={{ color: '#8f9bb3' }}>{a?.doctor?.firstName}</span>
               <div>
                 <span>{a.note}</span>
               </div>
