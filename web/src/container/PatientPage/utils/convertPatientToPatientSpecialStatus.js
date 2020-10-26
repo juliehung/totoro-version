@@ -1,3 +1,5 @@
+const [tagPregnantId, tagSmokingId] = [25, 26];
+
 export default function convertPatientToPatientSpecialStatus(patient) {
   if (!patient?.tags?.reduce) return [];
   const group = patient.tags.reduce((r, a) => {
@@ -8,6 +10,8 @@ export default function convertPatientToPatientSpecialStatus(patient) {
   const allergy = {};
   const disease = {};
   const others = {};
+  const pregnant = {};
+  const smoking = {};
 
   if (group.ALLERGY) {
     allergy.title = '藥物過敏';
@@ -21,8 +25,20 @@ export default function convertPatientToPatientSpecialStatus(patient) {
 
   if (group.OTHER) {
     others.title = '其他';
-    others.subTitle = group.OTHER.map(a => a.name).join(', ');
+    others.subTitle = group.OTHER
+      // filter pregnant and smoking
+      .filter(o => o.id !== tagPregnantId && o.id !== tagSmokingId)
+      .map(a => a.name)
+      .join(', ');
+
+    if (group.OTHER.find(o => o.id === tagPregnantId)) {
+      pregnant.title = '懷孕中';
+    }
+
+    if (group.OTHER.find(o => o.id === tagSmokingId)) {
+      smoking.title = '吸煙中';
+    }
   }
 
-  return [others, allergy, disease].filter(value => Object.keys(value).length !== 0);
+  return [pregnant, smoking, allergy, disease, others].filter(value => Object.keys(value).length !== 0);
 }
