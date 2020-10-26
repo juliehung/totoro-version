@@ -148,7 +148,11 @@ public class TreatmentProcedureResource {
     // Business API, for recent treatment
     @GetMapping("/treatment-procedures/by/{patientId}/recently")
     @Timed
-    public ResponseEntity<List<TreatmentProcedure>> getRecentTreatments(@PathVariable Long patientId, @RequestParam Instant begin, @RequestParam Instant end) {
+    public ResponseEntity<List<TreatmentProcedure>> getRecentTreatments(
+        @PathVariable Long patientId,
+        @RequestParam(required = false) Instant begin,
+        @RequestParam(required = false) Instant end
+    ) {
         if (begin != null && end != null) {
             log.debug("REST request to get recent TreatmentProcedures by patientId {} and dateTime period : {} ~ {}", patientId, begin, end);
             return ResponseEntity.ok().body(treatmentProcedureService.findTreatmentProceduresByPatientIdAndDateTimePeriod(patientId, begin, end));
