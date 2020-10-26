@@ -21,6 +21,10 @@ public class TreatmentProcedureMapper {
 
     private final DisposalRepository disposalRepository;
 
+    private final AppointmentRepository appointmentRepository;
+
+    private final ExtendUserRepository extendUserRepository;
+
     private final NhiProcedureMapper nhiProcedureMapper;
 
     private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
@@ -35,6 +39,8 @@ public class TreatmentProcedureMapper {
         ProcedureRepository procedureRepository,
         ToothRepository toothRepository,
         DisposalRepository disposalRepository,
+        AppointmentRepository appointmentRepository,
+        ExtendUserRepository extendUserRepository,
         NhiProcedureMapper nhiProcedureMapper,
         NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
         ProcedureMapper procedureMapper,
@@ -45,6 +51,8 @@ public class TreatmentProcedureMapper {
         this.procedureRepository = procedureRepository;
         this.toothRepository = toothRepository;
         this.disposalRepository = disposalRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.extendUserRepository = extendUserRepository;
         this.nhiProcedureMapper = nhiProcedureMapper;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
         this.procedureMapper = procedureMapper;
@@ -145,8 +153,12 @@ public class TreatmentProcedureMapper {
             tp.getDisposal().getId() != null
         ) {
             Optional<DisposalTable> opt = disposalRepository.findDisposalById(tp.getDisposal().getId());
-            opt.ifPresent(table ->
-                tp.setDisposal(DisposalMapper.disposalTableToDisposal(table)));
+            if (opt.isPresent()) {
+                Optional<AppointmentTable> optionalAppointmentTable = appointmentRepository
+                    .findAppointmentByRegistration_Id(opt.get().getRegistration_Id());
+
+                tp.setDoctor(extendUserRepository.findById(optionalAppointmentTable.get().getDoctorUser_Id()).orElse(null));
+            }
         }
     }
 }
