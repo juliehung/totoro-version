@@ -11,7 +11,7 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { GAevent, GApageView } from '../../ga';
 import { columns } from './utils/columns';
 import { convertToTableSource, allDoctors } from './utils/convertToTableSource';
-import { openXray, changeXrayModalVisible } from '../Home/actions';
+import { openXray, changeXrayModalVisible, restoreXrayState } from '../Home/actions';
 import DatePicker from '../../component/DatePicker';
 
 export const registrationPage = 'Registration page';
@@ -64,6 +64,7 @@ function RegistrationPage(props) {
     xrayOnRequest,
     changeXrayModalVisible,
     selectedDate,
+    restoreXrayState,
   } = props;
 
   const [selectedDoctor, setSelectedDoctor] = useState();
@@ -85,9 +86,15 @@ function RegistrationPage(props) {
     }
 
     return () => {
+      restoreXrayState();
+    };
+  }, [xrayServerState, xrayServerError, xrayOnRequest, changeXrayModalVisible, restoreXrayState]);
+
+  useEffect(() => {
+    return () => {
       onLeavePage();
     };
-  }, [xrayServerState, xrayServerError, onLeavePage, xrayOnRequest, changeXrayModalVisible]);
+  }, [onLeavePage]);
 
   useEffect(() => {
     const updateRegistrations = arrival => {
@@ -231,6 +238,7 @@ const mapDispatchToProps = {
   openXray,
   onLeavePage,
   changeXrayModalVisible,
+  restoreXrayState,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegistrationPage);

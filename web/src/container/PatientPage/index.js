@@ -8,7 +8,7 @@ import PatientDetail from './PatientDetail';
 import EmptyPage from './EmptyPage';
 import PatientSearchDrawer from './PatientSearchDrawer';
 import { Helmet } from 'react-helmet-async';
-import { changeXrayModalVisible } from '../Home/actions';
+import { changeXrayModalVisible, restoreXrayState } from '../Home/actions';
 import { onLeavePage } from './actions';
 import { message } from 'antd';
 
@@ -33,6 +33,7 @@ function PatientPage(props) {
     xrayServerError,
     changeXrayModalVisible,
     onLeavePage,
+    restoreXrayState,
   } = props;
 
   useEffect(() => {
@@ -53,7 +54,11 @@ function PatientPage(props) {
         changeXrayModalVisible(true);
       }
     }
-  }, [xrayServerState, xrayServerError, onLeavePage, xrayOnRequest, changeXrayModalVisible]);
+
+    return () => {
+      restoreXrayState();
+    };
+  }, [xrayServerState, xrayServerError, xrayOnRequest, changeXrayModalVisible, restoreXrayState]);
 
   useEffect(() => {
     return () => {
@@ -78,6 +83,6 @@ const mapStateToProps = ({ homePageReducer }) => ({
   xrayServerError: homePageReducer.xray.serverError,
 });
 
-const mapDispatchToProps = { changeDrawerVisible, onLeavePage, changeXrayModalVisible };
+const mapDispatchToProps = { changeDrawerVisible, onLeavePage, changeXrayModalVisible, restoreXrayState };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientPage);
