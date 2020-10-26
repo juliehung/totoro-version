@@ -13,8 +13,8 @@ export function* updateClinicNote() {
       const patient = yield select(patientSelector);
       const clinicNote = yield select(clinicNoteSelector);
       const { id } = patient;
-      yield call(Patient.put, { id, clinicNote });
-      yield put(updateClinicNoteSuccess());
+      const editedPatient = yield call(Patient.put, { id, clinicNote });
+      yield put(updateClinicNoteSuccess(editedPatient));
     } catch (error) {
       console.log(error);
     }

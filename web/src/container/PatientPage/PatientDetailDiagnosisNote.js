@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Container, Header, Content } from './component';
@@ -9,7 +9,10 @@ import {
   addDateClinicNote,
   updateClinicNote,
   restoreClinicNote,
+  restoreClinicNoteUpdateSuccess,
 } from './actions';
+
+import { CheckOutlined } from '@ant-design/icons';
 
 import calendarPlus from '../../images/calendar-plus.svg';
 
@@ -46,11 +49,28 @@ function PatientDetailDiagnosisNote(props) {
     addDateClinicNote,
     updateClinicNote,
     restoreClinicNote,
+    updateSuccess,
+    restoreClinicNoteUpdateSuccess,
   } = props;
+
+  const saveButtonRef = useRef(null);
 
   const onTextChange = e => {
     changeClinicNote(e.target.value);
   };
+
+  useEffect(() => {
+    if (updateSuccess) {
+      const restoreClinicNoteUpdateSuccessTimeout = setTimeout(() => {
+        restoreClinicNoteUpdateSuccess();
+        saveButtonRef.current.blur();
+      }, 500);
+
+      return () => {
+        clearTimeout(restoreClinicNoteUpdateSuccessTimeout);
+      };
+    }
+  }, [updateSuccess, restoreClinicNoteUpdateSuccess]);
 
   return (
     <StyledContainer>
@@ -74,7 +94,14 @@ function PatientDetailDiagnosisNote(props) {
           <Button size="small" shape="round" onClick={restoreClinicNote}>
             放棄
           </Button>
-          <Button size="small" type="primary" shape="round" onClick={updateClinicNote}>
+          <Button
+            size="small"
+            type="primary"
+            shape="round"
+            onClick={updateClinicNote}
+            icon={updateSuccess ? <CheckOutlined /> : null}
+            ref={saveButtonRef}
+          >
             儲存
           </Button>
         </ButtonsContainer>
@@ -93,6 +120,7 @@ function PatientDetailDiagnosisNote(props) {
 
 const mapStateToProps = ({ patientPageReducer }) => ({
   clinicNote: patientPageReducer.patient.editedClinicNote,
+  updateSuccess: patientPageReducer.patient.updateSuccess,
 });
 
 const mapDispatchToProps = {
@@ -101,6 +129,7 @@ const mapDispatchToProps = {
   addDateClinicNote,
   updateClinicNote,
   restoreClinicNote,
+  restoreClinicNoteUpdateSuccess,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientDetailDiagnosisNote);

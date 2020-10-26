@@ -24,6 +24,7 @@ import {
   UPDATE_CLINIC_NOTE,
   UPDATE_CLINIC_NOTE_SUCCESS,
   RESTORE_CLINIC_NOTE,
+  RESTORE_CLINIC_NOTE_UPDATE_SUCCESS,
   CHANGE_APPOINTMENT_LIST_MODAL_VISIBLE,
   SEARCH_PATIENTS_START,
   SEARCH_PATIENT_SUCCESS,
@@ -122,12 +123,16 @@ export function updateClinicNote() {
   return { type: UPDATE_CLINIC_NOTE };
 }
 
-export function updateClinicNoteSuccess() {
-  return { type: UPDATE_CLINIC_NOTE_SUCCESS };
+export function updateClinicNoteSuccess(patient) {
+  return { type: UPDATE_CLINIC_NOTE_SUCCESS, patient };
 }
 
 export function restoreClinicNote() {
   return { type: RESTORE_CLINIC_NOTE };
+}
+
+export function restoreClinicNoteUpdateSuccess() {
+  return { type: RESTORE_CLINIC_NOTE_UPDATE_SUCCESS };
 }
 
 export function changeAppointmentListModalVisible(visible) {
