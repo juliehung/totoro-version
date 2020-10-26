@@ -1,4 +1,5 @@
 import { take, call, put, fork, delay } from 'redux-saga/effects';
+import moment from 'moment';
 import { INIT_PATIENT_DETAIL } from '../constant';
 import NhiExtendPaitent from '../../../models/nhiExtendPaitent';
 import TreatmentProcedure from '../../../models/treatmentProcedure';
@@ -47,7 +48,9 @@ export function* initPatientDetail() {
 
 function* getRecentTreatmentProcedureSaga(id) {
   yield put(getRecentTreatmentProcedure());
-  const treatmentProcedure = yield call(TreatmentProcedure.getRecently, id);
+  const begin = moment().add(-18, 'M').toISOString();
+  const end = moment().toISOString();
+  const treatmentProcedure = yield call(TreatmentProcedure.getRecently, id, { begin, end });
   yield put(getRecentTreatmentProcedureSuccess(treatmentProcedure));
 }
 
