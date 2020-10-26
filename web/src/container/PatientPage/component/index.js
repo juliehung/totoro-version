@@ -4,6 +4,7 @@ import { Tooltip } from 'antd';
 import icImg from '../../../images/IC.svg';
 import allDone from '../../../images/all-done.svg';
 import close from '../../../images/close.svg';
+import warning from '../../../images/alert-circle.svg';
 import { toRocString } from '../utils';
 
 export const Container = styled.div`
@@ -61,8 +62,8 @@ const Item = styled.div`
   display: flex;
   min-height: 60px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 10px 0;
-  border-left: 4px solid ${props => (props.can ? '#00b383' : '#f2877d')};
+  padding: 10px 5px 10px 0;
+  border-left: 4px solid ${props => (props.warning ? '#fe9f43' : props.can ? '#00b383' : '#f2877d')};
   & > * {
     margin-left: 16px;
   }
@@ -99,6 +100,16 @@ export const PatientDeclarationStatusItem = props => (
     <div>
       <span>{props.can ? '可申報' : '不可申報'}</span>
       <span>{props.can ? '上次申報' : '始可申報'}</span>
+    </div>
+  </Item>
+);
+
+export const PatientSpecialStatusItem = props => (
+  <Item warning>
+    <img src={warning} height={'90%'} alt="icon" />
+    <div>
+      <span>{props.title}</span>
+      {props.subTitle && <span>{`${props.subTitle}`}</span>}
     </div>
   </Item>
 );

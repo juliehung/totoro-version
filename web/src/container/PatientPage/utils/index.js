@@ -5,11 +5,12 @@ import convertNhiExtentPatientToTableObject from './convertNhiExtentPatientToTab
 import convertAppointmentToCardObject from './convertAppointmentToCardObject';
 import dateStringWithNewLine from './dateStringWithNewLine';
 import toRocString from './toRocString';
-import convertNhiExtendPatientToPatientStatus from './convertNhiExtendPatientToPatientStatus';
+import convertNhiExtendPatientToPatientDeclarationStatus from './convertNhiExtendPatientToPatientDeclarationStatus';
 import appendAmountOnTitle from './appendAmountOnTitle';
 import convertDisposalsToTreatmentsAndPrescriptions from './convertDisposalsToTreatmentsAndPrescriptions';
 import toSurfaceAbbrivation from './toSurfaceAbbrivation';
 import renderYYYMMDDHHMMSS from './renderYYYMMDDHHMMSS';
+import convertPatientToPatientSpecialStatus from './convertPatientToPatientSpecialStatus';
 
 export {
   convertTreatmentProcedureToTableObject,
@@ -19,9 +20,10 @@ export {
   convertAppointmentToCardObject,
   dateStringWithNewLine,
   toRocString,
-  convertNhiExtendPatientToPatientStatus,
+  convertNhiExtendPatientToPatientDeclarationStatus,
   appendAmountOnTitle,
   convertDisposalsToTreatmentsAndPrescriptions,
   toSurfaceAbbrivation,
   renderYYYMMDDHHMMSS,
+  convertPatientToPatientSpecialStatus,
 };
