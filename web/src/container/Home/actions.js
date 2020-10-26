@@ -12,6 +12,7 @@ import {
   XRAY_GREETING,
   XRAY_GREETING_SUCCESS,
   XRAY_GREETING_FAILURE,
+  RESTORE_XRAY_STATE,
   GET_NHI_PROCEDURE,
   GET_NHI_PROCEDURE_SUCCESS,
 } from './constant';
@@ -62,6 +63,10 @@ export function xrayGreetingSuccess() {
 
 export function xrayGreetingFailure() {
   return { type: XRAY_GREETING_FAILURE };
+}
+
+export function restoreXrayState() {
+  return { type: RESTORE_XRAY_STATE };
 }
 
 export function changeXrayModalVisible(visible) {

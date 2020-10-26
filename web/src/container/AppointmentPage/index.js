@@ -14,7 +14,7 @@ import { GApageView } from '../../ga';
 import MobileDetect from 'mobile-detect';
 import { message } from 'antd';
 import { onLeavePage } from './actions';
-import { changeXrayModalVisible } from '../Home/actions';
+import { changeXrayModalVisible, restoreXrayState } from '../Home/actions';
 
 export const appointmentPage = 'Appointment page';
 
@@ -60,7 +60,14 @@ const phone = md.phone();
 const defaultView = 'resourceTimeGridDay';
 
 function AppointmentPage(props) {
-  const { xrayServerState, xrayServerError, onLeavePage, xrayOnRequest, changeXrayModalVisible } = props;
+  const {
+    xrayServerState,
+    xrayServerError,
+    onLeavePage,
+    xrayOnRequest,
+    changeXrayModalVisible,
+    restoreXrayState,
+  } = props;
   const [viewType, setViewType] = useState(defaultView);
 
   useEffect(() => {
@@ -80,9 +87,15 @@ function AppointmentPage(props) {
     }
 
     return () => {
+      restoreXrayState();
+    };
+  }, [xrayServerState, xrayServerError, xrayOnRequest, changeXrayModalVisible, restoreXrayState]);
+
+  useEffect(() => {
+    return () => {
       onLeavePage();
     };
-  }, [xrayServerState, xrayServerError, onLeavePage, xrayOnRequest, changeXrayModalVisible]);
+  }, [onLeavePage]);
 
   return (
     <Container>
@@ -108,6 +121,6 @@ const mapStateToProps = ({ homePageReducer }) => ({
   xrayOnRequest: homePageReducer.xray.onRequest,
 });
 
-const mapDispatchToProps = { onLeavePage, changeXrayModalVisible };
+const mapDispatchToProps = { onLeavePage, changeXrayModalVisible, restoreXrayState };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppointmentPage);
