@@ -1,5 +1,5 @@
 import moment from 'moment';
-const defaultObject = { can: false, next: undefined };
+const defaultObject = { is: false, can: false, next: undefined };
 
 export default function convertNhiExtendPatientToPatientStatus(nhiExtendPatient, patient) {
   let perioObject = { ...defaultObject };
@@ -7,52 +7,39 @@ export default function convertNhiExtendPatientToPatientStatus(nhiExtendPatient,
   let fluorideObject = { ...defaultObject };
   if (nhiExtendPatient && patient) {
     const { perio, scaling, fluoride } = nhiExtendPatient;
-    const { birth, patientIdentity } = patient;
+    const { birth } = patient;
     const age = moment().diff(moment(birth), 'years');
-    const patientIdentityCode = patientIdentity?.code;
 
     // perio
-    if (!perio) {
-      perioObject.can = true;
-    } else {
+    if (perio) {
       const { prev, next } = parseDate(perio);
+      const is = true;
       if (next.isBefore(moment())) {
         perioObject.can = true;
       }
-      perioObject = { ...perioObject, prev, next };
+      perioObject = { ...perioObject, prev, next, is };
     }
 
     // scaling
-    if (!scaling) {
-      scalingObject.can = true;
-    } else {
+    if (scaling && age >= 12) {
       const { prev, next } = parseDate(scaling);
+      const is = true;
       if (next.isBefore(moment())) {
         scalingObject.can = true;
       }
-      scalingObject = { ...scalingObject, prev, next };
+      scalingObject = { ...scalingObject, prev, next, is };
     }
 
     // fluoride
-    if (!fluoride) {
-      // 兒童牙齒塗氟:
-      // 1. 未滿六歲兒童，每半年補助一次
-      // 2. 未滿十二歲之低收入戶(003)、身心障礙、設籍原住民族地區、偏遠及離島地區兒童(007)，每三個月補助一次。
-      const canFluorideAge =
-        (age < 6 && age >= 0) || (age < 12 && (patientIdentityCode === '003' || patientIdentityCode === '007'));
-
-      if (canFluorideAge) {
-        fluorideObject.can = true;
-      }
-    } else {
+    if (fluoride && age <= 6) {
       const { prev, next } = parseDate(fluoride);
+      const is = true;
       if (next.isBefore(moment())) {
         fluorideObject.can = true;
       }
-      fluorideObject = { ...fluorideObject, prev, next };
+      fluorideObject = { ...fluorideObject, prev, next, is };
     }
   }
-
   return { perio: perioObject, scaling: scalingObject, fluoride: fluorideObject };
 }
 

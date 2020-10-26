@@ -2,6 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { Tooltip } from 'antd';
 import icImg from '../../../images/IC.svg';
+import allDone from '../../../images/all-done.svg';
+import close from '../../../images/close.svg';
+import { toRocString } from '../utils';
 
 export const Container = styled.div`
   background: #fff;
@@ -54,6 +57,26 @@ export const Count = styled.div`
   margin-left: 6px;
 `;
 
+const Item = styled.div`
+  display: flex;
+  min-height: 60px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  border-left: 4px solid ${props => (props.can ? '#00b383' : '#f2877d')};
+  & > * {
+    margin-left: 16px;
+  }
+  & > div {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    color: #222b45;
+    & > :first-child {
+      font-weight: 600;
+    }
+  }
+`;
+
 export const Ic = () => (
   <Tooltip title="病患IC卡的內容">
     <img src={icImg} alt="IC" style={{ marginLeft: '25px' }} />
@@ -64,4 +87,18 @@ export const BlueDottedUnderlineText = props => (
   <span style={{ fontSize: '14px', color: '#3366ff', borderBottom: '1px dashed #3366ff', cursor: 'pointer' }}>
     {props.text}
   </span>
+);
+
+export const PatientDeclarationStatusItem = props => (
+  <Item can={props.can}>
+    <img src={props.can ? allDone : close} height={'90%'} alt="icon" />
+    <div>
+      <span>{props.title}</span>
+      <span>{`${props.can ? toRocString(props?.prev) : toRocString(props?.next)}`}</span>
+    </div>
+    <div>
+      <span>{props.can ? '可申報' : '不可申報'}</span>
+      <span>{props.can ? '上次申報' : '始可申報'}</span>
+    </div>
+  </Item>
 );
