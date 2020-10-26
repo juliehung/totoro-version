@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Header, Content, PatientDeclarationStatusItem } from './component';
+import { Container, Header, Content, PatientDeclarationStatusItem, PatientSpecialStatusItem } from './component';
 import { Spin } from 'antd';
-import { convertNhiExtendPatientToPatientStatus } from './utils';
+import { convertNhiExtendPatientToPatientDeclarationStatus, convertPatientToPatientSpecialStatus } from './utils';
 
 //#region
 //#endregion
 
 function PatientDetailPatientStatus(props) {
-  const { patientStatus, loading } = props;
+  const { patientDeclarationStatus, loading, patientSpecialStatus } = props;
 
   return (
     <Container>
@@ -17,9 +17,18 @@ function PatientDetailPatientStatus(props) {
       </Header>
       <Content noPadding>
         <Spin spinning={loading}>
-          {patientStatus.scaling.is && <PatientDeclarationStatusItem {...patientStatus.scaling} title="洗牙91004C" />}
-          {patientStatus.perio.is && <PatientDeclarationStatusItem {...patientStatus.perio} title="牙周病控制" />}
-          {patientStatus.fluoride.is && <PatientDeclarationStatusItem {...patientStatus.fluoride} title="塗氟" />}
+          {patientDeclarationStatus.scaling.is && (
+            <PatientDeclarationStatusItem {...patientDeclarationStatus.scaling} title="洗牙91004C" />
+          )}
+          {patientDeclarationStatus.perio.is && (
+            <PatientDeclarationStatusItem {...patientDeclarationStatus.perio} title="牙周病控制" />
+          )}
+          {patientDeclarationStatus.fluoride.is && (
+            <PatientDeclarationStatusItem {...patientDeclarationStatus.fluoride} title="塗氟" />
+          )}
+          {patientSpecialStatus.map((s, i) => (
+            <PatientSpecialStatusItem key={i} {...s} />
+          ))}
         </Spin>
       </Content>
     </Container>
@@ -27,10 +36,11 @@ function PatientDetailPatientStatus(props) {
 }
 
 const mapStateToProps = ({ patientPageReducer }) => ({
-  patientStatus: convertNhiExtendPatientToPatientStatus(
+  patientDeclarationStatus: convertNhiExtendPatientToPatientDeclarationStatus(
     patientPageReducer.nhiExtendPatient.nhiExtendPatient,
     patientPageReducer.patient.patient,
   ),
+  patientSpecialStatus: convertPatientToPatientSpecialStatus(patientPageReducer.patient.patient),
   loading: patientPageReducer.nhiExtendPatient.loading,
 });
 
