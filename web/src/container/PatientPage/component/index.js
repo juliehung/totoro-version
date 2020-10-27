@@ -65,7 +65,8 @@ const BorderDiv = styled.div`
 
 const Item = styled.div`
   display: flex;
-  min-height: 60px;
+  min-height: ${props => (props.singleLine ? 0 : '60px')};
+  align-items: ${props => (props.singleLine ? 'center' : '')};
   padding: 10px 5px 10px 0;
   border-left: 4px solid ${props => (props.warning ? '#fe9f43' : props.can ? '#00b383' : '#f2877d')};
   & > * {
@@ -112,7 +113,7 @@ export const PatientDeclarationStatusItem = props => (
 
 export const PatientSpecialStatusItem = props => (
   <BorderDiv>
-    <Item warning>
+    <Item warning singleLine={!props.subTitle}>
       <img src={warning} height={'90%'} alt="icon" />
       <div>
         <span>{props.title}</span>
