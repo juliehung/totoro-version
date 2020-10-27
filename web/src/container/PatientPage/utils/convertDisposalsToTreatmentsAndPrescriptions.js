@@ -7,9 +7,18 @@ function convertDisposalsToTreatmentsAndPrescriptions(disposals) {
 
   const returnTreatments = [];
   const returnPrescriptions = [];
+  const returnDisposalWithoutTreatmentsAndPrescriptions = [];
 
   disposals.forEach(d => {
-    const { createdDate, treatmentProcedures, prescription, revisitContent, revisitComment, chiefComplaint } = d;
+    const {
+      createdDate,
+      treatmentProcedures,
+      prescription,
+      revisitContent,
+      revisitComment,
+      chiefComplaint,
+      registration,
+    } = d;
     const doctor = d.registration?.appointment?.doctor;
 
     const template = { createdDate, doctor, revisitContent, revisitComment, chiefComplaint };
@@ -61,9 +70,16 @@ function convertDisposalsToTreatmentsAndPrescriptions(disposals) {
 
         returnPrescriptions.push({ ...template, id, category, teeth, title, content });
       });
+
+    // disposal without treatments and prescriptions
+    if (!prescription?.treatmentDrugs?.length && !treatmentProcedures?.length) {
+      const id = `${d.id}disposal`;
+      const category = registration?.type;
+      returnDisposalWithoutTreatmentsAndPrescriptions.push({ ...template, id, category });
+    }
   });
 
-  return [...returnTreatments, ...returnPrescriptions];
+  return [...returnTreatments, ...returnPrescriptions, ...returnDisposalWithoutTreatmentsAndPrescriptions];
 }
 
 export default convertDisposalsToTreatmentsAndPrescriptions;
