@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api")
@@ -45,8 +44,7 @@ public class NhiRuleCheckResource {
         } catch (NoSuchMethodException e) {
             return new ResponseEntity<>(
                 new NhiRuleCheckResultVM()
-                    .validated(true)
-                    .messages(Arrays.asList("Not supported code")),
+                    .validated(true),
                 HttpStatus.OK);
         }
     }
