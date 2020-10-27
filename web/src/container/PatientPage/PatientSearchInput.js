@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Input, Button } from 'antd';
 
@@ -14,8 +14,14 @@ const SearchContainer = styled.div`
 //#endregion
 
 function PatientSearchInput(props) {
-  const { searchPatient, getRegistrationToday } = props;
+  const { searchPatient, getRegistrationToday, drawerVisible } = props;
   const ref = useRef(null);
+
+  useEffect(() => {
+    if (!drawerVisible) {
+      ref.current.state.value = '';
+    }
+  }, [drawerVisible]);
 
   return (
     <SearchContainer>
