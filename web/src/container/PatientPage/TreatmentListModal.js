@@ -62,7 +62,7 @@ const columns = doctors => [
     title: '國際病碼/項目資訊/處方內容',
     dataIndex: 'content',
     key: 'content',
-    width: '25%',
+    width: '220px',
   },
   {
     title: '下次預約',
