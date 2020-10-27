@@ -98,7 +98,11 @@ function PatientSearchDrawer(props) {
         height="80%"
       >
         <Container>
-          <PatientSearchInput searchPatient={searchPatient} getRegistrationToday={getRegistrationToday} />
+          <PatientSearchInput
+            searchPatient={searchPatient}
+            getRegistrationToday={getRegistrationToday}
+            drawerVisible={drawerOpen}
+          />
           <TabContainer>
             <Tabs centered activeKey={activeKey} onTabClick={setActiveKey}>
               <TabPane tab={appendAmountOnTitle('全部', patients?.length)} key="1">
