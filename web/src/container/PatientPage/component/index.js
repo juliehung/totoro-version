@@ -59,10 +59,13 @@ export const Count = styled.div`
   margin-left: 6px;
 `;
 
+const BorderDiv = styled.div`
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+`;
+
 const Item = styled.div`
   display: flex;
   min-height: 60px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 10px 5px 10px 0;
   border-left: 4px solid ${props => (props.warning ? '#fe9f43' : props.can ? '#00b383' : '#f2877d')};
   & > * {
@@ -92,25 +95,29 @@ export const BlueDottedUnderlineText = props => (
 );
 
 export const PatientDeclarationStatusItem = props => (
-  <Item can={props.can}>
-    <img src={props.can ? allDone : close} height={'90%'} alt="icon" />
-    <div>
-      <span>{props.title}</span>
-      <span>{`${props.can ? toRocString(props?.prev) : toRocString(props?.next)}`}</span>
-    </div>
-    <div>
-      <span>{props.can ? '可申報' : '不可申報'}</span>
-      <span>{props.can ? '上次申報' : '始可申報'}</span>
-    </div>
-  </Item>
+  <BorderDiv>
+    <Item can={props.can}>
+      <img src={props.can ? allDone : close} height={'90%'} alt="icon" />
+      <div>
+        <span>{props.title}</span>
+        <span>{`${props.can ? toRocString(props?.prev) : toRocString(props?.next)}`}</span>
+      </div>
+      <div>
+        <span>{props.can ? '可申報' : '不可申報'}</span>
+        <span>{props.can ? '上次申報' : '始可申報'}</span>
+      </div>
+    </Item>
+  </BorderDiv>
 );
 
 export const PatientSpecialStatusItem = props => (
-  <Item warning>
-    <img src={warning} height={'90%'} alt="icon" />
-    <div>
-      <span>{props.title}</span>
-      {props.subTitle && <span>{`${props.subTitle}`}</span>}
-    </div>
-  </Item>
+  <BorderDiv>
+    <Item warning>
+      <img src={warning} height={'90%'} alt="icon" />
+      <div>
+        <span>{props.title}</span>
+        {props.subTitle && <span>{`${props.subTitle}`}</span>}
+      </div>
+    </Item>
+  </BorderDiv>
 );
