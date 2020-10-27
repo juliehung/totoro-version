@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Container, Header, Content, PatientDeclarationStatusItem, PatientSpecialStatusItem } from './component';
-import { Spin } from 'antd';
+import { Spin, Empty } from 'antd';
 import { convertNhiExtendPatientToPatientDeclarationStatus, convertPatientToPatientSpecialStatus } from './utils';
 
 //#region
@@ -10,6 +10,12 @@ import { convertNhiExtendPatientToPatientDeclarationStatus, convertPatientToPati
 function PatientDetailPatientStatus(props) {
   const { patientDeclarationStatus, loading, patientSpecialStatus } = props;
 
+  const isEmpty =
+    !patientDeclarationStatus.scaling.is &&
+    !patientDeclarationStatus.perio.is &&
+    !patientDeclarationStatus.fluoride.is &&
+    patientSpecialStatus.length === 0;
+
   return (
     <Container>
       <Header>
@@ -17,18 +23,24 @@ function PatientDetailPatientStatus(props) {
       </Header>
       <Content noPadding>
         <Spin spinning={loading}>
-          {patientDeclarationStatus.scaling.is && (
-            <PatientDeclarationStatusItem {...patientDeclarationStatus.scaling} title="洗牙91004C" />
+          {isEmpty ? (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          ) : (
+            <Fragment>
+              {patientDeclarationStatus.scaling.is && (
+                <PatientDeclarationStatusItem {...patientDeclarationStatus.scaling} title="洗牙91004C" />
+              )}
+              {patientDeclarationStatus.perio.is && (
+                <PatientDeclarationStatusItem {...patientDeclarationStatus.perio} title="牙周病控制" />
+              )}
+              {patientDeclarationStatus.fluoride.is && (
+                <PatientDeclarationStatusItem {...patientDeclarationStatus.fluoride} title="塗氟" />
+              )}
+              {patientSpecialStatus.map((s, i) => (
+                <PatientSpecialStatusItem key={i} {...s} />
+              ))}
+            </Fragment>
           )}
-          {patientDeclarationStatus.perio.is && (
-            <PatientDeclarationStatusItem {...patientDeclarationStatus.perio} title="牙周病控制" />
-          )}
-          {patientDeclarationStatus.fluoride.is && (
-            <PatientDeclarationStatusItem {...patientDeclarationStatus.fluoride} title="塗氟" />
-          )}
-          {patientSpecialStatus.map((s, i) => (
-            <PatientSpecialStatusItem key={i} {...s} />
-          ))}
         </Spin>
       </Content>
     </Container>

@@ -68,19 +68,19 @@ const columns = doctors => [
     title: '下次預約',
     dataIndex: 'revisitContent',
     key: 'revisitContent',
-    width: '100px',
+    width: '200px',
   },
   {
     title: '預約備註',
     dataIndex: 'revisitComment',
     key: 'revisitComment',
-    width: '100px',
+    width: '200px',
   },
   {
     title: '病歷紀錄',
     dataIndex: 'chiefComplaint',
     key: 'chiefComplaint',
-    width: '100px',
+    width: '200px',
   },
 ];
 

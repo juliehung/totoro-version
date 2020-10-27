@@ -1,11 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import { Container, Header, Content, Count, BlueDottedUnderlineText } from './component';
 import { Table } from 'antd';
 import { convertTreatmentProcedureToTableObject, toRocString } from './utils';
 import { changeTreatmentListModalVisible } from './actions';
 
 //#region
+const StyledTable = styled(Table)`
+  & .ant-table-thead .ant-table-cell {
+    background-color: #f7f9fc;
+    &.ant-table-column-sort:hover {
+      background-color: #e8f0fc;
+    }
+  }
+`;
+
 //#endregion
 
 const columns = [
@@ -51,7 +61,7 @@ function PatientDetailRercentTreatment(props) {
         </div>
       </Header>
       <Content>
-        <Table
+        <StyledTable
           columns={columns}
           dataSource={treatmentProcedures}
           pagination={false}
