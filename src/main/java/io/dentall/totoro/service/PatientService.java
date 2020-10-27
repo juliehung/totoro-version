@@ -8,6 +8,7 @@ import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.FilterUtil;
 import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.service.QueryService;
 import io.github.jhipster.service.filter.InstantFilter;
 import org.slf4j.Logger;
@@ -21,8 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.criteria.*;
+import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,6 +37,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class PatientService extends QueryService<Patient> {
+
+    private static final String ENTITY_NAME = "patient";
 
     private final Logger log = LoggerFactory.getLogger(PatientService.class);
 
@@ -445,5 +451,70 @@ public class PatientService extends QueryService<Patient> {
         return PatientMapper.patientTableToPatient(
             patientRepository.findPatientById(patientId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to found resource")));
+    }
+
+    public Collection<Patient> getPatientRelationship(Long id, Method m) {
+        try {
+            Optional<Patient> optP = patientRepository.findById(id);
+            return optP.isPresent()
+                ? (Collection<Patient>) m.invoke(optP.get())
+                : new HashSet<>();
+        } catch (Exception e) {
+            log.error(e.toString());
+            return new HashSet<Patient>();
+        }
+    }
+
+    public Set<Patient> createPatientRelationship(Long id1, Long id2) {
+        try {
+            Optional<Patient> optP1 = patientRepository.findById(id1);
+            Optional<Patient> optP2 = patientRepository.findById(id2);
+
+            if (!optP1.isPresent() || !optP2.isPresent()) {
+                throw new BadRequestAlertException("Can not found by id1 or id2", ENTITY_NAME, "patient.not.found");
+            }
+
+            Patient p1 = optP1.get();
+            Patient p2 = optP2.get();
+
+            HashSet<Patient> s1 = new HashSet<>();
+            HashSet<Patient> s2 = new HashSet<>();
+            s1.add(p2);
+            s2.add(p1);
+
+            Method m1 = Patient.class.getMethod("setSpouse1S", Set.class);
+            Method m2 = Patient.class.getMethod("setSpouse2S", Set.class);
+
+            m1.invoke(optP1.get(), s1);
+            m2.invoke(optP2.get(), s2);
+
+            return s1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new HashSet<Patient>();
+        }
+    }
+
+    public HashSet<Patient> deletePatientRelationship(Long id1, Long id2) {
+        try {
+            Optional<Patient> optP1 = patientRepository.findById(id1);
+            Optional<Patient> optP2 = patientRepository.findById(id2);
+
+            if (!optP1.isPresent() || !optP2.isPresent()) {
+                throw new BadRequestAlertException("Can not found by id1 or id2", ENTITY_NAME, "patient.not.found");
+            }
+
+            HashSet<Patient> es = new HashSet<>();
+
+            Method m1 = Patient.class.getMethod("setSpouse1S", Set.class);
+            Method m2 = Patient.class.getMethod("setSpouse2S", Set.class);
+
+            m1.invoke(optP1.get(), es);
+            m2.invoke(optP2.get(), es);
+        } catch (Exception e) {
+            log.error(e.toString());
+        }
+
+        return new HashSet<Patient>();
     }
 }

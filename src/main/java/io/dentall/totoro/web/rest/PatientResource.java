@@ -35,9 +35,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -290,8 +288,12 @@ public class PatientResource {
     @Timed
     public ResponseEntity<Collection<Patient>> getPatientSpouse1S(@PathVariable Long id) {
         log.debug("REST request to get spouse1S of Patient : {}", id);
-
-        return ResponseEntity.ok().body(getPatient(id).getSpouse1S());
+        try {
+            return ResponseEntity.ok().body(patientService.getPatientRelationship(id, Patient.class.getMethod("getSpouse1S")));
+        } catch (NoSuchMethodException e) {
+            log.error(e.toString());
+            return ResponseEntity.ok().body(new HashSet<>());
+        }
     }
 
     /**
@@ -309,11 +311,7 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals spouse1_id not allow", ENTITY_NAME, "patient_id_equal_spouse1_id");
         }
 
-        checkKinship(id, spouse1_id);
-
-        Function<Patient, Patient> func = patient ->
-            getPatientCRUDResult(patient, getPatientCRUDTarget(spouse1_id, patientRepository), Patient::addSpouse1);
-        return ResponseEntity.ok().body(getPatient(id, func).getSpouse1S());
+        return ResponseEntity.ok().body(patientService.createPatientRelationship(id, spouse1_id));
     }
 
     /**
@@ -331,9 +329,7 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals spouse1_id not allow", ENTITY_NAME, "patient_id_equal_spouse1_id");
         }
 
-        Function<Patient, Patient> func = patient ->
-            getPatientCRUDResult(patient, getPatientCRUDTarget(spouse1_id, patientRepository), Patient::removeSpouse1);
-        return ResponseEntity.ok().body(getPatient(id, func).getSpouse1S());
+        return ResponseEntity.ok().body(patientService.deletePatientRelationship(id, spouse1_id));
     }
 
     /**
