@@ -29,6 +29,7 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
         nativeQuery = true,
         value =
             "select netp.*, " +
+            "tp.id as TreatmentProcedure_Id, " +
             "ned.a17, " +
             "ned.a54 " +
             "from disposal d " +
