@@ -65,7 +65,6 @@ const BorderDiv = styled.div`
 
 const Item = styled.div`
   display: flex;
-  min-height: ${props => (props.singleLine ? 0 : '60px')};
   align-items: ${props => (props.singleLine ? 'center' : '')};
   padding: 10px 5px 10px 0;
   border-left: 4px solid ${props => (props.warning ? '#fe9f43' : props.can ? '#00b383' : '#f2877d')};
