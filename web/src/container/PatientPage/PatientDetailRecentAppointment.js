@@ -60,7 +60,7 @@ function PatientDetailRecentAppointment(props) {
         <div>
           <span>約診</span>
           <Count>{futureAppointmentsAmount}</Count>
-          <span>
+          <span style={{ color: '#8f9bb3', marginLeft: '10px', fontSize: '12px' }}>
             (爽約 {appointmentsAnalysis.noShow} 次;取消 {appointmentsAnalysis.cancel} 次)
           </span>
         </div>
