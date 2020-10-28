@@ -466,34 +466,34 @@ public class PatientService extends QueryService<Patient> {
     }
 
     public Set<Patient> createPatientRelationship(
-        Long id1,
-        Long id2,
+        Long mainId,
+        Long subId,
         String mainRelationshipSetter,
         String subRelationshipSetter
     ) {
         try {
-            Optional<Patient> optP1 = patientRepository.findById(id1);
-            Optional<Patient> optP2 = patientRepository.findById(id2);
+            Optional<Patient> optMainP = patientRepository.findById(mainId);
+            Optional<Patient> optSubP = patientRepository.findById(subId);
 
-            if (!optP1.isPresent() || !optP2.isPresent()) {
-                throw new BadRequestAlertException("Can not found by id1 or id2", ENTITY_NAME, "patient.not.found");
+            if (!optMainP.isPresent() || !optSubP.isPresent()) {
+                throw new BadRequestAlertException("Can not found by mainId or subId", ENTITY_NAME, "patient.not.found");
             }
 
-            Patient p1 = optP1.get();
-            Patient p2 = optP2.get();
+            Patient mainP = optMainP.get();
+            Patient subP = optSubP.get();
 
-            HashSet<Patient> s1 = new HashSet<>();
-            HashSet<Patient> s2 = new HashSet<>();
-            s1.add(p2);
-            s2.add(p1);
+            HashSet<Patient> mainS = new HashSet<>();
+            HashSet<Patient> subS = new HashSet<>();
+            mainS.add(mainP);
+            subS.add(subP);
 
-            Method m1 = Patient.class.getMethod(mainRelationshipSetter,Set.class);
-            Method m2 = Patient.class.getMethod(subRelationshipSetter, Set.class);
+            Method mainM = Patient.class.getMethod(mainRelationshipSetter,Set.class);
+            Method subM = Patient.class.getMethod(subRelationshipSetter, Set.class);
 
-            m1.invoke(optP1.get(), s1);
-            m2.invoke(optP2.get(), s2);
+            mainM.invoke(optMainP.get(), mainS);
+            subM.invoke(optSubP.get(), subS);
 
-            return s1;
+            return mainS;
         } catch (Exception e) {
             e.printStackTrace();
             return new HashSet<Patient>();
@@ -501,26 +501,26 @@ public class PatientService extends QueryService<Patient> {
     }
 
     public HashSet<Patient> deletePatientRelationship(
-        Long id1,
-        Long id2,
+        Long mainId,
+        Long subId,
         String mainRelationshipSetter,
         String subRelationshipSetter
     ) {
         try {
-            Optional<Patient> optP1 = patientRepository.findById(id1);
-            Optional<Patient> optP2 = patientRepository.findById(id2);
+            Optional<Patient> optMainP = patientRepository.findById(mainId);
+            Optional<Patient> optSubP = patientRepository.findById(subId);
 
-            if (!optP1.isPresent() || !optP2.isPresent()) {
-                throw new BadRequestAlertException("Can not found by id1 or id2", ENTITY_NAME, "patient.not.found");
+            if (!optMainP.isPresent() || !optSubP.isPresent()) {
+                throw new BadRequestAlertException("Can not found by mainId or subId", ENTITY_NAME, "patient.not.found");
             }
 
             HashSet<Patient> es = new HashSet<>();
 
-            Method m1 = Patient.class.getMethod(mainRelationshipSetter, Set.class);
-            Method m2 = Patient.class.getMethod(subRelationshipSetter, Set.class);
+            Method mainM = Patient.class.getMethod(mainRelationshipSetter, Set.class);
+            Method subM = Patient.class.getMethod(subRelationshipSetter, Set.class);
 
-            m1.invoke(optP1.get(), es);
-            m2.invoke(optP2.get(), es);
+            mainM.invoke(optMainP.get(), es);
+            subM.invoke(optSubP.get(), es);
         } catch (Exception e) {
             log.error(e.toString());
         }

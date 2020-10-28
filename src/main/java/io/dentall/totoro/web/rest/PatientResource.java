@@ -217,7 +217,7 @@ public class PatientResource {
      * @param subId the id of the spouse1
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/patients/{id}/{relationshipType}/{spouse1_id}")
+    @DeleteMapping("/patients/{mainId}/{relationshipType}/{subId}")
     @Timed
     public ResponseEntity<Collection<Patient>> deletePatientSpouse(@PathVariable Long mainId, @PathVariable("relationshipType") PatientRelationshipType relationshipType, @PathVariable Long subId) {
         log.debug("REST request to delete {} (id: {}) of Patient(id: {})", relationshipType, mainId, subId);
