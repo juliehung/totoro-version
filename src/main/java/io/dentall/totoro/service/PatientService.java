@@ -8,6 +8,7 @@ import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.FilterUtil;
 import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.service.QueryService;
 import io.github.jhipster.service.filter.InstantFilter;
 import org.slf4j.Logger;
@@ -21,8 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.criteria.*;
+import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,6 +37,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class PatientService extends QueryService<Patient> {
+
+    private static final String ENTITY_NAME = "patient";
 
     private final Logger log = LoggerFactory.getLogger(PatientService.class);
 
@@ -445,5 +451,80 @@ public class PatientService extends QueryService<Patient> {
         return PatientMapper.patientTableToPatient(
             patientRepository.findPatientById(patientId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to found resource")));
+    }
+
+    public Collection<Patient> getPatientRelationship(Long id, Method m) {
+        try {
+            Optional<Patient> optP = patientRepository.findById(id);
+            return optP.isPresent()
+                ? (Collection<Patient>) m.invoke(optP.get())
+                : new HashSet<>();
+        } catch (Exception e) {
+            log.error(e.toString());
+            return new HashSet<Patient>();
+        }
+    }
+
+    public Set<Patient> createPatientRelationship(
+        Long mainId,
+        Long subId,
+        String mainRelationshipSetter,
+        String subRelationshipSetter
+    ) {
+        try {
+            Optional<Patient> optMainP = patientRepository.findById(mainId);
+            Optional<Patient> optSubP = patientRepository.findById(subId);
+
+            if (!optMainP.isPresent() || !optSubP.isPresent()) {
+                throw new BadRequestAlertException("Can not found by mainId or subId", ENTITY_NAME, "patient.not.found");
+            }
+
+            Patient mainP = optMainP.get();
+            Patient subP = optSubP.get();
+
+            HashSet<Patient> mainS = new HashSet<>();
+            HashSet<Patient> subS = new HashSet<>();
+            mainS.add(mainP);
+            subS.add(subP);
+
+            Method mainM = Patient.class.getMethod(mainRelationshipSetter,Set.class);
+            Method subM = Patient.class.getMethod(subRelationshipSetter, Set.class);
+
+            mainM.invoke(optSubP.get(), mainS);
+            subM.invoke(optMainP.get(), subS);
+
+            return subS;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new HashSet<Patient>();
+        }
+    }
+
+    public HashSet<Patient> deletePatientRelationship(
+        Long mainId,
+        Long subId,
+        String mainRelationshipSetter,
+        String subRelationshipSetter
+    ) {
+        try {
+            Optional<Patient> optMainP = patientRepository.findById(mainId);
+            Optional<Patient> optSubP = patientRepository.findById(subId);
+
+            if (!optMainP.isPresent() || !optSubP.isPresent()) {
+                throw new BadRequestAlertException("Can not found by mainId or subId", ENTITY_NAME, "patient.not.found");
+            }
+
+            HashSet<Patient> es = new HashSet<>();
+
+            Method mainM = Patient.class.getMethod(mainRelationshipSetter, Set.class);
+            Method subM = Patient.class.getMethod(subRelationshipSetter, Set.class);
+
+            mainM.invoke(optSubP.get(), es);
+            subM.invoke(optMainP.get(), es);
+        } catch (Exception e) {
+            log.error(e.toString());
+        }
+
+        return new HashSet<Patient>();
     }
 }

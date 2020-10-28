@@ -2,13 +2,17 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.Blood;
+import io.dentall.totoro.domain.enumeration.Gender;
 import io.dentall.totoro.domain.enumeration.TagName;
-import io.dentall.totoro.repository.*;
+import io.dentall.totoro.repository.PatientIdentityRepository;
+import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.repository.TagRepository;
+import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.AvatarService;
 import io.dentall.totoro.service.BroadcastService;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,8 +34,8 @@ import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.nio.file.Files;
-import java.time.LocalDate;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -40,17 +44,14 @@ import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 
-
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import io.dentall.totoro.domain.enumeration.Gender;
-import io.dentall.totoro.domain.enumeration.Blood;
 /**
  * Test class for the PatientResource REST controller.
+ * 由於沒有引用 url 轉換的機制，所以部分 url 區段需要用大寫表示
  *
  * @see PatientResource
  */
@@ -593,7 +594,7 @@ public class PatientResourceIntTest {
         patientRepository.saveAndFlush(patient);
 
         // Get the parents
-        restPatientMockMvc.perform(get("/api/patients/{id}/parents", patient.getId()))
+        restPatientMockMvc.perform(get("/api/patients/{id}/PARENTS", patient.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].name").value(hasItem(parent2.getName())));
@@ -610,7 +611,7 @@ public class PatientResourceIntTest {
         int parentsSizeBeforeTest = patientRepository.findById(patient.getId()).get().getParents().size();
 
         // Create a parent of the patient
-        restPatientMockMvc.perform(post("/api/patients/{id}/parents/{parent_id}", patient.getId(), parent.getId()))
+        restPatientMockMvc.perform(post("/api/patients/{id}/PARENTS/{parent_id}", patient.getId(), parent.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.length()").value(parentsSizeBeforeTest + 1));
@@ -626,7 +627,7 @@ public class PatientResourceIntTest {
         patientRepository.saveAndFlush(patient);
 
         // Delete a parent of the patient
-        restPatientMockMvc.perform(delete("/api/patients/{id}/parents/{parent_id}", patient.getId(), parent.getId()))
+        restPatientMockMvc.perform(delete("/api/patients/{id}/PARENTS/{parent_id}", patient.getId(), parent.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.length()").value(0));
@@ -644,7 +645,7 @@ public class PatientResourceIntTest {
         patientRepository.saveAndFlush(patient);
 
         // Get the children
-        restPatientMockMvc.perform(get("/api/patients/{id}/children", patient.getId()))
+        restPatientMockMvc.perform(get("/api/patients/{id}/CHILDREN", patient.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.length()").value(2));
@@ -659,7 +660,7 @@ public class PatientResourceIntTest {
         patientRepository.saveAndFlush(patient);
 
         // Create a child of the patient
-        restPatientMockMvc.perform(post("/api/patients/{id}/children/{child_id}", patient.getId(), child.getId()))
+        restPatientMockMvc.perform(post("/api/patients/{id}/CHILDREN/{child_id}", patient.getId(), child.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[0].name").value(child.getName()));
@@ -677,7 +678,7 @@ public class PatientResourceIntTest {
         int childrenSizeBeforeTest = patientRepository.findById(patient.getId()).get().getChildren().size();
 
         // Delete a child of the patient
-        restPatientMockMvc.perform(delete("/api/patients/{id}/children/{child_id}", patient.getId(), child.getId()))
+        restPatientMockMvc.perform(delete("/api/patients/{id}/CHILDREN/{child_id}", patient.getId(), child.getId()))
             .andExpect(status().isOk());
 
         assertThat(patientRepository.findById(patient.getId()).get().getChildren()).hasSize(childrenSizeBeforeTest - 1);
@@ -695,7 +696,7 @@ public class PatientResourceIntTest {
         patientRepository.saveAndFlush(patient);
 
         // Get the spouse1S
-        restPatientMockMvc.perform(get("/api/patients/{id}/spouse1S", patient.getId()))
+        restPatientMockMvc.perform(get("/api/patients/{id}/SPOUSE1S", patient.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].name").value(hasItem(andy.getName())));
@@ -710,7 +711,7 @@ public class PatientResourceIntTest {
         Patient spouse1 = createPatientByName("spouse1");
 
         // Create a spouse1 of the patient
-        restPatientMockMvc.perform(post("/api/patients/{id}/spouse1S/{spouse1_id}", patient.getId(), spouse1.getId()))
+        restPatientMockMvc.perform(post("/api/patients/{id}/SPOUSE1S/{spouse1_id}", patient.getId(), spouse1.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.length()").value(1));
@@ -726,7 +727,7 @@ public class PatientResourceIntTest {
         patientRepository.saveAndFlush(patient);
 
         // Delete a spouse1 of the patient
-        restPatientMockMvc.perform(delete("/api/patients/{id}/spouse1S/{spouse1_id}", patient.getId(), spouse1.getId()))
+        restPatientMockMvc.perform(delete("/api/patients/{id}/SPOUSE1S/{spouse1_id}", patient.getId(), spouse1.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.length()").value(0));
@@ -742,7 +743,7 @@ public class PatientResourceIntTest {
         patientRepository.saveAndFlush(patient);
 
         // Get the spouse2S
-        restPatientMockMvc.perform(get("/api/patients/{id}/spouse2S", patient.getId()))
+        restPatientMockMvc.perform(get("/api/patients/{id}/SPOUSE2S", patient.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[0].name").value(andy.getName()));
@@ -757,7 +758,7 @@ public class PatientResourceIntTest {
         patientRepository.saveAndFlush(patient);
 
         // Create a spouse2 of the patient
-        restPatientMockMvc.perform(post("/api/patients/{id}/spouse2S/{spouse2_id}", patient.getId(), spouse2.getId()))
+        restPatientMockMvc.perform(post("/api/patients/{id}/SPOUSE2S/{spouse2_id}", patient.getId(), spouse2.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.length()").value(1));
@@ -773,7 +774,7 @@ public class PatientResourceIntTest {
         patientRepository.saveAndFlush(patient);
 
         // Delete a spouse1 of the patient
-        restPatientMockMvc.perform(delete("/api/patients/{id}/spouse2S/{spouse2_id}", patient.getId(), spouse2.getId()))
+        restPatientMockMvc.perform(delete("/api/patients/{id}/SPOUSE2S/{spouse2_id}", patient.getId(), spouse2.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.length()").value(0));
