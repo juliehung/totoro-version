@@ -207,7 +207,15 @@ public class PatientResource {
             throw new BadRequestAlertException("patient_id equals spouse1_id not allow", ENTITY_NAME, "patient_id_equal_spouse1_id");
         }
 
-        return ResponseEntity.ok().body(patientService.createPatientRelationship(mainId, subId, relationshipType.getMainSetterName(), relationshipType.getSubSetterName()));
+        // 為了配合不異動前端，修改主從邏輯，因為 spouse1 是配偶關係的關係人，不是主要人，換句話說 mainId 應為 spouse2。
+        if (
+            relationshipType.equals(PatientRelationshipType.SPOUSE1S) ||
+            relationshipType.equals(PatientRelationshipType.SPOUSE2S)
+        ) {
+            return ResponseEntity.ok().body(patientService.createPatientRelationship(subId, mainId, relationshipType.getMainSetterName(), relationshipType.getSubSetterName()));
+        } else {
+            return ResponseEntity.ok().body(patientService.createPatientRelationship(mainId, subId, relationshipType.getMainSetterName(), relationshipType.getSubSetterName()));
+        }
     }
 
     /**

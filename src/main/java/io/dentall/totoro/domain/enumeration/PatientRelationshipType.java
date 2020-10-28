@@ -1,10 +1,10 @@
 package io.dentall.totoro.domain.enumeration;
 
 public enum PatientRelationshipType {
-    SPOUSE1("spouse1", "getSpouse1S","setSpouse1S", "setSpouse2S"),
-    SPOUSE2("spouse2", "getSpouse2S","setSpouse2S", "setSpouse1S"),
-    CHILDREN("children", "getChildren", "setChildren", "setParents"),
-    PARENTS("parents", "getParents", "setParents", "setChildren");
+    SPOUSE1S("spouse1s", "getSpouse1S","setSpouse1S", "setSpouse2S"),
+    SPOUSE2S("spouse2s", "getSpouse2S","setSpouse2S", "setSpouse1S"),
+    CHILDREN("children", "getChildren", "setParents", "setChildren"),
+    PARENTS("parents", "getParents", "setChildren", "setParents");
 
     private String urlPath;
 

@@ -490,8 +490,8 @@ public class PatientService extends QueryService<Patient> {
             Method mainM = Patient.class.getMethod(mainRelationshipSetter,Set.class);
             Method subM = Patient.class.getMethod(subRelationshipSetter, Set.class);
 
-            mainM.invoke(optMainP.get(), mainS);
-            subM.invoke(optSubP.get(), subS);
+            mainM.invoke(optSubP.get(), mainS);
+            subM.invoke(optMainP.get(), subS);
 
             return mainS;
         } catch (Exception e) {
