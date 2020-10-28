@@ -6,6 +6,7 @@ import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
+import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.NhiMedicalRecord;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
@@ -524,13 +525,9 @@ public class NhiRuleCheckUtil {
                 .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
                 .message(
                     String.format(
-                        "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (%s, %d 天前)",
-                        dto.getNhiExtendTreatmentProcedure().getA73(),
-                        codes.toString(),
-                        limitDays.getDays(),
-                        match.getA73(),
-                        matchDate,
-                        Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
+                        "建議 %s 後再行申報，近一次處置為系統中 %s",
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
                     )
                 );
         }
@@ -571,13 +568,9 @@ public class NhiRuleCheckUtil {
                 .validateTitle("指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
                 .message(
                     String.format(
-                        "%s 不可與 %s 在 %d 天內再次申報，上次在他院所申報 %s (%s, %d 天前)",
-                        dto.getNhiExtendTreatmentProcedure().getA73(),
-                        codes.toString(),
-                        limitDays.getDays(),
-                        match.getNhiCode(),
-                        matchDate,
-                        Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
+                        "建議 %s 後再行申報，近一次處置為健保IC卡中 %s",
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
                     )
                 );
         }
@@ -675,9 +668,9 @@ public class NhiRuleCheckUtil {
 
         result.validated(
             StringUtils.isNotBlank(dto.getNhiExtendTreatmentProcedure().getA74()) &&
-            !ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74())
-                .stream()
-                .anyMatch(tooth -> !ToothUtil.validatedToothConstraint(tc, tooth))
+                !ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74())
+                    .stream()
+                    .anyMatch(tooth -> !ToothUtil.validatedToothConstraint(tc, tooth))
         );
 
         if (!result.isValidated()) {

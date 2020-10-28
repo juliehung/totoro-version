@@ -30,6 +30,15 @@ public final class DateTimeUtil {
     public static Supplier<LocalDate> localMonthFirstDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.firstDayOfMonth()).toLocalDate();
     public static Supplier<LocalDate> localMonthLastDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.lastDayOfMonth()).toLocalDate();
 
+    public static String transformLocalDateToRocDateForDisplay(Instant dateTime) {
+        return dateTime
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .minus(1911, ChronoUnit.YEARS)
+            .format(
+                DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+            .substring(1);
+    }
+
     public static String transformLocalDateToRocDate(Instant dateTime) {
         return dateTime
             .atOffset(TimeConfig.ZONE_OFF_SET)
