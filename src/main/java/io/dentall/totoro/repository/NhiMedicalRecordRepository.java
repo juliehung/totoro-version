@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -14,6 +15,8 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface NhiMedicalRecordRepository extends JpaRepository<NhiMedicalRecord, Long>, JpaSpecificationExecutor<NhiMedicalRecord> {
+
+    Optional<NhiMedicalRecord> findTop1ByNhiExtendPatient_Patient_IdAndNhiCode(Long id, String code);
 
     List<NhiMedicalRecord> findByNhiExtendPatient_Patient_IdAndNhiCodeIn(Long id, List<String> codes);
 }

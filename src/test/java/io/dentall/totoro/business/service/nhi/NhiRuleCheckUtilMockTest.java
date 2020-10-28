@@ -1835,13 +1835,9 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "%s 不可與 %s 在 %d 天內再次申報，上次在他院所申報 %s (%s, %d 天前)",
-                dto.getNhiExtendTreatmentProcedure().getA73(),
-                DataGenerator.NHI_CODE_LIST_1,
-                DateTimeUtil.NHI_1_MONTH.getDays(),
-                DataGenerator.NHI_CODE_1,
-                DataGenerator.NHI_TREATMENT_DATE_NOW.minus(5, ChronoUnit.DAYS),
-                5
+                "建議 %s 後再行申報，近一次處置為健保IC卡中 %s",
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(DataGenerator.NHI_TREATMENT_DATE_NOW.minus(5, ChronoUnit.DAYS).plusDays(DateTimeUtil.NHI_1_MONTH.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(DataGenerator.NHI_TREATMENT_DATE_NOW.minus(5, ChronoUnit.DAYS).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
             ),
             rdto.getMessage());
     }

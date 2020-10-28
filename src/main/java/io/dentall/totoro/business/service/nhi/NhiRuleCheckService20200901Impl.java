@@ -26,9 +26,24 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NoSuchMethodException,
         InvocationTargetException,
         IllegalAccessException {
-        return (NhiRuleCheckResultVM) this.getClass()
+
+        // 轉換至統一入口 Object
+        NhiRuleCheckDTO dto = nhiRuleCheckUtil.convertVmToDto(code, vm);
+
+        // 依照個代碼進行檢核
+        NhiRuleCheckResultVM rvm = (NhiRuleCheckResultVM) this.getClass()
             .getMethod("validate".concat(code), NhiRuleCheckDTO.class)
-            .invoke(this, nhiRuleCheckUtil.convertVmToDto(code, vm));
+            .invoke(this, dto);
+
+        // 若代碼檢核無異常，則根據不同情境回傳訊息
+        if (rvm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.appendSuccessSourceInfo(dto),
+                rvm
+            );
+        }
+
+        return rvm;
     }
 
     // 910***
@@ -353,7 +368,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                 dto,
                 Arrays.asList(new String[]{"89"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
-                vm);
+            vm);
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
@@ -384,7 +399,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(
-              "應於病歷詳列充填牙面部位。"
+                "應於病歷詳列充填牙面部位。"
             ),
             vm
         );
