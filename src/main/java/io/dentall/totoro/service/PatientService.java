@@ -465,7 +465,12 @@ public class PatientService extends QueryService<Patient> {
         }
     }
 
-    public Set<Patient> createPatientRelationship(Long id1, Long id2) {
+    public Set<Patient> createPatientRelationship(
+        Long id1,
+        Long id2,
+        String mainRelationshipSetter,
+        String subRelationshipSetter
+    ) {
         try {
             Optional<Patient> optP1 = patientRepository.findById(id1);
             Optional<Patient> optP2 = patientRepository.findById(id2);
@@ -482,8 +487,8 @@ public class PatientService extends QueryService<Patient> {
             s1.add(p2);
             s2.add(p1);
 
-            Method m1 = Patient.class.getMethod("setSpouse1S", Set.class);
-            Method m2 = Patient.class.getMethod("setSpouse2S", Set.class);
+            Method m1 = Patient.class.getMethod(mainRelationshipSetter,Set.class);
+            Method m2 = Patient.class.getMethod(subRelationshipSetter, Set.class);
 
             m1.invoke(optP1.get(), s1);
             m2.invoke(optP2.get(), s2);
@@ -495,7 +500,12 @@ public class PatientService extends QueryService<Patient> {
         }
     }
 
-    public HashSet<Patient> deletePatientRelationship(Long id1, Long id2) {
+    public HashSet<Patient> deletePatientRelationship(
+        Long id1,
+        Long id2,
+        String mainRelationshipSetter,
+        String subRelationshipSetter
+    ) {
         try {
             Optional<Patient> optP1 = patientRepository.findById(id1);
             Optional<Patient> optP2 = patientRepository.findById(id2);
@@ -506,8 +516,8 @@ public class PatientService extends QueryService<Patient> {
 
             HashSet<Patient> es = new HashSet<>();
 
-            Method m1 = Patient.class.getMethod("setSpouse1S", Set.class);
-            Method m2 = Patient.class.getMethod("setSpouse2S", Set.class);
+            Method m1 = Patient.class.getMethod(mainRelationshipSetter, Set.class);
+            Method m2 = Patient.class.getMethod(subRelationshipSetter, Set.class);
 
             m1.invoke(optP1.get(), es);
             m2.invoke(optP2.get(), es);
