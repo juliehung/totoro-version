@@ -560,6 +560,7 @@ public class NhiRuleCheckUtil {
             limitDays);
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
             .validated(match == null);
 
         if (!result.isValidated()) {
@@ -568,7 +569,6 @@ public class NhiRuleCheckUtil {
             result
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
                 .nhiRuleCheckSourceType(NhiRuleCheckSourceType.NHI_CARD_RECORD)
-                .validateTitle("指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
                 .message(
                     String.format(
                         "%s 不可與 %s 在 %d 天內再次申報，上次在他院所申報 %s (%s, %d 天前)",
@@ -612,7 +612,8 @@ public class NhiRuleCheckUtil {
         NhiRuleCheckDTO dto,
         SurfaceConstraint sc
     ) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO();
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+                        .validateTitle("限制牙面在 isAllLimitedSurface 以下");
 
         switch (sc) {
             case MAX_2_SURFACES:
@@ -623,7 +624,6 @@ public class NhiRuleCheckUtil {
                 if (!result.isValidated()) {
                     result
                         .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                        .validateTitle("限制牙面在 isAllLimitedSurface 以下")
                         .message(SurfaceConstraint.MAX_2_SURFACES.getErrorMessage());
                 }
 
@@ -636,7 +636,6 @@ public class NhiRuleCheckUtil {
                 if (!result.isValidated()) {
                     result
                         .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                        .validateTitle("限制牙面在 isAllLimitedSurface 以下")
                         .message(SurfaceConstraint.MAX_3_SURFACES.getErrorMessage());
                 }
                 break;
@@ -648,7 +647,6 @@ public class NhiRuleCheckUtil {
                 if (!result.isValidated()) {
                     result
                         .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                        .validateTitle("限制牙面在 isAllLimitedSurface 以下")
                         .message(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage());
                 }
                 break;
@@ -671,6 +669,7 @@ public class NhiRuleCheckUtil {
         ToothConstraint tc
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("傳入 a74 自動切分為單牙，不可為空，並依照 給定的 ToothConstraint 來判定是否為核可牙位")
             .validated(true);
 
         result.validated(
@@ -683,7 +682,6 @@ public class NhiRuleCheckUtil {
         if (!result.isValidated()) {
             result
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                .validateTitle("傳入 a74 自動切分為單牙，不可為空，並依照 給定的 ToothConstraint 來判定是否為核可牙位")
                 .message(ToothUtil.getToothConstraintsFailureMessage(tc));
         }
 
@@ -706,6 +704,7 @@ public class NhiRuleCheckUtil {
         Period permanentToothLimitDays
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("病患 牙齒 是否有 健保代碼 於某時間前已被申報過")
             .validated(true);
 
         Map<String, Period> toothUsedPeriod = new HashMap<>();
@@ -746,7 +745,6 @@ public class NhiRuleCheckUtil {
                 result
                     .validated(false)
                     .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                    .validateTitle("病患 牙齒 是否有 健保代碼 於某時間前已被申報過")
                     .message(
                         String.format(
                             "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
@@ -773,6 +771,7 @@ public class NhiRuleCheckUtil {
      */
     public NhiRuleCheckResultDTO isPatientIdentityInclude(NhiRuleCheckDTO dto, CopaymentCode cc) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("檢查 nhi extend disposal 是否被調整為 指定部分代碼")
             .validated(
                 StringUtils.isNotBlank(dto.getNhiExtendDisposal().getPatientIdentity()) &&
                     dto.getNhiExtendDisposal().getPatientIdentity().equals(cc.getCode()));
@@ -781,7 +780,6 @@ public class NhiRuleCheckUtil {
             if (CopaymentCode._001.getCode().equals(cc.getCode())) {
                 result
                     .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                    .validateTitle("檢查 nhi extend disposal 是否被調整為 指定部分代碼")
                     .message(CopaymentCode._001.getNotification());
             }
         }
