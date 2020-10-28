@@ -51,6 +51,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 /**
  * Test class for the PatientResource REST controller.
+ * 由於沒有引用 url 轉換的機制，所以部分 url 區段需要用大寫表示
  *
  * @see PatientResource
  */
