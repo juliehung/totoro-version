@@ -493,7 +493,7 @@ public class PatientService extends QueryService<Patient> {
             mainM.invoke(optSubP.get(), mainS);
             subM.invoke(optMainP.get(), subS);
 
-            return mainS;
+            return subS;
         } catch (Exception e) {
             e.printStackTrace();
             return new HashSet<Patient>();
@@ -519,8 +519,8 @@ public class PatientService extends QueryService<Patient> {
             Method mainM = Patient.class.getMethod(mainRelationshipSetter, Set.class);
             Method subM = Patient.class.getMethod(subRelationshipSetter, Set.class);
 
-            mainM.invoke(optMainP.get(), es);
-            subM.invoke(optSubP.get(), es);
+            mainM.invoke(optSubP.get(), es);
+            subM.invoke(optMainP.get(), es);
         } catch (Exception e) {
             log.error(e.toString());
         }
