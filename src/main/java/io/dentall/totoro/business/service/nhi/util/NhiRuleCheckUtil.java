@@ -781,4 +781,48 @@ public class NhiRuleCheckUtil {
 
         return result;
     }
+
+    /**
+     * 檢查 nhi extend disposal 是否被調整為 指定部分代碼
+     *
+     * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.a73
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO appendSuccessSourceInfo(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validated(true);
+
+        // 查詢系統最新一筆資料
+        Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable = nhiExtendTreatmentProcedureRepository
+            .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73(
+                dto.getPatient().getId(),
+                dto.getNhiExtendTreatmentProcedure().getA73());
+
+        if (optionalNhiExtendTreatmentProcedureTable.isPresent()) {
+            result.message(
+                String.format(
+                    "目前可申報, 近一次處置為系統中 %s （為提升準確率，請常讀取 IC 卡取得最新資訊）",
+                    DateTimeUtil.transformA71ToDisplay(optionalNhiExtendTreatmentProcedureTable.get().getA71())
+                )
+            );
+            return result;
+        }
+
+        // 查詢已紀錄健保IC卡最新一筆資料
+        Optional<NhiMedicalRecord> optionalNhiMedicalRecord = nhiMedicalRecordRepository.findTop1ByNhiExtendPatient_Patient_IdAndNhiCode(
+            dto.getPatient().getId(),
+            dto.getNhiExtendTreatmentProcedure().getA73());
+
+        if (optionalNhiMedicalRecord.isPresent()) {
+            result.message(
+                String.format(
+                    "目前可申報, 近一次處置為健保IC卡中 %s （為提升準確率，請常讀取 IC 卡取得最新資訊）",
+                    DateTimeUtil.transformA71ToDisplay(optionalNhiMedicalRecord.get().getDate())
+                )
+            );
+            return result;
+        }
+
+        return result.message("目前可申報（為提升準確率，請常讀取 IC 卡取得最新資訊）");
+    }
 }
