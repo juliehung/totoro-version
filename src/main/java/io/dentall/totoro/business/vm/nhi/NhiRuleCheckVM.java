@@ -7,7 +7,7 @@ public class NhiRuleCheckVM {
     @NotNull
     private Long patientId;
 
-    private Long treatmentId;
+    private Long treatmentProcedureId;
 
     private String a74;
 
@@ -21,12 +21,12 @@ public class NhiRuleCheckVM {
         this.patientId = patientId;
     }
 
-    public Long getTreatmentId() {
-        return treatmentId;
+    public Long getTreatmentProcedureId() {
+        return treatmentProcedureId;
     }
 
-    public void setTreatmentId(Long treatmentId) {
-        this.treatmentId = treatmentId;
+    public void setTreatmentProcedureId(Long treatmentProcedureId) {
+        this.treatmentProcedureId = treatmentProcedureId;
     }
 
     public String getA74() {

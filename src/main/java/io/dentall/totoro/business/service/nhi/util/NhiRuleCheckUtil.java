@@ -288,13 +288,13 @@ public class NhiRuleCheckUtil {
             assignDtoByPatientId(dto, vm.getPatientId());
         }
 
-        if (vm.getTreatmentId() != null) {
-            assignDtoByNhiExtendTreatmentProcedureId(dto, code, vm.getTreatmentId(), vm.getPatientId());
+        if (vm.getTreatmentProcedureId() != null) {
+            assignDtoByNhiExtendTreatmentProcedureId(dto, code, vm.getTreatmentProcedureId(), vm.getPatientId());
             assignDtoByNhiExtendDisposalId(dto, dto.getNhiExtendTreatmentProcedure().getId());
         }
 
         // 產生暫時的 treatment 資料，在後續的檢驗中被檢核所需
-        if (vm.getPatientId() != null && vm.getTreatmentId() == null) {
+        if (vm.getPatientId() != null && vm.getTreatmentProcedureId() == null) {
             dto.setNhiExtendTreatmentProcedure(
                 new NhiExtendTreatmentProcedure()
                     .a71(DateTimeUtil.transformLocalDateToRocDate(Instant.now()))
@@ -315,6 +315,7 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO equalsOrGreaterThanAge12(@NotNull NhiRuleCheckDTO dto) {
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("病患是否在診療當下年紀小於 12 歲")
             .validated(true);
 
         if (dto.getPatient().getBirth() == null) {
@@ -330,7 +331,6 @@ public class NhiRuleCheckUtil {
         if (!result.isValidated()) {
             result
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                .validateTitle("病患是否在診療當下年紀小於 12 歲")
                 .message(
                     String.format(
                         "%s 須在病患年滿 12 歲，方能申報",
@@ -351,6 +351,7 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO lessThanAge12(@NotNull NhiRuleCheckDTO dto) {
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("病患是否在診療當下年紀大於 12 歲")
             .validated(true);
 
         if (dto.getPatient().getBirth() == null) {
@@ -366,7 +367,6 @@ public class NhiRuleCheckUtil {
         if (!result.isValidated()) {
             result
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                .validateTitle("病患是否在診療當下年紀大於 12 歲")
                 .message(
                     String.format(
                         "%s 須在病患未滿 12 歲，方能申報",
@@ -387,6 +387,7 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO lessThanAge6(@NotNull NhiRuleCheckDTO dto) {
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("病患是否在診療當下年紀大於等於 6 歲")
             .validated(true);
 
         if (dto.getPatient().getBirth() == null) {
@@ -401,7 +402,6 @@ public class NhiRuleCheckUtil {
         if (!result.isValidated()) {
             result
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                .validateTitle("病患是否在診療當下年紀大於等於 6 歲")
                 .message(
                     String.format(
                         "%s 須在病患未滿 6 歲，方能申報",
@@ -515,6 +515,7 @@ public class NhiRuleCheckUtil {
 
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
             .validated(match == null);
 
         if (!result.isValidated()) {
@@ -522,7 +523,6 @@ public class NhiRuleCheckUtil {
 
             result
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
                 .message(
                     String.format(
                         "建議 %s 後再行申報，近一次處置為系統中 %s",
@@ -781,13 +781,14 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 檢查 nhi extend disposal 是否被調整為 指定部分代碼
+     * 當檢核都成功的狀況下，呼叫此 method 。查詢最近一筆的治療紀錄，並回傳成功訊息。
      *
      * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.a73
      * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO appendSuccessSourceInfo(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("")
             .validated(true);
 
         // 查詢系統最新一筆資料
