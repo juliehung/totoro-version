@@ -1865,7 +1865,7 @@ public class NhiRuleCheckUtilMockTest {
     public void convertVmToDto_2() {
         NhiRuleCheckVM vm = new NhiRuleCheckVM();
         vm.setPatientId(DataGenerator.ID_1);
-        vm.setTreatmentId(DataGenerator.ID_1);
+        vm.setTreatmentProcedureId(DataGenerator.ID_1);
 
         Mockito
             .when(patientRepository.findPatientById(anyLong()))
