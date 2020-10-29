@@ -1,8 +1,8 @@
 import moment from 'moment';
+import { toRocString } from './';
 
 export default function dateStringWithNewLine() {
   const now = moment();
-  const year = now.year() - 1911;
-  const dateString = `${year}${now.format('MMDD')}`;
+  const dateString = toRocString(now);
   return dateString + '\r\n'.repeat(2);
 }
