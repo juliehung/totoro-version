@@ -793,7 +793,7 @@ public class NhiRuleCheckUtil {
 
         // 查詢系統最新一筆資料
         Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable = nhiExtendTreatmentProcedureRepository
-            .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73(
+            .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73OrderByA71Desc(
                 dto.getPatient().getId(),
                 dto.getNhiExtendTreatmentProcedure().getA73());
 
@@ -808,7 +808,7 @@ public class NhiRuleCheckUtil {
         }
 
         // 查詢已紀錄健保IC卡最新一筆資料
-        Optional<NhiMedicalRecord> optionalNhiMedicalRecord = nhiMedicalRecordRepository.findTop1ByNhiExtendPatient_Patient_IdAndNhiCode(
+        Optional<NhiMedicalRecord> optionalNhiMedicalRecord = nhiMedicalRecordRepository.findTop1ByNhiExtendPatient_Patient_IdAndNhiCodeOrderByDateDesc(
             dto.getPatient().getId(),
             dto.getNhiExtendTreatmentProcedure().getA73());
 

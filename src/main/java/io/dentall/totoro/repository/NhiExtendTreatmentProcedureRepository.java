@@ -21,7 +21,7 @@ import java.util.Set;
 @Repository
 public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<NhiExtendTreatmentProcedure, Long> {
 
-    Optional<NhiExtendTreatmentProcedureTable> findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73(Long patientId, String a73);
+    Optional<NhiExtendTreatmentProcedureTable> findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73OrderByA71Desc(Long patientId, String a73);
 
     // 查詢所有 nhi extend procedure，且包含輸入之健保代碼，且在指定病患下
     List<NhiExtendTreatmentProcedureTable> findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(Long patientId, List<String> a73s);
