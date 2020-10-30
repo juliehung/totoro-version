@@ -815,6 +815,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
                 SurfaceConstraint.MAX_3_SURFACES
