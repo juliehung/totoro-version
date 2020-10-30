@@ -606,7 +606,6 @@ public class NhiRuleCheckUtil {
         SurfaceConstraint sc
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
             .validateTitle("限制牙面在 isAllLimitedSurface 以下");
 
         switch (sc) {
@@ -617,6 +616,7 @@ public class NhiRuleCheckUtil {
                             dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_2_SURFACES.getLimitNumber());
                 if (!result.isValidated()) {
                     result
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
                         .message(SurfaceConstraint.MAX_2_SURFACES.getErrorMessage());
                 }
 
@@ -628,6 +628,7 @@ public class NhiRuleCheckUtil {
                             dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_3_SURFACES.getLimitNumber());
                 if (!result.isValidated()) {
                     result
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
                         .message(SurfaceConstraint.MAX_3_SURFACES.getErrorMessage());
                 }
                 break;
@@ -638,6 +639,7 @@ public class NhiRuleCheckUtil {
                             dto.getNhiExtendTreatmentProcedure().getA75().matches(SurfaceConstraint.MUST_HAVE_M_D_O.getLimitRegex()));
                 if (!result.isValidated()) {
                     result
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
                         .message(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage());
                 }
                 break;
