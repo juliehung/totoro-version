@@ -384,6 +384,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
+    // 890**C
     @Override
     public NhiRuleCheckResultVM validate89001C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -400,6 +401,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(
                 "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
@@ -436,6 +445,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
                 SurfaceConstraint.MAX_3_SURFACES
@@ -462,6 +479,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(
                 "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
@@ -574,6 +599,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
                 SurfaceConstraint.MAX_3_SURFACES
@@ -601,6 +633,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addNotification(
                 "應於病歷詳列充填牙面部位。"
             ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH),
             vm
         );
 
@@ -636,6 +675,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
                 SurfaceConstraint.MAX_3_SURFACES
@@ -666,6 +712,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             vm
         );
 
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
+
         return vm;
     }
 
@@ -687,6 +741,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addNotification(
                 "應於病歷詳列充填牙面部位。"
             ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH),
             vm
         );
 
@@ -730,6 +791,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
                 SurfaceConstraint.MAX_3_SURFACES
@@ -768,6 +836,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             vm
         );
 
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH),
+            vm
+        );
+
         return vm;
     }
 
@@ -789,6 +864,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addNotification(
                 "應於病歷詳列充填牙面部位。"
             ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH),
             vm
         );
 
@@ -853,6 +935,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
                 SurfaceConstraint.MAX_3_SURFACES
@@ -878,6 +968,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(
                 "應於病歷詳列充填牙面部位。"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
@@ -913,6 +1011,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
                 SurfaceConstraint.MAX_2_SURFACES
@@ -939,6 +1044,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addNotification(
                 "應於病歷詳列充填牙面部位。"
             ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH),
             vm
         );
 
@@ -973,6 +1085,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
                 SurfaceConstraint.MAX_3_SURFACES
@@ -999,6 +1118,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addNotification(
                 "應於病歷詳列充填牙面部位。"
             ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH),
             vm
         );
 
@@ -1033,6 +1159,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
                 SurfaceConstraint.MAX_3_SURFACES
@@ -1062,6 +1195,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             vm
         );
 
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
+
         return vm;
     }
 
@@ -1081,6 +1222,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addNotification(
                 "應於病歷詳列充填牙面部位。"
             ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH),
             vm
         );
 
@@ -1144,6 +1292,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             vm
         );
 
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH),
+            vm
+        );
+
         return vm;
     }
 
@@ -1163,6 +1318,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addNotification(
                 "應於病歷詳列充填牙面部位。"
             ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH),
             vm
         );
 
