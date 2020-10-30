@@ -20,10 +20,8 @@ const { TextArea } = Input;
 
 //#region
 const StyledContainer = styled(Container)`
-  &:not(:focus-within) {
-    & .hidingButton {
-      display: none;
-    }
+  & .hidingButton {
+    display: ${props => (props.expand ? 'block' : 'none')};
   }
 `;
 
@@ -50,30 +48,48 @@ function PatientDetailDiagnosisNote(props) {
     updateClinicNote,
     restoreClinicNote,
     updateSuccess,
+    updating,
     restoreClinicNoteUpdateSuccess,
+    expand,
+    setExpand,
   } = props;
 
-  const saveButtonRef = useRef(null);
+  const containerRef = useRef(null);
 
   const onTextChange = e => {
     changeClinicNote(e.target.value);
   };
 
+  const onClick = () => {
+    setExpand(true);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = event => {
+      setExpand(!!containerRef?.current?.contains(event.target));
+    };
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [setExpand]);
+
   useEffect(() => {
     if (updateSuccess) {
       const restoreClinicNoteUpdateSuccessTimeout = setTimeout(() => {
         restoreClinicNoteUpdateSuccess();
-        saveButtonRef.current.blur();
-      }, 500);
+        setExpand(false);
+      }, 300);
 
       return () => {
         clearTimeout(restoreClinicNoteUpdateSuccessTimeout);
       };
     }
-  }, [updateSuccess, restoreClinicNoteUpdateSuccess]);
+  }, [updateSuccess, restoreClinicNoteUpdateSuccess, setExpand]);
 
   return (
-    <StyledContainer>
+    <StyledContainer onClick={onClick} ref={containerRef} expand={expand}>
       <Header>
         <div>
           <span>診療筆記</span>
@@ -100,7 +116,7 @@ function PatientDetailDiagnosisNote(props) {
             shape="round"
             onClick={updateClinicNote}
             icon={updateSuccess ? <CheckOutlined /> : null}
-            ref={saveButtonRef}
+            loading={updating}
           >
             儲存
           </Button>
@@ -121,6 +137,7 @@ function PatientDetailDiagnosisNote(props) {
 const mapStateToProps = ({ patientPageReducer }) => ({
   clinicNote: patientPageReducer.patient.editedClinicNote,
   updateSuccess: patientPageReducer.patient.updateSuccess,
+  updating: patientPageReducer.patient.updating,
 });
 
 const mapDispatchToProps = {
