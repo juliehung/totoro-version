@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import PatientDetailPatientStatus from './PatientDetailPatientStatus';
@@ -22,13 +22,9 @@ const Container = styled.div`
       grid-column: 2/6;
     }
     & > :nth-child(4) {
-      grid-row: 2;
-      grid-column: 1/3;
       z-index: 400;
-
-      &:focus-within {
-        grid-column: 1/4;
-      }
+      grid-row: 2;
+      grid-column: ${props => (props.diagnosisNoteExpand ? '1/4' : '1/3')};
     }
     & > :nth-child(5) {
       grid-row: 2;
@@ -49,12 +45,13 @@ const Container = styled.div`
 //#endregion
 
 function PatientDetailContent() {
+  const [diagnosisNoteExpand, setDiagnosisNoteExpand] = useState(false);
   return (
-    <Container>
+    <Container diagnosisNoteExpand={diagnosisNoteExpand}>
       <PatientDetailPatientStatus />
       <PatientDetailRercentTreatment />
       <PatientDetailRecentAppointment />
-      <PatientDetailDiagnosisNote />
+      <PatientDetailDiagnosisNote expand={diagnosisNoteExpand} setExpand={setDiagnosisNoteExpand} />
       <PatientDetailAccumulatedMedicalRecord />
       <PatientDetailHelthICCardTreatmentRecord />
     </Container>
