@@ -330,7 +330,7 @@ public class NhiRuleCheckUtil {
 
         if (!result.isValidated()) {
             result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
                     String.format(
                         "%s 須在病患年滿 12 歲，方能申報",
@@ -366,7 +366,7 @@ public class NhiRuleCheckUtil {
 
         if (!result.isValidated()) {
             result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
                     String.format(
                         "%s 須在病患未滿 12 歲，方能申報",
@@ -401,7 +401,7 @@ public class NhiRuleCheckUtil {
 
         if (!result.isValidated()) {
             result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
                     String.format(
                         "%s 須在病患未滿 6 歲，方能申報",
@@ -522,7 +522,7 @@ public class NhiRuleCheckUtil {
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
 
             result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
                     String.format(
                         "建議 %s 後再行申報，近一次處置為系統中 %s",
@@ -564,7 +564,7 @@ public class NhiRuleCheckUtil {
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getDate());
 
             result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .nhiRuleCheckSourceType(NhiRuleCheckSourceType.NHI_CARD_RECORD)
                 .message(
                     String.format(
@@ -616,7 +616,7 @@ public class NhiRuleCheckUtil {
                             dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_2_SURFACES.getLimitNumber());
                 if (!result.isValidated()) {
                     result
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                         .message(SurfaceConstraint.MAX_2_SURFACES.getErrorMessage());
                 }
 
@@ -628,7 +628,7 @@ public class NhiRuleCheckUtil {
                             dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_3_SURFACES.getLimitNumber());
                 if (!result.isValidated()) {
                     result
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                         .message(SurfaceConstraint.MAX_3_SURFACES.getErrorMessage());
                 }
                 break;
@@ -639,7 +639,7 @@ public class NhiRuleCheckUtil {
                             dto.getNhiExtendTreatmentProcedure().getA75().matches(SurfaceConstraint.MUST_HAVE_M_D_O.getLimitRegex()));
                 if (!result.isValidated()) {
                     result
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                         .message(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage());
                 }
                 break;
@@ -674,7 +674,7 @@ public class NhiRuleCheckUtil {
 
         if (!result.isValidated()) {
             result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(ToothUtil.getToothConstraintsFailureMessage(tc));
         }
 
@@ -737,7 +737,7 @@ public class NhiRuleCheckUtil {
                 LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
                 result
                     .validated(false)
-                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                     .message(
                         String.format(
                             "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
@@ -772,7 +772,7 @@ public class NhiRuleCheckUtil {
         if (!result.isValidated()) {
             if (CopaymentCode._001.getCode().equals(cc.getCode())) {
                 result
-                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                     .message(CopaymentCode._001.getNotification());
             }
         }
@@ -788,6 +788,7 @@ public class NhiRuleCheckUtil {
      */
     public NhiRuleCheckResultDTO appendSuccessSourceInfo(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.SUCCESS)
             .validateTitle("")
             .validated(true);
 
