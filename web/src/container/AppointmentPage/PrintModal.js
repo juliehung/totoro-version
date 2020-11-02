@@ -90,7 +90,6 @@ class PrintModal extends React.Component {
             doctorList={this.props.doctorList}
             date={this.props.date}
             clinicName={this.props.clinicName}
-            isRoc={this.props.isRoc}
           />
         </div>
       </Modal>
@@ -98,13 +97,12 @@ class PrintModal extends React.Component {
   }
 }
 
-const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
+const mapStateToProps = ({ appointmentPageReducer }) => ({
   visible: appointmentPageReducer.print.visible,
   date: appointmentPageReducer.print.date,
   printButtonDisable: appointmentPageReducer.print.printButtonDisable,
   appointmentList: appointmentPageReducer.print.appData.appointmentList,
   doctorList: appointmentPageReducer.print.appData.doctorList,
-  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = { changePrintModalVisible, changePrintDate };

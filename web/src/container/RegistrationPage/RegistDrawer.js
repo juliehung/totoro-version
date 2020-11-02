@@ -56,17 +56,14 @@ const Title = styled.div`
 `;
 //#endregion
 
-const columns = (changeDrawerVisible, isRoc) => [
+const columns = changeDrawerVisible => [
   {
     title: '產生日期',
     dataIndex: 'createDate',
     key: 'createDate',
     render: date => {
       const momentDate = moment(date);
-      let year = momentDate.year();
-      if (isRoc) {
-        year = year - 1911;
-      }
+      const year = momentDate.year() - 1911;
       return `${year}-${momentDate.format('MM-DD HH:mm')}`;
     },
   },
@@ -90,7 +87,7 @@ const columns = (changeDrawerVisible, isRoc) => [
 ];
 
 function RegistDrawer(props) {
-  const { changeDrawerVisible, getDoc, drawerVisible, patient, isRoc } = props;
+  const { changeDrawerVisible, getDoc, drawerVisible, patient } = props;
 
   useEffect(() => {
     if (drawerVisible) {
@@ -139,17 +136,16 @@ function RegistDrawer(props) {
             <Button shape="round">新增填寫</Button>
           </a>
         </Title>
-        <Table columns={columns(changeDrawerVisible, isRoc)} dataSource={props.docs} pagination={false} />
+        <Table columns={columns(changeDrawerVisible)} dataSource={props.docs} pagination={false} />
       </DrawerContainer>
     </Drawer>
   );
 }
 
-const mapStateToProps = ({ registrationPageReducer, homePageReducer }) => ({
+const mapStateToProps = ({ registrationPageReducer }) => ({
   drawerVisible: registrationPageReducer.drawer.visible,
   patient: registrationPageReducer.drawer.patient,
   docs: registrationPageReducer.drawer.docs,
-  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = { changeDrawerVisible, getDoc };

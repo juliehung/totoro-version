@@ -201,7 +201,6 @@ function CreateAppModal({
   loading,
   searchMode,
   changePatientSearchMode,
-  isRoc,
 }) {
   const [expectedTimeOption, setExpectedTimeOption] = useState(defaultTimeOption);
 
@@ -392,7 +391,7 @@ function CreateAppModal({
                   <span>{selectedPatient && selectedPatient.name}</span>
                 </PatientDetailElement>
                 <PatientDetailElement>
-                  <span>{selectedPatient && parseDateToString(selectedPatient.birth, isRoc)}</span>
+                  <span>{selectedPatient && parseDateToString(selectedPatient.birth)}</span>
                   <span>{selectedPatient && selectedPatient.birth ? ', ' : ''}</span>
                   <span>{selectedPatient && selectedPatient.age}</span>
                   <span>{selectedPatient && (selectedPatient.age ? (selectedPatient.gender ? ', ' : '') : '')}</span>
@@ -411,13 +410,13 @@ function CreateAppModal({
                 <PatientDetailElement>
                   <span>
                     {selectedPatient &&
-                      `最近治療:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentRegistration, isRoc)}`}
+                      `最近治療:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentRegistration)}`}
                   </span>
                 </PatientDetailElement>
                 <PatientDetailElement>
                   <span>
                     {selectedPatient &&
-                      `最近預約:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentAppointment, isRoc)}`}
+                      `最近預約:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentAppointment)}`}
                   </span>
                 </PatientDetailElement>
               </PatientDetailCol>
@@ -541,7 +540,6 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   requiredTreatmentTime: homePageReducer.settings.settings?.preferences?.generalSetting?.requiredTreatmentTime,
   account: homePageReducer.account,
   loading: appointmentPageReducer.createApp.loading,
-  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = {
