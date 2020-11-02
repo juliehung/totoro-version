@@ -34,6 +34,7 @@ const DatePickerContainer = styled.div`
   align-items: center;
   height: 70px;
   padding: 10px;
+  background: #fff;
 `;
 const StyledTable = styled(Table)`
   flex-grow: 1;
