@@ -134,7 +134,6 @@ function Calendar(props) {
     copySuccess,
     getShift,
     changeCopyModalVisible,
-    isRoc,
   } = props;
   const calendarRef = useRef(null);
 
@@ -275,7 +274,7 @@ function Calendar(props) {
         <CopyAllShiftContainer onClick={handleCopyAllShiftClick}>複製全醫師班表</CopyAllShiftContainer>
         <TitleContainer className="fc-center">
           <img src={ArrowLeft} alt="arrow-left" onClick={prevClick} />
-          <span>{parseDateToString(range.start, isRoc)}</span>
+          <span>{parseDateToString(range.start)}</span>
           <img src={ArrowRight} alt="arrow-right" onClick={nextClick} />
         </TitleContainer>
       </Header>
@@ -330,7 +329,6 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
   changeColorSuccess: shiftPageReducer.resourceColor.changeColorSuccess,
   copySuccess: shiftPageReducer.copy.success,
-  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = {

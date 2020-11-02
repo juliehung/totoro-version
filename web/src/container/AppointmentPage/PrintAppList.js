@@ -48,77 +48,75 @@ const style = {
   fontFamily: 'Microsoft JhengHei',
 };
 
-const columns = isRoc => {
-  return [
-    {
-      title: '時間',
-      dataIndex: 'time',
-      key: 'time',
-      render: time => <p style={style}>{time}</p>,
+const columns = [
+  {
+    title: '時間',
+    dataIndex: 'time',
+    key: 'time',
+    render: time => <p style={style}>{time}</p>,
+  },
+  {
+    title: '病患名稱',
+    dataIndex: 'name',
+    key: 'name',
+    render: name => <p style={style}>{name}</p>,
+  },
+  {
+    title: '病編',
+    dataIndex: 'mrn',
+    key: 'mrn',
+    render: mrn => <p style={style}>{mrn}</p>,
+  },
+  {
+    title: '生日',
+    key: 'birth',
+    dataIndex: 'birth',
+    render: birth => {
+      if (moment(birth, 'YYYY-MM-DD').isValid()) {
+        const age = moment().diff(moment(birth, 'YYYY-MM-DD'), 'years');
+        return (
+          <p style={style}>
+            {parseDateToString(birth)} ({age})
+          </p>
+        );
+      } else {
+        return <p style={style}>{birth}</p>;
+      }
     },
-    {
-      title: '病患名稱',
-      dataIndex: 'name',
-      key: 'name',
-      render: name => <p style={style}>{name}</p>,
-    },
-    {
-      title: '病編',
-      dataIndex: 'mrn',
-      key: 'mrn',
-      render: mrn => <p style={style}>{mrn}</p>,
-    },
-    {
-      title: '生日',
-      key: 'birth',
-      dataIndex: 'birth',
-      render: birth => {
-        if (moment(birth, 'YYYY-MM-DD').isValid()) {
-          const age = moment().diff(moment(birth, 'YYYY-MM-DD'), 'years');
-          return (
-            <p style={style}>
-              {parseDateToString(birth, isRoc)} ({age})
-            </p>
-          );
-        } else {
-          return <p style={style}>{birth}</p>;
-        }
-      },
-    },
-    {
-      title: '性別',
-      dataIndex: 'gender',
-      key: 'gender',
-      render: gender => (
-        <p style={style}>
-          {gender === headerData[0].gender
-            ? headerData[0].gender
-            : Gender.find(g => g.en === gender)
-            ? Gender.find(g => g.en === gender).ch
-            : '無'}
-        </p>
-      ),
-    },
-    {
-      title: '電話',
-      dataIndex: 'phone',
-      key: 'phone',
-      render: phone => <p style={style}>{phone}</p>,
-    },
-    {
-      title: '預約醫師',
-      dataIndex: 'doctor',
-      key: 'doctor',
-      render: doctor => <p style={style}>{doctor}</p>,
-    },
-    {
-      title: '備註',
-      dataIndex: 'note',
-      key: 'note',
-      render: note => <span style={style}>{note}</span>,
-    },
-  ];
-};
+  },
+  {
+    title: '性別',
+    dataIndex: 'gender',
+    key: 'gender',
+    render: gender => (
+      <p style={style}>
+        {gender === headerData[0].gender
+          ? headerData[0].gender
+          : Gender.find(g => g.en === gender)
+          ? Gender.find(g => g.en === gender).ch
+          : '無'}
+      </p>
+    ),
+  },
+  {
+    title: '電話',
+    dataIndex: 'phone',
+    key: 'phone',
+    render: phone => <p style={style}>{phone}</p>,
+  },
+  {
+    title: '預約醫師',
+    dataIndex: 'doctor',
+    key: 'doctor',
+    render: doctor => <p style={style}>{doctor}</p>,
+  },
+  {
+    title: '備註',
+    dataIndex: 'note',
+    key: 'note',
+    render: note => <span style={style}>{note}</span>,
+  },
+];
 
 export default class PrintAppList extends React.Component {
   render() {
@@ -137,7 +135,7 @@ export default class PrintAppList extends React.Component {
           <Table
             style={{ border: '2px solid #808080' }}
             rowClassName={'printTableRow'}
-            columns={columns(this.props.isRoc)}
+            columns={columns}
             dataSource={[...headerData, ...this.props.appointmentList]}
             pagination={false}
             bordered
@@ -164,7 +162,7 @@ export default class PrintAppList extends React.Component {
                 </div>
                 <Table
                   rowClassName={'printTableRow'}
-                  columns={columns(this.props.isRoc)}
+                  columns={columns}
                   dataSource={[
                     ...headerData.map(header => ({
                       ...header,

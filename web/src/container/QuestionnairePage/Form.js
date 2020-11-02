@@ -94,7 +94,7 @@ const ButtonsContainer = styled.div`
 //#endregion
 
 function Form(props) {
-  const { match, getDoc, isRoc, patient } = props;
+  const { match, getDoc, patient } = props;
 
   useEffect(() => {
     GApageView();
@@ -117,7 +117,7 @@ function Form(props) {
             </div>
             <div>
               <InfoLabel>生日:</InfoLabel>
-              <Info>{parseDateToString(patient.birth, isRoc)}</Info>
+              <Info>{parseDateToString(patient.birth)}</Info>
             </div>
             <div>
               <InfoLabel>身分證字號:</InfoLabel>
@@ -236,10 +236,9 @@ function Form(props) {
   );
 }
 
-const mapStateToProps = ({ questionnairePageReducer, homePageReducer }) => ({
+const mapStateToProps = ({ questionnairePageReducer }) => ({
   patient: questionnairePageReducer.form.patient,
   esign: questionnairePageReducer.form.esign,
-  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = { getDoc };

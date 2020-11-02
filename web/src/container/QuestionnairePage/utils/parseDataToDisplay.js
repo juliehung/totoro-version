@@ -9,9 +9,9 @@ import {
 } from '../constant_options';
 import { parseDateToString } from './parseDateToString';
 
-export function parseDataToDisplay(data, isRoc) {
+export function parseDataToDisplay(data) {
   const name = data.name;
-  const birth = parseDateToString(data.birth, isRoc);
+  const birth = parseDateToString(data.birth);
   const nationalId = data.nationalId;
   const gender = parseKeyToValue(data.gender, GenderOption);
   const bloodType = parseKeyToValue(data.bloodType, BloodTypeOption);
