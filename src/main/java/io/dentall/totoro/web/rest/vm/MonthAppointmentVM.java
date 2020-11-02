@@ -15,6 +15,8 @@ public class MonthAppointmentVM {
 
     private final String patientName;
 
+    private final String patientDisplayName;
+
     private final LocalDate birth;
 
     private final String nationalId;
@@ -56,6 +58,7 @@ public class MonthAppointmentVM {
     public MonthAppointmentVM(AppointmentDTO appointmentDTO) {
         this.patientId = appointmentDTO.getPatientId();
         this.patientName = appointmentDTO.getPatientName();
+        this.patientDisplayName = appointmentDTO.getPatientDisplayName();
         this.birth = appointmentDTO.getBirth();
         this.nationalId = appointmentDTO.getNationalId();
         this.phone = appointmentDTO.getPhone();
@@ -159,5 +162,9 @@ public class MonthAppointmentVM {
 
     public String getMedicalId() {
         return medicalId;
+    }
+
+    public String getPatientDisplayName() {
+        return patientDisplayName;
     }
 }
