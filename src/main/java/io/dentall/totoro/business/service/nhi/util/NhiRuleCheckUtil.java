@@ -783,20 +783,32 @@ public class NhiRuleCheckUtil {
     /**
      * 當檢核都成功的狀況下，呼叫此 method 。查詢最近一筆的治療紀錄，並回傳成功訊息。
      *
-     * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.a73
+     * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.a73, nhiExtendDisposal.disposal.id
      * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO appendSuccessSourceInfo(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.SUCCESS)
-            .validateTitle("")
+            .validateTitle("當檢核都成功的狀況下，呼叫此 method 。查詢最近一筆的治療紀錄，並回傳成功訊息")
             .validated(true);
 
         // 查詢系統最新一筆資料
-        Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable = nhiExtendTreatmentProcedureRepository
-            .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73OrderByA71Desc(
-                dto.getPatient().getId(),
-                dto.getNhiExtendTreatmentProcedure().getA73());
+        Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable = Optional.empty();
+        if (dto.getNhiExtendDisposal() != null &&
+            dto.getNhiExtendDisposal().getDisposal() != null &&
+            dto.getNhiExtendDisposal().getDisposal().getId() != null
+        ) {
+            optionalNhiExtendTreatmentProcedureTable = nhiExtendTreatmentProcedureRepository
+                .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_Disposal_IdNotOrderByA71Desc(
+                    dto.getPatient().getId(),
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    dto.getNhiExtendDisposal().getDisposal().getId());
+        } else {
+            optionalNhiExtendTreatmentProcedureTable = nhiExtendTreatmentProcedureRepository
+                .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73OrderByA71Desc(
+                    dto.getPatient().getId(),
+                    dto.getNhiExtendTreatmentProcedure().getA73());
+        }
 
         if (optionalNhiExtendTreatmentProcedureTable.isPresent()) {
             result.message(
