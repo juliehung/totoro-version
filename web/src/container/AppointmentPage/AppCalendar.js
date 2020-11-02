@@ -79,6 +79,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 1%;
+  background: #fff;
   @media (max-width: 850px) {
     justify-content: flex-end;
   }
