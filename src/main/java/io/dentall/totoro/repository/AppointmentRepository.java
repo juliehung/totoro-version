@@ -115,6 +115,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
         "select new io.dentall.totoro.service.dto.AppointmentDTO( " +
             "appointment.patient.id, " +
             "appointment.patient.name, " +
+            "appointment.patient.displayName, " +
             "appointment.patient.birth, " +
             "appointment.patient.nationalId, " +
             "appointment.patient.gender, " +
