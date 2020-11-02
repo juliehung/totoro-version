@@ -24,14 +24,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * 共用的 rule check 邏輯會整合在這裡。
@@ -700,56 +698,95 @@ public class NhiRuleCheckUtil {
             .validateTitle("病患 牙齒 是否有 健保代碼 於某時間前已被申報過")
             .validated(true);
 
-        Map<String, Period> toothUsedPeriod = new HashMap<>();
-
-        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
         List<String> teeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
 
-        List<NhiExtendTreatmentProcedure> matches = teeth.stream()
-            .map(tooth -> {
-                if (isDeciduousTeeth(tooth)) {
-                    toothUsedPeriod.put(tooth, deciduousToothLimitDays);
-                } else if (isPermanentTeeth(tooth)) {
-                    toothUsedPeriod.put(tooth, permanentToothLimitDays);
-                } else {
-                    return null;
-                }
-
-                return this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+        teeth.stream()
+            .forEach(tooth -> {
+                Period selectedLimitDay = isDeciduousTeeth(tooth) ? deciduousToothLimitDays : permanentToothLimitDays;
+                NhiExtendTreatmentProcedure match = this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
                     dto.getPatient().getId(),
                     dto.getNhiExtendTreatmentProcedure().getId(),
                     DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
                     codes,
-                    toothUsedPeriod.get(tooth)
+                    selectedLimitDay
                 );
-            })
-            .collect(Collectors.toList());
 
-        matches.stream()
-            .filter(Objects::nonNull)
-            .filter(netp -> ToothUtil.splitA74(netp.getA74()).stream().anyMatch(netpTooth -> teeth.contains(netpTooth)))
-            .findFirst()
-            .ifPresent(match -> {
                 if (match == null) {
                     return;
+                } else if (
+                    match != null &&
+                    ToothUtil.splitA74(match.getA74()).contains(tooth)
+                ) {
+                    LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
+                    result
+                        .validated(false)
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                        .message(
+                            String.format(
+                                "建議 %s 後再行申報，近一次處置為系統中 %s",
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    matchDate.plusDays(selectedLimitDay.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+                            )
+                        );
                 }
+            });
 
-                LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
-                result
-                    .validated(false)
-                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                    .message(
-                        String.format(
-                            "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
-                            dto.getNhiExtendTreatmentProcedure().getA73(),
-                            codes.toString(),
-                            toothUsedPeriod.get(match.getA74()).getDays(),
-                            match.getA73(),
-                            match.getA74(),
-                            matchDate,
-                            Duration.between(matchDate.atStartOfDay(), currentTxDate.atStartOfDay()).toDays()
-                        )
-                    );
+        return result;
+    }
+
+    /**
+     * 病患 牙齒 是否有 健保代碼 於某時間前已被申報過 in IC card
+     *
+     * @param dto                     使用 nhiExtendTreatmentProcedure.id/a71/a73/a74, patient.id,
+     * @param codes                   被限制的健保代碼清單
+     * @param deciduousToothLimitDays 為乳牙時，所需時間間隔
+     * @param permanentToothLimitDays 為恆牙時，所需時間間隔
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
+        NhiRuleCheckDTO dto,
+        List<String> codes,
+        Period deciduousToothLimitDays,
+        Period permanentToothLimitDays
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("病患 牙齒 是否有 健保代碼 於某時間前已被申報過 in IC card")
+            .validated(true);
+
+        List<String> teeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
+
+        teeth.stream()
+            .forEach(tooth -> {
+                Period selectedLimitDay = isDeciduousTeeth(tooth) ? deciduousToothLimitDays : permanentToothLimitDays;
+                NhiMedicalRecord match = this.findPatientMediaRecordAtCodesAndBeforePeriod(
+                    dto.getPatient().getId(),
+                    DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
+                    codes,
+                    selectedLimitDay
+                );
+
+                if (match == null) {
+                    return;
+                } else if (
+                    match != null &&
+                        ToothUtil.splitA74(match.getPart()).contains(tooth)
+                ) {
+                    LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getPart());
+                    result
+                        .validated(false)
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                        .message(
+                            String.format(
+                                "建議 %s 後再行申報，近一次處置為健保IC卡中 %s",
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    matchDate.plusDays(selectedLimitDay.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+                            )
+                        );
+                }
             });
 
         return result;

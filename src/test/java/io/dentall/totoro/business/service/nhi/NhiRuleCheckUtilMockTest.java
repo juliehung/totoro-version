@@ -990,16 +990,11 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
-                dto.getNhiExtendTreatmentProcedure().getA73(),
-                Arrays.asList(DataGenerator.NHI_CODE_1),
-                DateTimeUtil.NHI_12_MONTH.getDays(),
-                DataGenerator.NHI_CODE_1,
-                DataGenerator.TOOTH_DECIDUOUS_1,
-                DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING),
-                Duration.between(
-                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay(),
-                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay()).toDays()
+                "建議 %s 後再行申報，近一次處置為系統中 %s",
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                    DataGenerator.NHI_TREATMENT_DATE_NOW.plusDays(DateTimeUtil.NHI_12_MONTH.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                    DataGenerator.NHI_TREATMENT_DATE_NOW.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
             ),
             rdto.getMessage());
     }
@@ -1060,16 +1055,11 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
-                dto.getNhiExtendTreatmentProcedure().getA73(),
-                Arrays.asList(DataGenerator.NHI_CODE_1),
-                DateTimeUtil.NHI_18_MONTH.getDays(),
-                DataGenerator.NHI_CODE_1,
-                DataGenerator.TOOTH_PERMANENT_1,
-                DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING),
-                Duration.between(
-                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay(),
-                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay()).toDays()
+                "建議 %s 後再行申報，近一次處置為系統中 %s",
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                    DataGenerator.NHI_TREATMENT_DATE_NOW.plusDays(DateTimeUtil.NHI_18_MONTH.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                    DataGenerator.NHI_TREATMENT_DATE_NOW.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
             ),
             rdto.getMessage());
     }
@@ -1244,16 +1234,11 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
-                dto.getNhiExtendTreatmentProcedure().getA73(),
-                Arrays.asList(DataGenerator.NHI_CODE_1),
-                DateTimeUtil.NHI_12_MONTH.getDays(),
-                DataGenerator.NHI_CODE_1,
-                DataGenerator.TOOTH_DECIDUOUS_1,
-                DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING),
-                Duration.between(
-                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay(),
-                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay()).toDays()
+                "建議 %s 後再行申報，近一次處置為系統中 %s",
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                    DataGenerator.NHI_TREATMENT_DATE_NOW.plusDays(DateTimeUtil.NHI_12_MONTH.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                    DataGenerator.NHI_TREATMENT_DATE_NOW.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
             ),
             rdto.getMessage());
     }
@@ -1314,16 +1299,11 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "%s 不可與 %s 在 %d 天內再次申報，上次申報 %s (牙位 %s, 於 %s, %d 天前)",
-                dto.getNhiExtendTreatmentProcedure().getA73(),
-                Arrays.asList(DataGenerator.NHI_CODE_1),
-                DateTimeUtil.NHI_18_MONTH.getDays(),
-                DataGenerator.NHI_CODE_1,
-                DataGenerator.TOOTH_PERMANENT_1,
-                DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING),
-                Duration.between(
-                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay(),
-                    DateTimeUtil.transformROCDateToLocalDate(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).atStartOfDay()).toDays()
+                "建議 %s 後再行申報，近一次處置為系統中 %s",
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                    DataGenerator.NHI_TREATMENT_DATE_NOW.plusDays(DateTimeUtil.NHI_18_MONTH.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                    DataGenerator.NHI_TREATMENT_DATE_NOW.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
             ),
             rdto.getMessage());
     }
