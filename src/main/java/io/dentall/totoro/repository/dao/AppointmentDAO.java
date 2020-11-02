@@ -33,6 +33,7 @@ public class AppointmentDAO {
     private final String patientLastModifiedBy;
     private final Instant patientLastModifiedDate;
     private final String name;
+    private final String displayName;
     private final String phone;
     private final Gender gender;
     private final LocalDate birth;
@@ -116,6 +117,7 @@ public class AppointmentDAO {
         String patientLastModifiedBy,
         Instant patientLastModifiedDate,
         String name,
+        String displayName,
         String phone,
         Gender gender,
         LocalDate birth,
@@ -192,6 +194,7 @@ public class AppointmentDAO {
         this.patientLastModifiedBy = patientLastModifiedBy;
         this.patientLastModifiedDate = patientLastModifiedDate;
         this.name = name;
+        this.displayName = displayName;
         this.phone = phone;
         this.gender = gender;
         this.birth = birth;
@@ -553,5 +556,9 @@ public class AppointmentDAO {
 
     public Instant getDisposalLastModifiedDate() {
         return disposalLastModifiedDate;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 }

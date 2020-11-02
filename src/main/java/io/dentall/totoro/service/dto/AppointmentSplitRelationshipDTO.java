@@ -53,6 +53,7 @@ public class AppointmentSplitRelationshipDTO {
 
         Patient patient = new Patient()
             .name(appointmentDAO.getName())
+            .displayName(appointmentDAO.getDisplayName())
             .phone(appointmentDAO.getPhone())
             .gender(appointmentDAO.getGender())
             .birth(appointmentDAO.getBirth())
