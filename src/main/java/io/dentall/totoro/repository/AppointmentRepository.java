@@ -31,7 +31,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
         value = "select" +
             "       p.id as patientId," +
             "       p.name as patientName," +
-            "       p.displayName as patientDisplayName," +
+            "       p.display_name as patientDisplayName," +
             "       p.birth as patientBirth," +
             "       p.medical_id as patientMedicalId," +
             "       p.gender as patientGender," +
