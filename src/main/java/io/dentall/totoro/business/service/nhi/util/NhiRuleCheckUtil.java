@@ -307,6 +307,9 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckDTO convertVmToDto(@NotNull String code, @NotNull NhiRuleCheckVM vm) {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
 
+        // 若有指定排除的 treatment procedure id，在後續的 query result 將會排除所列項目。（應用於前端刪除項目但尚未改動到資料）
+        dto.setExcludeTreatmentProcedureIds(vm.getExcludeTreatmentProcedureIds());
+
         if (vm.getPatientId() != null) {
             assignDtoByPatientId(dto, vm.getPatientId());
         }
