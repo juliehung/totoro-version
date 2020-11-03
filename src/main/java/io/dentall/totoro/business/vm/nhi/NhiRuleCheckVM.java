@@ -9,8 +9,19 @@ public class NhiRuleCheckVM {
 
     private Long treatmentProcedureId;
 
+    /**
+     * 民國時間
+     */
+    private String a71;
+
+    /**
+     * 牙位
+     */
     private String a74;
 
+    /**
+     * 牙面
+     */
     private String a75;
 
     public Long getPatientId() {
@@ -43,5 +54,13 @@ public class NhiRuleCheckVM {
 
     public void setA75(String a75) {
         this.a75 = a75;
+    }
+
+    public String getA71() {
+        return a71;
+    }
+
+    public void setA71(String a71) {
+        this.a71 = a71;
     }
 }

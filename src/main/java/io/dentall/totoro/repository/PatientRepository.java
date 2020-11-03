@@ -21,6 +21,8 @@ import java.util.Optional;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpecificationExecutor<Patient> {
 
+    Optional<Patient> findByAppointments_Registration_Disposal_id(Long disposalId);
+
     Optional<PatientTable> findPatientById(Long id);
 
     <T> Collection<T> findByParentsId(Long id, Class<T> type);
