@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.vm.nhi;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class NhiRuleCheckVM {
 
@@ -23,6 +24,11 @@ public class NhiRuleCheckVM {
      * 牙面
      */
     private String a75;
+
+    /**
+     * 排除列出的 treatment procedure id，於查詢結果的階段
+     */
+    private List<Long> excludeTreatmentProcedureIds;
 
     public Long getPatientId() {
         return patientId;
@@ -62,5 +68,13 @@ public class NhiRuleCheckVM {
 
     public void setA71(String a71) {
         this.a71 = a71;
+    }
+
+    public List<Long> getExcludeTreatmentProcedureIds() {
+        return excludeTreatmentProcedureIds;
+    }
+
+    public void setExcludeTreatmentProcedureIds(List<Long> excludeTreatmentProcedureIds) {
+        this.excludeTreatmentProcedureIds = excludeTreatmentProcedureIds;
     }
 }

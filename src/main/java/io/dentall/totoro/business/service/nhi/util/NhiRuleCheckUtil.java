@@ -466,7 +466,8 @@ public class NhiRuleCheckUtil {
         Long treatmentProcedureId,
         LocalDate currentTreatmentProcedureDate,
         @NotNull List<String> codes,
-        @NotNull Period limitDays
+        @NotNull Period limitDays,
+        List<Long> excludeTreatmentProcedureIds
     ) {
         List<NhiExtendTreatmentProcedure> matchedNhiExtendTreatmentProcedure = new ArrayList<>();
 
@@ -481,6 +482,7 @@ public class NhiRuleCheckUtil {
             .filter(netp -> !netp.getTreatmentProcedure_Id().equals(treatmentProcedureId))
             .filter(netp -> currentTreatmentProcedureDate.isEqual(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())) ||
                 currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
+            .filter(netp -> !excludeTreatmentProcedureIds.contains(netp.getTreatmentProcedure_Id()))
             .forEach(netpt -> {
                 LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
                 if (pastTxDate.plus(limitDays).isEqual(currentTreatmentProcedureDate) || pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
@@ -509,7 +511,8 @@ public class NhiRuleCheckUtil {
         LocalDate currentTreatmentProcedureDate,
         @NotNull List<String> codes,
         @NotNull Period limitDays,
-        String tooth
+        String tooth,
+        List<Long> excludeTreatmentProcedureIds
     ) {
         List<NhiExtendTreatmentProcedure> matchedNhiExtendTreatmentProcedure = new ArrayList<>();
 
@@ -525,6 +528,7 @@ public class NhiRuleCheckUtil {
             .filter(netp -> currentTreatmentProcedureDate.isEqual(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())) ||
                 currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
             .filter(netp -> ToothUtil.splitA74(netp.getA74()).contains(tooth))
+            .filter(netp -> !excludeTreatmentProcedureIds.contains(netp.getTreatmentProcedure_Id()))
             .forEach(netpt -> {
                 LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
                 if (pastTxDate.plus(limitDays).isEqual(currentTreatmentProcedureDate) || pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
@@ -593,8 +597,8 @@ public class NhiRuleCheckUtil {
                 dto.getNhiExtendTreatmentProcedure().getId(),
                 currentTxDate,
                 codes,
-                limitDays);
-
+                limitDays,
+                dto.getExcludeTreatmentProcedureIds());
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
@@ -793,7 +797,8 @@ public class NhiRuleCheckUtil {
                     DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
                     codes,
                     selectedLimitDay,
-                    tooth
+                    tooth,
+                    dto.getExcludeTreatmentProcedureIds()
                 );
 
                 if (match != null) {

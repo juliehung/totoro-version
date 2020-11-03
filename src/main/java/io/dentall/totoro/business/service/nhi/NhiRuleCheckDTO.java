@@ -5,6 +5,7 @@ import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.Patient;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class NhiRuleCheckDTO {
 
@@ -15,6 +16,8 @@ public class NhiRuleCheckDTO {
 
     @NotNull
     private NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure;
+
+    private List<Long> excludeTreatmentProcedureIds;
 
     public NhiRuleCheckDTO patient(Patient patient) {
         this.patient = patient;
@@ -53,5 +56,13 @@ public class NhiRuleCheckDTO {
 
     public void setNhiExtendTreatmentProcedure(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         this.nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedure;
+    }
+
+    public List<Long> getExcludeTreatmentProcedureIds() {
+        return excludeTreatmentProcedureIds;
+    }
+
+    public void setExcludeTreatmentProcedureIds(List<Long> excludeTreatmentProcedureIds) {
+        this.excludeTreatmentProcedureIds = excludeTreatmentProcedureIds;
     }
 }
