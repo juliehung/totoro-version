@@ -7,14 +7,15 @@ import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.config.TimeConfig;
+import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.NhiMedicalRecord;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
-import io.dentall.totoro.repository.NhiMedicalRecordRepository;
-import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
+import io.dentall.totoro.service.mapper.DisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.mapper.PatientMapper;
@@ -27,7 +28,10 @@ import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,13 +58,16 @@ public class NhiRuleCheckUtil {
 
     private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
 
+    private final DisposalRepository disposalRepository;
+
     public NhiRuleCheckUtil(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
         PatientRepository patientRepository,
         NhiMedicalRecordRepository nhiMedicalRecordRepository,
         NhiExtendDisposalMapper nhiExtendDisposalMapper,
-        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper
+        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
+        DisposalRepository disposalRepository
     ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
@@ -68,6 +75,7 @@ public class NhiRuleCheckUtil {
         this.nhiMedicalRecordRepository = nhiMedicalRecordRepository;
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
+        this.disposalRepository = disposalRepository;
     }
 
     /**
@@ -221,19 +229,35 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 查詢 nhi extend disposal 並將取得資料塞入 dto 以利後續使用，或 response as not found
+     * 查詢 nhi extend disposal 並將取得資料塞入 dto 以利後續使用。當還未寫卡時，會查詢 disposal 以及 patient 以取得 patient identity，
+     * 若查無 patient 則自動帶入 H10
      *
      * @param dto         dto.nhiExtendDisposal 將會被 assign db data
      * @param treatmentId 診療 id
      */
     private void assignDtoByNhiExtendDisposalId(@NotNull NhiRuleCheckDTO dto, @NotNull Long treatmentId) {
-        dto.setNhiExtendDisposal(
-            nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(
-                nhiExtendDisposalRepository.findByDisposal_TreatmentProcedures_Id(treatmentId, NhiExtendDisposalTable.class)
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .findAny()
-                    .orElseThrow(() -> new ResourceNotFoundException("nhi Extend Disposal Id with treatment id " + treatmentId))));
+        Optional<NhiExtendDisposalTable> optNed = nhiExtendDisposalRepository.findByDisposal_TreatmentProcedures_Id(treatmentId, NhiExtendDisposalTable.class)
+            .stream()
+            .filter(Objects::nonNull)
+            .findAny();
+
+        if (optNed.isPresent()) {
+            dto.setNhiExtendDisposal(nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(optNed.get()));
+        } else {
+            NhiExtendDisposal ned = new NhiExtendDisposal();
+
+            Optional<DisposalTable> optD = disposalRepository.findByTreatmentProcedures_Id(treatmentId);
+            if (optD.isPresent()) {
+                Optional<Patient> optP = patientRepository.findByAppointments_Registration_Disposal_id(optD.get().getId());
+                if (optP.isPresent()) {
+                    ned.setPatientIdentity(optP.get().getPatientIdentity().getCode());
+                } else {
+                    ned.setPatientIdentity("H10");
+                }
+
+                ned.setDisposal(DisposalMapper.disposalTableToDisposal(optD.get()));
+            }
+        }
     }
 
     /**
@@ -270,9 +294,10 @@ public class NhiRuleCheckUtil {
     /**
      * 作用是轉化 vm 取得到的值，檢核、查詢對應 Nhi Disposal, Nhi Treatment Procedure, Patient 資料，以利後續功能使用。
      * 此 method 使用情境有二
-     * 1. 診療項目 尚未被產生，需要預先進行確認，所需資料會用到 patientId, a71, a73, a74, a75，a71, a73 不用給定是因為，a71 必然為今日，
+     * 1. 診療項目 尚未被產生，需要預先進行確認，所需資料會用到 patientId, a71, a73, a74, a75，a71, a73
      * 這邊會自動計算帶入；a73 則是打 api 時就會認定想驗證的目標在 api path。
-     * 2. 診療項目 已被產生，需帶入 patientId, treatmentProcedureId(treatmentProcedureId === nhiExtendTreatmentProcedureId)，
+     * 2. 診療項目 已被產生，需帶入 patientId, treatmentProcedureId(treatmentProcedureId === nhiExtendTreatmentProcedureId),
+     * a74, a75，若檢查結果不同則以新帶入的欄位為檢驗項目
      * 並查詢取得對應資料。
      *
      * @param code 來源於 api path，及其預計想檢核的目標
@@ -289,13 +314,28 @@ public class NhiRuleCheckUtil {
         if (vm.getTreatmentProcedureId() != null) {
             assignDtoByNhiExtendTreatmentProcedureId(dto, code, vm.getTreatmentProcedureId(), vm.getPatientId());
             assignDtoByNhiExtendDisposalId(dto, dto.getNhiExtendTreatmentProcedure().getId());
+
+            // 若有給定 a74 且 與查詢結果不同，則將 其改為 前端傳入之牙位
+            if (
+                StringUtils.isNotBlank(vm.getA74()) &&
+                !dto.getNhiExtendTreatmentProcedure().getA74().equals(vm.getA74())
+            ) {
+                dto.getNhiExtendTreatmentProcedure().setA74(vm.getA74());
+            }
+            // 若有給定 a75 且 與查詢結果不同，則將 其改為 前端傳入之牙位
+            if (
+                StringUtils.isNotBlank(vm.getA75()) &&
+                !dto.getNhiExtendTreatmentProcedure().getA75().equals(vm.getA75())
+            ) {
+                dto.getNhiExtendTreatmentProcedure().setA75(vm.getA75());
+            }
         }
 
         // 產生暫時的 treatment 資料，在後續的檢驗中被檢核所需
         if (vm.getPatientId() != null && vm.getTreatmentProcedureId() == null) {
             dto.setNhiExtendTreatmentProcedure(
                 new NhiExtendTreatmentProcedure()
-                    .a71(DateTimeUtil.transformLocalDateToRocDate(Instant.now()))
+                    .a71(StringUtils.isNotBlank(vm.getA71()) ? vm.getA71() : DateTimeUtil.transformLocalDateToRocDate(Instant.now()))
                     .a73(code)
                     .a74(vm.getA74())
                     .a75(vm.getA75()));
@@ -441,6 +481,50 @@ public class NhiRuleCheckUtil {
             .filter(netp -> !netp.getTreatmentProcedure_Id().equals(treatmentProcedureId))
             .filter(netp -> currentTreatmentProcedureDate.isEqual(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())) ||
                 currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
+            .forEach(netpt -> {
+                LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
+                if (pastTxDate.plus(limitDays).isEqual(currentTreatmentProcedureDate) || pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
+                    matchedNhiExtendTreatmentProcedure.add(
+                        nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(netpt));
+                }
+            });
+
+        return matchedNhiExtendTreatmentProcedure.size() > 0 ? matchedNhiExtendTreatmentProcedure.get(0) : null;
+    }
+
+    /**
+     * 尋找 患者 在 時間區間 內，屬於 建制的健保代碼清單中，且 未超過時間區間 且 相同牙位 的 NhiExtendTreatmentProcedure
+     *
+     * @param patientId                     病患 id
+     * @param treatmentProcedureId          欲檢驗的處置 id
+     * @param currentTreatmentProcedureDate 當前處置的日期 a71 （此項是為了減少重複所加）
+     * @param codes                         被限制的健保代碼清單
+     * @param limitDays                     間隔時間
+     * @param tooth                         牙位
+     * @return null 或 有衝突的 NhiExtendTreatmentProcedure
+     */
+    public NhiExtendTreatmentProcedure findPatientTreatmentProcedureAtCodesAndBeforePeriodAndTooth(
+        Long patientId,
+        Long treatmentProcedureId,
+        LocalDate currentTreatmentProcedureDate,
+        @NotNull List<String> codes,
+        @NotNull Period limitDays,
+        String tooth
+    ) {
+        List<NhiExtendTreatmentProcedure> matchedNhiExtendTreatmentProcedure = new ArrayList<>();
+
+        List<String> parsedCodes = this.parseNhiCode(codes);
+
+        nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+            patientId,
+            parsedCodes)
+            .stream()
+            .filter(Objects::nonNull)
+            .filter(netp -> StringUtils.isNotBlank(netp.getA71()) && netp.getTreatmentProcedure_Id() != null)
+            .filter(netp -> !netp.getTreatmentProcedure_Id().equals(treatmentProcedureId))
+            .filter(netp -> currentTreatmentProcedureDate.isEqual(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())) ||
+                currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
+            .filter(netp -> ToothUtil.splitA74(netp.getA74()).contains(tooth))
             .forEach(netpt -> {
                 LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
                 if (pastTxDate.plus(limitDays).isEqual(currentTreatmentProcedureDate) || pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
@@ -703,20 +787,16 @@ public class NhiRuleCheckUtil {
         teeth.stream()
             .forEach(tooth -> {
                 Period selectedLimitDay = isDeciduousTeeth(tooth) ? deciduousToothLimitDays : permanentToothLimitDays;
-                NhiExtendTreatmentProcedure match = this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+                NhiExtendTreatmentProcedure match = this.findPatientTreatmentProcedureAtCodesAndBeforePeriodAndTooth(
                     dto.getPatient().getId(),
                     dto.getNhiExtendTreatmentProcedure().getId(),
                     DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
                     codes,
-                    selectedLimitDay
+                    selectedLimitDay,
+                    tooth
                 );
 
-                if (match == null) {
-                    return;
-                } else if (
-                    match != null &&
-                    ToothUtil.splitA74(match.getA74()).contains(tooth)
-                ) {
+                if (match != null) {
                     LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
                     result
                         .validated(false)
