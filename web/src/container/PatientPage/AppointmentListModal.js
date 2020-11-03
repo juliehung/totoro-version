@@ -205,7 +205,7 @@ const mapStateToProps = ({ patientPageReducer, homePageReducer }) => {
     appointments: appointmentsWithStatus,
     patient: patientPageReducer.patient.patient,
     visible: patientPageReducer.appointment.appointmentListModalVisible,
-    doctors: extractDoctorsFromUser(homePageReducer.user.users)?.filter(d => d.activated) ?? [],
+    doctors: extractDoctorsFromUser(homePageReducer.user.users) ?? [],
   };
 };
 const mapDispatchToProps = { changeAppointmentListModalVisible };
