@@ -936,9 +936,11 @@ public class NhiRuleCheckUtil {
                 );
         } else {
             optionalNhiExtendTreatmentProcedureTable = nhiExtendTreatmentProcedureRepository
-                .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73OrderByA71Desc(
+                .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_IdNotInOrderByA71Desc(
                     dto.getPatient().getId(),
-                    dto.getNhiExtendTreatmentProcedure().getA73());
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    dto.getExcludeTreatmentProcedureIds() == null ? new ArrayList<Long>() : dto.getExcludeTreatmentProcedureIds()
+                );
         }
 
         if (optionalNhiExtendTreatmentProcedureTable.isPresent()) {
