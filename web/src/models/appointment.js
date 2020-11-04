@@ -26,6 +26,13 @@ export default class Appointment {
     return result;
   };
 
+  static getForRegistrationPageBetween = async range => {
+    let requestURL = `${requestUrl}/for-registration-page`;
+    const params = { beginDate: range.start.toISOString(), endDate: range.end.toISOString() };
+    requestURL = combineUrlAndQueryData(requestURL, params);
+    return await request(requestURL);
+  };
+
   static getAppointmentsByPatientId = async id => {
     const requestURL = `${requestUrl}?patientId.equals=${id}`;
     const result = await request(requestURL);

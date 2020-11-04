@@ -66,6 +66,7 @@ function RegistrationPage(props) {
     changeXrayModalVisible,
     selectedDate,
     restoreXrayState,
+    registrations,
   } = props;
 
   const [selectedDoctor, setSelectedDoctor] = useState();
@@ -129,7 +130,7 @@ function RegistrationPage(props) {
     if (props.doctors) {
       const options = props.doctors.map(doctor => {
         return (
-          <Option key={doctor.id} value={doctor.id}>
+          <Option key={doctor.id} value={doctor.name}>
             {doctor.name}
           </Option>
         );
@@ -213,7 +214,7 @@ function RegistrationPage(props) {
             },
           };
         }}
-        dataSource={convertToTableSource(props.registrations, selectedDoctor)}
+        dataSource={convertToTableSource(registrations, selectedDoctor)}
         scroll={{ x: 1200 }}
       />
       <RegistDrawer />
@@ -222,7 +223,7 @@ function RegistrationPage(props) {
 }
 
 const mapStateToProps = ({ registrationPageReducer, homePageReducer, settingPageReducer }) => ({
-  registrations: registrationPageReducer.registration.registrations,
+  registrations: registrationPageReducer.registration.registrations ?? [],
   loading: registrationPageReducer.registration.loading,
   selectedDate: registrationPageReducer.registration.selectedDate,
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
