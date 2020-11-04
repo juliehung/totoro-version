@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 @Repository
 public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSpecificationExecutor<Disposal> {
 
+    Optional<DisposalTable> findByTreatmentProcedures_Id(Long treatmentProcedureId);
+
     List<SameTreatmentVM> findByRegistration_Appointment_Patient_IdAndDateTimeBetween(Long patientId, Instant begin, Instant end);
 
     List<DisposalTable> findDisposalByRegistration_Appointment_Patient_Id(Long patientId);

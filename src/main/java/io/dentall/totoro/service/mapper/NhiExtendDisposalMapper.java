@@ -45,6 +45,7 @@ public class NhiExtendDisposalMapper {
         nhiExtendDisposal.setCheckedMonthDeclaration(nhiExtendDisposalTable.getCheckedMonthDeclaration());
         nhiExtendDisposal.setCheckedAuditing(nhiExtendDisposalTable.getCheckedAuditing());
         nhiExtendDisposal.setSerialNumber(nhiExtendDisposalTable.getSerialNumber());
+        nhiExtendDisposal.setReferralHospitalCode(nhiExtendDisposalTable.getReferralHospitalCode());
 
         Disposal disposal = new Disposal();
         disposal.setId(nhiExtendDisposalTable.getDisposal_Id());

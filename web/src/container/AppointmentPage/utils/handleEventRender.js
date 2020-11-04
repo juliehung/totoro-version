@@ -1,10 +1,12 @@
-import { Popover, Dropdown, Menu, Button, Popconfirm } from 'antd';
+import { Popover, Dropdown, Menu } from 'antd';
 import React from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
 import { PhoneOutlined, UserOutlined, SolutionOutlined, EditOutlined } from '@ant-design/icons';
 import VisionImg from '../../../component/VisionImg';
 import VixWinImg from '../../../component/VixWinImg';
+import CancelAppointmentButton from '../CancelAppointmentButton';
+import RestoreAppointmentButton from '../RestoreAppointmentButton';
 
 import { XRAY_VENDORS } from '../constant';
 
@@ -44,8 +46,17 @@ const HightLightSpan = styled.span`
   font-style: italic;
 `;
 
-const NameSpan = styled.span`
+const NameSpan = styled.a`
   font-size: 24px;
+  color: inherit;
+  text-decoration: inherit;
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+    color: inherit;
+  }
 `;
 
 const XrayContainer = styled.div`
@@ -101,7 +112,7 @@ export function handleEventRender(info, func, params) {
   if (info.event.extendedProps.eventType === 'appointment') {
     const appointment = info.event.extendedProps.appointment;
     if (info.view.type.indexOf('Grid') !== -1) {
-      const { id, medicalId, patientName, phone, doctor, note, status, registrationStatus } = appointment;
+      const { id, medicalId, patientId, patientName, phone, doctor, note, status, registrationStatus } = appointment;
 
       if (info.view.type !== 'dayGridMonth') {
         const fcTitle = info.el.querySelector('.fc-title');
@@ -119,7 +130,7 @@ export function handleEventRender(info, func, params) {
 
         const popoverContent = (
           <PopoverContainer>
-            <NameSpan>
+            <NameSpan href={`/#/patient/${patientId}`} target="_blank" rel="noopener noreferrer">
               {status === 'CANCEL' ? '[C]' : null} {patientName}
             </NameSpan>
             <HightLightSpan>{medicalId}</HightLightSpan>
@@ -157,25 +168,9 @@ export function handleEventRender(info, func, params) {
             </XrayContainer>
             {!registrationStatus ? (
               status === 'CANCEL' ? (
-                <Popconfirm
-                  trigger="click"
-                  title="確定恢復預約"
-                  onConfirm={() => {
-                    func.cancel({ id: id, status: 'CONFIRMED' });
-                  }}
-                >
-                  <Button size="small">恢復預約</Button>
-                </Popconfirm>
+                <RestoreAppointmentButton id={id} onConfirm={func.restore} />
               ) : (
-                <Popconfirm
-                  trigger="click"
-                  title="確定取消預約"
-                  onConfirm={() => {
-                    func.cancel({ id: id, status: 'CANCEL' });
-                  }}
-                >
-                  <Button size="small">取消預約</Button>
-                </Popconfirm>
+                <CancelAppointmentButton id={id} onConfirm={func.cancel} />
               )
             ) : null}
             {!registrationStatus ? (

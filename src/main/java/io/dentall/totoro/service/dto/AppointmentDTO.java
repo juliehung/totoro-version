@@ -14,6 +14,8 @@ public class AppointmentDTO {
 
     private final String patientName;
 
+    private final String patientDisplayName;
+
     private final LocalDate birth;
 
     private final String nationalId;
@@ -52,9 +54,10 @@ public class AppointmentDTO {
 
     private final Integer colorId;
 
-    public AppointmentDTO(Long patientId, String patientName, LocalDate birth, String nationalId, Gender gender, String phone, Instant expectedArrivalTime, ExtendUser doctor, Integer requiredTreatmentTime, String note, Boolean microscope, Boolean baseFloor, AppointmentStatus status, Instant registerArrivalTime, Long id, Boolean newPatient, RegistrationStatus registrationStatus, Instant patientLastModifiedDate, String patientLastModifiedBy, String patientMedicalId, Integer colorId) {
+    public AppointmentDTO(Long patientId, String patientName, String patientDisplayName, LocalDate birth, String nationalId, Gender gender, String phone, Instant expectedArrivalTime, ExtendUser doctor, Integer requiredTreatmentTime, String note, Boolean microscope, Boolean baseFloor, AppointmentStatus status, Instant registerArrivalTime, Long id, Boolean newPatient, RegistrationStatus registrationStatus, Instant patientLastModifiedDate, String patientLastModifiedBy, String patientMedicalId, Integer colorId) {
         this.patientId = patientId;
         this.patientName = patientName;
+        this.patientDisplayName = patientDisplayName;
         this.birth = birth;
         this.nationalId = nationalId;
         this.phone = phone;
@@ -158,5 +161,9 @@ public class AppointmentDTO {
 
     public Integer getColorId() {
         return colorId;
+    }
+
+    public String getPatientDisplayName() {
+        return patientDisplayName;
     }
 }

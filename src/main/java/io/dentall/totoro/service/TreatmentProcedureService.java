@@ -333,6 +333,21 @@ public class TreatmentProcedureService {
         return nhiExtendTreatmentProcedure.getId() == null ? nhiExtendTreatmentProcedureService.save(nhiExtendTreatmentProcedure) : nhiExtendTreatmentProcedureService.update(nhiExtendTreatmentProcedure);
     }
 
+    public List<TreatmentProcedure> findTreatmentProceduresByPatientIdAndDateTimePeriod(Long patientId, Instant begin, Instant end) {
+        return treatmentProcedureRepository.findByDisposal_Registration_Appointment_Patient_IdAndDisposal_DateTimeBetweenOrderByCreatedDateDesc(patientId, begin, end).stream()
+            .map(treatmentProcedureMapper::TreatmentProcedureTableToTreatmentProcedure)
+            .map(treatmentProcedure -> {
+                treatmentProcedureMapper.attachNhiProcedureToDomain(treatmentProcedure);
+                treatmentProcedureMapper.attachNhiTreatmentProcedureToDomain(treatmentProcedure);
+                treatmentProcedureMapper.attachProcedureToDomain(treatmentProcedure);
+                treatmentProcedureMapper.attachToothToDomain(treatmentProcedure);
+                treatmentProcedureMapper.attachDisposalToDomain(treatmentProcedure);
+
+                return treatmentProcedure;
+            })
+            .collect(Collectors.toList());
+    }
+
     public List<TreatmentProcedure> findRecent6TreatmentProceduresByPatient(Long patient) {
         return treatmentProcedureRepository.findTop6ByDisposal_Registration_Appointment_Patient_IdOrderByCreatedDateDesc(patient).stream()
             .map(treatmentProcedureMapper::TreatmentProcedureTableToTreatmentProcedure)

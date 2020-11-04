@@ -1,5 +1,7 @@
 package io.dentall.totoro.business.vm;
 
+import io.dentall.totoro.domain.enumeration.Gender;
+
 import java.time.LocalDate;
 
 public class PatientSearchVM {
@@ -16,14 +18,24 @@ public class PatientSearchVM {
 
     private String nationalId;
 
+    private Gender gender;
 
-    public PatientSearchVM(Long id, String name, String medicalId, LocalDate birth, String phone, String nationalId) {
+    public PatientSearchVM(Long id, String name, String medicalId, LocalDate birth, String phone, String nationalId, Gender gender) {
         this.id = id;
         this.name = name;
         this.medicalId = medicalId;
         this.birth = birth;
         this.phone = phone;
         this.nationalId = nationalId;
+        this.gender = gender;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     public String getPhone() {

@@ -24,6 +24,8 @@ public interface TreatmentProcedureRepository extends JpaRepository<TreatmentPro
 
     List<TreatmentProcedureTable> findTop6ByDisposal_Registration_Appointment_Patient_IdOrderByCreatedDateDesc(Long patientId);
 
+    List<TreatmentProcedureTable> findByDisposal_Registration_Appointment_Patient_IdAndDisposal_DateTimeBetweenOrderByCreatedDateDesc(Long id, Instant begin, Instant end);
+
     Set<TreatmentProcedureTable> findTreatmentProceduresByDisposal_Id(Long id);
 
     <T> Collection<T> findByDisposal_Id(Long id, Class<T> type);

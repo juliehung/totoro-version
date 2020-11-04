@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 public interface PatientTable extends AuditingElement {
     Long getId();
+    String getDisplayName();
     String getName();
     String getPhone();
     Gender getGender();

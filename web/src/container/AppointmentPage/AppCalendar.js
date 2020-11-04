@@ -30,6 +30,7 @@ import {
   deleteAppointment,
   deleteCalEvt,
   popoverCancelApp,
+  popoverRestoreApp,
   changeSelectedDoctors,
   getShift,
   changeCalendarRange,
@@ -78,6 +79,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 1%;
+  background: #fff;
   @media (max-width: 850px) {
     justify-content: flex-end;
   }
@@ -397,7 +399,12 @@ class AppCalendar extends React.Component {
 
     if (prevProps.cancelApp !== this.props.cancelApp) {
       this.clickTitle();
-      message.success('取消/恢復預約成功');
+      message.success('取消預約成功');
+    }
+
+    if (prevProps.restoreApp !== this.props.restoreApp) {
+      this.clickTitle();
+      message.success('恢復預約成功');
     }
 
     //select self on mobile
@@ -580,6 +587,7 @@ class AppCalendar extends React.Component {
           edit: this.handleAppointmentDblClick,
           cancel: this.handlePopoverCancelApp,
           xray: this.handleXrayClick,
+          restore: this.handlePopoverRestoreApp,
         },
         { xRayVendors: this.props.xRayVendors },
       );
@@ -602,6 +610,10 @@ class AppCalendar extends React.Component {
 
   handlePopoverCancelApp = apptData => {
     this.props.popoverCancelApp(apptData);
+  };
+
+  handlePopoverRestoreApp = apptData => {
+    this.props.popoverRestoreApp(apptData);
   };
 
   handleXrayClick = data => {
@@ -770,7 +782,7 @@ class AppCalendar extends React.Component {
       <Container>
         <Header>
           <TodayContainer>
-            <TimeDisplay isRoc={this.props.isRoc} />
+            <TimeDisplay />
             <div onClick={this.todayClick}>
               <span>今日</span>
             </div>
@@ -778,7 +790,7 @@ class AppCalendar extends React.Component {
           <TitleContainer className="fc-center">
             <img src={TwoArrowLeft} alt="two-arrow-left" onClick={this.prevMonthClick} />
             <img src={ArrowLeft} alt="arrow-left" onClick={this.prevClick} />
-            <span>{parseDisplayRange(this.props.calendarRange, this.props.isRoc)}</span>
+            <span>{parseDisplayRange(this.props.calendarRange)}</span>
             <img src={ArrowRight} alt="arrow-right" onClick={this.nextClick} />
             <img src={TwoArrowRight} alt="two-arrow-right" onClick={this.nextMonthClick} />
           </TitleContainer>
@@ -788,13 +800,13 @@ class AppCalendar extends React.Component {
                 <span>天</span>
               </ViewItem>
               <ViewItem onClick={this.onWeekClick} selected={this.props.viewType === 'timeGridWeek'}>
-                <span>周</span>
+                <span>週</span>
               </ViewItem>
               <ViewItem onClick={this.onMonthClick} selected={this.props.viewType === 'dayGridMonth'}>
                 <span>月</span>
               </ViewItem>
               <ViewItem onClick={this.onListClick} selected={this.props.viewType === 'listWeek'}>
-                <span>周列表</span>
+                <span>週列表</span>
               </ViewItem>
             </ViewContainer>
             <Popover placement="bottomLeft" trigger="hover" content={doctorControl}>
@@ -889,9 +901,9 @@ const mapStateToProps = ({ homePageReducer, appointmentPageReducer, settingPageR
   calendarFullScreen: appointmentPageReducer.calendar.calendarFullScreen,
   xRayVendors: settingPageReducer.configurations.config.xRayVendors,
   generalSetting: homePageReducer.settings.settings?.preferences?.generalSetting,
-  isRoc: homePageReducer.settings.isRoc,
   calendarRange: appointmentPageReducer.calendar.range,
   cancelApp: appointmentPageReducer.calendar.cancelApp,
+  restoreApp: appointmentPageReducer.calendar.restoreApp,
   account: homePageReducer.account.data,
   backgroundEvent: convertShitToBackgroundEvent(appointmentPageReducer.shift.shift),
   getShiftSuccess: appointmentPageReducer.shift.getShiftSuccess,
@@ -920,6 +932,7 @@ const mapDispatchToProps = {
   deleteAppointment,
   deleteCalEvt,
   popoverCancelApp,
+  popoverRestoreApp,
   changeSelectedDoctors,
   getShift,
   openXray,

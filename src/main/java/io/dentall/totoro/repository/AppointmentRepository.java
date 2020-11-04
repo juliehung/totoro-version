@@ -31,6 +31,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
         value = "select" +
             "       p.id as patientId," +
             "       p.name as patientName," +
+            "       p.display_name as patientDisplayName," +
             "       p.birth as patientBirth," +
             "       p.medical_id as patientMedicalId," +
             "       p.gender as patientGender," +
@@ -115,6 +116,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
         "select new io.dentall.totoro.service.dto.AppointmentDTO( " +
             "appointment.patient.id, " +
             "appointment.patient.name, " +
+            "appointment.patient.displayName, " +
             "appointment.patient.birth, " +
             "appointment.patient.nationalId, " +
             "appointment.patient.gender, " +
@@ -160,6 +162,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "patient.lastModifiedBy, " +
             "patient.lastModifiedDate, " +
             "patient.name, " +
+            "patient.displayName, " +
             "patient.phone, " +
             "patient.gender, " +
             "patient.birth, " +

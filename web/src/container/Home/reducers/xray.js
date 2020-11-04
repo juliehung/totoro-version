@@ -1,8 +1,11 @@
 import produce from 'immer';
-import { CHANGE_XRAY_MODAL_VISIBLE, XRAY_GREETING, XRAY_GREETING_SUCCESS, XRAY_GREETING_FAILURE } from '../constant';
-
-import { ON_LEAVE_PAGE as ON_LEAVE_PAGE_REGISTRATION_PAGE } from '../../RegistrationPage/constant';
-import { ON_LEAVE_PAGE as ON_LEAVE_PAGE_APPOINTMENT_PAGE } from '../../AppointmentPage/constant';
+import {
+  CHANGE_XRAY_MODAL_VISIBLE,
+  XRAY_GREETING,
+  XRAY_GREETING_SUCCESS,
+  XRAY_GREETING_FAILURE,
+  RESTORE_XRAY_STATE,
+} from '../constant';
 
 const initialState = {
   modalVisible: false,
@@ -18,8 +21,7 @@ const xray = (state = initialState, action) =>
       case CHANGE_XRAY_MODAL_VISIBLE:
         draft.modalVisible = action.visible;
         break;
-      case ON_LEAVE_PAGE_APPOINTMENT_PAGE:
-      case ON_LEAVE_PAGE_REGISTRATION_PAGE:
+      case RESTORE_XRAY_STATE:
         draft.onRequest = initialState.onRequest;
         draft.serverState = initialState.serverState;
         draft.serverError = initialState.serverError;

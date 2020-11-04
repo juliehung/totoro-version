@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +59,7 @@ public class TreatmentProcedureResource {
             throw new BadRequestAlertException("A new treatmentProcedure cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TreatmentProcedure result = treatmentProcedureService.save(treatmentProcedure);
+        log.debug("REST request to save TreatmentProcedure result : {}", result);
         return ResponseEntity.created(new URI("/api/treatment-procedures/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -80,6 +82,7 @@ public class TreatmentProcedureResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         TreatmentProcedure result = treatmentProcedureService.update(treatmentProcedure);
+        log.debug("REST request to update TreatmentProcedure result : {}", result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatmentProcedure.getId().toString()))
             .body(result);
@@ -145,10 +148,19 @@ public class TreatmentProcedureResource {
     // Business API, for recent treatment
     @GetMapping("/treatment-procedures/by/{patientId}/recently")
     @Timed
-    public ResponseEntity<List<TreatmentProcedure>> getRecent6Treatments(@PathVariable Long patientId) {
-        log.debug("REST request to get recent 6 TreatmentProcedures : {}", patientId);
-        // query recent 6 Treatment procedures
-        return ResponseEntity.ok().body(treatmentProcedureService.findRecent6TreatmentProceduresByPatient(patientId));
+    public ResponseEntity<List<TreatmentProcedure>> getRecentTreatments(
+        @PathVariable Long patientId,
+        @RequestParam(required = false) Instant begin,
+        @RequestParam(required = false) Instant end
+    ) {
+        if (begin != null && end != null) {
+            log.debug("REST request to get recent TreatmentProcedures by patientId {} and dateTime period : {} ~ {}", patientId, begin, end);
+            return ResponseEntity.ok().body(treatmentProcedureService.findTreatmentProceduresByPatientIdAndDateTimePeriod(patientId, begin, end));
+        } else {
+            // query recent 6 Treatment procedures
+            log.debug("REST request to get recent 6 TreatmentProcedures patient id : {}", patientId);
+            return ResponseEntity.ok().body(treatmentProcedureService.findRecent6TreatmentProceduresByPatient(patientId));
+        }
     }
 
     @GetMapping("/treatment-procedures/isNhi/{id}")

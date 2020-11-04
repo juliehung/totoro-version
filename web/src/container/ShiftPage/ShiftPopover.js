@@ -258,7 +258,7 @@ function ShiftPopover(props) {
         <span>
           每
           <StyleInputNumber size="small" value={week} min={0} max={5} onChange={setWeek} />
-          周重複至 {date ? moment(date).format('M') : ''} 月底
+          週重複至 {date ? moment(date).format('M') : ''} 月底
         </span>
       </ItemContainer>
       <ButtonContainer>

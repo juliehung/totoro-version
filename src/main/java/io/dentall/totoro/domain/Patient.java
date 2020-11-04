@@ -34,6 +34,9 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @SequenceGenerator(name = "sequencePatientGenerator", sequenceName = "seq_patient", allocationSize = 1)
     private Long id;
 
+    @Column(name = "display_name")
+    private String displayName;
+
     @NotNull
     @Column(name = "name", nullable = false)
     private String name;
@@ -141,16 +144,18 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @Column(name = "introducer")
     private String introducer;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "patient_parent",
                joinColumns = @JoinColumn(name = "patients_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "parents_id", referencedColumnName = "id"))
+    @JsonProperty()
     private Set<Patient> parents = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "patient_spouse1",
                joinColumns = @JoinColumn(name = "patients_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "spouse1s_id", referencedColumnName = "id"))
+    @JsonIgnore
     private Set<Patient> spouse1S = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -159,11 +164,11 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
                inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
     private Set<Tag> tags = null;
 
-    @ManyToMany(mappedBy = "parents", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "parents", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Patient> children = new HashSet<>();
 
-    @ManyToMany(mappedBy = "spouse1S", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "spouse1S", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Patient> spouse2S = new HashSet<>();
 
@@ -887,6 +892,19 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         this.teethGraphPermanentSwitch = teethGraphPermanentSwitch;
     }
 
+    public Patient displayName(String displayName) {
+        this.displayName = displayName;
+        return this;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -912,6 +930,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         return "Patient{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", displayName='" + getDisplayName() + "'" +
             ", phone='" + getPhone() + "'" +
             ", gender='" + getGender() + "'" +
             ", birth='" + getBirth() + "'" +

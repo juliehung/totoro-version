@@ -39,4 +39,10 @@ public class BadRequestAlertException extends AbstractThrowableProblem {
         parameters.put("params", entityName);
         return parameters;
     }
+
+    public static void ifNull(Object o, String title, String message, String target) {
+        if (o == null) {
+            throw new BadRequestAlertException(title, message, target);
+        }
+    }
 }

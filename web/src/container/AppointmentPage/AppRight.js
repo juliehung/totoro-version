@@ -131,12 +131,11 @@ function AppRight(props) {
     changeSelectedDoctors,
     backgroundEvent,
     doctors,
-    isRoc,
   } = props;
 
   const [expand, setExpand] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [cookies, setCookie] = useCookies(['token']);
+  const [cookies, setCookie] = useCookies([]);
 
   useEffect(() => {
     const slotDuration = cookies.slotDuration;
@@ -194,10 +193,8 @@ function AppRight(props) {
 
   const headerRender = ({ value }) => {
     const month = value.locale('zh-tw').format('MMMM');
-    let year = value.year();
-    if (isRoc) {
-      year = year - 1911;
-    }
+    const year = value.year() - 1911;
+
     return (
       <div>
         <Row type="flex" justify="space-between">
@@ -365,7 +362,6 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   shiftOpen: appointmentPageReducer.shift.shiftOpen,
   backgroundEvent: convertShitToBackgroundEvent(appointmentPageReducer.shift.shift),
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
-  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = {

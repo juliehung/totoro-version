@@ -56,6 +56,8 @@ const AvatarImg = styled.img`
 
 //#endregion
 
+export const allDoctors = 'THESE_ARE_ALL_DOCTORS';
+
 const renderAvatarImg = gender => {
   if (gender === 'MALE') return <AvatarImg src={ManPng} alt="male" />;
   if (gender === 'FEMALE') return <AvatarImg src={WomanPng} alt="female" />;
@@ -88,43 +90,52 @@ const renderRowIndex = (rowIndex, status) => {
   );
 };
 
-const renderSubject = (subject, note) => {
-  if ((!subject || subject === '') && (!note || note === '')) {
+const renderSubject = note => {
+  if (!note || note === '') {
     return '無';
   }
-  return subject && subject !== '' ? subject + ',' + note : note;
+  return note;
 };
 
-export const allDoctors = 'THESE_ARE_ALL_DOCTORS';
+export function convertToTableSource(registrations, selectedDoctor) {
+  const filterBySelectedDoctor = registrations.filter(r => {
+    if (selectedDoctor === allDoctors || !selectedDoctor) {
+      return true;
+    }
+    return r.userFirstName === selectedDoctor;
+  });
 
-export const convertToTableSource = (registrations, selectedDoctor) => {
-  const tableSource = registrations
-    // Don't show cancel appointment and no registration
-    .filter(appt => appt.status !== 'CANCEL' && appt.registration && appt.registration.id)
-    .filter(appt => {
-      if (!selectedDoctor || !appt.doctor.user || selectedDoctor === allDoctors) {
-        return true;
-      }
-      return appt.doctor.user.id === selectedDoctor;
-    })
+  const sortByArrivalTime = filterBySelectedDoctor
     .slice()
-    .sort((a, b) => moment(a.registration.arrivalTime).unix() - moment(b.registration.arrivalTime).unix());
+    .sort((a, b) => moment(a.registrationArrivalTime).unix() - moment(b.registrationArrivalTime).unix());
 
-  let i = 1;
-  return tableSource.map(appt => {
+  return sortByArrivalTime.map((r, i) => {
+    const hasOwn = r.ProcedureCounter !== 0;
+    const hasNhi = r.NhiProcedureCounter !== 0;
+    const a23 = r.nhiExtendDisposalA23;
+    const typeResult = [];
+    if (hasNhi) typeResult.push(a23 ? '健保(' + a23 + ')' : '健保');
+    if (hasOwn) typeResult.push('自費');
+    const type = typeResult.length === 0 ? r.RegistrationType : typeResult.join(', ');
+    const patient = {
+      id: r.patientId,
+      name: r.patientName,
+      gender: r.patientGender,
+      medicalId: r.patientMedicalId,
+      birth: r.patientBirth,
+    };
+
     return {
-      key: appt.id,
-      rowIndex: renderRowIndex(i++, appt.registration.status),
-      name: renderName(appt.patient),
-      patient: appt.patient,
-      arrivalTime:
-        appt.registration.arrivalTime && moment(appt.registration.arrivalTime).local().format('YYYY-MM-DD HH:mm'),
-      expectedArrivalTime:
-        appt.expectedArrivalTime && moment(appt.expectedArrivalTime).local().format('YYYY-MM-DD HH:mm'),
-      age: moment().diff(appt.patient.birth, 'years') + 'Y',
-      type: appt.registration.type,
-      doctor: appt.doctor.user.firstName,
-      subject: renderSubject(appt.subject, appt.note),
+      key: r.registrationId,
+      rowIndex: renderRowIndex(i + 1, r.registrationStatus),
+      name: renderName(patient),
+      arrivalTime: moment(r.registrationArrivalTime).local().format('YYYY-MM-DD HH:mm'),
+      expectedArrivalTime: moment(r.appointmentExpectedArrivalTime).local().format('YYYY-MM-DD HH:mm'),
+      age: moment().diff(r.patientBirth, 'years') + 'Y',
+      doctor: r.userFirstName,
+      subject: renderSubject(r.appointmentNote),
+      type,
+      patient,
     };
   });
-};
+}

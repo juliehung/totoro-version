@@ -73,12 +73,13 @@ const ButtonsContainer = styled.div`
 
 const StyledButton = styled(Button)`
   margin: 10px;
+  border-radius: 4px !important;
 `;
 //#endregion
 
 function Form(props) {
-  const { patient, isRoc } = props;
-  const displayData = parseDataToDisplay(props.patient, isRoc);
+  const { patient } = props;
+  const displayData = parseDataToDisplay(props.patient);
 
   const disabled =
     !patient.name ||
@@ -225,9 +226,8 @@ function Form(props) {
   );
 }
 
-const mapStateToProps = ({ questionnairePageReducer, homePageReducer }) => ({
+const mapStateToProps = ({ questionnairePageReducer }) => ({
   patient: questionnairePageReducer.data.patient,
-  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = { gotoPage, nextPage };

@@ -9,6 +9,7 @@ import { HashRouter } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
 import { HelmetProvider } from 'react-helmet-async';
 import { initGA } from './ga';
+import { ConfigProvider } from 'antd';
 import 'antd/dist/antd.less';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -26,7 +27,9 @@ function App() {
       <HashRouter>
         <CookiesProvider>
           <HelmetProvider>
-            <Home />
+            <ConfigProvider autoInsertSpaceInButton={false}>
+              <Home />
+            </ConfigProvider>
           </HelmetProvider>
         </CookiesProvider>
       </HashRouter>

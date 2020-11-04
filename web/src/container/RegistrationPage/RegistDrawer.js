@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { changeDrawerVisible, getDoc } from './actions';
 import { getBaseUrl } from '../../utils/getBaseUrl';
+import personFill from '../../images/person-fill.svg';
 
 //#region
 const DrawerContainer = styled.div`
@@ -38,23 +39,31 @@ const PatientContainer = styled.div`
   }
 `;
 
-const StyledButton = styled(Button)`
-  margin: 20px auto;
+const PatientPageButtonContainer = styled.div`
+  margin: 25px 0 20px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #edf1f7;
 `;
 
+const Title = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #8f9bb3;
+`;
 //#endregion
 
-const columns = (changeDrawerVisible, isRoc) => [
+const columns = changeDrawerVisible => [
   {
     title: '產生日期',
     dataIndex: 'createDate',
     key: 'createDate',
     render: date => {
       const momentDate = moment(date);
-      let year = momentDate.year();
-      if (isRoc) {
-        year = year - 1911;
-      }
+      const year = momentDate.year() - 1911;
       return `${year}-${momentDate.format('MM-DD HH:mm')}`;
     },
   },
@@ -78,7 +87,7 @@ const columns = (changeDrawerVisible, isRoc) => [
 ];
 
 function RegistDrawer(props) {
-  const { changeDrawerVisible, getDoc, drawerVisible, patient, isRoc } = props;
+  const { changeDrawerVisible, getDoc, drawerVisible, patient } = props;
 
   useEffect(() => {
     if (drawerVisible) {
@@ -104,27 +113,39 @@ function RegistDrawer(props) {
             <span>{patient.name}</span>
           </div>
         </PatientContainer>
-        <Table columns={columns(changeDrawerVisible, isRoc)} dataSource={props.docs} pagination={false} />
-        <a
-          href={`${getBaseUrl()}#/q/${patient.id}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => {
-            changeDrawerVisible(false);
-          }}
-        >
-          <StyledButton type="primary">新增病歷首頁</StyledButton>
-        </a>
+        <PatientPageButtonContainer>
+          <a href={`/#/patient/${patient.id}`} target="_blank" rel="noopener noreferrer">
+            <Button shape="round" type="primary">
+              <div style={{ display: 'flex' }}>
+                <img src={personFill} alt="icon" />
+                <span>查看病患資訊</span>
+              </div>
+            </Button>
+          </a>
+        </PatientPageButtonContainer>
+        <Title>
+          <span>病歷表首頁</span>
+          <a
+            href={`${getBaseUrl()}#/q/${patient.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              changeDrawerVisible(false);
+            }}
+          >
+            <Button shape="round">新增填寫</Button>
+          </a>
+        </Title>
+        <Table columns={columns(changeDrawerVisible)} dataSource={props.docs} pagination={false} />
       </DrawerContainer>
     </Drawer>
   );
 }
 
-const mapStateToProps = ({ registrationPageReducer, homePageReducer }) => ({
+const mapStateToProps = ({ registrationPageReducer }) => ({
   drawerVisible: registrationPageReducer.drawer.visible,
   patient: registrationPageReducer.drawer.patient,
   docs: registrationPageReducer.drawer.docs,
-  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = { changeDrawerVisible, getDoc };

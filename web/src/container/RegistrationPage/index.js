@@ -11,7 +11,7 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { GAevent, GApageView } from '../../ga';
 import { columns } from './utils/columns';
 import { convertToTableSource, allDoctors } from './utils/convertToTableSource';
-import { openXray, changeXrayModalVisible } from '../Home/actions';
+import { openXray, changeXrayModalVisible, restoreXrayState } from '../Home/actions';
 import DatePicker from '../../component/DatePicker';
 
 export const registrationPage = 'Registration page';
@@ -34,6 +34,7 @@ const DatePickerContainer = styled.div`
   align-items: center;
   height: 70px;
   padding: 10px;
+  background: #fff;
 `;
 const StyledTable = styled(Table)`
   flex-grow: 1;
@@ -64,6 +65,8 @@ function RegistrationPage(props) {
     xrayOnRequest,
     changeXrayModalVisible,
     selectedDate,
+    restoreXrayState,
+    registrations,
   } = props;
 
   const [selectedDoctor, setSelectedDoctor] = useState();
@@ -85,9 +88,15 @@ function RegistrationPage(props) {
     }
 
     return () => {
+      restoreXrayState();
+    };
+  }, [xrayServerState, xrayServerError, xrayOnRequest, changeXrayModalVisible, restoreXrayState]);
+
+  useEffect(() => {
+    return () => {
       onLeavePage();
     };
-  }, [xrayServerState, xrayServerError, onLeavePage, xrayOnRequest, changeXrayModalVisible]);
+  }, [onLeavePage]);
 
   useEffect(() => {
     const updateRegistrations = arrival => {
@@ -121,7 +130,7 @@ function RegistrationPage(props) {
     if (props.doctors) {
       const options = props.doctors.map(doctor => {
         return (
-          <Option key={doctor.id} value={doctor.id}>
+          <Option key={doctor.id} value={doctor.name}>
             {doctor.name}
           </Option>
         );
@@ -205,7 +214,7 @@ function RegistrationPage(props) {
             },
           };
         }}
-        dataSource={convertToTableSource(props.registrations, selectedDoctor)}
+        dataSource={convertToTableSource(registrations, selectedDoctor)}
         scroll={{ x: 1200 }}
       />
       <RegistDrawer />
@@ -214,7 +223,7 @@ function RegistrationPage(props) {
 }
 
 const mapStateToProps = ({ registrationPageReducer, homePageReducer, settingPageReducer }) => ({
-  registrations: registrationPageReducer.registration.registrations,
+  registrations: registrationPageReducer.registration.registrations ?? [],
   loading: registrationPageReducer.registration.loading,
   selectedDate: registrationPageReducer.registration.selectedDate,
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
@@ -231,6 +240,7 @@ const mapDispatchToProps = {
   openXray,
   onLeavePage,
   changeXrayModalVisible,
+  restoreXrayState,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegistrationPage);

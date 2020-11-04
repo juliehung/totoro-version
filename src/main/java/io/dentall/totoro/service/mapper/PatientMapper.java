@@ -12,6 +12,7 @@ public class PatientMapper {
         Patient patient = new Patient();
 
         patient.setId(patientTable.getId());
+        patient.setDisplayName(patientTable.getDisplayName());
         patient.setName(patientTable.getName());
         patient.setPhone(patientTable.getPhone());
         patient.setGender(patientTable.getGender());

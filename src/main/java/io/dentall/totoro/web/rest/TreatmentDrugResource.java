@@ -2,25 +2,23 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.TreatmentDrug;
+import io.dentall.totoro.service.TreatmentDrugQueryService;
 import io.dentall.totoro.service.TreatmentDrugService;
+import io.dentall.totoro.service.dto.TreatmentDrugCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.dentall.totoro.service.dto.TreatmentDrugCriteria;
-import io.dentall.totoro.service.TreatmentDrugQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +57,7 @@ public class TreatmentDrugResource {
             throw new BadRequestAlertException("A new treatmentDrug cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TreatmentDrug result = treatmentDrugService.save(treatmentDrug);
+        log.debug("REST request to save TreatmentDrug result : {}", result);
         return ResponseEntity.created(new URI("/api/treatment-drugs/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -81,6 +80,7 @@ public class TreatmentDrugResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         TreatmentDrug result = treatmentDrugService.update(treatmentDrug);
+        log.debug("REST request to update TreatmentDrug result : {}", result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, treatmentDrug.getId().toString()))
             .body(result);

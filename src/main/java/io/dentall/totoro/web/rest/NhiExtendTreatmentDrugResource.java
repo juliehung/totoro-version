@@ -53,6 +53,7 @@ public class NhiExtendTreatmentDrugResource {
             throw new BadRequestAlertException("A new nhiExtendTreatmentDrug cannot already have an ID", ENTITY_NAME, "idexists");
         }
         NhiExtendTreatmentDrug result = nhiExtendTreatmentDrugService.save(nhiExtendTreatmentDrug);
+        log.debug("REST request to save NhiExtendTreatmentDrug result : {}", result);
         return ResponseEntity.created(new URI("/api/nhi-extend-treatment-drugs/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -75,6 +76,7 @@ public class NhiExtendTreatmentDrugResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         NhiExtendTreatmentDrug result = nhiExtendTreatmentDrugService.update(nhiExtendTreatmentDrug);
+        log.debug("REST request to update NhiExtendTreatmentDrug result : {}", result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nhiExtendTreatmentDrug.getId().toString()))
             .body(result);

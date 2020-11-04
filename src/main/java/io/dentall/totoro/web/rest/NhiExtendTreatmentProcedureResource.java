@@ -20,7 +20,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * REST controller for managing NhiExtendTreatmentProcedure.
@@ -54,6 +53,7 @@ public class NhiExtendTreatmentProcedureResource {
             throw new BadRequestAlertException("A new nhiExtendTreatmentProcedure cannot already have an ID", ENTITY_NAME, "idexists");
         }
         NhiExtendTreatmentProcedure result = nhiExtendTreatmentProcedureService.save(nhiExtendTreatmentProcedure);
+        log.debug("REST request to save NhiExtendTreatmentProcedure result : {}", result);
         return ResponseEntity.created(new URI("/api/nhi-extend-treatment-procedures/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -76,6 +76,7 @@ public class NhiExtendTreatmentProcedureResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         NhiExtendTreatmentProcedure result = nhiExtendTreatmentProcedureService.update(nhiExtendTreatmentProcedure);
+        log.debug("REST request to update NhiExtendTreatmentProcedure result : {}", result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nhiExtendTreatmentProcedure.getId().toString()))
             .body(result);

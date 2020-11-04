@@ -9,7 +9,6 @@ import { GApageView } from '../../ga';
 import { parseDateToString } from './utils/parseDateToString';
 
 //#region
-
 const Container = styled.div`
   position: fixed;
   height: 100%;
@@ -81,10 +80,22 @@ const ImageContainer = styled.div`
   margin-top: 10px;
   border: 2px solid #eee;
 `;
+
+const StyledButton = styled(Button)`
+  border-radius: 4px !important;
+`;
+
+const ButtonsContainer = styled.div`
+  & > * {
+    margin: 0 20px;
+  }
+`;
+
 //#endregion
 
 function Form(props) {
-  const { match, getDoc, isRoc, patient } = props;
+  const { match, getDoc, patient } = props;
+
   useEffect(() => {
     GApageView();
   }, []);
@@ -106,7 +117,7 @@ function Form(props) {
             </div>
             <div>
               <InfoLabel>生日:</InfoLabel>
-              <Info>{parseDateToString(patient.birth, isRoc)}</Info>
+              <Info>{parseDateToString(patient.birth)}</Info>
             </div>
             <div>
               <InfoLabel>身分證字號:</InfoLabel>
@@ -208,22 +219,26 @@ function Form(props) {
           </ImageContainer>
         )}
       </FormContainer>
-      <Button
-        type="primary"
-        onClick={() => {
-          window.close();
-        }}
-      >
-        關閉分頁
-      </Button>
+      <ButtonsContainer>
+        <a href={`/#/q/${patient.id}`}>
+          <StyledButton>編輯內容</StyledButton>
+        </a>
+        <StyledButton
+          type="primary"
+          onClick={() => {
+            window.close();
+          }}
+        >
+          關閉分頁
+        </StyledButton>
+      </ButtonsContainer>
     </Container>
   );
 }
 
-const mapStateToProps = ({ questionnairePageReducer, homePageReducer }) => ({
+const mapStateToProps = ({ questionnairePageReducer }) => ({
   patient: questionnairePageReducer.form.patient,
   esign: questionnairePageReducer.form.esign,
-  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = { getDoc };

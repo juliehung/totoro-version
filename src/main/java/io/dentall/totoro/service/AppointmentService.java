@@ -475,6 +475,11 @@ public class AppointmentService {
             }
 
             @Override
+            public String getDisplayName() {
+                return null;
+            }
+
+            @Override
             public String getName() {
                 return appointment1To1.getPatient_Name();
             }

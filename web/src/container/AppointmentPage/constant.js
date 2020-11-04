@@ -3,7 +3,7 @@ export const requiredTreatmentTimeDefault = [5, 15, 30, 45, 60, 75, 90, 105, 120
 export const repeatedCalendarEvtDefault = [
   { id: 'none', value: '不重複' },
   { id: 'day', value: '每天' },
-  { id: 'week', value: '每周' },
+  { id: 'week', value: '每週' },
   { id: 'month', value: '每月' },
 ];
 
@@ -216,6 +216,10 @@ export const CHANGE_CALENDAR_FULLSCREEN = `${APPOINTMENT_PAGE}CHANGE_CALENDAR_FU
 export const POPOVER_CANCEL_APP_START = `${APPOINTMENT_PAGE}POPOVER_CANCEL_APP_START`;
 
 export const POPOVER_CANCEL_APP_SUCCESS = `${APPOINTMENT_PAGE}POPOVER_CANCEL_APP_SUCCESS`;
+
+export const POPOVER_RESTORE_APP_START = `${APPOINTMENT_PAGE}POPOVER_RESTORE_APP_START`;
+
+export const POPOVER_RESTORE_APP_SUCCESS = `${APPOINTMENT_PAGE}POPOVER_RESTORE_APP_SUCCESS`;
 
 export const GET_SHIFT_START = `${APPOINTMENT_PAGE}GET_SHIFT_START`;
 

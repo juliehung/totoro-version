@@ -116,6 +116,9 @@ const ColorOptionContainer = styled.div`
   }
 `;
 
+const Width100 = styled.div`
+  width: 100%;
+`;
 //#endregion
 
 function EditAppModal({
@@ -142,7 +145,6 @@ function EditAppModal({
   editAppointment,
   getAllEvents,
   changeEditAppointmentConformDelete,
-  isRoc,
 }) {
   const [expectedTimeOption, setExpectedTimeOption] = useState(defaultTimeOption);
 
@@ -227,7 +229,7 @@ function EditAppModal({
                 <span>{patient && patient.name}</span>
               </PatientDetailElement>
               <PatientDetailElement>
-                <span>{parseDateToString(patient?.birth, isRoc)}</span>
+                <span>{parseDateToString(patient?.birth)}</span>
                 <span>{patient && patient.birth ? ', ' : ''}</span>
                 <span>{patient && patient.age}</span>
                 <span>{patient && (patient.age ? (patient.gender ? ', ' : '') : '')}</span>
@@ -245,12 +247,12 @@ function EditAppModal({
             <PatientDetailCol>
               <PatientDetailElement>
                 <span>
-                  {patient && `最近治療:  ${parseDateToString(patient.appointmentsAnalysis.recentRegistration, isRoc)}`}
+                  {patient && `最近治療:  ${parseDateToString(patient.appointmentsAnalysis.recentRegistration)}`}
                 </span>
               </PatientDetailElement>
               <PatientDetailElement>
                 <span>
-                  {patient && `最近預約:  ${parseDateToString(patient.appointmentsAnalysis.recentAppointment, isRoc)}`}
+                  {patient && `最近預約:  ${parseDateToString(patient.appointmentsAnalysis.recentAppointment)}`}
                 </span>
               </PatientDetailElement>
             </PatientDetailCol>
@@ -336,11 +338,13 @@ function EditAppModal({
           </div>
           <div>
             <span>預約內容：</span>
-            <Input.TextArea
-              autoSize={{ minRows: 3, maxRows: 3 }}
-              onChange={changeEditAppNote}
-              value={appointment.note}
-            />
+            <Width100>
+              <Input.TextArea
+                autoSize={{ minRows: 3, maxRows: 3 }}
+                onChange={changeEditAppNote}
+                value={appointment.note}
+              />
+            </Width100>
           </div>
           <div>
             <span>特殊註記：</span>
@@ -377,7 +381,6 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   loading: appointmentPageReducer.editApp.loading,
   editAppSuccess: appointmentPageReducer.editApp.editAppSuccess,
   confirmDelete: appointmentPageReducer.editApp.confirmDelete,
-  isRoc: homePageReducer.settings.isRoc,
 });
 
 const mapDispatchToProps = {
