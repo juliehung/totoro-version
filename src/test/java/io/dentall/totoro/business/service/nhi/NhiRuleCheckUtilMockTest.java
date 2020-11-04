@@ -158,6 +158,7 @@ public class NhiRuleCheckUtilMockTest {
                 ArgumentMatchers.any(),
                 ArgumentMatchers.any(),
                 ArgumentMatchers.any(),
+                ArgumentMatchers.any(),
                 ArgumentMatchers.any()
             ))
             .thenReturn(null);
@@ -169,6 +170,7 @@ public class NhiRuleCheckUtilMockTest {
     private void mockFindTxCodeReturnMatch(NhiExtendTreatmentProcedure netp) {
         Mockito
             .when(nhiRuleCheckUtil.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+                ArgumentMatchers.any(),
                 ArgumentMatchers.any(),
                 ArgumentMatchers.any(),
                 ArgumentMatchers.any(),
@@ -367,7 +369,9 @@ public class NhiRuleCheckUtilMockTest {
             DataGenerator.ID_1,
             DataGenerator.NHI_TREATMENT_DATE_NOW,
             DataGenerator.NHI_CODE_LIST_1,
-            DateTimeUtil.NHI_1_MONTH);
+            DateTimeUtil.NHI_1_MONTH,
+            new ArrayList<>()
+        );
 
         Assert.assertEquals(null, result);
     }
@@ -408,7 +412,9 @@ public class NhiRuleCheckUtilMockTest {
             DataGenerator.ID_1,
             DataGenerator.NHI_TREATMENT_DATE_NOW,
             DataGenerator.NHI_CODE_LIST_1,
-            DateTimeUtil.NHI_1_MONTH);
+            DateTimeUtil.NHI_1_MONTH,
+            new ArrayList<>()
+            );
 
         Assert.assertEquals(null, result);
     }
@@ -450,7 +456,9 @@ public class NhiRuleCheckUtilMockTest {
             DataGenerator.ID_1,
             DataGenerator.NHI_TREATMENT_DATE_NOW,
             DataGenerator.NHI_CODE_LIST_1,
-            DateTimeUtil.NHI_1_MONTH);
+            DateTimeUtil.NHI_1_MONTH,
+            new ArrayList<>()
+        );
 
         Assert.assertEquals(null, result);
     }
@@ -491,7 +499,9 @@ public class NhiRuleCheckUtilMockTest {
             DataGenerator.ID_1,
             DataGenerator.NHI_TREATMENT_DATE_NOW,
             DataGenerator.NHI_CODE_LIST_1,
-            DateTimeUtil.NHI_1_MONTH);
+            DateTimeUtil.NHI_1_MONTH,
+            new ArrayList<>()
+        );
 
         Assert.assertNotNull(result);
     }
@@ -513,7 +523,8 @@ public class NhiRuleCheckUtilMockTest {
             DataGenerator.ID_1,
             DataGenerator.NHI_TREATMENT_DATE_NOW,
             DataGenerator.NHI_CODE_LIST_1,
-            DateTimeUtil.NHI_1_MONTH
+            DateTimeUtil.NHI_1_MONTH,
+            new ArrayList<>()
         );
 
         Assert.assertNull(netp);
@@ -541,7 +552,8 @@ public class NhiRuleCheckUtilMockTest {
             DataGenerator.ID_1,
             DataGenerator.NHI_TREATMENT_DATE_NOW,
             DataGenerator.NHI_CODE_LIST_1,
-            DateTimeUtil.NHI_1_MONTH
+            DateTimeUtil.NHI_1_MONTH,
+            new ArrayList<>()
         );
 
         Assert.assertNull(netp);
@@ -569,7 +581,8 @@ public class NhiRuleCheckUtilMockTest {
             DataGenerator.ID_1,
             DataGenerator.NHI_TREATMENT_DATE_NOW,
             DataGenerator.NHI_CODE_LIST_1,
-            DateTimeUtil.NHI_1_MONTH
+            DateTimeUtil.NHI_1_MONTH,
+            new ArrayList<>()
         );
 
         Assert.assertNull(netp);
@@ -591,7 +604,8 @@ public class NhiRuleCheckUtilMockTest {
             DataGenerator.ID_1,
             DataGenerator.NHI_TREATMENT_DATE_NOW,
             DataGenerator.NHI_CODE_LIST_1,
-            DateTimeUtil.NHI_1_MONTH
+            DateTimeUtil.NHI_1_MONTH,
+            new ArrayList<>()
         );
 
         Assert.assertNull(netp);
@@ -627,7 +641,8 @@ public class NhiRuleCheckUtilMockTest {
             DataGenerator.ID_1,
             DataGenerator.NHI_TREATMENT_DATE_NOW,
             DataGenerator.NHI_CODE_LIST_1,
-            DateTimeUtil.NHI_1_MONTH
+            DateTimeUtil.NHI_1_MONTH,
+            new ArrayList<>()
         );
 
         Assert.assertNull(netp);
@@ -650,7 +665,8 @@ public class NhiRuleCheckUtilMockTest {
             DataGenerator.ID_1,
             DataGenerator.NHI_TREATMENT_DATE_NOW,
             DataGenerator.NHI_CODE_LIST_1,
-            DateTimeUtil.NHI_1_WEEK
+            DateTimeUtil.NHI_1_WEEK,
+            new ArrayList<>()
         );
 
         Assert.assertEquals(netpMock, netp);
