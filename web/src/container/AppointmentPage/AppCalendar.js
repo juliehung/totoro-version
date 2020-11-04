@@ -800,13 +800,13 @@ class AppCalendar extends React.Component {
                 <span>天</span>
               </ViewItem>
               <ViewItem onClick={this.onWeekClick} selected={this.props.viewType === 'timeGridWeek'}>
-                <span>周</span>
+                <span>週</span>
               </ViewItem>
               <ViewItem onClick={this.onMonthClick} selected={this.props.viewType === 'dayGridMonth'}>
                 <span>月</span>
               </ViewItem>
               <ViewItem onClick={this.onListClick} selected={this.props.viewType === 'listWeek'}>
-                <span>周列表</span>
+                <span>週列表</span>
               </ViewItem>
             </ViewContainer>
             <Popover placement="bottomLeft" trigger="hover" content={doctorControl}>

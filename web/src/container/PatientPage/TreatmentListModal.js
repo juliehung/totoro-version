@@ -186,7 +186,7 @@ const mapStateToProps = ({ patientPageReducer, homePageReducer }) => {
   return {
     patient: patientPageReducer.patient.patient,
     visible: patientPageReducer.disposal.treatmentListModalVisible,
-    doctors: extractDoctorsFromUser(homePageReducer.user.users)?.filter(d => d.activated) ?? [],
+    doctors: extractDoctorsFromUser(homePageReducer.user.users) ?? [],
     treatmentsAndPrescriptions: convertDisposalsToTreatmentsAndPrescriptions(patientPageReducer.disposal.disposals),
   };
 };

@@ -3,7 +3,7 @@ export const requiredTreatmentTimeDefault = [5, 15, 30, 45, 60, 75, 90, 105, 120
 export const repeatedCalendarEvtDefault = [
   { id: 'none', value: '不重複' },
   { id: 'day', value: '每天' },
-  { id: 'week', value: '每周' },
+  { id: 'week', value: '每週' },
   { id: 'month', value: '每月' },
 ];
 
