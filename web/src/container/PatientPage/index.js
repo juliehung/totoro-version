@@ -37,10 +37,15 @@ function PatientPage(props) {
   } = props;
 
   useEffect(() => {
-    if (!id && patient_center_pid) {
-      const url = `${window.location.origin}${window.location.pathname}#/patient/${patient_center_pid}`;
-      window.location.replace(url);
+    let url;
+    if (isNaN(id)) {
+      url = `${window.location.origin}${window.location.pathname}#/patient`;
+    } else if (!id && patient_center_pid) {
+      url = `${window.location.origin}${window.location.pathname}#/patient/${patient_center_pid}`;
+    } else {
+      return;
     }
+    window.location.replace(url);
   }, [id, changeDrawerVisible, patient_center_pid]);
 
   useEffect(() => {
