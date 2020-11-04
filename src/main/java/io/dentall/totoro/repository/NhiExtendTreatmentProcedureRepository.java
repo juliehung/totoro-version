@@ -21,10 +21,11 @@ import java.util.Set;
 @Repository
 public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<NhiExtendTreatmentProcedure, Long> {
 
-    Optional<NhiExtendTreatmentProcedureTable> findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_Disposal_IdNotOrderByA71Desc(
+    Optional<NhiExtendTreatmentProcedureTable> findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_Disposal_IdNotAndTreatmentProcedure_IdNotInOrderByA71Desc(
         Long patientId,
         String a73,
-        Long disposalId);
+        Long disposalId,
+        List<Long> excludeTreatmentProcedureIds);
 
     Optional<NhiExtendTreatmentProcedureTable> findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73OrderByA71Desc(Long patientId, String a73);
 

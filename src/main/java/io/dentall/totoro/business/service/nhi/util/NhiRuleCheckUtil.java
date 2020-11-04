@@ -485,7 +485,9 @@ public class NhiRuleCheckUtil {
             .filter(netp -> !netp.getTreatmentProcedure_Id().equals(treatmentProcedureId))
             .filter(netp -> currentTreatmentProcedureDate.isEqual(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())) ||
                 currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
-            .filter(netp -> excludeTreatmentProcedureIds == null || !excludeTreatmentProcedureIds.contains(netp.getTreatmentProcedure_Id()))
+            .filter(netp -> excludeTreatmentProcedureIds == null ||
+                excludeTreatmentProcedureIds.size() == 0 ||
+                !excludeTreatmentProcedureIds.contains(netp.getTreatmentProcedure_Id()))
             .forEach(netpt -> {
                 LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
                 if (pastTxDate.plus(limitDays).isEqual(currentTreatmentProcedureDate) || pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
@@ -531,7 +533,9 @@ public class NhiRuleCheckUtil {
             .filter(netp -> currentTreatmentProcedureDate.isEqual(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())) ||
                 currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
             .filter(netp -> ToothUtil.splitA74(netp.getA74()).contains(tooth))
-            .filter(netp -> excludeTreatmentProcedureIds == null || !excludeTreatmentProcedureIds.contains(netp.getTreatmentProcedure_Id()))
+            .filter(netp -> excludeTreatmentProcedureIds == null ||
+                excludeTreatmentProcedureIds.size() == 0 ||
+                !excludeTreatmentProcedureIds.contains(netp.getTreatmentProcedure_Id()))
             .forEach(netpt -> {
                 LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
                 if (pastTxDate.plus(limitDays).isEqual(currentTreatmentProcedureDate) || pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
@@ -924,10 +928,12 @@ public class NhiRuleCheckUtil {
             dto.getNhiExtendDisposal().getDisposal().getId() != null
         ) {
             optionalNhiExtendTreatmentProcedureTable = nhiExtendTreatmentProcedureRepository
-                .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_Disposal_IdNotOrderByA71Desc(
+                .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_Disposal_IdNotAndTreatmentProcedure_IdNotInOrderByA71Desc(
                     dto.getPatient().getId(),
                     dto.getNhiExtendTreatmentProcedure().getA73(),
-                    dto.getNhiExtendDisposal().getDisposal().getId());
+                    dto.getNhiExtendDisposal().getDisposal().getId(),
+                    dto.getExcludeTreatmentProcedureIds() == null ? new ArrayList<Long>() : dto.getExcludeTreatmentProcedureIds()
+                );
         } else {
             optionalNhiExtendTreatmentProcedureTable = nhiExtendTreatmentProcedureRepository
                 .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73OrderByA71Desc(
