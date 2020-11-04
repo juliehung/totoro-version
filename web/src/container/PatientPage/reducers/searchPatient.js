@@ -38,7 +38,7 @@ const searchPatient = (state = initState, action) =>
       case GET_REGISTRATION_TODAY_SUCCESS:
         draft.total = action.registrations
           .filter(a => a.registration)
-          .sort((a, b) => moment(a.registration.arrivalTime) - moment(b.registration.arrivalTime))
+          .sort((a, b) => moment(b.registration.arrivalTime) - moment(a.registration.arrivalTime))
           .map(r => {
             const { patient } = r;
             return patient;
