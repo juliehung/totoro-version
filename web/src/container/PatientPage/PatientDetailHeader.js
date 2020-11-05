@@ -107,8 +107,8 @@ function PatientDetailHeader(props) {
 
   const AvatarSrc = patient.gender === 'MALE' ? man : patient.gender === 'FEMALE' ? woman : defaultAvatar;
 
-  const handleXrayClick = (vender, xrayPatientObj) => {
-    openXray({ vender, appiontment: xrayPatientObj });
+  const handleXrayClick = (vendor, xrayPatientObj) => {
+    openXray({ vendor, appointment: xrayPatientObj });
   };
 
   return (
