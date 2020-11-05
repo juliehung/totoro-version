@@ -39,9 +39,7 @@ export function* initPatientDetail() {
       yield fork(getAppointmentSaga, id);
       yield fork(getDocNpHistorySaga, id);
     } catch (error) {
-      if (error.response.status === 404) {
-        yield put(patientNotFound());
-      }
+      yield put(patientNotFound());
     }
   }
 }
