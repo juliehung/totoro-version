@@ -110,12 +110,12 @@ export function convertToTableSource(registrations, selectedDoctor) {
     .sort((a, b) => moment(a.registrationArrivalTime).unix() - moment(b.registrationArrivalTime).unix());
 
   return sortByArrivalTime.map((r, i) => {
-    const hasOwn = r.ProcedureCounter !== 0;
-    const hasNhi = r.NhiProcedureCounter !== 0;
+    const hasOwn = r.procedureCounter !== 0;
+    const hasNhi = r.nhiProcedureCounter !== 0;
     const a23 = r.nhiExtendDisposalA23;
     const typeResult = [];
-    if (hasNhi) typeResult.push(a23 ? '健保(' + a23 + ')' : '健保');
-    if (hasOwn) typeResult.push('自費');
+    if (hasNhi) typeResult.push(a23 ? '健(' + a23 + ')' : '健');
+    if (hasOwn) typeResult.push('自');
     const type = typeResult.length === 0 ? r.RegistrationType : typeResult.join(', ');
     const patient = {
       id: r.patientId,
