@@ -38,9 +38,7 @@ function PatientPage(props) {
 
   useEffect(() => {
     let url;
-    if (isNaN(id)) {
-      url = `${window.location.origin}${window.location.pathname}#/patient`;
-    } else if (!id && patient_center_pid) {
+    if (!id && patient_center_pid) {
       url = `${window.location.origin}${window.location.pathname}#/patient/${patient_center_pid}`;
     } else {
       return;

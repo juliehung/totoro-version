@@ -7,6 +7,7 @@ import VisionImg from '../../../component/VisionImg';
 import VixWinImg from '../../../component/VixWinImg';
 import CancelAppointmentButton from '../CancelAppointmentButton';
 import RestoreAppointmentButton from '../RestoreAppointmentButton';
+import { getBaseUrl } from '../../../utils/getBaseUrl';
 
 import { XRAY_VENDORS } from '../constant';
 
@@ -130,7 +131,7 @@ export function handleEventRender(info, func, params) {
 
         const popoverContent = (
           <PopoverContainer>
-            <NameSpan href={`/#/patient/${patientId}`} target="_blank" rel="noopener noreferrer">
+            <NameSpan href={`${getBaseUrl()}#/patient/${patientId}`} target="_blank" rel="noopener noreferrer">
               {status === 'CANCEL' ? '[C]' : null} {patientName}
             </NameSpan>
             <HightLightSpan>{medicalId}</HightLightSpan>

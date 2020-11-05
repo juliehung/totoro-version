@@ -114,7 +114,7 @@ function RegistDrawer(props) {
           </div>
         </PatientContainer>
         <PatientPageButtonContainer>
-          <a href={`/#/patient/${patient.id}`} target="_blank" rel="noopener noreferrer">
+          <a href={`${getBaseUrl()}#/patient/${patient.id}`} target="_blank" rel="noopener noreferrer">
             <Button shape="round" type="primary">
               <div style={{ display: 'flex' }}>
                 <img src={personFill} alt="icon" />
