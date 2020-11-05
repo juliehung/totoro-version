@@ -11,6 +11,7 @@ import { openXray } from '../Home/actions';
 import { XRAY_VENDORS } from '../AppointmentPage/constant';
 import banner from '../../images/banner.svg';
 import editIcon from '../../images/edit-2-fill.svg';
+import { getBaseUrl } from '../../utils/getBaseUrl';
 
 //#region
 const Container = styled.div`
@@ -122,7 +123,7 @@ function PatientDetailHeader(props) {
           </span>
         </div>
         <a
-          href={lastestDocNpId ? `/#/q/history/${lastestDocNpId}` : `/#/q/${patient.id}`}
+          href={lastestDocNpId ? `${getBaseUrl()}#/q/history/${lastestDocNpId}` : `${getBaseUrl()}#/q/${patient.id}`}
           target="_blank"
           rel="noopener noreferrer"
         >

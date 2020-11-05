@@ -7,6 +7,7 @@ import { getDoc } from './actions';
 import { Button } from 'antd';
 import { GApageView } from '../../ga';
 import { parseDateToString } from './utils/parseDateToString';
+import { getBaseUrl } from '../../utils/getBaseUrl';
 
 //#region
 const Container = styled.div`
@@ -220,7 +221,7 @@ function Form(props) {
         )}
       </FormContainer>
       <ButtonsContainer>
-        <a href={`/#/q/${patient.id}`}>
+        <a href={`${getBaseUrl()}#/q/${patient.id}`}>
           <StyledButton>編輯內容</StyledButton>
         </a>
         <StyledButton

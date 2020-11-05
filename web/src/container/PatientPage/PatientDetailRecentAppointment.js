@@ -6,6 +6,7 @@ import { Badge } from 'antd';
 import { convertAppointmentToCardObject } from './utils';
 import analysisAppointments from '../AppointmentPage/utils/analysisAppointments';
 import { changeAppointmentListModalVisible } from './actions';
+import { getBaseUrl } from '../../utils/getBaseUrl';
 
 //#region
 const Item = styled.div`
@@ -92,7 +93,7 @@ function PatientDetailRecentAppointment(props) {
           <EmptyString>
             <span>
               目前沒有約診! 立即{' '}
-              <a href="/#/appointment" target="_blank" rel="noopener noreferrer">
+              <a href={`${getBaseUrl()}#/appointment`} target="_blank" rel="noopener noreferrer">
                 建立預約
               </a>
             </span>
