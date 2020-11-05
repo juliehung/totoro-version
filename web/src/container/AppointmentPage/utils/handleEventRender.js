@@ -8,6 +8,7 @@ import VixWinImg from '../../../component/VixWinImg';
 import CancelAppointmentButton from '../CancelAppointmentButton';
 import RestoreAppointmentButton from '../RestoreAppointmentButton';
 import { getBaseUrl } from '../../../utils/getBaseUrl';
+import parseDateToString from './parseDateToString';
 
 import { XRAY_VENDORS } from '../constant';
 
@@ -113,15 +114,15 @@ export function handleEventRender(info, func, params) {
   if (info.event.extendedProps.eventType === 'appointment') {
     const appointment = info.event.extendedProps.appointment;
     if (info.view.type.indexOf('Grid') !== -1) {
-      const { id, medicalId, patientId, patientName, phone, doctor, note, status, registrationStatus } = appointment;
+      const { id, birth, patientId, patientName, phone, doctor, note, status, registrationStatus } = appointment;
 
       if (info.view.type !== 'dayGridMonth') {
         const fcTitle = info.el.querySelector('.fc-title');
         if (fcTitle) {
           const fcTitleClone = fcTitle.innerHTML;
           fcTitle.innerHTML = note
-            ? `<div><b>${fcTitleClone}(${medicalId})</b><br /><span>${note}</span></div>`
-            : `<div><b>${fcTitleClone}(${medicalId})</b><br /></div>`;
+            ? `<div><b>${fcTitleClone}(${parseDateToString(birth, false)})</b><br /><span>${note}</span></div>`
+            : `<div><b>${fcTitleClone}(${parseDateToString(birth, false)})</b><br /></div>`;
         }
 
         const fcContent = info.el.querySelector('.fc-content');
@@ -134,7 +135,7 @@ export function handleEventRender(info, func, params) {
             <NameSpan href={`${getBaseUrl()}#/patient/${patientId}`} target="_blank" rel="noopener noreferrer">
               {status === 'CANCEL' ? '[C]' : null} {patientName}
             </NameSpan>
-            <HightLightSpan>{medicalId}</HightLightSpan>
+            <HightLightSpan>{parseDateToString(birth, false)}</HightLightSpan>
             <BreakP>
               <StyledPhoneOutlined />
               {phone}
