@@ -4,7 +4,8 @@ export function parseDateToString(date) {
   if (date) {
     const momentDate = moment(date);
     const year = momentDate.year() - 1911;
-    return year + momentDate.format('-MM-DD');
+    const yearString = ('0' + year).slice(-3);
+    return yearString + momentDate.format('/MM/DD');
   }
   return '';
 }

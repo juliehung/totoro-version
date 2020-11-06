@@ -1,12 +1,17 @@
 import moment from 'moment';
 
-export default function parseDateToString(date) {
+export default function parseDateToString(date, separator = '/') {
   if (date) {
     const momentBirth = moment(date);
     const isvalid = momentBirth.isValid();
     if (isvalid) {
       const year = momentBirth.year() - 1911;
-      return `${year}-${momentBirth.format('MM-DD')}`;
+      const yearString = ('0' + year).slice(-3);
+      if (separator) {
+        return `${yearString}${momentBirth.format(`/MM/DD`)}`;
+      } else {
+        return `${yearString}${momentBirth.format(`MMDD`)}`;
+      }
     }
     return date;
   }

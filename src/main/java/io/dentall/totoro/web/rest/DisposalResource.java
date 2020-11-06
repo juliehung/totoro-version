@@ -10,6 +10,7 @@ import io.dentall.totoro.service.dto.DisposalCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.web.rest.vm.DisposalV2VM;
 import io.dentall.totoro.web.rest.vm.SameTreatmentVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -118,9 +119,9 @@ public class DisposalResource {
      */
     @GetMapping("/disposals")
     @Timed
-    public ResponseEntity<List<Disposal>> getAllDisposals(DisposalCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<DisposalV2VM>> getAllDisposals(DisposalCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Disposals by criteria: {}", criteria);
-        Page<Disposal> page = null;
+        Page<DisposalV2VM> page = null;
         HttpHeaders headers = null;
 
         if (criteria.isOnlyPatientId()) {
