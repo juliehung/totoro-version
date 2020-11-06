@@ -1,23 +1,22 @@
 package io.dentall.totoro.service;
 
-import java.util.List;
-
-import javax.persistence.criteria.JoinType;
-
+import io.dentall.totoro.domain.*;
+import io.dentall.totoro.repository.DisposalRepository;
+import io.dentall.totoro.service.dto.DisposalCriteria;
+import io.dentall.totoro.web.rest.vm.DisposalV2VM;
+import io.github.jhipster.service.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
-import io.dentall.totoro.domain.Disposal;
-import io.dentall.totoro.domain.*; // for static metamodels
-import io.dentall.totoro.repository.DisposalRepository;
-import io.dentall.totoro.service.dto.DisposalCriteria;
+import javax.persistence.criteria.JoinType;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service for executing complex queries for Disposal entities in the database.
@@ -56,10 +55,25 @@ public class DisposalQueryService extends QueryService<Disposal> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<Disposal> findByCriteria(DisposalCriteria criteria, Pageable page) {
+    public Page<DisposalV2VM> findByCriteria(DisposalCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Disposal> specification = createSpecification(criteria);
-        return disposalRepository.findAll(specification, page);
+        List<DisposalV2VM> disposals = disposalRepository.findAll(specification, page)
+            .map(d -> {
+            DisposalV2VM vm = new DisposalV2VM();
+            vm.setDisposal(d);
+            if (d != null &&
+                d.getRegistration() != null &&
+                d.getRegistration().getAppointment() != null &&
+                d.getRegistration().getAppointment().getDoctor() != null &&
+                d.getRegistration().getAppointment().getDoctor().getId() != null
+            ) {
+                vm.setDoctorId(d.getRegistration().getAppointment().getDoctor().getId());
+            }
+            return vm;
+        }).stream().collect(Collectors.toList());
+
+        return  new PageImpl<>(disposals, page, disposals.size());
     }
 
     /**

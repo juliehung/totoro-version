@@ -7,6 +7,7 @@ import io.dentall.totoro.service.dto.table.*;
 import io.dentall.totoro.service.mapper.*;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.vm.DisposalV2VM;
 import io.dentall.totoro.web.rest.vm.SameTreatmentVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -558,11 +559,22 @@ public class DisposalService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Disposal> getDisposalProjectionByPatientId(Long patientId, Pageable page) {
-        List<Disposal> disposals = disposalRepository.findDisposalByRegistration_Appointment_Patient_Id(patientId)
+    public Page<DisposalV2VM> getDisposalProjectionByPatientId(Long patientId, Pageable page) {
+        List<DisposalV2VM> disposals = disposalRepository.findDisposalByRegistration_Appointment_Patient_Id(patientId)
             .stream()
             .map(disposalTable -> {
-                return this.getDisposalByProjection(disposalTable.getId());
+                Disposal d = this.getDisposalByProjection(disposalTable.getId());
+                DisposalV2VM vm = new DisposalV2VM();
+                vm.setDisposal(d);
+                if (d != null &&
+                    d.getRegistration() != null &&
+                    d.getRegistration().getAppointment() != null &&
+                    d.getRegistration().getAppointment().getDoctor() != null &&
+                    d.getRegistration().getAppointment().getDoctor().getId() != null
+                ) {
+                    vm.setDoctorId(d.getRegistration().getAppointment().getDoctor().getId());
+                }
+                return vm;
             })
             .collect(Collectors.toList());
 
