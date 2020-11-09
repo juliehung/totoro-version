@@ -28,10 +28,7 @@ import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -932,14 +929,14 @@ public class NhiRuleCheckUtil {
                     dto.getPatient().getId(),
                     dto.getNhiExtendTreatmentProcedure().getA73(),
                     dto.getNhiExtendDisposal().getDisposal().getId(),
-                    dto.getExcludeTreatmentProcedureIds() == null ? new ArrayList<Long>() : dto.getExcludeTreatmentProcedureIds()
+                    dto.getExcludeTreatmentProcedureIds() == null ? Arrays.asList(0L) : dto.getExcludeTreatmentProcedureIds()
                 );
         } else {
             optionalNhiExtendTreatmentProcedureTable = nhiExtendTreatmentProcedureRepository
                 .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_IdNotInOrderByA71Desc(
                     dto.getPatient().getId(),
                     dto.getNhiExtendTreatmentProcedure().getA73(),
-                    dto.getExcludeTreatmentProcedureIds() == null ? new ArrayList<Long>() : dto.getExcludeTreatmentProcedureIds()
+                    dto.getExcludeTreatmentProcedureIds() == null ? Arrays.asList(0L) : dto.getExcludeTreatmentProcedureIds()
                 );
         }
 
