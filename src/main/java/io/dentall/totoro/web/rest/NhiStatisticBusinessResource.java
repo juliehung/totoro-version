@@ -60,9 +60,9 @@ public class NhiStatisticBusinessResource {
     public ResponseEntity<List<NhiIndexOdVM>> getOdIndex(
         @RequestParam Instant begin,
         @RequestParam Instant end,
-        @RequestParam(required = false) List<Long> excludeId
+        @RequestParam(required = false) List<Long> excludeDisposalId
     ) {
-        return new ResponseEntity<>(nhiStatisticService.calculateOdIndex(begin, end), HttpStatus.OK);
+        return new ResponseEntity<>(nhiStatisticService.calculateOdIndex(begin, end, excludeDisposalId), HttpStatus.OK);
     }
 
     @GetMapping("/index/tooth-clean")
@@ -80,26 +80,26 @@ public class NhiStatisticBusinessResource {
     public ResponseEntity<List<NhiDoctorExamVM>> calculateDoctorNhiExam(
         @RequestParam Instant begin,
         @RequestParam Instant end,
-        @RequestParam(required = false) List<Long> excludeId
+        @RequestParam(required = false) List<Long> excludeDisposalId
     ) {
-        return new ResponseEntity<>(nhiStatisticService.calculateDoctorNhiExam(begin, end), HttpStatus.OK);
+        return new ResponseEntity<>(nhiStatisticService.calculateDoctorNhiExam(begin, end, excludeDisposalId), HttpStatus.OK);
     }
 
     @GetMapping("/doctor-nhi-tx")
     public ResponseEntity<List<NhiDoctorTxVM>> calculateDoctorTx(
         @RequestParam Instant begin,
         @RequestParam Instant end,
-        @RequestParam(required = false) List<Long> excludeId
+        @RequestParam(required = false) List<Long> excludeDisposalId
     ) {
-        return new ResponseEntity<>(nhiStatisticService.calculateDoctorTx(begin, end), HttpStatus.OK);
+        return new ResponseEntity<>(nhiStatisticService.calculateDoctorTx(begin, end, excludeDisposalId), HttpStatus.OK);
     }
 
     @GetMapping("/index-treatment-procedures")
     public ResponseEntity<List<NhiIndexTreatmentProcedureVM>> getNhiIndexTreatmentProcedures(
         @RequestParam Instant begin,
         @RequestParam Instant end,
-        @RequestParam(required = false) List<Long> excludeId
+        @RequestParam(required = false) List<Long> excludeDisposalId
     ) {
-        return new ResponseEntity<>(nhiStatisticService.getNhiIndexTreatmentProcedures(begin, end), HttpStatus.OK);
+        return new ResponseEntity<>(nhiStatisticService.getNhiIndexTreatmentProcedures(begin, end, excludeDisposalId), HttpStatus.OK);
     }
 }
