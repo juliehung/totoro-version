@@ -97,23 +97,43 @@ public class NhiStatisticService {
         return new ArrayList<>(docDashboardMap.values());
     }
 
-    public List<NhiIndexOdVM> calculateOdIndex(Instant begin, Instant end) {
-        return nhiExtendDisposalRepository.calculateOdIndex(begin, end);
+    public List<NhiIndexOdVM> calculateOdIndex(Instant begin, Instant end, List<Long> excludeDisposalId) {
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        return nhiExtendDisposalRepository.calculateOdIndex(begin, end, excludeDisposalId);
     }
 
-    public List<NhiIndexToothCleanVM> calculateToothCleanIndex(Instant begin, Instant end) {
-        return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end);
+    public List<NhiIndexToothCleanVM> calculateToothCleanIndex(Instant begin, Instant end, List<Long> excludeDisposalId) {
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end, excludeDisposalId);
     }
 
-    public List<NhiDoctorTxVM> calculateDoctorTx(Instant begin, Instant end) {
-       return nhiExtendDisposalRepository.calculateDoctorNhiTx(begin, end);
+    public List<NhiDoctorTxVM> calculateDoctorTx(Instant begin, Instant end, List<Long> excludeDisposalId) {
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        return nhiExtendDisposalRepository.calculateDoctorNhiTx(begin, end, excludeDisposalId);
     }
 
-    public List<NhiDoctorExamVM> calculateDoctorNhiExam(Instant begin, Instant end) {
-        return nhiExtendDisposalRepository.calculateDoctorNhiExam(begin, end);
+    public List<NhiDoctorExamVM> calculateDoctorNhiExam(Instant begin, Instant end, List<Long> excludeDisposalId) {
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        return nhiExtendDisposalRepository.calculateDoctorNhiExam(begin, end, excludeDisposalId);
     }
 
-    public List<NhiIndexTreatmentProcedureVM> getNhiIndexTreatmentProcedures(Instant begin, Instant end) {
-        return nhiExtendDisposalRepository.findNhiIndexTreatmentProcedures(begin, end);
+    public List<NhiIndexTreatmentProcedureVM> getNhiIndexTreatmentProcedures(Instant begin, Instant end, List<Long> excludeDisposalId) {
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        return nhiExtendDisposalRepository.findNhiIndexTreatmentProcedures(begin, end, excludeDisposalId);
     }
 }
