@@ -220,13 +220,14 @@ deployDevDentall8082:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
         - eval $(ssh-agent -s)
-        - echo "$DEV_MACHIN_KEY" | tr -d '\r' | ssh-add -
         - mkdir -p ~/.ssh
         - chmod 700 ~/.ssh
+        - echo "$DEV_MACHINE_KEY" > /home/dev.key
         - ssh-keyscan dev.dentall.site >> ~/.ssh/known_hosts
         - chmod 644 ~/.ssh/known_hosts
+        - chmod 700 /home/dev.key
     script:
-        - scp ./build/libs/*.war deploy@dev.dentall.site:/home/deploy/dora-monitor/storage/wars/dev.war
+        - scp -i /home/dev.key ./build/libs/*.war deploy@dev.dentall.site:/home/deploy/dora-monitor/storage/wars/dev.war
         - 'curl -X POST http://dev.dentall.site:8001/servers/8082/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
         - sleep 1
         - 'curl -X POST http://dev.dentall.site:8001/servers/8082/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
