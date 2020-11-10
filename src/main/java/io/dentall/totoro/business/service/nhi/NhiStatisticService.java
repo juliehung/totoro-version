@@ -101,8 +101,12 @@ public class NhiStatisticService {
         return nhiExtendDisposalRepository.calculateOdIndex(begin, end);
     }
 
-    public List<NhiIndexToothCleanVM> calculateToothCleanIndex(Instant begin, Instant end) {
-        return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end);
+    public List<NhiIndexToothCleanVM> calculateToothCleanIndex(Instant begin, Instant end, List<Long> excludeDisposalId) {
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end, excludeDisposalId);
     }
 
     public List<NhiDoctorTxVM> calculateDoctorTx(Instant begin, Instant end) {

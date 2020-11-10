@@ -68,8 +68,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "        left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "        left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "        left join jhi_user ju on ju.id = a.doctor_user_id " +
-            "                    where a19 <> '2' and date_time between ?1 and ?2  and a18 is not null and trim(a18) <> ''" +
-            "                       or a19 = '2' and replenishment_date between ?1 and ?2  and a18 is not null and trim(a18) <> ''" +
+            "                    where a19 <> '2' and date_time between ?1 and ?2  and a18 is not null and trim(a18) <> '' and d.id not in (?3)" +
+            "                       or a19 = '2' and replenishment_date between ?1 and ?2  and a18 is not null and trim(a18) <> '' and d.id not in (?3)" +
             "    ), " +
             "    tooth_clean_total_time as ( " +
             "        select did, count(*) as total_times " +
@@ -98,7 +98,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "    left join tooth_clean_distinct_pat tcdp on tctt.did = tcdp.did " +
             "    order by did "
     )
-    List<NhiIndexToothCleanVM> calculateToothCleanIndex(Instant begin, Instant end);
+    List<NhiIndexToothCleanVM> calculateToothCleanIndex(Instant begin, Instant end, List<Long> excludeDisposalId);
 
     @Query(
         nativeQuery = true,
