@@ -97,7 +97,7 @@ public class NhiStatisticService {
         return new ArrayList<>(docDashboardMap.values());
     }
 
-    public List<NhiIndexOdVM> calculateOdIndex(Instant begin, Instant end) {
+    public List<NhiIndexOdVM> calculateOdIndex(Instant begin, Instant end, List<Long> excludeDisposalId) {
         return nhiExtendDisposalRepository.calculateOdIndex(begin, end);
     }
 
@@ -109,15 +109,15 @@ public class NhiStatisticService {
         return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end, excludeDisposalId);
     }
 
-    public List<NhiDoctorTxVM> calculateDoctorTx(Instant begin, Instant end) {
-       return nhiExtendDisposalRepository.calculateDoctorNhiTx(begin, end);
+    public List<NhiDoctorTxVM> calculateDoctorTx(Instant begin, Instant end, List<Long> excludeDisposalId) {
+        return nhiExtendDisposalRepository.calculateDoctorNhiTx(begin, end);
     }
 
-    public List<NhiDoctorExamVM> calculateDoctorNhiExam(Instant begin, Instant end) {
+    public List<NhiDoctorExamVM> calculateDoctorNhiExam(Instant begin, Instant end, List<Long> excludeDisposalId) {
         return nhiExtendDisposalRepository.calculateDoctorNhiExam(begin, end);
     }
 
-    public List<NhiIndexTreatmentProcedureVM> getNhiIndexTreatmentProcedures(Instant begin, Instant end) {
+    public List<NhiIndexTreatmentProcedureVM> getNhiIndexTreatmentProcedures(Instant begin, Instant end, List<Long> excludeDisposalId) {
         return nhiExtendDisposalRepository.findNhiIndexTreatmentProcedures(begin, end);
     }
 }
