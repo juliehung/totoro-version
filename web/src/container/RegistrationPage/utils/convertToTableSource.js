@@ -124,7 +124,7 @@ export function convertToTableSource(registrations, selectedDoctor) {
       gender: r.patientGender,
       medicalId: r.patientMedicalId,
       birth: r.patientBirth,
-      nationalId: r.nationalId,
+      nationalId: r.patientNationalId,
     };
 
     return {
