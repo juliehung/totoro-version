@@ -33,6 +33,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "       p.name as patientName," +
             "       p.display_name as patientDisplayName," +
             "       p.birth as patientBirth," +
+            "       p.national_id as patientNationalId," +
             "       p.medical_id as patientMedicalId," +
             "       p.gender as patientGender," +
             "       d.id as disposalId," +

@@ -15,6 +15,7 @@ public interface UWPRegistrationPageVM {
     LocalDate getPatientBirth();
     String getPatientMedicalId();
     Gender getPatientGender();
+    String getPatientNationalId();
 
     // disposal
     Long getDisposalId();
