@@ -4,6 +4,7 @@ import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.web.rest.vm.SameTreatmentVM;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -27,7 +28,7 @@ public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSp
 
     List<SameTreatmentVM> findByRegistration_Appointment_Patient_IdAndDateTimeBetween(Long patientId, Instant begin, Instant end);
 
-    List<DisposalTable> findDisposalByRegistration_Appointment_Patient_Id(Long patientId);
+    List<DisposalTable> findDisposalByRegistration_Appointment_Patient_Id(Long patientId, Pageable pageable);
 
     Optional<DisposalTable> findDisposalById(Long id);
 

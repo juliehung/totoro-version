@@ -18,7 +18,7 @@ export default class Disposal {
   };
 
   static getByPatientId = async patientId => {
-    const params = { 'patientId.equals': patientId };
+    const params = { 'patientId.equals': patientId, page: 0, size: 50 };
     const requestURL = combineUrlAndQueryData(requestUrl, params);
     const result = await request(requestURL);
     return result;

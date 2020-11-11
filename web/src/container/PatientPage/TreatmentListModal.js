@@ -10,9 +10,9 @@ import { convertDisposalsToTreatmentsAndPrescriptions, toRocString } from './uti
 const columns = doctors => [
   {
     title: '治療日期',
-    dataIndex: 'createdDate',
-    key: 'createdDate',
-    sorter: (a, b) => moment(a.createdDate) - moment(b.createdDate),
+    dataIndex: 'dateTime',
+    key: 'dateTime',
+    sorter: (a, b) => moment(a.dateTime) - moment(b.dateTime),
     sortDirections: ['descend', 'ascend'],
     defaultSortOrder: 'descend',
     render: date => toRocString(date),

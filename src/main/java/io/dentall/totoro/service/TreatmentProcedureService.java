@@ -334,7 +334,7 @@ public class TreatmentProcedureService {
     }
 
     public List<TreatmentProcedure> findTreatmentProceduresByPatientIdAndDateTimePeriod(Long patientId, Instant begin, Instant end) {
-        return treatmentProcedureRepository.findByDisposal_Registration_Appointment_Patient_IdAndDisposal_DateTimeBetweenOrderByCreatedDateDesc(patientId, begin, end).stream()
+        return treatmentProcedureRepository.findByDisposal_Registration_Appointment_Patient_IdAndDisposal_DateTimeBetweenOrderByDisposal_DateTimeDesc(patientId, begin, end).stream()
             .map(treatmentProcedureMapper::TreatmentProcedureTableToTreatmentProcedure)
             .map(treatmentProcedure -> {
                 treatmentProcedureMapper.attachNhiProcedureToDomain(treatmentProcedure);
@@ -349,7 +349,7 @@ public class TreatmentProcedureService {
     }
 
     public List<TreatmentProcedure> findRecent6TreatmentProceduresByPatient(Long patient) {
-        return treatmentProcedureRepository.findTop6ByDisposal_Registration_Appointment_Patient_IdOrderByCreatedDateDesc(patient).stream()
+        return treatmentProcedureRepository.findTop6ByDisposal_Registration_Appointment_Patient_IdOrderByDisposal_DateTimeDesc(patient).stream()
             .map(treatmentProcedureMapper::TreatmentProcedureTableToTreatmentProcedure)
             .map(treatmentProcedure -> {
                 // NhiProcedure

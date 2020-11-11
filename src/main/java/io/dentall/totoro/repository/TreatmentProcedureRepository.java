@@ -22,9 +22,9 @@ import java.util.Set;
 @Repository
 public interface TreatmentProcedureRepository extends JpaRepository<TreatmentProcedure, Long>, JpaSpecificationExecutor<TreatmentProcedure> {
 
-    List<TreatmentProcedureTable> findTop6ByDisposal_Registration_Appointment_Patient_IdOrderByCreatedDateDesc(Long patientId);
+    List<TreatmentProcedureTable> findTop6ByDisposal_Registration_Appointment_Patient_IdOrderByDisposal_DateTimeDesc(Long patientId);
 
-    List<TreatmentProcedureTable> findByDisposal_Registration_Appointment_Patient_IdAndDisposal_DateTimeBetweenOrderByCreatedDateDesc(Long id, Instant begin, Instant end);
+    List<TreatmentProcedureTable> findByDisposal_Registration_Appointment_Patient_IdAndDisposal_DateTimeBetweenOrderByDisposal_DateTimeDesc(Long id, Instant begin, Instant end);
 
     Set<TreatmentProcedureTable> findTreatmentProceduresByDisposal_Id(Long id);
 
