@@ -336,6 +336,18 @@ Business Logic
 - 專科，只能在更新 user 的時候才能被增加，新增時不支援，且僅在 `/api/v2` 支援。
 - TreatmentProcedure，由於設計失誤，導致此像表示，使用者自行增加的項目，有可能為 `診療` 或 `診察`。
 
+
+Metrics
+---
+由於以內建整合於 application ， 可以藉由 http://some.how.domain:someport/management/metrics 以取得，且需要帶入 bearer token。
+```bash
+# Authorization 的 token 須自行取得
+curl --location --request GET 'http://his.dentall.io/cp/management/metrics' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b3Rvcm91c2VyIiwiYXV0aCI6IlJPTEVfQURNSU4iLCJleHAiOjE2MzY2OTkzNzB9.r94Sxqrh4eL5dQoqRAMyYtHAwhpmL2ujjk7HcEZH8G0Sz' \
+--header 'Cookie: GCLB=CP3pgqjoi6rW7gE'
+```
+
+
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0
 
