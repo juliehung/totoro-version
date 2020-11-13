@@ -271,6 +271,7 @@ function AppRight(props) {
           headerRender={headerRender}
           onSelect={props.changeCalDate}
           value={props.calendarDate}
+          locale={{ lang: { locale: 'zh-tw' } }}
         />
       </CalendarContainer>
       <ItemContainer>
