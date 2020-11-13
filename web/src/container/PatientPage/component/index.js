@@ -10,7 +10,7 @@ import { toRocString } from '../utils';
 export const Container = styled.div`
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1);
 `;
 
 export const Header = styled.div`
