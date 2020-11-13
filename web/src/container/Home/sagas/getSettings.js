@@ -8,7 +8,6 @@ export function* getSettings() {
     const result = yield call(Settings.getById);
     yield put(getSettingsSuccess(result));
   } catch (err) {
-    //  ignore
     console.log(err);
   }
 }

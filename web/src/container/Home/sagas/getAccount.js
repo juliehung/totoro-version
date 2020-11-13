@@ -10,7 +10,6 @@ export function* getAccount() {
       const account = yield call(Account.get);
       yield put(getAccountSuccess(account));
     } catch (error) {
-      // ignore
       console.log(error);
     }
   }
