@@ -216,10 +216,9 @@ const LaboDrawerItem = styled.a`
 
 const ContentContainer = styled.div`
   height: 100%;
-  margin: 0 1% 15px;
+  padding: 0 1% 15px;
   border-radius: 8px;
   background-color: #f8fafb;
-  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
   scrollbar-width: none;
   &::-webkit-scrollbar {
