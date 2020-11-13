@@ -9,7 +9,9 @@ const ColorSpan = styled.span`
 //#endregion
 
 function PatientSearchPatientListText(props) {
-  const { keyword = '', text = '', isBirth = false } = props;
+  const { text = '', isBirth = false } = props;
+  let { keyword = '' } = props;
+  keyword = keyword.charAt(0) === '?' ? '"?"' : keyword;
   const re = new RegExp(isBirth ? `(${keyword.split('').join('/*')})` : `(${keyword})`);
   const split = text.split(re);
   const array = split.map((s, i) => (i % 2 === 1 ? <ColorSpan key={i}>{s}</ColorSpan> : <span key={i}>{s}</span>));
