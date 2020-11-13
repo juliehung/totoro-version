@@ -135,6 +135,7 @@ function CreateCalendarEventModal({
       footer={null}
       visible={visible}
       onCancel={closeModal}
+      maskClosable={false}
       closable={false}
       width={600}
       destroyOnClose
