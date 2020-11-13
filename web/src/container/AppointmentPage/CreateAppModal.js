@@ -1,4 +1,4 @@
-import { Modal, Button, Select, Input, Spin, message, Checkbox, Empty } from 'antd';
+import { Modal, Button, Select, Input, Spin, message, Checkbox, Empty, AutoComplete } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -83,7 +83,7 @@ const RequiredCol = styled.span`
   }
 `;
 
-const StyledSearchSelect = styled(Select)`
+const StyledSearchSelect = styled(AutoComplete)`
   flex-grow: 1;
 `;
 
@@ -249,10 +249,11 @@ function CreateAppModal({
     }, 300);
   };
 
-  const onSearchTextFocus = () => {
+  const onSearchTextFocus = e => {
+    const value = e?.target?.value;
     clearTimeout(debounceSearch);
     debounceSearch = setTimeout(() => {
-      searchPatients(undefined);
+      searchPatients(value);
     }, 300);
   };
 
@@ -313,6 +314,10 @@ function CreateAppModal({
       searchPlaceholder = searchPlaceholderBase;
       break;
   }
+  patients = patients.map(patient => {
+    const { id, medicalId, name } = patient;
+    return { id, name, value: `${name}, ${medicalId}` };
+  });
 
   return (
     <Modal
@@ -329,16 +334,18 @@ function CreateAppModal({
       <Container>
         <div style={{ display: 'flex' }}>
           <StyledSearchSelect
-            showSearch
-            placeholder={searchPlaceholder}
+            showArrow={true}
+            showSearch={true}
             filterOption={false}
+            options={patients}
+            placeholder={searchPlaceholder}
             onSearch={onSearchTextChange}
             onFocus={onSearchTextFocus}
-            onSelect={onPatientSelect}
+            onSelect={(data, { id = null }) => onPatientSelect(id)}
             notFoundContent={<Empty description="沒有資料" />}
           >
             {patients.map(({ medicalId, name, id }) => (
-              <Select.Option key={medicalId} value={id}>
+              <Select.Option key={id} value={id}>
                 {`${name}, ${medicalId}`}
               </Select.Option>
             ))}
