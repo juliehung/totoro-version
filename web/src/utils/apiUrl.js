@@ -30,7 +30,7 @@ if (process.env.NODE_ENV !== 'production') {
   host = 'dev.dentall.site';
   apiPort = 8082;
 
-  // Use dentall.pw/rakumi
+  // Use dentall.pw
   // clinic = '/cp';
   // host = 'dentall.pw';
   // apiPort = 443;
