@@ -7,7 +7,6 @@ import { getDoc } from './actions';
 import { Button } from 'antd';
 import { GApageView } from '../../ga';
 import { parseDateToString } from './utils/parseDateToString';
-import { getBaseUrl } from '../../utils/getBaseUrl';
 import { Helmet } from 'react-helmet-async';
 
 //#region
@@ -225,9 +224,6 @@ function Form(props) {
         )}
       </FormContainer>
       <ButtonsContainer>
-        <a href={`${getBaseUrl()}#/q/${patient.id}`}>
-          <StyledButton>編輯內容</StyledButton>
-        </a>
         <StyledButton
           type="primary"
           onClick={() => {
