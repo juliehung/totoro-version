@@ -10,7 +10,7 @@ import EditAppModal from './EditAppModal';
 import CreateCalendarEventModal from './CreateCalendarEventModal';
 import EditCalendarEventModal from './EditCalendarEventModal';
 import { Helmet } from 'react-helmet-async';
-import { GApageView } from '../../ga';
+import GAHelper from '../../ga';
 import MobileDetect from 'mobile-detect';
 import { message } from 'antd';
 import { onLeavePage } from './actions';
@@ -71,7 +71,7 @@ function AppointmentPage(props) {
   const [viewType, setViewType] = useState(defaultView);
 
   useEffect(() => {
-    GApageView();
+    GAHelper.pageView();
   }, []);
 
   useEffect(() => {

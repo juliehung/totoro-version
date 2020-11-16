@@ -5,7 +5,7 @@ import Background from '../../images/questionnaire_bg.svg';
 import { withRouter } from 'react-router-dom';
 import { getDoc } from './actions';
 import { Button } from 'antd';
-import { GApageView } from '../../ga';
+import GAHelper from '../../ga';
 import { parseDateToString } from './utils/parseDateToString';
 import { Helmet } from 'react-helmet-async';
 
@@ -98,7 +98,7 @@ function Form(props) {
   const { match, getDoc, patient } = props;
 
   useEffect(() => {
-    GApageView();
+    GAHelper.pageView();
   }, []);
 
   useEffect(() => {

@@ -32,7 +32,7 @@ import Signature from './pages/Signature';
 import { handleKeyEvent } from './utils/handleKeyEvent';
 import { withRouter } from 'react-router-dom';
 import Background from '../../images/questionnaire_bg.svg';
-import { GApageView } from '../../ga';
+import GAHelper from '../../ga';
 import pages from './pages';
 import FinishModal from './FinishModal';
 import { Helmet } from 'react-helmet-async';
@@ -95,7 +95,7 @@ function QuestionnairePage(props) {
   const focusRef = useRef(null);
 
   useEffect(() => {
-    GApageView();
+    GAHelper.pageView();
   }, []);
 
   useEffect(() => {
