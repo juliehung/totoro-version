@@ -15,5 +15,5 @@ export default function parseDateToString(date, separator = '/') {
     }
     return date;
   }
-  return '';
+  return '生日未填';
 }
