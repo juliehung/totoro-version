@@ -8,6 +8,7 @@ import { Button } from 'antd';
 import { GApageView } from '../../ga';
 import { parseDateToString } from './utils/parseDateToString';
 import { getBaseUrl } from '../../utils/getBaseUrl';
+import { Helmet } from 'react-helmet-async';
 
 //#region
 const Container = styled.div`
@@ -108,6 +109,9 @@ function Form(props) {
 
   return (
     <Container>
+      <Helmet>
+        <title>病歷</title>
+      </Helmet>
       <FormContainer>
         <Label>基本資訊</Label>
         <InfoContainer>
@@ -216,7 +220,7 @@ function Form(props) {
         </InfoContainer>
         {props.esign && (
           <ImageContainer>
-            <img src={props.esign} alt="esign" width="100%"></img>
+            <img src={props.esign} alt="esign" width="100%" />
           </ImageContainer>
         )}
       </FormContainer>
