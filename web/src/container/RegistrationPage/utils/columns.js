@@ -66,8 +66,8 @@ export const columns = xRayVendors => [
     dataIndex: 'type',
     key: 'type',
     filters: [
-      { text: '健保', value: '健保' },
-      { text: '自費', value: '自費' },
+      { text: '健保', value: '健' },
+      { text: '自費', value: '自' },
     ],
     filterMultiple: false,
     onFilter: (value, record) => record.type.indexOf(value) === 0,
