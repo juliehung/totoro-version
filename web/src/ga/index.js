@@ -1,11 +1,10 @@
 import ReactGA from 'react-ga';
 
-const isProduction = process.env.NODE_ENV === 'production';
 const TrackingCode = 'UA-153780028-2';
 
 class GAHelper {
-  constructor() {
-    ReactGA.initialize(TrackingCode);
+  constructor(production) {
+    if (production) ReactGA.initialize(TrackingCode);
   }
 
   pageView = page => {
@@ -38,7 +37,7 @@ class GAHelper {
   };
 }
 
-const GAHelperInstance = new GAHelper();
+const GAHelperInstance = new GAHelper(process.env.NODE_ENV === 'production');
 Object.freeze(GAHelperInstance);
 
 export default GAHelperInstance;
