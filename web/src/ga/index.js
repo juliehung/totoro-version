@@ -1,10 +1,9 @@
 import ReactGA from 'react-ga';
 
-const TrackingCode = 'UA-153780028-2';
-
 class GAHelper {
   constructor(production) {
-    if (production) ReactGA.initialize(TrackingCode);
+    const TrackingCode = production ? 'UA-153780028-2' : 'UA-153780028-3';
+    ReactGA.initialize(TrackingCode);
   }
 
   pageView = page => {
