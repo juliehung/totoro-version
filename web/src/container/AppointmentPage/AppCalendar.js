@@ -57,7 +57,7 @@ import EyeFillWhite from '../../images/eye-fill-white.svg';
 import EyeOffFill from '../../images/eye-off-fill.svg';
 import { parseDisplayRange } from './utils/parseDisplayRange';
 import TimeDisplay from './TimeDisplay';
-import MqttHelper from '../../utils/mqtt';
+// import MqttHelper from '../../utils/mqtt';
 import { RedoOutlined, StopOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { handleResources } from './utils/handleResources';
 
@@ -352,21 +352,21 @@ class AppCalendar extends React.Component {
     }
 
     // mqtt
-    MqttHelper.subscribeAppointment(AppCalendar.name, message => {
-      let messageObj;
-      try {
-        messageObj = JSON.parse(message);
-      } catch (e) {
-        return;
-      }
-
-      const { start, end } = this.props.calendarRange;
-      const expectedArrivalTime = moment(messageObj.expectedArrivalTime);
-      if (expectedArrivalTime.isBetween(start, end)) {
-        // TODO: find a better way to update appointments
-        this.getAllEvent();
-      }
-    });
+    // MqttHelper.subscribeAppointment(AppCalendar.name, message => {
+    //   let messageObj;
+    //   try {
+    //     messageObj = JSON.parse(message);
+    //   } catch (e) {
+    //     return;
+    //   }
+    //
+    //   const { start, end } = this.props.calendarRange;
+    //   const expectedArrivalTime = moment(messageObj.expectedArrivalTime);
+    //   if (expectedArrivalTime.isBetween(start, end)) {
+    //     // TODO: find a better way to update appointments
+    //     this.getAllEvent();
+    //   }
+    // });
 
     this.setState({ pauseShift: false });
   }
@@ -436,9 +436,9 @@ class AppCalendar extends React.Component {
     this.props.getAppointments();
   }
 
-  componentWillUnmount() {
-    MqttHelper.unsubscribeAppointment(AppCalendar.name);
-  }
+  // componentWillUnmount() {
+  //   MqttHelper.unsubscribeAppointment(AppCalendar.name);
+  // }
 
   simulateMouseClick = element => {
     const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
