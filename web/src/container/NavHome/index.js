@@ -54,6 +54,10 @@ export const GlobalStyle = createGlobalStyle`
 
   .ant-dropdown-menu {
     border-radius: 10px !important;
+
+    > li:hover {
+      border-radius: 10px;
+    }
   }
 
 `;
