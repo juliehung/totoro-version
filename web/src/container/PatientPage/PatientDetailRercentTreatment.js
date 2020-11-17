@@ -26,7 +26,7 @@ const columns = [
     render: date => toRocString(date),
   },
   {
-    title: '牙位',
+    title: '牙位(面)',
     dataIndex: 'teeth',
     key: 'teeth',
   },
