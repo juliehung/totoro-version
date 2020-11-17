@@ -2,19 +2,14 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Container, Header, Content, PatientDeclarationStatusItem, PatientSpecialStatusItem } from './component';
 import { Spin, Empty } from 'antd';
-import { convertNhiExtendPatientToPatientDeclarationStatus, convertPatientToPatientSpecialStatus } from './utils';
+import { toRefreshNhiPatientStatusWithHistory, convertPatientToPatientSpecialStatus } from './utils';
 
 //#region
 //#endregion
 
 function PatientDetailPatientStatus(props) {
-  const { patientDeclarationStatus, loading, patientSpecialStatus } = props;
-
-  const isEmpty =
-    !patientDeclarationStatus.scaling.is &&
-    !patientDeclarationStatus.perio.is &&
-    !patientDeclarationStatus.fluoride.is &&
-    patientSpecialStatus.length === 0;
+  const { loading, nhiPatientFluorideStatus, nhiPatientScalingStatus, patientSpecialStatus } = props;
+  const isEmpty = !nhiPatientFluorideStatus && !nhiPatientScalingStatus && patientSpecialStatus.length === 0;
 
   return (
     <Container>
@@ -27,15 +22,22 @@ function PatientDetailPatientStatus(props) {
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           ) : (
             <Fragment>
-              {patientDeclarationStatus.scaling.is && (
-                <PatientDeclarationStatusItem {...patientDeclarationStatus.scaling} title="洗牙91004C" />
-              )}
-              {patientDeclarationStatus.perio.is && (
-                <PatientDeclarationStatusItem {...patientDeclarationStatus.perio} title="牙周病控制" />
-              )}
-              {patientDeclarationStatus.fluoride.is && (
-                <PatientDeclarationStatusItem {...patientDeclarationStatus.fluoride} title="塗氟" />
-              )}
+              {nhiPatientFluorideStatus &&
+                nhiPatientFluorideStatus.map((status, index) => (
+                  <PatientDeclarationStatusItem
+                    key={`${status?.msg || 'PatientFluorideStatusMsg'}-${index}`}
+                    {...status}
+                    title="91004C 牙結石清除-全口"
+                  />
+                ))}
+              {nhiPatientScalingStatus &&
+                nhiPatientScalingStatus.map((status, index) => (
+                  <PatientDeclarationStatusItem
+                    key={`${status?.msg || 'PatientScalingStatusMsg'}-${index}`}
+                    {...status}
+                    title="81 塗氟"
+                  />
+                ))}
               {patientSpecialStatus.map((s, i) => (
                 <PatientSpecialStatusItem key={i} {...s} />
               ))}
@@ -48,12 +50,14 @@ function PatientDetailPatientStatus(props) {
 }
 
 const mapStateToProps = ({ patientPageReducer }) => ({
-  patientDeclarationStatus: convertNhiExtendPatientToPatientDeclarationStatus(
-    patientPageReducer.nhiExtendPatient.nhiExtendPatient,
-    patientPageReducer.patient.patient,
+  loading: patientPageReducer.nhiPatientStatus.loading,
+  nhiPatientFluorideStatus: toRefreshNhiPatientStatusWithHistory(
+    patientPageReducer.nhiPatientStatus.nhiPatientFluorideStatus,
+  ),
+  nhiPatientScalingStatus: toRefreshNhiPatientStatusWithHistory(
+    patientPageReducer.nhiPatientStatus.nhiPatientScalingStatus,
   ),
   patientSpecialStatus: convertPatientToPatientSpecialStatus(patientPageReducer.patient.patient),
-  loading: patientPageReducer.nhiExtendPatient.loading,
 });
 
 const mapDispatchToProps = {};
