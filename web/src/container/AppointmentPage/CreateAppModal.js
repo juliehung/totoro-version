@@ -28,7 +28,7 @@ import {
 } from './actions';
 import styled from 'styled-components';
 import { requiredTreatmentTimeDefault, patientSearchMode, APPT_CUSTOM_COLORS } from './constant';
-import { GAevent } from '../../ga';
+import GAHelper from '../../ga';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { defaultTimeOption } from './utils/generateDefaultTime';
 import { appointmentPage } from './';
@@ -263,7 +263,7 @@ function CreateAppModal({
   };
 
   const handleConfirm = () => {
-    GAevent(appointmentPage, 'Create appointment click');
+    GAHelper.event(appointmentPage, 'Create appointment click');
     if (appointment.patientId) {
       createAppointment();
     } else {

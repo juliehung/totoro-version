@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import ShiftCalendar from './ShiftCalendar';
 import DefaultShift from './DefaultShift';
-import { GApageView } from '../../ga';
+import GAHelper from '../../ga';
 import './index.css';
 import { leavePage } from './actions';
 
@@ -20,7 +20,7 @@ function ShiftPage(props) {
   const { leavePage } = props;
 
   useEffect(() => {
-    GApageView();
+    GAHelper.pageView();
     return () => {
       leavePage();
     };
