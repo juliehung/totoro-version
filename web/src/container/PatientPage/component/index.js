@@ -5,7 +5,6 @@ import icImg from '../../../images/IC.svg';
 import allDone from '../../../images/all-done.svg';
 import close from '../../../images/close.svg';
 import warning from '../../../images/alert-circle.svg';
-import { toRocString } from '../utils';
 
 export const Container = styled.div`
   background: #fff;
@@ -79,6 +78,9 @@ const Item = styled.div`
     & > :first-child {
       font-weight: 600;
     }
+    .patient-status-msg {
+      color: #8f9bb3;
+    }
   }
 `;
 
@@ -96,15 +98,11 @@ export const BlueDottedUnderlineText = props => (
 
 export const PatientDeclarationStatusItem = props => (
   <BorderDiv>
-    <Item can={props.can}>
-      <img src={props.can ? allDone : close} height={'90%'} alt="icon" />
+    <Item can={props.validated}>
+      <img src={props.validated ? allDone : close} height={'90%'} alt="icon" />
       <div>
         <span>{props.title}</span>
-        <span>{`${props.can ? toRocString(props?.prev) : toRocString(props?.next)}`}</span>
-      </div>
-      <div>
-        <span>{props.can ? '可申報' : '不可申報'}</span>
-        <span>{props.can ? '上次申報' : '始可申報'}</span>
+        {props.messages && <span className="patient-status-msg">{props.messages}</span>}
       </div>
     </Item>
   </BorderDiv>

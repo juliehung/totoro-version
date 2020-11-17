@@ -29,6 +29,8 @@ import {
   SEARCH_PATIENTS_START,
   SEARCH_PATIENT_SUCCESS,
   CHANGE_TREATMENT_LIST_MODAL_VISIBLE,
+  GET_NHI_PATIENT_STATUS,
+  GET_NHI_PATIENT_STATUS_SUCCESS,
 } from './constant';
 
 export function changeDrawerVisible(visible) {
@@ -81,6 +83,14 @@ export function getNhiExtendPatient() {
 
 export function getNhiExtendPatientSuccess(nhiExtendPatient) {
   return { type: GET_NHI_EXTEND_PATIENT_SUCCESS, nhiExtendPatient };
+}
+
+export function getNhiPatientStatus() {
+  return { type: GET_NHI_PATIENT_STATUS };
+}
+
+export function getNhiPatientStatusSuccess({ nhiPatientScalingStatus, nhiPatientFluorideStatus }) {
+  return { type: GET_NHI_PATIENT_STATUS_SUCCESS, nhiPatientScalingStatus, nhiPatientFluorideStatus };
 }
 
 export function getAppointment() {

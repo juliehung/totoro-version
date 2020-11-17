@@ -2,6 +2,7 @@ import { take, call, put, fork, delay } from 'redux-saga/effects';
 import moment from 'moment';
 import { INIT_PATIENT_DETAIL } from '../constant';
 import NhiExtendPaitent from '../../../models/nhiExtendPaitent';
+import NhiPatientStatus from '../../../models/nhiPaitentStatus';
 import TreatmentProcedure from '../../../models/treatmentProcedure';
 import NhiAccumulatedMedicalRecords from '../../../models/nhiAccumulatedMedicalRecords';
 import Patient from '../../../models/patient';
@@ -23,6 +24,8 @@ import {
   getAppointmentSuccess,
   getDocNpHistory,
   getDocNpHistorySuccess,
+  getNhiPatientStatus,
+  getNhiPatientStatusSuccess,
 } from '../actions';
 
 export function* initPatientDetail() {
@@ -35,6 +38,7 @@ export function* initPatientDetail() {
       yield fork(getRecentTreatmentProcedureSaga, id);
       yield fork(getDisposalSaga, id);
       yield fork(getAccumulatedMedicalRecordSage, id);
+      yield fork(getNhiPatientStatusSaga, id);
       yield fork(getNhiExtendPatientSaga, id);
       yield fork(getAppointmentSaga, id);
       yield fork(getDocNpHistorySaga, id);
@@ -62,6 +66,13 @@ function* getAccumulatedMedicalRecordSage(id) {
   yield put(getAccumulatedMedicalRecords());
   const nhiAccumulatedMedicalRecords = yield call(NhiAccumulatedMedicalRecords.getByPatientId, id);
   yield put(getAccumulatedMedicalRecordSuccess(nhiAccumulatedMedicalRecords));
+}
+
+function* getNhiPatientStatusSaga(id) {
+  yield put(getNhiPatientStatus());
+  const nhiPatientScalingStatus = yield call(NhiPatientStatus.getById, id, '91004C');
+  const nhiPatientFluorideStatus = yield call(NhiPatientStatus.getById, id, '81');
+  yield put(getNhiPatientStatusSuccess({ nhiPatientScalingStatus, nhiPatientFluorideStatus }));
 }
 
 function* getNhiExtendPatientSaga(id) {
