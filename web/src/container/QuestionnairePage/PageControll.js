@@ -69,7 +69,14 @@ function PageControll(props) {
       }
       validateSuccess(currentPage);
     }
-    nextPage ? gotoPage(nextPage) : goNextPage();
+
+    nextPage
+      ? typeof nextPage === 'number'
+        ? gotoPage(nextPage)
+        : typeof nextPage === 'function'
+        ? gotoPage(nextPage(patient))
+        : goNextPage()
+      : goNextPage();
   };
 
   return (
