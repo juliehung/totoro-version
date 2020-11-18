@@ -102,16 +102,19 @@ const pages = [
     key: 'DoDrugQ',
     page: 16,
     component: <DoDrugQ />,
+    nextPage: patient => (patient?.doDrug === 'A' ? 22 : 17),
   },
   {
     key: 'SmokingQ',
     page: 17,
     component: <SmokingQ />,
+    nextPage: patient => (patient?.smoking === 'A' ? 23 : 18),
   },
   {
     key: 'PregnantQ',
     page: 18,
     component: <PregnantQ />,
+    nextPage: patient => (patient?.pregnant === 'A' ? 24 : 19),
   },
   {
     key: 'Other',
