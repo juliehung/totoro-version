@@ -22,18 +22,18 @@ function PatientDetailPatientStatus(props) {
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           ) : (
             <Fragment>
-              {nhiPatientFluorideStatus &&
-                nhiPatientFluorideStatus.map((status, index) => (
-                  <PatientDeclarationStatusItem
-                    key={`${status?.msg || 'PatientFluorideStatusMsg'}-${index}`}
-                    {...status}
-                    title="91004C 牙結石清除-全口"
-                  />
-                ))}
               {nhiPatientScalingStatus &&
                 nhiPatientScalingStatus.map((status, index) => (
                   <PatientDeclarationStatusItem
                     key={`${status?.msg || 'PatientScalingStatusMsg'}-${index}`}
+                    {...status}
+                    title="91004C 牙結石清除-全口"
+                  />
+                ))}
+              {nhiPatientFluorideStatus &&
+                nhiPatientFluorideStatus.map((status, index) => (
+                  <PatientDeclarationStatusItem
+                    key={`${status?.msg || 'PatientFluorideStatusMsg'}-${index}`}
                     {...status}
                     title="81 塗氟"
                   />
