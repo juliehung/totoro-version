@@ -52,6 +52,10 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 
+  .ant-dropdown {
+    box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+  }
+
   .ant-dropdown-menu {
     border-radius: 10px !important;
 

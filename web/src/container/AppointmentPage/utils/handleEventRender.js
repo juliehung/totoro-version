@@ -48,16 +48,31 @@ const HightLightSpan = styled.span`
   font-style: italic;
 `;
 
-const NameSpan = styled.a`
+const NameSpan = styled.span`
   font-size: 24px;
   color: inherit;
+`;
+
+const LinkSpan = styled.a`
+  height: 24px;
+  color: #fff;
   text-decoration: inherit;
+  background: #3266ff;
+  border-radius: 34px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > span {
+    font-size: 10px;
+  }
 
   &:hover,
   &:focus,
   &:active {
     text-decoration: none;
-    color: inherit;
+    color: #fff;
   }
 `;
 
@@ -108,9 +123,74 @@ const ListWeekContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
+const MenuStyle = styled(Menu)`
+  border-radius: ${props => (props.isFirstMenu ? '10px 10px 0 0' : '0 0 10px 10px')} !important;
+  padding: 3px !important;
+  > li {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    border-radius: 10px;
+    background-color: initial !important;
+    color: rgba(0, 0, 0, 0.85);
+    text-align: center !important;
+    &:hover {
+      border-radius: 10px;
+      background-color: #f5f5f5 !important;
+      color: rgba(0, 0, 0, 0.85) !important;
+
+      > button {
+        border-color: transparent !important;
+        background-color: #f5f5f5 !important;
+      }
+    }
+  }
+
+  > button {
+    width: 100%;
+    border-radius: 10px !important;
+    height: 40px;
+    border: 0;
+    box-shadow: none;
+
+    &:hover {
+      border-radius: 10px;
+      background-color: #fee1dd !important;
+    }
+
+    &:focus {
+      color: #fff;
+      background: #ff4d4f;
+      box-shadow: none;
+
+      &:hover {
+        color: #fff !important;
+        background: #ff4d4f !important;
+        box-shadow: none !important;
+      }
+    }
+  }
+
+  button.restore-appointment-btn {
+    color: #222b45 !important;
+    &:focus {
+      background-color: #edf1f7 !important;
+      color: #222b45 !important;
+
+      &:hover {
+        background-color: #edf1f7 !important;
+        color: #222b45 !important;
+      }
+    }
+    &:hover {
+      background-color: #edf1f7 !important;
+      color: #222b45 !important;
+    }
+  }
+`;
 //#endregion
 
-export function handleEventRender(info, func, params) {
+export function handleEventRender(info, func, params, { clickTitle = () => {} }) {
   if (info.event.extendedProps.eventType === 'appointment') {
     const appointment = info.event.extendedProps.appointment;
     if (info.view.type.indexOf('Grid') !== -1) {
@@ -132,7 +212,7 @@ export function handleEventRender(info, func, params) {
 
         const popoverContent = (
           <PopoverContainer>
-            <NameSpan href={`${getBaseUrl()}#/patient/${patientId}`} target="_blank" rel="noopener noreferrer">
+            <NameSpan>
               {status === 'CANCEL' ? '[C]' : null} {patientName}
             </NameSpan>
             <HightLightSpan>{parseDateToString(birth, false)}</HightLightSpan>
@@ -168,13 +248,9 @@ export function handleEventRender(info, func, params) {
                 </div>
               )}
             </XrayContainer>
-            {!registrationStatus ? (
-              status === 'CANCEL' ? (
-                <RestoreAppointmentButton id={id} onConfirm={func.restore} />
-              ) : (
-                <CancelAppointmentButton id={id} onConfirm={func.cancel} />
-              )
-            ) : null}
+            <LinkSpan href={`${getBaseUrl()}#/patient/${patientId}`} target="_blank" rel="noopener noreferrer">
+              查看詳細資訊
+            </LinkSpan>
             {!registrationStatus ? (
               <span>
                 <StyledEditOutlined
@@ -188,13 +264,28 @@ export function handleEventRender(info, func, params) {
         );
 
         const contextMenu = !registrationStatus ? (
-          <Menu
-            onClick={() => {
-              func.edit(appointment);
-            }}
-          >
-            <Menu.Item key="edit">編輯</Menu.Item>
-          </Menu>
+          <>
+            <MenuStyle
+              onClick={() => {
+                func.edit(appointment);
+                clickTitle();
+              }}
+              isFirstMenu={true}
+            >
+              <Menu.Item key="edit" className="first-li">
+                編輯預約
+              </Menu.Item>
+            </MenuStyle>
+            {status === 'CANCEL' ? (
+              <MenuStyle isFirstMenu={false}>
+                <RestoreAppointmentButton id={id} onConfirm={func.restore} className={'restore-appointment-btn'} />
+              </MenuStyle>
+            ) : (
+              <MenuStyle isFirstMenu={false}>
+                <CancelAppointmentButton id={id} onConfirm={func.cancel} className={'cancel-appointment-btn'} />
+              </MenuStyle>
+            )}
+          </>
         ) : (
           <div />
         );
