@@ -34,11 +34,10 @@ checkLint:
 buildByGradle:
     stage: build
     only:
-        - merge_requests
-#        refs:
-#            - merge_requests
-#        changes:
-#            - src/**/*
+        refs:
+            - merge_requests
+        changes:
+            - src/**/*
     image: openjdk:8-jdk-stretch
     script:
         - ./gradlew compileJava -x check --no-daemon
