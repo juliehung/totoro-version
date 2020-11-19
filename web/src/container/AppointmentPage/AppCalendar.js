@@ -590,9 +590,10 @@ class AppCalendar extends React.Component {
           restore: this.handlePopoverRestoreApp,
         },
         { xRayVendors: this.props.xRayVendors },
+        { clickTitle: this.clickTitle.bind(this) },
       );
     } else if (info.event.extendedProps.eventType === 'doctorDayOff') {
-      handleEventRender(info, { edit: this.handleCalEvtDblClick });
+      handleEventRender(info, { edit: this.handleCalEvtDblClick }, {}, { clickTitle: this.clickTitle.bind(this) });
     }
   };
 
