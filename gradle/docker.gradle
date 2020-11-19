@@ -1,6 +1,10 @@
 buildscript {
     repositories {
+        mavenLocal()
+        mavenCentral()
         maven { url "https://plugins.gradle.org/m2"}
+        maven { url "https://repo.spring.io/release" }
+        maven { url "https://jcenter.bintray.com/" }
     }
     dependencies {
         classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:0.9.11"
