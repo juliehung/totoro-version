@@ -21,6 +21,9 @@ function PatientSearchInput(props) {
     if (!drawerVisible) {
       ref.current.state.value = '';
     }
+    setTimeout(() => {
+      ref.current.focus();
+    }, 300);
   }, [drawerVisible]);
 
   return (
