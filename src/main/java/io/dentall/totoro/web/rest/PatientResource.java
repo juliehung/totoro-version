@@ -154,6 +154,10 @@ public class PatientResource {
     public ResponseEntity<Patient> getPatientById(@PathVariable Long id) {
         log.debug("REST request to get Patient : {}", id);
         Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isPresent()) {
+            patientService.getFirstLastDoctor(patient.get());
+        }
+
         return ResponseUtil.wrapOrNotFound(patient);
     }
 

@@ -527,4 +527,19 @@ public class PatientService extends QueryService<Patient> {
 
         return new HashSet<Patient>();
     }
+
+    public Patient getFirstLastDoctor(Patient p) {
+        if (p != null && p.getId() != null) {
+            ExtendUser fd = extendUserRepository.findPatientFirstDoctor(p.getId());
+            ExtendUser ld = extendUserRepository.findPatientLastDoctor(p.getId());
+            if (fd != null && fd.getId() != null) {
+                p.setFirstDoctor(fd);
+            }
+            if (ld != null && ld.getId() != null) {
+                p.setLastDoctor(ld);
+            }
+        }
+
+        return p;
+    }
 }
