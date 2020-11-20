@@ -9,7 +9,7 @@ import { initPatientDetail } from './actions';
 import PatientNotFound from './PatientNotFound';
 import AppointmentListModal from './AppointmentListModal';
 import TreatmentListModal from './TreatmentListModal';
-import SarchPatientButton from './SarchPatientButton';
+import SearchPatientButton from './SearchPatientButton';
 
 //#region
 const Container = styled.div`
@@ -35,7 +35,7 @@ function PatientDetail(props) {
         <PatientDetailContent />
         <AppointmentListModal />
         <TreatmentListModal />
-        {!searchPatientDrawerOpen && <SarchPatientButton />}
+        {!searchPatientDrawerOpen && <SearchPatientButton />}
       </Container>
     </Spin>
   );
