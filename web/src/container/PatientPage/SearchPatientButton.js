@@ -14,7 +14,6 @@ const Container = styled.div`
   right: 20px;
   bottom: 21px;
   z-index: 100000;
-  z-index: 400;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,7 +22,7 @@ const Container = styled.div`
 `;
 //#endregion
 
-function SarchPatientButton(props) {
+function SearchPatientButton(props) {
   const { changeDrawerVisible } = props;
 
   return (
@@ -39,4 +38,4 @@ function SarchPatientButton(props) {
 
 const mapDispatchToProps = { changeDrawerVisible };
 
-export default connect(null, mapDispatchToProps)(SarchPatientButton);
+export default connect(null, mapDispatchToProps)(SearchPatientButton);
