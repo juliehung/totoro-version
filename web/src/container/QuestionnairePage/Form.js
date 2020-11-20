@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import Background from '../../images/questionnaire_bg.svg';
 import { withRouter } from 'react-router-dom';
 import { getDoc } from './actions';
-import { Button } from 'antd';
 import GAHelper from '../../ga';
 import { parseDateToString } from './utils/parseDateToString';
 import { Helmet } from 'react-helmet-async';
@@ -80,16 +79,6 @@ const FlexGrowDiv = styled.div`
 const ImageContainer = styled.div`
   margin-top: 10px;
   border: 2px solid #eee;
-`;
-
-const StyledButton = styled(Button)`
-  border-radius: 4px !important;
-`;
-
-const ButtonsContainer = styled.div`
-  & > * {
-    margin: 0 20px;
-  }
 `;
 
 //#endregion
@@ -223,16 +212,6 @@ function Form(props) {
           </ImageContainer>
         )}
       </FormContainer>
-      <ButtonsContainer>
-        <StyledButton
-          type="primary"
-          onClick={() => {
-            window.close();
-          }}
-        >
-          關閉分頁
-        </StyledButton>
-      </ButtonsContainer>
     </Container>
   );
 }
