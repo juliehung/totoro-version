@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("ftp")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TotoroApp.class)
+@Ignore
 public class ImageFtpBusinessServiceIntTest {
 
     private static final String UPLOAD_FILENAME = "chrome.png";

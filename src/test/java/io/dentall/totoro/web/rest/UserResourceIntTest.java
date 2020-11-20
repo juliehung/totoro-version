@@ -299,7 +299,7 @@ public class UserResourceIntTest {
         // Initialize the database
         userRepository.saveAndFlush(user);
 
-        assertThat(userRepository.findOneByLogin(user.getLogin())).isNull();
+        assertThat(!userRepository.findOneByLogin(user.getLogin()).isPresent());
 
         // Get the user
         restUserMockMvc.perform(get("/api/users/{login}", user.getLogin()))
@@ -503,7 +503,7 @@ public class UserResourceIntTest {
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
-        assertThat(userRepository.findOneByLogin(user.getLogin())).isNull();
+        assertThat(!userRepository.findOneByLogin(user.getLogin()).isPresent());
 
         // Validate the database is empty
         List<User> userList = userRepository.findAll();
