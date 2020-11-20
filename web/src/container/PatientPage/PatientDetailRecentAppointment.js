@@ -92,7 +92,7 @@ function PatientDetailRecentAppointment(props) {
         ) : (
           <EmptyString>
             <span>
-              目前沒有約診! 立即{' '}
+              無即將到來的約診! 立即{' '}
               <a href={`${getBaseUrl()}#/appointment`} target="_blank" rel="noopener noreferrer">
                 建立預約
               </a>
