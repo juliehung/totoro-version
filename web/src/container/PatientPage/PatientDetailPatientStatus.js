@@ -51,12 +51,16 @@ function PatientDetailPatientStatus(props) {
 
 const mapStateToProps = ({ patientPageReducer }) => ({
   loading: patientPageReducer.nhiPatientStatus.loading,
-  nhiPatientFluorideStatus: toRefreshNhiPatientStatusWithHistory(
-    patientPageReducer.nhiPatientStatus.nhiPatientFluorideStatus,
-  ),
-  nhiPatientScalingStatus: toRefreshNhiPatientStatusWithHistory(
-    patientPageReducer.nhiPatientStatus.nhiPatientScalingStatus,
-  ),
+  nhiPatientFluorideStatus: toRefreshNhiPatientStatusWithHistory({
+    patientStatusObj: patientPageReducer.nhiPatientStatus.nhiPatientFluorideStatus,
+    patient: patientPageReducer.patient.patient,
+    type: 'fluoride',
+  }),
+  nhiPatientScalingStatus: toRefreshNhiPatientStatusWithHistory({
+    patientStatusObj: patientPageReducer.nhiPatientStatus.nhiPatientScalingStatus,
+    patient: patientPageReducer.patient.patient,
+    type: 'scaling',
+  }),
   patientSpecialStatus: convertPatientToPatientSpecialStatus(patientPageReducer.patient.patient),
 });
 
