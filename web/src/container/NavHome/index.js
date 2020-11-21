@@ -239,6 +239,16 @@ const PopoverContent = styled.div`
   flex-direction: column;
 `;
 
+const DentallServiceLink = styled.a`
+  text-decoration: none;
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+    color: #fff;
+  }
+`;
+
 //#endregion
 
 const route = [
@@ -457,6 +467,19 @@ function NavHome(props) {
           trigger="click"
           overlay={
             <Menu onClick={menuClick}>
+              <Menu.Item key="dentall-service-page">
+                <DentallServiceLink
+                  href={`https://www.notion.so/dentall-HiS-Help-Desk-864c13b186fb41668ac4505f62cdece2`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span role="img" aria-label="clap">
+                    👋
+                  </span>{' '}
+                  dentall 服務台
+                </DentallServiceLink>
+              </Menu.Item>
+
               <Menu.Item key="settings">
                 <Link to="/setting/xray">設定</Link>
               </Menu.Item>
