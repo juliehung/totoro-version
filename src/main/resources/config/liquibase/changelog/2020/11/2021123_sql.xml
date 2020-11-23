@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20201123-Sql-1" author="WeiChen">
+        <sql dbms="postgresql" splitStatements="true">
+            INSERT INTO tag (id, jhi_type, name) VALUES (40, 'BLOOD_DISEASE', 'AIDS);
+            INSERT INTO tag (id, jhi_type, name) VALUES (41, 'BLOOD_DISEASE', 'HIV');
+            INSERT INTO tag (id, jhi_type, name) VALUES (42, 'BLOOD_DISEASE', 'Ａ型肝炎');
+            INSERT INTO tag (id, jhi_type, name) VALUES (43, 'BLOOD_DISEASE', 'B型肝炎');
+            INSERT INTO tag (id, jhi_type, name) VALUES (44, 'BLOOD_DISEASE', 'C型肝炎');
+            INSERT INTO tag (id, jhi_type, name) VALUES (45, 'BLOOD_DISEASE', '梅毒');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
