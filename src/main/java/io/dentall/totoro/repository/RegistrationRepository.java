@@ -2,11 +2,12 @@ package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.service.dto.table.RegistrationTable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -17,7 +18,9 @@ import java.util.Optional;
 @Repository
 public interface RegistrationRepository extends JpaRepository<Registration, Long> {
 
-    List<Registration> findByArrivalTimeBetweenOrderByArrivalTimeAsc(Instant start, Instant end);
+    Page<Registration> findByAccounting_TransactionTimeBetweenOrderByAccounting_TransactionTime(Instant start, Instant end, Pageable page);
+
+    Page<Registration> findByArrivalTimeBetweenOrderByArrivalTimeAsc(Instant start, Instant end, Pageable page);
 
     Optional<RegistrationTable> findRegistrationByDisposal_Id(Long id);
 

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -107,7 +107,14 @@ public class RegistrationResource {
      */
     @GetMapping("/registrations")
     @Timed
-    public ResponseEntity<List<Registration>> getAllRegistrations(Pageable pageable, @RequestParam(required = false) String filter) {
+    public ResponseEntity<List<Registration>> getAllRegistrations(
+        Pageable pageable,
+        @RequestParam(required = false) String filter,
+        @RequestParam(required = false, name = "arrivalTime.beginDate") Instant arrivalTimeBegin,
+        @RequestParam(required = false, name = "arrivalTime.endDate") Instant arrivalTimeEnd,
+        @RequestParam(required = false, name = "accounting.transactionTime.beginDate") Instant transactionTimeBegin,
+        @RequestParam(required = false, name = "accounting.transactionTime.endDate") Instant transactionTimeEnd
+    ) {
         if ("appointment-is-null".equals(filter)) {
             log.debug("REST request to get all Registrations where appointment is null");
             return new ResponseEntity<>(StreamSupport
@@ -122,6 +129,19 @@ public class RegistrationResource {
                 .filter(registration -> registration.getDisposal() == null)
                 .collect(Collectors.toList()), HttpStatus.OK);
         }
+        if (arrivalTimeBegin != null && arrivalTimeEnd != null) {
+            log.debug("REST request to get registrations by arrival time");
+            Page<Registration> page = registrationRepository.findByArrivalTimeBetweenOrderByArrivalTimeAsc(arrivalTimeBegin, arrivalTimeEnd, pageable);
+            HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/registrations");
+            return ResponseEntity.ok().headers(headers).body(page.getContent());
+        }
+        if (transactionTimeBegin != null && transactionTimeEnd != null) {
+            log.debug("REST request to get registrations by accounting transaction time");
+            Page<Registration> page = registrationRepository.findByAccounting_TransactionTimeBetweenOrderByAccounting_TransactionTime(transactionTimeBegin, transactionTimeEnd, pageable);
+            HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/registrations");
+            return ResponseEntity.ok().headers(headers).body(page.getContent());
+        }
+
         log.debug("REST request to get a page of Registrations");
         Page<Registration> page = registrationRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/registrations");
