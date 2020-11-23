@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Container, Header, Content, Count, BlueDottedUnderlineText } from './component';
-import { Badge } from 'antd';
+import { Container, Header, Content, Count } from './component';
+import { Badge, Switch } from 'antd';
 import { convertAppointmentToCardObject } from './utils';
 import analysisAppointments from '../AppointmentPage/utils/analysisAppointments';
-import { changeAppointmentListModalVisible } from './actions';
 import { getBaseUrl } from '../../utils/getBaseUrl';
 
 //#region
@@ -48,39 +47,54 @@ const EmptyString = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+const SwitchWrap = styled.div`
+  margin-left: 2px;
+  span {
+    margin-left: 2px;
+    color: #8f9bb3;
+  }
+`;
+
 //#endregion
 
 function PatientDetailRecentAppointment(props) {
-  const { futureAppointments, appointmentsAnalysis, changeAppointmentListModalVisible } = props;
-
-  const futureAppointmentsAmount = futureAppointments?.length ?? 0;
-
+  const { appointments, appointmentsAnalysis } = props;
+  const [futureStatus, switchFuture] = useState(false);
+  const filteredAppointments = futureStatus ? appointments.filter(a => a.isFuture && !a.isRegistration) : appointments;
+  const filteredAppointmentsAmount = futureStatus
+    ? appointments.filter(a => a.isFuture && !a.isRegistration).length
+    : appointments?.length ?? 0;
   return (
     <Container>
       <Header>
         <div>
           <span>約診</span>
-          <Count>{futureAppointmentsAmount}</Count>
+          <Count>{filteredAppointmentsAmount}</Count>
           <span style={{ color: '#8f9bb3', marginLeft: '10px', fontSize: '12px' }}>
             (爽約 {appointmentsAnalysis.noShow} 次;取消 {appointmentsAnalysis.cancel} 次)
           </span>
         </div>
-        <div
-          onClick={() => {
-            changeAppointmentListModalVisible(true);
-          }}
-        >
-          <BlueDottedUnderlineText text={'預約紀錄'} />
-        </div>
+        <SwitchWrap>
+          <Switch onChange={() => switchFuture(!futureStatus)} />
+          <span>只顯示未來</span>
+        </SwitchWrap>
       </Header>
       <Content>
-        {futureAppointments?.length ? (
-          futureAppointments.map(a => (
+        {filteredAppointments?.length ? (
+          filteredAppointments.map(a => (
             <Item key={a.id} isCanceled={a.isCancel}>
-              <div>{a.isCancel ? <Badge status="error" /> : <Badge status="processing" />}</div>
+              <div>
+                {a.isFuture ? (
+                  <Badge status="processing" />
+                ) : (
+                  <Badge color={a.isRegistration ? '#8f9bb3' : '#ea5455'} />
+                )}
+              </div>
               <div>
                 <span style={{ fontWeight: 600 }}>
-                  {a.isCancel ? '已取消' : '即將到來'} - {a.expectedArrivalTime}
+                  {a.isFuture ? '即將到來' : a.isRegistration ? '掛號完成' : a.isCancel ? '已取消' : '預約未到'} -{' '}
+                  {a.expectedArrivalTime}
                 </span>
               </div>
               <span style={{ color: '#8f9bb3' }}>{a?.doctor?.firstName}</span>
@@ -105,13 +119,8 @@ function PatientDetailRecentAppointment(props) {
 }
 
 const mapStateToProps = ({ patientPageReducer, homePageReducer }) => ({
-  futureAppointments: convertAppointmentToCardObject(
-    patientPageReducer.appointment.appointment,
-    homePageReducer.user.users,
-  ).filter(a => a.isFuture && !a.isRegistration),
+  appointments: convertAppointmentToCardObject(patientPageReducer.appointment.appointment, homePageReducer.user.users),
   appointmentsAnalysis: analysisAppointments(patientPageReducer.appointment.appointment),
 });
 
-const mapDispatchToProps = { changeAppointmentListModalVisible };
-
-export default connect(mapStateToProps, mapDispatchToProps)(PatientDetailRecentAppointment);
+export default connect(mapStateToProps)(PatientDetailRecentAppointment);
