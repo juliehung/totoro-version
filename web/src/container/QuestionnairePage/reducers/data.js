@@ -36,6 +36,7 @@ import {
   CHANGE_SMOKING_A,
   GET_PATIENT_SUCCESS,
   INIT_PAGE,
+  CHANGE_BLOOD_DISEASE,
 } from '../constant';
 
 const initState = {
@@ -53,6 +54,7 @@ const initState = {
     marriage: undefined,
     introducer: undefined,
     disease: [],
+    bloodDisease: [],
     allergy: [],
     doDrug: undefined,
     drug: undefined,
@@ -96,6 +98,7 @@ const data = (state = initialState, action) =>
         draft.patient.disease = parseTagToOption(action.patient.tags, 'DISEASE', tags);
         draft.patient.allergy = parseTagToOption(action.patient.tags, 'ALLERGY', tags);
         draft.patient.other = parseTagToOption(action.patient.tags, 'OTHER', tags);
+        draft.patient.bloodDisease = parseTagToOption(action.patient.tags, 'BLOOD_DISEASE', tags);
 
         draft.patient.doDrug = action.patient.questionnaire ? (action.patient.questionnaire.drug ? 'A' : 'B') : 'B';
         draft.patient.drug = action.patient.questionnaire ? action.patient.questionnaire.drugName : undefined;
@@ -131,6 +134,9 @@ const data = (state = initialState, action) =>
         break;
       case CHANGE_DISEASE:
         draft.patient.disease = toggleArrayItem(state.patient.disease, action.disease);
+        break;
+      case CHANGE_BLOOD_DISEASE:
+        draft.patient.bloodDisease = toggleArrayItem(state.patient.bloodDisease, action.bloodDisease);
         break;
       case CHANGE_ALLERGY:
         draft.patient.allergy = toggleArrayItem(state.patient.allergy, action.allergy);

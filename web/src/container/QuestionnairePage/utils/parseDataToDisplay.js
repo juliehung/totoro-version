@@ -27,6 +27,8 @@ export function parseDataToDisplay(data) {
 
   const diseaseOption = tags.filter(t => t.jhi_type === 'DISEASE');
   const disease = data.disease.map(d => parseKeyToValue(d, diseaseOption)).join(', ');
+  const bloodDiseaseOption = tags.filter(t => t.jhi_type === 'BLOOD_DISEASE');
+  const bloodDisease = data.bloodDisease.map(d => parseKeyToValue(d, bloodDiseaseOption)).join(', ');
 
   const doDrug = data.doDrug;
   const drug = doDrug === 'A' ? data.drug : undefined;
@@ -63,6 +65,7 @@ export function parseDataToDisplay(data) {
     marriage,
     introducer,
     disease,
+    bloodDisease,
     allergy,
     drug,
     special,
