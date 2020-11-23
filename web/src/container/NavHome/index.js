@@ -52,6 +52,10 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 
+  .ant-dropdown {
+    box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+  }
+
   .ant-dropdown-menu {
     border-radius: 10px !important;
 
@@ -233,6 +237,16 @@ const ContentContainer = styled.div`
 const PopoverContent = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const DentallServiceLink = styled.a`
+  text-decoration: none;
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+    color: #fff;
+  }
 `;
 
 //#endregion
@@ -453,6 +467,19 @@ function NavHome(props) {
           trigger="click"
           overlay={
             <Menu onClick={menuClick}>
+              <Menu.Item key="dentall-service-page">
+                <DentallServiceLink
+                  href={`https://www.notion.so/dentall-HiS-Help-Desk-864c13b186fb41668ac4505f62cdece2`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span role="img" aria-label="clap">
+                    👋
+                  </span>{' '}
+                  dentall 服務台
+                </DentallServiceLink>
+              </Menu.Item>
+
               <Menu.Item key="settings">
                 <Link to="/setting/xray">設定</Link>
               </Menu.Item>
