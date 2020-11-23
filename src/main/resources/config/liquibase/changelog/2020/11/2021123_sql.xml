@@ -6,12 +6,12 @@
 
     <changeSet id="20201123-Sql-1" author="WeiChen">
         <sql dbms="postgresql" splitStatements="true">
-            INSERT INTO tag (id, jhi_type, name) VALUES (40, 'BLOOD_DISEASE', 'AIDS');
-            INSERT INTO tag (id, jhi_type, name) VALUES (41, 'BLOOD_DISEASE', 'HIV');
-            INSERT INTO tag (id, jhi_type, name) VALUES (42, 'BLOOD_DISEASE', 'Ａ型肝炎');
-            INSERT INTO tag (id, jhi_type, name) VALUES (43, 'BLOOD_DISEASE', 'B型肝炎');
-            INSERT INTO tag (id, jhi_type, name) VALUES (44, 'BLOOD_DISEASE', 'C型肝炎');
-            INSERT INTO tag (id, jhi_type, name) VALUES (45, 'BLOOD_DISEASE', '梅毒');
+            INSERT INTO tag (id, jhi_type, modifiable, name) VALUES (41, 'BLOOD_DISEASE', false, 'AIDS');
+            INSERT INTO tag (id, jhi_type, modifiable, name) VALUES (42, 'BLOOD_DISEASE', false, 'HIV');
+            INSERT INTO tag (id, jhi_type, modifiable, name) VALUES (43, 'BLOOD_DISEASE', false, 'Ａ型肝炎');
+            INSERT INTO tag (id, jhi_type, modifiable, name) VALUES (44, 'BLOOD_DISEASE', false, 'B型肝炎');
+            INSERT INTO tag (id, jhi_type, modifiable, name) VALUES (45, 'BLOOD_DISEASE', false, 'C型肝炎');
+            INSERT INTO tag (id, jhi_type, modifiable, name) VALUES (46, 'BLOOD_DISEASE', false, '梅毒');
             INSERT INTO nhi_procedure (id,code,name,point,description,nhi_procedure_type_id,chief_complaint,english_name) values ('219','25004C','第四級外科病理','1741','','200','','Surgical pathology Level IV');
         </sql>
     </changeSet>
