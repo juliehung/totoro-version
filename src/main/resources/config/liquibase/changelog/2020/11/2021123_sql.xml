@@ -12,6 +12,7 @@
             INSERT INTO tag (id, jhi_type, name) VALUES (43, 'BLOOD_DISEASE', 'B型肝炎');
             INSERT INTO tag (id, jhi_type, name) VALUES (44, 'BLOOD_DISEASE', 'C型肝炎');
             INSERT INTO tag (id, jhi_type, name) VALUES (45, 'BLOOD_DISEASE', '梅毒');
+            INSERT INTO nhi_procedure (id,code,name,point,description,nhi_procedure_type_id,chief_complaint,english_name) values ('219','25004C','第四級外科病理','1741','','200','','Surgical pathology Level IV');
         </sql>
     </changeSet>
 </databaseChangeLog>
