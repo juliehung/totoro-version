@@ -34,7 +34,7 @@ export default class Appointment {
   };
 
   static getAppointmentsByPatientId = async id => {
-    const requestURL = `${requestUrl}?patientId.equals=${id}`;
+    const requestURL = `${requestUrl}?patientId.equals=${id}&size=50`;
     const result = await request(requestURL);
     return result;
   };
