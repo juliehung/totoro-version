@@ -255,9 +255,9 @@ deployDevDentall8082:
 deployDevDentall8085:
     variables:
         CURL_CONTENT_TYPE: 'Content-Type: application/json'
-        CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "dev.war"}'
+        CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "totoro-$CI_COMMIT_TAG-`echo ${CI_COMMIT_SHA:0:8}`.war"}'
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "dev.war"}'
-        SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_REF_SLUG"}'
+        SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
     only:
         - merge_requests
 #        - tags
@@ -276,7 +276,7 @@ deployDevDentall8085:
         - chmod 644 ~/.ssh/known_hosts
         - chmod 700 /home/dev.key
     script:
-        - echo $SLACK_INFO
+        - echo $CURL_DATA_FOR_STOP
 #        - 'curl -X POST http://dev.dentall.site:8001/servers/8085/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
 #        - sleep 1
 #        - 'curl -X POST http://dev.dentall.site:8001/servers/8085/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
