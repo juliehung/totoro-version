@@ -255,7 +255,8 @@ deployDevDentall8082:
 deployDevDentall8085:
     variables:
         CURL_CONTENT_TYPE: 'Content-Type: application/json'
-        CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "totoro-$CI_COMMIT_TAG-"`echo ${CI_COMMIT_SHA:0:8}`".war"}'
+        GIT_SHA: `echo ${CI_COMMIT_SHA:0:8}`
+        CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "totoro-$CI_COMMIT_TAG-$GIT_SHA.war"}'
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "dev.war"}'
         SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
     only:
