@@ -177,6 +177,14 @@ function Form(props) {
             </FlexGrowDiv>
           </InfoRowContainer>
         </InfoContainer>
+        <Label>血液疾病史</Label>
+        <InfoContainer>
+          <InfoRowContainer>
+            <FlexGrowDiv>
+              <Info>{props.patient.bloodDisease}</Info>
+            </FlexGrowDiv>
+          </InfoRowContainer>
+        </InfoContainer>
         <Label>藥物</Label>
         <InfoContainer>
           <InfoRowContainer>

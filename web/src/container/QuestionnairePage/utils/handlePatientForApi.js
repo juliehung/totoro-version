@@ -31,6 +31,8 @@ export function handlePatientForApi(patientEntity, patient) {
 
   const diseaseOption = TagOption.filter(t => t.jhi_type === 'DISEASE');
   const disease = patient.disease.map(d => mapOptionToText(d, diseaseOption));
+  const bloodDiseaseOption = TagOption.filter(t => t.jhi_type === 'BLOOD_DISEASE');
+  const bloodDisease = patient.bloodDisease.map(d => mapOptionToText(d, bloodDiseaseOption));
 
   const allergyOption = TagOption.filter(t => t.jhi_type === 'ALLERGY');
   const allergy = patient.allergy.map(a => mapOptionToText(a, allergyOption));
@@ -38,7 +40,7 @@ export function handlePatientForApi(patientEntity, patient) {
   const otherOption = TagOption.filter(t => t.jhi_type === 'OTHER');
   const other = patient.other.map(o => mapOptionToText(o, otherOption));
 
-  const tags = [...disease, ...allergy, ...other].filter(t => t).map(id => ({ id }));
+  const tags = [...disease, ...bloodDisease, ...allergy, ...other].filter(t => t).map(id => ({ id }));
   if (pregnant) {
     tags.push({ id: 25 });
   }
