@@ -41,6 +41,18 @@
             </column>
         </createTable>
 
+        <createIndex indexName="idx_nhi_tx"
+                     tableName="nhi_tx"
+                     unique="false">
+            <column name="nhi_code" type="varchar"/>
+        </createIndex>
+
+        <createIndex indexName="idx_nhi_drug"
+                     tableName="nhi_drug"
+                     unique="false">
+            <column name="medicine_code" type="varchar"/>
+        </createIndex>
+
         <loadData encoding="UTF-8"
                   file="config/liquibase/nhi_tx.csv"
                   separator=","
