@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
-@Table(name = "nhi_tx")
-public class NhiTx implements Serializable {
+@Table(name = "nhi_medicine")
+public class NhiMedicine implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -17,13 +17,13 @@ public class NhiTx implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nhi_code")
-    private String nhiCode;
+    @Column(name = "medicine_code")
+    private String medicineCode;
 
-    @Column(name = "nhi_mandarin")
-    private String nhiMandarin;
+    @Column(name = "medicine_mandarin")
+    private String medicineMandarin;
 
-    @Column(name = "update_date")
+    @Column(name = "updateDate")
     private Instant updateDate;
 
     @Column(name = "version")
@@ -37,12 +37,20 @@ public class NhiTx implements Serializable {
         this.id = id;
     }
 
-    public String getNhiCode() {
-        return nhiCode;
+    public String getMedicineCode() {
+        return medicineCode;
     }
 
-    public void setNhiCode(String nhiCode) {
-        this.nhiCode = nhiCode;
+    public void setMedicineCode(String medicineCode) {
+        this.medicineCode = medicineCode;
+    }
+
+    public String getMedicineMandarin() {
+        return medicineMandarin;
+    }
+
+    public void setMedicineMandarin(String medicineMandarin) {
+        this.medicineMandarin = medicineMandarin;
     }
 
     public Instant getUpdateDate() {
