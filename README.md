@@ -336,6 +336,7 @@ Business Logic
 - 專科，只能在更新 user 的時候才能被增加，新增時不支援，且僅在 `/api/v2` 支援。
 - TreatmentProcedure，由於設計失誤，導致此像表示，使用者自行增加的項目，有可能為 `診療` 或 `診察`。
 - First/Last doctor，改由 disposal 下 appointment 中 第一跟最新一個預約醫生
+- Nhi tx/medicine 是完整匯入，來源自健保局公開資料
 
 
 Metrics

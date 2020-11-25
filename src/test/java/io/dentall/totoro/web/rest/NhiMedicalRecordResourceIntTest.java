@@ -5,6 +5,8 @@ import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.NhiMedicalRecord;
 import io.dentall.totoro.domain.NhiExtendPatient;
 import io.dentall.totoro.repository.NhiMedicalRecordRepository;
+import io.dentall.totoro.repository.NhiMedicineRepository;
+import io.dentall.totoro.repository.NhiTxRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.service.NhiMedicalRecordService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
@@ -98,6 +100,12 @@ public class NhiMedicalRecordResourceIntTest {
     private MockMvc restNhiMedicalRecordMockMvc;
 
     private NhiMedicalRecord nhiMedicalRecord;
+
+    @Autowired
+    private NhiTxRepository nhiTxRepository;
+
+    @Autowired
+    private NhiMedicineRepository nhiMedicineRepository;
 
     @Before
     public void setup() {
