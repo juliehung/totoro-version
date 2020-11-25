@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "nhi_tx")
@@ -24,7 +24,7 @@ public class NhiTx implements Serializable {
     private String nhiMandarin;
 
     @Column(name = "update_date")
-    private Instant updateDate;
+    private LocalDate updateDate;
 
     @Column(name = "version")
     private Long version;
@@ -53,11 +53,11 @@ public class NhiTx implements Serializable {
         this.nhiCode = nhiCode;
     }
 
-    public Instant getUpdateDate() {
+    public LocalDate getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Instant updateDate) {
+    public void setUpdateDate(LocalDate updateDate) {
         this.updateDate = updateDate;
     }
 
