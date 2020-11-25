@@ -9,7 +9,7 @@ import { getBaseUrl } from '../../utils/getBaseUrl';
 
 //#region
 const Item = styled.div`
-  background: ${props => (props.isCanceled ? '#f7f9fc' : '#cfecff')};
+  background: ${props => (props.isFuture ? '#cfecff' : '#f7f9fc')};
   min-height: 80px;
   border-radius: 8px;
   padding: 10px;
@@ -83,17 +83,21 @@ function PatientDetailRecentAppointment(props) {
       <Content>
         {filteredAppointments?.length ? (
           filteredAppointments.map(a => (
-            <Item key={a.id} isCanceled={a.isCancel}>
+            <Item key={a.id} isFuture={a.isFuture}>
               <div>
-                {a.isFuture ? (
+                {a.isRegistration ? (
+                  <Badge color={'#616161'} />
+                ) : a.isCancel ? (
+                  <Badge color={'#ea5455'} />
+                ) : a.isFuture ? (
                   <Badge status="processing" />
                 ) : (
-                  <Badge color={a.isRegistration ? '#8f9bb3' : '#ea5455'} />
+                  <Badge color={'#ea5455'} />
                 )}
               </div>
               <div>
                 <span style={{ fontWeight: 600 }}>
-                  {a.isFuture ? '即將到來' : a.isRegistration ? '掛號完成' : a.isCancel ? '已取消' : '預約未到'} -{' '}
+                  {a.isRegistration ? '掛號完成' : a.isCancel ? '已取消' : a.isFuture ? '即將到來' : '預約未到'} -{' '}
                   {a.expectedArrivalTime}
                 </span>
               </div>

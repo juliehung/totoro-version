@@ -6,19 +6,17 @@ export default function convertAppointmentToCardObject(appointments, users) {
   const currentDate = moment();
   return appointments.map(a => {
     let isCancel = false;
-    let isFuture = false;
     let isRegistration = false;
+    let isFuture = false;
     const { id, note, expectedArrivalTime, requiredTreatmentTime } = a;
     const doctor = users.find(u => u.id === a.doctor.id);
     const expectedArrivalTimeString = toRocString(expectedArrivalTime) + moment(expectedArrivalTime).format(' HH:mm');
 
-    if (a.status === 'CANCEL') {
-      isCancel = true;
-    }
-    if (a.registration) {
+    if (a?.registration) {
       isRegistration = true;
-    }
-    if (moment(expectedArrivalTime).isAfter(currentDate)) {
+    } else if (a?.status === 'CANCEL') {
+      isCancel = true;
+    } else if (moment(expectedArrivalTime).isAfter(currentDate)) {
       isFuture = true;
     }
 
