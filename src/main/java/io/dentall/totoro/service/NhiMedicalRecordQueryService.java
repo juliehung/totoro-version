@@ -11,6 +11,7 @@ import io.github.jhipster.service.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -127,11 +128,11 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
     }
 
     @Transactional(readOnly = true)
-    public List<NhiMedicalRecordVM> findVmByCriteria(NhiMedicalRecordCriteria criteria) {
+    public Page<NhiMedicalRecordVM> findVmByCriteria(NhiMedicalRecordCriteria criteria, Pageable pageable) {
         log.debug("find by criteria : {}", criteria);
         final Specification<NhiMedicalRecord> specification = createSpecification(criteria);
         List<NhiMedicalRecordVM> entityList = new ArrayList<>();
-        nhiMedicalRecordRepository.findAll(specification).forEach(e -> {
+        nhiMedicalRecordRepository.findAll(specification, pageable).forEach(e -> {
             NhiMedicalRecordVM vm = new NhiMedicalRecordVM();
             vm.setNhiMedicalRecord(e);
             if (e.getNhiCategory() != null && e.getNhiCategory().equals(NhiMedicalRecordCategory.MEDICINE.getNumber())) {
@@ -148,6 +149,6 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
             entityList.add(vm);
         });
 
-        return entityList;
+        return new PageImpl<>(entityList);
     }
 }
