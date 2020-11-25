@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Container, Header, Content, Count } from './component';
+import { Container, Header, Content } from './component';
 import { Badge, Switch } from 'antd';
 import { convertAppointmentToCardObject } from './utils';
 import analysisAppointments from '../AppointmentPage/utils/analysisAppointments';
@@ -62,15 +62,12 @@ function PatientDetailRecentAppointment(props) {
   const { appointments, appointmentsAnalysis } = props;
   const [futureStatus, switchFuture] = useState(false);
   const filteredAppointments = futureStatus ? appointments.filter(a => a.isFuture && !a.isRegistration) : appointments;
-  const filteredAppointmentsAmount = futureStatus
-    ? appointments.filter(a => a.isFuture && !a.isRegistration).length
-    : appointments?.length ?? 0;
+
   return (
     <Container>
       <Header>
         <div>
           <span>約診</span>
-          <Count>{filteredAppointmentsAmount}</Count>
           <span style={{ color: '#8f9bb3', marginLeft: '10px', fontSize: '12px' }}>
             (爽約 {appointmentsAnalysis.noShow} 次;取消 {appointmentsAnalysis.cancel} 次)
           </span>
