@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NhiMedicineRepository extends JpaRepository<NhiMedicine, Long> {
-    NhiMedicine findByMedicineCode(String code);
+    NhiMedicine findTop1ByMedicineCodeOrderByIdDesc(String code);
 }
