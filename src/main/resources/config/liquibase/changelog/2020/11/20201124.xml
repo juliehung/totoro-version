@@ -9,10 +9,10 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="nhi_code" type="varchar">
+            <column name="nhi_code" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="nhi_mandarin" type="varchar">
+            <column name="nhi_mandarin" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="update_date" type="date">
@@ -23,14 +23,14 @@
             </column>
         </createTable>
 
-        <createTable tableName="nhi_drug">
+        <createTable tableName="nhi_medicine">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="medicine_code" type="varchar">
+            <column name="medicine_code" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="medicine_mandarin" type="varchar">
+            <column name="medicine_mandarin" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="update_date" type="date">
@@ -44,13 +44,13 @@
         <createIndex indexName="idx_nhi_tx"
                      tableName="nhi_tx"
                      unique="false">
-            <column name="nhi_code" type="varchar"/>
+            <column name="nhi_code" type="varchar(255)"/>
         </createIndex>
 
-        <createIndex indexName="idx_nhi_drug"
-                     tableName="nhi_drug"
+        <createIndex indexName="idx_nhi_medicine"
+                     tableName="nhi_medicine"
                      unique="false">
-            <column name="medicine_code" type="varchar"/>
+            <column name="medicine_code" type="varchar(255)"/>
         </createIndex>
 
         <loadData encoding="UTF-8"
@@ -60,9 +60,9 @@
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/nhi_drug.csv"
+                  file="config/liquibase/nhi_medicine.csv"
                   separator=","
-                  tableName="nhi_drug">
+                  tableName="nhi_medicine">
         </loadData>
 
     </changeSet>
