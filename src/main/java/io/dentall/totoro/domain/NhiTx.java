@@ -29,6 +29,14 @@ public class NhiTx implements Serializable {
     @Column(name = "version")
     private Long version;
 
+    public String getNhiMandarin() {
+        return nhiMandarin;
+    }
+
+    public void setNhiMandarin(String nhiMandarin) {
+        this.nhiMandarin = nhiMandarin;
+    }
+
     public Long getId() {
         return id;
     }

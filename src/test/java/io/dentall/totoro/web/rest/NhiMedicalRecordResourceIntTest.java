@@ -102,7 +102,7 @@ public class NhiMedicalRecordResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NhiMedicalRecordResource nhiMedicalRecordResource = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService);
+        final NhiMedicalRecordResource nhiMedicalRecordResource = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService, nhiTxRepository, nhiMedicineRepository);
         this.restNhiMedicalRecordMockMvc = MockMvcBuilders.standaloneSetup(nhiMedicalRecordResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -199,7 +199,7 @@ public class NhiMedicalRecordResourceIntTest {
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].days").value(hasItem(DEFAULT_DAYS.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getNhiMedicalRecord() throws Exception {
