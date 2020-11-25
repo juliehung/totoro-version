@@ -22,6 +22,7 @@ export const Header = styled.div`
   & > :first-child {
     display: flex;
     align-items: center;
+    margin-left: 10px;
     &:first-child {
       font-size: 15px;
       font-weight: 600;
@@ -34,7 +35,7 @@ export const Header = styled.div`
 `;
 
 export const Content = styled.div`
-  max-height: 400px;
+  max-height: 300px;
   height: 100%;
   min-height: 300px;
   overflow-y: scroll;
