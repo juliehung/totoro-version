@@ -11,7 +11,9 @@ export default function convertAppointmentToCardObject(appointments, users) {
       let isFuture = false;
       const { id, note, expectedArrivalTime, requiredTreatmentTime } = a;
       const doctor = users.find(u => u.id === a.doctor.id);
-      const expectedArrivalTimeString = toRocString(expectedArrivalTime) + moment(expectedArrivalTime).format(' HH:mm');
+      const expectedArrivalTimeString = `${toRocString(expectedArrivalTime)} ${moment(expectedArrivalTime).format(
+        ' HH:mm',
+      )} ~ ${moment(expectedArrivalTime).add(requiredTreatmentTime, 'm').format(' HH:mm')}`;
 
       if (a?.registration) {
         isRegistration = true;

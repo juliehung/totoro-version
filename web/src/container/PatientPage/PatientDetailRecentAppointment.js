@@ -98,7 +98,7 @@ function PatientDetailRecentAppointment(props) {
               <div>
                 <span style={{ fontWeight: 600 }}>
                   {a.isRegistration ? '掛號完成' : a.isCancel ? '已取消' : a.isFuture ? '即將到來' : '預約未到'} -{' '}
-                  {a.expectedArrivalTime}
+                  {a.expectedArrivalTimeString}
                 </span>
               </div>
               <span style={{ color: '#8f9bb3' }}>{a?.doctor?.firstName}</span>
