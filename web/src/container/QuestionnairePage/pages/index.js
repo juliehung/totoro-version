@@ -133,7 +133,7 @@ const pages = [
     page: 22,
     component: <DoDrugA />,
     validator: validators.drugValidator,
-    nextPage: 16,
+    nextPage: 18,
     prevPage: 17,
   },
   {
@@ -141,7 +141,7 @@ const pages = [
     page: 23,
     component: <SmokingA />,
     validator: validators.smokingAmountValidator,
-    nextPage: 17,
+    nextPage: 19,
     prevPage: 18,
   },
   {
@@ -149,7 +149,7 @@ const pages = [
     page: 24,
     component: <PregnantA />,
     validator: validators.pregnantDateValidator,
-    nextPage: 18,
+    nextPage: 20,
     prevPage: 19,
   },
 ];
