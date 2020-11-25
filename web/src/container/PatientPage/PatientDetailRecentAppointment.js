@@ -15,7 +15,7 @@ const Item = styled.div`
   padding: 10px;
   font-size: 14px;
   display: grid;
-  grid-template-columns: 10% 70% 20%;
+  grid-template-columns: 6% 74% 20%;
   row-gap: 5px;
   &:not(:last-child) {
     margin-bottom: 10px;
@@ -26,7 +26,11 @@ const Item = styled.div`
   }
 
   & > :first-child {
-    place-self: center;
+    justify-self: flex-end;
+  }
+
+  & > :nth-child(3) {
+    margin-left: 4px;
   }
 
   & > :last-child {
@@ -50,13 +54,18 @@ const EmptyString = styled.div`
 
 const SwitchWrap = styled.div`
   margin-left: 2px;
+  .switch-content {
+    background: #c5cee0;
+    &.ant-switch-checked {
+      background-color: #3266ff;
+    }
+  }
   span {
-    margin-left: 2px;
+    margin-left: 4px;
     color: #8f9bb3;
+    font-weight: normal;
   }
 `;
-
-//#endregion
 
 function PatientDetailRecentAppointment(props) {
   const { appointments, appointmentsAnalysis } = props;
@@ -73,7 +82,7 @@ function PatientDetailRecentAppointment(props) {
           </span>
         </div>
         <SwitchWrap>
-          <Switch onChange={() => switchFuture(!futureStatus)} />
+          <Switch onChange={() => switchFuture(!futureStatus)} size="small" className="switch-content" />
           <span>只顯示未來</span>
         </SwitchWrap>
       </Header>
