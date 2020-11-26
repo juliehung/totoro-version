@@ -974,4 +974,30 @@ public class NhiRuleCheckUtil {
 
         return result.message("目前可申報（為提升準確率，請常讀取 IC 卡取得最新資訊）");
     }
+
+    /**
+     * 檢查同一處置單，是否沒有健保定義的其他衝突診療
+     *
+     * @param dto 使用 includeNhiCodes
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO isNoConflictNhiCode(NhiRuleCheckDTO dto, List<String> conflictCodes) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("檢查同一處置單，是否沒有健保定義的其他衝突診療")
+            .validated(true);
+
+        if (dto.getIncludeNhiCodes().stream()
+            .filter(Objects::nonNull)
+            .anyMatch(conflictCodes::contains)) {
+            result.message(
+              String.format(
+                  "不得與 %s 同時申報",
+                  conflictCodes.toString()
+              )
+            );
+        }
+
+        return result;
+    }
 }
