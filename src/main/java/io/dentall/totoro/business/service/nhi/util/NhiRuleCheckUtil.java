@@ -29,6 +29,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -692,6 +693,33 @@ public class NhiRuleCheckUtil {
     }
 
     /**
+     * 具有條件地，回訊息作為提醒用，檢核狀況算審核通過
+     *
+     * @param dto 根據 predicate 的不同許用不同的內容
+     * @param message 應回傳訊息
+     * @param predicates 條件式
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO addNotificationWithClause(
+        NhiRuleCheckDTO dto,
+        String message,
+        Predicate<NhiRuleCheckDTO> ...predicates
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.NONE)
+            .validateTitle("")
+            .validated(true)
+            .message(message);
+
+        if (Arrays.stream(predicates).allMatch(p -> p.test(dto))) {
+            result.nhiRuleCheckInfoType(NhiRuleCheckInfoType.INFO)
+                .message(message);
+        }
+
+        return result;
+    }
+
+    /**
      * 限制牙面在 isAllLimitedSurface 以下
      *
      * @param dto 使用 nhiExtendTreatmentProcedure.a75
@@ -1000,4 +1028,5 @@ public class NhiRuleCheckUtil {
 
         return result;
     }
+
 }

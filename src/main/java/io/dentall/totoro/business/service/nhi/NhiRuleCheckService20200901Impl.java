@@ -1,6 +1,5 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.business.service.NhiRuleCheckInfoType;
 import io.dentall.totoro.business.service.nhi.util.CopaymentCode;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.service.nhi.util.SurfaceConstraint;
@@ -53,12 +52,6 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(dto,
-                ToothConstraint.ZONE_AND_FULL),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91003C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
@@ -69,28 +62,6 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"91003C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91015C~91018C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91103C", "91104C"}.clone()),
-                DateTimeUtil.NHI_2_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91103C", "91104C"}.clone()),
-                DateTimeUtil.NHI_2_MONTH)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.INFO),
             vm
         );
 
@@ -122,6 +93,33 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"91015C~91018C"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"91103C", "91104C"}.clone()),
+                DateTimeUtil.NHI_2_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"91103C", "91104C"}.clone()),
+                DateTimeUtil.NHI_2_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(dto,
+                ToothConstraint.ZONE_AND_FULL),
             vm
         );
 
