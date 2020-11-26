@@ -259,25 +259,27 @@ deployDevDentall8085:
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
         SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
     only:
-        - tags
+#        - tags
+        - merge_requests
     stage: deploy
     image: ubuntu
     dependencies:
-        - repackageByGradle
+#        - repackageByGradle
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
-        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
-        - eval $(ssh-agent -s)
-        - mkdir -p ~/.ssh
-        - chmod 700 ~/.ssh
-        - echo "$DEV_MACHINE_KEY" > /home/dev.key
-        - ssh-keyscan dev.dentall.site >> ~/.ssh/known_hosts
-        - chmod 644 ~/.ssh/known_hosts
-        - chmod 700 /home/dev.key
+#        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
+#        - eval $(ssh-agent -s)
+#        - mkdir -p ~/.ssh
+#        - chmod 700 ~/.ssh
+#        - echo "$DEV_MACHINE_KEY" > /home/dev.key
+#        - ssh-keyscan dev.dentall.site >> ~/.ssh/known_hosts
+#        - chmod 644 ~/.ssh/known_hosts
+#        - chmod 700 /home/dev.key
     script:
-        - 'curl -X POST http://dev.dentall.site:8001/servers/8085/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
-        - sleep 1
-        - 'curl -X POST http://dev.dentall.site:8001/servers/8085/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
+#        - 'curl -X POST http://dev.dentall.site:8001/servers/8085/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
+#        - sleep 1
+#        - 'curl -X POST http://dev.dentall.site:8001/servers/8085/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
+        - echo $SLACK_INCOMING_HOOK , $SLACK_INFO
         - 'curl --location --request POST $SLACK_INCOMING_HOOK --header $CURL_CONTENT_TYPE --data-raw $SLACK_INFO'
 
 deployGcpDev:
