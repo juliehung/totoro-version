@@ -72,6 +72,20 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"91015C~91018C"}.clone()),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"91103C", "91104C"}.clone()),
+                DateTimeUtil.NHI_2_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
         );
