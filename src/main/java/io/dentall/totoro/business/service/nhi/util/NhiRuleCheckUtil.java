@@ -707,7 +707,7 @@ public class NhiRuleCheckUtil {
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.NONE)
-            .validateTitle("")
+            .validateTitle("具有條件地，回訊息作為提醒用，檢核狀況算審核通過")
             .validated(true)
             .message(message);
 
@@ -1029,4 +1029,22 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
+    /**
+     * 條件式群
+     */
+    // 小於 12 歲
+    public Predicate<NhiRuleCheckDTO> clauseIsLessThanAge12 = (dto) -> {
+        if (dto.getPatient().getBirth() == null) {
+            return false;
+        } else {
+            Period p = Period.between(
+                dto.getPatient().getBirth(),
+                DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
+
+            return p.getYears() < 12;
+        }
+    };
+
+    // 屬於 轉診
+    public Predicate<NhiRuleCheckDTO> clauseIsReferral = NhiRuleCheckDTO::isReferral;
 }
