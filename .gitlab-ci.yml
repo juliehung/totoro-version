@@ -267,6 +267,7 @@ deployDevDentall8085:
 #        - repackageByGradle
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
+        - apt-get update -y && apt-get install curl -y
 #        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
 #        - eval $(ssh-agent -s)
 #        - mkdir -p ~/.ssh
