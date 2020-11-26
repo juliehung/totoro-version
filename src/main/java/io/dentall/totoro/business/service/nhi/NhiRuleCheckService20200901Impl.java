@@ -1,9 +1,6 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.business.service.nhi.util.CopaymentCode;
-import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
-import io.dentall.totoro.business.service.nhi.util.SurfaceConstraint;
-import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
+import io.dentall.totoro.business.service.nhi.util.*;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.service.util.DateTimeUtil;
@@ -92,11 +89,6 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91015C~91018C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
@@ -120,6 +112,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(dto,
                 ToothConstraint.ZONE_AND_FULL),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
+                Arrays.asList(new String[]{"91001C", "91017C", "91019C"}.clone())),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotificationWithClause(dto,
+                "",
+                nhiRuleCheckUtil.clauseIsLessThanAge12),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotificationWithClause(dto,
+                "",
+                nhiRuleCheckUtil.clauseIsReferral),
             vm
         );
 

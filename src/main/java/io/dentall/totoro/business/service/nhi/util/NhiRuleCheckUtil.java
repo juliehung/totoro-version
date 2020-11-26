@@ -1015,9 +1015,11 @@ public class NhiRuleCheckUtil {
             .validateTitle("檢查同一處置單，是否沒有健保定義的其他衝突診療")
             .validated(true);
 
+        List<String> parsedCodes = this.parseNhiCode(conflictCodes);
+
         if (dto.getIncludeNhiCodes().stream()
             .filter(Objects::nonNull)
-            .anyMatch(conflictCodes::contains)) {
+            .anyMatch(parsedCodes::contains)) {
             result.message(
               String.format(
                   "不得與 %s 同時申報",
