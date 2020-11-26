@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi;
 
+import io.dentall.totoro.business.service.NhiRuleCheckInfoType;
 import io.dentall.totoro.business.service.nhi.util.CopaymentCode;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.service.nhi.util.SurfaceConstraint;
@@ -82,6 +83,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91103C", "91104C"}.clone()),
                 DateTimeUtil.NHI_2_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"91103C", "91104C"}.clone()),
+                DateTimeUtil.NHI_2_MONTH)
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.INFO),
             vm
         );
 

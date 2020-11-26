@@ -193,7 +193,10 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 用來把數個後端檢核結果總結，並以前端所需格式輸出
+     * 用來把數個後端檢核結果總結，並以前端所需格式輸出。你會想知道應用上每個塞入的 vm 都是依樣是為何？
+     * 因為要保持 domain, vm, dto 的 POJO 特性。 Why POJO ？ 這類資料可能會塞入其它套件應用，
+     * 此外也容易遺忘複查 get/set 裡面的邏輯，為了避免 vm, dto 太過複雜，
+     * 應把轉換邏輯提出，且保持 get/set。
      *
      * @param dto 後端檢驗後的結果
      * @param vm  前端檢驗後的結果
