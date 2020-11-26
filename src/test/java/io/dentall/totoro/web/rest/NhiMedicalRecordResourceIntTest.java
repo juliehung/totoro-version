@@ -5,6 +5,8 @@ import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.NhiMedicalRecord;
 import io.dentall.totoro.domain.NhiExtendPatient;
 import io.dentall.totoro.repository.NhiMedicalRecordRepository;
+import io.dentall.totoro.repository.NhiMedicineRepository;
+import io.dentall.totoro.repository.NhiTxRepository;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.service.NhiMedicalRecordService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
@@ -99,10 +101,16 @@ public class NhiMedicalRecordResourceIntTest {
 
     private NhiMedicalRecord nhiMedicalRecord;
 
+    @Autowired
+    private NhiTxRepository nhiTxRepository;
+
+    @Autowired
+    private NhiMedicineRepository nhiMedicineRepository;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NhiMedicalRecordResource nhiMedicalRecordResource = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService);
+        final NhiMedicalRecordResource nhiMedicalRecordResource = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService, nhiTxRepository, nhiMedicineRepository);
         this.restNhiMedicalRecordMockMvc = MockMvcBuilders.standaloneSetup(nhiMedicalRecordResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -199,7 +207,7 @@ public class NhiMedicalRecordResourceIntTest {
             .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
             .andExpect(jsonPath("$.[*].days").value(hasItem(DEFAULT_DAYS.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getNhiMedicalRecord() throws Exception {

@@ -3,18 +3,16 @@ package io.dentall.totoro.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
-
-import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 
 /**
  * A Registration.
@@ -52,7 +50,8 @@ public class Registration extends AbstractAuditingEntity implements Serializable
     @JsonIgnoreProperties(value = {"registration", "treatmentProcedures"}, allowSetters = true)
     private Appointment appointment;
 
-    @OneToOne    @JoinColumn(unique = true)
+    @OneToOne
+    @JoinColumn(unique = true)
     private Accounting accounting;
 
     @OneToOne(mappedBy = "registration")

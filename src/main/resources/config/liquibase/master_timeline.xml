@@ -16,4 +16,6 @@
     <include file="config/liquibase/changelog/2020/10/20201020_sql.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2020/10/20201021_addColumn.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2020/10/20201021_sql_1.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2020/11/2021123_sql.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2020/11/20201124.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

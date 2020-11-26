@@ -46,7 +46,7 @@ import { calFirstDay } from './reducers/calendar';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
 import { reverseEvents, generateRangeEvent } from './utils/reverseEvents';
-import { GAevent } from '../../ga';
+import GAHelper from '../../ga';
 import { appointmentPage } from './';
 import TwoArrowLeft from '../../images/arrow-left.svg';
 import TwoArrowRight from '../../images/arrow-right.svg';
@@ -576,7 +576,7 @@ class AppCalendar extends React.Component {
     if (doctor) {
       this.props.changeCreateAppDoctor(doctor);
     }
-    GAevent(appointmentPage, 'DblClick calendar to create appt');
+    GAHelper.event(appointmentPage, 'DblClick calendar to create appt');
   };
 
   eventRender = info => {
@@ -590,22 +590,23 @@ class AppCalendar extends React.Component {
           restore: this.handlePopoverRestoreApp,
         },
         { xRayVendors: this.props.xRayVendors },
+        { clickTitle: this.clickTitle.bind(this) },
       );
     } else if (info.event.extendedProps.eventType === 'doctorDayOff') {
-      handleEventRender(info, { edit: this.handleCalEvtDblClick });
+      handleEventRender(info, { edit: this.handleCalEvtDblClick }, {}, { clickTitle: this.clickTitle.bind(this) });
     }
   };
 
   handleAppointmentDblClick = app => {
     this.props.changeEditAppModalVisible(true);
     this.props.insertAppToEditAppModal(app);
-    GAevent(appointmentPage, 'DblClick appt to edit');
+    GAHelper.event(appointmentPage, 'DblClick appt to edit');
   };
 
   handleCalEvtDblClick = calEvt => {
     this.props.changeEditCalModalVisible(true);
     this.props.insertCalEvtToEditCalEvtModal(calEvt);
-    GAevent(appointmentPage, 'DblClick calendar event to edit');
+    GAHelper.event(appointmentPage, 'DblClick calendar event to edit');
   };
 
   handlePopoverCancelApp = apptData => {

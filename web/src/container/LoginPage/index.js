@@ -80,15 +80,15 @@ function LoginPage({
 
   return (
     <Container>
-      <Helmet>
-        <title>登入</title>
-      </Helmet>
       {!tokenValidateChecked ? (
         <SpinContainer>
           <Spin />
         </SpinContainer>
       ) : (
         <LoginFormContainer>
+          <Helmet>
+            <title>登入</title>
+          </Helmet>
           <StyledImg src={DentallLogo} />
           <LoginForm />
         </LoginFormContainer>

@@ -11,6 +11,7 @@ import convertDisposalsToTreatmentsAndPrescriptions from './convertDisposalsToTr
 import toSurfaceAbbrivation from './toSurfaceAbbrivation';
 import renderYYYMMDDHHMMSS from './renderYYYMMDDHHMMSS';
 import convertPatientToPatientSpecialStatus from './convertPatientToPatientSpecialStatus';
+import toRefreshNhiPatientStatusWithHistory from './toRefreshNhiPatientStatusWithHistory';
 
 export {
   convertTreatmentProcedureToTableObject,
@@ -26,4 +27,5 @@ export {
   toSurfaceAbbrivation,
   renderYYYMMDDHHMMSS,
   convertPatientToPatientSpecialStatus,
+  toRefreshNhiPatientStatusWithHistory,
 };

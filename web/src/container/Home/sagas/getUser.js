@@ -9,7 +9,6 @@ export function* getUsers() {
     const responses = yield all(result.map(r => call(user.getByLogin, r.login)));
     yield put(getUserSuccess(responses));
   } catch (err) {
-    //  ignore
     console.log(err);
   }
 }

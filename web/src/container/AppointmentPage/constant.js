@@ -36,9 +36,10 @@ export const patientSearchMode = {
 
 export const APPT_CUSTOM_COLORS = [
   { id: 0, color: '#f09300', text: '預設顏色' },
-  { id: 11, color: '#8e25a9', text: '自選顏色1(紫)' },
-  { id: 12, color: '#a91355', text: '自選顏色1(深紅)' },
-  { id: 13, color: '#0d9ce6', text: '自選顏色3(藍)' },
+  { id: 11, color: '#8e25a9', text: '自選1(紫)' },
+  { id: 12, color: '#a91355', text: '自選2(深紅)' },
+  { id: 13, color: '#0d9ce6', text: '自選3(藍)' },
+  { id: 14, color: '#7986CB', text: '自選4(薰衣草)' },
 ];
 
 export const APPOINTMENT_PAGE = 'totoro-web-appointmentPage/';

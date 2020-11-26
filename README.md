@@ -334,6 +334,23 @@ Business Logic
 - 影像，必須設定 Java 變數 `spring-active-profiles`，環境變數 `IMAGE_BASIC_FOLDER_PATH`。而檔案儲存的實體位置，可能在本機，可能在雲端，由 `spring-active-profiles` 決定；
 位置取決於 `IMAGE_BASIC_FOLDER_PATH` 。其他細節由本專案 Gitlab Wiki 提供。
 - 專科，只能在更新 user 的時候才能被增加，新增時不支援，且僅在 `/api/v2` 支援。
+- TreatmentProcedure，由於設計失誤，導致此像表示，使用者自行增加的項目，有可能為 `診療` 或 `診察`。
+- First/Last doctor，改由 disposal 下 appointment 中 第一跟最新一個預約醫生
+- Nhi tx/medicine 是完整匯入，來源自健保局公開資料
+
+
+Metrics
+---
+- 由於以內建整合於 application ， 可以藉由 http://some.how.domain:someport/management/metrics 以取得，且需要帶入 bearer token。
+<br/>For Example:
+    ```bash
+    # Authorization 的 token 須自行取得
+    curl --location --request GET 'http://his.dentall.io/cp/management/metrics' \
+    --header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b3Rvcm91c2VyIiwiYXV0aCI6IlJPTEVfQURNSU4iLCJleHAiOjE2MzY2OTkzNzB9.r94Sxqrh4eL5dQoqRAMyYtHAwhpmL2ujjk7HcEZH8G0Sz' \
+    --header 'Cookie: GCLB=CP3pgqjoi6rW7gE'
+    ```
+- 若要輸出至 log 可以調整 application-prod.yaml 的 jhipster.metrics.logs.enabled = true
+
 
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0

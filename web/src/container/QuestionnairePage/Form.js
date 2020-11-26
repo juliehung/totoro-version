@@ -4,10 +4,9 @@ import styled from 'styled-components';
 import Background from '../../images/questionnaire_bg.svg';
 import { withRouter } from 'react-router-dom';
 import { getDoc } from './actions';
-import { Button } from 'antd';
-import { GApageView } from '../../ga';
+import GAHelper from '../../ga';
 import { parseDateToString } from './utils/parseDateToString';
-import { getBaseUrl } from '../../utils/getBaseUrl';
+import { Helmet } from 'react-helmet-async';
 
 //#region
 const Container = styled.div`
@@ -82,23 +81,13 @@ const ImageContainer = styled.div`
   border: 2px solid #eee;
 `;
 
-const StyledButton = styled(Button)`
-  border-radius: 4px !important;
-`;
-
-const ButtonsContainer = styled.div`
-  & > * {
-    margin: 0 20px;
-  }
-`;
-
 //#endregion
 
 function Form(props) {
   const { match, getDoc, patient } = props;
 
   useEffect(() => {
-    GApageView();
+    GAHelper.pageView();
   }, []);
 
   useEffect(() => {
@@ -108,6 +97,9 @@ function Form(props) {
 
   return (
     <Container>
+      <Helmet>
+        <title>病歷</title>
+      </Helmet>
       <FormContainer>
         <Label>基本資訊</Label>
         <InfoContainer>
@@ -185,6 +177,14 @@ function Form(props) {
             </FlexGrowDiv>
           </InfoRowContainer>
         </InfoContainer>
+        <Label>血液疾病史</Label>
+        <InfoContainer>
+          <InfoRowContainer>
+            <FlexGrowDiv>
+              <Info>{props.patient.bloodDisease}</Info>
+            </FlexGrowDiv>
+          </InfoRowContainer>
+        </InfoContainer>
         <Label>藥物</Label>
         <InfoContainer>
           <InfoRowContainer>
@@ -216,23 +216,10 @@ function Form(props) {
         </InfoContainer>
         {props.esign && (
           <ImageContainer>
-            <img src={props.esign} alt="esign" width="100%"></img>
+            <img src={props.esign} alt="esign" width="100%" />
           </ImageContainer>
         )}
       </FormContainer>
-      <ButtonsContainer>
-        <a href={`${getBaseUrl()}#/q/${patient.id}`}>
-          <StyledButton>編輯內容</StyledButton>
-        </a>
-        <StyledButton
-          type="primary"
-          onClick={() => {
-            window.close();
-          }}
-        >
-          關閉分頁
-        </StyledButton>
-      </ButtonsContainer>
     </Container>
   );
 }

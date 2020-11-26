@@ -27,6 +27,7 @@ export function convertEditAppToEvt(appointment) {
     }),
     appointment: {
       ...appointment,
+      birth: appointment.patient.birth,
       medicalId: appointment.patient.medicalId,
       patientName: appointment.patient.name,
       patientId: appointment.patient.id,

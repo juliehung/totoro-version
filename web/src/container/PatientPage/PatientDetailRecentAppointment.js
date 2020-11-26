@@ -1,22 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Container, Header, Content, Count, BlueDottedUnderlineText } from './component';
-import { Badge } from 'antd';
+import { Container, Header, Content } from './component';
+import { Badge, Switch } from 'antd';
 import { convertAppointmentToCardObject } from './utils';
 import analysisAppointments from '../AppointmentPage/utils/analysisAppointments';
-import { changeAppointmentListModalVisible } from './actions';
 import { getBaseUrl } from '../../utils/getBaseUrl';
 
 //#region
 const Item = styled.div`
-  background: ${props => (props.isCanceled ? '#f7f9fc' : '#cfecff')};
+  background: ${props => (props.isFuture ? '#cfecff' : '#f7f9fc')};
   min-height: 80px;
   border-radius: 8px;
   padding: 10px;
   font-size: 14px;
   display: grid;
-  grid-template-columns: 10% 70% 20%;
+  grid-template-columns: 6% 74% 20%;
   row-gap: 5px;
   &:not(:last-child) {
     margin-bottom: 10px;
@@ -27,7 +26,11 @@ const Item = styled.div`
   }
 
   & > :first-child {
-    place-self: center;
+    justify-self: flex-end;
+  }
+
+  & > :nth-child(3) {
+    margin-left: 4px;
   }
 
   & > :last-child {
@@ -48,39 +51,60 @@ const EmptyString = styled.div`
   justify-content: center;
   align-items: center;
 `;
-//#endregion
+
+const SwitchWrap = styled.div`
+  margin-left: 2px;
+  .switch-content {
+    background: #c5cee0;
+    &.ant-switch-checked {
+      background-color: #3266ff;
+    }
+  }
+  span {
+    margin-left: 4px;
+    color: #8f9bb3;
+    font-weight: normal;
+  }
+`;
 
 function PatientDetailRecentAppointment(props) {
-  const { futureAppointments, appointmentsAnalysis, changeAppointmentListModalVisible } = props;
-
-  const futureAppointmentsAmount = futureAppointments?.length ?? 0;
+  const { appointments, appointmentsAnalysis } = props;
+  const [futureStatus, switchFuture] = useState(false);
+  const filteredAppointments = futureStatus ? appointments.filter(a => a.isFuture && !a.isRegistration) : appointments;
 
   return (
     <Container>
       <Header>
         <div>
           <span>約診</span>
-          <Count>{futureAppointmentsAmount}</Count>
           <span style={{ color: '#8f9bb3', marginLeft: '10px', fontSize: '12px' }}>
             (爽約 {appointmentsAnalysis.noShow} 次;取消 {appointmentsAnalysis.cancel} 次)
           </span>
         </div>
-        <div
-          onClick={() => {
-            changeAppointmentListModalVisible(true);
-          }}
-        >
-          <BlueDottedUnderlineText text={'預約紀錄'} />
-        </div>
+        <SwitchWrap>
+          <Switch onChange={() => switchFuture(!futureStatus)} size="small" className="switch-content" />
+          <span>只顯示未來</span>
+        </SwitchWrap>
       </Header>
       <Content>
-        {futureAppointments?.length ? (
-          futureAppointments.map(a => (
-            <Item key={a.id} isCanceled={a.isCancel}>
-              <div>{a.isCancel ? <Badge status="error" /> : <Badge status="processing" />}</div>
+        {filteredAppointments?.length ? (
+          filteredAppointments.map(a => (
+            <Item key={a.id} isFuture={a.isFuture}>
+              <div>
+                {a.isRegistration ? (
+                  <Badge color={'#616161'} />
+                ) : a.isCancel ? (
+                  <Badge color={'#ea5455'} />
+                ) : a.isFuture ? (
+                  <Badge status="processing" />
+                ) : (
+                  <Badge color={'#ea5455'} />
+                )}
+              </div>
               <div>
                 <span style={{ fontWeight: 600 }}>
-                  {a.isCancel ? '已取消' : '即將到來'} - {a.expectedArrivalTime}
+                  {a.isRegistration ? '掛號完成' : a.isCancel ? '已取消' : a.isFuture ? '即將到來' : '預約未到'} -{' '}
+                  {a.expectedArrivalTimeString}
                 </span>
               </div>
               <span style={{ color: '#8f9bb3' }}>{a?.doctor?.firstName}</span>
@@ -92,7 +116,7 @@ function PatientDetailRecentAppointment(props) {
         ) : (
           <EmptyString>
             <span>
-              目前沒有約診! 立即{' '}
+              無即將到來的約診! 立即{' '}
               <a href={`${getBaseUrl()}#/appointment`} target="_blank" rel="noopener noreferrer">
                 建立預約
               </a>
@@ -105,13 +129,8 @@ function PatientDetailRecentAppointment(props) {
 }
 
 const mapStateToProps = ({ patientPageReducer, homePageReducer }) => ({
-  futureAppointments: convertAppointmentToCardObject(
-    patientPageReducer.appointment.appointment,
-    homePageReducer.user.users,
-  ).filter(a => a.isFuture && !a.isRegistration),
+  appointments: convertAppointmentToCardObject(patientPageReducer.appointment.appointment, homePageReducer.user.users),
   appointmentsAnalysis: analysisAppointments(patientPageReducer.appointment.appointment),
 });
 
-const mapDispatchToProps = { changeAppointmentListModalVisible };
-
-export default connect(mapStateToProps, mapDispatchToProps)(PatientDetailRecentAppointment);
+export default connect(mapStateToProps)(PatientDetailRecentAppointment);

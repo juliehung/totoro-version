@@ -22,6 +22,12 @@ export function parseDataToDisplayFormPage(patient) {
         .map(t => t.name)
         .join(', ')
     : undefined;
+  const bloodDisease = patient.tags
+    ? patient.tags
+        .filter(t => t.type === 'BLOOD_DISEASE')
+        .map(t => t.name)
+        .join(', ')
+    : undefined;
   const drug = patient.questionnaire ? patient.questionnaire.drug : undefined;
   const drugName = drug ? (patient.questionnaire ? patient.questionnaire.drugName : undefined) : undefined;
   const allergy = patient.tags
@@ -74,6 +80,7 @@ export function parseDataToDisplayFormPage(patient) {
     emergencyPhone,
     emergencyRelationship,
     disease,
+    bloodDisease,
     drugName,
     allergy,
     other,

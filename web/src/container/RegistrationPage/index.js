@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet-async';
 import RegistDrawer from './RegistDrawer';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { GAevent, GApageView } from '../../ga';
+import GAHelper from '../../ga';
 import { columns } from './utils/columns';
 import { convertToTableSource, allDoctors } from './utils/convertToTableSource';
 import { openXray, changeXrayModalVisible, restoreXrayState } from '../Home/actions';
@@ -72,7 +72,7 @@ function RegistrationPage(props) {
   const [selectedDoctor, setSelectedDoctor] = useState();
 
   useEffect(() => {
-    GApageView();
+    GAHelper.pageView();
   }, []);
 
   useEffect(() => {
@@ -157,13 +157,13 @@ function RegistrationPage(props) {
 
   const onDoctorChange = doctor => {
     setSelectedDoctor(doctor);
-    GAevent(registrationPage, 'Change doctor');
+    GAHelper.event(registrationPage, 'Change doctor');
   };
 
   const moveDate = days => () => {
     const date = selectedDate.clone().add(days, 'day');
     onDatePickerChange(date);
-    GAevent(registrationPage, 'Change date');
+    GAHelper.event(registrationPage, 'Change date');
   };
 
   const withMargin = width => <div style={{ width: width + 'px' }} />;
@@ -210,7 +210,7 @@ function RegistrationPage(props) {
               }
 
               props.onSelectPatient(row.patient);
-              GAevent(registrationPage, 'Click patient');
+              GAHelper.event(registrationPage, 'Click patient');
             },
           };
         }}

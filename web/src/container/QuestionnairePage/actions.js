@@ -46,6 +46,7 @@ import {
   VALIDATE_SUCCESS,
   VALIDATE_FAIL,
   CHANGE_FINISH_MODAL_VISIBLE,
+  CHANGE_BLOOD_DISEASE,
 } from './constant';
 
 export function nextPage() {
@@ -102,6 +103,10 @@ export function changeEmergencyRelationship(relationship) {
 
 export function changeDisease(disease) {
   return { type: CHANGE_DISEASE, disease };
+}
+
+export function changeBloodDisease(bloodDisease) {
+  return { type: CHANGE_BLOOD_DISEASE, bloodDisease };
 }
 
 export function changeAllergy(allergy) {

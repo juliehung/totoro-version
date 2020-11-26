@@ -52,8 +52,16 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 
+  .ant-dropdown {
+    box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+  }
+
   .ant-dropdown-menu {
     border-radius: 10px !important;
+
+    > li:hover {
+      border-radius: 10px;
+    }
   }
 
 `;
@@ -216,10 +224,9 @@ const LaboDrawerItem = styled.a`
 
 const ContentContainer = styled.div`
   height: 100%;
-  margin: 0 1% 15px;
+  padding: 0 1% 15px;
   border-radius: 8px;
   background-color: #f8fafb;
-  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
   scrollbar-width: none;
   &::-webkit-scrollbar {
@@ -230,6 +237,16 @@ const ContentContainer = styled.div`
 const PopoverContent = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const DentallServiceLink = styled.a`
+  text-decoration: none;
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+    color: #fff;
+  }
 `;
 
 //#endregion
@@ -258,17 +275,6 @@ const route = [
     localVersion: true,
   },
   {
-    key: 'sms',
-    path: 'sms',
-    link: 'sms',
-    name: 'SMS',
-    icon: { on: MessageCircleFill, off: MessageCircle },
-    navigation: true,
-    exact: true,
-    component: <SmsPage />,
-    localVersion: false,
-  },
-  {
     key: 'patient',
     path: 'patient/:id?',
     link: 'patient',
@@ -278,6 +284,17 @@ const route = [
     exact: false,
     component: <PatientPage />,
     localVersion: true,
+  },
+  {
+    key: 'sms',
+    path: 'sms',
+    link: 'sms',
+    name: 'SMS',
+    icon: { on: MessageCircleFill, off: MessageCircle },
+    navigation: true,
+    exact: true,
+    component: <SmsPage />,
+    localVersion: false,
   },
   {
     key: 'shift',
@@ -450,6 +467,19 @@ function NavHome(props) {
           trigger="click"
           overlay={
             <Menu onClick={menuClick}>
+              <Menu.Item key="dentall-service-page">
+                <DentallServiceLink
+                  href={`https://www.notion.so/dentall-HiS-Help-Desk-864c13b186fb41668ac4505f62cdece2`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span role="img" aria-label="clap">
+                    👋
+                  </span>{' '}
+                  dentall 服務台
+                </DentallServiceLink>
+              </Menu.Item>
+
               <Menu.Item key="settings">
                 <Link to="/setting/xray">設定</Link>
               </Menu.Item>

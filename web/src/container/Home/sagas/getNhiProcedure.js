@@ -10,7 +10,6 @@ export function* getNhiProcedure() {
       const nhiProcedure = yield call(NhiProcedure.get);
       yield put(getNhiProcedureSuccess(nhiProcedure));
     } catch (error) {
-      // ignore
       console.log(error);
     }
   }

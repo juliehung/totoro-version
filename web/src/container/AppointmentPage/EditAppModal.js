@@ -21,7 +21,7 @@ import { requiredTreatmentTimeDefault, APPT_CUSTOM_COLORS } from './constant';
 import moment from 'moment';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
 import { defaultTimeOption } from './utils/generateDefaultTime';
-import { GAevent } from '../../ga';
+import GAHelper from '../../ga';
 import { appointmentPage } from './';
 import { DeleteOutlined } from '@ant-design/icons';
 import parseDateToString from './utils/parseDateToString';
@@ -188,7 +188,7 @@ function EditAppModal({
     };
 
     editAppointment(appt);
-    GAevent(appointmentPage, 'Edit appointment click');
+    GAHelper.event(appointmentPage, 'Edit appointment click');
   };
 
   const options = [

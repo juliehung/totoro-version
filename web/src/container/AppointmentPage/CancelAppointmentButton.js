@@ -33,7 +33,15 @@ function CancelAppointmentButton(props) {
   const type = [buttonStatus.firstClick, buttonStatus.loading].includes(status) ? 'primary' : 'default';
 
   return (
-    <Button onClick={onClick} loading={isLoading} type={type} danger size="small" onBlur={onBlur}>
+    <Button
+      onClick={onClick}
+      loading={isLoading}
+      type={type}
+      danger
+      size="small"
+      onBlur={onBlur}
+      className={props?.className || ''}
+    >
       {buttonText[status]}
     </Button>
   );

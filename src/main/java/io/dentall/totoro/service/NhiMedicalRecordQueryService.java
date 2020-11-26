@@ -1,23 +1,25 @@
 package io.dentall.totoro.service;
 
-import java.util.List;
-
-import javax.persistence.criteria.JoinType;
-
+import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.NhiMedicalRecordCategory;
+import io.dentall.totoro.repository.NhiMedicalRecordRepository;
+import io.dentall.totoro.repository.NhiMedicineRepository;
+import io.dentall.totoro.repository.NhiTxRepository;
+import io.dentall.totoro.service.dto.NhiMedicalRecordCriteria;
+import io.dentall.totoro.web.rest.vm.NhiMedicalRecordVM;
+import io.github.jhipster.service.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
-import io.dentall.totoro.domain.NhiMedicalRecord;
-import io.dentall.totoro.domain.*; // for static metamodels
-import io.dentall.totoro.repository.NhiMedicalRecordRepository;
-import io.dentall.totoro.service.dto.NhiMedicalRecordCriteria;
+import javax.persistence.criteria.JoinType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service for executing complex queries for NhiMedicalRecord entities in the database.
@@ -33,8 +35,18 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
 
     private final NhiMedicalRecordRepository nhiMedicalRecordRepository;
 
-    public NhiMedicalRecordQueryService(NhiMedicalRecordRepository nhiMedicalRecordRepository) {
+    private final NhiMedicineRepository nhiMedicineRepository;
+
+    private final NhiTxRepository nhiTxRepository;
+
+    public NhiMedicalRecordQueryService(
+        NhiMedicalRecordRepository nhiMedicalRecordRepository,
+        NhiMedicineRepository nhiMedicineRepository,
+        NhiTxRepository nhiTxRepository
+    ) {
         this.nhiMedicalRecordRepository = nhiMedicalRecordRepository;
+        this.nhiMedicineRepository = nhiMedicineRepository;
+        this.nhiTxRepository = nhiTxRepository;
     }
 
     /**
@@ -113,5 +125,30 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
             }
         }
         return specification;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<NhiMedicalRecordVM> findVmByCriteria(NhiMedicalRecordCriteria criteria, Pageable pageable) {
+        log.debug("find by criteria : {}", criteria);
+        final Specification<NhiMedicalRecord> specification = createSpecification(criteria);
+        List<NhiMedicalRecordVM> entityList = new ArrayList<>();
+        nhiMedicalRecordRepository.findAll(specification, pageable).forEach(e -> {
+            NhiMedicalRecordVM vm = new NhiMedicalRecordVM();
+            vm.setNhiMedicalRecord(e);
+            if (e.getNhiCategory() != null && e.getNhiCategory().equals(NhiMedicalRecordCategory.MEDICINE.getNumber())) {
+                NhiMedicine m = nhiMedicineRepository.findTop1ByMedicineCodeOrderByIdDesc(e.getNhiCode());
+                if (m != null) {
+                    vm.setMandarin(m.getMedicineMandarin());
+                }
+            } else if (e.getNhiCategory() != null && e.getNhiCategory().equals(NhiMedicalRecordCategory.TX.getNumber())) {
+                NhiTx t = nhiTxRepository.findTop1ByNhiCodeOrderByIdDesc(e.getNhiCode());
+                if (t != null) {
+                    vm.setMandarin(t.getNhiMandarin());
+                }
+            }
+            entityList.add(vm);
+        });
+
+        return new PageImpl<>(entityList);
     }
 }

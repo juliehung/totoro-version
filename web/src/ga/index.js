@@ -1,49 +1,42 @@
 import ReactGA from 'react-ga';
 
-const isProduction = process.env.NODE_ENV === 'production';
-const TrackingCode = 'UA-153780028-2';
-
-export const initGA = () => {
-  if (isProduction) {
+class GAHelper {
+  constructor(production) {
+    const TrackingCode = production ? 'UA-153780028-2' : 'UA-153780028-3';
     ReactGA.initialize(TrackingCode);
   }
-};
 
-export const GApageView = page => {
-  if (isProduction) {
+  pageView = page => {
     ReactGA.pageview(page ? page : window.location.href);
-  }
-};
+  };
 
-export const GAmodalView = modal => {
-  if (isProduction) {
+  modalView = modal => {
     ReactGA.modalview(modal);
-  }
-};
+  };
 
-export const GAevent = (category, action) => {
-  if (isProduction) {
+  event = (category, action) => {
     ReactGA.event({
       category,
       action,
     });
-  }
-};
+  };
 
-export const GAtiming = (categoryName, variableName, valueNum) => {
-  if (isProduction) {
+  timing = (categoryName, variableName, valueNum) => {
     ReactGA.timing({
       category: categoryName,
       variable: variableName,
       value: valueNum,
     });
-  }
-};
+  };
 
-export const GAexception = detail => {
-  if (isProduction) {
+  exception = detail => {
     ReactGA.exception({
       description: detail,
     });
-  }
-};
+  };
+}
+
+const GAHelperInstance = new GAHelper(process.env.NODE_ENV === 'production');
+Object.freeze(GAHelperInstance);
+
+export default GAHelperInstance;

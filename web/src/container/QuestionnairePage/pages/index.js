@@ -21,6 +21,7 @@ import PregnantA from './PregnantA';
 import SmokingQ from './SmokingQ';
 import SmokingA from './SmokingA';
 import Other from './Other';
+import BloodDisease from './BloodDisease';
 import * as validators from '../utils/validators';
 
 const pages = [
@@ -94,28 +95,36 @@ const pages = [
     component: <Disease />,
   },
   {
-    key: 'Allergy',
+    key: 'BloodDisease',
     page: 15,
+    component: <BloodDisease />,
+  },
+  {
+    key: 'Allergy',
+    page: 16,
     component: <Allergy />,
   },
   {
     key: 'DoDrugQ',
-    page: 16,
+    page: 17,
     component: <DoDrugQ />,
+    nextPage: patient => (patient?.doDrug === 'A' ? 22 : 18),
   },
   {
     key: 'SmokingQ',
-    page: 17,
+    page: 18,
     component: <SmokingQ />,
+    nextPage: patient => (patient?.smoking === 'A' ? 23 : 19),
   },
   {
     key: 'PregnantQ',
-    page: 18,
+    page: 19,
     component: <PregnantQ />,
+    nextPage: patient => (patient?.pregnant === 'A' ? 24 : 20),
   },
   {
     key: 'Other',
-    page: 19,
+    page: 20,
     component: <Other />,
     isLast: true,
   },
@@ -124,24 +133,24 @@ const pages = [
     page: 22,
     component: <DoDrugA />,
     validator: validators.drugValidator,
-    nextPage: 17,
-    prevPage: 16,
+    nextPage: 18,
+    prevPage: 17,
   },
   {
     key: 'SmokingA',
     page: 23,
     component: <SmokingA />,
     validator: validators.smokingAmountValidator,
-    nextPage: 18,
-    prevPage: 17,
+    nextPage: 19,
+    prevPage: 18,
   },
   {
     key: 'PregnantA',
     page: 24,
     component: <PregnantA />,
     validator: validators.pregnantDateValidator,
-    nextPage: 19,
-    prevPage: 18,
+    nextPage: 20,
+    prevPage: 19,
   },
 ];
 

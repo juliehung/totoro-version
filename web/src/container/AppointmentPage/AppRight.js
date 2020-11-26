@@ -19,7 +19,7 @@ import 'moment/locale/zh-tw';
 import GridIcon from '../../images/grid.svg';
 import PointerIcon from '../../images/printer.svg';
 import SettingsIcon from '../../images/settings.svg';
-import { GAevent } from '../../ga';
+import GAHelper from '../../ga';
 import { appointmentPage } from './';
 import FloatingActionButton from './FloatingActionButton';
 import { useCookies } from 'react-cookie';
@@ -243,7 +243,7 @@ function AppRight(props) {
   const toggleExpand = () => {
     setLoaded(true);
     setExpand(!expand);
-    GAevent(appointmentPage, 'Click add event button');
+    GAHelper.event(appointmentPage, 'Click add event button');
   };
 
   const closeExpand = () => {
@@ -252,13 +252,13 @@ function AppRight(props) {
   };
 
   const fabMoonClick = () => {
-    GAevent(appointmentPage, 'Click show create calendar event modal button');
+    GAHelper.event(appointmentPage, 'Click show create calendar event modal button');
     props.changeCreateCalModalVisible(true);
     toggleExpand();
   };
 
   const fabCalClick = () => {
-    GAevent(appointmentPage, 'Click show create appt modal button');
+    GAHelper.event(appointmentPage, 'Click show create appt modal button');
     props.changeCreateAppModalVisible(true);
     toggleExpand();
   };
@@ -271,6 +271,7 @@ function AppRight(props) {
           headerRender={headerRender}
           onSelect={props.changeCalDate}
           value={props.calendarDate}
+          locale={{ lang: { locale: 'zh-tw' } }}
         />
       </CalendarContainer>
       <ItemContainer>
@@ -284,7 +285,7 @@ function AppRight(props) {
           <button
             onClick={() => {
               props.changePrintModalVisible();
-              GAevent(appointmentPage, 'Print appt list');
+              GAHelper.event(appointmentPage, 'Print appt list');
             }}
           >
             預約表
@@ -302,7 +303,7 @@ function AppRight(props) {
           <button
             onClick={() => {
               onFullHeightClick();
-              GAevent(appointmentPage, 'slot full screen clicked');
+              GAHelper.event(appointmentPage, 'slot full screen clicked');
             }}
           >
             天
@@ -313,7 +314,7 @@ function AppRight(props) {
               <button
                 onClick={() => {
                   onSlotDurationChange(n);
-                  GAevent(appointmentPage, `slot duration ${n} clicked`);
+                  GAHelper.event(appointmentPage, `slot duration ${n} clicked`);
                 }}
               >
                 {`${n} 分`}
@@ -334,7 +335,7 @@ function AppRight(props) {
           <button
             onClick={() => {
               onShiftButtonClick();
-              GAevent(appointmentPage, 'Turn on/off shift');
+              GAHelper.event(appointmentPage, 'Turn on/off shift');
             }}
           >
             {shiftOpen ? '停用' : '啟用'}

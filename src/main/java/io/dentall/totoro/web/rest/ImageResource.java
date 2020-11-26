@@ -7,12 +7,15 @@ import io.dentall.totoro.domain.Image;
 import io.dentall.totoro.service.ImageQueryService;
 import io.dentall.totoro.service.dto.ImageCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.util.PaginationUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -92,8 +95,10 @@ public class ImageResource {
     }
 
     @GetMapping("/images")
-    public ResponseEntity<List<Image>> getImagesByCriteria(ImageCriteria imageCriteria) {
-        return ResponseEntity.ok(imageQueryService.findByCriteria(imageCriteria));
+    public ResponseEntity<List<Image>> getImagesByCriteria(ImageCriteria imageCriteria, Pageable pageable) {
+        Page<Image> page = imageQueryService.findByCriteria(imageCriteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/images");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     @GetMapping("/images/{id}")

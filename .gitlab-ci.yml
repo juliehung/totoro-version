@@ -144,6 +144,26 @@ releaseWarToFirebase:
         - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
         - gsutil cp build/libs/* gs://dentall-admin-auto-update/
 
+releaseWarToDevMachine:
+    stage: release
+    only:
+        - tags
+    dependencies:
+        - repackageByGradle
+    image: ubuntu
+    before_script:
+        # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
+        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
+        - eval $(ssh-agent -s)
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - echo "$DEV_MACHINE_KEY" > /home/dev.key
+        - ssh-keyscan dev.dentall.site >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+        - chmod 700 /home/dev.key
+    script:
+        - scp -i /home/dev.key ./build/libs/*.war deploy@dev.dentall.site:/home/deploy/dora-monitor/storage/wars
+
 releaseStaticFilesToGCS:
     stage: release
     only:
@@ -231,6 +251,34 @@ deployDevDentall8082:
         - 'curl -X POST http://dev.dentall.site:8001/servers/8082/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
         - sleep 1
         - 'curl -X POST http://dev.dentall.site:8001/servers/8082/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
+
+deployDevDentall8085:
+    variables:
+        CURL_CONTENT_TYPE: 'Content-Type: application/json'
+        CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
+        CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
+        SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
+    only:
+        - tags
+    stage: deploy
+    image: ubuntu
+    dependencies:
+        - repackageByGradle
+    before_script:
+        # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
+        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
+        - eval $(ssh-agent -s)
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - echo "$DEV_MACHINE_KEY" > /home/dev.key
+        - ssh-keyscan dev.dentall.site >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+        - chmod 700 /home/dev.key
+    script:
+        - 'curl -X POST http://dev.dentall.site:8001/servers/8085/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
+        - sleep 1
+        - 'curl -X POST http://dev.dentall.site:8001/servers/8085/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
+        - 'curl --location --request POST $SLACK_INCOMING_HOOK --header $CURL_CONTENT_TYPE --data-raw $SLACK_INFO'
 
 deployGcpDev:
     stage: deploy

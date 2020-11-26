@@ -2,10 +2,10 @@ import org.gradle.internal.os.OperatingSystem
 
 buildscript {
     repositories {
-        maven { url "https://repo.spring.io/plugins-release" }
         mavenLocal()
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://repo.spring.io/plugins-release" }
         google()
     }
     dependencies {
@@ -212,13 +212,14 @@ repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
-    //jhipster-needle-gradle-repositories - JHipster will add additional repositories
+    maven { url "https://repo.spring.io/release" }
+    maven { url "https://jcenter.bintray.com/" }
 }
 
 dependencies {
     // Use ", version: jhipster_dependencies_version, changing: true" if you want
     // to use a SNAPSHOT release instead of a stable release
-    compile group: "io.github.jhipster", name: "jhipster-framework"
+    compile group: "io.github.jhipster", name: "jhipster-framework", version: "${jhipster_dependencies_version}"
     compile "org.springframework.boot:spring-boot-starter-cache"
     compile "io.dropwizard.metrics:metrics-core"
     compile "io.dropwizard.metrics:metrics-jcache"

@@ -21,7 +21,6 @@ const Container = styled.div`
   z-index: 400;
   top: 0;
   position: sticky;
-  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
 `;
 
 const InfoContainer = styled.div`
