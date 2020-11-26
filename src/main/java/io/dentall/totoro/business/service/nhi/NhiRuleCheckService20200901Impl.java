@@ -66,21 +66,21 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91004C,91003C"}.clone()),
+                Arrays.asList(new String[]{"91004C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91004C,91003C"}.clone()),
+                Arrays.asList(new String[]{"91004C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(dto,
-                ToothConstraint.FULL_ZONE),
+                ToothConstraint.PARTIAL_ZONE),
             vm
         );
 
