@@ -52,6 +52,12 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(dto,
+                ToothConstraint.ZONE_AND_FULL),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"91003C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
