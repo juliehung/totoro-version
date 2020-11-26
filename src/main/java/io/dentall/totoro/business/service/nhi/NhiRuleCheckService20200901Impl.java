@@ -63,7 +63,8 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
+            nhiRuleCheckUtil.isAllLimitedTooth(dto,
+                ToothConstraint.FULL_ZONE),
             vm
         );
 
@@ -111,7 +112,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(dto,
-                ToothConstraint.ZONE_AND_FULL),
+                ToothConstraint.FULL_ZONE),
             vm
         );
 
