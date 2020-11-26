@@ -281,7 +281,7 @@ deployDevDentall8085:
 #        - sleep 1
 #        - 'curl -X POST http://dev.dentall.site:8001/servers/8085/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
         - echo $SLACK_INCOMING_HOOK , $SLACK_INFO
-        - 'curl --location --request POST $SLACK_INCOMING_HOOK --header $CURL_CONTENT_TYPE --data-raw $SLACK_INFO'
+        - "curl --location --request POST $SLACK_INCOMING_HOOK --header $CURL_CONTENT_TYPE --data-raw '$SLACK_INFO'"
 
 deployGcpDev:
     stage: deploy
