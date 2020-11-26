@@ -309,6 +309,10 @@ public class NhiRuleCheckUtil {
 
         // 若有指定排除的 treatment procedure id，在後續的 query result 將會排除所列項目。（應用於前端刪除項目但尚未改動到資料）
         dto.setExcludeTreatmentProcedureIds(vm.getExcludeTreatmentProcedureIds());
+        // assign 指定同處置底下的 nhi code，以利後續規則使用
+        dto.setIncludeNhiCodes(vm.getIncludeNhiCodes());
+        // assign 轉診註記，以利後續規則使用
+        dto.setReferral(vm.isReferral());
 
         if (vm.getPatientId() != null) {
             assignDtoByPatientId(dto, vm.getPatientId());

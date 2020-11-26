@@ -33,19 +33,19 @@ public class NhiRuleCheckVM {
     /**
      * 同一處單底下的其他健保代碼
      */
-    private List<String> includeTreatmentProcedureCodes;
+    private List<String> includeNhiCodes;
 
     /**
      * 轉診註記
      */
     private boolean referral;
 
-    public List<String> getIncludeTreatmentProcedureCodes() {
-        return includeTreatmentProcedureCodes;
+    public List<String> getIncludeNhiCodes() {
+        return includeNhiCodes;
     }
 
-    public void setIncludeTreatmentProcedureCodes(List<String> includeTreatmentProcedureCodes) {
-        this.includeTreatmentProcedureCodes = includeTreatmentProcedureCodes;
+    public void setIncludeNhiCodes(List<String> includeNhiCodes) {
+        this.includeNhiCodes = includeNhiCodes;
     }
 
     public boolean isReferral() {
