@@ -29,7 +29,8 @@ const Container = styled.div`
 `;
 
 const FloatingButton = styled.div`
-  width: 200px;
+  cursor: pointer;
+  width: 180px;
   height: 58px;
   display: flex;
   justify-content: flex-end;
@@ -113,21 +114,21 @@ function FloatingActionButton(props) {
 
   return (
     <Container ref={wrapperRef}>
-      <SubButton expand={expand} distance={130}>
+      <SubButton expand={expand} distance={130} onClick={moonClick}>
         <span>醫師與院所休診</span>
-        <div onClick={moonClick}>
+        <div>
           <img src={MoonIcon} alt="moon" />
         </div>
       </SubButton>
-      <SubButton expand={expand} distance={70}>
+      <SubButton expand={expand} distance={70} onClick={calClick}>
         <span>病患約診</span>
-        <div onClick={calClick}>
+        <div>
           <img src={CalendarIcon} alt="calendar" />
         </div>
       </SubButton>
-      <MainButton expand={expand} loaded={loaded}>
+      <MainButton expand={expand} loaded={loaded} onClick={toggleExpand}>
         <span>關閉選單</span>
-        <div onClick={toggleExpand}>
+        <div>
           <img src={PlusIcon} alt="plus" />
         </div>
       </MainButton>
