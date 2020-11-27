@@ -158,7 +158,7 @@ repositories {
  */
 dependencyManagement {
     imports {
-        mavenBom 'io.github.jhipster:jhipster-dependencies:' + jhipster_dependencies_version
+        mavenBom "io.github.jhipster:jhipster-dependencies:${jhipster_dependencies_version}"
         //jhipster-needle-gradle-dependency-management - JHipster will add additional dependencies management here
     }
 }
@@ -355,7 +355,7 @@ dependencies {
  */
 defaultTasks 'bootRun'
 compileJava.dependsOn processResources
-processResources.dependsOn cleanResources, bootBuildInfo, autoGenVersion
+processResources.dependsOn cleanResources,bootBuildInfo,autoGenVersion
 bootBuildInfo.mustRunAfter cleanResources
 checkstyleMain.include 'io/dentall/totoro/business/**'
 compileJava.finalizedBy checkstyleMain
