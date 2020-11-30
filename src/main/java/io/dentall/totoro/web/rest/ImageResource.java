@@ -8,6 +8,7 @@ import io.dentall.totoro.service.ImageQueryService;
 import io.dentall.totoro.service.dto.ImageCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.web.rest.vm.ImageVM;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
 @Profile({"img-host", "img-gcs"})
 @RestController
@@ -95,10 +97,22 @@ public class ImageResource {
     }
 
     @GetMapping("/images")
-    public ResponseEntity<List<Image>> getImagesByCriteria(ImageCriteria imageCriteria, Pageable pageable) {
+    public ResponseEntity<List<ImageVM>> getImagesByCriteria(ImageCriteria imageCriteria, Pageable pageable) {
         Page<Image> page = imageQueryService.findByCriteria(imageCriteria, pageable);
+        List<ImageVM> content = page.map(image -> {
+            ImageVM vm = new ImageVM();
+
+            vm.setImage(image);
+            Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(null, image.getId(), "original");
+            if (urls.containsKey("original")) {
+                vm.setUrl(urls.get("original"));
+            }
+
+            return vm;
+        })
+            .stream().collect(Collectors.toList());
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/images");
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        return ResponseEntity.ok().headers(headers).body(content);
     }
 
     @GetMapping("/images/{id}")
