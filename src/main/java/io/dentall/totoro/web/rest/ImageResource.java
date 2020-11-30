@@ -8,6 +8,7 @@ import io.dentall.totoro.service.ImageQueryService;
 import io.dentall.totoro.service.dto.ImageCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.web.rest.vm.ImageVM;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
 @Profile({"img-host", "img-gcs"})
 @RestController
@@ -95,17 +97,35 @@ public class ImageResource {
     }
 
     @GetMapping("/images")
-    public ResponseEntity<List<Image>> getImagesByCriteria(ImageCriteria imageCriteria, Pageable pageable) {
+    public ResponseEntity<List<ImageVM>> getImagesByCriteria(ImageCriteria imageCriteria, Pageable pageable) {
         Page<Image> page = imageQueryService.findByCriteria(imageCriteria, pageable);
+        List<ImageVM> content = page.map(image -> {
+            ImageVM vm = new ImageVM();
+            Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(null, image.getId(), "original");
+
+            vm.setImage(image);
+            vm.setUrl(urls.getOrDefault("original", ""));
+
+            return vm;
+        })
+            .stream().collect(Collectors.toList());
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/images");
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        return ResponseEntity.ok().headers(headers).body(content);
     }
 
     @GetMapping("/images/{id}")
-    public ResponseEntity<Image> getImagesById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(imageBusinessService.getImageById(id));
+    public ResponseEntity<ImageVM> getImagesById(@PathVariable("id") Long id) {
+        Image image = imageBusinessService.getImageById(id);
+        Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(null, id, "original");
+
+        ImageVM vm = new ImageVM();
+        vm.setImage(image);
+        vm.setUrl(urls.getOrDefault("original", ""));
+
+        return ResponseEntity.ok(vm);
     }
 
+    @Deprecated
     @GetMapping("/images/{id}/thumbnails")
     public ResponseEntity<Map<String, String>> getImageThumbnailsBySize(
         @RequestHeader(name = "Host", required = false) String host,
@@ -115,11 +135,13 @@ public class ImageResource {
         return ResponseEntity.ok(imageBusinessService.getImageThumbnailsBySize(host, id, size));
     }
 
+    @Deprecated
     @GetMapping("/images/sizes")
     public ResponseEntity<List<String>> getImageSizes() {
         return ResponseEntity.ok(imageBusinessService.getImageSizes());
     }
 
+    @Deprecated
     @GetMapping("/images/test")
     public ResponseEntity<String> getTestImage() throws IOException {
         String remotePath = imageBusinessService.createImagePath(-1L);
@@ -128,6 +150,7 @@ public class ImageResource {
         return ResponseEntity.ok("test upload file to ftp");
     }
 
+    @Deprecated
     @GetMapping("/images/thumbnail-url")
     public ResponseEntity<String> getImageThumbnailUrl(@RequestHeader(name = "Host", required = false) String host) {
         logger.info("Host of request header: {}", host);

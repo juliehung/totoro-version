@@ -37,6 +37,18 @@ public class ImageGcsBusinessService extends ImageBusinessService {
         GCS_BASE_URL = "https://storage.googleapis.com/" + bucketName + "/";
     }
 
+
+    /**
+     * 假的 thumbnail 回傳都一統一為 gcsUrl + path + fileName
+     * e.g.
+     * size = "median,giant"
+     * {
+     *     "original": "https://his.dentall.some.gcp.storage/cp/123/hello.png",
+     * }
+     * @param host 保持 null, img-host 專用
+     * @param id image id
+     * @param size 保持 null, img-host 專用
+     */
     @Override
     public Map<String, String> getImageThumbnailsBySize(String host, Long id, String size) {
         Image image = getImageById(id);
