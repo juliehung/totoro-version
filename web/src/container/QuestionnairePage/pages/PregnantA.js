@@ -47,7 +47,7 @@ function PregnantA(props) {
       </CalendarContainer>
 
       <br />
-      {validationError.includes(24) && <ErrorMessage errorText={`日期錯誤，若無懷孕請回上頁選取"無"`} />}
+      {validationError.includes(25) && <ErrorMessage errorText={`日期錯誤，若無懷孕請回上頁選取"無"`} />}
     </Container>
   );
 }

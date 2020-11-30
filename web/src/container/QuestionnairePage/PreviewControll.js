@@ -47,7 +47,7 @@ function PreviewControll(props) {
       <StyledButton
         disabled={disable}
         onClick={() => {
-          gotoPage(20);
+          gotoPage(21);
         }}
         size="large"
       >

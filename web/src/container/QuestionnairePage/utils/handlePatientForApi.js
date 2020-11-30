@@ -24,7 +24,7 @@ export function handlePatientForApi(patientEntity, patient) {
   const emergencyRelationship = mapOptionToText(patient.emergencyContact.relationship, RelationshipOption);
   const drug = mapOptionToText(patient.doDrug, BooleanOption);
   const drugName = drug ? patient.drug : undefined;
-  const smoking = mapOptionToText(patient.doDrug, BooleanOption);
+  const smoking = mapOptionToText(patient.smoking, BooleanOption);
   const smokeNumberADay = smoking ? patient.smokingAmount : undefined;
   const pregnant = mapOptionToText(patient.pregnant, BooleanOption);
   const dueDate = pregnant ? patient.pregnantDate : undefined;

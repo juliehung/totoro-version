@@ -77,7 +77,7 @@ export function parseDataToDisplay(data) {
 }
 
 function parseKeyToValue(key, options) {
-  const option = options.find(o => o.key === key);
+  const option = options.find(o => !!o?.key && !!key && o.key === key);
   if (option) {
     return option.value;
   }

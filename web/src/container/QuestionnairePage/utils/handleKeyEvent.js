@@ -3,8 +3,8 @@ import pages from '../pages';
 
 export function handleKeyEvent(currentPage, keyEvent, func, data) {
   const currentPageObj = pages.find(p => p.page === currentPage);
-  const nextPage = currentPageObj?.nextPage;
-  const prevPage = currentPageObj?.prevPage;
+  const nextPage = currentPage?.nextPage;
+  const prevPage = currentPage?.prevPage;
   const validator = currentPageObj?.validator;
   const isLast = currentPageObj?.isLast;
 
@@ -20,10 +20,18 @@ export function handleKeyEvent(currentPage, keyEvent, func, data) {
       }
       func.validateSuccess(currentPage);
     }
-    nextPage ? func.gotoPage(nextPage) : func.goNextPage();
+    nextPage
+      ? typeof nextPage === 'function'
+        ? func.gotoPage(nextPage())
+        : func.gotoPage(nextPage)
+      : func.goNextPage();
     return;
   } else if (keyEvent.keyCode === KeyCode.up_arrow) {
-    prevPage ? func.gotoPage(prevPage) : func.goPrevPage();
+    prevPage
+      ? typeof prevPage === 'function'
+        ? func.gotoPage(prevPage())
+        : func.gotoPage(prevPage)
+      : func.goPrevPage();
     return;
   }
 
@@ -58,27 +66,27 @@ export function handleKeyEvent(currentPage, keyEvent, func, data) {
         func.changeDisease(keyEvent.key.toUpperCase());
       }
       break;
-    case 15:
+    case 16:
       if (keyEvent.keyCode >= KeyCode.a && keyEvent.keyCode <= KeyCode.g) {
         func.changeAllergy(keyEvent.key.toUpperCase());
       }
       break;
-    case 16:
+    case 17:
       if (keyEvent.keyCode >= KeyCode.a && keyEvent.keyCode <= KeyCode.b) {
         func.preChangeDoDrug(keyEvent.key.toUpperCase());
       }
       break;
-    case 17:
+    case 18:
       if ([KeyCode.a, KeyCode.b].includes(keyEvent.keyCode)) {
         func.preChangeSmoking(keyEvent.key.toUpperCase());
       }
       break;
-    case 18:
+    case 19:
       if ([KeyCode.a, KeyCode.b].includes(keyEvent.keyCode)) {
         func.preChangePregnant(keyEvent.key.toUpperCase());
       }
       break;
-    case 19:
+    case 20:
       if ([KeyCode.a, KeyCode.f].includes(keyEvent.keyCode)) {
         func.changeOther(keyEvent.key.toUpperCase());
       }

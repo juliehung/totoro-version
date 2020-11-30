@@ -1,5 +1,6 @@
-import org.gradle.internal.os.OperatingSystem
-
+/**
+ * Buildscript, for how this script can be run and where is the repo of plugins
+ */
 buildscript {
     repositories {
         mavenLocal()
@@ -16,6 +17,9 @@ buildscript {
     }
 }
 
+/**
+ * Plugins, with official recommended style
+ */
 plugins {
     id "org.sonarqube" version "2.6.2"
     id "net.ltgt.apt-eclipse" version "0.18"
@@ -31,12 +35,20 @@ plugins {
     id 'checkstyle'
 }
 
+/**
+ *  Plugins, with legacy style
+ */
+apply plugin: 'maven'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'war'
+apply plugin: 'propdeps'
+apply plugin: 'com.moowork.node'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'idea'
+apply from: 'gradle/sonar.gradle'
+apply from: 'gradle/docker.gradle'
+apply from: project.hasProperty('prod') ? 'gradle/profile_prod.gradle': 'gradle/profile_dev.gradle'
 apply plugin: 'java'
-sourceCompatibility=1.8
-targetCompatibility=1.8
-// Until JHipster supports JDK 9
-assert System.properties['java.specification.version'] == '1.8'
-
 apply plugin: 'maven'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
@@ -45,16 +57,15 @@ apply plugin: 'com.moowork.node'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
 
-dependencyManagement {
-  imports {
-    mavenBom 'io.github.jhipster:jhipster-dependencies:' + jhipster_dependencies_version
-    //jhipster-needle-gradle-dependency-management - JHipster will add additional dependencies management here
-  }
-}
-
-defaultTasks 'bootRun'
-
+/**
+ * Constant
+ */
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 group = 'io.dentall.totoro'
+project.ext.runList = !project.hasProperty('runList') ? 'main' : ''
+project.ext.diffChangelogFile = 'src/main/resources/config/liquibase/changelog/' + new Date().format('yyyyMMddHHmmss') + '_changelog.xml'
+assert System.properties['java.specification.version'] == '1.8'
 
 def versionMajor = 0
 def versionMinor = 0
@@ -64,104 +75,30 @@ def commitCount = "git rev-list $branchName --count --since=$versionMinorRenewDa
 def semver = "$versionMajor.$versionMinor.$commitCount-$branchName"
 def gitTag = "git describe --tags".execute().text.trim()
 def sha1 = "git show --pretty=tformat:%h --quiet".execute().text.trim()
-
 description = ''
 
-task xbuild(type: Exec) {
-    commandLine './gradlew', 'build', '-x', 'webpackBuildDev', '-x', 'npm_install' , '-x', 'test'
+/**
+ * Configuration for plugins
+ */
+node {
+    version = "${node_version}"
+    npmVersion = "${npm_version}"
+    yarnVersion = "${yarn_version}"
+    download = true
+    nodeModulesDir = file("${project.projectDir}/web")
 }
 
-bootWar {
-    mainClassName = 'io.dentall.totoro.TotoroApp'
-
-    if (!project.hasProperty('gae')) {
-        if (!gitTag.isEmpty()) {
-            archiveName = "$baseName-$gitTag-$sha1.$extension"
-        } else {
-            archiveName = "$baseName-$branchName-$sha1.$extension"
-        }
-    }
-}
-
-war {
-
-}
-
-task autoGenVersion(type: WriteProperties) {
-    outputFile = file("src/main/resources/totoro.properties")
-    if (!gitTag.isEmpty()) {
-        property("version", "$gitTag-$sha1")
-    } else {
-        property("version", "$branchName-$sha1")
-    }
+checkstyle {
+    configFile = file("${configDir}/google_checks.xml")
+    toolVersion = '8.23'
+    maxWarnings = 0
+    sourceSets = [project.sourceSets.main]
 }
 
 springBoot {
     mainClassName = 'io.dentall.totoro.TotoroApp'
     buildInfo()
 }
-
-if (OperatingSystem.current().isWindows()) {
-    // https://stackoverflow.com/questions/40037487/the-filename-or-extension-is-too-long-error-using-gradle
-    task classpathJar(type: Jar) {
-        dependsOn configurations.runtime
-        appendix = 'classpath'
-
-        doFirst {
-            manifest {
-                attributes 'Class-Path': configurations.runtime.files.collect {
-                    it.toURI().toURL().toString().replaceFirst(/file:\/+/, '/').replaceAll(' ', '%20')
-                }.join(' ')
-            }
-        }
-    }
-
-    bootRun {
-        dependsOn classpathJar
-        doFirst {
-            classpath = files("$buildDir/classes/java/main", "$buildDir/resources/main", classpathJar.archivePath)
-        }
-    }
-}
-
-test {
-    if (project.hasProperty('testFtp')) {
-        exclude '**/CucumberTest*'
-    } else {
-        exclude '**/CucumberTest*', 'io/dentall/totoro/business/service/ImageFtpBusinessServiceIntTest.class'
-    }
-
-    // uncomment if the tests reports are not generated
-    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
-    // ignoreFailures true
-    reports.html.enabled = false
-}
-
-task testReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn test
-}
-
-apply from: 'gradle/sonar.gradle'
-
-test.finalizedBy testReport, jacocoTestReport
-
-
-apply from: 'gradle/docker.gradle'
-//jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
-
-if (project.hasProperty('prod')) {
-    apply from: 'gradle/profile_prod.gradle'
-} else {
-    apply from: 'gradle/profile_dev.gradle'
-}
-
-
-if (!project.hasProperty('runList')) {
-    project.ext.runList = 'main'
-}
-
-project.ext.diffChangelogFile = 'src/main/resources/config/liquibase/changelog/' + new Date().format('yyyyMMddHHmmss') + '_changelog.xml'
 
 liquibase {
     activities {
@@ -216,6 +153,99 @@ repositories {
     maven { url "https://jcenter.bintray.com/" }
 }
 
+/**
+ * Tasks
+ */
+dependencyManagement {
+    imports {
+        mavenBom "io.github.jhipster:jhipster-dependencies:${jhipster_dependencies_version}"
+        //jhipster-needle-gradle-dependency-management - JHipster will add additional dependencies management here
+    }
+}
+
+
+task xbuild(type: Exec) {
+    commandLine './gradlew', 'build', '-x', 'webpackBuildDev', '-x', 'npm_install', '-x', 'test'
+}
+
+bootWar {
+    mainClassName = 'io.dentall.totoro.TotoroApp'
+
+    if (!project.hasProperty('gae')) {
+        if (!gitTag.isEmpty()) {
+            archiveName = "$baseName-$gitTag-$sha1.$extension"
+        } else {
+            archiveName = "$baseName-$branchName-$sha1.$extension"
+        }
+    }
+}
+
+war {
+
+}
+
+task autoGenVersion(type: WriteProperties) {
+    outputFile = file("src/main/resources/totoro.properties")
+    if (!gitTag.isEmpty()) {
+        property("version", "$gitTag-$sha1")
+    } else {
+        property("version", "$branchName-$sha1")
+    }
+}
+
+// https://stackoverflow.com/questions/40037487/the-filename-or-extension-is-too-long-error-using-gradle
+task classpathJar(type: Jar) {
+    dependsOn configurations.runtime
+    appendix = 'classpath'
+
+    doFirst {
+        manifest {
+            attributes 'Class-Path': configurations.runtime.files.collect {
+                it.toURI().toURL().toString().replaceFirst(/file:\/+/, '/').replaceAll(' ', '%20')
+            }.join(' ')
+        }
+    }
+}
+
+bootRun {
+    dependsOn classpathJar
+    doFirst {
+        classpath = files("$buildDir/classes/java/main", "$buildDir/resources/main", classpathJar.archivePath)
+    }
+}
+
+test {
+    if (project.hasProperty('testFtp')) {
+        exclude '**/CucumberTest*'
+    } else {
+        exclude '**/CucumberTest*', 'io/dentall/totoro/business/service/ImageFtpBusinessServiceIntTest.class'
+    }
+
+    // uncomment if the tests reports are not generated
+    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+    // ignoreFailures true
+    reports.html.enabled = false
+}
+
+task testReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn test
+}
+
+task cleanResources(type: Delete) {
+    delete 'build/resources'
+}
+
+wrapper {
+    gradleVersion = '4.10.2'
+}
+
+task stage(dependsOn: 'bootWar') {
+}
+
+/**
+ * Application dependencies
+ **/
 dependencies {
     // Use ", version: jhipster_dependencies_version, changing: true" if you want
     // to use a SNAPSHOT release instead of a stable release
@@ -258,7 +288,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-aop"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile ("org.springframework.boot:spring-boot-starter-web") {
+    compile("org.springframework.boot:spring-boot-starter-web") {
         exclude module: 'spring-boot-starter-tomcat'
     }
     compile "org.springframework.boot:spring-boot-starter-undertow"
@@ -271,7 +301,7 @@ dependencies {
     compile "io.jsonwebtoken:jjwt-api"
     runtime "io.jsonwebtoken:jjwt-impl"
     runtime "io.jsonwebtoken:jjwt-jackson"
-    compile ("io.springfox:springfox-swagger2") {
+    compile("io.springfox:springfox-swagger2") {
         exclude module: 'mapstruct'
     }
     compile "io.springfox:springfox-bean-validators"
@@ -280,12 +310,12 @@ dependencies {
     compile "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen"
-    annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor") {
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
     compile "com.google.apis:google-api-services-calendar:${google_calendar_version}"
     testCompile "com.jayway.jsonpath:json-path"
-    testCompile ("org.springframework.boot:spring-boot-starter-test") {
+    testCompile("org.springframework.boot:spring-boot-starter-test") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
     testCompile "org.springframework.security:spring-security-test"
@@ -302,7 +332,7 @@ dependencies {
     compile "com.vladmihalcea:hibernate-types-52:2.4.0"
     compile "ru.yandex.qatools.embed:postgresql-embedded:2.10"
     compile "com.univocity:univocity-parsers:2.8.2"
-    compile ("io.moquette:moquette-broker:0.12.1") {
+    compile("io.moquette:moquette-broker:0.12.1") {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
     compile "org.springframework.integration:spring-integration-mqtt"
@@ -319,52 +349,14 @@ dependencies {
     compile "com.google.auth:google-auth-library-oauth2-http:0.20.0"
 }
 
-task cleanResources(type: Delete) {
-    delete 'build/resources'
-}
 
-wrapper {
-    gradleVersion = '4.10.2'
-}
-
-task stage(dependsOn: 'bootWar') {
-}
-
-if (project.hasProperty('nodeInstall')) {
-    node {
-        version = "${node_version}"
-        npmVersion = "${npm_version}"
-        yarnVersion = "${yarn_version}"
-        download = true
-        nodeModulesDir = file("${project.projectDir}/web")
-    }
-}
-
+/**
+ * Execute flow
+ */
+defaultTasks 'bootRun'
 compileJava.dependsOn processResources
 processResources.dependsOn cleanResources,bootBuildInfo,autoGenVersion
 bootBuildInfo.mustRunAfter cleanResources
-
-tasks.withType(FindBugs) {
-    reports {
-        xml.enabled false
-        html.enabled true
-    }
-}
-
-checkstyle {
-    configFile = file("${configDir}/google_checks.xml")
-    toolVersion = '8.23'
-    maxWarnings = 0
-    sourceSets = [project.sourceSets.main]
-}
-
 checkstyleMain.include 'io/dentall/totoro/business/**'
-
-tasks.withType(Checkstyle) {
-    reports {
-        xml.enabled false
-        html.enabled true
-    }
-}
-
 compileJava.finalizedBy checkstyleMain
+test.finalizedBy testReport, jacocoTestReport

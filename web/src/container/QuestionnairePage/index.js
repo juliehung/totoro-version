@@ -199,11 +199,11 @@ function QuestionnairePage(props) {
         <Helmet>
           <title>病歷</title>
         </Helmet>
-        {currentPage !== 20 && currentPage !== 21 && <QutContent />}
-        {currentPage === 20 && <Form />}
-        {currentPage === 21 && <Signature />}
+        {currentPage !== 21 && currentPage !== 22 && <QutContent />}
+        {currentPage === 21 && <Form />}
+        {currentPage === 22 && <Signature />}
         <ZeroAreaDiv>
-          <button ref={focusRef}></button>
+          <button ref={focusRef} />
         </ZeroAreaDiv>
         <FinishModal />
       </Container>
