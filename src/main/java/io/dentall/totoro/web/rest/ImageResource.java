@@ -101,12 +101,10 @@ public class ImageResource {
         Page<Image> page = imageQueryService.findByCriteria(imageCriteria, pageable);
         List<ImageVM> content = page.map(image -> {
             ImageVM vm = new ImageVM();
+            Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(null, image.getId(), "original");
 
             vm.setImage(image);
-            Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(null, image.getId(), "original");
-            if (urls.containsKey("original")) {
-                vm.setUrl(urls.get("original"));
-            }
+            vm.setUrl(urls.getOrDefault("original", ""));
 
             return vm;
         })
@@ -116,10 +114,18 @@ public class ImageResource {
     }
 
     @GetMapping("/images/{id}")
-    public ResponseEntity<Image> getImagesById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(imageBusinessService.getImageById(id));
+    public ResponseEntity<ImageVM> getImagesById(@PathVariable("id") Long id) {
+        Image image = imageBusinessService.getImageById(id);
+        Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(null, id, "original");
+
+        ImageVM vm = new ImageVM();
+        vm.setImage(image);
+        vm.setUrl(urls.getOrDefault("original", ""));
+
+        return ResponseEntity.ok(vm);
     }
 
+    @Deprecated
     @GetMapping("/images/{id}/thumbnails")
     public ResponseEntity<Map<String, String>> getImageThumbnailsBySize(
         @RequestHeader(name = "Host", required = false) String host,
@@ -129,11 +135,13 @@ public class ImageResource {
         return ResponseEntity.ok(imageBusinessService.getImageThumbnailsBySize(host, id, size));
     }
 
+    @Deprecated
     @GetMapping("/images/sizes")
     public ResponseEntity<List<String>> getImageSizes() {
         return ResponseEntity.ok(imageBusinessService.getImageSizes());
     }
 
+    @Deprecated
     @GetMapping("/images/test")
     public ResponseEntity<String> getTestImage() throws IOException {
         String remotePath = imageBusinessService.createImagePath(-1L);
@@ -142,6 +150,7 @@ public class ImageResource {
         return ResponseEntity.ok("test upload file to ftp");
     }
 
+    @Deprecated
     @GetMapping("/images/thumbnail-url")
     public ResponseEntity<String> getImageThumbnailUrl(@RequestHeader(name = "Host", required = false) String host) {
         logger.info("Host of request header: {}", host);

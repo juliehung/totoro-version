@@ -339,6 +339,12 @@ Business Logic
 - Nhi tx/medicine 是完整匯入，來源自健保局公開資料
 
 
+Image
+---
+- Size, Gcp 支援 original, Host 支援 original, median
+- `/api/images/{id}/thumbnails` 用來取得可用的 url
+- `/api/images/host` 只在 `img-host` 下可用，具有風險可以存取檔案的 api。能取得其他存在於機器本身的檔案
+
 Metrics
 ---
 - 由於以內建整合於 application ， 可以藉由 http://some.how.domain:someport/management/metrics 以取得，且需要帶入 bearer token。
