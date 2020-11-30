@@ -78,8 +78,7 @@ const StyledButton = styled(Button)`
 //#endregion
 
 function Form(props) {
-  const { patient } = props;
-  const displayData = parseDataToDisplay(props.patient);
+  const { patient, displayData } = props;
 
   const disabled =
     !patient.name ||
@@ -224,7 +223,7 @@ function Form(props) {
           type="primary"
           disabled={disabled}
           onClick={() => {
-            props.gotoPage(21);
+            props.gotoPage(22);
           }}
         >
           確認進行數位簽章
@@ -236,6 +235,7 @@ function Form(props) {
 
 const mapStateToProps = ({ questionnairePageReducer }) => ({
   patient: questionnairePageReducer.data.patient,
+  displayData: parseDataToDisplay(questionnairePageReducer.data.patient),
 });
 
 const mapDispatchToProps = { gotoPage, nextPage };

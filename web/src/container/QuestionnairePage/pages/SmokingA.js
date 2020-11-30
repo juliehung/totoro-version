@@ -29,7 +29,7 @@ function SmokingA(props) {
 
   const onPressEnter = () => {
     if (!props.smokingAmount) {
-      valitationFail(23);
+      valitationFail(24);
       return;
     }
     props.gotoPage(18);
@@ -50,7 +50,7 @@ function SmokingA(props) {
         value={patient.smokingAmount}
         min={0}
       />
-      {validationError.includes(23) && <ErrorMessage errorText={`數字必須大於零，若無吸菸請回上頁選取"無"`} />}
+      {validationError.includes(24) && <ErrorMessage errorText={`數字必須大於零，若無吸菸請回上頁選取"無"`} />}
     </Container>
   );
 }

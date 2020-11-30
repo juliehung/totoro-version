@@ -18,7 +18,7 @@ function DoDrugA(props) {
 
   const onPressEnter = () => {
     if (!drugValidator(patient)) {
-      valitationFail(22);
+      valitationFail(23);
       return;
     }
     props.gotoPage(17);
@@ -37,7 +37,7 @@ function DoDrugA(props) {
         value={patient.drug}
         onPressEnter={onPressEnter}
       />
-      {validationError.includes(22) && <ErrorMessage errorText={`需填內容，若無用藥請回上頁選取"無"`} />}
+      {validationError.includes(23) && <ErrorMessage errorText={`需填內容，若無用藥請回上頁選取"無"`} />}
     </Container>
   );
 }

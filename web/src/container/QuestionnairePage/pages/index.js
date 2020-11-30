@@ -108,19 +108,19 @@ const pages = [
     key: 'DoDrugQ',
     page: 17,
     component: <DoDrugQ />,
-    nextPage: patient => (patient?.doDrug === 'A' ? 22 : 18),
+    nextPage: patient => (patient?.doDrug === 'A' ? 23 : 18),
   },
   {
     key: 'SmokingQ',
     page: 18,
     component: <SmokingQ />,
-    nextPage: patient => (patient?.smoking === 'A' ? 23 : 19),
+    nextPage: patient => (patient?.smoking === 'A' ? 24 : 19),
   },
   {
     key: 'PregnantQ',
     page: 19,
     component: <PregnantQ />,
-    nextPage: patient => (patient?.pregnant === 'A' ? 24 : 20),
+    nextPage: patient => (patient?.pregnant === 'A' ? 25 : 20),
   },
   {
     key: 'Other',
@@ -130,7 +130,7 @@ const pages = [
   },
   {
     key: 'DoDrugA',
-    page: 22,
+    page: 23,
     component: <DoDrugA />,
     validator: validators.drugValidator,
     nextPage: 18,
@@ -138,7 +138,7 @@ const pages = [
   },
   {
     key: 'SmokingA',
-    page: 23,
+    page: 24,
     component: <SmokingA />,
     validator: validators.smokingAmountValidator,
     nextPage: 19,
@@ -146,7 +146,7 @@ const pages = [
   },
   {
     key: 'PregnantA',
-    page: 24,
+    page: 25,
     component: <PregnantA />,
     validator: validators.pregnantDateValidator,
     nextPage: 20,

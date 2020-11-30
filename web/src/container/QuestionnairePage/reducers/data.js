@@ -104,6 +104,8 @@ const data = (state = initialState, action) =>
         draft.patient.drug = action.patient.questionnaire ? action.patient.questionnaire.drugName : undefined;
 
         draft.patient.pregnant = action.patient.tags.find(tag => tag.id === 25) ? 'A' : 'B';
+        draft.patient.pregnantDate = action.patient?.dueDate;
+
         draft.patient.smoking = action.patient.tags.find(tag => tag.id === 26) ? 'A' : 'B';
         draft.patient.smokingAmount = action.patient.questionnaire ? action.patient.questionnaire.smokeNumberADay : 0;
         draft.patient.introducer = action.patient.introducer;
