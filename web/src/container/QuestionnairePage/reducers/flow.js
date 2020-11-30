@@ -54,12 +54,12 @@ const flow = (state = initialState, action) =>
         draft.reverse = state.page > action.page;
         break;
       case NEXT_PAGE_DELAY:
-        if (state.page !== 20 && state.page !== 21) {
+        if (state.page !== 21 && state.page !== 22) {
           draft.page = state.page + 1;
         }
         break;
       case PREV_PAGE_DELAY:
-        if (state.page !== 1 && state.page !== 20 && state.page !== 21) {
+        if (state.page !== 1 && state.page !== 21 && state.page !== 22) {
           draft.page = state.page - 1;
         }
         break;
