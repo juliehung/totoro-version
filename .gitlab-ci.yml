@@ -259,7 +259,8 @@ deployDevDentall8085:
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
         SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
     only:
-        - tags
+        variables:
+            - ($CI_COMMIT_BRANCH == "develop" && $CI_COMMIT_TAG)
     stage: deploy
     image: ubuntu
     dependencies:
@@ -285,7 +286,8 @@ deployGcpDev:
     image: google/cloud-sdk:alpine
     when: manual
     only:
-        - tags
+        variables:
+            - ($CI_COMMIT_BRANCH == "release" && $CI_COMMIT_TAG)
     script:
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
         - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
@@ -293,5 +295,5 @@ deployGcpDev:
         - curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl
         - chmod +x ./kubectl
         - mv ./kubectl /usr/local/bin/kubectl
-        - gcloud container clusters get-credentials dev-cluster --region asia-east1
+        - gcloud container clusters get-credentials his-cluster --region asia-east1
         - kubectl get pod -l run=totoro-cp -o yaml | sed 's/\(asia.gcr.io\/dentall-saas\/totoro-admin\):.*$/\1:'"$CI_COMMIT_TAG"'/' | kubectl replace -f -
