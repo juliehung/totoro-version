@@ -5,6 +5,8 @@ import io.dentall.totoro.business.service.nhi.NhiAbnormalityService;
 import io.dentall.totoro.business.service.nhi.NhiStatisticService;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormality;
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
+import io.dentall.totoro.repository.NhiExtendDisposalRepository;
+import io.dentall.totoro.service.dto.CalculateBaseData;
 import io.dentall.totoro.web.rest.vm.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -31,12 +34,16 @@ public class NhiStatisticBusinessResource {
 
     private final NhiStatisticService nhiStatisticService;
 
+    private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
+
     public NhiStatisticBusinessResource(
         NhiAbnormalityService nhiAbnormalityService,
-        NhiStatisticService nhiStatisticService
+        NhiStatisticService nhiStatisticService,
+        NhiExtendDisposalRepository nhiExtendDisposalRepository
     ) {
         this.nhiAbnormalityService = nhiAbnormalityService;
         this.nhiStatisticService = nhiStatisticService;
+        this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
     }
 
     @GetMapping("/abnormality")
@@ -102,4 +109,13 @@ public class NhiStatisticBusinessResource {
     ) {
         return new ResponseEntity<>(nhiStatisticService.getNhiIndexTreatmentProcedures(begin, end, excludeDisposalId), HttpStatus.OK);
     }
+
+    @GetMapping("/calculate-base")
+    public ResponseEntity<List<CalculateBaseData>> test(
+        @RequestParam LocalDate begin,
+        @RequestParam LocalDate end
+    ) {
+        return new ResponseEntity<>(nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end), HttpStatus.OK);
+    }
+
 }
