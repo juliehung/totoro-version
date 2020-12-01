@@ -20,7 +20,9 @@ public interface CalculateBaseData {
     String getCopayment();
 
     // Nhi procedure
-    String getCode();
+    String getTxCode();
+
+    Integer getTxPoint();
 
     String getSpecialCode();
 

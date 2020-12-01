@@ -369,8 +369,9 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "ned.examination_point as examinationPoint, " +
             "ned.patient_identity as patientIdentity, " +
             "ned.serial_number as serialNumber, " +
-            "np.code as code, " +
             "ned.a32 as copayment, " +
+            "np.code as txCode, " +
+            "np.point as txPoint, " +
             "np.special_code as specificCode, " +
             "a.patient_id as patientId, " +
             "a.doctor_user_id as doctorId " +
