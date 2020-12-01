@@ -194,9 +194,12 @@ public class NhiStatisticService {
                             }
                         }
 
-                        // Total
+                        // 總點數
                         o.setTotal(Long.sum(o.getTotal(), total));
+                        // 總處置數
                         o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
+                        // 部分負擔
+                        o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
 
                         return o;
                     });

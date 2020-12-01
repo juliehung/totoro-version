@@ -42,6 +42,19 @@ public class NhiStatisticDoctorSalary {
      */
     private Long totalDisposal = 0L;
 
+    /**
+     * 總部分負擔
+     */
+    private Long copayment = 0L;
+
+    public Long getCopayment() {
+        return copayment;
+    }
+
+    public void setCopayment(Long copayment) {
+        this.copayment = copayment;
+    }
+
     public Long getTotalDisposal() {
         return totalDisposal;
     }
