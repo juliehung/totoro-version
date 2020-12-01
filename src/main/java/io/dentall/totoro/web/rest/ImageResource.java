@@ -97,11 +97,15 @@ public class ImageResource {
     }
 
     @GetMapping("/images")
-    public ResponseEntity<List<ImageVM>> getImagesByCriteria(ImageCriteria imageCriteria, Pageable pageable) {
+    public ResponseEntity<List<ImageVM>> getImagesByCriteria(
+        @RequestHeader(name = "Host", required = false) String host,
+        ImageCriteria imageCriteria,
+        Pageable pageable
+    ) {
         Page<Image> page = imageQueryService.findByCriteria(imageCriteria, pageable);
         List<ImageVM> content = page.map(image -> {
             ImageVM vm = new ImageVM();
-            Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(null, image.getId(), "original");
+            Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(host, image.getId(), "original");
 
             vm.setImage(image);
             vm.setUrl(urls.getOrDefault("original", ""));
