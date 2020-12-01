@@ -151,7 +151,7 @@ public class NhiStatisticService {
                     m.compute(k, (kk, o) -> {
                         long total = 0L;
                         int examPoint = e.getExaminationPoint() != null ? e.getExaminationPoint() : 0;
-                        int txPoint = e.getTxPoint() != null ? e.getTxPoint() : 0;
+                        long txPoint = e.getTxPoint() != null ? e.getTxPoint().longValue() : 0;
                         total += examPoint;
                         total += txPoint;
 

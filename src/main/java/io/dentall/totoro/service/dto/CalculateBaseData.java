@@ -22,7 +22,7 @@ public interface CalculateBaseData {
     // Nhi procedure
     String getTxCode();
 
-    Integer getTxPoint();
+    Double getTxPoint();
 
     String getSpecificCode();
 
