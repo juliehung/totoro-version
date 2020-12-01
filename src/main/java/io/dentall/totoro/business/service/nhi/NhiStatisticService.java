@@ -196,6 +196,7 @@ public class NhiStatisticService {
 
                         // Total
                         o.setTotal(Long.sum(o.getTotal(), total));
+                        o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
 
                         return o;
                     });

@@ -37,6 +37,19 @@ public class NhiStatisticDoctorSalary {
      */
     private Long endoPoint = 0L;
 
+    /**
+     * 總處置單數量
+     */
+    private Long totalDisposal = 0L;
+
+    public Long getTotalDisposal() {
+        return totalDisposal;
+    }
+
+    public void setTotalDisposal(Long totalDisposal) {
+        this.totalDisposal = totalDisposal;
+    }
+
     public Long getTotal() {
         return total;
     }
