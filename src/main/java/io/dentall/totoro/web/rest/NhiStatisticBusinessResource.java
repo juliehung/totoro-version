@@ -6,7 +6,6 @@ import io.dentall.totoro.business.service.nhi.NhiStatisticService;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormality;
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import io.dentall.totoro.service.dto.CalculateBaseData;
 import io.dentall.totoro.web.rest.vm.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
 
 /**
  * REST controller for managing nhi statistics.
@@ -111,13 +111,13 @@ public class NhiStatisticBusinessResource {
     }
 
     @GetMapping("/calculate-base")
-    public ResponseEntity<List<CalculateBaseData>> test(
+    public ResponseEntity<Map<Long, NhiStatisticDoctorSalary>> test(
         @RequestParam LocalDate begin,
         @RequestParam LocalDate end,
         @RequestParam(required = false) Long doctorId,
         @RequestParam(required = false) boolean groupByDisposal
     ) {
-        return new ResponseEntity<>(nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end), HttpStatus.OK);
+        return new ResponseEntity<>(nhiStatisticService.getDoctorSalary(begin, end), HttpStatus.OK);
     }
 
 }

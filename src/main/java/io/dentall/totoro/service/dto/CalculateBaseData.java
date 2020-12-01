@@ -24,7 +24,7 @@ public interface CalculateBaseData {
 
     Integer getTxPoint();
 
-    String getSpecialCode();
+    String getSpecificCode();
 
     // Appointment
     Long getPatientId();

@@ -43,59 +43,59 @@ public class NhiStatisticService {
             ym.atDay(1),
             ym.atEndOfMonth()
         ).forEach(spDTO -> {
-                String docLogin = spDTO.getCreatedBy();
+            String docLogin = spDTO.getCreatedBy();
 
-                NhiStatisticDashboard dashboard = null;
-                if (!docMap.containsKey(docLogin)) {
-                    Optional<User> doc = userRepository.findOneByLogin(docLogin);
-                    if (doc.isPresent()) {
-                        long docId = doc.get().getId();
-                        dashboard = new NhiStatisticDashboard().doctorId(docId);
-                        docMap.put(docLogin, docId);
-                        docDashboardMap.put(docLogin, dashboard);
-                    }
-                } else {
-                    dashboard = docDashboardMap.get(docLogin);
+            NhiStatisticDashboard dashboard = null;
+            if (!docMap.containsKey(docLogin)) {
+                Optional<User> doc = userRepository.findOneByLogin(docLogin);
+                if (doc.isPresent()) {
+                    long docId = doc.get().getId();
+                    dashboard = new NhiStatisticDashboard().doctorId(docId);
+                    docMap.put(docLogin, docId);
+                    docDashboardMap.put(docLogin, dashboard);
                 }
+            } else {
+                dashboard = docDashboardMap.get(docLogin);
+            }
 
-                String specificCode = dashboard.getCircleMap()
-                    .containsKey(spDTO.getSpecificCode())
-                    ? spDTO.getSpecificCode()
-                    : "other";
-                int points = spDTO.getPoint();
+            String specificCode = dashboard.getCircleMap()
+                .containsKey(spDTO.getSpecificCode())
+                ? spDTO.getSpecificCode()
+                : "other";
+            int points = spDTO.getPoint();
 
-                summaryDashboard.getSummaryCircle().incrementCase().incrementPoints(points);
-                summaryDashboard.getCircleMap().get(specificCode).incrementCase().incrementPoints(points);
-                dashboard.getSummaryCircle().incrementCase().incrementPoints(points);
-                dashboard.getCircleMap().get(specificCode).incrementCase().incrementPoints(points);
+            summaryDashboard.getSummaryCircle().incrementCase().incrementPoints(points);
+            summaryDashboard.getCircleMap().get(specificCode).incrementCase().incrementPoints(points);
+            dashboard.getSummaryCircle().incrementCase().incrementPoints(points);
+            dashboard.getCircleMap().get(specificCode).incrementCase().incrementPoints(points);
 
-                summaryDashboard.incrementTotalCases();
-                dashboard.incrementTotalCases();
-                switch (specificCode) {
-                    case "P1" :
-                    case "P5" :
-                        dashboard.incrementEndoCases();
-                        summaryDashboard.incrementEndoCases();
-                        break;
-                    case "P2" :
-                    case "P3" :
-                        dashboard.incrementGvCases();
-                        summaryDashboard.incrementGvCases();
-                        break;
-                    case "P4" :
-                    case "P8" :
-                        dashboard.incrementPeriCases();
-                        summaryDashboard.incrementPeriCases();
-                        break;
-                    case "P6" :
-                    case "P7" :
-                    case "other" :
-                    default :
-                        dashboard.incrementOtherCases();
-                        summaryDashboard.incrementOtherCases();
-                        break;
-                }
-            });
+            summaryDashboard.incrementTotalCases();
+            dashboard.incrementTotalCases();
+            switch (specificCode) {
+                case "P1":
+                case "P5":
+                    dashboard.incrementEndoCases();
+                    summaryDashboard.incrementEndoCases();
+                    break;
+                case "P2":
+                case "P3":
+                    dashboard.incrementGvCases();
+                    summaryDashboard.incrementGvCases();
+                    break;
+                case "P4":
+                case "P8":
+                    dashboard.incrementPeriCases();
+                    summaryDashboard.incrementPeriCases();
+                    break;
+                case "P6":
+                case "P7":
+                case "other":
+                default:
+                    dashboard.incrementOtherCases();
+                    summaryDashboard.incrementOtherCases();
+                    break;
+            }
+        });
 
         docDashboardMap.forEach((k, v) -> v.calculateRatio());
 
@@ -148,47 +148,53 @@ public class NhiStatisticService {
             .collect(Collectors.groupingBy(CalculateBaseData::getDoctorId))
             .forEach((k, v) -> {
                 v.forEach(e -> {
+                    m.compute(k, (kk, o) -> {
+                        long total = 0L;
+                        int examPoint = e.getExaminationPoint() != null ? e.getExaminationPoint() : 0;
+                        int txPoint = e.getTxPoint() != null ? e.getTxPoint() : 0;
+                        total += examPoint;
+                        total += txPoint;
 
-                    m.computeIfPresent(k, (kk, o) -> {
-                        Long total = 0L;
-                        Integer examPoint = e.getExaminationPoint();
-                        Integer txPoint = e.getTxPoint();
+                        if (o == null) {
+                            o = new NhiStatisticDoctorSalary();
+                        }
 
                         // 感染或一般診察 並總和 診察 點數
-                        if (infectionExaminationCodes.contains(examPoint)) {
+                        if (infectionExaminationCodes.contains(e.getExaminationCode())) {
                             o.setInfectionExaminationPoint(Long.sum(o.getInfectionExaminationPoint(), examPoint));
                         } else {
                             o.setRegularExaminationPoint(Long.sum(o.getRegularExaminationPoint(), examPoint));
                         }
-                        total += examPoint;
 
                         // 感染會存在於 treatment procedure，在上述以加總，在此應忽略不計
                         if (!infectionExaminationCodes.contains(e.getTxCode())) {
                             o.setTreatmentPoint(Long.sum(o.getTreatmentPoint(), txPoint));
-                            total += txPoint;
                         }
 
                         // 區別計算 treamtent 各自專科別
-                        switch (e.getSpecialCode()) {
-                            case "P1" :
-                            case "P5" :
-                                o.setEndoPoint(Long.sum(o.getEndoPoint(), txPoint));
-                                break;
-                            case "P2" :
-                            case "P3" :
-                                o.setPedoPoint(Long.sum(o.getPedoPoint(), txPoint));
-                                break;
-                            case "P4" :
-                            case "P8" :
-                                o.setPerioPoint(Long.sum(o.getPerioPoint(), txPoint));
-                                break;
-                            case "P6" :
-                            case "P7" :
-                            case "other" :
-                            default :
-                                break;
+                        if (e.getSpecificCode() != null) {
+                            switch (e.getSpecificCode()) {
+                                case "P1":
+                                case "P5":
+                                    o.setEndoPoint(Long.sum(o.getEndoPoint(), txPoint));
+                                    break;
+                                case "P2":
+                                case "P3":
+                                    o.setPedoPoint(Long.sum(o.getPedoPoint(), txPoint));
+                                    break;
+                                case "P4":
+                                case "P8":
+                                    o.setPerioPoint(Long.sum(o.getPerioPoint(), txPoint));
+                                    break;
+                                case "P6":
+                                case "P7":
+                                case "other":
+                                default:
+                                    break;
+                            }
                         }
 
+                        // Total
                         o.setTotal(Long.sum(o.getTotal(), total));
 
                         return o;

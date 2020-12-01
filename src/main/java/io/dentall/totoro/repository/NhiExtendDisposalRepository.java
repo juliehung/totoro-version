@@ -372,7 +372,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "ned.a32 as copayment, " +
             "np.code as txCode, " +
             "np.point as txPoint, " +
-            "np.special_code as specificCode, " +
+            "np.specific_code as specificCode, " +
             "a.patient_id as patientId, " +
             "a.doctor_user_id as doctorId " +
             "from disposal d " +

@@ -5,37 +5,37 @@ public class NhiStatisticDoctorSalary {
     /**
      * 總點數
      */
-    private Long total;
+    private Long total = 0L;
 
     /**
      * 感染控制診察點數
      */
-    private Long infectionExaminationPoint;
+    private Long infectionExaminationPoint = 0L;
 
     /**
-     * 一班診察點數
+     * 一般診察點數
      */
-    private Long regularExaminationPoint;
+    private Long regularExaminationPoint = 0L;
 
     /**
      * 診療點數
      */
-    private Long treatmentPoint;
+    private Long treatmentPoint = 0L;
 
     /**
      * 牙周類型點數
      */
-    private Long perioPoint;
+    private Long perioPoint = 0L;
 
     /**
      * 兒童類型點數
      */
-    private Long pedoPoint;
+    private Long pedoPoint = 0L;
 
     /**
      * 根管類型點數
      */
-    private Long endoPoint;
+    private Long endoPoint = 0L;
 
     public Long getTotal() {
         return total;
