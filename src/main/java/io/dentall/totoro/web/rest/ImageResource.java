@@ -96,12 +96,22 @@ public class ImageResource {
         return result;
     }
 
+    /**
+     * 查詢圖片，並取得資料來源 url，以及其他訊息
+     * @param host local 模式下，方可取得 server 的 ip 位址；gcs 模式下是否有值並不影響
+     * @param imageCriteria query by image id, patient id, etc,.
+     * @param pageable pagination using size and page.
+     */
     @GetMapping("/images")
-    public ResponseEntity<List<ImageVM>> getImagesByCriteria(ImageCriteria imageCriteria, Pageable pageable) {
+    public ResponseEntity<List<ImageVM>> getImagesByCriteria(
+        @RequestHeader(name = "Host", required = false) String host,
+        ImageCriteria imageCriteria,
+        Pageable pageable
+    ) {
         Page<Image> page = imageQueryService.findByCriteria(imageCriteria, pageable);
         List<ImageVM> content = page.map(image -> {
             ImageVM vm = new ImageVM();
-            Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(null, image.getId(), "original");
+            Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(host, image.getId(), "original");
 
             vm.setImage(image);
             vm.setUrl(urls.getOrDefault("original", ""));
@@ -113,6 +123,7 @@ public class ImageResource {
         return ResponseEntity.ok().headers(headers).body(content);
     }
 
+    @Deprecated
     @GetMapping("/images/{id}")
     public ResponseEntity<ImageVM> getImagesById(@PathVariable("id") Long id) {
         Image image = imageBusinessService.getImageById(id);
@@ -158,6 +169,11 @@ public class ImageResource {
         return ResponseEntity.ok(imageBusinessService.getImageThumbnailUrl(host));
     }
 
+    /**
+     * 當 local 模式下，用來傳送 image byte 用的 api，有風險可直接存取其他檔案
+     * @param path file path + file name
+     * @param size original or median
+     */
     @Profile("img-host")
     @GetMapping("/images/host")
     public DeferredResult<ResponseEntity<byte[]>> getImageFromHost(

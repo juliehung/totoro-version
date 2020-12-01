@@ -39,7 +39,7 @@ public class ImageGcsBusinessService extends ImageBusinessService {
 
 
     /**
-     * 假的 thumbnail 回傳都一統一為 gcsUrl + path + fileName
+     * 並不會產生任何 thumbnail，其結果皆回傳都一統一為 gcsUrl + path + fileName
      * e.g.
      * size = "median,giant"
      * {
