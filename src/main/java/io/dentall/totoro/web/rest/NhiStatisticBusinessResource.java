@@ -113,7 +113,9 @@ public class NhiStatisticBusinessResource {
     @GetMapping("/calculate-base")
     public ResponseEntity<List<CalculateBaseData>> test(
         @RequestParam LocalDate begin,
-        @RequestParam LocalDate end
+        @RequestParam LocalDate end,
+        @RequestParam(required = false) Long doctorId,
+        @RequestParam(required = false) boolean groupByDisposal
     ) {
         return new ResponseEntity<>(nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end), HttpStatus.OK);
     }

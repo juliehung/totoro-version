@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 
@@ -135,5 +136,18 @@ public class NhiStatisticService {
         }
 
         return nhiExtendDisposalRepository.findNhiIndexTreatmentProcedures(begin, end, excludeDisposalId);
+    }
+
+    public List<NhiStatisticDoctorSalary> getDoctorSalary(LocalDate begin, LocalDate end) {
+        Map<Long, NhiStatisticDoctorSalary> m = new HashMap<>();
+        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end).stream()
+            .reduce(m, (data, e) -> {
+                if (m.containsKey(e.getDoctorId())) {
+                    
+                } else {
+
+                }
+                return data;
+            }, (a, b) -> a);
     }
 }

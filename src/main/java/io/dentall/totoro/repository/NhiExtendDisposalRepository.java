@@ -370,6 +370,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "ned.patient_identity as patientIdentity, " +
             "ned.serial_number as serialNumber, " +
             "np.code as code, " +
+            "ned.a32 as copayment, " +
+            "np.special_code as specificCode, " +
             "a.patient_id as patientId, " +
             "a.doctor_user_id as doctorId " +
             "from disposal d " +
