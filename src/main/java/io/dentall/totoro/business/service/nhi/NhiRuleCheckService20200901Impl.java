@@ -46,6 +46,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return rvm;
     }
 
+    // 900***
+    public NhiRuleCheckResultVM validate90012C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification("使用橡皮障防濕裝置時，需檢附Ｘ光片或相片(規格需為3*5吋以上且可清晰判讀)佐證。（X光片或相片費用已內含）。"),
+            vm
+        );
+
+        return vm;
+    }
+    
     // 910***
     @Override
     public NhiRuleCheckResultVM validate91003C(NhiRuleCheckDTO dto) {
