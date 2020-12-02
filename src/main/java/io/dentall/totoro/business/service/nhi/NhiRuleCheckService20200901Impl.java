@@ -230,7 +230,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
-        
+
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,

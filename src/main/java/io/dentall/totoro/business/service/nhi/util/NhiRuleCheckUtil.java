@@ -1014,7 +1014,8 @@ public class NhiRuleCheckUtil {
 
         List<String> parsedCodes = this.parseNhiCode(conflictCodes);
 
-        if (dto.getIncludeNhiCodes().stream()
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().stream()
             .filter(Objects::nonNull)
             .anyMatch(parsedCodes::contains)) {
             result.message(
@@ -1042,7 +1043,8 @@ public class NhiRuleCheckUtil {
 
         List<String> parsedCodes = this.parseNhiCode(mustIncludeCodes);
 
-        if (dto.getIncludeNhiCodes().stream()
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().stream()
             .filter(Objects::nonNull)
             .noneMatch(parsedCodes::contains)) {
             result.message(
@@ -1051,54 +1053,6 @@ public class NhiRuleCheckUtil {
                     mustIncludeCodes.toString()
                 )
             );
-        }
-
-        return result;
-    }
-
-    /**
-     * 檢查系統資料 main, sub code 是否曾在某時間段內出現
-     * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
-     * @param mainCode 主代碼
-     * @param subCode 次代碼
-     * @param limitDays 限制時間
-     * @return
-     */
-    public NhiRuleCheckResultDTO isCodeSetBeforeDate(NhiRuleCheckDTO dto, String mainCode, String subCode, Period limitDays) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("檢查系統資料 main, sub code 是否曾在某時間段內出現")
-            .validated(true);
-
-        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-
-        // 指定時間內是不是有 主代碼
-        NhiExtendTreatmentProcedure match =
-            this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
-                dto.getPatient().getId(),
-                dto.getNhiExtendTreatmentProcedure().getId(),
-                currentTxDate,
-                Arrays.asList(mainCode),
-                limitDays,
-                dto.getExcludeTreatmentProcedureIds());
-
-        // 時間內已有 主代碼，在相同 a71 下，是否存在 次代碼，若有則出錯誤訊息
-        if (match != null &&
-            match.getId() != null &&
-            StringUtils.isNotBlank(match.getA71()) &&
-            nhiExtendTreatmentProcedureRepository.existsByA71AndA73(match.getA71(), subCode)
-        ) {
-            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
-
-            result.validated(false)
-                .message(
-                    String.format(
-                        "建議 %s 後再行申報，近一次處置為系統中 %s",
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
-
-                    )
-                );
         }
 
         return result;
