@@ -109,14 +109,15 @@ export const PatientDeclarationStatusItem = props => (
   </BorderDiv>
 );
 
-export const PatientSpecialStatusItem = props => (
-  <BorderDiv>
-    <Item warning singleLine={!props.subTitle}>
-      <img src={warning} height={'90%'} alt="icon" />
-      <div>
-        <span>{props.title}</span>
-        {props.subTitle && <span>{`${props.subTitle}`}</span>}
-      </div>
-    </Item>
-  </BorderDiv>
-);
+export const PatientSpecialStatusItem = props =>
+  props.title ? (
+    <BorderDiv>
+      <Item warning singleLine={!props.subTitle}>
+        <img src={warning} height={'90%'} alt="icon" />
+        <div>
+          <span>{props.title}</span>
+          {props.subTitle && <span>{`${props.subTitle}`}</span>}
+        </div>
+      </Item>
+    </BorderDiv>
+  ) : null;
