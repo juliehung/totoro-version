@@ -30,6 +30,32 @@ public class NhiRuleCheckVM {
      */
     private List<Long> excludeTreatmentProcedureIds;
 
+    /**
+     * 同一處單底下的其他健保代碼
+     */
+    private List<String> includeNhiCodes;
+
+    /**
+     * 轉診註記
+     */
+    private boolean referral;
+
+    public List<String> getIncludeNhiCodes() {
+        return includeNhiCodes;
+    }
+
+    public void setIncludeNhiCodes(List<String> includeNhiCodes) {
+        this.includeNhiCodes = includeNhiCodes;
+    }
+
+    public boolean isReferral() {
+        return referral;
+    }
+
+    public void setReferral(boolean referral) {
+        this.referral = referral;
+    }
+
     public Long getPatientId() {
         return patientId;
     }

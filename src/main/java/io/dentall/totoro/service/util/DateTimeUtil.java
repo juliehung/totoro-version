@@ -14,6 +14,8 @@ public final class DateTimeUtil {
 
     public static final Period NHI_1_MONTH = Period.ofDays(30);
 
+    public static final Period NHI_2_MONTH = Period.ofDays(60);
+
     public static final Period NHI_3_MONTH = Period.ofDays(90);
 
     public static final Period NHI_6_MONTH = Period.ofDays(180);
