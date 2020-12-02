@@ -1,9 +1,11 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.business.service.nhi.util.*;
+import io.dentall.totoro.business.service.nhi.util.CopaymentCode;
+import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
+import io.dentall.totoro.business.service.nhi.util.SurfaceConstraint;
+import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
-import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import org.springframework.stereotype.Service;
 
@@ -221,6 +223,41 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                 Arrays.asList("91017C")),
             vm
         );
+
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().contains("91004C")
+        ) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeSetBeforeDate(dto,
+                    "91014C",
+                    "91004C",
+                    DateTimeUtil.NHI_12_MONTH
+                    ),
+                vm
+            );
+        } else if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().contains("91005C")
+        ) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeSetBeforeDate(dto,
+                    "91014C",
+                    "91005C",
+                    DateTimeUtil.NHI_12_MONTH
+                ),
+                vm
+            );
+        } else if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().contains("91020C")
+        ) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeSetBeforeDate(dto,
+                    "91014C",
+                    "91020C",
+                    DateTimeUtil.NHI_6_MONTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
