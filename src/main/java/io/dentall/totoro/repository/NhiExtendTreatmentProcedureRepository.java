@@ -62,11 +62,4 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
 
     <T> Optional<T> findById(Long id, Class<T> type);
 
-    /**
-     * 申報規則檢查用，主要 91014C 使用
-     * @param a71 診療民國 YYYMMDDHHmm
-     * @param a73 組合代碼中的次要代碼
-     */
-    Boolean existsByA71AndA73(String a71, String a73);
-
 }
