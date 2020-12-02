@@ -1052,7 +1052,7 @@ public class NhiRuleCheckUtil {
                 .filter(Objects::nonNull)
                 .filter(parsedCodes::contains)
                 .collect(Collectors.toList())
-                .size() == 1
+                .size() != 1
         ) {
             result.message(
                 String.format(
