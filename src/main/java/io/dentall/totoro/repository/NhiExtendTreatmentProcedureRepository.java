@@ -67,6 +67,6 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
      * @param a71 診療民國 YYYMMDDHHmm
      * @param a73 組合代碼中的次要代碼
      */
-    Boolean existByA71AndA73(String a71, String a73);
+    Boolean existsByA71AndA73(String a71, String a73);
 
 }

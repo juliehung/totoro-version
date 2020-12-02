@@ -1086,7 +1086,7 @@ public class NhiRuleCheckUtil {
         if (match != null &&
             match.getId() != null &&
             StringUtils.isNotBlank(match.getA71()) &&
-            nhiExtendTreatmentProcedureRepository.existByA71AndA73(match.getA71(), subCode)
+            nhiExtendTreatmentProcedureRepository.existsByA71AndA73(match.getA71(), subCode)
         ) {
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
 
@@ -1131,7 +1131,7 @@ public class NhiRuleCheckUtil {
         if (match != null &&
             match.getId() != null &&
             StringUtils.isNotBlank(match.getDate()) &&
-            nhiExtendTreatmentProcedureRepository.existByA71AndA73(match.getDate(), subCode)
+            nhiExtendTreatmentProcedureRepository.existsByA71AndA73(match.getDate(), subCode)
         ) {
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getDate());
 
