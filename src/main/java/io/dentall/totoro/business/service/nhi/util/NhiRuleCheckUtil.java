@@ -1032,6 +1032,34 @@ public class NhiRuleCheckUtil {
     }
 
     /**
+     * 檢查同一處置單，是否沒有健保定義 必須 包含的診療
+     *
+     * @param dto 使用 includeNhiCodes
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO isMustIncludeNhiCod(NhiRuleCheckDTO dto, List<String> mustIncludeCodes) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("檢查同一處置單，是否沒有健保定義必須包含的診療")
+            .validated(true);
+
+        List<String> parsedCodes = this.parseNhiCode(mustIncludeCodes);
+
+        if (dto.getIncludeNhiCodes().stream()
+            .filter(Objects::nonNull)
+            .noneMatch(parsedCodes::contains)) {
+            result.message(
+                String.format(
+                    "必須與 %s 同時申報",
+                    mustIncludeCodes.toString()
+                )
+            );
+        }
+
+        return result;
+    }
+
+    /**
      * 條件式群
      */
     // 小於 12 歲
