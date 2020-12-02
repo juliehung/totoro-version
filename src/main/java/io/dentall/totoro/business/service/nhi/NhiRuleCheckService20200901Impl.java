@@ -224,6 +224,41 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             vm
         );
 
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().contains("91004C")
+        ) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeSetBeforeDate(dto,
+                    "91014C",
+                    "91004C",
+                    DateTimeUtil.NHI_12_MONTH
+                    ),
+                vm
+            );
+        } else if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().contains("91005C")
+        ) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeSetBeforeDate(dto,
+                    "91014C",
+                    "91005C",
+                    DateTimeUtil.NHI_12_MONTH
+                ),
+                vm
+            );
+        } else if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().contains("91020C")
+        ) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeSetBeforeDate(dto,
+                    "91014C",
+                    "91020C",
+                    DateTimeUtil.NHI_6_MONTH
+                ),
+                vm
+            );
+        }
+
         return vm;
     }
 

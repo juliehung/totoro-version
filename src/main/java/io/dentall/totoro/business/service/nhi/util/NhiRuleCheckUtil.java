@@ -1057,7 +1057,7 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 檢查系統資料 main, sub code 是否曾在某時間段內出現
+     * 檢查 main, sub code 是否曾在某時間段內出現
      * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
      * @param mainCode 主代碼
      * @param subCode 次代碼
@@ -1067,7 +1067,7 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO isCodeSetBeforeDate(NhiRuleCheckDTO dto, String mainCode, String subCode, Period limitDays) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("檢查系統資料 main, sub code 是否曾在某時間段內出現")
+            .validateTitle("檢查 code set 是否在過去時間存在")
             .validated(true);
 
         LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
@@ -1089,6 +1089,51 @@ public class NhiRuleCheckUtil {
             nhiExtendTreatmentProcedureRepository.existsByA71AndA73(match.getA71(), subCode)
         ) {
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
+
+            result.validated(false)
+                .message(
+                    String.format(
+                        "建議 %s 後再行申報，近一次處置為系統中 %s",
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+
+                    )
+                );
+        }
+
+        return result;
+    }
+
+    /**
+     * 檢查 main, sub code 是否曾在某時間段內出現
+     * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
+     * @param mainCode 主代碼
+     * @param subCode 次代碼
+     * @param limitDays 限制時間
+     * @return
+     */
+    public NhiRuleCheckResultDTO isCodeSetBeforeDateByNhiMedicalRecord(NhiRuleCheckDTO dto, String mainCode, String subCode, Period limitDays) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("檢查 code set 是否在過去時間存在")
+            .validated(true);
+
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+
+        // 指定時間內是不是有 主代碼
+        NhiMedicalRecord match = this.findPatientMediaRecordAtCodesAndBeforePeriod(
+            dto.getPatient().getId(),
+            currentTxDate,
+            Arrays.asList(mainCode),
+            limitDays);
+
+        // 時間內已有 主代碼，在相同 a71 下，是否存在 次代碼，若有則出錯誤訊息
+        if (match != null &&
+            match.getId() != null &&
+            StringUtils.isNotBlank(match.getDate()) &&
+            nhiExtendTreatmentProcedureRepository.existsByA71AndA73(match.getDate(), subCode)
+        ) {
+            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getDate());
 
             result.validated(false)
                 .message(
