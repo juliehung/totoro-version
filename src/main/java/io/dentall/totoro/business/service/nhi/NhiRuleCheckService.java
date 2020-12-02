@@ -21,6 +21,8 @@ public interface NhiRuleCheckService<A, B, O> {
 
     O validate91005C(B dto);
 
+    O validate91014C(B dto);
+
     O validate91015C(B dto);
 
     O validate91016C(B dto);
