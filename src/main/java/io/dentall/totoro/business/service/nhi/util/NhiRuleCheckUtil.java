@@ -703,8 +703,7 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO addNotificationWithClause(
         NhiRuleCheckDTO dto,
         String message,
-        Predicate<NhiRuleCheckDTO>
-            ...predicates
+        Predicate<NhiRuleCheckDTO>...predicates
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.NONE)
