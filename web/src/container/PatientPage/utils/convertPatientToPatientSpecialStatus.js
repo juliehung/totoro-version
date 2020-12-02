@@ -24,12 +24,17 @@ export default function convertPatientToPatientSpecialStatus(patient) {
   }
 
   if (group.OTHER) {
+    others.subTitle = group.OTHER.filter(o => o.id !== tagPregnantId && o.id !== tagSmokingId)
+      .map(a => a.name)
+      .join(', ');
+    others.title = others?.subTitle && '其他';
+
     if (group.OTHER.find(o => o.id === tagPregnantId)) {
       pregnant.title = '懷孕中';
     }
 
     if (group.OTHER.find(o => o.id === tagSmokingId)) {
-      smoking.title = '吸煙中';
+      smoking.title = '吸煙';
     }
   }
 
