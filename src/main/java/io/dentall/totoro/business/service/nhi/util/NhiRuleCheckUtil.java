@@ -7,7 +7,10 @@ import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.config.TimeConfig;
-import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.NhiMedicalRecord;
+import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
@@ -29,6 +32,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 共用的 rule check 邏輯會整合在這裡。
@@ -1043,13 +1047,16 @@ public class NhiRuleCheckUtil {
 
         List<String> parsedCodes = this.parseNhiCode(mustIncludeCodes);
 
-        if (dto.getIncludeNhiCodes() == null &&
+        if (dto.getIncludeNhiCodes() == null ||
             dto.getIncludeNhiCodes().stream()
-            .filter(Objects::nonNull)
-            .noneMatch(parsedCodes::contains)) {
+                .filter(Objects::nonNull)
+                .filter(parsedCodes::contains)
+                .collect(Collectors.toList())
+                .size() == 1
+        ) {
             result.message(
                 String.format(
-                    "必須與 %s 同時申報",
+                    "必須且僅能與 %s 其一，同時申報",
                     mustIncludeCodes.toString()
                 )
             );
