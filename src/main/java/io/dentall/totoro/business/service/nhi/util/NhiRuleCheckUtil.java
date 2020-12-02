@@ -1037,7 +1037,7 @@ public class NhiRuleCheckUtil {
      * @param dto 使用 includeNhiCodes
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO isMustIncludeNhiCod(NhiRuleCheckDTO dto, List<String> mustIncludeCodes) {
+    public NhiRuleCheckResultDTO isMustIncludeNhiCode(NhiRuleCheckDTO dto, List<String> mustIncludeCodes) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
             .validateTitle("檢查同一處置單，是否沒有健保定義必須包含的診療")
