@@ -24,13 +24,6 @@ export default function convertPatientToPatientSpecialStatus(patient) {
   }
 
   if (group.OTHER) {
-    others.title = '其他';
-    others.subTitle = group.OTHER
-      // filter pregnant and smoking
-      .filter(o => o.id !== tagPregnantId && o.id !== tagSmokingId)
-      .map(a => a.name)
-      .join(', ');
-
     if (group.OTHER.find(o => o.id === tagPregnantId)) {
       pregnant.title = '懷孕中';
     }
