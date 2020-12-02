@@ -6,6 +6,7 @@ public enum ToothConstraint {
     BACK_TOOTH("^[1-4][4-8]$|^[5-8][4-5]$|^[1-9]9$", "請填入正確牙位後，再次點擊檢查代碼\n可填範圍: 14-18,24-28,34-38,44-48,54-55,64-65,74-75,84-85,19,29,39,49,59,69,79,89,99"),
     PERMANENT_TOOTH("^[1-4][1-9]$|99", "請填入正確牙位後，再次點擊檢查代碼\n可填範圍: 11-19,21-29,31-39,41-49,99"),
     PARTIAL_ZONE("UB|LB|UR|UL|LR|LL", "請填入正確牙位後，再次點擊檢查代碼\n可填範圍: UB, LB, UR, UL, LR, LL"),
+    FOUR_PHASE_ZONE("UR|UL|LR|LL", "請填入正確牙位後，再次點擊檢查代碼\n可填範圍: UR, UL, LR, LL"),
     FULL_ZONE("FM", "請填入正確牙位後，再次點擊檢查代碼\n可填範圍: FM");
 
     private String message;
