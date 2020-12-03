@@ -51,9 +51,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList("01272C", "01273C", "00315C", "00316C", "00317C"),
-                DateTimeUtil.NHI_12_MONTH),
+            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
+                Arrays.asList("34001C", "34004C")
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoTreatmentInPeriod(dto,
+                DateTimeUtil.NHI_36_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification("申報時應檢附Panoramic radiography環口全景X光片攝影。"),
+            vm
+        );
+
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification("病歷中除應記載缺牙部位、牙冠牙橋與阻生齒外，應記載X光片呈現之診斷與發現。"),
             vm
         );
 
