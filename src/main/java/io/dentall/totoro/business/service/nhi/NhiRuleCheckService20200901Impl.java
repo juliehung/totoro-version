@@ -63,6 +63,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             vm
         );
 
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentInPeriodByNhiMedicalRecord(dto),
+                vm
+            );
+        }
+
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification("申報時應檢附Panoramic radiography環口全景X光片攝影。"),
             vm
