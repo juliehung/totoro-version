@@ -796,21 +796,23 @@ public class NhiRuleCheckUtil {
                 limitDays,
                 dto.getExcludeTreatmentProcedureIds());
 
-        Set<ToothUtil.ToothPhase> matchPhaseSet = ToothUtil.markAsPhase(
-            ToothUtil.splitA74(match.getA74()));
+        if (match != null) {
+            Set<ToothUtil.ToothPhase> matchPhaseSet = ToothUtil.markAsPhase(
+                ToothUtil.splitA74(match.getA74()));
 
-        if (currentPhaseSet.stream().anyMatch(matchPhaseSet::contains)) {
-            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
+            if (currentPhaseSet.stream().anyMatch(matchPhaseSet::contains)) {
+                LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
 
-            result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .message(
-                    String.format(
-                        "建議次月再行申報，近一次處置為系統中 %s",
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
-                    )
-                );
+                result
+                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                    .message(
+                        String.format(
+                            "建議次月再行申報，近一次處置為系統中 %s",
+                            DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                            DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+                        )
+                    );
+            }
         }
 
         return result;
@@ -846,21 +848,24 @@ public class NhiRuleCheckUtil {
             codes,
             limitDays);
 
-        Set<ToothUtil.ToothPhase> matchPhaseSet = ToothUtil.markAsPhase(
-            ToothUtil.splitA74(match.getPart()));
+        if (match != null) {
+            Set<ToothUtil.ToothPhase> matchPhaseSet = ToothUtil.markAsPhase(
+                ToothUtil.splitA74(match.getPart()));
 
-        if (currentPhaseSet.stream().anyMatch(matchPhaseSet::contains)) {
-            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getPart());
+            if (currentPhaseSet.stream().anyMatch(matchPhaseSet::contains)) {
+                LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getPart());
 
-            result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .message(
-                    String.format(
-                        "建議次月再行申報，近一次處置為系統中 %s",
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
-                    )
-                );
+                result
+                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                    .message(
+                        String.format(
+                            "建議次月再行申報，近一次處置為系統中 %s",
+                            DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                            DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+                        )
+                    );
+            }
+
         }
 
         return result;
