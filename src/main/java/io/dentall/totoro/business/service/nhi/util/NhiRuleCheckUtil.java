@@ -1069,10 +1069,16 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
+    /**
+     * 檢查系統資料，過去時間，包含任何治療紀錄
+     *
+     * @param dto 使用 patient id
+     * @return 後續檢核統一 `回傳` 的介面
+     */
     public NhiRuleCheckResultDTO isNoTreatmentInPeriod(NhiRuleCheckDTO dto, Period limitDays) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("檢查過去時間，是否有任何處置")
+            .validateTitle("檢查系統資料，過去時間，包含任何治療紀錄查過去時間")
             .validated(true);
 
 
@@ -1088,12 +1094,12 @@ public class NhiRuleCheckUtil {
             currentDate != null
         ) {
             Optional<NhiExtendTreatmentProcedureTable> optionalNetpt = nhiExtendTreatmentProcedureRepository
-                .findByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndTreatmentProcedure_Disposal_DateTimeBetween(
+                .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndTreatmentProcedure_Disposal_DateTimeBetween(
                     dto.getPatient().getId(),
                     currentDate,
                     currentDate.plus(limitDays)
                 );
-            
+
             if (optionalNetpt.isPresent()) {
                 result.validated(false)
                     .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
@@ -1102,6 +1108,58 @@ public class NhiRuleCheckUtil {
                             "建議 %s 後再行申報，近一次處置為系統中 %s",
                             currentDate.plus(limitDays),
                             DateTimeUtil.transformA71ToDisplay(optionalNetpt.get().getA71())
+                        )
+                    );
+            }
+
+        }
+
+        return result;
+    }
+
+    /**
+     * 檢查IC紀錄，過去三年時間，包含任何治療紀錄
+     *
+     * @param dto 使用 patient id
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO isNoTreatmentInPeriodByNhiMedicalRecord(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("檢查IC紀錄，過去時間，包含任何治療紀錄")
+            .validated(true);
+
+
+        LocalDate currentDate = null;
+        if (dto.getNhiExtendTreatmentProcedure() != null &&
+            dto.getNhiExtendTreatmentProcedure().getA71() != null
+        ) {
+            currentDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+        }
+
+        if (dto.getPatient() != null &&
+            dto.getPatient().getId() != null &&
+            currentDate != null
+        ) {
+            String ym1st = DateTimeUtil.transformLocalDateToRocDate(Instant.from(currentDate)).substring(0, 5).concat("%");
+            String ym2nd = DateTimeUtil.transformLocalDateToRocDate(Instant.from(currentDate.minusYears(1))).substring(0, 5).concat("%");
+            String ym3th = DateTimeUtil.transformLocalDateToRocDate(Instant.from(currentDate.minusYears(2))).substring(0, 5).concat("%");
+
+            Optional<NhiMedicalRecord> optionalNmr = nhiMedicalRecordRepository.findTop1ByNhiExtendPatient_Patient_IdAndDateLikeOrDateLikeOrDateLike(
+                dto.getPatient().getId(),
+                ym1st,
+                ym2nd,
+                ym3th
+            );
+
+            if (optionalNmr.isPresent()) {
+                result.validated(false)
+                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                    .message(
+                        String.format(
+                            "建議 %s 後再行申報，近一次處置為健保IC卡中 %s",
+                            currentDate.plus(DateTimeUtil.NHI_36_MONTH),
+                            DateTimeUtil.transformA71ToDisplay(optionalNmr.get().getDate())
                         )
                     );
             }
