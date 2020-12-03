@@ -136,12 +136,12 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
             NhiMedicalRecordVM vm = new NhiMedicalRecordVM();
             vm.setNhiMedicalRecord(e);
             if (e.getNhiCategory() != null && e.getNhiCategory().equals(NhiMedicalRecordCategory.MEDICINE.getNumber())) {
-                NhiMedicine m = nhiMedicineRepository.findTop1ByMedicineCodeOrderByIdDesc(e.getNhiCode());
+                NhiMedicine m = nhiMedicineRepository.findTop1ByMedicineCodeAndMedicineMandarinIsNotNullOrderByIdDesc(e.getNhiCode());
                 if (m != null) {
                     vm.setMandarin(m.getMedicineMandarin());
                 }
-            } else if (e.getNhiCategory() != null && e.getNhiCategory().equals(NhiMedicalRecordCategory.TX.getNumber())) {
-                NhiTx t = nhiTxRepository.findTop1ByNhiCodeOrderByIdDesc(e.getNhiCode());
+            } else {
+                NhiTx t = nhiTxRepository.findTop1ByNhiCodeAndNhiMandarinIsNotNullOrderByIdDesc(e.getNhiCode());
                 if (t != null) {
                     vm.setMandarin(t.getNhiMandarin());
                 }
