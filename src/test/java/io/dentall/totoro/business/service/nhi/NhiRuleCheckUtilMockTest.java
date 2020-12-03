@@ -204,7 +204,7 @@ public class NhiRuleCheckUtilMockTest {
     @Test
     public void findPatientMediaRecordAtCodesAndBeforePeriod_1() {
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -229,7 +229,7 @@ public class NhiRuleCheckUtilMockTest {
         fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -254,7 +254,7 @@ public class NhiRuleCheckUtilMockTest {
         fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
                 eq(DataGenerator.ID_2),
                 anyList()
             ))
@@ -279,7 +279,7 @@ public class NhiRuleCheckUtilMockTest {
         fakeNmr.setNhiCode(DataGenerator.NHI_CODE_2);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -304,7 +304,7 @@ public class NhiRuleCheckUtilMockTest {
         fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -329,7 +329,7 @@ public class NhiRuleCheckUtilMockTest {
         fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -1653,7 +1653,7 @@ public class NhiRuleCheckUtilMockTest {
         dto.setNhiExtendTreatmentProcedure(netp);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
                 DataGenerator.ID_1,
                 DataGenerator.NHI_CODE_LIST_1
             ))
@@ -1693,7 +1693,7 @@ public class NhiRuleCheckUtilMockTest {
         netpMocking.setPart(DataGenerator.TOOTH_PERMANENT_3);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
                 DataGenerator.ID_1,
                 DataGenerator.NHI_CODE_LIST_1
             ))
@@ -1733,7 +1733,7 @@ public class NhiRuleCheckUtilMockTest {
         netpMocking.setPart(DataGenerator.TOOTH_PERMANENT_3);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
                 DataGenerator.ID_1,
                 DataGenerator.NHI_CODE_LIST_1
             ))
@@ -1773,7 +1773,7 @@ public class NhiRuleCheckUtilMockTest {
         netpMocking.setPart(DataGenerator.TOOTH_PERMANENT_3);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
                 DataGenerator.ID_1,
                 DataGenerator.NHI_CODE_LIST_1
             ))
