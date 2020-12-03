@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NhiTxRepository extends JpaRepository<NhiTx, Long> {
-    NhiTx findTop1ByNhiCodeOrderByIdDesc(String code);
+    NhiTx findTop1ByNhiCodeAndNhiMandarinIsNotNullOrderByIdDesc(String code);
 }
