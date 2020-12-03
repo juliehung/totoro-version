@@ -750,6 +750,7 @@ public class NhiRuleCheckUtil {
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.get(0).getA71());
 
             result
+                .validated(false)
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
                     String.format(
@@ -804,6 +805,7 @@ public class NhiRuleCheckUtil {
                 LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
 
                 result
+                    .validated(false)
                     .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                     .message(
                         String.format(
@@ -856,6 +858,7 @@ public class NhiRuleCheckUtil {
                 LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getPart());
 
                 result
+                    .validated(false)
                     .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                     .message(
                         String.format(
@@ -905,6 +908,7 @@ public class NhiRuleCheckUtil {
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.get(0).getDate());
 
             result
+                .validated(false)
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
                     String.format(
@@ -947,6 +951,7 @@ public class NhiRuleCheckUtil {
             LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getDate());
 
             result
+                .validated(false)
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .nhiRuleCheckSourceType(NhiRuleCheckSourceType.NHI_CARD_RECORD)
                 .message(
