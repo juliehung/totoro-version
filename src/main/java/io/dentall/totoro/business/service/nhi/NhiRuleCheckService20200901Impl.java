@@ -101,7 +101,25 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
     public NhiRuleCheckResultVM validate91001C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList("91001C"),
+                DateTimeUtil.startDayOfMonthDiff(
+                    DateTimeUtil.transformROCDateToLocalDate(
+                        dto.getNhiExtendTreatmentProcedure().getA71()))),
+            vm
+        );
 
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                    Arrays.asList("91001C"),
+                    DateTimeUtil.startDayOfMonthDiff(
+                        DateTimeUtil.transformROCDateToLocalDate(
+                            dto.getNhiExtendTreatmentProcedure().getA71()))),
+                vm
+            );
+        }
 
         return vm;
     }

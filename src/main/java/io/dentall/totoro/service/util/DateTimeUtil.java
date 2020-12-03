@@ -115,5 +115,8 @@ public final class DateTimeUtil {
         return format;
     };
 
+    public static Period startDayOfMonthDiff(LocalDate current) {
+        return Period.between(LocalDate.of(current.getYear(), current.getMonth(), 1), current);
+    }
 
 }

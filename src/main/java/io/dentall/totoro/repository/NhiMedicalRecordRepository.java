@@ -21,4 +21,6 @@ public interface NhiMedicalRecordRepository extends JpaRepository<NhiMedicalReco
     List<NhiMedicalRecord> findByNhiExtendPatient_Patient_IdAndNhiCodeIn(Long id, List<String> codes);
 
     Optional<NhiMedicalRecord> findTop1ByNhiExtendPatient_Patient_IdAndDateLikeOrDateLikeOrDateLike(Long patientId, String ym1st, String ym2nd, String ym3th);
+
+    List<NhiMedicalRecord> findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(Long id, List<String> codes);
 }
