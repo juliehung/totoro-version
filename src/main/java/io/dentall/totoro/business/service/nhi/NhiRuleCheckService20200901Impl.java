@@ -46,6 +46,20 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return rvm;
     }
 
+    // 012***
+    public NhiRuleCheckResultVM validate01271C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList("01272C", "01273C", "00315C", "00316C", "00317C"),
+                DateTimeUtil.NHI_12_MONTH),
+            vm
+        );
+
+        return vm;
+    }
+
     // 900***
     public NhiRuleCheckResultVM validate90012C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -57,7 +71,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         return vm;
     }
-    
+
     // 910***
     @Override
     public NhiRuleCheckResultVM validate91003C(NhiRuleCheckDTO dto) {
