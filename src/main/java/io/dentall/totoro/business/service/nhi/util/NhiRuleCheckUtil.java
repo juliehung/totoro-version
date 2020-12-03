@@ -482,7 +482,7 @@ public class NhiRuleCheckUtil {
 
         List<String> parsedCodes = this.parseNhiCode(codes);
 
-        nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+        nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
             patientId,
             parsedCodes)
             .stream()
@@ -574,7 +574,7 @@ public class NhiRuleCheckUtil {
 
         List<String> parsedCodes = this.parseNhiCode(codes);
 
-        nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
+        nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
             patientId,
             parsedCodes)
             .stream()
@@ -617,7 +617,7 @@ public class NhiRuleCheckUtil {
 
         List<String> parsedCodes = this.parseNhiCode(codes);
 
-        nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
+        nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
             patientId,
             parsedCodes)
             .stream()
