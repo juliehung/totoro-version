@@ -134,11 +134,8 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(dto,
+                nhiRuleCheckUtil.isCodeBeforeDateWithSamePhase(dto,
                     Arrays.asList("91001C"),
-                    DateTimeUtil.startDayOfMonthDiff(
-                        DateTimeUtil.transformROCDateToLocalDate(
-                            dto.getNhiExtendTreatmentProcedure().getA71())),
                     DateTimeUtil.startDayOfMonthDiff(
                         DateTimeUtil.transformROCDateToLocalDate(
                             dto.getNhiExtendTreatmentProcedure().getA71()))
@@ -149,11 +146,8 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(dto,
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecordWithSamePhase(dto,
                     Arrays.asList("91001C"),
-                    DateTimeUtil.startDayOfMonthDiff(
-                        DateTimeUtil.transformROCDateToLocalDate(
-                            dto.getNhiExtendTreatmentProcedure().getA71())),
                     DateTimeUtil.startDayOfMonthDiff(
                         DateTimeUtil.transformROCDateToLocalDate(
                             dto.getNhiExtendTreatmentProcedure().getA71()))
