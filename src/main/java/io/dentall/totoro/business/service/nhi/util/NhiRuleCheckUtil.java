@@ -1022,7 +1022,9 @@ public class NhiRuleCheckUtil {
             dto.getIncludeNhiCodes().stream()
             .filter(Objects::nonNull)
             .anyMatch(parsedCodes::contains)) {
-            result.message(
+            result.validated(false)
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .message(
               String.format(
                   "不得與 %s 同時申報",
                   conflictCodes.toString()
@@ -1054,12 +1056,56 @@ public class NhiRuleCheckUtil {
                 .collect(Collectors.toList())
                 .size() != 1
         ) {
-            result.message(
+            result.validated(false)
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .message(
                 String.format(
                     "必須且僅能與 %s 其一，同時申報",
                     mustIncludeCodes.toString()
                 )
             );
+        }
+
+        return result;
+    }
+
+    public NhiRuleCheckResultDTO isNoTreatmentInPeriod(NhiRuleCheckDTO dto, Period limitDays) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("檢查過去時間，是否有任何處置")
+            .validated(true);
+
+
+        LocalDate currentDate = null;
+        if (dto.getNhiExtendTreatmentProcedure() != null &&
+            dto.getNhiExtendTreatmentProcedure().getA71() != null
+        ) {
+            currentDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+        }
+
+        if (dto.getPatient() != null &&
+            dto.getPatient().getId() != null &&
+            currentDate != null
+        ) {
+            Optional<NhiExtendTreatmentProcedureTable> optionalNetpt = nhiExtendTreatmentProcedureRepository
+                .findByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndTreatmentProcedure_Disposal_DateTimeBetween(
+                    dto.getPatient().getId(),
+                    currentDate,
+                    currentDate.plus(limitDays)
+                );
+            
+            if (optionalNetpt.isPresent()) {
+                result.validated(false)
+                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                    .message(
+                        String.format(
+                            "建議 %s 後再行申報，近一次處置為系統中 %s",
+                            currentDate.plus(limitDays),
+                            DateTimeUtil.transformA71ToDisplay(optionalNetpt.get().getA71())
+                        )
+                    );
+            }
+
         }
 
         return result;

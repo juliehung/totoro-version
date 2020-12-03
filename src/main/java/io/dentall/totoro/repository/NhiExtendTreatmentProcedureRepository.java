@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -61,5 +62,11 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
     <T> Optional<T> findByIdAndA73AndTreatmentProcedure_Disposal_Registration_Appointment_Patient_Id(Long treatmentProcedureId, String a73, Long patientId, Class<T> type);
 
     <T> Optional<T> findById(Long id, Class<T> type);
+
+    Optional<NhiExtendTreatmentProcedureTable> findByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndTreatmentProcedure_Disposal_DateTimeBetween(
+        Long patientId,
+        LocalDate begin,
+        LocalDate end
+    );
 
 }
