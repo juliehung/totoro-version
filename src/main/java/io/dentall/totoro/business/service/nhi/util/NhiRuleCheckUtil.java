@@ -754,7 +754,7 @@ public class NhiRuleCheckUtil {
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
                     String.format(
-                        "建議次月再行申報，近一次處置為系統中 %s",
+                        "建議 %s 再行申報，近一次處置為系統中 %s",
                         DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
                         DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
                     )
@@ -809,7 +809,7 @@ public class NhiRuleCheckUtil {
                     .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                     .message(
                         String.format(
-                            "建議次月再行申報，近一次處置為系統中 %s",
+                            "建議 %s 再行申報，近一次處置為系統中 %s",
                             DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
                             DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
                         )
