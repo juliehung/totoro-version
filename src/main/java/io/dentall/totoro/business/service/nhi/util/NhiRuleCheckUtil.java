@@ -527,7 +527,7 @@ public class NhiRuleCheckUtil {
 
         List<String> parsedCodes = this.parseNhiCode(codes);
 
-        nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOOrderByA71Desc(
+        nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
             patientId,
             parsedCodes)
             .stream()
