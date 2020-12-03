@@ -102,21 +102,62 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
+                Arrays.asList("91003C~91005C", "91017C", "91019C", "91103C", "91104C")
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateWithMaxTimes(dto,
                 Arrays.asList("91001C"),
                 DateTimeUtil.startDayOfMonthDiff(
                     DateTimeUtil.transformROCDateToLocalDate(
-                        dto.getNhiExtendTreatmentProcedure().getA71()))),
+                        dto.getNhiExtendTreatmentProcedure().getA71())),
+                2
+            ),
             vm
         );
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecordWithMaxTimes(dto,
                     Arrays.asList("91001C"),
                     DateTimeUtil.startDayOfMonthDiff(
                         DateTimeUtil.transformROCDateToLocalDate(
-                            dto.getNhiExtendTreatmentProcedure().getA71()))),
+                            dto.getNhiExtendTreatmentProcedure().getA71())),
+                    2
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(dto,
+                    Arrays.asList("91001C"),
+                    DateTimeUtil.startDayOfMonthDiff(
+                        DateTimeUtil.transformROCDateToLocalDate(
+                            dto.getNhiExtendTreatmentProcedure().getA71())),
+                    DateTimeUtil.startDayOfMonthDiff(
+                        DateTimeUtil.transformROCDateToLocalDate(
+                            dto.getNhiExtendTreatmentProcedure().getA71()))
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(dto,
+                    Arrays.asList("91001C"),
+                    DateTimeUtil.startDayOfMonthDiff(
+                        DateTimeUtil.transformROCDateToLocalDate(
+                            dto.getNhiExtendTreatmentProcedure().getA71())),
+                    DateTimeUtil.startDayOfMonthDiff(
+                        DateTimeUtil.transformROCDateToLocalDate(
+                            dto.getNhiExtendTreatmentProcedure().getA71()))
+                ),
                 vm
             );
         }

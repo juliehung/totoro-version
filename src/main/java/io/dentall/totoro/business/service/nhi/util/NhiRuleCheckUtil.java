@@ -764,6 +764,113 @@ public class NhiRuleCheckUtil {
     }
 
     /**
+     * 指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays，且相同象限。
+     *
+     * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
+     * @param codes     被限制的健保代碼清單
+     * @param limitDays 間隔時間
+     * @param maxTimes  時間內最大次數
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO isCodeBeforeDateWithSamePhase(
+        @NotNull NhiRuleCheckDTO dto,
+        @NotNull List<String> codes,
+        @NotNull Period limitDays,
+        int maxTimes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays，且相同象限")
+            .validated(true);
+
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+
+        // 列出被驗證之牙位所佔象限
+        List<String> teeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
+        Set<ToothUtil.ToothPhase> currentPhaseSet = ToothUtil.markAsPhase(teeth);
+
+        // 檢核 nhi extend treatment procedure
+        NhiExtendTreatmentProcedure match =
+            this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+                dto.getPatient().getId(),
+                dto.getNhiExtendTreatmentProcedure().getId(),
+                currentTxDate,
+                codes,
+                limitDays,
+                dto.getExcludeTreatmentProcedureIds());
+
+        Set<ToothUtil.ToothPhase> matchPhaseSet = ToothUtil.markAsPhase(
+            ToothUtil.splitA74(match.getA74()));
+
+        if (currentPhaseSet.stream().anyMatch(matchPhaseSet::contains)) {
+            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
+
+            result
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .message(
+                    String.format(
+                        "建議次月再行申報，近一次處置為系統中 %s",
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+                    )
+                );
+        }
+
+        return result;
+    }
+
+    /**
+     * 指定的診療項目，在病患過去紀錄中（來自IC卡資料的紀錄），是否已經包含 codes，且未達間隔 limitDays，且相同象限。
+     *
+     * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
+     * @param codes     被限制的健保代碼清單
+     * @param limitDays 間隔時間
+     * @param maxTimes  時間內最大次數
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO isCodeBeforeDateByNhiMedicalRecordWithSamePhase(
+        @NotNull NhiRuleCheckDTO dto,
+        @NotNull List<String> codes,
+        @NotNull Period limitDays,
+        int maxTimes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("指定的診療項目，在病患過去紀錄中（來自IC卡資料的紀錄），是否已經包含 codes，且未達間隔 limitDays，且相同象限")
+            .validated(true);
+
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+
+        // 列出被驗證之牙位所佔象限
+        List<String> teeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
+        Set<ToothUtil.ToothPhase> currentPhaseSet = ToothUtil.markAsPhase(teeth);
+
+        // 檢核 nhi extend treatment procedure
+        NhiMedicalRecord match = this.findPatientMediaRecordAtCodesAndBeforePeriod(
+            dto.getPatient().getId(),
+            currentTxDate,
+            codes,
+            limitDays);
+
+        Set<ToothUtil.ToothPhase> matchPhaseSet = ToothUtil.markAsPhase(
+            ToothUtil.splitA74(match.getPart()));
+
+        if (currentPhaseSet.stream().anyMatch(matchPhaseSet::contains)) {
+            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getPart());
+
+            result
+                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .message(
+                    String.format(
+                        "建議次月再行申報，近一次處置為系統中 %s",
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+                    )
+                );
+        }
+
+        return result;
+    }
+
+    /**
      * 指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays，且超過 maxTimes。
      *
      * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
