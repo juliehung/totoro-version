@@ -1243,27 +1243,39 @@ public class NhiRuleCheckUtil {
             .validateTitle("當檢核都成功的狀況下，呼叫此 method 。查詢最近一筆的治療紀錄，並回傳成功訊息")
             .validated(true);
 
+        LocalDate currentDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+
         // 查詢系統最新一筆資料
-        Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable = Optional.empty();
+        List<NhiExtendTreatmentProcedureTable> netpts;
         if (dto.getNhiExtendDisposal() != null &&
             dto.getNhiExtendDisposal().getDisposal() != null &&
             dto.getNhiExtendDisposal().getDisposal().getId() != null
         ) {
-            optionalNhiExtendTreatmentProcedureTable = nhiExtendTreatmentProcedureRepository
-                .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_Disposal_IdNotAndTreatmentProcedure_IdNotInOrderByA71Desc(
+            netpts = nhiExtendTreatmentProcedureRepository
+                .findByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_Disposal_IdNotAndTreatmentProcedure_IdNotInOrderByA71Desc(
                     dto.getPatient().getId(),
                     dto.getNhiExtendTreatmentProcedure().getA73(),
                     dto.getNhiExtendDisposal().getDisposal().getId(),
                     dto.getExcludeTreatmentProcedureIds() == null ? Arrays.asList(0L) : dto.getExcludeTreatmentProcedureIds()
                 );
         } else {
-            optionalNhiExtendTreatmentProcedureTable = nhiExtendTreatmentProcedureRepository
-                .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_IdNotInOrderByA71Desc(
+            netpts = nhiExtendTreatmentProcedureRepository
+                .findByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_IdNotInOrderByA71Desc(
                     dto.getPatient().getId(),
                     dto.getNhiExtendTreatmentProcedure().getA73(),
                     dto.getExcludeTreatmentProcedureIds() == null ? Arrays.asList(0L) : dto.getExcludeTreatmentProcedureIds()
                 );
         }
+        // 取得紀錄中，離處置單時間最近的資料
+        Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable = netpts.stream().filter(netpt -> {
+            LocalDate historyDate = null;
+            if (netpt != null &&
+                netpt.getA71() != null
+            ) {
+                historyDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
+            }
+            return historyDate != null && historyDate.isEqual(currentDate) || historyDate != null && historyDate.isBefore(currentDate);
+        }).findFirst();
 
         if (optionalNhiExtendTreatmentProcedureTable.isPresent()) {
             result.message(
@@ -1276,9 +1288,19 @@ public class NhiRuleCheckUtil {
         }
 
         // 查詢已紀錄健保IC卡最新一筆資料
-        Optional<NhiMedicalRecord> optionalNhiMedicalRecord = nhiMedicalRecordRepository.findTop1ByNhiExtendPatient_Patient_IdAndNhiCodeOrderByDateDesc(
+        Optional<NhiMedicalRecord> optionalNhiMedicalRecord = nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeOrderByDateDesc(
             dto.getPatient().getId(),
-            dto.getNhiExtendTreatmentProcedure().getA73());
+            dto.getNhiExtendTreatmentProcedure().getA73()).stream()
+            .filter(nmr -> {
+                LocalDate historyDate = null;
+                if (nmr != null &&
+                    nmr.getDate() != null
+                ) {
+                    historyDate = DateTimeUtil.transformROCDateToLocalDate(nmr.getDate());
+                }
+                return historyDate != null && historyDate.isEqual(currentDate) || historyDate != null && historyDate.isBefore(currentDate);
+            })
+            .findFirst();
 
         if (optionalNhiMedicalRecord.isPresent()) {
             result.message(
@@ -1290,7 +1312,7 @@ public class NhiRuleCheckUtil {
             return result;
         }
 
-        return result.message("目前可申報（為提升準確率，請常讀取 IC 卡取得最新資訊）");
+        return result.message("系統及健保卡皆無紀錄，請查詢雲端藥歷取得正確資訊");
     }
 
     /**
