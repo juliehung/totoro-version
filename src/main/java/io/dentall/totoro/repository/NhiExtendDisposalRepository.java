@@ -3,6 +3,7 @@ package io.dentall.totoro.repository;
 import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
+import io.dentall.totoro.service.dto.CalculateBaseData;
 import io.dentall.totoro.service.dto.StatisticSpDTO;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.web.rest.vm.*;
@@ -358,4 +359,31 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
     long countByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
 
     <T> List<T> findByDisposal_TreatmentProcedures_Id(Long treatmentId, Class<T> clazz);
+
+    @Query(
+        nativeQuery = true,
+        value = "select " +
+            "d.id as disposalId, " +
+            "d.date_time as dateTime, " +
+            "ned.examination_code as examinationCode, " +
+            "ned.examination_point as examinationPoint, " +
+            "ned.patient_identity as patientIdentity, " +
+            "ned.serial_number as serialNumber, " +
+            "ned.a32 as copayment, " +
+            "np.code as txCode, " +
+            "tp.total as txPoint, " +
+            "np.specific_code as specificCode, " +
+            "a.patient_id as patientId, " +
+            "a.doctor_user_id as doctorId " +
+            "from disposal d " +
+            "    left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "    left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "    left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "    left join nhi_procedure np on tp.nhi_procedure_id = np.id " +
+            "    left join appointment a on d.registration_id = a.registration_id " +
+            "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
+            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
+            "order by d.id, tp.id "
+    )
+    List<CalculateBaseData> findCalculateBaseDataByDate(@Param("begin") LocalDate begin, @Param("end") LocalDate end);
 }
