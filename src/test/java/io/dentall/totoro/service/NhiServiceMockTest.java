@@ -168,7 +168,7 @@ public class NhiServiceMockTest {
 
         nhiExtendTreatmentProcedure.setId(fakeId1);
         nhiExtendTreatmentProcedure.setA73(code);
-        nhiExtendTreatmentProcedure.setA74("11");
+        nhiExtendTreatmentProcedure.setA74("111213");
 
         Rule rule = new Rule();
         rule.setInterval("MMx2;Qx1");
