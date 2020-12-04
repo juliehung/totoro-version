@@ -110,14 +110,20 @@ public class NhiStatisticBusinessResource {
         return new ResponseEntity<>(nhiStatisticService.getNhiIndexTreatmentProcedures(begin, end, excludeDisposalId), HttpStatus.OK);
     }
 
-    @GetMapping("/calculate-base")
-    public ResponseEntity<Map<Long, NhiStatisticDoctorSalary>> test(
+    @GetMapping("/doctor-salary")
+    public ResponseEntity<Map<Long, NhiStatisticDoctorSalary>> getDoctorSalary(
         @RequestParam LocalDate begin,
-        @RequestParam LocalDate end,
-        @RequestParam(required = false) Long doctorId,
-        @RequestParam(required = false) boolean groupByDisposal
+        @RequestParam LocalDate end
     ) {
         return new ResponseEntity<>(nhiStatisticService.getDoctorSalary(begin, end), HttpStatus.OK);
     }
 
+    @GetMapping("/doctor-salary/expands")
+    public ResponseEntity<Map<Long, NhiStatisticDoctorSalary>> getDoctorSalaryExpands(
+        @RequestParam LocalDate begin,
+        @RequestParam LocalDate end,
+        @RequestParam(required = false) Long doctorId
+    ) {
+        return new ResponseEntity<>(nhiStatisticService.getDoctorSalaryExpand(begin, end, doctorId), HttpStatus.OK);
+    }
 }
