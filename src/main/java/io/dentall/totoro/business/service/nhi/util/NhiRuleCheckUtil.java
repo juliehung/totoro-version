@@ -1039,7 +1039,7 @@ public class NhiRuleCheckUtil {
 
         List<String> parsedCodes = this.parseNhiCode(conflictCodes);
 
-        if (dto.getIncludeNhiCodes().stream()
+        if (dto.getIncludeNhiCodes() == null || dto.getIncludeNhiCodes().stream()
             .filter(Objects::nonNull)
             .anyMatch(parsedCodes::contains)) {
             result.message(
