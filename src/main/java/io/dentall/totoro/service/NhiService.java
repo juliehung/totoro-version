@@ -1038,7 +1038,7 @@ public class NhiService {
             for (String position : positions) {
                 for (Integer quadrant : Rule.getQuadrants(position)) {
                     quadrantsCount.put(quadrant, quadrantsCount.get(quadrant) + 1);
-                    if (quadrantsCount.get(quadrant) > limit) {
+                    if (quadrantsCount.get(quadrant) > limit * 3) {
                         LocalDate date = nhiExtTxPDates.get(0).getDate();
                         LocalDate dateBefore = nhiExtTxPDate.getDate();
                         String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";
