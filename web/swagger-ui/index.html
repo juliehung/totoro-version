@@ -68,12 +68,14 @@
 
                 initializeBaseUrl();
 
-                $('#select_baseUrl').change(function() {
-                    window.swaggerUi.headerView.trigger('update-swagger-ui', {
-                        url: $('#select_baseUrl').val()
+                if (sessionStorage.getItem("jhi-authenticationToken")) {
+                    $('#select_baseUrl').change(function() {
+                        window.swaggerUi.headerView.trigger('update-swagger-ui', {
+                            url: $('#select_baseUrl').val()
+                        });
+                        addApiKeyAuthorization();
                     });
-                    addApiKeyAuthorization();
-                });
+                }
 
                 function addApiKeyAuthorization() {
                     var authToken = JSON.parse(localStorage.getItem("jhi-authenticationToken") || sessionStorage.getItem("jhi-authenticationToken"));
@@ -136,26 +138,31 @@
         });
     </script>
     <script>
+        function callApi(location, un, pw) {
+            $.ajax({
+                url: 'http://localhost:8080/api/authenticate',
+                type: 'POST',
+                data: JSON.stringify({
+                    username: un,
+                    password: pw
+                }),
+                contentType: 'application/json',
+                success: function (response) {
+                    console.log("token: " + response.id_token);
+                    $("#message").text("authorized");
+                    sessionStorage.setItem("jhi-authenticationToken", JSON.stringify(response.id_token));
+                    location.reload();
+                }
+            });
+        }
+
         function validateForm() {
-            var un = document.loginform.usr.value;
-            var pw = document.loginform.pword.value;
+            let un = document.loginform.usr.value;
+            let pw = document.loginform.pword.value;
             if (un && pw) {
-                $.ajax({
-                    url: 'http://localhost:8080/api/authenticate',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        username: un,
-                        password: pw
-                    }),
-                    contentType: 'application/json',
-                    success: function (response) {
-                        console.log("token: " + response.id_token);
-                        $("#message").text("authorized");
-                        sessionStorage.setItem("jhi-authenticationToken", JSON.stringify(response.id_token));
-                    }
-                });
+                callApi(this.location, un, pw)
                 return false;
-            }          
+            }
             else {
                 alert("Login was unsuccessful, please check your username and password");
                 return false;
