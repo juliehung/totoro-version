@@ -18,6 +18,13 @@ const Container = styled.div`
   max-height: 85vh;
   font-size: 20px;
   overflow-y: scroll;
+  > div:nth-child(2) {
+    > span {
+      font-size: 14px;
+      line-height: 1.29;
+      color: #828991;
+    }
+  }
 `;
 
 const FormContainer = styled.div``;
@@ -38,8 +45,7 @@ const InfoContainer = styled.div`
   }
 
   & > div {
-    padding: 0.5em 1em;
-    min-height: 36px;
+    height: 45px;
   }
 
   color: #000;
@@ -51,6 +57,16 @@ const InfoRowContainer = styled.div`
   align-items: center;
   & > div {
     width: 33.3%;
+    height: 100%;
+    padding: 0.5em 1em;
+    display: flex;
+    align-items: center;
+    &:hover,
+    &:focus {
+      border-radius: 8px;
+      border: solid 2px #3266ff;
+      cursor: pointer;
+    }
   }
 `;
 
@@ -96,53 +112,56 @@ function Form(props) {
         <StyleRightCircleTwoTone />
         <span>資料確認</span>
       </div>
+      <div>
+        <span>&#x26B9;直接點擊表格編輯內容</span>
+      </div>
       <FormContainer>
         <Label>基本資訊</Label>
         <InfoContainer>
           <InfoRowContainer>
-            <div>
+            <div onClick={() => props.gotoPage(1)}>
               <InfoLabel>姓名:</InfoLabel>
               <Info>{displayData.name}</Info>
             </div>
-            <div>
+            <div onClick={() => props.gotoPage(2)}>
               <InfoLabel>生日:</InfoLabel>
               <Info>{displayData.birth}</Info>
             </div>
-            <div>
+            <div onClick={() => props.gotoPage(4)}>
               <InfoLabel>身分證字號:</InfoLabel>
               <Info>{displayData.nationalId}</Info>
             </div>
           </InfoRowContainer>
           <InfoRowContainer>
-            <div>
+            <div onClick={() => props.gotoPage(3)}>
               <InfoLabel>性別:</InfoLabel>
               <Info>{displayData.gender}</Info>
             </div>
-            <div>
+            <div onClick={() => props.gotoPage(5)}>
               <InfoLabel>血型:</InfoLabel>
               <Info>{displayData.bloodType}</Info>
             </div>
-            <div>
+            <div onClick={() => props.gotoPage(6)}>
               <InfoLabel>電話:</InfoLabel>
               <Info>{displayData.phone}</Info>
             </div>
           </InfoRowContainer>
           <InfoRowContainer>
-            <FlexGrowDiv>
+            <FlexGrowDiv onClick={() => props.gotoPage(7)}>
               <InfoLabel>地址:</InfoLabel>
               <Info>{displayData.address}</Info>
             </FlexGrowDiv>
-            <div>
+            <div onClick={() => props.gotoPage(8)}>
               <InfoLabel>職業:</InfoLabel>
               <Info>{displayData.career}</Info>
             </div>
           </InfoRowContainer>
           <InfoRowContainer>
-            <div>
+            <div onClick={() => props.gotoPage(9)}>
               <InfoLabel>婚姻:</InfoLabel>
               <Info>{displayData.marriage}</Info>
             </div>
-            <div>
+            <div onClick={() => props.gotoPage(10)}>
               <InfoLabel>介紹人:</InfoLabel>
               <Info>{displayData.introducer}</Info>
             </div>
@@ -151,15 +170,15 @@ function Form(props) {
         <Label>緊急聯絡</Label>
         <InfoContainer>
           <InfoRowContainer>
-            <div>
+            <div onClick={() => props.gotoPage(11)}>
               <InfoLabel>姓名:</InfoLabel>
               <Info>{displayData.emergencyContactName}</Info>
             </div>
-            <div>
+            <div onClick={() => props.gotoPage(12)}>
               <InfoLabel>電話:</InfoLabel>
               <Info>{displayData.emergencyContactPhone}</Info>
             </div>
-            <div>
+            <div onClick={() => props.gotoPage(13)}>
               <InfoLabel>關係:</InfoLabel>
               <Info>{displayData.emergencyContactRelationship}</Info>
             </div>
@@ -168,7 +187,7 @@ function Form(props) {
         <Label>疾病史</Label>
         <InfoContainer>
           <InfoRowContainer>
-            <FlexGrowDiv>
+            <FlexGrowDiv onClick={() => props.gotoPage(14)}>
               <Info>{displayData.disease}</Info>
             </FlexGrowDiv>
           </InfoRowContainer>
@@ -176,7 +195,7 @@ function Form(props) {
         <Label>血液疾病史</Label>
         <InfoContainer>
           <InfoRowContainer>
-            <FlexGrowDiv>
+            <FlexGrowDiv onClick={() => props.gotoPage(15)}>
               <Info>{displayData.bloodDisease}</Info>
             </FlexGrowDiv>
           </InfoRowContainer>
@@ -184,11 +203,11 @@ function Form(props) {
         <Label>藥物</Label>
         <InfoContainer>
           <InfoRowContainer>
-            <FlexGrowDiv>
+            <FlexGrowDiv onClick={() => props.gotoPage(17)}>
               <InfoLabel>正在服用:</InfoLabel>
               <Info>{displayData.drug}</Info>
             </FlexGrowDiv>
-            <FlexGrowDiv>
+            <FlexGrowDiv onClick={() => props.gotoPage(16)}>
               <InfoLabel>過敏:</InfoLabel>
               <Info>{displayData.allergy}</Info>
             </FlexGrowDiv>
@@ -197,15 +216,20 @@ function Form(props) {
         <Label>特殊</Label>
         <InfoContainer>
           <InfoRowContainer>
-            <FlexGrowDiv>
-              <Info>{displayData.special}</Info>
+            <FlexGrowDiv onClick={() => props.gotoPage(19)}>
+              <InfoLabel>懷孕狀況:</InfoLabel>
+              <Info>{displayData.pregnant}</Info>
+            </FlexGrowDiv>
+            <FlexGrowDiv onClick={() => props.gotoPage(18)}>
+              <InfoLabel>吸菸狀況:</InfoLabel>
+              <Info>{displayData.smoking}</Info>
             </FlexGrowDiv>
           </InfoRowContainer>
         </InfoContainer>
         <Label>治療困難</Label>
         <InfoContainer>
           <InfoRowContainer>
-            <FlexGrowDiv>
+            <FlexGrowDiv onClick={() => props.gotoPage(20)}>
               <Info>{displayData.other}</Info>
             </FlexGrowDiv>
           </InfoRowContainer>

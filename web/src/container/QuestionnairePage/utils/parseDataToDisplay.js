@@ -73,6 +73,8 @@ export function parseDataToDisplay(data) {
     emergencyContactName,
     emergencyContactPhone,
     emergencyContactRelationship,
+    smoking,
+    pregnant,
   };
 }
 
