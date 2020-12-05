@@ -10,6 +10,7 @@ import { CookiesProvider } from 'react-cookie';
 import { HelmetProvider } from 'react-helmet-async';
 import { ConfigProvider } from 'antd';
 import 'antd/dist/antd.less';
+import 'react-image-gallery/styles/css/image-gallery.css';
 
 const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

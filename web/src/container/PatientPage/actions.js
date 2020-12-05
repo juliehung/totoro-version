@@ -31,6 +31,11 @@ import {
   CHANGE_TREATMENT_LIST_MODAL_VISIBLE,
   GET_NHI_PATIENT_STATUS,
   GET_NHI_PATIENT_STATUS_SUCCESS,
+  GET_PATIENT_IMAGES,
+  GET_PATIENT_IMAGES_SUCCESS,
+  CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES,
+  CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES_SUCCESS,
+  UPDATE_PATIENT_IMAGES_INDEX,
 } from './constant';
 
 export function changeDrawerVisible(visible) {
@@ -161,4 +166,25 @@ export function searchPatientSuccess(patients, searchText) {
 // treatment list modal
 export function changeTreatmentListModalVisible(visible) {
   return { type: CHANGE_TREATMENT_LIST_MODAL_VISIBLE, visible };
+}
+
+// patient images
+export function getPatientImages() {
+  return { type: GET_PATIENT_IMAGES };
+}
+
+export function getPatientImagesSuccess(patientImages) {
+  return { type: GET_PATIENT_IMAGES_SUCCESS, patientImages };
+}
+
+export function updatePatientImagesIndex(currentIndex = 0) {
+  return { type: UPDATE_PATIENT_IMAGES_INDEX, currentIndex };
+}
+
+export function changePageSizeToGetPatientImages(id, page, size, currentIndex) {
+  return { type: CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES, id, page, size, currentIndex };
+}
+
+export function changePageSizeToGetPatientImagesSuccess(patientImages, page, size) {
+  return { type: CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES_SUCCESS, patientImages, page, size };
 }

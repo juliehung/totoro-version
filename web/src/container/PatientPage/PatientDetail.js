@@ -32,7 +32,7 @@ function PatientDetail(props) {
     <Spin spinning={spinning}>
       <Container>
         <PatientDetailHeader />
-        <PatientDetailContent />
+        <PatientDetailContent id={id} />
         <AppointmentListModal />
         <TreatmentListModal />
         {!searchPatientDrawerOpen && <SearchPatientButton />}
