@@ -9,12 +9,14 @@ export default function convertPatientImagesToImageGallery(patientImages, curren
 
   return {
     currentImageDate,
-    patientImages: patientImages.map(images => {
-      return {
-        ...images,
-        original: images.url,
-        thumbnail: images.url,
-      };
-    }),
+    patientImages: patientImages
+      .map(images => {
+        return {
+          ...images,
+          original: images.url,
+          thumbnail: images.url,
+        };
+      })
+      .sort((a, b) => moment(b.createdDate) - moment(a.createdDate)),
   };
 }
