@@ -26,6 +26,8 @@ import {
   getDocNpHistorySuccess,
   getNhiPatientStatus,
   getNhiPatientStatusSuccess,
+  getPatientImages,
+  getPatientImagesSuccess,
 } from '../actions';
 
 export function* initPatientDetail() {
@@ -42,6 +44,7 @@ export function* initPatientDetail() {
       yield fork(getNhiExtendPatientSaga, id);
       yield fork(getAppointmentSaga, id);
       yield fork(getDocNpHistorySaga, id);
+      yield fork(getPatientImagesSaga, id);
     } catch (error) {
       yield put(patientNotFound());
     }
@@ -91,4 +94,10 @@ function* getDocNpHistorySaga(id) {
   yield put(getDocNpHistory());
   const docNps = yield call(DocNps.getByPid, id);
   yield put(getDocNpHistorySuccess(docNps));
+}
+
+function* getPatientImagesSaga(id) {
+  yield put(getPatientImages());
+  const patientImages = yield call(Patient.getImagesById, id);
+  yield put(getPatientImagesSuccess(patientImages));
 }

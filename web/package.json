@@ -33,6 +33,7 @@
     "react-dom": "^16.12.0",
     "react-ga": "^2.7.0",
     "react-helmet-async": "^1.0.7",
+    "react-image-gallery": "^1.0.8",
     "react-inlinesvg": "^1.2.0",
     "react-mobile-datepicker": "^4.0.2",
     "react-redux": "^7.2.2",
