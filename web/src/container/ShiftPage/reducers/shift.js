@@ -20,6 +20,7 @@ const initialState = {
   createShiftSuccess: false,
   editShiftSuccess: false,
   deleteSuccess: false,
+  loading: false,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -53,11 +54,13 @@ const shift = (state = initialState, action) =>
         draft.shift = [...state.shift, ...action.shifts];
         break;
       case EDIT_SHIFT_START:
+        draft.loading = true;
         draft.editShiftSuccess = initialState.editShiftSuccess;
         break;
       case EDIT_SHIFT_SUCCESS:
         draft.shift = [...state.shift.filter(s => !action.result.ids.find(id => id === s.id)), action.result.shift];
         draft.editShiftSuccess = true;
+        draft.loading = false;
         break;
       case LEAVE_PAGE:
         draft.createShiftSuccess = initialState.createShiftSuccess;
