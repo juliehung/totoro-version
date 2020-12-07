@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
-import { Spin } from 'antd';
+import { Empty, Spin } from 'antd';
 import styled from 'styled-components';
 import ImageGallery from 'react-image-gallery';
 import { Container, Header } from './component';
@@ -97,7 +97,7 @@ function PatientDetailImages(props) {
       <Content isFullScreen={isFullScreen}>
         {loading ? (
           <Spin className="spin-wrap" />
-        ) : patientImagesData?.patientImages ? (
+        ) : patientImagesData?.patientImages && patientImagesData?.patientImages.length > 0 ? (
           <Fragment>
             <ImageGallery
               items={patientImagesData?.patientImages}
@@ -151,7 +151,9 @@ function PatientDetailImages(props) {
             />
             <div className="upload-date-wrap">上傳於 {patientImagesData?.currentImageDate}</div>
           </Fragment>
-        ) : null}
+        ) : (
+          <Empty description="沒有資料" />
+        )}
       </Content>
     </Container>
   );

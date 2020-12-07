@@ -85,7 +85,6 @@ const ImageContainer = styled.div`
 
 function Form(props) {
   const { match, getDoc, patient } = props;
-  console.log('patient = ', patient);
 
   useEffect(() => {
     GAHelper.pageView();
