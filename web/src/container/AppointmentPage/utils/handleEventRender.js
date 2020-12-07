@@ -125,17 +125,17 @@ const ListWeekContainer = styled.div`
 `;
 
 const MenuStyle = styled(Menu)`
-  border-radius: ${props => (props.isFirstMenu ? '10px 10px 0 0' : '0 0 10px 10px')} !important;
+  border-radius: ${props => (props.is_first_menu === 'true' ? '8px 8px 0 0' : '0 0 8px 8px')} !important;
   padding: 3px !important;
   > li {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    border-radius: 10px;
+    border-radius: 8px;
     background-color: initial !important;
     color: rgba(0, 0, 0, 0.85);
     text-align: center !important;
     &:hover {
-      border-radius: 10px;
+      border-radius: 8px;
       background-color: #f5f5f5 !important;
       color: rgba(0, 0, 0, 0.85) !important;
 
@@ -148,13 +148,13 @@ const MenuStyle = styled(Menu)`
 
   > button {
     width: 100%;
-    border-radius: 10px !important;
+    border-radius: 8px !important;
     height: 40px;
     border: 0;
     box-shadow: none;
 
     &:hover {
-      border-radius: 10px;
+      border-radius: 8px;
       background-color: #fee1dd !important;
     }
 
@@ -270,18 +270,18 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
                 func.edit(appointment);
                 clickTitle();
               }}
-              isFirstMenu={true}
+              is_first_menu={'true'}
             >
               <Menu.Item key="edit" className="first-li">
                 編輯預約
               </Menu.Item>
             </MenuStyle>
             {status === 'CANCEL' ? (
-              <MenuStyle isFirstMenu={false}>
+              <MenuStyle is_first_menu={'false'}>
                 <RestoreAppointmentButton id={id} onConfirm={func.restore} className={'restore-appointment-btn'} />
               </MenuStyle>
             ) : (
-              <MenuStyle isFirstMenu={false}>
+              <MenuStyle is_first_menu={'false'}>
                 <CancelAppointmentButton id={id} onConfirm={func.cancel} className={'cancel-appointment-btn'} />
               </MenuStyle>
             )}
