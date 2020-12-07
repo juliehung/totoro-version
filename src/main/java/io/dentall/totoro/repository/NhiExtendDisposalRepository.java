@@ -364,7 +364,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
         nativeQuery = true,
         value = "select " +
             "d.id as disposalId, " +
-            "d.date_time as dateTime, " +
+            "d.date_time as disposalDate, " +
             "ned.examination_code as examinationCode, " +
             "ned.examination_point as examinationPoint, " +
             "ned.patient_identity as patientIdentity, " +
@@ -386,4 +386,33 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "order by d.id, tp.id "
     )
     List<CalculateBaseData> findCalculateBaseDataByDate(@Param("begin") LocalDate begin, @Param("end") LocalDate end);
+
+    @Query(
+        nativeQuery = true,
+        value = "select " +
+            "d.id as disposalId, " +
+            "d.date_time as disposalDate, " +
+            "ned.examination_code as examinationCode, " +
+            "ned.examination_point as examinationPoint, " +
+            "ned.patient_identity as patientIdentity, " +
+            "ned.serial_number as serialNumber, " +
+            "ned.a32 as copayment, " +
+            "np.code as txCode, " +
+            "tp.total as txPoint, " +
+            "np.specific_code as specificCode, " +
+            "a.patient_id as patientId, " +
+            "a.doctor_user_id as doctorId, " +
+            "p.name as patientName " +
+            "from disposal d " +
+            "    left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "    left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "    left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "    left join nhi_procedure np on tp.nhi_procedure_id = np.id " +
+            "    left join appointment a on d.registration_id = a.registration_id " +
+            "    left join patient p on a.patient_id = p.id " +
+            "where ned.a19 = '1' and ned.jhi_date between :begin and :end and a.doctor_user_id = :doctorId " +
+            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end and a.doctor_user_id = :doctorId " +
+            "order by d.id, tp.id "
+    )
+    List<CalculateBaseData> findCalculateBaseDataByDateAndDoctorId(@Param("begin") LocalDate begin, @Param("end") LocalDate end, @Param("doctorId") Long doctorId);
 }

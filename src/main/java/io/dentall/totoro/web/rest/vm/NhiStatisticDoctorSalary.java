@@ -1,5 +1,7 @@
 package io.dentall.totoro.web.rest.vm;
 
+import java.time.Instant;
+
 public class NhiStatisticDoctorSalary {
 
     /**
@@ -46,6 +48,45 @@ public class NhiStatisticDoctorSalary {
      * 總部分負擔
      */
     private Long copayment = 0L;
+
+    /**
+     * 病患號碼(expand 才有)
+     */
+    private Long patientId;
+
+    /**
+     * 病患姓名(expand 才有)
+     */
+    private Long patientName;
+
+    /**
+     * 治療時間(expand 才有)
+     */
+    private Instant disposalDate;
+
+    public Long getPatientId() {
+        return patientId;
+    }
+
+    public Long getPatientName() {
+        return patientName;
+    }
+
+    public void setPatientName(Long patientName) {
+        this.patientName = patientName;
+    }
+
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
+    }
+
+    public Instant getDisposalDate() {
+        return disposalDate;
+    }
+
+    public void setDisposalDate(Instant disposalDate) {
+        this.disposalDate = disposalDate;
+    }
 
     public Long getCopayment() {
         return copayment;

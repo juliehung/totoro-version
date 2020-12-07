@@ -6,6 +6,8 @@ public interface CalculateBaseData {
     // Disposal
     Long getDisposalId();
 
+    Instant getDisposalDate();
+
     // Nhi extend disposal
     Instant getDateTime();
 
@@ -30,5 +32,8 @@ public interface CalculateBaseData {
     Long getPatientId();
 
     Long getDoctorId();
+
+    // Patient
+    Long getPatientName();
 
 }
