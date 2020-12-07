@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20201204-Sql-1" author="WeiChen">
+        <sql dbms="postgresql" splitStatements="true">
+            INSERT INTO nhi_procedure (id,code,name,point,description,nhi_procedure_type_id,chief_complaint,english_name) values ('220','P4001C','牙周病統合性治療第一階段支付','1800','','130','','comprehensive periodontal treatment');
+            INSERT INTO nhi_procedure (id,code,name,point,description,nhi_procedure_type_id,chief_complaint,english_name) values ('221','P4002C','牙周病統合性治療第二階段支付','5000','','130','','comprehensive periodontal treatment');
+            INSERT INTO nhi_procedure (id,code,name,point,description,nhi_procedure_type_id,chief_complaint,english_name) values ('222','P4003C','牙周病統合性治療第三階段支付','3200','','130','','comprehensive periodontal treatment');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
