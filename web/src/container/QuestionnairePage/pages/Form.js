@@ -218,11 +218,11 @@ function Form(props) {
           <InfoRowContainer>
             <FlexGrowDiv onClick={() => props.gotoPage(19)}>
               <InfoLabel>懷孕狀況:</InfoLabel>
-              <Info>{displayData.pregnant}</Info>
+              <Info>{displayData.pregnant || '無'}</Info>
             </FlexGrowDiv>
             <FlexGrowDiv onClick={() => props.gotoPage(18)}>
               <InfoLabel>吸菸狀況:</InfoLabel>
-              <Info>{displayData.smoking}</Info>
+              <Info>{displayData.smoking || '無'}</Info>
             </FlexGrowDiv>
           </InfoRowContainer>
         </InfoContainer>
