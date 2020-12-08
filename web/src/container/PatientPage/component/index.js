@@ -44,6 +44,13 @@ export const Content = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  .ant-spin-container {
+    > div {
+      &:last-child {
+        border-radius: 8px;
+      }
+    }
+  }
 `;
 
 export const Count = styled.div`
