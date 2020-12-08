@@ -30,7 +30,7 @@ const columns = [
   },
   {
     title: '治療項目',
-    dataIndex: 'nhiCode',
+    dataIndex: 'nhiMandarin',
   },
 ];
 
