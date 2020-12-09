@@ -6,7 +6,7 @@ const LOCATION = `nhi-medical-records`;
 const requestUrl = `${apiUrl}/${LOCATION}`;
 
 export default class NhiExtendPaitent {
-  static getById = async (id, page, size) => {
+  static getById = async (id, page, size = 100) => {
     const params = {
       'nhiExtendPatientId.equals': id,
       page: page,
