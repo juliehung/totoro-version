@@ -15,6 +15,7 @@ export default function convertPatientImagesToImageGallery(patientImages, curren
           ...images,
           original: images.url,
           thumbnail: images.url,
+          originalClass: 'patient-image-wrap',
         };
       })
       .sort((a, b) => moment(b.createdDate) - moment(a.createdDate)),
