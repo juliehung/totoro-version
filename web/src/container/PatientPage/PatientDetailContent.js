@@ -23,7 +23,7 @@ const Container = styled.div`
       grid-column: 2/6;
     }
     & > :nth-child(4) {
-      z-index: 400;
+      z-index: 2;
       grid-row: 2;
       grid-column: ${props => (props.diagnosisNoteExpand ? '1/4' : '1/3')};
     }

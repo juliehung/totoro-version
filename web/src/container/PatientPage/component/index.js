@@ -40,14 +40,19 @@ export const Content = styled.div`
   min-height: 300px;
   overflow-y: scroll;
   padding: ${props => (props.noPadding ? 0 : '10px')};
+  ${props => props.paddingBottom && 'padding-bottom: 20px;'}
   scrollbar-width: none;
+  border-radius: 0 8px 8px;
   &::-webkit-scrollbar {
     display: none;
+  }
+  .ant-spin-nested-loading {
+    ${props => props.paddingBottom && 'overflow: hidden;'}
   }
   .ant-spin-container {
     > div {
       &:last-child {
-        border-radius: 8px;
+        overflow: hidden;
       }
     }
   }
