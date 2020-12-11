@@ -62,16 +62,16 @@ const columns = [
     render: name => <p style={style}>{name}</p>,
   },
   {
-    title: '預約醫師',
-    dataIndex: 'doctor',
-    key: 'doctor',
-    render: doctor => <p style={style}>{doctor}</p>,
-  },
-  {
     title: '備註',
     dataIndex: 'note',
     key: 'note',
     render: note => <span style={style}>{note}</span>,
+  },
+  {
+    title: '預約醫師',
+    dataIndex: 'doctor',
+    key: 'doctor',
+    render: doctor => <p style={style}>{doctor}</p>,
   },
   {
     title: '病編',
