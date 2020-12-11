@@ -16,7 +16,7 @@ function PatientDetailPatientStatus(props) {
       <Header>
         <span>病患狀態</span>
       </Header>
-      <Content noPadding>
+      <Content noPadding paddingBottom>
         <Spin spinning={loading}>
           {isEmpty ? (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
