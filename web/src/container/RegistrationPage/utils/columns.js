@@ -70,7 +70,7 @@ export const columns = xRayVendors => [
       { text: '自費', value: '自' },
     ],
     filterMultiple: false,
-    onFilter: (value, record) => record.type.indexOf(value) === 0,
+    onFilter: (value, record) => record?.type.indexOf(value) !== -1,
     width: 60,
   },
   { title: '醫師', dataIndex: 'doctor', key: 'doctor', width: 70 },
