@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { Helmet } from 'react-helmet-async';
+import { message } from 'antd';
 import { changeDrawerVisible } from './actions';
 import PatientDetail from './PatientDetail';
 import EmptyPage from './EmptyPage';
 import PatientSearchDrawer from './PatientSearchDrawer';
-import { Helmet } from 'react-helmet-async';
 import { changeXrayModalVisible, restoreXrayState } from '../Home/actions';
 import { onLeavePage } from './actions';
-import { message } from 'antd';
+import GAHelper from '../../ga';
 
 //#region
 const Container = styled.div`
@@ -68,6 +69,10 @@ function PatientPage(props) {
       onLeavePage();
     };
   }, [onLeavePage]);
+
+  useEffect(() => {
+    GAHelper.pageView();
+  }, []);
 
   return (
     <Container>
