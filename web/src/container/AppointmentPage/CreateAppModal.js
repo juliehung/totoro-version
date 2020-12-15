@@ -367,15 +367,8 @@ function CreateAppModal({
                 <Input onChange={onChangePatientName} value={patient.name} placeholder="(必填)" />
               </NewPatientElement>
               <NewPatientElement>
-                <span>生日：</span>
-                <DatePicker
-                  onDateChange={changeCreateAppPatientBirth}
-                  date={patient.birth}
-                  placeholder="請輸入生日"
-                  readOnly
-                  upperYearLimit={0}
-                  lowerYearLimit={120}
-                />
+                <BoldSpan>電話：</BoldSpan>
+                <Input onChange={onChangePatientPhone} value={patient.phone} placeholder="(必填)" />
               </NewPatientElement>
             </NewPatientRow>
             <NewPatientRow>
@@ -384,8 +377,16 @@ function CreateAppModal({
                 <Input onChange={onChangePatientNationalId} value={patient.nationalId} />
               </NewPatientElement>
               <NewPatientElement>
-                <BoldSpan>電話：</BoldSpan>
-                <Input onChange={onChangePatientPhone} value={patient.phone} placeholder="(必填)" />
+                <span>生日：</span>
+                <DatePicker
+                  onDateChange={changeCreateAppPatientBirth}
+                  date={patient.birth}
+                  placeholder="請輸入生日"
+                  readOnly
+                  upperYearLimit={0}
+                  lowerYearLimit={120}
+                  size={'small'}
+                />
               </NewPatientElement>
             </NewPatientRow>
           </NewPatientContainer>
