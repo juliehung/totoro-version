@@ -3,8 +3,8 @@ import pages from '../pages';
 
 export function handleKeyEvent(currentPage, keyEvent, func, data) {
   const currentPageObj = pages.find(p => p.page === currentPage);
-  const nextPage = currentPage?.nextPage;
-  const prevPage = currentPage?.prevPage;
+  const nextPage = currentPageObj?.nextPage;
+  const prevPage = currentPageObj?.prevPage;
   const validator = currentPageObj?.validator;
   const isLast = currentPageObj?.isLast;
 
@@ -20,16 +20,17 @@ export function handleKeyEvent(currentPage, keyEvent, func, data) {
       }
       func.validateSuccess(currentPage);
     }
+
     nextPage
       ? typeof nextPage === 'function'
-        ? func.gotoPage(nextPage())
+        ? func.gotoPage(nextPage(data.patient))
         : func.gotoPage(nextPage)
       : func.goNextPage();
     return;
   } else if (keyEvent.keyCode === KeyCode.up_arrow) {
     prevPage
       ? typeof prevPage === 'function'
-        ? func.gotoPage(prevPage())
+        ? func.gotoPage(prevPage(data.patient))
         : func.gotoPage(prevPage)
       : func.goPrevPage();
     return;
