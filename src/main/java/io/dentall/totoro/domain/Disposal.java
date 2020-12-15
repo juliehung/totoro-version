@@ -76,7 +76,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @OneToOne    @JoinColumn(unique = true)
     private Registration registration;
 
-    @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "disposal", fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Tooth> teeth = null;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
