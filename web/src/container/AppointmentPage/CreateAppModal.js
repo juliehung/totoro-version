@@ -375,6 +375,7 @@ function CreateAppModal({
                   readOnly
                   upperYearLimit={0}
                   lowerYearLimit={120}
+                  size={'small'}
                 />
               </NewPatientElement>
             </NewPatientRow>
