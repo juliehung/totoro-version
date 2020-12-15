@@ -90,7 +90,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @JsonIgnore
     private Set<Todo> todos = null;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonProperty(access = WRITE_ONLY)
     private Disposal disposal;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
