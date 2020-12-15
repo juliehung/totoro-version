@@ -21,7 +21,7 @@ function DoDrugA(props) {
       valitationFail(23);
       return;
     }
-    props.gotoPage(17);
+    props.gotoPage(18);
   };
 
   return (
