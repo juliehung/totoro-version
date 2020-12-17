@@ -502,5 +502,10 @@ public class TableGenerator {
         public Instant getLastModifiedDate() {
             return null;
         }
+
+        @Override
+        public String getCaseManager() {
+            return null;
+        }
     };
 }

@@ -144,6 +144,9 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @Column(name = "introducer")
     private String introducer;
 
+	@Column(name = "case_manager")
+	private String caseManager;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "patient_parent",
                joinColumns = @JoinColumn(name = "patients_id", referencedColumnName = "id"),
@@ -558,6 +561,19 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
 
     public void setIntroducer(String introducer) {
         this.introducer = introducer;
+    }
+
+    public String getCaseManager() {
+        return caseManager;
+    }
+
+    public void setCaseManager(String caseManager) {
+        this.caseManager = caseManager;
+    }
+
+    public Patient caseMansger(String caseManager) {
+        this.caseManager = caseManager;
+        return this;
     }
 
     public Set<Patient> getParents() {
