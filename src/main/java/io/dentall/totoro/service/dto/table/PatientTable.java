@@ -45,4 +45,6 @@ public interface PatientTable extends AuditingElement {
     Long getPatientIdentity_Id();
     Long getLastDoctorUser_Id();
     Long getFirstDoctorUser_Id();
+
+    String getCaseManager();
 }

@@ -44,6 +44,7 @@ public class PatientMapper {
         patient.setTeethGraphPermanentSwitch(patientTable.getTeethGraphPermanentSwitch());
         patient.setIntroducer(patientTable.getIntroducer());
         patient.setDueDate(patientTable.getDueDate());
+        patient.setCaseManager(patientTable.getCaseManager());
 
         // Relationship
         if (patientTable.getQuestionnaire_Id() != null) {

@@ -668,6 +668,12 @@ public class AppointmentService {
             public Instant getLastModifiedDate() {
                 return appointment1To1.getPatient_LastModifiedDate();
             }
+
+            @Override
+            public String getCaseManager() {
+                return appointment1To1.getPatient_CaseManager();
+            }
+
         };
     }
 
@@ -871,6 +877,7 @@ public class AppointmentService {
         Long getPatient_PatientIdentity_Id();
         Long getPatient_LastDoctorUser_Id();
         Long getPatient_FirstDoctorUser_Id();
+        String getPatient_CaseManager();
 
         // Registration
         RegistrationStatus getRegistration_Status();

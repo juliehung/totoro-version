@@ -289,6 +289,10 @@ public class PatientService extends QueryService<Patient> {
                     patient.setTeethGraphPermanentSwitch(updatePatient.getTeethGraphPermanentSwitch());
                 }
 
+                if (updatePatient.getCaseManager() != null) {
+                    patient.setCaseManager(updatePatient.getCaseManager());
+                }
+
                 return patient;
             })
             .get();
