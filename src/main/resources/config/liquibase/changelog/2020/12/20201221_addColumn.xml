@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20201221" author="weichen">
+        <sql>
+            INSERT INTO nhi_procedure (id,code,name,point,description,nhi_procedure_type_id) values ('223','48025C','拆線(次)－ 傷口在10公分以下','97',
+            '本項各處置項目皆為兒童加成項目，另部分診療項目項下加註「提升兒童加成項 目」者，其加成率適用本節通則六、2之規定。','190');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
