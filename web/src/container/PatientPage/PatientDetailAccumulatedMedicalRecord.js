@@ -70,6 +70,7 @@ function PatientDetailAccumulatedMedicalRecord(props) {
 const mapStateToProps = ({ patientPageReducer }) => ({
   accumulatedMedicalRecords: convertMedicalRecordsToTableObject(
     patientPageReducer.medicalRecord.nhiAccumulatedMedicalRecords,
+    patientPageReducer.medicalRecord.nhiAccumulatedMedicalTwRecodes,
   ),
   loading: patientPageReducer.treatmentProcedure.loading,
 });

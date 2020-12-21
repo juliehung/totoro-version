@@ -36,6 +36,8 @@ import {
   CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES,
   CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES_SUCCESS,
   UPDATE_PATIENT_IMAGES_INDEX,
+  GET_MEDICAL_INSTITUTION_CODE_ZHTW,
+  GET_MEDICAL_INSTITUTION_CODE_ZHTW_SUCCESS,
 } from './constant';
 
 export function changeDrawerVisible(visible) {
@@ -80,6 +82,14 @@ export function getAccumulatedMedicalRecords() {
 
 export function getAccumulatedMedicalRecordSuccess(nhiAccumulatedMedicalRecords) {
   return { type: GET_ACCUMULATED_MEDICAL_RECORD_SUCCESS, nhiAccumulatedMedicalRecords };
+}
+
+export function getMedicalInstitutionCodeZhTw(nhiAccumulatedMedicalRecords) {
+  return { type: GET_MEDICAL_INSTITUTION_CODE_ZHTW, nhiAccumulatedMedicalRecords };
+}
+
+export function getMedicalInstitutionCodeZhTwSuccess(nhiAccumulatedMedicalTwRecodes) {
+  return { type: GET_MEDICAL_INSTITUTION_CODE_ZHTW_SUCCESS, nhiAccumulatedMedicalTwRecodes };
 }
 
 export function getNhiExtendPatient() {
