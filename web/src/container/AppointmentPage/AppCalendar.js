@@ -56,7 +56,6 @@ import EyeFill from '../../images/eye-fill.svg';
 import EyeFillWhite from '../../images/eye-fill-white.svg';
 import EyeOffFill from '../../images/eye-off-fill.svg';
 import { parseDisplayRange } from './utils/parseDisplayRange';
-import TimeDisplay from './TimeDisplay';
 import MqttHelper from '../../utils/mqtt';
 import { RedoOutlined, StopOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { handleResources } from './utils/handleResources';
@@ -82,31 +81,6 @@ const Header = styled.div`
   background: #fff;
   @media (max-width: 850px) {
     justify-content: flex-end;
-  }
-`;
-
-const TodayContainer = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-  display: flex;
-  color: #8f9bb3;
-  font-weight: bold;
-  & > div {
-    font-size: 10px;
-    padding: 5px 10px;
-    border: solid 1px #8f9bb3;
-    border-radius: 34px;
-    margin-left: 7px;
-    cursor: pointer;
-    background-color: rgba(143, 155, 179, 0.08);
-    transition: all 300ms ease-in-out;
-    &:hover {
-      background-color: rgba(143, 155, 179, 0.4);
-    }
-  }
-  @media (max-width: 850px) {
-    display: none;
   }
 `;
 
@@ -532,11 +506,6 @@ class AppCalendar extends React.Component {
     this.props.changeCalDate(moment(calendarApi.getDate()).add(-1, 'month'));
   };
 
-  todayClick = () => {
-    const calendarApi = this.calendarComponentRef.current.getApi();
-    calendarApi.gotoDate(moment().format('YYYY-MM-DD'));
-  };
-
   handleEventDrop = info => {
     if (info.event.extendedProps.eventType === 'appointment') {
       this.props.changeConfirmModalVisible(true);
@@ -782,12 +751,6 @@ class AppCalendar extends React.Component {
     return (
       <Container>
         <Header>
-          <TodayContainer>
-            <TimeDisplay />
-            <div onClick={this.todayClick}>
-              <span>今日</span>
-            </div>
-          </TodayContainer>
           <TitleContainer className="fc-center">
             <img src={TwoArrowLeft} alt="two-arrow-left" onClick={this.prevMonthClick} />
             <img src={ArrowLeft} alt="arrow-left" onClick={this.prevClick} />
