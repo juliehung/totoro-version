@@ -26,6 +26,7 @@ import { useCookies } from 'react-cookie';
 import { handleResources } from './utils/handleResources';
 import { convertShitToBackgroundEvent } from './utils/convertShitToBackgroundEvent';
 import extractDoctorsFromUser from '../../utils/extractDoctorsFromUser';
+import TimeDisplay from './TimeDisplay';
 
 //#region
 const Container = styled.div`
@@ -45,7 +46,7 @@ const Container = styled.div`
 `;
 
 const CalendarContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 10px;
   border-radius: 6px;
   border: 1px solid #e4e9f2;
   padding: 3px 0px;
@@ -115,6 +116,32 @@ const DateTitleContainer = styled(Col)`
   align-items: center;
   & > h4 {
     margin-bottom: 0;
+  }
+`;
+
+const TodayContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #8f9bb3;
+  font-weight: bold;
+  margin-top: 10px;
+  & > div {
+    font-size: 10px;
+    padding: 3px 12px;
+    border: solid 1px #8f9bb3;
+    border-radius: 34px;
+    margin-left: 7px;
+    cursor: pointer;
+    background-color: rgba(143, 155, 179, 0.08);
+    transition: all 300ms ease-in-out;
+    &:hover {
+      background-color: rgba(143, 155, 179, 0.4);
+    }
+  }
+  @media (max-width: 850px) {
+    display: none;
   }
 `;
 
@@ -194,7 +221,6 @@ function AppRight(props) {
   const headerRender = ({ value }) => {
     const month = value.locale('zh-tw').format('MMMM');
     const year = value.year() - 1911;
-
     return (
       <div>
         <Row type="flex" justify="space-between">
@@ -265,6 +291,12 @@ function AppRight(props) {
 
   return (
     <Container>
+      <TodayContainer>
+        <TimeDisplay />
+        <div onClick={() => changeCalDate(moment(new Date()))}>
+          <span>今日</span>
+        </div>
+      </TodayContainer>
       <CalendarContainer>
         <Calendar
           fullscreen={false}
