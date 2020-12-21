@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import PatientDetailHeader from './PatientDetailHeader';
 import PatientDetailContent from './PatientDetailContent';
 import { Spin } from 'antd';
 import { useCookies } from 'react-cookie';
-import { initPatientDetail } from './actions';
+import { initPatientDetail, getMedicalInstitutionCodeZhTw } from './actions';
 import PatientNotFound from './PatientNotFound';
 import AppointmentListModal from './AppointmentListModal';
 import TreatmentListModal from './TreatmentListModal';
@@ -18,13 +18,27 @@ const Container = styled.div`
 //#endregion
 
 function PatientDetail(props) {
-  const { id, initPatientDetail, isPatientNotFound, spinning, searchPatientDrawerOpen } = props;
+  const dispatch = useDispatch();
+  const {
+    id,
+    initPatientDetail,
+    isPatientNotFound,
+    spinning,
+    searchPatientDrawerOpen,
+    nhiAccumulatedMedicalRecords,
+  } = props;
   const [, setCookie] = useCookies();
 
   useEffect(() => {
     initPatientDetail(id);
     setCookie('patient_center_pid', id);
   }, [initPatientDetail, id, setCookie]);
+
+  useEffect(() => {
+    if (nhiAccumulatedMedicalRecords.length > 0) {
+      dispatch(getMedicalInstitutionCodeZhTw(nhiAccumulatedMedicalRecords));
+    }
+  }, [nhiAccumulatedMedicalRecords, dispatch]);
 
   return isPatientNotFound ? (
     <PatientNotFound />
@@ -45,8 +59,9 @@ const mapStateToProps = ({ patientPageReducer }) => ({
   isPatientNotFound: patientPageReducer.common.isPatientNotFound,
   spinning: patientPageReducer.common.loading,
   searchPatientDrawerOpen: patientPageReducer.searchPatient.drawerOpen,
+  nhiAccumulatedMedicalRecords: patientPageReducer.medicalRecord.nhiAccumulatedMedicalRecords,
 });
 
-const mapDispatchToProps = { initPatientDetail };
+const mapDispatchToProps = { initPatientDetail, getMedicalInstitutionCodeZhTw };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PatientDetail);
