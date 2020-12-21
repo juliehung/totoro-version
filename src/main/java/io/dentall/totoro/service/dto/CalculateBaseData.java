@@ -34,6 +34,6 @@ public interface CalculateBaseData {
     Long getDoctorId();
 
     // Patient
-    Long getPatientName();
+    String getPatientName();
 
 }

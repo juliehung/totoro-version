@@ -57,7 +57,7 @@ public class NhiStatisticDoctorSalary {
     /**
      * 病患姓名(expand 才有)
      */
-    private Long patientName;
+    private String patientName;
 
     /**
      * 治療時間(expand 才有)
@@ -68,11 +68,11 @@ public class NhiStatisticDoctorSalary {
         return patientId;
     }
 
-    public Long getPatientName() {
+    public String getPatientName() {
         return patientName;
     }
 
-    public void setPatientName(Long patientName) {
+    public void setPatientName(String patientName) {
         this.patientName = patientName;
     }
 
