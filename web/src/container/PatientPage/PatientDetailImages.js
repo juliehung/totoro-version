@@ -221,7 +221,13 @@ const Content = styled.div`
       white-space: nowrap;
     }
   }
-
+  .empty-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-height: 400px;
+  }
   .ant-empty {
     display: flex;
     height: 100%;
@@ -356,7 +362,9 @@ function PatientDetailImages(props) {
             <div className="upload-date-wrap">上傳於 {patientImagesData?.currentImageDate}</div>
           </Fragment>
         ) : (
-          <Empty image={<EmptyDataSvg />} description={<span>無資料，請至月申報新增</span>} />
+          <div className="empty-wrap">
+            <Empty image={<EmptyDataSvg />} description={<span>無資料，請至月申報新增</span>} />
+          </div>
         )}
       </Content>
     </Container>
