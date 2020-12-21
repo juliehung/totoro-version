@@ -35,7 +35,7 @@ export const Header = styled.div`
 `;
 
 export const Content = styled.div`
-  max-height: 300px;
+  max-height: ${props => (props.hasPagination ? 'auto' : '300px')};
   height: 100%;
   min-height: 300px;
   overflow-y: scroll;

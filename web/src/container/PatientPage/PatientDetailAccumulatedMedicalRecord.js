@@ -54,7 +54,7 @@ function PatientDetailAccumulatedMedicalRecord(props) {
           <Ic />
         </div>
       </Header>
-      <Content>
+      <Content hasPagination>
         <StyledTable
           columns={columns}
           dataSource={accumulatedMedicalRecords}
