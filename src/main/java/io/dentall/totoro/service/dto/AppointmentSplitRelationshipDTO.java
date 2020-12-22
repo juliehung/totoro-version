@@ -95,7 +95,8 @@ public class AppointmentSplitRelationshipDTO {
             .baseFloor(appointmentDAO.getBaseFloor())
             .colorId(appointmentDAO.getColorId())
             .archived(appointmentDAO.getArchived())
-            .contacted(appointmentDAO.getContacted());
+            .contacted(appointmentDAO.getContacted())
+            .firstVisit(appointmentDAO.getFirstVisit());
         appointment.setCreatedBy(appointmentDAO.getCreatedBy());
         appointment.setCreatedDate(appointmentDAO.getCreatedDate());
         appointment.setId(appointmentDAO.getId());

@@ -59,6 +59,8 @@ public class MonthAppointmentVM {
     
     private Set<Tag> tags;
 
+    private final Boolean firstVisit;
+
     public MonthAppointmentVM(AppointmentDTO appointmentDTO) {
         this.patientId = appointmentDTO.getPatientId();
         this.patientName = appointmentDTO.getPatientName();
@@ -82,6 +84,7 @@ public class MonthAppointmentVM {
         this.patientLastModifiedBy = appointmentDTO.getPatientLastModifiedBy();
         this.medicalId = appointmentDTO.getPatientMedicalId();
         this.colorId = appointmentDTO.getColorId();
+        this.firstVisit = appointmentDTO.getFirstVisit();
     }
 
     public Integer getColorId() {
@@ -178,5 +181,9 @@ public class MonthAppointmentVM {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public Boolean getFirstVisit() {
+        return firstVisit;
     }
 }
