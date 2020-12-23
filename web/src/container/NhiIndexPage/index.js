@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tabs, Button, Popover } from 'antd';
+import { Table, Tabs } from 'antd';
 import { connect, useDispatch } from 'react-redux';
 import {
   getNhiSalary,
@@ -13,7 +13,6 @@ import {
 import moment from 'moment';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { DayPickerRangeController } from 'react-dates';
 import { parseIndexTreatmentProcedureToTableObject } from './utils/parseIndexTreatmentProcedureToTableObject';
 import convertUserToNhiSalary from './utils/convertUserToNhiSalary';
 import toRefreshExpandSalary from './utils/toRefreshExpandSalary';
@@ -223,19 +222,6 @@ const ExpandTableContainer = styled(Table)`
   }
   .ant-table-cell {
     background: #e4eaff !important;
-  }
-`;
-
-const InputDiv = styled.div`
-  margin: 35px 0px 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  & > span {
-    font-size: 18px;
-    border: 1px solid #ccc;
-    padding: 2px 5px;
   }
 `;
 //#endregion
@@ -663,7 +649,6 @@ function NhiIndexPage({
   const [tabNumb, setTabNumb] = useState(1);
   const [startDate, setStartDate] = useState(moment().startOf('month'));
   const [endDate, setEndDate] = useState(moment());
-  const [focusedInput, setFocusedInput] = useState(FOCUSINPUT.startDate);
   const filterDoctors = doctors.filter(({ id }) => odIndexes.map(({ did }) => did).indexOf(id) !== -1);
   doctorNhiExam = doctorNhiExam.map((data, index) => {
     return { ...data, key: `doctorNhiExam-${data.did}-${index}` };
@@ -688,15 +673,6 @@ function NhiIndexPage({
       dispatch(getIndexTreatmentProcedure(startDate, endDate));
     }
   }, [dispatch, startDate, endDate]);
-
-  const toRocDate = date => {
-    if (date?._isAMomentObject) {
-      const year = date.year() - 1911;
-      const dateString = date.format('MMM Do');
-      return `${year}年${dateString}`;
-    }
-    return date;
-  };
 
   return (
     <div>

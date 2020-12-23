@@ -6,7 +6,7 @@ const initState = {
 };
 
 /* eslint-disable default-case, no-param-reassign */
-const common = (state = initState, action) =>
+export default (state = initState, action) =>
   produce(state, draft => {
     switch (action.type) {
       case INIT_NHI_SALARY:
@@ -23,5 +23,3 @@ const common = (state = initState, action) =>
         break;
     }
   });
-
-export default common;
