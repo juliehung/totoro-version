@@ -10,43 +10,16 @@ import {
   GET_TOOTH_CLEAN_FAIL,
   GET_INDEX_TREATMENT_PRECEDURE_SUCCESS,
   GET_INDEX_TREATMENT_PRECEDURE_FAIL,
+  GET_NHI_SALARY_SUCCESS,
+  GET_DOCTOR_NHI_SALARY_SUCCESS,
 } from '../constant';
 
 const initState = {
-  odIndexes: [
-    // Od object
-    // {
-    //   did: '',
-    //   totalPat: '',
-    //   distinctTotalPat: '',
-    //   totalTooth: '',
-    //   totalSurface: '',
-    //   surfaceToothRate: '',
-    //   toothPeopleRate: '',
-    //   surfacePeopleRate: ''
-    // }
-  ],
-  doctorNhiExam: [
-    // doctorNhiExam object
-    // {
-    //   did: '',
-    //   nhiExamCode: '',
-    //   nhiExamPoint: '',
-    //   totalNumber: '',
-    //   totalPoint: ''
-    // }
-  ],
-  doctorNhiTx: [
-    // doctorNhiTx object
-    // {
-    //   did: '',
-    //   nhiTxCode: '',
-    //   nhiTxName: '',
-    //   nhiTxPoint: '',
-    //   totalNumber: '',
-    //   totalPoint: ''
-    // }
-  ],
+  nhiSalary: undefined,
+  expandNhiSalary: undefined,
+  odIndexes: [],
+  doctorNhiExam: [],
+  doctorNhiTx: [],
   toothClean: [],
   indexTreatmentProcedure: [],
 };
@@ -57,6 +30,12 @@ export const initialState = { ...initState };
 export default (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case GET_NHI_SALARY_SUCCESS:
+        draft.nhiSalary = action.nhiSalary;
+        break;
+      case GET_DOCTOR_NHI_SALARY_SUCCESS:
+        draft.expandNhiSalary = [].concat(!!state.expandNhiSalary ? state.expandNhiSalary : [], action.doctorOneSalary);
+        break;
       case GET_OD_INDEXES_SUCCESS:
         draft.odIndexes = action.odIndexes;
         break;

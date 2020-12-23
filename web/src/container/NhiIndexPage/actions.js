@@ -14,7 +14,32 @@ import {
   GET_INDEX_TREATMENT_PRECEDURE,
   GET_INDEX_TREATMENT_PRECEDURE_SUCCESS,
   GET_INDEX_TREATMENT_PRECEDURE_FAIL,
+  INIT_NHI_SALARY,
+  GET_NHI_SALARY_SUCCESS,
+  NHI_SALARY_NOT_FOUND,
+  GET_DOCTOR_NHI_SALARY,
+  GET_DOCTOR_NHI_SALARY_SUCCESS,
 } from './constant';
+
+export function getNhiSalary(begin, end) {
+  return { type: INIT_NHI_SALARY, begin, end };
+}
+
+export function getNhiSalarySuccess(nhiSalary) {
+  return { type: GET_NHI_SALARY_SUCCESS, nhiSalary };
+}
+
+export function nhiSalaryNotFound() {
+  return { type: NHI_SALARY_NOT_FOUND };
+}
+
+export function getDoctorNhiSalary(doctorId, begin, end) {
+  return { type: GET_DOCTOR_NHI_SALARY, doctorId, begin, end };
+}
+
+export function getDoctorNhiSalarySuccess(doctorOneSalary) {
+  return { type: GET_DOCTOR_NHI_SALARY_SUCCESS, doctorOneSalary };
+}
 
 export function getOdIndexes(begin, end) {
   return { type: GET_OD_INDEXES, begin, end };

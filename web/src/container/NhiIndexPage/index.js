@@ -1,12 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Tabs, Button, Popover } from 'antd';
-import { connect } from 'react-redux';
-import { getDoctorNhiExam, getDoctorNhiTx, getOdIndexes, getToothClean, getIndexTreatmentProcedure } from './actions';
+import { connect, useDispatch } from 'react-redux';
+import {
+  getNhiSalary,
+  getDoctorNhiSalary,
+  getDoctorNhiExam,
+  getDoctorNhiTx,
+  getOdIndexes,
+  getToothClean,
+  getIndexTreatmentProcedure,
+} from './actions';
 import moment from 'moment';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import { DayPickerRangeController } from 'react-dates';
 import { parseIndexTreatmentProcedureToTableObject } from './utils/parseIndexTreatmentProcedureToTableObject';
+import convertUserToNhiSalary from './utils/convertUserToNhiSalary';
+import toRefreshExpandSalary from './utils/toRefreshExpandSalary';
+import { getBaseUrl } from '../../utils/getBaseUrl';
+import CloudDownload from '../../images/icon-cloud-download.svg';
+import BarChart from '../../images/icon-bar-chart.svg';
 
 const { TabPane } = Tabs;
 
@@ -60,9 +73,157 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const TitleContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 26px 0;
+
+  > div {
+    width: 33.33%;
+    flex: 1;
+
+    &:nth-child(2) {
+      text-align: center;
+    }
+    &:nth-last-child(1) {
+      text-align: right;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      > div {
+        padding: 10px 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        > span {
+          padding-left: 10px;
+          font-size: 14px;
+          font-weight: bold;
+          line-height: 1.14;
+        }
+        &:nth-child(1) {
+          > span {
+            color: #8f9bb3;
+          }
+        }
+        &:nth-child(2) {
+          > span {
+            color: #ffffff;
+          }
+          min-width: 142px;
+          height: 40px;
+          margin: 0 0 0 22px;
+          border-radius: 34px;
+          background: #3266ff;
+          text-align: center;
+        }
+      }
+    }
+    &:not(:last-child) {
+      font-size: 30px;
+      font-weight: 600;
+      line-height: 1.33;
+      color: #222b45;
+    }
+  }
+`;
+
 const TabsContainer = styled.div`
-  width: 90%;
   margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
+  background: #fff;
+  overflow: hidden;
+  padding-bottom: 20px;
+  max-height: 600px;
+
+  .ant-tabs-tab {
+    &:hover,
+    &:focus,
+    &:active,
+    .ant-tabs-tab-btn:focus,
+    .ant-tabs-tab-remove:focus,
+    .ant-tabs-tab-btn:active {
+      color: #1890ff !important;
+    }
+  }
+
+  .ant-tabs-tab-active {
+    color: #1890ff !important;
+
+    .ant-tabs-tab-btn {
+      color: #1890ff !important;
+    }
+  }
+`;
+
+const TabsWrap = styled(Tabs)`
+  .ant-tabs-ink-bar {
+    background: transparent;
+  }
+
+  .ant-tabs-ink-bar::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1890ff;
+  }
+`;
+
+const TableContainer = styled(Table)`
+  padding: 0 24px 26px 24px;
+
+  .ant-table-header {
+    .ant-table-cell {
+      background: #f7f9fc !important;
+      font-size: 13px !important;
+      font-weight: 600;
+      line-height: 1.85;
+      color: #222b45 !important;
+    }
+  }
+  .ant-table-expanded-row {
+    > .ant-table-cell {
+      background: #e4eaff !important;
+    }
+  }
+  .ant-table-cell {
+    font-size: 13px !important;
+    line-height: 1.38;
+    color: #222b45 !important;
+  }
+`;
+
+const TabBarExtraContentContainer = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.33;
+  color: #222b45;
+  padding: 24px;
+  margin-right: 20px;
+`;
+const ExpandTableContainer = styled(Table)`
+  padding: 0 24px 26px 24px;
+  .ant-table-header {
+    .ant-table-cell {
+      background: #f7f9fc !important;
+      font-size: 13px !important;
+      font-weight: 600;
+      line-height: 1.85;
+      color: #222b45 !important;
+    }
+  }
+  .ant-table-cell {
+    background: #e4eaff !important;
+  }
 `;
 
 const InputDiv = styled.div`
@@ -80,12 +241,12 @@ const InputDiv = styled.div`
 //#endregion
 
 const renderFloat2Position = f => (typeof f === 'number' ? (Math.round(f * 100) / 100).toFixed(2) : '0');
-const odColumns = doctors => [
+const odColumns = (doctors, filterDoctors) => [
   {
     title: '醫生',
     dataIndex: 'did',
     key: 'odColumns-did',
-    filters: doctors.map(d => ({ value: d?.id, text: d?.firstName })),
+    filters: filterDoctors.map(d => ({ value: d?.id, text: d?.firstName })),
     onFilter: (value, record) => value === record.did,
     render: did => doctors.find(d => d.id === did)?.firstName ?? did,
   },
@@ -129,12 +290,12 @@ const odColumns = doctors => [
   },
 ];
 
-const toothCleanColumns = doctors => [
+const toothCleanColumns = (doctors, filterDoctors) => [
   {
     title: '醫生',
     dataIndex: 'did',
     key: 'did',
-    filters: doctors.map(d => ({ value: d?.id, text: d?.firstName })),
+    filters: filterDoctors.map(d => ({ value: d?.id, text: d?.firstName })),
     onFilter: (value, record) => value === record.did,
     render: did => doctors.find(d => d.id === did)?.firstName ?? did,
   },
@@ -147,12 +308,12 @@ const toothCleanColumns = doctors => [
   { title: '洗牙人數比率', dataIndex: 'timePatRate', key: 'timePatRate', render: t => renderFloat2Position(t) },
 ];
 
-const doctorNhiExamColumns = doctors => [
+const doctorNhiExamColumns = (doctors, filterDoctors) => [
   {
     title: '醫生',
     dataIndex: 'did',
     key: 'doctorNhiExamColumns-did',
-    filters: doctors.map(d => ({ value: d?.id, text: d?.firstName })),
+    filters: filterDoctors.map(d => ({ value: d?.id, text: d?.firstName })),
     onFilter: (value, record) => value === record.did,
     render: did => doctors.find(d => d.id === did)?.firstName ?? did,
   },
@@ -180,12 +341,12 @@ const doctorNhiExamColumns = doctors => [
   // serialNumber,
 ];
 
-const doctorNhiTxColumns = doctors => [
+const doctorNhiTxColumns = (doctors, filterDoctors) => [
   {
     title: '醫生',
     dataIndex: 'did',
     key: 'doctorNhiTxColumns-did',
-    filters: doctors.map(d => ({ value: d?.id, text: d?.firstName })),
+    filters: filterDoctors.map(d => ({ value: d?.id, text: d?.firstName })),
     onFilter: (value, record) => value === record.did,
     render: did => doctors.find(d => d.id === did)?.firstName ?? did,
   },
@@ -216,6 +377,88 @@ const doctorNhiTxColumns = doctors => [
   },
   // !TODO hide temperarily 1.2
   // serialNumber,
+];
+
+const nhiSalaryColumns = () => [
+  {
+    title: '排序',
+    dataIndex: 'doctorId',
+    key: 'doctorId',
+    width: 50,
+    fixed: 'left',
+    sorter: (a, b) => a.doctorId - b.doctorId,
+  },
+  {
+    title: '醫師',
+    dataIndex: 'doctorName',
+    key: 'doctorName',
+    width: 70,
+    fixed: 'left',
+    sorter: (a, b) => a.doctorId - b.doctorId,
+  },
+  {
+    title: '合計',
+    dataIndex: 'total',
+    key: 'total',
+    sorter: (a, b) => a.total - b.total,
+    width: 50,
+  },
+  {
+    title: '感控診察',
+    dataIndex: 'infectionExaminationPoint',
+    key: 'infectionExaminationPoint',
+    sorter: (a, b) => a.infectionExaminationPoint - b.infectionExaminationPoint,
+    width: 70,
+  },
+  {
+    title: '未感控診察',
+    dataIndex: 'regularExaminationPoint',
+    key: 'regularExaminationPoint',
+    sorter: (a, b) => a.regularExaminationPoint - b.regularExaminationPoint,
+    width: 80,
+  },
+  {
+    title: '診療費',
+    dataIndex: 'treatmentPoint',
+    key: 'treatmentPoint',
+    sorter: (a, b) => a.treatmentPoint - b.treatmentPoint,
+    width: 70,
+  },
+  {
+    title: '部分負擔',
+    dataIndex: 'copayment',
+    key: 'copayment',
+    sorter: (a, b) => a.copayment - b.copayment,
+    width: 70,
+  },
+  {
+    title: '牙周專科',
+    dataIndex: 'perioPoint',
+    key: 'perioPoint',
+    sorter: (a, b) => a.perioPoint - b.perioPoint,
+    width: 70,
+  },
+  {
+    title: '兒童專科',
+    dataIndex: 'pedoPoint',
+    key: 'pedoPoint',
+    sorter: (a, b) => a.pedoPoint - b.pedoPoint,
+    width: 70,
+  },
+  {
+    title: '根管專科',
+    dataIndex: 'endoPoint',
+    key: 'endoPoint',
+    sorter: (a, b) => a.endoPoint - b.endoPoint,
+    width: 70,
+  },
+  {
+    title: '',
+    dataIndex: 'totalDisposal',
+    key: 'totalDisposal',
+    width: 100,
+    render: totalDisposal => `共計 ${!!totalDisposal ? totalDisposal : 0} 單處置`,
+  },
 ];
 
 // !TODO hide temperarily 1.2
@@ -303,6 +546,102 @@ const doctorNhiTxColumns = doctors => [
 //   },
 // ];
 
+const expandedRowRender = expandSalary => {
+  const columns = [
+    {
+      title: '排序',
+      dataIndex: 'doctorId',
+      key: 'doctorId',
+      width: 50,
+      fixed: 'left',
+      sorter: (a, b) => a.doctorId - b.doctorId,
+    },
+    {
+      title: '醫師',
+      dataIndex: 'doctorName',
+      key: 'doctorName',
+      width: 70,
+      fixed: 'left',
+      sorter: (a, b) => a.doctorId - b.doctorId,
+    },
+    {
+      title: '合計',
+      dataIndex: 'total',
+      key: 'total',
+      sorter: (a, b) => a.total - b.total,
+      width: 50,
+    },
+    {
+      title: '感控診察',
+      dataIndex: 'infectionExaminationPoint',
+      key: 'infectionExaminationPoint',
+      sorter: (a, b) => a.infectionExaminationPoint - b.infectionExaminationPoint,
+      width: 70,
+    },
+    {
+      title: '未感控診察',
+      dataIndex: 'regularExaminationPoint',
+      key: 'regularExaminationPoint',
+      sorter: (a, b) => a.regularExaminationPoint - b.regularExaminationPoint,
+      width: 80,
+    },
+    {
+      title: '診療費',
+      dataIndex: 'treatmentPoint',
+      key: 'treatmentPoint',
+      sorter: (a, b) => a.treatmentPoint - b.treatmentPoint,
+      width: 70,
+    },
+    {
+      title: '部分負擔',
+      dataIndex: 'copayment',
+      key: 'copayment',
+      sorter: (a, b) => a.copayment - b.copayment,
+      width: 70,
+    },
+    {
+      title: '牙周專科',
+      dataIndex: 'perioPoint',
+      key: 'perioPoint',
+      sorter: (a, b) => a.perioPoint - b.perioPoint,
+      width: 70,
+    },
+    {
+      title: '兒童專科',
+      dataIndex: 'pedoPoint',
+      key: 'pedoPoint',
+      sorter: (a, b) => a.pedoPoint - b.pedoPoint,
+      width: 70,
+    },
+    {
+      title: '根管專科',
+      dataIndex: 'endoPoint',
+      key: 'endoPoint',
+      sorter: (a, b) => a.endoPoint - b.endoPoint,
+      width: 70,
+    },
+    {
+      title: '',
+      width: 100,
+      render: record => (
+        <a href={`${getBaseUrl()}#/patient/${expandSalary?.doctorId}`} target="_blank" rel="noopener noreferrer">
+          {record?.patientName} 於 {moment(record?.disposalDate).format('YYYY/MM/DD')}
+        </a>
+      ),
+    },
+  ];
+  return (
+    <ExpandTableContainer
+      loading={!expandSalary?.doctorOneSalary}
+      columns={columns}
+      showHeader={false}
+      dataSource={expandSalary?.doctorOneSalary}
+      pagination={false}
+      tableLayout="fixed"
+    />
+  );
+};
+
 function NhiIndexPage({
   doctors,
   odIndexes,
@@ -315,21 +654,40 @@ function NhiIndexPage({
   toothClean,
   getIndexTreatmentProcedure,
   // !TODO hide temperarily 1.2
-  // groupedIndexTreatmentProcedure,
+  groupedIndexTreatmentProcedure,
+  getNhiSalary,
+  nhiSalary,
+  expandNhiSalary,
 }) {
+  const dispatch = useDispatch();
   const [tabNumb, setTabNumb] = useState(1);
   const [startDate, setStartDate] = useState(moment().startOf('month'));
   const [endDate, setEndDate] = useState(moment());
   const [focusedInput, setFocusedInput] = useState(FOCUSINPUT.startDate);
+  const filterDoctors = doctors.filter(({ id }) => odIndexes.map(({ did }) => did).indexOf(id) !== -1);
+  doctorNhiExam = doctorNhiExam.map((data, index) => {
+    return { ...data, key: `doctorNhiExam-${data.did}-${index}` };
+  });
+  doctorNhiTx = doctorNhiTx.map((data, index) => {
+    return { ...data, key: `doctorNhiTx-${data.did}-${index}` };
+  });
+  console.log('groupedIndexTreatmentProcedure = ', groupedIndexTreatmentProcedure);
 
   const calculateHandler = () => {
     if (!startDate || !endDate) return;
-    getOdIndexes(startDate, endDate);
-    getDoctorNhiExam(startDate, endDate);
-    getDoctorNhiTx(startDate, endDate);
-    getToothClean(startDate, endDate);
     getIndexTreatmentProcedure(startDate, endDate);
   };
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      dispatch(getNhiSalary(startDate, endDate));
+      dispatch(getOdIndexes(startDate, endDate));
+      dispatch(getToothClean(startDate, endDate));
+      dispatch(getDoctorNhiTx(startDate, endDate));
+      dispatch(getDoctorNhiExam(startDate, endDate));
+      dispatch(getIndexTreatmentProcedure(startDate, endDate));
+    }
+  }, [dispatch, startDate, endDate]);
 
   const toRocDate = date => {
     if (date?._isAMomentObject) {
@@ -340,130 +698,116 @@ function NhiIndexPage({
     return date;
   };
 
-  // !TODO hide temperarily 1.2
-  // const rowSelection = {
-  //   onChange: (selectedRowKeys, selectedRows) => {
-  //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  //   },
-  //   getCheckboxProps: () => ({}),
-  // };
-
   return (
     <div>
       <Helmet>
-        <title>健保</title>
+        <title>全民健保</title>
       </Helmet>
       <GlobalStyle />
+      <TitleContainer>
+        <div>健保點數與分析</div>
+        <div>109年5月</div>
+        <div>
+          <div>
+            <img src={CloudDownload} alt="cloud download" />
+            <span>匯出成 EXCEL</span>
+          </div>
+          <div>
+            <img src={BarChart} alt="icon-bar-chart" />
+            <span>選擇計算來源</span>
+          </div>
+        </div>
+      </TitleContainer>
       <div>
-        <InputDiv>
-          <Popover
-            trigger="click"
-            placement="bottom"
-            content={
-              <DayPickerRangeController
-                startDate={startDate}
-                endDate={endDate}
-                focusedInput={focusedInput}
-                onFocusChange={focusedInput => {
-                  setFocusedInput(!focusedInput ? FOCUSINPUT.startDate : focusedInput);
-                }}
-                onDatesChange={({ startDate, endDate }) => {
-                  setStartDate(startDate);
-                  setEndDate(endDate);
-                }}
-                numberOfMonths={2}
-                hideKeyboardShortcutsPanel
-                renderMonthElement={data => {
-                  const date = data.month;
-                  const year = date.year() - 1911;
-                  const month = date.format('MMM');
-                  return year + '年' + month;
-                }}
-              />
-            }
-          >
-            <span type="primary">
-              {toRocDate(startDate)} → {toRocDate(endDate)}
-            </span>
-          </Popover>
-          <Button value="計算" onClick={calculateHandler} disabled={!startDate || !endDate} type="primary">
-            計算
-          </Button>
-        </InputDiv>
         <TabsContainer>
-          <Tabs defaultActiveKey={tabNumb} onChange={setTabNumb}>
-            <TabPane tab="補牙指標" key="1">
-              <Table
-                columns={odColumns(doctors)}
-                dataSource={odIndexes}
-                pagination
-                bordered
+          <TabsWrap
+            defaultActiveKey={tabNumb}
+            onChange={setTabNumb}
+            tabBarExtraContent={{
+              left: <TabBarExtraContentContainer>醫師</TabBarExtraContentContainer>,
+            }}
+          >
+            <TabPane tab="點數" key="1">
+              <TableContainer
+                scroll={{ y: 280 }}
+                loading={!nhiSalary}
+                columns={nhiSalaryColumns(doctors)}
+                dataSource={nhiSalary}
+                pagination={false}
+                bordered={false}
                 showHeader={true}
                 tableLayout="fixed"
-                rowKey={record => `${record.did} ${record.distinctTotalPat}`}
-              />
-            </TabPane>
-            <TabPane tab="洗牙指標" key="2">
-              <Table
-                columns={toothCleanColumns(doctors)}
-                dataSource={toothClean}
-                pagination
-                bordered
-                showHeader={true}
-                tableLayout="fixed"
-                rowKey={record => `${record.did} ${record.distinctTotalPat}`}
-              />
-            </TabPane>
-            <TabPane tab="診察總覽" key="3">
-              <Table
-                columns={doctorNhiExamColumns(doctors)}
-                dataSource={doctorNhiExam}
-                pagination
-                bordered
-                showHeader={true}
-                tableLayout="fixed"
-                rowKey={record => `${record.did} ${record.nhiExamCode}`}
-              />
-            </TabPane>
-            <TabPane tab="診療總覽" key="4">
-              <Table
-                columns={doctorNhiTxColumns(doctors)}
-                dataSource={doctorNhiTx}
-                pagination
-                bordered
-                showHeader={true}
-                tableLayout="fixed"
-                rowKey={record => `${record.did} ${record.nhiTxCode}`}
-              />
-            </TabPane>
-
-            {/* !TODO hide temperarily 1.2 */}
-            {/* <TabPane tab="健保統計" key="5">
-              <Table
-                columns={treatmentProcedureColumn(doctors)}
-                dataSource={groupedIndexTreatmentProcedure}
-                pagination
-                bordered
-                showHeader={true}
-                tableLayout="fixed"
-                rowKey={record => `${record.disposalId}`}
+                rowKey={record => `${record.doctorId} ${record.doctorName}`}
+                onExpand={(expanded, record) => {
+                  if (
+                    expanded &&
+                    (expandNhiSalary.length === 0 ||
+                      (expandNhiSalary.length !== 0 &&
+                        expandNhiSalary.filter(expandData => expandData?.doctorId === record.doctorId).length === 0))
+                  ) {
+                    dispatch(getDoctorNhiSalary(record.doctorId, startDate, endDate));
+                  }
+                }}
                 expandable={{
-                  expandedRowRender: record => (
-                    <Table
-                      dataSource={record.treatments}
-                      columns={treatmentColumn}
-                      pagination={false}
-                      rowKey={rowData => `${rowData.treatmentProcedureId}`}
-                    />
-                  ),
-                }}
-                rowSelection={{
-                  type: 'checkbox',
-                  ...rowSelection,
+                  expandedRowRender: record =>
+                    expandedRowRender(
+                      expandNhiSalary.filter(expandData => expandData?.doctorId === record.doctorId).length !== 0
+                        ? expandNhiSalary.filter(expandData => expandData?.doctorId === record.doctorId)[0]
+                        : {},
+                    ),
+                  rowExpandable: record => !!record?.doctorName,
                 }}
               />
-            </TabPane> */}
-          </Tabs>
+            </TabPane>
+            <TabPane tab="補牙指標" key="2">
+              <TableContainer
+                scroll={{ y: 280 }}
+                columns={odColumns(doctors, filterDoctors)}
+                dataSource={odIndexes}
+                pagination={false}
+                bordered={false}
+                showHeader={true}
+                tableLayout="fixed"
+                rowKey={record => `${record.did} ${record.distinctTotalPat}`}
+              />
+            </TabPane>
+            <TabPane tab="洗牙指標" key="3">
+              <TableContainer
+                scroll={{ y: 280 }}
+                columns={toothCleanColumns(doctors, filterDoctors)}
+                dataSource={toothClean}
+                pagination={false}
+                bordered={false}
+                showHeader={true}
+                tableLayout="fixed"
+                rowKey={record => `${record.did} ${record.distinctTotalPat}`}
+              />
+            </TabPane>
+            <TabPane tab="診察總覽" key="4">
+              <TableContainer
+                scroll={{ y: 280 }}
+                columns={doctorNhiExamColumns(doctors, filterDoctors)}
+                dataSource={doctorNhiExam}
+                pagination={false}
+                bordered={false}
+                showHeader={true}
+                tableLayout="fixed"
+                rowKey={record => `doctorNhiExam - ${record.key}`}
+              />
+            </TabPane>
+            <TabPane tab="診療總覽" key="5">
+              <TableContainer
+                scroll={{ y: 280 }}
+                columns={doctorNhiTxColumns(doctors, filterDoctors)}
+                dataSource={doctorNhiTx}
+                pagination={false}
+                bordered={false}
+                showHeader={true}
+                tableLayout="fixed"
+                rowKey={record => `doctorNhiTx - ${record.key}`}
+              />
+            </TabPane>
+          </TabsWrap>
         </TabsContainer>
       </div>
     </div>
@@ -479,10 +823,14 @@ const mapStateToProps = ({ nhiIndexPageReducer, homePageReducer }) => ({
   groupedIndexTreatmentProcedure: parseIndexTreatmentProcedureToTableObject(
     nhiIndexPageReducer.nhiIndex.indexTreatmentProcedure,
   ),
+  nhiSalary: convertUserToNhiSalary(nhiIndexPageReducer.nhiIndex.nhiSalary, homePageReducer.user.users),
+  expandNhiSalary: toRefreshExpandSalary(nhiIndexPageReducer.nhiIndex.expandNhiSalary),
 });
 
 // map to actions
 const mapDispatchToProps = {
+  getNhiSalary,
+  getDoctorNhiSalary,
   getOdIndexes,
   getDoctorNhiExam,
   getDoctorNhiTx,

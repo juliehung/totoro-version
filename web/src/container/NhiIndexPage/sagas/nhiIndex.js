@@ -1,5 +1,13 @@
-import { GET_OD_INDEXES, GET_DOCTOR_NHI_EXAM, GET_DOCTOR_NHI_TX, GET_INDEX_TREATMENT_PRECEDURE } from '../constant';
-import { call, put, take } from 'redux-saga/effects';
+import {
+  GET_OD_INDEXES,
+  GET_DOCTOR_NHI_EXAM,
+  GET_DOCTOR_NHI_TX,
+  GET_INDEX_TREATMENT_PRECEDURE,
+  GET_TOOTH_CLEAN,
+  INIT_NHI_SALARY,
+  GET_DOCTOR_NHI_SALARY,
+} from '../constant';
+import { call, delay, put, take } from 'redux-saga/effects';
 import {
   getOdIndexesFail,
   getOdIndexesSuccess,
@@ -10,12 +18,42 @@ import {
   getToothCleanFail,
   getToothCleanSuccess,
   getIndexTreatmentProcedureSuccess,
+  getNhiSalarySuccess,
+  nhiSalaryNotFound,
+  getDoctorNhiSalarySuccess,
 } from '../actions';
 import OdIndexes from '../../../models/odIndexes';
 import DoctorNhiExam from '../../../models/doctorNhiExam';
 import DoctorNhiTx from '../../../models/doctorNhiTx';
 import ToothClean from '../../../models/toothClean';
 import IndexTreatmentProcedure from '../../../models/indexTreatmentProcedure';
+import DoctorNhiSalary from '../../../models/doctorNhiSalary';
+
+export function* getNhiSalary() {
+  while (true) {
+    try {
+      const { begin, end } = yield take(INIT_NHI_SALARY);
+      const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, { begin, end });
+      yield delay(300);
+      yield put(getNhiSalarySuccess(nhiSalary));
+    } catch (error) {
+      yield put(nhiSalaryNotFound());
+    }
+  }
+}
+
+export function* getDoctorNhiSalary() {
+  while (true) {
+    try {
+      const { doctorId, begin, end } = yield take(GET_DOCTOR_NHI_SALARY);
+      const doctorOneSalary = yield call(DoctorNhiSalary.getSalaryOneByDoctorId, { doctorId, begin, end });
+      yield delay(300);
+      yield put(getDoctorNhiSalarySuccess({ doctorId, doctorOneSalary }));
+    } catch (error) {
+      console.log('error = ', error);
+    }
+  }
+}
 
 export function* getOdIndexes() {
   while (true) {
@@ -71,7 +109,7 @@ export function* getDoctorNhiTx() {
 export function* getToothClean() {
   while (true) {
     try {
-      const { begin, end } = yield take(GET_DOCTOR_NHI_TX);
+      const { begin, end } = yield take(GET_TOOTH_CLEAN);
       const params = {
         begin: begin.startOf('day').toISOString(),
         end: end.endOf('day').toISOString(),
@@ -83,6 +121,7 @@ export function* getToothClean() {
     }
   }
 }
+
 export function* getIndexTreatmentProcedure() {
   while (true) {
     try {
