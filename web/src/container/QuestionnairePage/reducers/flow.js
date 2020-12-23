@@ -85,7 +85,7 @@ const flow = (state = initialState, action) =>
         draft.createQFailure = true;
         break;
       case VALIDATE_SUCCESS:
-        draft.validationError = state.validationError.filter(s => s === action.page);
+        draft.validationError = state.validationError.filter(s => s !== action.page);
         break;
       case VALIDATE_FAIL:
         if (!state.validationError.find(e => e === action.page)) {
