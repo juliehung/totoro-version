@@ -219,6 +219,10 @@ public class AppointmentService {
                     appointment.setContacted((updateAppointment.isContacted()));
                 }
 
+                if (updateAppointment.isFirstVisit() != null) {
+                    appointment.setFirstVisit(updateAppointment.isFirstVisit());
+                }
+
                 // doctor
                 if (updateAppointment.getDoctor() != null && updateAppointment.getDoctor().getId() != null) {
                     log.debug("Update Doctor({}) of Appointment(id: {})", updateAppointment.getDoctor(), updateAppointment.getId());

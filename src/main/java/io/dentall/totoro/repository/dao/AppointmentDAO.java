@@ -26,6 +26,7 @@ public class AppointmentDAO {
     private final Integer colorId;
     private final Boolean archived;
     private final Boolean contacted;
+    private final Boolean firstVisit;
     // Patient
     private final Long patientId;
     private final String patientCreatedBy;
@@ -111,6 +112,7 @@ public class AppointmentDAO {
         Integer colorId,
         Boolean archived,
         Boolean contacted,
+        Boolean firstVisit,
         Long patientId,
         String patientCreatedBy,
         Instant patientCreatedDate,
@@ -188,6 +190,7 @@ public class AppointmentDAO {
         this.colorId = colorId;
         this.archived = archived;
         this.contacted = contacted;
+        this.firstVisit = firstVisit;
         this.patientId = patientId;
         this.patientCreatedBy = patientCreatedBy;
         this.patientCreatedDate = patientCreatedDate;
@@ -364,6 +367,10 @@ public class AppointmentDAO {
 
     public Boolean getContacted() {
         return contacted;
+    }
+
+    public Boolean getFirstVisit() {
+        return firstVisit;
     }
 
     public Long getPatientId() {
