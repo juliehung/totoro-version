@@ -325,15 +325,6 @@ public class AppointmentService {
             tagList.add(tag);
         }
 
-        if (appointmentDTO.getBaseFloor() != null && appointmentDTO.getBaseFloor()) {
-            Tag tag = new Tag();
-            tag.setId(9998L);
-            tag.setName("行動不便");
-            tag.setType(TagType.OTHER);
-            tag.setModifiable(false);
-            tagList.add(tag);
-        }
-
         return tagList;
     }
 
