@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -140,6 +141,76 @@ public class NhiStatisticService {
         }
 
         return nhiExtendDisposalRepository.findNhiIndexTreatmentProcedures(begin, end, excludeDisposalId);
+    }
+
+    private void calculateSalary(NhiStatisticDoctorSalary o, CalculateBaseData e) {
+        long total = 0L;
+        int examPoint = e.getExaminationPoint() != null ? e.getExaminationPoint() : 0;
+        long txPoint = e.getTxPoint() != null ? e.getTxPoint().longValue() : 0;
+        total += examPoint;
+        total += txPoint;
+
+        // 感染或一般診察 並總和 診察 點數
+        if (infectionExaminationCodes.contains(e.getExaminationCode())) {
+            o.setInfectionExaminationPoint(Long.sum(o.getInfectionExaminationPoint(), examPoint));
+        } else {
+            o.setRegularExaminationPoint(Long.sum(o.getRegularExaminationPoint(), examPoint));
+        }
+
+        // 感染會存在於 treatment procedure，在上述以加總，在此應忽略不計
+        if (!infectionExaminationCodes.contains(e.getTxCode())) {
+            o.setTreatmentPoint(Long.sum(o.getTreatmentPoint(), txPoint));
+        }
+
+        // 區別計算 treamtent 各自專科別
+        if (e.getSpecificCode() != null) {
+            switch (e.getSpecificCode()) {
+            case "P1":
+            case "P5":
+                o.setEndoPoint(Long.sum(o.getEndoPoint(), txPoint));
+                break;
+            case "P2":
+            case "P3":
+                o.setPedoPoint(Long.sum(o.getPedoPoint(), txPoint));
+                break;
+            case "P4":
+            case "P8":
+                o.setPerioPoint(Long.sum(o.getPerioPoint(), txPoint));
+                break;
+            case "P6":
+            case "P7":
+            case "other":
+            default:
+                break;
+            }
+        }
+
+        // 總點數
+        o.setTotal(Long.sum(o.getTotal(), total));
+        // 總處置數
+        o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
+        // 部分負擔
+        o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
+    }
+
+    public Collection<NhiStatisticDoctorSalary> getDoctorSalaryPresentByDisposalDate(LocalDate begin, LocalDate end) {
+        Map<Instant, NhiStatisticDoctorSalary> m = new HashMap<>();
+        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end).stream()
+                .collect(Collectors.groupingBy(obj -> obj.getDisposalDate().truncatedTo(ChronoUnit.DAYS)))
+                .forEach((k, v) -> {
+                    v.forEach(e -> {
+                        m.compute(k, (kk, o) -> {
+                            if (o == null) {
+                                o = new NhiStatisticDoctorSalary();
+                                o.setDisposalDate(k);
+                            }
+                            calculateSalary(o, e);
+                            return o;
+                        });
+                    });
+                });
+
+        return m.values();
     }
 
     public Map<Long, NhiStatisticDoctorSalary> getDoctorSalary(LocalDate begin, LocalDate end) {
