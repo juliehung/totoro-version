@@ -1,12 +1,12 @@
 package io.dentall.totoro.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.business.service.nhi.NhiAbnormalityService;
-import io.dentall.totoro.business.service.nhi.NhiStatisticService;
-import io.dentall.totoro.business.vm.nhi.NhiAbnormality;
-import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import io.dentall.totoro.web.rest.vm.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,11 +16,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.List;
-import java.util.Map;
+import com.codahale.metrics.annotation.Timed;
+
+import io.dentall.totoro.business.service.nhi.NhiAbnormalityService;
+import io.dentall.totoro.business.service.nhi.NhiStatisticService;
+import io.dentall.totoro.business.vm.nhi.NhiAbnormality;
+import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
+import io.dentall.totoro.repository.NhiExtendDisposalRepository;
+import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexTreatmentProcedureVM;
+import io.dentall.totoro.web.rest.vm.NhiStatisticDoctorSalary;
 
 /**
  * REST controller for managing nhi statistics.
@@ -125,5 +133,13 @@ public class NhiStatisticBusinessResource {
         @RequestParam(required = false) Long doctorId
     ) {
         return new ResponseEntity<>(nhiStatisticService.getDoctorSalaryExpand(begin, end, doctorId), HttpStatus.OK);
+    }
+    
+    @GetMapping("/doctor-salary/present-by-disposal-date")
+    public ResponseEntity<Collection<NhiStatisticDoctorSalary>> getDoctorSalaryPresentByDisposalDate(
+        @RequestParam LocalDate begin,
+        @RequestParam LocalDate end
+    ) {
+        return new ResponseEntity<>(nhiStatisticService.getDoctorSalaryPresentByDisposalDate(begin, end), HttpStatus.OK);
     }
 }
