@@ -1,14 +1,17 @@
-import { Popover, Dropdown, Menu } from 'antd';
+import { Popover, Dropdown, Menu, Tag } from 'antd';
 import React from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
-import { PhoneOutlined, UserOutlined, SolutionOutlined, EditOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import VisionImg from '../../../component/VisionImg';
 import VixWinImg from '../../../component/VixWinImg';
 import CancelAppointmentButton from '../CancelAppointmentButton';
 import RestoreAppointmentButton from '../RestoreAppointmentButton';
 import { getBaseUrl } from '../../../utils/getBaseUrl';
 import parseDateToString from './parseDateToString';
+import PersonFillIcon from '../../../images/personIcon-fill.svg';
+import PhoneFillIcon from '../../../images/phone-fill.svg';
+import FileTextFillIcon from '../../../images/file-text-fill.svg';
 
 import { XRAY_VENDORS } from '../constant';
 
@@ -16,23 +19,25 @@ import { XRAY_VENDORS } from '../constant';
 const PopoverContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 160px;
+  width: 265px;
 `;
 
-const BreakP = styled.p`
+const InfoWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-family: OpenSans;
+  font-size: 13px;
+  line-height: 1.38;
+  margin-top: 5px;
+`;
+
+const BreakP = styled.span`
   margin: 5px 0;
-  overflow-wrap: break-word;
+  overflow-wrap: break-all;
+  display: flex;
 `;
 
-const StyledPhoneOutlined = styled(PhoneOutlined)`
-  margin-right: 5px;
-`;
-
-const StyledUserOutlined = styled(UserOutlined)`
-  margin-right: 5px;
-`;
-
-const StyledSolutionOutlined = styled(SolutionOutlined)`
+const StyledIcon = styled.span`
   margin-right: 5px;
 `;
 
@@ -45,39 +50,69 @@ const StyledEditOutlined = styled(EditOutlined)`
 
 const HightLightSpan = styled.span`
   font-weight: bold;
-  font-style: italic;
+  font-style: ${props => (props.birth ? 'italic' : 'normal')};
+  line-height: normal;
+  color: ${props => (props.birth ? '#222b45' : '#8f9bb3')};
+  font-size: 11px;
+  letter-spacing: -1px;
 `;
 
 const NameSpan = styled.span`
-  font-size: 24px;
+  font-size: 22px;
+  font-weight: 600;
   color: inherit;
+  line-height: 1.45;
+`;
+
+const TagsWrap = styled.div`
+  margin-top: 4px;
+  margin-bottom: 5px;
+`;
+
+const NormalTagStyle = styled(Tag)`
+  border-radius: 9px;
+  border: solid 0.8px #c5cee0;
+  background-color: rgba(143, 155, 179, 0.15);
+  color: #222b45;
+  line-height: 1.5;
+  margin-right: 4px;
+  margin-bottom: 3px;
+`;
+
+const DangerTagStyle = styled(Tag)`
+  border-radius: 9px;
+  border: solid 0.8px #ffa39e;
+  background-color: #fff1f0;
+  color: #ff4d4f;
+  line-height: 1.5;
+  margin-right: 4px;
+`;
+
+const BtnWrap = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 7px;
 `;
 
 const LinkSpan = styled.a`
-  height: 24px;
-  color: #fff;
-  text-decoration: inherit;
-  background: #3266ff;
-  border-radius: 34px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  > span {
-    font-size: 10px;
-  }
+  text-align: right;
+  font-family: PingFangSC;
+  font-size: 14px;
+  font-weight: 600;
+  color: #3366ff;
+  line-height: 1.14;
+  padding: 5px;
+  margin-left: auto;
 
   &:hover,
   &:focus,
   &:active {
     text-decoration: none;
-    color: #fff;
   }
 `;
 
 const XrayContainer = styled.div`
-  margin: 5px 0 10px;
+  margin: 0;
   display: flex;
   & > div {
     cursor: pointer;
@@ -194,8 +229,7 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
   if (info.event.extendedProps.eventType === 'appointment') {
     const appointment = info.event.extendedProps.appointment;
     if (info.view.type.indexOf('Grid') !== -1) {
-      const { id, birth, patientId, patientName, phone, doctor, note, status, registrationStatus } = appointment;
-
+      const { id, birth, patientId, patientName, phone, doctor, note, status, registrationStatus, tags } = appointment;
       if (info.view.type !== 'dayGridMonth') {
         const fcTitle = info.el.querySelector('.fc-title');
         if (fcTitle) {
@@ -210,47 +244,87 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
           fcContent.innerHTML = `<div class="eventCard">${fcContent.innerHTML}</div>`;
         }
 
+        const sortTags = { dangerTags: [], normalTags: [] };
+        if (tags) {
+          // TODO: id 33 & 44 have same value but different type
+          const ids = [];
+          tags.forEach(t => ids.push(t.id));
+          tags.forEach(tag => {
+            if (
+              tag.type === 'BLOOD_DISEASE' ||
+              (tag.type === 'OTHER' && tag.id === 9999) ||
+              (tag.type === 'OTHER' && tag.id === 25)
+            ) {
+              sortTags.dangerTags.push(tag);
+            } else if (tag.id === 33) {
+              ids.indexOf(44) === -1 && sortTags.dangerTags.push(tag);
+            } else {
+              sortTags.normalTags.push(tag);
+            }
+          });
+        }
+
         const popoverContent = (
           <PopoverContainer>
+            <HightLightSpan birth={birth}>{birth ? parseDateToString(birth, false) : '生日未填'}</HightLightSpan>
             <NameSpan>
               {status === 'CANCEL' ? '[C]' : null} {patientName}
             </NameSpan>
-            <HightLightSpan>{parseDateToString(birth, false)}</HightLightSpan>
-            <BreakP>
-              <StyledPhoneOutlined />
-              {phone}
-            </BreakP>
-            <BreakP>
-              <StyledUserOutlined />
-              {doctor.user.firstName}
-            </BreakP>
-            <BreakP>
-              <StyledSolutionOutlined />
-              {note}
-            </BreakP>
-            <XrayContainer>
-              {params.xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
-                <div
-                  onClick={() => {
-                    func.xray({ vendor: XRAY_VENDORS.vision, appointment });
-                  }}
-                >
-                  <VisionImg width="23" />
-                </div>
+            <InfoWrap>
+              <BreakP>
+                <StyledIcon>
+                  <img src={PhoneFillIcon} alt="phone-icon"></img>
+                </StyledIcon>
+                {phone}
+              </BreakP>
+              <BreakP>
+                <StyledIcon>
+                  <img src={PersonFillIcon} alt="person-icon"></img>
+                </StyledIcon>
+                {doctor.user.firstName}
+              </BreakP>
+              {note && (
+                <BreakP>
+                  <StyledIcon>
+                    <img src={FileTextFillIcon} alt="file-icon"></img>
+                  </StyledIcon>
+                  {note}
+                </BreakP>
               )}
-              {params.xRayVendors?.[XRAY_VENDORS.vixwin] === 'true' && (
-                <div
-                  onClick={() => {
-                    func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
-                  }}
-                >
-                  <VixWinImg width="23" />
-                </div>
-              )}
-            </XrayContainer>
-            <LinkSpan href={`${getBaseUrl()}#/patient/${patientId}`} target="_blank" rel="noopener noreferrer">
-              查看詳細資訊
-            </LinkSpan>
+            </InfoWrap>
+            <TagsWrap>
+              {sortTags.dangerTags.map(({ name, id }) => (
+                <DangerTagStyle key={id}>{name}</DangerTagStyle>
+              ))}
+              {sortTags.normalTags.map(({ name, type, id }) => (
+                <NormalTagStyle key={id}>{type === 'ALLERGY' ? `${name}過敏` : name}</NormalTagStyle>
+              ))}
+            </TagsWrap>
+            <BtnWrap>
+              <XrayContainer>
+                {params.xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
+                  <div
+                    onClick={() => {
+                      func.xray({ vendor: XRAY_VENDORS.vision, appointment });
+                    }}
+                  >
+                    <VisionImg width="23" />
+                  </div>
+                )}
+                {params.xRayVendors?.[XRAY_VENDORS.vixwin] === 'true' && (
+                  <div
+                    onClick={() => {
+                      func.xray({ vendor: XRAY_VENDORS.vixwin, appointment });
+                    }}
+                  >
+                    <VixWinImg width="23" />
+                  </div>
+                )}
+              </XrayContainer>
+              <LinkSpan href={`${getBaseUrl()}#/patient/${patientId}`} target="_blank" rel="noopener noreferrer">
+                關於病患
+              </LinkSpan>
+            </BtnWrap>
             {!registrationStatus ? (
               <span>
                 <StyledEditOutlined
