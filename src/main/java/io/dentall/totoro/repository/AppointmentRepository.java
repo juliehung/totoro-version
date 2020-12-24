@@ -42,6 +42,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "       a.expected_arrival_time as appointmentExpectedArrivalTime," +
             "       a.microscope as appointmentMicroscope," +
             "       a.base_floor as appointmentBaseFloor," +
+            "       a.first_visit as appointmentFirstVisit, " +
             "       r.id as registrationId," +
             "       r.arrival_time as registrationArrivalTime," +
             "       r.status as registrationStatus," +
@@ -136,7 +137,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.patient.lastModifiedDate, " +
             "appointment.patient.lastModifiedBy, " +
             "appointment.patient.medicalId, " +
-            "appointment.colorId" +
+            "appointment.colorId, " +
+            "appointment.firstVisit" +
             ") " +
             "from Appointment as appointment left outer join appointment.registration as registration " +
             "where appointment.expectedArrivalTime between :beginDate and :endDate ")
@@ -157,6 +159,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.colorId, " +
             "appointment.archived, " +
             "appointment.contacted, " +
+            "appointment.firstVisit, " +
             "patient.id, " +
             "patient.createdBy, " +
             "patient.createdDate, " +

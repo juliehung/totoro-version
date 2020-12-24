@@ -1,13 +1,15 @@
 package io.dentall.totoro.web.rest.vm;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Set;
+
 import io.dentall.totoro.domain.ExtendUser;
+import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 import io.dentall.totoro.domain.enumeration.Gender;
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.service.dto.AppointmentDTO;
-
-import java.time.Instant;
-import java.time.LocalDate;
 
 public class MonthAppointmentVM {
 
@@ -54,6 +56,10 @@ public class MonthAppointmentVM {
     private final String medicalId;
 
     private final Integer colorId;
+    
+    private Set<Tag> tags;
+
+    private final Boolean firstVisit;
 
     public MonthAppointmentVM(AppointmentDTO appointmentDTO) {
         this.patientId = appointmentDTO.getPatientId();
@@ -78,6 +84,7 @@ public class MonthAppointmentVM {
         this.patientLastModifiedBy = appointmentDTO.getPatientLastModifiedBy();
         this.medicalId = appointmentDTO.getPatientMedicalId();
         this.colorId = appointmentDTO.getColorId();
+        this.firstVisit = appointmentDTO.getFirstVisit();
     }
 
     public Integer getColorId() {
@@ -166,5 +173,17 @@ public class MonthAppointmentVM {
 
     public String getPatientDisplayName() {
         return patientDisplayName;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Boolean getFirstVisit() {
+        return firstVisit;
     }
 }

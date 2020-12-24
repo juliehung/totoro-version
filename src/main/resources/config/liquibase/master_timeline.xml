@@ -21,4 +21,5 @@
     <include file="config/liquibase/changelog/2020/12/20201204.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2020/12/20201216_addColumn.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/2020/12/20201221_addColumn.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/2020/12/20201222_addColumn.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

@@ -23,6 +23,7 @@ public class AppointmentMapper {
         appointment.setColorId(appointmentTable.getColorId());
         appointment.setArchived(appointmentTable.getArchived());
         appointment.setContacted(appointmentTable.getContacted());
+        appointment.setFirstVisit(appointmentTable.getFirstVisit());
 
         // Relationship
         if (appointmentTable.getPatient_Id() != null) {

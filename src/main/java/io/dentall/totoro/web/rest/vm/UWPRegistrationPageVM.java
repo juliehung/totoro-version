@@ -26,6 +26,7 @@ public interface UWPRegistrationPageVM {
     Instant getAppointmentExpectedArrivalTime();
     Boolean getAppointmentMicroscope();
     Boolean getAppointmentBaseFloor();
+    Boolean getAppointmentFirstVisit();
 
     // registration
     Long getRegistrationId();

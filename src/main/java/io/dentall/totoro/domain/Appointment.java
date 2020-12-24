@@ -59,6 +59,9 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
     @Column(name = "contacted")
     private Boolean contacted;
 
+    @Column(name = "first_visit")
+    private Boolean firstVisit;
+
     @ManyToOne
     @JsonIgnoreProperties(value = {"appointments", "treatments", "todos", "teeth", "parents", "spouse1S"}, allowSetters = true)
     private Patient patient;
@@ -208,6 +211,19 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
         this.contacted = contacted;
     }
 
+    public Boolean isFirstVisit() {
+        return firstVisit;
+    }
+
+    public Appointment firstVisit(Boolean firstVisit) {
+        this.firstVisit = firstVisit;
+        return this;
+    }
+
+    public void setFirstVisit(Boolean firstVisit) {
+        this.firstVisit = firstVisit;
+    }
+
     public Patient getPatient() {
         return patient;
     }
@@ -294,6 +310,7 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
             ", colorId=" + getColorId() +
             ", archived='" + isArchived() + "'" +
             ", contacted='" + isContacted() + "'" +
+            ", firstVisit='" + isFirstVisit() + "'" +
             "}";
     }
 }
