@@ -121,25 +121,28 @@ public class NhiStatisticBusinessResource {
     @GetMapping("/doctor-salary")
     public ResponseEntity<Map<Long, NhiStatisticDoctorSalary>> getDoctorSalary(
         @RequestParam LocalDate begin,
-        @RequestParam LocalDate end
+        @RequestParam LocalDate end,
+        @RequestParam(required = false) List<Long> excludeDisposalId
     ) {
-        return new ResponseEntity<>(nhiStatisticService.getDoctorSalary(begin, end), HttpStatus.OK);
+        return new ResponseEntity<>(nhiStatisticService.getDoctorSalary(begin, end, excludeDisposalId), HttpStatus.OK);
     }
 
     @GetMapping("/doctor-salary/expands")
     public ResponseEntity<Map<Long, NhiStatisticDoctorSalary>> getDoctorSalaryExpands(
         @RequestParam LocalDate begin,
         @RequestParam LocalDate end,
-        @RequestParam(required = false) Long doctorId
+        @RequestParam(required = false) Long doctorId,
+        @RequestParam(required = false) List<Long> excludeDisposalId
     ) {
-        return new ResponseEntity<>(nhiStatisticService.getDoctorSalaryExpand(begin, end, doctorId), HttpStatus.OK);
+        return new ResponseEntity<>(nhiStatisticService.getDoctorSalaryExpand(begin, end, doctorId, excludeDisposalId), HttpStatus.OK);
     }
     
     @GetMapping("/doctor-salary/present-by-disposal-date")
     public ResponseEntity<Collection<NhiStatisticDoctorSalary>> getDoctorSalaryPresentByDisposalDate(
         @RequestParam LocalDate begin,
-        @RequestParam LocalDate end
+        @RequestParam LocalDate end,
+        @RequestParam(required = false) List<Long> excludeDisposalId
     ) {
-        return new ResponseEntity<>(nhiStatisticService.getDoctorSalaryPresentByDisposalDate(begin, end), HttpStatus.OK);
+        return new ResponseEntity<>(nhiStatisticService.getDoctorSalaryPresentByDisposalDate(begin, end, excludeDisposalId), HttpStatus.OK);
     }
 }
