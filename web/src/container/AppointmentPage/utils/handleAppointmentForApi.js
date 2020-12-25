@@ -12,6 +12,7 @@ export function handleAppointmentForApi(appointment) {
     note: appointment.note,
     microscope: appointment.specialNote.includes('micro'),
     baseFloor: appointment.specialNote.includes('baseFloor'),
+    firstVisit: appointment.specialNote.includes('firstVisit'),
     status: 'CONFIRMED',
     colorId: appointment.colorId,
   };
