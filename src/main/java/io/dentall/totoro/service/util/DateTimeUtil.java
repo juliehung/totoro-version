@@ -26,8 +26,6 @@ public final class DateTimeUtil {
 
     public static final Period NHI_24_MONTH = Period.ofDays(730);
 
-    public static final Period NHI_36_MONTH = Period.ofDays(1095);
-
     public static Supplier<Instant> localTimeMin = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toZonedDateTime().with(LocalTime.MIN).toInstant();
     public static Supplier<Instant> localTimeMax = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toZonedDateTime().with(LocalTime.MAX).toInstant();
 
@@ -115,8 +113,5 @@ public final class DateTimeUtil {
         return format;
     };
 
-    public static Period startDayOfMonthDiff(LocalDate current) {
-        return Period.between(LocalDate.of(current.getYear(), current.getMonth(), 1), current);
-    }
 
 }

@@ -116,7 +116,7 @@ public class NhiRuleCheckUtilMockTest {
      */
     private void mockFindTxRepo() {
         Mockito
-            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                 any(),
                 any()
             ))
@@ -135,7 +135,7 @@ public class NhiRuleCheckUtilMockTest {
      */
     private void mockFindTxRepoWithReturn(NhiExtendTreatmentProcedure netp) {
         Mockito
-            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                 any(),
                 any()
             ))
@@ -204,7 +204,7 @@ public class NhiRuleCheckUtilMockTest {
     @Test
     public void findPatientMediaRecordAtCodesAndBeforePeriod_1() {
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -229,7 +229,7 @@ public class NhiRuleCheckUtilMockTest {
         fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -254,7 +254,7 @@ public class NhiRuleCheckUtilMockTest {
         fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
                 eq(DataGenerator.ID_2),
                 anyList()
             ))
@@ -279,7 +279,7 @@ public class NhiRuleCheckUtilMockTest {
         fakeNmr.setNhiCode(DataGenerator.NHI_CODE_2);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -304,7 +304,7 @@ public class NhiRuleCheckUtilMockTest {
         fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -329,7 +329,7 @@ public class NhiRuleCheckUtilMockTest {
         fakeNmr.setNhiCode(DataGenerator.NHI_CODE_1);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -356,7 +356,7 @@ public class NhiRuleCheckUtilMockTest {
     @Test
     public void findPatientTreatmentProcedureAtCodesAndBeforePeriod_1() {
         Mockito
-            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -395,7 +395,7 @@ public class NhiRuleCheckUtilMockTest {
         );
 
         Mockito
-            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -438,7 +438,7 @@ public class NhiRuleCheckUtilMockTest {
         );
 
         Mockito
-            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -482,7 +482,7 @@ public class NhiRuleCheckUtilMockTest {
         );
 
         Mockito
-            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                 eq(DataGenerator.ID_1),
                 anyList()
             ))
@@ -533,7 +533,7 @@ public class NhiRuleCheckUtilMockTest {
     @Test
     public void findTxCode_2() {
         Mockito
-            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                 eq(DataGenerator.ID_1),
                 eq(DataGenerator.NHI_CODE_LIST_1)
             ))
@@ -562,7 +562,7 @@ public class NhiRuleCheckUtilMockTest {
     @Test
     public void findTxCode_3() {
         Mockito
-            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                 eq(DataGenerator.ID_1),
                 eq(DataGenerator.NHI_CODE_LIST_1)
             ))
@@ -591,7 +591,7 @@ public class NhiRuleCheckUtilMockTest {
     @Ignore
     public void findTxCode_4() {
         Mockito
-            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                 eq(DataGenerator.ID_1),
                 eq(DataGenerator.NHI_CODE_LIST_1)
             ))
@@ -618,7 +618,7 @@ public class NhiRuleCheckUtilMockTest {
         mockingResult.a71(DataGenerator.NHI_TREATMENT_DATE_NOW_STRING).a73(DataGenerator.NHI_CODE_1).a74(DataGenerator.TOOTH_PERMANENT_1).a75(DataGenerator.SURFACE_BLANK);
 
         Mockito
-            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+            .when(nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                 eq(DataGenerator.ID_1),
                 eq(DataGenerator.NHI_CODE_LIST_1)
             ))
@@ -984,7 +984,7 @@ public class NhiRuleCheckUtilMockTest {
 
         Mockito
             .when(
-                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                     any(Long.class),
                     anyList()
                 ))
@@ -1049,7 +1049,7 @@ public class NhiRuleCheckUtilMockTest {
 
         Mockito
             .when(
-                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                     any(Long.class),
                     anyList()
                 ))
@@ -1114,7 +1114,7 @@ public class NhiRuleCheckUtilMockTest {
 
         Mockito
             .when(
-                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                     any(Long.class),
                     anyList()
                 ))
@@ -1171,7 +1171,7 @@ public class NhiRuleCheckUtilMockTest {
 
         Mockito
             .when(
-                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                     any(Long.class),
                     anyList()
                 ))
@@ -1228,7 +1228,7 @@ public class NhiRuleCheckUtilMockTest {
 
         Mockito
             .when(
-                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                     any(Long.class),
                     anyList()
                 ))
@@ -1293,7 +1293,7 @@ public class NhiRuleCheckUtilMockTest {
 
         Mockito
             .when(
-                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
+                nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(
                     any(Long.class),
                     anyList()
                 ))
@@ -1653,7 +1653,7 @@ public class NhiRuleCheckUtilMockTest {
         dto.setNhiExtendTreatmentProcedure(netp);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
                 DataGenerator.ID_1,
                 DataGenerator.NHI_CODE_LIST_1
             ))
@@ -1693,7 +1693,7 @@ public class NhiRuleCheckUtilMockTest {
         netpMocking.setPart(DataGenerator.TOOTH_PERMANENT_3);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
                 DataGenerator.ID_1,
                 DataGenerator.NHI_CODE_LIST_1
             ))
@@ -1733,7 +1733,7 @@ public class NhiRuleCheckUtilMockTest {
         netpMocking.setPart(DataGenerator.TOOTH_PERMANENT_3);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
                 DataGenerator.ID_1,
                 DataGenerator.NHI_CODE_LIST_1
             ))
@@ -1773,7 +1773,7 @@ public class NhiRuleCheckUtilMockTest {
         netpMocking.setPart(DataGenerator.TOOTH_PERMANENT_3);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
                 DataGenerator.ID_1,
                 DataGenerator.NHI_CODE_LIST_1
             ))
@@ -1814,7 +1814,7 @@ public class NhiRuleCheckUtilMockTest {
         netpMocking.setPart(DataGenerator.TOOTH_PERMANENT_3);
 
         Mockito
-            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
+            .when(nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeIn(
                 DataGenerator.ID_1,
                 DataGenerator.NHI_CODE_LIST_1
             ))

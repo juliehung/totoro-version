@@ -14,22 +14,12 @@ public interface NhiRuleCheckService<A, B, O> {
 
     O dispatch(String code, A vm) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
 
-    // 012***
-    O validate01271C(B dto);
-
-    // 900***
-    O validate90012C(B dto);
-
     // 910***
-    O validate91001C(B dto);
-
     O validate91003C(B dto);
 
     O validate91004C(B dto);
 
     O validate91005C(B dto);
-
-    O validate91014C(B dto);
 
     O validate91015C(B dto);
 
