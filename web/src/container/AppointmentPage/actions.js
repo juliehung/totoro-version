@@ -28,6 +28,8 @@ import {
   CHANGE_CREATE_APP_DEFAULT_DURATION,
   CHANGE_CREATE_APP_NOTE,
   CHANGE_CREATE_APP_SPECIAL_NOTE,
+  CHANGE_CREATE_APP_SPECIAL_NOTE_ADD_FIRST_VISIT,
+  CHANGE_CREATE_APP_SPECIAL_NOTE_REMOVE_FIRST_VISIT,
   CHECK_CONFIRM_BUTTON_DISABLE,
   CHANGE_CREATE_APP_PATIENT_NAME,
   CHANGE_CREATE_APP_PATIENT_PHONE,
@@ -212,6 +214,13 @@ export function changeCreateAppSpecialNote(value) {
   return { type: CHANGE_CREATE_APP_SPECIAL_NOTE, value };
 }
 
+export function changeCreateAppSpecialNoteAddFirstVisit(value) {
+  return { type: CHANGE_CREATE_APP_SPECIAL_NOTE_ADD_FIRST_VISIT, value };
+}
+
+export function changeCreateAppSpecialNoteRemoveFirstVisit() {
+  return { type: CHANGE_CREATE_APP_SPECIAL_NOTE_REMOVE_FIRST_VISIT };
+}
 export function checkConfirmButtonDisable() {
   return { type: CHECK_CONFIRM_BUTTON_DISABLE };
 }

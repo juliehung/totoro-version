@@ -229,9 +229,22 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
   if (info.event.extendedProps.eventType === 'appointment') {
     const appointment = info.event.extendedProps.appointment;
     if (info.view.type.indexOf('Grid') !== -1) {
-      const { id, birth, patientId, patientName, phone, doctor, note, status, registrationStatus, tags } = appointment;
+      const {
+        id,
+        birth,
+        patientId,
+        patientName,
+        phone,
+        doctor,
+        note,
+        status,
+        registrationStatus,
+        tags,
+        firstVisit,
+      } = appointment;
       if (info.view.type !== 'dayGridMonth') {
         const fcTitle = info.el.querySelector('.fc-title');
+
         if (fcTitle) {
           const fcTitleClone = fcTitle.innerHTML;
           fcTitle.innerHTML = note
@@ -268,7 +281,8 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
           <PopoverContainer>
             <HightLightSpan birth={birth}>{birth ? parseDateToString(birth, false) : '生日未填'}</HightLightSpan>
             <NameSpan>
-              {status === 'CANCEL' ? '[C]' : null} {patientName}
+              {status === 'CANCEL' ? '[C]' : null} {firstVisit ? '[N] ' : null}
+              {patientName}
             </NameSpan>
             <InfoWrap>
               <BreakP>

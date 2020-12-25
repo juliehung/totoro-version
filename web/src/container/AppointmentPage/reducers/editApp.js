@@ -75,6 +75,9 @@ const editApp = (state = initialState, action) =>
         if (action.app.baseFloor) {
           draft.appointment.specialNote.push('baseFloor');
         }
+        if (action.app.firstVisit) {
+          draft.appointment.specialNote.push('firstVisit');
+        }
         draft.appointment.colorId = action.app.colorId;
         break;
       case GET_PATIENT_SUCCESS_EDIT_APP:

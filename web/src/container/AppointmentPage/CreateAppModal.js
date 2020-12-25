@@ -17,6 +17,8 @@ import {
   changeCreateAppColor,
   createAppointment,
   changeCreateAppSpecialNote,
+  changeCreateAppSpecialNoteAddFirstVisit,
+  changeCreateAppSpecialNoteRemoveFirstVisit,
   checkConfirmButtonDisable,
   changeCreateAppPatientName,
   changeCreateAppPatientPhone,
@@ -189,6 +191,8 @@ function CreateAppModal({
   changeCreateAppColor,
   createAppointment,
   changeCreateAppSpecialNote,
+  changeCreateAppSpecialNoteAddFirstVisit,
+  changeCreateAppSpecialNoteRemoveFirstVisit,
   checkConfirmButtonDisable,
   changeCreateAppPatientName,
   changeCreateAppPatientPhone,
@@ -203,7 +207,7 @@ function CreateAppModal({
   changePatientSearchMode,
 }) {
   const [expectedTimeOption, setExpectedTimeOption] = useState(defaultTimeOption);
-
+  const { name, phone, nationalId, birth } = patient;
   useEffect(() => {
     if (createAppSuccess) {
       getAllEvents();
@@ -236,6 +240,25 @@ function CreateAppModal({
       changeCreateAppDoctor(lastDoctor);
     }
   }, [selectedPatient, changeCreateAppDoctor, appointment.doctorId]);
+
+  useEffect(() => {
+    if (
+      !selectedPatient &&
+      ((name && name !== '') || (phone && phone !== '') || (nationalId && nationalId !== '') || birth)
+    ) {
+      changeCreateAppSpecialNoteAddFirstVisit(['firstVisit']);
+    } else {
+      changeCreateAppSpecialNoteRemoveFirstVisit();
+    }
+  }, [
+    name,
+    phone,
+    nationalId,
+    birth,
+    selectedPatient,
+    changeCreateAppSpecialNoteAddFirstVisit,
+    changeCreateAppSpecialNoteRemoveFirstVisit,
+  ]);
 
   const closeModal = () => {
     changeCreateAppModalVisible(false);
@@ -272,6 +295,7 @@ function CreateAppModal({
   };
 
   const options = [
+    { label: '初診病患', value: 'firstVisit' },
     { label: 'micro', value: 'micro' },
     { label: '行動不便', value: 'baseFloor' },
   ];
@@ -565,6 +589,8 @@ const mapDispatchToProps = {
   changeCreateAppColor,
   createAppointment,
   changeCreateAppSpecialNote,
+  changeCreateAppSpecialNoteAddFirstVisit,
+  changeCreateAppSpecialNoteRemoveFirstVisit,
   checkConfirmButtonDisable,
   changeCreateAppPatientName,
   changeCreateAppPatientPhone,
