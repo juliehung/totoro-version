@@ -224,42 +224,42 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList("91004C", "91003C"),
+                Arrays.asList(new String[]{"91004C,91003C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList("91004C", "91003C"),
+                Arrays.asList(new String[]{"91004C,91003C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList("91015C~91018C"),
+                Arrays.asList(new String[]{"91015C~91018C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList("91015C~91018C"),
+                Arrays.asList(new String[]{"91015C~91018C"}.clone()),
                 DateTimeUtil.NHI_3_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList("91103C", "91104C"),
+                Arrays.asList(new String[]{"91103C", "91104C"}.clone()),
                 DateTimeUtil.NHI_2_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList("91103C", "91104C"),
+                Arrays.asList(new String[]{"91103C", "91104C"}.clone()),
                 DateTimeUtil.NHI_2_MONTH),
             vm
         );
@@ -272,8 +272,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isNoConflictNhiCode(dto,
-                Arrays.asList("91001C", "91017C", "91019C")
-            ),
+                Arrays.asList(new String[]{"91001C", "91017C", "91019C"}.clone())),
             vm
         );
 
