@@ -381,11 +381,14 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "    left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "    left join nhi_procedure np on tp.nhi_procedure_id = np.id " +
             "    left join appointment a on d.registration_id = a.registration_id " +
-            "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
-            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
+            "where ned.a19 = '1' and ned.jhi_date between :begin and :end and d.id not in :excludeDisposalId " +
+            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end and d.id not in :excludeDisposalId " +
             "order by d.id, tp.id "
     )
-    List<CalculateBaseData> findCalculateBaseDataByDate(@Param("begin") LocalDate begin, @Param("end") LocalDate end);
+    List<CalculateBaseData> findCalculateBaseDataByDate(
+            @Param("begin") LocalDate begin,
+            @Param("end") LocalDate end,
+            @Param("excludeDisposalId") List<Long> excludeDisposalId);
 
     @Query(
         nativeQuery = true,
@@ -410,9 +413,13 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "    left join nhi_procedure np on tp.nhi_procedure_id = np.id " +
             "    left join appointment a on d.registration_id = a.registration_id " +
             "    left join patient p on a.patient_id = p.id " +
-            "where ned.a19 = '1' and ned.jhi_date between :begin and :end and a.doctor_user_id = :doctorId " +
-            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end and a.doctor_user_id = :doctorId " +
+            "where ned.a19 = '1' and ned.jhi_date between :begin and :end and a.doctor_user_id = :doctorId and d.id not in :excludeDisposalId " +
+            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end and a.doctor_user_id = :doctorId and d.id not in :excludeDisposalId " +
             "order by d.id, tp.id "
     )
-    List<CalculateBaseData> findCalculateBaseDataByDateAndDoctorId(@Param("begin") LocalDate begin, @Param("end") LocalDate end, @Param("doctorId") Long doctorId);
+    List<CalculateBaseData> findCalculateBaseDataByDateAndDoctorId(
+            @Param("begin") LocalDate begin,
+            @Param("end") LocalDate end,
+            @Param("doctorId") Long doctorId,
+            @Param("excludeDisposalId") List<Long> excludeDisposalId);
 }

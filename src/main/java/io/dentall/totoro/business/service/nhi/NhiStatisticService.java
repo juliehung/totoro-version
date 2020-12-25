@@ -193,9 +193,15 @@ public class NhiStatisticService {
         o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
     }
 
-    public Collection<NhiStatisticDoctorSalary> getDoctorSalaryPresentByDisposalDate(LocalDate begin, LocalDate end) {
+    public Collection<NhiStatisticDoctorSalary> getDoctorSalaryPresentByDisposalDate(LocalDate begin, LocalDate end,
+            List<Long> excludeDisposalId) {
         Map<Instant, NhiStatisticDoctorSalary> m = new HashMap<>();
-        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end).stream()
+
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId).stream()
                 .collect(Collectors.groupingBy(obj -> obj.getDisposalDate().truncatedTo(ChronoUnit.DAYS)))
                 .forEach((k, v) -> {
                     v.forEach(e -> {
@@ -213,9 +219,15 @@ public class NhiStatisticService {
         return m.values();
     }
 
-    public Map<Long, NhiStatisticDoctorSalary> getDoctorSalary(LocalDate begin, LocalDate end) {
+    public Map<Long, NhiStatisticDoctorSalary> getDoctorSalary(LocalDate begin, LocalDate end,
+            List<Long> excludeDisposalId) {
         Map<Long, NhiStatisticDoctorSalary> m = new HashMap<>();
-        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end).stream()
+
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId).stream()
             .collect(Collectors.groupingBy(CalculateBaseData::getDoctorId))
             .forEach((k, v) -> {
                 v.forEach(e -> {
@@ -280,9 +292,15 @@ public class NhiStatisticService {
         return m;
     }
 
-    public Map<Long, NhiStatisticDoctorSalary> getDoctorSalaryExpand(LocalDate begin, LocalDate end, Long doctorId) {
+    public Map<Long, NhiStatisticDoctorSalary> getDoctorSalaryExpand(LocalDate begin, LocalDate end, Long doctorId,
+            List<Long> excludeDisposalId) {
         Map<Long, NhiStatisticDoctorSalary> m = new HashMap<>();
-        nhiExtendDisposalRepository.findCalculateBaseDataByDateAndDoctorId(begin, end, doctorId).stream()
+
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        nhiExtendDisposalRepository.findCalculateBaseDataByDateAndDoctorId(begin, end, doctorId, excludeDisposalId).stream()
             .collect(Collectors.groupingBy(CalculateBaseData::getDisposalId))
             .forEach((k, v) -> {
                 v.forEach(e -> {
