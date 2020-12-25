@@ -1,20 +1,34 @@
 package io.dentall.totoro.business.service.nhi;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.dto.CalculateBaseData;
-import io.dentall.totoro.web.rest.vm.*;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexTreatmentProcedureVM;
+import io.dentall.totoro.web.rest.vm.NhiStatisticDoctorSalary;
 
 @Service
 @Transactional
@@ -201,8 +215,11 @@ public class NhiStatisticService {
             excludeDisposalId = Arrays.asList(0L);
         }
 
+        // 這邊特別將時間轉成台北時區後，再進行Group By，因為沒有這樣處理的話，有可能會出現小於begin或大於end的日期
+        // 雖然特別將時區轉成台北時區後，可是因為NhiStatisticDoctorSalary.disposalDate為Instant型態，所以只好特別從localDateTime轉回Instant，但要時區要指定成UTC，避免時間又被減掉8小時
         nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId).stream()
-                .collect(Collectors.groupingBy(obj -> obj.getDisposalDate().truncatedTo(ChronoUnit.DAYS)))
+                .collect(Collectors
+                        .groupingBy(obj -> obj.getDisposalDate().atZone(ZoneId.of("Asia/Taipei")).toLocalDateTime().truncatedTo(ChronoUnit.DAYS).toInstant(ZoneOffset.UTC)))
                 .forEach((k, v) -> {
                     v.forEach(e -> {
                         m.compute(k, (kk, o) -> {
