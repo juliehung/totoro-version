@@ -29,7 +29,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -194,10 +193,7 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 用來把數個後端檢核結果總結，並以前端所需格式輸出。你會想知道應用上每個塞入的 vm 都是依樣是為何？
-     * 因為要保持 domain, vm, dto 的 POJO 特性。 Why POJO ？ 這類資料可能會塞入其它套件應用，
-     * 此外也容易遺忘複查 get/set 裡面的邏輯，為了避免 vm, dto 太過複雜，
-     * 應把轉換邏輯提出，且保持 get/set。
+     * 用來把數個後端檢核結果總結，並以前端所需格式輸出
      *
      * @param dto 後端檢驗後的結果
      * @param vm  前端檢驗後的結果
@@ -310,10 +306,6 @@ public class NhiRuleCheckUtil {
 
         // 若有指定排除的 treatment procedure id，在後續的 query result 將會排除所列項目。（應用於前端刪除項目但尚未改動到資料）
         dto.setExcludeTreatmentProcedureIds(vm.getExcludeTreatmentProcedureIds());
-        // assign 指定同處置底下的 nhi code，以利後續規則使用
-        dto.setIncludeNhiCodes(vm.getIncludeNhiCodes());
-        // assign 轉診註記，以利後續規則使用
-        dto.setReferral(vm.isReferral());
 
         if (vm.getPatientId() != null) {
             assignDtoByPatientId(dto, vm.getPatientId());
@@ -693,33 +685,6 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 具有條件地，回訊息作為提醒用，檢核狀況算審核通過
-     *
-     * @param dto 根據 predicate 的不同許用不同的內容
-     * @param message 應回傳訊息
-     * @param predicates 條件式
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO addNotificationWithClause(
-        NhiRuleCheckDTO dto,
-        String message,
-        Predicate<NhiRuleCheckDTO>...predicates
-    ) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.NONE)
-            .validateTitle("具有條件地，回訊息作為提醒用，檢核狀況算審核通過")
-            .validated(true)
-            .message(message);
-
-        if (Arrays.stream(predicates).allMatch(p -> p.test(dto))) {
-            result.nhiRuleCheckInfoType(NhiRuleCheckInfoType.INFO)
-                .message(message);
-        }
-
-        return result;
-    }
-
-    /**
      * 限制牙面在 isAllLimitedSurface 以下
      *
      * @param dto 使用 nhiExtendTreatmentProcedure.a75
@@ -1024,51 +989,4 @@ public class NhiRuleCheckUtil {
 
         return result.message("系統及健保卡皆無紀錄，請查詢雲端藥歷取得正確資訊");
     }
-
-    /**
-     * 檢查同一處置單，是否沒有健保定義的其他衝突診療
-     *
-     * @param dto 使用 includeNhiCodes
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isNoConflictNhiCode(NhiRuleCheckDTO dto, List<String> conflictCodes) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("檢查同一處置單，是否沒有健保定義的其他衝突診療")
-            .validated(true);
-
-        List<String> parsedCodes = this.parseNhiCode(conflictCodes);
-
-        if (dto.getIncludeNhiCodes().stream()
-            .filter(Objects::nonNull)
-            .anyMatch(parsedCodes::contains)) {
-            result.message(
-              String.format(
-                  "不得與 %s 同時申報",
-                  conflictCodes.toString()
-              )
-            );
-        }
-
-        return result;
-    }
-
-    /**
-     * 條件式群
-     */
-    // 小於 12 歲
-    public Predicate<NhiRuleCheckDTO> clauseIsLessThanAge12 = (dto) -> {
-        if (dto.getPatient().getBirth() == null) {
-            return false;
-        } else {
-            Period p = Period.between(
-                dto.getPatient().getBirth(),
-                DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
-
-            return p.getYears() < 12;
-        }
-    };
-
-    // 屬於 轉診
-    public Predicate<NhiRuleCheckDTO> clauseIsReferral = NhiRuleCheckDTO::isReferral;
 }

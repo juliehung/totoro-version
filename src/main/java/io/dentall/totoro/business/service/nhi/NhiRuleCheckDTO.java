@@ -19,20 +19,6 @@ public class NhiRuleCheckDTO {
 
     private List<Long> excludeTreatmentProcedureIds;
 
-    private List<String> includeNhiCodes;
-
-    private boolean referral;
-
-    public NhiRuleCheckDTO referral(boolean referral) {
-        this.referral = referral;
-        return this;
-    }
-
-    public NhiRuleCheckDTO includeNhiCodes(List<String> includeNhiCodes) {
-        this.includeNhiCodes = includeNhiCodes;
-        return this;
-    }
-
     public NhiRuleCheckDTO patient(Patient patient) {
         this.patient = patient;
         return this;
@@ -46,22 +32,6 @@ public class NhiRuleCheckDTO {
     public NhiRuleCheckDTO nhiExtendTreatmentProcedure(NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         this.nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedure;
         return this;
-    }
-
-    public List<String> getIncludeNhiCodes() {
-        return includeNhiCodes;
-    }
-
-    public void setIncludeNhiCodes(List<String> includeNhiCodes) {
-        this.includeNhiCodes = includeNhiCodes;
-    }
-
-    public boolean isReferral() {
-        return referral;
-    }
-
-    public void setReferral(boolean referral) {
-        this.referral = referral;
     }
 
     public Patient getPatient() {
