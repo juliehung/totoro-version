@@ -1,6 +1,9 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.business.service.nhi.util.*;
+import io.dentall.totoro.business.service.nhi.util.CopaymentCode;
+import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
+import io.dentall.totoro.business.service.nhi.util.SurfaceConstraint;
+import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.service.util.DateTimeUtil;
@@ -49,54 +52,21 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(dto,
-                Arrays.asList(new String[]{"91003C"}.clone()),
-                DateTimeUtil.NHI_6_MONTH,
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(dto,
-                Arrays.asList(new String[]{"91003C"}.clone()),
-                DateTimeUtil.NHI_6_MONTH,
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91004C"}.clone()),
+                Arrays.asList(new String[]{"91003C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91004C"}.clone()),
+                Arrays.asList(new String[]{"91003C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(dto,
-                ToothConstraint.FOUR_PHASE_ZONE),
-            vm
-        );
-
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotificationWithClause(dto,
-                "未滿十二歲兒童（「全民健康保險牙醫門診總額特殊醫療服務計畫」之適用對象除外）非全口性牙周病者不得申報全口牙結石清除，" +
-                    "病歷上應詳實記載備查;申報91003C或91004C需附相片(規格需為3*5吋以上且可清晰判讀)或X光片以為審核。",
-                nhiRuleCheckUtil.clauseIsLessThanAge12),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotificationWithClause(dto,
-                "本項不得申請轉診加成。",
-                nhiRuleCheckUtil.clauseIsReferral),
+            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
         );
 
@@ -109,70 +79,20 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91004C,91003C"}.clone()),
+                Arrays.asList(new String[]{"91004C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91004C,91003C"}.clone()),
+                Arrays.asList(new String[]{"91004C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91015C~91018C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91015C~91018C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91103C", "91104C"}.clone()),
-                DateTimeUtil.NHI_2_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91103C", "91104C"}.clone()),
-                DateTimeUtil.NHI_2_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(dto,
-                ToothConstraint.FULL_ZONE),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
-                Arrays.asList(new String[]{"91001C", "91017C", "91019C"}.clone())),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotificationWithClause(dto,
-                "未滿十二歲兒童（「全民健康保險牙醫門診總額特殊醫療服務計畫」之適用對象除外）非全口性牙周病者不得申報全口牙結石清除，" +
-                    "病歷上應詳實記載備查;申報91003C或91004C需附相片(規格需為3*5吋以上且可清晰判讀)或X光片以為審核。",
-                nhiRuleCheckUtil.clauseIsLessThanAge12),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotificationWithClause(dto,
-                "本項不得申請轉診加成。",
-                nhiRuleCheckUtil.clauseIsReferral),
+            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
         );
 
