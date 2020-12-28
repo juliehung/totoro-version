@@ -1,34 +1,18 @@
 package io.dentall.totoro.business.service.nhi;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.dto.CalculateBaseData;
-import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
-import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexTreatmentProcedureVM;
-import io.dentall.totoro.web.rest.vm.NhiStatisticDoctorSalary;
+import io.dentall.totoro.web.rest.vm.*;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.*;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -239,6 +223,7 @@ public class NhiStatisticService {
     public Map<Long, NhiStatisticDoctorSalary> getDoctorSalary(LocalDate begin, LocalDate end,
             List<Long> excludeDisposalId) {
         Map<Long, NhiStatisticDoctorSalary> m = new HashMap<>();
+        ArrayList<Long> disposalList = new ArrayList<>();
 
         if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
             excludeDisposalId = Arrays.asList(0L);
@@ -297,7 +282,10 @@ public class NhiStatisticService {
                         // 總點數
                         o.setTotal(Long.sum(o.getTotal(), total));
                         // 總處置數
-                        o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
+                        if (!disposalList.contains(e.getDisposalId())) {
+                            o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
+                            disposalList.add(e.getDisposalId());
+                        }
                         // 部分負擔
                         o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
 
