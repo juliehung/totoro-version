@@ -260,7 +260,7 @@ deployDevDentall8085:
         SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
     only:
         variables:
-            - $CI_COMMIT_BRANCH == "develop" && $CI_COMMIT_TAG
+            - $CI_COMMIT_BRANCH == "_TOTORO-941_CICD-Can-not-auto-deploy-to-8085_WeiChen-Huang" && $CI_COMMIT_TAG
     stage: deploy
     image: ubuntu
     dependencies:
