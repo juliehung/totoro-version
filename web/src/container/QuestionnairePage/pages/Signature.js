@@ -11,7 +11,7 @@ import { trimDataUrl } from '../utils/trimDataUrl';
 const Container = styled.div`
   max-width: 900px;
   width: 95%;
-  background: transparent;
+  position: relative;
 `;
 
 const HeadContainer = styled.div`
@@ -21,8 +21,8 @@ const HeadContainer = styled.div`
 `;
 
 const Title = styled.p`
-  color: rgb(25, 155, 255);
-  font-size: 24px;
+  color: #222b45;
+  font-size: 26px;
   font-weight: 600;
 `;
 
@@ -33,10 +33,29 @@ const SubTitle = styled.p`
 
 const SigContainer = styled.div`
   border: 1px solid #dadada;
-  background: #f5f5f5;
   border-radius: 3px;
   position: relative;
   height: 450px;
+`;
+
+const SigNotification = styled.div`
+  position: absolute;
+  top: 55%;
+  left: 0;
+  text-align: right;
+  padding: 0 15.5px;
+  width: 100%;
+  z-index: -1;
+  .notification {
+    color: #8f9bb3;
+    font-size: 26px;
+    margin-bottom: 11.5px;
+    margin-top: 11.5px;
+  }
+  .line {
+    height: 1px;
+    background-color: #c5cee0;
+  }
 `;
 
 const ClearButton = styled(Button)`
@@ -73,7 +92,6 @@ function Signature(props) {
         {props.isEmpty ? (
           <Button size="large" onClick={props.createQWOSign} loading={props.sendLoading}>
             不簽名直接送出
-            <CheckOutlined />
           </Button>
         ) : (
           <Button size="large" type="primary" onClick={SendWSign} loading={props.sendLoading}>
@@ -82,8 +100,13 @@ function Signature(props) {
           </Button>
         )}
       </HeadContainer>
+      <SigNotification>
+        <div className="notification">（簽名）</div>
+        <div className="line" />
+        <div className="notification">（年月日）</div>
+      </SigNotification>
       <SigContainer>
-        <ClearButton onClick={clearSig}>清除</ClearButton>
+        <ClearButton onClick={clearSig}>清除全部</ClearButton>
         <SignatureCanvas
           minDistance={0.1}
           velocityFilterWeight={0.5}
@@ -92,7 +115,7 @@ function Signature(props) {
           }}
           ref={ref => (sigRef = ref)}
           onEnd={onEnd}
-          backgroundColor="#fff"
+          backgroundColor="transparent"
         />
       </SigContainer>
     </Container>
