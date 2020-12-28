@@ -20,6 +20,11 @@ const PopoverContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 265px;
+  .btn-wrap {
+    display: flex;
+    align-items: center;
+    margin-top: 7px;
+  }
 `;
 
 const InfoWrap = styled.div`
@@ -29,16 +34,14 @@ const InfoWrap = styled.div`
   font-size: 13px;
   line-height: 1.38;
   margin-top: 5px;
-`;
-
-const BreakP = styled.span`
-  margin: 5px 0;
-  overflow-wrap: break-all;
-  display: flex;
-`;
-
-const StyledIcon = styled.span`
-  margin-right: 5px;
+  .info {
+    margin: 5px 0;
+    overflow-wrap: break-all;
+    display: flex;
+    .info-icon {
+      margin-right: 5px;
+    }
+  }
 `;
 
 const StyledEditOutlined = styled(EditOutlined)`
@@ -67,31 +70,23 @@ const NameSpan = styled.span`
 const TagsWrap = styled.div`
   margin-top: 4px;
   margin-bottom: 5px;
-`;
-
-const NormalTagStyle = styled(Tag)`
-  border-radius: 9px;
-  border: solid 0.8px #c5cee0;
-  background-color: rgba(143, 155, 179, 0.15);
-  color: #222b45;
-  line-height: 1.5;
-  margin-right: 4px;
-  margin-bottom: 3px;
-`;
-
-const DangerTagStyle = styled(Tag)`
-  border-radius: 9px;
-  border: solid 0.8px #ffa39e;
-  background-color: #fff1f0;
-  color: #ff4d4f;
-  line-height: 1.5;
-  margin-right: 4px;
-`;
-
-const BtnWrap = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 7px;
+  .danger {
+    border-radius: 9px;
+    border: solid 0.8px #ffa39e;
+    background-color: #fff1f0;
+    color: #ff4d4f;
+    line-height: 1.5;
+    margin-right: 4px;
+  }
+  .normal {
+    border-radius: 9px;
+    border: solid 0.8px #c5cee0;
+    background-color: rgba(143, 155, 179, 0.15);
+    color: #222b45;
+    line-height: 1.5;
+    margin-right: 4px;
+    margin-bottom: 3px;
+  }
 `;
 
 const LinkSpan = styled.a`
@@ -285,36 +280,34 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
               {patientName}
             </NameSpan>
             <InfoWrap>
-              <BreakP>
-                <StyledIcon>
-                  <img src={PhoneFillIcon} alt="phone-icon"></img>
-                </StyledIcon>
+              <span className="info">
+                <img src={PhoneFillIcon} alt="phone-icon" className="info-icon" />
                 {phone}
-              </BreakP>
-              <BreakP>
-                <StyledIcon>
-                  <img src={PersonFillIcon} alt="person-icon"></img>
-                </StyledIcon>
+              </span>
+              <span className="info">
+                <img src={PersonFillIcon} alt="person-icon" className="info-icon" />
                 {doctor.user.firstName}
-              </BreakP>
+              </span>
               {note && (
-                <BreakP>
-                  <StyledIcon>
-                    <img src={FileTextFillIcon} alt="file-icon"></img>
-                  </StyledIcon>
+                <span className="info">
+                  <img src={FileTextFillIcon} alt="file-icon" className="info-icon" />
                   {note}
-                </BreakP>
+                </span>
               )}
             </InfoWrap>
             <TagsWrap>
               {sortTags.dangerTags.map(({ name, id }) => (
-                <DangerTagStyle key={id}>{name}</DangerTagStyle>
+                <Tag key={id} className="danger">
+                  {name}
+                </Tag>
               ))}
               {sortTags.normalTags.map(({ name, type, id }) => (
-                <NormalTagStyle key={id}>{type === 'ALLERGY' ? `${name}過敏` : name}</NormalTagStyle>
+                <Tag key={id} className="normal">
+                  {type === 'ALLERGY' ? `${name}過敏` : name}
+                </Tag>
               ))}
             </TagsWrap>
-            <BtnWrap>
+            <div className="btn-wrap">
               <XrayContainer>
                 {params.xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
                   <div
@@ -338,7 +331,7 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
               <LinkSpan href={`${getBaseUrl()}#/patient/${patientId}`} target="_blank" rel="noopener noreferrer">
                 關於病患
               </LinkSpan>
-            </BtnWrap>
+            </div>
             {!registrationStatus ? (
               <span>
                 <StyledEditOutlined
