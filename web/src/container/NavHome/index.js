@@ -21,7 +21,8 @@ import MessageCircle from '../../images/message-circle.svg';
 import MessageCircleFill from '../../images/message-circle-fill.svg';
 import People from '../../images/people.svg';
 import PeopleFill from '../../images/people-fill.svg';
-import NhiIcon from '../../images/icon-nhi-fill.svg';
+import NhiIcon from '../../images/icon-nhi.svg';
+import NhiFillIcon from '../../images/icon-nhi-fill.svg';
 import Pantone from '../../images/pantone.svg';
 import Cube from '../../images/cube.svg';
 import FileText from '../../images/file-text.svg';
@@ -292,7 +293,7 @@ const route = [
     name: '全民健保',
     navigation: true,
     exact: false,
-    icon: { on: NhiIcon, off: NhiIcon },
+    icon: { on: NhiIcon, off: NhiFillIcon },
     component: <NhiIndexPage />,
     localVersion: true,
   },
