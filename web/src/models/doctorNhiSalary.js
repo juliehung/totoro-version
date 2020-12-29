@@ -10,6 +10,7 @@ export default class DoctorNhiSalary {
     const params = {
       begin: `${moment(range.begin).format('YYYY-MM-DD')}`,
       end: `${moment(range.end).format('YYYY-MM-DD')}`,
+      excludeDisposalId: range?.checkedModalData ? range?.checkedModalData : [],
     };
     const requestUrl = combineUrlAndQueryData(`${apiUrl}/${LOCATION}`, params);
     return await request(requestUrl);
@@ -28,6 +29,7 @@ export default class DoctorNhiSalary {
     const params = {
       begin: `${moment(range.begin).format('YYYY-MM-DD')}`,
       end: `${moment(range.end).format('YYYY-MM-DD')}`,
+      excludeDisposalId: range?.checkedModalData ? range?.checkedModalData : [],
     };
     const requestUrl = combineUrlAndQueryData(`${apiUrl}/${LOCATION}/present-by-disposal-date`, params);
     return await request(requestUrl);

@@ -63,11 +63,16 @@ export function* getNhiSalary() {
   while (true) {
     try {
       const { begin, end, checkedModalData } = yield take(GET_NHI_SALARY);
-      const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, { begin, end });
+      const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, { begin, end, checkedModalData });
       yield delay(300);
       yield put(getNhiSalarySuccess(nhiSalary));
-      yield put(getTotalPointByDisposalDate());
-      const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, { begin, end });
+      yield fork(getOdIndexes, begin, end, checkedModalData);
+      yield fork(getToothClean, begin, end, checkedModalData);
+      const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, {
+        begin,
+        end,
+        checkedModalData,
+      });
       yield put(getTotalPointByDisposalDateSuccess({ data: totalPointByDisposalDate, startDate: begin }));
     } catch (error) {
       yield put(nhiSalaryNotFound());
@@ -88,24 +93,27 @@ export function* getDoctorNhiSalary() {
   }
 }
 
-export function* getOdIndexes(begin, end) {
+export function* getOdIndexes(begin, end, checkedModalData) {
   try {
     const params = {
       begin: begin.startOf('day').toISOString(),
       end: end.endOf('day').toISOString(),
+      excludeDisposalId: checkedModalData ? checkedModalData : [],
     };
     const result = yield call(OdIndexes.get, params);
+    console.log('result = ', result);
     yield put(getOdIndexesSuccess(result));
   } catch (error) {
     yield put(getOdIndexesFail([]));
   }
 }
 
-export function* getToothClean(begin, end) {
+export function* getToothClean(begin, end, checkedModalData) {
   try {
     const params = {
       begin: begin.startOf('day').toISOString(),
       end: end.endOf('day').toISOString(),
+      excludeDisposalId: checkedModalData ? checkedModalData : [],
     };
     const result = yield call(ToothClean.get, params);
     yield put(getToothCleanSuccess(result));

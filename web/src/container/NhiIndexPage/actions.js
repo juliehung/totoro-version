@@ -37,8 +37,8 @@ export function initNhiSalary(begin, end) {
   return { type: INIT_NHI_SALARY, begin, end };
 }
 
-export function getNhiSalary(begin, end) {
-  return { type: GET_NHI_SALARY, begin, end };
+export function getNhiSalary(begin, end, checkedModalData) {
+  return { type: GET_NHI_SALARY, begin, end, checkedModalData };
 }
 
 export function getNhiSalarySuccess(nhiSalary) {
