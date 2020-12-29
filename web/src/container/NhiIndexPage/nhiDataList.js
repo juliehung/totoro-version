@@ -28,8 +28,7 @@ const CheckboxWrap = styled(Checkbox)`
        &::after {
         border-color: #222b45;
        }
-    `}//background-color: ;
-    //border-color: #fff;;;;;;;;
+    `}
   }
 `;
 
@@ -46,8 +45,8 @@ const NhiDataListRender = ({
     <div key={`validNhiData-${index}`} className="render-each-nhi-data-wrap">
       <div className="nhi-data-list-date-header">{key}</div>
       <div>
-        <LazyLoad>
-          {list.map(({ disposalId, nhiExtendDisposal }, index) => (
+        {list.map(({ disposalId, nhiExtendDisposal }, index) => (
+          <LazyLoad key={`render-each-nhi-wrap-${index}`}>
             <EachWrap
               key={`render-each-nhi-wrap-${index}`}
               className="render-each-nhi-wrap"
@@ -96,8 +95,8 @@ const NhiDataListRender = ({
                 </div>
               </div>
             </EachWrap>
-          ))}
-        </LazyLoad>
+          </LazyLoad>
+        ))}
       </div>
     </div>
   ));

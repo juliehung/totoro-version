@@ -4,10 +4,7 @@ import {
   getNhiSalary,
   getDoctorNhiSalary,
   getOdIndexes,
-  getDoctorNhiExam,
-  getDoctorNhiTx,
   getToothClean,
-  getIndexTreatmentProcedure,
   getValidNhiYearMonth,
   getValidNhiByYearMonth,
   getNhiOneByDisposalId,
@@ -18,10 +15,7 @@ export default function* nhiIndexPage() {
   yield fork(getNhiSalary);
   yield fork(getDoctorNhiSalary);
   yield fork(getOdIndexes);
-  yield fork(getDoctorNhiExam);
-  yield fork(getDoctorNhiTx);
   yield fork(getToothClean);
-  yield fork(getIndexTreatmentProcedure);
   yield fork(getValidNhiYearMonth);
   yield fork(getValidNhiByYearMonth);
   yield fork(getNhiOneByDisposalId);

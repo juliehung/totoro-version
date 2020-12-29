@@ -2,7 +2,7 @@ import uuid from 'react-uuid';
 
 function toRefreshValidNhiData(nhiOne, validNhiData, doctorData) {
   if (!validNhiData && !nhiOne) {
-    return {};
+    return undefined;
   }
   const treatmentProcedures = [];
   const userNotionalIds = doctorData.map(doctor => {

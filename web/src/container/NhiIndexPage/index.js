@@ -1,44 +1,26 @@
 import React, { useEffect, useState, Suspense } from 'react';
-import { Checkbox, DatePicker, Modal, Table, Tabs, Input, Menu, Dropdown, Button, Spin } from 'antd';
+import moment from 'moment';
+import { DatePicker, Modal, Table, Tabs, Input, Menu, Dropdown, Button, Spin } from 'antd';
 import { connect, useDispatch } from 'react-redux';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  Rectangle,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  Cell,
-  ResponsiveContainer,
-} from 'recharts';
+import { BarChart, Bar, XAxis, Rectangle, Tooltip, Cell, ResponsiveContainer } from 'recharts';
+import styled, { createGlobalStyle } from 'styled-components';
+import { Helmet } from 'react-helmet-async';
 import {
   initNhiSalary,
   getNhiSalary,
   getDoctorNhiSalary,
-  getDoctorNhiExam,
-  getDoctorNhiTx,
-  getOdIndexes,
-  getToothClean,
-  getIndexTreatmentProcedure,
   getValidNhiByYearMonth,
   getNhiOneByDisposalId,
 } from './actions';
-import moment from 'moment';
-import styled, { createGlobalStyle } from 'styled-components';
-import { Helmet } from 'react-helmet-async';
-import { parseIndexTreatmentProcedureToTableObject } from './utils/parseIndexTreatmentProcedureToTableObject';
+import { getBaseUrl } from '../../utils/getBaseUrl';
 import convertUserToNhiSalary from './utils/convertUserToNhiSalary';
 import toRefreshExpandSalary from './utils/toRefreshExpandSalary';
 import getCurrentMonthPoint from './utils/getCurrentMonthPoint';
 import toRefreshValidNhiData from './utils/toRefreshValidNhiData';
 import toRefreshNhiOne from './utils/toRefreshNhiOne';
-import { getBaseUrl } from '../../utils/getBaseUrl';
 import CloudDownload from '../../images/icon-cloud-download.svg';
 import IconBarChart from '../../images/icon-bar-chart.svg';
 import { ReactComponent as ArrowDown } from '../../images/1-2-icon-his-icons-arrow-down-fill.svg';
-import LazyLoad from 'react-lazyload';
 
 const NhiDataListRender = React.lazy(() => import('./nhiDataList'));
 
@@ -781,7 +763,7 @@ const nhiSalaryColumns = [
     dataIndex: 'totalDisposal',
     key: 'totalDisposal',
     width: 100,
-    render: totalDisposal => `共計 ${!!totalDisposal ? totalDisposal : 0} 單處置`,
+    render: totalDisposal => `共計 ${totalDisposal ? totalDisposal : 0} 單處置`,
   },
 ];
 const nhiOneColumns = [
@@ -1004,18 +986,10 @@ const CustomContent = props =>
   ) : null;
 
 function NhiIndexPage({
+  nhiTableLoading,
   doctors,
   odIndexes,
-  doctorNhiExam,
-  doctorNhiTx,
-  getOdIndexes,
-  getDoctorNhiExam,
-  getDoctorNhiTx,
-  getToothClean,
   toothClean,
-  getIndexTreatmentProcedure,
-  // !TODO hide temperarily 1.2
-  groupedIndexTreatmentProcedure,
   initNhiSalary,
   getNhiSalary,
   nhiSalary,
@@ -1024,6 +998,7 @@ function NhiIndexPage({
   totalPointByDisposalDate,
   validNhiYearMonths,
   getValidNhiByYearMonth,
+  validNhiDataLoading,
   validNhiData,
   getNhiOneByDisposalId,
   nhiOneLoading,
@@ -1038,7 +1013,6 @@ function NhiIndexPage({
   const [checkedModalData, updateCheckedModalData] = useState([]);
   const [nhiFirstId, updateNhiFirstId] = useState(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
   const [currentNhiOne, updateCurrentNhiOne] = useState(null);
-
   const filterDoctors = doctors.filter(({ id }) => odIndexes.map(({ did }) => did).indexOf(id) !== -1);
   const getAllDisposalId = Object.entries(validNhiData)
     .map(([, list]) => list.map(({ disposalId }) => disposalId))
@@ -1050,7 +1024,7 @@ function NhiIndexPage({
 
   useEffect(() => {
     dispatch(initNhiSalary(moment().startOf('month'), moment()));
-  }, [dispatch]);
+  }, [dispatch, initNhiSalary]);
   useEffect(() => {
     if (Object.values(validNhiData)?.[0]) {
       updateNhiFirstId(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
@@ -1060,44 +1034,39 @@ function NhiIndexPage({
     if (nhiFirstId) {
       dispatch(getNhiOneByDisposalId(nhiFirstId));
     }
-  }, [nhiFirstId]);
+  }, [dispatch, nhiFirstId, getNhiOneByDisposalId]);
   const disposalCheckBoxMenu = ({ getAllDisposalId, updateCheckedModalData, setDisposalCheckBoxVisible }) => (
     <MenuContainer>
       <Menu.Item
         onClick={() => {
-          if (getAllDisposalId.length !== checkedModalData.length) {
-            updateCheckedModalData(getAllDisposalId);
-          } else {
-            updateCheckedModalData([]);
-          }
           setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
+          setTimeout(() => {
+            if (getAllDisposalId.length !== checkedModalData.length) {
+              updateCheckedModalData(getAllDisposalId);
+            } else {
+              updateCheckedModalData([]);
+            }
+          }, 1000);
         }}
       >
         <div>全選</div>
       </Menu.Item>
       <Menu.Item
         onClick={() => {
-          if (getAllSerialNumber.length !== checkedModalData.length) {
-            updateCheckedModalData(getAllSerialNumber);
-          } else {
-            updateCheckedModalData([]);
-          }
           setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
+          setTimeout(() => {
+            if (getAllSerialNumber.length !== checkedModalData.length) {
+              updateCheckedModalData(getAllSerialNumber);
+            } else {
+              updateCheckedModalData([]);
+            }
+          }, 1000);
         }}
       >
         <div>專案流水號</div>
       </Menu.Item>
     </MenuContainer>
   );
-
-  useEffect(() => {
-    // dispatch(getNhiSalary(startDate, endDate, checkedModalData));
-    // dispatch(getOdIndexes(startDate, endDate));
-    // dispatch(getToothClean(startDate, endDate));
-    // dispatch(getDoctorNhiTx(startDate, endDate));
-    // dispatch(getDoctorNhiExam(startDate, endDate));
-    // dispatch(getIndexTreatmentProcedure(startDate, endDate));
-  }, [dispatch, startDate, endDate]);
 
   return (
     <div>
@@ -1145,8 +1114,10 @@ function NhiIndexPage({
                 <DatePicker
                   style={{ borderRadius: '8px', color: '#222b45' }}
                   onChange={(date, dateString) => {
+                    updateCheckedModalData([]);
                     setStartDate(date);
-                    dispatch(getValidNhiByYearMonth(moment(dateString).format('YYYYMM')));
+                    setEndDate(moment(date).endOf('month'));
+                    setTimeout(() => dispatch(getValidNhiByYearMonth(moment(dateString).format('YYYYMM'))), 700);
                   }}
                   picker="month"
                   value={moment(startDate)}
@@ -1198,7 +1169,9 @@ function NhiIndexPage({
                 <div>共幾項</div>
               </div>
               <div className="render-nhi-data-list-container">
-                {validNhiData && Object.keys(validNhiData).length > 0 && (
+                {validNhiDataLoading ? (
+                  <div className="lazy-load-wrap">Loading...</div>
+                ) : validNhiData && Object.keys(validNhiData).length > 0 ? (
                   <Suspense fallback={<div className="lazy-load-wrap">Loading...</div>}>
                     <NhiDataListRender
                       validNhiData={validNhiData}
@@ -1210,12 +1183,18 @@ function NhiIndexPage({
                       updateCurrentNhiOne={updateCurrentNhiOne}
                     />
                   </Suspense>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
 
-          <div>{nhiOneLoading ? <Spin className="nhi-one-loading" /> : nhiOne ? nhiOneRender({ nhiOne }) : null}</div>
+          <div>
+            {validNhiDataLoading || nhiOneLoading ? (
+              <Spin className="nhi-one-loading" />
+            ) : nhiOne ? (
+              nhiOneRender({ nhiOne })
+            ) : null}
+          </div>
         </ModalContentContainer>
       </ModalContainer>
 
@@ -1298,7 +1277,7 @@ function NhiIndexPage({
             <TabPane tab="點數" key="1">
               <TableContainer
                 scroll={{ y: 280 }}
-                loading={!nhiSalary}
+                loading={nhiTableLoading}
                 columns={nhiSalaryColumns}
                 dataSource={nhiSalary}
                 pagination={false}
@@ -1329,6 +1308,7 @@ function NhiIndexPage({
             </TabPane>
             <TabPane tab="補牙指標" key="2">
               <TableContainer
+                loading={nhiTableLoading}
                 scroll={{ y: 280 }}
                 columns={odColumns(doctors, filterDoctors)}
                 dataSource={odIndexes}
@@ -1341,6 +1321,7 @@ function NhiIndexPage({
             </TabPane>
             <TabPane tab="洗牙指標" key="3">
               <TableContainer
+                loading={nhiTableLoading}
                 scroll={{ y: 280 }}
                 columns={toothCleanColumns(doctors, filterDoctors)}
                 dataSource={toothClean}
@@ -1359,19 +1340,16 @@ function NhiIndexPage({
 }
 
 const mapStateToProps = ({ nhiIndexPageReducer, homePageReducer }) => ({
+  nhiTableLoading: nhiIndexPageReducer.common.loading,
   odIndexes: nhiIndexPageReducer.nhiIndex.odIndexes,
-  doctorNhiExam: nhiIndexPageReducer.nhiIndex.doctorNhiExam,
-  doctorNhiTx: nhiIndexPageReducer.nhiIndex.doctorNhiTx,
   toothClean: nhiIndexPageReducer.nhiIndex.toothClean,
   doctors: homePageReducer.user.users,
-  groupedIndexTreatmentProcedure: parseIndexTreatmentProcedureToTableObject(
-    nhiIndexPageReducer.nhiIndex.indexTreatmentProcedure,
-  ),
   nhiSalary: convertUserToNhiSalary(nhiIndexPageReducer.nhiIndex.nhiSalary, homePageReducer.user.users),
   expandNhiSalary: toRefreshExpandSalary(nhiIndexPageReducer.nhiIndex.expandNhiSalary),
   totalPointLoading: nhiIndexPageReducer.nhiIndex.totalPointLoading,
   totalPointByDisposalDate: getCurrentMonthPoint(nhiIndexPageReducer.nhiIndex.totalPointByDisposalDate),
   validNhiYearMonths: nhiIndexPageReducer.nhiIndex.validNhiYearMonths,
+  validNhiDataLoading: nhiIndexPageReducer.nhiIndex.validNhiDataLoading,
   validNhiData: toRefreshValidNhiData(nhiIndexPageReducer.nhiIndex.validNhiData, homePageReducer.user.users),
   nhiOneLoading: nhiIndexPageReducer.nhiIndex.nhiOneLoading,
   nhiOne: toRefreshNhiOne(
@@ -1386,11 +1364,6 @@ const mapDispatchToProps = {
   initNhiSalary,
   getNhiSalary,
   getDoctorNhiSalary,
-  getOdIndexes,
-  getDoctorNhiExam,
-  getDoctorNhiTx,
-  getToothClean,
-  getIndexTreatmentProcedure,
   getValidNhiByYearMonth,
   getNhiOneByDisposalId,
 };
