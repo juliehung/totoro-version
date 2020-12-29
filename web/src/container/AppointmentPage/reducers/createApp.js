@@ -13,6 +13,8 @@ import {
   CHANGE_CREATE_APP_EXPECTED_ARRIVAL_TIME,
   CHANGE_CREATE_APP_COLOR_ID,
   CHANGE_CREATE_APP_SPECIAL_NOTE,
+  CHANGE_CREATE_APP_SPECIAL_NOTE_ADD_FIRST_VISIT,
+  CHANGE_CREATE_APP_SPECIAL_NOTE_REMOVE_FIRST_VISIT,
   CREATE_APPOINTMENT,
   CREATE_APPOINTMENT_SUCCESS,
   CHECK_CONFIRM_BUTTON_DISABLE,
@@ -126,6 +128,13 @@ const createApp = (state = initialState, action) =>
         break;
       case CHANGE_CREATE_APP_SPECIAL_NOTE:
         draft.appointment.specialNote = action.value;
+        break;
+      case CHANGE_CREATE_APP_SPECIAL_NOTE_ADD_FIRST_VISIT:
+        draft.appointment.specialNote = [...state.appointment.specialNote, ...action.value];
+        break;
+      case CHANGE_CREATE_APP_SPECIAL_NOTE_REMOVE_FIRST_VISIT:
+        const newNotes = state.appointment.specialNote.filter(n => n !== 'firstVisit');
+        draft.appointment.specialNote = newNotes;
         break;
       case CREATE_APPOINTMENT:
         draft.loading = true;

@@ -44,9 +44,11 @@ export function convertAppToEvt(appointment) {
   const requiredTreatmentTime = appointment.requiredTreatmentTime;
   const end = moment(appointment.expectedArrivalTime).add(requiredTreatmentTime, 'minutes').toDate();
   const medicalId = appointment.medicalId;
+  const status = appointment.status === 'CANCEL' ? '[C]' : '';
+  const firstVisit = appointment.firstVisit ? '[N]' : '';
 
   return {
-    title: appointment.status === 'CANCEL' ? `[C] ${appointment.patientName}` : appointment.patientName,
+    title: `${status}${firstVisit}${appointment.patientName}`,
     resourceId: appointment.doctor.user.id,
     start,
     end,

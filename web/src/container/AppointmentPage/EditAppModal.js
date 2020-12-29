@@ -184,6 +184,7 @@ function EditAppModal({
       note: appointment.note,
       microscope: appointment.specialNote.includes('micro'),
       baseFloor: appointment.specialNote.includes('baseFloor'),
+      firstVisit: appointment.specialNote.includes('firstVisit'),
       colorId: appointment.colorId,
     };
 
@@ -192,6 +193,7 @@ function EditAppModal({
   };
 
   const options = [
+    { label: '初診病患', value: 'firstVisit' },
     { label: 'micro', value: 'micro' },
     { label: '行動不便', value: 'baseFloor' },
   ];

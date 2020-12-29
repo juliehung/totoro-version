@@ -2,6 +2,7 @@ package io.dentall.totoro.service;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -292,7 +293,12 @@ public class AppointmentService {
         List<AppointmentDTO> dtoList = appointmentRepository.findMonthAppointment(beginDate, endDate);
         List<Long> patientIds = dtoList.stream().map(AppointmentDTO::getPatientId).distinct()
                 .collect(Collectors.toList());
-        List<TagDTO> tags = tagRepository.findByPatientIds(patientIds);
+
+        List<TagDTO> tags = new ArrayList<>();
+        if (patientIds.size() != 0) { // 修正如無appointment資料，就無需再去查詢tag資料
+            List<TagDTO> tagsTmp = tagRepository.findByPatientIds(patientIds);
+            tags.addAll(tagsTmp);
+        }
 
         return dtoList.stream()
                 .map(appointmentDTO -> {
@@ -320,15 +326,6 @@ public class AppointmentService {
             Tag tag = new Tag();
             tag.setId(9999L);
             tag.setName("micro");
-            tag.setType(TagType.OTHER);
-            tag.setModifiable(false);
-            tagList.add(tag);
-        }
-
-        if (appointmentDTO.getBaseFloor() != null && appointmentDTO.getBaseFloor()) {
-            Tag tag = new Tag();
-            tag.setId(9998L);
-            tag.setName("行動不便");
             tag.setType(TagType.OTHER);
             tag.setModifiable(false);
             tagList.add(tag);

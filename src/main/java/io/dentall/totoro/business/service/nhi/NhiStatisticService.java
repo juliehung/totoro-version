@@ -9,9 +9,7 @@ import io.dentall.totoro.web.rest.vm.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.YearMonth;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -193,10 +191,19 @@ public class NhiStatisticService {
         o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
     }
 
-    public Collection<NhiStatisticDoctorSalary> getDoctorSalaryPresentByDisposalDate(LocalDate begin, LocalDate end) {
+    public Collection<NhiStatisticDoctorSalary> getDoctorSalaryPresentByDisposalDate(LocalDate begin, LocalDate end,
+            List<Long> excludeDisposalId) {
         Map<Instant, NhiStatisticDoctorSalary> m = new HashMap<>();
-        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end).stream()
-                .collect(Collectors.groupingBy(obj -> obj.getDisposalDate().truncatedTo(ChronoUnit.DAYS)))
+
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        // 這邊特別將時間轉成台北時區後，再進行Group By，因為沒有這樣處理的話，有可能會出現小於begin或大於end的日期
+        // 雖然特別將時區轉成台北時區後，可是因為NhiStatisticDoctorSalary.disposalDate為Instant型態，所以只好特別從localDateTime轉回Instant，但要時區要指定成UTC，避免時間又被減掉8小時
+        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId).stream()
+                .collect(Collectors
+                        .groupingBy(obj -> obj.getDisposalDate().atZone(ZoneId.of("Asia/Taipei")).toLocalDateTime().truncatedTo(ChronoUnit.DAYS).toInstant(ZoneOffset.UTC)))
                 .forEach((k, v) -> {
                     v.forEach(e -> {
                         m.compute(k, (kk, o) -> {
@@ -213,9 +220,16 @@ public class NhiStatisticService {
         return m.values();
     }
 
-    public Map<Long, NhiStatisticDoctorSalary> getDoctorSalary(LocalDate begin, LocalDate end) {
+    public Map<Long, NhiStatisticDoctorSalary> getDoctorSalary(LocalDate begin, LocalDate end,
+            List<Long> excludeDisposalId) {
         Map<Long, NhiStatisticDoctorSalary> m = new HashMap<>();
-        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end).stream()
+        ArrayList<Long> disposalList = new ArrayList<>();
+
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId).stream()
             .collect(Collectors.groupingBy(CalculateBaseData::getDoctorId))
             .forEach((k, v) -> {
                 v.forEach(e -> {
@@ -268,7 +282,10 @@ public class NhiStatisticService {
                         // 總點數
                         o.setTotal(Long.sum(o.getTotal(), total));
                         // 總處置數
-                        o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
+                        if (!disposalList.contains(e.getDisposalId())) {
+                            o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
+                            disposalList.add(e.getDisposalId());
+                        }
                         // 部分負擔
                         o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
 
@@ -280,9 +297,15 @@ public class NhiStatisticService {
         return m;
     }
 
-    public Map<Long, NhiStatisticDoctorSalary> getDoctorSalaryExpand(LocalDate begin, LocalDate end, Long doctorId) {
+    public Map<Long, NhiStatisticDoctorSalary> getDoctorSalaryExpand(LocalDate begin, LocalDate end, Long doctorId,
+            List<Long> excludeDisposalId) {
         Map<Long, NhiStatisticDoctorSalary> m = new HashMap<>();
-        nhiExtendDisposalRepository.findCalculateBaseDataByDateAndDoctorId(begin, end, doctorId).stream()
+
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        nhiExtendDisposalRepository.findCalculateBaseDataByDateAndDoctorId(begin, end, doctorId, excludeDisposalId).stream()
             .collect(Collectors.groupingBy(CalculateBaseData::getDisposalId))
             .forEach((k, v) -> {
                 v.forEach(e -> {

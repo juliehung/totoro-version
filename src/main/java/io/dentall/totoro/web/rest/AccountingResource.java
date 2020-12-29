@@ -1,13 +1,15 @@
 package io.dentall.totoro.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.domain.Accounting;
-import io.dentall.totoro.repository.AccountingRepository;
-import io.dentall.totoro.service.AccountingService;
-import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
-import io.dentall.totoro.web.rest.util.HeaderUtil;
-import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,16 +17,27 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
+import com.codahale.metrics.annotation.Timed;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import io.dentall.totoro.domain.Accounting;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
+import io.dentall.totoro.repository.AccountingRepository;
+import io.dentall.totoro.service.AccountingService;
+import io.dentall.totoro.service.dto.table.AccountingTable;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.util.HeaderUtil;
+import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing Accounting.
@@ -138,5 +151,24 @@ public class AccountingResource {
 
         accountingRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    /**
+     * 
+     * GET /accountings/search
+     * 
+     * @param arrivalTimeBegin
+     * @param arrivalTimeEnd
+     * @param status
+     * @return
+     */
+    @GetMapping("/accountings/search")
+    @Timed
+    public ResponseEntity<List<AccountingTable>> getAllAccountingBySearchParam(
+            @RequestParam(name = "registration.ArrivalTime.beginDate") Instant arrivalTimeBegin, 
+            @RequestParam(name = "registration.ArrivalTime.endDate") Instant arrivalTimeEnd,
+            @RequestParam(required = false, name = "registration.Status") RegistrationStatus status) {
+        List<AccountingTable> accountingList = accountingService.getAllAccountingByRegistrationArrivalTimeAndRegistrationStatus(arrivalTimeBegin, arrivalTimeEnd, status);
+        return ResponseEntity.ok().body(accountingList);
     }
 }
