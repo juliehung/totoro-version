@@ -43,7 +43,7 @@ const NhiDataListRender = ({
 }) => {
   return Object.entries(validNhiData).map(([key, list], index) => (
     <div key={`validNhiData-${index}`} className="render-each-nhi-data-wrap">
-      <div className="nhi-data-list-date-header">{key}</div>
+      {list.length > 0 && <div className="nhi-data-list-date-header">{key}</div>}
       <div>
         {list.map(({ disposalId, nhiExtendDisposal }, index) => (
           <LazyLoad key={`render-each-nhi-wrap-${index}`}>
@@ -75,7 +75,8 @@ const NhiDataListRender = ({
               >
                 <div>{nhiExtendDisposal?.patientName}</div>
                 <div>
-                  {disposalId}, {nhiExtendDisposal?.doctorName}
+                  {nhiExtendDisposal?.serialNumber ? `${nhiExtendDisposal?.serialNumber},` : ''}{' '}
+                  {nhiExtendDisposal?.doctorName}
                 </div>
               </div>
               <div
