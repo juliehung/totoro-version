@@ -100,6 +100,11 @@ const ModalContainer = styled(Modal)`
       color: #3266ff;
     }
   }
+  .ant-btn-primary[disabled] {
+    color: rgba(0, 0, 0, 0.25);
+    border-color: #d9d9d9;
+    background-color: #f5f5f5;
+  }
 `;
 
 const ModalContentContainer = styled.div`
@@ -471,6 +476,7 @@ const ChartContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    width: 100%;
 
     > div:nth-child(1) {
       .total-info-wrap {
@@ -498,7 +504,7 @@ const ChartContainer = styled.div`
             margin: 0;
           }
           > div:nth-child(2) {
-            margin: 0 40px;
+            margin-left: 40px;
           }
         }
 
@@ -513,6 +519,7 @@ const ChartContainer = styled.div`
     > div:nth-child(2) {
       flex: 1;
       height: 100%;
+      width: 80%;
       border-left: solid 1px #e5eced;
     }
   }
@@ -959,17 +966,32 @@ const nhiOneRender = ({ nhiOne }) => {
   );
 };
 
-const CustomCursor = ({ x, y, height, payload }) => (
-  <Rectangle
-    radius={[9.2, 9.2, 9.2, 9.2]}
-    fill={payload[0]?.payload?.color}
-    fillOpacity={0.2}
-    x={x + 21}
-    y={y}
-    width={18}
-    height={height}
-  />
-);
+const CustomCursor = ({ x, y, width, height, left, payload }) => {
+  const windowInnerWidth = window.innerWidth;
+  const reWidth = width > 18 ? 18 : width;
+  let xPosition = x - left - 2 + reWidth / 2;
+  if (1280 <= windowInnerWidth && windowInnerWidth < 1440) {
+    xPosition += 6;
+  } else if (1440 <= windowInnerWidth && windowInnerWidth < 1680) {
+    xPosition += 7;
+  } else if (1680 <= windowInnerWidth) {
+    xPosition += 10;
+  }
+  if (windowInnerWidth > 1680) {
+    xPosition = x - left - 3 + width / 2;
+  }
+  return (
+    <Rectangle
+      radius={[9.2, 9.2, 9.2, 9.2]}
+      fill={payload[0]?.payload?.color}
+      fillOpacity={0.2}
+      x={xPosition}
+      y={y}
+      width={reWidth}
+      height={height}
+    />
+  );
+};
 const CustomContent = props =>
   props?.payload[0]?.payload ? (
     <TooltipContainer>
@@ -1011,7 +1033,7 @@ function NhiIndexPage({
   const [tabNumb, setTabNumb] = useState(1);
   const [startDate, setStartDate] = useState(moment().startOf('month'));
   const [endDate, setEndDate] = useState(moment());
-  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDisposalCheckBoxVisible, setDisposalCheckBoxVisible] = useState(false);
   const [checkedModalData, updateCheckedModalData] = useState([]);
   const [nhiFirstId, updateNhiFirstId] = useState(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
@@ -1097,9 +1119,18 @@ function NhiIndexPage({
             className="submit-modal-btn"
             key="submit"
             type="primary"
+            disabled={checkedModalData.length === 0}
             onClick={() => {
-              setIsModalVisible(false);
-              dispatch(getNhiSalary(startDate, endDate, checkedModalData));
+              if (checkedModalData.length !== 0) {
+                setIsModalVisible(false);
+                dispatch(
+                  getNhiSalary(
+                    startDate,
+                    endDate,
+                    getAllDisposalId.filter(id => checkedModalData.indexOf(id) === -1),
+                  ),
+                );
+              }
             }}
           >
             完成
