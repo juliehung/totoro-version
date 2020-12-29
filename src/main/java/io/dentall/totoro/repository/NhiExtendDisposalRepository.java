@@ -422,4 +422,6 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             @Param("end") LocalDate end,
             @Param("doctorId") Long doctorId,
             @Param("excludeDisposalId") List<Long> excludeDisposalId);
+
+    List<NhiIndexEndoVM> calculateEndoIndex(Instant begin, Instant end, List<Long> excludeDisposalId);
 }

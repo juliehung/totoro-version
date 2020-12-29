@@ -117,6 +117,14 @@ public class NhiStatisticService {
         return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end, excludeDisposalId);
     }
 
+    public List<NhiIndexEndoVM> calculateEndoIndex(Instant begin, Instant end, List<Long> excludeDisposalId) {
+        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
+            excludeDisposalId = Arrays.asList(0L);
+        }
+
+        return nhiExtendDisposalRepository.calculateEndoIndex(begin, end, excludeDisposalId);
+    }
+
     public List<NhiDoctorTxVM> calculateDoctorTx(Instant begin, Instant end, List<Long> excludeDisposalId) {
         if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
             excludeDisposalId = Arrays.asList(0L);
