@@ -259,7 +259,7 @@ deployDevDentall8085:
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
         SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
     rules:
-        - if: '$CI_COMMIT_BRANCH == "_TOTORO-941_CICD-Can-not-auto-deploy-to-8085_WeiChen-Huang-4" && $CI_COMMIT_TAG != ""'
+        - if: $CI_COMMIT_TAG != "" && $CI_COMMIT_BRANCH == "_TOTORO-941_CICD-Can-not-auto-deploy-to-8085_WeiChen-Huang-4"
           when: on_success
           allow_failure: true
     stage: deploy
