@@ -258,10 +258,10 @@ deployDevDentall8085:
         CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
         SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
-    only:
-        variables:
-            - $CI_COMMIT_BRANCH == "develop"
-            - $CI_COMMIT_TAG
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^staging.*/'
+          when: on_success
+          allow_failure: true
     stage: deploy
     image: ubuntu
     dependencies:
@@ -285,11 +285,10 @@ deployDevDentall8085:
 deployGcpDev:
     stage: deploy
     image: google/cloud-sdk:alpine
-    when: manual
-    only:
-        variables:
-            - $CI_COMMIT_BRANCH == "release"
-            - $CI_COMMIT_TAG
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^[0-9]-[0-9]{1,2}-[0-9]{1,2}/'
+          when: manual
+          allow_failure: true
     script:
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
         - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
