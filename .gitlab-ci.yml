@@ -262,6 +262,7 @@ deployDevDentall8085:
         - if: $CI_COMMIT_TAG != "" && $CI_COMMIT_BRANCH == "_TOTORO-941_CICD-Can-not-auto-deploy-to-8085_WeiChen-Huang-4"
           when: on_success
           allow_failure: true
+        - when: never
     stage: deploy
     image: ubuntu
     dependencies:
