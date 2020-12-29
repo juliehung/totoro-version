@@ -1,7 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Tabs } from 'antd';
+import React, { useEffect, useState, Suspense } from 'react';
+import { Checkbox, DatePicker, Modal, Table, Tabs, Input, Menu, Dropdown, Button, Spin } from 'antd';
 import { connect, useDispatch } from 'react-redux';
 import {
+  BarChart,
+  Bar,
+  XAxis,
+  Rectangle,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Cell,
+  ResponsiveContainer,
+} from 'recharts';
+import {
+  initNhiSalary,
   getNhiSalary,
   getDoctorNhiSalary,
   getDoctorNhiExam,
@@ -9,6 +22,8 @@ import {
   getOdIndexes,
   getToothClean,
   getIndexTreatmentProcedure,
+  getValidNhiByYearMonth,
+  getNhiOneByDisposalId,
 } from './actions';
 import moment from 'moment';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -16,33 +31,19 @@ import { Helmet } from 'react-helmet-async';
 import { parseIndexTreatmentProcedureToTableObject } from './utils/parseIndexTreatmentProcedureToTableObject';
 import convertUserToNhiSalary from './utils/convertUserToNhiSalary';
 import toRefreshExpandSalary from './utils/toRefreshExpandSalary';
+import getCurrentMonthPoint from './utils/getCurrentMonthPoint';
+import toRefreshValidNhiData from './utils/toRefreshValidNhiData';
+import toRefreshNhiOne from './utils/toRefreshNhiOne';
 import { getBaseUrl } from '../../utils/getBaseUrl';
 import CloudDownload from '../../images/icon-cloud-download.svg';
-import BarChart from '../../images/icon-bar-chart.svg';
+import IconBarChart from '../../images/icon-bar-chart.svg';
+import { ReactComponent as ArrowDown } from '../../images/1-2-icon-his-icons-arrow-down-fill.svg';
+import LazyLoad from 'react-lazyload';
+
+const NhiDataListRender = React.lazy(() => import('./nhiDataList'));
 
 const { TabPane } = Tabs;
-
-const FOCUSINPUT = { startDate: 'startDate', endDate: 'endDate' };
-
-// !TODO hide temperarily 1.2
-// const onFilterSerialNumber = (value, record) => {
-//   if (value) {
-//     return record.serialNumber;
-//   } else {
-//     return !record.serialNumber;
-//   }
-// };
-
-// const serialNumber = {
-//   title: '申報序號',
-//   dataIndex: 'serialNumber',
-//   key: 'serialNumber',
-//   filters: [
-//     { text: '未申報', value: false },
-//     { text: '已申報', value: true },
-//   ],
-//   onFilter: onFilterSerialNumber,
-// };
+const { Search } = Input;
 
 //#region
 const GlobalStyle = createGlobalStyle`
@@ -68,7 +69,320 @@ const GlobalStyle = createGlobalStyle`
     border: 1px double rgba(50, 102, 255, 0.1) !important;
     color: #444 !important;
     font-weight:bold !important;
+  }
+`;
 
+const ModalContainer = styled(Modal)`
+  .ant-modal-body {
+    padding: 0;
+  }
+  .cancel-modal-btn {
+    width: 64px;
+    height: 40px;
+    margin: 0 18px 0 0;
+    border: solid 1px rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+    color: #8f9bb3;
+
+    &:hover {
+      color: #222b45;
+    }
+  }
+  .submit-modal-btn {
+    width: 102px;
+    height: 40px;
+    margin: 0 0 0 18px;
+    border-radius: 20px;
+    background-color: #3266ff;
+
+    &:hover {
+      background-color: #fff;
+      color: #3266ff;
+    }
+  }
+`;
+
+const ModalContentContainer = styled.div`
+  background-image: linear-gradient(159deg, #f3f6fa 19%, #e4e9f2 77%);
+  width: 100%;
+  height: 600px;
+
+  display: flex;
+  align-items: center;
+
+  > div:nth-child(1) {
+    box-shadow: 8px 0 14px 0 rgba(200, 138, 138, 0.06);
+    background-color: rgba(255, 255, 255, 0.95);
+    width: 280px;
+    margin-left: 28px;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .select-month-input-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      padding: 12px 24px;
+      > div:nth-child(1) {
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.6;
+        color: #222b45;
+        text-align: left;
+      }
+      > div:nth-child(2) {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        cursor: pointer;
+        > div {
+          width: 87%;
+        }
+      }
+    }
+
+    .search-input-container {
+      padding: 6px 24px;
+
+      .search-input-wrap {
+        border-radius: 8px;
+        border: solid 1px #e4e9f2;
+        background: #f7f9fc;
+        height: 40px;
+
+        input::-webkit-input-placeholder {
+          font-size: 15px;
+          line-height: 1.33;
+          color: #8f9bb3;
+        }
+        * {
+          background: #f7f9fc;
+          font-size: 15px;
+          line-height: 1.33;
+          color: #222b45;
+        }
+        .ant-input-suffix > span {
+          display: flex;
+
+          &::before {
+            border-left: 0;
+          }
+        }
+      }
+    }
+
+    .render-modal-nhi-data-container {
+      flex: 1;
+      overflow: hidden;
+
+      .nhi-data-header-wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 24px;
+
+        > div:nth-child(1) {
+          width: 43px;
+          .dropdown-click-btn-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+
+            > div:nth-child(1) {
+              width: 20px;
+              height: 20px;
+              border-radius: 3px;
+              background-color: #3266ff;
+              text-align: center;
+              color: #ffffff;
+              position: relative;
+
+              &::before {
+                position: absolute;
+                background: #fff;
+                content: '';
+                height: 3px;
+                width: 12px;
+                left: 50%;
+                top: 50%;
+              }
+              ${props =>
+                !props.isDisposalCheckBoxVisible &&
+                `&::after {
+                  position: absolute;
+                  width: 100%;
+                  background: #fff;
+                  content: '';
+                  height: 3px;
+                  width: 12px;
+                  left: 50%;
+                  top: 50%;
+                  transition: all 0.3s ease-in-out;
+                }`}
+              &::before {
+                transform: translate(-50%, -50%);
+              }
+              ${props =>
+                !props.isDisposalCheckBoxVisible &&
+                `&::after{
+                    transform: translate(-50%, -50%) rotate(90deg);
+                  }`}
+            }
+            > div:nth-child(2) {
+              flex: 1;
+              text-align: center;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              transform: ${props => (props.isDisposalCheckBoxVisible ? 'rotate(180deg)' : 'rotate(0deg)')};
+              transition: all 0.3s ease-out;
+            }
+          }
+        }
+        > div:nth-child(2) {
+          text-align: right;
+          flex: 1;
+        }
+      }
+
+      .render-nhi-data-list-container {
+        overflow-y: auto;
+        max-height: calc(100% - 40px);
+        max-width: 95%;
+        margin: 0 auto;
+        .lazy-load-wrap {
+          padding-left: 24px;
+        }
+        .render-each-nhi-data-wrap {
+          .nhi-data-list-date-header {
+            height: 29px;
+            background: #9ba1c3;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.6;
+            color: #fff;
+            padding: 3px 0 2px 14px;
+          }
+          > div:nth-child(2) {
+            padding: 6px 0;
+            .render-each-nhi-wrap {
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              padding: 10px 0;
+              position: relative;
+              cursor: pointer;
+
+              > div:nth-child(1) {
+                width: 20px;
+                height: 20px;
+                text-align: center;
+                position: relative;
+                padding-left: 24px;
+              }
+
+              > div:nth-child(2) {
+                margin-left: 5px;
+                padding-left: 24px;
+                flex: 1;
+
+                > div:nth-child(1) {
+                  font-size: 15px;
+                  font-weight: 600;
+                  line-height: 1.6;
+                  color: #222b45;
+                }
+
+                > div:nth-child(2) {
+                  font-size: 12px;
+                  line-height: 1.33;
+                  color: #8f9bb3;
+                }
+              }
+
+              > div:nth-child(3) {
+                font-size: 10px;
+                font-weight: bold;
+                line-height: 1.2;
+                text-align: right;
+                color: #8f9bb3;
+                padding-right: 24px;
+              }
+
+              &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                background: #edf1f7;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  > div:nth-child(2) {
+    flex: 1;
+    padding: 80px 56px;
+    height: 100%;
+
+    .render-nhi-one-detail-wrap {
+      .nhi-one-label {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.85;
+        color: #8f9bb3;
+      }
+      .nhi-one-info-label {
+        font-size: 26px;
+        font-weight: bold;
+        line-height: 1.23;
+        color: #222b45;
+      }
+      .nhi-one-name {
+        font-size: 32px;
+        font-weight: 600;
+        color: #4a90e2;
+      }
+      .nhi-one-info-wrap {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: 24px;
+
+        > div:not(:first-child) {
+          margin-left: 48px;
+        }
+      }
+      .nhi-one-table-wrap {
+        margin-top: 24px;
+      }
+    }
+    .nhi-one-loading {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+`;
+const MenuContainer = styled(Menu)`
+  min-width: 136px;
+  > li {
+    padding: 12px 16px;
+    font-size: 15px;
+    line-height: 1.33;
+    color: #222b45;
   }
 `;
 
@@ -129,6 +443,96 @@ const TitleContainer = styled.div`
       line-height: 1.33;
       color: #222b45;
     }
+  }
+`;
+
+const ChartContainer = styled.div`
+  background: #fff;
+  width: 100%;
+  min-height: 330px;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+  .chart-header-wrap {
+    height: 56px;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.33;
+    color: #222b45;
+    border-bottom: solid 1px #edf1f7;
+    padding: 20px;
+  }
+  .chart-content-wrap.spin-wrap {
+    min-height: 300px;
+    align-items: center;
+  }
+  .chart-content-wrap {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    > div:nth-child(1) {
+      .total-info-wrap {
+        padding: 20px;
+        > div:nth-child(1) {
+          p:nth-child(1) {
+            font-size: 36px;
+            font-weight: bold;
+            line-height: 1.33;
+            color: #ffab00;
+            margin: 0;
+          }
+        }
+        > div:nth-child(2) {
+          margin-top: 24px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          > div > p:nth-child(1) {
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 1.45;
+            color: #222b45;
+            margin: 0;
+          }
+          > div:nth-child(2) {
+            margin: 0 40px;
+          }
+        }
+
+        .total-sub-text {
+          font-size: 13px;
+          font-weight: 600;
+          line-height: 1.85;
+          color: #8f9bb3;
+        }
+      }
+    }
+    > div:nth-child(2) {
+      flex: 1;
+      height: 100%;
+      border-left: solid 1px #e5eced;
+    }
+  }
+`;
+const TooltipContainer = styled.div`
+  border-radius: 16px;
+  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  padding: 10px 20px 14px;
+  > div {
+    color: #222b45;
+  }
+  > div:nth-child(1) {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.85;
+  }
+  > div:nth-child(2) {
+    font-size: 12px;
+    line-height: 1.33;
   }
 `;
 
@@ -275,7 +679,6 @@ const odColumns = (doctors, filterDoctors) => [
     render: renderFloat2Position,
   },
 ];
-
 const toothCleanColumns = (doctors, filterDoctors) => [
   {
     title: '醫生',
@@ -293,79 +696,7 @@ const toothCleanColumns = (doctors, filterDoctors) => [
   },
   { title: '洗牙人數比率', dataIndex: 'timePatRate', key: 'timePatRate', render: t => renderFloat2Position(t) },
 ];
-
-const doctorNhiExamColumns = (doctors, filterDoctors) => [
-  {
-    title: '醫生',
-    dataIndex: 'did',
-    key: 'doctorNhiExamColumns-did',
-    filters: filterDoctors.map(d => ({ value: d?.id, text: d?.firstName })),
-    onFilter: (value, record) => value === record.did,
-    render: did => doctors.find(d => d.id === did)?.firstName ?? did,
-  },
-  {
-    title: '診察代碼',
-    dataIndex: 'nhiExamCode',
-    key: 'doctorNhiExamColumns-nhiExamCode',
-  },
-  {
-    title: '診察點數',
-    dataIndex: 'nhiExamPoint',
-    key: 'doctorNhiExamColumns-nhiExamPoint',
-  },
-  {
-    title: '總數',
-    dataIndex: 'totalNumber',
-    key: 'doctorNhiExamColumns-totalNumber',
-  },
-  {
-    title: '總點數',
-    dataIndex: 'totalPoint',
-    key: 'doctorNhiExamColumns-totalPoint',
-  },
-  // !TODO hide temperarily 1.2
-  // serialNumber,
-];
-
-const doctorNhiTxColumns = (doctors, filterDoctors) => [
-  {
-    title: '醫生',
-    dataIndex: 'did',
-    key: 'doctorNhiTxColumns-did',
-    filters: filterDoctors.map(d => ({ value: d?.id, text: d?.firstName })),
-    onFilter: (value, record) => value === record.did,
-    render: did => doctors.find(d => d.id === did)?.firstName ?? did,
-  },
-  {
-    title: '診療代碼',
-    dataIndex: 'nhiTxCode',
-    key: 'doctorNhiTxColumns-nhiTxCode',
-  },
-  {
-    title: '診療名稱',
-    dataIndex: 'nhiTxName',
-    key: 'doctorNhiTxColumns-nhiTxName',
-  },
-  {
-    title: '診療點數',
-    dataIndex: 'nhiTxPoint',
-    key: 'doctorNhiTxColumns-nhiTxPoint',
-  },
-  {
-    title: '總數',
-    dataIndex: 'totalNumber',
-    key: 'doctorNhiTxColumns-totalNumber',
-  },
-  {
-    title: '總點數',
-    dataIndex: 'totalPoint',
-    key: 'doctorNhiTxColumns-did',
-  },
-  // !TODO hide temperarily 1.2
-  // serialNumber,
-];
-
-const nhiSalaryColumns = () => [
+const nhiSalaryColumns = [
   {
     title: '排序',
     dataIndex: 'doctorId',
@@ -446,94 +777,41 @@ const nhiSalaryColumns = () => [
     render: totalDisposal => `共計 ${!!totalDisposal ? totalDisposal : 0} 單處置`,
   },
 ];
-
-// !TODO hide temperarily 1.2
-// const treatmentProcedureColumn = doctors => [
-//   {
-//     title: '醫生',
-//     dataIndex: 'did',
-//     filters: doctors.map(d => ({ value: d?.id, text: d?.firstName })),
-//     onFilter: (value, record) => value === record.did,
-//     key: 'treatmentProcedure-did',
-//     render: did => doctors.find(d => d.id === did)?.firstName ?? did,
-//     sorter: {
-//       compare: (a, b) => a.did - b.did,
-//     },
-//   },
-//   {
-//     title: '檢查點數',
-//     dataIndex: 'examinationPoint',
-//     key: 'treatmentProcedure-examinationPoint',
-//   },
-//   {
-//     title: '檢查碼',
-//     dataIndex: 'examinationCode',
-//     key: 'treatmentProcedure-examinationCode',
-//   },
-//   {
-//     title: 'a31',
-//     dataIndex: 'a31',
-//     key: 'treatmentProcedure-a31',
-//   },
-//   {
-//     title: 'a32',
-//     dataIndex: 'a32',
-//     key: 'treatmentProcedure-a32',
-//   },
-//   {
-//     ...serialNumber,
-//     sorter: {
-//       compare: (a, b) => a.serialNumber - b.serialNumber,
-//     },
-//   },
-// ];
-
-// !TODO hide temperarily 1.2
-// const treatmentColumn = [
-//   {
-//     title: 'a71',
-//     dataIndex: 'a71',
-//     key: 'treatment-a71',
-//   },
-//   {
-//     title: 'a72',
-//     dataIndex: 'a72',
-//     key: 'treatment-a72',
-//   },
-//   {
-//     title: 'a73',
-//     dataIndex: 'a73',
-//     key: 'treatment-a73',
-//   },
-//   {
-//     title: 'a74',
-//     dataIndex: 'a74',
-//     key: 'treatment-a74',
-//   },
-//   {
-//     title: 'a75',
-//     dataIndex: 'a75',
-//     key: 'treatment-a75',
-//   },
-//   {
-//     title: 'a76',
-//     dataIndex: 'a76',
-//     key: 'treatment-a76',
-//   },
-//   {
-//     title: 'a77',
-//     dataIndex: 'a77',
-//     key: 'treatment-a77',
-//   },
-//   {
-//     title: 'a78',
-//     dataIndex: 'a78',
-//     key: 'treatment-a78',
-//   },
-// ];
+const nhiOneColumns = [
+  {
+    title: '健保代碼/中文',
+    dataIndex: 'treatmentProcedureName',
+    key: 'treatmentProcedureName',
+    width: '60%',
+  },
+  {
+    title: '乘數',
+    dataIndex: 'multiplier',
+    key: 'multiplier',
+    width: '10%',
+  },
+  {
+    title: '數量',
+    dataIndex: 'quantity',
+    key: 'quantity',
+    width: '10%',
+  },
+  {
+    title: '乘數',
+    dataIndex: 'point',
+    key: 'point',
+    width: '10%',
+  },
+  {
+    title: '合計',
+    dataIndex: 'total',
+    key: 'total',
+    width: '10%',
+  },
+];
 
 const expandedRowRender = expandSalary => {
-  const columns = [
+  const expandedRowColumns = [
     {
       title: '排序',
       dataIndex: 'doctorId',
@@ -616,10 +894,11 @@ const expandedRowRender = expandSalary => {
       ),
     },
   ];
+
   return (
     <ExpandTableContainer
       loading={!expandSalary?.doctorOneSalary}
-      columns={columns}
+      columns={expandedRowColumns}
       showHeader={false}
       dataSource={expandSalary?.doctorOneSalary}
       pagination={false}
@@ -627,6 +906,80 @@ const expandedRowRender = expandSalary => {
     />
   );
 };
+const nhiOneRender = ({ nhiOne }) => {
+  const {
+    patientName,
+    patientNationalId,
+    doctorName,
+    examinationPoint,
+    treatmentPoint,
+    totalPoint,
+    treatmentProcedureArr,
+  } = nhiOne;
+  return (
+    <div className="render-nhi-one-detail-wrap">
+      <div className="nhi-one-label">病患姓名</div>
+      <div className="nhi-one-name">{patientName}</div>
+      <div className="nhi-one-info-wrap">
+        <div>
+          <div className="nhi-one-label">身分證號</div>
+          <div className="nhi-one-info-label">{patientNationalId}</div>
+        </div>
+        <div>
+          <div className="nhi-one-label">主治醫師</div>
+          <div className="nhi-one-info-label">{doctorName}</div>
+        </div>
+        <div>
+          <div className="nhi-one-label">診察費</div>
+          <div className="nhi-one-info-label">{examinationPoint}</div>
+        </div>
+        <div>
+          <div className="nhi-one-label">診療費</div>
+          <div className="nhi-one-info-label">{treatmentPoint}</div>
+        </div>
+        <div>
+          <div className="nhi-one-label">合計點數</div>
+          <div className="nhi-one-info-label">{totalPoint}</div>
+        </div>
+      </div>
+      <div className="nhi-one-table-wrap">
+        <Table
+          dataSource={treatmentProcedureArr}
+          columns={nhiOneColumns}
+          scroll={{ y: 280 }}
+          // loading={!nhiSalary}
+          pagination={false}
+          bordered={false}
+          showHeader={true}
+          tableLayout="fixed"
+          rowKey={record => `nhi-one-${record._id}`}
+        />
+      </div>
+    </div>
+  );
+};
+
+const CustomCursor = ({ x, y, height, payload }) => (
+  <Rectangle
+    radius={[9.2, 9.2, 9.2, 9.2]}
+    fill={payload[0]?.payload?.color}
+    fillOpacity={0.2}
+    x={x + 21}
+    y={y}
+    width={18}
+    height={height}
+  />
+);
+const CustomContent = props =>
+  props?.payload[0]?.payload ? (
+    <TooltipContainer>
+      <div>
+        {moment(props?.payload[0]?.payload?.disposalDate).year() - 1911}/
+        {moment(props?.payload[0]?.payload?.disposalDate).format('MM/DD')}
+      </div>
+      <div>合計 {props?.payload[0]?.payload?.total || 0} 點</div>
+    </TooltipContainer>
+  ) : null;
 
 function NhiIndexPage({
   doctors,
@@ -641,37 +994,87 @@ function NhiIndexPage({
   getIndexTreatmentProcedure,
   // !TODO hide temperarily 1.2
   groupedIndexTreatmentProcedure,
+  initNhiSalary,
   getNhiSalary,
   nhiSalary,
   expandNhiSalary,
+  totalPointLoading,
+  totalPointByDisposalDate,
+  validNhiYearMonths,
+  getValidNhiByYearMonth,
+  validNhiData,
+  getNhiOneByDisposalId,
+  nhiOneLoading,
+  nhiOne,
 }) {
   const dispatch = useDispatch();
   const [tabNumb, setTabNumb] = useState(1);
   const [startDate, setStartDate] = useState(moment().startOf('month'));
   const [endDate, setEndDate] = useState(moment());
-  const filterDoctors = doctors.filter(({ id }) => odIndexes.map(({ did }) => did).indexOf(id) !== -1);
-  doctorNhiExam = doctorNhiExam.map((data, index) => {
-    return { ...data, key: `doctorNhiExam-${data.did}-${index}` };
-  });
-  doctorNhiTx = doctorNhiTx.map((data, index) => {
-    return { ...data, key: `doctorNhiTx-${data.did}-${index}` };
-  });
-  console.log('groupedIndexTreatmentProcedure = ', groupedIndexTreatmentProcedure);
+  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isDisposalCheckBoxVisible, setDisposalCheckBoxVisible] = useState(false);
+  const [checkedModalData, updateCheckedModalData] = useState([]);
+  const [nhiFirstId, updateNhiFirstId] = useState(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
+  const [currentNhiOne, updateCurrentNhiOne] = useState(null);
 
-  const calculateHandler = () => {
-    if (!startDate || !endDate) return;
-    getIndexTreatmentProcedure(startDate, endDate);
-  };
+  const filterDoctors = doctors.filter(({ id }) => odIndexes.map(({ did }) => did).indexOf(id) !== -1);
+  const getAllDisposalId = Object.entries(validNhiData)
+    .map(([, list]) => list.map(({ disposalId }) => disposalId))
+    .flat(Infinity);
+  const getAllSerialNumber = Object.entries(validNhiData)
+    .map(([, list]) => list.map(({ nhiExtendDisposal }) => nhiExtendDisposal?.serialNumber))
+    .flat(Infinity)
+    .filter(d => d !== '');
 
   useEffect(() => {
-    if (startDate && endDate) {
-      dispatch(getNhiSalary(startDate, endDate));
-      dispatch(getOdIndexes(startDate, endDate));
-      dispatch(getToothClean(startDate, endDate));
-      dispatch(getDoctorNhiTx(startDate, endDate));
-      dispatch(getDoctorNhiExam(startDate, endDate));
-      dispatch(getIndexTreatmentProcedure(startDate, endDate));
+    dispatch(initNhiSalary(moment().startOf('month'), moment()));
+  }, [dispatch]);
+  useEffect(() => {
+    if (Object.values(validNhiData)?.[0]) {
+      updateNhiFirstId(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
     }
+  }, [validNhiData]);
+  useEffect(() => {
+    if (nhiFirstId) {
+      dispatch(getNhiOneByDisposalId(nhiFirstId));
+    }
+  }, [nhiFirstId]);
+  const disposalCheckBoxMenu = ({ getAllDisposalId, updateCheckedModalData, setDisposalCheckBoxVisible }) => (
+    <MenuContainer>
+      <Menu.Item
+        onClick={() => {
+          if (getAllDisposalId.length !== checkedModalData.length) {
+            updateCheckedModalData(getAllDisposalId);
+          } else {
+            updateCheckedModalData([]);
+          }
+          setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
+        }}
+      >
+        <div>全選</div>
+      </Menu.Item>
+      <Menu.Item
+        onClick={() => {
+          if (getAllSerialNumber.length !== checkedModalData.length) {
+            updateCheckedModalData(getAllSerialNumber);
+          } else {
+            updateCheckedModalData([]);
+          }
+          setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
+        }}
+      >
+        <div>專案流水號</div>
+      </Menu.Item>
+    </MenuContainer>
+  );
+
+  useEffect(() => {
+    // dispatch(getNhiSalary(startDate, endDate, checkedModalData));
+    // dispatch(getOdIndexes(startDate, endDate));
+    // dispatch(getToothClean(startDate, endDate));
+    // dispatch(getDoctorNhiTx(startDate, endDate));
+    // dispatch(getDoctorNhiExam(startDate, endDate));
+    // dispatch(getIndexTreatmentProcedure(startDate, endDate));
   }, [dispatch, startDate, endDate]);
 
   return (
@@ -680,20 +1083,178 @@ function NhiIndexPage({
         <title>全民健保</title>
       </Helmet>
       <GlobalStyle />
+      <ModalContainer
+        centered={true}
+        title="勾選計算項目"
+        visible={isModalVisible}
+        width={'100%'}
+        closable={false}
+        footer={[
+          <Button className="cancel-modal-btn" key="back" onClick={() => setIsModalVisible(false)}>
+            取消
+          </Button>,
+          <Button
+            className="submit-modal-btn"
+            key="submit"
+            type="primary"
+            onClick={() => {
+              setIsModalVisible(false);
+              dispatch(getNhiSalary(startDate, endDate, checkedModalData));
+            }}
+          >
+            完成
+          </Button>,
+        ]}
+      >
+        <ModalContentContainer isDisposalCheckBoxVisible={isDisposalCheckBoxVisible}>
+          <div>
+            <div className="select-month-input-wrap">
+              <div>選擇月份:</div>
+              <div>
+                <DatePicker
+                  style={{ borderRadius: '8px', color: '#222b45' }}
+                  onChange={(date, dateString) => {
+                    setStartDate(date);
+                    dispatch(getValidNhiByYearMonth(moment(dateString).format('YYYYMM')));
+                  }}
+                  picker="month"
+                  value={moment(startDate)}
+                  allowClear={false}
+                  disabledDate={current =>
+                    current &&
+                    !current.isBetween(
+                      moment(validNhiYearMonths[0]?.yearMonth).endOf('day'),
+                      moment(validNhiYearMonths[validNhiYearMonths.length - 1]?.yearMonth).endOf('day'),
+                      'day',
+                      [],
+                    )
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="search-input-container">
+              <Search
+                className="search-input-wrap"
+                allowClear
+                onSearch={() => {}}
+                placeholder={'搜尋姓名,生日或流水號'}
+              />
+            </div>
+
+            <div className="render-modal-nhi-data-container">
+              <div className="nhi-data-header-wrap">
+                <div>
+                  <Dropdown
+                    visible={isDisposalCheckBoxVisible}
+                    overlay={() =>
+                      disposalCheckBoxMenu({ getAllDisposalId, updateCheckedModalData, setDisposalCheckBoxVisible })
+                    }
+                    placement="bottomLeft"
+                    trigger={'click'}
+                  >
+                    <div
+                      className="dropdown-click-btn-wrap"
+                      onClick={() => setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible)}
+                    >
+                      <div />
+                      <div>
+                        <ArrowDown />
+                      </div>
+                    </div>
+                  </Dropdown>
+                </div>
+                <div>共幾項</div>
+              </div>
+              <div className="render-nhi-data-list-container">
+                {validNhiData && Object.keys(validNhiData).length > 0 && (
+                  <Suspense fallback={<div className="lazy-load-wrap">Loading...</div>}>
+                    <NhiDataListRender
+                      validNhiData={validNhiData}
+                      checkedModalData={checkedModalData}
+                      updateCheckedModalData={updateCheckedModalData}
+                      onNhiDataOneSelect={nhiFirstId => dispatch(getNhiOneByDisposalId(nhiFirstId))}
+                      nhiOne={nhiOne}
+                      currentNhiOne={currentNhiOne}
+                      updateCurrentNhiOne={updateCurrentNhiOne}
+                    />
+                  </Suspense>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div>{nhiOneLoading ? <Spin className="nhi-one-loading" /> : nhiOne ? nhiOneRender({ nhiOne }) : null}</div>
+        </ModalContentContainer>
+      </ModalContainer>
+
       <TitleContainer>
         <div>健保點數與分析</div>
-        <div>109年5月</div>
+        <div>{`${startDate.year() - 1911}年${startDate.format('MM')}`}月</div>
         <div>
           <div>
             <img src={CloudDownload} alt="cloud download" />
             <span>匯出成 EXCEL</span>
           </div>
-          <div>
-            <img src={BarChart} alt="icon-bar-chart" />
+          <div onClick={() => setIsModalVisible(true)}>
+            <img src={IconBarChart} alt="icon-bar-chart" />
             <span>選擇計算來源</span>
           </div>
         </div>
       </TitleContainer>
+      <ChartContainer>
+        <div className="chart-header-wrap">院所</div>
+        {!totalPointLoading &&
+        totalPointByDisposalDate &&
+        totalPointByDisposalDate?.totalPointByDisposalDate?.length > 0 ? (
+          <div className="chart-content-wrap">
+            <div>
+              <div className="total-info-wrap">
+                <div>
+                  <p>{totalPointByDisposalDate?.totalPoint}</p>
+                  <p className="total-sub-text">合計</p>
+                </div>
+                <div>
+                  <div>
+                    <p>{totalPointByDisposalDate?.examinationTotalPoint}</p>
+                    <p className="total-sub-text">診察</p>
+                  </div>
+                  <div>
+                    <p>{totalPointByDisposalDate?.treatmentTotalPoint}</p>
+                    <p className="total-sub-text">診療</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              {totalPointByDisposalDate?.totalPointByDisposalDate && (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={totalPointByDisposalDate?.totalPointByDisposalDate}>
+                    <XAxis dataKey="name" padding={{ top: 10 }} axisLine={false} tickLine={false} />
+                    <Bar dataKey="total" radius={[9.2, 9.2, 9.2, 9.2]} maxBarSize={18}>
+                      {totalPointByDisposalDate?.totalPointByDisposalDate.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={totalPointByDisposalDate?.colors[index]} />
+                      ))}
+                    </Bar>
+                    <Tooltip
+                      cursor={<CustomCursor />}
+                      // content={obj => {
+                      //   const style = {
+                      //     background: 'rgba(255, 255, 255, 0.3)',
+                      //   };
+                      //   return <TooltipContainer style={style}>some</TooltipContainer>;
+                      // }}
+                      content={<CustomContent />}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
+            </div>
+          </div>
+        ) : (
+          <Spin className="chart-content-wrap spin-wrap" />
+        )}
+      </ChartContainer>
       <div>
         <TabsContainer>
           <TabsWrap
@@ -707,7 +1268,7 @@ function NhiIndexPage({
               <TableContainer
                 scroll={{ y: 280 }}
                 loading={!nhiSalary}
-                columns={nhiSalaryColumns(doctors)}
+                columns={nhiSalaryColumns}
                 dataSource={nhiSalary}
                 pagination={false}
                 bordered={false}
@@ -759,30 +1320,6 @@ function NhiIndexPage({
                 rowKey={record => `${record.did} ${record.distinctTotalPat}`}
               />
             </TabPane>
-            <TabPane tab="診察總覽" key="4">
-              <TableContainer
-                scroll={{ y: 280 }}
-                columns={doctorNhiExamColumns(doctors, filterDoctors)}
-                dataSource={doctorNhiExam}
-                pagination={false}
-                bordered={false}
-                showHeader={true}
-                tableLayout="fixed"
-                rowKey={record => `doctorNhiExam - ${record.key}`}
-              />
-            </TabPane>
-            <TabPane tab="診療總覽" key="5">
-              <TableContainer
-                scroll={{ y: 280 }}
-                columns={doctorNhiTxColumns(doctors, filterDoctors)}
-                dataSource={doctorNhiTx}
-                pagination={false}
-                bordered={false}
-                showHeader={true}
-                tableLayout="fixed"
-                rowKey={record => `doctorNhiTx - ${record.key}`}
-              />
-            </TabPane>
           </TabsWrap>
         </TabsContainer>
       </div>
@@ -801,10 +1338,21 @@ const mapStateToProps = ({ nhiIndexPageReducer, homePageReducer }) => ({
   ),
   nhiSalary: convertUserToNhiSalary(nhiIndexPageReducer.nhiIndex.nhiSalary, homePageReducer.user.users),
   expandNhiSalary: toRefreshExpandSalary(nhiIndexPageReducer.nhiIndex.expandNhiSalary),
+  totalPointLoading: nhiIndexPageReducer.nhiIndex.totalPointLoading,
+  totalPointByDisposalDate: getCurrentMonthPoint(nhiIndexPageReducer.nhiIndex.totalPointByDisposalDate),
+  validNhiYearMonths: nhiIndexPageReducer.nhiIndex.validNhiYearMonths,
+  validNhiData: toRefreshValidNhiData(nhiIndexPageReducer.nhiIndex.validNhiData, homePageReducer.user.users),
+  nhiOneLoading: nhiIndexPageReducer.nhiIndex.nhiOneLoading,
+  nhiOne: toRefreshNhiOne(
+    nhiIndexPageReducer.nhiIndex.nhiOne,
+    nhiIndexPageReducer.nhiIndex.validNhiData,
+    homePageReducer.user.users,
+  ),
 });
 
 // map to actions
 const mapDispatchToProps = {
+  initNhiSalary,
   getNhiSalary,
   getDoctorNhiSalary,
   getOdIndexes,
@@ -812,6 +1360,8 @@ const mapDispatchToProps = {
   getDoctorNhiTx,
   getToothClean,
   getIndexTreatmentProcedure,
+  getValidNhiByYearMonth,
+  getNhiOneByDisposalId,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NhiIndexPage);
