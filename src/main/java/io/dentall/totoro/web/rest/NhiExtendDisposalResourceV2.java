@@ -106,7 +106,10 @@ public class NhiExtendDisposalResourceV2 {
 
     @GetMapping("/nhi-extend-disposals/yearmonth/{yyyymm}")
     @Timed
-    public ResponseEntity<List<MonthDisposalVM>> getAllByYYYYMM(@PathVariable Integer yyyymm) {
+    public ResponseEntity<List<MonthDisposalVM>> getAllByYYYYMM(
+            @PathVariable Integer yyyymm,
+            @RequestParam(required = false, name = "toleranceA18") Boolean toleranceA18 // 原始程式邏輯會用isNotBlank(A18)來過慮資料，如果不想過濾A18，請設定true
+            ) {
         log.debug("REST request to get all nhi ext dis all in year month");
 
         YearMonth ym;
@@ -115,7 +118,7 @@ public class NhiExtendDisposalResourceV2 {
         } catch (DateTimeException e) {
             throw new BadRequestAlertException("Can not parse yyyymm", ENTITY_NAME, "invalidate");
         }
-        return ResponseEntity.ok().body(nhiExtendDisposalService.findByYearMonthForLazyNhiExtDis(ym));
+        return ResponseEntity.ok().body(nhiExtendDisposalService.findByYearMonthForLazyNhiExtDis(ym, toleranceA18));
     }
 
     /**
