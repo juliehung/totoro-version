@@ -261,8 +261,7 @@ deployDevDentall8085:
     only:
         variables:
             - $CI_COMMIT_BRANCH == "_TOTORO-941_CICD-Can-not-auto-deploy-to-8085_WeiChen-Huang-3"
-        refs:
-            - tags
+            - $CI_COMMIT_TAG
     stage: deploy
     image: ubuntu
     dependencies:
