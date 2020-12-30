@@ -200,9 +200,9 @@ public class ImageResource {
                     .body(imageHostBusinessService.getImageByPathAndSize(path, size))
                 );
             } catch (IOException e) {
-                logger.error("unable to get image from host path[{}] and size[{}]: {}", path, size, e.getMessage());
-
-                throw new BadRequestAlertException("unable to get image from host", ENTITY_NAME, null);
+                String message = String.format("unable to get image from host path[%s] and size[%s]: error-mssage:[%s]", path, size, e.getMessage());
+                logger.error(message);
+                result.setErrorResult(new BadRequestAlertException(message, ENTITY_NAME, null));
             }
         });
 
