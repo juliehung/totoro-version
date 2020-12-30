@@ -21,7 +21,4 @@ public interface AccountingRepository extends JpaRepository<Accounting, Long> {
 
     Optional<AccountingTable> findAccountingById(Long id);
 
-    List<AccountingTable> findByRegistration_ArrivalTimeBetweenAndRegistration_Status(Instant start, Instant end, RegistrationStatus status);
-
-    List<AccountingTable> findByRegistration_ArrivalTimeBetween(Instant start, Instant end);
 }
