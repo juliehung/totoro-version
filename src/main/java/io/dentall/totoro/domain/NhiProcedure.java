@@ -6,12 +6,12 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A NhiProcedure.
@@ -60,6 +60,9 @@ public class NhiProcedure implements Serializable {
     @Column(name = "chief_complaint")
     private String chiefComplaint;
 
+    @Column(name = "expiration_time")
+    private Instant expirationTime;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private NhiProcedureType nhiProcedureType;
@@ -72,6 +75,15 @@ public class NhiProcedure implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<NhiIcd10Pcs> nhiIcd10Pcs = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    public Instant getExpirationTime() {
+        return expirationTime;
+    }
+
+    public void setExpirationTime(Instant expirationTime) {
+        this.expirationTime = expirationTime;
+    }
+
     public Long getId() {
         return id;
     }
