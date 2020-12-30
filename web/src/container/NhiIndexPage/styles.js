@@ -550,6 +550,10 @@ const TableContainer = styled(Table)`
     }
   }
   .ant-table-expanded-row {
+    > td {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
     > .ant-table-cell {
       background: #e4eaff !important;
     }
