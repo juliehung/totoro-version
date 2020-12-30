@@ -10,5 +10,8 @@
                 <constraints nullable="true" />
             </column>
         </addColumn>
+        <sql>
+            UPDATE nhi_procedure SET expiration_time = '2004-06-29T16:00:00Z' WHERE code = '90009C';
+        </sql>
     </changeSet>
 </databaseChangeLog>
