@@ -9,6 +9,7 @@ import io.dentall.totoro.web.rest.vm.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -122,7 +123,26 @@ public class NhiStatisticService {
             excludeDisposalId = Arrays.asList(0L);
         }
 
-        return nhiExtendDisposalRepository.calculateEndoIndex(begin, end, excludeDisposalId);
+        return nhiExtendDisposalRepository.calculateEndoIndex(begin, end, excludeDisposalId).stream()
+                .map(endoDto -> {
+                    NhiIndexEndoVM endo = new NhiIndexEndoVM()
+                        .did(endoDto.getDid())
+                        .preOperationNumber(endoDto.getPreOperationNumber())
+                        .postOperationNumber(endoDto.getPostOperationNumber());
+
+                    BigDecimal preOpeNumb = BigDecimal.valueOf(endo.getPreOperationNumber());
+                    BigDecimal postOpeNumb = BigDecimal.valueOf(endo.getPostOperationNumber());
+                    if (endo.getPreOperationNumber() == 0L) {
+                        return endo.uncompletedRate(postOpeNumb.negate());
+                    } else if (endo.getPostOperationNumber() == 0L) {
+                        return endo.uncompletedRate(preOpeNumb);
+                    } else if (endo.getPostOperationNumber() > endo.getPreOperationNumber()) {
+                        return endo.uncompletedRate(postOpeNumb.divide(preOpeNumb));
+                    } else {
+                        return endo.uncompletedRate(BigDecimal.ONE.min(postOpeNumb.divide(preOpeNumb)));
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
     public List<NhiDoctorTxVM> calculateDoctorTx(Instant begin, Instant end, List<Long> excludeDisposalId) {

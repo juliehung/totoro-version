@@ -1,14 +1,66 @@
 package io.dentall.totoro.web.rest.vm;
 
-public interface NhiIndexEndoVM {
+import java.math.BigDecimal;
 
-    Long getDid();
+public class NhiIndexEndoVM {
 
-    Integer getTotalPat();
+    private Long did;
 
-    Integer getTotalTime();
+    private Long preOperationNumber;
 
-    Double getTimePatRate();
+    private Long postOperationNumber;
 
-    String getSerialNumber();
+    private BigDecimal uncompletedRate;
+
+    public NhiIndexEndoVM did(Long did) {
+        this.did = did;
+        return this;
+    }
+
+    public NhiIndexEndoVM preOperationNumber(Long preOperationNumber) {
+        this.preOperationNumber = preOperationNumber;
+        return this;
+    }
+
+    public NhiIndexEndoVM postOperationNumber(Long postOperationNumber) {
+        this.postOperationNumber = postOperationNumber;
+        return this;
+    }
+
+    public NhiIndexEndoVM uncompletedRate(BigDecimal uncompletedRate) {
+        this.uncompletedRate = uncompletedRate;
+        return this;
+    }
+
+    public BigDecimal getUncompletedRate() {
+        return uncompletedRate;
+    }
+
+    public void setUncompletedRate(BigDecimal uncompletedRate) {
+        this.uncompletedRate = uncompletedRate;
+    }
+
+    public Long getDid() {
+        return did;
+    }
+
+    public void setDid(Long did) {
+        this.did = did;
+    }
+
+    public Long getPreOperationNumber() {
+        return preOperationNumber;
+    }
+
+    public void setPreOperationNumber(Long preOperationNumber) {
+        this.preOperationNumber = preOperationNumber;
+    }
+
+    public Long getPostOperationNumber() {
+        return postOperationNumber;
+    }
+
+    public void setPostOperationNumber(Long postOperationNumber) {
+        this.postOperationNumber = postOperationNumber;
+    }
 }

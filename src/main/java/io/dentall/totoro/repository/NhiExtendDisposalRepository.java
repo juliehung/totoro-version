@@ -4,6 +4,7 @@ import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.CalculateBaseData;
+import io.dentall.totoro.service.dto.NhiIndexEndoDTO;
 import io.dentall.totoro.service.dto.StatisticSpDTO;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.web.rest.vm.*;
@@ -423,5 +424,50 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             @Param("doctorId") Long doctorId,
             @Param("excludeDisposalId") List<Long> excludeDisposalId);
 
-    List<NhiIndexEndoVM> calculateEndoIndex(Instant begin, Instant end, List<Long> excludeDisposalId);
+    @Query(
+        nativeQuery = true,
+        value = "with " +
+            "     nhi_90015C_total as ( " +
+            "        select a.doctor_user_id as did, " +
+            "               case " +
+            "                   when count(a.doctor_user_id) is not null then count(a.doctor_user_id) " +
+            "                   else 0 " +
+            "               end as operation " +
+            "        from disposal d " +
+            "            left join appointment a on d.registration_id = a.registration_id " +
+            "            left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "            left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "            left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "        where ned.a19 <> '2' and ned.jhi_date between '2020-10-01' and '2020-10-10' and a73 = '90015C' and ned.id not in (0) " +
+            "           or ned.a19 = '2' and ned.replenishment_date between '2020-10-01' and '2020-10-10' and a73 = '90015C' and ned.id not in (0) " +
+            "        group by a.doctor_user_id " +
+            "     ), " +
+            "     nhi_other_endo_total as ( " +
+            "        select a.doctor_user_id as did, " +
+            "               case " +
+            "                   when count(a.doctor_user_id) is not null then count(a.doctor_user_id) " +
+            "                   else 0 " +
+            "               end as operation " +
+            "        from disposal d " +
+            "            left join appointment a on d.registration_id = a.registration_id " +
+            "            left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "            left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "            left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "        where ned.a19 <> '2' and ned.jhi_date between ?1 and ?2 and a73 in ('90001C', '90002C', '90003C', '90016C', '90018C', '90019C', '90020C') and ned.id not in (0) " +
+            "           or ned.a19 = '2' and ned.replenishment_date between ?1 and ?2 and a73 in ('90001C', '90002C', '90003C', '90016C', '90018C', '90019C', '90020C') and ned.id not in (0) " +
+            "        group by a.doctor_user_id " +
+            "     ) " +
+            "select pre.did as did, " +
+            "       case " +
+            "           when post.operation is not null then post.operation " +
+            "           else 0 " +
+            "       end as postOperationNumber, " +
+            "       case " +
+            "           when pre.operation is not null then pre.operation " +
+            "           else 0 " +
+            "       end as preOperationNumber " +
+            "from nhi_90015C_total pre " +
+            "    left join nhi_other_endo_total post on pre.did = post.did;"
+    )
+    List<NhiIndexEndoDTO> calculateEndoIndex(Instant begin, Instant end, List<Long> excludeDisposalId);
 }
