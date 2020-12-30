@@ -6,6 +6,8 @@ import {
   GET_PATIENT_SUCCESS,
   GET_DISPOSAL,
   GET_DISPOSAL_SUCCESS,
+  GET_NHI_ICD10_CMS,
+  GET_NHI_ICD10_CMS_SUCCESS,
   GET_RECENT_TREATMENT_PROCEDURE,
   GET_RECENT_TREATMENT_PROCEDURE_SUCCESS,
   GET_ACCUMULATED_MEDICAL_RECORD,
@@ -66,6 +68,14 @@ export function getDisposal() {
 
 export function getDisposalSuccess(disposals) {
   return { type: GET_DISPOSAL_SUCCESS, disposals };
+}
+
+export function getNhiIcd10Cms() {
+  return { type: GET_NHI_ICD10_CMS };
+}
+
+export function getNhiIcd10CmsSuccess(nhiIcd10cms) {
+  return { type: GET_NHI_ICD10_CMS_SUCCESS, nhiIcd10cms };
 }
 
 export function getRecentTreatmentProcedure() {

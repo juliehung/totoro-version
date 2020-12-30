@@ -187,7 +187,10 @@ const mapStateToProps = ({ patientPageReducer, homePageReducer }) => {
     patient: patientPageReducer.patient.patient,
     visible: patientPageReducer.disposal.treatmentListModalVisible,
     doctors: extractDoctorsFromUser(homePageReducer.user.users) ?? [],
-    treatmentsAndPrescriptions: convertDisposalsToTreatmentsAndPrescriptions(patientPageReducer.disposal.disposals),
+    treatmentsAndPrescriptions: convertDisposalsToTreatmentsAndPrescriptions(
+      patientPageReducer.disposal.disposals,
+      patientPageReducer.disposal.nhiIcd10cms,
+    ),
   };
 };
 const mapDispatchToProps = { changeTreatmentListModalVisible };
