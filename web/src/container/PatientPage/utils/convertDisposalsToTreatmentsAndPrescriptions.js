@@ -1,6 +1,6 @@
 import { toSurfaceAbbrivation } from './';
 
-function convertDisposalsToTreatmentsAndPrescriptions(disposals) {
+function convertDisposalsToTreatmentsAndPrescriptions(disposals, nhiIcd10Cms) {
   if (!disposals) {
     return [];
   }
@@ -32,8 +32,10 @@ function convertDisposalsToTreatmentsAndPrescriptions(disposals) {
         let content;
         if (t.nhiProcedure) {
           category = '健保';
+          const nhiIcd10Cm = Number(t.nhiIcd10Cm);
+          const nhiIcd10Content = nhiIcd10Cms.filter(cm => cm.id === nhiIcd10Cm)[0];
           title = (t?.nhiProcedure?.code ?? '') + ' ' + (t?.nhiProcedure?.name ?? '');
-          content = (t?.nhiProcedure?.nhiIcd9Cm?.code ?? '') + ' ' + (t?.nhiProcedure?.nhiIcd9Cm?.name ?? '');
+          content = (nhiIcd10Content?.code ?? '') + ' ' + (nhiIcd10Content?.name ?? '');
         } else {
           category = '自費';
           title = t?.procedure?.content ?? '';

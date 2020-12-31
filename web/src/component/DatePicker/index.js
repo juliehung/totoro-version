@@ -26,18 +26,19 @@ const SingleDatePickerContainer = styled.div`
     padding-top: ${props => (props.size === 'large' ? '9px' : props.size === 'small' ? '1px' : '2px')} !important;
     padding-bottom: ${props => (props.size === 'large' ? '9px' : props.size === 'small' ? '1px' : '2px')} !important;
     border: 1px solid transparent !important;
-    color: rgba(0, 0, 0, 0.65);
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: normal;
   }
   & .DateInput_input__focused {
     border: 1px solid #5c8aff !important;
   }
   & .DateInput_input::placeholder {
-    color: #a1a1a1;
+    color: #bfbfbf;
     font-size: ${props => (props.size === 'large' ? '18px' : props.size === 'small' ? '14px' : '16px')} !important;
     font-weight: normal;
   }
   & .DateInput.DateInput_1 {
-    width: ${props => (props.size === 'large' ? '200px' : '150px')} !important;
+    width: ${props => (props.size === 'large' ? '200px' : '143px')} !important;
   }
 `;
 

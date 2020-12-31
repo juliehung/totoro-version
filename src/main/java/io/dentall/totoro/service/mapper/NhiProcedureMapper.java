@@ -23,6 +23,7 @@ public class NhiProcedureMapper {
         nhiProcedure.setFdi(nhiProcedureTable.getFdi());
         nhiProcedure.setSpecificCode(nhiProcedureTable.getSpecificCode());
         nhiProcedure.setChiefComplaint(nhiProcedureTable.getChiefComplaint());
+        nhiProcedure.setExpirationTime(nhiProcedureTable.getExpirationTime());
 
         NhiProcedureType nhiProcedureType  = new NhiProcedureType();
         nhiProcedureType.setId(nhiProcedureTable.getNhiProcedureType_Id());

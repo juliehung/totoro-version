@@ -100,7 +100,9 @@ const TitleContainer = styled.div`
   & > :nth-child(3) {
     margin-right: 16px;
   }
-
+  & > :nth-child(4) {
+    margin-left: 16px;
+  }
   @media (max-width: 1250px) {
     display: none;
   }

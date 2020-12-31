@@ -20,10 +20,56 @@ const PopoverContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 265px;
+  .name {
+    font-size: 22px;
+    font-weight: 600;
+    color: inherit;
+    line-height: 1.45;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 90%;
+  }
   .btn-wrap {
     display: flex;
     align-items: center;
     margin-top: 7px;
+    .xray-container {
+      margin: 0;
+      display: flex;
+      & > div {
+        cursor: pointer;
+        margin-right: 10px;
+        width: 33px;
+        height: 33px;
+        border-radius: 50%;
+        background: #eee;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: box-shadow 200ms ease-in-out;
+        &:hover {
+          background-color: rgba(50, 102, 255, 0.2);
+          box-shadow: 0 2px 13px 0 rgba(50, 102, 255, 0.3), 0 1px 3px 0 rgba(0, 0, 0, 0.18);
+        }
+      }
+    }
+    .link {
+      text-align: right;
+      font-family: PingFangSC;
+      font-size: 14px;
+      font-weight: 600;
+      color: #3366ff;
+      line-height: 1.14;
+      padding: 5px;
+      margin-left: auto;
+
+      &:hover,
+      &:focus,
+      &:active {
+        text-decoration: none;
+      }
+    }
   }
 `;
 
@@ -60,13 +106,6 @@ const HightLightSpan = styled.span`
   letter-spacing: -1px;
 `;
 
-const NameSpan = styled.span`
-  font-size: 22px;
-  font-weight: 600;
-  color: inherit;
-  line-height: 1.45;
-`;
-
 const TagsWrap = styled.div`
   margin-top: 4px;
   margin-bottom: 5px;
@@ -86,44 +125,6 @@ const TagsWrap = styled.div`
     line-height: 1.5;
     margin-right: 4px;
     margin-bottom: 3px;
-  }
-`;
-
-const LinkSpan = styled.a`
-  text-align: right;
-  font-family: PingFangSC;
-  font-size: 14px;
-  font-weight: 600;
-  color: #3366ff;
-  line-height: 1.14;
-  padding: 5px;
-  margin-left: auto;
-
-  &:hover,
-  &:focus,
-  &:active {
-    text-decoration: none;
-  }
-`;
-
-const XrayContainer = styled.div`
-  margin: 0;
-  display: flex;
-  & > div {
-    cursor: pointer;
-    margin-right: 10px;
-    width: 33px;
-    height: 33px;
-    border-radius: 50%;
-    background: #eee;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: box-shadow 200ms ease-in-out;
-    &:hover {
-      background-color: rgba(50, 102, 255, 0.2);
-      box-shadow: 0 2px 13px 0 rgba(50, 102, 255, 0.3), 0 1px 3px 0 rgba(0, 0, 0, 0.18);
-    }
   }
 `;
 
@@ -275,10 +276,10 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
         const popoverContent = (
           <PopoverContainer>
             <HightLightSpan birth={birth}>{birth ? parseDateToString(birth, false) : '生日未填'}</HightLightSpan>
-            <NameSpan>
+            <span className="name">
               {status === 'CANCEL' ? '[C]' : null} {firstVisit ? '[N] ' : null}
               {patientName}
-            </NameSpan>
+            </span>
             <InfoWrap>
               <span className="info">
                 <img src={PhoneFillIcon} alt="phone-icon" className="info-icon" />
@@ -308,7 +309,7 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
               ))}
             </TagsWrap>
             <div className="btn-wrap">
-              <XrayContainer>
+              <div className="xray-container">
                 {params.xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
                   <div
                     onClick={() => {
@@ -327,10 +328,15 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
                     <VixWinImg width="23" />
                   </div>
                 )}
-              </XrayContainer>
-              <LinkSpan href={`${getBaseUrl()}#/patient/${patientId}`} target="_blank" rel="noopener noreferrer">
+              </div>
+              <a
+                className="link"
+                href={`${getBaseUrl()}#/patient/${patientId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 關於病患
-              </LinkSpan>
+              </a>
             </div>
             {!registrationStatus ? (
               <span>
