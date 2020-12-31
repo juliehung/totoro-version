@@ -295,7 +295,7 @@ const route = [
     exact: false,
     icon: { on: NhiIcon, off: NhiFillIcon },
     component: <NhiIndexPage />,
-    localVersion: true,
+    localVersion: false,
   },
   {
     key: 'sms',
