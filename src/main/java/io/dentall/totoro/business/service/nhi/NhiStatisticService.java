@@ -138,12 +138,22 @@ public class NhiStatisticService {
         return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end, excludeDisposalId);
     }
 
+    private static final List<String> endoPostTreatmentList = 
+            Arrays.asList(
+                    "90001C", 
+                    "90002C", 
+                    "90003C", 
+                    "90016C", 
+                    "90018C", 
+                    "90019C", 
+                    "90020C");
+
     public List<NhiIndexEndoVM> calculateEndoIndex(Instant begin, Instant end, List<Long> excludeDisposalId) {
         if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
             excludeDisposalId = Arrays.asList(0L);
         }
 
-        return nhiExtendDisposalRepository.calculateEndoIndex(begin, end, excludeDisposalId).stream()
+        return nhiExtendDisposalRepository.calculateEndoIndex(begin, end, endoPostTreatmentList, excludeDisposalId).stream()
                 .map(endoDto -> {
                     NhiIndexEndoVM endo = new NhiIndexEndoVM()
                         .did(endoDto.getDid())
@@ -152,15 +162,7 @@ public class NhiStatisticService {
 
                     BigDecimal preOpeNumb = BigDecimal.valueOf(endo.getPreOperationNumber());
                     BigDecimal postOpeNumb = BigDecimal.valueOf(endo.getPostOperationNumber());
-                    if (endo.getPreOperationNumber() == 0L) {
-                        return endo.uncompletedRate(postOpeNumb.negate());
-                    } else if (endo.getPostOperationNumber() == 0L) {
-                        return endo.uncompletedRate(preOpeNumb);
-                    } else if (endo.getPostOperationNumber() > endo.getPreOperationNumber()) {
-                        return endo.uncompletedRate(postOpeNumb.divide(preOpeNumb, 2, RoundingMode.HALF_UP));
-                    } else {
-                        return endo.uncompletedRate(BigDecimal.ONE.min(postOpeNumb.divide(preOpeNumb, 2, RoundingMode.HALF_UP)));
-                    }
+                    return endo.uncompletedRate(preOpeNumb.subtract(postOpeNumb).divide(preOpeNumb, 2, RoundingMode.HALF_UP));
                 })
                 .collect(Collectors.toList());
     }
