@@ -438,8 +438,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "            left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "            left join treatment_procedure tp on d.id = tp.disposal_id " +
             "            left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
-            "        where ned.a19 <> '2' and ned.jhi_date between '2020-10-01' and '2020-10-10' and a73 = '90015C' and ned.id not in (0) " +
-            "           or ned.a19 = '2' and ned.replenishment_date between '2020-10-01' and '2020-10-10' and a73 = '90015C' and ned.id not in (0) " +
+            "        where ned.a19 <> '2' and ned.jhi_date between :begin and :end and a73 = '90015C' and d.id not in :excludeDisposalId " +
+            "           or ned.a19 = '2' and ned.replenishment_date between :begin and :end and a73 = '90015C' and d.id not in :excludeDisposalId " +
             "        group by a.doctor_user_id " +
             "     ), " +
             "     nhi_other_endo_total as ( " +
@@ -453,8 +453,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "            left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "            left join treatment_procedure tp on d.id = tp.disposal_id " +
             "            left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
-            "        where ned.a19 <> '2' and ned.jhi_date between ?1 and ?2 and a73 in ('90001C', '90002C', '90003C', '90016C', '90018C', '90019C', '90020C') and ned.id not in (0) " +
-            "           or ned.a19 = '2' and ned.replenishment_date between ?1 and ?2 and a73 in ('90001C', '90002C', '90003C', '90016C', '90018C', '90019C', '90020C') and ned.id not in (0) " +
+            "        where ned.a19 <> '2' and ned.jhi_date between :begin and :end and a73 in ('90001C', '90002C', '90003C', '90016C', '90018C', '90019C', '90020C') and d.id not in :excludeDisposalId " +
+            "           or ned.a19 = '2' and ned.replenishment_date between :begin and :end and a73 in ('90001C', '90002C', '90003C', '90016C', '90018C', '90019C', '90020C') and d.id not in :excludeDisposalId " +
             "        group by a.doctor_user_id " +
             "     ) " +
             "select pre.did as did, " +
@@ -469,5 +469,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "from nhi_90015C_total pre " +
             "    left join nhi_other_endo_total post on pre.did = post.did;"
     )
-    List<NhiIndexEndoDTO> calculateEndoIndex(Instant begin, Instant end, List<Long> excludeDisposalId);
+    List<NhiIndexEndoDTO> calculateEndoIndex(
+            @Param("begin") Instant begin, 
+            @Param("end") Instant end, 
+            @Param("excludeDisposalId") List<Long> excludeDisposalId);
 }

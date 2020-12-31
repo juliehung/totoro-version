@@ -1,19 +1,39 @@
 package io.dentall.totoro.business.service.nhi;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.dto.CalculateBaseData;
-import io.dentall.totoro.web.rest.vm.*;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.time.*;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexEndoVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexTreatmentProcedureVM;
+import io.dentall.totoro.web.rest.vm.NhiStatisticDoctorSalary;
 
 @Service
 @Transactional
@@ -137,9 +157,9 @@ public class NhiStatisticService {
                     } else if (endo.getPostOperationNumber() == 0L) {
                         return endo.uncompletedRate(preOpeNumb);
                     } else if (endo.getPostOperationNumber() > endo.getPreOperationNumber()) {
-                        return endo.uncompletedRate(postOpeNumb.divide(preOpeNumb));
+                        return endo.uncompletedRate(postOpeNumb.divide(preOpeNumb, 2, RoundingMode.HALF_UP));
                     } else {
-                        return endo.uncompletedRate(BigDecimal.ONE.min(postOpeNumb.divide(preOpeNumb)));
+                        return endo.uncompletedRate(BigDecimal.ONE.min(postOpeNumb.divide(preOpeNumb, 2, RoundingMode.HALF_UP)));
                     }
                 })
                 .collect(Collectors.toList());
