@@ -20,7 +20,7 @@ function getCurrentMonthPoint(totalPointByDisposalDate) {
   const totalAbs = Math.round(totalPoint / filterWithDate.length);
   const currentMonthDates = moment(totalPointByDisposalDate?.startDate).daysInMonth();
 
-  let reTotalPointByDisposalDate = [];
+  const reTotalPointByDisposalDate = [];
   for (let i = 1; i <= currentMonthDates; i++) {
     const findMapping = filterWithDate.filter(data => new Date(data?.disposalDate).getDate() === i);
     if (findMapping.length !== 0) {
