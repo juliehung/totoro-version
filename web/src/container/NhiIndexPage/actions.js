@@ -22,6 +22,9 @@ import {
   GET_NHI_ONE_BY_DISPOSAL_ID_SUCCESS,
   NHI_ONE_BY_DISPOSAL_ID_NOT_FOUND,
   GET_NHI_SALARY,
+  GET_ENDO_INDEXES_FAIL,
+  GET_ENDO_INDEXES_SUCCESS,
+  GET_ENDO_INDEXES,
 } from './constant';
 
 export function initNhiSalary(begin, end) {
@@ -77,6 +80,18 @@ export function getToothCleanSuccess(toothClean) {
 
 export function getToothCleanFail(toothClean) {
   return { type: GET_TOOTH_CLEAN_FAIL, toothClean };
+}
+
+export function getEndoIndexes(begin, end) {
+  return { type: GET_ENDO_INDEXES, begin, end };
+}
+
+export function getEndoIndexesSuccess(endoIndexes) {
+  return { type: GET_ENDO_INDEXES_SUCCESS, endoIndexes };
+}
+
+export function getEndoIndexesFail(endoIndexes) {
+  return { type: GET_ENDO_INDEXES_FAIL, endoIndexes };
 }
 
 export function getValidNhiYearMonth(yearMonth) {

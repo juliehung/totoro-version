@@ -13,6 +13,7 @@ import {
   GET_NHI_ONE_BY_DISPOSAL_ID_SUCCESS,
   GET_NHI_ONE_BY_DISPOSAL_ID,
   GET_VALID_NHI_BY_YEAR_MONTH,
+  GET_ENDO_INDEXES_SUCCESS,
 } from '../constant';
 
 const initState = {
@@ -22,6 +23,7 @@ const initState = {
   totalPointLoading: false,
   odIndexes: [],
   toothClean: [],
+  endoIndexes: [],
   validNhiYearMonth: undefined,
   validNhiDataLoading: undefined,
   validNhiData: undefined,
@@ -53,6 +55,9 @@ export default (state = initialState, action) =>
         break;
       case GET_TOOTH_CLEAN_SUCCESS:
         draft.toothClean = action.toothClean;
+        break;
+      case GET_ENDO_INDEXES_SUCCESS:
+        draft.endoIndexes = action.endoIndexes;
         break;
       case GET_VALID_NHI_YEAR_MONTH_SUCCESS:
         draft.validNhiYearMonths = action.validNhiYearMonths;

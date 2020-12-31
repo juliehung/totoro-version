@@ -106,6 +106,17 @@ const toothCleanColumns = (doctors, filterDoctors) => [
   },
   { title: '洗牙人數比率', dataIndex: 'timePatRate', key: 'timePatRate', render: t => renderFloat2Position(t) },
 ];
+const endoColumns = (doctors, filterDoctors) => [
+  {
+    title: '醫生',
+    dataIndex: 'did',
+    key: 'did',
+    filters: filterDoctors.map(d => ({ value: d?.id, text: d?.firstName })),
+    onFilter: (value, record) => value === record.did,
+    render: did => doctors.find(d => d.id === did)?.firstName ?? did,
+  },
+  { title: '根管未完成率', dataIndex: 'uncompletedRate', key: 'uncompletedRate', render: t => `${t * 100}%` },
+];
 const nhiSalaryColumns = [
   {
     title: '排序',
@@ -335,7 +346,6 @@ const nhiOneRender = ({ nhiOne }) => {
           dataSource={treatmentProcedureArr}
           columns={nhiOneColumns}
           scroll={{ y: 280 }}
-          // loading={!nhiSalary}
           pagination={false}
           bordered={false}
           showHeader={true}
@@ -389,6 +399,7 @@ function NhiIndexPage({
   doctors,
   odIndexes,
   toothClean,
+  endoIndexes,
   initNhiSalary,
   getNhiSalary,
   nhiSalary,
@@ -656,16 +667,7 @@ function NhiIndexPage({
                         <Cell key={`cell-${index}`} fill={totalPointByDisposalDate?.colors[index]} />
                       ))}
                     </Bar>
-                    <Tooltip
-                      cursor={<CustomCursor />}
-                      // content={obj => {
-                      //   const style = {
-                      //     background: 'rgba(255, 255, 255, 0.3)',
-                      //   };
-                      //   return <TooltipContainer style={style}>some</TooltipContainer>;
-                      // }}
-                      content={<CustomContent />}
-                    />
+                    <Tooltip cursor={<CustomCursor />} content={<CustomContent />} />
                   </BarChart>
                 </ResponsiveContainer>
               )}
@@ -742,6 +744,19 @@ function NhiIndexPage({
                 rowKey={record => `${record.did} ${record.distinctTotalPat}`}
               />
             </TabPane>
+            <TabPane tab="根管未完成率指標" key="4">
+              <TableContainer
+                loading={nhiTableLoading}
+                scroll={{ y: 280 }}
+                columns={endoColumns(doctors, filterDoctors)}
+                dataSource={endoIndexes}
+                pagination={false}
+                bordered={false}
+                showHeader={true}
+                tableLayout="fixed"
+                rowKey={record => `${record.did} ${record.distinctTotalPat}`}
+              />
+            </TabPane>
           </TabsWrap>
         </TabsContainer>
       </div>
@@ -753,6 +768,7 @@ const mapStateToProps = ({ nhiIndexPageReducer, homePageReducer }) => ({
   nhiTableLoading: nhiIndexPageReducer.common.loading,
   odIndexes: nhiIndexPageReducer.nhiIndex.odIndexes,
   toothClean: nhiIndexPageReducer.nhiIndex.toothClean,
+  endoIndexes: nhiIndexPageReducer.nhiIndex.endoIndexes,
   doctors: homePageReducer.user.users,
   nhiSalary: convertUserToNhiSalary(nhiIndexPageReducer.nhiIndex.nhiSalary, homePageReducer.user.users),
   expandNhiSalary: toRefreshExpandSalary(nhiIndexPageReducer.nhiIndex.expandNhiSalary),

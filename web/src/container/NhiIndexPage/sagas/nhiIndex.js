@@ -22,9 +22,12 @@ import {
   getNhiOneByDisposalIdSuccess,
   nhiOneByDisposalIdNotFound,
   getTotalPointByDisposalDate,
+  getEndoIndexesSuccess,
+  getEndoIndexesFail,
 } from '../actions';
 import OdIndexes from '../../../models/odIndexes';
 import ToothClean from '../../../models/toothClean';
+import EndoIndexes from '../../../models/endoIndexes';
 import DoctorNhiSalary from '../../../models/doctorNhiSalary';
 
 export function* initNhiSalary() {
@@ -36,6 +39,7 @@ export function* initNhiSalary() {
       yield delay(300);
       yield fork(getOdIndexes, begin, end);
       yield fork(getToothClean, begin, end);
+      yield fork(getEndoIndexes, begin, end);
       yield fork(getValidNhiYearMonth, begin);
       const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, { begin, end });
       yield put(getNhiSalarySuccess(nhiSalary));
@@ -55,6 +59,7 @@ export function* getNhiSalary() {
       yield delay(300);
       yield fork(getOdIndexes, begin, end, checkedModalData);
       yield fork(getToothClean, begin, end, checkedModalData);
+      yield fork(getEndoIndexes, begin, end, checkedModalData);
       const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, {
         begin,
         end,
@@ -106,6 +111,20 @@ export function* getToothClean(begin, end, checkedModalData) {
     yield put(getToothCleanSuccess(result));
   } catch (error) {
     yield put(getToothCleanFail([]));
+  }
+}
+
+export function* getEndoIndexes(begin, end, checkedModalData) {
+  try {
+    const params = {
+      begin: begin.startOf('day').toISOString(),
+      end: end.endOf('day').toISOString(),
+      excludeDisposalId: checkedModalData ? checkedModalData : [],
+    };
+    const result = yield call(EndoIndexes.get, params);
+    yield put(getEndoIndexesSuccess(result));
+  } catch (error) {
+    yield put(getEndoIndexesFail([]));
   }
 }
 
