@@ -32,7 +32,6 @@ import toRefreshExpandSalary from './utils/toRefreshExpandSalary';
 import getCurrentMonthPoint from './utils/getCurrentMonthPoint';
 import toRefreshValidNhiData from './utils/toRefreshValidNhiData';
 import toRefreshNhiOne from './utils/toRefreshNhiOne';
-import CloudDownload from '../../images/icon-cloud-download.svg';
 import IconBarChart from '../../images/icon-bar-chart.svg';
 import { ReactComponent as ArrowDown } from '../../images/1-2-icon-his-icons-arrow-down-fill.svg';
 
@@ -623,10 +622,9 @@ function NhiIndexPage({
         <div>健保點數與分析</div>
         <div>{`${startDate.year() - 1911}年${startDate.format('MM')}`}月</div>
         <div>
-          <div>
-            <img src={CloudDownload} alt="cloud download" />
-            <span>匯出成 EXCEL</span>
-          </div>
+          <div />
+          {/*<img src={CloudDownload} alt="cloud download" />*/}
+          {/*<span>匯出成 EXCEL</span>*/}
           <div onClick={() => setIsModalVisible(true)}>
             <img src={IconBarChart} alt="icon-bar-chart" />
             <span>選擇計算來源</span>
