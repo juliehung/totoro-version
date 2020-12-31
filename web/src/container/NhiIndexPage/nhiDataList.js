@@ -31,6 +31,13 @@ const CheckboxWrap = styled(Checkbox)`
     `}
   }
 `;
+const renderWithCaseCategory = (a23, serialNumber) => {
+  if (a23.toUpperCase() === 'AC') {
+    return `A3${serialNumber}`;
+  } else {
+    return `19${serialNumber}`;
+  }
+};
 
 const NhiDataListRender = ({
   validNhiData,
@@ -75,7 +82,7 @@ const NhiDataListRender = ({
               >
                 <div>{nhiExtendDisposal?.patientName}</div>
                 <div>
-                  {nhiExtendDisposal?.serialNumber ? `${nhiExtendDisposal?.serialNumber},` : ''}{' '}
+                  {renderWithCaseCategory(nhiExtendDisposal?.a23 || '', nhiExtendDisposal?.serialNumber || '')}{' '}
                   {nhiExtendDisposal?.doctorName}
                 </div>
               </div>
