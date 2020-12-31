@@ -13,7 +13,15 @@ function convertUserToNhiSalary(salary, users) {
     );
   });
 
-  return reNhiSalary.filter(d => d?.doctorId && d?.doctorName).sort((a, b) => a.doctorId - b.doctorId);
+  return reNhiSalary
+    .filter(d => d?.doctorId && d?.doctorName)
+    .sort((a, b) => a.doctorId - b.doctorId)
+    .map((record, index) => {
+      return {
+        ...record,
+        no: index + 1,
+      };
+    });
 }
 
 export default convertUserToNhiSalary;

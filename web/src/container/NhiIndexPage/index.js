@@ -32,7 +32,6 @@ import toRefreshExpandSalary from './utils/toRefreshExpandSalary';
 import getCurrentMonthPoint from './utils/getCurrentMonthPoint';
 import toRefreshValidNhiData from './utils/toRefreshValidNhiData';
 import toRefreshNhiOne from './utils/toRefreshNhiOne';
-import CloudDownload from '../../images/icon-cloud-download.svg';
 import IconBarChart from '../../images/icon-bar-chart.svg';
 import { ReactComponent as ArrowDown } from '../../images/1-2-icon-his-icons-arrow-down-fill.svg';
 
@@ -41,6 +40,15 @@ const NhiDataListRender = React.lazy(() => import('./nhiDataList'));
 const { TabPane } = Tabs;
 
 const renderFloat2Position = f => (typeof f === 'number' ? (Math.round(f * 100) / 100).toFixed(2) : '0');
+const renderThousands = v => {
+  if (typeof v === 'number') {
+    const value = v.toString().split('.');
+    value[0] = value[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return value.join('.');
+  } else {
+    return v;
+  }
+};
 const odColumns = (doctors, filterDoctors) => [
   {
     title: '醫生',
@@ -120,10 +128,9 @@ const endoColumns = (doctors, filterDoctors) => [
 const nhiSalaryColumns = [
   {
     title: '排序',
-    dataIndex: 'doctorId',
-    key: 'doctorId',
+    dataIndex: 'no',
+    key: 'no',
     fixed: 'left',
-    sorter: (a, b) => a.doctorId - b.doctorId,
   },
   {
     title: '醫師',
@@ -137,48 +144,64 @@ const nhiSalaryColumns = [
     dataIndex: 'total',
     key: 'total',
     sorter: (a, b) => a.total - b.total,
+    align: 'right',
+    render: total => renderThousands(total),
   },
   {
     title: '感控診察',
     dataIndex: 'infectionExaminationPoint',
     key: 'infectionExaminationPoint',
     sorter: (a, b) => a.infectionExaminationPoint - b.infectionExaminationPoint,
+    align: 'right',
+    render: infectionExaminationPoint => renderThousands(infectionExaminationPoint),
   },
   {
     title: '未感控診察',
     dataIndex: 'regularExaminationPoint',
     key: 'regularExaminationPoint',
     sorter: (a, b) => a.regularExaminationPoint - b.regularExaminationPoint,
+    align: 'right',
+    render: regularExaminationPoint => renderThousands(regularExaminationPoint),
   },
   {
     title: '診療費',
     dataIndex: 'treatmentPoint',
     key: 'treatmentPoint',
     sorter: (a, b) => a.treatmentPoint - b.treatmentPoint,
+    align: 'right',
+    render: treatmentPoint => renderThousands(treatmentPoint),
   },
   {
     title: '部分負擔',
     dataIndex: 'copayment',
     key: 'copayment',
     sorter: (a, b) => a.copayment - b.copayment,
+    align: 'right',
+    render: copayment => renderThousands(copayment),
   },
   {
     title: '牙周專科',
     dataIndex: 'perioPoint',
     key: 'perioPoint',
     sorter: (a, b) => a.perioPoint - b.perioPoint,
+    align: 'right',
+    render: perioPoint => renderThousands(perioPoint),
   },
   {
     title: '兒童專科',
     dataIndex: 'pedoPoint',
     key: 'pedoPoint',
     sorter: (a, b) => a.pedoPoint - b.pedoPoint,
+    align: 'right',
+    render: pedoPoint => renderThousands(pedoPoint),
   },
   {
     title: '根管專科',
     dataIndex: 'endoPoint',
     key: 'endoPoint',
     sorter: (a, b) => a.endoPoint - b.endoPoint,
+    align: 'right',
+    render: endoPoint => renderThousands(endoPoint),
   },
   {
     title: '',
@@ -205,18 +228,21 @@ const nhiOneColumns = [
     dataIndex: 'quantity',
     key: 'quantity',
     width: '10%',
+    align: 'right',
   },
   {
-    title: '乘數',
+    title: '點數',
     dataIndex: 'point',
     key: 'point',
     width: '10%',
+    align: 'right',
   },
   {
     title: '合計',
     dataIndex: 'total',
     key: 'total',
     width: '10%',
+    align: 'right',
   },
 ];
 
@@ -224,10 +250,9 @@ const expandedRowRender = expandSalary => {
   const expandedRowColumns = [
     {
       title: '排序',
-      dataIndex: 'doctorId',
-      key: 'doctorId',
+      dataIndex: 'no',
+      key: 'no',
       fixed: 'left',
-      sorter: (a, b) => a.doctorId - b.doctorId,
     },
     {
       title: '醫師',
@@ -241,48 +266,64 @@ const expandedRowRender = expandSalary => {
       dataIndex: 'total',
       key: 'total',
       sorter: (a, b) => a.total - b.total,
+      align: 'right',
+      render: total => renderThousands(total),
     },
     {
       title: '感控診察',
       dataIndex: 'infectionExaminationPoint',
       key: 'infectionExaminationPoint',
       sorter: (a, b) => a.infectionExaminationPoint - b.infectionExaminationPoint,
+      align: 'right',
+      render: infectionExaminationPoint => renderThousands(infectionExaminationPoint),
     },
     {
       title: '未感控診察',
       dataIndex: 'regularExaminationPoint',
       key: 'regularExaminationPoint',
       sorter: (a, b) => a.regularExaminationPoint - b.regularExaminationPoint,
+      align: 'right',
+      render: regularExaminationPoint => renderThousands(regularExaminationPoint),
     },
     {
       title: '診療費',
       dataIndex: 'treatmentPoint',
       key: 'treatmentPoint',
       sorter: (a, b) => a.treatmentPoint - b.treatmentPoint,
+      align: 'right',
+      render: treatmentPoint => renderThousands(treatmentPoint),
     },
     {
       title: '部分負擔',
       dataIndex: 'copayment',
       key: 'copayment',
       sorter: (a, b) => a.copayment - b.copayment,
+      align: 'right',
+      render: copayment => renderThousands(copayment),
     },
     {
       title: '牙周專科',
       dataIndex: 'perioPoint',
       key: 'perioPoint',
       sorter: (a, b) => a.perioPoint - b.perioPoint,
+      align: 'right',
+      render: perioPoint => renderThousands(perioPoint),
     },
     {
       title: '兒童專科',
       dataIndex: 'pedoPoint',
       key: 'pedoPoint',
       sorter: (a, b) => a.pedoPoint - b.pedoPoint,
+      align: 'right',
+      render: pedoPoint => renderThousands(pedoPoint),
     },
     {
       title: '根管專科',
       dataIndex: 'endoPoint',
       key: 'endoPoint',
       sorter: (a, b) => a.endoPoint - b.endoPoint,
+      align: 'right',
+      render: endoPoint => renderThousands(endoPoint),
     },
     {
       title: '',
@@ -623,10 +664,9 @@ function NhiIndexPage({
         <div>健保點數與分析</div>
         <div>{`${startDate.year() - 1911}年${startDate.format('MM')}`}月</div>
         <div>
-          <div>
-            <img src={CloudDownload} alt="cloud download" />
-            <span>匯出成 EXCEL</span>
-          </div>
+          <div />
+          {/*<img src={CloudDownload} alt="cloud download" />*/}
+          {/*<span>匯出成 EXCEL</span>*/}
           <div onClick={() => setIsModalVisible(true)}>
             <img src={IconBarChart} alt="icon-bar-chart" />
             <span>選擇計算來源</span>
