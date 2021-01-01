@@ -10,13 +10,13 @@ function getCurrentMonthPoint(totalPointByDisposalDate) {
         new Date(totalPointByDisposalDate?.startDate).getMonth() + 1 === new Date(disposalDate).getMonth() + 1,
     )
     .sort((a, b) => new Date(a.disposalDate).getTime() - new Date(b.disposalDate).getTime());
-  const totalPoint = filterWithDate.map(({ total }) => total).reduce((a, b) => a + b);
-  const treatmentTotalPoint = filterWithDate.map(({ treatmentPoint }) => treatmentPoint).reduce((a, b) => a + b);
+  const totalPoint = filterWithDate.map(({ total }) => total).reduce((a, b) => a + b, 0);
+  const treatmentTotalPoint = filterWithDate.map(({ treatmentPoint }) => treatmentPoint).reduce((a, b) => a + b, 0);
   const examinationTotalPoint = filterWithDate
     .map(
       ({ infectionExaminationPoint, regularExaminationPoint }) => infectionExaminationPoint + regularExaminationPoint,
     )
-    .reduce((a, b) => a + b);
+    .reduce((a, b) => a + b, 0);
   const totalAbs = Math.round(totalPoint / filterWithDate.length);
   const currentMonthDates = moment(totalPointByDisposalDate?.startDate).daysInMonth();
 
@@ -30,7 +30,10 @@ function getCurrentMonthPoint(totalPointByDisposalDate) {
         color: findMapping[0]?.total > totalAbs ? '#26c8f0' : '#ffc935',
       });
     } else {
-      const disposalDate = new Date(`${new Date().getFullYear()}-${new Date().getMonth()}-${i}`).toISOString();
+      const current = new Date();
+      const fullYear = current.getFullYear();
+      const month = current.getMonth() + 1;
+      const disposalDate = new Date(`${fullYear}-${month}-${i}`).toISOString();
       reTotalPointByDisposalDate.push({
         copayment: 0,
         disposalDate: `${disposalDate}`,
