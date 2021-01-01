@@ -10,7 +10,6 @@ function getCurrentMonthPoint(totalPointByDisposalDate) {
         new Date(totalPointByDisposalDate?.startDate).getMonth() + 1 === new Date(disposalDate).getMonth() + 1,
     )
     .sort((a, b) => new Date(a.disposalDate).getTime() - new Date(b.disposalDate).getTime());
-  console.log(filterWithDate);
   const totalPoint = filterWithDate.map(({ total }) => total).reduce((a, b) => a + b, 0);
   const treatmentTotalPoint = filterWithDate.map(({ treatmentPoint }) => treatmentPoint).reduce((a, b) => a + b, 0);
   const examinationTotalPoint = filterWithDate
