@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import moment from 'moment';
+import locale from 'antd/es/date-picker/locale/zh_TW';
 import { DatePicker, Table, Tabs, Menu, Dropdown, Button, Spin } from 'antd';
 import { connect, useDispatch } from 'react-redux';
 import { BarChart, Bar, XAxis, Rectangle, Tooltip, Cell, ResponsiveContainer } from 'recharts';
@@ -573,6 +574,7 @@ function NhiIndexPage({
               <div>選擇月份:</div>
               <div>
                 <DatePicker
+                  locale={locale}
                   style={{ borderRadius: '8px', color: '#222b45' }}
                   onChange={(date, dateString) => {
                     updateCheckedModalData([]);
