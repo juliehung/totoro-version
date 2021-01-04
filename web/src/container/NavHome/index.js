@@ -289,7 +289,8 @@ const route = [
   },
   {
     key: 'nhi',
-    link: 'nhi-index',
+    path: 'nhi',
+    link: 'nhi',
     name: '全民健保',
     navigation: true,
     exact: false,
@@ -323,15 +324,6 @@ const route = [
     link: 'setting',
     navigation: false,
     component: <SettingPage />,
-    localVersion: true,
-  },
-  {
-    key: 'nhi-index',
-    path: 'nhi-index',
-    link: 'nhi-index',
-    navigation: false,
-    exact: true,
-    component: <NhiIndexPage />,
     localVersion: true,
   },
   {
