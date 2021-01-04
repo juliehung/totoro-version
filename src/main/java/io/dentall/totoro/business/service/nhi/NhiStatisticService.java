@@ -23,7 +23,21 @@ public class NhiStatisticService {
 
     private final UserRepository userRepository;
 
-    private final List<String> infectionExaminationCodes = Arrays.asList("00315C", "00316C", "00317C", "00307C", "00308C");
+    private final List<String> infectionExaminationCodes = Arrays.asList(
+        "00305C",
+        "00306C",
+        "00307C",
+        "00308C",
+        "00309C",
+        "00310C",
+        "00311C",
+        "00312C",
+        "00313C",
+        "00314C",
+        "00315C",
+        "00316C",
+        "00317C"
+    );
 
     public NhiStatisticService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
@@ -232,7 +246,7 @@ public class NhiStatisticService {
 
         // 這邊特別將時間轉成台北時區後，再進行Group By，因為沒有這樣處理的話，有可能會出現小於begin或大於end的日期
         // 雖然特別將時區轉成台北時區後，可是因為NhiStatisticDoctorSalary.disposalDate為Instant型態，所以只好特別從localDateTime轉回Instant，但要時區要指定成UTC，避免時間又被減掉8小時
-        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId, infectionExaminationCodes).stream()
+        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId).stream()
                 .collect(Collectors
                         .groupingBy(obj -> obj.getDisposalDate().atZone(ZoneId.of("Asia/Taipei")).toLocalDateTime().truncatedTo(ChronoUnit.DAYS).toInstant(ZoneOffset.UTC)))
                 .forEach((k, v) -> {
@@ -260,7 +274,7 @@ public class NhiStatisticService {
             excludeDisposalId = Arrays.asList(0L);
         }
 
-        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId, infectionExaminationCodes).stream()
+        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId).stream()
             .collect(Collectors.groupingBy(CalculateBaseData::getDoctorId))
             .forEach((k, v) -> {
                 v.forEach(e -> {
@@ -336,7 +350,7 @@ public class NhiStatisticService {
             excludeDisposalId = Arrays.asList(0L);
         }
 
-        nhiExtendDisposalRepository.findCalculateBaseDataByDateAndDoctorId(begin, end, doctorId, excludeDisposalId, infectionExaminationCodes).stream()
+        nhiExtendDisposalRepository.findCalculateBaseDataByDateAndDoctorId(begin, end, doctorId, excludeDisposalId).stream()
             .collect(Collectors.groupingBy(CalculateBaseData::getDisposalId))
             .forEach((k, v) -> {
                 v.forEach(e -> {
