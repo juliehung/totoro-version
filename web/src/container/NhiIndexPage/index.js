@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import moment from 'moment';
+import locale from 'antd/es/date-picker/locale/zh_TW';
 import { DatePicker, Table, Tabs, Menu, Dropdown, Button, Spin } from 'antd';
 import { connect, useDispatch } from 'react-redux';
 import { BarChart, Bar, XAxis, Rectangle, Tooltip, Cell, ResponsiveContainer } from 'recharts';
@@ -236,6 +237,7 @@ const nhiOneColumns = [
     key: 'point',
     width: '10%',
     align: 'right',
+    render: point => renderThousands(point),
   },
   {
     title: '合計',
@@ -243,6 +245,7 @@ const nhiOneColumns = [
     key: 'total',
     width: '10%',
     align: 'right',
+    render: total => renderThousands(total),
   },
 ];
 
@@ -328,7 +331,7 @@ const expandedRowRender = expandSalary => {
     {
       title: '',
       render: record => (
-        <a href={`${getBaseUrl()}#/patient/${expandSalary?.doctorId}`} target="_blank" rel="noopener noreferrer">
+        <a href={`${getBaseUrl()}#/patient/${record?.patientId}`} target="_blank" rel="noopener noreferrer">
           {record?.patientName} 於 {moment(record?.disposalDate).format('YYYY/MM/DD')}
         </a>
       ),
@@ -371,15 +374,15 @@ const nhiOneRender = ({ nhiOne }) => {
         </div>
         <div>
           <div className="nhi-one-label">診察費</div>
-          <div className="nhi-one-info-label">{examinationPoint}</div>
+          <div className="nhi-one-info-label">{renderThousands(examinationPoint)}</div>
         </div>
         <div>
           <div className="nhi-one-label">診療費</div>
-          <div className="nhi-one-info-label">{treatmentPoint}</div>
+          <div className="nhi-one-info-label">{renderThousands(treatmentPoint)}</div>
         </div>
         <div>
           <div className="nhi-one-label">合計點數</div>
-          <div className="nhi-one-info-label">{totalPoint}</div>
+          <div className="nhi-one-info-label">{renderThousands(totalPoint)}</div>
         </div>
       </div>
       <div className="nhi-one-table-wrap">
@@ -573,6 +576,7 @@ function NhiIndexPage({
               <div>選擇月份:</div>
               <div>
                 <DatePicker
+                  locale={locale}
                   style={{ borderRadius: '8px', color: '#222b45' }}
                   onChange={(date, dateString) => {
                     updateCheckedModalData([]);
@@ -682,16 +686,16 @@ function NhiIndexPage({
             <div>
               <div className="total-info-wrap">
                 <div>
-                  <p>{totalPointByDisposalDate?.totalPoint}</p>
+                  <p>{renderThousands(totalPointByDisposalDate?.totalPoint)}</p>
                   <p className="total-sub-text">合計</p>
                 </div>
                 <div>
                   <div>
-                    <p>{totalPointByDisposalDate?.examinationTotalPoint}</p>
+                    <p>{renderThousands(totalPointByDisposalDate?.examinationTotalPoint)}</p>
                     <p className="total-sub-text">診察</p>
                   </div>
                   <div>
-                    <p>{totalPointByDisposalDate?.treatmentTotalPoint}</p>
+                    <p>{renderThousands(totalPointByDisposalDate?.treatmentTotalPoint)}</p>
                     <p className="total-sub-text">診療</p>
                   </div>
                 </div>
