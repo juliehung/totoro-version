@@ -391,7 +391,11 @@ public class NhiStatisticService {
                         // 總處置數
                         o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
                         // 部分負擔
-                        o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
+                        o.setCopayment(e.getCopayment() != null  &&
+                                o.getCopayment() == 0L ||
+                                o.getCopayment() == null
+                            ? Long.parseLong(e.getCopayment())
+                            : 0L);
                         // 治療時間
                         o.setDisposalDate(e.getDisposalDate());
                         // 病患資料
