@@ -293,7 +293,7 @@ const route = [
     name: '全民健保',
     navigation: true,
     exact: false,
-    icon: { on: NhiIcon, off: NhiFillIcon },
+    icon: { on: NhiFillIcon, off: NhiIcon },
     component: <NhiIndexPage />,
     localVersion: false,
   },
