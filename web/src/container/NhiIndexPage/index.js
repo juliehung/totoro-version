@@ -329,7 +329,7 @@ const expandedRowRender = expandSalary => {
     {
       title: '',
       render: record => (
-        <a href={`${getBaseUrl()}#/patient/${expandSalary?.doctorId}`} target="_blank" rel="noopener noreferrer">
+        <a href={`${getBaseUrl()}#/patient/${record?.patientId}`} target="_blank" rel="noopener noreferrer">
           {record?.patientName} 於 {moment(record?.disposalDate).format('YYYY/MM/DD')}
         </a>
       ),
