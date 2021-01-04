@@ -326,13 +326,12 @@ public class NhiStatisticService {
 
                         // 總點數
                         o.setTotal(Long.sum(o.getTotal(), total));
-                        // 總處置數
+                        // 總處置數 跟 部分負擔
                         if (!disposalList.contains(e.getDisposalId())) {
                             o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
+                            o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
                             disposalList.add(e.getDisposalId());
                         }
-                        // 部分負擔
-                        o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
 
                         return o;
                     });
