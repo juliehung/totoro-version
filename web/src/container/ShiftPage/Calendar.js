@@ -373,11 +373,4 @@ const mapDispatchToProps = {
   changeSelectAllDoctor,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(
-  React.memo(Calendar, (prevProps, nextProps) => {
-    return prevProps.popoverVisible && !nextProps.popoverVisible;
-  }),
-);
+export default connect(mapStateToProps, mapDispatchToProps)(Calendar);
