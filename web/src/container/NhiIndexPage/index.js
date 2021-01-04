@@ -237,6 +237,7 @@ const nhiOneColumns = [
     key: 'point',
     width: '10%',
     align: 'right',
+    render: point => renderThousands(point),
   },
   {
     title: '合計',
@@ -244,6 +245,7 @@ const nhiOneColumns = [
     key: 'total',
     width: '10%',
     align: 'right',
+    render: total => renderThousands(total),
   },
 ];
 
@@ -372,15 +374,15 @@ const nhiOneRender = ({ nhiOne }) => {
         </div>
         <div>
           <div className="nhi-one-label">診察費</div>
-          <div className="nhi-one-info-label">{examinationPoint}</div>
+          <div className="nhi-one-info-label">{renderThousands(examinationPoint)}</div>
         </div>
         <div>
           <div className="nhi-one-label">診療費</div>
-          <div className="nhi-one-info-label">{treatmentPoint}</div>
+          <div className="nhi-one-info-label">{renderThousands(treatmentPoint)}</div>
         </div>
         <div>
           <div className="nhi-one-label">合計點數</div>
-          <div className="nhi-one-info-label">{totalPoint}</div>
+          <div className="nhi-one-info-label">{renderThousands(totalPoint)}</div>
         </div>
       </div>
       <div className="nhi-one-table-wrap">
@@ -684,16 +686,16 @@ function NhiIndexPage({
             <div>
               <div className="total-info-wrap">
                 <div>
-                  <p>{totalPointByDisposalDate?.totalPoint}</p>
+                  <p>{renderThousands(totalPointByDisposalDate?.totalPoint)}</p>
                   <p className="total-sub-text">合計</p>
                 </div>
                 <div>
                   <div>
-                    <p>{totalPointByDisposalDate?.examinationTotalPoint}</p>
+                    <p>{renderThousands(totalPointByDisposalDate?.examinationTotalPoint)}</p>
                     <p className="total-sub-text">診察</p>
                   </div>
                   <div>
-                    <p>{totalPointByDisposalDate?.treatmentTotalPoint}</p>
+                    <p>{renderThousands(totalPointByDisposalDate?.treatmentTotalPoint)}</p>
                     <p className="total-sub-text">診療</p>
                   </div>
                 </div>
