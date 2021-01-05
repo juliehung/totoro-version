@@ -9,14 +9,12 @@ import moment from 'moment';
 const initVisible = false;
 const initDate = moment();
 const initDoctor = [];
-const initPrintButtonDisable = true;
 const initAppData = { appointmentList: [], doctorList: [] };
 
 export const initialState = {
   visible: initVisible,
   date: initDate,
   doctor: initDoctor,
-  printButtonDisable: initPrintButtonDisable,
   appData: initAppData,
 };
 
@@ -29,15 +27,11 @@ const print = (state = initialState, action) =>
         break;
       case CHANGE_PRINT_DATE:
         draft.date = action.date;
-        draft.printButtonDisable = false;
         break;
       case CHANGE_PRINT_DOCTOR:
-        console.log(action.doctor);
         draft.doctor = action.doctor;
-        draft.printButtonDisable = false;
         break;
       case GET_PRINT_APP_LIST_SUCCESS:
-        draft.printButtonDisable = false;
         draft.appData = action.appData;
         break;
       default:
