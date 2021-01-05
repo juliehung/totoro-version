@@ -1,39 +1,20 @@
 package io.dentall.totoro.business.service.nhi;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.dto.CalculateBaseData;
-import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
-import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexEndoVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexTreatmentProcedureVM;
-import io.dentall.totoro.web.rest.vm.NhiStatisticDoctorSalary;
+import io.dentall.totoro.web.rest.vm.*;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -42,7 +23,21 @@ public class NhiStatisticService {
 
     private final UserRepository userRepository;
 
-    private final List<String> infectionExaminationCodes = Arrays.asList("00315C", "00316C", "00317C", "00307C", "00308C");
+    private final List<String> infectionExaminationCodes = Arrays.asList(
+        "00305C",
+        "00306C",
+        "00307C",
+        "00308C",
+        "00309C",
+        "00310C",
+        "00311C",
+        "00312C",
+        "00313C",
+        "00314C",
+        "00315C",
+        "00316C",
+        "00317C"
+    );
 
     public NhiStatisticService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
@@ -138,14 +133,14 @@ public class NhiStatisticService {
         return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end, excludeDisposalId);
     }
 
-    private static final List<String> endoPostTreatmentList = 
+    private static final List<String> endoPostTreatmentList =
             Arrays.asList(
-                    "90001C", 
-                    "90002C", 
-                    "90003C", 
-                    "90016C", 
-                    "90018C", 
-                    "90019C", 
+                    "90001C",
+                    "90002C",
+                    "90003C",
+                    "90016C",
+                    "90018C",
+                    "90019C",
                     "90020C");
 
     public List<NhiIndexEndoVM> calculateEndoIndex(Instant begin, Instant end, List<Long> excludeDisposalId) {
@@ -331,13 +326,12 @@ public class NhiStatisticService {
 
                         // 總點數
                         o.setTotal(Long.sum(o.getTotal(), total));
-                        // 總處置數
+                        // 總處置數 跟 部分負擔
                         if (!disposalList.contains(e.getDisposalId())) {
                             o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
+                            o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
                             disposalList.add(e.getDisposalId());
                         }
-                        // 部分負擔
-                        o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
 
                         return o;
                     });
@@ -410,7 +404,11 @@ public class NhiStatisticService {
                         // 總處置數
                         o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
                         // 部分負擔
-                        o.setCopayment(Long.sum(o.getCopayment(), e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L));
+                        o.setCopayment(e.getCopayment() != null  &&
+                                o.getCopayment() == 0L ||
+                                o.getCopayment() == null
+                            ? Long.parseLong(e.getCopayment())
+                            : 0L);
                         // 治療時間
                         o.setDisposalDate(e.getDisposalDate());
                         // 病患資料
