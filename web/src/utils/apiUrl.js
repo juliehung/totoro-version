@@ -35,8 +35,8 @@ if (process.env.NODE_ENV !== 'production') {
   // host = 'dentall.pw';
   // apiPort = 443;
   apiProtocol = 'http';
-  mqttProtocol = 'wss';
-  mqttPort = apiPort;
+  mqttProtocol = apiProtocol === 'http' ? 'ws' : 'wss';
+  mqttPort = apiPort === 8085 ? 8081 : apiPort;
 }
 
 export const mqttUrl = `${mqttProtocol}://${host}:${mqttPort}${clinic}${mqttPrefix}`;
