@@ -11,9 +11,13 @@ function handleShiftEvtTitle(shifts, defaultShifts) {
     );
 
     if (defaultShift) {
-      return { ...s, title: defaultShift.origin.name };
+      return { ...s, title: moment(s.start).valueOf(), displayText: defaultShift.origin.name };
     }
-    return { ...s, title: `${moment(s.start).format('H:mm')}~${moment(s.end).format('H:mm')}` };
+    return {
+      ...s,
+      title: moment(s.start).valueOf(),
+      displayText: `${moment(s.start).format('H:mm')}~${moment(s.end).format('H:mm')}`,
+    };
   });
 }
 

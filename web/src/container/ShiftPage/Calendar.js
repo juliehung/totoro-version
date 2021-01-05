@@ -284,7 +284,6 @@ function Calendar(props) {
       calendarApi.next();
     }
   };
-
   return (
     <Container>
       <GlobalStyle />
@@ -333,6 +332,7 @@ function Calendar(props) {
             selectable
             selectLongPressDelay={500}
             scrollTime="00:00:00"
+            eventOrder={'title'}
           />
         </div>
       </CalendarContainer>

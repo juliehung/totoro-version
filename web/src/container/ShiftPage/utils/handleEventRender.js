@@ -31,10 +31,9 @@ export function handleEventRender({ el, event }, { deleteShift }) {
     el.style.transform = 'translate(0,0)';
     HoverSpanRef.current.style.opacity = 0;
   });
-
   const content = (
     <Container>
-      <span>{event.title}</span>
+      <span>{event?.extendedProps?.displayText || ''}</span>
       <HoverSpan
         ref={HoverSpanRef}
         onClick={() => {
