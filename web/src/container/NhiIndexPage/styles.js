@@ -302,6 +302,13 @@ const ModalContentContainer = styled.div`
     height: 100%;
 
     .render-nhi-one-detail-wrap {
+      .nhi-one-info-wrap {
+        > div {
+          display: flex;
+          flex-direction: column;
+          align-self: flex-start;
+        }
+      }
       .nhi-one-label {
         font-size: 13px;
         font-weight: 600;
@@ -313,6 +320,7 @@ const ModalContentContainer = styled.div`
         font-weight: bold;
         line-height: 1.23;
         color: #222b45;
+        flex: 1;
       }
       .nhi-one-name {
         font-size: 32px;

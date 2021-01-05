@@ -42,7 +42,7 @@ const { TabPane } = Tabs;
 
 const renderFloat2Position = f => (typeof f === 'number' ? (Math.round(f * 100) / 100).toFixed(2) : '0');
 const renderThousands = v => {
-  if (typeof v === 'number') {
+  if (typeof v === 'number' && v < 1000) {
     const value = v.toString().split('.');
     value[0] = value[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return value.join('.');
@@ -214,8 +214,8 @@ const nhiSalaryColumns = [
 const nhiOneColumns = [
   {
     title: '健保代碼/中文',
-    dataIndex: 'treatmentProcedureName',
-    key: 'treatmentProcedureName',
+    dataIndex: 'nhiName',
+    key: 'nhiName',
     width: '60%',
   },
   {
@@ -357,7 +357,7 @@ const nhiOneRender = ({ nhiOne }) => {
     examinationPoint,
     treatmentPoint,
     totalPoint,
-    treatmentProcedureArr,
+    nhiOneTableData,
   } = nhiOne;
   return (
     <div className="render-nhi-one-detail-wrap">
@@ -387,7 +387,7 @@ const nhiOneRender = ({ nhiOne }) => {
       </div>
       <div className="nhi-one-table-wrap">
         <Table
-          dataSource={treatmentProcedureArr}
+          dataSource={nhiOneTableData}
           columns={nhiOneColumns}
           scroll={{ y: 280 }}
           pagination={false}
