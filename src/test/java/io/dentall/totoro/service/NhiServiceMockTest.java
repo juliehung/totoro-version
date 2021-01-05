@@ -1,15 +1,7 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.business.dto.Rule;
-import io.dentall.totoro.domain.*;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -21,8 +13,25 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.function.Function;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import io.dentall.totoro.business.dto.Rule;
+import io.dentall.totoro.domain.Disposal;
+import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.Treatment;
+import io.dentall.totoro.domain.TreatmentPlan;
+import io.dentall.totoro.domain.TreatmentProcedure;
+import io.dentall.totoro.domain.TreatmentTask;
+import io.dentall.totoro.repository.NhiExtendDisposalRepository;
+import io.dentall.totoro.service.dto.NhiExtendTreatmentProcedureDTO;
 
 public class NhiServiceMockTest {
 
@@ -91,36 +100,18 @@ public class NhiServiceMockTest {
             put(code, rule);
         }});
 
+        NhiExtendTreatmentProcedureDTO dtoCurrent = new NhiExtendTreatmentProcedureDTO(fakeId1, "", "", code, "", "", "", "", "", "", "", "", nhiExtDisposalToday.getDate(), null);
+
         // 100 days ago
-        Disposal disposalDateBefore100 = new Disposal();
-        TreatmentProcedure treatmentProcedureDateBefore100 = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposalDateBefore100);
-        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureDateBefore100 = new NhiExtendTreatmentProcedure()
-            .a73(code)
-            .treatmentProcedure(treatmentProcedureDateBefore100);
-        nhiExtendTreatmentProcedureDateBefore100.setId(fakeId2);
         LocalDate dateBefore100 = getGreaterThanEqualDate.apply(100);
-        NhiExtendDisposal nhiExtDisposalDateBefore100 = new NhiExtendDisposal()
-            .a17(dateBefore100.getYear() - 1911 + monthFormatter.format(dateBefore100) + dayFormatter.format(dateBefore100))
-            .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedureDateBefore100));
-        disposalDateBefore100.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalDateBefore100));
+        NhiExtendTreatmentProcedureDTO dtoDateBefore100 = new NhiExtendTreatmentProcedureDTO(fakeId3, "", "", code, "", "", "", "", "", "", "", "", dateBefore100, null);
 
         // 20 days ago
-        Disposal disposalDateBefore20 = new Disposal();
-        TreatmentProcedure treatmentProcedureDateBefore20 = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposalDateBefore20);
-        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureDateBefore20 = new NhiExtendTreatmentProcedure()
-            .a73(code)
-            .treatmentProcedure(treatmentProcedureDateBefore20);
-        nhiExtendTreatmentProcedureDateBefore20.setId(fakeId3);
         LocalDate dateBefore20 = getGreaterThanEqualDate.apply(20);
-        NhiExtendDisposal nhiExtDisposalDateBefore20 = new NhiExtendDisposal()
-            .a19("2")
-            .a54(dateBefore20.getYear() - 1911 + monthFormatter.format(dateBefore20) + dayFormatter.format(dateBefore20))
-            .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedureDateBefore20));
-        disposalDateBefore20.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalDateBefore20));
+        NhiExtendTreatmentProcedureDTO dtoDateBefore20 = new NhiExtendTreatmentProcedureDTO(fakeId2, "", "", code, "", "", "", "", "", "", "", "", dateBefore20, null);
 
-        Mockito
-            .when(mockNhiExtendDisposalRepository.findByDateBetweenAndPatientId(today.minusDays(180), today, patient.getId()))
-            .thenReturn(Arrays.asList(nhiExtDisposalDateBefore100, nhiExtDisposalDateBefore20, nhiExtDisposalToday));
+        Mockito.when(mockNhiExtendDisposalRepository.findByDateBetweenAndPatientId2(today.minusDays(180), today, patient.getId()))
+                .thenReturn(Arrays.asList(dtoDateBefore100, dtoDateBefore20, dtoCurrent));
 
         nhiService.checkInterval.accept(nhiExtendTreatmentProcedure);
         assertThat(nhiExtendTreatmentProcedure.getCheck()).isEqualTo("180 天內不得重複申報。上次：" + formatter.format(dateBefore20) + "(20 天前)\n");
@@ -230,23 +221,14 @@ public class NhiServiceMockTest {
             put(code, rule);
         }});
 
-        // last year
-        Disposal disposalLastYearDate = new Disposal();
-        TreatmentProcedure treatmentProcedureMonthFirstDate = new TreatmentProcedure().treatmentTask(treatmentTask).disposal(disposalLastYearDate);
-        NhiExtendTreatmentProcedure nhiExtendTreatmentProcedureMonthFirstDate = new NhiExtendTreatmentProcedure()
-            .a73(code)
-            .treatmentProcedure(treatmentProcedureMonthFirstDate);
-        nhiExtendTreatmentProcedureMonthFirstDate.setId(fakeId2);
         LocalDate lastYearDate = today.minusYears(1);
-        NhiExtendDisposal nhiExtDisposalLastYearDate = new NhiExtendDisposal()
-            .a14(hospital)
-            .a17(lastYearDate.getYear() - 1911 + monthFormatter.format(lastYearDate) + dayFormatter.format(lastYearDate))
-            .nhiExtendTreatmentProcedures(Collections.singleton(nhiExtendTreatmentProcedureMonthFirstDate));
-        disposalLastYearDate.setNhiExtendDisposals(Collections.singleton(nhiExtDisposalLastYearDate));
 
-        Mockito
-            .when(mockNhiExtendDisposalRepository.findByDateBetweenAndPatientId(getGreaterThanEqualDate.apply(730), today, patient.getId()))
-            .thenReturn(Arrays.asList(nhiExtDisposalLastYearDate, nhiExtDisposalToday));
+        NhiExtendTreatmentProcedureDTO dtoCurrent = new NhiExtendTreatmentProcedureDTO(fakeId1, "", "", code, "", "", "", "", "", "", "", hospital, nhiExtDisposalToday.getDate(),
+                null);
+        NhiExtendTreatmentProcedureDTO dtoLastYear = new NhiExtendTreatmentProcedureDTO(fakeId2, "", "", code, "", "", "", "", "", "", "", hospital, lastYearDate, null);
+
+        Mockito.when(mockNhiExtendDisposalRepository.findByDateBetweenAndPatientId2(getGreaterThanEqualDate.apply(730), today, patient.getId()))
+                .thenReturn(Arrays.asList(dtoLastYear, dtoCurrent));
 
         nhiService.checkInterval.accept(nhiExtendTreatmentProcedure);
         assertThat(nhiExtendTreatmentProcedure.getCheck()).isEqualTo(
