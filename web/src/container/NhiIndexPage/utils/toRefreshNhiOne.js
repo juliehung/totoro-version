@@ -35,17 +35,19 @@ function toRefreshValidNhiData(nhiOne, validNhiData, doctorData) {
   }
   if (nhiOne && nhiOne?.nhiExtendDisposals.length !== 0) {
     for (const nhiExtendDisposal of nhiOne?.nhiExtendDisposals) {
-      const nhiName = `${nhiExtendDisposal?.examinationCode} ${
-        staticExaminationData[nhiExtendDisposal?.examinationCode]
-      }`;
-      examinationData.push({
-        _id: `${nhiOne?.id}-${uuid()}`,
-        nhiName,
-        point: nhiExtendDisposal?.examinationPoint,
-        total: nhiExtendDisposal?.examinationPoint,
-        quantity: 1,
-        multiplier: '100%',
-      });
+      if (nhiExtendDisposal?.examinationCode && nhiExtendDisposal?.examinationCode.length !== 0) {
+        const nhiName = `${nhiExtendDisposal?.examinationCode} ${
+          staticExaminationData[nhiExtendDisposal?.examinationCode]
+        }`;
+        examinationData.push({
+          _id: `${nhiOne?.id}-${uuid()}`,
+          nhiName,
+          point: nhiExtendDisposal?.examinationPoint,
+          total: nhiExtendDisposal?.examinationPoint,
+          quantity: 1,
+          multiplier: '100%',
+        });
+      }
     }
   }
 

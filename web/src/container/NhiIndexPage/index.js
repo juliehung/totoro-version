@@ -189,14 +189,6 @@ const nhiSalaryColumns = [
     render: perioPoint => renderThousands(perioPoint),
   },
   {
-    title: '兒童專科',
-    dataIndex: 'pedoPoint',
-    key: 'pedoPoint',
-    sorter: (a, b) => a.pedoPoint - b.pedoPoint,
-    align: 'right',
-    render: pedoPoint => renderThousands(pedoPoint),
-  },
-  {
     title: '根管專科',
     dataIndex: 'endoPoint',
     key: 'endoPoint',
@@ -311,14 +303,6 @@ const expandedRowRender = expandSalary => {
       sorter: (a, b) => a.perioPoint - b.perioPoint,
       align: 'right',
       render: perioPoint => renderThousands(perioPoint),
-    },
-    {
-      title: '兒童專科',
-      dataIndex: 'pedoPoint',
-      key: 'pedoPoint',
-      sorter: (a, b) => a.pedoPoint - b.pedoPoint,
-      align: 'right',
-      render: pedoPoint => renderThousands(pedoPoint),
     },
     {
       title: '根管專科',
