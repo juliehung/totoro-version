@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense } from 'react';
-import moment from 'moment';
+import moment from 'moment-taiwan';
 import locale from 'antd/es/date-picker/locale/zh_TW';
 import { DatePicker, Table, Tabs, Menu, Dropdown, Button, Spin } from 'antd';
 import { connect, useDispatch } from 'react-redux';
@@ -585,15 +585,16 @@ function NhiIndexPage({
                 <DatePicker
                   locale={locale}
                   style={{ borderRadius: '8px', color: '#222b45' }}
-                  onChange={(date, dateString) => {
+                  onChange={date => {
                     updateCheckedModalData([]);
                     setStartDate(date);
                     setEndDate(moment(date).endOf('month'));
                     onChangeValue('');
-                    setTimeout(() => dispatch(getValidNhiByYearMonth(moment(dateString).format('YYYYMM'))), 700);
+                    setTimeout(() => dispatch(getValidNhiByYearMonth(moment(date).format('YYYYMM'))), 700);
                   }}
                   picker="month"
                   value={moment(startDate)}
+                  format={'tYY/MM'}
                   allowClear={false}
                   disabledDate={current =>
                     current &&

@@ -2,6 +2,7 @@ import React from 'react';
 import { Checkbox } from 'antd';
 import LazyLoad from 'react-lazyload';
 import styled from 'styled-components';
+import moment from 'moment';
 
 const EachWrap = styled.div`
   ${props =>
@@ -50,7 +51,11 @@ const NhiDataListRender = ({
 }) => {
   return Object.entries(validNhiData).map(([key, list], index) => (
     <div key={`validNhiData-${index}`} className="render-each-nhi-data-wrap">
-      {list.length > 0 && <div className="nhi-data-list-date-header">{key}</div>}
+      {list.length > 0 && (
+        <div className="nhi-data-list-date-header">
+          {moment(key).year() - 1911}-{moment(key).format('MM-DD')}
+        </div>
+      )}
       <div>
         {list.map(({ disposalId, nhiExtendDisposal }, index) => (
           <LazyLoad key={`render-each-nhi-wrap-${index}`}>
