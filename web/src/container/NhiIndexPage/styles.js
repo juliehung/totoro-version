@@ -1,6 +1,44 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import { Menu, Modal, Table, Tabs } from 'antd';
 
+const checkCheckboxMode = (allNums, currentNums) => {
+  if (currentNums === 0) {
+    return ``;
+  } else if (currentNums === allNums) {
+    return `
+      &::after {
+        position: absolute;
+        display: table;
+        border: 2px solid #ffffff;
+        border-top: 0;
+        border-left: 0;
+        opacity: 1;
+        -webkit-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+        transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+        transform: rotate(45deg) scale(1) translate(-50%, -50%);
+        width: 6px;
+        height: 9px;
+        content: '';
+        top: 50%;
+        left: 28%;
+      }
+    `;
+  } else {
+    return `
+      &::after {
+        position: absolute;
+        background: #ffffff;
+        content: '';
+        height: 2px;
+        width: 9px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    `;
+  }
+};
+
 //#region
 const GlobalStyle = createGlobalStyle`
   .CalendarDay__selected,
@@ -104,7 +142,6 @@ const ModalContentContainer = styled.div`
         }
       }
     }
-
     .search-input-container {
       padding: 6px 24px;
 
@@ -134,7 +171,6 @@ const ModalContentContainer = styled.div`
         }
       }
     }
-
     .render-modal-nhi-data-container {
       flex: 1;
       overflow: hidden;
@@ -157,41 +193,12 @@ const ModalContentContainer = styled.div`
               width: 20px;
               height: 20px;
               border-radius: 3px;
-              background-color: #3266ff;
+              background-color: ${props => (props.currentCheckedNums === 0 ? '#ffffff' : '#3266ff')};
               text-align: center;
               color: #ffffff;
               position: relative;
-
-              &::before {
-                position: absolute;
-                background: #fff;
-                content: '';
-                height: 3px;
-                width: 12px;
-                left: 50%;
-                top: 50%;
-              }
-              ${props =>
-                !props.isDisposalCheckBoxVisible &&
-                `&::after {
-                  position: absolute;
-                  width: 100%;
-                  background: #fff;
-                  content: '';
-                  height: 3px;
-                  width: 12px;
-                  left: 50%;
-                  top: 50%;
-                  transition: all 0.3s ease-in-out;
-                }`}
-              &::before {
-                transform: translate(-50%, -50%);
-              }
-              ${props =>
-                !props.isDisposalCheckBoxVisible &&
-                `&::after{
-                    transform: translate(-50%, -50%) rotate(90deg);
-                  }`}
+              border: solid 1px #c5cee0;
+              ${props => checkCheckboxMode(props.allDisposalIdNums, props.currentCheckedNums)}
             }
             > div:nth-child(2) {
               flex: 1;
@@ -295,6 +302,13 @@ const ModalContentContainer = styled.div`
     height: 100%;
 
     .render-nhi-one-detail-wrap {
+      .nhi-one-info-wrap {
+        > div {
+          display: flex;
+          flex-direction: column;
+          align-self: flex-start;
+        }
+      }
       .nhi-one-label {
         font-size: 13px;
         font-weight: 600;
@@ -306,6 +320,7 @@ const ModalContentContainer = styled.div`
         font-weight: bold;
         line-height: 1.23;
         color: #222b45;
+        flex: 1;
       }
       .nhi-one-name {
         font-size: 32px;

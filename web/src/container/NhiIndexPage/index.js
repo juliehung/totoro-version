@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense } from 'react';
-import moment from 'moment';
+import moment from 'moment-taiwan';
 import locale from 'antd/es/date-picker/locale/zh_TW';
 import { DatePicker, Table, Tabs, Menu, Dropdown, Button, Spin } from 'antd';
 import { connect, useDispatch } from 'react-redux';
@@ -42,7 +42,7 @@ const { TabPane } = Tabs;
 
 const renderFloat2Position = f => (typeof f === 'number' ? (Math.round(f * 100) / 100).toFixed(2) : '0');
 const renderThousands = v => {
-  if (typeof v === 'number') {
+  if (typeof v === 'number' && v < 1000) {
     const value = v.toString().split('.');
     value[0] = value[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return value.join('.');
@@ -214,8 +214,8 @@ const nhiSalaryColumns = [
 const nhiOneColumns = [
   {
     title: '健保代碼/中文',
-    dataIndex: 'treatmentProcedureName',
-    key: 'treatmentProcedureName',
+    dataIndex: 'nhiName',
+    key: 'nhiName',
     width: '60%',
   },
   {
@@ -357,7 +357,7 @@ const nhiOneRender = ({ nhiOne }) => {
     examinationPoint,
     treatmentPoint,
     totalPoint,
-    treatmentProcedureArr,
+    nhiOneTableData,
   } = nhiOne;
   return (
     <div className="render-nhi-one-detail-wrap">
@@ -387,7 +387,7 @@ const nhiOneRender = ({ nhiOne }) => {
       </div>
       <div className="nhi-one-table-wrap">
         <Table
-          dataSource={treatmentProcedureArr}
+          dataSource={nhiOneTableData}
           columns={nhiOneColumns}
           scroll={{ y: 280 }}
           pagination={false}
@@ -496,6 +496,9 @@ function NhiIndexPage({
       filterValidNhiData(validNhiData);
     }
   }, [validNhiData, searchValue]);
+  useEffect(() => {
+    updateCurrentNhiOne(nhiFirstId);
+  }, [nhiFirstId]);
 
   const disposalCheckBoxMenu = ({ getAllDisposalId, updateCheckedModalData, setDisposalCheckBoxVisible }) => (
     <MenuContainer>
@@ -508,7 +511,7 @@ function NhiIndexPage({
             } else {
               updateCheckedModalData([]);
             }
-          }, 1000);
+          }, 700);
         }}
       >
         <div>全選</div>
@@ -570,7 +573,11 @@ function NhiIndexPage({
           </Button>,
         ]}
       >
-        <ModalContentContainer isDisposalCheckBoxVisible={isDisposalCheckBoxVisible}>
+        <ModalContentContainer
+          isDisposalCheckBoxVisible={isDisposalCheckBoxVisible}
+          allDisposalIdNums={getAllDisposalId.length}
+          currentCheckedNums={checkedModalData.length}
+        >
           <div>
             <div className="select-month-input-wrap">
               <div>選擇月份:</div>
@@ -578,15 +585,16 @@ function NhiIndexPage({
                 <DatePicker
                   locale={locale}
                   style={{ borderRadius: '8px', color: '#222b45' }}
-                  onChange={(date, dateString) => {
+                  onChange={date => {
                     updateCheckedModalData([]);
                     setStartDate(date);
                     setEndDate(moment(date).endOf('month'));
                     onChangeValue('');
-                    setTimeout(() => dispatch(getValidNhiByYearMonth(moment(dateString).format('YYYYMM'))), 700);
+                    setTimeout(() => dispatch(getValidNhiByYearMonth(moment(date).format('YYYYMM'))), 700);
                   }}
                   picker="month"
                   value={moment(startDate)}
+                  format={'tYY/MM'}
                   allowClear={false}
                   disabledDate={current =>
                     current &&
@@ -600,7 +608,6 @@ function NhiIndexPage({
                 />
               </div>
             </div>
-
             <div className="search-input-container">
               <NhiSalarySearchInput
                 validNhiData={validNhiData}
@@ -609,7 +616,6 @@ function NhiIndexPage({
                 onChangeValue={onChangeValue}
               />
             </div>
-
             <div className="render-modal-nhi-data-container">
               <div className="nhi-data-header-wrap">
                 <div>
@@ -621,12 +627,17 @@ function NhiIndexPage({
                     placement="bottomLeft"
                     trigger={'click'}
                   >
-                    <div
-                      className="dropdown-click-btn-wrap"
-                      onClick={() => setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible)}
-                    >
-                      <div />
-                      <div>
+                    <div className="dropdown-click-btn-wrap">
+                      <div
+                        onClick={() => {
+                          if (checkedModalData.length === 0) {
+                            updateCheckedModalData(getAllDisposalId);
+                          } else {
+                            updateCheckedModalData([]);
+                          }
+                        }}
+                      />
+                      <div onClick={() => setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible)}>
                         <ArrowDown />
                       </div>
                     </div>
