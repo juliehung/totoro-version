@@ -1,13 +1,11 @@
 package io.dentall.totoro.repository;
 
-import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository;
-import io.dentall.totoro.domain.NhiExtendDisposal;
-import io.dentall.totoro.repository.dao.MonthDisposalDAO;
-import io.dentall.totoro.service.dto.CalculateBaseData;
-import io.dentall.totoro.service.dto.NhiIndexEndoDTO;
-import io.dentall.totoro.service.dto.StatisticSpDTO;
-import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
-import io.dentall.totoro.web.rest.vm.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,11 +14,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository;
+import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.repository.dao.MonthDisposalDAO;
+import io.dentall.totoro.service.dto.CalculateBaseData;
+import io.dentall.totoro.service.dto.NhiExtendTreatmentProcedureDTO;
+import io.dentall.totoro.service.dto.NhiIndexEndoDTO;
+import io.dentall.totoro.service.dto.StatisticSpDTO;
+import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
+import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexTreatmentProcedureVM;
 
 
 /**
@@ -320,6 +326,39 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "nhiExtendDisposal.patientId = :patientId and " + dateBetween
     )
     List<NhiExtendDisposal> findByDateBetweenAndPatientId(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("patientId") Long patientId);
+
+    /**
+     * 
+     * 因為NhiExtendDisposalRepository.findByDateBetweenAndPatientId在某些patient會有效能上的問題，所以特地另寫這個方法來直接取得資料
+     * 
+     * @param start
+     * @param end
+     * @param patientId
+     * @return
+     */
+    @Query(
+            "select new io.dentall.totoro.service.dto.NhiExtendTreatmentProcedureDTO( " +
+            "nhiExtendTreatmentProcedure.id," +
+            "nhiExtendTreatmentProcedure.a71," +
+            "nhiExtendTreatmentProcedure.a72," +
+            "nhiExtendTreatmentProcedure.a73," +
+            "nhiExtendTreatmentProcedure.a74," +
+            "nhiExtendTreatmentProcedure.a75," +
+            "nhiExtendTreatmentProcedure.a76," +
+            "nhiExtendTreatmentProcedure.a77," +
+            "nhiExtendTreatmentProcedure.a78," +
+            "nhiExtendTreatmentProcedure.a79," +
+            "nhiExtendTreatmentProcedure.check," +
+            "nhiExtendDisposal.a14," +
+            "nhiExtendDisposal.date," +
+            "nhiExtendDisposal.replenishmentDate" +
+            ")" +
+            "  from NhiExtendDisposal nhiExtendDisposal " +
+            "  left join NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure on nhiExtendDisposal.id = nhiExtendTreatmentProcedure.nhiExtendDisposal.id " +
+            " where " +
+            "nhiExtendDisposal.patientId = :patientId and " + dateBetween
+        )
+    List<NhiExtendTreatmentProcedureDTO> findByDateBetweenAndPatientId2(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("patientId") Long patientId);
 
     @Query(
         "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
