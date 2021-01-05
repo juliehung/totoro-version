@@ -496,6 +496,9 @@ function NhiIndexPage({
       filterValidNhiData(validNhiData);
     }
   }, [validNhiData, searchValue]);
+  useEffect(() => {
+    updateCurrentNhiOne(nhiFirstId);
+  }, [nhiFirstId]);
 
   const disposalCheckBoxMenu = ({ getAllDisposalId, updateCheckedModalData, setDisposalCheckBoxVisible }) => (
     <MenuContainer>
@@ -508,7 +511,7 @@ function NhiIndexPage({
             } else {
               updateCheckedModalData([]);
             }
-          }, 1000);
+          }, 700);
         }}
       >
         <div>全選</div>
@@ -570,7 +573,11 @@ function NhiIndexPage({
           </Button>,
         ]}
       >
-        <ModalContentContainer isDisposalCheckBoxVisible={isDisposalCheckBoxVisible}>
+        <ModalContentContainer
+          isDisposalCheckBoxVisible={isDisposalCheckBoxVisible}
+          allDisposalIdNums={getAllDisposalId.length}
+          currentCheckedNums={checkedModalData.length}
+        >
           <div>
             <div className="select-month-input-wrap">
               <div>選擇月份:</div>
@@ -600,7 +607,6 @@ function NhiIndexPage({
                 />
               </div>
             </div>
-
             <div className="search-input-container">
               <NhiSalarySearchInput
                 validNhiData={validNhiData}
@@ -609,7 +615,6 @@ function NhiIndexPage({
                 onChangeValue={onChangeValue}
               />
             </div>
-
             <div className="render-modal-nhi-data-container">
               <div className="nhi-data-header-wrap">
                 <div>
@@ -621,12 +626,17 @@ function NhiIndexPage({
                     placement="bottomLeft"
                     trigger={'click'}
                   >
-                    <div
-                      className="dropdown-click-btn-wrap"
-                      onClick={() => setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible)}
-                    >
-                      <div />
-                      <div>
+                    <div className="dropdown-click-btn-wrap">
+                      <div
+                        onClick={() => {
+                          if (checkedModalData.length === 0) {
+                            updateCheckedModalData(getAllDisposalId);
+                          } else {
+                            updateCheckedModalData([]);
+                          }
+                        }}
+                      />
+                      <div onClick={() => setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible)}>
                         <ArrowDown />
                       </div>
                     </div>
