@@ -451,7 +451,7 @@ function NhiIndexPage({
   const [checkedModalData, updateCheckedModalData] = useState([]);
   const [nhiFirstId, updateNhiFirstId] = useState(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
   const [currentNhiOne, updateCurrentNhiOne] = useState(null);
-  const [currentValidNhiData, filterValidNhiData] = useState(validNhiData);
+  const [currentValidNhiData, filterValidNhiData] = useState({});
   const [searchValue, onChangeValue] = useState('');
   const filterDoctors = doctors.filter(({ id }) => odIndexes.map(({ did }) => did).indexOf(id) !== -1);
   const getAllDisposalId = Object.entries(validNhiData)
@@ -466,20 +466,25 @@ function NhiIndexPage({
     dispatch(initNhiSalary(moment().startOf('month'), moment()));
   }, [dispatch, initNhiSalary]);
   useEffect(() => {
-    if (Object.values(validNhiData)?.[0]) {
+    if (!validNhiDataLoading && Object.values(validNhiData)?.[0]) {
       updateNhiFirstId(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
+      updateCheckedModalData(
+        Object.entries(validNhiData)
+          .map(([, list]) => list.map(({ disposalId }) => disposalId))
+          .flat(Infinity),
+      );
     }
-  }, [validNhiData]);
+  }, [validNhiData, validNhiDataLoading]);
   useEffect(() => {
     if (nhiFirstId) {
       dispatch(getNhiOneByDisposalId(nhiFirstId));
     }
   }, [dispatch, nhiFirstId, getNhiOneByDisposalId]);
   useEffect(() => {
-    if (searchValue.length === 0) {
+    if (!validNhiDataLoading && searchValue.length === 0) {
       filterValidNhiData(validNhiData);
     }
-  }, [validNhiData, searchValue]);
+  }, [validNhiData, searchValue, validNhiDataLoading]);
   useEffect(() => {
     updateCurrentNhiOne(nhiFirstId);
   }, [nhiFirstId]);
@@ -492,8 +497,6 @@ function NhiIndexPage({
           setTimeout(() => {
             if (getAllDisposalId.length !== checkedModalData.length) {
               updateCheckedModalData(getAllDisposalId);
-            } else {
-              updateCheckedModalData([]);
             }
           }, 700);
         }}
@@ -571,6 +574,7 @@ function NhiIndexPage({
                   style={{ borderRadius: '8px', color: '#222b45' }}
                   onChange={date => {
                     updateCheckedModalData([]);
+                    filterValidNhiData({});
                     setStartDate(date);
                     setEndDate(moment(date).endOf('month'));
                     onChangeValue('');

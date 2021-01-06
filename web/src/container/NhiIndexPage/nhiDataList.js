@@ -1,6 +1,5 @@
 import React from 'react';
 import { Checkbox } from 'antd';
-import LazyLoad from 'react-lazyload';
 import styled from 'styled-components';
 import moment from 'moment';
 
@@ -33,10 +32,14 @@ const CheckboxWrap = styled(Checkbox)`
   }
 `;
 const renderWithCaseCategory = (a23, serialNumber) => {
-  if (a23.toUpperCase() === 'AC') {
-    return `A3${serialNumber}`;
+  if (serialNumber.length !== 0) {
+    if (a23.toUpperCase() === 'AC') {
+      return `A3${serialNumber}`;
+    } else {
+      return `19${serialNumber}`;
+    }
   } else {
-    return `19${serialNumber}`;
+    return '';
   }
 };
 
@@ -58,57 +61,55 @@ const NhiDataListRender = ({
       )}
       <div>
         {list.map(({ disposalId, nhiExtendDisposal }, index) => (
-          <LazyLoad key={`render-each-nhi-wrap-${index}`}>
-            <EachWrap
-              key={`render-each-nhi-wrap-${index}`}
-              className="render-each-nhi-wrap"
-              isSelected={currentNhiOne === disposalId}
+          <EachWrap
+            key={`render-each-nhi-wrap-${index}`}
+            className="render-each-nhi-wrap"
+            isSelected={currentNhiOne === disposalId}
+          >
+            <div>
+              <div>
+                <CheckboxWrap
+                  checked={checkedModalData.find(id => disposalId === id || nhiExtendDisposal?.serialNumber === id)}
+                  isSelected={currentNhiOne === disposalId}
+                  onChange={() => {
+                    checkedModalData.find(id => disposalId === id)
+                      ? updateCheckedModalData(checkedModalData.filter(id => disposalId !== id))
+                      : updateCheckedModalData(oldArray => [...oldArray, disposalId]);
+                  }}
+                />
+              </div>
+            </div>
+            <div
+              onClick={() => {
+                updateCurrentNhiOne(disposalId);
+                if (nhiOne?.id !== disposalId) {
+                  onNhiDataOneSelect(disposalId);
+                }
+              }}
+            >
+              <div>{nhiExtendDisposal?.patientName}</div>
+              <div>
+                {renderWithCaseCategory(nhiExtendDisposal?.a23 || '', nhiExtendDisposal?.serialNumber || '')}{' '}
+                {nhiExtendDisposal?.doctorName}
+              </div>
+            </div>
+            <div
+              onClick={() => {
+                updateCurrentNhiOne(disposalId);
+                if (nhiOne?.id !== disposalId) {
+                  onNhiDataOneSelect(disposalId);
+                }
+              }}
             >
               <div>
-                <div>
-                  <CheckboxWrap
-                    checked={checkedModalData.find(id => disposalId === id)}
-                    isSelected={currentNhiOne === disposalId}
-                    onChange={() => {
-                      checkedModalData.find(id => disposalId === id)
-                        ? updateCheckedModalData(checkedModalData.filter(id => disposalId !== id))
-                        : updateCheckedModalData(oldArray => [...oldArray, disposalId]);
-                    }}
-                  />
-                </div>
+                {nhiExtendDisposal?.a13 &&
+                  nhiExtendDisposal?.a13.length !== 0 &&
+                  `${parseInt(nhiExtendDisposal?.a13.slice(0, 3))}/${parseInt(
+                    nhiExtendDisposal?.a13.slice(3, 5),
+                  )}/${parseInt(nhiExtendDisposal?.a13.slice(5))}`}
               </div>
-              <div
-                onClick={() => {
-                  updateCurrentNhiOne(disposalId);
-                  if (nhiOne?.id !== disposalId) {
-                    onNhiDataOneSelect(disposalId);
-                  }
-                }}
-              >
-                <div>{nhiExtendDisposal?.patientName}</div>
-                <div>
-                  {renderWithCaseCategory(nhiExtendDisposal?.a23 || '', nhiExtendDisposal?.serialNumber || '')}{' '}
-                  {nhiExtendDisposal?.doctorName}
-                </div>
-              </div>
-              <div
-                onClick={() => {
-                  updateCurrentNhiOne(disposalId);
-                  if (nhiOne?.id !== disposalId) {
-                    onNhiDataOneSelect(disposalId);
-                  }
-                }}
-              >
-                <div>
-                  {nhiExtendDisposal?.a13 &&
-                    nhiExtendDisposal?.a13.length !== 0 &&
-                    `${parseInt(nhiExtendDisposal?.a13.slice(0, 3))}/${parseInt(
-                      nhiExtendDisposal?.a13.slice(3, 5),
-                    )}/${parseInt(nhiExtendDisposal?.a13.slice(5))}`}
-                </div>
-              </div>
-            </EachWrap>
-          </LazyLoad>
+            </div>
+          </EachWrap>
         ))}
       </div>
     </div>
