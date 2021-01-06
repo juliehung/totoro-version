@@ -5,6 +5,7 @@ import io.dentall.totoro.business.service.nhi.NhiAbnormalityService;
 import io.dentall.totoro.business.service.nhi.NhiStatisticService;
 import io.dentall.totoro.business.vm.nhi.NhiAbnormality;
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
+import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.web.rest.vm.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * REST controller for managing nhi statistics.
@@ -31,12 +35,16 @@ public class NhiStatisticBusinessResource {
 
     private final NhiStatisticService nhiStatisticService;
 
+    private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
+
     public NhiStatisticBusinessResource(
         NhiAbnormalityService nhiAbnormalityService,
-        NhiStatisticService nhiStatisticService
+        NhiStatisticService nhiStatisticService,
+        NhiExtendDisposalRepository nhiExtendDisposalRepository
     ) {
         this.nhiAbnormalityService = nhiAbnormalityService;
         this.nhiStatisticService = nhiStatisticService;
+        this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
     }
 
     @GetMapping("/abnormality")
@@ -75,6 +83,16 @@ public class NhiStatisticBusinessResource {
         return new ResponseEntity<>(nhiStatisticService.calculateToothCleanIndex(begin, end, excludeDisposalId), HttpStatus.OK);
     }
 
+    @GetMapping("/index/endo")
+    @Timed
+    public ResponseEntity<List<NhiIndexEndoVM>> getEndoIndex(
+        @RequestParam Instant begin,
+        @RequestParam Instant end,
+        @RequestParam(required = false) List<Long> excludeDisposalId
+    ) {
+        return new ResponseEntity<>(nhiStatisticService.calculateEndoIndex(begin, end, excludeDisposalId), HttpStatus.OK);
+    }
+
     @GetMapping("/doctor-nhi-exam")
     @Timed
     public ResponseEntity<List<NhiDoctorExamVM>> calculateDoctorNhiExam(
@@ -101,5 +119,33 @@ public class NhiStatisticBusinessResource {
         @RequestParam(required = false) List<Long> excludeDisposalId
     ) {
         return new ResponseEntity<>(nhiStatisticService.getNhiIndexTreatmentProcedures(begin, end, excludeDisposalId), HttpStatus.OK);
+    }
+
+    @GetMapping("/doctor-salary")
+    public ResponseEntity<Map<Long, NhiStatisticDoctorSalary>> getDoctorSalary(
+        @RequestParam LocalDate begin,
+        @RequestParam LocalDate end,
+        @RequestParam(required = false) List<Long> excludeDisposalId
+    ) {
+        return new ResponseEntity<>(nhiStatisticService.getDoctorSalary(begin, end, excludeDisposalId), HttpStatus.OK);
+    }
+
+    @GetMapping("/doctor-salary/expands")
+    public ResponseEntity<Map<Long, NhiStatisticDoctorSalary>> getDoctorSalaryExpands(
+        @RequestParam LocalDate begin,
+        @RequestParam LocalDate end,
+        @RequestParam(required = false) Long doctorId,
+        @RequestParam(required = false) List<Long> excludeDisposalId
+    ) {
+        return new ResponseEntity<>(nhiStatisticService.getDoctorSalaryExpand(begin, end, doctorId, excludeDisposalId), HttpStatus.OK);
+    }
+
+    @GetMapping("/doctor-salary/present-by-disposal-date")
+    public ResponseEntity<Collection<NhiStatisticDoctorSalary>> getDoctorSalaryPresentByDisposalDate(
+        @RequestParam LocalDate begin,
+        @RequestParam LocalDate end,
+        @RequestParam(required = false) List<Long> excludeDisposalId
+    ) {
+        return new ResponseEntity<>(nhiStatisticService.getDoctorSalaryPresentByDisposalDate(begin, end, excludeDisposalId), HttpStatus.OK);
     }
 }

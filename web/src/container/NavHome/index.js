@@ -21,7 +21,8 @@ import MessageCircle from '../../images/message-circle.svg';
 import MessageCircleFill from '../../images/message-circle-fill.svg';
 import People from '../../images/people.svg';
 import PeopleFill from '../../images/people-fill.svg';
-import NhiIcon from '../../images/nhi-icon.svg';
+import NhiIcon from '../../images/icon-nhi.svg';
+import NhiFillIcon from '../../images/icon-nhi-fill.svg';
 import Pantone from '../../images/pantone.svg';
 import Cube from '../../images/cube.svg';
 import FileText from '../../images/file-text.svg';
@@ -53,6 +54,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .ant-dropdown {
+    border-radius: 8px;
     box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
   }
 
@@ -286,6 +288,17 @@ const route = [
     localVersion: true,
   },
   {
+    key: 'nhi',
+    path: 'nhi',
+    link: 'nhi',
+    name: '全民健保',
+    navigation: true,
+    exact: false,
+    icon: { on: NhiFillIcon, off: NhiIcon },
+    component: <NhiIndexPage />,
+    localVersion: false,
+  },
+  {
     key: 'sms',
     path: 'sms',
     link: 'sms',
@@ -311,15 +324,6 @@ const route = [
     link: 'setting',
     navigation: false,
     component: <SettingPage />,
-    localVersion: true,
-  },
-  {
-    key: 'nhi-index',
-    path: 'nhi-index',
-    link: 'nhi-index',
-    navigation: false,
-    exact: true,
-    component: <NhiIndexPage />,
     localVersion: true,
   },
   {
@@ -365,7 +369,6 @@ function NavHome(props) {
   const toothMaterialSheet = linkManagement.toothMaterialSheet
     ? linkManagement.toothMaterialSheet
     : `${getBaseUrl()}#/setting/link`;
-  const nhiINdex = `${getBaseUrl()}#/nhi-index`;
 
   const navLink = [
     {
@@ -381,13 +384,6 @@ function NavHome(props) {
       href: toothMaterialSheet,
       icon: Cube,
       newTab: true,
-    },
-    {
-      key: 'nhi',
-      name: '健保',
-      href: nhiINdex,
-      icon: NhiIcon,
-      newTab: false,
     },
   ];
 

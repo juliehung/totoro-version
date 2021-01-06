@@ -1,11 +1,11 @@
 package io.dentall.totoro.repository;
 
-import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository;
-import io.dentall.totoro.domain.NhiExtendDisposal;
-import io.dentall.totoro.repository.dao.MonthDisposalDAO;
-import io.dentall.totoro.service.dto.StatisticSpDTO;
-import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
-import io.dentall.totoro.web.rest.vm.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,11 +14,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository;
+import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.repository.dao.MonthDisposalDAO;
+import io.dentall.totoro.service.dto.CalculateBaseData;
+import io.dentall.totoro.service.dto.NhiExtendTreatmentProcedureDTO;
+import io.dentall.totoro.service.dto.NhiIndexEndoDTO;
+import io.dentall.totoro.service.dto.StatisticSpDTO;
+import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
+import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexTreatmentProcedureVM;
 
 
 /**
@@ -319,6 +327,39 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
     )
     List<NhiExtendDisposal> findByDateBetweenAndPatientId(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("patientId") Long patientId);
 
+    /**
+     * 
+     * 因為NhiExtendDisposalRepository.findByDateBetweenAndPatientId在某些patient會有效能上的問題，所以特地另寫這個方法來直接取得資料
+     * 
+     * @param start
+     * @param end
+     * @param patientId
+     * @return
+     */
+    @Query(
+            "select new io.dentall.totoro.service.dto.NhiExtendTreatmentProcedureDTO( " +
+            "nhiExtendTreatmentProcedure.id," +
+            "nhiExtendTreatmentProcedure.a71," +
+            "nhiExtendTreatmentProcedure.a72," +
+            "nhiExtendTreatmentProcedure.a73," +
+            "nhiExtendTreatmentProcedure.a74," +
+            "nhiExtendTreatmentProcedure.a75," +
+            "nhiExtendTreatmentProcedure.a76," +
+            "nhiExtendTreatmentProcedure.a77," +
+            "nhiExtendTreatmentProcedure.a78," +
+            "nhiExtendTreatmentProcedure.a79," +
+            "nhiExtendTreatmentProcedure.check," +
+            "nhiExtendDisposal.a14," +
+            "nhiExtendDisposal.date," +
+            "nhiExtendDisposal.replenishmentDate" +
+            ")" +
+            "  from NhiExtendDisposal nhiExtendDisposal " +
+            "  left join NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure on nhiExtendDisposal.id = nhiExtendTreatmentProcedure.nhiExtendDisposal.id " +
+            " where " +
+            "nhiExtendDisposal.patientId = :patientId and " + dateBetween
+        )
+    List<NhiExtendTreatmentProcedureDTO> findByDateBetweenAndPatientId2(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("patientId") Long patientId);
+
     @Query(
         "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " +
             "nhiExtendDisposal.patientId = :patientId and " + dateGte
@@ -358,4 +399,124 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
     long countByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
 
     <T> List<T> findByDisposal_TreatmentProcedures_Id(Long treatmentId, Class<T> clazz);
+
+    @Query(
+        nativeQuery = true,
+        value = "select " +
+            "d.id as disposalId, " +
+            "d.date_time as disposalDate, " +
+            "ned.examination_code as examinationCode, " +
+            "ned.examination_point as examinationPoint, " +
+            "ned.patient_identity as patientIdentity, " +
+            "ned.serial_number as serialNumber, " +
+            "ned.a32 as copayment, " +
+            "np.code as txCode, " +
+            "tp.total as txPoint, " +
+            "np.specific_code as specificCode, " +
+            "a.patient_id as patientId, " +
+            "a.doctor_user_id as doctorId " +
+            "from disposal d " +
+            "    left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "    left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "    left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "    left join nhi_procedure np on tp.nhi_procedure_id = np.id " +
+            "    left join appointment a on d.registration_id = a.registration_id " +
+            "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
+            "   and d.id not in :excludeDisposalId " +
+            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
+            "   and d.id not in :excludeDisposalId " +
+            "order by d.id, tp.id "
+    )
+    List<CalculateBaseData> findCalculateBaseDataByDate(
+            @Param("begin") LocalDate begin,
+            @Param("end") LocalDate end,
+            @Param("excludeDisposalId") List<Long> excludeDisposalId
+    );
+
+    @Query(
+        nativeQuery = true,
+        value = "select " +
+            "d.id as disposalId, " +
+            "d.date_time as disposalDate, " +
+            "ned.examination_code as examinationCode, " +
+            "ned.examination_point as examinationPoint, " +
+            "ned.patient_identity as patientIdentity, " +
+            "ned.serial_number as serialNumber, " +
+            "ned.a32 as copayment, " +
+            "np.code as txCode, " +
+            "tp.total as txPoint, " +
+            "np.specific_code as specificCode, " +
+            "a.patient_id as patientId, " +
+            "a.doctor_user_id as doctorId, " +
+            "p.name as patientName " +
+            "from disposal d " +
+            "    left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "    left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "    left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "    left join nhi_procedure np on tp.nhi_procedure_id = np.id " +
+            "    left join appointment a on d.registration_id = a.registration_id " +
+            "    left join patient p on a.patient_id = p.id " +
+            "where ned.a19 = '1' and ned.jhi_date between :begin and :end and a.doctor_user_id = :doctorId " +
+            "   and d.id not in :excludeDisposalId " +
+            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end and a.doctor_user_id = :doctorId " +
+            "   and d.id not in :excludeDisposalId " +
+            "order by d.id, tp.id "
+    )
+    List<CalculateBaseData> findCalculateBaseDataByDateAndDoctorId(
+            @Param("begin") LocalDate begin,
+            @Param("end") LocalDate end,
+            @Param("doctorId") Long doctorId,
+            @Param("excludeDisposalId") List<Long> excludeDisposalId
+    );
+
+    @Query(
+        nativeQuery = true,
+        value = "with " +
+            "     nhi_90015C_total as ( " +
+            "        select a.doctor_user_id as did, " +
+            "               case " +
+            "                   when count(a.doctor_user_id) is not null then count(a.doctor_user_id) " +
+            "                   else 0 " +
+            "               end as operation " +
+            "        from disposal d " +
+            "            left join appointment a on d.registration_id = a.registration_id " +
+            "            left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "            left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "            left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "        where ned.a19 <> '2' and ned.jhi_date between :begin and :end and a73 = '90015C' and d.id not in :excludeDisposalId " +
+            "           or ned.a19 = '2' and ned.replenishment_date between :begin and :end and a73 = '90015C' and d.id not in :excludeDisposalId " +
+            "        group by a.doctor_user_id " +
+            "     ), " +
+            "     nhi_other_endo_total as ( " +
+            "        select a.doctor_user_id as did, " +
+            "               case " +
+            "                   when count(a.doctor_user_id) is not null then count(a.doctor_user_id) " +
+            "                   else 0 " +
+            "               end as operation " +
+            "        from disposal d " +
+            "            left join appointment a on d.registration_id = a.registration_id " +
+            "            left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "            left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "            left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "        where ned.a19 <> '2' and ned.jhi_date between :begin and :end and a73 in :endoPostTreatmentList and d.id not in :excludeDisposalId " +
+            "           or ned.a19 = '2' and ned.replenishment_date between :begin and :end and a73 in :endoPostTreatmentList and d.id not in :excludeDisposalId " +
+            "        group by a.doctor_user_id " +
+            "     ) " +
+            "select pre.did as did, " +
+            "       case " +
+            "           when post.operation is not null then post.operation " +
+            "           else 0 " +
+            "       end as postOperationNumber, " +
+            "       case " +
+            "           when pre.operation is not null then pre.operation " +
+            "           else 0 " +
+            "       end as preOperationNumber " +
+            "from nhi_90015C_total pre " +
+            "    left join nhi_other_endo_total post on pre.did = post.did;"
+    )
+    List<NhiIndexEndoDTO> calculateEndoIndex(
+            @Param("begin") Instant begin,
+            @Param("end") Instant end,
+            @Param("endoPostTreatmentList") List<String> endoPostTreatmentList,
+            @Param("excludeDisposalId") List<Long> excludeDisposalId);
 }

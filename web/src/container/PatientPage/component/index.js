@@ -35,14 +35,26 @@ export const Header = styled.div`
 `;
 
 export const Content = styled.div`
-  max-height: 300px;
+  max-height: ${props => (props.hasPagination ? 'auto' : '300px')};
   height: 100%;
   min-height: 300px;
   overflow-y: scroll;
   padding: ${props => (props.noPadding ? 0 : '10px')};
+  ${props => props.paddingBottom && 'padding-bottom: 20px;'}
   scrollbar-width: none;
+  border-radius: 0 8px 8px;
   &::-webkit-scrollbar {
     display: none;
+  }
+  .ant-spin-nested-loading {
+    ${props => props.paddingBottom && 'overflow: hidden;'}
+  }
+  .ant-spin-container {
+    > div {
+      &:last-child {
+        overflow: hidden;
+      }
+    }
   }
 `;
 
@@ -109,14 +121,15 @@ export const PatientDeclarationStatusItem = props => (
   </BorderDiv>
 );
 
-export const PatientSpecialStatusItem = props => (
-  <BorderDiv>
-    <Item warning singleLine={!props.subTitle}>
-      <img src={warning} height={'90%'} alt="icon" />
-      <div>
-        <span>{props.title}</span>
-        {props.subTitle && <span>{`${props.subTitle}`}</span>}
-      </div>
-    </Item>
-  </BorderDiv>
-);
+export const PatientSpecialStatusItem = props =>
+  props.title ? (
+    <BorderDiv>
+      <Item warning singleLine={!props.subTitle}>
+        <img src={warning} height={'90%'} alt="icon" />
+        <div>
+          <span>{props.title}</span>
+          {props.subTitle && <span>{`${props.subTitle}`}</span>}
+        </div>
+      </Item>
+    </BorderDiv>
+  ) : null;

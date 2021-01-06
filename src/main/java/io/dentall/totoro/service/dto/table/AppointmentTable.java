@@ -16,6 +16,7 @@ public interface AppointmentTable extends AuditingElement {
     Integer getColorId();
     Boolean getArchived();
     Boolean getContacted();
+    Boolean getFirstVisit();
 
     //Relationship
     Long getPatient_Id();

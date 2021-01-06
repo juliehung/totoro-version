@@ -30,7 +30,7 @@ const columns = [
   },
   {
     title: '治療項目',
-    dataIndex: 'nhiCode',
+    dataIndex: 'nhiMandarin',
   },
 ];
 
@@ -60,7 +60,7 @@ function PatientDetailHelthICCardTreatmentRecord(props) {
           <span>只顯示牙科</span>
         </div>
       </Header>
-      <Content>
+      <Content hasPagination>
         <StyledTable
           columns={columns}
           dataSource={filteredNhiMedicalRecords}

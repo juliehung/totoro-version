@@ -1,12 +1,18 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.Accounting;
-import io.dentall.totoro.repository.AccountingRepository;
-import io.dentall.totoro.repository.HospitalRepository;
+import java.time.Instant;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import io.dentall.totoro.domain.Accounting;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
+import io.dentall.totoro.repository.AccountingRepository;
+import io.dentall.totoro.repository.HospitalRepository;
+import io.dentall.totoro.service.dto.table.AccountingTable;
 
 /**
  * Service class for managing accounting.
@@ -104,5 +110,18 @@ public class AccountingService {
                 return accounting;
             })
             .get();
+    }
+
+    /**
+     * @param start  Registration.ArrivalTime
+     * @param end    Registration.ArrivalTime
+     * @param status Registration.Status
+     * @return io.dentall.totoro.domain.Accounting
+     */
+    public List<AccountingTable> getAllAccountingByRegistrationArrivalTimeAndRegistrationStatus(Instant start, Instant end, RegistrationStatus status) {
+        if (status == null) {
+            return accountingRepository.findByRegistration_ArrivalTimeBetween(start, end);
+        }
+        return accountingRepository.findByRegistration_ArrivalTimeBetweenAndRegistration_Status(start, end, status);
     }
 }

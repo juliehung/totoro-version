@@ -9,6 +9,7 @@ import Patient from '../../../models/patient';
 import Appointment from '../../../models/appointment';
 import Disposal from '../../../models/disposal';
 import DocNps from '../../../models/docNps';
+import NhiIcd10Cms from '../../../models/icd10Cms';
 import {
   patientNotFound,
   getPatientSuccess,
@@ -26,6 +27,10 @@ import {
   getDocNpHistorySuccess,
   getNhiPatientStatus,
   getNhiPatientStatusSuccess,
+  getPatientImages,
+  getPatientImagesSuccess,
+  getNhiIcd10Cms,
+  getNhiIcd10CmsSuccess,
 } from '../actions';
 
 export function* initPatientDetail() {
@@ -42,6 +47,8 @@ export function* initPatientDetail() {
       yield fork(getNhiExtendPatientSaga, id);
       yield fork(getAppointmentSaga, id);
       yield fork(getDocNpHistorySaga, id);
+      yield fork(getPatientImagesSaga, id);
+      yield fork(getNhiIcd10CmsSaga);
     } catch (error) {
       yield put(patientNotFound());
     }
@@ -60,6 +67,12 @@ function* getDisposalSaga(id) {
   yield put(getDisposal());
   const disposal = yield call(Disposal.getByPatientId, id);
   yield put(getDisposalSuccess(disposal));
+}
+
+function* getNhiIcd10CmsSaga() {
+  yield put(getNhiIcd10Cms());
+  const nhiProcedure = yield call(NhiIcd10Cms.get);
+  yield put(getNhiIcd10CmsSuccess(nhiProcedure));
 }
 
 function* getAccumulatedMedicalRecordSage(id) {
@@ -91,4 +104,10 @@ function* getDocNpHistorySaga(id) {
   yield put(getDocNpHistory());
   const docNps = yield call(DocNps.getByPid, id);
   yield put(getDocNpHistorySuccess(docNps));
+}
+
+function* getPatientImagesSaga(id) {
+  yield put(getPatientImages());
+  const patientImages = yield call(Patient.getImagesById, id);
+  yield put(getPatientImagesSuccess(patientImages));
 }

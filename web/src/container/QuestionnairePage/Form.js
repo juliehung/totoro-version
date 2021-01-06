@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet-async';
 import Background from '../../images/questionnaire_bg.svg';
 import { withRouter } from 'react-router-dom';
 import { getDoc } from './actions';
 import GAHelper from '../../ga';
 import { parseDateToString } from './utils/parseDateToString';
-import { Helmet } from 'react-helmet-async';
 
 //#region
 const Container = styled.div`
@@ -202,7 +202,12 @@ function Form(props) {
         <InfoContainer>
           <InfoRowContainer>
             <FlexGrowDiv>
-              <Info>{props.patient.special}</Info>
+              <InfoLabel>懷孕狀況:</InfoLabel>
+              <Info>{props.patient.pregnantString || '無'}</Info>
+            </FlexGrowDiv>
+            <FlexGrowDiv>
+              <InfoLabel>吸菸狀況:</InfoLabel>
+              <Info>{props.patient.smokingString || '無'}</Info>
             </FlexGrowDiv>
           </InfoRowContainer>
         </InfoContainer>

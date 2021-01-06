@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { Spin } from 'antd';
 import { connect } from 'react-redux';
 import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -105,6 +106,25 @@ const SavedIndicator = styled.span`
 const CalendarContainer = styled.div`
   flex-grow: 1;
   flex-shrink: 1;
+  position: relative;
+  > div:nth-child(1) {
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: fill-available;
+
+    > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+    }
+  }
+  > div:nth-child(2) {
+    position: relative;
+    z-index: 1;
+  }
 `;
 
 const CopyAllShiftContainer = styled.div`
@@ -134,7 +154,9 @@ function Calendar(props) {
     copySuccess,
     getShift,
     changeCopyModalVisible,
+    loading,
   } = props;
+
   const calendarRef = useRef(null);
 
   const [showSaved, setShowSaved] = useState(false);
@@ -262,7 +284,6 @@ function Calendar(props) {
       calendarApi.next();
     }
   };
-
   return (
     <Container>
       <GlobalStyle />
@@ -279,33 +300,41 @@ function Calendar(props) {
         </TitleContainer>
       </Header>
       <CalendarContainer>
-        <FullCalendar
-          ref={calendarRef}
-          header={false}
-          locales={zhTW}
-          locale="zh-tw"
-          height="parent"
-          resources={props.resource}
-          resourceRender={resourceRender}
-          events={props.event}
-          eventRender={eventRender}
-          plugins={[interactionPlugin, resourceTimelinePlugin]}
-          defaultView={'resourceTimelineWeek'}
-          editable={true}
-          eventDurationEditable={false}
-          resourceLabelText={'Doctor'}
-          resourceAreaWidth={'250px'}
-          datesRender={datesRender}
-          dateClick={dateClick}
-          eventDrop={eventDrop}
-          drop={drop}
-          slotLabelFormat={{ day: 'numeric', weekday: 'short', month: 'numeric' }}
-          slotDuration="24:00:00"
-          displayEventTime={false}
-          selectable
-          selectLongPressDelay={500}
-          scrollTime="00:00:00"
-        />
+        {loading && (
+          <div>
+            <Spin />
+          </div>
+        )}
+        <div>
+          <FullCalendar
+            ref={calendarRef}
+            header={false}
+            locales={zhTW}
+            locale="zh-tw"
+            height="parent"
+            resources={props.resource}
+            resourceRender={resourceRender}
+            events={props.event}
+            eventRender={eventRender}
+            plugins={[interactionPlugin, resourceTimelinePlugin]}
+            defaultView={'resourceTimelineWeek'}
+            editable={true}
+            eventDurationEditable={false}
+            resourceLabelText={'Doctor'}
+            resourceAreaWidth={'250px'}
+            datesRender={datesRender}
+            dateClick={dateClick}
+            eventDrop={eventDrop}
+            drop={drop}
+            slotLabelFormat={{ day: 'numeric', weekday: 'short', month: 'numeric' }}
+            slotDuration="24:00:00"
+            displayEventTime={false}
+            selectable
+            selectLongPressDelay={500}
+            scrollTime="00:00:00"
+            eventOrder={'title'}
+          />
+        </div>
       </CalendarContainer>
     </Container>
   );
@@ -329,6 +358,7 @@ const mapStateToProps = ({ homePageReducer, shiftPageReducer }) => ({
   editShiftSuccess: shiftPageReducer.shift.editShiftSuccess,
   changeColorSuccess: shiftPageReducer.resourceColor.changeColorSuccess,
   copySuccess: shiftPageReducer.copy.success,
+  loading: shiftPageReducer.shift.loading,
 });
 
 const mapDispatchToProps = {
@@ -343,11 +373,4 @@ const mapDispatchToProps = {
   changeSelectAllDoctor,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(
-  React.memo(Calendar, (prevProps, nextProps) => {
-    return prevProps.popoverVisible && !nextProps.popoverVisible;
-  }),
-);
+export default connect(mapStateToProps, mapDispatchToProps)(Calendar);

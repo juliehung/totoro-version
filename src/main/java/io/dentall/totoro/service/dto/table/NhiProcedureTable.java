@@ -1,5 +1,7 @@
 package io.dentall.totoro.service.dto.table;
 
+import java.time.Instant;
+
 public interface NhiProcedureTable {
     Long getId();
     String getCode();
@@ -12,6 +14,7 @@ public interface NhiProcedureTable {
     String getFdi();
     String getSpecificCode();
     String getChiefComplaint();
+    Instant getExpirationTime();
 
     // Relationship
     Long getNhiProcedureType_Id();

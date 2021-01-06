@@ -1,8 +1,10 @@
 import request from '../utils/request';
 import apiUrl from '../utils/apiUrl';
+import combineUrlAndQueryData from '../utils/combineUrlAndQueryData';
 
 const LOCATION = `patients`;
 const requestUrl = `${apiUrl}/${LOCATION}`;
+const requestImagesUrl = `${apiUrl}/images`;
 
 const businessRequestUrl = `${apiUrl}/business/${LOCATION}`;
 
@@ -10,6 +12,17 @@ export default class Patient {
   // GET
   static getById = async id => {
     const requestURL = `${requestUrl}/${id}`;
+    const result = await request(requestURL);
+    return result;
+  };
+
+  static getImagesById = async (id, page, size) => {
+    const params = {
+      'patientId.equals': id,
+      page: page,
+      size: size,
+    };
+    const requestURL = combineUrlAndQueryData(requestImagesUrl, params);
     const result = await request(requestURL);
     return result;
   };

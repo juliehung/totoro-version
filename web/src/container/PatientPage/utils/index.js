@@ -12,6 +12,7 @@ import toSurfaceAbbrivation from './toSurfaceAbbrivation';
 import renderYYYMMDDHHMMSS from './renderYYYMMDDHHMMSS';
 import convertPatientToPatientSpecialStatus from './convertPatientToPatientSpecialStatus';
 import toRefreshNhiPatientStatusWithHistory from './toRefreshNhiPatientStatusWithHistory';
+import convertPatientImagesToImageGallery from './convertPatientImagesToImageGallery';
 
 export {
   convertTreatmentProcedureToTableObject,
@@ -28,4 +29,5 @@ export {
   renderYYYMMDDHHMMSS,
   convertPatientToPatientSpecialStatus,
   toRefreshNhiPatientStatusWithHistory,
+  convertPatientImagesToImageGallery,
 };

@@ -85,6 +85,8 @@ export function parseDataToDisplayFormPage(patient) {
     allergy,
     other,
     special,
+    pregnantString,
+    smokingString,
   };
 
   return patientForDisplay;

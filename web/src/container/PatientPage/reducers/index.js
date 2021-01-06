@@ -9,6 +9,7 @@ import appointment from './appointment';
 import searchPatient from './searchPatient';
 import disposal from './disposal';
 import docNpHistory from './docNpHistory';
+import patientImages from './patientImages';
 
 const patientPageReducer = combineReducers({
   common,
@@ -21,6 +22,7 @@ const patientPageReducer = combineReducers({
   searchPatient,
   disposal,
   docNpHistory,
+  patientImages,
 });
 
 export default patientPageReducer;

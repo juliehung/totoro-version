@@ -148,20 +148,6 @@ function ShiftPopover(props) {
     }
   }, [visible, setSelectedShift, setCustomRange, setWeek]);
 
-  const mousedownCallback = useCallback(
-    e => {
-      const child = e.target;
-      if (
-        child.querySelector(':scope>.fc-event-container') ||
-        (child.className.includes && child.className.includes('fc-highlight'))
-      ) {
-        return;
-      }
-      setVisible(false);
-    },
-    [setVisible],
-  );
-
   const escKeyCallback = useCallback(
     e => {
       if (e.keyCode === 27) {
@@ -172,13 +158,11 @@ function ShiftPopover(props) {
   );
 
   useEffect(() => {
-    window.addEventListener('mousedown', mousedownCallback);
     window.addEventListener('keydown', escKeyCallback);
     return () => {
-      window.removeEventListener('mousedown', mousedownCallback);
       window.removeEventListener('keydown', escKeyCallback);
     };
-  }, [visible, mousedownCallback, escKeyCallback]);
+  }, [visible, escKeyCallback]);
 
   useEffect(() => {
     const height = ref.current.clientHeight;

@@ -54,7 +54,7 @@ function PatientDetailAccumulatedMedicalRecord(props) {
           <Ic />
         </div>
       </Header>
-      <Content>
+      <Content hasPagination>
         <StyledTable
           columns={columns}
           dataSource={accumulatedMedicalRecords}
@@ -70,6 +70,7 @@ function PatientDetailAccumulatedMedicalRecord(props) {
 const mapStateToProps = ({ patientPageReducer }) => ({
   accumulatedMedicalRecords: convertMedicalRecordsToTableObject(
     patientPageReducer.medicalRecord.nhiAccumulatedMedicalRecords,
+    patientPageReducer.medicalRecord.nhiAccumulatedMedicalTwRecodes,
   ),
   loading: patientPageReducer.treatmentProcedure.loading,
 });

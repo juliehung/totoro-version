@@ -6,6 +6,8 @@ import {
   GET_PATIENT_SUCCESS,
   GET_DISPOSAL,
   GET_DISPOSAL_SUCCESS,
+  GET_NHI_ICD10_CMS,
+  GET_NHI_ICD10_CMS_SUCCESS,
   GET_RECENT_TREATMENT_PROCEDURE,
   GET_RECENT_TREATMENT_PROCEDURE_SUCCESS,
   GET_ACCUMULATED_MEDICAL_RECORD,
@@ -31,6 +33,13 @@ import {
   CHANGE_TREATMENT_LIST_MODAL_VISIBLE,
   GET_NHI_PATIENT_STATUS,
   GET_NHI_PATIENT_STATUS_SUCCESS,
+  GET_PATIENT_IMAGES,
+  GET_PATIENT_IMAGES_SUCCESS,
+  CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES,
+  CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES_SUCCESS,
+  UPDATE_PATIENT_IMAGES_INDEX,
+  GET_MEDICAL_INSTITUTION_CODE_ZHTW,
+  GET_MEDICAL_INSTITUTION_CODE_ZHTW_SUCCESS,
 } from './constant';
 
 export function changeDrawerVisible(visible) {
@@ -61,6 +70,14 @@ export function getDisposalSuccess(disposals) {
   return { type: GET_DISPOSAL_SUCCESS, disposals };
 }
 
+export function getNhiIcd10Cms() {
+  return { type: GET_NHI_ICD10_CMS };
+}
+
+export function getNhiIcd10CmsSuccess(nhiIcd10cms) {
+  return { type: GET_NHI_ICD10_CMS_SUCCESS, nhiIcd10cms };
+}
+
 export function getRecentTreatmentProcedure() {
   return { type: GET_RECENT_TREATMENT_PROCEDURE };
 }
@@ -75,6 +92,14 @@ export function getAccumulatedMedicalRecords() {
 
 export function getAccumulatedMedicalRecordSuccess(nhiAccumulatedMedicalRecords) {
   return { type: GET_ACCUMULATED_MEDICAL_RECORD_SUCCESS, nhiAccumulatedMedicalRecords };
+}
+
+export function getMedicalInstitutionCodeZhTw(nhiAccumulatedMedicalRecords) {
+  return { type: GET_MEDICAL_INSTITUTION_CODE_ZHTW, nhiAccumulatedMedicalRecords };
+}
+
+export function getMedicalInstitutionCodeZhTwSuccess(nhiAccumulatedMedicalTwRecodes) {
+  return { type: GET_MEDICAL_INSTITUTION_CODE_ZHTW_SUCCESS, nhiAccumulatedMedicalTwRecodes };
 }
 
 export function getNhiExtendPatient() {
@@ -161,4 +186,25 @@ export function searchPatientSuccess(patients, searchText) {
 // treatment list modal
 export function changeTreatmentListModalVisible(visible) {
   return { type: CHANGE_TREATMENT_LIST_MODAL_VISIBLE, visible };
+}
+
+// patient images
+export function getPatientImages() {
+  return { type: GET_PATIENT_IMAGES };
+}
+
+export function getPatientImagesSuccess(patientImages) {
+  return { type: GET_PATIENT_IMAGES_SUCCESS, patientImages };
+}
+
+export function updatePatientImagesIndex(currentIndex = 0) {
+  return { type: UPDATE_PATIENT_IMAGES_INDEX, currentIndex };
+}
+
+export function changePageSizeToGetPatientImages(id, page, size, currentIndex) {
+  return { type: CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES, id, page, size, currentIndex };
+}
+
+export function changePageSizeToGetPatientImagesSuccess(patientImages, page, size) {
+  return { type: CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES_SUCCESS, patientImages, page, size };
 }

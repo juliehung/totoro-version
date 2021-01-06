@@ -6,7 +6,7 @@ import { Gender } from './utils/convertPatientToPatientDetail';
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
- .printTableRow {
+  .printTableRow {
     & tr,
     & td {
       border: 1px solid #808080 !important;
@@ -62,6 +62,18 @@ const columns = [
     render: name => <p style={style}>{name}</p>,
   },
   {
+    title: '備註',
+    dataIndex: 'note',
+    key: 'note',
+    render: note => <span style={style}>{note}</span>,
+  },
+  {
+    title: '預約醫師',
+    dataIndex: 'doctor',
+    key: 'doctor',
+    render: doctor => <p style={style}>{doctor}</p>,
+  },
+  {
     title: '病編',
     dataIndex: 'mrn',
     key: 'mrn',
@@ -103,18 +115,6 @@ const columns = [
     dataIndex: 'phone',
     key: 'phone',
     render: phone => <p style={style}>{phone}</p>,
-  },
-  {
-    title: '預約醫師',
-    dataIndex: 'doctor',
-    key: 'doctor',
-    render: doctor => <p style={style}>{doctor}</p>,
-  },
-  {
-    title: '備註',
-    dataIndex: 'note',
-    key: 'note',
-    render: note => <span style={style}>{note}</span>,
   },
 ];
 

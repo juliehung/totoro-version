@@ -301,9 +301,9 @@ Liquibase
 - `2020/08/03` 之前的紀錄，會在 `main/resources/config/liquibase/master_<type>.xml` 依照操作類型紀錄實際操作內容。
 
 如何操作 Liquibase data migration
-1. 確認需要加入的操作，並把該操作(a.k.a changeSet)，寫在 `main/resources/config/liquibase/<year>/<monty>/<year-month-modification-type>.xml`
+1. 確認需要加入的操作，並把該操作(a.k.a changeSet)，寫在 `main/resources/config/liquibase/changelog/<year>/<monty>/<year-month-modification-type>.xml`
 2. 將上面的檔案位置加回進入點 `main/resources/config/liquibase/master_timeline.xml`。
-3. 測試 migration 是否能正常運作。終端機在 project root 下執行 `./gradlew updateLiquibase` 便會依序執行 migration。詳細執行對象之設定 `build.gradle` 的 `liquibase` 設定段可以找到，
+3. 測試 migration 是否能正常運作。終端機在 project root 下執行 `./gradlew liquibaseUpdate` 便會依序執行 migration。詳細執行對象之設定 `build.gradle` 的 `liquibase` 設定段可以找到，
 預設值為 `totoro:totoro@localhost:5432/totoro` 。
 
 Java8 lambda
@@ -338,6 +338,12 @@ Business Logic
 - First/Last doctor，改由 disposal 下 appointment 中 第一跟最新一個預約醫生
 - Nhi tx/medicine 是完整匯入，來源自健保局公開資料
 
+
+Image
+---
+- Size, Gcp 支援 original, Host 支援 original, median
+- `/api/images/{id}/thumbnails` 用來取得可用的 url
+- `/api/images/host` 只在 `img-host` 下可用，具有風險可以存取檔案的 api。能取得其他存在於機器本身的檔案
 
 Metrics
 ---

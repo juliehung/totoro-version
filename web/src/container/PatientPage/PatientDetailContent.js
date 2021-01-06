@@ -7,6 +7,7 @@ import PatientDetailRecentAppointment from './PatientDetailRecentAppointment';
 import PatientDetailDiagnosisNote from './PatientDetailDiagnosisNote';
 import PatientDetailHelthICCardTreatmentRecord from './PatientDetailHelthICCardTreatmentRecord';
 import PatientDetailAccumulatedMedicalRecord from './PatientDetailAccumulatedMedicalRecord';
+import PatientDetailImages from './PatientDetailImages';
 
 //#region
 const Container = styled.div`
@@ -22,7 +23,7 @@ const Container = styled.div`
       grid-column: 2/6;
     }
     & > :nth-child(4) {
-      z-index: 400;
+      z-index: 2;
       grid-row: 2;
       grid-column: ${props => (props.diagnosisNoteExpand ? '1/4' : '1/3')};
     }
@@ -34,6 +35,10 @@ const Container = styled.div`
       grid-row: 2;
       grid-column: 5/7;
     }
+    & > :nth-child(7) {
+      grid-row: 3;
+      grid-column: 1/4;
+    }
   }
   @media (max-width: 1000px) {
     & > * {
@@ -44,7 +49,7 @@ const Container = styled.div`
 
 //#endregion
 
-function PatientDetailContent() {
+function PatientDetailContent(props) {
   const [diagnosisNoteExpand, setDiagnosisNoteExpand] = useState(false);
   return (
     <Container diagnosisNoteExpand={diagnosisNoteExpand}>
@@ -54,6 +59,7 @@ function PatientDetailContent() {
       <PatientDetailDiagnosisNote expand={diagnosisNoteExpand} setExpand={setDiagnosisNoteExpand} />
       <PatientDetailAccumulatedMedicalRecord />
       <PatientDetailHelthICCardTreatmentRecord />
+      <PatientDetailImages id={props?.id} />
     </Container>
   );
 }

@@ -5,6 +5,7 @@ import { Tooltip, Typography } from 'antd';
 import ManPng from '../../../static/images/man.png';
 import WomanPng from '../../../static/images/woman.png';
 import DefaultPng from '../../../static/images/default.png';
+import NP from '../../../static/images/NP.svg';
 import { B1, G1, Gray700 } from '../../../utils/colors';
 
 const { Title } = Typography;
@@ -58,17 +59,21 @@ const AvatarImg = styled.img`
 
 export const allDoctors = 'THESE_ARE_ALL_DOCTORS';
 
-const renderAvatarImg = gender => {
-  if (gender === 'MALE') return <AvatarImg src={ManPng} alt="male" />;
-  if (gender === 'FEMALE') return <AvatarImg src={WomanPng} alt="female" />;
-  return <AvatarImg src={DefaultPng} alt="default" />;
+const renderAvatarImg = (gender, firstVisitStatus) => {
+  if (firstVisitStatus) {
+    return <AvatarImg src={NP} alt="first-visit" />;
+  } else {
+    if (gender === 'MALE') return <AvatarImg src={ManPng} alt="male" />;
+    if (gender === 'FEMALE') return <AvatarImg src={WomanPng} alt="female" />;
+    return <AvatarImg src={DefaultPng} alt="default" />;
+  }
 };
 
 const renderName = patient => {
   return (
     <Tooltip title={patient.name}>
       <NameContainer>
-        {renderAvatarImg(patient.gender)}
+        {renderAvatarImg(patient.gender, patient.firstVisit)}
         <div>
           <span>{patient.medicalId}</span>
           <Title level={4}>{patient.name}</Title>
@@ -125,6 +130,7 @@ export function convertToTableSource(registrations, selectedDoctor) {
       medicalId: r.patientMedicalId,
       birth: r.patientBirth,
       nationalId: r.patientNationalId,
+      firstVisit: r.appointmentFirstVisit,
     };
 
     return {

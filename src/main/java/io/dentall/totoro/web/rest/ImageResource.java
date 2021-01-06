@@ -8,6 +8,7 @@ import io.dentall.totoro.service.ImageQueryService;
 import io.dentall.totoro.service.dto.ImageCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.web.rest.vm.ImageVM;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
 @Profile({"img-host", "img-gcs"})
 @RestController
@@ -94,18 +96,47 @@ public class ImageResource {
         return result;
     }
 
+    /**
+     * 查詢圖片，並取得資料來源 url，以及其他訊息
+     * @param host local 模式下，方可取得 server 的 ip 位址；gcs 模式下是否有值並不影響
+     * @param imageCriteria query by image id, patient id, etc,.
+     * @param pageable pagination using size and page.
+     */
     @GetMapping("/images")
-    public ResponseEntity<List<Image>> getImagesByCriteria(ImageCriteria imageCriteria, Pageable pageable) {
+    public ResponseEntity<List<ImageVM>> getImagesByCriteria(
+        @RequestHeader(name = "Host", required = false) String host,
+        ImageCriteria imageCriteria,
+        Pageable pageable
+    ) {
         Page<Image> page = imageQueryService.findByCriteria(imageCriteria, pageable);
+        List<ImageVM> content = page.map(image -> {
+            ImageVM vm = new ImageVM();
+            Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(host, image.getId(), "original");
+
+            vm.setImage(image);
+            vm.setUrl(urls.getOrDefault("original", ""));
+
+            return vm;
+        })
+            .stream().collect(Collectors.toList());
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/images");
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        return ResponseEntity.ok().headers(headers).body(content);
     }
 
+    @Deprecated
     @GetMapping("/images/{id}")
-    public ResponseEntity<Image> getImagesById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(imageBusinessService.getImageById(id));
+    public ResponseEntity<ImageVM> getImagesById(@PathVariable("id") Long id) {
+        Image image = imageBusinessService.getImageById(id);
+        Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(null, id, "original");
+
+        ImageVM vm = new ImageVM();
+        vm.setImage(image);
+        vm.setUrl(urls.getOrDefault("original", ""));
+
+        return ResponseEntity.ok(vm);
     }
 
+    @Deprecated
     @GetMapping("/images/{id}/thumbnails")
     public ResponseEntity<Map<String, String>> getImageThumbnailsBySize(
         @RequestHeader(name = "Host", required = false) String host,
@@ -115,11 +146,13 @@ public class ImageResource {
         return ResponseEntity.ok(imageBusinessService.getImageThumbnailsBySize(host, id, size));
     }
 
+    @Deprecated
     @GetMapping("/images/sizes")
     public ResponseEntity<List<String>> getImageSizes() {
         return ResponseEntity.ok(imageBusinessService.getImageSizes());
     }
 
+    @Deprecated
     @GetMapping("/images/test")
     public ResponseEntity<String> getTestImage() throws IOException {
         String remotePath = imageBusinessService.createImagePath(-1L);
@@ -128,6 +161,7 @@ public class ImageResource {
         return ResponseEntity.ok("test upload file to ftp");
     }
 
+    @Deprecated
     @GetMapping("/images/thumbnail-url")
     public ResponseEntity<String> getImageThumbnailUrl(@RequestHeader(name = "Host", required = false) String host) {
         logger.info("Host of request header: {}", host);
@@ -135,6 +169,11 @@ public class ImageResource {
         return ResponseEntity.ok(imageBusinessService.getImageThumbnailUrl(host));
     }
 
+    /**
+     * 當 local 模式下，用來傳送 image byte 用的 api，有風險可直接存取其他檔案
+     * @param path file path + file name
+     * @param size original or median
+     */
     @Profile("img-host")
     @GetMapping("/images/host")
     public DeferredResult<ResponseEntity<byte[]>> getImageFromHost(
@@ -161,9 +200,9 @@ public class ImageResource {
                     .body(imageHostBusinessService.getImageByPathAndSize(path, size))
                 );
             } catch (IOException e) {
-                logger.error("unable to get image from host path[{}] and size[{}]: {}", path, size, e.getMessage());
-
-                throw new BadRequestAlertException("unable to get image from host", ENTITY_NAME, null);
+                String message = String.format("unable to get image from host path[%s] and size[%s]: error-mssage:[%s]", path, size, e.getMessage());
+                logger.error(message);
+                result.setErrorResult(new BadRequestAlertException(message, ENTITY_NAME, null));
             }
         });
 

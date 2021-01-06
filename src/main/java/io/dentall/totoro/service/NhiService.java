@@ -10,6 +10,7 @@ import io.dentall.totoro.repository.NhiExtendPatientRepository;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.repository.SettingRepository;
 import io.dentall.totoro.service.dto.InfectionControlDuration;
+import io.dentall.totoro.service.dto.NhiExtendTreatmentProcedureDTO;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.StreamUtil;
@@ -821,6 +822,20 @@ public class NhiService {
             .collect(Collectors.toList());
     }
 
+    private List<NhiExtTxPDate> getSameCodeNhiExtendTreatmentProceduresExcludeSelf2(
+            List<NhiExtendTreatmentProcedureDTO> nhiExtendTreatmentProcedureDTOs,
+            NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
+        return nhiExtendTreatmentProcedureDTOs
+                .stream()
+                .map(dto -> NhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable2(dto))
+                .filter(nhiExtTxP -> nhiExtTxP.getId() != null) // 資料面會有出現只有nhiExtendDisposal而沒有nhiExtendTreatmentProcedure的資料，所以要特別過濾掉
+                .filter(nhiExtTxP -> !nhiExtTxP.getId().equals(nhiExtendTreatmentProcedure.getId()))
+                .filter(nhiExtTxP -> nhiExtTxP.getA73() != null && nhiExtTxP.getA73().equals(nhiExtendTreatmentProcedure.getA73()))
+                .map(NhiExtTxPDate::new)
+                .sorted(Comparator.comparing(NhiExtTxPDate::getDate).reversed())
+                .collect(Collectors.toList());
+    }
+
     private void checkIntervalLessOrEqualThan(String interval, NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure) {
         String[] info = interval.split("<=");
         int days;
@@ -850,8 +865,8 @@ public class NhiService {
         }
 
         LocalDate date = getNhiExtendDisposalDate(nhiExtendTreatmentProcedure);
-        List<NhiExtTxPDate> nhiExtTxPDates = getSameCodeNhiExtendTreatmentProceduresExcludeSelf(
-            nhiExtendDisposalRepository.findByDateBetweenAndPatientId(
+        List<NhiExtTxPDate> nhiExtTxPDates = getSameCodeNhiExtendTreatmentProceduresExcludeSelf2(
+            nhiExtendDisposalRepository.findByDateBetweenAndPatientId2(
                 date.minusDays(days),
                 date,
                 nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId()
@@ -1038,7 +1053,7 @@ public class NhiService {
             for (String position : positions) {
                 for (Integer quadrant : Rule.getQuadrants(position)) {
                     quadrantsCount.put(quadrant, quadrantsCount.get(quadrant) + 1);
-                    if (quadrantsCount.get(quadrant) > limit) {
+                    if (quadrantsCount.get(quadrant) > limit * 3) {
                         LocalDate date = nhiExtTxPDates.get(0).getDate();
                         LocalDate dateBefore = nhiExtTxPDate.getDate();
                         String nhiExtTxPBefore = formatter.format(dateBefore) + "(" + DAYS.between(dateBefore, date) + " 天前)";

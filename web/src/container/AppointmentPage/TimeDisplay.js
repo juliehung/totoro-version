@@ -17,10 +17,10 @@ function TimeDisplay() {
   const year = currentTime.year() - 1911;
   const month = currentTime.month();
   const date = currentTime.date();
-  const day = currentTime.format('dddd');
+  const day = currentTime.format('dd');
   const time = currentTime.format('LT');
 
-  return <span>{`${year}年${month + 1}月${date}日${day} ${time}`}</span>;
+  return <span>{`${year}年${month + 1}月${date}日 週${day} ${time}`}</span>;
 }
 
 export default TimeDisplay;
