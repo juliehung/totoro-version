@@ -33,7 +33,7 @@ import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.repository.AccountingRepository;
 import io.dentall.totoro.service.AccountingService;
-import io.dentall.totoro.service.dto.table.AccountingTable;
+import io.dentall.totoro.service.dto.AccountingDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -164,11 +164,11 @@ public class AccountingResource {
      */
     @GetMapping("/accountings/search")
     @Timed
-    public ResponseEntity<List<AccountingTable>> getAllAccountingBySearchParam(
+    public ResponseEntity<List<AccountingDTO>> getAllAccountingBySearchParam(
             @RequestParam(name = "registration.ArrivalTime.beginDate") Instant arrivalTimeBegin, 
             @RequestParam(name = "registration.ArrivalTime.endDate") Instant arrivalTimeEnd,
             @RequestParam(required = false, name = "registration.Status") RegistrationStatus status) {
-        List<AccountingTable> accountingList = accountingService.getAllAccountingByRegistrationArrivalTimeAndRegistrationStatus(arrivalTimeBegin, arrivalTimeEnd, status);
+        List<AccountingDTO> accountingList = accountingService.getAllAccountingsByAppointmentAndRegistration(arrivalTimeBegin, arrivalTimeEnd, status);
         return ResponseEntity.ok().body(accountingList);
     }
 }
