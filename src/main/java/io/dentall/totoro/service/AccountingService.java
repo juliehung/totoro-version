@@ -137,4 +137,13 @@ public class AccountingService {
         }
         return appointmentRepository.findByRegistration_ArrivalTimeBetweenAndRegistration_Status(begin, end, status);
     }
+
+    /**
+     * @param begin Accounting.TransactionTime
+     * @param end   Accounting.TransactionTime
+     * @return
+     */
+    public List<AccountingDTO> getAllAccountingsByTransactionTime(Instant begin, Instant end) {
+        return appointmentRepository.findByRegistration_Accounting_TransactionTimeBetween(begin, end);
+    }
 }

@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -165,10 +166,23 @@ public class AccountingResource {
     @GetMapping("/accountings/search")
     @Timed
     public ResponseEntity<List<AccountingDTO>> getAllAccountingBySearchParam(
-            @RequestParam(name = "registration.ArrivalTime.beginDate") Instant arrivalTimeBegin, 
-            @RequestParam(name = "registration.ArrivalTime.endDate") Instant arrivalTimeEnd,
-            @RequestParam(required = false, name = "registration.Status") RegistrationStatus status) {
-        List<AccountingDTO> accountingList = accountingService.getAllAccountingsByAppointmentAndRegistration(arrivalTimeBegin, arrivalTimeEnd, status);
+            @RequestParam(required = false,name = "registration.ArrivalTime.beginDate") Instant arrivalTimeBegin, 
+            @RequestParam(required = false,name = "registration.ArrivalTime.endDate") Instant arrivalTimeEnd,
+            @RequestParam(required = false, name = "registration.Status") RegistrationStatus status,
+            @RequestParam(required = false, name = "accounting.TransactionTime.beginDate") Instant transactionTimeBegin,
+            @RequestParam(required = false, name = "accounting.TransactionTime.endDate") Instant transactionTimeEnd) {
+
+        List<AccountingDTO> accountingList;
+
+        if (arrivalTimeBegin != null && arrivalTimeEnd != null) {
+            accountingList = accountingService.getAllAccountingsByAppointmentAndRegistration(arrivalTimeBegin, arrivalTimeEnd, status);
+        } else if (transactionTimeBegin != null && transactionTimeEnd != null) {
+            accountingList = accountingService.getAllAccountingsByTransactionTime(transactionTimeBegin, transactionTimeEnd);
+        } else {
+            // 查詢的時間參數只能擇其一，不然就回個空list
+            accountingList = new ArrayList<>(0);
+        }
+
         return ResponseEntity.ok().body(accountingList);
     }
 }
