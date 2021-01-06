@@ -1,13 +1,25 @@
 package io.dentall.totoro.business.service.nhi.util;
 
-import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
-
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.validation.constraints.NotNull;
+
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 
 public class ToothUtil {
+
+    private static String toothRegexLiteral = "\\d{2}";
+
+    private static String toothPositionRegexLiteral = "(?<=\\G..)";
+
+    private static Pattern toothRegexPattern = Pattern.compile(toothRegexLiteral);
+
+    private static Pattern toothPositionRegexPattern = Pattern.compile(toothPositionRegexLiteral);
+
 
     /**
      * 使用 ToothConstraint 決定牙齒屬於哪個範圍的檢核標準，並且利用 regex 來判斷，僅提供單牙
@@ -40,5 +52,34 @@ public class ToothUtil {
         return tc.getMessage();
     }
 
+    /**
+     * 計算牙齒顆數
+     * 
+     * <pre>
+     * input=3M3G-> count=0
+     * input=M3G3-> count=0
+     * input=M33-> count=0
+     * input=0-> count=0
+     * input=01-> count=1
+     * input=012-> count=1
+     * input=0123-> count=2
+     * input=01234-> count=2
+     * input=0F12GEWE39-> count=2
+     * input=0F12GEWE397-> count=2
+     * </pre>
+     * 
+     * @param toothString 牙齒字串
+     * @return
+     */
+    public static long getToothCount(String toothString) {
+        if (toothString == null || toothString.isEmpty()) {
+            return 0L;
+        }
+
+        return Arrays.asList(toothPositionRegexPattern.split(toothString))
+                .stream().filter(tooth -> {
+                    return toothRegexPattern.matcher(tooth).matches();
+                }).count();
+    }
 }
 
