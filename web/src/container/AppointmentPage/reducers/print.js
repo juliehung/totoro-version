@@ -1,16 +1,20 @@
 import produce from 'immer';
-import { CHANGE_PRINT_MODAL_VISIBLE, CHANGE_PRINT_DATE, GET_PRINT_APP_LIST_SUCCESS } from '../constant';
+import {
+  CHANGE_PRINT_MODAL_VISIBLE,
+  CHANGE_PRINT_DATE,
+  CHANGE_PRINT_DOCTOR,
+  GET_PRINT_APP_LIST_SUCCESS,
+} from '../constant';
 import moment from 'moment';
-
 const initVisible = false;
-const intiDate = moment();
-const initPrintButtonDisable = true;
+const initDate = moment();
+const initDoctor = [];
 const initAppData = { appointmentList: [], doctorList: [] };
 
 export const initialState = {
   visible: initVisible,
-  date: intiDate,
-  printButtonDisable: initPrintButtonDisable,
+  date: initDate,
+  doctor: initDoctor,
   appData: initAppData,
 };
 
@@ -23,10 +27,11 @@ const print = (state = initialState, action) =>
         break;
       case CHANGE_PRINT_DATE:
         draft.date = action.date;
-        draft.printButtonDisable = initPrintButtonDisable;
+        break;
+      case CHANGE_PRINT_DOCTOR:
+        draft.doctor = action.doctor;
         break;
       case GET_PRINT_APP_LIST_SUCCESS:
-        draft.printButtonDisable = false;
         draft.appData = action.appData;
         break;
       default:

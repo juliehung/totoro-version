@@ -158,6 +158,7 @@ function EditAppModal({
 
   useEffect(() => {
     if (editAppSuccess) {
+      getAllEvents();
       changeEditAppModalVisible(false);
       message.success('編輯預約成功');
     }

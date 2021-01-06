@@ -86,7 +86,13 @@ function ConfirmDropModal(props) {
             <HightLightSpan>{props.info.event ? props.info.event.title : ''}</HightLightSpan>
             <span>預約至</span>
             <HightLightSpan>
-              {props.info.event ? moment(props.info.event.start).format('YYYY-MM-DD HH:mm') : ''}
+              {props.info.event
+                ? `${moment(props.info.event.start).format('YYYY') - 1911}年${moment(props.info.event.start).format(
+                    'MM',
+                  )}月${moment(props.info.event.start).format('DD')}日 ${moment(props.info.event.start).format(
+                    'HH:mm',
+                  )}`
+                : ''}
             </HightLightSpan>
             <span>?</span>
           </p>
