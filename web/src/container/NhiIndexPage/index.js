@@ -468,12 +468,11 @@ function NhiIndexPage({
   useEffect(() => {
     if (Object.values(validNhiData)?.[0]) {
       updateNhiFirstId(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
-      updateCheckedModalData(oldArray => [
-        ...oldArray,
-        ...Object.entries(validNhiData)
+      updateCheckedModalData(
+        Object.entries(validNhiData)
           .map(([, list]) => list.map(({ disposalId }) => disposalId))
           .flat(Infinity),
-      ]);
+      );
     }
   }, [validNhiData]);
   useEffect(() => {
