@@ -13,8 +13,10 @@ function NhiSalarySearchInput(props) {
       className={className}
       allowClear={true}
       onSearch={() => {
-        onChangeValue(ref.current.state.value.toString());
-        filterValidNhiData(searchFilteredNhiData(ref.current.state.value.toString(), validNhiData));
+        if (typeof ref.current.state.value === 'string') {
+          onChangeValue(ref.current.state.value.toString());
+          filterValidNhiData(searchFilteredNhiData(ref.current.state.value.toString(), validNhiData));
+        }
       }}
       placeholder={'搜尋姓名,生日或流水號'}
       ref={ref}
