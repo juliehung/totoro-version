@@ -33,10 +33,14 @@ const CheckboxWrap = styled(Checkbox)`
   }
 `;
 const renderWithCaseCategory = (a23, serialNumber) => {
-  if (a23.toUpperCase() === 'AC') {
-    return `A3${serialNumber}`;
+  if (serialNumber.length !== 0) {
+    if (a23.toUpperCase() === 'AC') {
+      return `A3${serialNumber}`;
+    } else {
+      return `19${serialNumber}`;
+    }
   } else {
-    return `19${serialNumber}`;
+    return '';
   }
 };
 
@@ -67,7 +71,7 @@ const NhiDataListRender = ({
               <div>
                 <div>
                   <CheckboxWrap
-                    checked={checkedModalData.find(id => disposalId === id)}
+                    checked={checkedModalData.find(id => disposalId === id || nhiExtendDisposal?.serialNumber === id)}
                     isSelected={currentNhiOne === disposalId}
                     onChange={() => {
                       checkedModalData.find(id => disposalId === id)
