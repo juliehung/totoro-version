@@ -468,6 +468,12 @@ function NhiIndexPage({
   useEffect(() => {
     if (Object.values(validNhiData)?.[0]) {
       updateNhiFirstId(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
+      updateCheckedModalData(oldArray => [
+        ...oldArray,
+        ...Object.entries(validNhiData)
+          .map(([, list]) => list.map(({ disposalId }) => disposalId))
+          .flat(Infinity),
+      ]);
     }
   }, [validNhiData]);
   useEffect(() => {
@@ -492,8 +498,6 @@ function NhiIndexPage({
           setTimeout(() => {
             if (getAllDisposalId.length !== checkedModalData.length) {
               updateCheckedModalData(getAllDisposalId);
-            } else {
-              updateCheckedModalData([]);
             }
           }, 700);
         }}
