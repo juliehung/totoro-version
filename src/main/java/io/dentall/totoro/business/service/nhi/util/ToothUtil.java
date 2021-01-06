@@ -53,6 +53,8 @@ public class ToothUtil {
     }
 
     /**
+     * 計算牙齒顆數
+     * 
      * <pre>
      * input=3M3G-> count=0
      * input=M3G3-> count=0
@@ -66,7 +68,7 @@ public class ToothUtil {
      * input=0F12GEWE397-> count=2
      * </pre>
      * 
-     * @param toothString
+     * @param toothString 牙齒字串
      * @return
      */
     public static long getToothCount(String toothString) {
