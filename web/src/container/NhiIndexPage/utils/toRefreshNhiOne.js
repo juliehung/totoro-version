@@ -30,6 +30,8 @@ function toRefreshValidNhiData(nhiOne, validNhiData, doctorData) {
               treatmentProcedure?.total / (treatmentProcedure?.quantity * treatmentProcedure?.nhiProcedure?.point),
             ) * 100
           }%`,
+        nhiCode: treatmentProcedure?.nhiProcedure?.code,
+        target: 'treatment',
       });
     }
   }
@@ -46,16 +48,25 @@ function toRefreshValidNhiData(nhiOne, validNhiData, doctorData) {
           total: nhiExtendDisposal?.examinationPoint,
           quantity: 1,
           multiplier: '100%',
+          nhiCode: nhiExtendDisposal?.examinationCode,
+          target: 'examination',
         });
       }
     }
   }
-
   if (findMappingData.length !== 0) {
     const { nhiExtendDisposalList } = findMappingData[0];
     const findMappingDoctor = userNotionalIds.filter(({ nationalId }) => nationalId === nhiExtendDisposalList[0]?.a15);
-    const examinationPoint = examinationData.map(({ total }) => total).reduce((a, b) => (b ? a + b : a), 0);
-    const treatmentPoint = treatmentData.map(({ total }) => total).reduce((a, b) => (b ? a + b : a), 0);
+    const nhiOneTableData = []
+      .concat(examinationData, treatmentData)
+      .filter((data, index, self) => index === self.findIndex(t => t.nhiCode === data.nhiCode));
+
+    const examinationPoint = nhiOneTableData
+      .map(({ total, target }) => target === 'examination' && total)
+      .reduce((a, b) => (b ? a + b : a), 0);
+    const treatmentPoint = nhiOneTableData
+      .map(({ total, target }) => target === 'treatment' && total)
+      .reduce((a, b) => (b ? a + b : a), 0);
     return {
       ...nhiOne,
       patientName: nhiExtendDisposalList[0]?.patientName,
@@ -64,10 +75,11 @@ function toRefreshValidNhiData(nhiOne, validNhiData, doctorData) {
       examinationPoint,
       treatmentPoint,
       totalPoint: examinationPoint + treatmentPoint,
-      nhiOneTableData: [].concat(treatmentData, examinationData),
+      nhiOneTableData,
     };
+  } else {
+    return undefined;
   }
-  return nhiOne;
 }
 
 export default toRefreshValidNhiData;
