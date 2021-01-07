@@ -118,7 +118,7 @@ export function* getEndoIndexes(begin, end, checkedModalData) {
   try {
     const params = {
       begin: begin.startOf('day').toISOString(),
-      end: end.endOf('day').toISOString(),
+      end: end.subtract(90, 'days').endOf('day').toISOString(),
       excludeDisposalId: checkedModalData ? checkedModalData : [],
     };
     const result = yield call(EndoIndexes.get, params);
