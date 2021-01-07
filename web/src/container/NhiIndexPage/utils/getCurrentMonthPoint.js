@@ -30,13 +30,9 @@ function getCurrentMonthPoint(totalPointByDisposalDate) {
         color: findMapping[0]?.total > totalAbs ? '#26c8f0' : '#ffc935',
       });
     } else {
-      const current = new Date();
-      const fullYear = current.getFullYear();
-      const month = current.getMonth() + 1;
-      const disposalDate = new Date(`${fullYear}-${month}-${i}`).toISOString();
       reTotalPointByDisposalDate.push({
         copayment: 0,
-        disposalDate: `${disposalDate}`,
+        disposalDate: `${moment().toISOString()}`,
         endoPoint: 0,
         infectionExaminationPoint: 0,
         pedoPoint: 0,
