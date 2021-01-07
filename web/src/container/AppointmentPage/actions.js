@@ -4,6 +4,7 @@ import {
   GET_APPOINTMENTS_SUCCESS,
   CHANGE_PRINT_MODAL_VISIBLE,
   CHANGE_PRINT_DATE,
+  CHANGE_PRINT_DOCTOR,
   GET_PRINT_APP_LIST_SUCCESS,
   CHANGE_CAL_FIRST_DAY,
   CHANGE_SELECTED_DOCTORS,
@@ -120,6 +121,10 @@ export function changePrintModalVisible() {
 
 export function changePrintDate(date) {
   return { type: CHANGE_PRINT_DATE, date };
+}
+
+export function changePrintDoctor(doctor) {
+  return { type: CHANGE_PRINT_DOCTOR, doctor };
 }
 
 export function getPrintAppointmentsSuccess(appData) {

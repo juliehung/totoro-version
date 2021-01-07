@@ -1,20 +1,40 @@
 package io.dentall.totoro.business.service.nhi;
 
+import static io.dentall.totoro.business.service.nhi.util.ToothUtil.getToothCount;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.dto.CalculateBaseData;
-import io.dentall.totoro.web.rest.vm.*;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.*;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import io.dentall.totoro.service.dto.NhiIndexEndoDTO;
+import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
+import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexEndoVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
+import io.dentall.totoro.web.rest.vm.NhiIndexTreatmentProcedureVM;
+import io.dentall.totoro.web.rest.vm.NhiStatisticDoctorSalary;
 
 @Service
 @Transactional
@@ -133,8 +153,9 @@ public class NhiStatisticService {
         return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end, excludeDisposalId);
     }
 
-    private static final List<String> endoPostTreatmentList =
+    private static final List<String> endoList = 
             Arrays.asList(
+                    "90015C",
                     "90001C",
                     "90002C",
                     "90003C",
@@ -143,23 +164,49 @@ public class NhiStatisticService {
                     "90019C",
                     "90020C");
 
-    public List<NhiIndexEndoVM> calculateEndoIndex(Instant begin, Instant end, List<Long> excludeDisposalId) {
-        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
-            excludeDisposalId = Arrays.asList(0L);
+    public List<NhiIndexEndoVM> calculateEndoIndex(Instant begin, Instant end, List<Long> excludeDisposalIds) {
+        if (excludeDisposalIds == null || excludeDisposalIds.size() == 0) {
+            excludeDisposalIds = Arrays.asList(0L);
         }
 
-        return nhiExtendDisposalRepository.calculateEndoIndex(begin, end, endoPostTreatmentList, excludeDisposalId).stream()
-                .map(endoDto -> {
-                    NhiIndexEndoVM endo = new NhiIndexEndoVM()
-                        .did(endoDto.getDid())
-                        .preOperationNumber(endoDto.getPreOperationNumber())
-                        .postOperationNumber(endoDto.getPostOperationNumber());
+        List<NhiIndexEndoDTO> rawData = nhiExtendDisposalRepository.findEndoIndexRawData(begin, end, endoList, excludeDisposalIds);
 
-                    BigDecimal preOpeNumb = BigDecimal.valueOf(endo.getPreOperationNumber());
-                    BigDecimal postOpeNumb = BigDecimal.valueOf(endo.getPostOperationNumber());
-                    return endo.uncompletedRate(preOpeNumb.subtract(postOpeNumb).divide(preOpeNumb, 2, RoundingMode.HALF_UP));
-                })
-                .collect(Collectors.toList());
+        Map<Long, NhiIndexEndoVM> mapResult = rawData.stream()
+                .reduce(new HashMap<Long, NhiIndexEndoVM>(), (map, dto) -> {
+                    map.compute(dto.getDid(), (did, vm) -> {
+                        if (vm == null) {
+                            vm = new NhiIndexEndoVM();
+                            vm.setDid(did);
+                            vm.setPreOperationNumber(0L);
+                            vm.setPostOperationNumber(0L);
+                        }
+
+                        String a73 = dto.getA73();
+                        long toothCount = getToothCount(dto.getA74());
+
+                        if ("90015C".equals(a73)) {
+                            vm.setPreOperationNumber(toothCount + vm.getPreOperationNumber());
+                        } else {
+                            vm.setPostOperationNumber(toothCount + vm.getPostOperationNumber());
+                        }
+                        return vm;
+                    });
+
+                    return map;
+                }, (accMap, map) -> {
+                    accMap.putAll(map); // 這邊不會執行到
+                    return accMap;
+                });
+
+        Collection<NhiIndexEndoVM> result = mapResult.values();
+
+        result.stream().forEach(vm -> {
+            BigDecimal preOpeNumb = BigDecimal.valueOf(vm.getPreOperationNumber());
+            BigDecimal postOpeNumb = BigDecimal.valueOf(vm.getPostOperationNumber());
+            vm.uncompletedRate(preOpeNumb.subtract(postOpeNumb).divide(preOpeNumb, 2, RoundingMode.HALF_UP));
+        });
+
+        return new ArrayList<>(result);
     }
 
     public List<NhiDoctorTxVM> calculateDoctorTx(Instant begin, Instant end, List<Long> excludeDisposalId) {

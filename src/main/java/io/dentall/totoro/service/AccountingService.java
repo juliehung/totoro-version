@@ -3,6 +3,9 @@ package io.dentall.totoro.service;
 import java.time.Instant;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,8 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.repository.AccountingRepository;
+import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.HospitalRepository;
-import io.dentall.totoro.service.dto.table.AccountingTable;
+import io.dentall.totoro.service.dto.AccountingDTO;
 
 /**
  * Service class for managing accounting.
@@ -25,11 +29,20 @@ public class AccountingService {
 
     private final AccountingRepository accountingRepository;
 
+    private final AppointmentRepository appointmentRepository;
+
     private final HospitalRepository hospitalRepository;
 
-    public AccountingService(AccountingRepository accountingRepository, HospitalRepository hospitalRepository) {
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public AccountingService(
+            AccountingRepository accountingRepository,
+            HospitalRepository hospitalRepository,
+            AppointmentRepository appointmentRepository) {
         this.accountingRepository = accountingRepository;
         this.hospitalRepository = hospitalRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     /**
@@ -118,10 +131,19 @@ public class AccountingService {
      * @param status Registration.Status
      * @return io.dentall.totoro.domain.Accounting
      */
-    public List<AccountingTable> getAllAccountingByRegistrationArrivalTimeAndRegistrationStatus(Instant start, Instant end, RegistrationStatus status) {
+    public List<AccountingDTO> getAllAccountingsByAppointmentAndRegistration(Instant begin, Instant end, RegistrationStatus status) {
         if (status == null) {
-            return accountingRepository.findByRegistration_ArrivalTimeBetween(start, end);
+            return appointmentRepository.findByRegistration_ArrivalTimeBetween(begin, end);
         }
-        return accountingRepository.findByRegistration_ArrivalTimeBetweenAndRegistration_Status(start, end, status);
+        return appointmentRepository.findByRegistration_ArrivalTimeBetweenAndRegistration_Status(begin, end, status);
+    }
+
+    /**
+     * @param begin Accounting.TransactionTime
+     * @param end   Accounting.TransactionTime
+     * @return
+     */
+    public List<AccountingDTO> getAllAccountingsByTransactionTime(Instant begin, Instant end) {
+        return appointmentRepository.findByRegistration_Accounting_TransactionTimeBetween(begin, end);
     }
 }

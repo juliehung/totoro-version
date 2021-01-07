@@ -3,8 +3,7 @@ package io.dentall.totoro.service.dto;
 public interface NhiIndexEndoDTO {
     Long getDid();
 
-    Long getPreOperationNumber();
+    String getA73();
 
-    Long getPostOperationNumber();
-
+    String getA74();
 }

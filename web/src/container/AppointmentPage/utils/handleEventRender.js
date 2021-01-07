@@ -157,15 +157,16 @@ const ListWeekContainer = styled.div`
 
 const MenuStyle = styled(Menu)`
   border-radius: ${props => (props.is_first_menu === 'true' ? '8px 8px 0 0' : '0 0 8px 8px')} !important;
-  padding: 3px !important;
-  > li {
+  padding: 0 3px 2px !important;
+  width: 108px;
+  li {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     border-radius: 8px;
     background-color: initial !important;
     color: rgba(0, 0, 0, 0.85);
     text-align: center !important;
-    &:hover {
+    &.ant-menu-item:hover {
       border-radius: 8px;
       background-color: #f5f5f5 !important;
       color: rgba(0, 0, 0, 0.85) !important;
@@ -176,7 +177,19 @@ const MenuStyle = styled(Menu)`
       }
     }
   }
-
+  .ant-menu-item-group-list .ant-menu-item {
+    padding: 0;
+  }
+  .ant-menu-item-group-title {
+    color: #828991;
+    margin-bottom: 2px;
+    padding: 2px 12px;
+    border-bottom: 1px solid #edf1f7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+  }
   > button {
     width: 100%;
     border-radius: 8px !important;
@@ -359,9 +372,11 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
               }}
               is_first_menu={'true'}
             >
-              <Menu.Item key="edit" className="first-li">
-                編輯預約
-              </Menu.Item>
+              <Menu.ItemGroup title={patientName}>
+                <Menu.Item key="edit" className="first-li">
+                  編輯預約
+                </Menu.Item>
+              </Menu.ItemGroup>
             </MenuStyle>
             {status === 'CANCEL' ? (
               <MenuStyle is_first_menu={'false'}>

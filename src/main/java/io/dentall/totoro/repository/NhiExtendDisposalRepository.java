@@ -469,54 +469,26 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             @Param("excludeDisposalId") List<Long> excludeDisposalId
     );
 
-    @Query(
-        nativeQuery = true,
-        value = "with " +
-            "     nhi_90015C_total as ( " +
-            "        select a.doctor_user_id as did, " +
-            "               case " +
-            "                   when count(a.doctor_user_id) is not null then count(a.doctor_user_id) " +
-            "                   else 0 " +
-            "               end as operation " +
-            "        from disposal d " +
-            "            left join appointment a on d.registration_id = a.registration_id " +
-            "            left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
-            "            left join treatment_procedure tp on d.id = tp.disposal_id " +
-            "            left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
-            "        where ned.a19 <> '2' and ned.jhi_date between :begin and :end and a73 = '90015C' and d.id not in :excludeDisposalId " +
-            "           or ned.a19 = '2' and ned.replenishment_date between :begin and :end and a73 = '90015C' and d.id not in :excludeDisposalId " +
-            "        group by a.doctor_user_id " +
-            "     ), " +
-            "     nhi_other_endo_total as ( " +
-            "        select a.doctor_user_id as did, " +
-            "               case " +
-            "                   when count(a.doctor_user_id) is not null then count(a.doctor_user_id) " +
-            "                   else 0 " +
-            "               end as operation " +
-            "        from disposal d " +
-            "            left join appointment a on d.registration_id = a.registration_id " +
-            "            left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
-            "            left join treatment_procedure tp on d.id = tp.disposal_id " +
-            "            left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
-            "        where ned.a19 <> '2' and ned.jhi_date between :begin and :end and a73 in :endoPostTreatmentList and d.id not in :excludeDisposalId " +
-            "           or ned.a19 = '2' and ned.replenishment_date between :begin and :end and a73 in :endoPostTreatmentList and d.id not in :excludeDisposalId " +
-            "        group by a.doctor_user_id " +
-            "     ) " +
-            "select pre.did as did, " +
-            "       case " +
-            "           when post.operation is not null then post.operation " +
-            "           else 0 " +
-            "       end as postOperationNumber, " +
-            "       case " +
-            "           when pre.operation is not null then pre.operation " +
-            "           else 0 " +
-            "       end as preOperationNumber " +
-            "from nhi_90015C_total pre " +
-            "    left join nhi_other_endo_total post on pre.did = post.did;"
-    )
-    List<NhiIndexEndoDTO> calculateEndoIndex(
+    @Query(nativeQuery = true, 
+            value = "select a.doctor_user_id did, netp.a73, netp.a74 " +
+                    "  from disposal d " +
+                    "  left join appointment a                       on d.registration_id = a.registration_id " +
+                    "  left join nhi_extend_disposal ned             on d.id              = ned.disposal_id " +
+                    "  left join treatment_procedure tp              on d.id              = tp.disposal_id " +
+                    "  left join nhi_extend_treatment_procedure netp on tp.id             = netp.treatment_procedure_id " +
+                    " where (ned.a19 <> '2' " +
+                    "   and ned.jhi_date between :begin and :end " +
+                    "   and netp.a73 in :endoList " +
+                    "   and d.id not in :excludeDisposalIds) " +
+                    "    or (ned.a19 = '2' " +
+                    "   and ned.replenishment_date between :begin and :end " +
+                    "   and netp.a73 in :endoList " +
+                    "   and d.id not in :excludeDisposalIds) " +
+                    " order by a.doctor_user_id")
+    List<NhiIndexEndoDTO> findEndoIndexRawData(
             @Param("begin") Instant begin,
             @Param("end") Instant end,
-            @Param("endoPostTreatmentList") List<String> endoPostTreatmentList,
-            @Param("excludeDisposalId") List<Long> excludeDisposalId);
+            @Param("endoList") List<String> endoList,
+            @Param("excludeDisposalIds") List<Long> excludeDisposalIds);
+
 }

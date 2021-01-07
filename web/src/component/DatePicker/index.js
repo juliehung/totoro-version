@@ -22,7 +22,7 @@ export const GlobalStyle = createGlobalStyle`
 
 const SingleDatePickerContainer = styled.div`
   & .DateInput_input {
-    font-size: ${props => (props.size === 'large' ? '18px' : props.size === 'small' ? '14px' : '16px')} !important;
+    font-size: ${props => (props.size === 'large' ? '18px' : props.size === 'small' ? '14px' : '16px')};
     padding-top: ${props => (props.size === 'large' ? '9px' : props.size === 'small' ? '1px' : '2px')} !important;
     padding-bottom: ${props => (props.size === 'large' ? '9px' : props.size === 'small' ? '1px' : '2px')} !important;
     border: 1px solid transparent !important;
@@ -34,11 +34,11 @@ const SingleDatePickerContainer = styled.div`
   }
   & .DateInput_input::placeholder {
     color: #bfbfbf;
-    font-size: ${props => (props.size === 'large' ? '18px' : props.size === 'small' ? '14px' : '16px')} !important;
+    font-size: ${props => (props.size === 'large' ? '18px' : props.size === 'small' ? '14px' : '16px')};
     font-weight: normal;
   }
   & .DateInput.DateInput_1 {
-    width: ${props => (props.size === 'large' ? '200px' : '143px')} !important;
+    width: ${props => (props.size === 'large' ? '200px' : '143px')};
   }
 `;
 
@@ -60,13 +60,25 @@ const NavButtonL = styled(NavButton)`
 //#endregion
 
 function DatePicker(props) {
-  const { date, onDateChange, readOnly, placeholder, size, disabled, upperYearLimit, lowerYearLimit } = props;
+  const {
+    date,
+    onDateChange,
+    readOnly,
+    placeholder,
+    size,
+    disabled,
+    upperYearLimit,
+    lowerYearLimit,
+    customInputIcon,
+    inputIconPosition,
+    className,
+  } = props;
   const [focused, setFocused] = useState(false);
 
   return (
     <Fragment>
       <GlobalStyle />
-      <SingleDatePickerContainer size={size}>
+      <SingleDatePickerContainer size={size} className={className}>
         <SingleDatePicker
           numberOfMonths={1}
           onDateChange={onDateChange}
@@ -100,6 +112,8 @@ function DatePicker(props) {
               <RightOutlined />
             </NavButtonR>
           }
+          customInputIcon={customInputIcon}
+          inputIconPosition={inputIconPosition}
         />
       </SingleDatePickerContainer>
     </Fragment>
