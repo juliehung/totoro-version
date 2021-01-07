@@ -33,7 +33,9 @@ function getCurrentMonthPoint(totalPointByDisposalDate) {
       const current = new Date();
       const fullYear = current.getFullYear();
       const month = current.getMonth() + 1;
-      const disposalDate = new Date(`${fullYear}-${month}-${i}`).toISOString();
+      const disposalDate = new Date(
+        `${fullYear}-${month < 10 ? `0${month}` : month}-${i < 10 ? `0${i}` : i}`,
+      ).toISOString();
       reTotalPointByDisposalDate.push({
         copayment: 0,
         disposalDate: `${disposalDate}`,
