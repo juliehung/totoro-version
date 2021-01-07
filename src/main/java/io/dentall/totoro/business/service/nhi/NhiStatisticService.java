@@ -188,7 +188,7 @@ public class NhiStatisticService {
             BigDecimal preOpeNumb = BigDecimal.valueOf(vm.getPreOperationNumber());
             BigDecimal postOpeNumb = BigDecimal.valueOf(vm.getPostOperationNumber());
             if (!preOpeNumb.equals(BigDecimal.ZERO)) {
-                vm.completedRate(preOpeNumb.subtract(postOpeNumb).divide(preOpeNumb, 2, RoundingMode.HALF_UP));
+                vm.completedRate(postOpeNumb.divide(preOpeNumb, 2, RoundingMode.HALF_UP));
             }
         });
 
