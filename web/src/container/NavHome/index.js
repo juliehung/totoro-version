@@ -292,7 +292,7 @@ const route = [
     path: 'nhi',
     link: 'nhi',
     name: '全民健保',
-    navigation: true,
+    navigation: false,
     exact: false,
     icon: { on: NhiFillIcon, off: NhiIcon },
     component: <NhiIndexPage />,
