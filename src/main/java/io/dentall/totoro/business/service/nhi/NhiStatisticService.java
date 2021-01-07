@@ -1,40 +1,24 @@
 package io.dentall.totoro.business.service.nhi;
 
-import static io.dentall.totoro.business.service.nhi.util.ToothUtil.getToothCount;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.dto.CalculateBaseData;
 import io.dentall.totoro.service.dto.NhiIndexEndoDTO;
-import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
-import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexEndoVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexTreatmentProcedureVM;
-import io.dentall.totoro.web.rest.vm.NhiStatisticDoctorSalary;
+import io.dentall.totoro.web.rest.vm.*;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static io.dentall.totoro.business.service.nhi.util.ToothUtil.getToothCount;
 
 @Service
 @Transactional
@@ -153,7 +137,7 @@ public class NhiStatisticService {
         return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end, excludeDisposalId);
     }
 
-    private static final List<String> endoList = 
+    private static final List<String> endoList =
             Arrays.asList(
                     "90015C",
                     "90001C",
@@ -182,7 +166,7 @@ public class NhiStatisticService {
                         }
 
                         String a73 = dto.getA73();
-                        long toothCount = getToothCount(dto.getA74());
+                        long toothCount = getToothCount(ToothConstraint.SPECIFIC_TOOTH, dto.getA74());
 
                         if ("90015C".equals(a73)) {
                             vm.setPreOperationNumber(toothCount + vm.getPreOperationNumber());
@@ -203,7 +187,9 @@ public class NhiStatisticService {
         result.stream().forEach(vm -> {
             BigDecimal preOpeNumb = BigDecimal.valueOf(vm.getPreOperationNumber());
             BigDecimal postOpeNumb = BigDecimal.valueOf(vm.getPostOperationNumber());
-            vm.uncompletedRate(preOpeNumb.subtract(postOpeNumb).divide(preOpeNumb, 2, RoundingMode.HALF_UP));
+            if (!preOpeNumb.equals(BigDecimal.ZERO)) {
+                vm.completedRate(preOpeNumb.subtract(postOpeNumb).divide(preOpeNumb, 2, RoundingMode.HALF_UP));
+            }
         });
 
         return new ArrayList<>(result);
