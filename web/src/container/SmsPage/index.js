@@ -21,7 +21,7 @@ import PaperPlane from './svg/PaperPlane';
 import GiftFill from './svg/GiftFill';
 import AwardFill from './svg/AwardFill';
 import { StyledLargerButton } from './StyledComponents';
-import isEqual from 'lodash.isequal';
+import _ from 'lodash';
 import { O1 } from '../../utils/colors';
 import { Spin, Pagination } from 'antd';
 
@@ -51,7 +51,7 @@ const Container = styled.div`
   flex-direction: column;
   height: 100%;
   @media screen and (max-width: 480px) {
-    padding: 0px;
+    padding: 0;
   }
 `;
 
@@ -172,7 +172,7 @@ const EventList = styled.div`
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
   &::-webkit-scrollbar {
-    width: 0px;
+    width: 0;
     background: transparent; /* Chrome/Safari/Webkit */
   }
 `;
@@ -321,7 +321,7 @@ function SmsPage(props) {
     const newApp = o1.metadata.selectedAppointments.map(app => app.id);
     const oldApp = o2.metadata.selectedAppointments.map(app => app.id);
 
-    if (!isEqual(newApp, oldApp)) return true;
+    if (!_.isEqual(newApp, oldApp)) return true;
     if (o1.title !== o2.title) return true;
 
     return false;

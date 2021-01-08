@@ -1,5 +1,5 @@
 import { Button, Popover } from 'antd';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import ManPng from '../../static/images/man.png';
 import WomanPng from '../../static/images/woman.png';
@@ -23,8 +23,9 @@ import Close from './svg/Close';
 import Trash from './svg/Trash';
 import { StyledMediumButton, StyledTag, StyledInput } from './StyledComponents';
 import { P2, Caption, Subtitle, Title } from '../../utils/textComponents';
-import isEqual from 'lodash.isequal';
+import _ from 'lodash';
 import MixTagTextArea from './MixTagTextArea';
+import { useDebouncedEffect } from './useDebouncedEffect';
 
 //#region
 const RootContainer = styled.div`
@@ -49,14 +50,14 @@ const BoneContainer = styled.div`
   justify-content: space-between;
   margin: 16px;
   padding: 32px;
-  box-shadow: 0 0px 16px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   background: white;
   overflow: scroll;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
   &::-webkit-scrollbar {
-    width: 0px;
+    width: 0;
     background: transparent; /* Chrome/Safari/Webkit */
   }
 `;
@@ -104,7 +105,7 @@ const TagsContainer = styled.div`
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
   &::-webkit-scrollbar {
-    width: 0px;
+    width: 0;
     background: transparent; /* Chrome/Safari/Webkit */
   }
 `;
@@ -150,7 +151,7 @@ const isDiff = (o1, o2) => {
   const newApp = o1.metadata.selectedAppointments.map(app => app.id);
   const oldApp = o2.metadata.selectedAppointments.map(app => app.id);
 
-  if (!isEqual(newApp, oldApp)) return true;
+  if (!_.isEqual(newApp, oldApp)) return true;
   if (o1.title !== o2.title) return true;
 
   return false;
@@ -171,17 +172,18 @@ function EventEditing(props) {
     isDeletingEvent,
   } = props;
 
-  useEffect(() => {
-    const interval = setInterval(() => {
+  useDebouncedEffect(
+    () => {
       if (editingEvent !== null && editingEvent.isEdit) {
         if (isDiff(editingEvent, selectedEvent)) {
           saveEvent(editingEvent);
         }
       }
-    }, 500);
-    return () => clearInterval(interval);
-    // eslint-disable-next-line
-  }, [editingEvent]);
+      return () => {};
+    },
+    300,
+    [editingEvent],
+  );
 
   return (
     <RootContainer>
