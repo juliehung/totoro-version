@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockftpserver.fake.FakeFtpServer;
@@ -28,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("ftp")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TotoroApp.class)
-@Ignore
 public class ImageFtpBusinessServiceIntTest {
 
     private static final String UPLOAD_FILENAME = "chrome.png";

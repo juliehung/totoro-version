@@ -35,6 +35,8 @@ public class CacheConfiguration {
     @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
+            cm.createCache(io.dentall.totoro.repository.UserRepository.USERS_BY_LOGIN_CACHE, jcacheConfiguration);
+            cm.createCache(io.dentall.totoro.repository.UserRepository.USERS_BY_EMAIL_CACHE, jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.User.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(io.dentall.totoro.domain.User.class.getName() + ".authorities", jcacheConfiguration);
