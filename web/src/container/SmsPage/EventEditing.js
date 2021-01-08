@@ -176,13 +176,15 @@ function EventEditing(props) {
     () => {
       if (editingEvent !== null && editingEvent.isEdit) {
         if (isDiff(editingEvent, selectedEvent)) {
+          console.log('in');
           saveEvent(editingEvent);
         }
       }
       return () => {};
     },
     300,
-    [editingEvent],
+    // eslint-disable-next-line
+    [editingEvent, saveEvent, selectedEvent],
   );
 
   return (

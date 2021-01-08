@@ -9,7 +9,7 @@
     "no-constant-condition": "off",
     "no-var": "error",
     "prefer-const": "error",
-    "react-hooks/exhaustive-deps": "error"
+    "react-hooks/rules-of-hooks": "error"
   },
   "parser": "babel-eslint",
   "plugins": ["babel", "import", "jsx-a11y", "react", "prettier", "react-hooks"],
