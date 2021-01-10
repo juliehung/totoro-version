@@ -1,14 +1,12 @@
 package io.dentall.totoro.business.service.nhi.util;
 
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
+
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.validation.constraints.NotNull;
-
-import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 
 public class ToothUtil {
 
@@ -54,7 +52,7 @@ public class ToothUtil {
 
     /**
      * 計算牙齒顆數
-     * 
+     *
      * <pre>
      * input=3M3G-> count=0
      * input=M3G3-> count=0
@@ -67,19 +65,19 @@ public class ToothUtil {
      * input=0F12GEWE39-> count=2
      * input=0F12GEWE397-> count=2
      * </pre>
-     * 
+     *
      * @param toothString 牙齒字串
      * @return
      */
-    public static long getToothCount(String toothString) {
+    public static long getToothCount(ToothConstraint tc, String toothString) {
         if (toothString == null || toothString.isEmpty()) {
             return 0L;
         }
 
-        return Arrays.asList(toothPositionRegexPattern.split(toothString))
-                .stream().filter(tooth -> {
-                    return toothRegexPattern.matcher(tooth).matches();
-                }).count();
+        return Arrays.stream(toothPositionRegexPattern.split(toothString))
+            .filter(tooth -> toothRegexPattern.matcher(tooth).matches())
+            .filter(tooth -> tooth.matches(tc.getRegex()))
+            .count();
     }
 }
 

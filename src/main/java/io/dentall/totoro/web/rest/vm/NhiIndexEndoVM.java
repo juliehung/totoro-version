@@ -10,10 +10,15 @@ public class NhiIndexEndoVM {
 
     private Long postOperationNumber;
 
-    private BigDecimal uncompletedRate;
+    private BigDecimal completedRate;
 
     public NhiIndexEndoVM did(Long did) {
         this.did = did;
+        return this;
+    }
+
+    public NhiIndexEndoVM completedRate(BigDecimal completedRate) {
+        this.completedRate = completedRate;
         return this;
     }
 
@@ -27,17 +32,12 @@ public class NhiIndexEndoVM {
         return this;
     }
 
-    public NhiIndexEndoVM uncompletedRate(BigDecimal uncompletedRate) {
-        this.uncompletedRate = uncompletedRate;
-        return this;
+    public BigDecimal getCompletedRate() {
+        return completedRate;
     }
 
-    public BigDecimal getUncompletedRate() {
-        return uncompletedRate;
-    }
-
-    public void setUncompletedRate(BigDecimal uncompletedRate) {
-        this.uncompletedRate = uncompletedRate;
+    public void setCompletedRate(BigDecimal completedRate) {
+        this.completedRate = completedRate;
     }
 
     public Long getDid() {
