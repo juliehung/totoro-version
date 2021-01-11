@@ -156,7 +156,8 @@ const DoctorControlContainer = styled.div`
 
 const DoctorControl = styled.div`
   width: 300px;
-  max-height: 500px;
+  max-height: 350px;
+  overflow-y: auto;
 
   & > :first-child {
     height: 32px;
