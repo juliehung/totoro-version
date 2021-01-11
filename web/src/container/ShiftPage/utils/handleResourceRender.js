@@ -180,12 +180,8 @@ export const handleResourceRender = ({ resource, el }, utils) => {
         </Popover>
         <span>{resource.title}</span>
       </LeftContainer>
-      <Tooltip title="套用上週班表" trigger="hover" placement="top">
-        <CopyContainer
-          onClick={() => {
-            utils.copyShiftClick(resource.extendedProps.doctor);
-          }}
-        >
+      <Tooltip title="套用上週班表" trigger={['hover', 'click']} placement="top">
+        <CopyContainer onClick={() => utils.copyShiftClick(resource.extendedProps.doctor)}>
           <img src={Copy} alt={'copy'} />
         </CopyContainer>
       </Tooltip>
