@@ -3,13 +3,21 @@ import { connect } from 'react-redux';
 import { Container, Header, Content, PatientDeclarationStatusItem, PatientSpecialStatusItem } from './component';
 import { Spin, Empty } from 'antd';
 import { toRefreshNhiPatientStatusWithHistory, convertPatientToPatientSpecialStatus } from './utils';
+import { ReactComponent as EmptyDataSvg } from '../../images/empty-data.svg';
 
 //#region
 //#endregion
 
 function PatientDetailPatientStatus(props) {
   const { loading, nhiPatientFluorideStatus, nhiPatientScalingStatus, patientSpecialStatus } = props;
-  const isEmpty = !nhiPatientFluorideStatus && !nhiPatientScalingStatus && patientSpecialStatus.length === 0;
+  const isEmpty =
+    (!nhiPatientFluorideStatus && !nhiPatientScalingStatus && !patientSpecialStatus) ||
+    (nhiPatientFluorideStatus &&
+      nhiPatientFluorideStatus.length === 0 &&
+      nhiPatientScalingStatus &&
+      nhiPatientScalingStatus.length === 0 &&
+      patientSpecialStatus &&
+      patientSpecialStatus.length === 0);
 
   return (
     <Container>
@@ -19,7 +27,9 @@ function PatientDetailPatientStatus(props) {
       <Content noPadding paddingBottom>
         <Spin spinning={loading}>
           {isEmpty ? (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            <div className="empty-wrap">
+              <Empty image={<EmptyDataSvg />} description={<span>無資料，請儘速讀取健保卡或雲端藥歷</span>} />
+            </div>
           ) : (
             <Fragment>
               {nhiPatientScalingStatus &&
