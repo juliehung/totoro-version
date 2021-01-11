@@ -26,6 +26,8 @@ import { appointmentPage } from './';
 import { DeleteOutlined } from '@ant-design/icons';
 import parseDateToString from './utils/parseDateToString';
 import DatePicker from '../../component/DatePicker';
+import { convertAppointmentToCardObject } from '../PatientPage/utils';
+import PatientAppointmentPopover from './PatientAppointmentPopover';
 
 //#region
 const Container = styled.div`
@@ -125,6 +127,7 @@ function EditAppModal({
   visible,
   appointment,
   patient,
+  currentPatientAppointments,
   deleteLoading,
   deleteAppSuccess,
   doctors,
@@ -256,6 +259,7 @@ function EditAppModal({
               <PatientDetailElement>
                 <span>
                   {patient && `最近預約:  ${parseDateToString(patient.appointmentsAnalysis.recentAppointment)}`}
+                  <PatientAppointmentPopover patient={patient} patientAppointments={currentPatientAppointments} />
                 </span>
               </PatientDetailElement>
             </PatientDetailCol>
@@ -377,6 +381,10 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   visible: appointmentPageReducer.editApp.visible,
   appointment: appointmentPageReducer.editApp.appointment,
   patient: appointmentPageReducer.editApp.patient,
+  currentPatientAppointments: convertAppointmentToCardObject(
+    appointmentPageReducer.editApp?.patient?.appointments,
+    homePageReducer.user.users,
+  ).filter(a => a.isFuture && !a.isRegistration),
   deleteLoading: appointmentPageReducer.editApp.deleteLoading,
   deleteAppSuccess: appointmentPageReducer.editApp.deleteAppSuccess,
   doctors: extractDoctorsFromUser(homePageReducer.user.users),

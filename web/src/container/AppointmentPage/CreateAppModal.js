@@ -36,6 +36,8 @@ import { defaultTimeOption } from './utils/generateDefaultTime';
 import { appointmentPage } from './';
 import parseDateToString from './utils/parseDateToString';
 import DatePicker from '../../component/DatePicker';
+import { convertAppointmentToCardObject } from '../PatientPage/utils';
+import PatientAppointmentPopover from './PatientAppointmentPopover';
 
 const { Option } = Select;
 
@@ -172,6 +174,7 @@ function CreateAppModal({
   patients,
   patientSelected,
   selectedPatient,
+  selectedPatientAppointments,
   doctors,
   appointment,
   patient,
@@ -449,6 +452,10 @@ function CreateAppModal({
                   <span>
                     {selectedPatient &&
                       `最近預約:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentAppointment)}`}
+                    <PatientAppointmentPopover
+                      patient={selectedPatient}
+                      patientAppointments={selectedPatientAppointments}
+                    />
                   </span>
                 </PatientDetailElement>
               </PatientDetailCol>
@@ -564,6 +571,10 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   patients: appointmentPageReducer.createApp.searchPatients,
   patientSelected: appointmentPageReducer.createApp.patientSelected,
   selectedPatient: appointmentPageReducer.createApp.selectedPatient,
+  selectedPatientAppointments: convertAppointmentToCardObject(
+    appointmentPageReducer.createApp?.selectedPatient?.appointments,
+    homePageReducer.user.users,
+  ).filter(a => a.isFuture && !a.isRegistration),
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
   appointment: appointmentPageReducer.createApp.appointment,
   patient: appointmentPageReducer.createApp.patient,

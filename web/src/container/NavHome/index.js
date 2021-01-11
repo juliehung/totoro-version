@@ -66,6 +66,22 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 
+  .ant-popover.selected-patient-content {
+    z-index: 1033;
+    @media screen and (max-width: 414px) {
+      width: 98%;
+      max-width: 300px;
+      left: 34px !important;
+      .ant-popover-content {
+        .ant-popover-arrow {
+          display: none !important;
+        }
+      }
+    }
+    @media screen and (max-width: 320px) {
+      left: 17px !important;
+    }
+  }
 `;
 
 const Banner = styled.div`
