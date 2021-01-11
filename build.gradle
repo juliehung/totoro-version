@@ -332,7 +332,7 @@ dependencies {
     compile "com.vladmihalcea:hibernate-types-52:2.4.0"
     compile "ru.yandex.qatools.embed:postgresql-embedded:2.10"
     compile "com.univocity:univocity-parsers:2.8.2"
-    compile("io.moquette:moquette-broker:0.12.1") {
+    compile("io.moquette:moquette-broker:0.13") {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
     compile "org.springframework.integration:spring-integration-mqtt"
