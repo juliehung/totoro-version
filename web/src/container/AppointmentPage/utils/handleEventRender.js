@@ -250,6 +250,7 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
         registrationStatus,
         tags,
         firstVisit,
+        baseFloor,
       } = appointment;
       if (info.view.type !== 'dayGridMonth') {
         const fcTitle = info.el.querySelector('.fc-title');
@@ -310,6 +311,11 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
               )}
             </InfoWrap>
             <TagsWrap>
+              {baseFloor && (
+                <Tag key={id} className="danger">
+                  行動不便
+                </Tag>
+              )}
               {sortTags.dangerTags.map(({ name, id }) => (
                 <Tag key={id} className="danger">
                   {name}
