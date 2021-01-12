@@ -1,10 +1,19 @@
 import moment from 'moment';
 
+const findNotWebAppt = appt => {
+  const expectTime = moment(appt.expectedArrivalTime).format('YYYY-MM-DD hh:mm:ss');
+  const arrivalTime = moment(appt.registerArrivalTime).format('YYYY-MM-DD hh:mm:ss');
+  if (expectTime !== arrivalTime) {
+    return appt;
+  }
+};
+
 export default function convertAppToPrintItem(appointments) {
   if (appointments && appointments.length > 0) {
     const doctorList = [];
     const appointmentList = appointments
       .filter(a => a.status !== 'CANCEL')
+      .filter(f => findNotWebAppt(f))
       .sort((a, b) => moment(a.expectedArrivalTime).diff(moment(b.expectedArrivalTime)))
       .map(p => {
         const key = p.id;
@@ -21,7 +30,6 @@ export default function convertAppToPrintItem(appointments) {
         }
         return { key, time, name, mrn, birth, gender, phone, doctor, note };
       });
-
     return { appointmentList, doctorList };
   }
   return { appointmentList: [], doctorList: [] };

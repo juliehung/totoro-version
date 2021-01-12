@@ -90,6 +90,7 @@ const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   color: #222b45;
+  margin: 0 auto;
   & > img {
     width: 24px;
     height: 24px;
