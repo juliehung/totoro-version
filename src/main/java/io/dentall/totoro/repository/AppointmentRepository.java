@@ -39,6 +39,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "       p.national_id as patientNationalId," +
             "       p.medical_id as patientMedicalId," +
             "       p.gender as patientGender," +
+            "       p.vip_patient as patientVipPatient," +
             "       d.id as disposalId," +
             "       a.id as appointmentId," +
             "       a.note as appointmentNote," +
@@ -126,6 +127,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.patient.nationalId, " +
             "appointment.patient.gender, " +
             "appointment.patient.phone, " +
+            "appointment.patient.vipPatient, " +
             "appointment.expectedArrivalTime, " +
             "appointment.doctor, " +
             "appointment.requiredTreatmentTime, " +
@@ -196,6 +198,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "patient.marriage, " +
             "patient.newPatient, " +
             "patient.patientIdentity, " +
+            "patient.vipPatient, " +
             "registration.id, " +
             "registration.createdBy, " +
             "registration.createdDate, " +

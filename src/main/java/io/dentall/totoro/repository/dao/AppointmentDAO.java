@@ -61,6 +61,7 @@ public class AppointmentDAO {
     private final String marriage;
     private final Boolean newPatient;
     private final PatientIdentity patientIdentity;
+    private final Boolean vipPatient;
     // Registration
     private final Long registrationId;
     private final String registrationCreatedBy;
@@ -146,6 +147,7 @@ public class AppointmentDAO {
         String marriage,
         Boolean newPatient,
         PatientIdentity patientIdentity,
+        Boolean vipPatient,
         Long registrationId,
         String registrationCreatedBy,
         Instant registrationCreatedDate,
@@ -224,6 +226,7 @@ public class AppointmentDAO {
         this.marriage = marriage;
         this.newPatient = newPatient;
         this.patientIdentity = patientIdentity;
+        this.vipPatient = vipPatient;
         this.registrationId = registrationId;
         this.registrationCreatedBy = registrationCreatedBy;
         this.registrationCreatedDate = registrationCreatedDate;
@@ -495,6 +498,10 @@ public class AppointmentDAO {
 
     public Boolean getNewPatient() {
         return newPatient;
+    }
+
+    public Boolean getVipPatient() {
+        return vipPatient;
     }
 
     public Long getRegistrationId() {
