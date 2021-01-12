@@ -36,12 +36,12 @@ export function* initNhiSalary() {
       const { begin, end } = yield take(INIT_NHI_SALARY);
       yield put(getTotalPointByDisposalDate());
       const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, { begin, end });
+      const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, { begin, end });
       yield delay(300);
       yield fork(getOdIndexes, begin, end);
       yield fork(getToothClean, begin, end);
       yield fork(getEndoIndexes, begin, end);
       yield fork(getValidNhiYearMonth, begin);
-      const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, { begin, end });
       yield put(getNhiSalarySuccess(nhiSalary));
       yield put(getTotalPointByDisposalDateSuccess({ data: totalPointByDisposalDate, startDate: begin }));
     } catch (error) {
@@ -56,15 +56,15 @@ export function* getNhiSalary() {
       const { begin, end, checkedModalData } = yield take(GET_NHI_SALARY);
       yield put(getTotalPointByDisposalDate());
       const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, { begin, end, checkedModalData });
-      yield delay(300);
-      yield fork(getOdIndexes, begin, end, checkedModalData);
-      yield fork(getToothClean, begin, end, checkedModalData);
-      yield fork(getEndoIndexes, begin, end, checkedModalData);
       const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, {
         begin,
         end,
         checkedModalData,
       });
+      yield delay(300);
+      yield fork(getOdIndexes, begin, end, checkedModalData);
+      yield fork(getToothClean, begin, end, checkedModalData);
+      yield fork(getEndoIndexes, begin, end, checkedModalData);
       yield put(getNhiSalarySuccess(nhiSalary));
       yield put(getTotalPointByDisposalDateSuccess({ data: totalPointByDisposalDate, startDate: begin }));
     } catch (error) {
