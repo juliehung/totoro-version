@@ -19,6 +19,11 @@ export const GlobalStyle = createGlobalStyle`
     background-color:#e4eaff;
     font-weight: normal;
   }
+  @media(max-width: 580px) {
+    .SingleDatePicker_picker__portal {
+      z-index: 1000;
+    }
+  }
 `;
 
 const StyleModal = styled(Modal)`
