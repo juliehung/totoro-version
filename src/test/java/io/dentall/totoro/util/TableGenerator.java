@@ -507,5 +507,11 @@ public class TableGenerator {
         public String getCaseManager() {
             return null;
         }
+
+        @Override
+        public Boolean getVipPatient() {
+            return null;
+        }
+
     };
 }

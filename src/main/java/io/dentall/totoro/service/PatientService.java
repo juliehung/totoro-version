@@ -293,6 +293,10 @@ public class PatientService extends QueryService<Patient> {
                     patient.setCaseManager(updatePatient.getCaseManager());
                 }
 
+                if (updatePatient.getVipPatient() != null) {
+                    patient.setVipPatient(updatePatient.getVipPatient());
+                }
+
                 return patient;
             })
             .get();

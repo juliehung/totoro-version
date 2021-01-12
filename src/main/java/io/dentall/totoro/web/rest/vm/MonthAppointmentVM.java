@@ -25,6 +25,8 @@ public class MonthAppointmentVM {
 
     private final String phone;
 
+    private final Boolean vipPatient;
+
     private final Instant expectedArrivalTime;
 
     private final ExtendUser doctor;
@@ -68,6 +70,7 @@ public class MonthAppointmentVM {
         this.birth = appointmentDTO.getBirth();
         this.nationalId = appointmentDTO.getNationalId();
         this.phone = appointmentDTO.getPhone();
+        this.vipPatient = appointmentDTO.getVipPatient();
         this.expectedArrivalTime = appointmentDTO.getExpectedArrivalTime();
         this.doctor = appointmentDTO.getDoctor();
         this.requiredTreatmentTime = appointmentDTO.getRequiredTreatmentTime();
@@ -109,6 +112,10 @@ public class MonthAppointmentVM {
 
     public String getPhone() {
         return phone;
+    }
+
+    public Boolean getVipPatient() {
+        return vipPatient;
     }
 
     public Instant getExpectedArrivalTime() {
