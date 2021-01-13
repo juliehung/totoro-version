@@ -99,4 +99,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         "ORDER BY FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) DESC, patient.id ASC",
         countQuery = "SELECT count(*) FROM Patient patient WHERE FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) > 0")
     Page<PatientSearchVM> findByMedicalId(@Param("search") String search, Pageable pageable);
+
+    Boolean existsByNationalId(String nationalId);
 }
