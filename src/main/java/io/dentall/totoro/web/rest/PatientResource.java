@@ -20,6 +20,7 @@ import io.dentall.totoro.web.rest.util.AvatarUtil;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.AvatarVM;
+import io.dentall.totoro.web.rest.vm.PatientNationalIdValidationVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -417,6 +418,14 @@ public class PatientResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(patient.isPresent()
             ? PatientMapper.patientTableToPatient(patient.get())
             : null));
+    }
+
+    @GetMapping("/patients/nationalId/validation")
+    @Timed
+    public ResponseEntity<PatientNationalIdValidationVM> patientNationalIdValidation(@RequestParam String nationalId) {
+        log.debug("REST request to get Patient : {}", nationalId);
+        Boolean result = patientRepository.existsByNationalId(nationalId);
+        return ResponseEntity.ok(new PatientNationalIdValidationVM().exist(result));
     }
 
 }
