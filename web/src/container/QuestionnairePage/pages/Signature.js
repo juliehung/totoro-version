@@ -36,6 +36,11 @@ const SigContainer = styled.div`
   border-radius: 3px;
   position: relative;
   height: 450px;
+  .copy {
+    position: absolute;
+    z-index: -2;
+    left: 0;
+  }
 `;
 
 const SigNotification = styled.div`
@@ -67,7 +72,7 @@ const ClearButton = styled(Button)`
 
 function Signature(props) {
   let sigRef = useRef(null);
-
+  let copyRef = useRef(null);
   const clearSig = () => {
     sigRef.clear();
     props.changeIsSigEmpty(sigRef.isEmpty());
@@ -78,7 +83,9 @@ function Signature(props) {
   };
 
   const SendWSign = () => {
-    const imgURL = trimDataUrl(sigRef.toDataURL());
+    const getOriginalSign = sigRef.toData();
+    copyRef.fromData(getOriginalSign);
+    const imgURL = trimDataUrl(copyRef.toDataURL());
     props.createQWSign({ base64: imgURL, contentType: 'image/png' });
   };
 
@@ -112,10 +119,20 @@ function Signature(props) {
           velocityFilterWeight={0.5}
           canvasProps={{
             style: { width: '100%', height: '100%' },
+            className: 'original',
           }}
           ref={ref => (sigRef = ref)}
           onEnd={onEnd}
-          backgroundColor="transparent"
+        />
+        <SignatureCanvas
+          minDistance={0.1}
+          velocityFilterWeight={0.5}
+          canvasProps={{
+            style: { width: '100%', height: '100%' },
+            className: 'copy',
+          }}
+          ref={ref => (copyRef = ref)}
+          backgroundColor={'#fff'}
         />
       </SigContainer>
     </Container>

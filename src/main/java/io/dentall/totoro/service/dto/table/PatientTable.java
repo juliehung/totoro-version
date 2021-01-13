@@ -47,4 +47,5 @@ public interface PatientTable extends AuditingElement {
     Long getFirstDoctorUser_Id();
 
     String getCaseManager();
+    Boolean getVipPatient();
 }

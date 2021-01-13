@@ -31,7 +31,6 @@ plugins {
     id "com.github.ben-manes.versions" version "0.20.0"
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 
-    id 'findbugs'
     id 'checkstyle'
 }
 
@@ -237,7 +236,7 @@ task cleanResources(type: Delete) {
 }
 
 wrapper {
-    gradleVersion = '4.10.2'
+    gradleVersion = '4.10.3'
 }
 
 task stage(dependsOn: 'bootWar') {
@@ -258,12 +257,13 @@ dependencies {
     compile "io.dropwizard.metrics:metrics-servlet"
     compile "io.dropwizard.metrics:metrics-servlets"
     compile "net.logstash.logback:logstash-logback-encoder"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
-    compile "com.fasterxml.jackson.core:jackson-annotations"
-    compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "com.fasterxml.jackson.module:jackson-module-afterburner"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-hppc:${com_fasterxml_jackson_version}"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${com_fasterxml_jackson_version}"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:${com_fasterxml_jackson_version}"
+    compile "com.fasterxml.jackson.core:jackson-core:${com_fasterxml_jackson_version}"
+    compile "com.fasterxml.jackson.core:jackson-annotations:${com_fasterxml_jackson_version}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${com_fasterxml_jackson_version}"
+    compile "com.fasterxml.jackson.module:jackson-module-afterburner:${com_fasterxml_jackson_version}"
     compile "com.ryantenney.metrics:metrics-spring"
     compile "javax.cache:cache-api"
     compile "org.hibernate:hibernate-core"
@@ -332,7 +332,7 @@ dependencies {
     compile "com.vladmihalcea:hibernate-types-52:2.4.0"
     compile "ru.yandex.qatools.embed:postgresql-embedded:2.10"
     compile "com.univocity:univocity-parsers:2.8.2"
-    compile("io.moquette:moquette-broker:0.12.1") {
+    compile("io.moquette:moquette-broker:0.13") {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
     compile "org.springframework.integration:spring-integration-mqtt"

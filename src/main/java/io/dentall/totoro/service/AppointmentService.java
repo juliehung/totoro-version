@@ -733,6 +733,11 @@ public class AppointmentService {
                 return appointment1To1.getPatient_CaseManager();
             }
 
+            @Override
+            public Boolean getVipPatient() {
+                return appointment1To1.getPatient_VipPatient();
+            }
+
         };
     }
 
@@ -937,6 +942,7 @@ public class AppointmentService {
         Long getPatient_LastDoctorUser_Id();
         Long getPatient_FirstDoctorUser_Id();
         String getPatient_CaseManager();
+        Boolean getPatient_VipPatient();
 
         // Registration
         RegistrationStatus getRegistration_Status();
