@@ -94,21 +94,21 @@ testRegular:
 #    script:
 #        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/totoro TTR_F_U=localhost TTR_F_A=user TTR_F_S=password TTR_F_T_P=56047 TTR_F_B_P=55536 TTR_F_P=21 ./gradlew test -PtestFtp --tests io.dentall.totoro.business.service.ImageFtpBusinessServiceIntTest --no-daemon
 
-testPackage:
-    stage: package
-    only:
-        - master
-        - develop
-        - release
-    image: openjdk:8-jdk-stretch
-    script:
-        - apt-get install -y --no-install-recommends curl unzip
-        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - git checkout $CI_COMMIT_REF_SLUG
-        - ./gradlew bootWar -Pprod -x check -PnodeInstall --no-daemon
-    artifacts:
-        paths:
-            - build/*
+#testPackage:
+#    stage: package
+#    only:
+#        - master
+#        - develop
+#        - release
+#    image: openjdk:8-jdk-stretch
+#    script:
+#        - apt-get install -y --no-install-recommends curl unzip
+#        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
+#        - git checkout $CI_COMMIT_REF_SLUG
+#        - ./gradlew bootWar -Pprod -x check -PnodeInstall --no-daemon
+#    artifacts:
+#        paths:
+#            - build/*
 
 # package stage
 repackageByGradle:
@@ -126,6 +126,7 @@ repackageByGradle:
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
         - git checkout $CI_COMMIT_TAG
         - ./gradlew bootWar -Pprod -x check -PnodeInstall --no-daemon
+        - curl --location --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://gitlab.example.com/api/v4/projects/dentall/jobs/artifacts/cicd-test/raw/build?job=buildArtifact"
     artifacts:
         paths:
             - build/*
@@ -225,32 +226,32 @@ releaseImageToGCPRegistry:
         - docker push asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:cache
 
 # deploy stage
-deployDevDentall8082:
-    variables:
-        CURL_CONTENT_TYPE: 'Content-Type: application/json'
-        CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "dev.war"}'
-        CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "dev.war"}'
-    only:
-        - develop
-    stage: deploy
-    image: ubuntu
-    dependencies:
-        - repackageByGradle
-    before_script:
-        # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
-        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
-        - eval $(ssh-agent -s)
-        - mkdir -p ~/.ssh
-        - chmod 700 ~/.ssh
-        - echo "$DEV_MACHINE_KEY" > /home/dev.key
-        - ssh-keyscan dev.dentall.site >> ~/.ssh/known_hosts
-        - chmod 644 ~/.ssh/known_hosts
-        - chmod 700 /home/dev.key
-    script:
-        - scp -i /home/dev.key ./build/libs/*.war deploy@dev.dentall.site:/home/deploy/dora-monitor/storage/wars/dev.war
-        - 'curl -X POST http://dev.dentall.site:8001/servers/8082/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
-        - sleep 1
-        - 'curl -X POST http://dev.dentall.site:8001/servers/8082/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
+#deployDevDentall8082:
+#    variables:
+#        CURL_CONTENT_TYPE: 'Content-Type: application/json'
+#        CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "dev.war"}'
+#        CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "dev.war"}'
+#    only:
+#        - develop
+#    stage: deploy
+#    image: ubuntu
+#    dependencies:
+#        - repackageByGradle
+#    before_script:
+         run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
+#        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
+#        - eval $(ssh-agent -s)
+#        - mkdir -p ~/.ssh
+#        - chmod 700 ~/.ssh
+#        - echo "$DEV_MACHINE_KEY" > /home/dev.key
+#        - ssh-keyscan dev.dentall.site >> ~/.ssh/known_hosts
+#        - chmod 644 ~/.ssh/known_hosts
+#        - chmod 700 /home/dev.key
+#    script:
+#        - scp -i /home/dev.key ./build/libs/*.war deploy@dev.dentall.site:/home/deploy/dora-monitor/storage/wars/dev.war
+#        - 'curl -X POST http://dev.dentall.site:8001/servers/8082/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
+#        - sleep 1
+#        - 'curl -X POST http://dev.dentall.site:8001/servers/8082/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
 
 deployDevDentall8085:
     variables:
