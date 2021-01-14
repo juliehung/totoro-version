@@ -56,7 +56,6 @@ const PopoverContainer = styled.div`
     }
     .link {
       text-align: right;
-      font-family: PingFangSC;
       font-size: 14px;
       font-weight: 600;
       color: #3366ff;
@@ -76,7 +75,6 @@ const PopoverContainer = styled.div`
 const InfoWrap = styled.div`
   display: flex;
   flex-direction: column;
-  font-family: OpenSans;
   font-size: 13px;
   line-height: 1.38;
   margin-top: 5px;
