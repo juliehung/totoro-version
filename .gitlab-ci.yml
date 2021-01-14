@@ -124,7 +124,6 @@ repackageByGradle:
         - apt-get install -y --no-install-recommends curl unzip
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
         - git checkout $CI_COMMIT_TAG
-        - 'curl --location --header "JOB-TOKEN: $CI_JOB_TOKEN" https://gitlab.com/api/v4/projects/dentall/jobs/artifacts/cicd-test/raw?job=buildArtifact'
     artifacts:
         paths:
             - build/*
