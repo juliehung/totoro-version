@@ -97,6 +97,7 @@ testRegular:
 testPackage:
     stage: package
     only:
+        - master
         - release
     image: openjdk:8-jdk-stretch
     script:
