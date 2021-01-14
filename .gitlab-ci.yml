@@ -119,7 +119,7 @@ repackageByGradle:
         - apt-get install -y --no-install-recommends curl unzip
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
         - git checkout $CI_COMMIT_TAG
-        - 'curl --header "PRIVATE-TOKEN: 2uhuvyyiXX2Kmz_RNAjE" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/cicd-test/download?job=buildArtifact"'
+        - 'curl --location --header "PRIVATE-TOKEN: 2uhuvyyiXX2Kmz_RNAjE" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/cicd-test/download?job=buildArtifact"'
         - ls
         - unzip artifact.zip
         - ls
