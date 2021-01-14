@@ -112,11 +112,6 @@ testPackage:
 # package stage
 repackageByGradle:
     stage: package
-    only:
-        - master
-        - develop
-        - release
-        - tags
     except:
         - /^(\d)+-.*$/
     image: openjdk:8-jdk-stretch
