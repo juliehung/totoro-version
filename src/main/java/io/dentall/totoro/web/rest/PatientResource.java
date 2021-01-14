@@ -37,10 +37,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -185,7 +182,7 @@ public class PatientResource {
      */
     @GetMapping("/patients/{id}/{relationshipType}")
     @Timed
-    public ResponseEntity<Collection<Patient>> getPatientSpouse1S(
+    public ResponseEntity<HashSet<Patient>> getPatientSpouse1S(
         @PathVariable Long id,
         @PathVariable("relationshipType") PatientRelationshipType relationshipType) {
         log.debug("REST request to get spouse1S of Patient : {}", id);

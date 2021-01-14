@@ -25,7 +25,6 @@ import javax.persistence.criteria.*;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -461,12 +460,15 @@ public class PatientService extends QueryService<Patient> {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to found resource")));
     }
 
-    public Collection<Patient> getPatientRelationship(Long id, Method m) {
+    public HashSet<Patient> getPatientRelationship(Long id, Method m) {
         try {
+            // 由於 prod 下，transition 機制跟 dev 不同，造成 object 出 service 後，尚未被註記成 initialized，使得 json wrapping 時
+            // 會把 lazy 的資料拉出來，但這時候已經不在 session 下了，導致 exception。為了避免此事發生，將查詢結果(PersistentSet)
+            // 異動為 HashSet，就不會在後續有自動查詢的狀況。
             Optional<Patient> optP = patientRepository.findById(id);
-            return optP.isPresent()
-                ? (Collection<Patient>) m.invoke(optP.get())
-                : new HashSet<>();
+            Set<Patient> set = optP.isPresent() ? (Set<Patient>) m.invoke(optP.get()) : new HashSet<>();
+            HashSet rset = new HashSet(set);
+            return rset;
         } catch (Exception e) {
             log.error(e.toString());
             return new HashSet<Patient>();
