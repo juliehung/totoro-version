@@ -9,6 +9,7 @@ import CancelAppointmentButton from '../CancelAppointmentButton';
 import RestoreAppointmentButton from '../RestoreAppointmentButton';
 import { getBaseUrl } from '../../../utils/getBaseUrl';
 import parseDateToString from './parseDateToString';
+import { parsePatientNameWithVipMark } from '../../../utils/patientHelper';
 import PersonFillIcon from '../../../images/personIcon-fill.svg';
 import PhoneFillIcon from '../../../images/phone-fill.svg';
 import FileTextFillIcon from '../../../images/file-text-fill.svg';
@@ -292,7 +293,7 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
             <HightLightSpan birth={birth}>{birth ? parseDateToString(birth, false) : '生日未填'}</HightLightSpan>
             <span className="name">
               {status === 'CANCEL' ? '[C]' : null} {firstVisit ? '[N] ' : null}
-              {vipPatient ? `*${patientName}` : patientName}
+              {parsePatientNameWithVipMark(vipPatient, patientName)}
             </span>
             <InfoWrap>
               <span className="info">
@@ -437,7 +438,7 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
           }
         >
           <span>
-            {`${medicalId}, ${isCanceled ? '[C]' : ''}${vipPatient ? `*${patientName}` : patientName}, ${
+            {`${medicalId}, ${isCanceled ? '[C]' : ''}${parsePatientNameWithVipMark(vipPatient, patientName)}, ${
               phone ? phone + `,` : ''
             } ${doctor.user.firstName} ${note ? ', ' + note : ''}`}
           </span>

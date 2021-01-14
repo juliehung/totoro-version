@@ -26,6 +26,7 @@ import { P2, Caption, Subtitle, Title } from '../../utils/textComponents';
 import _ from 'lodash';
 import MixTagTextArea from './MixTagTextArea';
 import { useDebouncedEffect } from './useDebouncedEffect';
+import { parsePatientNameWithVipMark } from '../../utils/patientHelper';
 
 //#region
 const RootContainer = styled.div`
@@ -226,7 +227,7 @@ function EventEditing(props) {
                       title={
                         <PopoverTitleBox>
                           {renderAvatarImg(app.gender)}
-                          <Subtitle>{app?.vipPatient ? `*${app.patientName}` : app.patientName}</Subtitle>
+                          <Subtitle>{parsePatientNameWithVipMark(app?.vipPatient, app.patientName)}</Subtitle>
                           <P2>{app.phone}</P2>
                         </PopoverTitleBox>
                       }
@@ -238,7 +239,7 @@ function EventEditing(props) {
                       }
                     >
                       <StyledTag>
-                        {`${app?.vipPatient ? `*${app.patientName}` : app.patientName}(${app.phone.trim()})`}
+                        {`${parsePatientNameWithVipMark(app?.vipPatient, app.patientName)}(${app.phone.trim()})`}
                         {
                           <Button
                             type="link"

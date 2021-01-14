@@ -36,6 +36,7 @@ import { defaultTimeOption } from './utils/generateDefaultTime';
 import { appointmentPage } from './';
 import parseDateToString from './utils/parseDateToString';
 import DatePicker from '../../component/DatePicker';
+import { parsePatientNameWithVipMark } from '../../utils/patientHelper';
 
 const { Option } = Select;
 
@@ -340,7 +341,7 @@ function CreateAppModal({
   }
   patients = patients.map(patient => {
     const { id, medicalId, name, vipPatient } = patient;
-    return { id, name, value: `${vipPatient ? `*${name}` : name}, ${medicalId}` };
+    return { id, name, value: `${parsePatientNameWithVipMark(vipPatient, name)}, ${medicalId}` };
   });
 
   return (
@@ -370,7 +371,7 @@ function CreateAppModal({
           >
             {patients.map(({ medicalId, name, id, vipPatient }) => (
               <Select.Option key={id} value={id}>
-                {`${vipPatient ? `*${name}` : name}, ${medicalId}`}
+                {`${parsePatientNameWithVipMark(vipPatient, name)}, ${medicalId}`}
               </Select.Option>
             ))}
           </StyledSearchSelect>
@@ -421,9 +422,7 @@ function CreateAppModal({
               <PatientDetailCol>
                 <PatientDetailElement>
                   <span>
-                    {selectedPatient && selectedPatient?.vipPatient
-                      ? `*${selectedPatient?.name}`
-                      : selectedPatient?.name}
+                    {selectedPatient && parsePatientNameWithVipMark(selectedPatient?.vipPatient, selectedPatient?.name)}
                   </span>
                 </PatientDetailElement>
                 <PatientDetailElement>

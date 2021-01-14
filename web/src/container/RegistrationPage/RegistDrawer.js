@@ -9,6 +9,7 @@ import moment from 'moment';
 import { changeDrawerVisible, getDoc } from './actions';
 import { getBaseUrl } from '../../utils/getBaseUrl';
 import personFill from '../../images/person-fill.svg';
+import { parsePatientNameWithVipMark } from '../../utils/patientHelper';
 
 //#region
 const DrawerContainer = styled.div`
@@ -110,7 +111,7 @@ function RegistDrawer(props) {
             <span>
               MRN. <span>{patient.medicalId}</span>
             </span>
-            <span>{patient?.patientVipPatient ? `*${patient.name}` : patient.name}</span>
+            <span>{parsePatientNameWithVipMark(patient?.patientVipPatient, patient.name)}</span>
           </div>
         </PatientContainer>
         <PatientPageButtonContainer>
