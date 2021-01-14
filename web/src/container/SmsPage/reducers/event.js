@@ -323,6 +323,7 @@ const processingEventSms = (clinicName, event) => {
         patientName: app.patientName,
         appointmentDate: app.expectedArrivalTime,
         appointmentId: app.id,
+        vipPatient: !!app?.vipPatient,
       },
       phone: app.phone.trim().replace(/^09/, '+8869'),
       content,

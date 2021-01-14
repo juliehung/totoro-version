@@ -229,7 +229,7 @@ function EditAppModal({
           <PatientDetail>
             <PatientDetailCol>
               <PatientDetailElement>
-                <span>{patient && patient.name}</span>
+                <span>{patient && patient?.vipPatient ? `*${patient?.name}` : patient?.name}</span>
               </PatientDetailElement>
               <PatientDetailElement>
                 <span>{parseDateToString(patient?.birth)}</span>

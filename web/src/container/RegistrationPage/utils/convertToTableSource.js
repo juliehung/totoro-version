@@ -76,7 +76,7 @@ const renderName = patient => {
         {renderAvatarImg(patient.gender, patient.firstVisit)}
         <div>
           <span>{patient.medicalId}</span>
-          <Title level={4}>{patient.name}</Title>
+          <Title level={4}>{patient?.patientVipPatient ? `*${patient.name}` : patient.name}</Title>
         </div>
       </NameContainer>
     </Tooltip>
@@ -131,6 +131,7 @@ export function convertToTableSource(registrations, selectedDoctor) {
       birth: r.patientBirth,
       nationalId: r.patientNationalId,
       firstVisit: r.appointmentFirstVisit,
+      patientVipPatient: !!r?.patientVipPatient,
     };
 
     return {

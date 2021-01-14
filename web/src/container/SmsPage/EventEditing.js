@@ -226,7 +226,7 @@ function EventEditing(props) {
                       title={
                         <PopoverTitleBox>
                           {renderAvatarImg(app.gender)}
-                          <Subtitle>{app.patientName}</Subtitle>
+                          <Subtitle>{app?.vipPatient ? `*${app.patientName}` : app.patientName}</Subtitle>
                           <P2>{app.phone}</P2>
                         </PopoverTitleBox>
                       }
@@ -238,7 +238,7 @@ function EventEditing(props) {
                       }
                     >
                       <StyledTag>
-                        {`${app.patientName}(${app.phone.trim()})`}
+                        {`${app?.vipPatient ? `*${app.patientName}` : app.patientName}(${app.phone.trim()})`}
                         {
                           <Button
                             type="link"

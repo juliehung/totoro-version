@@ -22,5 +22,5 @@ export default function convertPatientToPatientDetail(patient, appointments) {
     }
     return undefined;
   })();
-  return { name, id, gender: genderTranslate, birth, age, appointmentsAnalysis };
+  return { name, id, gender: genderTranslate, birth, age, appointmentsAnalysis, vipPatient: !!patient?.vipPatient };
 }

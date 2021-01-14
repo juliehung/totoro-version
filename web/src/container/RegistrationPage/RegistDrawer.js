@@ -110,7 +110,7 @@ function RegistDrawer(props) {
             <span>
               MRN. <span>{patient.medicalId}</span>
             </span>
-            <span>{patient.name}</span>
+            <span>{patient?.patientVipPatient ? `*${patient.name}` : patient.name}</span>
           </div>
         </PatientContainer>
         <PatientPageButtonContainer>

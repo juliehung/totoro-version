@@ -48,7 +48,7 @@ export function convertAppToEvt(appointment) {
   const firstVisit = appointment.firstVisit ? '[N]' : '';
 
   return {
-    title: `${status}${firstVisit}${appointment.patientName}`,
+    title: `${status}${firstVisit}${appointment?.vipPatient ? `*${appointment.patientName}` : appointment.patientName}`,
     resourceId: appointment.doctor.user.id,
     start,
     end,

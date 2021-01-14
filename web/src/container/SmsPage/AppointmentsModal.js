@@ -212,9 +212,9 @@ function AppointmentsModal(props) {
   const columns = [
     {
       title: '姓名',
-      dataIndex: 'patientName',
       width: 140,
       sorter: (a, b) => a.patientName.localeCompare(b.patientName),
+      render: data => (data?.vipPatient ? `*${data?.patientName}` : data?.patientName),
     },
     {
       title: '時間',

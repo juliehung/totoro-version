@@ -5,5 +5,6 @@ export default function convertPatientToOption(patients) {
       name: p.name,
       medicalId: p.medicalId,
       id: p.id,
+      vipPatient: !!p?.vipPatient,
     }));
 }

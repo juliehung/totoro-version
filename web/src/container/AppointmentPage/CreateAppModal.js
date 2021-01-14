@@ -339,8 +339,8 @@ function CreateAppModal({
       break;
   }
   patients = patients.map(patient => {
-    const { id, medicalId, name } = patient;
-    return { id, name, value: `${name}, ${medicalId}` };
+    const { id, medicalId, name, vipPatient } = patient;
+    return { id, name, value: `${vipPatient ? `*${name}` : name}, ${medicalId}` };
   });
 
   return (
@@ -368,9 +368,9 @@ function CreateAppModal({
             onSelect={(data, { id = null }) => onPatientSelect(id)}
             notFoundContent={<Empty description="沒有資料" />}
           >
-            {patients.map(({ medicalId, name, id }) => (
+            {patients.map(({ medicalId, name, id, vipPatient }) => (
               <Select.Option key={id} value={id}>
-                {`${name}, ${medicalId}`}
+                {`${vipPatient ? `*${name}` : name}, ${medicalId}`}
               </Select.Option>
             ))}
           </StyledSearchSelect>
@@ -420,7 +420,11 @@ function CreateAppModal({
             <PatientDetail>
               <PatientDetailCol>
                 <PatientDetailElement>
-                  <span>{selectedPatient && selectedPatient.name}</span>
+                  <span>
+                    {selectedPatient && selectedPatient?.vipPatient
+                      ? `*${selectedPatient?.name}`
+                      : selectedPatient?.name}
+                  </span>
                 </PatientDetailElement>
                 <PatientDetailElement>
                   <span>{selectedPatient && parseDateToString(selectedPatient.birth)}</span>

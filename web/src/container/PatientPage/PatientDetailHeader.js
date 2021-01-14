@@ -116,7 +116,7 @@ function PatientDetailHeader(props) {
       <InfoContainer>
         <div>
           <img src={AvatarSrc} height="30" alt="man" />
-          <span>{patient.name}</span>
+          <span>{patient.vipPatient ? `*${patient.name}` : patient.name}</span>
           <span>
             {patient.ROCBirth} ({patient?.age?.year}Y{patient?.age?.month}M)
           </span>

@@ -11,5 +11,5 @@ export default function convertPatientToHeaderObject(patient) {
 
   const ROCBirth = toRocString(birth);
 
-  return { id, name, gender, medicalId, nationalId, age, birth, ROCBirth };
+  return { id, name, gender, medicalId, nationalId, age, birth, ROCBirth, vipPatient: !!patient?.vipPatient };
 }

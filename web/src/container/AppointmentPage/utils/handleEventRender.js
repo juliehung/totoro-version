@@ -250,6 +250,7 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
         registrationStatus,
         tags,
         firstVisit,
+        vipPatient = false,
       } = appointment;
       if (info.view.type !== 'dayGridMonth') {
         const fcTitle = info.el.querySelector('.fc-title');
@@ -291,7 +292,7 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
             <HightLightSpan birth={birth}>{birth ? parseDateToString(birth, false) : '生日未填'}</HightLightSpan>
             <span className="name">
               {status === 'CANCEL' ? '[C]' : null} {firstVisit ? '[N] ' : null}
-              {patientName}
+              {vipPatient ? `*${patientName}` : patientName}
             </span>
             <InfoWrap>
               <span className="info">
@@ -422,7 +423,7 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
         }
       }
     } else if (info.view.type === 'listWeek') {
-      const { medicalId, patientName, phone, doctor, note, status } = appointment;
+      const { medicalId, patientName, phone, doctor, note, status, vipPatient = false } = appointment;
       const isCanceled = status === 'CANCEL';
       render(
         <ListWeekContainer
@@ -436,9 +437,9 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
           }
         >
           <span>
-            {`${medicalId}, ${isCanceled ? '[C]' : ''}${patientName}, ${phone ? phone + `,` : ''} ${
-              doctor.user.firstName
-            } ${note ? ', ' + note : ''}`}
+            {`${medicalId}, ${isCanceled ? '[C]' : ''}${vipPatient ? `*${patientName}` : patientName}, ${
+              phone ? phone + `,` : ''
+            } ${doctor.user.firstName} ${note ? ', ' + note : ''}`}
           </span>
           <XrayContainerListView>
             {params.xRayVendors?.[XRAY_VENDORS.vision] === 'true' && (
