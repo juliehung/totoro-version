@@ -119,7 +119,7 @@ repackageByGradle:
         - apt-get install -y --no-install-recommends curl unzip
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
         - git checkout $CI_COMMIT_TAG
-        - "curl --output=artifact.zip https://dentall.gitlab.io/dentall/totoro-web/-/jobs/artifacts/cicd-test/download?job=buildArtifact"
+        - "curl --output artifact.zip https://dentall.gitlab.io/dentall/totoro-web/-/jobs/artifacts/cicd-test/download?job=buildArtifact"
         - ls
         - unzip artifact.zip
         - ls
