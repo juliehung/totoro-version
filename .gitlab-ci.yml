@@ -120,6 +120,8 @@ repackageByGradle:
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
         - git checkout $CI_COMMIT_TAG
         - 'curl --location --header "JOB-TOKEN: $CI_JOB_TOKEN" https://gitlab.com/api/v4/projects/8708561/jobs/artifacts/cicd-test/raw?job=buildArtifact'
+        - unzip artifact.zip
+        - ls/build
     artifacts:
         paths:
             - build/*
