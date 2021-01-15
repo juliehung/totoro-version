@@ -13,6 +13,9 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   position: relative;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
 `;
 //#endregion
 
