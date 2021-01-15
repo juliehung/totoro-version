@@ -6,7 +6,7 @@ export default function convertNhiExtentPatientToTableObject(nhiExtendPatient, n
     const date = n?.date;
     const teeth = n?.part;
     const nhiCode = n?.nhiCode;
-    const nhiMandarin = `${n?.nhiCode} ${n?.mandarin}`;
+    const nhiMandarin = `${n?.nhiCode} ${n?.mandarin || ''}`;
     const isDental = !!nhiProcedures.find(nhiProcedure => nhiProcedure?.code === nhiCode);
     return { key, date, teeth, nhiCode, nhiMandarin, isDental };
   });
