@@ -208,6 +208,7 @@ function CreateAppModal({
 }) {
   const [expectedTimeOption, setExpectedTimeOption] = useState(defaultTimeOption);
   const { name, phone, nationalId, birth } = patient;
+  const [openControl, setOpenControl] = useState(false);
   useEffect(() => {
     if (createAppSuccess) {
       getAllEvents();
@@ -273,6 +274,7 @@ function CreateAppModal({
   };
 
   const onSearchTextFocus = e => {
+    setOpenControl(true);
     const value = e?.target?.value;
     clearTimeout(debounceSearch);
     debounceSearch = setTimeout(() => {
@@ -283,6 +285,7 @@ function CreateAppModal({
   const onPatientSelect = id => {
     getPatient(id);
     changePatientSelected(true);
+    setOpenControl(false);
   };
 
   const handleConfirm = () => {
@@ -366,14 +369,11 @@ function CreateAppModal({
             onSearch={onSearchTextChange}
             onFocus={onSearchTextFocus}
             onSelect={(data, { id = null }) => onPatientSelect(id)}
+            open={openControl}
+            onBlur={() => setOpenControl(false)}
+            onChange={() => setOpenControl(true)}
             notFoundContent={<Empty description="沒有資料" />}
-          >
-            {patients.map(({ medicalId, name, id }) => (
-              <Select.Option key={id} value={id}>
-                {`${name}, ${medicalId}`}
-              </Select.Option>
-            ))}
-          </StyledSearchSelect>
+          />
           <Select value={searchMode} style={{ width: 120 }} onChange={changePatientSearchMode}>
             <Option value={patientSearchMode.name}>姓名</Option>
             <Option value={patientSearchMode.birth}>生日</Option>
