@@ -1,7 +1,6 @@
 cache:
     key: "$CI_PIPELINE_ID"
     paths:
-        - node_modules
         - .gradle/wrapper
         - .gradle/caches
 
@@ -17,43 +16,15 @@ before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x gradlew
 
-# coding style check
-checkLint:
-    stage: check
-    only:
-        refs:
-            - merge_requests
-        changes:
-            - web/**/*
-    image: node:12.16.3-stretch
-    script:
-        - npm install
-        - npm run lint
-
 # build stage
 buildByGradle:
     stage: build
     only:
         refs:
             - merge_requests
-        changes:
-            - src/**/*
     image: openjdk:8-jdk-stretch
     script:
         - ./gradlew compileJava -x check --no-daemon
-
-buildByWebpack:
-    stage: build
-    only:
-        refs:
-            - merge_requests
-        changes:
-            - web/**/*
-    image: openjdk:8-jdk-stretch
-    script:
-        - apt-get install -y --no-install-recommends curl unzip
-        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - ./gradlew webpack -Pprod -x check -PnodeInstall --no-daemon
 
 # test stage
 testRegular:
@@ -104,7 +75,12 @@ testPackage:
         - apt-get install -y --no-install-recommends curl unzip
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
         - git checkout $CI_COMMIT_REF_SLUG
-        - ./gradlew bootWar -Pprod -x check -PnodeInstall --no-daemon
+        - ./gradlew bootWar -Pprod -x check -x nodeInstall --no-daemon
+        - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: 2uhuvyyiXX2Kmz_RNAjE" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/cicd-test/download?job=buildArtifact"'
+        - mv artifact.zip build/resources/main/
+        - cd build/resources/main/
+        - unzip artifact.zip
+        - rm artifact.zip
     artifacts:
         paths:
             - build/*
@@ -116,17 +92,7 @@ repackageByGradle:
         - /^(\d)+-.*$/
     image: openjdk:8-jdk-stretch
     script:
-        - apt-get install -y --no-install-recommends curl unzip
-        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - git checkout $CI_COMMIT_TAG
-        - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: 2uhuvyyiXX2Kmz_RNAjE" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/cicd-test/download?job=buildArtifact"'
-        - ls
-        - unzip artifact.zip
-        - ls
-        - ls build
-    artifacts:
-        paths:
-            - build/*
+        - echo hello
 
 # release stage
 releaseWarToFirebase:
