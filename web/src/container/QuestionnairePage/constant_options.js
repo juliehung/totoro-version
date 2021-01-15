@@ -98,3 +98,5 @@ export const tags = [
   { id: 45, key: 'F', jhi_type: 'BLOOD_DISEASE', value: 'C型肝炎', code: 45 },
   { id: 46, key: 'G', jhi_type: 'BLOOD_DISEASE', value: '梅毒', code: 46 },
 ];
+
+export const dangerTags = ['AIDS', 'HIV', 'Ａ型肝炎', 'B型肝炎', 'C型肝炎', '梅毒', '懷孕', 'micro'];
