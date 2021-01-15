@@ -354,7 +354,7 @@ function EditAppModal({
             </Width100>
           </div>
           <div>
-            <span>特殊註記：</span>
+            <span>預約註記：</span>
             <Checkbox.Group options={options} value={appointment.specialNote} onChange={onSpecialNoteChange} />
           </div>
         </InfoRowContainer>
