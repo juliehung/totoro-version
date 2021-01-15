@@ -184,8 +184,13 @@ function QuestionnairePage(props) {
       }
       validateSuccess(currentPage);
     }
-
-    isLast ? changeFinishModalVisible(true) : nextPage ? gotoPage(nextPage) : goNextPage();
+    isLast
+      ? changeFinishModalVisible(true)
+      : nextPage
+      ? typeof nextPage === 'function'
+        ? gotoPage(nextPage(patient))
+        : gotoPage(nextPage)
+      : goNextPage();
   };
 
   const onSwipedDown = () => {
