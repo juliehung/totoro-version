@@ -1,66 +1,26 @@
 cache:
     key: "$CI_PIPELINE_ID"
     paths:
-        - node_modules
         - .gradle/wrapper
         - .gradle/caches
 
 stages:
-    - check
-    - build
     - test
-    - package
+    - build
     - release
     - deploy
+    - nofify
 
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x gradlew
-
-# coding style check
-checkLint:
-    stage: check
-    only:
-        refs:
-            - merge_requests
-        changes:
-            - web/**/*
-    image: node:12.16.3-stretch
-    script:
-        - npm install
-        - npm run lint
-
-# build stage
-buildByGradle:
-    stage: build
-    only:
-        refs:
-            - master
-        changes:
-            - src/**/*
-    image: openjdk:8-jdk-stretch
-    script:
-        - ./gradlew compileJava -x check --no-daemon
-
-buildByWebpack:
-    stage: build
-    only:
-        refs:
-            - merge_requests
-        changes:
-            - web/**/*
-    image: openjdk:8-jdk-stretch
-    script:
-        - apt-get install -y --no-install-recommends curl unzip
-        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - ./gradlew webpack -Pprod -x check -PnodeInstall --no-daemon
 
 # test stage
 testRegular:
     stage: test
     only:
         refs:
-            - master
+            - merge_requests
         changes:
             - src/**/*
     image: openjdk:8-jdk-stretch
@@ -72,32 +32,25 @@ testRegular:
         POSTGRES_PASSWORD: totoro
     script:
         - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/totoro ./gradlew test --no-daemon
-    artifacts:
-        paths:
-            - build/reports/tests/*
-            - build/jacocoHtml/*
 
-#testFTP:
-#    stage: test
-#    only:
-#        refs:
-#            - merge_requests
-#        changes:
-#            - src/**/*
-#    image: openjdk:8-jdk-stretch
-#    services:
-#        - postgres:10.4
-#    variables:
-#        POSTGRES_DB: totoro
-#        POSTGRES_USER: totoro
-#        POSTGRES_PASSWORD: totoro
-#    script:
-#        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/totoro TTR_F_U=localhost TTR_F_A=user TTR_F_S=password TTR_F_T_P=56047 TTR_F_B_P=55536 TTR_F_P=21 ./gradlew test -PtestFtp --tests io.dentall.totoro.business.service.ImageFtpBusinessServiceIntTest --no-daemon
-
-newPackage:
-    stage: check
+# build stage
+testCompile:
+    stage: test
     only:
-        - merge_requests
+        refs:
+            - merge_requests
+        changes:
+            - src/**/*
+    image: openjdk:8-jdk-stretch
+    script:
+        - ./gradlew compileJava -x check --no-daemon
+
+packageWebIntoWarWhenDev:
+    stage: build
+    rules:
+        - if: '$CI_COMMIT_BRANCH == "develop"'
+          when: on_success
+          allow_failure: true
     image: openjdk:8-jdk-stretch
     script:
         - apt-get install -y --no-install-recommends curl unzip
@@ -110,38 +63,22 @@ newPackage:
         paths:
             - build/*
 
-testPackage:
-    stage: package
-    only:
-        - master
-        - develop
-        - release
+packageWebIntoWarWhenTag:
+    stage: build
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^staging.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /^\d*\.\*\.\d*)/'
+          when: on_success
+          allow_failure: true
     image: openjdk:8-jdk-stretch
     script:
         - apt-get install -y --no-install-recommends curl unzip
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - 'curl --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/develop/download?job=buildArtifact"'
-        - ./gradlew bootWar -Pprod -x check -PnodeInstall --no-daemon
-    artifacts:
-        paths:
-            - build/*
-
-# package stage
-repackageByGradle:
-    stage: package
-    only:
-        - master
-        - develop
-        - release
-        - tags
-    except:
-        - /^(\d)+-.*$/
-    image: openjdk:8-jdk-stretch
-    script:
-        - apt-get install -y --no-install-recommends curl unzip
-        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - git checkout $CI_COMMIT_TAG
-        - ./gradlew bootWar -Pprod -x check -PnodeInstall --no-daemon
+        - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/$CI_COMMIT_TAG/download?job=buildArtifact"'
+        - unzip artifact.zip -d web/
+        - ./gradlew bootWar -Pprod -x check --no-daemon
     artifacts:
         paths:
             - build/*
@@ -149,11 +86,15 @@ repackageByGradle:
 # release stage
 releaseWarToFirebase:
     stage: release
-    only:
-        - tags
-        - release
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^staging.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /^\d*\.\*\.\d*)/'
+          when: on_success
+          allow_failure: true
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     image: google/cloud-sdk:alpine
     script:
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
@@ -162,10 +103,15 @@ releaseWarToFirebase:
 
 releaseWarToDevMachine:
     stage: release
-    only:
-        - tags
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^staging.*/'
+          when: manual
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /^\d*\.\*\.\d*)/'
+          when: manual
+          allow_failure: true
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     image: ubuntu
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
@@ -182,10 +128,15 @@ releaseWarToDevMachine:
 
 releaseStaticFilesToGCS:
     stage: release
-    only:
-        - tags
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^staging.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /^\d*\.\*\.\d*)/'
+          when: on_success
+          allow_failure: true
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     image: google/cloud-sdk:alpine
     script:
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
@@ -194,12 +145,15 @@ releaseStaticFilesToGCS:
 
 releaseImageToGitlabRegistry:
     stage: release
-    only:
-        - tags
-    except:
-        - /^(\d)+-.*$/
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^staging.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /^\d*\.\*\.\d*)/'
+          when: on_success
+          allow_failure: true
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     image: docker
     services:
         - docker:dind
@@ -216,12 +170,15 @@ releaseImageToGitlabRegistry:
 
 releaseImageToGCPRegistry:
     stage: release
-    only:
-        - tags
-    except:
-        - /^(\d)+-.*$/
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^staging.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /^\d*\.\*\.\d*)/'
+          when: on_success
+          allow_failure: true
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     image: docker
     services:
         - docker:dind
@@ -251,7 +208,7 @@ deployDevDentall8082:
     stage: deploy
     image: ubuntu
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenDev
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
@@ -281,7 +238,7 @@ deployDevDentall8085:
     stage: deploy
     image: ubuntu
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
@@ -302,7 +259,7 @@ deployGcpDev:
     stage: deploy
     image: google/cloud-sdk:alpine
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^[0-9]-[0-9]{1,2}-[0-9]{1,2}/'
+        - if: '$CI_COMMIT_TAG =~ /^\d*\.\d*\.\d*/'
           when: manual
           allow_failure: true
     script:
