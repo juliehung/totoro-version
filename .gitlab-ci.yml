@@ -66,10 +66,7 @@ testPackage:
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
         - ./gradlew compileJava -x check --no-daemon
         - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: 2uhuvyyiXX2Kmz_RNAjE" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/develop/download?job=buildArtifact"'
-        - mv artifact.zip build/resources/main/
-        - cd build/resources/main/
-        - unzip artifact.zip
-        - rm artifact.zip
+        - unzip artifact.zip -d build/resources/main/
         - ./gradlew bootWar -Pprod -x check -x nodeInstall --no-daemon
     artifacts:
         paths:
