@@ -17,15 +17,6 @@ before_script:
     - chmod +x gradlew
 
 # build stage
-buildByGradle:
-    stage: build
-    only:
-        refs:
-            - merge_requests
-    image: openjdk:8-jdk-stretch
-    script:
-        - ./gradlew compileJava -x check --no-daemon
-
 # test stage
 testRegular:
     stage: test
@@ -73,13 +64,13 @@ testPackage:
     script:
         - apt-get install -y --no-install-recommends curl unzip
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - git checkout $CI_COMMIT_REF_SLUG
-        - ./gradlew bootWar -Pprod -x check -x nodeInstall --no-daemon
+        - ./gradlew compileJava -x check --no-daemon
         - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: 2uhuvyyiXX2Kmz_RNAjE" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/develop/download?job=buildArtifact"'
         - mv artifact.zip build/resources/main/
         - cd build/resources/main/
         - unzip artifact.zip
         - rm artifact.zip
+        - ./gradlew bootWar -Pprod -x check -x nodeInstall --no-daemon
     artifacts:
         paths:
             - build/*
