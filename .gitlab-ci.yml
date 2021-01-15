@@ -103,7 +103,6 @@ newPackage:
         - apt-get install -y --no-install-recommends curl unzip
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
         - 'curl --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/develop/download?job=buildArtifact"'
-        - mkdir web
         - unzip artifact.zip -d build/
         - ls
         - ./gradlew bootWar -Pprod -x check --no-daemon
