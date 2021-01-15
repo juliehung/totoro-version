@@ -67,7 +67,7 @@ testPackage:
         - ./gradlew compileJava -x check --no-daemon
         - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: 2uhuvyyiXX2Kmz_RNAjE" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/develop/download?job=buildArtifact"'
         - unzip artifact.zip -d build/resources/main/
-        - ./gradlew bootWar -Pprod -x check -x nodeInstall --no-daemon
+        - ./gradlew bootWar -Pprod -x check --no-daemon
     artifacts:
         paths:
             - build/*
