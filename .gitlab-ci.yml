@@ -50,7 +50,7 @@ packageWebIntoWarWhenDev:
     rules:
         - if: '$CI_COMMIT_BRANCH == "develop"'
           when: on_success
-          allow_failure: true
+          allow_failure: false
     image: openjdk:8-jdk-stretch
     script:
         - apt-get install -y --no-install-recommends curl unzip
@@ -68,10 +68,10 @@ packageWebIntoWarWhenTag:
     rules:
         - if: '$CI_COMMIT_TAG =~ /^staging.*/'
           when: on_success
-          allow_failure: true
+          allow_failure: false
         - if: '$CI_COMMIT_TAG =~ /^\d*\.\*\.\d*)/'
           when: on_success
-          allow_failure: true
+          allow_failure: false
     image: openjdk:8-jdk-stretch
     script:
         - apt-get install -y --no-install-recommends curl unzip
@@ -89,10 +89,10 @@ releaseWarToFirebase:
     rules:
         - if: '$CI_COMMIT_TAG =~ /^staging.*/'
           when: on_success
-          allow_failure: true
+          allow_failure: false
         - if: '$CI_COMMIT_TAG =~ /^\d*\.\*\.\d*)/'
           when: on_success
-          allow_failure: true
+          allow_failure: false
     dependencies:
         - packageWebIntoWarWhenTag
     image: google/cloud-sdk:alpine
@@ -105,11 +105,11 @@ releaseWarToDevMachine:
     stage: release
     rules:
         - if: '$CI_COMMIT_TAG =~ /^staging.*/'
-          when: manual
-          allow_failure: true
+          when: on_success
+          allow_failure: false
         - if: '$CI_COMMIT_TAG =~ /^\d*\.\*\.\d*)/'
-          when: manual
-          allow_failure: true
+          when: on_success
+          allow_failure: false
     dependencies:
         - packageWebIntoWarWhenTag
     image: ubuntu
