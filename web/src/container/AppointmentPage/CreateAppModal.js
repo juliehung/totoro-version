@@ -36,6 +36,7 @@ import { defaultTimeOption } from './utils/generateDefaultTime';
 import { appointmentPage } from './';
 import parseDateToString from './utils/parseDateToString';
 import DatePicker from '../../component/DatePicker';
+import { parsePatientNameWithVipMark } from '../../utils/patientHelper';
 import { convertAppointmentToCardObject } from '../PatientPage/utils';
 import PatientAppointmentPopover from './PatientAppointmentPopover';
 
@@ -345,8 +346,8 @@ function CreateAppModal({
       break;
   }
   patients = patients.map(patient => {
-    const { id, medicalId, name } = patient;
-    return { id, name, value: `${name}, ${medicalId}` };
+    const { id, medicalId, name, vipPatient } = patient;
+    return { id, name, value: `${parsePatientNameWithVipMark(vipPatient, name)}, ${medicalId}` };
   });
 
   return (
@@ -376,7 +377,13 @@ function CreateAppModal({
             onBlur={() => setOpenControl(false)}
             onChange={() => setOpenControl(true)}
             notFoundContent={<Empty description="沒有資料" />}
-          />
+          >
+            {patients.map(({ medicalId, name, id, vipPatient }) => (
+              <Select.Option key={id} value={id}>
+                {`${parsePatientNameWithVipMark(vipPatient, name)}, ${medicalId}`}
+              </Select.Option>
+            ))}
+          </StyledSearchSelect>
           <Select value={searchMode} style={{ width: 120 }} onChange={changePatientSearchMode}>
             <Option value={patientSearchMode.name}>姓名</Option>
             <Option value={patientSearchMode.birth}>生日</Option>
@@ -423,7 +430,9 @@ function CreateAppModal({
             <PatientDetail>
               <PatientDetailCol>
                 <PatientDetailElement>
-                  <span>{selectedPatient && selectedPatient.name}</span>
+                  <span>
+                    {selectedPatient && parsePatientNameWithVipMark(selectedPatient?.vipPatient, selectedPatient?.name)}
+                  </span>
                 </PatientDetailElement>
                 <PatientDetailElement>
                   <span>{selectedPatient && parseDateToString(selectedPatient.birth)}</span>

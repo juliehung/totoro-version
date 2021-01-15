@@ -26,6 +26,7 @@ import { appointmentPage } from './';
 import { DeleteOutlined } from '@ant-design/icons';
 import parseDateToString from './utils/parseDateToString';
 import DatePicker from '../../component/DatePicker';
+import { parsePatientNameWithVipMark } from '../../utils/patientHelper';
 import { convertAppointmentToCardObject } from '../PatientPage/utils';
 import PatientAppointmentPopover from './PatientAppointmentPopover';
 
@@ -232,7 +233,7 @@ function EditAppModal({
           <PatientDetail>
             <PatientDetailCol>
               <PatientDetailElement>
-                <span>{patient && patient.name}</span>
+                <span>{patient && parsePatientNameWithVipMark(patient?.vipPatient, patient?.name)}</span>
               </PatientDetailElement>
               <PatientDetailElement>
                 <span>{parseDateToString(patient?.birth)}</span>

@@ -9,6 +9,7 @@ import { StyledMediumButton, StyledModal } from './StyledComponents';
 import { P2 } from '../../utils/textComponents';
 import { Default, O1 } from '../../utils/colors';
 import DatePicker from '../../component/DatePicker';
+import { parsePatientNameWithVipMark } from '../../utils/patientHelper';
 
 const NoMarginText = styled.p`
   margin: auto 0;
@@ -212,9 +213,9 @@ function AppointmentsModal(props) {
   const columns = [
     {
       title: '姓名',
-      dataIndex: 'patientName',
       width: 140,
       sorter: (a, b) => a.patientName.localeCompare(b.patientName),
+      render: data => parsePatientNameWithVipMark(data?.vipPatient, data?.patientName),
     },
     {
       title: '時間',

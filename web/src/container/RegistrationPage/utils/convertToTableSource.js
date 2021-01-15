@@ -7,6 +7,7 @@ import WomanPng from '../../../static/images/woman.png';
 import DefaultPng from '../../../static/images/default.png';
 import NP from '../../../static/images/NP.svg';
 import { B1, G1, Gray700 } from '../../../utils/colors';
+import { parsePatientNameWithVipMark } from '../../../utils/patientHelper';
 
 const { Title } = Typography;
 
@@ -76,7 +77,7 @@ const renderName = patient => {
         {renderAvatarImg(patient.gender, patient.firstVisit)}
         <div>
           <span>{patient.medicalId}</span>
-          <Title level={4}>{patient.name}</Title>
+          <Title level={4}>{parsePatientNameWithVipMark(patient?.patientVipPatient, patient.name)}</Title>
         </div>
       </NameContainer>
     </Tooltip>
@@ -131,6 +132,7 @@ export function convertToTableSource(registrations, selectedDoctor) {
       birth: r.patientBirth,
       nationalId: r.patientNationalId,
       firstVisit: r.appointmentFirstVisit,
+      patientVipPatient: !!r?.patientVipPatient,
     };
 
     return {

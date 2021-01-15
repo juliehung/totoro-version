@@ -12,6 +12,7 @@ import { XRAY_VENDORS } from '../AppointmentPage/constant';
 import banner from '../../images/banner.svg';
 import editIcon from '../../images/edit-2-fill.svg';
 import { getBaseUrl } from '../../utils/getBaseUrl';
+import { parsePatientNameWithVipMark } from '../../utils/patientHelper';
 
 //#region
 const Container = styled.div`
@@ -116,7 +117,7 @@ function PatientDetailHeader(props) {
       <InfoContainer>
         <div>
           <img src={AvatarSrc} height="30" alt="man" />
-          <span>{patient.name}</span>
+          <span>{parsePatientNameWithVipMark(patient.vipPatient, patient.name)}</span>
           <span>
             {patient.ROCBirth} ({patient?.age?.year}Y{patient?.age?.month}M)
           </span>
