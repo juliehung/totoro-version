@@ -5,7 +5,7 @@ import {
   GET_NHI_ONE_BY_DISPOSAL_ID,
   INIT_NHI_SALARY,
 } from '../constant';
-import { call, delay, fork, put, take } from 'redux-saga/effects';
+import { call, fork, put, take } from 'redux-saga/effects';
 import {
   getOdIndexesFail,
   getOdIndexesSuccess,
@@ -36,7 +36,6 @@ export function* initNhiSalary() {
       const { begin, end } = yield take(INIT_NHI_SALARY);
       yield put(getTotalPointByDisposalDate());
       const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, { begin, end });
-      yield delay(300);
       yield fork(getOdIndexes, begin, end);
       yield fork(getToothClean, begin, end);
       yield fork(getEndoIndexes, begin, end);
@@ -56,7 +55,6 @@ export function* getNhiSalary() {
       const { begin, end, checkedModalData } = yield take(GET_NHI_SALARY);
       yield put(getTotalPointByDisposalDate());
       const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, { begin, end, checkedModalData });
-      yield delay(300);
       yield fork(getOdIndexes, begin, end, checkedModalData);
       yield fork(getToothClean, begin, end, checkedModalData);
       yield fork(getEndoIndexes, begin, end, checkedModalData);
@@ -78,7 +76,6 @@ export function* getDoctorNhiSalary() {
     try {
       const { doctorId, begin, end } = yield take(GET_DOCTOR_NHI_SALARY);
       const doctorOneSalary = yield call(DoctorNhiSalary.getSalaryOneByDoctorId, { doctorId, begin, end });
-      yield delay(300);
       yield put(getDoctorNhiSalarySuccess({ doctorId, doctorOneSalary }));
     } catch (error) {
       console.log('error = ', error);
@@ -131,7 +128,6 @@ export function* getEndoIndexes(begin, end, checkedModalData) {
 export function* getValidNhiYearMonth(begin) {
   try {
     const validNhiYearMonths = yield call(DoctorNhiSalary.getValidNhiYearMonth);
-    yield delay(300);
     yield put(getValidNhiYearMonthSuccess(validNhiYearMonths));
     try {
       const validNhiData = yield call(DoctorNhiSalary.getValidNhiByYearMonth, begin.format('YYYYMM'));

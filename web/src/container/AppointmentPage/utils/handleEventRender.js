@@ -13,7 +13,7 @@ import { parsePatientNameWithVipMark } from '../../../utils/patientHelper';
 import PersonFillIcon from '../../../images/personIcon-fill.svg';
 import PhoneFillIcon from '../../../images/phone-fill.svg';
 import FileTextFillIcon from '../../../images/file-text-fill.svg';
-
+import { dangerTags } from '../../QuestionnairePage/constant_options';
 import { XRAY_VENDORS } from '../constant';
 
 //#region
@@ -57,7 +57,6 @@ const PopoverContainer = styled.div`
     }
     .link {
       text-align: right;
-      font-family: PingFangSC;
       font-size: 14px;
       font-weight: 600;
       color: #3366ff;
@@ -77,7 +76,6 @@ const PopoverContainer = styled.div`
 const InfoWrap = styled.div`
   display: flex;
   flex-direction: column;
-  font-family: OpenSans;
   font-size: 13px;
   line-height: 1.38;
   margin-top: 5px;
@@ -251,6 +249,7 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
         registrationStatus,
         tags,
         firstVisit,
+        baseFloor,
         vipPatient = false,
       } = appointment;
       if (info.view.type !== 'dayGridMonth') {
@@ -270,18 +269,9 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
 
         const sortTags = { dangerTags: [], normalTags: [] };
         if (tags) {
-          // TODO: id 33 & 44 have same value but different type
-          const ids = [];
-          tags.forEach(t => ids.push(t.id));
           tags.forEach(tag => {
-            if (
-              tag.type === 'BLOOD_DISEASE' ||
-              (tag.type === 'OTHER' && tag.id === 9999) ||
-              (tag.type === 'OTHER' && tag.id === 25)
-            ) {
+            if (dangerTags.includes(tag?.name)) {
               sortTags.dangerTags.push(tag);
-            } else if (tag.id === 33) {
-              ids.indexOf(44) === -1 && sortTags.dangerTags.push(tag);
             } else {
               sortTags.normalTags.push(tag);
             }
@@ -312,6 +302,11 @@ export function handleEventRender(info, func, params, { clickTitle = () => {} })
               )}
             </InfoWrap>
             <TagsWrap>
+              {baseFloor && (
+                <Tag key={id} className="danger">
+                  行動不便
+                </Tag>
+              )}
               {sortTags.dangerTags.map(({ name, id }) => (
                 <Tag key={id} className="danger">
                   {name}

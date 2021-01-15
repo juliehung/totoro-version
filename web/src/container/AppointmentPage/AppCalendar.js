@@ -157,7 +157,8 @@ const DoctorControlContainer = styled.div`
 
 const DoctorControl = styled.div`
   width: 300px;
-  max-height: 500px;
+  max-height: 350px;
+  overflow-y: auto;
 
   & > :first-child {
     height: 32px;
@@ -345,6 +346,21 @@ class AppCalendar extends React.Component {
       }
     });
 
+    MqttHelper.subscribeRegistration(AppCalendar.name, message => {
+      let messageObj;
+      try {
+        messageObj = JSON.parse(message);
+      } catch (e) {
+        return;
+      }
+
+      const { start, end } = this.props.calendarRange;
+      const expectedArrivalTime = moment(messageObj.expectedArrivalTime);
+      if (expectedArrivalTime.isBetween(start, end)) {
+        this.getAllEvent();
+      }
+    });
+
     this.setState({ pauseShift: false });
   }
 
@@ -415,6 +431,7 @@ class AppCalendar extends React.Component {
 
   componentWillUnmount() {
     MqttHelper.unsubscribeAppointment(AppCalendar.name);
+    MqttHelper.unsubscribeRegistration(AppCalendar.name);
   }
 
   simulateMouseClick = element => {

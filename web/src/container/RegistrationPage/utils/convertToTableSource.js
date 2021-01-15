@@ -146,6 +146,7 @@ export function convertToTableSource(registrations, selectedDoctor) {
       subject: renderSubject(r.appointmentNote),
       type,
       patient,
+      appointmentBaseFloor: r?.appointmentBaseFloor,
     };
   });
 }

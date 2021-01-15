@@ -4,6 +4,7 @@ import mqtt from 'mqtt';
 const appointmentCallbacks = {};
 const patientCallbacks = {};
 const messageCallbacks = {};
+const registrationCallbacks = {};
 
 class MqttHelper {
   constructor() {
@@ -33,6 +34,7 @@ class MqttHelper {
     this.client.subscribe('totoro/appointment', { qos: 0 });
     this.client.subscribe('totoro/patient', { qos: 0 });
     this.client.subscribe('totoro/message', { qos: 0 });
+    this.client.subscribe('totoro/registration', { qos: 0 });
 
     this.client.on('message', (topic, message) => {
       const payload = message.toString();
@@ -51,6 +53,11 @@ class MqttHelper {
         const keys = Object.keys(messageCallbacks);
         for (let i = 0; i < keys.length; i++) {
           messageCallbacks[keys[i]](payload);
+        }
+      } else if (topic === 'totoro/registration') {
+        const keys = Object.keys(registrationCallbacks);
+        for (let i = 0; i < keys.length; i++) {
+          registrationCallbacks[keys[i]](payload);
         }
       }
     });
@@ -78,6 +85,14 @@ class MqttHelper {
 
   unsubscribeMessage = name => {
     delete messageCallbacks[name];
+  };
+
+  subscribeRegistration = (name, callback) => {
+    registrationCallbacks[name] = callback;
+  };
+
+  unsubscribeRegistration = name => {
+    delete registrationCallbacks[name];
   };
 
   // Publish a message back to server and then go to other clients

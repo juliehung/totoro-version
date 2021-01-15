@@ -20,7 +20,9 @@ public class PatientSearchVM {
 
     private Gender gender;
 
-    public PatientSearchVM(Long id, String name, String medicalId, LocalDate birth, String phone, String nationalId, Gender gender) {
+    private Boolean vipPatient;
+
+    public PatientSearchVM(Long id, String name, String medicalId, LocalDate birth, String phone, String nationalId, Gender gender, Boolean vipPatient) {
         this.id = id;
         this.name = name;
         this.medicalId = medicalId;
@@ -28,6 +30,7 @@ public class PatientSearchVM {
         this.phone = phone;
         this.nationalId = nationalId;
         this.gender = gender;
+        this.vipPatient = vipPatient;
     }
 
     public Gender getGender() {
@@ -85,4 +88,13 @@ public class PatientSearchVM {
     public void setBirth(LocalDate birth) {
         this.birth = birth;
     }
+
+    public Boolean getVipPatient() {
+        return vipPatient;
+    }
+
+    public void setVipPatient(Boolean vipPatient) {
+        this.vipPatient = vipPatient;
+    }
+
 }

@@ -4,7 +4,12 @@ import styled from 'styled-components';
 import { XRAY_VENDORS } from '../../AppointmentPage/constant';
 import VisionImg from '../../../component/VisionImg';
 import VixWinImg from '../../../component/VixWinImg';
+import BaseFloor from '../../../images/iconfinder_accessible_wheelchair_disability_disable_disabled_handicap_person_751069.svg';
 
+const BaseFloorStyle = styled.img`
+  max-width: 33px;
+  max-height: 33px;
+`;
 const XrayContainer = styled.div`
   display: flex;
   & > div {
@@ -75,6 +80,14 @@ export const columns = xRayVendors => [
   },
   { title: '醫師', dataIndex: 'doctor', key: 'doctor', width: 70 },
   { title: '治療事項', dataIndex: 'subject', key: 'subject', ellipsis: true, width: 200 },
+  {
+    title: '治療事項',
+    ellipsis: true,
+    dataIndex: 'appointmentBaseFloor',
+    key: 'appointmentBaseFloor',
+    render: appointmentBaseFloor => appointmentBaseFloor && <BaseFloorStyle src={BaseFloor} alt={'base floor'} />,
+    width: 70,
+  },
   {
     title: 'X光片',
     dataIndex: 'xray',
