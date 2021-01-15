@@ -36,6 +36,8 @@ import { defaultTimeOption } from './utils/generateDefaultTime';
 import { appointmentPage } from './';
 import parseDateToString from './utils/parseDateToString';
 import DatePicker from '../../component/DatePicker';
+import { convertAppointmentToCardObject } from '../PatientPage/utils';
+import PatientAppointmentPopover from './PatientAppointmentPopover';
 
 const { Option } = Select;
 
@@ -172,6 +174,7 @@ function CreateAppModal({
   patients,
   patientSelected,
   selectedPatient,
+  selectedPatientAppointments,
   doctors,
   appointment,
   patient,
@@ -208,6 +211,7 @@ function CreateAppModal({
 }) {
   const [expectedTimeOption, setExpectedTimeOption] = useState(defaultTimeOption);
   const { name, phone, nationalId, birth } = patient;
+  const [openControl, setOpenControl] = useState(false);
   useEffect(() => {
     if (createAppSuccess) {
       getAllEvents();
@@ -273,6 +277,7 @@ function CreateAppModal({
   };
 
   const onSearchTextFocus = e => {
+    setOpenControl(true);
     const value = e?.target?.value;
     clearTimeout(debounceSearch);
     debounceSearch = setTimeout(() => {
@@ -283,6 +288,7 @@ function CreateAppModal({
   const onPatientSelect = id => {
     getPatient(id);
     changePatientSelected(true);
+    setOpenControl(false);
   };
 
   const handleConfirm = () => {
@@ -366,14 +372,11 @@ function CreateAppModal({
             onSearch={onSearchTextChange}
             onFocus={onSearchTextFocus}
             onSelect={(data, { id = null }) => onPatientSelect(id)}
+            open={openControl}
+            onBlur={() => setOpenControl(false)}
+            onChange={() => setOpenControl(true)}
             notFoundContent={<Empty description="沒有資料" />}
-          >
-            {patients.map(({ medicalId, name, id }) => (
-              <Select.Option key={id} value={id}>
-                {`${name}, ${medicalId}`}
-              </Select.Option>
-            ))}
-          </StyledSearchSelect>
+          />
           <Select value={searchMode} style={{ width: 120 }} onChange={changePatientSearchMode}>
             <Option value={patientSearchMode.name}>姓名</Option>
             <Option value={patientSearchMode.birth}>生日</Option>
@@ -449,6 +452,10 @@ function CreateAppModal({
                   <span>
                     {selectedPatient &&
                       `最近預約:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentAppointment)}`}
+                    <PatientAppointmentPopover
+                      patient={selectedPatient}
+                      patientAppointments={selectedPatientAppointments}
+                    />
                   </span>
                 </PatientDetailElement>
               </PatientDetailCol>
@@ -542,7 +549,7 @@ function CreateAppModal({
             </Width100>
           </div>
           <div>
-            <span>特殊註記：</span>
+            <span>預約註記：</span>
             <Checkbox.Group options={options} value={appointment.specialNote} onChange={onSpecialNoteChange} />
           </div>
         </InfoRowContainer>
@@ -564,6 +571,10 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   patients: appointmentPageReducer.createApp.searchPatients,
   patientSelected: appointmentPageReducer.createApp.patientSelected,
   selectedPatient: appointmentPageReducer.createApp.selectedPatient,
+  selectedPatientAppointments: convertAppointmentToCardObject(
+    appointmentPageReducer.createApp?.selectedPatient?.appointments,
+    homePageReducer.user.users,
+  ).filter(a => a.isFuture && !a.isRegistration),
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
   appointment: appointmentPageReducer.createApp.appointment,
   patient: appointmentPageReducer.createApp.patient,

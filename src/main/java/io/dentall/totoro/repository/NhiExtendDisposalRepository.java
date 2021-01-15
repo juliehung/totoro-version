@@ -1,19 +1,5 @@
 package io.dentall.totoro.repository;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
 import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
@@ -22,11 +8,20 @@ import io.dentall.totoro.service.dto.NhiExtendTreatmentProcedureDTO;
 import io.dentall.totoro.service.dto.NhiIndexEndoDTO;
 import io.dentall.totoro.service.dto.StatisticSpDTO;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
-import io.dentall.totoro.web.rest.vm.NhiDoctorExamVM;
-import io.dentall.totoro.web.rest.vm.NhiDoctorTxVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexOdVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexToothCleanVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexTreatmentProcedureVM;
+import io.dentall.totoro.web.rest.vm.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -328,9 +323,9 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
     List<NhiExtendDisposal> findByDateBetweenAndPatientId(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("patientId") Long patientId);
 
     /**
-     * 
+     *
      * 因為NhiExtendDisposalRepository.findByDateBetweenAndPatientId在某些patient會有效能上的問題，所以特地另寫這個方法來直接取得資料
-     * 
+     *
      * @param start
      * @param end
      * @param patientId
@@ -409,6 +404,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "ned.examination_point as examinationPoint, " +
             "ned.patient_identity as patientIdentity, " +
             "ned.serial_number as serialNumber, " +
+            "ned.a31 as visitTotalPoint, " +
             "ned.a32 as copayment, " +
             "np.code as txCode, " +
             "tp.total as txPoint, " +
@@ -442,6 +438,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "ned.examination_point as examinationPoint, " +
             "ned.patient_identity as patientIdentity, " +
             "ned.serial_number as serialNumber, " +
+            "ned.a31 as visitTotalPoint, " +
             "ned.a32 as copayment, " +
             "np.code as txCode, " +
             "tp.total as txPoint, " +
@@ -469,7 +466,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             @Param("excludeDisposalId") List<Long> excludeDisposalId
     );
 
-    @Query(nativeQuery = true, 
+    @Query(nativeQuery = true,
             value = "select a.doctor_user_id did, netp.a73, netp.a74 " +
                     "  from disposal d " +
                     "  left join appointment a                       on d.registration_id = a.registration_id " +
@@ -491,4 +488,33 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             @Param("endoList") List<String> endoList,
             @Param("excludeDisposalIds") List<Long> excludeDisposalIds);
 
+    @Query(
+        nativeQuery = true,
+        value = "select " +
+            "d.id as disposalId, " +
+            "d.date_time as disposalDate, " +
+            "ned.examination_code as examinationCode, " +
+            "ned.examination_point as examinationPoint, " +
+            "ned.patient_identity as patientIdentity, " +
+            "ned.serial_number as serialNumber, " +
+            "ned.a31 as visitTotalPoint, " +
+            "ned.a32 as copayment, " +
+            "a.patient_id as patientId, " +
+            "a.doctor_user_id as doctorId, " +
+            "p.name as patientName " +
+            "from disposal d " +
+            "    left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "    left join appointment a on d.registration_id = a.registration_id " +
+            "    left join patient p on a.patient_id = p.id " +
+            "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
+            "   and d.id not in :excludeDisposalId " +
+            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
+            "   and d.id not in :excludeDisposalId " +
+            "order by d.id "
+    )
+    List<CalculateBaseData> findCalculateBaseDataWithoutTx(
+        @Param("begin") LocalDate begin,
+        @Param("end") LocalDate end,
+        @Param("excludeDisposalId") List<Long> excludeDisposalId
+    );
 }

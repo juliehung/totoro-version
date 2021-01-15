@@ -19,6 +19,8 @@ public interface CalculateBaseData {
 
     String getSerialNumber();
 
+    String getVisitTotalPoint();
+
     String getCopayment();
 
     // Nhi procedure

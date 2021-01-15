@@ -78,7 +78,8 @@ public class AppointmentSplitRelationshipDTO {
             .mainNoticeChannel(appointmentDAO.getMainNoticeChannel())
             .career(appointmentDAO.getCareer())
             .marriage(appointmentDAO.getMarriage())
-            .newPatient(appointmentDAO.getNewPatient());
+            .newPatient(appointmentDAO.getNewPatient())
+            .vipPatient(appointmentDAO.getVipPatient());
         patient.setId(appointmentDAO.getPatientId());
         patient.setLastModifiedBy(appointmentDAO.getPatientLastModifiedBy());
         patient.setLastModifiedDate(appointmentDAO.getPatientLastModifiedDate());

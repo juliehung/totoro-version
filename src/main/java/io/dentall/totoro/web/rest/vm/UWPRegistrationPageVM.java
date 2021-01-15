@@ -16,6 +16,7 @@ public interface UWPRegistrationPageVM {
     String getPatientMedicalId();
     Gender getPatientGender();
     String getPatientNationalId();
+    Boolean getPatientVipPatient();
 
     // disposal
     Long getDisposalId();
