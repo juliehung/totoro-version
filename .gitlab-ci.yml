@@ -174,9 +174,7 @@ releaseImageToGCPRegistry:
           allow_failure: true
     dependencies:
         - packageWebIntoWarWhenTag
-    image: docker
-    services:
-        - docker:stable
+    image: docker:20.10-dind
     variables:
         DOCKER_DRIVER: overlay
     script:
