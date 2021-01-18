@@ -154,7 +154,7 @@ releaseImageToGitlabRegistry:
         - packageWebIntoWarWhenTag
     image: docker
     services:
-        - docker:dind
+        - docker:stable
     variables:
         DOCKER_DRIVER: overlay
     script:
@@ -182,7 +182,7 @@ releaseImageToGCPRegistry:
         - packageWebIntoWarWhenTag
     image: docker
     services:
-        - docker:dind
+        - docker:stable
     variables:
         DOCKER_DRIVER: overlay
     script:
