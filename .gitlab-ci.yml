@@ -68,9 +68,22 @@ packageWebIntoWarWhenTag:
 # release stage
 releaseWarToFirebase:
     stage: release
+<<<<<<< HEAD
     only:
         - tags
         - release
+=======
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^test.*/'
+          when: on_success
+          allow_failure: false
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: false
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
+          when: on_success
+          allow_failure: false
+>>>>>>> Test full stg build flow
     dependencies:
         - repackageByGradle
     image: google/cloud-sdk:alpine
@@ -81,8 +94,21 @@ releaseWarToFirebase:
 
 releaseWarToDevMachine:
     stage: release
+<<<<<<< HEAD
     only:
         - tags
+=======
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^test.*/'
+          when: on_success
+          allow_failure: false
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
+          when: on_success
+          allow_failure: true
+>>>>>>> Test full stg build flow
     dependencies:
         - repackageByGradle
     image: ubuntu
@@ -135,10 +161,23 @@ releaseImageToGitlabRegistry:
 
 releaseImageToGCPRegistry:
     stage: release
+<<<<<<< HEAD
     only:
         - tags
     except:
         - /^(\d)+-.*$/
+=======
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^test.*/'
+          when: on_success
+          allow_failure: false
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
+          when: on_success
+          allow_failure: true
+>>>>>>> Test full stg build flow
     dependencies:
         - repackageByGradle
     image: docker
@@ -196,7 +235,14 @@ deployDevDentall8085:
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
         SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
     rules:
+<<<<<<< HEAD
         - if: '$CI_COMMIT_TAG =~ /^staging.*/'
+=======
+        - if: '$CI_COMMIT_TAG =~ /^test.*/'
+          when: on_success
+          allow_failure: false
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+>>>>>>> Test full stg build flow
           when: on_success
           allow_failure: true
     stage: deploy
