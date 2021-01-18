@@ -174,14 +174,10 @@ releaseImageToGCPRegistry:
           allow_failure: true
     dependencies:
         - packageWebIntoWarWhenTag
-    image: docker:19.03.12
+    image: $CI_REGISTRY/group/project/docker:19.03.12
     services:
-        - name: docker:19.03.12-dind
+        - name: $CI_REGISTRY/group/project/docker:19.03.12-dind
           alias: docker
-    variables:
-        # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
-        DOCKER_HOST: tcp://docker:2376
-        DOCKER_TLS_CERTDIR: "/certs"
     script:
         # Write our GCP service account private key into a file
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
