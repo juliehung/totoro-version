@@ -173,10 +173,15 @@ releaseImageToGCPRegistry:
           allow_failure: true
 >>>>>>> Test full stg build flow
     dependencies:
+<<<<<<< HEAD
         - repackageByGradle
     image: docker
     services:
         - docker:stable
+=======
+        - packageWebIntoWarWhenTag
+    image: docker:20.10-dind
+>>>>>>> Fix used docker image version
     variables:
         DOCKER_DRIVER: overlay
         # See https://github.com/docker-library/docker/pull/166
