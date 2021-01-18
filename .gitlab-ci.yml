@@ -80,7 +80,7 @@ packageWebIntoWarWhenTag:
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
     script:
         - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/dentall/totoro-version.git
-        - if [ "$CI_COMMIT_BRANCH" == "staging" ]; then totorowebtag=`jq '.totoroWeb' totoro-version/stg.version.json`; else totorowebtag=`jq '.totoroWeb` totoro-version/rel.version.json`; fi;
+        - "if [ '$CI_COMMIT_BRANCH' == 'staging' ]; then totorowebtag=`jq '.totoroWeb' totoro-version/stg.version.json`; else totorowebtag=`jq '.totoroWeb` totoro-version/rel.version.json`; fi;"
         - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/$totorowebtag/download?job=buildArtifact"'
         - unzip artifact.zip -d web/
         - ./gradlew bootWar -Pprod -x check --no-daemon
