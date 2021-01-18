@@ -147,7 +147,7 @@ releaseImageToGitlabRegistry:
         - repackageByGradle
     image: docker
     services:
-        - docker:dind
+        - docker:stable
     variables:
         DOCKER_DRIVER: overlay
     script:
@@ -182,7 +182,7 @@ releaseImageToGCPRegistry:
         - repackageByGradle
     image: docker
     services:
-        - docker:dind
+        - docker:stable
     variables:
         DOCKER_DRIVER: overlay
         # See https://github.com/docker-library/docker/pull/166
