@@ -63,11 +63,11 @@ packageWebIntoWarWhenDev:
 packageWebIntoWarWhenTag:
     stage: build
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^test.*/'
-          when: on_success
-          allow_failure: false
-          variables:
-              VERSION_FILE: stg.version.json
+#        - if: '$CI_COMMIT_TAG =~ /^test.*/'
+#          when: on_success
+#          allow_failure: false
+#          variables:
+#              VERSION_FILE: stg.version.json
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: false
@@ -172,8 +172,6 @@ releaseImageToGCPRegistry:
         - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
           when: on_success
           allow_failure: true
-    dependencies:
-        - packageWebIntoWarWhenTag
     image: docker:19.03.12
     services:
         - name: docker:19.03.12-dind
