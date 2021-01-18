@@ -174,9 +174,9 @@ releaseImageToGCPRegistry:
           allow_failure: true
     dependencies:
         - packageWebIntoWarWhenTag
-    image: $CI_REGISTRY/group/project/docker:19.03.12
+    image: docker:19.03.12
     services:
-        - name: $CI_REGISTRY/group/project/docker:19.03.12-dind
+        - name: docker:19.03.12-dind
           alias: docker
     script:
         # Write our GCP service account private key into a file
