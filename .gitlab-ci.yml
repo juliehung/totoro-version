@@ -74,9 +74,6 @@ releaseWarToFirebase:
         - release
 =======
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^test.*/'
-          when: on_success
-          allow_failure: false
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: false
@@ -99,9 +96,6 @@ releaseWarToDevMachine:
         - tags
 =======
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^test.*/'
-          when: on_success
-          allow_failure: false
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: true
