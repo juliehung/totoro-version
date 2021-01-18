@@ -183,6 +183,7 @@ releaseImageToGCPRegistry:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     image: docker:20.10-dind
 >>>>>>> Fix used docker image version
     variables:
@@ -199,8 +200,11 @@ releaseImageToGCPRegistry:
 =======
     image: $CI_REGISTRY/group/project/docker:19.03.12
 >>>>>>> Use exactly what web say
+=======
+    image: docker:19.03.12
+>>>>>>> Remove using gitlab container registry
     services:
-        - name: $CI_REGISTRY/group/project/docker:19.03.12-dind
+        - name: docker:19.03.12-dind
           alias: docker
 <<<<<<< HEAD
     variables:
