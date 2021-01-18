@@ -19,10 +19,48 @@ testPackage:
     script:
         - apt-get install -y --no-install-recommends curl unzip
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
+<<<<<<< HEAD
         - ./gradlew compileJava -x check --no-daemon
         - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: 2uhuvyyiXX2Kmz_RNAjE" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/develop/download?job=buildArtifact"'
         - unzip artifact.zip -d build/resources/main/
         - ./gradlew bootWar -x check --no-daemon
+=======
+        - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/develop/download?job=buildArtifact"'
+        - unzip artifact.zip -d web/
+        - ./gradlew bootWar -Pprod -x check --no-daemon
+    artifacts:
+        paths:
+            - build/*
+
+packageWebIntoWarWhenTag:
+    stage: build
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^test.*/'
+          when: on_success
+          allow_failure: false
+          variables:
+              VERSION_FILE: stg.version.json
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: false
+          variables:
+              VERSION_FILE: stg.version.json
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
+          when: on_success
+          allow_failure: false
+          variables:
+              VERSION_FILE: rel.version.json
+    image: openjdk:8-jdk-stretch
+    before_script:
+        - apt-get update -y && apt-get install jq curl git unzip -y
+        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
+    script:
+        - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/dentall/totoro-version.git
+        - totorowebversion=`jq -r '.totoroWeb' totoro-version/$VERSION_FILE`
+        - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/$totorowebversion/download?job=buildArtifact"'
+        - unzip artifact.zip -d web/
+        - ./gradlew bootWar -Pprod -x check --no-daemon
+>>>>>>> Remove quote when getting json value from jq
     artifacts:
         paths:
             - build/*
