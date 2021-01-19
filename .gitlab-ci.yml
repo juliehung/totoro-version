@@ -172,6 +172,7 @@ releaseImageToGCPRegistry:
           when: on_success
           allow_failure: true
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> Test full stg build flow
     dependencies:
 <<<<<<< HEAD
@@ -197,6 +198,11 @@ releaseImageToGCPRegistry:
         - docker:dind
 >>>>>>> Remove docker networking env
 =======
+=======
+    variables:
+        DOCKER_HOST: tcp://docker:2376
+        DOCKER_TLS_CERTDIR: "/certs"
+>>>>>>> Using enctrypted docker daemon
     image: docker:19.03.12
 =======
     image: $CI_REGISTRY/group/project/docker:19.03.12
