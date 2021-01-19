@@ -173,8 +173,7 @@ releaseImageToGCPRegistry:
           when: on_success
           allow_failure: true
     variables:
-        DOCKER_HOST: tcp://docker:2376
-        DOCKER_TLS_CERTDIR: "/certs"
+        DOCKER_DRIVER: overlay
     image: docker:19.03.12
     services:
         - docker:19.03.12-dind
