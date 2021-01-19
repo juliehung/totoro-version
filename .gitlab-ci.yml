@@ -14,7 +14,46 @@ before_script:
 testPackage:
     stage: package
     only:
+<<<<<<< HEAD
         - merge_requests
+=======
+        refs:
+            - merge_requests
+        changes:
+            - src/**/*
+    image: openjdk:8-jdk-stretch
+    services:
+        - postgres:10.4
+    variables:
+        POSTGRES_DB: totoro
+        POSTGRES_USER: totoro
+        POSTGRES_PASSWORD: totoro
+    script:
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/totoro ./gradlew test --no-daemon
+
+# build stage
+testCompile:
+    stage: test
+    only:
+        refs:
+            - merge_requests
+        changes:
+            - src/**/*
+    image: openjdk:8-jdk-stretch
+    script:
+        - ./gradlew compileJava -x check --no-daemon
+
+packageWebIntoWarWhenDev:
+    stage: build
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^test.*/'
+          when: on_success
+          allow_failure: false
+          variables:
+              VERSION_FILE: stg.version.json
+#    only:
+#        - develop
+>>>>>>> Test dev build and auto deploy
     image: openjdk:8-jdk-stretch
     script:
         - apt-get install -y --no-install-recommends curl unzip
