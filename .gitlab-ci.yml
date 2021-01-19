@@ -200,9 +200,13 @@ releaseImageToGCPRegistry:
 =======
 =======
     variables:
+<<<<<<< HEAD
         DOCKER_HOST: tcp://docker:2376
         DOCKER_TLS_CERTDIR: "/certs"
 >>>>>>> Using enctrypted docker daemon
+=======
+        DOCKER_DRIVER: overlay
+>>>>>>> Recover using docker driver with overlay mode
     image: docker:19.03.12
 =======
     image: $CI_REGISTRY/group/project/docker:19.03.12
