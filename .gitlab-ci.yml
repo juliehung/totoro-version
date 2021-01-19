@@ -207,6 +207,7 @@ releaseImageToGCPRegistry:
     image: docker:19.03.12
 >>>>>>> Remove using gitlab container registry
     services:
+<<<<<<< HEAD
         - name: docker:19.03.12-dind
           alias: docker
 <<<<<<< HEAD
@@ -217,6 +218,9 @@ releaseImageToGCPRegistry:
 >>>>>>> Using gitlab offical best practice of using docker in ci job
 =======
 >>>>>>> Use exactly what web say
+=======
+        - docker:19.03.12-dind
+>>>>>>> Fix services field
     script:
         # Write our GCP service account private key into a file
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
