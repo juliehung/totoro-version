@@ -355,8 +355,6 @@ const route = [
 
 function NavHome(props) {
   const { account, linkManagement } = props;
-  console.log('account = ', account);
-
   const [, , removeCookie] = useCookies(['token']);
 
   const logout = () => {
