@@ -113,6 +113,9 @@ releaseWarToFirebase:
 releaseWarToDevMachine:
     stage: release
     rules:
+        - if: '$CI_COMMIT_TAG =~ /^test.*/'
+          when: on_success
+          allow_failure: false
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: true
@@ -163,9 +166,6 @@ releaseImageToGitlabRegistry:
 releaseImageToGCPRegistry:
     stage: release
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^test.*/'
-          when: on_success
-          allow_failure: false
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: true
