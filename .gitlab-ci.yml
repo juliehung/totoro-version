@@ -174,8 +174,7 @@ releaseImageToGCPRegistry:
           allow_failure: true
     image: docker:19.03.12
     services:
-        - name: docker:19.03.12-dind
-          alias: docker
+        - docker:19.03.12-dind
     script:
         # Write our GCP service account private key into a file
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
