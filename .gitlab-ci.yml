@@ -45,6 +45,7 @@ testCompile:
 
 packageWebIntoWarWhenDev:
     stage: build
+<<<<<<< HEAD
     rules:
         - if: '$CI_COMMIT_TAG =~ /^test.*/'
           when: on_success
@@ -54,6 +55,10 @@ packageWebIntoWarWhenDev:
 #    only:
 #        - develop
 >>>>>>> Test dev build and auto deploy
+=======
+    only:
+        - develop
+>>>>>>> Recover general work flow
     image: openjdk:8-jdk-stretch
     script:
         - apt-get install -y --no-install-recommends curl unzip
@@ -296,12 +301,8 @@ deployDevDentall8082:
         CURL_CONTENT_TYPE: 'Content-Type: application/json'
         CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "dev.war"}'
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "dev.war"}'
-    rules:
-        -   if: '$CI_COMMIT_TAG =~ /^test.*/'
-            when: on_success
-            allow_failure: false
-#    only:
-#        - develop
+    only:
+        - develop
     stage: deploy
     image: ubuntu
     dependencies:
