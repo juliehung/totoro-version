@@ -173,10 +173,13 @@ releaseImageToGCPRegistry:
           when: on_success
           allow_failure: true
     variables:
-        DOCKER_DRIVER: overlay
+        DOCKER_DRIVER: overlay2
+        DOCKER_TLS_CERTDIR: ""
     image: docker:19.03.12
     services:
         - docker:19.03.12-dind
+    before_script:
+        - docker info
     script:
         # Write our GCP service account private key into a file
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
