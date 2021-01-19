@@ -308,11 +308,12 @@ const route = [
     path: 'nhi',
     link: 'nhi',
     name: '全民健保',
-    navigation: false,
+    navigation: true,
     exact: false,
     icon: { on: NhiFillIcon, off: NhiIcon },
     component: <NhiIndexPage />,
     localVersion: false,
+    requireAuth: true,
   },
   {
     key: 'sms',
@@ -354,7 +355,6 @@ const route = [
 
 function NavHome(props) {
   const { account, linkManagement } = props;
-
   const [, , removeCookie] = useCookies(['token']);
 
   const logout = () => {
@@ -422,7 +422,7 @@ function NavHome(props) {
           <ul>
             {[
               ...route
-                .filter(r => r.navigation && determineRouteOrLinkShow(r))
+                .filter(r => r.navigation && determineRouteOrLinkShow(r, account))
                 .map(n => (
                   <NavItem key={n.key} focus={currentLocation === `/${n.link}`}>
                     <Link to={`/${n.link}`}>
@@ -529,7 +529,7 @@ function NavHome(props) {
         </div>
         {[
           ...route
-            .filter(r => r.navigation && determineRouteOrLinkShow(r))
+            .filter(r => r.navigation && determineRouteOrLinkShow(r, account))
             .map(n => (
               <DrawerItem key={n.key} to={`/${n.link}`}>
                 <div>
@@ -553,7 +553,7 @@ function NavHome(props) {
       <ContentContainer currentLocation={currentLocation}>
         <Switch>
           {route
-            .filter(r => determineRouteOrLinkShow(r))
+            .filter(r => determineRouteOrLinkShow(r, account))
             .map(r => (
               <Route key={r.key} exact={r.exact} path={`/${r.path}`}>
                 {r.component}
