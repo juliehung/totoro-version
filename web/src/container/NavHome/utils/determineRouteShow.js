@@ -1,10 +1,13 @@
-export function determineRouteOrLinkShow(route) {
+export function determineRouteOrLinkShow(route, account) {
+  const adminRole = account && account?.role && account?.role.indexOf('管理者') !== -1;
+  const isRequireAuth = !!route?.requireAuth;
   const isDev = process.env.NODE_ENV === 'development';
   const showWhenLocalVersion = route.localVersion;
   const specificClinic = route.clinic;
   const isLocal = isLocalChecker();
+  const routeCheck = isDev ? true : isLocal ? showWhenLocalVersion : clinicChecker(specificClinic);
 
-  return isDev ? true : isLocal ? showWhenLocalVersion : clinicChecker(specificClinic);
+  return isRequireAuth ? (adminRole ? routeCheck : false) : routeCheck;
 }
 
 function isLocalChecker() {
