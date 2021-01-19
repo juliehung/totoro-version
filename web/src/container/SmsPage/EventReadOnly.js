@@ -66,7 +66,17 @@ const AvatarImg = styled.img`
   height: 30px;
   border-radius: 50%;
   grid-row: 1/3;
-  box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12);
+  justify-self: center;
+  align-self: center;
+  object-fit: cover;
+`;
+const AvatarDiv = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  grid-row: 1/3;
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12);
   justify-self: center;
   align-self: center;
   object-fit: cover;
@@ -136,7 +146,7 @@ function EventReadOnly(props) {
             {createdBy.extendUser.avatar ? (
               <AvatarImg alt="avatar" src={`data:image/png;base64,${createdBy.extendUser.avatar}`} />
             ) : (
-              <AvatarImg alt={createdBy.firstName[0]} src={null} style={{ textAlign: 'center', lineHeight: '30px' }} />
+              <AvatarDiv style={{ textAlign: 'center', lineHeight: '30px' }}>{createdBy.firstName[0]}</AvatarDiv>
             )}
             <div>
               <P1>{createdBy.firstName}</P1>
