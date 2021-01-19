@@ -63,11 +63,6 @@ packageWebIntoWarWhenDev:
 packageWebIntoWarWhenTag:
     stage: build
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^test.*/'
-          when: on_success
-          allow_failure: false
-          variables:
-              VERSION_FILE: stg.version.json
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: false
@@ -113,9 +108,6 @@ releaseWarToFirebase:
 releaseWarToDevMachine:
     stage: release
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^test.*/'
-          when: on_success
-          allow_failure: false
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: true
@@ -176,6 +168,8 @@ releaseImageToGCPRegistry:
         DOCKER_DRIVER: overlay2
         DOCKER_TLS_CERTDIR: ""
     image: docker:19.03.12
+    dependencies:
+        - packageWebIntoWarWhenTag
     services:
         - docker:19.03.12-dind
     before_script:
@@ -275,11 +269,6 @@ deployGcpDev:
 updateTotoroVersion:
     stage: notify
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^test.*/'
-          when: on_success
-          allow_failure: false
-          variables:
-              VERSION_FILE: stg.version.json
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: false
