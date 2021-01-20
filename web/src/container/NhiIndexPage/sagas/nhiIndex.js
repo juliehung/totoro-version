@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
   GET_NHI_SALARY,
   GET_DOCTOR_NHI_SALARY,
@@ -33,7 +34,8 @@ import DoctorNhiSalary from '../../../models/doctorNhiSalary';
 export function* initNhiSalary() {
   while (true) {
     try {
-      const { begin, end } = yield take(INIT_NHI_SALARY);
+      const { begin } = yield take(INIT_NHI_SALARY);
+      const end = moment();
       yield put(getTotalPointByDisposalDate());
       const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, { begin, end });
       const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, { begin, end });
@@ -52,9 +54,14 @@ export function* initNhiSalary() {
 export function* getNhiSalary() {
   while (true) {
     try {
-      const { begin, end, checkedModalData } = yield take(GET_NHI_SALARY);
+      const { begin, checkedModalData } = yield take(GET_NHI_SALARY);
+      const end = moment(begin).endOf('month');
       yield put(getTotalPointByDisposalDate());
-      const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, { begin, end, checkedModalData });
+      const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, {
+        begin,
+        end,
+        checkedModalData,
+      });
       const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, {
         begin,
         end,
