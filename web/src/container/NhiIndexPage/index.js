@@ -458,9 +458,9 @@ function NhiIndexPage({
     .map(([, list]) => list.map(({ disposalId }) => disposalId))
     .flat(Infinity);
   const getAllSerialNumber = Object.entries(validNhiData)
-    .map(([, list]) => list.map(({ nhiExtendDisposal }) => nhiExtendDisposal?.serialNumber))
+    .map(([, list]) => list.map(({ nhiExtendDisposal, disposalId }) => !!nhiExtendDisposal?.serialNumber && disposalId))
     .flat(Infinity)
-    .filter(d => d !== '');
+    .filter(d => d && d !== '');
 
   useEffect(() => {
     dispatch(initNhiSalary(moment().startOf('month'), moment()));
@@ -545,7 +545,13 @@ function NhiIndexPage({
               if (checkedModalData.length !== 0) {
                 setIsModalVisible(false);
                 setTimeout(() => {
-                  dispatch(getNhiSalary(startDate, endDate, checkedModalData));
+                  dispatch(
+                    getNhiSalary(
+                      startDate,
+                      endDate,
+                      getAllDisposalId.filter(id => checkedModalData.indexOf(id) === -1),
+                    ),
+                  );
                 }, 500);
               }
             }}
