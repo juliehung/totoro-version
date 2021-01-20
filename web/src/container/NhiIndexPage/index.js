@@ -545,13 +545,7 @@ function NhiIndexPage({
               if (checkedModalData.length !== 0) {
                 setIsModalVisible(false);
                 setTimeout(() => {
-                  dispatch(
-                    getNhiSalary(
-                      startDate,
-                      endDate,
-                      getAllDisposalId.filter(id => checkedModalData.indexOf(id) === -1),
-                    ),
-                  );
+                  dispatch(getNhiSalary(startDate, endDate, checkedModalData));
                 }, 500);
               }
             }}
