@@ -83,11 +83,13 @@ public class MonthDisposalDAO {
 
     private final String patientName;
 
+    private final Boolean vipPatient;
+
     public MonthDisposalDAO(
         Long disposalId, Long nhiExtendDisposalId, String a11, String a12, String a13, String a14, String a15, String a16, String a17, String a18, String a19,
         String a22, String a23, String a25, String a26, String a27, String a31, String a32, String a41, String a42, String a43, String a44, String a54, LocalDate date,
         NhiExtendDisposalUploadStatus uploadStatus, String examinationCode, Integer examinationPoint, String patientIdentity, String serialNumber, Long patientId, String category,
-        LocalDate replenishmentDate, Boolean checkedMonthDeclaration, Boolean checkedAuditing, String patientName
+        LocalDate replenishmentDate, Boolean checkedMonthDeclaration, Boolean checkedAuditing, String patientName, Boolean vipPatient
     ) {
         this.disposalId = disposalId;
         this.nhiExtendDisposalId = nhiExtendDisposalId;
@@ -124,6 +126,7 @@ public class MonthDisposalDAO {
         this.checkedMonthDeclaration = checkedMonthDeclaration;
         this.checkedAuditing = checkedAuditing;
         this.patientName = patientName;
+        this.vipPatient = vipPatient;
     }
 
     public String getPatientName() {

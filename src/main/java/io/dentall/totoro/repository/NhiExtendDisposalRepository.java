@@ -381,7 +381,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
         "nhiExtendDisposal.replenishmentDate, " +
         "nhiExtendDisposal.checkedMonthDeclaration, " +
         "nhiExtendDisposal.checkedAuditing," +
-        "patient.name ) " +
+        "patient.name, " +
+        "patient.vipPatient ) " +
         "from " +
         "   NhiExtendDisposal as nhiExtendDisposal left outer join nhiExtendDisposal.disposal as disposal," +
         "   Patient as patient " +
@@ -445,7 +446,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "np.specific_code as specificCode, " +
             "a.patient_id as patientId, " +
             "a.doctor_user_id as doctorId, " +
-            "p.name as patientName " +
+            "p.name as patientName, " +
+            "p.vip_patient as vipPatient " +
             "from disposal d " +
             "    left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "    left join treatment_procedure tp on d.id = tp.disposal_id " +
@@ -501,7 +503,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "ned.a32 as copayment, " +
             "a.patient_id as patientId, " +
             "a.doctor_user_id as doctorId, " +
-            "p.name as patientName " +
+            "p.name as patientName, " +
+            "p.vip_patient as vipPatient " +
             "from disposal d " +
             "    left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "    left join appointment a on d.registration_id = a.registration_id " +

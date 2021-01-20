@@ -215,6 +215,7 @@ public class NhiExtendDisposalService {
                 if (optionalPatientTable.isPresent()) {
                     vm.setMedicalId(optionalPatientTable.get().getMedicalId());
                     vm.setName(optionalPatientTable.get().getName());
+                    vm.setVipPatient(optionalPatientTable.get().getVipPatient());
                 }
 
                 // Assemble doctor
@@ -281,6 +282,7 @@ public class NhiExtendDisposalService {
                 if (optionalPatientTable.isPresent()) {
                     vm.setMedicalId(optionalPatientTable.get().getMedicalId());
                     vm.setName(optionalPatientTable.get().getName());
+                    vm.setVipPatient(optionalPatientTable.get().getVipPatient());
                 }
 
                 // Assemble doctor
