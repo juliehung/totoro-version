@@ -18,6 +18,9 @@ public class NhiAbnormalityPatient implements Serializable {
     private LocalDate birth;
 
     @JsonProperty
+    private Boolean vipPaient;
+
+    @JsonProperty
     private String medicalId;
 
     @JsonProperty
@@ -35,10 +38,11 @@ public class NhiAbnormalityPatient implements Serializable {
     @JsonProperty
     private Double code92013cPoint;
 
-    public NhiAbnormalityPatient(Long id, String name, LocalDate birth, String medicalId, String cardNumber) {
+    public NhiAbnormalityPatient(Long id, String name, LocalDate birth, Boolean vipPaient, String medicalId, String cardNumber) {
         this.id = id;
         this.name = name;
         this.birth = birth;
+        this.vipPaient = vipPaient;
         this.medicalId = medicalId;
         this.cardNumber = cardNumber;
     }

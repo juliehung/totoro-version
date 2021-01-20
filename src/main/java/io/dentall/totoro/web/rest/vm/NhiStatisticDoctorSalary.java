@@ -60,6 +60,11 @@ public class NhiStatisticDoctorSalary {
     private String patientName;
 
     /**
+     * 病患是否為VIP(expand 才有)
+     */
+    private Boolean vipPatient;
+
+    /**
      * 治療時間(expand 才有)
      */
     private Instant disposalDate;
@@ -75,6 +80,10 @@ public class NhiStatisticDoctorSalary {
     public void setPatientName(String patientName) {
         this.patientName = patientName;
     }
+
+    public Boolean getVipPatient() { return this.vipPatient; }
+
+    public void setVipPatient(Boolean vipPatient) { this.vipPatient = vipPatient; }
 
     public void setPatientId(Long patientId) {
         this.patientId = patientId;

@@ -401,6 +401,7 @@ public class NhiStatisticService {
                             o.setDisposalDate(e.getDisposalDate());
                             o.setPatientId(e.getPatientId());
                             o.setPatientName(e.getPatientName());
+                            o.setVipPatient(e.getVipPatient());
                             o.setTreatmentPoint(o.getTotal() - o.getCopayment() - e.getExaminationPoint());
                             if (infectionExaminationCodes.contains(e.getExaminationCode())) {
                                 o.setInfectionExaminationPoint(e.getExaminationPoint().longValue());

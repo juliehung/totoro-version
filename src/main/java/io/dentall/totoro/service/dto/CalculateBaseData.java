@@ -37,5 +37,6 @@ public interface CalculateBaseData {
 
     // Patient
     String getPatientName();
+    Boolean getVipPatient();
 
 }

@@ -13,6 +13,9 @@ public class NhiExtendDisposalVM implements Serializable {
     private String name;
 
     @JsonProperty
+    private Boolean vipPatient;
+
+    @JsonProperty
     private String doctor;
 
     @JsonProperty
@@ -28,6 +31,7 @@ public class NhiExtendDisposalVM implements Serializable {
     public NhiExtendDisposalVM(NhiExtendDisposal nhiExtendDisposal) {
         Patient patient = nhiExtendDisposal.getDisposal().getRegistration().getAppointment().getPatient();
         name = patient.getName();
+        vipPatient = patient.getVipPatient();
         medicalId = patient.getMedicalId();
         doctor = nhiExtendDisposal.getDisposal().getCreatedBy();
 
@@ -41,6 +45,10 @@ public class NhiExtendDisposalVM implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Boolean getVipPatient() { return vipPatient; }
+
+    public void setVipPatient(Boolean vipPatient) { this.vipPatient = vipPatient; }
 
     public String getDoctor() {
         return doctor;
