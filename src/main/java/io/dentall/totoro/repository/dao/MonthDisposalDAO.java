@@ -133,6 +133,10 @@ public class MonthDisposalDAO {
         return patientName;
     }
 
+    public Boolean getVipPatient() {
+        return vipPatient;
+    }
+
     public Long getDisposalId() {
         return disposalId;
     }
