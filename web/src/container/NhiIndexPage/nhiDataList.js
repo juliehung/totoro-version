@@ -69,7 +69,7 @@ const NhiDataListRender = ({
             <div>
               <div>
                 <CheckboxWrap
-                  checked={checkedModalData.find(id => disposalId === id || nhiExtendDisposal?.serialNumber === id)}
+                  checked={checkedModalData.find(id => disposalId === id)}
                   isSelected={currentNhiOne === disposalId}
                   onChange={() => {
                     checkedModalData.find(id => disposalId === id)

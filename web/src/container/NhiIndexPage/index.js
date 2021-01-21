@@ -468,13 +468,17 @@ function NhiIndexPage({
   useEffect(() => {
     if (!validNhiDataLoading && Object.values(validNhiData)?.[0]) {
       updateNhiFirstId(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
-      updateCheckedModalData(
-        Object.entries(validNhiData)
-          .map(([, list]) => list.map(({ disposalId }) => disposalId))
-          .flat(Infinity),
-      );
+      if (!isModalVisible) {
+        setTimeout(() => {
+          updateCheckedModalData(
+            Object.entries(validNhiData)
+              .map(([, list]) => list.map(({ disposalId }) => disposalId))
+              .flat(Infinity),
+          );
+        }, 100);
+      }
     }
-  }, [validNhiData, validNhiDataLoading]);
+  }, [validNhiData, validNhiDataLoading, isModalVisible]);
   useEffect(() => {
     if (nhiFirstId) {
       dispatch(getNhiOneByDisposalId(nhiFirstId));
