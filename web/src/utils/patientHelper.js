@@ -1,3 +1,3 @@
 export const parsePatientNameWithVipMark = (isVip, name) => {
-  return isVip ? (name ? `*${name}` : name) : '';
+  return name ? (isVip ? `*${name}` : name) : '';
 };
