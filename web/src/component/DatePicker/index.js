@@ -98,6 +98,7 @@ function DatePicker(props) {
           disabled={disabled}
           displayFormat={() => {
             if (date) {
+              date.locale('zh-tw');
               const year = date.year() - 1911;
               return `${year}年${date.format('MMMDo')}`;
             }
