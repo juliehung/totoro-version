@@ -411,17 +411,19 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "tp.total as txPoint, " +
             "np.specific_code as specificCode, " +
             "a.patient_id as patientId, " +
-            "a.doctor_user_id as doctorId " +
+            "eu.user_id as doctorId " +
             "from disposal d " +
             "    left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "    left join treatment_procedure tp on d.id = tp.disposal_id " +
             "    left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "    left join nhi_procedure np on tp.nhi_procedure_id = np.id " +
             "    left join appointment a on d.registration_id = a.registration_id " +
+            "    left join extend_user eu on ned.a15 = eu.national_id " +
+            "    left join jhi_user ju on eu.user_id = ju.id " +
             "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
-            "   and d.id not in :excludeDisposalId " +
+            "   and d.id not in :excludeDisposalId and trim(ned.serial_number) <> '' and trim(ned.a18) <> '' and tp.nhi_procedure_id is not null " +
             "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
-            "   and d.id not in :excludeDisposalId " +
+            "   and d.id not in :excludeDisposalId and trim(ned.serial_number) <> '' and trim(ned.a18) <> '' and tp.nhi_procedure_id is not null " +
             "order by d.id, tp.id "
     )
     List<CalculateBaseData> findCalculateBaseDataByDate(
@@ -445,7 +447,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "tp.total as txPoint, " +
             "np.specific_code as specificCode, " +
             "a.patient_id as patientId, " +
-            "a.doctor_user_id as doctorId, " +
+            "eu.user_id as doctorId, " +
             "p.name as patientName, " +
             "p.vip_patient as vipPatient " +
             "from disposal d " +
@@ -455,10 +457,12 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "    left join nhi_procedure np on tp.nhi_procedure_id = np.id " +
             "    left join appointment a on d.registration_id = a.registration_id " +
             "    left join patient p on a.patient_id = p.id " +
+            "    left join extend_user eu on ned.a15 = eu.national_id " +
+            "    left join jhi_user ju on eu.user_id = ju.id " +
             "where ned.a19 = '1' and ned.jhi_date between :begin and :end and a.doctor_user_id = :doctorId " +
-            "   and d.id not in :excludeDisposalId " +
+            "   and d.id not in :excludeDisposalId and trim(ned.serial_number) <> '' and trim(ned.a18) <> '' and tp.nhi_procedure_id is not null " +
             "or ned.a19 = '2' and ned.replenishment_date between :begin and :end and a.doctor_user_id = :doctorId " +
-            "   and d.id not in :excludeDisposalId " +
+            "   and d.id not in :excludeDisposalId and trim(ned.serial_number) <> '' and trim(ned.a18) <> '' and tp.nhi_procedure_id is not null " +
             "order by d.id, tp.id "
     )
     List<CalculateBaseData> findCalculateBaseDataByDateAndDoctorId(
@@ -478,12 +482,18 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
                     " where (ned.a19 <> '2' " +
                     "   and ned.jhi_date between :begin and :end " +
                     "   and netp.a73 in :endoList " +
-                    "   and d.id not in :excludeDisposalIds) " +
+                    "   and d.id not in :excludeDisposalIds " +
+                    "   and trim(ned.serial_number) <> '' " +
+                    "   and trim(ned.a18) <> ''  " +
+                    "   and tp.nhi_procedure_id is not null) " +
                     "    or (ned.a19 = '2' " +
                     "   and ned.replenishment_date between :begin and :end " +
                     "   and netp.a73 in :endoList " +
-                    "   and d.id not in :excludeDisposalIds) " +
-                    " order by a.doctor_user_id")
+                    "   and d.id not in :excludeDisposalIds " +
+                    "   and trim(ned.serial_number) <> '' " +
+                    "   and trim(ned.a18) <> '' " +
+                    "   and tp.nhi_procedure_id is not null) " +
+                " order by a.doctor_user_id")
     List<NhiIndexEndoDTO> findEndoIndexRawData(
             @Param("begin") Instant begin,
             @Param("end") Instant end,
@@ -510,9 +520,9 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "    left join appointment a on d.registration_id = a.registration_id " +
             "    left join patient p on a.patient_id = p.id " +
             "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
-            "   and d.id not in :excludeDisposalId " +
+            "   and d.id not in :excludeDisposalId and trim(ned.serial_number) <> '' and trim(ned.a18) <> '' and tp.nhi_procedure_id is not null " +
             "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
-            "   and d.id not in :excludeDisposalId " +
+            "   and d.id not in :excludeDisposalId and trim(ned.serial_number) <> '' and trim(ned.a18) <> '' and tp.nhi_procedure_id is not null " +
             "order by d.id "
     )
     List<CalculateBaseData> findCalculateBaseDataWithoutTx(

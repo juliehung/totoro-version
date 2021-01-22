@@ -1,5 +1,7 @@
 package io.dentall.totoro.business.service.nhi;
 
+import io.dentall.totoro.business.service.nhi.util.NhiProcedureSalaryType;
+import io.dentall.totoro.business.service.nhi.util.NhiProcedureUtil;
 import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.domain.User;
@@ -26,22 +28,6 @@ public class NhiStatisticService {
     private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
 
     private final UserRepository userRepository;
-
-    private final List<String> infectionExaminationCodes = Arrays.asList(
-        "00305C",
-        "00306C",
-        "00307C",
-        "00308C",
-        "00309C",
-        "00310C",
-        "00311C",
-        "00312C",
-        "00313C",
-        "00314C",
-        "00315C",
-        "00316C",
-        "00317C"
-    );
 
     public NhiStatisticService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
@@ -137,23 +123,12 @@ public class NhiStatisticService {
         return nhiExtendDisposalRepository.calculateToothCleanIndex(begin, end, excludeDisposalId);
     }
 
-    private static final List<String> endoList =
-            Arrays.asList(
-                    "90015C",
-                    "90001C",
-                    "90002C",
-                    "90003C",
-                    "90016C",
-                    "90018C",
-                    "90019C",
-                    "90020C");
-
     public List<NhiIndexEndoVM> calculateEndoIndex(Instant begin, Instant end, List<Long> excludeDisposalIds) {
         if (excludeDisposalIds == null || excludeDisposalIds.size() == 0) {
             excludeDisposalIds = Arrays.asList(0L);
         }
 
-        List<NhiIndexEndoDTO> rawData = nhiExtendDisposalRepository.findEndoIndexRawData(begin, end, endoList, excludeDisposalIds);
+        List<NhiIndexEndoDTO> rawData = nhiExtendDisposalRepository.findEndoIndexRawData(begin, end, NhiProcedureSalaryType.ENDO.getCodeListAtSalary(), excludeDisposalIds);
 
         Map<Long, NhiIndexEndoVM> mapResult = rawData.stream()
                 .reduce(new HashMap<Long, NhiIndexEndoVM>(), (map, dto) -> {
@@ -223,13 +198,15 @@ public class NhiStatisticService {
             List<Long> excludeDisposalId) {
         Map<Instant, NhiStatisticDoctorSalary> m = new HashMap<>();
 
+        List<Long> disposalList = new ArrayList<>();
+
         if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
             excludeDisposalId = Arrays.asList(0L);
         }
 
         // 這邊特別將時間轉成台北時區後，再進行Group By，因為沒有這樣處理的話，有可能會出現小於begin或大於end的日期
         // 雖然特別將時區轉成台北時區後，可是因為NhiStatisticDoctorSalary.disposalDate為Instant型態，所以只好特別從localDateTime轉回Instant，但要時區要指定成UTC，避免時間又被減掉8小時
-        nhiExtendDisposalRepository.findCalculateBaseDataWithoutTx(begin, end, excludeDisposalId).stream()
+        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId).stream()
                 .collect(Collectors
                         .groupingBy(obj -> obj.getDisposalDate().atZone(ZoneId.of("Asia/Taipei")).toLocalDateTime().truncatedTo(ChronoUnit.DAYS).toInstant(ZoneOffset.UTC)))
                 .forEach((k, v) -> {
@@ -240,28 +217,8 @@ public class NhiStatisticService {
                                 o.setDisposalDate(k);
                             }
 
-                            o.setTotal(Long.sum(
-                                o.getTotal(),
-                                Long.parseLong(e.getVisitTotalPoint())
-                            ));
-                            o.setTreatmentPoint(Long.sum(
-                                o.getTreatmentPoint(),
-                                Long.parseLong(e.getVisitTotalPoint()) - e.getExaminationPoint().longValue() - Long.parseLong(e.getCopayment())
-                            ));
-
-                            if (infectionExaminationCodes.contains(e.getExaminationCode())) {
-                                o.setInfectionExaminationPoint(Long.sum(
-                                    o.getInfectionExaminationPoint(),
-                                    e.getExaminationPoint()
-                                ));
-                            } else {
-                                o.setRegularExaminationPoint(Long.sum(
-                                    o.getRegularExaminationPoint(),
-                                    e.getExaminationPoint()
-                                ));
-                            }
-
-                            o.setDisposalDate(kk);
+                            this.disposalCounting(o, e, disposalList);
+                            this.txCounting(o, e);
 
                             return o;
                         });
@@ -271,8 +228,84 @@ public class NhiStatisticService {
         return m.values();
     }
 
-    public Map<Long, NhiStatisticDoctorSalary> getDoctorSalary(LocalDate begin, LocalDate end,
-            List<Long> excludeDisposalId) {
+    private void txCounting(NhiStatisticDoctorSalary o, CalculateBaseData e) {
+        if (NhiProcedureUtil.isPeriodAtSalary(e.getTxCode())) {
+            // dentall 定義之薪水類行為牙周
+            o.setPerioPoint(
+                o.getPerioPoint() != null
+                    ? o.getPerioPoint() + e.getTxPoint().longValue()
+                    : e.getTxPoint().longValue()
+            );
+        } else if (NhiProcedureUtil.isEndoAtSalary(e.getTxCode())) {
+            // dentall 定義之薪水類行為根管
+            o.setEndoPoint(
+                o.getEndoPoint() != null
+                    ? o.getEndoPoint() + e.getTxPoint().longValue()
+                    : e.getTxPoint().longValue()
+            );
+        }
+
+        if (!NhiProcedureSalaryType.EXAMINATION_CODE.getCodeListAtSalary().contains(e.getTxCode())) {
+            o.setTreatmentPoint(
+                o.getTreatmentPoint() != null
+                    ? o.getTreatmentPoint() + e.getTxPoint().longValue()
+                    : e.getTxPoint().longValue()
+            );
+            o.setTotal(
+                o.getTotal() != null
+                    ? o.getTotal() + e.getTxPoint().longValue()
+                    : e.getExaminationPoint()
+            );
+        }
+
+    }
+
+    private void disposalCounting(NhiStatisticDoctorSalary o, CalculateBaseData e, List<Long> countedList) {
+        if (!countedList.contains(e.getDisposalId())) {
+            o.setTotal(
+                o.getTotal() != null
+                    ? o.getTotal() + e.getExaminationPoint() - Long.parseLong(e.getCopayment())
+                    : e.getExaminationPoint() - Long.parseLong(e.getCopayment())
+            );
+
+            if (NhiProcedureSalaryType.INFECTION_EXAMINATION_CODE.getCodeListAtSalary().contains(e.getExaminationCode())) {
+                o.setInfectionExaminationPoint(
+                    o.getInfectionExaminationPoint() != null
+                        ? o.getInfectionExaminationPoint() + e.getExaminationPoint()
+                        : e.getExaminationPoint()
+                );
+            } else {
+                o.setRegularExaminationPoint(
+                    o.getRegularExaminationPoint() != null
+                        ? o.getRegularExaminationPoint() + e.getExaminationPoint()
+                        : e.getExaminationPoint()
+                );
+            }
+
+            o.setCopayment(
+                o.getCopayment() != null
+                    ? o.getCopayment() + Long.parseLong(e.getCopayment())
+                    : Long.parseLong(e.getCopayment())
+            );
+
+
+            o.setPatientId(e.getPatientId());
+            o.setPatientName(e.getPatientName());
+            o.setDisposalDate(e.getDisposalDate());
+            o.setVipPatient(e.getVipPatient());
+
+            countedList.add(e.getDisposalId());
+
+            o.setTotalDisposal((long) countedList.size());
+        }
+    }
+
+    public Map<Long, NhiStatisticDoctorSalary> getSalary(
+        LocalDate begin,
+        LocalDate end,
+        Long doctorId,
+        List<Long> excludeDisposalId
+    ) {
         Map<Long, NhiStatisticDoctorSalary> m = new HashMap<>();
         ArrayList<Long> disposalList = new ArrayList<>();
 
@@ -280,141 +313,41 @@ public class NhiStatisticService {
             excludeDisposalId = Arrays.asList(0L);
         }
 
-        nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId).stream()
-            .collect(Collectors.groupingBy(CalculateBaseData::getDoctorId))
-            .forEach((k, v) -> {
-                v.forEach(e -> {
-                    m.compute(k, (kk, o) -> {
-                        long txPoint = e.getTxPoint() != null ? e.getTxPoint().longValue() : 0;
-
-                        if (o == null) {
-                            o = new NhiStatisticDoctorSalary();
-                        }
-
-                        // 區別計算 treamtent 各自專科別
-                        if (e.getSpecificCode() != null) {
-                            switch (e.getSpecificCode()) {
-                                case "P1":
-                                case "P5":
-                                    o.setEndoPoint(Long.sum(o.getEndoPoint(), txPoint));
-                                    break;
-                                case "P2":
-                                case "P3":
-                                    o.setPedoPoint(Long.sum(o.getPedoPoint(), txPoint));
-                                    break;
-                                case "P4":
-                                case "P8":
-                                    o.setPerioPoint(Long.sum(o.getPerioPoint(), txPoint));
-                                    break;
-                                case "P6":
-                                case "P7":
-                                case "other":
-                                default:
-                                    break;
+        if (doctorId == null) {
+            nhiExtendDisposalRepository.findCalculateBaseDataByDate(begin, end, excludeDisposalId).stream()
+                .collect(Collectors.groupingBy(CalculateBaseData::getDoctorId))
+                .forEach((k, v) -> {
+                    v.forEach(e -> {
+                        m.compute(k, (kk, o) -> {
+                            if (o == null) {
+                                o = new NhiStatisticDoctorSalary();
                             }
-                        }
 
-                        // 總點數
-                        // 總處置數 跟 部分負擔
-                        if (!disposalList.contains(e.getDisposalId())) {
-                            o.setTotalDisposal(Long.sum(
-                                o.getTotalDisposal(),
-                                1L)
-                            );
-                            o.setCopayment(Long.sum(
-                                o.getCopayment(),
-                                e.getCopayment() != null ? Long.parseLong(e.getCopayment()) : 0L)
-                            );
-                            o.setTotal(Long.sum(
-                                o.getTotal(),
-                                Long.parseLong(e.getVisitTotalPoint()))
-                            );
-                            o.setTreatmentPoint(Long.sum(
-                                o.getTreatmentPoint(),
-                                (Long.parseLong(e.getVisitTotalPoint()) - Long.parseLong(e.getCopayment()) - e.getExaminationPoint())
-                            ));
-                            // 感染或一般診察 並總和 診察 點數
-                            if (infectionExaminationCodes.contains(e.getExaminationCode())) {
-                                o.setInfectionExaminationPoint(Long.sum(o.getInfectionExaminationPoint(), e.getExaminationPoint().longValue()));
-                            } else {
-                                o.setRegularExaminationPoint(Long.sum(o.getRegularExaminationPoint(), e.getExaminationPoint().longValue()));
-                            }
-                            disposalList.add(e.getDisposalId());
-                        }
+                            this.disposalCounting(o, e, disposalList);
+                            this.txCounting(o, e);
 
-                        return o;
+                            return o;
+                        });
                     });
                 });
-            });
+        } else {
+            nhiExtendDisposalRepository.findCalculateBaseDataByDateAndDoctorId(begin, end, doctorId, excludeDisposalId).stream()
+                .collect(Collectors.groupingBy(CalculateBaseData::getDisposalId))
+                .forEach((k, v) -> {
+                    v.forEach(e -> {
+                        m.compute(k, (kk, o) -> {
+                            if (o == null) {
+                                o = new NhiStatisticDoctorSalary();
+                            }
 
-        return m;
-    }
+                            this.disposalCounting(o, e, disposalList);
+                            this.txCounting(o, e);
 
-    public Map<Long, NhiStatisticDoctorSalary> getDoctorSalaryExpand(LocalDate begin, LocalDate end, Long doctorId,
-            List<Long> excludeDisposalId) {
-        Map<Long, NhiStatisticDoctorSalary> m = new HashMap<>();
-        List<Long> disposalList = new ArrayList<>();
-
-        if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
-            excludeDisposalId = Arrays.asList(0L);
+                            return o;
+                        });
+                    });
+                });
         }
-
-        nhiExtendDisposalRepository.findCalculateBaseDataByDateAndDoctorId(begin, end, doctorId, excludeDisposalId).stream()
-            .collect(Collectors.groupingBy(CalculateBaseData::getDisposalId))
-            .forEach((k, v) -> {
-                v.forEach(e -> {
-                    m.compute(k, (kk, o) -> {
-                        long txPoint = e.getTxPoint() != null ? e.getTxPoint().longValue() : 0;
-
-                        if (o == null) {
-                            o = new NhiStatisticDoctorSalary();
-                        }
-
-                        // 區別計算 treamtent 各自專科別
-                        if (e.getSpecificCode() != null) {
-                            switch (e.getSpecificCode()) {
-                                case "P1":
-                                case "P5":
-                                    o.setEndoPoint(Long.sum(o.getEndoPoint(), txPoint));
-                                    break;
-                                case "P2":
-                                case "P3":
-                                    o.setPedoPoint(Long.sum(o.getPedoPoint(), txPoint));
-                                    break;
-                                case "P4":
-                                case "P8":
-                                    o.setPerioPoint(Long.sum(o.getPerioPoint(), txPoint));
-                                    break;
-                                case "P6":
-                                case "P7":
-                                case "other":
-                                default:
-                                    break;
-                            }
-                        }
-
-                        // 總點數
-                        if (!disposalList.contains(e.getDisposalId())) {
-                            o.setCopayment(Long.parseLong(e.getCopayment()));
-                            o.setTotal(Long.parseLong(e.getVisitTotalPoint()));
-                            o.setTotalDisposal(Long.sum(o.getTotalDisposal(), 1L));
-                            o.setDisposalDate(e.getDisposalDate());
-                            o.setPatientId(e.getPatientId());
-                            o.setPatientName(e.getPatientName());
-                            o.setVipPatient(e.getVipPatient());
-                            o.setTreatmentPoint(o.getTotal() - o.getCopayment() - e.getExaminationPoint());
-                            if (infectionExaminationCodes.contains(e.getExaminationCode())) {
-                                o.setInfectionExaminationPoint(e.getExaminationPoint().longValue());
-                            } else {
-                                o.setRegularExaminationPoint(e.getExaminationPoint().longValue());
-                            }
-                            disposalList.add(e.getDoctorId());
-                        }
-
-                        return o;
-                    });
-                });
-            });
 
         return m;
     }
