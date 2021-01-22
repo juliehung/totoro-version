@@ -1,0 +1,117 @@
+package io.dentall.totoro.business.service.nhi.util;
+
+import java.util.Arrays;
+import java.util.List;
+
+public enum NhiProcedureSalaryType {
+    ENDO(Arrays.asList("90021C",
+        "90088C",
+        "90091C",
+        "90092C",
+        "90093C",
+        "90017C",
+        "90020C",
+        "90112C",
+        "90098C",
+        "90097C",
+        "90096C",
+        "90095C",
+        "90010C",
+        "90013C",
+        "90014C",
+        "90011C",
+        "90008C",
+        "90018C",
+        "90001C",
+        "90002C",
+        "90003C",
+        "90004C",
+        "90006C",
+        "90007C",
+        "90015C",
+        "90012C",
+        "90019C",
+        "90005C",
+        "90016C",
+        "90094C",
+        "90009C")),
+    PERIOD(Arrays.asList("91001C",
+        "91002C",
+        "91003C",
+        "91004C",
+        "91005C",
+        "91006C",
+        "91007C",
+        "91008C",
+        "91011C",
+        "91012C",
+        "91013C",
+        "91014C",
+        "91015C",
+        "91016C",
+        "91017C",
+        "91018C",
+        "91019C",
+        "91020C",
+        "91021C",
+        "91022C",
+        "91023C",
+        "91088C",
+        "91103C",
+        "91104C",
+        "91114C")),
+    EXAMINATION_CODE(Arrays.asList("00121C",
+        "00122C",
+        "00123C",
+        "00124C",
+        "00125C",
+        "00126C",
+        "00128C",
+        "00129C",
+        "00130C",
+        "00133C",
+        "00134C",
+        "00301C",
+        "00302C",
+        "00303C",
+        "00304C",
+        "00305C",
+        "00306C",
+        "00307C",
+        "00308C",
+        "00309C",
+        "00310C",
+        "00315C",
+        "00316C",
+        "00317C",
+        "01271C",
+        "01272C",
+        "01273C")),
+    INFECTION_EXAMINATION_CODE(Arrays.asList("00305C",
+        "00306C",
+        "00307C",
+        "00308C",
+        "00309C",
+        "00310C",
+        "00311C",
+        "00312C",
+        "00313C",
+        "00314C",
+        "00315C",
+        "00316C",
+        "00317C"));
+
+    private List<String> codeListAtSalary;
+
+    NhiProcedureSalaryType(List<String> codeListAtSalary) {
+       this.codeListAtSalary = codeListAtSalary;
+    }
+
+    public List<String> getCodeListAtSalary() {
+        return codeListAtSalary;
+    }
+
+    public void setCodeListAtSalary(List<String> codeListAtSalary) {
+        this.codeListAtSalary = codeListAtSalary;
+    }
+}
