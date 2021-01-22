@@ -74,7 +74,7 @@ function DatePicker(props) {
     className,
   } = props;
   const [focused, setFocused] = useState(false);
-  // console.log('date = ', date);
+
   return (
     <Fragment>
       <GlobalStyle />
