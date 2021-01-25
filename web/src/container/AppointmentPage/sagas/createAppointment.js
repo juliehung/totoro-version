@@ -4,6 +4,7 @@ import {
   GET_PATIENT_START_CREATE_APP,
   CREATE_PATIENT,
   patientSearchMode,
+  GET_EXIST_NATIONAL_ID,
 } from '../constant';
 import { call, put, take, select } from 'redux-saga/effects';
 import Appointment from '../../../models/appointment';
@@ -14,6 +15,7 @@ import {
   getPatientSuccessCreateApp,
   createPatientSuccess,
   createAppointment as createAppointmentAction,
+  getExistNationalIdSuccess,
 } from '../actions';
 import convertPatientToOption from '../utils/convertPatientToOption';
 import convertPatientToPatientDetail from '../utils/convertPatientToPatientDetail';
@@ -112,6 +114,18 @@ export function* createPatient() {
       const createdPatient = yield call(Patient.create, patient);
       yield put(createPatientSuccess(createdPatient.id));
       yield put(createAppointmentAction());
+    } catch (error) {
+      // ignore
+    }
+  }
+}
+
+export function* getExistNationalId() {
+  while (true) {
+    try {
+      const { nationalId } = yield take(GET_EXIST_NATIONAL_ID);
+      const isPatientExist = yield call(Patient.getExistNationalId, nationalId);
+      yield put(getExistNationalIdSuccess(isPatientExist));
     } catch (error) {
       // ignore
     }
