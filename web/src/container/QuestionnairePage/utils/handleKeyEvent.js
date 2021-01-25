@@ -13,7 +13,7 @@ export function handleKeyEvent(currentPage, keyEvent, func, data) {
       func.changeFinishModalVisible(true);
       return;
     } else if (validator) {
-      const validation = validator(data.patient);
+      const validation = validator(data.patient, data.isPatientExist, data.existedNationalId);
       if (!validation) {
         func.valitationFail(currentPage);
         return;

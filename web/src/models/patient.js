@@ -63,6 +63,12 @@ export default class Patient {
     return result;
   };
 
+  static getExistNationalId = async nationalId => {
+    const requestURL = `${requestUrl}/nationalId/validation?nationalId=${nationalId}`;
+    const result = await request(requestURL);
+    return result;
+  };
+
   // POST
   static create = async patient => {
     const requestURL = `${requestUrl}`;

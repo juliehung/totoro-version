@@ -25,6 +25,7 @@ import {
   CREATE_PATIENT_SUCCESS,
   CHANGE_PATIENT_SEARCH_MODE,
   patientSearchMode,
+  GET_EXIST_NATIONAL_ID_SUCCESS,
 } from '../constant';
 
 const defaultSearchMode = patientSearchMode.birth;
@@ -64,6 +65,7 @@ const initState = {
   },
   default: { duration: undefined, doctorId: undefined },
   disposalId: undefined,
+  isPatientExist: false,
 };
 
 export const initialState = { ...initState };
@@ -156,7 +158,8 @@ const createApp = (state = initialState, action) =>
             draft.patient.name &&
             draft.patient.name.length > 0 &&
             draft.patient.phone &&
-            draft.patient.phone.length > 0
+            draft.patient.phone.length > 0 &&
+            !draft.isPatientExist
           ) {
             draft.disabled = false;
             return;
@@ -181,6 +184,9 @@ const createApp = (state = initialState, action) =>
         break;
       case CHANGE_PATIENT_SEARCH_MODE:
         draft.searchMode = action.mode;
+        break;
+      case GET_EXIST_NATIONAL_ID_SUCCESS:
+        draft.isPatientExist = action.isPatientExist?.exist;
         break;
       default:
         break;

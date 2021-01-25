@@ -421,8 +421,13 @@ public class PatientResource {
     @Timed
     public ResponseEntity<PatientNationalIdValidationVM> patientNationalIdValidation(@RequestParam String nationalId) {
         log.debug("REST request to get Patient : {}", nationalId);
-        Boolean result = patientRepository.existsByNationalId(nationalId);
-        return ResponseEntity.ok(new PatientNationalIdValidationVM().exist(result));
+        List<PatientNationalIdValidationVM> result = patientRepository.findByNationalId(nationalId);
+        if (result.size() > 0) {
+            return ResponseEntity.ok(result.get(0));
+        } else {
+            return ResponseEntity.ok(new PatientNationalIdValidationVM(null));
+        }
+
     }
 
 }

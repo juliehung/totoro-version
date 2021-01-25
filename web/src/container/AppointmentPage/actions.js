@@ -97,6 +97,8 @@ import {
   CHANGE_PATIENT_SEARCH_MODE,
   CHANGE_CALENADR_RANGE,
   CHANGE_SHIFT_OPEN,
+  GET_EXIST_NATIONAL_ID,
+  GET_EXIST_NATIONAL_ID_SUCCESS,
 } from './constant';
 
 export function changeCalDate(date) {
@@ -489,4 +491,12 @@ export function changeCalendarRange(start, end) {
 
 export function changeShiftOpen(shiftOpen) {
   return { type: CHANGE_SHIFT_OPEN, shiftOpen };
+}
+
+export function getExistNationalId(nationalId) {
+  return { type: GET_EXIST_NATIONAL_ID, nationalId };
+}
+
+export function getExistNationalIdSuccess(isPatientExist) {
+  return { type: GET_EXIST_NATIONAL_ID_SUCCESS, isPatientExist };
 }
