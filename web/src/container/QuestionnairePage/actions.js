@@ -47,6 +47,8 @@ import {
   VALIDATE_FAIL,
   CHANGE_FINISH_MODAL_VISIBLE,
   CHANGE_BLOOD_DISEASE,
+  GET_EXIST_NATIONAL_ID,
+  GET_EXIST_NATIONAL_ID_SUCCESS,
 } from './constant';
 
 export function nextPage() {
@@ -239,4 +241,12 @@ export function valitationFail(page) {
 
 export function changeFinishModalVisible(visible) {
   return { type: CHANGE_FINISH_MODAL_VISIBLE, visible };
+}
+
+export function getExistNationalId(nationalId) {
+  return { type: GET_EXIST_NATIONAL_ID, nationalId };
+}
+
+export function getExistNationalIdSuccess(isPatientExist) {
+  return { type: GET_EXIST_NATIONAL_ID_SUCCESS, isPatientExist };
 }

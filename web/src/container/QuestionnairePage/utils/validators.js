@@ -4,6 +4,10 @@ export function nameValidator(patient) {
   return patient.name?.length > 0;
 }
 
+export function nationalIdValidator(patient, isPatientExist, existedNationalId) {
+  return !isPatientExist || !existedNationalId || patient.nationalId !== existedNationalId;
+}
+
 export function birthValidator(patient) {
   const { birth } = patient;
   return birth && moment().isAfter(moment(birth)) && moment('1911-01-01').isBefore(moment(birth));

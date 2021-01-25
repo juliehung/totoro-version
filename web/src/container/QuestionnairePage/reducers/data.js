@@ -37,6 +37,7 @@ import {
   GET_PATIENT_SUCCESS,
   INIT_PAGE,
   CHANGE_BLOOD_DISEASE,
+  GET_EXIST_NATIONAL_ID_SUCCESS,
 } from '../constant';
 
 const initState = {
@@ -65,6 +66,8 @@ const initState = {
     other: [],
     emergencyContact: { name: undefined, phone: undefined, relationship: undefined },
   },
+  isPatientExist: false,
+  existedNationalId: undefined,
 };
 
 export const initialState = { ...initState };
@@ -187,6 +190,10 @@ const data = (state = initialState, action) =>
         break;
       case CHANGE_SMOKING_A:
         draft.patient.smokingAmount = action.amount;
+        break;
+      case GET_EXIST_NATIONAL_ID_SUCCESS:
+        draft.isPatientExist = action.isPatientExist?.exist;
+        draft.existedNationalId = action.isPatientExist?.patientId;
         break;
       default:
         break;
