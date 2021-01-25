@@ -260,6 +260,7 @@ function PatientDetailImages(props) {
     changePageSizeToGetPatientImages,
     updatePatientImagesIndex,
     isFetchEmpty,
+    isPatientImageError,
   } = props;
   const [isFullScreen, switchFullScreen] = useState(false);
 
@@ -271,7 +272,11 @@ function PatientDetailImages(props) {
         </div>
       </Header>
       <Content isFullScreen={isFullScreen}>
-        {loading ? (
+        {isPatientImageError ? (
+          <div className="empty-wrap">
+            <Empty image={<EmptyDataSvg />} description={<span>無資料，請至月申報新增</span>} />
+          </div>
+        ) : loading ? (
           <Spin className="spin-wrap" />
         ) : patientImagesData?.patientImages && patientImagesData?.patientImages.length > 0 ? (
           <Fragment>
@@ -381,6 +386,7 @@ const mapStateToProps = ({ patientPageReducer }) => ({
   size: patientPageReducer.patientImages.size,
   currentIndex: patientPageReducer.patientImages.currentIndex,
   isFetchEmpty: patientPageReducer.patientImages.isFetchEmpty,
+  isPatientImageError: patientPageReducer.patientImages.isPatientImageError,
 });
 
 const mapDispatchToProps = { changePageSizeToGetPatientImages, updatePatientImagesIndex };
