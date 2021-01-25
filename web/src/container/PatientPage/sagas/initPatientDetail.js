@@ -31,6 +31,7 @@ import {
   getPatientImagesSuccess,
   getNhiIcd10Cms,
   getNhiIcd10CmsSuccess,
+  patientImagesApiError,
 } from '../actions';
 
 export function* initPatientDetail() {
@@ -107,7 +108,11 @@ function* getDocNpHistorySaga(id) {
 }
 
 function* getPatientImagesSaga(id) {
-  yield put(getPatientImages());
-  const patientImages = yield call(Patient.getImagesById, id);
-  yield put(getPatientImagesSuccess(patientImages));
+  try {
+    yield put(getPatientImages());
+    const patientImages = yield call(Patient.getImagesById, id);
+    yield put(getPatientImagesSuccess(patientImages));
+  } catch (error) {
+    yield put(patientImagesApiError());
+  }
 }

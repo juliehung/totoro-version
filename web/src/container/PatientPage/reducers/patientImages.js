@@ -3,6 +3,7 @@ import {
   CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES,
   CHANGE_PAGE_SIZE_TO_GET_PATIENT_IMAGES_SUCCESS,
   GET_PATIENT_IMAGES,
+  GET_PATIENT_IMAGES_API_ERROR,
   GET_PATIENT_IMAGES_SUCCESS,
   UPDATE_PATIENT_IMAGES_INDEX,
 } from '../constant';
@@ -14,6 +15,7 @@ const initState = {
   size: 20,
   currentIndex: 0,
   isFetchEmpty: false,
+  isPatientImageError: false,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -44,6 +46,9 @@ const patientImages = (state = initState, action) =>
           draft.currentIndex = state.patientImages.length;
           draft.patientImages = [].concat(state.patientImages, action.patientImages);
         }
+        break;
+      case GET_PATIENT_IMAGES_API_ERROR:
+        draft.isPatientImageError = true;
         break;
       default:
         break;
