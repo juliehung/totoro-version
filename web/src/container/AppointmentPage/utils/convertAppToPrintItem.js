@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { parsePatientNameWithVipMark } from '../../../utils/patientHelper';
 
 const findNotWebAppt = appt => {
   const expectTime = moment(appt.expectedArrivalTime).format('YYYY-MM-DD hh:mm:ss');
@@ -18,7 +19,7 @@ export default function convertAppToPrintItem(appointments) {
       .map(p => {
         const key = p.id;
         const time = moment(p.expectedArrivalTime).format('HH:mm');
-        const name = p.patientName;
+        const name = parsePatientNameWithVipMark(p.vipPatient, p.patientName);
         const mrn = p.medicalId;
         const birth = p.birth;
         const gender = p.gender;

@@ -42,7 +42,7 @@ const { TabPane } = Tabs;
 
 const renderFloat2Position = f => (typeof f === 'number' ? (Math.round(f * 100) / 100).toFixed(2) : '0');
 const renderThousands = v => {
-  if (typeof v === 'number' && v < 1000) {
+  if (typeof v === 'number' && v > 1000) {
     const value = v.toString().split('.');
     value[0] = value[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return value.join('.');

@@ -16,23 +16,25 @@ function toRefreshValidNhiData(nhiOne, validNhiData, doctorData) {
   const findMappingData = validNhiData.filter(({ disposalId }) => disposalId === nhiOne?.id);
   if (nhiOne && nhiOne?.treatmentProcedures.length !== 0) {
     for (const treatmentProcedure of nhiOne?.treatmentProcedures) {
-      const nhiName = `${treatmentProcedure?.nhiProcedure?.code} ${treatmentProcedure?.nhiProcedure?.name}`;
-      treatmentData.push({
-        _id: `${nhiOne?.id}-${uuid()}`,
-        nhiName,
-        point: treatmentProcedure?.nhiProcedure?.point,
-        total: treatmentProcedure?.total,
-        quantity: treatmentProcedure?.quantity,
-        multiplier:
-          treatmentProcedure?.total &&
-          `${
-            Math.round(
-              treatmentProcedure?.total / (treatmentProcedure?.quantity * treatmentProcedure?.nhiProcedure?.point),
-            ) * 100
-          }%`,
-        nhiCode: treatmentProcedure?.nhiProcedure?.code,
-        target: 'treatment',
-      });
+      if (!!treatmentProcedure?.nhiProcedure && !!treatmentProcedure?.nhiProcedure?.code) {
+        const nhiName = `${treatmentProcedure?.nhiProcedure?.code} ${treatmentProcedure?.nhiProcedure?.name}`;
+        treatmentData.push({
+          _id: `${nhiOne?.id}-${uuid()}`,
+          nhiName,
+          point: treatmentProcedure?.nhiProcedure?.point,
+          total: treatmentProcedure?.total,
+          quantity: treatmentProcedure?.quantity,
+          multiplier:
+            treatmentProcedure?.total &&
+            `${
+              Math.round(
+                treatmentProcedure?.total / (treatmentProcedure?.quantity * treatmentProcedure?.nhiProcedure?.point),
+              ) * 100
+            }%`,
+          nhiCode: treatmentProcedure?.nhiProcedure?.code,
+          target: 'treatment',
+        });
+      }
     }
   }
   if (nhiOne && nhiOne?.nhiExtendDisposals.length !== 0) {
@@ -59,8 +61,10 @@ function toRefreshValidNhiData(nhiOne, validNhiData, doctorData) {
     const findMappingDoctor = userNotionalIds.filter(({ nationalId }) => nationalId === nhiExtendDisposalList[0]?.a15);
     const nhiOneTableData = []
       .concat(examinationData, treatmentData)
-      .filter((data, index, self) => index === self.findIndex(t => t.nhiCode === data.nhiCode));
-
+      .filter(
+        (data, index, self) =>
+          index === self.findIndex(t => !!t.nhiCode && !!data.nhiCode && t.nhiCode === data.nhiCode),
+      );
     const examinationPoint = nhiOneTableData
       .map(({ total, target }) => target === 'examination' && total)
       .reduce((a, b) => (b ? a + b : a), 0);
