@@ -91,7 +91,7 @@ function QuestionnairePage(props) {
     isLast,
     changeFinishModalVisible,
     isPatientExist,
-    existedNationalId,
+    existedPatientId,
   } = props;
 
   const focusRef = useRef(null);
@@ -124,7 +124,7 @@ function QuestionnairePage(props) {
           valitationFail,
           changeFinishModalVisible,
         },
-        { patient, isPatientExist, existedNationalId },
+        { patient, isPatientExist, existedPatientId },
       );
     }
 
@@ -154,7 +154,7 @@ function QuestionnairePage(props) {
     valitationFail,
     changeFinishModalVisible,
     isPatientExist,
-    existedNationalId,
+    existedPatientId,
   ]);
 
   useEffect(() => {
@@ -181,7 +181,7 @@ function QuestionnairePage(props) {
   const onSwipedUp = () => {
     focusRef.current.focus();
     if (validator) {
-      const validation = validator(patient, isPatientExist);
+      const validation = validator(patient, isPatientExist, existedPatientId);
       if (!validation) {
         valitationFail(currentPage);
         return;
@@ -234,7 +234,7 @@ const mapStateToProps = ({ questionnairePageReducer }) => {
     prevPage: currentPageObj?.prevPage,
     isLast: currentPageObj?.isLast,
     isPatientExist: questionnairePageReducer.data.isPatientExist,
-    existedNationalId: questionnairePageReducer.data.existedNationalId,
+    existedPatientId: questionnairePageReducer.data.existedPatientId,
   };
 };
 

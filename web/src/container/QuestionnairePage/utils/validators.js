@@ -4,8 +4,8 @@ export function nameValidator(patient) {
   return patient.name?.length > 0;
 }
 
-export function nationalIdValidator(patient, isPatientExist, existedNationalId) {
-  return !isPatientExist || !existedNationalId || patient.nationalId !== existedNationalId;
+export function nationalIdValidator(patient, isPatientExist, existedPatientId) {
+  return !isPatientExist || !existedPatientId || patient.id === existedPatientId;
 }
 
 export function birthValidator(patient) {

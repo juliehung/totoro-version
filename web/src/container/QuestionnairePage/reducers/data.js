@@ -67,7 +67,7 @@ const initState = {
     emergencyContact: { name: undefined, phone: undefined, relationship: undefined },
   },
   isPatientExist: false,
-  existedNationalId: undefined,
+  existedPatientId: undefined,
 };
 
 export const initialState = { ...initState };
@@ -193,7 +193,7 @@ const data = (state = initialState, action) =>
         break;
       case GET_EXIST_NATIONAL_ID_SUCCESS:
         draft.isPatientExist = action.isPatientExist?.exist;
-        draft.existedNationalId = action.isPatientExist?.patientId;
+        draft.existedPatientId = action.isPatientExist?.patientId;
         break;
       default:
         break;
