@@ -486,7 +486,7 @@ function CreateAppModal({
                 <PatientDetailElement>
                   <span>
                     {selectedPatient &&
-                      `最近預約:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentAppointment)}`}
+                      `即將到來:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentAppointment)}`}
                     <PatientAppointmentPopover
                       patient={selectedPatient}
                       patientAppointments={selectedPatientAppointments}

@@ -259,7 +259,7 @@ function EditAppModal({
               </PatientDetailElement>
               <PatientDetailElement>
                 <span>
-                  {patient && `最近預約:  ${parseDateToString(patient.appointmentsAnalysis.recentAppointment)}`}
+                  {patient && `即將到來:  ${parseDateToString(patient.appointmentsAnalysis.recentAppointment)}`}
                   <PatientAppointmentPopover patient={patient} patientAppointments={currentPatientAppointments} />
                 </span>
               </PatientDetailElement>
