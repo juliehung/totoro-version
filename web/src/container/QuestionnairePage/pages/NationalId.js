@@ -13,7 +13,7 @@ function NationalId(props) {
   };
 
   const onPressEnter = () => {
-    if (!nationalIdValidator(props.patient, props.isPatientExist, props.existedNationalId)) {
+    if (!nationalIdValidator(props.patient, props.isPatientExist, props.existedPatientId)) {
       valitationFail(4);
       return;
     }
@@ -34,7 +34,7 @@ function NationalId(props) {
         value={props.nationalId}
         onBlur={() => props?.nationalId && props.nationalId.length !== 0 && props.getExistNationalId(props.nationalId)}
       />
-      {!nationalIdValidator(props.nationalId, props.isPatientExist, props.existedNationalId) && (
+      {!nationalIdValidator(props.patient, props.isPatientExist, props.existedPatientId) && (
         <ErrorMessagess errorText={'身分證號重複'} />
       )}
     </Container>
@@ -45,7 +45,7 @@ const mapStateToProps = ({ questionnairePageReducer }) => ({
   patient: questionnairePageReducer.data.patient,
   nationalId: questionnairePageReducer.data.patient.nationalId,
   isPatientExist: questionnairePageReducer.data.isPatientExist,
-  existedNationalId: questionnairePageReducer.data.existedNationalId,
+  existedPatientId: questionnairePageReducer.data.existedPatientId,
   validationError: questionnairePageReducer.flow.validationError,
 });
 

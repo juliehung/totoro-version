@@ -43,7 +43,7 @@ function PageControll(props) {
     isLast,
     changeFinishModalVisible,
     isPatientExist,
-    existedNationalId,
+    existedPatientId,
   } = props;
 
   const [disable, setDisable] = useState(false);
@@ -64,7 +64,7 @@ function PageControll(props) {
 
   const nextPageClick = () => {
     if (validator) {
-      const validation = validator(patient, isPatientExist, existedNationalId);
+      const validation = validator(patient, isPatientExist, existedPatientId);
       if (!validation) {
         valitationFail(currentPage);
         return;
@@ -116,7 +116,7 @@ const mapStateToProps = ({ questionnairePageReducer }) => {
     patient: questionnairePageReducer.data.patient,
     error: questionnairePageReducer.flow.validationError,
     isPatientExist: questionnairePageReducer.data.isPatientExist,
-    existedNationalId: questionnairePageReducer.data.existedNationalId,
+    existedPatientId: questionnairePageReducer.data.existedPatientId,
   };
 };
 
