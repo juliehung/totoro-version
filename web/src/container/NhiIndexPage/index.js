@@ -498,11 +498,9 @@ function NhiIndexPage({
       <Menu.Item
         onClick={() => {
           setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
-          setTimeout(() => {
-            if (getAllDisposalId.length !== checkedModalData.length) {
-              updateCheckedModalData(getAllDisposalId);
-            }
-          }, 700);
+          if (getAllDisposalId.length !== checkedModalData.length) {
+            updateCheckedModalData(getAllDisposalId);
+          }
         }}
       >
         <div>全選</div>
@@ -510,13 +508,11 @@ function NhiIndexPage({
       <Menu.Item
         onClick={() => {
           setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
-          setTimeout(() => {
-            if (getAllSerialNumber.length !== checkedModalData.length) {
-              updateCheckedModalData(getAllSerialNumber);
-            } else {
-              updateCheckedModalData([]);
-            }
-          }, 1000);
+          if (getAllSerialNumber.length !== checkedModalData.length) {
+            updateCheckedModalData(getAllSerialNumber);
+          } else {
+            updateCheckedModalData([]);
+          }
         }}
       >
         <div>專案流水號</div>
@@ -556,15 +552,13 @@ function NhiIndexPage({
               if (checkedModalData.length !== 0) {
                 setIsModalVisible(false);
                 setDisposalCheckBoxVisible(false);
-                setTimeout(() => {
-                  dispatch(
-                    getNhiSalary(
-                      startDate,
-                      endDate,
-                      getAllDisposalId.filter(id => checkedModalData.indexOf(id) === -1),
-                    ),
-                  );
-                }, 500);
+                dispatch(
+                  getNhiSalary(
+                    startDate,
+                    endDate,
+                    getAllDisposalId.filter(id => checkedModalData.indexOf(id) === -1),
+                  ),
+                );
               }
             }}
           >
