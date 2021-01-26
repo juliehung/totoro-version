@@ -124,7 +124,7 @@ const endoColumns = (doctors, filterDoctors) => [
     onFilter: (value, record) => value === record.did,
     render: did => doctors.find(d => d.id === did)?.firstName ?? did,
   },
-  { title: '根管未完成率', dataIndex: 'uncompletedRate', key: 'uncompletedRate', render: t => `${t * 100}%` },
+  { title: '根管完成率', dataIndex: 'completedRate', key: 'completedRate', render: t => (t ? `${t * 100}%` : '') },
 ];
 const nhiSalaryColumns = [
   {
@@ -791,7 +791,7 @@ function NhiIndexPage({
                 rowKey={record => `${record.did} ${record.distinctTotalPat}`}
               />
             </TabPane>
-            <TabPane tab="根管未完成率指標" key="4">
+            <TabPane tab="根管完成率指標" key="4">
               <TableContainer
                 loading={nhiTableLoading}
                 scroll={{ y: 280 }}
