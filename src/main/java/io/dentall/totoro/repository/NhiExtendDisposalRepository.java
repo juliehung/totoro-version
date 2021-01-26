@@ -421,9 +421,9 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "    left join extend_user eu on ned.a15 = eu.national_id " +
             "    left join jhi_user ju on eu.user_id = ju.id " +
             "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
-            "   and d.id not in :excludeDisposalId and trim(ned.serial_number) <> '' and trim(ned.a18) <> '' and tp.nhi_procedure_id is not null " +
+            "   and d.id not in :excludeDisposalId and tp.nhi_procedure_id is not null " +
             "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
-            "   and d.id not in :excludeDisposalId and trim(ned.serial_number) <> '' and trim(ned.a18) <> '' and tp.nhi_procedure_id is not null " +
+            "   and d.id not in :excludeDisposalId and tp.nhi_procedure_id is not null " +
             "order by d.id, tp.id "
     )
     List<CalculateBaseData> findCalculateBaseDataByDate(
