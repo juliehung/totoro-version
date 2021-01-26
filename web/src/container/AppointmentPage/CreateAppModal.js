@@ -609,7 +609,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   selectedPatientAppointments: convertAppointmentToCardObject(
     appointmentPageReducer.createApp?.selectedPatient?.appointments,
     homePageReducer.user.users,
-  ).filter(a => a.isFuture && !a.isRegistration),
+  ).filter(a => (a.isFuture && !a.isRegistration) || a.isCancel),
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
   appointment: appointmentPageReducer.createApp.appointment,
   patient: appointmentPageReducer.createApp.patient,
