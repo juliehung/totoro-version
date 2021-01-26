@@ -121,8 +121,8 @@ export function* getToothClean(begin, end, checkedModalData) {
 export function* getEndoIndexes(begin, end, checkedModalData) {
   try {
     const params = {
-      begin: begin.startOf('day').toISOString(),
-      end: end.subtract(90, 'days').endOf('day').toISOString(),
+      begin: end.subtract(90, 'days').endOf('day').toISOString(),
+      end: begin.startOf('day').toISOString(),
       excludeDisposalId: checkedModalData ? checkedModalData : [],
     };
     const result = yield call(EndoIndexes.get, params);
