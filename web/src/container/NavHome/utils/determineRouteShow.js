@@ -7,6 +7,9 @@ export function determineRouteOrLinkShow(route, account) {
   const isLocal = isLocalChecker();
   const routeCheck = isDev ? true : isLocal ? showWhenLocalVersion : clinicChecker(specificClinic);
 
+  if (route.path === 'nhi' && !isDev) {
+    return false;
+  }
   return isRequireAuth ? (adminRole ? routeCheck : false) : routeCheck;
 }
 

@@ -498,11 +498,9 @@ function NhiIndexPage({
       <Menu.Item
         onClick={() => {
           setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
-          setTimeout(() => {
-            if (getAllDisposalId.length !== checkedModalData.length) {
-              updateCheckedModalData(getAllDisposalId);
-            }
-          }, 700);
+          if (getAllDisposalId.length !== checkedModalData.length) {
+            updateCheckedModalData(getAllDisposalId);
+          }
         }}
       >
         <div>全選</div>
@@ -510,13 +508,11 @@ function NhiIndexPage({
       <Menu.Item
         onClick={() => {
           setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
-          setTimeout(() => {
-            if (getAllSerialNumber.length !== checkedModalData.length) {
-              updateCheckedModalData(getAllSerialNumber);
-            } else {
-              updateCheckedModalData([]);
-            }
-          }, 1000);
+          if (getAllSerialNumber.length !== checkedModalData.length) {
+            updateCheckedModalData(getAllSerialNumber);
+          } else {
+            updateCheckedModalData([]);
+          }
         }}
       >
         <div>專案流水號</div>
@@ -537,7 +533,14 @@ function NhiIndexPage({
         width={'100%'}
         closable={false}
         footer={[
-          <Button className="cancel-modal-btn" key="back" onClick={() => setIsModalVisible(false)}>
+          <Button
+            className="cancel-modal-btn"
+            key="back"
+            onClick={() => {
+              setDisposalCheckBoxVisible(false);
+              setIsModalVisible(false);
+            }}
+          >
             取消
           </Button>,
           <Button
@@ -548,15 +551,14 @@ function NhiIndexPage({
             onClick={() => {
               if (checkedModalData.length !== 0) {
                 setIsModalVisible(false);
-                setTimeout(() => {
-                  dispatch(
-                    getNhiSalary(
-                      startDate,
-                      endDate,
-                      getAllDisposalId.filter(id => checkedModalData.indexOf(id) === -1),
-                    ),
-                  );
-                }, 500);
+                setDisposalCheckBoxVisible(false);
+                dispatch(
+                  getNhiSalary(
+                    startDate,
+                    endDate,
+                    getAllDisposalId.filter(id => checkedModalData.indexOf(id) === -1),
+                  ),
+                );
               }
             }}
           >
