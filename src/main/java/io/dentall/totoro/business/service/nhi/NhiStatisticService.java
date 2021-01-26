@@ -296,7 +296,11 @@ public class NhiStatisticService {
 
             countedList.add(e.getDisposalId());
 
-            o.setTotalDisposal((long) countedList.size());
+            o.setTotalDisposal(
+                o.getTotalDisposal() != null
+                    ? o.getTotalDisposal() + 1L
+                    : 1L
+            );
         }
     }
 
