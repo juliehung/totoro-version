@@ -211,6 +211,8 @@ releaseImageToGCPRegistry:
         - docker:dind
     variables:
         DOCKER_DRIVER: overlay
+        # See https://github.com/docker-library/docker/pull/166
+        DOCKER_TLS_CERTDIR: ""
     script:
         # Write our GCP service account private key into a file
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
