@@ -537,7 +537,14 @@ function NhiIndexPage({
         width={'100%'}
         closable={false}
         footer={[
-          <Button className="cancel-modal-btn" key="back" onClick={() => setIsModalVisible(false)}>
+          <Button
+            className="cancel-modal-btn"
+            key="back"
+            onClick={() => {
+              setDisposalCheckBoxVisible(false);
+              setIsModalVisible(false);
+            }}
+          >
             取消
           </Button>,
           <Button
@@ -548,6 +555,7 @@ function NhiIndexPage({
             onClick={() => {
               if (checkedModalData.length !== 0) {
                 setIsModalVisible(false);
+                setDisposalCheckBoxVisible(false);
                 setTimeout(() => {
                   dispatch(
                     getNhiSalary(
