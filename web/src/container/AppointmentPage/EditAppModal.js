@@ -385,7 +385,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   currentPatientAppointments: convertAppointmentToCardObject(
     appointmentPageReducer.editApp?.patient?.appointments,
     homePageReducer.user.users,
-  ).filter(a => a.isFuture && !a.isRegistration),
+  ).filter(a => (a.isFuture && !a.isRegistration) || a.isCancel),
   deleteLoading: appointmentPageReducer.editApp.deleteLoading,
   deleteAppSuccess: appointmentPageReducer.editApp.deleteAppSuccess,
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
