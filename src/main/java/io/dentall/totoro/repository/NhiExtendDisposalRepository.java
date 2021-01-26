@@ -123,7 +123,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "        left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "        left join jhi_user ju on ju.id = a.doctor_user_id " +
             "                     where a19 <> '2' and date_time between ?1 and ?2 and d.id not in (?3) and tp.nhi_procedure_id is not null" +
-            "                        or a19 = '2' and replenishment_date between ?1 and ?2 and d.id not in (?3), and tp.nhi_procedure_id is not null " +
+            "                        or a19 = '2' and replenishment_date between ?1 and ?2 and d.id not in (?3) and tp.nhi_procedure_id is not null), " +
             "    od_total_pat as ( " +
             "        select did, count(*) as total_pat " +
             "        from ( " +
@@ -212,7 +212,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "                              left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "                              left join jhi_user ju on ju.id = a.doctor_user_id " +
             "                     where a19 <> '2' and date_time between ?1 and ?2 and d.id not in (?3) and tp.nhi_procedure_id is not null " +
-            "                        or a19 = '2' and replenishment_date between ?1 and ?2 and d.id not in (?3) and tp.nhi_procedure_id is not null, " +
+            "                        or a19 = '2' and replenishment_date between ?1 and ?2 and d.id not in (?3) and tp.nhi_procedure_id is not null), " +
             "     nhi_doc_exam as ( " +
             "         select did as did, " +
             "                examination_code, " +
@@ -248,7 +248,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "                              left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "                              left join jhi_user ju on ju.id = a.doctor_user_id " +
             "                     where a19 <> '2' and date_time between ?1 and ?2 and d.id not in (?3)  and tp.nhi_procedure_id is not null" +
-            "                        or a19 = '2' and replenishment_date between ?1 and ?2 and d.id not in (?3) and tp.nhi_procedure_id is not null, " +
+            "                        or a19 = '2' and replenishment_date between ?1 and ?2 and d.id not in (?3) and tp.nhi_procedure_id is not null), " +
             "     nhi_doctor_tx as ( " +
             "        select did, serial_number, a73, np.name as nhiTxName, np.point as nhiTxPoint, count(*) as totalCount, count(*) * np.point as totalPoint " +
             "        from nhi_tx_base " +
@@ -479,7 +479,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
                     "  left join nhi_extend_disposal ned             on d.id              = ned.disposal_id " +
                     "  left join treatment_procedure tp              on d.id              = tp.disposal_id " +
                     "  left join nhi_extend_treatment_procedure netp on tp.id             = netp.treatment_procedure_id " +
-                    " where (ned.a19 <> '2' " +
+                    " where (ned.a19 = '1' " +
                     "   and ned.jhi_date between :begin and :end " +
                     "   and netp.a73 in :endoList " +
                     "   and d.id not in :excludeDisposalIds " +

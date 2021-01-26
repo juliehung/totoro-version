@@ -29,6 +29,8 @@ if (process.env.NODE_ENV !== 'production') {
   // Use dev.dentall.site
   host = 'dev.dentall.site';
   apiPort = 8082;
+  // host = 'localhost';
+  // apiPort = 8080;
 
   // Use dentall.pw
   // clinic = '/cp';
