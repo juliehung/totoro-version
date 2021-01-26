@@ -1,7 +1,7 @@
 export function determineRouteOrLinkShow(route, account) {
   const isDev = process.env.NODE_ENV === 'development';
-  if (route.path === 'nhi' && (window.location.href.includes('dev.dentall.site') || isDev)) {
-    return true;
+  if (route.path === 'nhi') {
+    return window.location.href.includes('dev.dentall.site') || isDev;
   }
   const adminRole = account && account?.role && account?.role.indexOf('管理者') !== -1;
   const isRequireAuth = !!route?.requireAuth;
