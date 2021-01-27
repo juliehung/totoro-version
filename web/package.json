@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/compatible": "^1.0.8",
+    "@ant-design/icons": "^4.4.0",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@fullcalendar/core": "^4.4.0",
     "@fullcalendar/daygrid": "^4.4.0",

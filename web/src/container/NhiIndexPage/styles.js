@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle } from 'styled-components';
-import { Menu, Modal, Table, Tabs } from 'antd';
+import { Col, Menu, Modal, Table, Tabs } from 'antd';
 
 const checkCheckboxMode = (allNums, currentNums) => {
   if (currentNums === 0) {
@@ -103,10 +103,8 @@ const ModalContentContainer = styled.div`
   background-image: linear-gradient(159deg, #f3f6fa 19%, #e4e9f2 77%);
   width: 100%;
   height: 600px;
-
   display: flex;
   align-items: center;
-
   > div:nth-child(1) {
     box-shadow: 8px 0 14px 0 rgba(200, 138, 138, 0.06);
     background-color: rgba(255, 255, 255, 0.95);
@@ -133,12 +131,29 @@ const ModalContentContainer = styled.div`
       }
       > div:nth-child(2) {
         flex: 1;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
         cursor: pointer;
-        > div {
-          width: 87%;
+        border: solid 1px #c5cee0;
+        border-radius: 8px;
+        height: 32px;
+        margin-left: 10px;
+
+        .calendar-tooltip-content {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          & > div:nth-child(1) {
+            margin-left: 10px;
+            flex: 1;
+            color: #222b45;
+            text-align: left;
+            display: flex;
+            align-items: center;
+          }
+          & > div:nth-child(2) {
+            margin-right: 15px;
+          }
         }
       }
     }
@@ -280,16 +295,18 @@ const ModalContentContainer = styled.div`
                 color: #8f9bb3;
                 padding-right: 24px;
               }
-
-              &:not(:last-child)::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 1px;
-                background: #edf1f7;
-              }
+            }
+            .lazyload-wrapper {
+              position: relative;
+            }
+            .lazyload-wrapper:not(:last-child)::after {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              height: 1px;
+              background: #edf1f7;
             }
           }
         }
@@ -300,8 +317,10 @@ const ModalContentContainer = styled.div`
     flex: 1;
     padding: 80px 56px;
     height: 100%;
+    overflow: hidden;
 
     .render-nhi-one-detail-wrap {
+      overflow: hidden;
       .nhi-one-info-wrap {
         > div {
           display: flex;
@@ -321,11 +340,13 @@ const ModalContentContainer = styled.div`
         line-height: 1.23;
         color: #222b45;
         flex: 1;
+        white-space: nowrap;
       }
       .nhi-one-name {
         font-size: 32px;
         font-weight: 600;
         color: #4a90e2;
+        white-space: nowrap;
       }
       .nhi-one-info-wrap {
         display: flex;
@@ -339,6 +360,7 @@ const ModalContentContainer = styled.div`
       }
       .nhi-one-table-wrap {
         margin-top: 24px;
+        max-width: 100%;
       }
     }
     .nhi-one-loading {
@@ -347,6 +369,58 @@ const ModalContentContainer = styled.div`
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    > div:nth-child(2) {
+      padding: 30px;
+      .render-nhi-one-detail-wrap {
+        max-height: 100%;
+        .nhi-one-info-wrap {
+          flex-wrap: wrap;
+          justify-content: flex-start;
+          > div:not(:first-child) {
+            margin-left: 0;
+          }
+          > div {
+            margin-right: 30px;
+          }
+        }
+        .nhi-one-table-wrap {
+          .ant-table-body {
+            max-height: 240px !important;
+            padding-bottom: 10px;
+          }
+          table {
+            width: auto;
+            tbody {
+              width: 100%;
+              > tr > th {
+                white-space: nowrap;
+              }
+              > tr > td {
+                word-break: keep-all;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+    > div {
+      width: 100% !important;
+    }
+    > div:nth-child(1) {
+      max-height: 300px !important;
+      margin-left: 0;
+    }
+    > div:nth-child(2) {
+      .render-nhi-one-detail-wrap {
+        overflow-y: auto;
+      }
     }
   }
 `;
@@ -602,6 +676,14 @@ const ExpandTableContainer = styled(Table)`
     background: #e4eaff !important;
   }
 `;
+
+const DateTitleContainer = styled(Col)`
+  display: flex;
+  align-items: center;
+  & > h4 {
+    margin-bottom: 0;
+  }
+`;
 //#endregion
 
 export {
@@ -617,4 +699,5 @@ export {
   TableContainer,
   TabBarExtraContentContainer,
   ExpandTableContainer,
+  DateTitleContainer,
 };

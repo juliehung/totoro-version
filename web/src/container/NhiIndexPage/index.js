@@ -1,7 +1,8 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import moment from 'moment-taiwan';
 import locale from 'antd/es/date-picker/locale/zh_TW';
-import { DatePicker, Table, Tabs, Menu, Dropdown, Button, Spin } from 'antd';
+import { Calendar, Table, Tabs, Menu, Dropdown, Button, Spin, Row, Col, Tooltip as AntTooltip } from 'antd';
+import { CalendarOutlined } from '@ant-design/icons';
 import { connect, useDispatch } from 'react-redux';
 import { BarChart, Bar, XAxis, Rectangle, Tooltip, Cell, ResponsiveContainer } from 'recharts';
 import { Helmet } from 'react-helmet-async';
@@ -26,6 +27,7 @@ import {
   TableContainer,
   TabBarExtraContentContainer,
   ExpandTableContainer,
+  DateTitleContainer,
 } from './styles';
 import { getBaseUrl } from '../../utils/getBaseUrl';
 import convertUserToNhiSalary from './utils/convertUserToNhiSalary';
@@ -35,6 +37,7 @@ import toRefreshValidNhiData from './utils/toRefreshValidNhiData';
 import toRefreshNhiOne from './utils/toRefreshNhiOne';
 import IconBarChart from '../../images/icon-bar-chart.svg';
 import { ReactComponent as ArrowDown } from '../../images/1-2-icon-his-icons-arrow-down-fill.svg';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const NhiDataListRender = React.lazy(() => import('./nhiDataList'));
 
@@ -373,11 +376,10 @@ const nhiOneRender = ({ nhiOne }) => {
         <Table
           dataSource={nhiOneTableData}
           columns={nhiOneColumns}
-          scroll={{ y: 280 }}
+          scroll={{ y: 280, x: true }}
           pagination={false}
           bordered={false}
           showHeader={true}
-          tableLayout="fixed"
           rowKey={record => `nhi-one-${record._id}`}
         />
       </div>
@@ -520,6 +522,29 @@ function NhiIndexPage({
     </MenuContainer>
   );
 
+  const calendarHeaderRender = ({ value, onChange }) => {
+    const year = value.year() - 1911;
+    return (
+      <div>
+        <Row type="flex" justify="space-between">
+          <Col>
+            <Button type="link" onClick={() => onChange(moment(value).add(-1, 'Y').month(0))}>
+              <LeftOutlined />
+            </Button>
+          </Col>
+          <DateTitleContainer>
+            <h4>{year}年</h4>
+          </DateTitleContainer>
+          <Col>
+            <Button type="link" onClick={() => onChange(moment(value).add(1, 'Y').month(0))}>
+              <RightOutlined />
+            </Button>
+          </Col>
+        </Row>
+      </div>
+    );
+  };
+
   return (
     <div>
       <Helmet>
@@ -575,31 +600,44 @@ function NhiIndexPage({
             <div className="select-month-input-wrap">
               <div>選擇月份:</div>
               <div>
-                <DatePicker
-                  locale={locale}
-                  style={{ borderRadius: '8px', color: '#222b45' }}
-                  onChange={date => {
-                    updateCheckedModalData([]);
-                    filterValidNhiData({});
-                    setStartDate(date);
-                    setEndDate(moment(date).endOf('month'));
-                    onChangeValue('');
-                    setTimeout(() => dispatch(getValidNhiByYearMonth(moment(date).format('YYYYMM'))), 700);
-                  }}
-                  picker="month"
-                  value={moment(startDate)}
-                  format={'tYY/MM'}
-                  allowClear={false}
-                  disabledDate={current =>
-                    current &&
-                    !current.isBetween(
-                      moment(validNhiYearMonths[0]?.yearMonth).endOf('day'),
-                      moment(validNhiYearMonths[validNhiYearMonths.length - 1]?.yearMonth).endOf('day'),
-                      'day',
-                      [],
-                    )
+                <AntTooltip
+                  overlayClassName="calendar-tooltip-wrap"
+                  trigger={['click', 'hover']}
+                  color={'#fff'}
+                  title={
+                    <Calendar
+                      fullscreen={false}
+                      headerRender={calendarHeaderRender}
+                      onSelect={date => {
+                        updateCheckedModalData([]);
+                        filterValidNhiData({});
+                        setStartDate(date);
+                        setEndDate(moment(date).endOf('month'));
+                        onChangeValue('');
+                        setTimeout(() => dispatch(getValidNhiByYearMonth(moment(date).format('YYYYMM'))), 700);
+                      }}
+                      value={moment(startDate)}
+                      locale={locale}
+                      mode={'year'}
+                      disabledDate={current =>
+                        current &&
+                        !current.isBetween(
+                          moment(validNhiYearMonths[0]?.yearMonth).endOf('day'),
+                          moment(validNhiYearMonths[validNhiYearMonths.length - 1]?.yearMonth).endOf('day'),
+                          'day',
+                          [],
+                        )
+                      }
+                    />
                   }
-                />
+                >
+                  <div className="calendar-tooltip-content">
+                    <div>{moment(startDate).format('tYY/MM')}</div>
+                    <div>
+                      <CalendarOutlined />
+                    </div>
+                  </div>
+                </AntTooltip>
               </div>
             </div>
             <div className="search-input-container">

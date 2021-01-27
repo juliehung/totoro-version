@@ -7,7 +7,6 @@ const { Search } = Input;
 function NhiSalarySearchInput(props) {
   const { className, validNhiData = {}, filterValidNhiData = () => {}, onChangeValue = () => {} } = props;
   const ref = useRef(null);
-
   return (
     <Search
       className={className}
@@ -17,6 +16,14 @@ function NhiSalarySearchInput(props) {
           onChangeValue(ref.current.state.value.toString());
           filterValidNhiData(searchFilteredNhiData(ref.current.state.value.toString(), validNhiData));
         }
+      }}
+      onChange={() => {
+        setTimeout(() => {
+          if (typeof ref.current.state.value === 'string' && ref.current.state.value === '') {
+            onChangeValue(ref.current.state.value.toString());
+            filterValidNhiData(searchFilteredNhiData(ref.current.state.value.toString(), validNhiData));
+          }
+        }, 1000);
       }}
       placeholder={'搜尋姓名,生日或流水號'}
       ref={ref}
