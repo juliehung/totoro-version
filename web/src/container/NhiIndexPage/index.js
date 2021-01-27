@@ -376,11 +376,10 @@ const nhiOneRender = ({ nhiOne }) => {
         <Table
           dataSource={nhiOneTableData}
           columns={nhiOneColumns}
-          scroll={{ y: 280 }}
+          scroll={{ y: 280, x: true }}
           pagination={false}
           bordered={false}
           showHeader={true}
-          tableLayout="fixed"
           rowKey={record => `nhi-one-${record._id}`}
         />
       </div>
