@@ -295,16 +295,18 @@ const ModalContentContainer = styled.div`
                 color: #8f9bb3;
                 padding-right: 24px;
               }
-
-              &:not(:last-child)::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 1px;
-                background: #edf1f7;
-              }
+            }
+            .lazyload-wrapper {
+              position: relative;
+            }
+            .lazyload-wrapper:not(:last-child)::after {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              height: 1px;
+              background: #edf1f7;
             }
           }
         }

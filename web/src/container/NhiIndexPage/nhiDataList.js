@@ -54,66 +54,72 @@ const NhiDataListRender = ({
   updateCurrentNhiOne,
 }) => {
   return Object.entries(validNhiData).map(([key, list], index) => (
-    <div key={`validNhiData-${index}`} className="render-each-nhi-data-wrap">
-      {list.length > 0 && (
-        <div className="nhi-data-list-date-header">
-          {moment(key).year() - 1911}-{moment(key).format('MM-DD')}
-        </div>
-      )}
-      <LazyLoad height={400} offset={100}>
-        {list.map(({ disposalId, nhiExtendDisposal }, index) => (
-          <EachWrap
-            key={`render-each-nhi-wrap-${index}`}
-            className="render-each-nhi-wrap"
-            isSelected={currentNhiOne === disposalId}
-          >
-            <div>
-              <div>
-                <CheckboxWrap
-                  checked={checkedModalData.find(id => disposalId === id)}
-                  isSelected={currentNhiOne === disposalId}
-                  onChange={() => {
-                    checkedModalData.find(id => disposalId === id)
-                      ? updateCheckedModalData(checkedModalData.filter(id => disposalId !== id))
-                      : updateCheckedModalData(oldArray => [...oldArray, disposalId]);
+    <LazyLoad key={`validNhiData-${index}`} once={true} height={'100%'} overflow={true}>
+      <div key={`validNhiData-${index}`} className="render-each-nhi-data-wrap">
+        {list.length > 0 && (
+          <div className="nhi-data-list-date-header">
+            {moment(key).year() - 1911}-{moment(key).format('MM-DD')}
+          </div>
+        )}
+        <div>
+          {list.map(({ disposalId, nhiExtendDisposal }, index) => (
+            <LazyLoad key={`render-each-nhi-wrap-${index}`} once={true} height={'100%'} overflow={true}>
+              <EachWrap
+                key={`render-each-nhi-wrap-${index}`}
+                className="render-each-nhi-wrap"
+                isSelected={currentNhiOne === disposalId}
+              >
+                <div>
+                  <div>
+                    <CheckboxWrap
+                      checked={checkedModalData.find(id => disposalId === id)}
+                      isSelected={currentNhiOne === disposalId}
+                      onChange={() => {
+                        checkedModalData.find(id => disposalId === id)
+                          ? updateCheckedModalData(checkedModalData.filter(id => disposalId !== id))
+                          : updateCheckedModalData(oldArray => [...oldArray, disposalId]);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div
+                  onClick={() => {
+                    updateCurrentNhiOne(disposalId);
+                    if (nhiOne?.id !== disposalId) {
+                      setTimeout(() => {
+                        onNhiDataOneSelect(disposalId);
+                      }, 500);
+                    }
                   }}
-                />
-              </div>
-            </div>
-            <div
-              onClick={() => {
-                updateCurrentNhiOne(disposalId);
-                if (nhiOne?.id !== disposalId) {
-                  onNhiDataOneSelect(disposalId);
-                }
-              }}
-            >
-              <div>{nhiExtendDisposal?.patientName}</div>
-              <div>
-                {renderWithCaseCategory(nhiExtendDisposal?.a23 || '', nhiExtendDisposal?.serialNumber || '')}{' '}
-                {nhiExtendDisposal?.doctorName}
-              </div>
-            </div>
-            <div
-              onClick={() => {
-                updateCurrentNhiOne(disposalId);
-                if (nhiOne?.id !== disposalId) {
-                  onNhiDataOneSelect(disposalId);
-                }
-              }}
-            >
-              <div>
-                {nhiExtendDisposal?.a13 &&
-                  nhiExtendDisposal?.a13.length !== 0 &&
-                  `${parseInt(nhiExtendDisposal?.a13.slice(0, 3))}/${parseInt(
-                    nhiExtendDisposal?.a13.slice(3, 5),
-                  )}/${parseInt(nhiExtendDisposal?.a13.slice(5))}`}
-              </div>
-            </div>
-          </EachWrap>
-        ))}
-      </LazyLoad>
-    </div>
+                >
+                  <div>{nhiExtendDisposal?.patientName}</div>
+                  <div>
+                    {renderWithCaseCategory(nhiExtendDisposal?.a23 || '', nhiExtendDisposal?.serialNumber || '')}{' '}
+                    {nhiExtendDisposal?.doctorName}
+                  </div>
+                </div>
+                <div
+                  onClick={() => {
+                    updateCurrentNhiOne(disposalId);
+                    if (nhiOne?.id !== disposalId) {
+                      onNhiDataOneSelect(disposalId);
+                    }
+                  }}
+                >
+                  <div>
+                    {nhiExtendDisposal?.a13 &&
+                      nhiExtendDisposal?.a13.length !== 0 &&
+                      `${parseInt(nhiExtendDisposal?.a13.slice(0, 3))}/${parseInt(
+                        nhiExtendDisposal?.a13.slice(3, 5),
+                      )}/${parseInt(nhiExtendDisposal?.a13.slice(5))}`}
+                  </div>
+                </div>
+              </EachWrap>
+            </LazyLoad>
+          ))}
+        </div>
+      </div>
+    </LazyLoad>
   ));
 };
 
