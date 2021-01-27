@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle } from 'styled-components';
-import { Menu, Modal, Table, Tabs } from 'antd';
+import { Col, Menu, Modal, Table, Tabs } from 'antd';
 
 const checkCheckboxMode = (allNums, currentNums) => {
   if (currentNums === 0) {
@@ -133,12 +133,29 @@ const ModalContentContainer = styled.div`
       }
       > div:nth-child(2) {
         flex: 1;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
         cursor: pointer;
-        > div {
-          width: 87%;
+        border: solid 1px #c5cee0;
+        border-radius: 8px;
+        height: 32px;
+        margin-left: 10px;
+
+        .calendar-tooltip-content {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          & > div:nth-child(1) {
+            margin-left: 10px;
+            flex: 1;
+            color: #222b45;
+            text-align: left;
+            display: flex;
+            align-items: center;
+          }
+          & > div:nth-child(2) {
+            margin-right: 15px;
+          }
         }
       }
     }
@@ -602,6 +619,14 @@ const ExpandTableContainer = styled(Table)`
     background: #e4eaff !important;
   }
 `;
+
+const DateTitleContainer = styled(Col)`
+  display: flex;
+  align-items: center;
+  & > h4 {
+    margin-bottom: 0;
+  }
+`;
 //#endregion
 
 export {
@@ -617,4 +642,5 @@ export {
   TableContainer,
   TabBarExtraContentContainer,
   ExpandTableContainer,
+  DateTitleContainer,
 };

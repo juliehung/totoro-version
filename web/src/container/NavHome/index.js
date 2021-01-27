@@ -89,6 +89,15 @@ export const GlobalStyle = createGlobalStyle`
       left: 17px !important;
     }
   }
+
+  .calendar-tooltip-wrap {
+    border-radius: 8px;
+
+    .ant-tooltip-inner {
+      border-radius: 8px;
+    }
+  }
+
 `;
 
 const Banner = styled.div`
