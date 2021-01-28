@@ -25,6 +25,8 @@ import {
   GET_ENDO_INDEXES_FAIL,
   GET_ENDO_INDEXES_SUCCESS,
   GET_ENDO_INDEXES,
+  ON_CHECKED_MODAL_DATA_CHANGE,
+  INIT_CHECKED_MODAL_DATA_SUCCESS,
 } from './constant';
 
 export function initNhiSalary(begin, end) {
@@ -43,8 +45,8 @@ export function nhiSalaryNotFound() {
   return { type: NHI_SALARY_NOT_FOUND };
 }
 
-export function getDoctorNhiSalary(doctorId, begin, end) {
-  return { type: GET_DOCTOR_NHI_SALARY, doctorId, begin, end };
+export function getDoctorNhiSalary(doctorId, begin, end, checkedModalData) {
+  return { type: GET_DOCTOR_NHI_SALARY, doctorId, begin, end, checkedModalData };
 }
 
 export function getDoctorNhiSalarySuccess(doctorOneSalary) {
@@ -124,4 +126,11 @@ export function getNhiOneByDisposalIdSuccess(nhiOne) {
 }
 export function nhiOneByDisposalIdNotFound() {
   return { type: NHI_ONE_BY_DISPOSAL_ID_NOT_FOUND };
+}
+
+export function onCheckedModalDataChange(checkedModalData) {
+  return { type: ON_CHECKED_MODAL_DATA_CHANGE, checkedModalData };
+}
+export function initCheckedModalDataSuccess(checkedModalData) {
+  return { type: INIT_CHECKED_MODAL_DATA_SUCCESS, checkedModalData };
 }

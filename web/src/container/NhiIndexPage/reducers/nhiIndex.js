@@ -14,6 +14,8 @@ import {
   GET_NHI_ONE_BY_DISPOSAL_ID,
   GET_VALID_NHI_BY_YEAR_MONTH,
   GET_ENDO_INDEXES_SUCCESS,
+  ON_CHECKED_MODAL_DATA_CHANGE,
+  INIT_CHECKED_MODAL_DATA_SUCCESS,
 } from '../constant';
 
 const initState = {
@@ -29,6 +31,7 @@ const initState = {
   validNhiData: undefined,
   nhiOneLoading: undefined,
   nhiOne: undefined,
+  checkedModalData: [],
 };
 
 export const initialState = { ...initState };
@@ -78,6 +81,10 @@ export default (state = initialState, action) =>
         break;
       case GET_OD_INDEXES_FAIL:
       case GET_TOOTH_CLEAN_FAIL:
+        break;
+      case ON_CHECKED_MODAL_DATA_CHANGE:
+      case INIT_CHECKED_MODAL_DATA_SUCCESS:
+        draft.checkedModalData = action.checkedModalData;
         break;
       default:
         break;
