@@ -56,6 +56,16 @@ export const Content = styled.div`
       }
     }
   }
+  .empty-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    font-size: 12px;
+    line-height: 1.33;
+    text-align: center;
+    color: #8f9bb3;
+  }
 `;
 
 export const Count = styled.div`

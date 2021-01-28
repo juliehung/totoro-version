@@ -26,4 +26,5 @@
     <include file="config/liquibase/changelog/2020/12/20201230_addColumn.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/migrationXml/20210104_weichen.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/migrationXml/20210111_shihfeng.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/migrationXml/20210111_weichen.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

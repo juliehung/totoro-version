@@ -18,6 +18,9 @@ public class NhiAbnormalityPatient implements Serializable {
     private LocalDate birth;
 
     @JsonProperty
+    private Boolean vipPatient;
+
+    @JsonProperty
     private String medicalId;
 
     @JsonProperty
@@ -35,10 +38,11 @@ public class NhiAbnormalityPatient implements Serializable {
     @JsonProperty
     private Double code92013cPoint;
 
-    public NhiAbnormalityPatient(Long id, String name, LocalDate birth, String medicalId, String cardNumber) {
+    public NhiAbnormalityPatient(Long id, String name, LocalDate birth, Boolean vipPatient, String medicalId, String cardNumber) {
         this.id = id;
         this.name = name;
         this.birth = birth;
+        this.vipPatient = vipPatient;
         this.medicalId = medicalId;
         this.cardNumber = cardNumber;
     }
@@ -58,6 +62,19 @@ public class NhiAbnormalityPatient implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public Boolean getVipPatient() {
+        return vipPatient;
+    }
+
+    public void setVipPatient(Boolean vipPatient) {
+        this.vipPatient = vipPatient;
+    }
+
+    public NhiAbnormalityPatient vipPatient(Boolean vipPatient) {
+        this.vipPatient = vipPatient;
+        return this;
     }
 
     public NhiAbnormalityPatient name(String name) {

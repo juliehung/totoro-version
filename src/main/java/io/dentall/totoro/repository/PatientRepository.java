@@ -3,6 +3,7 @@ package io.dentall.totoro.repository;
 import io.dentall.totoro.business.vm.PatientSearchVM;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.service.dto.table.PatientTable;
+import io.dentall.totoro.web.rest.vm.PatientNationalIdValidationVM;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,7 +31,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
 
     <T> Collection<T> findBySpouse1SId(Long id, Class<T> type);
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender, patient.vipPatient) " +
         "FROM Patient patient WHERE to_char(patient.birth, 'yyyyMMdd') like '%'||:search||'%' " +
         "ORDER BY " +
         "CASE " +
@@ -42,7 +44,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         countQuery = "SELECT count(*) FROM Patient patient WHERE to_char(patient.birth, 'yyyyMMdd') like '%'||:search||'%'")
     Page<PatientSearchVM> findByBirthCE(@Param("search") String search, Pageable pageable);
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender, patient.vipPatient) " +
         "FROM Patient patient WHERE FUNCTION('SUCK_ROC_BIRTH_TO_CHAR', patient.birth) like '%'||:search||'%' " +
         "ORDER BY " +
         "CASE " +
@@ -55,7 +57,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         countQuery = "SELECT count(*) FROM Patient patient WHERE function('SUCK_ROC_BIRTH_TO_CHAR', patient.birth) like '%'||:search||'%'")
     Page<PatientSearchVM> findByBirthROC(@Param("search") String search, Pageable pageable);
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender, patient.vipPatient) " +
         "FROM Patient patient WHERE UPPER(patient.name) like '%'||:search||'%' " +
         "ORDER BY " +
         "CASE " +
@@ -68,7 +70,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         countQuery = "SELECT count(*) FROM Patient patient WHERE UPPER(patient.name) like '%'||:search||'%'")
     Page<PatientSearchVM> findByName(@Param("search") String search, Pageable pageable);
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender, patient.vipPatient) " +
         "FROM Patient patient WHERE patient.phone like '%'||:search||'%' " +
         "ORDER BY " +
         "CASE " +
@@ -81,7 +83,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         countQuery = "SELECT count(*) FROM Patient patient WHERE patient.phone like '%'||:search||'%'")
     Page<PatientSearchVM> findByPhone(@Param("search") String search, Pageable pageable);
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender, patient.vipPatient) " +
         "FROM Patient patient WHERE UPPER(patient.nationalId) like '%'||:search||'%' " +
         "ORDER BY " +
         "CASE " +
@@ -94,9 +96,11 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         countQuery = "SELECT count(*) FROM Patient patient WHERE UPPER(patient.nationalId) like '%'||:search||'%'")
     Page<PatientSearchVM> findByNationalId(@Param("search") String search, Pageable pageable);
 
-    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender) " +
+    @Query(value = "SELECT new io.dentall.totoro.business.vm.PatientSearchVM(patient.id, patient.name, patient.medicalId, patient.birth, patient.phone, patient.nationalId, patient.gender, patient.vipPatient) " +
         "FROM Patient patient WHERE FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) > 0 " +
         "ORDER BY FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) DESC, patient.id ASC",
         countQuery = "SELECT count(*) FROM Patient patient WHERE FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) > 0")
     Page<PatientSearchVM> findByMedicalId(@Param("search") String search, Pageable pageable);
+
+    List<PatientNationalIdValidationVM> findByNationalId(String nationalId);
 }

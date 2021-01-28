@@ -1,7 +1,8 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import moment from 'moment-taiwan';
 import locale from 'antd/es/date-picker/locale/zh_TW';
-import { DatePicker, Table, Tabs, Menu, Dropdown, Button, Spin } from 'antd';
+import { Calendar, Table, Tabs, Menu, Dropdown, Button, Spin, Row, Col, Tooltip as AntTooltip } from 'antd';
+import { CalendarOutlined } from '@ant-design/icons';
 import { connect, useDispatch } from 'react-redux';
 import { BarChart, Bar, XAxis, Rectangle, Tooltip, Cell, ResponsiveContainer } from 'recharts';
 import { Helmet } from 'react-helmet-async';
@@ -26,6 +27,7 @@ import {
   TableContainer,
   TabBarExtraContentContainer,
   ExpandTableContainer,
+  DateTitleContainer,
 } from './styles';
 import { getBaseUrl } from '../../utils/getBaseUrl';
 import convertUserToNhiSalary from './utils/convertUserToNhiSalary';
@@ -35,6 +37,7 @@ import toRefreshValidNhiData from './utils/toRefreshValidNhiData';
 import toRefreshNhiOne from './utils/toRefreshNhiOne';
 import IconBarChart from '../../images/icon-bar-chart.svg';
 import { ReactComponent as ArrowDown } from '../../images/1-2-icon-his-icons-arrow-down-fill.svg';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const NhiDataListRender = React.lazy(() => import('./nhiDataList'));
 
@@ -42,7 +45,7 @@ const { TabPane } = Tabs;
 
 const renderFloat2Position = f => (typeof f === 'number' ? (Math.round(f * 100) / 100).toFixed(2) : '0');
 const renderThousands = v => {
-  if (typeof v === 'number' && v < 1000) {
+  if (typeof v === 'number' && v > 1000) {
     const value = v.toString().split('.');
     value[0] = value[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return value.join('.');
@@ -124,7 +127,7 @@ const endoColumns = (doctors, filterDoctors) => [
     onFilter: (value, record) => value === record.did,
     render: did => doctors.find(d => d.id === did)?.firstName ?? did,
   },
-  { title: '根管未完成率', dataIndex: 'uncompletedRate', key: 'uncompletedRate', render: t => `${t * 100}%` },
+  { title: '根管完成率', dataIndex: 'completedRate', key: 'completedRate', render: t => (t ? `${t * 100}%` : '') },
 ];
 const nhiSalaryColumns = [
   {
@@ -373,11 +376,10 @@ const nhiOneRender = ({ nhiOne }) => {
         <Table
           dataSource={nhiOneTableData}
           columns={nhiOneColumns}
-          scroll={{ y: 280 }}
+          scroll={{ y: 280, x: true }}
           pagination={false}
           bordered={false}
           showHeader={true}
-          tableLayout="fixed"
           rowKey={record => `nhi-one-${record._id}`}
         />
       </div>
@@ -458,9 +460,9 @@ function NhiIndexPage({
     .map(([, list]) => list.map(({ disposalId }) => disposalId))
     .flat(Infinity);
   const getAllSerialNumber = Object.entries(validNhiData)
-    .map(([, list]) => list.map(({ nhiExtendDisposal }) => nhiExtendDisposal?.serialNumber))
+    .map(([, list]) => list.map(({ nhiExtendDisposal, disposalId }) => !!nhiExtendDisposal?.serialNumber && disposalId))
     .flat(Infinity)
-    .filter(d => d !== '');
+    .filter(d => d && d !== '');
 
   useEffect(() => {
     dispatch(initNhiSalary(moment().startOf('month'), moment()));
@@ -468,13 +470,17 @@ function NhiIndexPage({
   useEffect(() => {
     if (!validNhiDataLoading && Object.values(validNhiData)?.[0]) {
       updateNhiFirstId(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
-      updateCheckedModalData(
-        Object.entries(validNhiData)
-          .map(([, list]) => list.map(({ disposalId }) => disposalId))
-          .flat(Infinity),
-      );
+      if (!isModalVisible) {
+        setTimeout(() => {
+          updateCheckedModalData(
+            Object.entries(validNhiData)
+              .map(([, list]) => list.map(({ disposalId }) => disposalId))
+              .flat(Infinity),
+          );
+        }, 100);
+      }
     }
-  }, [validNhiData, validNhiDataLoading]);
+  }, [validNhiData, validNhiDataLoading, isModalVisible]);
   useEffect(() => {
     if (nhiFirstId) {
       dispatch(getNhiOneByDisposalId(nhiFirstId));
@@ -494,11 +500,9 @@ function NhiIndexPage({
       <Menu.Item
         onClick={() => {
           setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
-          setTimeout(() => {
-            if (getAllDisposalId.length !== checkedModalData.length) {
-              updateCheckedModalData(getAllDisposalId);
-            }
-          }, 700);
+          if (getAllDisposalId.length !== checkedModalData.length) {
+            updateCheckedModalData(getAllDisposalId);
+          }
         }}
       >
         <div>全選</div>
@@ -506,19 +510,40 @@ function NhiIndexPage({
       <Menu.Item
         onClick={() => {
           setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
-          setTimeout(() => {
-            if (getAllSerialNumber.length !== checkedModalData.length) {
-              updateCheckedModalData(getAllSerialNumber);
-            } else {
-              updateCheckedModalData([]);
-            }
-          }, 1000);
+          if (getAllSerialNumber.length !== checkedModalData.length) {
+            updateCheckedModalData(getAllSerialNumber);
+          } else {
+            updateCheckedModalData([]);
+          }
         }}
       >
         <div>專案流水號</div>
       </Menu.Item>
     </MenuContainer>
   );
+
+  const calendarHeaderRender = ({ value, onChange }) => {
+    const year = value.year() - 1911;
+    return (
+      <div>
+        <Row type="flex" justify="space-between">
+          <Col>
+            <Button type="link" onClick={() => onChange(moment(value).add(-1, 'Y').month(0))}>
+              <LeftOutlined />
+            </Button>
+          </Col>
+          <DateTitleContainer>
+            <h4>{year}年</h4>
+          </DateTitleContainer>
+          <Col>
+            <Button type="link" onClick={() => onChange(moment(value).add(1, 'Y').month(0))}>
+              <RightOutlined />
+            </Button>
+          </Col>
+        </Row>
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -533,7 +558,14 @@ function NhiIndexPage({
         width={'100%'}
         closable={false}
         footer={[
-          <Button className="cancel-modal-btn" key="back" onClick={() => setIsModalVisible(false)}>
+          <Button
+            className="cancel-modal-btn"
+            key="back"
+            onClick={() => {
+              setDisposalCheckBoxVisible(false);
+              setIsModalVisible(false);
+            }}
+          >
             取消
           </Button>,
           <Button
@@ -544,15 +576,14 @@ function NhiIndexPage({
             onClick={() => {
               if (checkedModalData.length !== 0) {
                 setIsModalVisible(false);
-                setTimeout(() => {
-                  dispatch(
-                    getNhiSalary(
-                      startDate,
-                      endDate,
-                      getAllDisposalId.filter(id => checkedModalData.indexOf(id) === -1),
-                    ),
-                  );
-                }, 500);
+                setDisposalCheckBoxVisible(false);
+                dispatch(
+                  getNhiSalary(
+                    startDate,
+                    endDate,
+                    getAllDisposalId.filter(id => checkedModalData.indexOf(id) === -1),
+                  ),
+                );
               }
             }}
           >
@@ -569,31 +600,44 @@ function NhiIndexPage({
             <div className="select-month-input-wrap">
               <div>選擇月份:</div>
               <div>
-                <DatePicker
-                  locale={locale}
-                  style={{ borderRadius: '8px', color: '#222b45' }}
-                  onChange={date => {
-                    updateCheckedModalData([]);
-                    filterValidNhiData({});
-                    setStartDate(date);
-                    setEndDate(moment(date).endOf('month'));
-                    onChangeValue('');
-                    setTimeout(() => dispatch(getValidNhiByYearMonth(moment(date).format('YYYYMM'))), 700);
-                  }}
-                  picker="month"
-                  value={moment(startDate)}
-                  format={'tYY/MM'}
-                  allowClear={false}
-                  disabledDate={current =>
-                    current &&
-                    !current.isBetween(
-                      moment(validNhiYearMonths[0]?.yearMonth).endOf('day'),
-                      moment(validNhiYearMonths[validNhiYearMonths.length - 1]?.yearMonth).endOf('day'),
-                      'day',
-                      [],
-                    )
+                <AntTooltip
+                  overlayClassName="calendar-tooltip-wrap"
+                  trigger={['click', 'hover']}
+                  color={'#fff'}
+                  title={
+                    <Calendar
+                      fullscreen={false}
+                      headerRender={calendarHeaderRender}
+                      onSelect={date => {
+                        updateCheckedModalData([]);
+                        filterValidNhiData({});
+                        setStartDate(date);
+                        setEndDate(moment(date).endOf('month'));
+                        onChangeValue('');
+                        setTimeout(() => dispatch(getValidNhiByYearMonth(moment(date).format('YYYYMM'))), 700);
+                      }}
+                      value={moment(startDate)}
+                      locale={locale}
+                      mode={'year'}
+                      disabledDate={current =>
+                        current &&
+                        !current.isBetween(
+                          moment(validNhiYearMonths[0]?.yearMonth).endOf('day'),
+                          moment(validNhiYearMonths[validNhiYearMonths.length - 1]?.yearMonth).endOf('day'),
+                          'day',
+                          [],
+                        )
+                      }
+                    />
                   }
-                />
+                >
+                  <div className="calendar-tooltip-content">
+                    <div>{moment(startDate).format('tYY/MM')}</div>
+                    <div>
+                      <CalendarOutlined />
+                    </div>
+                  </div>
+                </AntTooltip>
               </div>
             </div>
             <div className="search-input-container">
@@ -787,7 +831,7 @@ function NhiIndexPage({
                 rowKey={record => `${record.did} ${record.distinctTotalPat}`}
               />
             </TabPane>
-            <TabPane tab="根管未完成率指標" key="4">
+            <TabPane tab="根管完成率指標" key="4">
               <TableContainer
                 loading={nhiTableLoading}
                 scroll={{ y: 280 }}

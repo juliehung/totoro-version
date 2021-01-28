@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { APPT_CUSTOM_COLORS } from '../constant';
+import { parsePatientNameWithVipMark } from '../../../utils/patientHelper';
 
 export default function convertAppsToEvt(appointments) {
   return appointments.filter(a => a.registerArrivalTime !== a.expectedArrivalTime).map(a => convertAppToEvt(a));
@@ -48,7 +49,7 @@ export function convertAppToEvt(appointment) {
   const firstVisit = appointment.firstVisit ? '[N]' : '';
 
   return {
-    title: `${status}${firstVisit}${appointment.patientName}`,
+    title: `${status}${firstVisit}${parsePatientNameWithVipMark(appointment?.vipPatient, appointment.patientName)}`,
     resourceId: appointment.doctor.user.id,
     start,
     end,

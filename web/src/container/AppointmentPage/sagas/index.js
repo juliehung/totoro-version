@@ -2,7 +2,7 @@ import { fork } from 'redux-saga/effects';
 import { watchGetAppointments } from './getAppointment';
 import { watchGetPrintAppointments } from './getPrintAppointments';
 import { editAppointment, getPatient as getPatientEditApp } from './editAppointment';
-import { createAppointment, searchPatients, getPatient, createPatient } from './createAppointment';
+import { createAppointment, searchPatients, getPatient, createPatient, getExistNationalId } from './createAppointment';
 import { deleteAppointments } from './deleteAppointment';
 import { watchGetCalendarEvents } from './getCalendarEvents';
 import { createCalendarEvent } from './createCalendarEvent';
@@ -31,4 +31,5 @@ export default function* appointmentPage() {
   yield fork(popoverCancelApp);
   yield fork(popoverRestoreApp);
   yield fork(watchGetShift);
+  yield fork(getExistNationalId);
 }

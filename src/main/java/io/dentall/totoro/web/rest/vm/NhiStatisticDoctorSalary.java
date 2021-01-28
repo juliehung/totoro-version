@@ -5,7 +5,7 @@ import java.time.Instant;
 public class NhiStatisticDoctorSalary {
 
     /**
-     * 總點數
+     * 總點數 (tx total + examination code)
      */
     private Long total = 0L;
 
@@ -20,22 +20,22 @@ public class NhiStatisticDoctorSalary {
     private Long regularExaminationPoint = 0L;
 
     /**
-     * 診療點數
+     * 診療點數 (sum all tx point)
      */
     private Long treatmentPoint = 0L;
 
     /**
-     * 牙周類型點數
+     * 牙周類型點數 (period)
      */
     private Long perioPoint = 0L;
 
     /**
-     * 兒童類型點數
+     * 兒童類型點數 (not defined yet)
      */
     private Long pedoPoint = 0L;
 
     /**
-     * 根管類型點數
+     * 根管類型點數 (endo)
      */
     private Long endoPoint = 0L;
 
@@ -60,6 +60,11 @@ public class NhiStatisticDoctorSalary {
     private String patientName;
 
     /**
+     * 病患是否為VIP(expand 才有)
+     */
+    private Boolean vipPatient;
+
+    /**
      * 治療時間(expand 才有)
      */
     private Instant disposalDate;
@@ -75,6 +80,10 @@ public class NhiStatisticDoctorSalary {
     public void setPatientName(String patientName) {
         this.patientName = patientName;
     }
+
+    public Boolean getVipPatient() { return this.vipPatient; }
+
+    public void setVipPatient(Boolean vipPatient) { this.vipPatient = vipPatient; }
 
     public void setPatientId(Long patientId) {
         this.patientId = patientId;

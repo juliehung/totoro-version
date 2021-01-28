@@ -10,7 +10,7 @@ export default function convertTreatmentProcedureToTableObject(treatmentProcedur
 
     const teeth = t.teeth
       .map(te => {
-        const surface = toSurfaceAbbrivation(te.surface);
+        const surface = te?.surface ? toSurfaceAbbrivation(te?.surface) : '';
         return `${te.position} ${surface}`;
       })
       ?.join(', ');

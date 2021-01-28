@@ -123,6 +123,7 @@ public class NhiAbnormalityService {
                         patient.getId(),
                         patient.getName(),
                         patient.getBirth(),
+                        patient.getVipPatient(),
                         patient.getMedicalId(),
                         patient.getNhiExtendPatient().getCardNumber()
                     ).date(nhiExtendDisposalDate.apply(nhiExtendDisposal)).count(count);
@@ -184,6 +185,7 @@ public class NhiAbnormalityService {
                         patient.getId(),
                         patient.getName(),
                         patient.getBirth(),
+                        patient.getVipPatient(),
                         patient.getMedicalId(),
                         patient.getNhiExtendPatient().getCardNumber()
                     ).date(patientDate.getValue()).code92013cPoint(sum));
@@ -230,6 +232,7 @@ public class NhiAbnormalityService {
                                     patient.getId(),
                                     patient.getName(),
                                     patient.getBirth(),
+                                    patient.getVipPatient(),
                                     patient.getMedicalId(),
                                     patient.getNhiExtendPatient().getCardNumber()
                                 ).date(entry.getValue()).ratioOf90004cTo90015c(new HashMap<>());
@@ -281,6 +284,7 @@ public class NhiAbnormalityService {
                         patient.getId(),
                         patient.getName(),
                         patient.getBirth(),
+                        patient.getVipPatient(),
                         patient.getMedicalId(),
                         patient.getNhiExtendPatient().getCardNumber()
                     ).date(nhiExtendDisposalDate.apply(nhiExtendDisposal));
@@ -473,6 +477,7 @@ public class NhiAbnormalityService {
                 patient.getId(),
                 patient.getName(),
                 patient.getBirth(),
+                patient.getVipPatient(),
                 patient.getMedicalId(),
                 patient.getNhiExtendPatient().getCardNumber()
             ).count(count);

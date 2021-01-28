@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
   GET_NHI_SALARY,
   GET_DOCTOR_NHI_SALARY,
@@ -5,7 +6,7 @@ import {
   GET_NHI_ONE_BY_DISPOSAL_ID,
   INIT_NHI_SALARY,
 } from '../constant';
-import { call, delay, fork, put, take } from 'redux-saga/effects';
+import { call, fork, put, take } from 'redux-saga/effects';
 import {
   getOdIndexesFail,
   getOdIndexesSuccess,
@@ -33,15 +34,15 @@ import DoctorNhiSalary from '../../../models/doctorNhiSalary';
 export function* initNhiSalary() {
   while (true) {
     try {
-      const { begin, end } = yield take(INIT_NHI_SALARY);
+      const { begin } = yield take(INIT_NHI_SALARY);
+      const end = moment();
       yield put(getTotalPointByDisposalDate());
       const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, { begin, end });
-      yield delay(300);
+      const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, { begin, end });
       yield fork(getOdIndexes, begin, end);
       yield fork(getToothClean, begin, end);
       yield fork(getEndoIndexes, begin, end);
       yield fork(getValidNhiYearMonth, begin);
-      const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, { begin, end });
       yield put(getNhiSalarySuccess(nhiSalary));
       yield put(getTotalPointByDisposalDateSuccess({ data: totalPointByDisposalDate, startDate: begin }));
     } catch (error) {
@@ -53,18 +54,22 @@ export function* initNhiSalary() {
 export function* getNhiSalary() {
   while (true) {
     try {
-      const { begin, end, checkedModalData } = yield take(GET_NHI_SALARY);
+      const { begin, checkedModalData } = yield take(GET_NHI_SALARY);
+      const end = moment(begin).endOf('month');
       yield put(getTotalPointByDisposalDate());
-      const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, { begin, end, checkedModalData });
-      yield delay(300);
-      yield fork(getOdIndexes, begin, end, checkedModalData);
-      yield fork(getToothClean, begin, end, checkedModalData);
-      yield fork(getEndoIndexes, begin, end, checkedModalData);
+      const nhiSalary = yield call(DoctorNhiSalary.getInitSalary, {
+        begin,
+        end,
+        checkedModalData,
+      });
       const totalPointByDisposalDate = yield call(DoctorNhiSalary.getTotalPointPresentByDisposalDate, {
         begin,
         end,
         checkedModalData,
       });
+      yield fork(getOdIndexes, begin, end, checkedModalData);
+      yield fork(getToothClean, begin, end, checkedModalData);
+      yield fork(getEndoIndexes, begin, end, checkedModalData);
       yield put(getNhiSalarySuccess(nhiSalary));
       yield put(getTotalPointByDisposalDateSuccess({ data: totalPointByDisposalDate, startDate: begin }));
     } catch (error) {
@@ -78,7 +83,6 @@ export function* getDoctorNhiSalary() {
     try {
       const { doctorId, begin, end } = yield take(GET_DOCTOR_NHI_SALARY);
       const doctorOneSalary = yield call(DoctorNhiSalary.getSalaryOneByDoctorId, { doctorId, begin, end });
-      yield delay(300);
       yield put(getDoctorNhiSalarySuccess({ doctorId, doctorOneSalary }));
     } catch (error) {
       console.log('error = ', error);
@@ -117,8 +121,8 @@ export function* getToothClean(begin, end, checkedModalData) {
 export function* getEndoIndexes(begin, end, checkedModalData) {
   try {
     const params = {
-      begin: begin.startOf('day').toISOString(),
-      end: end.subtract(90, 'days').endOf('day').toISOString(),
+      begin: end.subtract(90, 'days').endOf('day').toISOString(),
+      end: begin.startOf('day').toISOString(),
       excludeDisposalId: checkedModalData ? checkedModalData : [],
     };
     const result = yield call(EndoIndexes.get, params);
@@ -131,7 +135,6 @@ export function* getEndoIndexes(begin, end, checkedModalData) {
 export function* getValidNhiYearMonth(begin) {
   try {
     const validNhiYearMonths = yield call(DoctorNhiSalary.getValidNhiYearMonth);
-    yield delay(300);
     yield put(getValidNhiYearMonthSuccess(validNhiYearMonths));
     try {
       const validNhiData = yield call(DoctorNhiSalary.getValidNhiByYearMonth, begin.format('YYYYMM'));

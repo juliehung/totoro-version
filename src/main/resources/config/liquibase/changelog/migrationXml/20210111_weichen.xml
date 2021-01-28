@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210111-weichen" author="WeiChen">
+        <sql>
+            INSERT INTO nhi_procedure (id,code,name,point,description,nhi_procedure_type_id,chief_complaint) values ('225','00305C','符合牙醫門診加強感染管制實施方案之牙科門診診察費1.每位醫師每日門診量在二十人次以下部份（≦20）－處方交付特約藥局調劑','355',null,'200',null);
+            INSERT INTO nhi_procedure (id,code,name,point,description,nhi_procedure_type_id,chief_complaint) values ('226','00306C','符合牙醫門診加強感染管制實施方案之牙科門診診察費1.每位醫師每日門診量在二十人次以下部份（≦20）－未開處方或處方由本院所自行調劑','355',null,'200',null);
+            INSERT INTO nhi_procedure (id,code,name,point,description,nhi_procedure_type_id,chief_complaint) values ('227','00309C','符合牙醫門診加強感染管制實施方案之牙科門診診察費3.山地離島地區－處方交付特約藥局調劑','385',null,'200',null);
+            INSERT INTO nhi_procedure (id,code,name,point,description,nhi_procedure_type_id,chief_complaint) values ('228','00310C','符合牙醫門診加強感染管制實施方案之牙科門診診察費3.山地離島地區－未開處方或處方由本院所自行調劑','385',null,'200',null);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

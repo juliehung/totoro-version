@@ -83,7 +83,6 @@ export const tags = [
   { id: 30, key: 'D', jhi_type: 'OTHER', value: '曾住院或接受手術', code: 30 },
   { id: 31, key: 'E', jhi_type: 'OTHER', value: '一年內服長期藥物(含避孕藥)', code: 31 },
   { id: 32, key: 'F', jhi_type: 'OTHER', value: '曾經接受放射線治療或化學治療', code: 32 },
-  { id: 33, key: 'G', jhi_type: 'DISEASE', value: 'B型肝炎', code: 33 },
   { id: 34, key: 'H', jhi_type: 'ALLERGY', value: 'Amoxicillin', code: 34 },
   { id: 35, key: 'I', jhi_type: 'ALLERGY', value: 'Voren', code: 35 },
   { id: 36, key: 'J', jhi_type: 'ALLERGY', value: '四環黴素', code: 36 },
@@ -98,3 +97,5 @@ export const tags = [
   { id: 45, key: 'F', jhi_type: 'BLOOD_DISEASE', value: 'C型肝炎', code: 45 },
   { id: 46, key: 'G', jhi_type: 'BLOOD_DISEASE', value: '梅毒', code: 46 },
 ];
+
+export const dangerTags = ['AIDS', 'HIV', 'Ａ型肝炎', 'B型肝炎', 'C型肝炎', '梅毒', '懷孕', 'micro'];

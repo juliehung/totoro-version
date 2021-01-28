@@ -10,7 +10,7 @@ import SettingPage from '../SettingPage';
 import SmsPage from '../SmsPage';
 import PatientPage from '../PatientPage';
 import DentallHisLogo from '../../images/DentallHisLogo.svg';
-import { Menu, Dropdown, Drawer, Popover } from 'antd';
+import { Menu, Dropdown, Drawer, Popover, Spin } from 'antd';
 import { parseAccountData } from './utils/parseAccountData';
 import { determineRouteOrLinkShow } from './utils/determineRouteShow';
 import IconBookOpen from '../../images/icon-book-open.svg';
@@ -36,6 +36,13 @@ const Container = styled.div`
   flex-direction: column;
   background-color: #f8fafb;
   user-select: none;
+
+  .spin-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
 `;
 
 export const GlobalStyle = createGlobalStyle`
@@ -63,6 +70,31 @@ export const GlobalStyle = createGlobalStyle`
 
     > li:hover {
       border-radius: 10px;
+    }
+  }
+
+  .ant-popover.selected-patient-content {
+    z-index: 1033;
+    @media screen and (max-width: 414px) {
+      width: 98%;
+      max-width: 300px;
+      left: 34px !important;
+      .ant-popover-content {
+        .ant-popover-arrow {
+          display: none !important;
+        }
+      }
+    }
+    @media screen and (max-width: 320px) {
+      left: 17px !important;
+    }
+  }
+
+  .calendar-tooltip-wrap {
+    border-radius: 8px;
+
+    .ant-tooltip-inner {
+      border-radius: 8px;
     }
   }
 
@@ -292,11 +324,12 @@ const route = [
     path: 'nhi',
     link: 'nhi',
     name: '全民健保',
-    navigation: false,
+    navigation: true,
     exact: false,
     icon: { on: NhiFillIcon, off: NhiIcon },
     component: <NhiIndexPage />,
     localVersion: false,
+    requireAuth: true,
   },
   {
     key: 'sms',
@@ -338,7 +371,6 @@ const route = [
 
 function NavHome(props) {
   const { account, linkManagement } = props;
-
   const [, , removeCookie] = useCookies(['token']);
 
   const logout = () => {
@@ -387,166 +419,181 @@ function NavHome(props) {
     },
   ];
 
-  return (
-    <Container>
-      <Banner />
-      <GlobalStyle />
-      <NavContainer>
-        <span
+  if (!account || !account?.role) {
+    return (
+      <Container>
+        <div className="spin-wrap">
+          <Spin spinning={true} />
+        </div>
+      </Container>
+    );
+  } else {
+    return (
+      <Container>
+        <Banner />
+        <GlobalStyle />
+        <NavContainer>
+          <span
+            onClick={() => {
+              setDrawerVisible(true);
+            }}
+          >
+            ☰
+          </span>
+          <Link to="/">
+            <img src={DentallHisLogo} alt="dentallHis" />
+          </Link>
+          <div>
+            <ul>
+              {[
+                ...route
+                  .filter(r => r.navigation && determineRouteOrLinkShow(r, account))
+                  .map(n => (
+                    <NavItem key={n.key} focus={currentLocation === `/${n.link}`}>
+                      <Link to={`/${n.link}`}>
+                        <div>
+                          <div>
+                            <img src={n.icon.on} alt={n.name} />
+                            <img src={n.icon.off} alt={n.name} />
+                          </div>
+                          <span className="svg">{n.name}</span>
+                        </div>
+                      </Link>
+                    </NavItem>
+                  )),
+                determineRouteOrLinkShow({ localVersion: false }) && (
+                  <Popover
+                    overlayClassName="linkPopover"
+                    placement="bottomLeft"
+                    key="web"
+                    content={
+                      <PopoverContent>
+                        {navLink.map(n => (
+                          <LinkNavItem key={n.key}>
+                            <a href={n.href} target={n.newTab ? '_blank' : '_top'} rel="noopener noreferrer">
+                              <div>
+                                <div>
+                                  <span />
+                                  <img src={n.icon} alt={n.name} />
+                                </div>
+                                <span className="svg">{n.name}</span>
+                              </div>
+                            </a>
+                          </LinkNavItem>
+                        ))}
+                      </PopoverContent>
+                    }
+                  >
+                    <NavItem key={'web'}>
+                      <span>
+                        <div>
+                          <div>
+                            <img className="oneModeimg" src={FileText} alt="管理表" />
+                          </div>
+                          <span className="svg">管理表</span>
+                        </div>
+                      </span>
+                    </NavItem>
+                  </Popover>
+                ),
+              ]}
+            </ul>
+          </div>
+          <Dropdown
+            style={{ borderRadius: '10px' }}
+            trigger="click"
+            overlay={
+              <Menu onClick={menuClick}>
+                <Menu.Item key="dentall-service-page">
+                  <DentallServiceLink
+                    href={`https://www.notion.so/dentall-HiS-Help-Desk-864c13b186fb41668ac4505f62cdece2`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span role="img" aria-label="clap">
+                      👋
+                    </span>{' '}
+                    dentall 服務台
+                  </DentallServiceLink>
+                </Menu.Item>
+
+                <Menu.Item key="settings">
+                  <Link to="/setting/xray">設定</Link>
+                </Menu.Item>
+                <Menu.Item key="logout">登出</Menu.Item>
+              </Menu>
+            }
+            placement="bottomCenter"
+          >
+            <UserContainer>
+              <div>
+                <span>{account.name}</span>
+                <span>{account.role}</span>
+              </div>
+              {account.avatar ? (
+                <img alt="avatar" src={`data:image/png;base64,${account.avatar}`} />
+              ) : (
+                <div>{account.name[0]}</div>
+              )}
+            </UserContainer>
+          </Dropdown>
+        </NavContainer>
+        <Drawer
+          visible={drawerVisible}
+          closable
+          placement="left"
+          onClose={() => {
+            setDrawerVisible(false);
+          }}
           onClick={() => {
-            setDrawerVisible(true);
+            setDrawerVisible(false);
           }}
         >
-          ☰
-        </span>
-        <Link to="/">
-          <img src={DentallHisLogo} alt="dentallHis" />
-        </Link>
-        <div>
-          <ul>
-            {[
-              ...route
-                .filter(r => r.navigation && determineRouteOrLinkShow(r))
-                .map(n => (
-                  <NavItem key={n.key} focus={currentLocation === `/${n.link}`}>
-                    <Link to={`/${n.link}`}>
-                      <div>
-                        <div>
-                          <img src={n.icon.on} alt={n.name} />
-                          <img src={n.icon.off} alt={n.name} />
-                        </div>
-                        <span className="svg">{n.name}</span>
-                      </div>
-                    </Link>
-                  </NavItem>
-                )),
-              determineRouteOrLinkShow({ localVersion: false }) && (
-                <Popover
-                  overlayClassName="linkPopover"
-                  placement="bottomLeft"
-                  key="web"
-                  content={
-                    <PopoverContent>
-                      {navLink.map(n => (
-                        <LinkNavItem key={n.key}>
-                          <a href={n.href} target={n.newTab ? '_blank' : '_top'} rel="noopener noreferrer">
-                            <div>
-                              <div>
-                                <span />
-                                <img src={n.icon} alt={n.name} />
-                              </div>
-                              <span className="svg">{n.name}</span>
-                            </div>
-                          </a>
-                        </LinkNavItem>
-                      ))}
-                    </PopoverContent>
-                  }
-                >
-                  <NavItem key={'web'}>
-                    <span>
-                      <div>
-                        <div>
-                          <img className="oneModeimg" src={FileText} alt="管理表" />
-                        </div>
-                        <span className="svg">管理表</span>
-                      </div>
-                    </span>
-                  </NavItem>
-                </Popover>
-              ),
-            ]}
-          </ul>
-        </div>
-        <Dropdown
-          style={{ borderRadius: '10px' }}
-          trigger="click"
-          overlay={
-            <Menu onClick={menuClick}>
-              <Menu.Item key="dentall-service-page">
-                <DentallServiceLink
-                  href={`https://www.notion.so/dentall-HiS-Help-Desk-864c13b186fb41668ac4505f62cdece2`}
-                  target="_blank"
+          <div style={{ marginBottom: '30px' }}>
+            <img src={DentallHisLogo} alt="dentallHis" />
+          </div>
+          {[
+            ...route
+              .filter(r => r.navigation && determineRouteOrLinkShow(r, account))
+              .map(n => (
+                <DrawerItem key={n.key} to={`/${n.link}`}>
+                  <div>
+                    <img src={n.icon.off} height="16px" alt="icon" />
+                    <span>{n.name}</span>
+                  </div>
+                </DrawerItem>
+              )),
+            ...navLink
+              .filter(n => determineRouteOrLinkShow(n))
+              .map(n => (
+                <LaboDrawerItem
+                  key={n.key}
+                  href={n.href}
+                  target={n.newTab ? '_blank' : '_top'}
                   rel="noopener noreferrer"
                 >
-                  <span role="img" aria-label="clap">
-                    👋
-                  </span>{' '}
-                  dentall 服務台
-                </DentallServiceLink>
-              </Menu.Item>
-
-              <Menu.Item key="settings">
-                <Link to="/setting/xray">設定</Link>
-              </Menu.Item>
-              <Menu.Item key="logout">登出</Menu.Item>
-            </Menu>
-          }
-          placement="bottomCenter"
-        >
-          <UserContainer>
-            <div>
-              <span>{account.name}</span>
-              <span>{account.role}</span>
-            </div>
-            {account.avatar ? (
-              <img alt="avatar" src={`data:image/png;base64,${account.avatar}`} />
-            ) : (
-              <div>{account.name[0]}</div>
-            )}
-          </UserContainer>
-        </Dropdown>
-      </NavContainer>
-      <Drawer
-        visible={drawerVisible}
-        closable
-        placement="left"
-        onClose={() => {
-          setDrawerVisible(false);
-        }}
-        onClick={() => {
-          setDrawerVisible(false);
-        }}
-      >
-        <div style={{ marginBottom: '30px' }}>
-          <img src={DentallHisLogo} alt="dentallHis" />
-        </div>
-        {[
-          ...route
-            .filter(r => r.navigation && determineRouteOrLinkShow(r))
-            .map(n => (
-              <DrawerItem key={n.key} to={`/${n.link}`}>
-                <div>
-                  <img src={n.icon.off} height="16px" alt="icon" />
-                  <span>{n.name}</span>
-                </div>
-              </DrawerItem>
-            )),
-          ...navLink
-            .filter(n => determineRouteOrLinkShow(n))
-            .map(n => (
-              <LaboDrawerItem key={n.key} href={n.href} target={n.newTab ? '_blank' : '_top'} rel="noopener noreferrer">
-                <div>
-                  <img src={n.icon} alt={n.name} />
-                  <span>{n.name}</span>
-                </div>
-              </LaboDrawerItem>
-            )),
-        ]}
-      </Drawer>
-      <ContentContainer currentLocation={currentLocation}>
-        <Switch>
-          {route
-            .filter(r => determineRouteOrLinkShow(r))
-            .map(r => (
-              <Route key={r.key} exact={r.exact} path={`/${r.path}`}>
-                {r.component}
-              </Route>
-            ))}
-        </Switch>
-      </ContentContainer>
-    </Container>
-  );
+                  <div>
+                    <img src={n.icon} alt={n.name} />
+                    <span>{n.name}</span>
+                  </div>
+                </LaboDrawerItem>
+              )),
+          ]}
+        </Drawer>
+        <ContentContainer currentLocation={currentLocation}>
+          <Switch>
+            {route
+              .filter(r => determineRouteOrLinkShow(r, account))
+              .map(r => (
+                <Route key={r.key} exact={r.exact} path={`/${r.path}`}>
+                  {r.component}
+                </Route>
+              ))}
+          </Switch>
+        </ContentContainer>
+      </Container>
+    );
+  }
 }
 
 const mapStateToProps = ({ homePageReducer, settingPageReducer }) => ({

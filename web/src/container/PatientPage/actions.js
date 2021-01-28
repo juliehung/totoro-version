@@ -40,6 +40,7 @@ import {
   UPDATE_PATIENT_IMAGES_INDEX,
   GET_MEDICAL_INSTITUTION_CODE_ZHTW,
   GET_MEDICAL_INSTITUTION_CODE_ZHTW_SUCCESS,
+  GET_PATIENT_IMAGES_API_ERROR,
 } from './constant';
 
 export function changeDrawerVisible(visible) {
@@ -195,6 +196,10 @@ export function getPatientImages() {
 
 export function getPatientImagesSuccess(patientImages) {
   return { type: GET_PATIENT_IMAGES_SUCCESS, patientImages };
+}
+
+export function patientImagesApiError() {
+  return { type: GET_PATIENT_IMAGES_API_ERROR };
 }
 
 export function updatePatientImagesIndex(currentIndex = 0) {

@@ -46,6 +46,7 @@ const pages = [
     key: 'NationalId',
     page: 4,
     component: <NationalId />,
+    validator: validators.nationalIdValidator,
   },
   {
     key: 'BloodType',

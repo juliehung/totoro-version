@@ -16,7 +16,7 @@ export default class Patient {
     return result;
   };
 
-  static getImagesById = async (id, page, size) => {
+  static getImagesById = async (id, page = 0, size = 20) => {
     const params = {
       'patientId.equals': id,
       page: page,
@@ -59,6 +59,12 @@ export default class Patient {
 
   static searchByNationalId = async searchText => {
     const requestURL = `${businessRequestUrl}/national-id?search=${searchText}&size=50`;
+    const result = await request(requestURL);
+    return result;
+  };
+
+  static getExistNationalId = async nationalId => {
+    const requestURL = `${requestUrl}/nationalId/validation?nationalId=${nationalId}`;
     const result = await request(requestURL);
     return result;
   };

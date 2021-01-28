@@ -40,7 +40,7 @@ export default class DoctorNhiSalary {
   };
 
   static getValidNhiByYearMonth = async yearMonth => {
-    return await request(`${apiUrl}/v2/nhi-extend-disposals/yearmonth/${yearMonth}`);
+    return await request(`${apiUrl}/v2/nhi-extend-disposals/yearmonth/${yearMonth}?toleranceA18=true`);
   };
 
   static getNhiOneByDisposalId = async disposalId => {

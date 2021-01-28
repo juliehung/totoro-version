@@ -19,6 +19,8 @@ public interface CalculateBaseData {
 
     String getSerialNumber();
 
+    String getVisitTotalPoint();
+
     String getCopayment();
 
     // Nhi procedure
@@ -35,5 +37,6 @@ public interface CalculateBaseData {
 
     // Patient
     String getPatientName();
+    Boolean getVipPatient();
 
 }

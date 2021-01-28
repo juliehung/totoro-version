@@ -42,6 +42,8 @@ function PageControll(props) {
     goNextPage,
     isLast,
     changeFinishModalVisible,
+    isPatientExist,
+    existedPatientId,
   } = props;
 
   const [disable, setDisable] = useState(false);
@@ -62,7 +64,7 @@ function PageControll(props) {
 
   const nextPageClick = () => {
     if (validator) {
-      const validation = validator(patient);
+      const validation = validator(patient, isPatientExist, existedPatientId);
       if (!validation) {
         valitationFail(currentPage);
         return;
@@ -113,6 +115,8 @@ const mapStateToProps = ({ questionnairePageReducer }) => {
     isLast: currentPageObj?.isLast,
     patient: questionnairePageReducer.data.patient,
     error: questionnairePageReducer.flow.validationError,
+    isPatientExist: questionnairePageReducer.data.isPatientExist,
+    existedPatientId: questionnairePageReducer.data.existedPatientId,
   };
 };
 

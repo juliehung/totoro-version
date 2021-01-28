@@ -1,4 +1,4 @@
-import { Modal, Button, Select, Input, Spin, message, Checkbox, Empty, AutoComplete } from 'antd';
+import { Modal, Button, Select, Input, Spin, message, Checkbox, Empty, AutoComplete, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -27,6 +27,7 @@ import {
   createPatient,
   getAllEvents,
   changePatientSearchMode,
+  getExistNationalId,
 } from './actions';
 import styled from 'styled-components';
 import { requiredTreatmentTimeDefault, patientSearchMode, APPT_CUSTOM_COLORS } from './constant';
@@ -36,6 +37,10 @@ import { defaultTimeOption } from './utils/generateDefaultTime';
 import { appointmentPage } from './';
 import parseDateToString from './utils/parseDateToString';
 import DatePicker from '../../component/DatePicker';
+import { parsePatientNameWithVipMark } from '../../utils/patientHelper';
+import { convertAppointmentToCardObject } from '../PatientPage/utils';
+import PatientAppointmentPopover from './PatientAppointmentPopover';
+import AlertCircleFill from '../../images/alert-circle-fill.svg';
 
 const { Option } = Select;
 
@@ -109,6 +114,7 @@ const NewPatientElement = styled.div`
   align-items: baseline;
   justify-content: center;
   padding: 0 3px;
+  position: relative;
   & > :nth-child(1) {
     flex-shrink: 0;
   }
@@ -124,6 +130,16 @@ const NewPatientElement = styled.div`
     & > span {
       width: 50px;
     }
+  }
+
+  .nationalId-exist-alert-wrap {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    display: ${props => (props.isPatientExist ? 'block' : 'none')};
   }
 `;
 
@@ -172,6 +188,7 @@ function CreateAppModal({
   patients,
   patientSelected,
   selectedPatient,
+  selectedPatientAppointments,
   doctors,
   appointment,
   patient,
@@ -205,9 +222,12 @@ function CreateAppModal({
   loading,
   searchMode,
   changePatientSearchMode,
+  getExistNationalId,
+  isPatientExist = false,
 }) {
   const [expectedTimeOption, setExpectedTimeOption] = useState(defaultTimeOption);
   const { name, phone, nationalId, birth } = patient;
+  const [openControl, setOpenControl] = useState(false);
   useEffect(() => {
     if (createAppSuccess) {
       getAllEvents();
@@ -218,7 +238,7 @@ function CreateAppModal({
 
   useEffect(() => {
     checkConfirmButtonDisable();
-  }, [appointment, patient, checkConfirmButtonDisable]);
+  }, [appointment, patient, checkConfirmButtonDisable, isPatientExist]);
 
   useEffect(() => {
     if (requiredTreatmentTime) {
@@ -273,6 +293,7 @@ function CreateAppModal({
   };
 
   const onSearchTextFocus = e => {
+    setOpenControl(true);
     const value = e?.target?.value;
     clearTimeout(debounceSearch);
     debounceSearch = setTimeout(() => {
@@ -283,6 +304,7 @@ function CreateAppModal({
   const onPatientSelect = id => {
     getPatient(id);
     changePatientSelected(true);
+    setOpenControl(false);
   };
 
   const handleConfirm = () => {
@@ -339,8 +361,8 @@ function CreateAppModal({
       break;
   }
   patients = patients.map(patient => {
-    const { id, medicalId, name } = patient;
-    return { id, name, value: `${name}, ${medicalId}` };
+    const { id, medicalId, name, vipPatient } = patient;
+    return { id, name, value: `${parsePatientNameWithVipMark(vipPatient, name)}, ${medicalId}` };
   });
 
   return (
@@ -366,11 +388,14 @@ function CreateAppModal({
             onSearch={onSearchTextChange}
             onFocus={onSearchTextFocus}
             onSelect={(data, { id = null }) => onPatientSelect(id)}
+            open={openControl}
+            onBlur={() => setOpenControl(false)}
+            onChange={() => setOpenControl(true)}
             notFoundContent={<Empty description="沒有資料" />}
           >
-            {patients.map(({ medicalId, name, id }) => (
+            {patients.map(({ medicalId, name, id, vipPatient }) => (
               <Select.Option key={id} value={id}>
-                {`${name}, ${medicalId}`}
+                {`${parsePatientNameWithVipMark(vipPatient, name)}, ${medicalId}`}
               </Select.Option>
             ))}
           </StyledSearchSelect>
@@ -396,9 +421,20 @@ function CreateAppModal({
               </NewPatientElement>
             </NewPatientRow>
             <NewPatientRow>
-              <NewPatientElement>
+              <NewPatientElement isPatientExist={isPatientExist}>
                 <span>身分證號：</span>
-                <Input onChange={onChangePatientNationalId} value={patient.nationalId} />
+                <Input
+                  onChange={onChangePatientNationalId}
+                  onBlur={() =>
+                    patient?.nationalId && patient.nationalId.length !== 0 && getExistNationalId(patient.nationalId)
+                  }
+                  value={patient.nationalId}
+                />
+                <div className="nationalId-exist-alert-wrap">
+                  <Tooltip placement="top" title={<span>身分證號重複</span>}>
+                    <img src={AlertCircleFill} alt="alert-circle-fill" />
+                  </Tooltip>
+                </div>
               </NewPatientElement>
               <NewPatientElement>
                 <span>生日：</span>
@@ -420,7 +456,9 @@ function CreateAppModal({
             <PatientDetail>
               <PatientDetailCol>
                 <PatientDetailElement>
-                  <span>{selectedPatient && selectedPatient.name}</span>
+                  <span>
+                    {selectedPatient && parsePatientNameWithVipMark(selectedPatient?.vipPatient, selectedPatient?.name)}
+                  </span>
                 </PatientDetailElement>
                 <PatientDetailElement>
                   <span>{selectedPatient && parseDateToString(selectedPatient.birth)}</span>
@@ -448,7 +486,11 @@ function CreateAppModal({
                 <PatientDetailElement>
                   <span>
                     {selectedPatient &&
-                      `最近預約:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentAppointment)}`}
+                      `即將到來:  ${parseDateToString(selectedPatient.appointmentsAnalysis.recentAppointment)}`}
+                    <PatientAppointmentPopover
+                      patient={selectedPatient}
+                      patientAppointments={selectedPatientAppointments}
+                    />
                   </span>
                 </PatientDetailElement>
               </PatientDetailCol>
@@ -542,7 +584,7 @@ function CreateAppModal({
             </Width100>
           </div>
           <div>
-            <span>特殊註記：</span>
+            <span>預約註記：</span>
             <Checkbox.Group options={options} value={appointment.specialNote} onChange={onSpecialNoteChange} />
           </div>
         </InfoRowContainer>
@@ -564,6 +606,10 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   patients: appointmentPageReducer.createApp.searchPatients,
   patientSelected: appointmentPageReducer.createApp.patientSelected,
   selectedPatient: appointmentPageReducer.createApp.selectedPatient,
+  selectedPatientAppointments: convertAppointmentToCardObject(
+    appointmentPageReducer.createApp?.selectedPatient?.appointments,
+    homePageReducer.user.users,
+  ).filter(a => (a.isFuture && !a.isRegistration) || a.isCancel),
   doctors: extractDoctorsFromUser(homePageReducer.user.users),
   appointment: appointmentPageReducer.createApp.appointment,
   patient: appointmentPageReducer.createApp.patient,
@@ -572,6 +618,7 @@ const mapStateToProps = ({ appointmentPageReducer, homePageReducer }) => ({
   requiredTreatmentTime: homePageReducer.settings.settings?.preferences?.generalSetting?.requiredTreatmentTime,
   account: homePageReducer.account,
   loading: appointmentPageReducer.createApp.loading,
+  isPatientExist: appointmentPageReducer.createApp.isPatientExist,
 });
 
 const mapDispatchToProps = {
@@ -599,6 +646,7 @@ const mapDispatchToProps = {
   createPatient,
   getAllEvents,
   changePatientSearchMode,
+  getExistNationalId,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateAppModal);
