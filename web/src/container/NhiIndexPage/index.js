@@ -12,6 +12,7 @@ import {
   getDoctorNhiSalary,
   getValidNhiByYearMonth,
   getNhiOneByDisposalId,
+  onCheckedModalDataChange,
 } from './actions';
 import NhiSalarySearchInput from './nhiSalarySearchInput';
 import {
@@ -443,6 +444,8 @@ function NhiIndexPage({
   getNhiOneByDisposalId,
   nhiOneLoading,
   nhiOne,
+  onCheckedModalDataChange,
+  checkedModalData,
 }) {
   const dispatch = useDispatch();
   const [tabNumb, setTabNumb] = useState(1);
@@ -450,7 +453,6 @@ function NhiIndexPage({
   const [endDate, setEndDate] = useState(moment());
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDisposalCheckBoxVisible, setDisposalCheckBoxVisible] = useState(false);
-  const [checkedModalData, updateCheckedModalData] = useState([]);
   const [nhiFirstId, updateNhiFirstId] = useState(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
   const [currentNhiOne, updateCurrentNhiOne] = useState(null);
   const [currentValidNhiData, filterValidNhiData] = useState({});
@@ -470,17 +472,9 @@ function NhiIndexPage({
   useEffect(() => {
     if (!validNhiDataLoading && Object.values(validNhiData)?.[0]) {
       updateNhiFirstId(Object.values(validNhiData)?.[0]?.[0]?.disposalId);
-      if (!isModalVisible) {
-        setTimeout(() => {
-          updateCheckedModalData(
-            Object.entries(validNhiData)
-              .map(([, list]) => list.map(({ disposalId }) => disposalId))
-              .flat(Infinity),
-          );
-        }, 100);
-      }
     }
-  }, [validNhiData, validNhiDataLoading, isModalVisible]);
+  }, [validNhiData, validNhiDataLoading, isModalVisible, checkedModalData]);
+
   useEffect(() => {
     if (nhiFirstId) {
       dispatch(getNhiOneByDisposalId(nhiFirstId));
@@ -495,13 +489,13 @@ function NhiIndexPage({
     updateCurrentNhiOne(nhiFirstId);
   }, [nhiFirstId]);
 
-  const disposalCheckBoxMenu = ({ getAllDisposalId, updateCheckedModalData, setDisposalCheckBoxVisible }) => (
+  const disposalCheckBoxMenu = ({ getAllDisposalId, onCheckedModalDataChange, setDisposalCheckBoxVisible }) => (
     <MenuContainer>
       <Menu.Item
         onClick={() => {
           setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
           if (getAllDisposalId.length !== checkedModalData.length) {
-            updateCheckedModalData(getAllDisposalId);
+            onCheckedModalDataChange(getAllDisposalId);
           }
         }}
       >
@@ -511,9 +505,9 @@ function NhiIndexPage({
         onClick={() => {
           setDisposalCheckBoxVisible(!isDisposalCheckBoxVisible);
           if (getAllSerialNumber.length !== checkedModalData.length) {
-            updateCheckedModalData(getAllSerialNumber);
+            onCheckedModalDataChange(getAllSerialNumber);
           } else {
-            updateCheckedModalData([]);
+            onCheckedModalDataChange([]);
           }
         }}
       >
@@ -609,7 +603,7 @@ function NhiIndexPage({
                       fullscreen={false}
                       headerRender={calendarHeaderRender}
                       onSelect={date => {
-                        updateCheckedModalData([]);
+                        onCheckedModalDataChange([]);
                         filterValidNhiData({});
                         setStartDate(date);
                         setEndDate(moment(date).endOf('month'));
@@ -654,7 +648,7 @@ function NhiIndexPage({
                   <Dropdown
                     visible={isDisposalCheckBoxVisible}
                     overlay={() =>
-                      disposalCheckBoxMenu({ getAllDisposalId, updateCheckedModalData, setDisposalCheckBoxVisible })
+                      disposalCheckBoxMenu({ getAllDisposalId, onCheckedModalDataChange, setDisposalCheckBoxVisible })
                     }
                     placement="bottomLeft"
                     trigger={'click'}
@@ -663,9 +657,9 @@ function NhiIndexPage({
                       <div
                         onClick={() => {
                           if (checkedModalData.length === 0) {
-                            updateCheckedModalData(getAllDisposalId);
+                            onCheckedModalDataChange(getAllDisposalId);
                           } else {
-                            updateCheckedModalData([]);
+                            onCheckedModalDataChange([]);
                           }
                         }}
                       />
@@ -685,7 +679,7 @@ function NhiIndexPage({
                     <NhiDataListRender
                       validNhiData={currentValidNhiData}
                       checkedModalData={checkedModalData}
-                      updateCheckedModalData={updateCheckedModalData}
+                      onCheckedModalDataChange={onCheckedModalDataChange}
                       onNhiDataOneSelect={nhiFirstId => dispatch(getNhiOneByDisposalId(nhiFirstId))}
                       nhiOne={nhiOne}
                       currentNhiOne={currentNhiOne}
@@ -791,7 +785,14 @@ function NhiIndexPage({
                       (expandNhiSalary.length !== 0 &&
                         expandNhiSalary.filter(expandData => expandData?.doctorId === record.doctorId).length === 0))
                   ) {
-                    dispatch(getDoctorNhiSalary(record.doctorId, startDate, endDate));
+                    dispatch(
+                      getDoctorNhiSalary(
+                        record.doctorId,
+                        startDate,
+                        endDate,
+                        getAllDisposalId.filter(id => checkedModalData.indexOf(id) === -1),
+                      ),
+                    );
                   }
                 }}
                 expandable={{
@@ -870,6 +871,7 @@ const mapStateToProps = ({ nhiIndexPageReducer, homePageReducer }) => ({
     nhiIndexPageReducer.nhiIndex.validNhiData,
     homePageReducer.user.users,
   ),
+  checkedModalData: nhiIndexPageReducer.nhiIndex.checkedModalData,
 });
 
 // map to actions
@@ -879,6 +881,7 @@ const mapDispatchToProps = {
   getDoctorNhiSalary,
   getValidNhiByYearMonth,
   getNhiOneByDisposalId,
+  onCheckedModalDataChange,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NhiIndexPage);

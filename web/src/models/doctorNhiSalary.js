@@ -21,6 +21,7 @@ export default class DoctorNhiSalary {
       begin: `${moment(range.begin).format('YYYY-MM-DD')}`,
       doctorId: range.doctorId,
       end: `${moment(range.end).format('YYYY-MM-DD')}`,
+      excludeDisposalId: range?.checkedModalData ? range?.checkedModalData : [],
     };
     const requestUrl = combineUrlAndQueryData(`${apiUrl}/${LOCATION}/expands`, params);
     return await request(requestUrl);

@@ -6,7 +6,7 @@ import {
   GET_NHI_ONE_BY_DISPOSAL_ID,
   INIT_NHI_SALARY,
 } from '../constant';
-import { call, fork, put, take } from 'redux-saga/effects';
+import { call, fork, put, select, take } from 'redux-saga/effects';
 import {
   getOdIndexesFail,
   getOdIndexesSuccess,
@@ -25,11 +25,13 @@ import {
   getTotalPointByDisposalDate,
   getEndoIndexesSuccess,
   getEndoIndexesFail,
+  initCheckedModalDataSuccess,
 } from '../actions';
 import OdIndexes from '../../../models/odIndexes';
 import ToothClean from '../../../models/toothClean';
 import EndoIndexes from '../../../models/endoIndexes';
 import DoctorNhiSalary from '../../../models/doctorNhiSalary';
+import toRefreshValidNhiData from '../utils/toRefreshValidNhiData';
 
 export function* initNhiSalary() {
   while (true) {
@@ -81,8 +83,13 @@ export function* getNhiSalary() {
 export function* getDoctorNhiSalary() {
   while (true) {
     try {
-      const { doctorId, begin, end } = yield take(GET_DOCTOR_NHI_SALARY);
-      const doctorOneSalary = yield call(DoctorNhiSalary.getSalaryOneByDoctorId, { doctorId, begin, end });
+      const { doctorId, begin, end, checkedModalData } = yield take(GET_DOCTOR_NHI_SALARY);
+      const doctorOneSalary = yield call(DoctorNhiSalary.getSalaryOneByDoctorId, {
+        doctorId,
+        begin,
+        end,
+        checkedModalData,
+      });
       yield put(getDoctorNhiSalarySuccess({ doctorId, doctorOneSalary }));
     } catch (error) {
       console.log('error = ', error);
@@ -139,6 +146,15 @@ export function* getValidNhiYearMonth(begin) {
     try {
       const validNhiData = yield call(DoctorNhiSalary.getValidNhiByYearMonth, begin.format('YYYYMM'));
       yield put(getValidNhiByYearMonthSuccess(validNhiData));
+      const doctors = state => state.homePageReducer.user.users;
+      const getDoctors = yield select(doctors);
+      yield put(
+        initCheckedModalDataSuccess(
+          Object.entries(toRefreshValidNhiData(validNhiData, getDoctors))
+            .map(([, list]) => list.map(({ disposalId }) => disposalId))
+            .flat(Infinity),
+        ),
+      );
     } catch (error) {
       yield put(validNhiByYearMonthNotFound());
     }

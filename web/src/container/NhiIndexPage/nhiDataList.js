@@ -47,7 +47,7 @@ const renderWithCaseCategory = (a23, serialNumber) => {
 const NhiDataListRender = ({
   validNhiData,
   checkedModalData,
-  updateCheckedModalData,
+  onCheckedModalDataChange,
   onNhiDataOneSelect = () => {},
   nhiOne,
   currentNhiOne,
@@ -76,8 +76,8 @@ const NhiDataListRender = ({
                       isSelected={currentNhiOne === disposalId}
                       onChange={() => {
                         checkedModalData.find(id => disposalId === id)
-                          ? updateCheckedModalData(checkedModalData.filter(id => disposalId !== id))
-                          : updateCheckedModalData(oldArray => [...oldArray, disposalId]);
+                          ? onCheckedModalDataChange(checkedModalData.filter(id => disposalId !== id))
+                          : onCheckedModalDataChange(oldArray => [...oldArray, disposalId]);
                       }}
                     />
                   </div>
