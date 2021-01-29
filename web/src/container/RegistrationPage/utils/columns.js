@@ -81,7 +81,7 @@ export const columns = xRayVendors => [
   { title: '醫師', dataIndex: 'doctor', key: 'doctor', width: 70 },
   { title: '治療事項', dataIndex: 'subject', key: 'subject', ellipsis: true, width: 200 },
   {
-    title: '治療事項',
+    title: '特殊情況',
     ellipsis: true,
     dataIndex: 'appointmentBaseFloor',
     key: 'appointmentBaseFloor',
