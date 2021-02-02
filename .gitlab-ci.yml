@@ -1,59 +1,19 @@
 cache:
     key: "$CI_PIPELINE_ID"
     paths:
-        - node_modules
         - .gradle/wrapper
         - .gradle/caches
 
 stages:
-    - check
-    - build
     - test
-    - package
+    - build
     - release
     - deploy
+    - notify
 
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x gradlew
-
-# coding style check
-checkLint:
-    stage: check
-    only:
-        refs:
-            - merge_requests
-        changes:
-            - web/**/*
-    image: node:12.16.3-stretch
-    script:
-        - npm install
-        - npm run lint
-
-# build stage
-buildByGradle:
-    stage: build
-    only:
-        refs:
-            - merge_requests
-        changes:
-            - src/**/*
-    image: openjdk:8-jdk-stretch
-    script:
-        - ./gradlew compileJava -x check --no-daemon
-
-buildByWebpack:
-    stage: build
-    only:
-        refs:
-            - merge_requests
-        changes:
-            - web/**/*
-    image: openjdk:8-jdk-stretch
-    script:
-        - apt-get install -y --no-install-recommends curl unzip
-        - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - ./gradlew webpack -Pprod -x check -PnodeInstall --no-daemon
 
 # test stage
 testRegular:
@@ -72,60 +32,57 @@ testRegular:
         POSTGRES_PASSWORD: totoro
     script:
         - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/totoro ./gradlew test --no-daemon
-    artifacts:
-        paths:
-            - build/reports/tests/*
-            - build/jacocoHtml/*
 
-#testFTP:
-#    stage: test
-#    only:
-#        refs:
-#            - merge_requests
-#        changes:
-#            - src/**/*
-#    image: openjdk:8-jdk-stretch
-#    services:
-#        - postgres:10.4
-#    variables:
-#        POSTGRES_DB: totoro
-#        POSTGRES_USER: totoro
-#        POSTGRES_PASSWORD: totoro
-#    script:
-#        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/totoro TTR_F_U=localhost TTR_F_A=user TTR_F_S=password TTR_F_T_P=56047 TTR_F_B_P=55536 TTR_F_P=21 ./gradlew test -PtestFtp --tests io.dentall.totoro.business.service.ImageFtpBusinessServiceIntTest --no-daemon
-
-testPackage:
-    stage: package
+# build stage
+testCompile:
+    stage: test
     only:
-        - master
+        refs:
+            - merge_requests
+        changes:
+            - src/**/*
+    image: openjdk:8-jdk-stretch
+    script:
+        - ./gradlew compileJava -x check --no-daemon
+
+packageWebIntoWarWhenDev:
+    stage: build
+    only:
         - develop
-        - release
     image: openjdk:8-jdk-stretch
     script:
         - apt-get install -y --no-install-recommends curl unzip
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - git checkout $CI_COMMIT_REF_SLUG
-        - ./gradlew bootWar -Pprod -x check -PnodeInstall --no-daemon
+        - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/develop/download?job=buildArtifact"'
+        - unzip artifact.zip -d web/
+        - ./gradlew bootWar -Pprod -x check --no-daemon
     artifacts:
         paths:
             - build/*
 
-# package stage
-repackageByGradle:
-    stage: package
-    only:
-        - master
-        - develop
-        - release
-        - tags
-    except:
-        - /^(\d)+-.*$/
+packageWebIntoWarWhenTag:
+    stage: build
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: false
+          variables:
+              VERSION_FILE: stg.version.json
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
+          when: on_success
+          allow_failure: false
+          variables:
+              VERSION_FILE: rel.version.json
     image: openjdk:8-jdk-stretch
-    script:
-        - apt-get install -y --no-install-recommends curl unzip
+    before_script:
+        - apt-get update -y && apt-get install jq curl git unzip -y
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - git checkout $CI_COMMIT_TAG
-        - ./gradlew bootWar -Pprod -x check -PnodeInstall --no-daemon
+    script:
+        - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/dentall/totoro-version.git
+        - totorowebversion=`jq -r '.totoroWeb' totoro-version/$VERSION_FILE`
+        - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/$totorowebversion/download?job=buildArtifact"'
+        - unzip artifact.zip -d web/
+        - ./gradlew bootWar -Pprod -x check --no-daemon
     artifacts:
         paths:
             - build/*
@@ -133,11 +90,15 @@ repackageByGradle:
 # release stage
 releaseWarToFirebase:
     stage: release
-    only:
-        - tags
-        - release
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: false
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
+          when: on_success
+          allow_failure: false
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     image: google/cloud-sdk:alpine
     script:
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
@@ -146,10 +107,15 @@ releaseWarToFirebase:
 
 releaseWarToDevMachine:
     stage: release
-    only:
-        - tags
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
+          when: on_success
+          allow_failure: true
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     image: ubuntu
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
@@ -164,29 +130,20 @@ releaseWarToDevMachine:
     script:
         - scp -i /home/dev.key ./build/libs/*.war deploy@dev.dentall.site:/home/deploy/dora-monitor/storage/wars
 
-releaseStaticFilesToGCS:
-    stage: release
-    only:
-        - tags
-    dependencies:
-        - repackageByGradle
-    image: google/cloud-sdk:alpine
-    script:
-        - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-        - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
-        - gsutil -m cp -r build/resources/main/public/** gs://totoro-admin-static
-
 releaseImageToGitlabRegistry:
     stage: release
-    only:
-        - tags
-    except:
-        - /^(\d)+-.*$/
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
+          when: on_success
+          allow_failure: true
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     image: docker
     services:
-        - docker:dind
+        - docker:stable
     variables:
         DOCKER_DRIVER: overlay
     script:
@@ -200,23 +157,27 @@ releaseImageToGitlabRegistry:
 
 releaseImageToGCPRegistry:
     stage: release
-    only:
-        - tags
-    except:
-        - /^(\d)+-.*$/
-    dependencies:
-        - repackageByGradle
-    image: docker
-    services:
-        - docker:dind
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
+          when: on_success
+          allow_failure: true
     variables:
-        DOCKER_DRIVER: overlay
-        # See https://github.com/docker-library/docker/pull/166
+        DOCKER_DRIVER: overlay2
         DOCKER_TLS_CERTDIR: ""
+    image: docker:19.03.12
+    dependencies:
+        - packageWebIntoWarWhenTag
+    services:
+        - docker:19.03.12-dind
+    before_script:
+        - docker info
     script:
         # Write our GCP service account private key into a file
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-        - docker login -u _json_key --password-stdin https://asia.gcr.io < ${HOME}/gcloud-service-key.json
+        - cat ${HOME}/gcloud-service-key.json | docker login -u _json_key --password-stdin https://asia.gcr.io
         - war_path=build/libs/*.war
         - filename=$(basename $war_path .war)
         - version=${filename##*-}
@@ -237,7 +198,7 @@ deployDevDentall8082:
     stage: deploy
     image: ubuntu
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenDev
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
@@ -261,13 +222,13 @@ deployDevDentall8085:
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
         SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^staging.*/'
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
-          allow_failure: true
+          allow_failure: false
     stage: deploy
     image: ubuntu
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
@@ -288,7 +249,7 @@ deployGcpDev:
     stage: deploy
     image: google/cloud-sdk:alpine
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^[0-9]-[0-9]{1,2}-[0-9]{1,2}/'
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
           when: manual
           allow_failure: true
     script:
@@ -300,3 +261,35 @@ deployGcpDev:
         - mv ./kubectl /usr/local/bin/kubectl
         - gcloud container clusters get-credentials his-cluster --region asia-east1
         - kubectl get pod -l run=totoro-cp -o yaml | sed 's/\(asia.gcr.io\/dentall-saas\/totoro-admin\):.*$/\1:'"$CI_COMMIT_TAG"'/' | kubectl replace -f -
+
+# Notify
+updateTotoroVersion:
+    stage: notify
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: false
+          variables:
+              VERSION_FILE: stg.version.json
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
+          when: on_success
+          allow_failure: false
+          variables:
+              VERSION_FILE: rel.version.json
+    image: ubuntu:16.04
+    dependencies:
+        - packageWebIntoWarWhenTag
+    before_script:
+        - apt-get update -y && apt-get install jq curl git -y
+        - git config --global user.email "gitlab-auto@dentall.io"
+        - git config --global user.name "gitlab-auto"
+    script:
+        - echo "如果你在這個 job 遇到不可言喻的錯誤，你可能會想看這個 https://docs.gitlab.com/ee/ci/yaml/README.html#rulesvariables"
+        - git clone https://gitlab-ci-token:$GITLAB_TOTORO_VERSION_PRIVATE_TOKEN@gitlab.com/dentall/totoro-version.git
+        - tagTimestamp=`date --iso-8601=minutes`
+        - jq --arg timestamp $tagTimestamp --arg version $CI_COMMIT_TAG '.totoroAdminModifiedTime=$timestamp | .totoroAdmin=$version' totoro-version/$VERSION_FILE > new.$VERSION_FILE
+        - mv new.$VERSION_FILE totoro-version/$VERSION_FILE
+        - jq '.' totoro-version/$VERSION_FILE
+        - cd totoro-version
+        - git commit -am "Create update totoro-web $CI_COMMIT_REF_NAME version at $tagTimestamp"
+        - git push
