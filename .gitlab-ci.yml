@@ -5,18 +5,20 @@ cache:
         - .gradle/caches
 
 stages:
-    - package
+    - test
+    - build
+    - release
+    - deploy
+    - notify
 
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x gradlew
 
-testPackage:
-    stage: package
+# test stage
+testRegular:
+    stage: test
     only:
-<<<<<<< HEAD
-        - merge_requests
-=======
         refs:
             - merge_requests
         changes:
@@ -45,30 +47,12 @@ testCompile:
 
 packageWebIntoWarWhenDev:
     stage: build
-<<<<<<< HEAD
-    rules:
-        - if: '$CI_COMMIT_TAG =~ /^test.*/'
-          when: on_success
-          allow_failure: false
-          variables:
-              VERSION_FILE: stg.version.json
-#    only:
-#        - develop
->>>>>>> Test dev build and auto deploy
-=======
     only:
         - develop
->>>>>>> Recover general work flow
     image: openjdk:8-jdk-stretch
     script:
         - apt-get install -y --no-install-recommends curl unzip
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-<<<<<<< HEAD
-        - ./gradlew compileJava -x check --no-daemon
-        - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: 2uhuvyyiXX2Kmz_RNAjE" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/develop/download?job=buildArtifact"'
-        - unzip artifact.zip -d build/resources/main/
-        - ./gradlew bootWar -x check --no-daemon
-=======
         - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/develop/download?job=buildArtifact"'
         - unzip artifact.zip -d web/
         - ./gradlew bootWar -Pprod -x check --no-daemon
@@ -99,7 +83,6 @@ packageWebIntoWarWhenTag:
         - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/$totorowebversion/download?job=buildArtifact"'
         - unzip artifact.zip -d web/
         - ./gradlew bootWar -Pprod -x check --no-daemon
->>>>>>> Remove quote when getting json value from jq
     artifacts:
         paths:
             - build/*
@@ -107,11 +90,6 @@ packageWebIntoWarWhenTag:
 # release stage
 releaseWarToFirebase:
     stage: release
-<<<<<<< HEAD
-    only:
-        - tags
-        - release
-=======
     rules:
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
@@ -119,9 +97,8 @@ releaseWarToFirebase:
         - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
           when: on_success
           allow_failure: false
->>>>>>> Test full stg build flow
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     image: google/cloud-sdk:alpine
     script:
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
@@ -130,10 +107,6 @@ releaseWarToFirebase:
 
 releaseWarToDevMachine:
     stage: release
-<<<<<<< HEAD
-    only:
-        - tags
-=======
     rules:
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
@@ -141,9 +114,8 @@ releaseWarToDevMachine:
         - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
           when: on_success
           allow_failure: true
->>>>>>> Test full stg build flow
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     image: ubuntu
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
@@ -158,26 +130,17 @@ releaseWarToDevMachine:
     script:
         - scp -i /home/dev.key ./build/libs/*.war deploy@dev.dentall.site:/home/deploy/dora-monitor/storage/wars
 
-releaseStaticFilesToGCS:
-    stage: release
-    only:
-        - tags
-    dependencies:
-        - repackageByGradle
-    image: google/cloud-sdk:alpine
-    script:
-        - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-        - gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json --project $GCP_PROJECT_ID
-        - gsutil -m cp -r build/resources/main/public/** gs://totoro-admin-static
-
 releaseImageToGitlabRegistry:
     stage: release
-    only:
-        - tags
-    except:
-        - /^(\d)+-.*$/
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
+          when: on_success
+          allow_failure: true
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     image: docker
     services:
         - docker:stable
@@ -194,12 +157,6 @@ releaseImageToGitlabRegistry:
 
 releaseImageToGCPRegistry:
     stage: release
-<<<<<<< HEAD
-    only:
-        - tags
-    except:
-        - /^(\d)+-.*$/
-=======
     rules:
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
@@ -207,81 +164,16 @@ releaseImageToGCPRegistry:
         - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
           when: on_success
           allow_failure: true
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> Test full stg build flow
-    dependencies:
-<<<<<<< HEAD
-        - repackageByGradle
-    image: docker
-    services:
-        - docker:stable
-=======
-        - packageWebIntoWarWhenTag
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    image: docker:20.10-dind
->>>>>>> Fix used docker image version
     variables:
-        DOCKER_DRIVER: overlay
-        # See https://github.com/docker-library/docker/pull/166
-        DOCKER_TLS_CERTDIR: ""
-=======
-    image: docker
-    services:
-        - docker:dind
->>>>>>> Remove docker networking env
-=======
-=======
-    variables:
-<<<<<<< HEAD
-<<<<<<< HEAD
-        DOCKER_HOST: tcp://docker:2376
-        DOCKER_TLS_CERTDIR: "/certs"
->>>>>>> Using enctrypted docker daemon
-=======
-        DOCKER_DRIVER: overlay
->>>>>>> Recover using docker driver with overlay mode
-=======
         DOCKER_DRIVER: overlay2
         DOCKER_TLS_CERTDIR: ""
->>>>>>> Remove tls for connect to docker daemon
     image: docker:19.03.12
-<<<<<<< HEAD
-=======
-    image: $CI_REGISTRY/group/project/docker:19.03.12
->>>>>>> Use exactly what web say
-=======
-=======
->>>>>>> Ignore dep for quick dev docker can not login issue
-    image: docker:19.03.12
->>>>>>> Remove using gitlab container registry
-=======
     dependencies:
         - packageWebIntoWarWhenTag
->>>>>>> Remove test tag and Add dependency for release image to GCP
     services:
-<<<<<<< HEAD
-        - name: docker:19.03.12-dind
-          alias: docker
-<<<<<<< HEAD
-    variables:
-        # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
-        DOCKER_HOST: tcp://docker:2376
-        DOCKER_TLS_CERTDIR: "/certs"
->>>>>>> Using gitlab offical best practice of using docker in ci job
-=======
->>>>>>> Use exactly what web say
-=======
         - docker:19.03.12-dind
-<<<<<<< HEAD
->>>>>>> Fix services field
-=======
     before_script:
         - docker info
->>>>>>> Remove tls for connect to docker daemon
     script:
         # Write our GCP service account private key into a file
         - echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
@@ -306,7 +198,7 @@ deployDevDentall8082:
     stage: deploy
     image: ubuntu
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenDev
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
@@ -330,23 +222,13 @@ deployDevDentall8085:
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
         SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
     rules:
-<<<<<<< HEAD
-<<<<<<< HEAD
-        - if: '$CI_COMMIT_TAG =~ /^staging.*/'
-=======
-        - if: '$CI_COMMIT_TAG =~ /^test.*/'
+        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: false
-=======
->>>>>>> Test dev build and auto deploy
-        - if: '$CI_COMMIT_TAG =~ /^stg.*/'
->>>>>>> Test full stg build flow
-          when: on_success
-          allow_failure: true
     stage: deploy
     image: ubuntu
     dependencies:
-        - repackageByGradle
+        - packageWebIntoWarWhenTag
     before_script:
         # run ssh in job ref https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client curl -y )'
@@ -367,7 +249,7 @@ deployGcpDev:
     stage: deploy
     image: google/cloud-sdk:alpine
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^[0-9]-[0-9]{1,2}-[0-9]{1,2}/'
+        - if: '$CI_COMMIT_TAG =~ /\d\.\d\.\d/'
           when: manual
           allow_failure: true
     script:
@@ -379,8 +261,6 @@ deployGcpDev:
         - mv ./kubectl /usr/local/bin/kubectl
         - gcloud container clusters get-credentials his-cluster --region asia-east1
         - kubectl get pod -l run=totoro-cp -o yaml | sed 's/\(asia.gcr.io\/dentall-saas\/totoro-admin\):.*$/\1:'"$CI_COMMIT_TAG"'/' | kubectl replace -f -
-<<<<<<< HEAD
-=======
 
 # Notify
 updateTotoroVersion:
@@ -413,4 +293,3 @@ updateTotoroVersion:
         - cd totoro-version
         - git commit -am "Create update totoro-web $CI_COMMIT_REF_NAME version at $tagTimestamp"
         - git push
->>>>>>> Remove test tag and Add dependency for release image to GCP
