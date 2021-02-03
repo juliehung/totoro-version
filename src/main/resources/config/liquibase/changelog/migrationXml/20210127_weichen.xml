@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210127-weichen" author="WeiChen">
+        <sql>
+            UPDATE doc_np
+            SET patient = target.neop
+            FROM (
+                SELECT id, replace(
+                    cast(patient as varchar),
+                        '"id": 33, "name": "B型肝炎", "type": "DISEASE"',
+                        '"id": 44, "name": "B型肝炎", "type": "BLOOD_DISEASE"')::jsonb as neop
+                FROM doc_np
+                WHERE patient -> 'tags' @> '[{"id": 33}]'
+            ) AS target
+            WHERE doc_np.id = target.id;
+        </sql>
+        <sql>
+            UPDATE patient_tag
+            SET tags_id = 44
+            WHERE tags_id = 33;
+        </sql>
+        <sql>
+            DELETE FROM tag WHERE id = 33;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

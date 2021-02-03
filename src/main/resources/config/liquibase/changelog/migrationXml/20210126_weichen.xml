@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210126-weichen" author="WeiChen">
+        <sql>
+            INSERT INTO tag (id, jhi_type, name, modifiable) VALUES (47, 'BLOOD_DISEASE', '無', false);
+            INSERT INTO tag (id, jhi_type, name, modifiable) VALUES (48, 'BLOOD_DISEASE', '其他血液疾病', false);
+            INSERT INTO tag (id, jhi_type, name, modifiable) VALUES (49, 'DISEASE', '無', false);
+            INSERT INTO tag (id, jhi_type, name, modifiable) VALUES (50, 'DISEASE', '其他疾病史', false);
+            INSERT INTO tag (id, jhi_type, name, modifiable) VALUES (51, 'OTHER', '無', false);
+            INSERT INTO tag (id, jhi_type, name, modifiable) VALUES (52, 'OTHER', '其他藥物過敏', false);
+            INSERT INTO tag (id, jhi_type, name, modifiable) VALUES (53, 'ALLERGY', '無', false);
+            INSERT INTO tag (id, jhi_type, name, modifiable) VALUES (54, 'ALLERGY', '其他治療困難', false);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

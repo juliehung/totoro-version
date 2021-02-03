@@ -332,12 +332,14 @@ dependencies {
     compile "com.vladmihalcea:hibernate-types-52:2.4.0"
     compile "ru.yandex.qatools.embed:postgresql-embedded:2.10"
     compile "com.univocity:univocity-parsers:2.8.2"
-    compile("io.moquette:moquette-broker:0.13") {
-        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    compile ("org.springframework.integration:spring-integration-mqtt") {
+        exclude group: 'org.eclipse.paho', module: 'org.eclipse.paho.client.mqttv3'
     }
-    compile "org.springframework.integration:spring-integration-mqtt"
     compile "org.springframework.boot:spring-boot-starter-artemis"
     compile "org.apache.activemq:artemis-jms-server"
+    compile "org.apache.activemq:artemis-mqtt-protocol:2.4.0"
+    compile "org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5"
+    compile "io.netty:netty-codec-mqtt:4.1.51.Final" //4.1.52.Final ~ 4.1.58.Final會造成本機測試收不到訊息
 
     // https://mvnrepository.com/artifact/commons-net/commons-net
     compile group: 'commons-net', name: 'commons-net', version: '3.6'
