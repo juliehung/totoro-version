@@ -21,7 +21,11 @@
         <sql>
             UPDATE patient_tag
             SET tags_id = 44
-            WHERE tags_id = 33;
+            WHERE tags_id = 33
+            AND patients_id NOT IN (select patients_id from patient_tag where tags_id = 44);
+        </sql>
+        <sql>
+            DELETE FROM patient_tag WHERE tags_id = 33;
         </sql>
         <sql>
             DELETE FROM tag WHERE id = 33;
