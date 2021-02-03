@@ -2,18 +2,23 @@ package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.repository.*;
+import io.dentall.totoro.domain.enumeration.AppointmentStatus;
+import io.dentall.totoro.repository.AppointmentRepository;
+import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.repository.TagRepository;
+import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.service.AppointmentQueryService;
 import io.dentall.totoro.service.AppointmentService;
 import io.dentall.totoro.service.BroadcastService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
-import io.dentall.totoro.service.AppointmentQueryService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -29,14 +34,11 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 
-
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 /**
  * Test class for the AppointmentResource REST controller.
  *
@@ -109,7 +111,7 @@ public class AppointmentResourceIntTest {
     @Autowired
     private PatientRepository patientRepository;
 
-    @Autowired
+    @MockBean
     private BroadcastService broadcastService;
 
     private MockMvc restAppointmentMockMvc;
@@ -119,6 +121,7 @@ public class AppointmentResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        Mockito.doNothing().when(broadcastService).broadcastDomainId(Mockito.anyLong(), Mockito.any());
         final AppointmentResource appointmentResource = new AppointmentResource(appointmentService, appointmentQueryService, broadcastService, tagRepository);
         this.restAppointmentMockMvc = MockMvcBuilders.standaloneSetup(appointmentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -935,8 +938,8 @@ public class AppointmentResourceIntTest {
     @Transactional
     public void getAllAppointmentsByRegistrationIsNullAndPatientId() throws Exception {
         Patient patient = TestUtil.createPatient(em, userRepository, tagRepository, patientRepository);
-        patient.addAppointment(appointment);
 
+        appointment.setPatient(patient);
         // Initialize the database
         appointmentRepository.saveAndFlush(appointment);
 

@@ -301,16 +301,6 @@ public class PatientService extends QueryService<Patient> {
             .get();
     }
 
-    void setNewPatient(Patient patient) {
-        patient.setNewPatient(
-            patient
-                .getAppointments()
-                .stream()
-                .filter(appointment -> appointment.getRegistration() != null)
-                .count() < 1
-        );
-    }
-
     private Questionnaire updateQuestionnaire(Questionnaire questionnaire, Questionnaire updateQuestionnaire) {
         if (updateQuestionnaire.isDrug() != null) {
             questionnaire.setDrug(updateQuestionnaire.isDrug());

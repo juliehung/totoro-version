@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210125-shihfeng" author="shihfeng">
+        <addColumn tableName="disposal">
+            <column name="treatment_procedure_signature_not_provided" type="boolean">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <setColumnRemarks tableName="disposal" columnName="treatment_procedure_signature_not_provided" remarks="true:表示尚有處置未寫入IC卡，fale:表示未有處置未寫入IC卡" />
+    </changeSet>
+</databaseChangeLog>

@@ -1,13 +1,23 @@
 package io.dentall.totoro.service;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.Blood;
+import io.dentall.totoro.domain.enumeration.Gender;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
+import io.dentall.totoro.domain.enumeration.TagType;
+import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.dto.AppointmentDTO;
+import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
+import io.dentall.totoro.service.dto.TagDTO;
+import io.dentall.totoro.service.dto.table.AccountingTable;
+import io.dentall.totoro.service.dto.table.AppointmentTable;
+import io.dentall.totoro.service.dto.table.PatientTable;
+import io.dentall.totoro.service.dto.table.RegistrationTable;
+import io.dentall.totoro.service.mapper.*;
+import io.dentall.totoro.service.util.MapperUtil;
+import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;
+import io.dentall.totoro.web.rest.vm.UWPRegistrationPageVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -16,42 +26,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.dentall.totoro.domain.Accounting;
-import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.Disposal;
-import io.dentall.totoro.domain.ExtendUser;
-import io.dentall.totoro.domain.Patient;
-import io.dentall.totoro.domain.Registration;
-import io.dentall.totoro.domain.Tag;
-import io.dentall.totoro.domain.TreatmentProcedure;
-import io.dentall.totoro.domain.User;
-import io.dentall.totoro.domain.enumeration.Blood;
-import io.dentall.totoro.domain.enumeration.Gender;
-import io.dentall.totoro.domain.enumeration.RegistrationStatus;
-import io.dentall.totoro.domain.enumeration.TagType;
-import io.dentall.totoro.repository.AccountingRepository;
-import io.dentall.totoro.repository.AppointmentRepository;
-import io.dentall.totoro.repository.DisposalRepository;
-import io.dentall.totoro.repository.ExtendUserRepository;
-import io.dentall.totoro.repository.PatientRepository;
-import io.dentall.totoro.repository.RegistrationRepository;
-import io.dentall.totoro.repository.TagRepository;
-import io.dentall.totoro.service.dto.AppointmentDTO;
-import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
-import io.dentall.totoro.service.dto.TagDTO;
-import io.dentall.totoro.service.dto.table.AccountingTable;
-import io.dentall.totoro.service.dto.table.AppointmentTable;
-import io.dentall.totoro.service.dto.table.PatientTable;
-import io.dentall.totoro.service.dto.table.RegistrationTable;
-import io.dentall.totoro.service.mapper.AccountingMapper;
-import io.dentall.totoro.service.mapper.AppointmentMapper;
-import io.dentall.totoro.service.mapper.PatientMapper;
-import io.dentall.totoro.service.mapper.RegistrationMapper;
-import io.dentall.totoro.service.mapper.TagMapper;
-import io.dentall.totoro.service.util.MapperUtil;
-import io.dentall.totoro.service.util.StreamUtil;
-import io.dentall.totoro.web.rest.vm.MonthAppointmentVM;
-import io.dentall.totoro.web.rest.vm.UWPRegistrationPageVM;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing Appointment.
@@ -121,11 +102,8 @@ public class AppointmentService {
         appointment = appointmentRepository.save(appointment.treatmentProcedures(null));
         relationshipService.addRelationshipWithTreatmentProcedures(appointment.treatmentProcedures(treatmentProcedures));
         appointment.setPatient(patient);
-        patient.getAppointments().add(appointment);
         Registration registration = getRegistration(appointment);
         appointment.setRegistration(registration);
-
-        patientService.setNewPatient(patient);
 
         return appointment;
     }
@@ -253,8 +231,6 @@ public class AppointmentService {
                     );
                     relationshipService.addRelationshipWithTreatmentProcedures(appointment.treatmentProcedures(updateAppointment.getTreatmentProcedures()));
                 }
-
-                patientService.setNewPatient(appointment.getPatient());
 
                 return appointment;
             })

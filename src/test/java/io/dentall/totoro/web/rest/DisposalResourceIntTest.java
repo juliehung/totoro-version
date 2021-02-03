@@ -5,17 +5,16 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.DisposalRevisitInterval;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import io.dentall.totoro.repository.*;
-import io.dentall.totoro.service.DisposalQueryService;
-import io.dentall.totoro.service.DisposalService;
-import io.dentall.totoro.service.NhiExtendDisposalService;
-import io.dentall.totoro.service.NhiService;
+import io.dentall.totoro.service.*;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -117,6 +116,9 @@ public class DisposalResourceIntTest {
     @Autowired
     private RegistrationRepository registrationRepository;
 
+    @MockBean
+    private BroadcastService broadcastService;
+
     @Autowired
     private NhiService nhiService;
 
@@ -127,6 +129,7 @@ public class DisposalResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        Mockito.doNothing().when(broadcastService).broadcastDomainId(Mockito.anyLong(), Mockito.any());
         final DisposalResource disposalResource = new DisposalResource(disposalService, disposalQueryService, nhiService, nhiExtendDisposalService);
         this.restDisposalMockMvc = MockMvcBuilders.standaloneSetup(disposalResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)

@@ -21,7 +21,7 @@ import java.util.Set;
 @Entity
 @Table(name = "disposal")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@AttributeOverride(name="createdBy", column=@Column(name="createdBy"))
+@AttributeOverride(name = "createdBy", column = @Column(name = "createdBy"))
 public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,6 +61,9 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @Column(name = "revisit_will_not_happen")
     private Boolean revisitWillNotHappen;
 
+    @Column(name = "treatment_procedure_signature_not_provided")
+    private Boolean treatmentProcedureSignatureNotProvided;
+
     @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = null;
@@ -73,7 +76,8 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(unique = true)
     private Todo todo;
 
-    @OneToOne    @JoinColumn(unique = true)
+    @OneToOne
+    @JoinColumn(unique = true)
     private Registration registration;
 
     @OneToMany(mappedBy = "disposal")
@@ -104,6 +108,19 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     public void setRevisitWillNotHappen(Boolean revisitWillNotHappen) {
         this.revisitWillNotHappen = revisitWillNotHappen;
+    }
+
+    public Disposal treatmentProcedureSignatureNotProvided(Boolean treatmentProcedureSignatureNotProvided) {
+        this.treatmentProcedureSignatureNotProvided = treatmentProcedureSignatureNotProvided;
+        return this;
+    }
+
+    public Boolean getTreatmentProcedureSignatureNotProvided() {
+        return this.treatmentProcedureSignatureNotProvided;
+    }
+
+    public void setTreatmentProcedureSignatureNotProvided(Boolean treatmentProcedureSignatureNotProvided) {
+        this.treatmentProcedureSignatureNotProvided = treatmentProcedureSignatureNotProvided;
     }
 
     public Disposal revisitContent(String revisitContent) {

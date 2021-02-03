@@ -10,9 +10,11 @@ import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -94,7 +96,7 @@ public class RegistrationResourceIntTest {
     @Autowired
     private RegistrationDelRepository registrationDelRepository;
 
-    @Autowired
+    @MockBean
     private BroadcastService broadcastService;
 
     private MockMvc restRegistrationMockMvc;
@@ -104,6 +106,7 @@ public class RegistrationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        Mockito.doNothing().when(broadcastService).broadcastDomainId(Mockito.anyLong(), Mockito.any());
         final RegistrationResource registrationResource = new RegistrationResource(registrationRepository, registrationService, broadcastService);
         this.restRegistrationMockMvc = MockMvcBuilders.standaloneSetup(registrationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -211,7 +214,7 @@ public class RegistrationResourceIntTest {
             .andExpect(jsonPath("$.[*].onSite").value(hasItem(DEFAULT_ON_SITE.booleanValue())))
             .andExpect(jsonPath("$.[*].noCard").value(hasItem(DEFAULT_NO_CARD.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getRegistration() throws Exception {
