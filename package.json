@@ -29,7 +29,7 @@
   },
   "scripts": {
     "start": "echo 'hello!'",
-    "swagger": "serve -s web/swagger-ui",
+    "swagger": "serve -s swagger-ui",
     "prettier": "prettier web/src",
     "format": "npm run prettier -- --write",
     "lint": "eslint web/src",
