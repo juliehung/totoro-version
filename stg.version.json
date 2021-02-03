@@ -1,6 +1,6 @@
 {
-  "totoroAdmin": "test-notify",
-  "totoroAdminModifiedTime": "2021-01-19T04:28+00:00",
+  "totoroAdmin": "stg-1.5.7",
+  "totoroAdminModifiedTime": "2021-02-03T04:08+00:00",
   "totoroWeb": "stg-1.5.7",
   "totoroWebModifiedTime": "2021-02-03T03:22+00:00",
   "deploy8085Time": "1900-01-01T00:00+00:00"
