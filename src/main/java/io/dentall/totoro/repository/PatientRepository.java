@@ -3,6 +3,7 @@ package io.dentall.totoro.repository;
 import io.dentall.totoro.business.vm.PatientSearchVM;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.service.dto.table.PatientTable;
+import io.dentall.totoro.web.rest.vm.PatientNationalIdValidationVM;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -100,5 +102,5 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
         countQuery = "SELECT count(*) FROM Patient patient WHERE FUNCTION('DENTALL_MATCHED_POSITION', :search, patient.medicalId) > 0")
     Page<PatientSearchVM> findByMedicalId(@Param("search") String search, Pageable pageable);
 
-    Boolean existsByNationalId(String nationalId);
+    List<PatientNationalIdValidationVM> findByNationalId(String nationalId);
 }
