@@ -2,6 +2,7 @@
 # Project Specific
 ######################
 /build/www/**
+/src/main/generated
 /src/test/javascript/coverage/
 
 ######################
