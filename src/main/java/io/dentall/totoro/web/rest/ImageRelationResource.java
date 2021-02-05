@@ -43,6 +43,11 @@ public class ImageRelationResource {
         return ResponseEntity.ok(imageRelationBusinessService.getImageRelationPathsByDomain(domain, domainId));
     }
 
+    @GetMapping("/image-relations/patients/{patientId}")
+    public ResponseEntity<List<ImageRelationPathVM>> getImagePathsByPatient(@PathVariable Long patientId, @RequestParam(value = "domain") ImageRelationDomain domain) {
+        return ResponseEntity.ok(imageRelationBusinessService.getImageRelationPathsByPatient(domain, patientId));
+    }
+
     /**
      * DELETE  /image-relations/:id : delete the "id" image-relation.
      *

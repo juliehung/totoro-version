@@ -49,6 +49,15 @@ public class ImageRelationBusinessService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<ImageRelationPathVM> getImageRelationPathsByPatient(ImageRelationDomain domain, Long patientId) {
+        try (Stream<ImageRelation> imageRelations = imageRelationRepository.findByDomainAndImage_Patient_Id(domain, patientId)) {
+            return imageRelations
+                .map(ImageRelationPathVM::new)
+                .collect(Collectors.toList());
+        }
+    }
+
     @Transactional
     public void deleteById(Long id) {
         imageRelationRepository.deleteById(id);

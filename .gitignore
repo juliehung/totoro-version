@@ -2,7 +2,7 @@
 # Project Specific
 ######################
 /build/www/**
-/src/main/generated
+src/main/generated/io/dentall/totoro/domain/**
 /src/test/javascript/coverage/
 
 ######################
