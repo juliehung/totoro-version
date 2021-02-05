@@ -22,4 +22,6 @@ public interface ImageRelationRepository extends JpaRepository<ImageRelation, Lo
     @EntityGraph(attributePaths = "image")
     @Query("SELECT imageRelation FROM ImageRelation imageRelation WHERE imageRelation.domain = :domain AND imageRelation.domainId = :domainId")
     Stream<ImageRelation> findDistinctImageByDomainAndDomainId(@Param("domain") ImageRelationDomain domain, @Param("domainId") Long domainId);
+
+    Stream<ImageRelation> findByDomainAndImage_Patient_Id(ImageRelationDomain domain, Long patientId);
 }
