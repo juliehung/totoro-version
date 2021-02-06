@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,9 +32,6 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
         Long patientId,
         String a73,
         List<Long> excludeTreatmentProcedureIds);
-
-    // 查詢所有 nhi extend procedure，且包含輸入之健保代碼，且在指定病患下
-    List<NhiExtendTreatmentProcedureTable> findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73In(Long patientId, List<String> a73s);
 
     // 查詢這個 `病患(?1)` ，除了當下這個 `健保治療(?2)` 外，這項治療的 `發生時間(?3)` 之前的所有健保治療項目
     @Query(
@@ -61,4 +59,14 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
     <T> Optional<T> findByIdAndA73AndTreatmentProcedure_Disposal_Registration_Appointment_Patient_Id(Long treatmentProcedureId, String a73, Long patientId, Class<T> type);
 
     <T> Optional<T> findById(Long id, Class<T> type);
+
+    Optional<NhiExtendTreatmentProcedureTable> findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndTreatmentProcedure_Disposal_DateTimeBetween(
+        Long patientId,
+        LocalDate begin,
+        LocalDate end
+    );
+
+    // 查詢所有 nhi extend procedure，且包含輸入之健保代碼，且在指定病患下
+    List<NhiExtendTreatmentProcedureTable> findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(Long patientId, List<String> a73s);
+
 }
