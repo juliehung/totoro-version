@@ -94,4 +94,5 @@ public class ImageGcsBusinessService extends ImageBusinessService {
     private enum Size {
         original
     }
+
 }
