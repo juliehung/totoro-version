@@ -7,9 +7,6 @@ import io.dentall.totoro.domain.enumeration.ImageRelationDomain;
 import io.dentall.totoro.repository.ImageRelationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,20 +47,6 @@ public class ImageRelationBusinessService {
                 .map(ImageRelationPathVM::new)
                 .collect(Collectors.toList());
         }
-    }
-
-    @Transactional(readOnly = true)
-    public Page<ImageRelationPathVM> getImageRelationPathsByPatient(
-        ImageRelationDomain domain,
-        Long patientId,
-        Pageable pageable
-    ) {
-        Page<ImageRelation> imageRelations = imageRelationRepository.findByDomainAndImage_Patient_IdOrderByDomainIdDesc(domain, patientId, pageable);
-        List<ImageRelationPathVM> irpvm =  imageRelations.stream()
-            .map(ImageRelationPathVM::new)
-            .collect(Collectors.toList());
-
-        return new PageImpl<>(irpvm, imageRelations.getPageable(), imageRelations.getTotalElements());
     }
 
     @Transactional
