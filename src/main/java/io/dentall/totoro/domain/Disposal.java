@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.enumeration.DisposalRevisitInterval;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
+import io.netty.util.internal.StringUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.annotation.CreatedBy;
@@ -422,7 +423,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "Disposal{" +
+        String s = "Disposal{" +
             "id=" + getId() +
             ", status='" + getStatus() + "'" +
             ", total=" + getTotal() +
@@ -433,5 +434,20 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
             ", revisitTreatmentTime='" + getRevisitTreatmentTime() + "'" +
             ", revisitComment='" + getRevisitComment() + "'" +
             "}";
+
+        if (this.getTreatmentProcedures() != null &&
+            this.getTreatmentProcedures().size() > 0
+        ) {
+            s = s + this.getTreatmentProcedures().toString();
+        }
+
+        if (this.getPrescription() != null &&
+            this.getPrescription().getTreatmentDrugs() != null &&
+            this.getPrescription().getTreatmentDrugs().size() > 0
+        ) {
+            s = s + this.getPrescription().getTreatmentDrugs().toString();
+        }
+
+        return s;
     }
 }
