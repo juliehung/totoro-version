@@ -25,5 +25,5 @@ public interface ImageRelationRepository extends JpaRepository<ImageRelation, Lo
     @Query("SELECT imageRelation FROM ImageRelation imageRelation WHERE imageRelation.domain = :domain AND imageRelation.domainId = :domainId")
     Stream<ImageRelation> findDistinctImageByDomainAndDomainId(@Param("domain") ImageRelationDomain domain, @Param("domainId") Long domainId);
 
-    Page<ImageRelation> findByDomainAndImage_Patient_Id(ImageRelationDomain domain, Long patientId, Pageable pageable);
+    Page<ImageRelation> findByDomainAndImage_Patient_IdOrderByDomainIdDesc(ImageRelationDomain domain, Long patientId, Pageable pageable);
 }

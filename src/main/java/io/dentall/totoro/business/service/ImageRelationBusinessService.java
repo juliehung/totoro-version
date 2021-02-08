@@ -58,7 +58,7 @@ public class ImageRelationBusinessService {
         Long patientId,
         Pageable pageable
     ) {
-        Page<ImageRelation> imageRelations = imageRelationRepository.findByDomainAndImage_Patient_Id(domain, patientId, pageable);
+        Page<ImageRelation> imageRelations = imageRelationRepository.findByDomainAndImage_Patient_IdOrderByDomainIdDesc(domain, patientId, pageable);
         List<ImageRelationPathVM> irpvm =  imageRelations.stream()
             .map(ImageRelationPathVM::new)
             .collect(Collectors.toList());
