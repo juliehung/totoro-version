@@ -1,12 +1,16 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.business.service.ImageRelationBusinessService;
+import io.dentall.totoro.business.vm.ImageRelationPathVM;
 import io.dentall.totoro.domain.ImageRelation;
 import io.dentall.totoro.domain.enumeration.ImageRelationDomain;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
-import io.dentall.totoro.business.vm.ImageRelationPathVM;
+import io.dentall.totoro.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,8 +48,19 @@ public class ImageRelationResource {
     }
 
     @GetMapping("/image-relations/patients/{patientId}")
-    public ResponseEntity<List<ImageRelationPathVM>> getImagePathsByPatient(@PathVariable Long patientId, @RequestParam(value = "domain") ImageRelationDomain domain) {
-        return ResponseEntity.ok(imageRelationBusinessService.getImageRelationPathsByPatient(domain, patientId));
+    public ResponseEntity<List<ImageRelationPathVM>> getImagePathsByPatient(
+        @PathVariable Long patientId,
+        @RequestParam(value = "domain") ImageRelationDomain domain,
+        Pageable pageable
+    ) {
+        HttpHeaders headers = null;
+        Page<ImageRelationPathVM> page = imageRelationBusinessService.getImageRelationPathsByPatient(domain, patientId, pageable);
+
+        if (page != null) {
+            headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/image-relations/patients/{patientId}");
+        }
+
+        return ResponseEntity.ok().headers(headers).body(page != null? page.getContent(): null);
     }
 
     /**
