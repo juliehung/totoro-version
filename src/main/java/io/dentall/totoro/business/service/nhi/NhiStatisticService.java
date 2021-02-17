@@ -300,8 +300,8 @@ public class NhiStatisticService {
         if (!countedList.contains(e.getDisposalId())) {
             o.setTotal(
                 o.getTotal() != null
-                    ? o.getTotal() + e.getExaminationPoint() - Long.parseLong(e.getCopayment())
-                    : e.getExaminationPoint() - Long.parseLong(e.getCopayment())
+                    ? o.getTotal() + e.getExaminationPoint()
+                    : e.getExaminationPoint()
             );
 
             this.examCounting(o, e);
