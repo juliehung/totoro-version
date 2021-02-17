@@ -30,4 +30,5 @@
     <include file="config/liquibase/changelog/migrationXml/20210125_shihfeng.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/migrationXml/20210126_weichen.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/migrationXml/20210127_weichen.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/migrationXml/20210217_weichen.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
