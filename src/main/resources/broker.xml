@@ -2,6 +2,22 @@
 <configuration xmlns="urn:activemq" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:activemq /schema/artemis-configuration.xsd">
     <core xmlns="urn:activemq:core">
         <persistence-enabled>false</persistence-enabled>
+        <security-enabled>false</security-enabled>
+
+        <acceptors>
+            <acceptor name="netty">tcp://0.0.0.0:61616?protocols=CORE</acceptor>
+            <acceptor name="mqtt">tcp://0.0.0.0:${mqtt.port:1883}?protocols=MQTT</acceptor>
+            <acceptor name="mqtt_ws">tcp://0.0.0.0:${mqtt.ws.port:8081}?protocols=MQTT</acceptor>
+            <!-- Artemis原本就支援在同一個protocol就可以運行tcp、ws了，但DentallHis架構是額外另開一個ws port，所以這邊也跟著開一個port -->
+        </acceptors>
+
+        <!-- 設一下dead-letter-address和expiry-address，不然debug log一直會提醒要設定 -->
+        <address-settings>
+            <address-setting match="#">
+                <dead-letter-address>totoro.deadLetterAddress</dead-letter-address>
+                <expiry-address>totoro.expiryAddress</expiry-address>
+            </address-setting>
+        </address-settings>
 
         <addresses>
             <address name="totoro.appointmentQueue">

@@ -191,12 +191,22 @@ public class TreatmentDrug implements Serializable {
 
     @Override
     public String toString() {
-        return "TreatmentDrug{" +
+        String s = "TreatmentDrug{" +
             "id=" + getId() +
             ", day=" + getDay() +
             ", frequency='" + getFrequency() + "'" +
             ", way='" + getWay() + "'" +
             ", quantity=" + getQuantity() +
             "}";
+
+        if (this.getDrug() != null) {
+            s = s + this.getDrug().toString();
+        }
+
+        if (this.getNhiExtendTreatmentDrug() != null) {
+            s = s + this.getNhiExtendTreatmentDrug().toString();
+        }
+
+        return s;
     }
 }

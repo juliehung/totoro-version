@@ -36,7 +36,7 @@ public class PersonalNhiExtendTreatmentProcedure {
     }
 
     public Stream<LocalDate> getSortedDeclarationDates() {
-        return this.declarationDates.stream().sorted();
+        return this.declarationDates.stream().sorted(Comparator.reverseOrder());
     }
 
     public void pushDeclarationDateAndTooth(LocalDate declarationDate, List<String> teeth) {

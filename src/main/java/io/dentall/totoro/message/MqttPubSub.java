@@ -2,9 +2,6 @@ package io.dentall.totoro.message;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.eclipse.paho.client.mqttv3.IMqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -19,12 +16,12 @@ public class MqttPubSub {
 
     private final Logger log = LoggerFactory.getLogger(MqttPubSub.class);
 
-    private final IMqttClient mqttClient;
+    private final MqttGateway mqttGateway;
 
     private final ObjectMapper mapper;
 
-    public MqttPubSub(IMqttClient mqttClient, ObjectMapper mapper) {
-        this.mqttClient = mqttClient;
+    public MqttPubSub(MqttGateway mqttGateway, ObjectMapper mapper) {
+        this.mqttGateway = mqttGateway;
         this.mapper = mapper;
     }
 
@@ -50,17 +47,10 @@ public class MqttPubSub {
 
     private void publish(String topic, Object payload, int qos, boolean retained) {
         try {
-            MqttMessage mqttMessage = new MqttMessage();
-            mqttMessage.setPayload(mapper.writeValueAsString(payload).getBytes());
-            mqttMessage.setQos(qos);
-            mqttMessage.setRetained(retained);
-
-            mqttClient.publish(topic, mqttMessage);
+            mqttGateway.sendToMqtt(mapper.writeValueAsString(payload).getBytes(), topic, qos, retained);
             log.debug("mqttClient publish: topic[{}], payload[{}]", topic, payload);
         } catch (JsonProcessingException e) {
             log.error("JsonProcessingException: {}", payload);
-        } catch (MqttException e) {
-            log.error("MqttException: topic[{}], payload[{}]", topic, payload);
         }
     }
 }

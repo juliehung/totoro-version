@@ -199,6 +199,7 @@ public class NhiStatisticService {
         Map<Instant, NhiStatisticDoctorSalary> m = new HashMap<>();
 
         List<Long> disposalList = new ArrayList<>();
+        List<Long> multipleExaminationDisposalList = new ArrayList<>();
 
         if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
             excludeDisposalId = Arrays.asList(0L);
@@ -218,7 +219,7 @@ public class NhiStatisticService {
                             }
 
                             this.disposalCounting(o, e, disposalList);
-                            this.txCounting(o, e);
+                            this.txCounting(o, e, multipleExaminationDisposalList);
 
                             return o;
                         });
@@ -228,7 +229,23 @@ public class NhiStatisticService {
         return m.values();
     }
 
-    private void txCounting(NhiStatisticDoctorSalary o, CalculateBaseData e) {
+    private void examCounting(NhiStatisticDoctorSalary o, CalculateBaseData e) {
+        if (NhiProcedureSalaryType.INFECTION_EXAMINATION_CODE.getCodeListAtSalary().contains(e.getExaminationCode())) {
+            o.setInfectionExaminationPoint(
+                o.getInfectionExaminationPoint() != null
+                    ? o.getInfectionExaminationPoint() + e.getExaminationPoint()
+                    : e.getExaminationPoint()
+            );
+        } else {
+            o.setRegularExaminationPoint(
+                o.getRegularExaminationPoint() != null
+                    ? o.getRegularExaminationPoint() + e.getExaminationPoint()
+                    : e.getExaminationPoint()
+            );
+        }
+    }
+
+    private void txCounting(NhiStatisticDoctorSalary o, CalculateBaseData e, List<Long> multipleExaminationDisposalList) {
         if (NhiProcedureUtil.isPeriodAtSalary(e.getTxCode())) {
             // dentall 定義之薪水類行為牙周
             o.setPerioPoint(
@@ -245,19 +262,38 @@ public class NhiStatisticService {
             );
         }
 
-        if (!NhiProcedureSalaryType.EXAMINATION_CODE.getCodeListAtSalary().contains(e.getTxCode())) {
+        if (!NhiProcedureUtil.isExaminationCodeAtSalary(e.getTxCode())) {
+            // 診療 費用累計
             o.setTreatmentPoint(
                 o.getTreatmentPoint() != null
                     ? o.getTreatmentPoint() + e.getTxPoint().longValue()
                     : e.getTxPoint().longValue()
             );
-            o.setTotal(
-                o.getTotal() != null
-                    ? o.getTotal() + e.getTxPoint().longValue()
-                    : e.getExaminationPoint()
-            );
+        } else {
+            // 多筆 診察 費用扣一次重複的點數
+            if (!multipleExaminationDisposalList.contains(e.getDisposalId())) {
+                if (NhiProcedureUtil.isInfectionExaminationCodeAtSalary(e.getTxCode())) {
+                    o.setInfectionExaminationPoint(o.getInfectionExaminationPoint() - e.getExaminationPoint());
+                } else {
+                    o.setRegularExaminationPoint(o.getRegularExaminationPoint() - e.getExaminationPoint());
+                }
+
+                if (o.getTotal() != null) {
+                    o.setTotal(o.getTotal() - e.getExaminationPoint());
+                }
+
+                multipleExaminationDisposalList.add(e.getDisposalId());
+            }
+
+            // 診察 費用累計
+            this.examCounting(o, e);
         }
 
+        o.setTotal(
+            o.getTotal() != null
+                ? o.getTotal() + e.getTxPoint().longValue()
+                : e.getExaminationPoint()
+        );
     }
 
     private void disposalCounting(NhiStatisticDoctorSalary o, CalculateBaseData e, List<Long> countedList) {
@@ -268,26 +304,13 @@ public class NhiStatisticService {
                     : e.getExaminationPoint() - Long.parseLong(e.getCopayment())
             );
 
-            if (NhiProcedureSalaryType.INFECTION_EXAMINATION_CODE.getCodeListAtSalary().contains(e.getExaminationCode())) {
-                o.setInfectionExaminationPoint(
-                    o.getInfectionExaminationPoint() != null
-                        ? o.getInfectionExaminationPoint() + e.getExaminationPoint()
-                        : e.getExaminationPoint()
-                );
-            } else {
-                o.setRegularExaminationPoint(
-                    o.getRegularExaminationPoint() != null
-                        ? o.getRegularExaminationPoint() + e.getExaminationPoint()
-                        : e.getExaminationPoint()
-                );
-            }
+            this.examCounting(o, e);
 
             o.setCopayment(
                 o.getCopayment() != null
                     ? o.getCopayment() + Long.parseLong(e.getCopayment())
                     : Long.parseLong(e.getCopayment())
             );
-
 
             o.setPatientId(e.getPatientId());
             o.setPatientName(e.getPatientName());
@@ -311,7 +334,9 @@ public class NhiStatisticService {
         List<Long> excludeDisposalId
     ) {
         Map<Long, NhiStatisticDoctorSalary> m = new HashMap<>();
+
         ArrayList<Long> disposalList = new ArrayList<>();
+        List<Long> multipleExaminationDisposalList = new ArrayList<>();
 
         if (excludeDisposalId == null || excludeDisposalId.size() == 0) {
             excludeDisposalId = Arrays.asList(0L);
@@ -328,7 +353,7 @@ public class NhiStatisticService {
                             }
 
                             this.disposalCounting(o, e, disposalList);
-                            this.txCounting(o, e);
+                            this.txCounting(o, e, multipleExaminationDisposalList);
 
                             return o;
                         });
@@ -345,7 +370,7 @@ public class NhiStatisticService {
                             }
 
                             this.disposalCounting(o, e, disposalList);
-                            this.txCounting(o, e);
+                            this.txCounting(o, e, multipleExaminationDisposalList);
 
                             return o;
                         });

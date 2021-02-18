@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.enumeration.DisposalRevisitInterval;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
+import io.netty.util.internal.StringUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.annotation.CreatedBy;
@@ -21,7 +22,7 @@ import java.util.Set;
 @Entity
 @Table(name = "disposal")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@AttributeOverride(name="createdBy", column=@Column(name="createdBy"))
+@AttributeOverride(name = "createdBy", column = @Column(name = "createdBy"))
 public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,6 +62,9 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @Column(name = "revisit_will_not_happen")
     private Boolean revisitWillNotHappen;
 
+    @Column(name = "treatment_procedure_signature_not_provided")
+    private Boolean treatmentProcedureSignatureNotProvided;
+
     @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = null;
@@ -73,7 +77,8 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(unique = true)
     private Todo todo;
 
-    @OneToOne    @JoinColumn(unique = true)
+    @OneToOne
+    @JoinColumn(unique = true)
     private Registration registration;
 
     @OneToMany(mappedBy = "disposal")
@@ -104,6 +109,19 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     public void setRevisitWillNotHappen(Boolean revisitWillNotHappen) {
         this.revisitWillNotHappen = revisitWillNotHappen;
+    }
+
+    public Disposal treatmentProcedureSignatureNotProvided(Boolean treatmentProcedureSignatureNotProvided) {
+        this.treatmentProcedureSignatureNotProvided = treatmentProcedureSignatureNotProvided;
+        return this;
+    }
+
+    public Boolean getTreatmentProcedureSignatureNotProvided() {
+        return this.treatmentProcedureSignatureNotProvided;
+    }
+
+    public void setTreatmentProcedureSignatureNotProvided(Boolean treatmentProcedureSignatureNotProvided) {
+        this.treatmentProcedureSignatureNotProvided = treatmentProcedureSignatureNotProvided;
     }
 
     public Disposal revisitContent(String revisitContent) {
@@ -405,7 +423,7 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "Disposal{" +
+        String s = "Disposal{" +
             "id=" + getId() +
             ", status='" + getStatus() + "'" +
             ", total=" + getTotal() +
@@ -416,5 +434,20 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
             ", revisitTreatmentTime='" + getRevisitTreatmentTime() + "'" +
             ", revisitComment='" + getRevisitComment() + "'" +
             "}";
+
+        if (this.getTreatmentProcedures() != null &&
+            this.getTreatmentProcedures().size() > 0
+        ) {
+            s = s + this.getTreatmentProcedures().toString();
+        }
+
+        if (this.getPrescription() != null &&
+            this.getPrescription().getTreatmentDrugs() != null &&
+            this.getPrescription().getTreatmentDrugs().size() > 0
+        ) {
+            s = s + this.getPrescription().getTreatmentDrugs().toString();
+        }
+
+        return s;
     }
 }

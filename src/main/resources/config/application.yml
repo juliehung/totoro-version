@@ -62,6 +62,10 @@ spring:
         mode: HTML
     jackson:
         default-property-inclusion: non_null
+    artemis:
+        host: localhost
+        port: 61616
+        mode: native
 
 server:
     servlet:
@@ -137,7 +141,8 @@ mqtt:
     cleanSession: true
     connectionTimeout: 10
     clientId: totoro-MQTT
-    hostname: 127.0.0.1
+    serverURIs:
+        - tcp://localhost:1883
 
 queue:
     appointment: totoro.appointmentQueue
@@ -145,4 +150,5 @@ queue:
     registration: totoro.registrationQueue
     message: totoro.messageQueue
 
-artemis.acceptor.netty.port: 61616
+gcp:
+    timeout: 300000

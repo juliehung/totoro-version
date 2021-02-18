@@ -17,9 +17,11 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -175,7 +177,7 @@ public class PatientResourceIntTest {
     @Autowired
     private PatientIdentityRepository patientIdentityRepository;
 
-    @Autowired
+    @MockBean
     private BroadcastService broadcastService;
 
     private MockMvc restPatientMockMvc;
@@ -193,6 +195,7 @@ public class PatientResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        Mockito.doNothing().when(broadcastService).broadcastDomainId(Mockito.anyLong(), Mockito.any());
         final PatientResource patientResource = new PatientResource(patientRepository, tagRepository, avatarService, patientService, broadcastService);
         this.restPatientMockMvc = MockMvcBuilders.standaloneSetup(patientResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)

@@ -20,6 +20,7 @@ public interface UWPRegistrationPageVM {
 
     // disposal
     Long getDisposalId();
+    Boolean getDisposalTreatmentProcedureSignatureNotProvided();
 
     // apointment
     Long getAppointmentId();

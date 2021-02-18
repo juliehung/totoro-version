@@ -115,7 +115,7 @@ code,x_ray,medical_record,exclude,interval,position_limit,surface_limit,other_co
 91011C,y,y,,,VALIDATED_ONLY,@type=SURFACE_BLANK_ONLY,,,,,,
 91012C,y,y,,,VALIDATED_ONLY,@type=SURFACE_BLANK_ONLY,,,,,,
 91013C,y,,"91011C,91012C",,VALIDATED_ONLY,@type=SURFACE_BLANK_ONLY,,,,,,
-91014C,,,,,FM_ONLY,@type=SURFACE_BLANK_ONLY,,,,,,
+91014C,,,,,FM_ONLY,@type=SURFACE_BLANK_ONLY,"@code=91014C@interval=365",,,,,
 91015C,y,y,,,VALIDATED_ONLY,@type=SURFACE_BLANK_ONLY,"@interval=180@code=91006C,91007C,91008C;@interval=90@code=91018C,91015C",,,,,
 91016C,y,y,,,VALIDATED_ONLY,@type=SURFACE_BLANK_ONLY,"@interval=180@code=91006C,91007C,91008C;@interval=90@code=91018C;@interval=90@code=91016C",,,,,
 91017C,,y,"91001C,91003C,91004C,91005C,91014C,91103C,91104C,91019C",002@<=90,FM_ONLY,@type=SURFACE_BLANK_ONLY,@interval=90@code=91004C,,,,,

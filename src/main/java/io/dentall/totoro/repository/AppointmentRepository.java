@@ -41,6 +41,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "       p.gender as patientGender," +
             "       p.vip_patient as patientVipPatient," +
             "       d.id as disposalId," +
+            "       d.treatment_procedure_signature_not_provided as disposalTreatmentProcedureSignatureNotProvided," +
             "       a.id as appointmentId," +
             "       a.note as appointmentNote," +
             "       a.expected_arrival_time as appointmentExpectedArrivalTime," +
@@ -82,6 +83,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "         p.medical_id," +
             "         p.gender," +
             "         d.id," +
+            "         d.treatment_procedure_signature_not_provided," +
             "         a.id," +
             "         a.note," +
             "         a.expected_arrival_time," +
@@ -116,7 +118,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
 
     <T> Collection<T> findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end, Class<T> type);
 
-    <T> Collection<T> findByRegistrationIsNotNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end, Class<T> type);
+    <T> Collection<T> findByRegistrationIsNotNullAndExpectedArrivalTimeBetweenOrderByRegistration_ArrivalTime(Instant start, Instant end, Class<T> type);
 
     @Query(value =
         "select new io.dentall.totoro.service.dto.AppointmentDTO( " +
