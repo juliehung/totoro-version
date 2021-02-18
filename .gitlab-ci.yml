@@ -47,8 +47,6 @@ testCompile:
 
 packageWebIntoWarWhenDev:
     stage: build
-    only:
-        - develop
     image: openjdk:8-jdk-stretch
     before_script:
         - apt-get update -y && apt-get install jq curl git unzip -y
