@@ -7,6 +7,7 @@ import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.NhiExtendDisposalService;
+import io.dentall.totoro.service.dto.NhiExtendDisposalSerialNumberBatchDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -24,10 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -230,4 +228,33 @@ public class NhiExtendDisposalResource {
 
         return ResponseUtil.wrapOrNotFound(nhiExtendDisposalService.getSimpleByDisposalId(id));
     }
+
+    @PatchMapping("/nhi-extend-disposals/batch/serial-number")
+    @Timed
+    public ResponseEntity<Void> updateNhiExtendDisposalByBatch(
+        @RequestBody List<NhiExtendDisposalSerialNumberBatchDTO> nhiExtendDisposalSerialNumberBatchDTOList
+    ) {
+        log.debug("REST request to patch nhi extend disposal serial number by disposal id[{}]", nhiExtendDisposalSerialNumberBatchDTOList);
+
+        nhiExtendDisposalSerialNumberBatchDTOList.stream()
+            .map(nhiExtendDisposalSerialNumberBatchDTO -> {
+                NhiExtendDisposal ned = new NhiExtendDisposal();
+
+                if (nhiExtendDisposalSerialNumberBatchDTO.getDisposalId() == null) {
+                    throw new BadRequestAlertException("Batch update for serial number must have disposal id.", ENTITY_NAME, "noid");
+                }
+
+                ned.setId(nhiExtendDisposalSerialNumberBatchDTO.getDisposalId());
+
+                if (nhiExtendDisposalSerialNumberBatchDTO.getSerialNumber() != null) {
+                    ned.setSerialNumber(nhiExtendDisposalSerialNumberBatchDTO.getSerialNumber());
+                }
+
+                return ned;
+            })
+            .forEach(nhiExtendDisposalService::update);
+
+        return ResponseEntity.accepted().build();
+    }
+
 }
