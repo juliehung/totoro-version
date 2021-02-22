@@ -32,10 +32,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * REST controller for managing Disposal.
@@ -243,11 +240,29 @@ public class DisposalResource {
 
             HybridRuleCheckDisposal hd = new HybridRuleCheckDisposal(disposal);
             Set<HybridRuleCheckTreatmentProcedure> htp = new HashSet<>();
+            List<Long> excludeTpIds = new ArrayList<>();
+            List<String> includeCodes = new ArrayList<>();
+            disposal.getTreatmentProcedures().stream()
+                .forEach(treatmentProcedure -> {
+                    if (treatmentProcedure != null &&
+                        treatmentProcedure.getId() != null
+                    ) {
+                        excludeTpIds.add(treatmentProcedure.getId());
+                    }
+                    if (treatmentProcedure != null &&
+                        treatmentProcedure.getNhiProcedure() != null &&
+                        treatmentProcedure.getNhiProcedure().getCode() != null
+                    ) {
+                        includeCodes.add(treatmentProcedure.getNhiProcedure().getCode());
+                    }
+                });
 
             disposal.getTreatmentProcedures().forEach(tp -> {
                 NhiRuleCheckVM vm = new NhiRuleCheckVM();
                 vm.setPatientId(patient.getId());
                 vm.setTreatmentProcedureId(tp.getId());
+                vm.setExcludeTreatmentProcedureIds(excludeTpIds);
+                vm.setIncludeNhiCodes(includeCodes);
                 try {
                     NhiRuleCheckResultVM rvm = (NhiRuleCheckResultVM) nhiRuleCheckService.dispatch(tp.getNhiProcedure().getCode(), vm);
                     HybridRuleCheckTreatmentProcedure hybridRuleCheckTreatmentProcedure = new HybridRuleCheckTreatmentProcedure(tp);
