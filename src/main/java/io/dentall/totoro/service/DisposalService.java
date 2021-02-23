@@ -338,6 +338,10 @@ public class DisposalService {
                     disposal.setPrescription(getPrescription(updateDisposal));
                 }
 
+                if(updateDisposal.getTreatmentProcedureSignatureNotProvided() != null) {
+                    disposal.setTreatmentProcedureSignatureNotProvided(updateDisposal.getTreatmentProcedureSignatureNotProvided());
+                }
+
                 if (updateDisposal.getTreatmentProcedures() != null || updateDisposal.getTodo() != null) {
                     Set<TreatmentProcedure> originTxPs = null;
                     if (updateDisposal.getTreatmentProcedures() != null) {

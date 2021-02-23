@@ -360,5 +360,7 @@ compileJava.dependsOn processResources
 processResources.dependsOn cleanResources,bootBuildInfo,autoGenVersion
 bootBuildInfo.mustRunAfter cleanResources
 checkstyleMain.include 'io/dentall/totoro/business/**'
+checkstyleMain.exclude 'io/dentall/totoro/business/service/nhi/util/**'
+checkstyleMain.exclude 'io/dentall/totoro/repository'
 compileJava.finalizedBy checkstyleMain
 test.finalizedBy testReport, jacocoTestReport
