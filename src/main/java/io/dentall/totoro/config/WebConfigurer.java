@@ -3,6 +3,7 @@ package io.dentall.totoro.config;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.MetricsServlet;
+import io.dentall.totoro.domain.converter.StringToBackupFileCatalogConverter;
 import io.dentall.totoro.domain.converter.StringToPatientRelationshipTypeConverter;
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.config.JHipsterProperties;
@@ -61,6 +62,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new StringToPatientRelationshipTypeConverter());
+        registry.addConverter(new StringToBackupFileCatalogConverter());
     }
 
     @Override

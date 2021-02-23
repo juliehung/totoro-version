@@ -51,7 +51,7 @@ public class ImageRelation extends AbstractAuditingEntity implements Serializabl
     private Long domainId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JsonProperty(access = WRITE_ONLY)
     private Image image;
 

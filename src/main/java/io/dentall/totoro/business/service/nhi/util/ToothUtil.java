@@ -5,6 +5,7 @@ import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -18,6 +19,48 @@ public class ToothUtil {
 
     private static Pattern toothPositionRegexPattern = Pattern.compile(toothPositionRegexLiteral);
 
+    public enum ToothPhase {
+        P1("[1|5][1-9]|UR|UA|UB|FM"),
+        P2("[2|6][1-9]|UL|UA|UB|FM"),
+        P3("[3|7][1-9]|LL|LA|LB|FM"),
+        P4("[4|8][1-9]|LR|LA|LB|FM");
+
+        private final String regex;
+
+        ToothPhase(String regex) {
+            this.regex = regex;
+        }
+
+        public String getRegex() {
+            return regex;
+        }
+    }
+
+    /**
+     * 輸入牙位，並回傳所佔據的象限
+     * @param teeth 牙位
+     * @return 回傳輸入牙位所佔據的牙位象限
+     */
+    public static HashSet<ToothPhase> markAsPhase(List<String> teeth) {
+        HashSet<ToothPhase> result = new HashSet<>();
+
+        teeth.stream().forEach(t -> {
+            if (t.matches(ToothPhase.P1.getRegex())) {
+                result.add(ToothPhase.P1);
+            }
+            if (t.matches(ToothPhase.P2.getRegex())) {
+                result.add(ToothPhase.P2);
+            }
+            if (t.matches(ToothPhase.P3.getRegex())) {
+                result.add(ToothPhase.P3);
+            }
+            if (t.matches(ToothPhase.P4.getRegex())) {
+                result.add(ToothPhase.P4);
+            }
+        });
+
+        return result;
+    }
 
     /**
      * 使用 ToothConstraint 決定牙齒屬於哪個範圍的檢核標準，並且利用 regex 來判斷，僅提供單牙

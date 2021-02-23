@@ -14,6 +14,7 @@ public abstract class Disposal_ extends io.dentall.totoro.domain.AbstractAuditin
 
 	public static volatile SingularAttribute<Disposal, Instant> dateTime;
 	public static volatile SingularAttribute<Disposal, Boolean> revisitWillNotHappen;
+	public static volatile SingularAttribute<Disposal, Boolean> treatmentProcedureSignatureNotProvided;
 	public static volatile SingularAttribute<Disposal, Instant> dateTimeEnd;
 	public static volatile SingularAttribute<Disposal, String> chiefComplaint;
 	public static volatile SingularAttribute<Disposal, String> revisitContent;
