@@ -126,6 +126,12 @@ releaseWarToFirebase:
 releaseWarToDevMachine:
     stage: release
     rules:
+        - if: '$CI_COMMIT_TAG =~ /^nhi.*/'
+          when: on_success
+          allow_failure: true
+        - if: '$CI_COMMIT_TAG =~ /^ms.*/'
+          when: on_success
+          allow_failure: true
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: true
@@ -249,18 +255,19 @@ deployDevDentallForQA:
         CURL_CONTENT_TYPE: 'Content-Type: application/json'
         CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
-        SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
     rules:
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: false
           variables:
               DORA_MANAGERED_SERVER_PORT: '8085'
+              SLACK_INFO: '{"text": "Hey everyone in <!here>, 8085 is ready with version: $CI_COMMIT_TAG"}'
         - if: '$CI_COMMIT_TAG =~ /^nhi.*/'
           when: on_success
           allow_failure: false
           variables:
               DORA_MANAGERED_SERVER_PORT: '8087'
+              SLACK_INFO: '{"text": "Hey everyone in <!here>, 8087 is ready with version: $CI_COMMIT_TAG"}'
     dependencies:
         - packageWebIntoWarWhenTag
     before_script:
