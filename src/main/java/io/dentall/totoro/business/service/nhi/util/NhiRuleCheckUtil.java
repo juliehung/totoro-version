@@ -1405,7 +1405,6 @@ public class NhiRuleCheckUtil {
             dto.getPatient().getId() != null &&
             currentDate != null
         ) {
-<<<<<<< HEAD
             Long disposalId =
                 dto.getNhiExtendDisposal() != null &&
                 dto.getNhiExtendDisposal().getDisposal() != null &&
@@ -1418,13 +1417,6 @@ public class NhiRuleCheckUtil {
                     currentDate.atStartOfDay(TimeConfig.ZONE_OFF_SET).toInstant().minus(limitDays.getDays(), ChronoUnit.DAYS),
                     currentDate.atTime(LocalTime.MAX).atZone(TimeConfig.ZONE_OFF_SET).toInstant(),
                     disposalId
-=======
-            Optional<NhiExtendTreatmentProcedureTable> optionalNetpt = nhiExtendTreatmentProcedureRepository
-                .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndTreatmentProcedure_Disposal_DateTimeBetween(
-                    dto.getPatient().getId(),
-                    currentDate,
-                    currentDate.plus(limitDays)
->>>>>>> new-ci-for-nhi
                 );
 
             if (optionalNetpt.isPresent()) {
@@ -1433,11 +1425,7 @@ public class NhiRuleCheckUtil {
                     .message(
                         String.format(
                             "建議 %s 後再行申報，近一次處置為系統中 %s",
-<<<<<<< HEAD
                             DateTimeUtil.transformROCDateToLocalDate(optionalNetpt.get().getA71()).plus(limitDays),
-=======
-                            currentDate.plus(limitDays),
->>>>>>> new-ci-for-nhi
                             DateTimeUtil.transformA71ToDisplay(optionalNetpt.get().getA71())
                         )
                     );
