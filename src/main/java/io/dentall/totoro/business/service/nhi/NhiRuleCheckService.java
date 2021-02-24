@@ -14,6 +14,7 @@ public interface NhiRuleCheckService<A, B, O> {
 
     O dispatch(String code, A vm) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
 
+<<<<<<< HEAD
     // 012***
     O validate01271C(B dto);
 
@@ -22,6 +23,16 @@ public interface NhiRuleCheckService<A, B, O> {
 
     // 910***
     O validate91001C(B dto);
+=======
+    // 012***, TODO: 要實作時加回即可，免得遇到奇怪的問題
+    // O validate01271C(B dto);
+
+    // 900***, TODO: 要實作時加回即可，免得遇到奇怪的問題
+    // O validate90012C(B dto);
+
+    // 910***, TODO: 要實作時加回即可，免得遇到奇怪的問題
+    // O validate91001C(B dto);
+>>>>>>> new-ci-for-nhi
 
     O validate91003C(B dto);
 

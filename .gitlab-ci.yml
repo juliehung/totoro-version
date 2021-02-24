@@ -47,13 +47,21 @@ testCompile:
 
 packageWebIntoWarWhenDev:
     stage: build
-    only:
-        - develop
     image: openjdk:8-jdk-stretch
-    script:
-        - apt-get install -y --no-install-recommends curl unzip
+    rules:
+        -   if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" && $CI_PIPELINE_SOURCE == "push"'
+            when: on_success
+            allow_failure: false
+        -   if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^milestone.*/ && $CI_PIPELINE_SOURCE == "push"'
+            when: on_success
+            allow_failure: false
+    before_script:
+        - apt-get update -y && apt-get install jq curl git unzip -y
         - apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
-        - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/develop/download?job=buildArtifact"'
+    script:
+        - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/dentall/totoro-version.git
+        - totorowebdevpath=`jq -r '.totoroWebArtifactRef' totoro-version/dev.version.json`
+        - 'curl --location --output artifact.zip --header "PRIVATE-TOKEN: $GITLAB_TOTORO_WEB_PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/8544858/jobs/artifacts/$totorowebdevpath/download?job=buildArtifact"'
         - unzip artifact.zip -d web/
         - ./gradlew bootWar -Pprod -x check --no-daemon
     artifacts:
@@ -64,6 +72,16 @@ packageWebIntoWarWhenTag:
     stage: build
     rules:
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
+          when: on_success
+          allow_failure: false
+          variables:
+              VERSION_FILE: stg.version.json
+        - if: '$CI_COMMIT_TAG =~ /^nhi.*/'
+          when: on_success
+          allow_failure: false
+          variables:
+              VERSION_FILE: stg.version.json
+        - if: '$CI_COMMIT_TAG =~ /^ms.*/'
           when: on_success
           allow_failure: false
           variables:
@@ -188,15 +206,24 @@ releaseImageToGCPRegistry:
         - docker push asia.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:cache
 
 # deploy stage
-deployDevDentall8082:
+deployDevDentallForDev:
+    stage: deploy
+    image: ubuntu
     variables:
         CURL_CONTENT_TYPE: 'Content-Type: application/json'
         CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "dev.war"}'
         CURL_DATA_FOR_START: '{"operation": "start", "warVersion": "dev.war"}'
-    only:
-        - develop
-    stage: deploy
-    image: ubuntu
+    rules:
+        - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" && $CI_PIPELINE_SOURCE == "push"'
+          when: on_success
+          allow_failure: false
+          variables:
+              DORA_MANAGERED_SERVER_PORT: '8082'
+        - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^milestone.*/ && $CI_PIPELINE_SOURCE == "push"'
+          when: on_success
+          allow_failure: false
+          variables:
+              DORA_MANAGERED_SERVER_PORT: '8088'
     dependencies:
         - packageWebIntoWarWhenDev
     before_script:
@@ -211,11 +238,13 @@ deployDevDentall8082:
         - chmod 700 /home/dev.key
     script:
         - scp -i /home/dev.key ./build/libs/*.war deploy@dev.dentall.site:/home/deploy/dora-monitor/storage/wars/dev.war
-        - 'curl -X POST http://dev.dentall.site:8001/servers/8082/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
+        - 'curl -X POST http://dev.dentall.site:8001/servers/$DORA_MANAGERED_SERVER_PORT/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
         - sleep 1
-        - 'curl -X POST http://dev.dentall.site:8001/servers/8082/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
+        - 'curl -X POST http://dev.dentall.site:8001/servers/$DORA_MANAGERED_SERVER_PORT/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
 
-deployDevDentall8085:
+deployDevDentallForQA:
+    stage: deploy
+    image: ubuntu
     variables:
         CURL_CONTENT_TYPE: 'Content-Type: application/json'
         CURL_DATA_FOR_STOP: '{"operation": "stop", "warVersion": "totoro-$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA.war"}'
@@ -225,8 +254,13 @@ deployDevDentall8085:
         - if: '$CI_COMMIT_TAG =~ /^stg.*/'
           when: on_success
           allow_failure: false
-    stage: deploy
-    image: ubuntu
+          variables:
+              DORA_MANAGERED_SERVER_PORT: '8085'
+        - if: '$CI_COMMIT_TAG =~ /^nhi.*/'
+          when: on_success
+          allow_failure: false
+          variables:
+              DORA_MANAGERED_SERVER_PORT: '8087'
     dependencies:
         - packageWebIntoWarWhenTag
     before_script:
@@ -240,9 +274,9 @@ deployDevDentall8085:
         - chmod 644 ~/.ssh/known_hosts
         - chmod 700 /home/dev.key
     script:
-        - 'curl -X POST http://dev.dentall.site:8001/servers/8085/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
+        - 'curl -X POST http://dev.dentall.site:8001/servers/$DORA_MANAGERED_SERVER_PORT/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_STOP"'
         - sleep 1
-        - 'curl -X POST http://dev.dentall.site:8001/servers/8085/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
+        - 'curl -X POST http://dev.dentall.site:8001/servers/$DORA_MANAGERED_SERVER_PORT/operation -H "$CURL_CONTENT_TYPE" -d "$CURL_DATA_FOR_START"'
         - 'curl --location --request POST "$SLACK_INCOMING_HOOK" --header "$CURL_CONTENT_TYPE" --data-raw "$SLACK_INFO"'
 
 deployGcpDev:
