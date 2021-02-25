@@ -339,41 +339,6 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList("91004C", "91005C", "91020C"),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("91004C", "91005C", "91020C"),
-                    DateTimeUtil.NHI_12_MONTH),
-                vm
-            );
-
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("91004C", "91005C"),
-                    DateTimeUtil.NHI_12_MONTH),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91004C", "91005C"),
-                    DateTimeUtil.NHI_6_MONTH),
-                vm
-            );
-        }
-
         return vm;
     }
 
