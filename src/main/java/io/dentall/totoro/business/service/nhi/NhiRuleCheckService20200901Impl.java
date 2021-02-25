@@ -344,14 +344,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         ) {
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("91004C"),
+                    Arrays.asList("91014C"),
                     DateTimeUtil.NHI_360_DAY),
                 vm
             );
 
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91004C"),
+                    Arrays.asList("91014C"),
                     DateTimeUtil.NHI_360_DAY),
                 vm
             );
@@ -362,14 +362,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         ) {
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("91005C"),
+                    Arrays.asList("91014C"),
                     DateTimeUtil.NHI_360_DAY),
                 vm
             );
 
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91005C"),
+                    Arrays.asList("91014C"),
                     DateTimeUtil.NHI_360_DAY),
                 vm
             );
@@ -380,14 +380,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         ) {
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("91020C"),
+                    Arrays.asList("91014C"),
                     DateTimeUtil.NHI_6_MONTH),
                 vm
             );
 
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91020C"),
+                    Arrays.asList("91014C"),
                     DateTimeUtil.NHI_6_MONTH),
                 vm
             );
