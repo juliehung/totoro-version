@@ -100,7 +100,7 @@ public class NhiProcedureResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NhiProcedureResource nhiProcedureResource = new NhiProcedureResource(nhiProcedureService);
+        final NhiProcedureResource nhiProcedureResource = new NhiProcedureResource(nhiProcedureService, nhiProcedureRepository);
         this.restNhiProcedureMockMvc = MockMvcBuilders.standaloneSetup(nhiProcedureResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -204,7 +204,7 @@ public class NhiProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].specificCode").value(hasItem(DEFAULT_SPECIFIC_CODE.toString())))
             .andExpect(jsonPath("$.[*].chiefComplaint").value(hasItem(DEFAULT_CHIEF_COMPLAINT.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getNhiProcedure() throws Exception {
