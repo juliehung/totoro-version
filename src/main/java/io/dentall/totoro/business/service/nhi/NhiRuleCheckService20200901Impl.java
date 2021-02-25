@@ -501,6 +501,35 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
     }
 
     @Override
+    public NhiRuleCheckResultVM validate91020C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+              "牙菌斑清除"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                Arrays.asList(new String[]{"91020C"}.clone()),
+                DateTimeUtil.NHI_6_MONTH
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.lessThanAge12(
+                dto
+            ),
+            vm
+        );
+
+        return vm;
+    }
+
+    @Override
     public NhiRuleCheckResultVM validate91103C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
