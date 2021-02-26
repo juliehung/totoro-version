@@ -276,7 +276,8 @@ public class DisposalResource {
                     hybridRuleCheckTreatmentProcedure.setCheckHistory(rvm.getCheckHistory());
                     htp.add(hybridRuleCheckTreatmentProcedure);
                 } catch (Exception e) {
-
+                    HybridRuleCheckTreatmentProcedure hybridRuleCheckTreatmentProcedure = new HybridRuleCheckTreatmentProcedure(tp);
+                    htp.add(hybridRuleCheckTreatmentProcedure);
                 }
             });
             hd.setHybridRuleCheckTreatmentProcedures(htp);
