@@ -1,17 +1,12 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.business.service.nhi.NhiRuleCheckService;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.service.DisposalQueryService;
 import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.NhiExtendDisposalService;
 import io.dentall.totoro.service.NhiService;
 import io.dentall.totoro.service.dto.DisposalCriteria;
-import io.dentall.totoro.service.dto.HybridRuleCheckDisposal;
-import io.dentall.totoro.service.dto.HybridRuleCheckTreatmentProcedure;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -32,7 +27,10 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing Disposal.
@@ -51,19 +49,15 @@ public class DisposalResource {
 
     private final NhiService nhiService;
 
-    private final NhiRuleCheckService nhiRuleCheckService;
-
     public DisposalResource(
         DisposalService disposalService,
         DisposalQueryService disposalQueryService,
         NhiService nhiService,
-        NhiExtendDisposalService nhiExtendDisposalService,
-        NhiRuleCheckService nhiRuleCheckService
+        NhiExtendDisposalService nhiExtendDisposalService
     ) {
         this.disposalService = disposalService;
         this.disposalQueryService = disposalQueryService;
         this.nhiService = nhiService;
-        this.nhiRuleCheckService = nhiRuleCheckService;
     }
 
     /**
@@ -199,7 +193,8 @@ public class DisposalResource {
 
     @GetMapping("/disposals/rules-checked/{id}")
     @Timed
-    public ResponseEntity<HybridRuleCheckDisposal> getDisposalWithRulesCheckedNhiExtTxProc2(@PathVariable Long id) {
+    @Transactional
+    public ResponseEntity<Disposal> getDisposalWithRulesCheckedNhiExtTxProc2(@PathVariable Long id) {
         log.debug("REST request to get Disposal rules-checked : {}", id);
         // Origin useing -> findOneWithEagerRelationships
         Disposal disposal = disposalService.getDisposalByProjection(id);
@@ -236,45 +231,9 @@ public class DisposalResource {
                 }
             });
 
+
             nhiService.checkNhiExtendTreatmentProcedures(disposal);
-
-            HybridRuleCheckDisposal hd = new HybridRuleCheckDisposal(disposal);
-            Set<HybridRuleCheckTreatmentProcedure> htp = new HashSet<>();
-            List<Long> excludeTpIds = new ArrayList<>();
-            List<String> includeCodes = new ArrayList<>();
-            disposal.getTreatmentProcedures().stream()
-                .forEach(treatmentProcedure -> {
-                    if (treatmentProcedure != null &&
-                        treatmentProcedure.getId() != null
-                    ) {
-                        excludeTpIds.add(treatmentProcedure.getId());
-                    }
-                    if (treatmentProcedure != null &&
-                        treatmentProcedure.getNhiProcedure() != null &&
-                        treatmentProcedure.getNhiProcedure().getCode() != null
-                    ) {
-                        includeCodes.add(treatmentProcedure.getNhiProcedure().getCode());
-                    }
-                });
-
-            disposal.getTreatmentProcedures().forEach(tp -> {
-                NhiRuleCheckVM vm = new NhiRuleCheckVM();
-                vm.setPatientId(patient.getId());
-                vm.setTreatmentProcedureId(tp.getId());
-                vm.setExcludeTreatmentProcedureIds(excludeTpIds);
-                vm.setIncludeNhiCodes(includeCodes);
-                try {
-                    NhiRuleCheckResultVM rvm = (NhiRuleCheckResultVM) nhiRuleCheckService.dispatch(tp.getNhiProcedure().getCode(), vm);
-                    HybridRuleCheckTreatmentProcedure hybridRuleCheckTreatmentProcedure = new HybridRuleCheckTreatmentProcedure(tp);
-                    hybridRuleCheckTreatmentProcedure.setCheckHistory(rvm.getCheckHistory());
-                    htp.add(hybridRuleCheckTreatmentProcedure);
-                } catch (Exception e) {
-
-                }
-            });
-            hd.setHybridRuleCheckTreatmentProcedures(htp);
-
-            return ResponseEntity.ok(hd);
+            return ResponseEntity.ok(disposal);
         }
     }
 
