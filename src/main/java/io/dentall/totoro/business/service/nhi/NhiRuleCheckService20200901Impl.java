@@ -339,36 +339,55 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList("91004C", "91005C", "91020C"),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        if (vm.isValidated()) {
+        if (vm.isValidated() &&
+            dto.getIncludeNhiCodes().contains("91004C")
+        ) {
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("91004C", "91005C", "91020C"),
-                    DateTimeUtil.NHI_12_MONTH),
+                    Arrays.asList("91014C"),
+                    DateTimeUtil.NHI_360_DAY),
                 vm
             );
 
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("91004C", "91005C"),
-                    DateTimeUtil.NHI_12_MONTH),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91004C", "91005C"),
+                    Arrays.asList("91014C"),
+                    DateTimeUtil.NHI_360_DAY),
+                vm
+            );
+        }
+
+        if (vm.isValidated() &&
+            dto.getIncludeNhiCodes().contains("91005C")
+        ) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                    Arrays.asList("91014C"),
+                    DateTimeUtil.NHI_360_DAY),
+                vm
+            );
+
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("91014C"),
+                    DateTimeUtil.NHI_360_DAY),
+                vm
+            );
+        }
+
+        if (vm.isValidated() &&
+            dto.getIncludeNhiCodes().contains("91020C")
+        ) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                    Arrays.asList("91014C"),
+                    DateTimeUtil.NHI_6_MONTH),
+                vm
+            );
+
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("91014C"),
                     DateTimeUtil.NHI_6_MONTH),
                 vm
             );
@@ -475,6 +494,35 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
+            vm
+        );
+
+        return vm;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate91020C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+              "牙菌斑清除"
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                Arrays.asList(new String[]{"91020C"}.clone()),
+                DateTimeUtil.NHI_6_MONTH
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.lessThanAge12(
+                dto
+            ),
             vm
         );
 
