@@ -2,7 +2,6 @@ package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.TreatmentProcedure;
 import io.dentall.totoro.service.dto.PlainDisposalInfoDTO;
-import io.dentall.totoro.service.dto.PlainDisposalInfoListDTO;
 import io.dentall.totoro.service.dto.table.TreatmentProcedureTable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,8 +67,8 @@ public interface TreatmentProcedureRepository extends JpaRepository<TreatmentPro
                 "ju.first_name as doctorName, " +
                 "p.id as patientId, " +
                 "p.name as patientName, " +
-                "p.birth as birth, " +
-                "np.code as infoContent, " +
+                "p.birth as patientBirth, " +
+                "np.code as targetInfo, " +
                 "p.phone as phone, " +
                 "p.note as note " +
                 "from treatment_procedure tp " +
@@ -113,8 +112,8 @@ public interface TreatmentProcedureRepository extends JpaRepository<TreatmentPro
                 "ju.first_name as doctorName, " +
                 "p.id as patientId, " +
                 "p.name as patientName, " +
-                "p.birth as birth, " +
-                "np.content as infoContent, " +
+                "p.birth as patientBirth, " +
+                "np.content as targetInfo, " +
                 "p.phone as phone, " +
                 "p.note as note " +
                 "from treatment_procedure tp " +

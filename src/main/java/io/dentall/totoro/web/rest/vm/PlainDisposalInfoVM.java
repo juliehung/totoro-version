@@ -1,6 +1,7 @@
 package io.dentall.totoro.web.rest.vm;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 public class PlainDisposalInfoVM {
@@ -9,7 +10,7 @@ public class PlainDisposalInfoVM {
 
     private String doctorName;
 
-    private String birth;
+    private LocalDate patientBirth;
 
     private Long patientId;
 
@@ -39,12 +40,12 @@ public class PlainDisposalInfoVM {
         this.futureAppointment = futureAppointment;
     }
 
-    public String getBirth() {
-        return birth;
+    public LocalDate getPatientBirth() {
+        return patientBirth;
     }
 
-    public void setBirth(String birth) {
-        this.birth = birth;
+    public void setPatientBirth(LocalDate patientBirth) {
+        this.patientBirth = patientBirth;
     }
 
     public Instant getArrivalTime() {

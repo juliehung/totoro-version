@@ -659,6 +659,8 @@ public class DisposalService {
                 vm.setNote(dto.getNote());
                 vm.setPhone(dto.getPhone());
                 vm.setTargetInfo(dto.getTargetInfo());
+                vm.setPatientBirth(dto.getPatientBirth());
+                vm.setTargetInfo(dto.getTargetInfo());
 
                 vm.setFutureAppointment(
                     appointmentRepository
