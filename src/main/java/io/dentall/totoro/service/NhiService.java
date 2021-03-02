@@ -599,11 +599,13 @@ public class NhiService {
             Arrays.stream(rules.get(targetCode).getDependOn())
                 .map(DependOn::new)
                 .forEach(r -> {
-                    if (personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getDependOn())) {
+                    if (!personalNhiExtendTreatmentProcedureMap.containPersonalNhiExtendTreatmentProcedure(r.getDependOn())) {
+                        targetNhiExtendTreatmentProcedure.setCheck(r.getMessage() + "\n");
+                    } else {
                         personalNhiExtendTreatmentProcedureMap.getPersonalNhiExtendTreatmentProcedure(r.getDependOn()).getSortedDeclarationDates()
                             .forEach( localDate -> {
                                 LocalDate d = localDate.plusDays(r.getInterval());
-                                if (d.isAfter(targetDate) || d.isEqual(targetDate)) {
+                                if (d.isBefore(targetDate)) {
                                     targetNhiExtendTreatmentProcedure.setCheck(targetNhiExtendTreatmentProcedure.getCheck() +
                                         r.getMessage() +
                                         "。 上次申報時間：" +
