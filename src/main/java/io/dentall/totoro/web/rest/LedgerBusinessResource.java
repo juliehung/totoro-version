@@ -6,8 +6,11 @@ import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.service.LedgerQueryService;
 import io.dentall.totoro.service.dto.LedgerCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +57,8 @@ public class LedgerBusinessResource {
     @Timed
     public ResponseEntity<List<Ledger>> getLedger(
         LedgerCriteria criteria,
-        @RequestParam(name = "headOnly", required = false) boolean headOnly
+        @RequestParam(name = "headOnly", required = false) boolean headOnly,
+        Pageable pageable
     ) {
         log.debug("REST request to find ledgers by id");
 
@@ -62,7 +66,11 @@ public class LedgerBusinessResource {
             criteria.getDate() != null ||
             criteria.getProjectCode() != null
         ) {
-            return new ResponseEntity<>(ledgerQueryService.findByCriteria(criteria), HttpStatus.OK);
+            Page<Ledger> page = ledgerQueryService.findByCriteria(criteria, pageable);
+            return ResponseEntity
+                .ok()
+                .headers(PaginationUtil.generatePaginationHttpHeaders(page, "/api/business/ledgers"))
+                .body(page != null? page.getContent(): null);
         }
 
         Long id = criteria.getId() == null? null: criteria.getId().getEquals();
