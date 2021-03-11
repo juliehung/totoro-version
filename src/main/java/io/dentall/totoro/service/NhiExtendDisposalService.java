@@ -1,15 +1,16 @@
 package io.dentall.totoro.service;
 
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
+import io.dentall.totoro.repository.*;
+import io.dentall.totoro.repository.dao.MonthDisposalDAO;
+import io.dentall.totoro.service.dto.table.*;
+import io.dentall.totoro.service.mapper.*;
+import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
+import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,42 +18,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.dentall.totoro.domain.Disposal;
-import io.dentall.totoro.domain.ExtendUser;
-import io.dentall.totoro.domain.NhiExtendDisposal;
-import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
-import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
-import io.dentall.totoro.domain.Prescription;
-import io.dentall.totoro.domain.TreatmentDrug;
-import io.dentall.totoro.domain.TreatmentProcedure;
-import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
-import io.dentall.totoro.repository.AppointmentRepository;
-import io.dentall.totoro.repository.DisposalRepository;
-import io.dentall.totoro.repository.ExtendUserRepository;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import io.dentall.totoro.repository.NhiExtendTreatmentDrugRepository;
-import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
-import io.dentall.totoro.repository.PatientRepository;
-import io.dentall.totoro.repository.PrescriptionRepository;
-import io.dentall.totoro.repository.RegistrationRepository;
-import io.dentall.totoro.repository.TreatmentProcedureRepository;
-import io.dentall.totoro.repository.dao.MonthDisposalDAO;
-import io.dentall.totoro.service.dto.table.AppointmentTable;
-import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
-import io.dentall.totoro.service.dto.table.NhiExtendTreatmentDrugTable;
-import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
-import io.dentall.totoro.service.dto.table.PatientTable;
-import io.dentall.totoro.service.dto.table.RegistrationTable;
-import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
-import io.dentall.totoro.service.mapper.NhiExtendTreatmentDrugMapper;
-import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
-import io.dentall.totoro.service.mapper.PrescriptionMapper;
-import io.dentall.totoro.service.mapper.TreatmentProcedureMapper;
-import io.dentall.totoro.service.util.StreamUtil;
-import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
-import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
-import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
-import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service Implementation for managing NhiExtendDisposal.
@@ -366,7 +336,9 @@ public class NhiExtendDisposalService {
     @Transactional(readOnly = true)
     public List<MonthDisposalVM> findByYearMonthForLazyNhiExtDis(YearMonth ym, Boolean toleranceA18) {
         Stream<MonthDisposalDAO> stream = nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(ym.atDay(1), ym.atEndOfMonth()).stream()
-                .filter(Objects::nonNull);
+                .filter(dao -> dao != null &&
+                    dao.getDate() != null
+                );
 
         if (!Optional.ofNullable(toleranceA18).orElse(false)) {
             stream = stream.filter(monthDisposalDAO -> StringUtils.isNotBlank(monthDisposalDAO.getA18()));
