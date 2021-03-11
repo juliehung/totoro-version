@@ -1,10 +1,12 @@
 package io.dentall.totoro.repository;
 
-import java.time.Instant;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
+import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.domain.enumeration.RegistrationStatus;
+import io.dentall.totoro.repository.dao.AppointmentDAO;
+import io.dentall.totoro.service.dto.AccountingDTO;
+import io.dentall.totoro.service.dto.AppointmentDTO;
+import io.dentall.totoro.service.dto.table.AppointmentTable;
+import io.dentall.totoro.web.rest.vm.UWPRegistrationPageVM;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,13 +15,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import io.dentall.totoro.domain.Appointment;
-import io.dentall.totoro.domain.enumeration.RegistrationStatus;
-import io.dentall.totoro.repository.dao.AppointmentDAO;
-import io.dentall.totoro.service.dto.AccountingDTO;
-import io.dentall.totoro.service.dto.AppointmentDTO;
-import io.dentall.totoro.service.dto.table.AppointmentTable;
-import io.dentall.totoro.web.rest.vm.UWPRegistrationPageVM;
+import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -118,7 +117,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
 
     <T> Collection<T> findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end, Class<T> type);
 
-    <T> Collection<T> findByRegistrationIsNotNullAndExpectedArrivalTimeBetweenOrderByRegistration_ArrivalTime(Instant start, Instant end, Class<T> type);
+    <T> Collection<T> findByRegistrationIsNotNullAndExpectedArrivalTimeBetweenOrderByRegistration_ArrivalTimeAsc(Instant start, Instant end, Class<T> type);
 
     @Query(value =
         "select new io.dentall.totoro.service.dto.AppointmentDTO( " +
