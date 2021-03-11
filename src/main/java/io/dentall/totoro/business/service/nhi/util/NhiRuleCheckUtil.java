@@ -1267,15 +1267,21 @@ public class NhiRuleCheckUtil {
                 );
         }
         // 取得紀錄中，離處置單時間最近的資料
-        Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable = netpts.stream().filter(netpt -> {
-            LocalDate historyDate = null;
-            if (netpt != null &&
-                netpt.getA71() != null
-            ) {
-                historyDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
-            }
-            return historyDate != null && historyDate.isEqual(currentDate) || historyDate != null && historyDate.isBefore(currentDate);
-        }).findFirst();
+        Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable = netpts.stream()
+            .filter(netpt -> dto.getNhiExtendTreatmentProcedure() != null &&
+                dto.getNhiExtendTreatmentProcedure().getId() != null &&
+                !dto.getNhiExtendTreatmentProcedure().getId().equals(netpt.getTreatmentProcedure_Id())
+            )
+            .filter(netpt -> {
+                LocalDate historyDate = null;
+                if (netpt != null &&
+                    netpt.getA71() != null
+                ) {
+                    historyDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
+                }
+                return historyDate != null && historyDate.isEqual(currentDate) || historyDate != null && historyDate.isBefore(currentDate);
+            })
+            .findFirst();
 
         if (optionalNhiExtendTreatmentProcedureTable.isPresent()) {
             result.message(
