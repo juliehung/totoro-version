@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210309-weichen" author="WeiChen">
+        <sql>
+            INSERT INTO nhi_procedure_type (id, major, minor) VALUES ('22', 'Extraction', 'OS,Pedo');
+            UPDATE nhi_procedure SET nhi_procedure_type_id = '22' WHERE code in ('92055C', '92092C');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
