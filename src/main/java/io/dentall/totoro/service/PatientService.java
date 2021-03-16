@@ -302,6 +302,10 @@ public class PatientService extends QueryService<Patient> {
                     patient.setVipPatient(updatePatient.getVipPatient());
                 }
 
+                if (updatePatient.getDisabled() != null) {
+                    patient.setDisabled(updatePatient.getDisabled());
+                }
+
                 return patient;
             })
             .get();

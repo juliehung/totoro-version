@@ -29,6 +29,7 @@ public interface UWPRegistrationPageVM {
     Boolean getAppointmentMicroscope();
     Boolean getAppointmentBaseFloor();
     Boolean getAppointmentFirstVisit();
+    Boolean getAppointmentDisabled();
 
     // registration
     Long getRegistrationId();
