@@ -1,13 +1,17 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
+import io.dentall.totoro.domain.enumeration.PlainDisposalType;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.dto.PlainDisposalInfoDTO;
 import io.dentall.totoro.service.dto.table.*;
 import io.dentall.totoro.service.mapper.*;
 import io.dentall.totoro.service.util.ProblemUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.vm.DisposalV2VM;
+import io.dentall.totoro.web.rest.vm.PlainDisposalInfoVM;
 import io.dentall.totoro.web.rest.vm.SameTreatmentVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -621,5 +623,55 @@ public class DisposalService {
 
     public List<SameTreatmentVM> findSameTreatment(Long patientId, Instant begin, Instant end) {
         return disposalRepository.findByRegistration_Appointment_Patient_IdAndDateTimeBetween(patientId, begin, end);
+    }
+
+    public Page<PlainDisposalInfoVM> findPlainDisposalInfo(
+        PlainDisposalType plainDisposalType,
+        Instant begin,
+        Instant end,
+        List<Long> doctorIds,
+        Long infoId,
+        Pageable page
+    ) {
+        Page<PlainDisposalInfoDTO> p = new PageImpl<>(new ArrayList<>(), page, 0);
+        List<PlainDisposalInfoVM> rvm;
+        Instant todayBeginTime = LocalDate.now().atStartOfDay(TimeConfig.ZONE_OFF_SET).toInstant();
+
+        switch (plainDisposalType) {
+            case NHI_TX:
+                p = treatmentProcedureRepository.findPlainDisposalNhiTx(begin, end, doctorIds, infoId, page);
+                break;
+            case NONE_NHI_TX:
+                p = treatmentProcedureRepository.findPlainDisposalNoneNhiTx(begin, end, doctorIds, infoId, page);
+                break;
+            case DRUG:
+                p = treatmentDrugRepository.findPlainDisposalDrug(begin, end, doctorIds, infoId, page);
+                break;
+        }
+
+        rvm = p.getContent().stream()
+            .map(dto -> {
+                PlainDisposalInfoVM vm = new PlainDisposalInfoVM();
+                vm.setArrivalTime(dto.getArrivalTime());
+                vm.setDoctorName(dto.getDoctorName());
+                vm.setPatientId(dto.getPatientId());
+                vm.setPatientName(dto.getPatientName());
+                vm.setNote(dto.getNote());
+                vm.setPhone(dto.getPhone());
+                vm.setTargetInfo(dto.getTargetInfo());
+                vm.setPatientBirth(dto.getPatientBirth());
+                vm.setTargetInfo(dto.getTargetInfo());
+
+                vm.setFutureAppointment(
+                    appointmentRepository
+                        .findByExpectedArrivalTimeAfterAndPatient_IdOrderByExpectedArrivalTime(todayBeginTime, dto.getPatientId()).stream()
+                        .map(AppointmentTable::getExpectedArrivalTime)
+                        .collect(Collectors.toList())
+                );
+                return vm;
+            })
+            .collect(Collectors.toList());
+
+        return new PageImpl<>(rvm, p.getPageable(), p.getTotalElements());
     }
 }

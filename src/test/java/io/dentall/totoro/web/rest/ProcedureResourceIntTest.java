@@ -7,7 +7,6 @@ import io.dentall.totoro.domain.ProcedureType;
 import io.dentall.totoro.repository.ProcedureRepository;
 import io.dentall.totoro.service.ProcedureService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
-import io.dentall.totoro.service.dto.ProcedureCriteria;
 import io.dentall.totoro.service.ProcedureQueryService;
 
 import org.junit.Before;
@@ -81,7 +80,7 @@ public class ProcedureResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ProcedureResource procedureResource = new ProcedureResource(procedureService, procedureQueryService);
+        final ProcedureResource procedureResource = new ProcedureResource(procedureService, procedureQueryService, procedureRepository);
         this.restProcedureMockMvc = MockMvcBuilders.standaloneSetup(procedureResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -178,7 +177,7 @@ public class ProcedureResourceIntTest {
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())));
     }
-    
+
     @Test
     @Transactional
     public void getProcedure() throws Exception {

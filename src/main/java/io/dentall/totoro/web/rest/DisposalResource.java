@@ -1,16 +1,24 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dentall.totoro.business.service.nhi.NhiRuleCheckService;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.PlainDisposalType;
+import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.DisposalQueryService;
 import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.NhiExtendDisposalService;
 import io.dentall.totoro.service.NhiService;
 import io.dentall.totoro.service.dto.DisposalCriteria;
+import io.dentall.totoro.service.dto.HybridRuleCheckDisposal;
+import io.dentall.totoro.service.dto.HybridRuleCheckTreatmentProcedure;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.DisposalV2VM;
+import io.dentall.totoro.web.rest.vm.PlainDisposalInfoVM;
 import io.dentall.totoro.web.rest.vm.SameTreatmentVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -27,10 +35,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * REST controller for managing Disposal.
@@ -49,15 +54,23 @@ public class DisposalResource {
 
     private final NhiService nhiService;
 
+    private final NhiRuleCheckService nhiRuleCheckService;
+
+    private final UserRepository userRepository;
+
     public DisposalResource(
         DisposalService disposalService,
         DisposalQueryService disposalQueryService,
         NhiService nhiService,
-        NhiExtendDisposalService nhiExtendDisposalService
+        NhiExtendDisposalService nhiExtendDisposalService,
+        NhiRuleCheckService nhiRuleCheckService,
+        UserRepository userRepository
     ) {
         this.disposalService = disposalService;
         this.disposalQueryService = disposalQueryService;
         this.nhiService = nhiService;
+        this.nhiRuleCheckService = nhiRuleCheckService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -193,8 +206,7 @@ public class DisposalResource {
 
     @GetMapping("/disposals/rules-checked/{id}")
     @Timed
-    @Transactional
-    public ResponseEntity<Disposal> getDisposalWithRulesCheckedNhiExtTxProc2(@PathVariable Long id) {
+    public ResponseEntity<HybridRuleCheckDisposal> getDisposalWithRulesCheckedNhiExtTxProc2(@PathVariable Long id) {
         log.debug("REST request to get Disposal rules-checked : {}", id);
         // Origin useing -> findOneWithEagerRelationships
         Disposal disposal = disposalService.getDisposalByProjection(id);
@@ -231,9 +243,46 @@ public class DisposalResource {
                 }
             });
 
-
             nhiService.checkNhiExtendTreatmentProcedures(disposal);
-            return ResponseEntity.ok(disposal);
+
+            HybridRuleCheckDisposal hd = new HybridRuleCheckDisposal(disposal);
+            Set<HybridRuleCheckTreatmentProcedure> htp = new HashSet<>();
+            List<Long> excludeTpIds = new ArrayList<>();
+            List<String> includeCodes = new ArrayList<>();
+            disposal.getTreatmentProcedures().stream()
+                .forEach(treatmentProcedure -> {
+                    if (treatmentProcedure != null &&
+                        treatmentProcedure.getId() != null
+                    ) {
+                        excludeTpIds.add(treatmentProcedure.getId());
+                    }
+                    if (treatmentProcedure != null &&
+                        treatmentProcedure.getNhiProcedure() != null &&
+                        treatmentProcedure.getNhiProcedure().getCode() != null
+                    ) {
+                        includeCodes.add(treatmentProcedure.getNhiProcedure().getCode());
+                    }
+                });
+
+            disposal.getTreatmentProcedures().forEach(tp -> {
+                NhiRuleCheckVM vm = new NhiRuleCheckVM();
+                vm.setPatientId(patient.getId());
+                vm.setTreatmentProcedureId(tp.getId());
+                vm.setExcludeTreatmentProcedureIds(excludeTpIds);
+                vm.setIncludeNhiCodes(includeCodes);
+                try {
+                    NhiRuleCheckResultVM rvm = (NhiRuleCheckResultVM) nhiRuleCheckService.dispatch(tp.getNhiProcedure().getCode(), vm);
+                    HybridRuleCheckTreatmentProcedure hybridRuleCheckTreatmentProcedure = new HybridRuleCheckTreatmentProcedure(tp);
+                    hybridRuleCheckTreatmentProcedure.setCheckHistory(rvm.getCheckHistory());
+                    htp.add(hybridRuleCheckTreatmentProcedure);
+                } catch (Exception e) {
+                    HybridRuleCheckTreatmentProcedure hybridRuleCheckTreatmentProcedure = new HybridRuleCheckTreatmentProcedure(tp);
+                    htp.add(hybridRuleCheckTreatmentProcedure);
+                }
+            });
+            hd.setHybridRuleCheckTreatmentProcedures(htp);
+
+            return ResponseEntity.ok(hd);
         }
     }
 
@@ -248,4 +297,44 @@ public class DisposalResource {
        return disposalService.findSameTreatment(patientId, begin, end);
     }
 
+    @GetMapping("/disposals/plain")
+    @Timed
+    @Transactional
+    public ResponseEntity<List<PlainDisposalInfoVM>> findPlainDisposal(
+        @RequestParam(name = "plainDisposalType") PlainDisposalType plainDisposalType,
+        @RequestParam(name = "begin") Instant begin,
+        @RequestParam(name = "end") Instant end,
+        @RequestParam(name = "doctorId", required = false) Long doctorId,
+        @RequestParam(name = "infoId") Long infoId,
+        Pageable page
+    ){
+
+        if (infoId == null) {
+            throw new BadRequestAlertException("Must has info id", ENTITY_NAME, "noinfoid");
+        }
+
+        if (begin == null) {
+            throw new BadRequestAlertException("Must has begin time", ENTITY_NAME, "nobegin");
+        }
+
+        if (end == null) {
+            throw new BadRequestAlertException("Must has end time", ENTITY_NAME, "noend");
+        }
+
+        List<Long> doctorIds = new ArrayList<>();
+        if (doctorId == null) {
+            userRepository.findAll().stream()
+                .filter(User::getActivated)
+                .forEach(user -> doctorIds.add(user.getId()));
+        } else {
+            doctorIds.add(doctorId);
+        }
+
+        Page<PlainDisposalInfoVM> p = disposalService.findPlainDisposalInfo(plainDisposalType, begin, end, doctorIds, infoId, page);
+
+        return ResponseEntity
+            .ok()
+            .headers(PaginationUtil.generatePaginationHttpHeaders(p, "/api/disposals/plain"))
+            .body(p.getContent());
+    }
 }
