@@ -201,6 +201,11 @@ public class TableGenerator {
         }
 
         @Override
+        public Long getDependedTreatmentProcedureId() {
+            return null;
+        }
+
+        @Override
         public Long getDisposal_Id() {
             return null;
         }

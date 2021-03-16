@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210309-weichen-2" author="WeiChen">
+        <sql>
+            ALTER TABLE nhi_extend_disposal ADD COLUMN depended_treatment_procedure_id bigint;
+        </sql>
+        <addForeignKeyConstraint baseColumnNames="depended_treatment_procedure_id"
+                                 baseTableName="nhi_extend_disposal"
+                                 constraintName="fk_nhi_extend_disposal_depend_treatment_procedure_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="treatment_procedure"/>
+    </changeSet>
+</databaseChangeLog>
