@@ -29,6 +29,10 @@ public class HybridRuleCheckTreatmentProcedure extends TreatmentProcedure {
         this.setDoctor(tp.getDoctor());
         this.setNhiExtendTreatmentProcedure(tp.getNhiExtendTreatmentProcedure());
         this.setDisposal(tp.getDisposal());
+<<<<<<< HEAD
+=======
+        this.setTeeth(tp.getTeeth());
+>>>>>>> milestone-1.20
     }
 
     public List<NhiRuleCheckResultDTO> getCheckHistory() {

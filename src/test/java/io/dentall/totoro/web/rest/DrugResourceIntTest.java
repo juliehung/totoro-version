@@ -7,7 +7,6 @@ import io.dentall.totoro.domain.Drug;
 import io.dentall.totoro.repository.DrugRepository;
 import io.dentall.totoro.service.DrugService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
-import io.dentall.totoro.service.dto.DrugCriteria;
 import io.dentall.totoro.service.DrugQueryService;
 
 import org.junit.Before;
@@ -111,7 +110,7 @@ public class DrugResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final DrugResource drugResource = new DrugResource(drugService, drugQueryService);
+        final DrugResource drugResource = new DrugResource(drugService, drugQueryService, drugRepository);
         final DrugBusinessResource drugBusinessResource =
             new DrugBusinessResource(drugBusinessService);
 
@@ -240,7 +239,7 @@ public class DrugResourceIntTest {
             .andExpect(jsonPath("$.[*].days").value(hasItem(DEFAULT_DAYS)))
             .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)));
     }
-    
+
     @Test
     @Transactional
     public void getDrug() throws Exception {

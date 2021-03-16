@@ -130,7 +130,11 @@ public class DisposalResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         Mockito.doNothing().when(broadcastService).broadcastDomainId(Mockito.anyLong(), Mockito.any());
+<<<<<<< HEAD
         final DisposalResource disposalResource = new DisposalResource(disposalService, disposalQueryService, nhiService, nhiExtendDisposalService, null);
+=======
+        final DisposalResource disposalResource = new DisposalResource(disposalService, disposalQueryService, nhiService, nhiExtendDisposalService, null, userRepository);
+>>>>>>> milestone-1.20
         this.restDisposalMockMvc = MockMvcBuilders.standaloneSetup(disposalResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

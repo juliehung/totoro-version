@@ -5,6 +5,8 @@ import io.dentall.totoro.business.service.nhi.NhiRuleCheckService;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.PlainDisposalType;
+import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.DisposalQueryService;
 import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.NhiExtendDisposalService;
@@ -16,6 +18,7 @@ import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.DisposalV2VM;
+import io.dentall.totoro.web.rest.vm.PlainDisposalInfoVM;
 import io.dentall.totoro.web.rest.vm.SameTreatmentVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -53,17 +56,31 @@ public class DisposalResource {
 
     private final NhiRuleCheckService nhiRuleCheckService;
 
+<<<<<<< HEAD
+=======
+    private final UserRepository userRepository;
+
+>>>>>>> milestone-1.20
     public DisposalResource(
         DisposalService disposalService,
         DisposalQueryService disposalQueryService,
         NhiService nhiService,
         NhiExtendDisposalService nhiExtendDisposalService,
+<<<<<<< HEAD
         NhiRuleCheckService nhiRuleCheckService
+=======
+        NhiRuleCheckService nhiRuleCheckService,
+        UserRepository userRepository
+>>>>>>> milestone-1.20
     ) {
         this.disposalService = disposalService;
         this.disposalQueryService = disposalQueryService;
         this.nhiService = nhiService;
         this.nhiRuleCheckService = nhiRuleCheckService;
+<<<<<<< HEAD
+=======
+        this.userRepository = userRepository;
+>>>>>>> milestone-1.20
     }
 
     /**
@@ -269,7 +286,12 @@ public class DisposalResource {
                     hybridRuleCheckTreatmentProcedure.setCheckHistory(rvm.getCheckHistory());
                     htp.add(hybridRuleCheckTreatmentProcedure);
                 } catch (Exception e) {
+<<<<<<< HEAD
 
+=======
+                    HybridRuleCheckTreatmentProcedure hybridRuleCheckTreatmentProcedure = new HybridRuleCheckTreatmentProcedure(tp);
+                    htp.add(hybridRuleCheckTreatmentProcedure);
+>>>>>>> milestone-1.20
                 }
             });
             hd.setHybridRuleCheckTreatmentProcedures(htp);
@@ -289,4 +311,44 @@ public class DisposalResource {
        return disposalService.findSameTreatment(patientId, begin, end);
     }
 
+    @GetMapping("/disposals/plain")
+    @Timed
+    @Transactional
+    public ResponseEntity<List<PlainDisposalInfoVM>> findPlainDisposal(
+        @RequestParam(name = "plainDisposalType") PlainDisposalType plainDisposalType,
+        @RequestParam(name = "begin") Instant begin,
+        @RequestParam(name = "end") Instant end,
+        @RequestParam(name = "doctorId", required = false) Long doctorId,
+        @RequestParam(name = "infoId") Long infoId,
+        Pageable page
+    ){
+
+        if (infoId == null) {
+            throw new BadRequestAlertException("Must has info id", ENTITY_NAME, "noinfoid");
+        }
+
+        if (begin == null) {
+            throw new BadRequestAlertException("Must has begin time", ENTITY_NAME, "nobegin");
+        }
+
+        if (end == null) {
+            throw new BadRequestAlertException("Must has end time", ENTITY_NAME, "noend");
+        }
+
+        List<Long> doctorIds = new ArrayList<>();
+        if (doctorId == null) {
+            userRepository.findAll().stream()
+                .filter(User::getActivated)
+                .forEach(user -> doctorIds.add(user.getId()));
+        } else {
+            doctorIds.add(doctorId);
+        }
+
+        Page<PlainDisposalInfoVM> p = disposalService.findPlainDisposalInfo(plainDisposalType, begin, end, doctorIds, infoId, page);
+
+        return ResponseEntity
+            .ok()
+            .headers(PaginationUtil.generatePaginationHttpHeaders(p, "/api/disposals/plain"))
+            .body(p.getContent());
+    }
 }
