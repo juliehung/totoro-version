@@ -40,6 +40,7 @@ public interface PatientTable extends AuditingElement {
     String getTeethGraphPermanentSwitch();
     String getIntroducer();
     LocalDate getDueDate();
+    Boolean getDisabled();
 
     Long getQuestionnaire_Id();
     Long getPatientIdentity_Id();

@@ -464,6 +464,11 @@ public class TableGenerator {
         }
 
         @Override
+        public Boolean getDisabled() {
+            return null;
+        }
+
+        @Override
         public Long getQuestionnaire_Id() {
             return null;
         }
