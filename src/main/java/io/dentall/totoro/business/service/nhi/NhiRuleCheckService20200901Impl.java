@@ -46,27 +46,156 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return rvm;
     }
 
+    // 012***, TODO: 啟用時記得加回 overwrite annotation
+    public NhiRuleCheckResultVM validate01271C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
+                Arrays.asList("34001C", "34004C")
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoTreatmentInPeriod(dto,
+                DateTimeUtil.NHI_36_MONTH),
+            vm
+        );
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentInPeriodByNhiMedicalRecord(dto),
+                vm
+            );
+        }
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification("申報時應檢附Panoramic radiography環口全景X光片攝影。"),
+            vm
+        );
+
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification("病歷中除應記載缺牙部位、牙冠牙橋與阻生齒外，應記載X光片呈現之診斷與發現。"),
+            vm
+        );
+
+        return vm;
+    }
+
+    // 900***, TODO: 啟用時記得加回 overwrite annotation
+    public NhiRuleCheckResultVM validate90012C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification("使用橡皮障防濕裝置時，需檢附Ｘ光片或相片(規格需為3*5吋以上且可清晰判讀)佐證。（X光片或相片費用已內含）。"),
+            vm
+        );
+
+        return vm;
+    }
+
+    // 910***, TODO: 啟用時記得加回 overwrite annotation
+    public NhiRuleCheckResultVM validate91001C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
+                Arrays.asList("91003C~91005C", "91017C", "91019C", "91103C", "91104C")
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateWithMaxTimes(dto,
+                Arrays.asList("91001C"),
+                DateTimeUtil.startDayOfMonthDiff(
+                    DateTimeUtil.transformROCDateToLocalDate(
+                        dto.getNhiExtendTreatmentProcedure().getA71())),
+                2
+            ),
+            vm
+        );
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecordWithMaxTimes(dto,
+                    Arrays.asList("91001C"),
+                    DateTimeUtil.startDayOfMonthDiff(
+                        DateTimeUtil.transformROCDateToLocalDate(
+                            dto.getNhiExtendTreatmentProcedure().getA71())),
+                    2
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateWithSamePhase(dto,
+                    Arrays.asList("91001C"),
+                    DateTimeUtil.startDayOfMonthDiff(
+                        DateTimeUtil.transformROCDateToLocalDate(
+                            dto.getNhiExtendTreatmentProcedure().getA71()))
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecordWithSamePhase(dto,
+                    Arrays.asList("91001C"),
+                    DateTimeUtil.startDayOfMonthDiff(
+                        DateTimeUtil.transformROCDateToLocalDate(
+                            dto.getNhiExtendTreatmentProcedure().getA71()))
+                ),
+                vm
+            );
+        }
+
+        return vm;
+    }
+
     // 910***
     @Override
     public NhiRuleCheckResultVM validate91003C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(dto,
                 Arrays.asList(new String[]{"91003C"}.clone()),
+                DateTimeUtil.NHI_6_MONTH,
+                DateTimeUtil.NHI_6_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(dto,
+                Arrays.asList(new String[]{"91003C"}.clone()),
+                DateTimeUtil.NHI_6_MONTH,
+                DateTimeUtil.NHI_6_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList(new String[]{"91004C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91003C"}.clone()),
+                Arrays.asList(new String[]{"91004C"}.clone()),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
+            nhiRuleCheckUtil.isAllLimitedTooth(dto,
+                ToothConstraint.FOUR_PHASE_ZONE),
             vm
         );
 
@@ -79,20 +208,50 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91004C"}.clone()),
+                Arrays.asList("91004C", "91003C"),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91004C"}.clone()),
+                Arrays.asList("91004C", "91003C"),
                 DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList("91015C~91018C"),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                Arrays.asList("91015C~91018C"),
+                DateTimeUtil.NHI_3_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList("91103C", "91104C"),
+                DateTimeUtil.NHI_2_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                Arrays.asList("91103C", "91104C"),
+                DateTimeUtil.NHI_2_MONTH),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
+                Arrays.asList("91001C", "91017C", "91019C")
+            ),
             vm
         );
 
@@ -121,6 +280,60 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
             vm
         );
+
+        return vm;
+    }
+
+    @Override
+    public NhiRuleCheckResultVM validate91014C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isMustIncludeNhiCode(dto,
+                Arrays.asList("91004C", "91005C", "91020C")),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
+                Arrays.asList("91017C")),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                Arrays.asList("91004C", "91005C", "91020C"),
+                DateTimeUtil.NHI_6_MONTH),
+            vm
+        );
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                    Arrays.asList("91004C", "91005C", "91020C"),
+                    DateTimeUtil.NHI_12_MONTH),
+                vm
+            );
+
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                    Arrays.asList("91004C", "91005C"),
+                    DateTimeUtil.NHI_12_MONTH),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("91004C", "91005C"),
+                    DateTimeUtil.NHI_6_MONTH),
+                vm
+            );
+        }
 
         return vm;
     }
@@ -288,14 +501,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"81"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
+                DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"81"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
+                DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
@@ -340,14 +553,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDate(dto,
                 Arrays.asList(new String[]{"88"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
+                DateTimeUtil.NHI_6_MONTH),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
                 Arrays.asList(new String[]{"88"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
+                DateTimeUtil.NHI_6_MONTH),
             vm
         );
 

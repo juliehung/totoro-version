@@ -118,3 +118,6 @@ queue:
     patient: totoro.patientQueue
     registration: totoro.registrationQueue
     message: totoro.messageQueue
+
+gcs:
+    timeout: 5000

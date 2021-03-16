@@ -389,7 +389,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
 
     @Override
     public String toString() {
-        return "TreatmentProcedure{" +
+        String s = "TreatmentProcedure{" +
             "id=" + getId() +
             ", status='" + getStatus() + "'" +
             ", quantity=" + getQuantity() +
@@ -401,5 +401,15 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
             ", nhiDescription='" + getNhiDescription() + "'" +
             ", nhiIcd10Cm='" + getNhiIcd10Cm() + "'" +
             "}";
+
+        if (this.getNhiProcedure() != null) {
+            s = s + this.getNhiProcedure().toString();
+        }
+
+        if (this.getNhiExtendTreatmentProcedure() != null) {
+            s = s + this.getNhiExtendTreatmentProcedure().toString();
+        }
+
+        return s;
     }
 }

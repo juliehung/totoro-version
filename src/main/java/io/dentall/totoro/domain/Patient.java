@@ -537,18 +537,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
         return this;
     }
 
-    public Patient addAppointment(Appointment appointment) {
-        this.appointments.add(appointment);
-        appointment.setPatient(this);
-        return this;
-    }
-
-    public Patient removeAppointment(Appointment appointment) {
-        this.appointments.remove(appointment);
-        appointment.setPatient(null);
-        return this;
-    }
-
     public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
     }

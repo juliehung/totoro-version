@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210127-weichen" author="WeiChen">
+        <comment>更新 doc_np 的 json</comment>
+        <comment>查到 tags id = 9 假若他裡面包含了 id = 41 將其刪除(可能狀況為多筆(處於第一筆，中間筆，末一筆)，單筆，0筆)</comment>
+        <sql>
+            UPDATE doc_np
+            SET patient = neop
+            FROM (
+            SELECT id,
+            case
+            when position('{"id": 41, "name": "AIDS", "type": "BLOOD_DISEASE", "modifiable": false},' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), '{"id": 41, "name": "AIDS", "type": "BLOOD_DISEASE", "modifiable": false},', '')::jsonb
+            when position(', {"id": 41, "name": "AIDS", "type": "BLOOD_DISEASE", "modifiable": false}' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), ', {"id": 41, "name": "AIDS", "type": "BLOOD_DISEASE", "modifiable": false}', '')::jsonb
+            when position('{"id": 41, "name": "AIDS", "type": "BLOOD_DISEASE", "modifiable": false}' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), '{"id": 41, "name": "AIDS", "type": "BLOOD_DISEASE", "modifiable": false}', '')::jsonb
+            else patient
+            end as neop
+            FROM doc_np
+            WHERE patient -> 'tags' @> '[{"id": 9}]'
+            ) as neodocnp
+            WHERE doc_np.id = neodocnp.id;
+        </sql>
+        <comment>查到 tags id = 9 將其更新為 41</comment>
+        <sql>
+            <comment>查到 tags id = 9 將其更新為 41</comment>
+            UPDATE doc_np
+            SET patient = neop
+            FROM (
+            SELECT id,
+            case
+            when position('{"id": 9, "name": "AIDS", "type": "DISEASE", "modifiable": false},' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), '{"id": 9, "name": "AIDS", "type": "DISEASE", "modifiable": false},', '{"id": 41, "name": "AIDS", "type": "BLOOD_DISEASE", "modifiable": false},')::jsonb
+            when position(', {"id": 9, "name": "AIDS", "type": "DISEASE", "modifiable": false}' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), ', {"id": 9, "name": "AIDS", "type": "DISEASE", "modifiable": false}', ', {"id": 41, "name": "AIDS", "type": "BLOOD_DISEASE", "modifiable": false}')::jsonb
+            when position('{"id": 9, "name": "AIDS", "type": "DISEASE", "modifiable": false}' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), '{"id": 9, "name": "AIDS", "type": "DISEASE", "modifiable": false}', '{"id": 41, "name": "AIDS", "type": "BLOOD_DISEASE", "modifiable": false}')::jsonb
+            else patient
+            end as neop
+            FROM doc_np
+            WHERE patient -> 'tags' @> '[{"id": 9}]'
+            ) as neodocnp
+            WHERE doc_np.id = neodocnp.id;
+        </sql>
+        <comment>更新 patient_tag</comment>
+        <comment>更新沒有 9, 41 同時存在的 9</comment>
+        <sql>
+            UPDATE patient_tag
+            SET tags_id = 41
+            WHERE tags_id = 9
+            AND patients_id NOT IN (select patients_id from patient_tag where tags_id = 41);
+        </sql>
+        <comment>移除 9</comment>
+        <sql>
+            DELETE FROM patient_tag WHERE tags_id = 9;
+        </sql>
+        <comment>移除 tag</comment>
+        <sql>
+            DELETE FROM tag WHERE id = 9;
+        </sql>
+        <comment>-----------------------------------------</comment>
+        <comment>更新 doc_np 的 json</comment>
+        <comment>查到 tags id =  假若他裡面包含了 id = 44 將其刪除(可能狀況為多筆(處於第一筆，中間筆，末一筆)，單筆，0筆)</comment>
+        <sql>
+            UPDATE doc_np
+            SET patient = neop
+            FROM (
+            SELECT id,
+            case
+            when position('{"id": 44, "name": "B型肝炎", "type": "BLOOD_DISEASE", "modifiable": false},' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), '{"id": 44, "name": "B型肝炎", "type": "BLOOD_DISEASE", "modifiable": false},', '')::jsonb
+            when position(', {"id": 44, "name": "B型肝炎", "type": "BLOOD_DISEASE", "modifiable": false}' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), ', {"id": 44, "name": "B型肝炎", "type": "BLOOD_DISEASE", "modifiable": false}', '')::jsonb
+            when position('{"id": 44, "name": "B型肝炎", "type": "BLOOD_DISEASE", "modifiable": false}' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), '{"id": 44, "name": "B型肝炎", "type": "BLOOD_DISEASE", "modifiable": false}', '')::jsonb
+            else patient
+            end as neop
+            FROM doc_np
+            WHERE patient -> 'tags' @> '[{"id": 33}]'
+            ) as neodocnp
+            WHERE doc_np.id = neodocnp.id;
+        </sql>
+        <comment>查到 tags id = 33 將其更新為 44</comment>
+        <sql>
+            <comment>查到 tags id = 33 將其更新為 44</comment>
+            UPDATE doc_np
+            SET patient = neop
+            FROM (
+            SELECT id,
+            case
+            when position('{"id": 33, "name": "B型肝炎", "type": "DISEASE", "modifiable": false},' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), '{"id": 33, "name": "B型肝炎", "type": "DISEASE", "modifiable": false},', '{"id": 44, "name": "B型肝炎", "type": "BLOOD_DISEASE", "modifiable": false},')::jsonb
+            when position(', {"id": 33, "name": "B型肝炎", "type": "DISEASE", "modifiable": false}' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), ', {"id": 33, "name": "B型肝炎", "type": "DISEASE", "modifiable": false}', ', {"id": 44, "name": "B型肝炎", "type": "BLOOD_DISEASE", "modifiable": false}')::jsonb
+            when position('{"id": 33, "name": "B型肝炎", "type": "DISEASE", "modifiable": false}' in cast(patient as varchar)) > 0
+            then replace(cast(patient as varchar), '{"id": 33, "name": "B型肝炎", "type": "DISEASE", "modifiable": false}', '{"id": 44, "name": "B型肝炎", "type": "BLOOD_DISEASE", "modifiable": false}')::jsonb
+            else patient
+            end as neop
+            FROM doc_np
+            WHERE patient -> 'tags' @> '[{"id": 33}]'
+            ) as neodocnp
+            WHERE doc_np.id = neodocnp.id;
+        </sql>
+        <comment>更新 patient_tag</comment>
+        <comment>更新沒有 33, 44 同時存在的 33</comment>
+        <sql>
+            UPDATE patient_tag
+            SET tags_id = 44
+            WHERE tags_id = 33
+            AND patients_id NOT IN (select patients_id from patient_tag where tags_id = 44);
+        </sql>
+        <comment>移除 9</comment>
+        <sql>
+            DELETE FROM patient_tag WHERE tags_id = 33;
+        </sql>
+        <comment>移除 tag</comment>
+        <sql>
+            DELETE FROM tag WHERE id = 33;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
