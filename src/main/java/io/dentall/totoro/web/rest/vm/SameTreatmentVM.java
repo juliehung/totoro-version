@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 
 public interface SameTreatmentVM {
+    @JsonProperty(value = "id")
+    Long getTreatmentProcedures_NhiExtendTreatmentProcedure_TreatmentProcedure_Id();
+
     @JsonProperty(value = "a18")
     String getNhiExtendDisposals_a18();
 
