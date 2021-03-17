@@ -140,7 +140,7 @@ public class DrugResource {
         return drugRepository.findAll(new Sort(Sort.Direction.ASC, "order")).stream()
             .map(drug -> {
                 PlainDisposalInfoListDTO vm = new PlainDisposalInfoListDTO();
-                return vm.id(drug.getId()).code("").name(drug.getChineseName());
+                return vm.id(drug.getId()).code("").name(drug.getName());
             })
             .collect(Collectors.toList());
     }
