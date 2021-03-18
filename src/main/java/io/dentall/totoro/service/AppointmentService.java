@@ -144,8 +144,6 @@ public class AppointmentService {
     public void delete(Long id) {
         log.debug("Request to delete Appointment : {}", id);
 
-        List<Patient> patientList = new ArrayList<>();
-
         appointmentRepository.findById(id).ifPresent(appointment -> {
             StreamUtil.asStream(appointment.getTreatmentProcedures()).forEach(treatmentProcedure -> treatmentProcedure.setAppointment(null));
             relationshipService.deleteTreatmentProcedures(appointment.getTreatmentProcedures());
@@ -153,26 +151,10 @@ public class AppointmentService {
             if (appointment.getPatient() != null) {
                 Patient patient = appointment.getPatient();
                 patient.getAppointments().remove(appointment);
-                patientList.add(patient);
             }
 
             appointmentRepository.deleteById(id);
         });
-
-
-        if (patientList.size() == 1 &&
-            patientList.get(0) != null
-        ) {
-            Optional<AppointmentTable> optionalAppointmentTable =
-                appointmentRepository.findTop1ByPatient_IdAndExpectedArrivalTimeBeforeOrderByExpectedArrivalTimeDesc(patientList.get(0).getId(), Instant.now());
-            if (optionalAppointmentTable.isPresent()) {
-                Patient updatePatient = new Patient();
-                updatePatient.setId(optionalAppointmentTable.get().getPatient_Id());
-                updatePatient.setDisabled(optionalAppointmentTable.get().getDisabled());
-                patientService.update(updatePatient);
-            }
-        }
-
     }
 
     public Appointment update(Appointment updateAppointment) {
