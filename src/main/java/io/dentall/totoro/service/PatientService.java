@@ -570,24 +570,30 @@ public class PatientService extends QueryService<Patient> {
         switch(code) {
             case "81":
                 // 檢查 81
-                nhiRuleCheckUtil.addResultToVm(
-                    nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                        Arrays.asList(new String[]{"81"}.clone()),
-                        DateTimeUtil.NHI_6_MONTH),
-                    rvm
-                );
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.lessThanAge6(dto),
+                        rvm
+                    );
+                }
 
-                nhiRuleCheckUtil.addResultToVm(
-                    nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                        Arrays.asList(new String[]{"81"}.clone()),
-                        DateTimeUtil.NHI_6_MONTH),
-                    rvm
-                );
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                            Arrays.asList(new String[]{"81"}.clone()),
+                            DateTimeUtil.NHI_6_MONTH),
+                        rvm
+                    );
+                }
 
-                nhiRuleCheckUtil.addResultToVm(
-                    nhiRuleCheckUtil.lessThanAge6(dto),
-                    rvm
-                );
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                            Arrays.asList(new String[]{"81"}.clone()),
+                            DateTimeUtil.NHI_6_MONTH),
+                        rvm
+                    );
+                }
 
                 if (rvm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
@@ -595,50 +601,63 @@ public class PatientService extends QueryService<Patient> {
                         rvm
                     );
                 }
+
                 break;
             case "91004C":
                 // 檢查 91004C
-                nhiRuleCheckUtil.addResultToVm(
-                    nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                        Arrays.asList("91004C", "91003C"),
-                        DateTimeUtil.NHI_6_MONTH),
-                    rvm
-                );
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                            Arrays.asList("91004C", "91003C"),
+                            DateTimeUtil.NHI_6_MONTH),
+                        rvm
+                    );
+                }
 
-                nhiRuleCheckUtil.addResultToVm(
-                    nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                        Arrays.asList("91004C", "91003C"),
-                        DateTimeUtil.NHI_6_MONTH),
-                    rvm
-                );
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                            Arrays.asList("91004C", "91003C"),
+                            DateTimeUtil.NHI_6_MONTH),
+                        rvm
+                    );
+                }
 
-                nhiRuleCheckUtil.addResultToVm(
-                    nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                        Arrays.asList("91015C~91018C"),
-                        DateTimeUtil.NHI_3_MONTH),
-                    rvm
-                );
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                            Arrays.asList("91015C~91018C"),
+                            DateTimeUtil.NHI_3_MONTH),
+                        rvm
+                    );
+                }
 
-                nhiRuleCheckUtil.addResultToVm(
-                    nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                        Arrays.asList("91015C~91018C"),
-                        DateTimeUtil.NHI_3_MONTH),
-                    rvm
-                );
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                            Arrays.asList("91015C~91018C"),
+                            DateTimeUtil.NHI_3_MONTH),
+                        rvm
+                    );
+                }
 
-                nhiRuleCheckUtil.addResultToVm(
-                    nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                        Arrays.asList("91103C", "91104C"),
-                        DateTimeUtil.NHI_2_MONTH),
-                    rvm
-                );
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                            Arrays.asList("91103C", "91104C"),
+                            DateTimeUtil.NHI_2_MONTH),
+                        rvm
+                    );
+                }
 
-                nhiRuleCheckUtil.addResultToVm(
-                    nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                        Arrays.asList("91103C", "91104C"),
-                        DateTimeUtil.NHI_2_MONTH),
-                    rvm
-                );
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                            Arrays.asList("91103C", "91104C"),
+                            DateTimeUtil.NHI_2_MONTH),
+                        rvm
+                    );
+                }
 
                 if (rvm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
