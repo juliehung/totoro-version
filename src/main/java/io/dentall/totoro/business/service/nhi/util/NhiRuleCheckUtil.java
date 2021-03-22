@@ -338,6 +338,15 @@ public class NhiRuleCheckUtil {
             ) {
                 dto.getNhiExtendTreatmentProcedure().setA75(vm.getA75());
             }
+
+            // 將自身加入 exclude list
+            if (dto.getExcludeTreatmentProcedureIds() == null) {
+                List<Long> ids = new ArrayList<>();
+                ids.add(vm.getTreatmentProcedureId());
+                dto.setExcludeTreatmentProcedureIds(ids);
+            } else {
+                dto.getExcludeTreatmentProcedureIds().add(vm.getTreatmentProcedureId());
+            }
         }
 
         // 產生暫時的 treatment 資料，在後續的檢驗中被檢核所需
