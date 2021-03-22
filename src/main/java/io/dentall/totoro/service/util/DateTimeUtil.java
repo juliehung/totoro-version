@@ -28,6 +28,8 @@ public final class DateTimeUtil {
 
     public static final Period NHI_36_MONTH = Period.ofDays(1095);
 
+    public static final Period NHI_360_DAY = Period.ofDays(360);
+
     public static Supplier<Instant> localTimeMin = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toZonedDateTime().with(LocalTime.MIN).toInstant();
     public static Supplier<Instant> localTimeMax = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toZonedDateTime().with(LocalTime.MAX).toInstant();
 
