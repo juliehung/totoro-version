@@ -56,31 +56,21 @@ public class DisposalResource {
 
     private final NhiRuleCheckService nhiRuleCheckService;
 
-<<<<<<< HEAD
-=======
     private final UserRepository userRepository;
 
->>>>>>> milestone-1.20
     public DisposalResource(
         DisposalService disposalService,
         DisposalQueryService disposalQueryService,
         NhiService nhiService,
         NhiExtendDisposalService nhiExtendDisposalService,
-<<<<<<< HEAD
-        NhiRuleCheckService nhiRuleCheckService
-=======
         NhiRuleCheckService nhiRuleCheckService,
         UserRepository userRepository
->>>>>>> milestone-1.20
     ) {
         this.disposalService = disposalService;
         this.disposalQueryService = disposalQueryService;
         this.nhiService = nhiService;
         this.nhiRuleCheckService = nhiRuleCheckService;
-<<<<<<< HEAD
-=======
         this.userRepository = userRepository;
->>>>>>> milestone-1.20
     }
 
     /**
@@ -286,12 +276,8 @@ public class DisposalResource {
                     hybridRuleCheckTreatmentProcedure.setCheckHistory(rvm.getCheckHistory());
                     htp.add(hybridRuleCheckTreatmentProcedure);
                 } catch (Exception e) {
-<<<<<<< HEAD
-
-=======
                     HybridRuleCheckTreatmentProcedure hybridRuleCheckTreatmentProcedure = new HybridRuleCheckTreatmentProcedure(tp);
                     htp.add(hybridRuleCheckTreatmentProcedure);
->>>>>>> milestone-1.20
                 }
             });
             hd.setHybridRuleCheckTreatmentProcedures(htp);

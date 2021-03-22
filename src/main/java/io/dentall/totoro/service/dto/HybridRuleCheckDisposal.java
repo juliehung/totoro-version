@@ -26,10 +26,7 @@ public class HybridRuleCheckDisposal extends Disposal {
 
         this.setPrescription(d.getPrescription());
         this.setRegistration(d.getRegistration());
-<<<<<<< HEAD
-=======
         this.setNhiExtendDisposals(d.getNhiExtendDisposals());
->>>>>>> milestone-1.20
     }
 
     @JsonProperty(value = "treatmentProcedures")
