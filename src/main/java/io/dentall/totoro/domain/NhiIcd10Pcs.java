@@ -15,7 +15,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "nhi_icd_10_pcs")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NhiIcd10Pcs implements Serializable {
 
     private static final long serialVersionUID = 1L;

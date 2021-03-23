@@ -21,7 +21,6 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "disposal")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @AttributeOverride(name = "createdBy", column = @Column(name = "createdBy"))
 public class Disposal extends AbstractAuditingEntity implements Serializable {
 
@@ -66,7 +65,6 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     private Boolean treatmentProcedureSignatureNotProvided;
 
     @OneToMany(mappedBy = "disposal", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = null;
 
     @OneToOne
@@ -82,7 +80,6 @@ public class Disposal extends AbstractAuditingEntity implements Serializable {
     private Registration registration;
 
     @OneToMany(mappedBy = "disposal")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Tooth> teeth = null;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 

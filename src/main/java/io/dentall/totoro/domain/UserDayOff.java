@@ -12,7 +12,6 @@ import java.time.Instant;
  */
 @Entity
 @Table(name = "user_day_off")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class UserDayOff extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

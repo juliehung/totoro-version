@@ -19,7 +19,6 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
  */
 @Entity
 @Table(name = "image_relation")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ImageRelation extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -20,7 +20,6 @@ import io.dentall.totoro.domain.enumeration.TagType;
  */
 @Entity
 @Table(name = "tag")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Tag implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,7 +46,6 @@ public class Tag implements Serializable {
     private Integer order;
 
     @ManyToMany(mappedBy = "tags")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonIgnore
     private Set<Patient> patients = new HashSet<>();
 

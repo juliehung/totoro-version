@@ -23,7 +23,6 @@ import io.dentall.totoro.domain.enumeration.TodoStatus;
  */
 @Entity
 @Table(name = "todo")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Todo extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,7 +51,6 @@ public class Todo extends AbstractAuditingEntity implements Serializable {
     private Patient patient;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "todo_treatment_procedure",
         joinColumns = @JoinColumn(name = "todos_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "treatment_procedures_id", referencedColumnName = "id"))
