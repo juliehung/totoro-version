@@ -20,7 +20,6 @@ import io.dentall.totoro.domain.enumeration.TimeInterval;
  */
 @Entity
 @Table(name = "calendar")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Calendar implements Serializable {
 
     private static final long serialVersionUID = 1L;

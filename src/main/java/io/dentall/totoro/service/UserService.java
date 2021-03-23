@@ -9,13 +9,11 @@ import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.AuthoritiesConstants;
 import io.dentall.totoro.security.SecurityUtils;
 import io.dentall.totoro.service.dto.UserDTO;
-import io.dentall.totoro.service.util.CacheUtil;
 import io.dentall.totoro.service.util.RandomUtil;
 import io.dentall.totoro.web.rest.errors.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -43,13 +41,14 @@ public class UserService {
 
     private final AuthorityRepository authorityRepository;
 
-    private final CacheManager cacheManager;
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    public UserService(
+        UserRepository userRepository,
+        PasswordEncoder passwordEncoder,
+        AuthorityRepository authorityRepository
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
-        this.cacheManager = cacheManager;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -59,7 +58,6 @@ public class UserService {
                 // activate given user for the registration key.
                 user.setActivated(true);
                 user.setActivationKey(null);
-                this.clearUserCaches(user);
                 log.debug("Activated user: {}", user);
                 return user;
             });
@@ -73,7 +71,6 @@ public class UserService {
                 user.setPassword(passwordEncoder.encode(newPassword));
                 user.setResetKey(null);
                 user.setResetDate(null);
-                this.clearUserCaches(user);
                 return user;
             });
     }
@@ -84,7 +81,6 @@ public class UserService {
             .map(user -> {
                 user.setPassword(passwordEncoder.encode(login));
                 user.getExtendUser().setFirstLogin(true);
-                this.clearUserCaches(user);
                 return user;
             });
     }
@@ -95,7 +91,6 @@ public class UserService {
             .map(user -> {
                 user.setResetKey(RandomUtil.generateResetKey());
                 user.setResetDate(Instant.now());
-                this.clearUserCaches(user);
                 return user;
             });
     }
@@ -132,7 +127,6 @@ public class UserService {
         newUser.setAuthorities(authorities);
         newUser.setExtendUser(createExtendUser(newUser, userDTO.getExtendUser()));
         userRepository.save(newUser);
-        this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
@@ -143,7 +137,6 @@ public class UserService {
         }
         userRepository.delete(existingUser);
         userRepository.flush();
-        this.clearUserCaches(existingUser);
         return true;
     }
 
@@ -178,7 +171,6 @@ public class UserService {
 
         user.setExtendUser(createExtendUser(user, userDTO.getExtendUser()));
         userRepository.save(user);
-        this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);
         return user;
     }
@@ -201,7 +193,6 @@ public class UserService {
                 user.setEmail(email == null ? null : email.toLowerCase());
                 user.setLangKey(langKey);
                 user.setImageUrl(imageUrl);
-                this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
             });
     }
@@ -218,7 +209,6 @@ public class UserService {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .map(user -> {
-                this.clearUserCaches(user);
                 if (userDTO.getLogin() != null) {
                     user.setLogin(userDTO.getLogin().toLowerCase());
                 }
@@ -258,7 +248,6 @@ public class UserService {
                 }
 
                 updateExtendUser(user.getExtendUser(), userDTO.getExtendUser());
-                this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
                 return user;
             })
@@ -274,7 +263,6 @@ public class UserService {
     public void updateExtendUser(String login, UserDTO userDTO) {
         userRepository.findOneByLogin(login).ifPresent(user -> {
             updateExtendUser(user.getExtendUser(), userDTO.getExtendUser());
-            this.clearUserCaches(user);
         });
     }
 
@@ -291,7 +279,6 @@ public class UserService {
             .ifPresent(extendUser -> {
                 extendUser.setGmail(gmail);
                 extendUser.setCalendarId(calendarId);
-                this.clearUserCaches(extendUser.getUser());
                 log.debug("Changed Information for ExtendUser: {}", extendUser);
             });
     }
@@ -299,7 +286,6 @@ public class UserService {
     public void deleteUser(String login) {
         userRepository.findOneByLogin(login).ifPresent(user -> {
             userRepository.delete(user);
-            this.clearUserCaches(user);
             log.debug("Deleted User: {}", user);
         });
     }
@@ -315,7 +301,6 @@ public class UserService {
                 String encryptedPassword = passwordEncoder.encode(newPassword);
                 user.setPassword(encryptedPassword);
                 user.getExtendUser().setFirstLogin(false);
-                this.clearUserCaches(user);
                 log.debug("Changed password for User: {}", user);
             });
     }
@@ -352,7 +337,6 @@ public class UserService {
             .forEach(user -> {
                 log.debug("Deleting not activated user {}", user.getLogin());
                 userRepository.delete(user);
-                this.clearUserCaches(user);
             });
     }
 
@@ -390,9 +374,5 @@ public class UserService {
 
             log.debug("Changed Information for ExtendUser: {}", extendUser);
         }
-    }
-
-    private void clearUserCaches(User user) {
-        CacheUtil.clearUserCaches(user, cacheManager);
     }
 }

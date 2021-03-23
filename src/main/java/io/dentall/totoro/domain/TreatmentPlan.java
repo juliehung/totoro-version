@@ -20,7 +20,6 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
  */
 @Entity
 @Table(name = "treatment_plan")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class TreatmentPlan extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,7 +37,6 @@ public class TreatmentPlan extends AbstractAuditingEntity implements Serializabl
     private String name;
 
     @OneToMany(mappedBy = "treatmentPlan", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentTask> treatmentTasks = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

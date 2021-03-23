@@ -21,7 +21,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "ledger")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @EntityListeners(AuditingEntityListener.class)
 public class Ledger implements Serializable {
 
