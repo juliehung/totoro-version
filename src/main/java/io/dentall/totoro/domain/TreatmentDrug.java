@@ -18,7 +18,6 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
  */
 @Entity
 @Table(name = "treatment_drug")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class TreatmentDrug implements Serializable {
 
     private static final long serialVersionUID = 1L;

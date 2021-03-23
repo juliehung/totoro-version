@@ -16,7 +16,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "nhi_month_declaration")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NhiMonthDeclaration implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,7 +33,6 @@ public class NhiMonthDeclaration implements Serializable {
     private String institution;
 
     @OneToMany(mappedBy = "nhiMonthDeclaration", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<NhiMonthDeclarationDetails> nhiMonthDeclarationDetails = null;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {

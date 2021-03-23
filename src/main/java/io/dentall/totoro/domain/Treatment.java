@@ -19,7 +19,6 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "treatment")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Treatment extends AbstractDoctorAndAuditingEntity<Treatment> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,7 +54,6 @@ public class Treatment extends AbstractDoctorAndAuditingEntity<Treatment> implem
     private Patient patient;
 
     @OneToMany(mappedBy = "treatment", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentPlan> treatmentPlans = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 

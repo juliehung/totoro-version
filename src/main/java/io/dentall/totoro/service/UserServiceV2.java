@@ -10,12 +10,10 @@ import io.dentall.totoro.repository.AuthorityRepository;
 import io.dentall.totoro.repository.SpecialistRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.dto.UserDTO;
-import io.dentall.totoro.service.util.CacheUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.vm.UserV2VM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -47,20 +45,16 @@ public class UserServiceV2 {
 
     private final SpecialistRepository specialistRepository;
 
-    private final CacheManager cacheManager;
-
     public UserServiceV2(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
-        SpecialistRepository specialistRepository,
-        CacheManager cacheManager
+        SpecialistRepository specialistRepository
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.specialistRepository = specialistRepository;
-        this.cacheManager = cacheManager;
     }
 
     public Optional<UserV2VM> resetPasswordByAdmin(String login) {
@@ -69,7 +63,6 @@ public class UserServiceV2 {
             .map(user -> {
                 user.setPassword(passwordEncoder.encode(login));
                 user.getExtendUser().setFirstLogin(true);
-                this.clearUserCaches(user);
                 return user;
             })
             .map(UserDTO::new)
@@ -99,7 +92,6 @@ public class UserServiceV2 {
 
         user.setExtendUser(createExtendUser(user, userV2VM));
         userRepository.save(user);
-        this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);
         return user;
     }
@@ -116,7 +108,6 @@ public class UserServiceV2 {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .map(user -> {
-                this.clearUserCaches(user);
                 if (userV2VM.getLogin() != null) { user.setLogin(userV2VM.getLogin().toLowerCase()); }
                 if (userV2VM.getFirstName() != null) { user.setFirstName(userV2VM.getFirstName()); }
                 if (userV2VM.getLastName() != null) { user.setLastName(userV2VM.getLastName()); }
@@ -145,7 +136,6 @@ public class UserServiceV2 {
                 }
 
                 updateExtendUser(user.getExtendUser(), userV2VM);
-                this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
                 return user;
             })
@@ -156,7 +146,6 @@ public class UserServiceV2 {
     public void deleteUser(String login) {
         userRepository.findOneByLogin(login).ifPresent(user -> {
             userRepository.delete(user);
-            this.clearUserCaches(user);
             log.debug("Deleted User: {}", user);
         });
     }
@@ -191,7 +180,6 @@ public class UserServiceV2 {
             .forEach(user -> {
                 log.debug("Deleting not activated user {}", user.getLogin());
                 userRepository.delete(user);
-                this.clearUserCaches(user);
             });
     }
 
@@ -219,9 +207,5 @@ public class UserServiceV2 {
                 extendUser.setNationalId(userV2VM.getNationalId());
             }
         }
-    }
-
-    private void clearUserCaches(User user) {
-        CacheUtil.clearUserCaches(user, cacheManager);
     }
 }

@@ -19,7 +19,6 @@ import io.dentall.totoro.domain.enumeration.RegistrationStatus;
  */
 @Entity
 @Table(name = "registration_del")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class RegistrationDel extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

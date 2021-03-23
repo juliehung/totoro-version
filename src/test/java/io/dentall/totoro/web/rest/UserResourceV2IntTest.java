@@ -84,9 +84,6 @@ public class UserResourceV2IntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
-    private CacheManager cacheManager;
-
-    @Autowired
     private WebApplicationContext context;
 
     @Autowired
@@ -102,8 +99,6 @@ public class UserResourceV2IntTest {
 
     @Before
     public void setup() {
-        cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
-        cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
         UserResourceV2 userResource = new UserResourceV2(userService, userRepository);
         s1 = new Specialist();
         s1.setId(1L);
@@ -282,8 +277,6 @@ public class UserResourceV2IntTest {
         // Initialize the database
         userRepository.saveAndFlush(user);
 
-        assertThat(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNull();
-
         // Get the user
         restUserMockMvc.perform(get("/api/v2/users/{login}", user.getLogin()))
             .andExpect(status().isOk())
@@ -292,8 +285,6 @@ public class UserResourceV2IntTest {
             .andExpect(jsonPath("$.firstName").value(DEFAULT_FIRSTNAME))
             .andExpect(jsonPath("$.lastName").value(DEFAULT_LASTNAME))
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL));
-
-        assertThat(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNotNull();
     }
 
     @Test
@@ -513,8 +504,6 @@ public class UserResourceV2IntTest {
         restUserMockMvc.perform(delete("/api/v2/users/{login}", user.getLogin())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
-
-        assertThat(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNull();
 
         // Validate the database is empty
         List<User> userList = userRepository.findAll();

@@ -24,7 +24,6 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "patient")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Patient extends AbstractAuditingEntity implements Serializable, Avatar {
 
     private static final long serialVersionUID = 1L;
@@ -138,7 +137,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     private Questionnaire questionnaire;
 
     @OneToMany(mappedBy = "patient")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Appointment> appointments = new HashSet<>();
 
     @Column(name = "introducer")
@@ -183,11 +181,9 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     private PatientIdentity patientIdentity;
 
     @OneToMany(mappedBy = "patient")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Todo> todos = new HashSet<>();
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Tooth> teeth = null;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 

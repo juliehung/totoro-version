@@ -24,7 +24,6 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
  */
 @Entity
 @Table(name = "nhi_extend_patient")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class NhiExtendPatient extends AbstractAuditingEntity implements Serializable {
 
@@ -70,7 +69,6 @@ public class NhiExtendPatient extends AbstractAuditingEntity implements Serializ
     private Patient patient;
 
     @OneToMany(mappedBy = "nhiExtendPatient", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<NhiMedicalRecord> nhiMedicalRecords = null;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

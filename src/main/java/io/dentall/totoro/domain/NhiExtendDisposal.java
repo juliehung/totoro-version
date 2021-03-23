@@ -23,7 +23,6 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
  */
 @Entity
 @Table(name = "nhi_extend_disposal")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NhiExtendDisposal implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -174,7 +173,6 @@ public class NhiExtendDisposal implements Serializable {
     private Set<NhiExtendTreatmentDrug> nhiExtendTreatmentDrugs = null;
 
     @ManyToMany(mappedBy = "nhiExtendDisposals")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonIgnore
     private Set<NhiDayUploadDetails> nhiDayUploadDetails = null;
 

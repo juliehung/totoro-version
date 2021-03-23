@@ -16,7 +16,6 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
  */
 @Entity
 @Table(name = "nhi_extend_treatment_procedure")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NhiExtendTreatmentProcedure extends NhiAbstractMedicalArea<NhiExtendTreatmentProcedure> implements Serializable {
 
     private static final long serialVersionUID = 1L;

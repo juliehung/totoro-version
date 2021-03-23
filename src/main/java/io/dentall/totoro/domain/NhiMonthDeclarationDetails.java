@@ -19,7 +19,6 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
  */
 @Entity
 @Table(name = "nhi_month_declaration_details")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NhiMonthDeclarationDetails implements Serializable {
 
     private static final long serialVersionUID = 1L;

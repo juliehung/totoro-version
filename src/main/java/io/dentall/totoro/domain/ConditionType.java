@@ -14,7 +14,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "condition_type")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ConditionType implements Serializable {
 
     private static final long serialVersionUID = 1L;

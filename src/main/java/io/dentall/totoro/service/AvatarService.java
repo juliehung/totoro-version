@@ -4,10 +4,8 @@ import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.SecurityUtils;
-import io.dentall.totoro.service.util.CacheUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,12 +26,12 @@ public class AvatarService {
 
     private final PatientRepository patientRepository;
 
-    private final CacheManager cacheManager;
-
-    public AvatarService(UserRepository userRepository, PatientRepository patientRepository, CacheManager cacheManager) {
+    public AvatarService(
+        UserRepository userRepository,
+        PatientRepository patientRepository
+    ) {
         this.userRepository = userRepository;
         this.patientRepository = patientRepository;
-        this.cacheManager = cacheManager;
     }
 
     public Optional<String> storeUserAvatar(MultipartFile file) {
@@ -47,8 +45,6 @@ public class AvatarService {
 
                     user.setImageUrl(file.getOriginalFilename());
                     log.debug("Set ImageUrl for User: {}", user);
-
-                    CacheUtil.clearUserCaches(user, cacheManager);
 
                     return Optional.of(user.getImageUrl());
                 } catch (IOException e) {
