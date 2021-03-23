@@ -14,7 +14,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "nhi_procedure_type")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NhiProcedureType implements Serializable {
 
     private static final long serialVersionUID = 1L;

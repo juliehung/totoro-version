@@ -24,7 +24,6 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
  */
 @Entity
 @Table(name = "tooth")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class Tooth extends AbstractAuditingEntity implements Serializable {
 

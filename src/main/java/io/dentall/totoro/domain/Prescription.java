@@ -21,7 +21,6 @@ import io.dentall.totoro.domain.enumeration.PrescriptionMode;
  */
 @Entity
 @Table(name = "prescription")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Prescription implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,7 +53,6 @@ public class Prescription implements Serializable {
     private PrescriptionMode mode;
 
     @OneToMany(mappedBy = "prescription", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentDrug> treatmentDrugs = null;
 
     @OneToOne(mappedBy = "prescription", fetch = FetchType.LAZY)

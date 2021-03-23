@@ -14,7 +14,6 @@ import java.util.*;
  */
 @Entity
 @Table(name = "extend_user")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ExtendUser implements Serializable, Avatar {
 
     private static final long serialVersionUID = 1L;

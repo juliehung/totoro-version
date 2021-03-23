@@ -20,7 +20,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "doc_np")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @EntityListeners(AuditingEntityListener.class)
 public class DocNp implements Serializable {

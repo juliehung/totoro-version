@@ -14,7 +14,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "nhi_unusal_content")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NHIUnusalContent implements Serializable {
 
     private static final long serialVersionUID = 1L;

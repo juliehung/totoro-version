@@ -19,7 +19,6 @@ import io.dentall.totoro.domain.enumeration.WeekDay;
  */
 @Entity
 @Table(name = "calendar_setting")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class CalendarSetting implements Serializable {
 
     private static final long serialVersionUID = 1L;

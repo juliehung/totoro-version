@@ -18,7 +18,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "nhi_icd_9_cm")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NhiIcd9Cm implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,7 +38,6 @@ public class NhiIcd9Cm implements Serializable {
     private String englishName;
 
     @OneToMany(mappedBy = "nhiIcd9Cm", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<NhiIcd10Cm> nhiIcd10Cms = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {

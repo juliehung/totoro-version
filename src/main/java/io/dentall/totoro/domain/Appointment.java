@@ -17,7 +17,6 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "appointment")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -70,7 +69,6 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
     private Registration registration;
 
     @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TreatmentProcedure> treatmentProcedures = null;
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {

@@ -18,7 +18,6 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "nhi_procedure")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NhiProcedure implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -72,7 +71,6 @@ public class NhiProcedure implements Serializable {
     private NhiIcd9Cm nhiIcd9Cm;
 
     @OneToMany(mappedBy = "nhiProcedure", fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<NhiIcd10Pcs> nhiIcd10Pcs = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 

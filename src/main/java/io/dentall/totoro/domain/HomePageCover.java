@@ -14,7 +14,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "home_page_cover")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class HomePageCover implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -24,7 +24,6 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
  */
 @Entity
 @Table(name = "treatment_procedure")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @AttributeOverride(name="createdDate", column=@Column(name="createdDate"))
 public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<TreatmentProcedure> implements Serializable {
 
@@ -83,7 +82,6 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     private Appointment appointment;
 
     @OneToMany(mappedBy = "treatmentProcedure", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Tooth> teeth = new HashSet<>();
 
     @ManyToMany(mappedBy = "treatmentProcedures")

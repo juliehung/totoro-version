@@ -14,8 +14,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
 
-@Configuration
-@EnableCaching
 public class CacheConfiguration {
 
     private final javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration;

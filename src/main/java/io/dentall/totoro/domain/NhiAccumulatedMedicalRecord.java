@@ -15,7 +15,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "nhi_accumulated_medical_record")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NhiAccumulatedMedicalRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
