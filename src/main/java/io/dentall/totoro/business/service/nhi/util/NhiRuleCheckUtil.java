@@ -1277,10 +1277,6 @@ public class NhiRuleCheckUtil {
         }
         // 取得紀錄中，離處置單時間最近的資料
         Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable = netpts.stream()
-            .filter(netpt -> dto.getNhiExtendTreatmentProcedure() != null &&
-                dto.getNhiExtendTreatmentProcedure().getId() != null &&
-                !dto.getNhiExtendTreatmentProcedure().getId().equals(netpt.getTreatmentProcedure_Id())
-            )
             .filter(netpt -> {
                 LocalDate historyDate = null;
                 if (netpt != null &&
