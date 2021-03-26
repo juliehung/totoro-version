@@ -324,7 +324,7 @@ public class DisposalResource {
         List<Long> doctorIds = new ArrayList<>();
         if (doctorId == null) {
             userRepository.findAll().stream()
-                .filter(User::getActivated)
+                .filter(Objects::nonNull)
                 .forEach(user -> doctorIds.add(user.getId()));
         } else {
             doctorIds.add(doctorId);
