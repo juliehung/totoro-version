@@ -5,7 +5,9 @@ import io.dentall.totoro.business.service.ImageRelationBusinessService;
 import io.dentall.totoro.business.vm.ImageRelationPathVM;
 import io.dentall.totoro.domain.ImageRelation;
 import io.dentall.totoro.domain.enumeration.ImageRelationDomain;
+import io.dentall.totoro.repository.DisposalRepository;
 import io.dentall.totoro.repository.ImageRelationRepository;
+import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.ImageVM;
@@ -23,6 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Profile({"img-host", "img-gcs"})
@@ -40,14 +43,18 @@ public class ImageRelationResource {
 
     private final ImageRelationRepository imageRelationRepository;
 
+    private final DisposalRepository disposalRepository;
+
     public ImageRelationResource(
         ImageRelationBusinessService imageRelationBusinessService,
         ImageBusinessService imageBusinessService,
-        ImageRelationRepository imageRelationRepository
+        ImageRelationRepository imageRelationRepository,
+        DisposalRepository disposalRepository
     ) {
         this.imageRelationBusinessService = imageRelationBusinessService;
         this.imageBusinessService = imageBusinessService;
         this.imageRelationRepository = imageRelationRepository;
+        this.disposalRepository = disposalRepository;
     }
 
     @PostMapping("/image-relations")
@@ -76,6 +83,16 @@ public class ImageRelationResource {
         List<ImageVM> vmList = page.getContent().stream()
             .map(ir -> {
                 ImageVM vm = new ImageVM();
+
+                if (ImageRelationDomain.DISPOSAL.equals(domain) &&
+                    ir.getDomainId() != null &&
+                    ir.getDomainId() != 0L
+                ) {
+                    Optional<DisposalTable> disposalTableOptional = disposalRepository.findDisposalById(ir.getDomainId());
+                    if (disposalTableOptional.isPresent()) {
+                        vm.setDisposalDate(disposalTableOptional.get().getDateTime());
+                    }
+                }
 
                 if (ir.getImage() != null) {
                     Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(null, ir.getImage().getId(), "original");
