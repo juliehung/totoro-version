@@ -2,14 +2,14 @@ package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.dentall.totoro.domain.enumeration.AccountingOtherDealStatus;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -71,6 +71,45 @@ public class Accounting implements Serializable {
 
     @Column(name = "copayment_exemption")
     private Boolean copaymentExemption;
+
+    @Column(name = "other_deal_status")
+    @Enumerated(value = EnumType.STRING)
+    private AccountingOtherDealStatus otherDealStatus;
+
+    @Column(name = "other_deal_price")
+    @PositiveOrZero
+    private BigDecimal otherDealPrice;
+
+    @Column(name = "other_deal_comment")
+    private String otherDealComment;
+
+    public Boolean getCopaymentExemption() {
+        return copaymentExemption;
+    }
+
+    public AccountingOtherDealStatus getOtherDealStatus() {
+        return otherDealStatus;
+    }
+
+    public void setOtherDealStatus(AccountingOtherDealStatus otherDealStatus) {
+        this.otherDealStatus = otherDealStatus;
+    }
+
+    public BigDecimal getOtherDealPrice() {
+        return otherDealPrice;
+    }
+
+    public void setOtherDealPrice(BigDecimal otherDealPrice) {
+        this.otherDealPrice = otherDealPrice;
+    }
+
+    public String getOtherDealComment() {
+        return otherDealComment;
+    }
+
+    public void setOtherDealComment(String otherDealComment) {
+        this.otherDealComment = otherDealComment;
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
