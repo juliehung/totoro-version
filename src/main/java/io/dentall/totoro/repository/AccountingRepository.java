@@ -1,15 +1,11 @@
 package io.dentall.totoro.repository;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
-
+import io.dentall.totoro.domain.Accounting;
+import io.dentall.totoro.service.dto.table.AccountingTable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import io.dentall.totoro.domain.Accounting;
-import io.dentall.totoro.domain.enumeration.RegistrationStatus;
-import io.dentall.totoro.service.dto.table.AccountingTable;
+import java.util.Optional;
 
 
 /**
