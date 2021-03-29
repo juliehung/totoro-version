@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dentall.totoro.domain.enumeration.Blood;
 import io.dentall.totoro.domain.enumeration.Gender;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -200,6 +198,50 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
 
     @Column(name = "due_date")
     private LocalDate dueDate;
+
+    @Column(name = "customized_disease")
+    private String customizedDisease;
+
+    @Column(name = "customized_blood_disease")
+    private String customizedBloodDisease;
+
+    @Column(name = "customized_allergy")
+    private String customizedAllergy;
+
+    @Column(name = "customized_other")
+    private String customizedOther;
+
+    public String getCustomizedDisease() {
+        return customizedDisease;
+    }
+
+    public void setCustomizedDisease(String customizedDisease) {
+        this.customizedDisease = customizedDisease;
+    }
+
+    public String getCustomizedBloodDisease() {
+        return customizedBloodDisease;
+    }
+
+    public void setCustomizedBloodDisease(String customizedBloodDisease) {
+        this.customizedBloodDisease = customizedBloodDisease;
+    }
+
+    public String getCustomizedAllergy() {
+        return customizedAllergy;
+    }
+
+    public void setCustomizedAllergy(String customizedAllergy) {
+        this.customizedAllergy = customizedAllergy;
+    }
+
+    public String getCustomizedOther() {
+        return customizedOther;
+    }
+
+    public void setCustomizedOther(String customizedOther) {
+        this.customizedOther = customizedOther;
+    }
 
     public Long getId() {
         return id;

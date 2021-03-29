@@ -414,6 +414,26 @@ public class TableGenerator {
         }
 
         @Override
+        public String getCustomizedDisease() {
+            return null;
+        }
+
+        @Override
+        public String getCustomizedBloodDisease() {
+            return null;
+        }
+
+        @Override
+        public String getCustomizedAllergy() {
+            return null;
+        }
+
+        @Override
+        public String getCustomizedOther() {
+            return null;
+        }
+
+        @Override
         public String getAvatarContentType() {
             return null;
         }

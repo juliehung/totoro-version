@@ -615,6 +615,26 @@ public class AppointmentService {
             }
 
             @Override
+            public String getCustomizedDisease() {
+                return appointment1To1.getPatient_CustomizedDisease();
+            }
+
+            @Override
+            public String getCustomizedBloodDisease() {
+                return appointment1To1.getPatient_CustomizedBloodDisease();
+            }
+
+            @Override
+            public String getCustomizedAllergy() {
+                return appointment1To1.getPatient_CustomizedAllergy();
+            }
+
+            @Override
+            public String getCustomizedOther() {
+                return appointment1To1.getPatient_CustomizedOther();
+            }
+
+            @Override
             public String getAvatarContentType() {
                 return appointment1To1.getPatient_AvatarContentType();
             }
@@ -919,6 +939,10 @@ public class AppointmentService {
         Long getPatient_FirstDoctorUser_Id();
         String getPatient_CaseManager();
         Boolean getPatient_VipPatient();
+        String getPatient_CustomizedDisease();
+        String getPatient_CustomizedBloodDisease();
+        String getPatient_CustomizedAllergy();
+        String getPatient_CustomizedOther();
 
         // Registration
         RegistrationStatus getRegistration_Status();
