@@ -9,6 +9,16 @@ public class ImageVM {
 
     private String url;
 
+    private Long imageRelationId;
+
+    public Long getImageRelationId() {
+        return imageRelationId;
+    }
+
+    public void setImageRelationId(Long imageRelationId) {
+        this.imageRelationId = imageRelationId;
+    }
+
     public Image getImage() {
         return image;
     }
