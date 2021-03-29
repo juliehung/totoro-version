@@ -237,6 +237,22 @@ public class PatientService extends QueryService<Patient> {
                     patient.setWriteIcTime(updatePatient.getWriteIcTime());
                 }
 
+                if (updatePatient.getCustomizedDisease() != null) {
+                    patient.setCustomizedDisease(updatePatient.getCustomizedDisease());
+                }
+
+                if (updatePatient.getCustomizedBloodDisease() != null) {
+                    patient.setCustomizedBloodDisease(updatePatient.getCustomizedBloodDisease());
+                }
+
+                if (updatePatient.getCustomizedAllergy() != null) {
+                    patient.setCustomizedAllergy(updatePatient.getCustomizedAllergy());
+                }
+
+                if (updatePatient.getCustomizedOther() != null) {
+                    patient.setCustomizedOther(updatePatient.getCustomizedOther());
+                }
+
                 // introducer
                 if (updatePatient.getIntroducer() != null) {
                     patient.setIntroducer(updatePatient.getIntroducer());

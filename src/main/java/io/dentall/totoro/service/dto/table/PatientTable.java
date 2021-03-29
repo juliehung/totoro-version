@@ -29,6 +29,11 @@ public interface PatientTable extends AuditingElement {
     String getNote();
     String getClinicNote();
     Instant getWriteIcTime();
+    String getCustomizedDisease();
+    String getCustomizedBloodDisease();
+    String getCustomizedAllergy();
+    String getCustomizedOther();
+
 //    byte[] getAvatar();
     String getAvatarContentType();
     Boolean getNewPatient();
