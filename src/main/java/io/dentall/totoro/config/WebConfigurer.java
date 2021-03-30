@@ -3,6 +3,7 @@ package io.dentall.totoro.config;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.MetricsServlet;
+import com.google.cloud.sqlcommenter.interceptors.SpringSQLCommenterInterceptor;
 import io.dentall.totoro.domain.converter.StringToBackupFileCatalogConverter;
 import io.dentall.totoro.domain.converter.StringToPatientRelationshipTypeConverter;
 import io.github.jhipster.config.JHipsterConstants;
@@ -28,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.*;
@@ -212,5 +214,15 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
     @Bean
     public SortHandlerMethodArgumentResolverCustomizer sortCustomizer() {
         return s -> s.setFallbackSort(Sort.by("id"));
+    }
+
+    @Bean
+    public SpringSQLCommenterInterceptor sqlInterceptor() {
+        return new SpringSQLCommenterInterceptor();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(sqlInterceptor());
     }
 }

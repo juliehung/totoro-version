@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210329-shihfeng-nhi_extend_disposal" author="shihfeng">
+        <createIndex tableName="nhi_extend_disposal" indexName="idx_nhi_extend_disposal_disposal_id">
+            <column name="disposal_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20210329-shihfeng-treatment_procedure" author="shihfeng">
+        <createIndex tableName="treatment_procedure" indexName="idx_treatment_procedure_disposal_id">
+            <column name="disposal_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20210329-shihfeng-appointment" author="shihfeng">
+        <createIndex tableName="appointment" indexName="idx_appointment_expected_arrival_time">
+            <column name="expected_arrival_time"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
