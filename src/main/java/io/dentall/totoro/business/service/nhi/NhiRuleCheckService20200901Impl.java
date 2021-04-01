@@ -1,9 +1,6 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.business.service.nhi.util.CopaymentCode;
-import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
-import io.dentall.totoro.business.service.nhi.util.SurfaceConstraint;
-import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
+import io.dentall.totoro.business.service.nhi.util.*;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.service.util.DateTimeUtil;
@@ -52,35 +49,22 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
-                Arrays.asList("34001C", "34004C")
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isNoTreatmentInPeriod(dto,
                 DateTimeUtil.NHI_36_MONTH),
             vm
         );
 
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification("須檢附影像。"),
+            vm
+        );
+
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentInPeriodByNhiMedicalRecord(dto),
+                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
                 vm
             );
         }
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification("申報時應檢附Panoramic radiography環口全景X光片攝影。"),
-            vm
-        );
-
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification("病歷中除應記載缺牙部位、牙冠牙橋與阻生齒外，應記載X光片呈現之診斷與發現。"),
-            vm
-        );
 
         return vm;
     }
@@ -91,14 +75,44 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification("銀粉、複合樹脂、玻璃離子體及複合體充填時，橡皮障防濕裝置視病情需要使用。"),
+            nhiRuleCheckUtil.addNotification("須檢附影像。"),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification("使用橡皮障防濕裝置時，需檢附Ｘ光片或相片(規格需為3*5吋以上且可清晰判讀)佐證。（X光片或相片費用已內含）。"),
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
             vm
         );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+                dto,
+                Arrays.asList("92013C~92015C"),
+                DateTimeUtil.NHI_12_MONTH,
+                DateTimeUtil.NHI_18_MONTH),
+            vm
+        );
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
+                    dto,
+                    Arrays.asList("92013C~92015C"),
+                    DateTimeUtil.NHI_12_MONTH,
+                    DateTimeUtil.NHI_18_MONTH),
+                vm
+            );
+        }
 
         return vm;
     }
@@ -124,6 +138,20 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             ),
             vm
         );
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isSinglePhase(dto),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
+                vm
+            );
+        }
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
@@ -171,56 +199,67 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(dto,
-                Arrays.asList(new String[]{"91003C"}.clone()),
-                DateTimeUtil.NHI_6_MONTH,
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(dto,
-                Arrays.asList(new String[]{"91003C"}.clone()),
-                DateTimeUtil.NHI_6_MONTH,
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91004C"}.clone()),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91004C"}.clone()),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(dto,
                 ToothConstraint.FOUR_PHASE_ZONE),
             vm
         );
 
-
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotificationWithClause(dto,
-                "未滿十二歲兒童（「全民健康保險牙醫門診總額特殊醫療服務計畫」之適用對象除外）非全口性牙周病者不得申報全口牙結石清除，" +
-                    "病歷上應詳實記載備查;申報91003C或91004C需附相片(規格需為3*5吋以上且可清晰判讀)或X光片以為審核。",
+                "須檢附影像",
                 nhiRuleCheckUtil.clauseIsLessThanAge12),
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotificationWithClause(dto,
-                "本項不得申請轉診加成。",
-                nhiRuleCheckUtil.clauseIsReferral),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateWithSamePhase(dto,
+                    Arrays.asList("91003C", "91004C"),
+                    DateTimeUtil.NHI_6_MONTH
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("91018C", "91005C", "91103C", "91104C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.D1_2
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("91003C", "91004C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.D7_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("91003C", "91004C"),
+                    DateTimeUtil.NHI_6_MONTH,
+                    NhiRuleCheckFormat.W1_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
+                vm
+            );
+        }
 
         return vm;
     }
@@ -230,74 +269,67 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList("91004C", "91003C"),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList("91004C", "91003C"),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList("91015C~91018C"),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList("91015C~91018C"),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList("91103C", "91104C"),
-                DateTimeUtil.NHI_2_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList("91103C", "91104C"),
-                DateTimeUtil.NHI_2_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(dto,
                 ToothConstraint.FULL_ZONE),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
-                Arrays.asList("91001C", "91017C", "91019C")
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotificationWithClause(dto,
-                "未滿十二歲兒童（「全民健康保險牙醫門診總額特殊醫療服務計畫」之適用對象除外）非全口性牙周病者不得申報全口牙結石清除，" +
-                    "病歷上應詳實記載備查;申報91003C或91004C需附相片(規格需為3*5吋以上且可清晰判讀)或X光片以為審核。",
+                "須檢附影像",
                 nhiRuleCheckUtil.clauseIsLessThanAge12),
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotificationWithClause(dto,
-                "本項不得申請轉診加成。",
-                nhiRuleCheckUtil.clauseIsReferral),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateWithSamePhase(dto,
+                    Arrays.asList("91003C", "91004C"),
+                    DateTimeUtil.NHI_6_MONTH
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("91018C", "91005C", "91103C", "91104C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.D1_2
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("91003C", "91004C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.D7_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("91003C", "91004C"),
+                    DateTimeUtil.NHI_6_MONTH,
+                    NhiRuleCheckFormat.W1_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
+                vm
+            );
+        }
 
         return vm;
     }
@@ -332,17 +364,25 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
     public NhiRuleCheckResultVM validate91014C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(dto,
+                ToothConstraint.FULL_ZONE),
+            vm
+        );
+
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isMustIncludeNhiCode(dto,
                 Arrays.asList("91004C", "91005C", "91020C")),
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
-                Arrays.asList("91017C")),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
+                vm
+            );
+        }
 
         if (vm.isValidated() &&
             dto.getIncludeNhiCodes().contains("91004C")
@@ -591,23 +631,38 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"81"}.clone()),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"81"}.clone()),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.lessThanAge6(dto),
             vm
         );
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBetweenDuration(dto,
+                    Arrays.asList("81"),
+                    nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_6),
+                    NhiRuleCheckFormat.D4_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBetweenDurationByNhiMedicalRecord(dto,
+                    Arrays.asList("81"),
+                    nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_6),
+                    NhiRuleCheckFormat.D4_1
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
