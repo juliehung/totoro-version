@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi;
 
+import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
 import io.dentall.totoro.business.service.nhi.util.*;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.config.TimeConfig;
@@ -1006,9 +1007,11 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "建議 %s 後再行申報，近一次處置為系統中 %s",
-                DateTimeUtil.transformLocalDateToRocDateForDisplay(
-                    DataGenerator.NHI_TREATMENT_DATE_NOW.plusDays(DateTimeUtil.NHI_12_MONTH.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                NhiRuleCheckFormat.D1_3.getFormat(),
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                DataGenerator.TOOTH_DECIDUOUS_1,
+                DataGenerator.NHI_CODE_1,
+                NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL.getValue(),
                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
                     DataGenerator.NHI_TREATMENT_DATE_NOW.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
             ),
@@ -1071,9 +1074,11 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "建議 %s 後再行申報，近一次處置為系統中 %s",
-                DateTimeUtil.transformLocalDateToRocDateForDisplay(
-                    DataGenerator.NHI_TREATMENT_DATE_NOW.plusDays(DateTimeUtil.NHI_18_MONTH.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                NhiRuleCheckFormat.D1_3.getFormat(),
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                DataGenerator.TOOTH_PERMANENT_1,
+                DataGenerator.NHI_CODE_1,
+                NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL.getValue(),
                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
                     DataGenerator.NHI_TREATMENT_DATE_NOW.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
             ),
@@ -1250,9 +1255,11 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "建議 %s 後再行申報，近一次處置為系統中 %s",
-                DateTimeUtil.transformLocalDateToRocDateForDisplay(
-                    DataGenerator.NHI_TREATMENT_DATE_NOW.plusDays(DateTimeUtil.NHI_12_MONTH.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                NhiRuleCheckFormat.D1_3.getFormat(),
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                DataGenerator.TOOTH_DECIDUOUS_1,
+                DataGenerator.NHI_CODE_1,
+                NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL.getValue(),
                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
                     DataGenerator.NHI_TREATMENT_DATE_NOW.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
             ),
@@ -1315,9 +1322,11 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "建議 %s 後再行申報，近一次處置為系統中 %s",
-                DateTimeUtil.transformLocalDateToRocDateForDisplay(
-                    DataGenerator.NHI_TREATMENT_DATE_NOW.plusDays(DateTimeUtil.NHI_18_MONTH.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                NhiRuleCheckFormat.D1_3.getFormat(),
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                DataGenerator.TOOTH_PERMANENT_1,
+                DataGenerator.NHI_CODE_1,
+                NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL.getValue(),
                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
                     DataGenerator.NHI_TREATMENT_DATE_NOW.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
             ),
@@ -1446,7 +1455,7 @@ public class NhiRuleCheckUtilMockTest {
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto);
 
         Assert.assertEquals(false, rdto.isValidated());
-        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患年滿 12 歲，方能申報"), rdto.getMessage());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(": 須年滿十二歲"), rdto.getMessage());
     }
 
     @Test
@@ -1464,7 +1473,7 @@ public class NhiRuleCheckUtilMockTest {
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto);
 
         Assert.assertEquals(false, rdto.isValidated());
-        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患年滿 12 歲，方能申報"), rdto.getMessage());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(": 須年滿十二歲"), rdto.getMessage());
     }
 
 
@@ -1490,7 +1499,7 @@ public class NhiRuleCheckUtilMockTest {
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge12(dto);
 
         Assert.assertEquals(false, rdto.isValidated());
-        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 12 歲，方能申報"), rdto.getMessage());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(": 須未滿十二歲"), rdto.getMessage());
     }
 
     @Test
@@ -1509,7 +1518,7 @@ public class NhiRuleCheckUtilMockTest {
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge12(dto);
 
         Assert.assertEquals(false, rdto.isValidated());
-        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 12 歲，方能申報"), rdto.getMessage());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(": 須未滿十二歲"), rdto.getMessage());
     }
 
     @Test
@@ -1545,7 +1554,7 @@ public class NhiRuleCheckUtilMockTest {
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge12(dto);
 
         Assert.assertEquals(false, rdto.isValidated());
-        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 12 歲，方能申報"), rdto.getMessage());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(": 須未滿十二歲"), rdto.getMessage());
     }
 
     /**
@@ -1570,7 +1579,7 @@ public class NhiRuleCheckUtilMockTest {
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge6(dto);
 
         Assert.assertEquals(false, rdto.isValidated());
-        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 6 歲，方能申報"), rdto.getMessage());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(": 須未滿六歲"), rdto.getMessage());
     }
 
     @Test
@@ -1589,7 +1598,7 @@ public class NhiRuleCheckUtilMockTest {
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge6(dto);
 
         Assert.assertEquals(false, rdto.isValidated());
-        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 6 歲，方能申報"), rdto.getMessage());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(": 須未滿六歲"), rdto.getMessage());
     }
 
     @Test
@@ -1625,7 +1634,7 @@ public class NhiRuleCheckUtilMockTest {
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.lessThanAge6(dto);
 
         Assert.assertEquals(false, rdto.isValidated());
-        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(" 須在病患未滿 6 歲，方能申報"), rdto.getMessage());
+        Assert.assertEquals(DataGenerator.NHI_CODE_1.concat(": 須未滿六歲"), rdto.getMessage());
     }
 
 
@@ -1831,10 +1840,15 @@ public class NhiRuleCheckUtilMockTest {
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
-                "建議 %s 後再行申報，近一次處置為健保IC卡中 %s",
-                DateTimeUtil.transformLocalDateToRocDateForDisplay(DataGenerator.NHI_TREATMENT_DATE_NOW.minus(5, ChronoUnit.DAYS).plusDays(DateTimeUtil.NHI_1_MONTH.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                DateTimeUtil.transformLocalDateToRocDateForDisplay(DataGenerator.NHI_TREATMENT_DATE_NOW.minus(5, ChronoUnit.DAYS).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
-            ),
+                    NhiRuleCheckFormat.D1_2.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    NhiRuleCheckSourceType.NHI_CARD_RECORD.getValue(),
+                    DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                        DataGenerator.NHI_TREATMENT_DATE_NOW.minus(5, ChronoUnit.DAYS).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                    "30",
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                ),
             rdto.getMessage());
     }
 

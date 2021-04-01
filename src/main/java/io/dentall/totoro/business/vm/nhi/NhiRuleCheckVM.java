@@ -11,6 +11,11 @@ public class NhiRuleCheckVM {
     private Long treatmentProcedureId;
 
     /**
+     * 就醫類別
+     */
+    private String a23;
+
+    /**
      * 民國時間
      */
     private String a71;
@@ -38,6 +43,14 @@ public class NhiRuleCheckVM {
      * 轉診註記
      */
     private boolean referral;
+
+    public String getA23() {
+        return a23;
+    }
+
+    public void setA23(String a23) {
+        this.a23 = a23;
+    }
 
     public List<String> getIncludeNhiCodes() {
         return includeNhiCodes;
