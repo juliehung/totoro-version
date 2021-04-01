@@ -83,6 +83,8 @@ public class Accounting implements Serializable {
     @Column(name = "other_deal_comment")
     private String otherDealComment;
 
+    // Remember to maintain AccountingDTO and AccountingTable
+
     public Boolean getCopaymentExemption() {
         return copaymentExemption;
     }
