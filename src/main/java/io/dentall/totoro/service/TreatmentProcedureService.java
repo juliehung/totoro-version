@@ -185,28 +185,7 @@ public class TreatmentProcedureService {
      */
     public void delete(Long id) {
         log.debug("Request to delete TreatmentProcedure : {}", id);
-
-        treatmentProcedureRepository.findById(id).ifPresent(treatmentProcedure -> {
-            if (treatmentProcedure.getTodos() != null) {
-                treatmentProcedure.getTodos().forEach(todo -> {
-                    todo.treatmentProcedures(null);
-                });
-            }
-
-            if (treatmentProcedure.getAppointment() != null) {
-                treatmentProcedure.getAppointment().removeTreatmentProcedure(treatmentProcedure);
-            }
-
-            if (treatmentProcedure.getDisposal() != null) {
-                treatmentProcedure.getDisposal().removeTreatmentProcedure(treatmentProcedure);
-            }
-
-            if (treatmentProcedure.getTreatmentTask() != null) {
-                treatmentProcedure.getTreatmentTask().removeTreatmentProcedure(treatmentProcedure);
-            }
-
-            treatmentProcedureRepository.deleteById(id);
-        });
+        treatmentProcedureRepository.deleteById(id);
     }
 
     /**
