@@ -40,6 +40,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "       p.medical_id as patientMedicalId," +
             "       p.gender as patientGender," +
             "       p.vip_patient as patientVipPatient," +
+            "       p.customized_disease as patientCustomizedDisease," +
+            "       p.customized_blood_disease as patientCustomizedBloodDisease," +
+            "       p.customized_allergy as patientCustomizedAllergy," +
+            "       p.customized_other as patientCustomizedOther," +
             "       d.id as disposalId," +
             "       d.treatment_procedure_signature_not_provided as disposalTreatmentProcedureSignatureNotProvided," +
             "       a.id as appointmentId," +
