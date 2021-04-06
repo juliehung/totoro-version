@@ -1,22 +1,20 @@
 package io.dentall.totoro.service;
 
-import java.time.Instant;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import io.dentall.totoro.domain.Accounting;
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.repository.AccountingRepository;
 import io.dentall.totoro.repository.AppointmentRepository;
 import io.dentall.totoro.repository.HospitalRepository;
 import io.dentall.totoro.service.dto.AccountingDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.time.Instant;
+import java.util.List;
 
 /**
  * Service class for managing accounting.
@@ -120,13 +118,25 @@ public class AccountingService {
                     accounting.setCopaymentExemption(updateAccounting.isCopaymentExemption());
                 }
 
+                if (updateAccounting.getOtherDealStatus() != null) {
+                    accounting.setOtherDealStatus(updateAccounting.getOtherDealStatus());
+                }
+
+                if (updateAccounting.getOtherDealPrice() != null) {
+                    accounting.setOtherDealPrice(updateAccounting.getOtherDealPrice());
+                }
+
+                if (updateAccounting.getOtherDealComment() != null) {
+                    accounting.setOtherDealComment(updateAccounting.getOtherDealComment());
+                }
+
                 return accounting;
             })
             .get();
     }
 
     /**
-     * @param start  Registration.ArrivalTime
+     * @param begin  Registration.ArrivalTime
      * @param end    Registration.ArrivalTime
      * @param status Registration.Status
      * @return io.dentall.totoro.domain.Accounting

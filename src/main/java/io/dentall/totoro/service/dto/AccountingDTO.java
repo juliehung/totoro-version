@@ -1,8 +1,11 @@
 package io.dentall.totoro.service.dto;
 
-import java.time.Instant;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dentall.totoro.domain.enumeration.AccountingOtherDealStatus;
+
+import javax.validation.constraints.PositiveOrZero;
+import java.math.BigDecimal;
+import java.time.Instant;
 
 public interface AccountingDTO {
 
@@ -44,5 +47,15 @@ public interface AccountingDTO {
 
     @JsonProperty("copaymentExemption")
     Boolean getRegistration_Accounting_CopaymentExemption();
+
+    @JsonProperty("otherDealStatus")
+    AccountingOtherDealStatus getRegistration_Accounting_OtherDealStatus();
+
+    @PositiveOrZero
+    @JsonProperty("otherDealPrice")
+    BigDecimal getRegistration_Accounting_OtherDealPrice();
+
+    @JsonProperty("otherDealComment")
+    String getRegistration_Accounting_OtherDealComment();
 
 }

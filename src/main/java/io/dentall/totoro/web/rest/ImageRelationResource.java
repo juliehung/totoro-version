@@ -82,6 +82,7 @@ public class ImageRelationResource {
                     vm.setUrl(urls.getOrDefault("original", ""));
                 }
 
+                vm.setImageRelationId(ir.getId());
                 vm.setImage(ir.getImage());
 
                 return vm;

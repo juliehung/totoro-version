@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="2020331-shihfeng_1" author="ShihFeng">
+        <createIndex tableName="treatment_procedure" indexName="idx_treatment_procedure_nhi_procedure_id">
+            <column name="nhi_procedure_id"></column>
+        </createIndex>
+        <createIndex tableName="nhi_extend_treatment_procedure" indexName="idx_nhi_extend_treatment_procedure_nhi_extend_disposal_id">
+            <column name="nhi_extend_disposal_id"/>
+        </createIndex>
+        <createIndex tableName="nhi_extend_treatment_drug" indexName="idx_nhi_extend_treatment_drug_nhi_extend_disposal_id">
+            <column name="nhi_extend_disposal_id"/>
+        </createIndex>
+        <createIndex tableName="procedure" indexName="idx_procedure_doctor_user_id">
+            <column name="doctor_user_id"/>
+        </createIndex>
+        <createIndex tableName="tooth" indexName="idx_tooth_patient_id">
+            <column name="patient_id"/>
+        </createIndex>
+        <createIndex tableName="tooth" indexName="idx_tooth_treatment_procedure_id">
+            <column name="treatment_procedure_id"/>
+        </createIndex>
+        <createIndex tableName="nhi_medical_record" indexName="idx_nhi_medical_record_nhi_extend_patient_patient_id">
+            <column name="nhi_extend_patient_patient_id"/>
+        </createIndex>
+        <createIndex tableName="nhi_icd_10_pcs" indexName="idx_nhi_icd_10_pcs_nhi_procedure_id">
+            <column name="nhi_procedure_id"/>
+        </createIndex>
+        <createIndex tableName="nhi_icd_10_cm" indexName="idx_nhi_icd_10_cm_nhi_icd9cm_id">
+            <column name="nhi_icd9cm_id"/>
+        </createIndex>
+        <createIndex tableName="treatment_drug" indexName="idx_treatment_drug_prescription_id">
+            <column name="prescription_id"/>
+        </createIndex>
+        <createIndex tableName="treatment_drug" indexName="idx_treatment_drug_drug_id">
+            <column name="drug_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

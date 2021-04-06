@@ -1,10 +1,7 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.domain.enumeration.Blood;
-import io.dentall.totoro.domain.enumeration.Gender;
-import io.dentall.totoro.domain.enumeration.RegistrationStatus;
-import io.dentall.totoro.domain.enumeration.TagType;
+import io.dentall.totoro.domain.enumeration.*;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.AppointmentDTO;
 import io.dentall.totoro.service.dto.AppointmentSplitRelationshipDTO;
@@ -26,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -637,6 +635,26 @@ public class AppointmentService {
             }
 
             @Override
+            public String getCustomizedDisease() {
+                return appointment1To1.getPatient_CustomizedDisease();
+            }
+
+            @Override
+            public String getCustomizedBloodDisease() {
+                return appointment1To1.getPatient_CustomizedBloodDisease();
+            }
+
+            @Override
+            public String getCustomizedAllergy() {
+                return appointment1To1.getPatient_CustomizedAllergy();
+            }
+
+            @Override
+            public String getCustomizedOther() {
+                return appointment1To1.getPatient_CustomizedOther();
+            }
+
+            @Override
             public String getAvatarContentType() {
                 return appointment1To1.getPatient_AvatarContentType();
             }
@@ -881,6 +899,21 @@ public class AppointmentService {
             public Boolean getCopaymentExemption() {
                 return appointment1To1.getRegistration_Accounting_CopaymentExemption();
             }
+
+            @Override
+            public AccountingOtherDealStatus getOtherDealStatus() {
+                return appointment1To1.getRegistration_Accounting_OtherDealStatus();
+            }
+
+            @Override
+            public BigDecimal getOtherDealPrice() {
+                return appointment1To1.getRegistration_Accounting_OtherDealPrice();
+            }
+
+            @Override
+            public String getOtherDealComment() {
+                return appointment1To1.getRegistration_Accounting_OtherDealComment();
+            }
         };
     }
 
@@ -946,6 +979,10 @@ public class AppointmentService {
         Long getPatient_FirstDoctorUser_Id();
         String getPatient_CaseManager();
         Boolean getPatient_VipPatient();
+        String getPatient_CustomizedDisease();
+        String getPatient_CustomizedBloodDisease();
+        String getPatient_CustomizedAllergy();
+        String getPatient_CustomizedOther();
 
         // Registration
         RegistrationStatus getRegistration_Status();
@@ -977,6 +1014,9 @@ public class AppointmentService {
         String getRegistration_Accounting_Staff();
         Long getRegistration_Accounting_Hospital_Id();
         Boolean getRegistration_Accounting_CopaymentExemption();
+        AccountingOtherDealStatus getRegistration_Accounting_OtherDealStatus();
+        BigDecimal getRegistration_Accounting_OtherDealPrice();
+        String getRegistration_Accounting_OtherDealComment();
 
         // Doctor
         Long getDoctor_User_Id();
