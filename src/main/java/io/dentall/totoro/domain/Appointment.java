@@ -61,6 +61,9 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
     @Column(name = "first_visit")
     private Boolean firstVisit;
 
+    @Column(name = "disabled")
+    private Boolean disabled;
+
     @ManyToOne
     @JsonIgnoreProperties(value = {"appointments", "treatments", "todos", "teeth", "parents", "spouse1S"}, allowSetters = true)
     private Patient patient;
@@ -70,6 +73,15 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
 
     @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY)
     private Set<TreatmentProcedure> treatmentProcedures = null;
+
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
+    }
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -309,6 +321,7 @@ public class Appointment extends AbstractDoctorAndAuditingEntity<Appointment> im
             ", archived='" + isArchived() + "'" +
             ", contacted='" + isContacted() + "'" +
             ", firstVisit='" + isFirstVisit() + "'" +
+            ", disabled='" + getDisabled() + "'" +
             "}";
     }
 }

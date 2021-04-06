@@ -39,6 +39,7 @@ public interface NhiExtendDisposalTable {
     Boolean getCheckedAuditing();
     String getSerialNumber();
     String getReferralHospitalCode();
+    Long getDependedTreatmentProcedureId();
 
     // Relationship
     Long getDisposal_Id();

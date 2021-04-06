@@ -148,6 +148,9 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @Column(name = "vip_patient")
     private Boolean vipPatient;
 
+    @Column(name = "disabled")
+    private Boolean disabled;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "patient_parent",
                joinColumns = @JoinColumn(name = "patients_id", referencedColumnName = "id"),
@@ -200,6 +203,14 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
 
     @Column(name = "due_date")
     private LocalDate dueDate;
+
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
+    }
 
     public Long getId() {
         return id;
@@ -975,6 +986,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
             ", marriage='" + getMarriage() + "'" +
             ", permanent='" + getTeethGraphPermanentSwitch() + "'" +
             ", dueDate='" + getDueDate() + "'" +
+            ", disabled='" + getDisabled() + "'" +
             "}";
     }
 }

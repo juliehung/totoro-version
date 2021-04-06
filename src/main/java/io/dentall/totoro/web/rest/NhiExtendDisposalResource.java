@@ -15,6 +15,7 @@ import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -25,7 +26,10 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -81,11 +85,16 @@ public class NhiExtendDisposalResource {
             }
         }
 
-        NhiExtendDisposal result = nhiExtendDisposalService.save(nhiExtendDisposal);
-        log.debug("REST request to save NhiExtendDisposal result : {}", result);
-        return ResponseEntity.created(new URI("/api/nhi-extend-disposals/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        try {
+            NhiExtendDisposal result = nhiExtendDisposalService.save(nhiExtendDisposal);
+            log.debug("REST request to save NhiExtendDisposal result : {}", result);
+            return ResponseEntity.created(new URI("/api/nhi-extend-disposals/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+                .body(result);
+        } catch(DataIntegrityViolationException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "db.constraint");
+        }
+
     }
 
     /**
@@ -104,11 +113,16 @@ public class NhiExtendDisposalResource {
         if (nhiExtendDisposal.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        NhiExtendDisposal result = nhiExtendDisposalService.update(nhiExtendDisposal);
-        log.debug("REST request to update NhiExtendDisposal result : {}", result);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nhiExtendDisposal.getId().toString()))
-            .body(result);
+
+        try {
+            NhiExtendDisposal result = nhiExtendDisposalService.update(nhiExtendDisposal);
+            log.debug("REST request to update NhiExtendDisposal result : {}", result);
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, nhiExtendDisposal.getId().toString()))
+                .body(result);
+        } catch(DataIntegrityViolationException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "db.constraint");
+        }
     }
 
     /**

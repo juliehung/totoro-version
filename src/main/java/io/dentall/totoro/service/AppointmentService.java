@@ -97,6 +97,9 @@ public class AppointmentService {
         log.debug("Request to save Appointment : {}", appointment);
 
         Patient patient = getPatient(appointment);
+        if (appointment.getDisabled() != null) {
+           patient.setDisabled(appointment.getDisabled());
+        }
 
         Set<TreatmentProcedure> treatmentProcedures = appointment.getTreatmentProcedures();
         appointment = appointmentRepository.save(appointment.treatmentProcedures(null));
@@ -200,6 +203,25 @@ public class AppointmentService {
 
                 if (updateAppointment.isFirstVisit() != null) {
                     appointment.setFirstVisit(updateAppointment.isFirstVisit());
+                }
+
+                // 具有順序性，必須在 patch patient 之前做塞入
+                if (updateAppointment.getDisabled() != null) {
+                    appointment.setDisabled(updateAppointment.getDisabled());
+                    if (updateAppointment.getPatient() != null) {
+                        updateAppointment.getPatient().setDisabled(updateAppointment.getDisabled());
+                    } else {
+                        Patient patient = new Patient();
+                        Long pid =
+                            appointment != null &&
+                                appointment.getPatient() != null &&
+                                appointment.getPatient().getId() != null
+                            ? appointment.getPatient().getId()
+                            : 0L;
+                        patient.setId(pid);
+                        patient.setDisabled(updateAppointment.getDisabled());
+                        updateAppointment.setPatient(patient);
+                    }
                 }
 
                 // doctor
@@ -662,6 +684,11 @@ public class AppointmentService {
             @Override
             public LocalDate getDueDate() {
                 return appointment1To1.getPatient_DueDate();
+            }
+
+            @Override
+            public Boolean getDisabled() {
+                return appointment1To1.getDisabled();
             }
 
             @Override
