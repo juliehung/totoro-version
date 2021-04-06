@@ -28,6 +28,8 @@ Add the `help` flag on any command to see how you can use it. For example, `npm 
 
 The `npm run` command will list all of the scripts available to run for this project.
 
+NOTE: The gradle daemon may fail if OpenJDK is used instead of Oracle Java. Oracle Java can be downloaded from this [link](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html).
+
 ### Service workers
 
 Service workers are commented by default, to enable them please uncomment the following code.
