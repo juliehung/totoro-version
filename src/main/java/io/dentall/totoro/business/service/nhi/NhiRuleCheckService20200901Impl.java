@@ -202,6 +202,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
+    /**
+     * 此項有另於 PatientService 實作部分檢核，若有任何異動，請確保於他處實作的部分是否需要併同處理。
+     */
     @Override
     public NhiRuleCheckResultVM validate91004C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -513,6 +516,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
+    /**
+     * 此項有另於 PatientService 實作部分檢核，若有任何異動，請確保於他處實作的部分是否需要併同處理。
+     */
     @Override
     public NhiRuleCheckResultVM validate81(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();

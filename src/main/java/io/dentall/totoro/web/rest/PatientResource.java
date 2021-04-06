@@ -1,6 +1,7 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.domain.enumeration.PatientRelationshipType;
@@ -37,7 +38,10 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -428,6 +432,21 @@ public class PatientResource {
             return ResponseEntity.ok(new PatientNationalIdValidationVM(null));
         }
 
+    }
+
+    @GetMapping("/patients/nhi/{code}/status")
+    @Timed
+    public ResponseEntity<NhiRuleCheckResultVM> patientNhiStatus(
+        @PathVariable("code") String code,
+        @RequestParam("patientId") Long patientId
+    ) {
+        log.debug("REST request to get Patient's nhi status by patient id : {}", patientId);
+        if (!code.equals("81") &&
+            !code.equals("91004C")
+        ) {
+            throw new BadRequestAlertException("Only support nhi code 81, 91004C", ENTITY_NAME, "not.supported.nhi.code");
+        }
+        return ResponseEntity.ok(patientService.getPatientNhiStatus(code, patientId));
     }
 
 }

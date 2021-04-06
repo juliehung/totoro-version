@@ -32,4 +32,10 @@
     <include file="config/liquibase/changelog/migrationXml/20210127_weichen.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/migrationXml/20210217_weichen.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/migrationXml/20210218_weichen.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/migrationXml/20210309_weichen.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/migrationXml/20210309_weichen_2.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/migrationXml/20210315_weichen.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/migrationXml/20210325_weichen.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/migrationXml/20210329_weichen.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/migrationXml/20210331_shihfeng.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

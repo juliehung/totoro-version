@@ -39,6 +39,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "       p.medical_id as patientMedicalId," +
             "       p.gender as patientGender," +
             "       p.vip_patient as patientVipPatient," +
+            "       p.customized_disease as patientCustomizedDisease," +
+            "       p.customized_blood_disease as patientCustomizedBloodDisease," +
+            "       p.customized_allergy as patientCustomizedAllergy," +
+            "       p.customized_other as patientCustomizedOther," +
             "       d.id as disposalId," +
             "       d.treatment_procedure_signature_not_provided as disposalTreatmentProcedureSignatureNotProvided," +
             "       a.id as appointmentId," +
@@ -47,6 +51,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "       a.microscope as appointmentMicroscope," +
             "       a.base_floor as appointmentBaseFloor," +
             "       a.first_visit as appointmentFirstVisit, " +
+            "       a.disabled as appointmentDisabled, " +
             "       r.id as registrationId," +
             "       r.arrival_time as registrationArrivalTime," +
             "       r.status as registrationStatus," +
@@ -109,6 +114,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
 
     Page<AppointmentTable> findByPatient_Id(Long id, Pageable page);
 
+    Optional<AppointmentTable> findTop1ByPatient_IdAndExpectedArrivalTimeBeforeOrderByExpectedArrivalTimeDesc(Long id, Instant currentTime);
+
     List<Appointment> findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end);
 
     Collection<AppointmentTable> findByExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end);
@@ -144,7 +151,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.patient.lastModifiedBy, " +
             "appointment.patient.medicalId, " +
             "appointment.colorId, " +
-            "appointment.firstVisit" +
+            "appointment.firstVisit," +
+            "appointment.patient.customizedAllergy, " +
+            "appointment.patient.customizedBloodDisease, " +
+            "appointment.patient.customizedDisease, " +
+            "appointment.patient.customizedOther " +
             ") " +
             "from Appointment as appointment left outer join appointment.registration as registration " +
             "where appointment.expectedArrivalTime between :beginDate and :endDate ")

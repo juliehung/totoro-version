@@ -201,6 +201,11 @@ public class TableGenerator {
         }
 
         @Override
+        public Long getDependedTreatmentProcedureId() {
+            return null;
+        }
+
+        @Override
         public Long getDisposal_Id() {
             return null;
         }
@@ -414,6 +419,26 @@ public class TableGenerator {
         }
 
         @Override
+        public String getCustomizedDisease() {
+            return null;
+        }
+
+        @Override
+        public String getCustomizedBloodDisease() {
+            return null;
+        }
+
+        @Override
+        public String getCustomizedAllergy() {
+            return null;
+        }
+
+        @Override
+        public String getCustomizedOther() {
+            return null;
+        }
+
+        @Override
         public String getAvatarContentType() {
             return null;
         }
@@ -460,6 +485,11 @@ public class TableGenerator {
 
         @Override
         public LocalDate getDueDate() {
+            return null;
+        }
+
+        @Override
+        public Boolean getDisabled() {
             return null;
         }
 

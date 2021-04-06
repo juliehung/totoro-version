@@ -29,6 +29,11 @@ public interface PatientTable extends AuditingElement {
     String getNote();
     String getClinicNote();
     Instant getWriteIcTime();
+    String getCustomizedDisease();
+    String getCustomizedBloodDisease();
+    String getCustomizedAllergy();
+    String getCustomizedOther();
+
 //    byte[] getAvatar();
     String getAvatarContentType();
     Boolean getNewPatient();
@@ -40,6 +45,7 @@ public interface PatientTable extends AuditingElement {
     String getTeethGraphPermanentSwitch();
     String getIntroducer();
     LocalDate getDueDate();
+    Boolean getDisabled();
 
     Long getQuestionnaire_Id();
     Long getPatientIdentity_Id();

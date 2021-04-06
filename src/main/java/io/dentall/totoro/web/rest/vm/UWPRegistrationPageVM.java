@@ -17,6 +17,10 @@ public interface UWPRegistrationPageVM {
     Gender getPatientGender();
     String getPatientNationalId();
     Boolean getPatientVipPatient();
+    String getPatientCustomizedDisease();
+    String getPatientCustomizedBloodDisease();
+    String getPatientCustomizedAllergy();
+    String getPatientCustomizedOther();
 
     // disposal
     Long getDisposalId();
@@ -29,6 +33,7 @@ public interface UWPRegistrationPageVM {
     Boolean getAppointmentMicroscope();
     Boolean getAppointmentBaseFloor();
     Boolean getAppointmentFirstVisit();
+    Boolean getAppointmentDisabled();
 
     // registration
     Long getRegistrationId();
