@@ -2,23 +2,30 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Drug;
+import io.dentall.totoro.repository.DrugRepository;
+import io.dentall.totoro.service.DrugQueryService;
 import io.dentall.totoro.service.DrugService;
+import io.dentall.totoro.service.dto.DrugCriteria;
+import io.dentall.totoro.service.dto.PlainDisposalInfoListDTO;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
-import io.dentall.totoro.service.dto.DrugCriteria;
-import io.dentall.totoro.service.DrugQueryService;
+import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Drug.
@@ -35,9 +42,18 @@ public class DrugResource {
 
     private final DrugQueryService drugQueryService;
 
-    public DrugResource(DrugService drugService, DrugQueryService drugQueryService) {
+    private final DrugRepository drugRepository;
+
+    private final Sort defaultSort = new Sort(Sort.Direction.ASC, "order", "id");
+
+    public DrugResource(
+        DrugService drugService,
+        DrugQueryService drugQueryService,
+        DrugRepository drugRepository
+    ) {
         this.drugService = drugService;
         this.drugQueryService = drugQueryService;
+        this.drugRepository = drugRepository;
     }
 
     /**
@@ -90,10 +106,21 @@ public class DrugResource {
      */
     @GetMapping("/drugs")
     @Timed
-    public ResponseEntity<List<Drug>> getAllDrugs(DrugCriteria criteria) {
+    public ResponseEntity<List<Drug>> getAllDrugs(DrugCriteria criteria, Pageable page) {
         log.debug("REST request to get Drugs by criteria: {}", criteria);
-        List<Drug> entityList = drugQueryService.findByCriteria(criteria);
-        return ResponseEntity.ok().body(entityList);
+        page.getSortOr(defaultSort);
+        Page<Drug> entityList = drugQueryService.findByCriteria(criteria, page);
+        HttpHeaders headers = new HttpHeaders();
+        try {
+            headers = PaginationUtil.generatePaginationHttpHeaders(entityList, "/api/drugs");
+        } catch (Exception e) {
+            // do nothing
+        }
+
+        return ResponseEntity
+            .ok()
+            .headers(headers)
+            .body(entityList.getContent());
     }
 
     /**
@@ -123,4 +150,15 @@ public class DrugResource {
         return ResponseUtil.wrapOrNotFound(drug);
     }
 
+    @GetMapping("/drugs/brief")
+    @Timed
+    public List<PlainDisposalInfoListDTO> getBriefDrug() {
+        log.debug("REST request to get brief Drug");
+        return drugRepository.findAll(defaultSort).stream()
+            .map(drug -> {
+                PlainDisposalInfoListDTO vm = new PlainDisposalInfoListDTO();
+                return vm.id(drug.getId()).code("").name(drug.getName());
+            })
+            .collect(Collectors.toList());
+    }
 }

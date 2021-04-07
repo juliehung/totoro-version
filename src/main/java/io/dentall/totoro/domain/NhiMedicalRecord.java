@@ -182,17 +182,20 @@ public class NhiMedicalRecord implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NhiMedicalRecord that = (NhiMedicalRecord) o;
+        if (nhiExtendPatient == null || nhiExtendPatient.getId() == null) {
             return false;
         }
-        NhiMedicalRecord nhiMedicalRecord = (NhiMedicalRecord) o;
-        if (nhiMedicalRecord.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), nhiMedicalRecord.getId());
+        return Objects.equals(date, that.date) &&
+            Objects.equals(nhiCategory, that.nhiCategory) &&
+            Objects.equals(nhiCode, that.nhiCode) &&
+            Objects.equals(part, that.part) &&
+            Objects.equals(usage, that.usage) &&
+            Objects.equals(total, that.total) &&
+            Objects.equals(note, that.note) &&
+            nhiExtendPatient.getId().equals(that.nhiExtendPatient.getId());
     }
 
     @Override

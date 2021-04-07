@@ -4,16 +4,22 @@ import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.LedgerBusinessService;
 import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.service.LedgerQueryService;
+import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.service.dto.LedgerCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.web.rest.vm.LedgerVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Ledger.
@@ -30,14 +36,19 @@ public class LedgerBusinessResource {
 
     private final LedgerQueryService ledgerQueryService;
 
+    private final PatientService patientService;
+
     public LedgerBusinessResource(
         LedgerBusinessService ledgerBusinessService,
-        LedgerQueryService ledgerQueryService
+        LedgerQueryService ledgerQueryService,
+        PatientService patientService
     ) {
         this.ledgerBusinessService = ledgerBusinessService;
         this.ledgerQueryService = ledgerQueryService;
+        this.patientService = patientService;
     }
 
+    @Deprecated
     @PostMapping("/ledgers")
     @Timed
     public ResponseEntity<Ledger> createLedger(@Valid @RequestBody Ledger ledger) {
@@ -50,11 +61,15 @@ public class LedgerBusinessResource {
         return new ResponseEntity<>(vm, HttpStatus.CREATED);
     }
 
+    /**
+     * 2021-03-17: 當前僅使用 patientId, date 兩項 query string
+     */
     @GetMapping("/ledgers")
     @Timed
-    public ResponseEntity<List<Ledger>> getLedger(
+    public ResponseEntity<List<LedgerVM>> getLedger(
         LedgerCriteria criteria,
-        @RequestParam(name = "headOnly", required = false) boolean headOnly
+        @RequestParam(name = "headOnly", required = false) boolean headOnly,
+        Pageable pageable
     ) {
         log.debug("REST request to find ledgers by id");
 
@@ -62,7 +77,27 @@ public class LedgerBusinessResource {
             criteria.getDate() != null ||
             criteria.getProjectCode() != null
         ) {
-            return new ResponseEntity<>(ledgerQueryService.findByCriteria(criteria), HttpStatus.OK);
+            Page<Ledger> page = ledgerQueryService.findByCriteria(criteria, pageable);
+            List<LedgerVM> content = page.getContent().stream()
+                .map(l -> {
+
+                    LedgerVM vm = new LedgerVM();
+                    vm.setLedger(l);
+
+                    if (l != null &&
+                        l.getPatientId() != null
+                    ) {
+                        vm.setPatient(patientService.findPatientById(l.getPatientId()));
+                    }
+
+                    return vm;
+                })
+                .collect(Collectors.toList());
+
+            return ResponseEntity
+                .ok()
+                .headers(PaginationUtil.generatePaginationHttpHeaders(page, "/api/business/ledgers"))
+                .body(page != null? content: null);
         }
 
         Long id = criteria.getId() == null? null: criteria.getId().getEquals();
@@ -80,7 +115,10 @@ public class LedgerBusinessResource {
             throw new BadRequestAlertException("Gid must be fulfilled and id must be empty for finding group", ENTITY_NAME, "paraconstraint");
         }
 
-        List<Ledger> vm = ledgerBusinessService.findRecords(id, gid, headOnly);
+        List<LedgerVM> vm = ledgerBusinessService.findRecords(id, gid, headOnly).stream()
+            .map(LedgerVM::new)
+            .collect(Collectors.toList());
+
         return new ResponseEntity<>(vm, HttpStatus.OK);
 
     }

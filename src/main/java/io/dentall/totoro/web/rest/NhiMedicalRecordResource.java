@@ -11,6 +11,7 @@ import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.NhiMedicalRecordVM;
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,17 @@ public class NhiMedicalRecordResource {
         if (nhiMedicalRecord.getId() != null) {
             throw new BadRequestAlertException("A new nhiMedicalRecord cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        NhiMedicalRecordCriteria criteria = new NhiMedicalRecordCriteria();
+        LongFilter lf = new LongFilter();
+        lf.setEquals(nhiMedicalRecord.getNhiExtendPatient().getId());
+        criteria.setNhiExtendPatientId(lf);
+        if (nhiMedicalRecordQueryService.findByCriteria(criteria).stream()
+            .anyMatch(queriedValue -> queriedValue.equals(nhiMedicalRecord))
+        ) {
+            throw new BadRequestAlertException("Already has this nhi medical record", ENTITY_NAME, "nhi.medical.record.duplicated");
+        }
+
         NhiMedicalRecord result = nhiMedicalRecordService.save(nhiMedicalRecord);
         return ResponseEntity.created(new URI("/api/nhi-medical-records/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
