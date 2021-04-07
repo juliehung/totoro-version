@@ -74,8 +74,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "         left join treatment_procedure tp on d.id = tp.disposal_id" +
             "         left join patient p on a.patient_id = p.id" +
             "         left join jhi_user u on a.doctor_user_id = u.id" +
-            "         left join (select max(id) as mxId, disposal_id from nhi_extend_disposal group by disposal_id) mned on d.id = mned.disposal_id" +
-            "         left join nhi_extend_disposal ned on mned.mxId = ned.id" +
+            "         left join nhi_extend_disposal ned on ned.id = (select max(id) from nhi_extend_disposal ned2 where ned2.disposal_id = d.id)" +
             "         left join accounting acc on r.accounting_id = acc.id " +
             " where a.expected_arrival_time between ?1 and ?2 " +
             "  and a.status <> 'CANCEL' " +
@@ -106,7 +105,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "         ned.A23," +
             "         ned.A54," +
             "         acc.transaction_time" +
-            " order by a.expected_arrival_time;"
+            " order by a.expected_arrival_time"
     )
     List<UWPRegistrationPageVM> findAppointmentWithTonsOfDataForUWPRegistrationPage(Instant start, Instant end);
 
