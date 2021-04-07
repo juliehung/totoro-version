@@ -53,6 +53,8 @@ spring:
                 implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         properties:
             hibernate.order_by.default_null_ordering: last
+            hibernate.session_factory.statement_inspector: com.google.cloud.sqlcommenter.schibernate.SCHibernate
+
     messages:
         basename: i18n/messages
     mvc:
