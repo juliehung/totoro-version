@@ -131,7 +131,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.patient.gender, " +
             "appointment.patient.phone, " +
             "appointment.patient.vipPatient, " +
-            "appointment.patient.disabled, " +
             "appointment.expectedArrivalTime, " +
             "appointment.doctor, " +
             "appointment.requiredTreatmentTime, " +
@@ -147,7 +146,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.patient.lastModifiedBy, " +
             "appointment.patient.medicalId, " +
             "appointment.colorId, " +
-            "appointment.firstVisit" +
+            "appointment.firstVisit, " +
+            "appointment.disabled " +
             ") " +
             "from Appointment as appointment left outer join appointment.registration as registration " +
             "where appointment.expectedArrivalTime between :beginDate and :endDate ")
