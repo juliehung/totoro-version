@@ -16,6 +16,8 @@ public class AppointmentDTO {
 
     private final String patientDisplayName;
 
+    private final Boolean patientDisabled;
+
     private final LocalDate birth;
 
     private final String nationalId;
@@ -34,6 +36,7 @@ public class AppointmentDTO {
 
     private final Boolean microscope;
 
+    @Deprecated
     private final Boolean baseFloor;
 
     private final Gender gender;
@@ -59,7 +62,7 @@ public class AppointmentDTO {
     private final Boolean firstVisit;
 
     public AppointmentDTO(Long patientId, String patientName, String patientDisplayName, LocalDate birth,
-            String nationalId, Gender gender, String phone, Boolean vipPatient, Instant expectedArrivalTime, ExtendUser doctor,
+            String nationalId, Gender gender, String phone, Boolean vipPatient, Boolean patientDisabled, Instant expectedArrivalTime, ExtendUser doctor,
             Integer requiredTreatmentTime, String note, Boolean microscope, Boolean baseFloor, AppointmentStatus status,
             Instant registerArrivalTime, Long id, Boolean newPatient, RegistrationStatus registrationStatus,
             Instant patientLastModifiedDate, String patientLastModifiedBy, String patientMedicalId, Integer colorId,
@@ -67,6 +70,7 @@ public class AppointmentDTO {
         this.patientId = patientId;
         this.patientName = patientName;
         this.patientDisplayName = patientDisplayName;
+        this.patientDisabled = patientDisabled;
         this.birth = birth;
         this.nationalId = nationalId;
         this.phone = phone;
@@ -88,6 +92,10 @@ public class AppointmentDTO {
         this.patientMedicalId = patientMedicalId;
         this.colorId = colorId;
         this.firstVisit = firstVisit;
+    }
+
+    public Boolean getPatientDisabled() {
+        return patientDisabled;
     }
 
     public Boolean getMicroscope() {
