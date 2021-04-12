@@ -40,7 +40,7 @@ public class MonthAppointmentVM {
     @Deprecated
     private final Boolean baseFloor;
 
-    private final Boolean patientDisabled;
+    private final Boolean disabled;
 
     private final Gender gender;
 
@@ -70,7 +70,7 @@ public class MonthAppointmentVM {
         this.patientId = appointmentDTO.getPatientId();
         this.patientName = appointmentDTO.getPatientName();
         this.patientDisplayName = appointmentDTO.getPatientDisplayName();
-        this.patientDisabled = appointmentDTO.getPatientDisabled();
+        this.disabled = appointmentDTO.getDisabled();
         this.birth = appointmentDTO.getBirth();
         this.nationalId = appointmentDTO.getNationalId();
         this.phone = appointmentDTO.getPhone();
@@ -92,6 +92,10 @@ public class MonthAppointmentVM {
         this.medicalId = appointmentDTO.getPatientMedicalId();
         this.colorId = appointmentDTO.getColorId();
         this.firstVisit = appointmentDTO.getFirstVisit();
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
     }
 
     public Integer getColorId() {
