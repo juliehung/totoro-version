@@ -946,6 +946,7 @@ public class AppointmentService {
         Long getPatient_FirstDoctorUser_Id();
         String getPatient_CaseManager();
         Boolean getPatient_VipPatient();
+        Boolean getPatient_Disabled();
 
         // Registration
         RegistrationStatus getRegistration_Status();

@@ -46,6 +46,7 @@ public class PatientMapper {
         patient.setDueDate(patientTable.getDueDate());
         patient.setCaseManager(patientTable.getCaseManager());
         patient.setVipPatient(patientTable.getVipPatient());
+        patient.setDisabled(patientTable.getDisabled());
 
         // Relationship
         if (patientTable.getQuestionnaire_Id() != null) {
