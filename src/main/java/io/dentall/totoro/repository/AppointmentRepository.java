@@ -131,6 +131,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.patient.gender, " +
             "appointment.patient.phone, " +
             "appointment.patient.vipPatient, " +
+            "appointment.patient.disabled, " +
             "appointment.expectedArrivalTime, " +
             "appointment.doctor, " +
             "appointment.requiredTreatmentTime, " +
