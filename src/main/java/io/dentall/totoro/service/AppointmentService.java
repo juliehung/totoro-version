@@ -983,6 +983,7 @@ public class AppointmentService {
         String getPatient_CustomizedBloodDisease();
         String getPatient_CustomizedAllergy();
         String getPatient_CustomizedOther();
+        Boolean getPatient_Disabled();
 
         // Registration
         RegistrationStatus getRegistration_Status();

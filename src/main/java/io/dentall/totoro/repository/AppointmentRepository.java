@@ -151,10 +151,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             "appointment.patient.medicalId, " +
             "appointment.colorId, " +
             "appointment.firstVisit," +
-            "appointment.patient.customizedAllergy, " +
-            "appointment.patient.customizedBloodDisease, " +
             "appointment.patient.customizedDisease, " +
-            "appointment.patient.customizedOther " +
+            "appointment.patient.customizedBloodDisease, " +
+            "appointment.patient.customizedAllergy, " +
+            "appointment.patient.customizedOther, " +
+            "appointment.disabled " +
             ") " +
             "from Appointment as appointment left outer join appointment.registration as registration " +
             "where appointment.expectedArrivalTime between :beginDate and :endDate ")
