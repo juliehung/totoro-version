@@ -21,6 +21,7 @@ import io.dentall.totoro.web.rest.vm.DisposalV2VM;
 import io.dentall.totoro.web.rest.vm.PlainDisposalInfoVM;
 import io.dentall.totoro.web.rest.vm.SameTreatmentVM;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Disposal.
@@ -294,7 +296,12 @@ public class DisposalResource {
         @RequestParam(name = "begin") Instant begin,
         @RequestParam(name = "end") Instant end
     ) {
-       return disposalService.findSameTreatment(patientId, begin, end);
+       return disposalService.findSameTreatment(patientId, begin, end).stream()
+           .filter(Objects::nonNull)
+           .filter(vm -> vm.getTreatmentProcedures_NhiProcedure_code() != null &&
+               StringUtils.isNotBlank(vm.getNhiExtendDisposals_a18())
+           )
+           .collect(Collectors.toList());
     }
 
     @GetMapping("/disposals/plain")
