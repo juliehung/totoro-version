@@ -37,7 +37,10 @@ public class MonthAppointmentVM {
 
     private final Boolean microscope;
 
+    @Deprecated
     private final Boolean baseFloor;
+
+    private final Boolean disabled;
 
     private final Gender gender;
 
@@ -91,6 +94,7 @@ public class MonthAppointmentVM {
         this.patientId = appointmentDTO.getPatientId();
         this.patientName = appointmentDTO.getPatientName();
         this.patientDisplayName = appointmentDTO.getPatientDisplayName();
+        this.disabled = appointmentDTO.getDisabled();
         this.birth = appointmentDTO.getBirth();
         this.nationalId = appointmentDTO.getNationalId();
         this.phone = appointmentDTO.getPhone();
@@ -116,6 +120,10 @@ public class MonthAppointmentVM {
         this.patientCustomizedBloodDisease = appointmentDTO.getPatientCustomizedBloodDisease();
         this.patientCustomizedAllergy = appointmentDTO.getPatientCustomizedAllergy();
         this.patientCustomizedOther = appointmentDTO.getPatientCustomizedOther();
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
     }
 
     public Integer getColorId() {

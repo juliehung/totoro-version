@@ -24,6 +24,7 @@ public class AppointmentMapper {
         appointment.setArchived(appointmentTable.getArchived());
         appointment.setContacted(appointmentTable.getContacted());
         appointment.setFirstVisit(appointmentTable.getFirstVisit());
+        appointment.setDisabled(appointmentTable.getDisabled());
 
         // Relationship
         if (appointmentTable.getPatient_Id() != null) {
