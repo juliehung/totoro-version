@@ -1647,9 +1647,11 @@ public class NhiRuleCheckUtil {
                         .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                         .message(
                             String.format(
-                                NhiRuleCheckFormat.D1_3.getFormat(),
+                                // 91004C:  91015C(來源-110/01/01) 90天內不得申報 91004C。
+                                // D1_2("%s:  %s(%s-%s) %s 天內不得申報 %s"),
+                                // 90012C:  37 已申報 92013C(來源-110/01/01)
+                                NhiRuleCheckFormat.D1_2.getFormat(),
                                 dto.getNhiExtendTreatmentProcedure().getA73(),
-                                tooth,
                                 match.getA73(),
                                 this.classifySourceType(
                                     NhiRuleCheckSourceType.SYSTEM_RECORD,
@@ -1658,7 +1660,11 @@ public class NhiRuleCheckUtil {
                                     dto
                                 ),
                                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
-                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                                ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
+                                    ?deciduousToothLimitDays
+                                    :permanentToothLimitDays,
+                                dto.getNhiExtendTreatmentProcedure().getA73()
                             )
                         );
                 }
