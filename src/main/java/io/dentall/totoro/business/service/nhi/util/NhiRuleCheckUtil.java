@@ -778,7 +778,7 @@ public class NhiRuleCheckUtil {
     public List<NhiExtendTreatmentProcedure> findPatientTreatmentProcedureAtCodes(Long patientId, List<String> codes) {
         List<String> parsedCodes = this.parseNhiCode(codes);
         return nhiExtendTreatmentProcedureRepository
-            .findByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndCodeInOrderByA71Desc(patientId, parsedCodes)
+            .findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(patientId, parsedCodes)
             .stream()
             .map(nhiExtendTreatmentProcedureMapper::nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable)
             .collect(Collectors.toList());
