@@ -2051,6 +2051,13 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
     }
 
     @Override
+    public NhiRuleCheckResultVM validate89088C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+        // Do nothing
+        return vm;
+    }
+
+    @Override
     public NhiRuleCheckResultVM validate89101C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
