@@ -2176,7 +2176,7 @@ public class NhiRuleCheckUtil {
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("任意時間點未曾申報過指定代碼");
+            .validateTitle("任意時間點未曾申報過指定代碼 (資料來源 IC card)");
 
         List<NhiMedicalRecord> matches =
             this.findPatientMedicalRecordAtCodes(dto.getPatient().getId(), codes);
@@ -2196,25 +2196,6 @@ public class NhiRuleCheckUtil {
                 )
             );
         }
-
-        return result;
-    }
-
-    /**
-     * 過去時間內，有存在所有指定代碼
-     * @param dto
-     * @param limitDays
-     * @param codes
-     * @return
-     */
-    public NhiRuleCheckResultDTO isDependOnSpecificTreatments(
-        NhiRuleCheckDTO dto,
-        Period limitDays,
-        List<String> codes
-    ) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("過去時間內，有存在所有指定代碼");
 
         return result;
     }
