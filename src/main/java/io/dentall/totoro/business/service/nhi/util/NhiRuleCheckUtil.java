@@ -1668,7 +1668,8 @@ public class NhiRuleCheckUtil {
         NhiRuleCheckDTO dto,
         List<String> codes,
         Period deciduousToothLimitDays,
-        Period permanentToothLimitDays
+        Period permanentToothLimitDays,
+        NhiRuleCheckFormat format
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validateTitle("病患 牙齒 是否有 健保代碼 於某時間前已被申報過")
@@ -1693,11 +1694,12 @@ public class NhiRuleCheckUtil {
                     result.isValidated()
                 ) {
                     LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
-                    result
-                        .validated(false)
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                        .message(
-                            String.format(
+
+                    String msg = "";
+
+                    switch (format) {
+                        case D1_2:
+                            msg = String.format(
                                 NhiRuleCheckFormat.D1_2.getFormat(),
                                 dto.getNhiExtendTreatmentProcedure().getA73(),
                                 match.getA73(),
@@ -1713,8 +1715,32 @@ public class NhiRuleCheckUtil {
                                     ?deciduousToothLimitDays.getDays()
                                     :permanentToothLimitDays.getDays(),
                                 dto.getNhiExtendTreatmentProcedure().getA73()
-                            )
-                        );
+                            );
+                            break;
+                        case D1_3:
+                            msg = String.format(
+                                NhiRuleCheckFormat.D1_3.getFormat(),
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
+                                tooth,
+                                match.getA73(),
+                                this.classifySourceType(
+                                    NhiRuleCheckSourceType.SYSTEM_RECORD,
+                                    matchDate,
+                                    match.getNhiExtendDisposal() != null ?match.getNhiExtendDisposal().getId() :null,
+                                    dto
+                                ),
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+                            );
+                            break;
+                        default:
+                            break;
+                    }
+
+                    result
+                        .validated(false)
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                        .message(msg);
                 }
             });
 
