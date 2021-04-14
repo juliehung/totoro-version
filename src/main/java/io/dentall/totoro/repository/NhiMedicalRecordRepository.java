@@ -28,4 +28,6 @@ public interface NhiMedicalRecordRepository extends JpaRepository<NhiMedicalReco
         Long _3rdPatientId,
         String _3rdDateString
     );
+
+    List<NhiMedicalRecord> findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderBOrderByDateDesc(Long patientId, List<String> codes);
 }

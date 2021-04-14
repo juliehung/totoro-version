@@ -775,6 +775,20 @@ public class NhiRuleCheckUtil {
         return matchedNhiMedicalRecord;
     }
 
+    public List<NhiExtendTreatmentProcedure> findPatientTreatmentProcedureAtCodes(Long patientId, List<String> codes) {
+        List<String> parsedCodes = this.parseNhiCode(codes);
+        return nhiExtendTreatmentProcedureRepository
+            .findByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndCodeInOrderByA71Desc(patientId, parsedCodes)
+            .stream()
+            .map(nhiExtendTreatmentProcedureMapper::nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable)
+            .collect(Collectors.toList());
+    }
+
+    public List<NhiMedicalRecord> findPatientMedicalRecordAtCodes(Long patientId, List<String> codes) {
+        List<String> parsedCodes = this.parseNhiCode(codes);
+        return nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(patientId, parsedCodes);
+    }
+
     /**
      * 指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。
      *
@@ -2103,6 +2117,104 @@ public class NhiRuleCheckUtil {
             }
 
         }
+
+        return result;
+    }
+
+    /**
+     * 任意時間點未曾申報過指定代碼
+     * @param dto
+     * @param codes
+     * @return
+     */
+    public NhiRuleCheckResultDTO isNoTreatment(
+        NhiRuleCheckDTO dto,
+        List<String> codes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("任意時間點未曾申報過指定代碼");
+
+        List<NhiExtendTreatmentProcedure> matches =
+            this.findPatientTreatmentProcedureAtCodes(dto.getPatient().getId(), codes);
+
+        result.validated(matches != null && matches.size() > 0);
+
+        if (!result.isValidated()) {
+            NhiExtendTreatmentProcedure match = matches.get(0);
+            List<NhiExtendDisposalTable> nedt =
+                nhiExtendDisposalRepository.findByDisposal_TreatmentProcedures_Id(match.getId(), NhiExtendDisposalTable.class);
+            result.message(
+                String.format(
+                    NhiRuleCheckFormat.D1_1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    match.getA73(),
+                    this.classifySourceType(
+                        NhiRuleCheckSourceType.SYSTEM_RECORD,
+                        DateTimeUtil.transformROCDateToLocalDate(match.getA71()),
+                        nedt != null && nedt.size() > 0 ?nedt.get(0).getId() :null,
+                        dto
+                    ),
+                    DateTimeUtil.transformA71ToDisplay(match.getA71()),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
+            );
+        }
+
+        return result;
+    }
+
+    /**
+     * 任意時間點未曾申報過指定代碼 (資料來源 IC card)
+     * @param dto
+     * @param codes
+     * @return
+     */
+    public NhiRuleCheckResultDTO isNoTreatmentByNhiMedicalRecord(
+        NhiRuleCheckDTO dto,
+        List<String> codes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("任意時間點未曾申報過指定代碼");
+
+        List<NhiMedicalRecord> matches =
+            this.findPatientMedicalRecordAtCodes(dto.getPatient().getId(), codes);
+
+        result.validated(matches != null && matches.size() > 0);
+
+        if (!result.isValidated()) {
+            NhiMedicalRecord match = matches.get(0);
+            result.message(
+                String.format(
+                    NhiRuleCheckFormat.D1_1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    match.getNhiCode(),
+                    NhiRuleCheckSourceType.NHI_CARD_RECORD,
+                    DateTimeUtil.transformA71ToDisplay(match.getDate()),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
+            );
+        }
+
+        return result;
+    }
+
+    /**
+     * 過去時間內，有存在所有指定代碼
+     * @param dto
+     * @param limitDays
+     * @param codes
+     * @return
+     */
+    public NhiRuleCheckResultDTO isDependOnSpecificTreatments(
+        NhiRuleCheckDTO dto,
+        Period limitDays,
+        List<String> codes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("過去時間內，有存在所有指定代碼");
 
         return result;
     }

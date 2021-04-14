@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -69,5 +68,7 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
 
     // 查詢所有 nhi extend procedure，且包含輸入之健保代碼，且在指定病患下
     List<NhiExtendTreatmentProcedureTable> findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(Long patientId, List<String> a73s);
+
+    List<NhiExtendTreatmentProcedureTable> findByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndCodeInOrderByA71Desc(Long patientId, List<String> codes);
 
 }
