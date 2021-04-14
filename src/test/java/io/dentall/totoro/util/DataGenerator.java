@@ -14,9 +14,22 @@ public class DataGenerator {
 
     public static final Long ID_2 = 2L;
 
+    public static final String PATIENT_NAME_1 = "AAA";
+
+    public static final String PATIENT_NAME_2 = "BBB";
+
+    public static final String PATIENT_PHONE_1 = "0000000000";
+
+    public static final String PATIENT_PHONE_2 = "1111111111";
+
+
     public static final String PATIENT_IDENTITY_1 = "001";
 
     public static final String PATIENT_IDENTITY_2 = "002";
+
+    public static final String NHI_CATEGORY_1 = "02";
+
+    public static final String NHI_CATEGORY_2 = "AB";
 
     public static final String NHI_CODE_1 = "FAKE1";
 
