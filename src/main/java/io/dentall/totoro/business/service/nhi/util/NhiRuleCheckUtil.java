@@ -2165,7 +2165,7 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 任意時間點未曾申報過指定代碼 (資料來源 IC card)
+     * 任意時間點未曾申報過指定代碼 (資料來源 IC)
      * @param dto
      * @param codes
      * @return
@@ -2176,7 +2176,7 @@ public class NhiRuleCheckUtil {
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("任意時間點未曾申報過指定代碼 (資料來源 IC card)");
+            .validateTitle("任意時間點未曾申報過指定代碼 (資料來源 IC)");
 
         List<NhiMedicalRecord> matches =
             this.findPatientMedicalRecordAtCodes(dto.getPatient().getId(), codes);
@@ -2196,6 +2196,102 @@ public class NhiRuleCheckUtil {
                 )
             );
         }
+
+        return result;
+    }
+
+    /**
+     * 同牙未曾申報過，指定代碼
+     * @param dto
+     * @param codes
+     * @return
+     */
+    public NhiRuleCheckResultDTO isNoTreatmentAtSpecificTooth(
+        NhiRuleCheckDTO dto,
+        List<String> codes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("同牙未曾申報過，指定代碼");
+
+        List<String> currentTeeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
+
+        this.findPatientTreatmentProcedureAtCodes(dto.getPatient().getId(), codes)
+            .forEach(netp -> {
+                List<String> oldTeeth = ToothUtil.splitA74(netp.getA74());
+                currentTeeth
+                    .forEach(currentTooth -> {
+                        if (result.isValidated() && oldTeeth.contains(currentTooth)) {
+                            List<NhiExtendDisposalTable> nedt =
+                                nhiExtendDisposalRepository.findByDisposal_TreatmentProcedures_Id(netp.getId(), NhiExtendDisposalTable.class);
+
+                            result.validated(false)
+                                .message(
+                                String.format(
+                                    NhiRuleCheckFormat.D1_3.getFormat(),
+                                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                                    currentTooth,
+                                    netp.getA73(),
+                                    this.classifySourceType(
+                                        NhiRuleCheckSourceType.SYSTEM_RECORD,
+                                        DateTimeUtil.transformROCDateToLocalDate(netp.getA71()),
+                                        nedt != null && nedt.size() > 0 ?nedt.get(0).getId() :null,
+                                        dto
+                                    ),
+                                    DateTimeUtil.transformA71ToDisplay(netp.getA71())
+                                )
+                            );
+                        }
+                    });
+            });
+
+        return result;
+    }
+
+    /**
+     * 同牙未曾申報過，指定代碼 (資料來源 IC)
+     * @param dto
+     * @param codes
+     * @return
+     */
+    public NhiRuleCheckResultDTO isNoNhiMedicalRecordAtSpecificTooth(
+        NhiRuleCheckDTO dto,
+        List<String> codes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("同牙未曾申報過，指定代碼 (資料來源 IC)");
+
+        List<String> currentTeeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
+
+        this.findPatientMedicalRecordAtCodes(dto.getPatient().getId(), codes)
+            .forEach(netp -> {
+                List<String> oldTeeth = ToothUtil.splitA74(netp.getPart());
+                currentTeeth
+                    .forEach(currentTooth -> {
+                        if (result.isValidated() && oldTeeth.contains(currentTooth)) {
+                            List<NhiExtendDisposalTable> nedt =
+                                nhiExtendDisposalRepository.findByDisposal_TreatmentProcedures_Id(netp.getId(), NhiExtendDisposalTable.class);
+
+                            result.validated(false)
+                                .message(
+                                    String.format(
+                                        NhiRuleCheckFormat.D1_3.getFormat(),
+                                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                                        currentTooth,
+                                        netp.getPart(),
+                                        this.classifySourceType(
+                                            NhiRuleCheckSourceType.SYSTEM_RECORD,
+                                            DateTimeUtil.transformROCDateToLocalDate(netp.getDate()),
+                                            nedt != null && nedt.size() > 0 ?nedt.get(0).getId() :null,
+                                            dto
+                                        ),
+                                        DateTimeUtil.transformA71ToDisplay(netp.getDate())
+                                    )
+                                );
+                        }
+                    });
+            });
 
         return result;
     }
