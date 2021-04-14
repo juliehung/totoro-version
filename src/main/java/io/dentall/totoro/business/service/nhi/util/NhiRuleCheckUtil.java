@@ -1710,8 +1710,8 @@ public class NhiRuleCheckUtil {
                                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
                                     matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
                                 ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
-                                    ?deciduousToothLimitDays
-                                    :permanentToothLimitDays,
+                                    ?deciduousToothLimitDays.getDays()
+                                    :permanentToothLimitDays.getDays(),
                                 dto.getNhiExtendTreatmentProcedure().getA73()
                             )
                         );
