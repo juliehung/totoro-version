@@ -2057,6 +2057,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
+    // 891**C
     @Override
     public NhiRuleCheckResultVM validate89101C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -2094,16 +2095,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2112,14 +2115,6 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
                 ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedSurface(
-                dto,
-                SurfaceConstraint.MAX_3_SURFACES
             ),
             vm
         );
@@ -2132,16 +2127,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2154,14 +2151,6 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedSurface(
-                dto,
-                SurfaceConstraint.MAX_3_SURFACES
-            ),
-            vm
-        );
-
         return vm;
     }
 
@@ -2170,16 +2159,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2187,14 +2178,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.FRONT_TOOTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedSurface(
-                dto,
-                SurfaceConstraint.MAX_2_SURFACES
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
@@ -2207,16 +2191,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2224,14 +2210,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.FRONT_TOOTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedSurface(
-                dto,
-                SurfaceConstraint.MAX_2_SURFACES
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
@@ -2244,16 +2223,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2261,14 +2242,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.BACK_TOOTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedSurface(
-                dto,
-                SurfaceConstraint.MAX_3_SURFACES
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
@@ -2281,16 +2255,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2298,14 +2274,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.BACK_TOOTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedSurface(
-                dto,
-                SurfaceConstraint.MAX_3_SURFACES
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
@@ -2318,16 +2287,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2335,14 +2306,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.BACK_TOOTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedSurface(
-                dto,
-                SurfaceConstraint.MAX_3_SURFACES
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
@@ -2355,16 +2319,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2385,16 +2351,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2402,14 +2370,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.FRONT_TOOTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedSurface(
-                dto,
-                SurfaceConstraint.MAX_3_SURFACES
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
@@ -2422,16 +2383,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2439,7 +2402,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.PERMANENT_TOOTH
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
@@ -2452,16 +2415,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2469,7 +2434,8 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.FRONT_TOOTH),
+                ToothConstraint.GENERAL_TOOTH
+            ),
             vm
         );
 
@@ -2481,16 +2447,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2498,14 +2466,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.BACK_TOOTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedSurface(
-                dto,
-                SurfaceConstraint.MUST_HAVE_M_D_O
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
