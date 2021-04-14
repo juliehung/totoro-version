@@ -809,7 +809,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -910,7 +910,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -1011,7 +1011,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -1112,7 +1112,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -1213,7 +1213,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -1376,7 +1376,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -1477,7 +1477,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -1578,7 +1578,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -1679,7 +1679,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -1780,7 +1780,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -1908,7 +1908,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -2009,7 +2009,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
                     dto
                 ),
                 vm
@@ -2062,16 +2062,18 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientIdentityInclude(
-                dto,
-                CopaymentCode._001
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.PT1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
             ),
             vm
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
+            nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                dto
             ),
             vm
         );
@@ -2080,14 +2082,6 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
                 ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedSurface(
-                dto,
-                SurfaceConstraint.MAX_3_SURFACES
             ),
             vm
         );

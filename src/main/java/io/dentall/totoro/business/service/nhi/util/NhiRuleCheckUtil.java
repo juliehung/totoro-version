@@ -2356,7 +2356,7 @@ public class NhiRuleCheckUtil {
      * @param dto patient.id, netp.id, excludeTreamentProcedureId
      * @return
      */
-    public NhiRuleCheckResultDTO specificRule_1_for890XXC(NhiRuleCheckDTO dto) {
+    public NhiRuleCheckResultDTO specificRule_1_for89XXXC(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
             .validated(true)
