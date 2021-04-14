@@ -1760,7 +1760,8 @@ public class NhiRuleCheckUtil {
         NhiRuleCheckDTO dto,
         List<String> codes,
         Period deciduousToothLimitDays,
-        Period permanentToothLimitDays
+        Period permanentToothLimitDays,
+        NhiRuleCheckFormat format
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validateTitle("病患 牙齒 是否有 健保代碼 於某時間前已被申報過 in IC card")
@@ -1785,25 +1786,43 @@ public class NhiRuleCheckUtil {
                     result.isValidated()
                 ) {
                     LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getPart());
-                    result
-                        .validated(false)
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                        .message(
-                            String.format(
+
+                    String msg = "";
+
+                    switch (format) {
+                        case D1_2:
+                            msg = String.format(
+                                NhiRuleCheckFormat.D1_2.getFormat(),
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
+                                match.getNhiCode(),
+                                NhiRuleCheckSourceType.NHI_CARD_RECORD,
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                                ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
+                                    ?deciduousToothLimitDays.getDays()
+                                    :permanentToothLimitDays.getDays(),
+                                dto.getNhiExtendTreatmentProcedure().getA73()
+                            );
+                            break;
+                        case D1_3:
+                            msg = String.format(
                                 NhiRuleCheckFormat.D1_3.getFormat(),
                                 dto.getNhiExtendTreatmentProcedure().getA73(),
                                 tooth,
                                 match.getNhiCode(),
-                                this.classifySourceType(
-                                    NhiRuleCheckSourceType.NHI_CARD_RECORD,
-                                    matchDate,
-                                    null,
-                                    dto
-                                ),
+                                NhiRuleCheckSourceType.NHI_CARD_RECORD,
                                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
                                     matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
-                            )
-                        );
+                            );
+                            break;
+                        default:
+                            break;
+                    }
+
+                    result
+                        .validated(false)
+                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                        .message(msg);
                 }
             });
 

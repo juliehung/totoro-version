@@ -111,7 +111,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("92013C~92015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -768,7 +770,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -867,7 +871,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -966,7 +972,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -1065,7 +1073,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -1164,7 +1174,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -1290,7 +1302,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -1389,7 +1403,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -1488,7 +1504,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -1587,7 +1605,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -1686,7 +1706,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -1812,7 +1834,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
@@ -1911,7 +1935,9 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
                     dto,
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_3
+                ),
                 vm
             );
         }
