@@ -1135,25 +1135,14 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isCodeBeforeDate(
                 dto,
-                Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH),
+                Arrays.asList("89006C"),
+                DateTimeUtil.NHI_3_MONTH,
+                NhiRuleCheckFormat.D4_1
+            ),
             vm
         );
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("89006C"),
-                    DateTimeUtil.NHI_3_MONTH,
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
@@ -1558,52 +1547,24 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
+            nhiRuleCheckUtil.isCodeBeforeDate(
                 dto,
-                ToothConstraint.PERMANENT_TOOTH
+                Arrays.asList("89013C"),
+                DateTimeUtil.NHI_18_MONTH,
+                NhiRuleCheckFormat.D4_1
             ),
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
-                dto,
-                Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
-                null,
-                DateTimeUtil.NHI_18_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                dto,
-                Arrays.asList(new String[]{"89001C~89005C", "89008C~89012C", "89014C~89015C"}.clone()),
-                null,
-                DateTimeUtil.NHI_18_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.PERMANENT_TOOTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedSurface(
-                dto,
-                SurfaceConstraint.MAX_3_SURFACES
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.PERMANENT_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
