@@ -810,6 +810,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isAllLimitedTooth(
                     dto,
                     ToothConstraint.GENERAL_TOOTH
@@ -880,6 +900,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.specificRule_1_for890XXC(
                     dto
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
                 ),
                 vm
             );
@@ -964,6 +1004,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isAllLimitedTooth(
                     dto,
                     ToothConstraint.GENERAL_TOOTH
@@ -1041,6 +1101,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isAllLimitedTooth(
                     dto,
                     ToothConstraint.FRONT_TOOTH
@@ -1111,6 +1191,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.specificRule_1_for890XXC(
                     dto
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
                 ),
                 vm
             );
@@ -1222,6 +1322,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isAllLimitedTooth(
                     dto,
                     ToothConstraint.BACK_TOOTH
@@ -1292,6 +1412,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.specificRule_1_for890XXC(
                     dto
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
                 ),
                 vm
             );
@@ -1376,6 +1516,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isAllLimitedTooth(
                     dto,
                     ToothConstraint.BACK_TOOTH
@@ -1453,6 +1613,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isAllLimitedTooth(
                     dto,
                     ToothConstraint.GENERAL_TOOTH
@@ -1523,6 +1703,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.specificRule_1_for890XXC(
                     dto
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
                 ),
                 vm
             );
@@ -1634,6 +1834,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isAllLimitedTooth(
                     dto,
                     ToothConstraint.FRONT_TOOTH
@@ -1704,6 +1924,26 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.specificRule_1_for890XXC(
                     dto
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
                 ),
                 vm
             );
