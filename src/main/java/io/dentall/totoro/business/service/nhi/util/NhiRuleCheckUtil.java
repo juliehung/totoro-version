@@ -2133,12 +2133,16 @@ public class NhiRuleCheckUtil {
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validated(true)
             .validateTitle("任意時間點未曾申報過指定代碼");
 
         List<NhiExtendTreatmentProcedure> matches =
             this.findPatientTreatmentProcedureAtCodes(dto.getPatient().getId(), codes);
 
-        result.validated(matches != null && matches.size() > 0);
+        result.validated(
+            matches == null ||
+            matches.size() == 0
+        );
 
         if (!result.isValidated()) {
             NhiExtendTreatmentProcedure match = matches.get(0);
@@ -2176,12 +2180,16 @@ public class NhiRuleCheckUtil {
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validated(true)
             .validateTitle("任意時間點未曾申報過指定代碼 (資料來源 IC)");
 
         List<NhiMedicalRecord> matches =
             this.findPatientMedicalRecordAtCodes(dto.getPatient().getId(), codes);
 
-        result.validated(matches != null && matches.size() > 0);
+        result.validated(
+            matches == null ||
+            matches.size() == 0
+        );
 
         if (!result.isValidated()) {
             NhiMedicalRecord match = matches.get(0);
@@ -2212,6 +2220,7 @@ public class NhiRuleCheckUtil {
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validated(true)
             .validateTitle("同牙未曾申報過，指定代碼");
 
         List<String> currentTeeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
@@ -2260,6 +2269,7 @@ public class NhiRuleCheckUtil {
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validated(true)
             .validateTitle("同牙未曾申報過，指定代碼 (資料來源 IC)");
 
         List<String> currentTeeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
@@ -2304,6 +2314,7 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO specificRule_1_for890XXC(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validated(true)
             .validateTitle("890XX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外");
 
         NhiExtendTreatmentProcedure outOfLimitationClause =
