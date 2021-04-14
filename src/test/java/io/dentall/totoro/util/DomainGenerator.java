@@ -1,6 +1,5 @@
 package io.dentall.totoro.util;
 
-import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.DisposalStatus;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
@@ -12,9 +11,9 @@ import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.service.TreatmentQueryService;
 import io.dentall.totoro.service.dto.TreatmentCriteria;
+import io.dentall.totoro.service.util.DateTimeUtil;
 import io.github.jhipster.service.filter.LongFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,6 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
-@SpringBootTest(classes = TotoroApp.class)
 @Transactional
 @Service
 public class DomainGenerator {
@@ -179,4 +177,22 @@ public class DomainGenerator {
         return treatmentProcedure;
     }
 
+    public NhiExtendDisposal generateNhiExtendDisposal(
+        Instant time,
+        String nhiCategory
+    ) {
+        Disposal disposal = new Disposal();
+        disposal.setDateTime(time);
+        disposal.setStatus(DisposalStatus.PERMANENT);
+        disposalRepository.save(disposal);
+
+        NhiExtendDisposal ned = new NhiExtendDisposal();
+        ned.setUploadStatus(NhiExtendDisposalUploadStatus.NORMAL);
+        ned.setA17(DateTimeUtil.transformLocalDateToRocDate(time));
+        ned.setA23(nhiCategory);
+        ned.setDisposal(disposal);
+        nhiExtendDisposalRepository.save(ned);
+
+        return ned;
+    }
 }
