@@ -45,6 +45,9 @@ public enum NhiRuleCheckFormat {
 
     // 需併同 91003C/91004C/91020C 申報
     W3_1("需併同 %s 申報"),
+
+    // 90012C: 須檢附影像
+    XRAY("%s: 須檢附影像")
     ;
 
     private String format;

@@ -1282,6 +1282,41 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
     }
 
     @Override
+    public NhiRuleCheckResultVM validate89007C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.XRAY.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
+            ),
+            vm
+        );
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.PERMANENT_TOOTH
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isMustIncludeNhiCode(dto,
+                    Arrays.asList("89001C~89015C", "89101C~89115C")),
+                vm
+            );
+        }
+
+        return vm;
+    }
+
+    @Override
     public NhiRuleCheckResultVM validate89008C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
