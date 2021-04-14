@@ -2326,7 +2326,7 @@ public class NhiRuleCheckUtil {
                 DateTimeUtil.NHI_1_MONTH,
                 dto.getExcludeTreatmentProcedureIds());
 
-        if (outOfLimitationClause != null) {
+        if (outOfLimitationClause == null) {
             NhiExtendTreatmentProcedure match =
                 this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
                     dto.getPatient().getId(),
