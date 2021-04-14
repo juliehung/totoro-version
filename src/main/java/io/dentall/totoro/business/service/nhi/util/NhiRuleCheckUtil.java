@@ -1529,9 +1529,46 @@ public class NhiRuleCheckUtil {
         SurfaceConstraint sc
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
             .validateTitle("限制牙面在 isAllLimitedSurface 以下");
 
         switch (sc) {
+            case MIN_1_SURFACES:
+                result
+                    .validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() == null &&
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_1_SURFACES.getLimitNumber()
+                    );
+
+                if (!result.isValidated()) {
+                    result.message(SurfaceConstraint.MIN_1_SURFACES.getErrorMessage());
+                }
+
+                break;
+            case MIN_2_SURFACES:
+                result
+                    .validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() == null &&
+                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_2_SURFACES.getLimitNumber()
+                    );
+
+                if (!result.isValidated()) {
+                    result.message(SurfaceConstraint.MIN_2_SURFACES.getErrorMessage());
+                }
+
+                break;
+            case MIN_3_SURFACES:
+                result
+                    .validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() == null &&
+                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_3_SURFACES.getLimitNumber()
+                    );
+
+                if (!result.isValidated()) {
+                    result.message(SurfaceConstraint.MIN_3_SURFACES.getErrorMessage());
+                }
+
+                break;
             case MAX_2_SURFACES:
                 result
                     .validated(
@@ -1647,9 +1684,6 @@ public class NhiRuleCheckUtil {
                         .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                         .message(
                             String.format(
-                                // 91004C:  91015C(來源-110/01/01) 90天內不得申報 91004C。
-                                // D1_2("%s:  %s(%s-%s) %s 天內不得申報 %s"),
-                                // 90012C:  37 已申報 92013C(來源-110/01/01)
                                 NhiRuleCheckFormat.D1_2.getFormat(),
                                 dto.getNhiExtendTreatmentProcedure().getA73(),
                                 match.getA73(),
