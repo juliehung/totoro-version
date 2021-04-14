@@ -1,8 +1,10 @@
 package io.dentall.totoro.business.service.nhi;
 
+import io.dentall.totoro.business.service.NhiRuleCheckInfoType;
 import io.dentall.totoro.business.service.nhi.util.*;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import org.springframework.stereotype.Service;
 
@@ -779,12 +781,34 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
             );
         }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-                "應於病歷詳列充填牙面部位。"
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatment(
+                    dto,
+                    Arrays.asList("90007C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
+                    dto,
+                    Arrays.asList("90007C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for890XXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(

@@ -2201,6 +2201,61 @@ public class NhiRuleCheckUtil {
     }
 
     /**
+     * 890XX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
+     * @param dto patient.id, netp.id, excludeTreamentProcedureId
+     * @return
+     */
+    public NhiRuleCheckResultDTO specificRule_1_for890XXC(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("890XX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外");
+
+        NhiExtendTreatmentProcedure outOfLimitationClause =
+            this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+                dto.getPatient().getId(),
+                dto.getNhiExtendTreatmentProcedure().getId(),
+                DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
+                Arrays.asList("90001C~90003C", "90019C", "90020C"),
+                DateTimeUtil.NHI_1_MONTH,
+                dto.getExcludeTreatmentProcedureIds());
+
+        if (outOfLimitationClause != null) {
+            NhiExtendTreatmentProcedure match =
+                this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+                    dto.getPatient().getId(),
+                    dto.getNhiExtendTreatmentProcedure().getId(),
+                    DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
+                    Arrays.asList("89006C"),
+                    DateTimeUtil.NHI_1_MONTH,
+                    dto.getExcludeTreatmentProcedureIds());
+
+            if (match != null) {
+                result.validated(false)
+                    .message(
+                        String.format(
+                            NhiRuleCheckFormat.D1_2.getFormat(),
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            "89006C",
+                            this.classifySourceType(
+                                NhiRuleCheckSourceType.SYSTEM_RECORD,
+                                DateTimeUtil.transformROCDateToLocalDate(match.getA71()),
+                                match.getNhiExtendDisposal() != null
+                                    ? match.getNhiExtendDisposal().getId()
+                                    : null,
+                                dto
+                            ),
+                            DateTimeUtil.transformA71ToDisplay(match.getA71()),
+                            DateTimeUtil.NHI_1_MONTH.getDays(),
+                            dto.getNhiExtendTreatmentProcedure().getA73()
+                        )
+                    );
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * 條件式群
      */
     // 小於 12 歲
