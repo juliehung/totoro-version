@@ -1550,7 +1550,7 @@ public class NhiRuleCheckUtil {
             case MIN_1_SURFACES:
                 result
                     .validated(
-                        dto.getNhiExtendTreatmentProcedure().getA75() == null &&
+                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
                         dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_1_SURFACES.getLimitNumber()
                     );
 
@@ -1562,8 +1562,8 @@ public class NhiRuleCheckUtil {
             case MIN_2_SURFACES:
                 result
                     .validated(
-                        dto.getNhiExtendTreatmentProcedure().getA75() == null &&
-                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_2_SURFACES.getLimitNumber()
+                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_2_SURFACES.getLimitNumber()
                     );
 
                 if (!result.isValidated()) {
@@ -1574,8 +1574,8 @@ public class NhiRuleCheckUtil {
             case MIN_3_SURFACES:
                 result
                     .validated(
-                        dto.getNhiExtendTreatmentProcedure().getA75() == null &&
-                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_3_SURFACES.getLimitNumber()
+                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_3_SURFACES.getLimitNumber()
                     );
 
                 if (!result.isValidated()) {
