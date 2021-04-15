@@ -66,6 +66,10 @@ public interface NhiRuleCheckService<A, B, O> {
 
     O validate89005C(B dto);
 
+    O validate89006C(B dto);
+
+    O validate89007C(B dto);
+
     O validate89008C(B dto);
 
     O validate89009C(B dto);
@@ -81,6 +85,8 @@ public interface NhiRuleCheckService<A, B, O> {
     O validate89014C(B dto);
 
     O validate89015C(B dto);
+
+    O validate89088C(B dto);
 
     // 891***
     O validate89101C(B dto);
