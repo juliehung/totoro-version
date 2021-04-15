@@ -2436,7 +2436,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.GENERAL_TOOTH
+                ToothConstraint.FRONT_TOOTH
             ),
             vm
         );
@@ -2468,7 +2468,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.GENERAL_TOOTH
+                ToothConstraint.BACK_TOOTH
             ),
             vm
         );
