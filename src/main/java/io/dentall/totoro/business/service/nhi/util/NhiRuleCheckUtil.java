@@ -4,15 +4,19 @@ import io.dentall.totoro.business.service.NhiRuleCheckInfoType;
 import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.config.TimeConfig;
-import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.NhiMedicalRecord;
+import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.NhiMedicalRecordDTO;
 import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
+import io.dentall.totoro.service.dto.table.PatientTable;
 import io.dentall.totoro.service.mapper.DisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
@@ -292,7 +296,7 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 作用是轉化 vm 取得到的值，檢核、查詢對應 Nhi Disposal, Nhi Treatment Procedure, Patient 資料，以利後續功能使用。
+     * 作用是轉化 body 取得到的值，檢核、查詢對應 Nhi Disposal, Nhi Treatment Procedure, Patient 資料，以利後續功能使用。
      * 此 method 使用情境有二
      * 1. 診療項目 尚未被產生，需要預先進行確認，所需資料會用到 patientId, a71, a73, a74, a75，a71, a73
      * 這邊會自動計算帶入；a73 則是打 api 時就會認定想驗證的目標在 api path。
@@ -301,59 +305,103 @@ public class NhiRuleCheckUtil {
      * 並查詢取得對應資料。
      *
      * @param code 來源於 api path，及其預計想檢核的目標
-     * @param vm   來自於前端的輸入
+     * @param body 來自於前端的輸入
      * @return 後續檢核統一 `輸入` 的介面
      */
-    public NhiRuleCheckDTO convertVmToDto(@NotNull String code, @NotNull NhiRuleCheckVM vm) {
+    public NhiRuleCheckDTO convertVmToDto(
+        @NotNull String code,
+        @NotNull NhiRuleCheckBody body
+    ) {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        HashMap<Long, NhiExtendTreatmentProcedure> oldNetpMap = new HashMap<>();
+        ArrayList<Long> excludeTreatmentProcedureIds = new ArrayList<>();
+        ArrayList<String> includeNhiCode= new ArrayList<>();
 
-        // 若有指定排除的 treatment procedure id，在後續的 query result 將會排除所列項目。（應用於前端刪除項目但尚未改動到資料）
-        dto.setExcludeTreatmentProcedureIds(vm.getExcludeTreatmentProcedureIds());
-        // assign 指定同處置底下的 nhi code，以利後續規則使用
-        dto.setIncludeNhiCodes(vm.getIncludeNhiCodes());
-        // assign 轉診註記，以利後續規則使用
-        dto.setReferral(vm.isReferral());
-
-        if (vm.getPatientId() != null) {
-            assignDtoByPatientId(dto, vm.getPatientId());
-        }
-
-        if (vm.getTreatmentProcedureId() != null) {
-            assignDtoByNhiExtendTreatmentProcedureId(dto, code, vm.getTreatmentProcedureId(), vm.getPatientId());
-            assignDtoByNhiExtendDisposalId(dto, dto.getNhiExtendTreatmentProcedure().getId());
-
-            // 若有給定 a74 且 與查詢結果不同，則將 其改為 前端傳入之牙位
-            if (
-                StringUtils.isNotBlank(vm.getA74()) &&
-                !dto.getNhiExtendTreatmentProcedure().getA74().equals(vm.getA74())
-            ) {
-                dto.getNhiExtendTreatmentProcedure().setA74(vm.getA74());
-            }
-            // 若有給定 a75 且 與查詢結果不同，則將 其改為 前端傳入之牙位
-            if (
-                StringUtils.isNotBlank(vm.getA75()) &&
-                !dto.getNhiExtendTreatmentProcedure().getA75().equals(vm.getA75())
-            ) {
-                dto.getNhiExtendTreatmentProcedure().setA75(vm.getA75());
+        // Assign patient
+        if (body.getPatientId() != null) {
+            Optional<PatientTable> optionalPt = patientRepository.findPatientById(body.getPatientId());
+            if (optionalPt.isPresent()) {
+                dto.setPatient(PatientMapper.patientTableToPatient(optionalPt.get()));
+            } else {
+                dto.setPatient(new Patient());
             }
         }
 
-        // 產生暫時的 treatment 資料，在後續的檢驗中被檢核所需
-        if (vm.getPatientId() != null && vm.getTreatmentProcedureId() == null) {
-            dto.setNhiExtendTreatmentProcedure(
-                new NhiExtendTreatmentProcedure()
-                    .a71(StringUtils.isNotBlank(vm.getA71()) ? vm.getA71() : DateTimeUtil.transformLocalDateToRocDate(Instant.now()))
-                    .a73(code)
-                    .a74(vm.getA74())
-                    .a75(vm.getA75()));
+        // Assign nhi extend disposal
+        if (body.getDisposalId() != null) {
+            Optional<DisposalTable> optionalDt = disposalRepository.findDisposalById(body.getDisposalId());
+            if (optionalDt.isPresent()) {
+                // TODO: 這段效能很差，若有反應檢查很慢可以先調整此項
+                nhiExtendTreatmentProcedureRepository.findNhiExtendTreatmentProcedureByTreatmentProcedure_Disposal_Id(optionalDt.get().getId())
+                    .forEach(netp -> oldNetpMap.put(netp.getId(), netp));
+
+                List<NhiExtendDisposalTable> nedts =
+                    nhiExtendDisposalRepository.findByDisposal_IdOrderByIdDesc(optionalDt.get().getId(), NhiExtendDisposalTable.class).stream().collect(Collectors.toList());
+                if (nedts != null &&
+                    nedts.size() > 0
+                ) {
+                    NhiExtendDisposal ned = nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(
+                        nedts.get(0)
+                    );
+                    dto.setNhiExtendDisposal(
+                        ned
+                    );
+
+                }
+            }
+
+            if (dto.getNhiExtendDisposal() == null) {
+                dto.setNhiExtendDisposal(new NhiExtendDisposal());
+            }
+
+            dto.getNhiExtendDisposal().setA23(body.getNhiCategory());
         }
 
-        // 健保代碼
-        if (dto.getNhiExtendDisposal() == null) {
-            dto.setNhiExtendDisposal(new NhiExtendDisposal());
+        // Assign nhi treatment procedure a.k.a target treatment procedure
+        if (body.getTxSnapshots() != null &&
+            body.getTxSnapshots().size() > 0
+        ) {
+            body.getTxSnapshots().stream()
+                .filter(Objects::nonNull)
+                .forEach(txSnapshot -> {
+                    // General
+                    includeNhiCode.add(txSnapshot.getNhiCode());
+                    // Update
+                    if (txSnapshot.getId() != null &&
+                        oldNetpMap.containsKey(txSnapshot.getId()) &&
+                        !txSnapshot.equalsNhiExtendTreatmentProcedure(oldNetpMap.get(txSnapshot.getId()))
+                    ) {
+                        excludeTreatmentProcedureIds.add(txSnapshot.getId());
+                    }
+                    // Delete
+                    if (txSnapshot.getId() != null &&
+                        !oldNetpMap.containsKey(txSnapshot.getId())
+                    ) {
+                        excludeTreatmentProcedureIds.add(txSnapshot.getId());
+                    }
+
+                    // Check if it is belong to target nhi code
+                    if (code.equals(txSnapshot.getNhiCode())) {
+                        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure()
+                            .a71(body.getDisposalTime())
+                            .a73(txSnapshot.getNhiCode())
+                            .a74(txSnapshot.getTeeth())
+                            .a75(txSnapshot.getSurface());
+
+                        dto.setNhiExtendTreatmentProcedure(netp);
+
+                        if (txSnapshot.getId() != null  &&
+                            oldNetpMap.containsKey(txSnapshot.getId())
+                        ) {
+                            dto.getNhiExtendTreatmentProcedure().setId(txSnapshot.getId());
+                            excludeTreatmentProcedureIds.add(txSnapshot.getId());
+                        }
+                    }
+                });
         }
 
-        dto.getNhiExtendDisposal().setA23(vm.getA23());
+        dto.setExcludeTreatmentProcedureIds(excludeTreatmentProcedureIds);
+        dto.setIncludeNhiCodes(includeNhiCode);
 
         return dto;
     }

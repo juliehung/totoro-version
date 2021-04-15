@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi;
 
 import io.dentall.totoro.business.service.nhi.util.*;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 @Service
-public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiRuleCheckVM, NhiRuleCheckDTO, NhiRuleCheckResultVM> {
+public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiRuleCheckBody, NhiRuleCheckDTO, NhiRuleCheckResultVM> {
 
     private final NhiRuleCheckUtil nhiRuleCheckUtil;
 
@@ -19,13 +19,15 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
     }
 
     @Override
-    public NhiRuleCheckResultVM dispatch(String code, NhiRuleCheckVM vm) throws
+    public NhiRuleCheckResultVM dispatch(
+        String code,
+        NhiRuleCheckBody body
+    ) throws
         NoSuchMethodException,
         InvocationTargetException,
         IllegalAccessException {
-
         // 轉換至統一入口 Object
-        NhiRuleCheckDTO dto = nhiRuleCheckUtil.convertVmToDto(code, vm);
+        NhiRuleCheckDTO dto = nhiRuleCheckUtil.convertVmToDto(code, body);
 
         // 依照個代碼進行檢核
         NhiRuleCheckResultVM rvm = (NhiRuleCheckResultVM) this.getClass()

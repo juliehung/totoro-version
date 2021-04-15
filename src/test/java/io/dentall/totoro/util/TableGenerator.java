@@ -2,9 +2,8 @@ package io.dentall.totoro.util;
 
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
-import io.dentall.totoro.domain.enumeration.Blood;
-import io.dentall.totoro.domain.enumeration.Gender;
-import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
+import io.dentall.totoro.domain.enumeration.*;
+import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
 import io.dentall.totoro.service.dto.table.PatientTable;
@@ -14,20 +13,123 @@ import java.time.LocalDate;
 
 public class TableGenerator {
 
+    public static class DisposalTableGenerator implements DisposalTable {
+
+        private Long id;
+
+        public DisposalTableGenerator(Long id) {
+            this.id = id;
+        }
+
+        @Override
+        public String getCreatedBy() {
+            return null;
+        }
+
+        @Override
+        public String getLastModifiedBy() {
+            return null;
+        }
+
+        @Override
+        public Instant getCreatedDate() {
+            return null;
+        }
+
+        @Override
+        public Instant getLastModifiedDate() {
+            return null;
+        }
+
+        @Override
+        public Long getId() {
+            return id;
+        }
+
+        @Override
+        public DisposalStatus getStatus() {
+            return null;
+        }
+
+        @Override
+        public Double getTotal() {
+            return null;
+        }
+
+        @Override
+        public Instant getDateTime() {
+            return null;
+        }
+
+        @Override
+        public Instant getDateTimeEnd() {
+            return null;
+        }
+
+        @Override
+        public String getChiefComplaint() {
+            return null;
+        }
+
+        @Override
+        public String getRevisitContent() {
+            return null;
+        }
+
+        @Override
+        public DisposalRevisitInterval getRevisitInterval() {
+            return null;
+        }
+
+        @Override
+        public Integer getRevisitTreatmentTime() {
+            return null;
+        }
+
+        @Override
+        public String getRevisitComment() {
+            return null;
+        }
+
+        @Override
+        public Boolean getRevisitWillNotHappen() {
+            return null;
+        }
+
+        @Override
+        public Long getPrescription_Id() {
+            return null;
+        }
+
+        @Override
+        public Long getTodo_Id() {
+            return null;
+        }
+
+        @Override
+        public Long getRegistration_Id() {
+            return null;
+        }
+    }
+
     public static class NhiExtendDisposalTableGenerator implements NhiExtendDisposalTable {
 
         private final Long id;
 
         private final String patientIdentity;
 
+        private final String a23;
+
         public NhiExtendDisposalTableGenerator(NhiExtendDisposal ned) {
             this.id = ned.getId();
             this.patientIdentity = ned.getPatientIdentity();
+            this.a23 = ned.getA23();
         }
 
         public NhiExtendDisposalTableGenerator(Long id, String patientIdentity) {
             this.id = id;
             this.patientIdentity = patientIdentity;
+            this.a23 = "";
         }
 
         @Override
