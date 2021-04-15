@@ -19,6 +19,29 @@ public class NhiRuleCheckScript900XXC {
         this.nhiRuleCheckUtil = nhiRuleCheckUtil;
     }
 
+    public NhiRuleCheckResultVM validate90001C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate90002C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate90003C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate90007C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        return vm;
+    }
 
     public NhiRuleCheckResultVM validate90012C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -62,6 +85,37 @@ public class NhiRuleCheckScript900XXC {
                 vm
             );
         }
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate90015C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        return vm;
+    }
+
+
+    public NhiRuleCheckResultVM validate90016C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate90018C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate90019C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate90020C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         return vm;
     }
