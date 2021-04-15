@@ -924,7 +924,9 @@ public class NhiRuleCheckUtilMockTest {
             dto,
             Arrays.asList(new String[]{DataGenerator.NHI_CODE_1}.clone()),
             DateTimeUtil.NHI_12_MONTH,
-            DateTimeUtil.NHI_18_MONTH);
+            DateTimeUtil.NHI_18_MONTH,
+            NhiRuleCheckFormat.D1_3
+        );
 
         Assert.assertEquals(true, rdto.isValidated());
         Assert.assertEquals(null, rdto.getMessage());
@@ -948,8 +950,9 @@ public class NhiRuleCheckUtilMockTest {
             dto,
             Arrays.asList(new String[]{DataGenerator.NHI_CODE_1}.clone()),
             DateTimeUtil.NHI_12_MONTH,
-            DateTimeUtil.NHI_18_MONTH);
-
+            DateTimeUtil.NHI_18_MONTH,
+            NhiRuleCheckFormat.D1_3
+        );
         Assert.assertEquals(true, rdto.isValidated());
         Assert.assertEquals(null, rdto.getMessage());
     }
@@ -1005,8 +1008,9 @@ public class NhiRuleCheckUtilMockTest {
             dto,
             Arrays.asList(DataGenerator.NHI_CODE_1),
             DateTimeUtil.NHI_12_MONTH,
-            DateTimeUtil.NHI_18_MONTH);
-
+            DateTimeUtil.NHI_18_MONTH,
+            NhiRuleCheckFormat.D1_3
+        );
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
@@ -1072,8 +1076,9 @@ public class NhiRuleCheckUtilMockTest {
             dto,
             Arrays.asList(DataGenerator.NHI_CODE_1),
             DateTimeUtil.NHI_12_MONTH,
-            DateTimeUtil.NHI_18_MONTH);
-
+            DateTimeUtil.NHI_18_MONTH,
+            NhiRuleCheckFormat.D1_3
+        );
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
@@ -1139,8 +1144,9 @@ public class NhiRuleCheckUtilMockTest {
             dto,
             Arrays.asList(DataGenerator.NHI_CODE_1),
             DateTimeUtil.NHI_12_MONTH,
-            DateTimeUtil.NHI_18_MONTH);
-
+            DateTimeUtil.NHI_18_MONTH,
+            NhiRuleCheckFormat.D1_3
+        );
         Assert.assertEquals(true, rdto.isValidated());
         Assert.assertEquals(null, rdto.getMessage());
     }
@@ -1196,8 +1202,9 @@ public class NhiRuleCheckUtilMockTest {
             dto,
             Arrays.asList(DataGenerator.NHI_CODE_1),
             DateTimeUtil.NHI_12_MONTH,
-            DateTimeUtil.NHI_18_MONTH);
-
+            DateTimeUtil.NHI_18_MONTH,
+            NhiRuleCheckFormat.D1_3
+        );
         Assert.assertEquals(true, rdto.isValidated());
         Assert.assertEquals(null, rdto.getMessage());
     }
@@ -1253,8 +1260,9 @@ public class NhiRuleCheckUtilMockTest {
             dto,
             Arrays.asList(DataGenerator.NHI_CODE_1),
             DateTimeUtil.NHI_12_MONTH,
-            DateTimeUtil.NHI_18_MONTH);
-
+            DateTimeUtil.NHI_18_MONTH,
+            NhiRuleCheckFormat.D1_3
+        );
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
@@ -1320,8 +1328,9 @@ public class NhiRuleCheckUtilMockTest {
             dto,
             Arrays.asList(DataGenerator.NHI_CODE_1),
             DateTimeUtil.NHI_12_MONTH,
-            DateTimeUtil.NHI_18_MONTH);
-
+            DateTimeUtil.NHI_18_MONTH,
+            NhiRuleCheckFormat.D1_3
+        );
         Assert.assertEquals(false, rdto.isValidated());
         Assert.assertEquals(
             String.format(
