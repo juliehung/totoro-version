@@ -2400,7 +2400,7 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 890XX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
+     * 89XXX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
      * @param dto patient.id, netp.id, excludeTreamentProcedureId
      * @return
      */
@@ -2408,7 +2408,7 @@ public class NhiRuleCheckUtil {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
             .validated(true)
-            .validateTitle("890XX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外");
+            .validateTitle("89XXX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外");
 
         NhiExtendTreatmentProcedure outOfLimitationClause =
             this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
