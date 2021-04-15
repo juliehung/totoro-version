@@ -24,9 +24,11 @@ import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.web.rest.errors.ResourceNotFoundException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.lang.reflect.InvocationTargetException;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -46,6 +48,8 @@ public class NhiRuleCheckUtil {
     // 申報時常用說明
     public static final String DESC_MUST_FULFILL_SURFACE = "應於病歷詳列充填牙面部位";
 
+    private final ApplicationContext applicationContext;
+
     private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
 
     private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
@@ -61,6 +65,7 @@ public class NhiRuleCheckUtil {
     private final DisposalRepository disposalRepository;
 
     public NhiRuleCheckUtil(
+        ApplicationContext applicationContext,
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
         PatientRepository patientRepository,
@@ -69,6 +74,7 @@ public class NhiRuleCheckUtil {
         NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
         DisposalRepository disposalRepository
     ) {
+        this.applicationContext = applicationContext;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
         this.patientRepository = patientRepository;
@@ -76,6 +82,42 @@ public class NhiRuleCheckUtil {
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
         this.disposalRepository = disposalRepository;
+    }
+
+    public NhiRuleCheckResultVM dispatch(
+        String code,
+        NhiRuleCheckBody body
+    ) throws NoSuchFieldException,
+        NoSuchMethodException,
+        InvocationTargetException,
+        IllegalAccessException {
+        // 轉換至統一入口 Object
+        NhiRuleCheckDTO dto = this.convertVmToDto(code, body);
+
+        // 分派到號碼群的腳本當中
+        NhiRuleCheckScriptType scriptType =
+            Arrays.stream(NhiRuleCheckScriptType.values())
+                .filter(e -> e.getRegex().matcher(code).matches())
+                .findFirst()
+                .orElseThrow(NoSuchFieldException::new);
+
+        Object scriptBean = applicationContext.getBean(scriptType.getScriptClass());
+
+        // 並在該腳本中找到對應函式
+        NhiRuleCheckResultVM rvm = (NhiRuleCheckResultVM) scriptBean
+            .getClass()
+            .getMethod("validate".concat(code), NhiRuleCheckDTO.class)
+            .invoke(scriptBean, dto);
+
+        // 若代碼檢核無異常，則根據不同情境回傳訊息
+        if (rvm.isValidated()) {
+            this.addResultToVm(
+                this.appendSuccessSourceInfo(dto),
+                rvm
+            );
+        }
+
+        return rvm;
     }
 
     /**

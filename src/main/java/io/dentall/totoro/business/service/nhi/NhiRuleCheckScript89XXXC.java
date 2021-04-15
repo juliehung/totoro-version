@@ -1,757 +1,27 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.business.service.nhi.util.*;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
+import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckFormat;
+import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
+import io.dentall.totoro.business.service.nhi.util.SurfaceConstraint;
+import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 @Service
-public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiRuleCheckBody, NhiRuleCheckDTO, NhiRuleCheckResultVM> {
+public class NhiRuleCheckScript89XXXC {
 
     private final NhiRuleCheckUtil nhiRuleCheckUtil;
 
-    public NhiRuleCheckService20200901Impl(NhiRuleCheckUtil nhiRuleCheckUtil) {
+    public NhiRuleCheckScript89XXXC(
+        NhiRuleCheckUtil nhiRuleCheckUtil
+    ) {
         this.nhiRuleCheckUtil = nhiRuleCheckUtil;
     }
 
-    @Override
-    public NhiRuleCheckResultVM dispatch(
-        String code,
-        NhiRuleCheckBody body
-    ) throws
-        NoSuchMethodException,
-        InvocationTargetException,
-        IllegalAccessException {
-        // 轉換至統一入口 Object
-        NhiRuleCheckDTO dto = nhiRuleCheckUtil.convertVmToDto(code, body);
 
-        // 依照個代碼進行檢核
-        NhiRuleCheckResultVM rvm = (NhiRuleCheckResultVM) this.getClass()
-            .getMethod("validate".concat(code), NhiRuleCheckDTO.class)
-            .invoke(this, dto);
-
-        // 若代碼檢核無異常，則根據不同情境回傳訊息
-        if (rvm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.appendSuccessSourceInfo(dto),
-                rvm
-            );
-        }
-
-        return rvm;
-    }
-
-    // 012***
-    @Override
-    public NhiRuleCheckResultVM validate01271C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isNoTreatmentInPeriod(dto,
-                DateTimeUtil.NHI_36_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification("須檢附影像。"),
-            vm
-        );
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
-                vm
-            );
-        }
-
-        return vm;
-    }
-
-    // 900***
-    @Override
-    public NhiRuleCheckResultVM validate90012C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification("須檢附影像。"),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
-                dto,
-                Arrays.asList("92013C~92015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
-            ),
-            vm
-        );
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("92013C~92015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
-                ),
-                vm
-            );
-        }
-
-        return vm;
-    }
-
-    // 910***
-    public NhiRuleCheckResultVM validate91001C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isNoConflictNhiCode(dto,
-                Arrays.asList("91003C~91005C", "91017C", "91019C", "91103C", "91104C")
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateWithMaxTimes(dto,
-                Arrays.asList("91001C"),
-                DateTimeUtil.startDayOfMonthDiff(
-                    DateTimeUtil.transformROCDateToLocalDate(
-                        dto.getNhiExtendTreatmentProcedure().getA71())),
-                2
-            ),
-            vm
-        );
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isSinglePhase(dto),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecordWithMaxTimes(dto,
-                    Arrays.asList("91001C"),
-                    DateTimeUtil.startDayOfMonthDiff(
-                        DateTimeUtil.transformROCDateToLocalDate(
-                            dto.getNhiExtendTreatmentProcedure().getA71())),
-                    2
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateWithSamePhase(dto,
-                    Arrays.asList("91001C"),
-                    DateTimeUtil.startDayOfMonthDiff(
-                        DateTimeUtil.transformROCDateToLocalDate(
-                            dto.getNhiExtendTreatmentProcedure().getA71()))
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecordWithSamePhase(dto,
-                    Arrays.asList("91001C"),
-                    DateTimeUtil.startDayOfMonthDiff(
-                        DateTimeUtil.transformROCDateToLocalDate(
-                            dto.getNhiExtendTreatmentProcedure().getA71()))
-                ),
-                vm
-            );
-        }
-
-        return vm;
-    }
-
-    // 910***
-    @Override
-    public NhiRuleCheckResultVM validate91003C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(dto,
-                ToothConstraint.FOUR_PHASE_ZONE),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotificationWithClause(dto,
-                "須檢附影像",
-                nhiRuleCheckUtil.clauseIsLessThanAge12),
-            vm
-        );
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateWithSamePhase(dto,
-                    Arrays.asList("91003C", "91004C"),
-                    DateTimeUtil.NHI_6_MONTH
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91018C", "91005C", "91103C", "91104C"),
-                    DateTimeUtil.NHI_3_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91003C", "91004C"),
-                    DateTimeUtil.NHI_3_MONTH,
-                    NhiRuleCheckFormat.D7_1
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91003C", "91004C"),
-                    DateTimeUtil.NHI_6_MONTH,
-                    NhiRuleCheckFormat.W1_1
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
-                vm
-            );
-        }
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate91004C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(dto,
-                ToothConstraint.FULL_ZONE),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotificationWithClause(dto,
-                "須檢附影像",
-                nhiRuleCheckUtil.clauseIsLessThanAge12),
-            vm
-        );
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateWithSamePhase(dto,
-                    Arrays.asList("91003C", "91004C"),
-                    DateTimeUtil.NHI_6_MONTH
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91018C", "91005C", "91103C", "91104C"),
-                    DateTimeUtil.NHI_3_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91003C", "91004C"),
-                    DateTimeUtil.NHI_3_MONTH,
-                    NhiRuleCheckFormat.D7_1
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91003C", "91004C"),
-                    DateTimeUtil.NHI_6_MONTH,
-                    NhiRuleCheckFormat.W1_1
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
-                vm
-            );
-        }
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate91005C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91005C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91005C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
-            vm
-        );
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate91014C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(dto,
-                ToothConstraint.FULL_ZONE),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isMustIncludeNhiCode(dto,
-                Arrays.asList("91004C", "91005C", "91020C")),
-            vm
-        );
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
-                vm
-            );
-        }
-
-        if (vm.isValidated() &&
-            dto.getIncludeNhiCodes().contains("91004C")
-        ) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("91014C"),
-                    DateTimeUtil.NHI_360_DAY),
-                vm
-            );
-
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91014C"),
-                    DateTimeUtil.NHI_360_DAY),
-                vm
-            );
-        }
-
-        if (vm.isValidated() &&
-            dto.getIncludeNhiCodes().contains("91005C")
-        ) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("91014C"),
-                    DateTimeUtil.NHI_360_DAY),
-                vm
-            );
-
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91014C"),
-                    DateTimeUtil.NHI_360_DAY),
-                vm
-            );
-        }
-
-        if (vm.isValidated() &&
-            dto.getIncludeNhiCodes().contains("91020C")
-        ) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("91014C"),
-                    DateTimeUtil.NHI_6_MONTH),
-                vm
-            );
-
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("91014C"),
-                    DateTimeUtil.NHI_6_MONTH),
-                vm
-            );
-        }
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate91015C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91015C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91015C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
-            vm
-        );
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate91016C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91016C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91016C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
-            vm
-        );
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate91017C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91017C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91017C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
-            vm
-        );
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate91018C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91018C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91018C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
-            vm
-        );
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate91020C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.addNotification(
-              "牙菌斑清除"
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91020C"}.clone()),
-                DateTimeUtil.NHI_6_MONTH
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.lessThanAge12(
-                dto
-            ),
-            vm
-        );
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate91103C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91103C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91103C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
-            vm
-        );
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate91104C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"91104C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"91104C"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.equalsOrGreaterThanAge12(dto),
-            vm
-        );
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate81(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.lessThanAge6(dto),
-            vm
-        );
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBetweenDuration(dto,
-                    Arrays.asList("81"),
-                    nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_6),
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBetweenDurationByNhiMedicalRecord(dto,
-                    Arrays.asList("81"),
-                    nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_6),
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate87(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"87"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"87"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.lessThanAge12(dto),
-            vm
-        );
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate88(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"88"}.clone()),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"88"}.clone()),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.lessThanAge6(dto),
-            vm
-        );
-
-        return vm;
-    }
-
-    @Override
-    public NhiRuleCheckResultVM validate89(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(
-                dto,
-                Arrays.asList(new String[]{"89"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm);
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"89"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.lessThanAge12(dto),
-            vm);
-
-        return vm;
-    }
-
-    // 890**C
-    @Override
     public NhiRuleCheckResultVM validate89001C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -852,7 +122,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89002C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -953,7 +223,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89003C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1054,7 +324,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89004C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1155,7 +425,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89005C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1256,7 +526,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89006C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1283,7 +553,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89007C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1318,7 +588,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89008C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1419,7 +689,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89009C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1520,7 +790,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89010C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1621,7 +891,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89011C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1722,7 +992,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89012C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1823,7 +1093,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89013C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1850,7 +1120,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89014C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -1951,7 +1221,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89015C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2052,7 +1322,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89088C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
         // Do nothing
@@ -2060,7 +1330,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
     }
 
     // 891**C
-    @Override
+
     public NhiRuleCheckResultVM validate89101C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2092,7 +1362,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89102C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2124,7 +1394,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89103C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2156,7 +1426,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89104C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2188,7 +1458,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89105C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2220,7 +1490,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89108C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2252,7 +1522,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89109C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2284,7 +1554,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89110C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2316,7 +1586,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89111C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2348,7 +1618,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89112C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2380,7 +1650,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89113C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2412,7 +1682,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89114C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -2444,7 +1714,7 @@ public class NhiRuleCheckService20200901Impl implements NhiRuleCheckService<NhiR
         return vm;
     }
 
-    @Override
+
     public NhiRuleCheckResultVM validate89115C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 

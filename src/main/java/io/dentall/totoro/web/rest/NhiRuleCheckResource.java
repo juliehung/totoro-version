@@ -2,8 +2,7 @@ package io.dentall.totoro.web.rest;
 
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
-import io.dentall.totoro.business.service.nhi.NhiRuleCheckService;
+import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import org.slf4j.Logger;
@@ -20,12 +19,12 @@ public class NhiRuleCheckResource {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final NhiRuleCheckService<NhiRuleCheckBody, NhiRuleCheckDTO, NhiRuleCheckResultVM> nhiRuleCheckService;
+    private final NhiRuleCheckUtil nhiRuleCheckUtil;
 
     public NhiRuleCheckResource(
-        NhiRuleCheckService nhiRuleCheckService
+        NhiRuleCheckUtil nhiRuleCheckUtil
     ) {
-        this.nhiRuleCheckService = nhiRuleCheckService;
+        this.nhiRuleCheckUtil = nhiRuleCheckUtil;
     }
 
     // 即便 vm validation 為 false ，仍有需要顯示的 message
@@ -40,10 +39,11 @@ public class NhiRuleCheckResource {
     {
         try {
             return new ResponseEntity<>(
-                nhiRuleCheckService.dispatch(code, body),
+                nhiRuleCheckUtil.dispatch(code, body),
                 HttpStatus.OK
             );
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException | NoSuchFieldException e) {
+            logger.error("NhiRuleCheckResource requested a code not supported, {}.", code);
             return new ResponseEntity<>(
                 new NhiRuleCheckResultVM()
                     .validated(true),
