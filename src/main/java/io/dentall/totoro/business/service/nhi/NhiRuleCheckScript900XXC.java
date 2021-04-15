@@ -4,9 +4,11 @@ import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckFormat;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
+@Service
 public class NhiRuleCheckScript900XXC {
 
     private final NhiRuleCheckUtil nhiRuleCheckUtil;
@@ -18,7 +20,7 @@ public class NhiRuleCheckScript900XXC {
     }
 
 
-    public NhiRuleCheckResultVM validate89001C(NhiRuleCheckDTO dto) {
+    public NhiRuleCheckResultVM validate90012C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
