@@ -1484,6 +1484,17 @@ public class NhiRuleCheckUtil {
             String m = "";
 
             switch (format) {
+                case D1_2:
+                    m = String.format(
+                        NhiRuleCheckFormat.D1_2.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        match.getNhiCode(),
+                        NhiRuleCheckSourceType.NHI_CARD_RECORD,
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                        limitDays,
+                        dto.getNhiExtendTreatmentProcedure().getA73()
+                    );
+                    break;
                 case D4_1:
                     m = String.format(
                         NhiRuleCheckFormat.D4_1.getFormat(),
@@ -1492,20 +1503,6 @@ public class NhiRuleCheckUtil {
                     );
                     break;
                 default:
-                    m = String.format(
-                        "%s： %s (%s-%s)，%s 天內不得申報 %s",
-                        dto.getNhiExtendTreatmentProcedure().getA73(),
-                        match.getNhiCode(),
-                        this.classifySourceType(
-                            NhiRuleCheckSourceType.NHI_CARD_RECORD,
-                            matchDate,
-                            null,
-                            dto
-                        ),
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                        limitDays.getDays(),
-                        dto.getNhiExtendTreatmentProcedure().getA73()
-                    );
                     break;
             }
 

@@ -241,7 +241,7 @@ public class NhiRuleCheckScript900XXC {
             );
         }
 
-        return vm
+        return vm;
     }
 
     public NhiRuleCheckResultVM validate90003C(NhiRuleCheckDTO dto) {
@@ -353,11 +353,21 @@ public class NhiRuleCheckScript900XXC {
             );
         }
 
-        return vm
+        return vm;
     }
 
     public NhiRuleCheckResultVM validate90007C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.XRAY.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -410,6 +420,60 @@ public class NhiRuleCheckScript900XXC {
 
     public NhiRuleCheckResultVM validate90015C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.XRAY.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
+            ),
+            vm
+        );
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("90015C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D1_2
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                    Arrays.asList("90015C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D1_2
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("90005C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D4_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                    Arrays.asList("90005C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D4_1
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
