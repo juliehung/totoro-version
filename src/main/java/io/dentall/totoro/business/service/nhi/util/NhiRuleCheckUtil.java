@@ -1823,12 +1823,14 @@ public class NhiRuleCheckUtil {
                                     matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
                             );
                             break;
-                        case D6_1:
+                        case D7_2:
                             msg = String.format(
-                                NhiRuleCheckFormat.W6_1.getFormat(),
+                                NhiRuleCheckFormat.D7_2.getFormat(),
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
                                 ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
                                     ?deciduousToothLimitDays.getDays()
                                     :permanentToothLimitDays.getDays(),
+                                match.getA73(),
                                 this.classifySourceType(
                                     NhiRuleCheckSourceType.SYSTEM_RECORD,
                                     matchDate,
@@ -1840,9 +1842,9 @@ public class NhiRuleCheckUtil {
                                 tooth
                             );
                             break;
-                        case D7_2:
+                        case W6_1:
                             msg = String.format(
-                                NhiRuleCheckFormat.D7_2.getFormat(),
+                                NhiRuleCheckFormat.W6_1.getFormat(),
                                 dto.getNhiExtendTreatmentProcedure().getA73(),
                                 ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
                                     ?deciduousToothLimitDays.getDays()
