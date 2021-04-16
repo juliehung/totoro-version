@@ -1823,6 +1823,41 @@ public class NhiRuleCheckUtil {
                                     matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
                             );
                             break;
+                        case D6_1:
+                            msg = String.format(
+                                NhiRuleCheckFormat.W6_1.getFormat(),
+                                ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
+                                    ?deciduousToothLimitDays.getDays()
+                                    :permanentToothLimitDays.getDays(),
+                                this.classifySourceType(
+                                    NhiRuleCheckSourceType.SYSTEM_RECORD,
+                                    matchDate,
+                                    match.getNhiExtendDisposal() != null ?match.getNhiExtendDisposal().getId() :null,
+                                    dto
+                                ),
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                                tooth
+                            );
+                        case D7_2:
+                            msg = String.format(
+                                NhiRuleCheckFormat.D7_2.getFormat(),
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
+                                ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
+                                    ?deciduousToothLimitDays.getDays()
+                                    :permanentToothLimitDays.getDays(),
+                                match.getA73(),
+                                this.classifySourceType(
+                                    NhiRuleCheckSourceType.SYSTEM_RECORD,
+                                    matchDate,
+                                    match.getNhiExtendDisposal() != null ?match.getNhiExtendDisposal().getId() :null,
+                                    dto
+                                ),
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                                tooth
+                            );
+                            break;
                         default:
                             break;
                     }
@@ -2437,6 +2472,52 @@ public class NhiRuleCheckUtil {
                         }
                     });
             });
+
+        return result;
+    }
+
+    public NhiRuleCheckResultDTO isTreatmentDependOnCodeInDuration(
+        NhiRuleCheckDTO dto,
+        List<String> codes,
+        Period limitDays,
+        NhiRuleCheckFormat format
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("指定時間內，曾經有指定治療項目")
+            .validated(true);
+
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+
+        NhiExtendTreatmentProcedure match =
+            this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+                dto.getPatient().getId(),
+                dto.getNhiExtendTreatmentProcedure().getId(),
+                currentTxDate,
+                codes,
+                limitDays,
+                dto.getExcludeTreatmentProcedureIds()
+            );
+
+        if (match == null) {
+            String msg = "";
+
+            switch (format) {
+                case D8_1:
+                    msg = String.format(
+                        NhiRuleCheckFormat.D8_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        limitDays.getDays(),
+                        codes.toString()
+                    );
+                    break;
+                default:
+                    break;
+            }
+
+            result.validated(false)
+                .message(msg);
+        }
 
         return result;
     }
