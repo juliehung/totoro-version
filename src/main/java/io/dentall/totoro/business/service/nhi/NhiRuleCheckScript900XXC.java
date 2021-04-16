@@ -540,17 +540,301 @@ public class NhiRuleCheckScript900XXC {
     public NhiRuleCheckResultVM validate90018C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("90018C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.D4_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                    Arrays.asList("90018C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.D4_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.DECIDUOUS_TOOTH
+                ),
+                vm
+            );
+        }
+
         return vm;
     }
 
     public NhiRuleCheckResultVM validate90019C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.PERMANENT_TOOTH
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isTreatmentDependOnCodeInDuration(
+                    dto,
+                    Arrays.asList("90015C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D8_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNhiMedicalRecordDependOnCodeInDuration(
+                    dto,
+                    Arrays.asList("90015C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D8_1
+                ),
+                vm
+            );
+        }
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.XRAY.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
+            ),
+            vm
+        );
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+                    dto,
+                    Arrays.asList("90001C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D7_2
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
+                    dto,
+                    Arrays.asList("90001C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D7_2
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+                    dto,
+                    Arrays.asList("90001C~90003C", "90019C~90020C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.W6_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
+                    dto,
+                    Arrays.asList("90001C~90003C", "90019C~90020C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.W6_1
+                ),
+                vm
+            );
+        }
+
         return vm;
     }
 
     public NhiRuleCheckResultVM validate90020C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.PERMANENT_TOOTH
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isTreatmentDependOnCodeInDuration(
+                    dto,
+                    Arrays.asList("90015C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D8_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNhiMedicalRecordDependOnCodeInDuration(
+                    dto,
+                    Arrays.asList("90015C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D8_1
+                ),
+                vm
+            );
+        }
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.XRAY.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
+            ),
+            vm
+        );
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+                    dto,
+                    Arrays.asList("90001C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D7_2
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
+                    dto,
+                    Arrays.asList("90001C"),
+                    DateTimeUtil.NHI_2_MONTH,
+                    DateTimeUtil.NHI_2_MONTH,
+                    NhiRuleCheckFormat.D7_2
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+                    dto,
+                    Arrays.asList("90001C~90003C", "90019C~90020C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.W6_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
+                    dto,
+                    Arrays.asList("90001C~90003C", "90019C~90020C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.W6_1
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
