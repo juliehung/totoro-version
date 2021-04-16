@@ -482,6 +482,58 @@ public class NhiRuleCheckScript900XXC {
     public NhiRuleCheckResultVM validate90016C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                    Arrays.asList("90016C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.D4_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                    Arrays.asList("90016C"),
+                    DateTimeUtil.NHI_3_MONTH,
+                    NhiRuleCheckFormat.D4_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.DECIDUOUS_TOOTH
+                ),
+                vm
+            );
+        }
+
         return vm;
     }
 
