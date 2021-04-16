@@ -1839,6 +1839,7 @@ public class NhiRuleCheckUtil {
                                     matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
                                 tooth
                             );
+                            break;
                         case D7_2:
                             msg = String.format(
                                 NhiRuleCheckFormat.D7_2.getFormat(),
