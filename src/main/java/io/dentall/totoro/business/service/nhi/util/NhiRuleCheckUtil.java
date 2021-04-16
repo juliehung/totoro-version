@@ -2526,6 +2526,50 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
+    public NhiRuleCheckResultDTO isNhiMedicalRecordDependOnCodeInDuration(
+        NhiRuleCheckDTO dto,
+        List<String> codes,
+        Period limitDays,
+        NhiRuleCheckFormat format
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("指定時間內，曾經有指定治療項目")
+            .validated(true);
+
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+
+        NhiMedicalRecord match = this.findPatientMediaRecordAtCodesAndBeforePeriod(
+            dto.getPatient().getId(),
+            currentTxDate,
+            codes,
+            limitDays
+        );
+
+        if (match == null) {
+            String msg = "";
+
+            switch (format) {
+                case D8_1:
+                    msg = String.format(
+                        NhiRuleCheckFormat.D8_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        limitDays.getDays(),
+                        codes.toString()
+                    );
+                    break;
+                default:
+                    break;
+            }
+
+            result.validated(false)
+                .nhiRuleCheckInfoType(format.getLevel())
+                .message(msg);
+        }
+
+        return result;
+    }
+
     /**
      * 89XXX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
      * @param dto patient.id, netp.id, excludeTreamentProcedureId
