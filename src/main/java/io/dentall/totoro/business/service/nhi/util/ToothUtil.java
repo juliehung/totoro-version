@@ -143,5 +143,15 @@ public class ToothUtil {
             .filter(tooth -> tooth.matches(tc.getRegex()))
             .count();
     }
+
+    public static String multipleToothToDisplay(String teeth) {
+        if (StringUtils.isBlank(teeth) ||
+            teeth.length() % 2 != 0
+        ) {
+            return "";
+        } else {
+            return String.join("/", ToothUtil.splitA74(teeth));
+        }
+    }
 }
 

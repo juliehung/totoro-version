@@ -121,42 +121,6 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 單顆牙齒是否為 乳牙（字串兩碼且為 51-59, 61-69, 71-79, 81-89）
-     *
-     * @param singleToothPosition 單一牙位
-     * @return boolean 是否為乳牙
-     */
-    private boolean isDeciduousTeeth(String singleToothPosition) {
-        if (singleToothPosition.length() != 2) {
-            return false;
-        }
-
-        if (!singleToothPosition.matches("^[5|6|7|8][1-5]$")) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 單顆牙齒是否為 恆牙（字串兩碼且為 11-19, 21-29, 31-39, 41-49）
-     *
-     * @param singleToothPosition 單一牙位
-     * @return boolean 是否為恆牙
-     */
-    private boolean isPermanentTeeth(String singleToothPosition) {
-        if (singleToothPosition.length() != 2) {
-            return false;
-        }
-
-        if (!singleToothPosition.matches("^[1|2|3|4][1-9]$")) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * 解析 健保代碼 若是區間型態，則切分並產生，包含頭、尾、區間三個部位全部的代碼，目前僅支援
      * [number-low][single-alphabet]~[number-high][single-alphabet] 這種格式，且 [single-alphabet] 需相同，且 [single-alphabet] 相同
      * 若不符合此項規則，則不分割，直接回傳。
@@ -1769,7 +1733,9 @@ public class NhiRuleCheckUtil {
 
         teeth.stream()
             .forEach(tooth -> {
-                Period selectedLimitDay = isDeciduousTeeth(tooth) ? deciduousToothLimitDays : permanentToothLimitDays;
+                Period selectedLimitDay = ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
+                    ? deciduousToothLimitDays
+                    : permanentToothLimitDays;
                 NhiExtendTreatmentProcedure match = this.findPatientTreatmentProcedureAtCodesAndBeforePeriodAndTooth(
                     dto.getPatient().getId(),
                     dto.getNhiExtendTreatmentProcedure().getId(),
@@ -1861,7 +1827,9 @@ public class NhiRuleCheckUtil {
 
         teeth.stream()
             .forEach(tooth -> {
-                Period selectedLimitDay = isDeciduousTeeth(tooth) ? deciduousToothLimitDays : permanentToothLimitDays;
+                Period selectedLimitDay = ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
+                    ? deciduousToothLimitDays
+                    : permanentToothLimitDays;
                 NhiMedicalRecord match = this.findPatientMediaRecordAtCodesAndBeforePeriod(
                     dto.getPatient().getId(),
                     DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
@@ -2171,10 +2139,9 @@ public class NhiRuleCheckUtil {
                     .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                     .message(
                         String.format(
-                            //90012C:  37 已申報 92013C(來源-110/01/01)
                             NhiRuleCheckFormat.D1_3.getFormat(),
                             dto.getNhiExtendTreatmentProcedure().getA73(),
-                            optionalNetpt.get().getA74(),
+                            ToothUtil.multipleToothToDisplay(optionalNetpt.get().getA74()),
                             optionalNetpt.get().getA73(),
                             this.classifySourceType(
                                 NhiRuleCheckSourceType.SYSTEM_RECORD,
