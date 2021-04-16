@@ -118,4 +118,8 @@ public enum NhiRuleCheckFormat {
     public String getFormat() {
         return format;
     }
+
+    public NhiRuleCheckInfoType getLevel() {
+        return level;
+    }
 }

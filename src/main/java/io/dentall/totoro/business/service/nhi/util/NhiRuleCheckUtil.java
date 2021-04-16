@@ -1042,7 +1042,7 @@ public class NhiRuleCheckUtil {
             }
 
             result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .nhiRuleCheckInfoType(format.getLevel())
                 .message(m);
         }
 
@@ -1104,7 +1104,7 @@ public class NhiRuleCheckUtil {
             }
 
             result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .nhiRuleCheckInfoType(format.getLevel())
                 .message(m);
         }
 
@@ -1511,7 +1511,7 @@ public class NhiRuleCheckUtil {
 
             result
                 .validated(false)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .nhiRuleCheckInfoType(format.getLevel())
                 .nhiRuleCheckSourceType(NhiRuleCheckSourceType.NHI_CARD_RECORD)
                 .message(m);
         }
@@ -1570,7 +1570,7 @@ public class NhiRuleCheckUtil {
 
             result
                 .validated(false)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .nhiRuleCheckInfoType(format.getLevel())
                 .nhiRuleCheckSourceType(NhiRuleCheckSourceType.NHI_CARD_RECORD)
                 .message(m);
         }
@@ -1867,7 +1867,7 @@ public class NhiRuleCheckUtil {
 
                     result
                         .validated(false)
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                        .nhiRuleCheckInfoType(format.getLevel())
                         .message(msg);
                 }
             });
@@ -1949,7 +1949,7 @@ public class NhiRuleCheckUtil {
 
                     result
                         .validated(false)
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                        .nhiRuleCheckInfoType(format.getLevel())
                         .message(msg);
                 }
             });
@@ -2519,6 +2519,7 @@ public class NhiRuleCheckUtil {
             }
 
             result.validated(false)
+                .nhiRuleCheckInfoType(format.getLevel())
                 .message(msg);
         }
 
