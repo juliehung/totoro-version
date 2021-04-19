@@ -336,7 +336,9 @@ public class NhiExtendDisposalService {
     @Transactional(readOnly = true)
     public List<MonthDisposalVM> findByYearMonthForLazyNhiExtDis(YearMonth ym, Boolean toleranceA18) {
         Stream<MonthDisposalDAO> stream = nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(ym.atDay(1), ym.atEndOfMonth()).stream()
-                .filter(Objects::nonNull);
+                .filter(dao -> dao != null &&
+                    dao.getDate() != null
+                );
 
         if (!Optional.ofNullable(toleranceA18).orElse(false)) {
             stream = stream.filter(monthDisposalDAO -> StringUtils.isNotBlank(monthDisposalDAO.getA18()));

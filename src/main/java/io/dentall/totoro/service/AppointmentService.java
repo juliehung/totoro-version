@@ -418,7 +418,7 @@ public class AppointmentService {
 
     @Transactional(readOnly = true)
     public List<Appointment> getSimpleAppointmentProjectionByExpectedArrivalTimeAndRegIsNotNull(Instant start, Instant end) {
-        return appointmentRepository.findByRegistrationIsNotNullAndExpectedArrivalTimeBetweenOrderByRegistration_ArrivalTime(start, end, Appointment1To1.class)
+        return appointmentRepository.findByRegistrationIsNotNullAndExpectedArrivalTimeBetweenOrderByRegistration_ArrivalTimeDesc(start, end, Appointment1To1.class)
             .stream()
             .map(this::getSimpleAppointment)
             .collect(Collectors.toList());

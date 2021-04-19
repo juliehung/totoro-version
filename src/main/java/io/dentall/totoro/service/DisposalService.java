@@ -664,7 +664,7 @@ public class DisposalService {
 
                 vm.setFutureAppointment(
                     appointmentRepository
-                        .findByExpectedArrivalTimeAfterAndPatient_IdOrderByExpectedArrivalTime(todayBeginTime, dto.getPatientId()).stream()
+                        .findByExpectedArrivalTimeAfterAndPatient_IdAndRegistrationIsNullOrderByExpectedArrivalTime(todayBeginTime, dto.getPatientId()).stream()
                         .map(AppointmentTable::getExpectedArrivalTime)
                         .collect(Collectors.toList())
                 );

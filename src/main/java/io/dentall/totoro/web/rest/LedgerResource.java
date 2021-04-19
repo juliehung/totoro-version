@@ -2,26 +2,24 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Ledger;
+import io.dentall.totoro.service.LedgerQueryService;
 import io.dentall.totoro.service.LedgerService;
+import io.dentall.totoro.service.dto.LedgerCriteria;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.dentall.totoro.service.dto.LedgerCriteria;
-import io.dentall.totoro.service.LedgerQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -89,6 +87,7 @@ public class LedgerResource {
 
     /**
      * GET  /ledgers : get all the ledgers.
+     * 2021-03-17: 僅使用 patientId 作為 query string
      *
      * @param pageable the pagination information
      * @param criteria the criterias which the requested entities should match

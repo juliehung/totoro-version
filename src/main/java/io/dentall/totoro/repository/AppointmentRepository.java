@@ -123,7 +123,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
 
     <T> Collection<T> findByRegistrationIsNullAndExpectedArrivalTimeBetweenOrderByExpectedArrivalTimeAsc(Instant start, Instant end, Class<T> type);
 
-    <T> Collection<T> findByRegistrationIsNotNullAndExpectedArrivalTimeBetweenOrderByRegistration_ArrivalTime(Instant start, Instant end, Class<T> type);
+    <T> Collection<T> findByRegistrationIsNotNullAndExpectedArrivalTimeBetweenOrderByRegistration_ArrivalTimeDesc(Instant start, Instant end, Class<T> type);
 
     @Query(value =
         "select new io.dentall.totoro.service.dto.AppointmentDTO( " +
@@ -259,5 +259,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
 
     List<AccountingDTO> findByRegistration_Accounting_TransactionTimeBetween(Instant begin, Instant end);
 
-    List<AppointmentTable> findByExpectedArrivalTimeAfterAndPatient_IdOrderByExpectedArrivalTime(Instant targetTime, Long patientId);
+    List<AppointmentTable> findByExpectedArrivalTimeAfterAndPatient_IdAndRegistrationIsNullOrderByExpectedArrivalTime(Instant targetTime, Long patientId);
 }

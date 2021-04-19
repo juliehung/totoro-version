@@ -1,17 +1,13 @@
 package io.dentall.totoro.web.rest;
 
 import io.dentall.totoro.TotoroApp;
-
-import io.dentall.totoro.domain.NhiMedicalRecord;
 import io.dentall.totoro.domain.NhiExtendPatient;
-import io.dentall.totoro.repository.NhiMedicalRecordRepository;
-import io.dentall.totoro.repository.NhiMedicineRepository;
-import io.dentall.totoro.repository.NhiTxRepository;
-import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.domain.NhiMedicalRecord;
+import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.NhiMedicalRecordQueryService;
 import io.dentall.totoro.service.NhiMedicalRecordService;
 import io.dentall.totoro.web.rest.errors.ExceptionTranslator;
-import io.dentall.totoro.service.NhiMedicalRecordQueryService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +25,6 @@ import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-
 
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,6 +67,9 @@ public class NhiMedicalRecordResourceIntTest {
 
     @Autowired
     private NhiMedicalRecordRepository nhiMedicalRecordRepository;
+
+    @Autowired
+    private NhiExtendPatientRepository nhiExtendPatientRepository;
 
     @Autowired
     private NhiMedicalRecordService nhiMedicalRecordService;
@@ -148,17 +146,32 @@ public class NhiMedicalRecordResourceIntTest {
     public void createNhiMedicalRecord() throws Exception {
         int databaseSizeBeforeCreate = nhiMedicalRecordRepository.findAll().size();
 
+        Patient p = new Patient();
+        p.setId(1L);
+        p.setPhone("1");
+        p.setName("1");
+        patientRepository.save(p);
+
+        NhiExtendPatient nep = new NhiExtendPatient();
+        nep.setId(1L);
+        nep.setPatient(p);
+        nhiExtendPatientRepository.save(nep);
+
+
         // Create the NhiMedicalRecord
         restNhiMedicalRecordMockMvc.perform(post("/api/nhi-medical-records")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(nhiMedicalRecord)))
+            .content(TestUtil.convertObjectToJsonBytes(
+                nhiMedicalRecord
+                    .nhiExtendPatient(nep)
+                    .date("modify.for.not.duplicate"))))
             .andExpect(status().isCreated());
 
         // Validate the NhiMedicalRecord in the database
         List<NhiMedicalRecord> nhiMedicalRecordList = nhiMedicalRecordRepository.findAll();
         assertThat(nhiMedicalRecordList).hasSize(databaseSizeBeforeCreate + 1);
         NhiMedicalRecord testNhiMedicalRecord = nhiMedicalRecordList.get(nhiMedicalRecordList.size() - 1);
-        assertThat(testNhiMedicalRecord.getDate()).isEqualTo(DEFAULT_DATE);
+        assertThat(testNhiMedicalRecord.getDate()).isEqualTo("modify.for.not.duplicate");
         assertThat(testNhiMedicalRecord.getNhiCategory()).isEqualTo(DEFAULT_NHI_CATEGORY);
         assertThat(testNhiMedicalRecord.getNhiCode()).isEqualTo(DEFAULT_NHI_CODE);
         assertThat(testNhiMedicalRecord.getPart()).isEqualTo(DEFAULT_PART);
@@ -685,20 +698,5 @@ public class NhiMedicalRecordResourceIntTest {
         // Validate the database is empty
         List<NhiMedicalRecord> nhiMedicalRecordList = nhiMedicalRecordRepository.findAll();
         assertThat(nhiMedicalRecordList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(NhiMedicalRecord.class);
-        NhiMedicalRecord nhiMedicalRecord1 = new NhiMedicalRecord();
-        nhiMedicalRecord1.setId(1L);
-        NhiMedicalRecord nhiMedicalRecord2 = new NhiMedicalRecord();
-        nhiMedicalRecord2.setId(nhiMedicalRecord1.getId());
-        assertThat(nhiMedicalRecord1).isEqualTo(nhiMedicalRecord2);
-        nhiMedicalRecord2.setId(2L);
-        assertThat(nhiMedicalRecord1).isNotEqualTo(nhiMedicalRecord2);
-        nhiMedicalRecord1.setId(null);
-        assertThat(nhiMedicalRecord1).isNotEqualTo(nhiMedicalRecord2);
     }
 }

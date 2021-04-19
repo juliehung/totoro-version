@@ -29,6 +29,10 @@ public class Drug extends AbstractAuditingEntity implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
+    /**
+     * 2021-03-16: 前端新增藥品時，並不會帶入此項
+     */
+    @Deprecated
     @Column(name = "chinese_name")
     private String chineseName;
 
