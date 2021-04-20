@@ -411,15 +411,13 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "tp.total as txPoint, " +
             "np.specific_code as specificCode, " +
             "a.patient_id as patientId, " +
-            "eu.user_id as doctorId " +
+            "a.doctor_user_id as doctorId " +
             "from disposal d " +
             "    left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "    left join treatment_procedure tp on d.id = tp.disposal_id " +
             "    left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "    left join nhi_procedure np on tp.nhi_procedure_id = np.id " +
             "    left join appointment a on d.registration_id = a.registration_id " +
-            "    left join extend_user eu on ned.a15 = eu.national_id " +
-            "    left join jhi_user ju on eu.user_id = ju.id " +
             "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
             "   and d.id not in :excludeDisposalId and tp.nhi_procedure_id is not null " +
             "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
