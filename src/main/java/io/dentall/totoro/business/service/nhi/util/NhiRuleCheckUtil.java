@@ -1006,7 +1006,7 @@ public class NhiRuleCheckUtil {
             }
 
             result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .nhiRuleCheckInfoType(format.getLevel())
                 .message(m);
         }
 
@@ -1068,7 +1068,7 @@ public class NhiRuleCheckUtil {
             }
 
             result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .nhiRuleCheckInfoType(format.getLevel())
                 .message(m);
         }
 
@@ -1448,6 +1448,17 @@ public class NhiRuleCheckUtil {
             String m = "";
 
             switch (format) {
+                case D1_2:
+                    m = String.format(
+                        NhiRuleCheckFormat.D1_2.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        match.getNhiCode(),
+                        NhiRuleCheckSourceType.NHI_CARD_RECORD,
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                        limitDays,
+                        dto.getNhiExtendTreatmentProcedure().getA73()
+                    );
+                    break;
                 case D4_1:
                     m = String.format(
                         NhiRuleCheckFormat.D4_1.getFormat(),
@@ -1456,26 +1467,12 @@ public class NhiRuleCheckUtil {
                     );
                     break;
                 default:
-                    m = String.format(
-                        "%s： %s (%s-%s)，%s 天內不得申報 %s",
-                        dto.getNhiExtendTreatmentProcedure().getA73(),
-                        match.getNhiCode(),
-                        this.classifySourceType(
-                            NhiRuleCheckSourceType.NHI_CARD_RECORD,
-                            matchDate,
-                            null,
-                            dto
-                        ),
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                        limitDays.getDays(),
-                        dto.getNhiExtendTreatmentProcedure().getA73()
-                    );
                     break;
             }
 
             result
                 .validated(false)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .nhiRuleCheckInfoType(format.getLevel())
                 .nhiRuleCheckSourceType(NhiRuleCheckSourceType.NHI_CARD_RECORD)
                 .message(m);
         }
@@ -1534,7 +1531,7 @@ public class NhiRuleCheckUtil {
 
             result
                 .validated(false)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                .nhiRuleCheckInfoType(format.getLevel())
                 .nhiRuleCheckSourceType(NhiRuleCheckSourceType.NHI_CARD_RECORD)
                 .message(m);
         }
@@ -1789,13 +1786,51 @@ public class NhiRuleCheckUtil {
                                     matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
                             );
                             break;
+                        case D7_2:
+                            msg = String.format(
+                                NhiRuleCheckFormat.D7_2.getFormat(),
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
+                                ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
+                                    ?deciduousToothLimitDays.getDays()
+                                    :permanentToothLimitDays.getDays(),
+                                match.getA73(),
+                                this.classifySourceType(
+                                    NhiRuleCheckSourceType.SYSTEM_RECORD,
+                                    matchDate,
+                                    match.getNhiExtendDisposal() != null ?match.getNhiExtendDisposal().getId() :null,
+                                    dto
+                                ),
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                                tooth
+                            );
+                            break;
+                        case W6_1:
+                            msg = String.format(
+                                NhiRuleCheckFormat.W6_1.getFormat(),
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
+                                ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
+                                    ?deciduousToothLimitDays.getDays()
+                                    :permanentToothLimitDays.getDays(),
+                                match.getA73(),
+                                this.classifySourceType(
+                                    NhiRuleCheckSourceType.SYSTEM_RECORD,
+                                    matchDate,
+                                    match.getNhiExtendDisposal() != null ?match.getNhiExtendDisposal().getId() :null,
+                                    dto
+                                ),
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                                tooth
+                            );
+                            break;
                         default:
                             break;
                     }
 
                     result
                         .validated(false)
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                        .nhiRuleCheckInfoType(format.getLevel())
                         .message(msg);
                 }
             });
@@ -1879,7 +1914,7 @@ public class NhiRuleCheckUtil {
 
                     result
                         .validated(false)
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+                        .nhiRuleCheckInfoType(format.getLevel())
                         .message(msg);
                 }
             });
@@ -2404,6 +2439,97 @@ public class NhiRuleCheckUtil {
                         }
                     });
             });
+
+        return result;
+    }
+
+    public NhiRuleCheckResultDTO isTreatmentDependOnCodeInDuration(
+        NhiRuleCheckDTO dto,
+        List<String> codes,
+        Period limitDays,
+        NhiRuleCheckFormat format
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("指定時間內，曾經有指定治療項目")
+            .validated(true);
+
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+
+        NhiExtendTreatmentProcedure match =
+            this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+                dto.getPatient().getId(),
+                dto.getNhiExtendTreatmentProcedure().getId(),
+                currentTxDate,
+                codes,
+                limitDays,
+                dto.getExcludeTreatmentProcedureIds()
+            );
+
+        if (match == null) {
+            String msg = "";
+
+            switch (format) {
+                case D8_1:
+                    msg = String.format(
+                        NhiRuleCheckFormat.D8_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        limitDays.getDays(),
+                        codes.toString()
+                    );
+                    break;
+                default:
+                    break;
+            }
+
+            result.validated(false)
+                .nhiRuleCheckInfoType(format.getLevel())
+                .message(msg);
+        }
+
+        return result;
+    }
+
+    public NhiRuleCheckResultDTO isNhiMedicalRecordDependOnCodeInDuration(
+        NhiRuleCheckDTO dto,
+        List<String> codes,
+        Period limitDays,
+        NhiRuleCheckFormat format
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("指定時間內，曾經有指定治療項目")
+            .validated(true);
+
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+
+        NhiMedicalRecord match = this.findPatientMediaRecordAtCodesAndBeforePeriod(
+            dto.getPatient().getId(),
+            currentTxDate,
+            codes,
+            limitDays
+        );
+
+        if (match == null) {
+            String msg = "";
+
+            switch (format) {
+                case D8_1:
+                    msg = String.format(
+                        NhiRuleCheckFormat.D8_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        limitDays.getDays(),
+                        codes.toString()
+                    );
+                    break;
+                default:
+                    break;
+            }
+
+            result.validated(false)
+                .nhiRuleCheckInfoType(format.getLevel())
+                .message(msg);
+        }
 
         return result;
     }
