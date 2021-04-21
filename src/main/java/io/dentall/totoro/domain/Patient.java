@@ -196,7 +196,7 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @JsonIgnoreProperties(value = {"lastPatients", "firstPatients", "appointments", "treatmentProcedures", "treatmentTasks", "procedures", "treatments", "calendars"}, allowSetters = true)
     private ExtendUser firstDoctor;
 
-    @OneToOne(mappedBy = "patient")
+    @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
     private NhiExtendPatient nhiExtendPatient;
 
     @Column(name = "due_date")
