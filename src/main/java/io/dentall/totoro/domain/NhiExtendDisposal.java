@@ -163,8 +163,13 @@ public class NhiExtendDisposal implements Serializable {
     @Column(name = "checked_auditing")
     private Boolean checkedAuditing;
 
+    // 轉診，原本院所代碼
     @Column(name = "referral_hospital_code")
     private String referralHospitalCode;
+
+    // AB 處置，紀錄當初選擇之 treatment procedure id
+    @Column(name = "depended_treatment_procedure_id")
+    private Long dependedTreatmentProcedureId;
 
     @OneToMany(mappedBy = "nhiExtendDisposal", fetch = FetchType.EAGER)
     private Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = null;
@@ -694,6 +699,14 @@ public class NhiExtendDisposal implements Serializable {
         this.referralHospitalCode = referralHospitalCode;
     }
 
+    public Long getDependedTreatmentProcedureId() {
+        return dependedTreatmentProcedureId;
+    }
+
+    public void setDependedTreatmentProcedureId(Long dependedTreatmentProcedureId) {
+        this.dependedTreatmentProcedureId = dependedTreatmentProcedureId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -749,6 +762,7 @@ public class NhiExtendDisposal implements Serializable {
             ", category='" + getCategory() + "'" +
             ", replenishmentDate='" + getReplenishmentDate() + "'" +
             ", referralHospitalCode='" + getReferralHospitalCode() + "'" +
+            ", dependedTreatmentProcedureId='" + getDependedTreatmentProcedureId() + "'" +
             "}";
     }
 }

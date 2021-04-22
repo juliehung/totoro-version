@@ -48,7 +48,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "         left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "         left join jhi_user ju on ju.id = a.doctor_user_id " +
             "where a19 <> '2' and date_time between ?1 and ?2 and d.id not in (?3) and tp.nhi_procedure_id is not null " +
-            "   or a19 = '2' and replenishment_date between ?1 and ?2 and d.id not in (?3) and tp.nhi_procedure_id is not null;"
+            "   or a19 = '2' and replenishment_date between ?1 and ?2 and d.id not in (?3) and tp.nhi_procedure_id is not null"
     )
     List<NhiIndexTreatmentProcedureVM> findNhiIndexTreatmentProcedures(Instant begin, Instant end, List<Long> excludeDisposalId);
 
@@ -232,7 +232,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "       serial_number as serialNumber " +
             "from nhi_doc_exam " +
             "group by did, examination_code, examination_point, serial_number " +
-            "order by did, examination_code;"
+            "order by did, examination_code"
     )
     List<NhiDoctorExamVM> calculateDoctorNhiExam(Instant begin, Instant end, List<Long> excludeDisposalId);
 
@@ -411,15 +411,13 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "tp.total as txPoint, " +
             "np.specific_code as specificCode, " +
             "a.patient_id as patientId, " +
-            "eu.user_id as doctorId " +
+            "a.doctor_user_id as doctorId " +
             "from disposal d " +
             "    left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "    left join treatment_procedure tp on d.id = tp.disposal_id " +
             "    left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "    left join nhi_procedure np on tp.nhi_procedure_id = np.id " +
             "    left join appointment a on d.registration_id = a.registration_id " +
-            "    left join extend_user eu on ned.a15 = eu.national_id " +
-            "    left join jhi_user ju on eu.user_id = ju.id " +
             "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
             "   and d.id not in :excludeDisposalId and tp.nhi_procedure_id is not null " +
             "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +

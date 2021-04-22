@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210329-weichen" author="WeiChen">
+        <sql>
+            ALTER TABLE accounting ADD COLUMN other_deal_status varchar;
+            ALTER TABLE accounting ADD COLUMN other_deal_price decimal;
+            ALTER TABLE accounting ADD COLUMN other_deal_comment varchar;
+            COMMENT ON COLUMN accounting.other_deal_status IS '其他收支的類型';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

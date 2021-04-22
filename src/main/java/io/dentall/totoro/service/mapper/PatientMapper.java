@@ -33,6 +33,10 @@ public class PatientMapper {
         patient.setNote(patientTable.getNote());
         patient.setClinicNote(patientTable.getClinicNote());
         patient.setWriteIcTime(patientTable.getWriteIcTime());
+        patient.setCustomizedAllergy(patientTable.getCustomizedAllergy());
+        patient.setCustomizedBloodDisease(patientTable.getCustomizedBloodDisease());
+        patient.setCustomizedDisease(patientTable.getCustomizedDisease());
+        patient.setCustomizedOther(patientTable.getCustomizedOther());
 //    byte[] getAvatar();
         patient.setAvatarContentType(patientTable.getAvatarContentType());
         patient.setNewPatient(patientTable.getNewPatient());
@@ -46,6 +50,7 @@ public class PatientMapper {
         patient.setDueDate(patientTable.getDueDate());
         patient.setCaseManager(patientTable.getCaseManager());
         patient.setVipPatient(patientTable.getVipPatient());
+        patient.setDisabled(patientTable.getDisabled());
 
         // Relationship
         if (patientTable.getQuestionnaire_Id() != null) {

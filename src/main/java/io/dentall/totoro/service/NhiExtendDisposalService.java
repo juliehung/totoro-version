@@ -536,6 +536,10 @@ public class NhiExtendDisposalService {
                     relationshipService.addRelationshipWithNhiExtendTreatmentDrugs(nhiExtendDisposal, updateNhiExtendDisposal.getNhiExtendTreatmentDrugs());
                 }
 
+                if (updateNhiExtendDisposal.getDependedTreatmentProcedureId() != null) {
+                    nhiExtendDisposal.setDependedTreatmentProcedureId(updateNhiExtendDisposal.getDependedTreatmentProcedureId());
+                }
+
                 return nhiExtendDisposal;
             })
             .get();

@@ -34,6 +34,7 @@ public class AppointmentDTO {
 
     private final Boolean microscope;
 
+    @Deprecated
     private final Boolean baseFloor;
 
     private final Gender gender;
@@ -58,15 +59,28 @@ public class AppointmentDTO {
 
     private final Boolean firstVisit;
 
+    private final String patientCustomizedDisease;
+
+    private final String patientCustomizedBloodDisease;
+
+    private final String patientCustomizedAllergy;
+
+    private final String patientCustomizedOther;
+
+    private final Boolean disabled;
+
     public AppointmentDTO(Long patientId, String patientName, String patientDisplayName, LocalDate birth,
             String nationalId, Gender gender, String phone, Boolean vipPatient, Instant expectedArrivalTime, ExtendUser doctor,
             Integer requiredTreatmentTime, String note, Boolean microscope, Boolean baseFloor, AppointmentStatus status,
             Instant registerArrivalTime, Long id, Boolean newPatient, RegistrationStatus registrationStatus,
             Instant patientLastModifiedDate, String patientLastModifiedBy, String patientMedicalId, Integer colorId,
-            Boolean firstVisit) {
+            Boolean firstVisit, String patientCustomizedDisease, String patientCustomizedBloodDisease, String patientCustomizedAllergy, String patientCustomizedOther,
+            Boolean disabled
+    ) {
         this.patientId = patientId;
         this.patientName = patientName;
         this.patientDisplayName = patientDisplayName;
+        this.disabled = disabled;
         this.birth = birth;
         this.nationalId = nationalId;
         this.phone = phone;
@@ -88,6 +102,30 @@ public class AppointmentDTO {
         this.patientMedicalId = patientMedicalId;
         this.colorId = colorId;
         this.firstVisit = firstVisit;
+        this.patientCustomizedDisease = patientCustomizedDisease;
+        this.patientCustomizedBloodDisease = patientCustomizedBloodDisease;
+        this.patientCustomizedAllergy = patientCustomizedAllergy;
+        this.patientCustomizedOther = patientCustomizedOther;
+    }
+
+    public String getPatientCustomizedDisease() {
+        return patientCustomizedDisease;
+    }
+
+    public String getPatientCustomizedBloodDisease() {
+        return patientCustomizedBloodDisease;
+    }
+
+    public String getPatientCustomizedAllergy() {
+        return patientCustomizedAllergy;
+    }
+
+    public String getPatientCustomizedOther() {
+        return patientCustomizedOther;
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
     }
 
     public Boolean getMicroscope() {

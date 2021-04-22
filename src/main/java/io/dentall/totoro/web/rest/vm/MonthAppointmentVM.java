@@ -1,15 +1,15 @@
 package io.dentall.totoro.web.rest.vm;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Set;
-
 import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.domain.enumeration.AppointmentStatus;
 import io.dentall.totoro.domain.enumeration.Gender;
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
 import io.dentall.totoro.service.dto.AppointmentDTO;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Set;
 
 public class MonthAppointmentVM {
 
@@ -37,7 +37,10 @@ public class MonthAppointmentVM {
 
     private final Boolean microscope;
 
+    @Deprecated
     private final Boolean baseFloor;
+
+    private final Boolean disabled;
 
     private final Gender gender;
 
@@ -58,15 +61,40 @@ public class MonthAppointmentVM {
     private final String medicalId;
 
     private final Integer colorId;
-    
+
     private Set<Tag> tags;
 
     private final Boolean firstVisit;
+
+    private final String patientCustomizedDisease;
+
+    private final String patientCustomizedBloodDisease;
+
+    private final String patientCustomizedAllergy;
+
+    private final String patientCustomizedOther;
+
+    public String getPatientCustomizedDisease() {
+        return patientCustomizedDisease;
+    }
+
+    public String getPatientCustomizedBloodDisease() {
+        return patientCustomizedBloodDisease;
+    }
+
+    public String getPatientCustomizedAllergy() {
+        return patientCustomizedAllergy;
+    }
+
+    public String getPatientCustomizedOther() {
+        return patientCustomizedOther;
+    }
 
     public MonthAppointmentVM(AppointmentDTO appointmentDTO) {
         this.patientId = appointmentDTO.getPatientId();
         this.patientName = appointmentDTO.getPatientName();
         this.patientDisplayName = appointmentDTO.getPatientDisplayName();
+        this.disabled = appointmentDTO.getDisabled();
         this.birth = appointmentDTO.getBirth();
         this.nationalId = appointmentDTO.getNationalId();
         this.phone = appointmentDTO.getPhone();
@@ -88,6 +116,14 @@ public class MonthAppointmentVM {
         this.medicalId = appointmentDTO.getPatientMedicalId();
         this.colorId = appointmentDTO.getColorId();
         this.firstVisit = appointmentDTO.getFirstVisit();
+        this.patientCustomizedDisease = appointmentDTO.getPatientCustomizedDisease();
+        this.patientCustomizedBloodDisease = appointmentDTO.getPatientCustomizedBloodDisease();
+        this.patientCustomizedAllergy = appointmentDTO.getPatientCustomizedAllergy();
+        this.patientCustomizedOther = appointmentDTO.getPatientCustomizedOther();
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
     }
 
     public Integer getColorId() {

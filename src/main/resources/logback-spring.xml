@@ -60,6 +60,7 @@
     <logger name="mio.mqtt" level="WARN"/>
     <logger name="io.dentall.totoro.web.rest" level="DEBUG"/>
     <logger name="io.netty.handler.codec.http.websocketx" level="INFO"/>
+    <logger name="io.grpc.Context" level="OFF" />
 
     <!-- https://logback.qos.ch/manual/configuration.html#shutdownHook and https://jira.qos.ch/browse/LOGBACK-1090 -->
     <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>

@@ -49,7 +49,7 @@ public interface TreatmentDrugRepository extends JpaRepository<TreatmentDrug, Lo
             "       p.id as patientId, " +
             "       p.name as patientName, " +
             "       p.birth as patientBirth, " +
-            "       dg.chinese_name as targetInfo, " +
+            "       dg.name as targetInfo, " +
             "       p.note  as note " +
             "from treatment_drug td " +
             "    left join drug dg on dg.id = td.drug_id " +

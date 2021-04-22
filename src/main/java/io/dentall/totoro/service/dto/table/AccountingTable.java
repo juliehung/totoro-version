@@ -1,5 +1,8 @@
 package io.dentall.totoro.service.dto.table;
 
+import io.dentall.totoro.domain.enumeration.AccountingOtherDealStatus;
+
+import java.math.BigDecimal;
 import java.time.Instant;
 
 public interface AccountingTable {
@@ -16,6 +19,9 @@ public interface AccountingTable {
     Instant getTransactionTime();
     String getStaff();
     Boolean getCopaymentExemption();
+    AccountingOtherDealStatus getOtherDealStatus();
+    BigDecimal getOtherDealPrice();
+    String getOtherDealComment();
 
     // Relationship
     Long getHospital_Id();

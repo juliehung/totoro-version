@@ -1,5 +1,9 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
+import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
@@ -25,9 +29,7 @@ import javax.persistence.criteria.*;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -61,6 +63,8 @@ public class PatientService extends QueryService<Patient> {
 
     private final NhiExtendPatientRepository nhiExtendPatientRepository;
 
+    private final NhiRuleCheckUtil nhiRuleCheckUtil;
+
     public PatientService(
         PatientRepository patientRepository,
         TagRepository tagRepository,
@@ -71,7 +75,8 @@ public class PatientService extends QueryService<Patient> {
         TreatmentPlanRepository treatmentPlanRepository,
         TreatmentTaskRepository treatmentTaskRepository,
         RelationshipService relationshipService,
-        NhiExtendPatientRepository nhiExtendPatientRepository
+        NhiExtendPatientRepository nhiExtendPatientRepository,
+        NhiRuleCheckUtil nhiRuleCheckUtil
     ) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
@@ -83,6 +88,7 @@ public class PatientService extends QueryService<Patient> {
         this.treatmentTaskRepository = treatmentTaskRepository;
         this.relationshipService = relationshipService;
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
+        this.nhiRuleCheckUtil = nhiRuleCheckUtil;
     }
 
     /**
@@ -237,6 +243,22 @@ public class PatientService extends QueryService<Patient> {
                     patient.setWriteIcTime(updatePatient.getWriteIcTime());
                 }
 
+                if (updatePatient.getCustomizedDisease() != null) {
+                    patient.setCustomizedDisease(updatePatient.getCustomizedDisease());
+                }
+
+                if (updatePatient.getCustomizedBloodDisease() != null) {
+                    patient.setCustomizedBloodDisease(updatePatient.getCustomizedBloodDisease());
+                }
+
+                if (updatePatient.getCustomizedAllergy() != null) {
+                    patient.setCustomizedAllergy(updatePatient.getCustomizedAllergy());
+                }
+
+                if (updatePatient.getCustomizedOther() != null) {
+                    patient.setCustomizedOther(updatePatient.getCustomizedOther());
+                }
+
                 // introducer
                 if (updatePatient.getIntroducer() != null) {
                     patient.setIntroducer(updatePatient.getIntroducer());
@@ -294,6 +316,10 @@ public class PatientService extends QueryService<Patient> {
 
                 if (updatePatient.getVipPatient() != null) {
                     patient.setVipPatient(updatePatient.getVipPatient());
+                }
+
+                if (updatePatient.getDisabled() != null) {
+                    patient.setDisabled(updatePatient.getDisabled());
                 }
 
                 return patient;
@@ -541,5 +567,125 @@ public class PatientService extends QueryService<Patient> {
         }
 
         return p;
+    }
+
+    /**
+     * 特殊 rule check 只實作指定代碼(81/91004C)，部分檢核，若原生代碼有異動，則需一併調整
+     */
+    public NhiRuleCheckResultVM getPatientNhiStatus(
+        String code,
+        Long patientId
+    ) {
+
+        NhiRuleCheckVM vm = new NhiRuleCheckVM();
+        vm.setPatientId(patientId);
+
+        NhiRuleCheckResultVM rvm = new NhiRuleCheckResultVM();
+        NhiRuleCheckDTO dto = nhiRuleCheckUtil.convertVmToDto(code, vm);
+
+        switch(code) {
+            case "81":
+                // 檢查 81
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.lessThanAge6(dto),
+                        rvm
+                    );
+                }
+
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                            Arrays.asList(new String[]{"81"}.clone()),
+                            DateTimeUtil.NHI_6_MONTH),
+                        rvm
+                    );
+                }
+
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                            Arrays.asList(new String[]{"81"}.clone()),
+                            DateTimeUtil.NHI_6_MONTH),
+                        rvm
+                    );
+                }
+
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.appendSuccessSourceInfo(dto),
+                        rvm
+                    );
+                }
+
+                break;
+            case "91004C":
+                // 檢查 91004C
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                            Arrays.asList("91004C", "91003C"),
+                            DateTimeUtil.NHI_6_MONTH),
+                        rvm
+                    );
+                }
+
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                            Arrays.asList("91004C", "91003C"),
+                            DateTimeUtil.NHI_6_MONTH),
+                        rvm
+                    );
+                }
+
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                            Arrays.asList("91015C~91018C"),
+                            DateTimeUtil.NHI_3_MONTH),
+                        rvm
+                    );
+                }
+
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                            Arrays.asList("91015C~91018C"),
+                            DateTimeUtil.NHI_3_MONTH),
+                        rvm
+                    );
+                }
+
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
+                            Arrays.asList("91103C", "91104C"),
+                            DateTimeUtil.NHI_2_MONTH),
+                        rvm
+                    );
+                }
+
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
+                            Arrays.asList("91103C", "91104C"),
+                            DateTimeUtil.NHI_2_MONTH),
+                        rvm
+                    );
+                }
+
+                if (rvm.isValidated()) {
+                    nhiRuleCheckUtil.addResultToVm(
+                        nhiRuleCheckUtil.appendSuccessSourceInfo(dto),
+                        rvm
+                    );
+                }
+                break;
+            default:
+                break;
+        }
+
+        return rvm;
     }
 }
