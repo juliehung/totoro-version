@@ -349,6 +349,12 @@ Image
 
 Metrics
 ---
+- 加入下列參數，來開啟 prometheus endpoint，`management/`可看到所有 metric 清單，`management/prometheus`
+  可看到，auto-config 產生的 prometheus 格式的資料。
+  ```
+  -Dmanagement.metrics.web.server.request.autotime.enabled=true
+  -Dmanagement.metrics.export.prometheus.enabled=true
+  ```
 - 由於以內建整合於 application ， 可以藉由 http://some.how.domain:someport/management/metrics 以取得，且需要帶入 bearer token。
 <br/>For Example:
     ```bash

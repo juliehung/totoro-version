@@ -250,12 +250,6 @@ dependencies {
     // to use a SNAPSHOT release instead of a stable release
     compile group: "io.github.jhipster", name: "jhipster-framework", version: "${jhipster_dependencies_version}"
     compile "org.springframework.boot:spring-boot-starter-cache"
-    compile "io.dropwizard.metrics:metrics-core"
-    compile "io.dropwizard.metrics:metrics-jcache"
-    compile "io.dropwizard.metrics:metrics-json"
-    compile "io.dropwizard.metrics:metrics-jvm"
-    compile "io.dropwizard.metrics:metrics-servlet"
-    compile "io.dropwizard.metrics:metrics-servlets"
     compile "net.logstash.logback:logstash-logback-encoder"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-hppc:${com_fasterxml_jackson_version}"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${com_fasterxml_jackson_version}"
@@ -350,6 +344,8 @@ dependencies {
     compile "com.google.cloud:google-cloud-storage:1.105.1"
     compile "com.google.auth:google-auth-library-oauth2-http:0.20.0"
     compile 'com.google.cloud:sqlcommenter:1.0.0'
+    compile 'io.micrometer:micrometer-core:1.5.5'
+    compile 'io.micrometer:micrometer-registry-prometheus:1.5.0'
 }
 
 

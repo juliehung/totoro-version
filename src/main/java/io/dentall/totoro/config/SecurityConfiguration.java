@@ -1,8 +1,7 @@
 package io.dentall.totoro.config;
 
-import io.dentall.totoro.security.*;
-import io.dentall.totoro.security.jwt.*;
-
+import io.dentall.totoro.security.jwt.JWTConfigurer;
+import io.dentall.totoro.security.jwt.TokenProvider;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -115,7 +114,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()
-            .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/management/**").hasRole("ADMIN")
         .and()
             .apply(securityConfigurerAdapter());
 
