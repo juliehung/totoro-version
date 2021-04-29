@@ -22,6 +22,7 @@ public abstract class Appointment_ extends io.dentall.totoro.domain.AbstractDoct
 	public static volatile SingularAttribute<Appointment, Boolean> archived;
 	public static volatile SingularAttribute<Appointment, Patient> patient;
 	public static volatile SetAttribute<Appointment, TreatmentProcedure> treatmentProcedures;
+	public static volatile SingularAttribute<Appointment, Boolean> disabled;
 	public static volatile SingularAttribute<Appointment, Registration> registration;
 	public static volatile SingularAttribute<Appointment, Long> id;
 	public static volatile SingularAttribute<Appointment, Boolean> firstVisit;

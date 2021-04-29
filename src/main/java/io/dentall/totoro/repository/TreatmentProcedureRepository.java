@@ -136,4 +136,7 @@ public interface TreatmentProcedureRepository extends JpaRepository<TreatmentPro
         @Param(value="doctorIds") List<Long> doctorIds,
         @Param(value="id") Long nhiProcedureId,
         Pageable page);
+
+    List<TreatmentProcedure> findTreatmentProceduresByDisposal_IdIn(List<Long> disposalIds);
+
 }

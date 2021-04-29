@@ -405,6 +405,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "ned.examination_point as examinationPoint, " +
             "ned.patient_identity as patientIdentity, " +
             "ned.serial_number as serialNumber, " +
+            "ned.a23 as nhiCategory, " +
             "ned.a31 as visitTotalPoint, " +
             "ned.a32 as copayment, " +
             "np.code as txCode, " +
@@ -439,6 +440,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "ned.examination_point as examinationPoint, " +
             "ned.patient_identity as patientIdentity, " +
             "ned.serial_number as serialNumber, " +
+            "ned.a23 as nhiCategory, " +
             "ned.a31 as visitTotalPoint, " +
             "ned.a32 as copayment, " +
             "np.code as txCode, " +
@@ -503,6 +505,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "ned.examination_point as examinationPoint, " +
             "ned.patient_identity as patientIdentity, " +
             "ned.serial_number as serialNumber, " +
+            "ned.a23 as nhiCategory, " +
             "ned.a31 as visitTotalPoint, " +
             "ned.a32 as copayment, " +
             "a.patient_id as patientId, " +
@@ -523,5 +526,12 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
         @Param("begin") LocalDate begin,
         @Param("end") LocalDate end,
         @Param("excludeDisposalId") List<Long> excludeDisposalId
+    );
+
+    List<NhiExtendDisposalTable> findByDateBetweenOrReplenishmentDateBetween(
+        LocalDate dateBegin,
+        LocalDate dateEnd,
+        LocalDate replenishmentDateBegin,
+        LocalDate replenishmentDateEnd
     );
 }

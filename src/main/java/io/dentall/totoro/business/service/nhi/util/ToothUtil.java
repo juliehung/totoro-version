@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ToothUtil {
 
@@ -121,6 +122,23 @@ public class ToothUtil {
             .filter(tooth -> toothRegexPattern.matcher(tooth).matches())
             .filter(tooth -> tooth.matches(tc.getRegex()))
             .count();
+    }
+
+    public static String parseToothSurfaceToNhiSurface(String toothSurface) {
+        String result = "";
+
+        try {
+            result = Arrays.stream(toothSurface.split("[*]"))
+                .map(toothSurfaceInfo -> {
+                    String[] toothSurfaceInfoSplit = toothSurfaceInfo.split("[_]");
+                    return toothSurfaceInfoSplit[toothSurfaceInfoSplit.length - 1];
+                })
+                .collect(Collectors.joining());
+        } catch (Exception e) {
+            // do nothing;
+        }
+
+        return result;
     }
 }
 
