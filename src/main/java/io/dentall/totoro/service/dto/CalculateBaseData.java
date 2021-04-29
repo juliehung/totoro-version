@@ -1,5 +1,9 @@
 package io.dentall.totoro.service.dto;
 
+import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.Instant;
 
 public interface CalculateBaseData {
@@ -23,12 +27,19 @@ public interface CalculateBaseData {
 
     String getCopayment();
 
+    /**
+     * 就醫類別，a.k.a A23
+     * @return
+     */
+    String getNhiCategory();
+
     // Nhi procedure
     String getTxCode();
 
     Double getTxPoint();
 
-    String getSpecificCode();
+    @Enumerated(EnumType.STRING)
+    NhiSpecialCode getSpecificCode();
 
     // Appointment
     Long getPatientId();
