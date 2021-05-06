@@ -160,7 +160,13 @@ public class AppointmentService {
             .findById(updateAppointment.getId())
             .map(appointment -> {
                 if (updateAppointment.getStatus() != null) {
-                    appointment.setStatus((updateAppointment.getStatus()));
+                    // 當預約已經有掛號時，不允許改變狀態
+                    if (appointment == null ||
+                        appointment.getRegistration() == null ||
+                        appointment.getRegistration().getId() == null
+                    ) {
+                        appointment.setStatus((updateAppointment.getStatus()));
+                    }
                 }
 
                 if (updateAppointment.getSubject() != null) {
