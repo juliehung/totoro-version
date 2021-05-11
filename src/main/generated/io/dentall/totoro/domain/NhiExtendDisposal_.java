@@ -46,6 +46,7 @@ public abstract class NhiExtendDisposal_ {
 	public static volatile SingularAttribute<NhiExtendDisposal, String> a27;
 	public static volatile SingularAttribute<NhiExtendDisposal, Integer> examinationPoint;
 	public static volatile SingularAttribute<NhiExtendDisposal, String> patientIdentity;
+	public static volatile SingularAttribute<NhiExtendDisposal, Long> dependedTreatmentProcedureId;
 	public static volatile SingularAttribute<NhiExtendDisposal, String> referralHospitalCode;
 	public static volatile SingularAttribute<NhiExtendDisposal, String> category;
 	public static volatile SingularAttribute<NhiExtendDisposal, String> a31;

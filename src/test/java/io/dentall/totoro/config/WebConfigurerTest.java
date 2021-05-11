@@ -1,17 +1,12 @@
 package io.dentall.totoro.config;
 
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.servlet.InstrumentedFilter;
-import com.codahale.metrics.servlets.MetricsServlet;
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.config.JHipsterProperties;
-import io.github.jhipster.web.filter.CachingHttpHeadersFilter;
 import io.undertow.Undertow;
 import io.undertow.Undertow.Builder;
 import io.undertow.UndertowOptions;
 import org.apache.commons.io.FilenameUtils;
-
-import org.h2.server.web.WebServlet;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
@@ -23,8 +18,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.xnio.OptionMap;
 
-import javax.servlet.*;
-import java.util.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterRegistration;
+import javax.servlet.Servlet;
+import javax.servlet.ServletRegistration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,53 +44,16 @@ public class WebConfigurerTest {
 
     private WebConfigurer webConfigurer;
 
-    private MockServletContext servletContext;
-
     private MockEnvironment env;
 
     private JHipsterProperties props;
 
-    private MetricRegistry metricRegistry;
-
     @Before
     public void setup() {
-        servletContext = spy(new MockServletContext());
-        doReturn(mock(FilterRegistration.Dynamic.class))
-            .when(servletContext).addFilter(anyString(), any(Filter.class));
-        doReturn(mock(ServletRegistration.Dynamic.class))
-            .when(servletContext).addServlet(anyString(), any(Servlet.class));
-
         env = new MockEnvironment();
         props = new JHipsterProperties();
 
         webConfigurer = new WebConfigurer(env, props);
-        metricRegistry = new MetricRegistry();
-        webConfigurer.setMetricRegistry(metricRegistry);
-    }
-
-    @Test
-    public void testStartUpProdServletContext() throws ServletException {
-        env.setActiveProfiles(JHipsterConstants.SPRING_PROFILE_PRODUCTION);
-        webConfigurer.onStartup(servletContext);
-
-        assertThat(servletContext.getAttribute(InstrumentedFilter.REGISTRY_ATTRIBUTE)).isEqualTo(metricRegistry);
-        assertThat(servletContext.getAttribute(MetricsServlet.METRICS_REGISTRY)).isEqualTo(metricRegistry);
-        verify(servletContext).addFilter(eq("webappMetricsFilter"), any(InstrumentedFilter.class));
-        verify(servletContext).addServlet(eq("metricsServlet"), any(MetricsServlet.class));
-        verify(servletContext).addFilter(eq("cachingHttpHeadersFilter"), any(CachingHttpHeadersFilter.class));
-        verify(servletContext, never()).addServlet(eq("H2Console"), any(WebServlet.class));
-    }
-
-    @Test
-    public void testStartUpDevServletContext() throws ServletException {
-        env.setActiveProfiles(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT);
-        webConfigurer.onStartup(servletContext);
-
-        assertThat(servletContext.getAttribute(InstrumentedFilter.REGISTRY_ATTRIBUTE)).isEqualTo(metricRegistry);
-        assertThat(servletContext.getAttribute(MetricsServlet.METRICS_REGISTRY)).isEqualTo(metricRegistry);
-        verify(servletContext).addFilter(eq("webappMetricsFilter"), any(InstrumentedFilter.class));
-        verify(servletContext).addServlet(eq("metricsServlet"), any(MetricsServlet.class));
-        verify(servletContext, never()).addFilter(eq("cachingHttpHeadersFilter"), any(CachingHttpHeadersFilter.class));
     }
 
     @Test
