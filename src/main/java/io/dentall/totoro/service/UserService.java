@@ -8,10 +8,13 @@ import io.dentall.totoro.repository.AuthorityRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.AuthoritiesConstants;
 import io.dentall.totoro.security.SecurityUtils;
+import io.dentall.totoro.service.dto.DoctorVM;
 import io.dentall.totoro.service.dto.UserDTO;
+import io.dentall.totoro.service.mapper.UserDomainMapper;
 import io.dentall.totoro.service.util.RandomUtil;
-import io.dentall.totoro.web.rest.errors.*;
-
+import io.dentall.totoro.web.rest.errors.EmailAlreadyUsedException;
+import io.dentall.totoro.web.rest.errors.InvalidPasswordException;
+import io.dentall.totoro.web.rest.errors.LoginAlreadyUsedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -131,9 +134,9 @@ public class UserService {
         return newUser;
     }
 
-    private boolean removeNonActivatedUser(User existingUser){
-        if(existingUser.getActivated()) {
-             return false;
+    private boolean removeNonActivatedUser(User existingUser) {
+        if (existingUser.getActivated()) {
+            return false;
         }
         userRepository.delete(existingUser);
         userRepository.flush();
@@ -179,10 +182,10 @@ public class UserService {
      * Update basic information (first name, last name, email, language) for the current user.
      *
      * @param firstName first name of user
-     * @param lastName last name of user
-     * @param email email id of user
-     * @param langKey language key
-     * @param imageUrl image URL of user
+     * @param lastName  last name of user
+     * @param email     email id of user
+     * @param langKey   language key
+     * @param imageUrl  image URL of user
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
         SecurityUtils.getCurrentUserLogin()
@@ -257,7 +260,7 @@ public class UserService {
     /**
      * Update extendUser
      *
-     * @param login login of user
+     * @param login   login of user
      * @param userDTO user to update
      */
     public void updateExtendUser(String login, UserDTO userDTO) {
@@ -269,7 +272,7 @@ public class UserService {
     /**
      * Update gmail and calendarId for a user
      *
-     * @param gmail gmail of user
+     * @param gmail      gmail of user
      * @param calendarId id of google calendar
      */
     public void updateExtendUser(String gmail, String calendarId) {
@@ -308,6 +311,16 @@ public class UserService {
     @Transactional(readOnly = true)
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
         return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(UserDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<DoctorVM> getAllDoctors(Pageable pageable) {
+        return userRepository.findByAuthorities_NameIn(pageable, Arrays.asList(AuthoritiesConstants.DOCTOR)).map(UserDomainMapper.INSTANCE::mapToDoctorVM);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<DoctorVM> getDoctor(String doctorId) {
+        return userRepository.findByLoginAndAuthorities_NameIn(doctorId, Arrays.asList(AuthoritiesConstants.DOCTOR)).map(UserDomainMapper.INSTANCE::mapToDoctorVM);
     }
 
     @Transactional(readOnly = true)

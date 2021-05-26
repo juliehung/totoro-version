@@ -1,6 +1,7 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository;
+import io.dentall.totoro.business.vm.nhi.NhiMetricBaseVM;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.CalculateBaseData;
@@ -534,4 +535,149 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
         LocalDate replenishmentDateBegin,
         LocalDate replenishmentDateEnd
     );
+
+    // 更動此 query 記得同時更動，排除 codes 的 function
+    @Query(
+        nativeQuery = true,
+        value = "select" +
+            " p.id as patientId," +
+            " p.birth as patientBirth," +
+            " d.id as disposalId, " +
+            " ned.jhi_date as disposalDate," +
+            " ned.a18 as cardNumber," +
+            " ned.a19 as cardReplenishment," +
+            " ned.a23 as nhiCategory," +
+            " ned.a32 as partialBurden," +
+            " ned.replenishment_date as cardReplenishmentDisposalDate," +
+            " ned.examination_code as examCode," +
+            " ned.examination_point as examPoint," +
+            " ned.patient_identity as patientIdentity," +
+            " ned.serial_number as serialNumber," +
+            " tp.total as treatmentProcedureTotal," +
+            " np.specific_code as treatmentProcedureSpecificCode," +
+            " netp.a73 as treatmentProcedureCode," +
+            " netp.a74 as treatmentProcedureTooth," +
+            " netp.a75 as treatmentProcedureSurface " +
+            "from disposal d " +
+            "left join registration r on r.id = d.registration_id " +
+            "left join appointment a on r.id = a.registration_id " +
+            "left join patient p on p.id = a.patient_id " +
+            "left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "left join nhi_procedure np on np.id = tp.nhi_procedure_id " +
+            "left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
+            "   and d.id not in :excludeDisposalIds " +
+            "   and tp.nhi_procedure_id is not null " +
+            "   and trim(ned.a18) <> '' " +
+            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
+            "   and d.id not in :excludeDisposalIds " +
+            "   and tp.nhi_procedure_id is not null " +
+            "   and trim(ned.a18) <> '' "
+    )
+    List<NhiMetricBaseVM> findMetricBases(
+        @Param("begin") Instant begin,
+        @Param("end") Instant end,
+        @Param("excludeDisposalIds") List<Long> excludeDisposalIds
+    );
+
+    // 更動此 query 記得同時更動，尚未排除 codes 的 function
+    @Query(
+        nativeQuery = true,
+        value = "select" +
+            " p.id as patientId," +
+            " p.birth as patientBirth," +
+            " d.id as disposalId, " +
+            " ned.jhi_date as disposalDate," +
+            " ned.a18 as cardNumber," +
+            " ned.a19 as cardReplenishment," +
+            " ned.a23 as nhiCategory," +
+            " ned.a32 as partialBurden," +
+            " ned.replenishment_date as cardReplenishmentDisposalDate," +
+            " ned.examination_code as examCode," +
+            " ned.examination_point as examPoint," +
+            " ned.patient_identity as patientIdentity," +
+            " ned.serial_number as serialNumber," +
+            " tp.total as treatmentProcedureTotal," +
+            " np.specific_code as treatmentProcedureSpecificCode," +
+            " netp.a73 as treatmentProcedureCode," +
+            " netp.a74 as treatmentProcedureTooth," +
+            " netp.a75 as treatmentProcedureSurface " +
+            "from disposal d " +
+            "left join registration r on r.id = d.registration_id " +
+            "left join appointment a on r.id = a.registration_id " +
+            "left join patient p on p.id = a.patient_id " +
+            "left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "left join nhi_procedure np on np.id = tp.nhi_procedure_id " +
+            "left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
+            "   and tp.nhi_procedure_id is not null " +
+            "   and trim(ned.a18) <> '' " +
+            "   and d.id not in :excludeDisposalIds " +
+            "   and p.id in :onlyPatientId " +
+            "   and netp.a73 in :onlyCodes " +
+            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
+            "   and tp.nhi_procedure_id is not null " +
+            "   and trim(ned.a18) <> '' " +
+            "   and d.id not in :excludeDisposalIds " +
+            "   and p.id in :onlyPatientId " +
+            "   and netp.a73 in :onlyCodes "
+    )
+    List<NhiMetricBaseVM> findMetricBases(
+        @Param("begin") Instant begin,
+        @Param("end") Instant end,
+        @Param("excludeDisposalIds") List<Long> excludeDisposalIds,
+        @Param("onlyPatientId") List<Long> onlyPatientId,
+        @Param("onlyCodes") List<String> onlyCodes
+    );
+
+    // 更動此 query 記得同時更動，尚未排除 codes 的 function
+    @Query(
+        nativeQuery = true,
+        value = "select" +
+            " p.id as patientId," +
+            " p.birth as patientBirth," +
+            " d.id as disposalId, " +
+            " ned.jhi_date as disposalDate," +
+            " ned.a18 as cardNumber," +
+            " ned.a19 as cardReplenishment," +
+            " ned.a23 as nhiCategory," +
+            " ned.a32 as partialBurden," +
+            " ned.replenishment_date as cardReplenishmentDisposalDate," +
+            " ned.examination_code as examCode," +
+            " ned.examination_point as examPoint," +
+            " ned.patient_identity as patientIdentity," +
+            " ned.serial_number as serialNumber," +
+            " tp.total as treatmentProcedureTotal," +
+            " np.specific_code as treatmentProcedureSpecificCode," +
+            " netp.a73 as treatmentProcedureCode," +
+            " netp.a74 as treatmentProcedureTooth," +
+            " netp.a75 as treatmentProcedureSurface " +
+            "from disposal d " +
+            "left join registration r on r.id = d.registration_id " +
+            "left join appointment a on r.id = a.registration_id " +
+            "left join patient p on p.id = a.patient_id " +
+            "left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "left join nhi_procedure np on np.id = tp.nhi_procedure_id " +
+            "left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
+            "   and d.id not in :excludeDisposalIds " +
+            "   and tp.nhi_procedure_id is not null " +
+            "   and trim(ned.a18) <> '' " +
+            "   and netp.a73 in :onlyCodes " +
+            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
+            "   and d.id not in :excludeDisposalIds " +
+            "   and tp.nhi_procedure_id is not null " +
+            "   and trim(ned.a18) <> '' " +
+            "   and netp.a73 in :onlyCodes "
+    )
+    List<NhiMetricBaseVM> findMetricBases(
+        @Param("begin") Instant begin,
+        @Param("end") Instant end,
+        @Param("excludeDisposalIds") List<Long> excludeDisposalIds,
+        @Param("onlyCodes") List<String> onlyCodes
+    );
+
 }
