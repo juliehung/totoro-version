@@ -3,6 +3,9 @@ package io.dentall.totoro.business.service.nhi;
 import io.dentall.totoro.business.service.nhi.util.NhiProcedureSalaryType;
 import io.dentall.totoro.business.service.nhi.util.NhiProcedureUtil;
 import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
+import io.dentall.totoro.business.service.nhi.util.ToothUtil;
+import io.dentall.totoro.business.vm.nhi.NhiMetricBaseVM;
+import io.dentall.totoro.business.vm.nhi.NhiNorthQuickPassMetricVM;
 import io.dentall.totoro.business.vm.nhi.NhiStatisticDashboard;
 import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.User;
@@ -10,15 +13,19 @@ import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.dto.CalculateBaseData;
 import io.dentall.totoro.service.dto.NhiIndexEndoDTO;
+import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.web.rest.vm.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ejb.Timeout;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static io.dentall.totoro.business.service.nhi.util.ToothUtil.getToothCount;
@@ -26,6 +33,19 @@ import static io.dentall.totoro.business.service.nhi.util.ToothUtil.getToothCoun
 @Service
 @Transactional
 public class NhiStatisticService {
+    private final List<String> odCodes = Arrays.asList(
+        "89001C",
+        "89002C",
+        "89003C",
+        "89004C",
+        "89005C",
+        "89008C",
+        "89009C",
+        "89010C",
+        "89011C",
+        "89012C"
+    );
+
     private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
 
     private final UserRepository userRepository;
@@ -712,5 +732,621 @@ public class NhiStatisticService {
 
         return m;
     }
+
+    /**
+     * 北區快速通關指標
+     */
+    public NhiNorthQuickPassMetricVM getNorthQuickPassMetrics(
+        Instant begin,
+        Instant end,
+        List<Long> excludeDisposalIds
+    ) {
+        NhiNorthQuickPassMetricVM result = new NhiNorthQuickPassMetricVM();
+
+        if (excludeDisposalIds == null) {
+            excludeDisposalIds = new ArrayList<>();
+            excludeDisposalIds.add(0L);
+        }
+
+        if (excludeDisposalIds.size() == 0) {
+            excludeDisposalIds.add(0L);
+        }
+
+        List<NhiMetricBaseVM> metricBaseResult = nhiExtendDisposalRepository.findMetricBases(
+            begin,
+            end,
+            excludeDisposalIds
+        );
+
+        // a7
+        List<NhiMetricBaseVM> a7Resource = metricBaseResult.stream()
+            .filter(this.excludeNhiCategory1416)
+            .filter(this.excludePerio1Codes)
+            .filter(this.excludePerio2Codes)
+            .filter(this.onlyDeclareCase)
+            .collect(Collectors.toList());
+
+        Map<Long, List<NhiMetricBaseVM>> a7ResourceGroupByDisposalId = a7Resource.stream()
+            .collect(Collectors.groupingBy(NhiMetricBaseVM::getDisposalId));
+        Set<String> a7ResourceNumberOfICCard = new HashSet<>();
+        a7Resource.forEach(base -> {
+            a7ResourceNumberOfICCard.add(
+                base.getPatientId().toString()
+                    .concat("_")
+                    .concat(base.getCardNumber())
+            );
+        });
+        BigDecimal a7CaseNumber = a7ResourceNumberOfICCard != null && a7ResourceNumberOfICCard.size() > 0
+            ? new BigDecimal(a7ResourceNumberOfICCard.size())
+            : BigDecimal.ZERO;
+
+        BigDecimal a7TotalPoint = this.summaryTotalDisposalPoint(a7ResourceGroupByDisposalId);
+
+        if (!BigDecimal.ZERO.equals(a7CaseNumber)) {
+            result.setA7(
+                a7TotalPoint.divide(
+                    a7CaseNumber,
+                    2,
+                    BigDecimal.ROUND_HALF_UP
+                )
+            );
+        }
+
+        // a8
+        Instant a8Begin = end
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .with(LocalTime.MIN)
+            .withYear(end.atOffset(TimeConfig.ZONE_OFF_SET).getYear())
+            .withMonth(end.atOffset(TimeConfig.ZONE_OFF_SET).getMonthValue())
+            .withDayOfMonth(end.atOffset(TimeConfig.ZONE_OFF_SET).getDayOfMonth())
+            .minus(DateTimeUtil.NHI_12_MONTH)
+            .toInstant();
+
+        List<NhiMetricBaseVM> a8Resource = nhiExtendDisposalRepository.findMetricBases(
+            a8Begin,
+            end,
+            excludeDisposalIds
+        );
+
+        BigDecimal a8Numerator = new BigDecimal(
+            a8Resource.stream()
+            .filter(this.onlyA8numerator)
+            .count()
+        );
+
+        BigDecimal a8Denominator = new BigDecimal(
+            a8Resource.stream()
+                .filter(this.onlyA8Denominator)
+                .count()
+        );
+
+        if (!BigDecimal.ZERO.equals(a8Denominator)) {
+            result.setA8(
+                a8Numerator.divide(
+                    a8Denominator,
+                    2,
+                    BigDecimal.ROUND_HALF_UP
+                )
+                .subtract(
+                    BigDecimal.ONE
+                )
+                .negate()
+            );
+        }
+
+        // a9
+        List<NhiMetricBaseVM> a9Numerator = metricBaseResult.stream()
+            .filter(this.excludeNhiCategory1416)
+            .filter(this.onlyODCode)
+            .collect(Collectors.toList());
+        List<NhiMetricBaseVM> a9Denominator = metricBaseResult.stream()
+            .filter(this.excludeNhiCategory1416)
+            .collect(Collectors.toList());
+
+
+        Map<Long, List<NhiMetricBaseVM>> a9DenominatorByDisposalId = a9Denominator.stream()
+            .collect(Collectors.groupingBy(NhiMetricBaseVM::getDisposalId));
+        BigDecimal a9DenominatorByIdPointSummary = this.summaryTotalDisposalPoint(a9DenominatorByDisposalId);
+
+        if (!BigDecimal.ZERO.equals(a9DenominatorByIdPointSummary)) {
+            result.setA9(
+                this.summaryTotalTreatmentPoint(
+                    a9Numerator
+                ).divide(
+                    a9DenominatorByIdPointSummary,
+                    2,
+                    BigDecimal.ROUND_HALF_UP
+                )
+            );
+        }
+
+        // a10
+        result.setA10(
+            this.summaryApplyDisposalPointWithSameExamPoint(
+                metricBaseResult.stream()
+                    .filter(this.excludeNhiCategory1416)
+                    .filter(this.excludeNhiCategoryA3)
+                    .filter(this.exclude91014C)
+                    .filter(this.excludePerio1Codes)
+                    .filter(this.excludePerio2Codes)
+                    .filter(this.excludeSpecificCodeG9)
+                    .filter(this.excludeSpecificCodeJA)
+                    .collect(Collectors.groupingBy(NhiMetricBaseVM::getDisposalId))
+            )
+        );
+
+        // a14, CAUTION: 以起始時間的月份作為，切換成季的標準。
+        Map<Long, List<String>> patientPermanentToothMap = new HashMap<>();
+        Map<Long, List<String>> patientDeciduousToothMap = new HashMap<>();
+        // Key will be patient_tooth
+        Set<String> patientDuplicatedPermanentToothSet = new HashSet();
+        Set<String> patientDuplicatedDeciduousToothSet = new HashSet();
+
+        DateTimeUtil.BeginEnd quarterBeginEnd =
+            DateTimeUtil.getCurrentQuarterMonthsRangeInstant(
+                begin
+            );
+
+        nhiExtendDisposalRepository.findMetricBases(
+            quarterBeginEnd.getBegin(),
+            quarterBeginEnd.getEnd(),
+            excludeDisposalIds,
+            this.odCodes
+        ).stream()
+            .filter(this.excludeNhiCategory1416)
+            .filter(this.excludeSpecificCodeG9)
+            .forEach(base -> {
+                ToothUtil.splitA74(base.getTreatmentProcedureTooth())
+                    .forEach(tooth -> {
+                        if (ToothUtil.validatedToothConstraint(ToothConstraint.PERMANENT_TOOTH, tooth)) {
+                            this.recordDuplicatedPatientTooth(
+                                patientPermanentToothMap,
+                                patientDuplicatedPermanentToothSet,
+                                base.getPatientId(),
+                                tooth
+                            );
+                        } else {
+                            this.recordDuplicatedPatientTooth(
+                                patientDeciduousToothMap,
+                                patientDuplicatedDeciduousToothSet,
+                                base.getPatientId(),
+                                tooth
+                            );
+                        }
+                    });
+            });
+
+        nhiExtendDisposalRepository.findMetricBases(
+            quarterBeginEnd.getBegin().minus(DateTimeUtil.NHI_24_MONTH),
+            quarterBeginEnd.getEnd().minus(DateTimeUtil.NHI_24_MONTH),
+            excludeDisposalIds,
+            patientPermanentToothMap.keySet().size() != 0
+                ? new ArrayList<>(patientPermanentToothMap.keySet())
+                : Arrays.asList(0L),
+            this.odCodes
+        ).stream()
+            .filter(this.excludeNhiCategory1416)
+            .filter(this.excludeNhiCategoryA3)
+            .filter(this.excludeNhiCategoryB6B7)
+            .filter(this.excludeSpecificCodeG9)
+            .filter(this.excludeSpecificCodeJA)
+            .filter(this.excludeSpecificCodeJB)
+            .forEach(base -> {
+                Long patientId = base.getPatientId();
+                ToothUtil.splitA74(base.getTreatmentProcedureTooth())
+                    .forEach(tooth -> {
+                        if (ToothUtil.validatedToothConstraint(ToothConstraint.PERMANENT_TOOTH, tooth) &&
+                            patientPermanentToothMap.containsKey(patientId) &&
+                            patientPermanentToothMap.get(patientId).contains(tooth)
+                        ) {
+                            patientDuplicatedPermanentToothSet.add(
+                                this.generatePatientDuplicateToothKey(
+                                    patientId,
+                                    tooth
+                                )
+                            );
+                        }
+                    });
+            });
+
+        result.setA14(
+            this.calculateReODRatio(
+                patientPermanentToothMap,
+                patientDuplicatedPermanentToothSet
+            )
+        );
+
+        // a15
+        Set<String> pastDeciduousToothList = new HashSet<>();
+        nhiExtendDisposalRepository.findMetricBases(
+            quarterBeginEnd.getBegin().minus(DateTimeUtil.NHI_18_MONTH),
+            quarterBeginEnd.getEnd().minus(DateTimeUtil.NHI_18_MONTH),
+            excludeDisposalIds,
+            patientDeciduousToothMap.keySet().size() != 0
+                ? new ArrayList<>(patientDeciduousToothMap.keySet())
+                : Arrays.asList(0L),
+            this.odCodes
+        ).stream()
+            .filter(this.excludeNhiCategory1416)
+            .filter(this.excludeSpecificCodeG9)
+            .forEach(base -> {
+                Long patientId = base.getPatientId();
+                ToothUtil.splitA74(base.getTreatmentProcedureTooth())
+                    .forEach(tooth -> {
+                        if (!ToothUtil.validatedToothConstraint(ToothConstraint.PERMANENT_TOOTH, tooth) &&
+                            !patientDeciduousToothMap.containsKey(patientId) ||
+                            !ToothUtil.validatedToothConstraint(ToothConstraint.PERMANENT_TOOTH, tooth) &&
+                            patientDeciduousToothMap.containsKey(patientId) &&
+                            !patientDeciduousToothMap.get(patientId).contains(tooth)
+                        ) {
+                            pastDeciduousToothList.add(
+                                this.generatePatientDuplicateToothKey(
+                                    patientId,
+                                    tooth
+                                )
+                            );
+                        }
+
+                        if (!ToothUtil.validatedToothConstraint(ToothConstraint.PERMANENT_TOOTH, tooth) &&
+                            patientDeciduousToothMap.containsKey(patientId) &&
+                            patientDeciduousToothMap.get(patientId).contains(tooth)
+                        ) {
+                            patientDuplicatedDeciduousToothSet.add(
+                                this.generatePatientDuplicateToothKey(
+                                    patientId,
+                                    tooth
+                                )
+                            );
+                        }
+                    });
+            });
+
+        result.setA15_1(
+            this.calculateReODRatio(
+                patientDeciduousToothMap,
+                patientDuplicatedDeciduousToothSet
+            )
+        );
+
+        result.setA15_2(
+            new BigDecimal(
+                pastDeciduousToothList.size()
+            ).add(
+                this.calculateReODNumbers(patientDeciduousToothMap)
+            )
+        );
+
+        // a17
+        BigDecimal a17CaseNumber = BigDecimal.ZERO;
+        BigDecimal a17PatientElderThan50 = BigDecimal.ZERO;
+
+        a17CaseNumber = a17CaseNumber.add(
+            new BigDecimal(
+                metricBaseResult.stream()
+                    .filter(base -> "89013C".equals(base.getTreatmentProcedureCode()))
+                    .collect(Collectors.groupingBy(NhiMetricBaseVM::getDisposalId))
+                    .keySet()
+                    .size()
+            )
+        );
+
+        a17PatientElderThan50 = a17PatientElderThan50.add(
+            new BigDecimal(
+                metricBaseResult.stream()
+                    .filter(base -> "89013C".equals(base.getTreatmentProcedureCode()))
+                    .filter(base -> 50 > Period.between(
+                        base.getPatientBirth(),
+                        "1".equals(base.getCardReplenishment())
+                            ? base.getDisposalDate()
+                            : base.getCardReplenishmentDisposalDate()
+                        ).getYears()
+                    )
+                    .collect(Collectors.groupingBy(NhiMetricBaseVM::getDisposalId))
+                    .keySet()
+                    .size()
+            )
+        );
+
+        List<NhiMetricBaseVM> a17PastResult = nhiExtendDisposalRepository.findMetricBases(
+            begin.minus(DateTimeUtil.NHI_2_MONTH),
+            end.minus(DateTimeUtil.NHI_2_MONTH),
+            excludeDisposalIds,
+            Arrays.asList("89013C")
+        );
+
+        a17CaseNumber = a17CaseNumber.add(
+            new BigDecimal(
+                a17PastResult.stream()
+                    .filter(base -> "89013C".equals(base.getTreatmentProcedureCode()))
+                    .collect(Collectors.groupingBy(NhiMetricBaseVM::getDisposalId))
+                    .keySet()
+                    .size()
+            )
+        );
+
+        a17PatientElderThan50 = a17PatientElderThan50.add(
+            new BigDecimal(
+                a17PastResult.stream()
+                    .filter(base -> "89013C".equals(base.getTreatmentProcedureCode()))
+                    .filter(base -> 50 > Period.between(
+                        base.getPatientBirth(),
+                        "1".equals(base.getCardReplenishment())
+                            ? base.getDisposalDate()
+                            : base.getCardReplenishmentDisposalDate()
+                        ).getYears()
+                    )
+                    .collect(Collectors.groupingBy(NhiMetricBaseVM::getDisposalId))
+                    .keySet()
+                    .size()
+            )
+        );
+
+        result.setA17_1(a17CaseNumber);
+        if (BigDecimal.ZERO.equals(a17CaseNumber)) {
+            result.setA17_2(
+                a17PatientElderThan50.divide(
+                    a17CaseNumber,
+                    2,
+                    BigDecimal.ROUND_HALF_UP
+                )
+            );
+        }
+
+        // a18
+        BigDecimal a18b1 = BigDecimal.ZERO;
+        BigDecimal a18b2 = BigDecimal.ZERO;
+
+        for (NhiMetricBaseVM base
+            : metricBaseResult.stream()
+                .collect(Collectors.toList())
+        ) {
+            if ("91018C".equals(base.getTreatmentProcedureCode())) {
+                a18b1 = a18b1.add(BigDecimal.ONE);
+            }
+            if ("91023C".equals(base.getTreatmentProcedureCode())) {
+                a18b2 = a18b2.add(BigDecimal.ONE);
+            }
+        }
+
+        result.setA18_1(a18b1);
+        result.setA18_2(a18b2);
+
+        return result;
+    }
+
+
+    private BigDecimal calculateReODNumbers(
+        Map<Long, List<String>> patientToothMap
+    ) {
+        BigDecimal result = BigDecimal.ZERO;
+
+        for (Long patientId : patientToothMap.keySet()) {
+            result = result.add(
+                new BigDecimal(
+                    patientToothMap.get(patientId).size()
+                )
+            );
+        }
+
+        return result;
+    }
+
+    private BigDecimal calculateReODRatio(
+        Map<Long, List<String>> patientToothMap,
+        Set<String> patientDuplicatedTooth
+    ) {
+        BigDecimal result = BigDecimal.ZERO;
+        BigDecimal denominator = this.calculateReODNumbers(patientToothMap);
+
+        if (!BigDecimal.ZERO.equals(denominator)) {
+            result = new BigDecimal(
+                patientDuplicatedTooth.size()
+            ).divide(
+                denominator,
+                2,
+                BigDecimal.ROUND_HALF_UP
+            );
+        }
+
+        return result;
+    }
+
+    private void recordDuplicatedPatientTooth(
+        Map<Long, List<String>> patientTeethMap,
+        Set<String> patientDuplicatedToothSet,
+        Long patientId,
+        String tooth
+    ) {
+        if (!patientTeethMap.containsKey(patientId)) {
+            patientTeethMap.put(patientId, new ArrayList<>(Arrays.asList(tooth)));
+        } else {
+            if (!patientTeethMap.get(patientId)
+                .contains(tooth)
+            ) {
+                patientTeethMap.get(patientId).add(tooth);
+            } else {
+                patientDuplicatedToothSet.add(
+                    this.generatePatientDuplicateToothKey(
+                        patientId,
+                        tooth
+                    )
+                );
+            }
+        }
+    }
+
+    private String generatePatientDuplicateToothKey(Long patientId, String tooth) {
+        return patientId.toString().concat("_").concat(tooth);
+    }
+
+    private BigDecimal summaryTotalTreatmentPoint(List<NhiMetricBaseVM> bs) {
+        BigDecimal result = BigDecimal.ZERO;
+        for (NhiMetricBaseVM b : bs) {
+            result = result.add(
+                new BigDecimal(
+                    b.getTreatmentProcedureTotal()
+                )
+            );
+        }
+
+        return result;
+    }
+
+    /**
+     * 診察點數 + 診療項目點數 + 部分負擔
+     */
+    private BigDecimal summaryTotalDisposalPoint(Map<Long, List<NhiMetricBaseVM>> m) {
+        BigDecimal result = BigDecimal.ZERO;
+        for (List<NhiMetricBaseVM> tps : m.values()) {
+            boolean duplicatedDisposalId = false;
+            for (NhiMetricBaseVM tp : tps) {
+                if (!duplicatedDisposalId) {
+                    result = result.add(new BigDecimal(tp.getExamPoint()))
+                        .add(new BigDecimal(tp.getPartialBurden()))
+                    ;
+                    duplicatedDisposalId = true;
+                }
+                result = result.add(new BigDecimal(tp.getTreatmentProcedureTotal()));
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 診察代碼都以 00121C 為計算點數 + 診療項目點數
+     */
+    private BigDecimal summaryApplyDisposalPointWithSameExamPoint(Map<Long, List<NhiMetricBaseVM>> m) {
+        BigDecimal result = BigDecimal.ZERO;
+        for (List<NhiMetricBaseVM> tps : m.values()) {
+            boolean duplicatedDisposalId = false;
+            for (NhiMetricBaseVM tp : tps) {
+                if (!duplicatedDisposalId &&
+                    StringUtils.isNotBlank(tp.getExamCode())
+                ) {
+                    result = result.add(new BigDecimal(230));
+                    duplicatedDisposalId = true;
+                }
+                result = result.add(new BigDecimal(tp.getTreatmentProcedureTotal()));
+            }
+        }
+
+        return result;
+    }
+
+    private Predicate<NhiMetricBaseVM> excludeNhiCategory1416 = (base) -> {
+        return !"14".equals(base.getNhiCategory()) &&
+            !"16".equals(base.getNhiCategory());
+    };
+
+    private Predicate<NhiMetricBaseVM> excludeNhiCategoryA3 = (base) -> {
+        return !"A3".equals(base.getNhiCategory());
+    };
+
+    private Predicate<NhiMetricBaseVM> excludeNhiCategoryB6B7 = (base) -> {
+        return !"B6".equals(base.getNhiCategory()) &&
+            !"B7".equals(base.getNhiCategory());
+    };
+
+    private Predicate<NhiMetricBaseVM> excludeNhiCategoryAB = (base) -> {
+        return !"AB".equals(base.getNhiCategory());
+    };
+
+    private Predicate<NhiMetricBaseVM> excludePerio1Codes = (base) -> {
+        List<String> excludeCodes = Arrays.asList(
+            "P4001C",
+            "P4002C",
+            "P4003C",
+            "91021C",
+            "91022C",
+            "91023C"
+        );
+
+        return !excludeCodes.contains(base.getTreatmentProcedureCode());
+    };
+
+    private Predicate<NhiMetricBaseVM> excludePerio2Codes = (base) -> {
+        List<String> excludeCodes = Arrays.asList(
+            "91015C",
+            "91016C",
+            "91018C"
+        );
+
+        return !excludeCodes.contains(base.getTreatmentProcedureCode());
+    };
+
+    private Predicate<NhiMetricBaseVM> excludeExam1Codes = (base) -> {
+        List<String> excludeCodes = Arrays.asList(
+            "00121C",
+            "00122C",
+            "00123C",
+            "00124C",
+            "00125C",
+            "00126C",
+            "00128C",
+            "00129C",
+            "00130C",
+            "00133C",
+            "00134C",
+            "00301C",
+            "00302C",
+            "00303C",
+            "00304C"
+        );
+
+        return !excludeCodes.contains(base.getTreatmentProcedureCode());
+    };
+
+    private Predicate<NhiMetricBaseVM> excludeExam2Codes = (base) -> {
+        List<String> excludeCodes = Arrays.asList(
+            "01271C",
+            "01272C",
+            "01273C"
+        );
+
+        return !excludeCodes.contains(base.getTreatmentProcedureCode());
+    };
+
+    private Predicate<NhiMetricBaseVM> exclude91014C = (base) -> {
+        return "91014C".equals(base.getTreatmentProcedureCode());
+    };
+
+    private Predicate<NhiMetricBaseVM> onlyDeclareCase = (base) -> {
+        return StringUtils.isNotBlank(base.getCardNumber());
+    };
+
+    private Predicate<NhiMetricBaseVM> onlyA8numerator = (base) -> {
+        List<String> onlyCodes = Arrays.asList(
+            "90001C",
+            "90002C",
+            "90003C",
+            "90016C",
+            "90018C",
+            "90019C",
+            "90020C"
+        );
+
+        return onlyCodes.contains(base.getTreatmentProcedureCode());
+    };
+
+    private Predicate<NhiMetricBaseVM> onlyA8Denominator = (base) -> {
+        return "90015C".equals(base.getTreatmentProcedureCode());
+    };
+
+    private Predicate<NhiMetricBaseVM> onlyODCode = (base) -> {
+        return this.odCodes.contains(base.getTreatmentProcedureCode());
+    };
+
+    private Predicate<NhiMetricBaseVM> excludeSpecificCodeG9 = (base) -> {
+        return !"G9".equals(base.getTreatmentProcedureSpecificCode());
+    };
+
+    private Predicate<NhiMetricBaseVM> excludeSpecificCodeJA = (base) -> {
+        return !"JA".equals(base.getTreatmentProcedureSpecificCode());
+    };
+
+    private Predicate<NhiMetricBaseVM> excludeSpecificCodeJB = (base) -> {
+        return !"JB".equals(base.getTreatmentProcedureSpecificCode());
+    };
 
 }

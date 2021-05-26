@@ -2,6 +2,7 @@ package io.dentall.totoro.config;
 
 import io.dentall.totoro.security.jwt.JWTConfigurer;
 import io.dentall.totoro.security.jwt.TokenProvider;
+import io.dentall.totoro.service.DentauthService;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,9 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 import javax.annotation.PostConstruct;
 
+import static io.dentall.totoro.dentauth.DentauthConstraint.DENTAUTH;
+import static io.dentall.totoro.dentauth.DentauthConstraint.ROLE_DENTAUTH;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
@@ -36,14 +40,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;
 
+    private final DentauthService dentauthService;
+
     private final CorsFilter corsFilter;
 
     private final SecurityProblemSupport problemSupport;
 
-    public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder, UserDetailsService userDetailsService, TokenProvider tokenProvider, CorsFilter corsFilter, SecurityProblemSupport problemSupport) {
+
+    public SecurityConfiguration(
+        AuthenticationManagerBuilder authenticationManagerBuilder,
+        UserDetailsService userDetailsService,
+        TokenProvider tokenProvider,
+        DentauthService dentauthService,
+        CorsFilter corsFilter,
+        SecurityProblemSupport problemSupport
+    ) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userDetailsService = userDetailsService;
         this.tokenProvider = tokenProvider;
+        this.dentauthService = dentauthService;
         this.corsFilter = corsFilter;
         this.problemSupport = problemSupport;
     }
@@ -92,14 +107,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .exceptionHandling()
             .authenticationEntryPoint(problemSupport)
             .accessDeniedHandler(problemSupport)
-        .and()
+            .and()
             .headers()
             .frameOptions()
             .disable()
-        .and()
+            .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
+            .and()
             .authorizeRequests()
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
@@ -111,16 +126,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/spring-profiles-active").permitAll()
             .antMatchers("/api/images/test").permitAll()
             .antMatchers("/api/images/host").permitAll()
-            .antMatchers("/api/**").authenticated()
+            .antMatchers("/api/dentauth/**").hasRole("ADMIN")
+            .antMatchers("/api/prerogative/**").hasRole(DENTAUTH)
+            .antMatchers("/api/**").access("authenticated and !hasRole('" + ROLE_DENTAUTH + "')")
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()
             .antMatchers("/management/**").hasRole("ADMIN")
-        .and()
+            .and()
             .apply(securityConfigurerAdapter());
 
     }
 
     private JWTConfigurer securityConfigurerAdapter() {
-        return new JWTConfigurer(tokenProvider);
+        return new JWTConfigurer(tokenProvider, dentauthService);
     }
 }

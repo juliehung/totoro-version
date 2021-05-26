@@ -159,12 +159,13 @@ public class Tag implements Serializable {
 
     @Override
     public String toString() {
-        return "Tag{" +
-            "id=" + getId() +
-            ", type='" + getType() + "'" +
-            ", name='" + getName() + "'" +
-            ", modifiable='" + isModifiable() + "'" +
-            ", order=" + getOrder() +
-            "}";
+        return "{"
+            .concat(id == null ? "" : " \"id\": \"" + id + "\"")
+            .concat(type == null ? "" : ", \"type\": \"" + type + "\"")
+            .concat(name == null ? "" : ", \"name\": \"" + name + "\"")
+            .concat(modifiable == null ? "" : ", \"modifiable\": \"" + modifiable + "\"")
+            .concat(order == null ? "" : ", \"order\": \"" + order + "\"")
+            .concat(patients == null ? "" : ", \"patients\": \"" + patients + "\"")
+            .concat("}");
     }
 }
