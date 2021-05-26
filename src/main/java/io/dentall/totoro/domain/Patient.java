@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -996,39 +997,48 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
 
     @Override
     public String toString() {
-        return "Patient{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", displayName='" + getDisplayName() + "'" +
-            ", phone='" + getPhone() + "'" +
-            ", gender='" + getGender() + "'" +
-            ", birth='" + getBirth() + "'" +
-            ", nationalId='" + getNationalId() + "'" +
-            ", medicalId='" + getMedicalId() + "'" +
-            ", address='" + getAddress() + "'" +
-            ", email='" + getEmail() + "'" +
-            ", blood='" + getBlood() + "'" +
-            ", cardId='" + getCardId() + "'" +
-            ", vip='" + getVip() + "'" +
-            ", emergencyName='" + getEmergencyName() + "'" +
-            ", emergencyPhone='" + getEmergencyPhone() + "'" +
-            ", emergencyAddress='" + getEmergencyAddress() + "'" +
-            ", emergencyRelationship='" + getEmergencyRelationship() + "'" +
-            ", deleteDate='" + getDeleteDate() + "'" +
-            ", scaling='" + getScaling() + "'" +
-            ", lineId='" + getLineId() + "'" +
-            ", fbId='" + getFbId() + "'" +
-            ", note='" + getNote() + "'" +
-            ", clinicNote='" + getClinicNote() + "'" +
-            ", writeIcTime='" + getWriteIcTime() + "'" +
-            ", avatarContentType='" + getAvatarContentType() + "'" +
-            ", newPatient='" + isNewPatient() + "'" +
-            ", mainNoticeChannel='" + getMainNoticeChannel() + "'" +
-            ", career='" + getCareer() + "'" +
-            ", marriage='" + getMarriage() + "'" +
-            ", permanent='" + getTeethGraphPermanentSwitch() + "'" +
-            ", dueDate='" + getDueDate() + "'" +
-            ", disabled='" + getDisabled() + "'" +
-            "}";
+        return "{"
+            .concat(id == null ? "" : " \"id\": \"" + id + "\"")
+            .concat(displayName == null ? "" : ", \"displayName\": \"" + displayName + "\"")
+            .concat(name == null ? "" : ", \"name\": \"" + name + "\"")
+            .concat(phone == null ? "" : ", \"phone\": \"" + phone + "\"")
+            .concat(gender == null ? "" : ", \"gender\": \"" + gender + "\"")
+            .concat(birth == null ? "" : ", \"birth\": \"" + birth + "\"")
+            .concat(nationalId == null ? "" : ", \"nationalId\": \"" + nationalId + "\"")
+            .concat(medicalId == null ? "" : ", \"medicalId\": \"" + medicalId + "\"")
+            .concat(address == null ? "" : ", \"address\": \"" + address + "\"")
+            .concat(email == null ? "" : ", \"email\": \"" + email + "\"")
+            .concat(blood == null ? "" : ", \"blood\": \"" + blood + "\"")
+            .concat(cardId == null ? "" : ", \"cardId\": \"" + cardId + "\"")
+            .concat(vip == null ? "" : ", \"vip\": \"" + vip + "\"")
+            .concat(emergencyName == null ? "" : ", \"emergencyName\": \"" + emergencyName + "\"")
+            .concat(emergencyPhone == null ? "" : ", \"emergencyPhone\": \"" + emergencyPhone + "\"")
+            .concat(emergencyAddress == null ? "" : ", \"emergencyAddress\": \"" + emergencyAddress + "\"")
+            .concat(emergencyRelationship == null ? "" : ", \"emergencyRelationship\": \"" + emergencyRelationship + "\"")
+            .concat(deleteDate == null ? "" : ", \"deleteDate\": \"" + deleteDate + "\"")
+            .concat(scaling == null ? "" : ", \"scaling\": \"" + scaling + "\"")
+            .concat(lineId == null ? "" : ", \"lineId\": \"" + lineId + "\"")
+            .concat(fbId == null ? "" : ", \"fbId\": \"" + fbId + "\"")
+            .concat(note == null ? "" : ", \"note\": \"" + note + "\"")
+            .concat(clinicNote == null ? "" : ", \"clinicNote\": \"" + clinicNote + "\"")
+            .concat(writeIcTime == null ? "" : ", \"writeIcTime\": \"" + writeIcTime + "\"")
+            .concat(mainNoticeChannel == null ? "" : ", \"mainNoticeChannel\": \"" + mainNoticeChannel + "\"")
+            .concat(career == null ? "" : ", \"career\": \"" + career + "\"")
+            .concat(marriage == null ? "" : ", \"marriage\": \"" + marriage + "\"")
+            .concat(newPatient == null ? "" : ", \"newPatient\": \"" + newPatient + "\"")
+            .concat(teethGraphPermanentSwitch == null ? "" : ", \"teethGraphPermanentSwitch\": \"" + teethGraphPermanentSwitch + "\"")
+            .concat(questionnaire == null ? "" : ", \"questionnaire\": \"" + questionnaire + "\"")
+            .concat(introducer == null ? "" : ", \"introducer\": \"" + introducer + "\"")
+            .concat(caseManager == null ? "" : ", \"caseManager\": \"" + caseManager + "\"")
+            .concat(vipPatient == null ? "" : ", \"vipPatient\": \"" + vipPatient + "\"")
+            .concat(disabled == null ? "" : ", \"disabled\": \"" + disabled + "\"")
+            .concat(tags == null ? "" : ", \"tags\": \"" + tags + "\"")
+            .concat(patientIdentity == null ? "" : ", \"patientIdentity\": \"" + patientIdentity + "\"")
+            .concat(dueDate == null ? "" : ", \"dueDate\": \"" + dueDate + "\"")
+            .concat(customizedDisease == null ? "" : ", \"customizedDisease\": \"" + customizedDisease + "\"")
+            .concat(customizedBloodDisease == null ? "" : ", \"customizedBloodDisease\": \"" + customizedBloodDisease + "\"")
+            .concat(customizedAllergy == null ? "" : ", \"customizedAllergy\": \"" + customizedAllergy + "\"")
+            .concat(customizedOther == null ? "" : ", \"customizedOther\": \"" + customizedOther + "\"")
+            .concat("}");
     }
 }

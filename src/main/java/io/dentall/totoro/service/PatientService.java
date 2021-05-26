@@ -688,4 +688,15 @@ public class PatientService extends QueryService<Patient> {
 
         return rvm;
     }
+
+    public void setNewPatient(Patient patient) {
+        patient.setNewPatient(
+            patient
+                .getAppointments()
+                .stream()
+                .filter(appointment -> appointment.getRegistration() != null)
+                .count() < 1
+        );
+    }
+
 }

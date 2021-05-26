@@ -160,14 +160,14 @@ public class Questionnaire extends AbstractAuditingEntity implements Serializabl
 
     @Override
     public String toString() {
-        return "Questionnaire{" +
-            "id=" + getId() +
-            ", drug='" + isDrug() + "'" +
-            ", drugName='" + getDrugName() + "'" +
-            ", glycemicAC=" + getGlycemicAC() +
-            ", glycemicPC=" + getGlycemicPC() +
-            ", smokeNumberADay=" + getSmokeNumberADay() +
-            ", otherInTreatment='" + getOtherInTreatment() + "'" +
-            "}";
+        return "{"
+            .concat(id == null ? "" : " \"id\": \"" + id + "\"")
+            .concat(drug == null ? "" : ", \"drug\": \"" + drug + "\"")
+            .concat(drugName == null ? "" : ", \"drugName\": \"" + drugName + "\"")
+            .concat(glycemicAC == null ? "" : ", \"glycemicAC\": \"" + glycemicAC + "\"")
+            .concat(glycemicPC == null ? "" : ", \"glycemicPC\": \"" + glycemicPC + "\"")
+            .concat(smokeNumberADay == null ? "" : ", \"smokeNumberADay\": \"" + smokeNumberADay + "\"")
+            .concat(otherInTreatment == null ? "" : ", \"otherInTreatment\": \"" + otherInTreatment + "\"")
+            .concat("}");
     }
 }
