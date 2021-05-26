@@ -106,6 +106,10 @@ public class AppointmentService {
         Registration registration = getRegistration(appointment);
         appointment.setRegistration(registration);
 
+        // 為了讓 setNewPatient 判定正確，需加入 appointment 到 patient 當中，因為此時還沒進入 db 當中
+        patient.getAppointments().add(appointment);
+        patientService.setNewPatient(patient);
+
         return appointment;
     }
 
@@ -244,6 +248,7 @@ public class AppointmentService {
                 if (updateAppointment.getRegistration() != null) {
                     log.debug("Update Registration({}) of Appointment(id: {})", updateAppointment.getRegistration(), updateAppointment.getId());
                     appointment.setRegistration(getRegistration(updateAppointment.patient(appointment.getPatient())));
+                    patientService.setNewPatient(appointment.getPatient());
                 }
 
                 // treatmentProcedures

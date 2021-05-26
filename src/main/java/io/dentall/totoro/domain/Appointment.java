@@ -14,6 +14,7 @@ import java.util.Set;
 
 /**
  * A Appointment.
+ * 2021-05-24, weichen: 要改寫 appointment 需要注意 new patient 機制，需要被實作
  */
 @Entity
 @Table(name = "appointment")

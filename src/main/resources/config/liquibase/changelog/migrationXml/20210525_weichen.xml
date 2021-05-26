@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210525-weichen" author="WeiChen">
+        <sql>
+            UPDATE patient
+            SET new_patient = true
+            ;
+        </sql>
+        <sql>
+            UPDATE patient
+            SET new_patient = false
+            FROM appointment a
+            WHERE patient.id = a.patient_id
+            AND a.registration_id is not null
+            ;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -2,13 +2,78 @@ package io.dentall.totoro.service.util;
 
 import io.dentall.totoro.config.TimeConfig;
 
+import javax.validation.constraints.NotNull;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public final class DateTimeUtil {
+
+    public static class BeginEnd {
+        private Instant begin;
+        private Instant end;
+
+        public Instant getBegin() {
+            return begin;
+        }
+
+        public void setBegin(Instant begin) {
+            this.begin = begin;
+        }
+
+        public Instant getEnd() {
+            return end;
+        }
+
+        public void setEnd(Instant end) {
+            this.end = end;
+        }
+    }
+
+    public static enum QuarterMonth {
+        SEASON_1(0, 1, 2, 3),
+        SEASON_2(1, 4, 5,6),
+        SEASON_3(2, 7, 8, 9),
+        SEASON_4(3, 10, 11, 12),
+        ;
+
+        QuarterMonth(Integer quotientValue, Integer firstMonth, Integer middleMonth, Integer lastMonth) {
+            this.quotientValue = quotientValue;
+            this.firstMonth = firstMonth;
+            this.middleMonth = middleMonth;
+            this.lastMonth = lastMonth;
+        }
+
+        private Integer quotientValue;
+
+        private Integer firstMonth;
+
+        private Integer middleMonth;
+
+        private Integer lastMonth;
+
+        public Integer getQuotientValue() {
+            return quotientValue;
+        }
+
+        public Integer getFirstMonth() {
+            return firstMonth;
+        }
+
+        public Integer getMiddleMonth() {
+            return middleMonth;
+        }
+
+        public Integer getLastMonth() {
+            return lastMonth;
+        }
+    };
 
     public static final Period NHI_1_WEEK = Period.ofDays(7);
 
@@ -119,5 +184,83 @@ public final class DateTimeUtil {
 
     public static Period startDayOfMonthDiff(LocalDate current) {
         return Period.between(LocalDate.of(current.getYear(), current.getMonth(), 1), current);
+    }
+
+    public static QuarterMonth getCurrentQuarter(Instant currentTime) {
+        QuarterMonth result = null;
+
+        int quotientValue = (currentTime.atOffset(TimeConfig.ZONE_OFF_SET).getMonth().getValue() - 1) / 3;
+
+        switch (quotientValue) {
+            case 0:
+                result = QuarterMonth.SEASON_1;
+                break;
+            case 1:
+                result = QuarterMonth.SEASON_2;
+                break;
+            case 2:
+                result = QuarterMonth.SEASON_3;
+                break;
+            case 3:
+                result = QuarterMonth.SEASON_4;
+                break;
+            default:
+                result = QuarterMonth.SEASON_1;
+                break;
+        }
+
+        return result;
+    }
+
+    public static DateTimeUtil.BeginEnd getCurrentQuarterMonthsRangeInstant(
+        @NotNull Instant currentTime
+    ) {
+        DateTimeUtil.BeginEnd result = new DateTimeUtil.BeginEnd();
+        QuarterMonth currentQuarter = DateTimeUtil.getCurrentQuarter(currentTime);
+        YearMonth lym = YearMonth.of(
+            currentTime.atOffset(TimeConfig.ZONE_OFF_SET).getYear(),
+            currentQuarter.lastMonth
+        );
+
+        result.setBegin(
+            Instant.now()
+                .atOffset(TimeConfig.ZONE_OFF_SET)
+                .with(LocalTime.MIN)
+                .withYear(lym.getYear())
+                .withMonth(currentQuarter.firstMonth)
+                .withDayOfMonth(1)
+                .toInstant()
+        );
+        result.setEnd(
+            Instant.now()
+                .atOffset(TimeConfig.ZONE_OFF_SET)
+                .with(LocalTime.MAX)
+                .withYear(lym.getYear())
+                .withMonth(currentQuarter.lastMonth)
+                .withDayOfMonth(lym.atEndOfMonth().getDayOfMonth())
+                .toInstant()
+        );
+
+        return result;
+    }
+
+    public static Instant convertLocalDateToBeginOfDayInstant(LocalDate date) {
+        return Instant.now()
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .with(LocalDateTime.MIN)
+            .withYear(date.getYear())
+            .withMonth(date.getMonthValue())
+            .withDayOfMonth(date.getDayOfMonth())
+            .toInstant();
+    }
+
+    public static Instant convertLocalDateToEndOfDayInstant(LocalDate date) {
+        return Instant.now()
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .with(LocalDateTime.MAX)
+            .withYear(date.getYear())
+            .withMonth(date.getMonthValue())
+            .withDayOfMonth(date.getDayOfMonth())
+            .toInstant();
     }
 }
