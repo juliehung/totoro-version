@@ -321,7 +321,7 @@ public class NhiRuleCheckUtil {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
         HashMap<Long, NhiExtendTreatmentProcedure> oldNetpMap = new HashMap<>();
         ArrayList<Long> excludeTreatmentProcedureIds = new ArrayList<>();
-        ArrayList<String> includeNhiCode= new ArrayList<>();
+        ArrayList<String> includeNhiCode = new ArrayList<>();
 
         // Assign patient
         if (body.getPatientId() != null) {
@@ -357,10 +357,20 @@ public class NhiRuleCheckUtil {
             }
 
             if (dto.getNhiExtendDisposal() == null) {
+                NhiExtendDisposal ned = new NhiExtendDisposal();
+                ned.setA17(
+                    body.getDisposalTime()
+                );
                 dto.setNhiExtendDisposal(new NhiExtendDisposal());
             }
 
             dto.getNhiExtendDisposal().setA23(body.getNhiCategory());
+        } else {
+            NhiExtendDisposal ned = new NhiExtendDisposal();
+            ned.setA17(
+                body.getDisposalTime()
+            );
+            dto.setNhiExtendDisposal(ned);
         }
 
         // Assign nhi treatment procedure a.k.a target treatment procedure
@@ -396,7 +406,7 @@ public class NhiRuleCheckUtil {
 
                         dto.setNhiExtendTreatmentProcedure(netp);
 
-                        if (txSnapshot.getId() != null  &&
+                        if (txSnapshot.getId() != null &&
                             oldNetpMap.containsKey(txSnapshot.getId())
                         ) {
                             dto.getNhiExtendTreatmentProcedure().setId(txSnapshot.getId());
@@ -581,10 +591,10 @@ public class NhiRuleCheckUtil {
     /**
      * 尋找 患者 在 時間區間 內，屬於 建制的健保代碼清單中，且 未超指定時間區間 的 NhiExtendTreatmentProcedure
      *
-     * @param patientId                     病患 id
-     * @param treatmentProcedureId          欲檢驗的處置 id
-     * @param duration                      指定時間區間
-     * @param codes                         被限制的健保代碼清單
+     * @param patientId            病患 id
+     * @param treatmentProcedureId 欲檢驗的處置 id
+     * @param duration             指定時間區間
+     * @param codes                被限制的健保代碼清單
      * @return null 或 有衝突的 NhiExtendTreatmentProcedure
      */
     public NhiExtendTreatmentProcedure findPatientTreatmentProcedureAtCodesAndBetweenDuration(
@@ -765,9 +775,9 @@ public class NhiRuleCheckUtil {
     /**
      * 尋找 患者 在 時間區間 內，屬於 建制的健保代碼清單中，且 未超指定時間區間 的 NhiMedicalRecord
      *
-     * @param patientId                     病患 id
-     * @param duration                      指定時間區間
-     * @param codes                         被限制的健保代碼清單
+     * @param patientId 病患 id
+     * @param duration  指定時間區間
+     * @param codes     被限制的健保代碼清單
      * @return null 或 有衝突的 NhiMedicalRecord
      */
     public NhiMedicalRecord findPatientMediaRecordAtCodesAndBetweenDuration(
@@ -1016,10 +1026,10 @@ public class NhiRuleCheckUtil {
     /**
      * 指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達 指定時間間隔。
      *
-     * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
-     * @param codes     被限制的健保代碼清單
+     * @param dto      使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
+     * @param codes    被限制的健保代碼清單
      * @param duration 指定時間間隔
-     * @param format    回傳訊息格式, 目前支援 D4_4
+     * @param format   回傳訊息格式, 目前支援 D4_4
      * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO isCodeBetweenDuration(
@@ -1211,10 +1221,10 @@ public class NhiRuleCheckUtil {
                     List<ToothUtil.ToothPhase> matchPhase = new ArrayList<>();
 
                     tphs.forEach(tph -> {
-                            if (currentPhaseSet.contains(tph)) {
-                                matchPhase.add(tph);
-                            }
-                        });
+                        if (currentPhaseSet.contains(tph)) {
+                            matchPhase.add(tph);
+                        }
+                    });
 
                     if (matchPhase.size() > 0) {
                         LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
@@ -1483,10 +1493,10 @@ public class NhiRuleCheckUtil {
     /**
      * 指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達 只定間隔時間。
      *
-     * @param dto       使用 patient.id
-     * @param codes     被限制的健保代碼清單
-     * @param duration  只定間隔時間
-     * @param format    回傳訊息格式
+     * @param dto      使用 patient.id
+     * @param codes    被限制的健保代碼清單
+     * @param duration 只定間隔時間
+     * @param format   回傳訊息格式
      * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO isCodeBetweenDurationByNhiMedicalRecord(
@@ -1558,15 +1568,15 @@ public class NhiRuleCheckUtil {
     /**
      * 具有條件地，回訊息作為提醒用，檢核狀況算審核通過
      *
-     * @param dto 根據 predicate 的不同許用不同的內容
-     * @param message 應回傳訊息
+     * @param dto        根據 predicate 的不同許用不同的內容
+     * @param message    應回傳訊息
      * @param predicates 條件式
      * @return 後續檢核統一 `回傳` 的介面
      */
     public NhiRuleCheckResultDTO addNotificationWithClause(
         NhiRuleCheckDTO dto,
         String message,
-        Predicate<NhiRuleCheckDTO>...predicates
+        Predicate<NhiRuleCheckDTO>... predicates
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.NONE)
@@ -1602,7 +1612,7 @@ public class NhiRuleCheckUtil {
                 result
                     .validated(
                         dto.getNhiExtendTreatmentProcedure().getA75() != null &&
-                        dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_1_SURFACES.getLimitNumber()
+                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_1_SURFACES.getLimitNumber()
                     );
 
                 if (!result.isValidated()) {
@@ -1614,7 +1624,7 @@ public class NhiRuleCheckUtil {
                 result
                     .validated(
                         dto.getNhiExtendTreatmentProcedure().getA75() != null &&
-                        dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_2_SURFACES.getLimitNumber()
+                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_2_SURFACES.getLimitNumber()
                     );
 
                 if (!result.isValidated()) {
@@ -1626,7 +1636,7 @@ public class NhiRuleCheckUtil {
                 result
                     .validated(
                         dto.getNhiExtendTreatmentProcedure().getA75() != null &&
-                        dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_3_SURFACES.getLimitNumber()
+                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_3_SURFACES.getLimitNumber()
                     );
 
                 if (!result.isValidated()) {
@@ -1700,7 +1710,17 @@ public class NhiRuleCheckUtil {
         if (!result.isValidated()) {
             result
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                .message(ToothUtil.getToothConstraintsFailureMessage(tc));
+                .message(
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                        .concat(
+                            ": "
+                        )
+                        .concat(
+                            ToothUtil.getToothConstraintsFailureMessage(
+                                tc
+                            )
+                        )
+                );
         }
 
         return result;
@@ -1759,14 +1779,14 @@ public class NhiRuleCheckUtil {
                                 this.classifySourceType(
                                     NhiRuleCheckSourceType.SYSTEM_RECORD,
                                     matchDate,
-                                    match.getNhiExtendDisposal() != null ?match.getNhiExtendDisposal().getId() :null,
+                                    match.getNhiExtendDisposal() != null ? match.getNhiExtendDisposal().getId() : null,
                                     dto
                                 ),
                                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
                                     matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
                                 ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
-                                    ?deciduousToothLimitDays.getDays()
-                                    :permanentToothLimitDays.getDays(),
+                                    ? deciduousToothLimitDays.getDays()
+                                    : permanentToothLimitDays.getDays(),
                                 dto.getNhiExtendTreatmentProcedure().getA73()
                             );
                             break;
@@ -1779,7 +1799,7 @@ public class NhiRuleCheckUtil {
                                 this.classifySourceType(
                                     NhiRuleCheckSourceType.SYSTEM_RECORD,
                                     matchDate,
-                                    match.getNhiExtendDisposal() != null ?match.getNhiExtendDisposal().getId() :null,
+                                    match.getNhiExtendDisposal() != null ? match.getNhiExtendDisposal().getId() : null,
                                     dto
                                 ),
                                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
@@ -1791,13 +1811,13 @@ public class NhiRuleCheckUtil {
                                 NhiRuleCheckFormat.D7_2.getFormat(),
                                 dto.getNhiExtendTreatmentProcedure().getA73(),
                                 ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
-                                    ?deciduousToothLimitDays.getDays()
-                                    :permanentToothLimitDays.getDays(),
+                                    ? deciduousToothLimitDays.getDays()
+                                    : permanentToothLimitDays.getDays(),
                                 match.getA73(),
                                 this.classifySourceType(
                                     NhiRuleCheckSourceType.SYSTEM_RECORD,
                                     matchDate,
-                                    match.getNhiExtendDisposal() != null ?match.getNhiExtendDisposal().getId() :null,
+                                    match.getNhiExtendDisposal() != null ? match.getNhiExtendDisposal().getId() : null,
                                     dto
                                 ),
                                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
@@ -1810,13 +1830,13 @@ public class NhiRuleCheckUtil {
                                 NhiRuleCheckFormat.W6_1.getFormat(),
                                 dto.getNhiExtendTreatmentProcedure().getA73(),
                                 ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
-                                    ?deciduousToothLimitDays.getDays()
-                                    :permanentToothLimitDays.getDays(),
+                                    ? deciduousToothLimitDays.getDays()
+                                    : permanentToothLimitDays.getDays(),
                                 match.getA73(),
                                 this.classifySourceType(
                                     NhiRuleCheckSourceType.SYSTEM_RECORD,
                                     matchDate,
-                                    match.getNhiExtendDisposal() != null ?match.getNhiExtendDisposal().getId() :null,
+                                    match.getNhiExtendDisposal() != null ? match.getNhiExtendDisposal().getId() : null,
                                     dto
                                 ),
                                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
@@ -1892,8 +1912,8 @@ public class NhiRuleCheckUtil {
                                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
                                     matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
                                 ToothUtil.validatedToothConstraint(ToothConstraint.DECIDUOUS_TOOTH, tooth)
-                                    ?deciduousToothLimitDays.getDays()
-                                    :permanentToothLimitDays.getDays(),
+                                    ? deciduousToothLimitDays.getDays()
+                                    : permanentToothLimitDays.getDays(),
                                 dto.getNhiExtendTreatmentProcedure().getA73()
                             );
                             break;
@@ -2047,16 +2067,16 @@ public class NhiRuleCheckUtil {
 
         if (dto.getIncludeNhiCodes() != null &&
             dto.getIncludeNhiCodes().stream()
-            .filter(Objects::nonNull)
-            .anyMatch(parsedCodes::contains)) {
+                .filter(Objects::nonNull)
+                .anyMatch(parsedCodes::contains)) {
             result.validated(false)
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
-              String.format(
-                  "不得與 %s 同時申報",
-                  conflictCodes.toString()
-              )
-            );
+                    String.format(
+                        "不得與 %s 同時申報",
+                        conflictCodes.toString()
+                    )
+                );
         }
 
         return result;
@@ -2118,11 +2138,11 @@ public class NhiRuleCheckUtil {
             result.validated(false)
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
-                String.format(
-                    NhiRuleCheckFormat.W3_1.getFormat(),
-                    StringUtils.join(mustIncludeCodes, "/")
-                )
-            );
+                    String.format(
+                        NhiRuleCheckFormat.W3_1.getFormat(),
+                        StringUtils.join(mustIncludeCodes, "/")
+                    )
+                );
         }
 
         return result;
@@ -2154,8 +2174,8 @@ public class NhiRuleCheckUtil {
         ) {
             Long disposalId =
                 dto.getNhiExtendDisposal() != null &&
-                dto.getNhiExtendDisposal().getDisposal() != null &&
-                dto.getNhiExtendDisposal().getDisposal().getId() != null
+                    dto.getNhiExtendDisposal().getDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal().getId() != null
                     ? dto.getNhiExtendDisposal().getDisposal().getId()
                     : 0L;
             Optional<NhiExtendTreatmentProcedureTable> optionalNetpt = nhiExtendTreatmentProcedureRepository
@@ -2180,8 +2200,8 @@ public class NhiRuleCheckUtil {
                             optionalNetpt.get().getA73(),
                             this.classifySourceType(
                                 NhiRuleCheckSourceType.SYSTEM_RECORD,
-                                ned.size() > 0 ?ned.get(0).getDate() :null,
-                                ned.size() > 0 ?ned.get(0).getId() :null,
+                                ned.size() > 0 ? ned.get(0).getDate() : null,
+                                ned.size() > 0 ? ned.get(0).getId() : null,
                                 dto
                             ),
                             DateTimeUtil.transformA71ToDisplay(optionalNetpt.get().getA71())
@@ -2235,13 +2255,13 @@ public class NhiRuleCheckUtil {
                     dto.getPatient().getId(),
                     ym3th
                 ).stream()
-                    .filter(nmr -> {
-                        Instant nmrDateTime = DateTimeUtil.transformROCDateToLocalDate(nmr.getDate()).atStartOfDay().toInstant(ZoneOffset.UTC);
-                        return nmrDateTime.isAfter(ym3thDateTime) && nmrDateTime.isBefore(currentDateTime);
-                    })
-                    .findFirst();
+                .filter(nmr -> {
+                    Instant nmrDateTime = DateTimeUtil.transformROCDateToLocalDate(nmr.getDate()).atStartOfDay().toInstant(ZoneOffset.UTC);
+                    return nmrDateTime.isAfter(ym3thDateTime) && nmrDateTime.isBefore(currentDateTime);
+                })
+                .findFirst();
 
-            if (optionalNmr.isPresent()){
+            if (optionalNmr.isPresent()) {
                 result.validated(false)
                     .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                     .message(
@@ -2260,6 +2280,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 任意時間點未曾申報過指定代碼
+     *
      * @param dto
      * @param codes
      * @return
@@ -2278,7 +2299,7 @@ public class NhiRuleCheckUtil {
 
         result.validated(
             matches == null ||
-            matches.size() == 0
+                matches.size() == 0
         );
 
         if (!result.isValidated()) {
@@ -2293,7 +2314,7 @@ public class NhiRuleCheckUtil {
                     this.classifySourceType(
                         NhiRuleCheckSourceType.SYSTEM_RECORD,
                         DateTimeUtil.transformROCDateToLocalDate(match.getA71()),
-                        nedt != null && nedt.size() > 0 ?nedt.get(0).getId() :null,
+                        nedt != null && nedt.size() > 0 ? nedt.get(0).getId() : null,
                         dto
                     ),
                     DateTimeUtil.transformA71ToDisplay(match.getA71()),
@@ -2307,6 +2328,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 任意時間點未曾申報過指定代碼 (資料來源 IC)
+     *
      * @param dto
      * @param codes
      * @return
@@ -2325,7 +2347,7 @@ public class NhiRuleCheckUtil {
 
         result.validated(
             matches == null ||
-            matches.size() == 0
+                matches.size() == 0
         );
 
         if (!result.isValidated()) {
@@ -2347,6 +2369,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 同牙未曾申報過，指定代碼
+     *
      * @param dto
      * @param codes
      * @return
@@ -2373,20 +2396,20 @@ public class NhiRuleCheckUtil {
 
                             result.validated(false)
                                 .message(
-                                String.format(
-                                    NhiRuleCheckFormat.D1_3.getFormat(),
-                                    dto.getNhiExtendTreatmentProcedure().getA73(),
-                                    currentTooth,
-                                    netp.getA73(),
-                                    this.classifySourceType(
-                                        NhiRuleCheckSourceType.SYSTEM_RECORD,
-                                        DateTimeUtil.transformROCDateToLocalDate(netp.getA71()),
-                                        nedt != null && nedt.size() > 0 ?nedt.get(0).getId() :null,
-                                        dto
-                                    ),
-                                    DateTimeUtil.transformA71ToDisplay(netp.getA71())
-                                )
-                            );
+                                    String.format(
+                                        NhiRuleCheckFormat.D1_3.getFormat(),
+                                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                                        currentTooth,
+                                        netp.getA73(),
+                                        this.classifySourceType(
+                                            NhiRuleCheckSourceType.SYSTEM_RECORD,
+                                            DateTimeUtil.transformROCDateToLocalDate(netp.getA71()),
+                                            nedt != null && nedt.size() > 0 ? nedt.get(0).getId() : null,
+                                            dto
+                                        ),
+                                        DateTimeUtil.transformA71ToDisplay(netp.getA71())
+                                    )
+                                );
                         }
                     });
             });
@@ -2396,6 +2419,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 同牙未曾申報過，指定代碼 (資料來源 IC)
+     *
      * @param dto
      * @param codes
      * @return
@@ -2430,7 +2454,7 @@ public class NhiRuleCheckUtil {
                                         this.classifySourceType(
                                             NhiRuleCheckSourceType.SYSTEM_RECORD,
                                             DateTimeUtil.transformROCDateToLocalDate(netp.getDate()),
-                                            nedt != null && nedt.size() > 0 ?nedt.get(0).getId() :null,
+                                            nedt != null && nedt.size() > 0 ? nedt.get(0).getId() : null,
                                             dto
                                         ),
                                         DateTimeUtil.transformA71ToDisplay(netp.getDate())
@@ -2536,6 +2560,7 @@ public class NhiRuleCheckUtil {
 
     /**
      * 89XXX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
+     *
      * @param dto patient.id, netp.id, excludeTreamentProcedureId
      * @return
      */
@@ -2613,6 +2638,7 @@ public class NhiRuleCheckUtil {
      * 適用於，81, etc,. 這類非常規時間區間，事先在檢查前，算出最大間隔區間
      * example,
      * 7/15 --limitationMonth is 3 months--> 4/1, 6/30
+     *
      * @return
      */
     public LocalDateDuration specialMonthDurationCalculation(NhiRuleCheckDTO dto, long limitationMonth) {
@@ -2635,10 +2661,11 @@ public class NhiRuleCheckUtil {
 
     /**
      * 依照 ned id 來決定是否為相同處置，依照日期來決定是否為同日處置，其餘則依照傳入類型做為結果
-     * @param originSrcType 由呼叫函式決定，當不符合狀態時的結果
-     * @param matchedDate  查詢到的日期
+     *
+     * @param originSrcType     由呼叫函式決定，當不符合狀態時的結果
+     * @param matchedDate       查詢到的日期
      * @param matchedDisposalId 查詢到的 ned id
-     * @param dto 欲檢查的內容
+     * @param dto               欲檢查的內容
      * @return 來源類型
      */
     public String classifySourceType(
@@ -2681,5 +2708,107 @@ public class NhiRuleCheckUtil {
         }
 
         return result.getValue();
+    }
+
+    /**
+     * 檢查當前處置單，當日其他處置單，是否包含目標代碼
+     *
+     * @param dto
+     * @param codes
+     * @return
+     */
+    public NhiRuleCheckResultDTO isCurrentDateHasCode(
+        NhiRuleCheckDTO dto,
+        List<String> codes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+            .validated(true)
+            .validateTitle("檢查當前處置單，當日其他處置單，是否包含目標代碼");
+
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().stream()
+                .filter(Objects::nonNull)
+                .anyMatch(codes::contains)
+        ) {
+            result.validated(
+                false
+            )
+                .nhiRuleCheckInfoType(
+                    NhiRuleCheckInfoType.WARNING
+                )
+                .message(
+                    String.format(
+                        NhiRuleCheckFormat.W4_1.getFormat(),
+                        DateTimeUtil.transformA71ToDisplay(
+                            dto.getNhiExtendTreatmentProcedure().getA71()
+                        ),
+                        codes.toString(),
+                        NhiRuleCheckSourceType.CURRENT_DISPOSAL.getValue(),
+                        dto.getNhiExtendDisposal().getA17()
+                    )
+                );
+        }
+
+        if (result.isValidated() &&
+            dto.getNhiExtendDisposal() != null &&
+            dto.getNhiExtendDisposal().getDate() != null
+        ) {
+            LocalDateDuration localDateDuration = new LocalDateDuration();
+            localDateDuration.setBegin(
+                LocalDate.MIN
+                    .withYear(
+                        dto.getNhiExtendDisposal().getDate().getYear()
+                    )
+                    .withMonth(
+                        dto.getNhiExtendDisposal().getDate().getMonthValue()
+                    )
+                    .withDayOfMonth(
+                        dto.getNhiExtendDisposal().getDate().getDayOfMonth()
+                    )
+            );
+            localDateDuration.setEnd(
+                LocalDate.MAX
+                    .withYear(
+                        dto.getNhiExtendDisposal().getDate().getYear()
+                    )
+                    .withMonth(
+                        dto.getNhiExtendDisposal().getDate().getMonthValue()
+                    )
+                    .withDayOfMonth(
+                        dto.getNhiExtendDisposal().getDate().getDayOfMonth()
+                    )
+            );
+            NhiExtendTreatmentProcedure match =
+                this.findPatientTreatmentProcedureAtCodesAndBetweenDuration(
+                    dto.getPatient().getId(),
+                    dto.getNhiExtendTreatmentProcedure().getId(),
+                    localDateDuration,
+                    codes,
+                    dto.getExcludeTreatmentProcedureIds()
+                );
+
+            if (match != null) {
+                result.validated(
+                    false
+                )
+                    .nhiRuleCheckInfoType(
+                        NhiRuleCheckInfoType.WARNING
+                    )
+                    .message(
+                        String.format(
+                            NhiRuleCheckFormat.W4_1.getFormat(),
+                            DateTimeUtil.transformA71ToDisplay(
+                                dto.getNhiExtendTreatmentProcedure().getA71()
+                            ),
+                            codes.toString(),
+                            NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL.getValue(),
+                            dto.getNhiExtendDisposal().getA17()
+                        )
+                    );
+            }
+        }
+
+        return result;
     }
 }

@@ -687,36 +687,45 @@ public class NhiRuleCheckUtilMockTest {
     public void isAllLimitTooth_1() {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
         NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA74(DataGenerator.NHI_CODE_1);
         netp.setA74("1234");
         dto.setNhiExtendTreatmentProcedure(netp);
 
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedTooth(dto, ToothConstraint.PERMANENT_TOOTH);
         Assert.assertEquals(true, rdto.isValidated());
-        Assert.assertEquals(rdto.getMessage(), null);
+        Assert.assertEquals(null, rdto.getMessage());
     }
 
     @Test
     public void isAllLimitTooth_2() {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
         NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA73(DataGenerator.NHI_CODE_1);
         netp.setA74("1254");
         dto.setNhiExtendTreatmentProcedure(netp);
 
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedTooth(dto, ToothConstraint.PERMANENT_TOOTH);
         Assert.assertEquals(false, rdto.isValidated());
-        Assert.assertEquals(rdto.getMessage(), ToothUtil.getToothConstraintsFailureMessage(ToothConstraint.PERMANENT_TOOTH));
+        Assert.assertEquals(
+            DataGenerator.NHI_CODE_1 + ": " + ToothUtil.getToothConstraintsFailureMessage(ToothConstraint.PERMANENT_TOOTH),
+            rdto.getMessage()
+        );
     }
 
     @Test
     public void isAllLimitTooth_3() {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
         NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure();
+        netp.setA73(DataGenerator.NHI_CODE_1);
         netp.setA74("");
         dto.setNhiExtendTreatmentProcedure(netp);
 
         NhiRuleCheckResultDTO rdto = nhiRuleCheckUtil.isAllLimitedTooth(dto, ToothConstraint.PERMANENT_TOOTH);
         Assert.assertEquals(false, rdto.isValidated());
-        Assert.assertEquals(rdto.getMessage(), ToothUtil.getToothConstraintsFailureMessage(ToothConstraint.PERMANENT_TOOTH));
+        Assert.assertEquals(
+            DataGenerator.NHI_CODE_1 + ": " + ToothUtil.getToothConstraintsFailureMessage(ToothConstraint.PERMANENT_TOOTH),
+            rdto.getMessage()
+        );
     }
 
     /**
