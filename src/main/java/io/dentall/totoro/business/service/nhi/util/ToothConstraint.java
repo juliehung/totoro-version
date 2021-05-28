@@ -9,7 +9,9 @@ public enum ToothConstraint {
     PARTIAL_ZONE("UB|LB|UR|UL|LR|LL", "牙位限填: UB, LB, UR, UL, LR, LL"),
     FOUR_PHASE_ZONE("UR|UL|LR|LL", "牙位限填: UR, UL, LR, LL"),
     DECIDUOUS_TOOTH("^[5-8][1-5]$", "牙位限填: 51-55, 61-65, 71-75, 81-85"),
-    FULL_ZONE("FM", "牙位限填: FM");
+    FULL_ZONE("FM", "牙位限填: FM"),
+    VALIDATED_ALL("^[1-4][1-8]$|^[5-8][1-5]$|^[1-9]9$|UR|UL|LR|LL|UA|LA|FM", "牙位限填: 11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99,UR,UL,LR,LL,UA,LA,FM"),
+    ;
 
     private String message;
 
