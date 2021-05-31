@@ -32,6 +32,8 @@ public final class DateTimeUtil {
 
     public static final long NUMBERS_OF_MONTH_6 = 6L;
 
+    public static final long NUMBERS_OF_MONTH_12 = 12L;
+
     public static Supplier<Instant> localTimeMin = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toZonedDateTime().with(LocalTime.MIN).toInstant();
     public static Supplier<Instant> localTimeMax = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toZonedDateTime().with(LocalTime.MAX).toInstant();
 
