@@ -164,6 +164,13 @@ public class NhiRuleCheckScript340XXC {
             );
         }
 
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.VALIDATED_ALL
+            );
+        }
+
         return vm;
     }
 
