@@ -82,6 +82,7 @@ public class BackupResource {
             );
         });
 
+        // 由於月申報的 xml 檔，包含了 encoding ，而 GCS 不支援，當他使用 xml 時，會進行 parsing ，導致檔案無法正常下載貨開啟。這裡強制轉為 text/plan ，避免此情境。
         ForkJoinPool.commonPool().submit(() -> {
             try {
                 imageBusinessService.uploadFile(
@@ -91,7 +92,7 @@ public class BackupResource {
                         .concat("/"),
                     file.getOriginalFilename(),
                     file.getInputStream(),
-                    file.getContentType()
+                    "text/plain"
                 );
                 result.setResult(
                     ResponseEntity
