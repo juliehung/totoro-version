@@ -92,7 +92,7 @@ public class BackupResource {
                         .concat("/"),
                     file.getOriginalFilename(),
                     file.getInputStream(),
-                    "text/plan"
+                    "text/plain"
                 );
                 result.setResult(
                     ResponseEntity
