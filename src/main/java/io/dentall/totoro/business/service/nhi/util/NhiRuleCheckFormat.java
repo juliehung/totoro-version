@@ -12,6 +12,9 @@ public enum NhiRuleCheckFormat {
     // 91004C:  91015C(來源-110/01/01) 90天內不得申報 91004C。
     D1_2("%s:  %s(%s-%s) %s 天內不得申報 %s", NhiRuleCheckInfoType.DANGER),
 
+    // 91004C:  91015C(來源-110/01/01) 90天內不得申報 91004C。
+    D1_2_2("%s:  %s(%s-%s) %s 月內不得申報 %s", NhiRuleCheckInfoType.DANGER),
+
     // 90012C:  37 已申報 92013C(來源-110/01/01)
     D1_3("%s:  %s 已申報 %s(%s-%s)", NhiRuleCheckInfoType.DANGER),
 

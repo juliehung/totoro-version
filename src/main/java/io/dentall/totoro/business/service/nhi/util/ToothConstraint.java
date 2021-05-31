@@ -11,6 +11,10 @@ public enum ToothConstraint {
     DECIDUOUS_TOOTH("^[5-8][1-5]$", "牙位限填: 51-55, 61-65, 71-75, 81-85"),
     FULL_ZONE("FM", "牙位限填: FM"),
     VALIDATED_ALL("^[1-4][1-8]$|^[5-8][1-5]$|^[1-9]9$|UR|UL|LR|LL|UA|LA|FM", "牙位限填: 11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99,UR,UL,LR,LL,UA,LA,FM"),
+    ONLY_16("16", "牙位限填: 16"),
+    ONLY_26("26", "牙位限填: 26"),
+    ONLY_36("36", "牙位限填: 36"),
+    ONLY_46("46", "牙位限填: 46"),
     ;
 
     private String message;

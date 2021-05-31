@@ -1550,6 +1550,59 @@ public class NhiRuleCheckUtil {
     }
 
     /**
+     * 指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達 只定間隔時間。
+     *
+     * @param dto      使用 patient.id
+     * @param codes    被限制的健保代碼清單
+     * @param duration 只定間隔時間
+     * @param month    月份
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO isCodeBetweenDurationByNhiMedicalRecord(
+        @NotNull NhiRuleCheckDTO dto,
+        @NotNull List<String> codes,
+        LocalDateDuration duration,
+        Long month
+    ) {
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+
+        NhiMedicalRecord match = this.findPatientMediaRecordAtCodesAndBetweenDuration(
+            dto.getPatient().getId(),
+            duration,
+            codes);
+
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
+            .validated(match == null);
+
+        if (!result.isValidated()) {
+            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getDate());
+
+            String m = "";
+
+            m = String.format(
+                NhiRuleCheckFormat.D1_2_2.getFormat(),
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                match.getNhiCode(),
+                NhiRuleCheckSourceType.NHI_CARD_RECORD,
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                month,
+                dto.getNhiExtendTreatmentProcedure().getA73()
+            );
+
+            result
+                .nhiRuleCheckInfoType(
+                    NhiRuleCheckFormat.D1_2_2.getLevel()
+                )
+                .message(
+                    m
+                );
+        }
+
+        return result;
+    }
+
+    /**
      * 回訊息作為提醒用，檢核狀況算審核通過
      *
      * @param message 作為提醒用訊息
@@ -2728,7 +2781,6 @@ public class NhiRuleCheckUtil {
 
         if (dto.getIncludeNhiCodes() != null &&
             dto.getIncludeNhiCodes().stream()
-                .filter(Objects::nonNull)
                 .anyMatch(codes::contains)
         ) {
             result.validated(
@@ -2807,6 +2859,253 @@ public class NhiRuleCheckUtil {
                         )
                     );
             }
+        }
+
+        return result;
+    }
+
+    /**
+     * 終生一次
+     */
+    public NhiRuleCheckResultDTO isOnceInWholeLife(
+        NhiRuleCheckDTO dto,
+        List<String> codes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validated(true)
+            .validateTitle("終生一次");
+
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().stream()
+                .filter(codes::contains)
+                .count() > 1
+        ) {
+            result
+                .validated(
+                    false
+                )
+                .message(
+                    String.format(
+                        NhiRuleCheckFormat.D2_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        NhiRuleCheckSourceType.CURRENT_DISPOSAL.getValue(),
+                        DateTimeUtil.transformA71ToDisplay(
+                            dto.getNhiExtendDisposal().getA17()
+                        )
+                    )
+                );
+        }
+
+        if (result.isValidated()) {
+            LocalDateDuration localDateDuration = new LocalDateDuration();
+            localDateDuration.setBegin(
+                DateTimeUtil.transformROCDateToLocalDate(
+                    dto.getNhiExtendTreatmentProcedure().getA71()
+                )
+            );
+            localDateDuration.setEnd(
+                DateTimeUtil.transformROCDateToLocalDate(
+                    dto.getNhiExtendTreatmentProcedure().getA71()
+                )
+            );
+            NhiExtendTreatmentProcedure netp = this.findPatientTreatmentProcedureAtCodesAndBetweenDuration(
+                dto.getPatient().getId(),
+                dto.getNhiExtendTreatmentProcedure().getId(),
+                localDateDuration,
+                codes,
+                dto.getExcludeTreatmentProcedureIds()
+            );
+
+            if (netp != null) {
+                result
+                    .validated(
+                        false
+                    )
+                    .message(
+                        String.format(
+                            NhiRuleCheckFormat.D2_1.getFormat(),
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL.getValue(),
+                            DateTimeUtil.transformA71ToDisplay(
+                                dto.getNhiExtendDisposal().getA17()
+                            )
+                        )
+                    );
+            }
+
+            if (result.isValidated()) {
+                NhiMedicalRecord nmr = this.findPatientMediaRecordAtCodesAndBetweenDuration(
+                    dto.getPatient().getId(),
+                    localDateDuration,
+                    codes
+                );
+
+                if (nmr != null) {
+                    result
+                        .validated(
+                            false
+                        )
+                        .message(
+                            String.format(
+                                NhiRuleCheckFormat.D2_1.getFormat(),
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
+                                NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL.getValue(),
+                                DateTimeUtil.transformA71ToDisplay(
+                                    dto.getNhiExtendDisposal().getA17()
+                                )
+                            )
+                        );
+                }
+            }
+
+        }
+
+        if (result.isValidated()) {
+            List<NhiExtendTreatmentProcedure> netps = this.findPatientTreatmentProcedureAtCodes(
+                dto.getPatient().getId(),
+                codes
+            );
+
+            if (netps != null &&
+                netps.size() > 0
+            ) {
+                result
+                    .validated(
+                        false
+                    )
+                    .message(
+                        String.format(
+                            NhiRuleCheckFormat.D2_1.getFormat(),
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            NhiRuleCheckSourceType.SYSTEM_RECORD.getValue(),
+                            DateTimeUtil.transformA71ToDisplay(
+                                dto.getNhiExtendDisposal().getA17()
+                            )
+                        )
+                    );
+            }
+        }
+
+        if (result.isValidated()) {
+            List<NhiMedicalRecord> nmrs = this.findPatientMedicalRecordAtCodes(
+                dto.getPatient().getId(),
+                codes
+            );
+
+            if (nmrs != null &&
+                nmrs.size() > 0
+            ) {
+                result
+                    .validated(
+                        false
+                    )
+                    .message(
+                        String.format(
+                            NhiRuleCheckFormat.D2_1.getFormat(),
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            NhiRuleCheckSourceType.NHI_CARD_RECORD.getValue(),
+                            DateTimeUtil.transformA71ToDisplay(
+                                dto.getNhiExtendDisposal().getA17()
+                            )
+                        )
+                    );
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達 指定月份間隔。
+     *
+     * @param dto      使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
+     * @param codes    被限制的健保代碼清單
+     * @param duration 指定時間間隔
+     * @return 後續檢核統一 `回傳` 的介面
+     */
+    public NhiRuleCheckResultDTO isCodeBetweenDuration(
+        @NotNull NhiRuleCheckDTO dto,
+        @NotNull List<String> codes,
+        LocalDateDuration duration,
+        Long month
+    ) {
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+
+        // 檢核 nhi extend treatment procedure
+        NhiExtendTreatmentProcedure match =
+            this.findPatientTreatmentProcedureAtCodesAndBetweenDuration(
+                dto.getPatient().getId(),
+                dto.getNhiExtendTreatmentProcedure().getId(),
+                duration,
+                codes,
+                dto.getExcludeTreatmentProcedureIds());
+
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達 指定月份間隔。")
+            .validated(match == null);
+
+        if (!result.isValidated()) {
+            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
+
+            String m = "";
+
+            m = String.format(
+                NhiRuleCheckFormat.D1_2_2.getFormat(),
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                match.getA73(),
+                this.classifySourceType(
+                    NhiRuleCheckSourceType.SYSTEM_RECORD,
+                    matchDate,
+                    match.getNhiExtendDisposal().getId(),
+                    dto
+                ),
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
+                month,
+                dto.getNhiExtendTreatmentProcedure().getA73()
+            );
+
+            result
+                .nhiRuleCheckInfoType(
+                    NhiRuleCheckFormat.D1_2_2.getLevel()
+                )
+                .message(
+                    m
+                );
+        }
+
+        return result;
+    }
+
+    public NhiRuleCheckResultDTO isTreatmentDependOnCode(
+        NhiRuleCheckDTO dto,
+        List<String> codes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validateTitle("不指定時間，曾經有指定治療項目")
+            .validated(true);
+
+        List<NhiExtendTreatmentProcedure> netps =
+            this.findPatientTreatmentProcedureAtCodes(
+                dto.getPatient().getId(),
+                codes
+            );
+
+        if (netps == null ||
+            netps.size() < 1
+        ) {
+            result
+                .validated(
+                    false
+                )
+                .message(
+                    String.format(
+                        NhiRuleCheckFormat.D8_2.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        codes
+                    )
+                );
         }
 
         return result;
