@@ -361,7 +361,7 @@ public class NhiRuleCheckUtil {
                 ned.setA17(
                     body.getDisposalTime()
                 );
-                dto.setNhiExtendDisposal(new NhiExtendDisposal());
+                dto.setNhiExtendDisposal(ned);
             }
 
             dto.getNhiExtendDisposal().setA23(body.getNhiCategory());
@@ -2555,6 +2555,11 @@ public class NhiRuleCheckUtil {
                         codes.toString()
                     );
                     break;
+                case W3_1:
+                    msg = String.format(
+                        NhiRuleCheckFormat.W3_1.getFormat(),
+                        codes
+                    );
                 default:
                     break;
             }
@@ -3103,6 +3108,73 @@ public class NhiRuleCheckUtil {
                     String.format(
                         NhiRuleCheckFormat.D8_2.getFormat(),
                         dto.getNhiExtendTreatmentProcedure().getA73(),
+                        codes
+                    )
+                );
+        }
+
+        return result;
+    }
+
+    public NhiRuleCheckResultDTO isTreatmentDependOnCodeToday(
+        NhiRuleCheckDTO dto,
+        List<String> codes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(
+                NhiRuleCheckInfoType.WARNING
+            )
+            .validateTitle(
+                "今天時間，曾經有指定治療項目"
+            )
+            .validated(
+                true
+            );
+
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().stream()
+            .anyMatch(
+                codes::contains
+            )
+        ) {
+            return result;
+        }
+
+        NhiMedicalRecord nmr = this.findPatientMediaRecordAtCodesAndBeforePeriod(
+                dto.getPatient().getId(),
+                DateTimeUtil.transformROCDateToLocalDate(
+                    dto.getNhiExtendDisposal().getA17()
+                ),
+                codes,
+                Period.ZERO
+            );
+        if (nmr != null) {
+            return result;
+        }
+
+        NhiExtendTreatmentProcedure netps =
+            this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
+                dto.getPatient().getId(),
+                dto.getNhiExtendTreatmentProcedure().getId(),
+                DateTimeUtil.transformROCDateToLocalDate(
+                    dto.getNhiExtendDisposal().getA17()
+                ),
+                codes,
+                Period.ZERO,
+                dto.getExcludeTreatmentProcedureIds()
+            );
+
+        if (netps == null) {
+            result
+                .validated(
+                    false
+                )
+                .nhiRuleCheckInfoType(
+                    NhiRuleCheckFormat.W3_1.getLevel()
+                )
+                .message(
+                    String.format(
+                        NhiRuleCheckFormat.W3_1.getFormat(),
                         codes
                     )
                 );
