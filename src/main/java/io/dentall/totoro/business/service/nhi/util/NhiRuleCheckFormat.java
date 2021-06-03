@@ -46,10 +46,10 @@ public enum NhiRuleCheckFormat {
     D6_1("%s 不得同日申報", NhiRuleCheckInfoType.DANGER),
 
     // 91003C: 180 天內曾申報(來源-110/01/01) ，就醫類別請選 AB
-    D7_1("%s: %s 內已申報 %s (%s-%s) 的 %s , 就醫類別請選 AB", NhiRuleCheckInfoType.DANGER),
+    D7_1("%s: %s 天內曾申報 %s (%s-%s), 就醫類別請選 AB", NhiRuleCheckInfoType.DANGER),
 
     // 90001C: 60 內已申報 90015C (來源-110/01/01) 的 37 , 就醫類別請選 AB
-    D7_2("%s: %s 內已申報 %s (%s-%s) 的 %s , 就醫類別請選 AB", NhiRuleCheckInfoType.DANGER),
+    D7_2("%s: %s 天內曾申報 %s (%s-%s) 的 %s, 就醫類別請選 AB", NhiRuleCheckInfoType.DANGER),
 
     // 90001C: 前 60 天內須曾申報 90015C
     D8_1("%s: 前 %s 天內須曾申報 %s", NhiRuleCheckInfoType.DANGER),
@@ -77,6 +77,9 @@ public enum NhiRuleCheckFormat {
 
     // 90001C: 90 天內已申報 90002C(來源-110/01/01) 的 37, 支付點數以最高者
     W6_1("%s: %s 天內已申報 %s(%s-%s) 的 %s, 支付點數以最高者", NhiRuleCheckInfoType.WARNING),
+
+    // 91018C: 限經「牙周病統合治療方案」核備之醫師，執行院所內已完成第三階段91023C患者之牙醫醫療服務，且需與第二階段91022C間隔九十天。
+    PERIO_1("%s: 限經「牙周病統合治療方案」核備之醫師，執行院所內已完成第三階段91023C患者之牙醫醫療服務，且需與第二階段91022C間隔九十天。", NhiRuleCheckInfoType.WARNING),
 
     /**
      * INFO LEVEL
