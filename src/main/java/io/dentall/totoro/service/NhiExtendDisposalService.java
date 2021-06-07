@@ -65,6 +65,10 @@ public class NhiExtendDisposalService {
 
     private final PrescriptionMapper prescriptionMapper;
 
+    private final ToothRepository toothRepository;
+
+    private final ToothMapper toothMapper;
+
     public NhiExtendDisposalService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         RelationshipService relationshipService,
@@ -81,7 +85,10 @@ public class NhiExtendDisposalService {
         NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository,
         NhiExtendTreatmentDrugMapper nhiExtendTreatmentDrugMapper,
         PrescriptionRepository prescriptionRepository,
-        PrescriptionMapper prescriptionMapper) {
+        PrescriptionMapper prescriptionMapper,
+        ToothRepository toothRepository,
+        ToothMapper toothMapper
+    ) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.relationshipService = relationshipService;
         this.disposalRepository = disposalRepository;
@@ -98,6 +105,8 @@ public class NhiExtendDisposalService {
         this.nhiExtendTreatmentDrugMapper = nhiExtendTreatmentDrugMapper;
         this.prescriptionRepository = prescriptionRepository;
         this.prescriptionMapper = prescriptionMapper;
+        this.toothRepository = toothRepository;
+        this.toothMapper = toothMapper;
     }
 
     /**
@@ -271,6 +280,11 @@ public class NhiExtendDisposalService {
                 Set<TreatmentProcedure> treatmentProcedures = treatmentProcedureRepository.findTreatmentProceduresByDisposal_Id(nhiExtendDisposalTable.getDisposal_Id()).stream()
                     .map(treatmentProcedureMapper::TreatmentProcedureTableToTreatmentProcedure)
                     .map(treatmentProcedure -> {
+                        Set<Tooth> toothSet = toothRepository.findToothByTreatmentProcedure_Id(treatmentProcedure.getId())
+                            .stream()
+                            .map(toothMapper::toothTableToTooth)
+                            .collect(Collectors.toSet());
+                        treatmentProcedure.setTeeth(toothSet);
                         if (treatmentProcedure.getNhiExtendTreatmentProcedure() != null &&
                             treatmentProcedure.getNhiExtendTreatmentProcedure().getId() != null &&
                             treatmentProcedure.getNhiProcedure() != null &&
