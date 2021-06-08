@@ -514,7 +514,7 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO lessThanAge6(@NotNull NhiRuleCheckDTO dto) {
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("病患是否在診療當下年紀大於等於 6 歲")
+            .validateTitle("病患是否在診療當下年紀小於 6 歲")
             .validated(true);
 
         if (dto.getPatient().getBirth() == null) {
@@ -2229,6 +2229,7 @@ public class NhiRuleCheckUtil {
      * @param dto 使用 includeNhiCodes
      * @return 後續檢核統一 `回傳` 的介面
      */
+    @Deprecated
     public NhiRuleCheckResultDTO isMustIncludeNhiCode(NhiRuleCheckDTO dto, List<String> mustIncludeCodes) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
@@ -2684,26 +2685,35 @@ public class NhiRuleCheckUtil {
             .validated(true)
             .validateTitle("89XXX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外");
 
-        NhiExtendTreatmentProcedure outOfLimitationClause =
+        NhiExtendTreatmentProcedure targetTp =
             this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
                 dto.getPatient().getId(),
                 dto.getNhiExtendTreatmentProcedure().getId(),
                 DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
-                Arrays.asList("90001C~90003C", "90019C", "90020C"),
+                Arrays.asList("89006C"),
                 DateTimeUtil.NHI_1_MONTH,
-                dto.getExcludeTreatmentProcedureIds());
+                dto.getExcludeTreatmentProcedureIds()
+            );
 
-        if (outOfLimitationClause == null) {
-            NhiExtendTreatmentProcedure match =
+        if (targetTp != null) {
+            NhiExtendTreatmentProcedure outOfLimitationClause =
                 this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
                     dto.getPatient().getId(),
                     dto.getNhiExtendTreatmentProcedure().getId(),
                     DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
-                    Arrays.asList("89006C"),
+                    Arrays.asList("90001C~90003C", "90019C", "90020C"),
                     DateTimeUtil.NHI_1_MONTH,
-                    dto.getExcludeTreatmentProcedureIds());
+                    dto.getExcludeTreatmentProcedureIds()
+                );
 
-            if (match != null) {
+            if (outOfLimitationClause == null ||
+                DateTimeUtil.transformROCDateToLocalDate(outOfLimitationClause.getA71())
+                    .isAfter(
+                        DateTimeUtil.transformROCDateToLocalDate(
+                            targetTp.getA71()
+                        )
+                    )
+            ) {
                 result.validated(false)
                     .message(
                         String.format(
@@ -2712,13 +2722,13 @@ public class NhiRuleCheckUtil {
                             "89006C",
                             this.classifySourceType(
                                 NhiRuleCheckSourceType.SYSTEM_RECORD,
-                                DateTimeUtil.transformROCDateToLocalDate(match.getA71()),
-                                match.getNhiExtendDisposal() != null
-                                    ? match.getNhiExtendDisposal().getId()
+                                DateTimeUtil.transformROCDateToLocalDate(outOfLimitationClause.getA71()),
+                                outOfLimitationClause.getNhiExtendDisposal() != null
+                                    ? outOfLimitationClause.getNhiExtendDisposal().getId()
                                     : null,
                                 dto
                             ),
-                            DateTimeUtil.transformA71ToDisplay(match.getA71()),
+                            DateTimeUtil.transformA71ToDisplay(targetTp.getA71()),
                             DateTimeUtil.NHI_1_MONTH.getDays(),
                             dto.getNhiExtendTreatmentProcedure().getA73()
                         )
