@@ -110,6 +110,9 @@ public enum NhiRuleCheckFormat {
 
     // 00302C: 限精神病及精神分裂患者
     PT5("%s: 限精神病及精神分裂患者", NhiRuleCheckInfoType.INFO),
+
+    // 92094C: 限週六、日及國定假日申報, 當月看診需≦二十六日, 前月於健保VPN完成登錄
+    HOLIDAY("%s: 限週六、日及國定假日申報, 當月看診需≦二十六日, 前月於健保VPN完成登錄", NhiRuleCheckInfoType.INFO)
     ;
 
     private String format;

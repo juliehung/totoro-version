@@ -64,6 +64,8 @@ public class NhiRuleCheckUtil {
 
     private final DisposalRepository disposalRepository;
 
+    private final AppointmentRepository appointmentRepository;
+
     public NhiRuleCheckUtil(
         ApplicationContext applicationContext,
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
@@ -72,7 +74,8 @@ public class NhiRuleCheckUtil {
         NhiMedicalRecordRepository nhiMedicalRecordRepository,
         NhiExtendDisposalMapper nhiExtendDisposalMapper,
         NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
-        DisposalRepository disposalRepository
+        DisposalRepository disposalRepository,
+        AppointmentRepository appointmentRepository
     ) {
         this.applicationContext = applicationContext;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
@@ -82,6 +85,7 @@ public class NhiRuleCheckUtil {
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
         this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
         this.disposalRepository = disposalRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     public NhiRuleCheckResultVM dispatch(
@@ -358,6 +362,11 @@ public class NhiRuleCheckUtil {
 
             if (dto.getNhiExtendDisposal() == null) {
                 NhiExtendDisposal ned = new NhiExtendDisposal();
+                if (optionalDt.isPresent()) {
+                    ned.setDisposal(
+                        DisposalMapper.disposalTableToDisposal(optionalDt.get())
+                    );
+                }
                 ned.setA17(
                     body.getDisposalTime()
                 );
@@ -3063,6 +3072,67 @@ public class NhiRuleCheckUtil {
                             NhiRuleCheckSourceType.NHI_CARD_RECORD.getValue(),
                             DateTimeUtil.transformA71ToDisplay(
                                 dto.getNhiExtendDisposal().getA17()
+                            )
+                        )
+                    );
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 醫生對病患，終生一次
+     */
+    public NhiRuleCheckResultDTO isOnceInWholeLifeAtDoctor(
+        NhiRuleCheckDTO dto,
+        String code
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validated(true)
+            .validateTitle("醫生對病患，終生一次");
+
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().stream()
+                .filter(c -> c.equals(code))
+                .count() > 1
+        ) {
+            result
+                .validated(false)
+                .message(
+                    String.format(
+                        NhiRuleCheckFormat.D2_3.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        NhiRuleCheckSourceType.CURRENT_DISPOSAL.getValue(),
+                        DateTimeUtil.transformA71ToDisplay(
+                            dto.getNhiExtendDisposal().getA17()
+                        )
+                    )
+                );
+        }
+
+        if (dto.getNhiExtendDisposal() != null &&
+            dto.getNhiExtendDisposal().getDisposal() != null &&
+            dto.getNhiExtendDisposal().getDisposal().getId() != null
+        ) {
+            List<NhiExtendTreatmentProcedureTable> netps =
+                disposalRepository.findDoctorOperationForPatientWithOnceWholeLifeLimitation(
+                    dto.getNhiExtendDisposal().getDisposal().getId(),
+                    code
+                );
+            if (netps != null &&
+                0 < netps.size()
+            ) {
+                result
+                    .validated(false)
+                    .message(
+                        String.format(
+                            NhiRuleCheckFormat.D2_3.getFormat(),
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            NhiRuleCheckSourceType.SYSTEM_RECORD.getValue(),
+                            DateTimeUtil.transformA71ToDisplay(
+                                netps.get(0).getA71()
                             )
                         )
                     );
