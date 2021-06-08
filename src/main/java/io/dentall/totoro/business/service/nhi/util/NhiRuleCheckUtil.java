@@ -1750,6 +1750,19 @@ public class NhiRuleCheckUtil {
                         .message(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage());
                 }
                 break;
+            case EQUAL_4_SURFACES:
+                result
+                    .validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() ==
+                            SurfaceConstraint.EQUAL_4_SURFACES.getLimitNumber()
+                    );
+
+                if (!result.isValidated()) {
+                    result.message(SurfaceConstraint.EQUAL_4_SURFACES.getErrorMessage());
+                }
+
+                break;
             default:
                 break;
         }
@@ -1876,6 +1889,21 @@ public class NhiRuleCheckUtil {
                                 ),
                                 DateTimeUtil.transformLocalDateToRocDateForDisplay(
                                     matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+                            );
+                            break;
+                        case D4_1:
+                            msg = String.format(
+                                NhiRuleCheckFormat.D4_1.getFormat(),
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
+                                this.classifySourceType(
+                                    NhiRuleCheckSourceType.SYSTEM_RECORD,
+                                    matchDate,
+                                    match.getNhiExtendDisposal() != null ? match.getNhiExtendDisposal().getId() : null,
+                                    dto
+                                ),
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)
+                                )
                             );
                             break;
                         case D7_2:
