@@ -21,7 +21,6 @@ public class NhiRuleCheckScript89XXXC {
         this.nhiRuleCheckUtil = nhiRuleCheckUtil;
     }
 
-
     public NhiRuleCheckResultVM validate89001C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -31,7 +30,7 @@ public class NhiRuleCheckScript89XXXC {
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -43,7 +42,7 @@ public class NhiRuleCheckScript89XXXC {
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
                     DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
+                    NhiRuleCheckFormat.D1_2
                 ),
                 vm
             );
@@ -108,20 +107,8 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.GENERAL_TOOTH
-                ),
-                vm
-            );
-        }
-
-
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89002C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -132,7 +119,7 @@ public class NhiRuleCheckScript89XXXC {
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -144,7 +131,7 @@ public class NhiRuleCheckScript89XXXC {
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
                     DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
+                    NhiRuleCheckFormat.D1_2
                 ),
                 vm
             );
@@ -209,20 +196,8 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.GENERAL_TOOTH
-                ),
-                vm
-            );
-        }
-
-
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89003C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -233,7 +208,7 @@ public class NhiRuleCheckScript89XXXC {
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -245,7 +220,7 @@ public class NhiRuleCheckScript89XXXC {
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
                     DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
+                    NhiRuleCheckFormat.D1_2
                 ),
                 vm
             );
@@ -310,20 +285,8 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.GENERAL_TOOTH
-                ),
-                vm
-            );
-        }
-
-
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89004C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -334,7 +297,7 @@ public class NhiRuleCheckScript89XXXC {
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -346,7 +309,7 @@ public class NhiRuleCheckScript89XXXC {
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
                     DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
+                    NhiRuleCheckFormat.D1_2
                 ),
                 vm
             );
@@ -421,10 +384,8 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
-
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89005C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -435,7 +396,7 @@ public class NhiRuleCheckScript89XXXC {
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -447,7 +408,7 @@ public class NhiRuleCheckScript89XXXC {
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
                     DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
+                    NhiRuleCheckFormat.D1_2
                 ),
                 vm
             );
@@ -522,19 +483,18 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
-
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89006C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
                 dto,
                 Arrays.asList("89006C"),
-                DateTimeUtil.NHI_3_MONTH,
+                DateTimeUtil.NHI_6_MONTH,
+                DateTimeUtil.NHI_6_MONTH,
                 NhiRuleCheckFormat.D4_1
             ),
             vm
@@ -552,7 +512,6 @@ public class NhiRuleCheckScript89XXXC {
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89007C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -588,7 +547,6 @@ public class NhiRuleCheckScript89XXXC {
         return vm;
     }
 
-
     public NhiRuleCheckResultVM validate89008C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -598,7 +556,7 @@ public class NhiRuleCheckScript89XXXC {
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -610,7 +568,7 @@ public class NhiRuleCheckScript89XXXC {
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
                     DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
+                    NhiRuleCheckFormat.D1_2
                 ),
                 vm
             );
@@ -685,10 +643,8 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
-
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89009C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -699,7 +655,7 @@ public class NhiRuleCheckScript89XXXC {
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -711,7 +667,7 @@ public class NhiRuleCheckScript89XXXC {
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
                     DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
+                    NhiRuleCheckFormat.D1_2
                 ),
                 vm
             );
@@ -786,10 +742,8 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
-
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89010C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -800,7 +754,7 @@ public class NhiRuleCheckScript89XXXC {
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -812,7 +766,7 @@ public class NhiRuleCheckScript89XXXC {
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
                     DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
+                    NhiRuleCheckFormat.D1_2
                 ),
                 vm
             );
@@ -887,10 +841,8 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
-
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89011C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -901,7 +853,7 @@ public class NhiRuleCheckScript89XXXC {
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -913,17 +865,7 @@ public class NhiRuleCheckScript89XXXC {
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
                     DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_1_SURFACES
+                    NhiRuleCheckFormat.D1_2
                 ),
                 vm
             );
@@ -978,20 +920,8 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.GENERAL_TOOTH
-                ),
-                vm
-            );
-        }
-
-
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89012C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1002,7 +932,7 @@ public class NhiRuleCheckScript89XXXC {
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -1014,7 +944,7 @@ public class NhiRuleCheckScript89XXXC {
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
                     DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
+                    NhiRuleCheckFormat.D1_2
                 ),
                 vm
             );
@@ -1025,134 +955,6 @@ public class NhiRuleCheckScript89XXXC {
                 nhiRuleCheckUtil.isAllLimitedSurface(
                     dto,
                     SurfaceConstraint.MIN_3_SURFACES
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.GENERAL_TOOTH
-                ),
-                vm
-            );
-        }
-
-
-        return vm;
-    }
-
-
-    public NhiRuleCheckResultVM validate89013C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(
-                dto,
-                Arrays.asList("89013C"),
-                DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D4_1
-            ),
-            vm
-        );
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_TOOTH
-                ),
-                vm
-            );
-        }
-
-        return vm;
-    }
-
-
-    public NhiRuleCheckResultVM validate89014C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
-                dto,
-                Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
-            ),
-            vm
-        );
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_1_SURFACES
                 ),
                 vm
             );
@@ -1217,12 +1019,38 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate89013C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.PERMANENT_TOOTH
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBeforeDate(
+                    dto,
+                    Arrays.asList("89013C"),
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D4_1
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
 
-
-    public NhiRuleCheckResultVM validate89015C(NhiRuleCheckDTO dto) {
+    public NhiRuleCheckResultVM validate89014C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
@@ -1231,7 +1059,7 @@ public class NhiRuleCheckScript89XXXC {
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                 DateTimeUtil.NHI_12_MONTH,
                 DateTimeUtil.NHI_18_MONTH,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -1243,7 +1071,7 @@ public class NhiRuleCheckScript89XXXC {
                     Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
                     DateTimeUtil.NHI_12_MONTH,
                     DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_3
+                    NhiRuleCheckFormat.D1_2
                 ),
                 vm
             );
@@ -1253,7 +1081,106 @@ public class NhiRuleCheckScript89XXXC {
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isAllLimitedSurface(
                     dto,
-                    SurfaceConstraint.MIN_1_SURFACES
+                    SurfaceConstraint.EQUAL_4_SURFACES
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatment(
+                    dto,
+                    Arrays.asList("90007C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
+                    dto,
+                    Arrays.asList("90007C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
+                    dto,
+                    Arrays.asList("92013C~92015C")
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.FRONT_TOOTH
+                ),
+                vm
+            );
+        }
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate89015C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+                dto,
+                Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
+                DateTimeUtil.NHI_12_MONTH,
+                DateTimeUtil.NHI_18_MONTH,
+                NhiRuleCheckFormat.D1_2
+            ),
+            vm
+        );
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
+                    dto,
+                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
+                    DateTimeUtil.NHI_12_MONTH,
+                    DateTimeUtil.NHI_18_MONTH,
+                    NhiRuleCheckFormat.D1_2
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedSurface(
+                    dto,
+                    SurfaceConstraint.EQUAL_4_SURFACES
                 ),
                 vm
             );
@@ -1318,18 +1245,14 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
-
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89088C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
         // Do nothing
         return vm;
     }
-
-    // 891**C
 
     public NhiRuleCheckResultVM validate89101C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1344,24 +1267,37 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedSurface(
+                    dto,
+                    SurfaceConstraint.MIN_1_SURFACES
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.GENERAL_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89102C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1376,24 +1312,37 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedSurface(
+                    dto,
+                    SurfaceConstraint.MIN_2_SURFACES
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.GENERAL_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89103C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1408,24 +1357,37 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedSurface(
+                    dto,
+                    SurfaceConstraint.MIN_3_SURFACES
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.GENERAL_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89104C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1440,24 +1402,37 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedSurface(
+                    dto,
+                    SurfaceConstraint.MIN_1_SURFACES
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.FRONT_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89105C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1472,24 +1447,37 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedSurface(
+                    dto,
+                    SurfaceConstraint.MIN_2_SURFACES
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.FRONT_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89108C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1504,24 +1492,37 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedSurface(
+                    dto,
+                    SurfaceConstraint.MIN_1_SURFACES
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.BACK_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89109C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1536,24 +1537,37 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedSurface(
+                    dto,
+                    SurfaceConstraint.MIN_2_SURFACES
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.BACK_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89110C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1568,24 +1582,37 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedSurface(
+                    dto,
+                    SurfaceConstraint.MIN_3_SURFACES
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.BACK_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89111C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1600,24 +1627,27 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.GENERAL_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89112C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1632,24 +1662,37 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedSurface(
+                    dto,
+                    SurfaceConstraint.MIN_3_SURFACES
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.FRONT_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89113C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1664,24 +1707,27 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.GENERAL_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.PERMANENT_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89114C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1696,24 +1742,27 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.FRONT_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.FRONT_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }
-
 
     public NhiRuleCheckResultVM validate89115C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
@@ -1728,20 +1777,24 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                dto
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.specificRule_1_for89XXXC(
+                    dto
+                ),
+                vm
+            );
+        }
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.BACK_TOOTH
-            ),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.BACK_TOOTH
+                ),
+                vm
+            );
+        }
 
         return vm;
     }

@@ -6,7 +6,9 @@ public enum SurfaceConstraint {
     MAX_3_SURFACES(3, ".*", "申報面數最高以 3 面為限"),
     MIN_1_SURFACES(1, ".*", "牙面數不可小於 1"),
     MIN_2_SURFACES(2, ".*", "牙面數不可小於 2"),
-    MIN_3_SURFACES(3, ".*", "牙面數不可小於 3");
+    MIN_3_SURFACES(3, ".*", "牙面數不可小於 3"),
+    EQUAL_4_SURFACES(4, ".*", "牙面面數應為4面"),
+    ;
 
     private int limitNumber;
 
