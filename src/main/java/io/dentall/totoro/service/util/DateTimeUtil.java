@@ -10,6 +10,8 @@ import java.util.function.Supplier;
 
 public final class DateTimeUtil {
 
+    public static final Period NHI_3_DAY = Period.ofDays(3);
+
     public static final Period NHI_360_DAY = Period.ofDays(360);
 
     public static final Period NHI_152_DAY = Period.ofDays(152);

@@ -11,6 +11,7 @@ public enum NhiRuleCheckScriptType {
     _89XXXC(Pattern.compile("89...C"), NhiRuleCheckScript89XXXC.class),
     _900XXC(Pattern.compile("90...C"), NhiRuleCheckScript90XXXC.class),
     _910XXC(Pattern.compile("91...C"), NhiRuleCheckScript91XXXC.class),
+    _92XXXC(Pattern.compile("92...C"), NhiRuleCheckScript92XXXC.class),
     ;
 
     private Pattern regex;
