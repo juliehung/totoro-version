@@ -9,6 +9,7 @@ import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.TreatmentProcedureRepository;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.service.dto.table.PatientTable;
+import io.dentall.totoro.service.mapper.PatientDomainMapper;
 import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.ProblemUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -19,8 +20,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Status;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
+import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToEndOfDayInstant;
 
 @Service
 public class PatientBusinessService {
@@ -129,5 +136,15 @@ public class PatientBusinessService {
         log.debug("search.replaceAll result: {}", result);
 
         return patientRepository.findByMedicalId(result, page);
+    }
+
+    public List<PatientSearchVM> findByRegistration(Instant begin, Instant end) {
+        if (begin == null || end == null) {
+            begin = convertLocalDateToBeginOfDayInstant(LocalDate.now());
+            end = convertLocalDateToEndOfDayInstant(LocalDate.now());
+        }
+
+        return patientRepository.findAllByRegistration(begin, end)
+            .stream().map(PatientDomainMapper.INSTANCE::mapToSearchVM).collect(Collectors.toList());
     }
 }
