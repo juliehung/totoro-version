@@ -14,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -52,7 +51,7 @@ public class InternalPatientResource {
         log.debug("REST request to get a page of Patients by birth[{}] and format[{}]", search, format);
 
         Page<PatientSearchVM> page = patientBusinessService.findByBirth(search, format, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/prerogative/patient/birth");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/business/patients/birth");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
@@ -62,7 +61,7 @@ public class InternalPatientResource {
         log.debug("REST request to get a page of Patients by name[{}]", search);
 
         Page<PatientSearchVM> page = patientBusinessService.findByName(search, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/prerogative/patient/name");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/business/patients/name");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
@@ -72,7 +71,7 @@ public class InternalPatientResource {
         log.debug("REST request to get a page of Patients by phone[{}]", search);
 
         Page<PatientSearchVM> page = patientBusinessService.findByPhone(search, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/prerogative/patient/phone");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/business/patients/phone");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
@@ -82,7 +81,7 @@ public class InternalPatientResource {
         log.debug("REST request to get a page of Patients by nationalId[{}]", search);
 
         Page<PatientSearchVM> page = patientBusinessService.findByNationalId(search, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/prerogative/patient/national-id");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/business/patients/national-id");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
@@ -92,17 +91,7 @@ public class InternalPatientResource {
         log.debug("REST request to get a page of Patients by medicalId[{}]", search);
 
         Page<PatientSearchVM> page = patientBusinessService.findByMedicalId(search, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/prerogative/patient/medical-id");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/business/patients/medical-id");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-
-    @GetMapping("/has-registration")
-    @Timed
-    public ResponseEntity<List<PatientSearchVM>> findByRegistration(@RequestParam(required = false) Instant begin, @RequestParam(required = false) Instant end) {
-        log.debug("REST request to get a page of Patients, begin[{}], end[{}]", begin, end);
-
-        List<PatientSearchVM> list = patientBusinessService.findByRegistration(begin, end);
-        return ResponseEntity.ok().body(list);
     }
 }
