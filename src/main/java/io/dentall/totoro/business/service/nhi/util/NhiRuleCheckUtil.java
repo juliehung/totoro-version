@@ -868,62 +868,6 @@ public class NhiRuleCheckUtil {
      * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
      * @param codes     被限制的健保代碼清單
      * @param limitDays 間隔時間
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    @Deprecated
-    public NhiRuleCheckResultDTO isCodeBeforeDate(
-        @NotNull NhiRuleCheckDTO dto,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays
-    ) {
-        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-
-        // 檢核 nhi extend treatment procedure
-        NhiExtendTreatmentProcedure match =
-            this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
-                dto.getPatient().getId(),
-                dto.getNhiExtendTreatmentProcedure().getId(),
-                currentTxDate,
-                codes,
-                limitDays,
-                dto.getExcludeTreatmentProcedureIds());
-
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
-            .validated(match == null);
-
-        if (!result.isValidated()) {
-            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
-
-            result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .message(
-                    String.format(
-                        "%s： %s (%s-%s)，%s 天內不得申報 %s",
-                        dto.getNhiExtendTreatmentProcedure().getA73(),
-                        match.getA73(),
-                        this.classifySourceType(
-                            NhiRuleCheckSourceType.SYSTEM_RECORD,
-                            matchDate,
-                            match.getNhiExtendDisposal().getId(),
-                            dto
-                        ),
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                        limitDays.getDays(),
-                        dto.getNhiExtendTreatmentProcedure().getA73()
-                    )
-                );
-        }
-
-        return result;
-    }
-
-    /**
-     * 指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。
-     *
-     * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
-     * @param codes     被限制的健保代碼清單
-     * @param limitDays 間隔時間
      * @param format    回傳訊息格式
      * @return 後續檢核統一 `回傳` 的介面
      */
@@ -1393,60 +1337,6 @@ public class NhiRuleCheckUtil {
                         match.stream()
                             .map(m -> DateTimeUtil.transformA71ToDisplay(m.getDate()))
                             .collect(Collectors.toList())
-                    )
-                );
-        }
-
-        return result;
-    }
-
-    /**
-     * 指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達間隔 limitDays。
-     *
-     * @param dto       使用 patient.id
-     * @param codes     被限制的健保代碼清單
-     * @param limitDays 間隔時間
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    @Deprecated
-    public NhiRuleCheckResultDTO isCodeBeforeDateByNhiMedicalRecord(
-        @NotNull NhiRuleCheckDTO dto,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays
-    ) {
-        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-
-        NhiMedicalRecord match = this.findPatientMediaRecordAtCodesAndBeforePeriod(
-            dto.getPatient().getId(),
-            currentTxDate,
-            codes,
-            limitDays);
-
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
-            .validated(match == null);
-
-        if (!result.isValidated()) {
-            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getDate());
-
-            result
-                .validated(false)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .nhiRuleCheckSourceType(NhiRuleCheckSourceType.NHI_CARD_RECORD)
-                .message(
-                    String.format(
-                        NhiRuleCheckFormat.D1_2.getFormat(),
-                        dto.getNhiExtendTreatmentProcedure().getA73(),
-                        match.getNhiCode(),
-                        this.classifySourceType(
-                            NhiRuleCheckSourceType.NHI_CARD_RECORD,
-                            matchDate,
-                            null,
-                            dto
-                        ),
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                        limitDays.getDays(),
-                        dto.getNhiExtendTreatmentProcedure().getA73()
                     )
                 );
         }
