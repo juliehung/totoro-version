@@ -477,7 +477,7 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO lessThanAge12(@NotNull NhiRuleCheckDTO dto) {
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("病患是否在診療當下年紀大於 12 歲")
+            .validateTitle("病患是否在診療當下年紀小於 12 歲")
             .validated(true);
 
         if (dto.getPatient().getBirth() == null) {
@@ -974,13 +974,13 @@ public class NhiRuleCheckUtil {
                 case D4_1:
                     m = String.format(
                         NhiRuleCheckFormat.D4_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
                         this.classifySourceType(
                             NhiRuleCheckSourceType.SYSTEM_RECORD,
                             matchDate,
                             match.getNhiExtendDisposal().getId(),
                             dto
                         ),
-                        dto.getNhiExtendTreatmentProcedure().getA73(),
                         DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
                     );
                     break;

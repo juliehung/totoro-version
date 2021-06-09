@@ -34,6 +34,8 @@ public final class DateTimeUtil {
 
     public static final Period NHI_36_MONTH = Period.ofDays(1095);
 
+    public static final long NUMBERS_OF_MONTH_3 = 3L;
+
     public static final long NUMBERS_OF_MONTH_6 = 6L;
 
     public static final long NUMBERS_OF_MONTH_12 = 12L;
