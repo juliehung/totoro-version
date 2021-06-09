@@ -85,7 +85,7 @@ public class NhiRuleCheckScript8X {
                 ),
                 vm
             );
-        };
+        }
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.lessThanAge6(dto),
@@ -108,7 +108,7 @@ public class NhiRuleCheckScript8X {
                 ),
                 vm
             );
-        };
+        }
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.lessThanAge12(dto),

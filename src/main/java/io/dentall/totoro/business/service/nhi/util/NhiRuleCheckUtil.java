@@ -12,7 +12,6 @@ import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.NhiMedicalRecord;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.*;
-import io.dentall.totoro.service.dto.NhiMedicalRecordDTO;
 import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
@@ -29,7 +28,9 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.InvocationTargetException;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Predicate;
@@ -2056,37 +2057,6 @@ public class NhiRuleCheckUtil {
      * @param dto 使用 includeNhiCodes
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO isNoConflictNhiCode(NhiRuleCheckDTO dto, List<String> conflictCodes) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("檢查同一處置單，是否沒有健保定義的其他衝突診療")
-            .validated(true);
-
-        List<String> parsedCodes = this.parseNhiCode(conflictCodes);
-
-        if (dto.getIncludeNhiCodes() != null &&
-            dto.getIncludeNhiCodes().stream()
-                .filter(Objects::nonNull)
-                .anyMatch(parsedCodes::contains)) {
-            result.validated(false)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .message(
-                    String.format(
-                        "不得與 %s 同時申報",
-                        conflictCodes.toString()
-                    )
-                );
-        }
-
-        return result;
-    }
-
-    /**
-     * 檢查同一處置單，是否沒有健保定義的其他衝突診療
-     *
-     * @param dto 使用 includeNhiCodes
-     * @return 後續檢核統一 `回傳` 的介面
-     */
     public NhiRuleCheckResultDTO isNoSelfConflictNhiCode(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
@@ -2106,41 +2076,6 @@ public class NhiRuleCheckUtil {
                     String.format(
                         "同處置單已有 %s",
                         dto.getNhiExtendTreatmentProcedure().getA73()
-                    )
-                );
-        }
-
-        return result;
-    }
-
-    /**
-     * 檢查同一處置單，是否沒有健保定義 必須 包含的診療
-     *
-     * @param dto 使用 includeNhiCodes
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    @Deprecated
-    public NhiRuleCheckResultDTO isMustIncludeNhiCode(NhiRuleCheckDTO dto, List<String> mustIncludeCodes) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("檢查同一處置單，是否沒有健保定義必須包含的診療")
-            .validated(true);
-
-        List<String> parsedCodes = this.parseNhiCode(mustIncludeCodes);
-
-        if (dto.getIncludeNhiCodes() == null ||
-            dto.getIncludeNhiCodes().stream()
-                .filter(Objects::nonNull)
-                .filter(parsedCodes::contains)
-                .collect(Collectors.toList())
-                .size() == 0
-        ) {
-            result.validated(false)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .message(
-                    String.format(
-                        NhiRuleCheckFormat.W3_1.getFormat(),
-                        StringUtils.join(mustIncludeCodes, "/")
                     )
                 );
         }
@@ -2205,70 +2140,6 @@ public class NhiRuleCheckUtil {
                                 dto
                             ),
                             DateTimeUtil.transformA71ToDisplay(optionalNetpt.get().getA71())
-                        )
-                    );
-            }
-
-        }
-
-        return result;
-    }
-
-    /**
-     * 檢查IC紀錄，過去三年時間，包含任何治療紀錄
-     *
-     * @param dto 使用 patient id
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isNoTreatmentInPeriodByNhiMedicalRecord(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("檢查IC紀錄，過去時間，包含任何治療紀錄")
-            .validated(true);
-
-
-        LocalDate currentDate = null;
-        if (dto.getNhiExtendTreatmentProcedure() != null &&
-            dto.getNhiExtendTreatmentProcedure().getA71() != null
-        ) {
-            currentDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-        }
-
-        if (dto.getPatient() != null &&
-            dto.getPatient().getId() != null &&
-            currentDate != null
-        ) {
-            Instant currentDateTime = currentDate.atStartOfDay().toInstant(ZoneOffset.UTC);
-            Instant ym3thDateTime = currentDate.atStartOfDay().toInstant(ZoneOffset.UTC).minus(DateTimeUtil.NHI_36_MONTH.getDays(), ChronoUnit.DAYS);
-            String rocDateString = DateTimeUtil.transformLocalDateToRocDate(currentDate.atStartOfDay().toInstant(ZoneOffset.UTC));
-            String rocDateStringYear = rocDateString.substring(0, 3);
-            String ym1st = rocDateStringYear.concat("%");
-            String ym2nd = String.valueOf(Integer.parseInt(rocDateStringYear) - 1).concat("%");
-            String ym3th = String.valueOf(Integer.parseInt(rocDateStringYear) - 2).concat("%");
-
-            Optional<NhiMedicalRecordDTO> optionalNmr = nhiMedicalRecordRepository
-                .findByNhiExtendPatient_Patient_IdAndDateLikeOrNhiExtendPatient_Patient_IdAndDateLikeOrNhiExtendPatient_Patient_IdAndDateLikeOrderByDateDesc(
-                    dto.getPatient().getId(),
-                    ym1st,
-                    dto.getPatient().getId(),
-                    ym2nd,
-                    dto.getPatient().getId(),
-                    ym3th
-                ).stream()
-                .filter(nmr -> {
-                    Instant nmrDateTime = DateTimeUtil.transformROCDateToLocalDate(nmr.getDate()).atStartOfDay().toInstant(ZoneOffset.UTC);
-                    return nmrDateTime.isAfter(ym3thDateTime) && nmrDateTime.isBefore(currentDateTime);
-                })
-                .findFirst();
-
-            if (optionalNmr.isPresent()) {
-                result.validated(false)
-                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                    .message(
-                        String.format(
-                            "建議 %s 後再行申報，近一次處置為健保IC卡中 %s",
-                            currentDate.plus(DateTimeUtil.NHI_36_MONTH),
-                            DateTimeUtil.transformA71ToDisplay(optionalNmr.get().getDate())
                         )
                     );
             }
