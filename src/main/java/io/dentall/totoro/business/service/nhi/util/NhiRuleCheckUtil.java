@@ -2,6 +2,7 @@ package io.dentall.totoro.business.service.nhi.util;
 
 import io.dentall.totoro.business.service.NhiRuleCheckInfoType;
 import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
+import io.dentall.totoro.business.service.nhi.NhiHybridRecordDTO;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
@@ -424,6 +425,11 @@ public class NhiRuleCheckUtil {
                         }
                     }
                 });
+            dto.setTxSnapshots(body.getTxSnapshots());
+        }
+
+        if (dto.getTxSnapshots() == null) {
+            dto.setTxSnapshots(new ArrayList());
         }
 
         dto.setExcludeTreatmentProcedureIds(excludeTreatmentProcedureIds);
@@ -861,6 +867,30 @@ public class NhiRuleCheckUtil {
     public List<NhiMedicalRecord> findPatientMedicalRecordAtCodes(Long patientId, List<String> codes) {
         List<String> parsedCodes = this.parseNhiCode(codes);
         return nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(patientId, parsedCodes);
+    }
+
+    public List<NhiHybridRecordDTO> findNhiHypeRecordsDTO(
+        Long patientId,
+        List<String> codes,
+        List<Long> excludeDisposalIds
+    ) {
+        return nhiExtendDisposalRepository.findNhiHybridRecord(
+            patientId,
+            codes,
+            excludeDisposalIds
+        ).stream()
+            .map(
+                nhr -> new NhiHybridRecordDTO(
+                    nhr.getRecordSource(),
+                    nhr.getDisposalId(),
+                    nhr.getDoctorId(),
+                    nhr.getRecordDateTime(),
+                    nhr.getCode(),
+                    nhr.getTooth(),
+                    nhr.getSurface()
+                )
+            )
+            .collect(Collectors.toList());
     }
 
     /**
@@ -3202,4 +3232,177 @@ public class NhiRuleCheckUtil {
 
         return result;
     }
+
+    public NhiRuleCheckResultDTO isCodeBeforeDateV2(
+        NhiRuleCheckDTO dto,
+        NhiRuleCheckSourceType onlySourceType,
+        List<String> codes,
+        LocalDateDuration duration,
+        String limitDisplayDuration,
+        NhiRuleCheckFormat format,
+        List<Long> excludeDisposalIds
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("指定 patient id, codes, 並排除 disposal")
+            .validated(true);
+
+        // 當前 disposal
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().size() > 0
+        ) {
+            Map<String, Integer> count = new HashMap<>();
+            dto.getIncludeNhiCodes().stream()
+                .filter(c -> codes.contains(c))
+                .forEach(c -> {
+                    if (count.containsKey(c)) {
+                        count.replace(
+                            c,
+                            count.get(c) + 1
+                        );
+                    } else {
+                        count.put(
+                            c,
+                            1
+                        );
+                    }
+                });
+
+            List<String> matches = new ArrayList<>();
+            count.keySet()
+                .forEach(k -> {
+                    if (count.get(k) > 1) {
+                        matches.add(k);
+                    }
+                });
+
+            if (matches.size() > 0) {
+                String m = this.generateErrorMessage(
+                    format,
+                    NhiRuleCheckSourceType.CURRENT_DISPOSAL,
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    matches.get(0),
+                    dto.getNhiExtendDisposal().getA19() != null &&
+                        dto.getNhiExtendDisposal().getA19() == "2"
+                        ? dto.getNhiExtendDisposal().getReplenishmentDate()
+                        : dto.getNhiExtendDisposal().getDate(),
+                    limitDisplayDuration
+                );
+
+                return result
+                    .validated(false)
+                    .nhiRuleCheckInfoType(format.getLevel())
+                    .message(m);
+            }
+        }
+
+        // 其他處置
+        List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            codes,
+            excludeDisposalIds
+        );
+
+        if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(onlySourceType)) {
+            sourceData = sourceData.stream()
+                .filter(d -> "SYS".equals(d.getRecordSource()))
+                .collect(Collectors.toList());
+        }
+
+        List<NhiHybridRecordDTO> matches = sourceData.stream()
+            .filter(
+                d -> d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                    d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                    d.getRecordDateTime().isEqual(duration.getEnd())
+            )
+            .collect(Collectors.toList());
+
+        if (matches != null &&
+            matches.size() > 0
+        ) {
+            NhiRuleCheckSourceType matchedSourceType = NhiRuleCheckSourceType.SYSTEM_RECORD;
+            NhiHybridRecordDTO latestNhiHybridRecord = matches.get(0);
+            if (
+                "IC".equals(latestNhiHybridRecord.getRecordSource())
+            ) {
+                matchedSourceType = NhiRuleCheckSourceType.NHI_CARD_RECORD;
+            } else if (
+                latestNhiHybridRecord.getRecordDateTime().isEqual(
+                    DateTimeUtil.transformROCDateToLocalDate(
+                        dto.getNhiExtendTreatmentProcedure().getA71()
+                    )
+                )
+            ) {
+                matchedSourceType = NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL;
+            }
+
+            String m = this.generateErrorMessage(
+                format,
+                matchedSourceType,
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                latestNhiHybridRecord.getCode(),
+                latestNhiHybridRecord.getRecordDateTime(),
+                limitDisplayDuration
+            );
+
+            return result
+                .validated(false)
+                .nhiRuleCheckInfoType(format.getLevel())
+                .message(m);
+        }
+
+        return result;
+    }
+
+    public String generateErrorMessage(
+        NhiRuleCheckFormat format,
+        NhiRuleCheckSourceType sourceType,
+        String targetCode,
+        String matchCode,
+        LocalDate matchDate,
+        String limitValueString
+    ) {
+        String m = "";
+        switch (format) {
+            case D1_2:
+                m = String.format(
+                    NhiRuleCheckFormat.D1_2.getFormat(),
+                    targetCode,
+                    sourceType.getValue(),
+                    matchCode,
+                    DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                        matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)
+                    ),
+                    limitValueString,
+                    targetCode
+                );
+                break;
+            case D4_1:
+                m = String.format(
+                    NhiRuleCheckFormat.D4_1.getFormat(),
+                    targetCode,
+                    sourceType.getValue(),
+                    DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                        matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)
+                    )
+                );
+                break;
+            case D7_1:
+                m = String.format(
+                    NhiRuleCheckFormat.D7_1.getFormat(),
+                    targetCode,
+                    limitValueString,
+                    sourceType.getValue(),
+                    DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                        matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)
+                    )
+                );
+                break;
+            default:
+                m = "";
+                break;
+        }
+
+        return m;
+    }
+
 }

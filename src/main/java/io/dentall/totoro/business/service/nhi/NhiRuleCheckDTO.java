@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi;
 
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.Patient;
@@ -12,6 +13,8 @@ public class NhiRuleCheckDTO {
     @NotNull
     private Patient patient;
 
+    private Long doctorId;
+
     private NhiExtendDisposal nhiExtendDisposal;
 
     @NotNull
@@ -21,7 +24,25 @@ public class NhiRuleCheckDTO {
 
     private List<String> includeNhiCodes;
 
+    private List<NhiRuleCheckTxSnapshot> txSnapshots;
+
     private boolean referral;
+
+    public Long getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(Long doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public List<NhiRuleCheckTxSnapshot> getTxSnapshots() {
+        return txSnapshots;
+    }
+
+    public void setTxSnapshots(List<NhiRuleCheckTxSnapshot> txSnapshots) {
+        this.txSnapshots = txSnapshots;
+    }
 
     public List<String> getIncludeNhiCodes() {
         return includeNhiCodes;
