@@ -12,26 +12,53 @@ public final class DateTimeUtil {
 
     public static final Period NHI_3_DAY = Period.ofDays(3);
 
-    public static final Period NHI_360_DAY = Period.ofDays(360);
+    public static final Period NHI_7_DAY = Period.ofDays(7);
+
+    public static final Period NHI_30_MONTH = Period.ofDays(30);
+
+    public static final Period NHI_60_MONTH = Period.ofDays(60);
+
+    public static final Period NHI_90_DAY = Period.ofDays(90);
 
     public static final Period NHI_152_DAY = Period.ofDays(152);
 
+    public static final Period NHI_180_DAY = Period.ofDays(180);
+
+    public static final Period NHI_360_DAY = Period.ofDays(360);
+
+    public static final Period NHI_365_DAY = Period.ofDays(365);
+
+    public static final Period NHI_545_DAY = Period.ofDays(545);
+
+    public static final Period NHI_730_DAY = Period.ofDays(730);
+
+    public static final Period NHI_1095_DAY = Period.ofDays(1095);
+
+    @Deprecated
     public static final Period NHI_1_WEEK = Period.ofDays(7);
 
+    @Deprecated
     public static final Period NHI_1_MONTH = Period.ofDays(30);
 
+    @Deprecated
     public static final Period NHI_2_MONTH = Period.ofDays(60);
 
+    @Deprecated
     public static final Period NHI_3_MONTH = Period.ofDays(90);
 
+    @Deprecated
     public static final Period NHI_6_MONTH = Period.ofDays(180);
 
+    @Deprecated
     public static final Period NHI_12_MONTH = Period.ofDays(365);
 
+    @Deprecated
     public static final Period NHI_18_MONTH = Period.ofDays(545);
 
+    @Deprecated
     public static final Period NHI_24_MONTH = Period.ofDays(730);
 
+    @Deprecated
     public static final Period NHI_36_MONTH = Period.ofDays(1095);
 
     public static final long NUMBERS_OF_MONTH_3 = 3L;

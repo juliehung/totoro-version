@@ -3397,6 +3397,16 @@ public class NhiRuleCheckUtil {
                     )
                 );
                 break;
+            case W4_1:
+                m = String.format(
+                    NhiRuleCheckFormat.W4_1.getFormat(),
+                    targetCode,
+                    matchCode,
+                    sourceType.getValue(),
+                    DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                        matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)
+                    )
+                );
             default:
                 m = "";
                 break;
