@@ -7,8 +7,12 @@ import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.config.TimeConfig;
-import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.NhiExtendDisposal;
+import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.NhiMedicalRecord;
+import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
@@ -3236,6 +3240,7 @@ public class NhiRuleCheckUtil {
         List<String> codes,
         LocalDateDuration duration,
         String limitDisplayDuration,
+        int limitTimes,
         NhiRuleCheckFormat format
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
@@ -3266,7 +3271,7 @@ public class NhiRuleCheckUtil {
             List<String> matches = new ArrayList<>();
             count.keySet()
                 .forEach(k -> {
-                    if (count.get(k) > 1) {
+                    if (count.get(k) > limitTimes) {
                         matches.add(k);
                     }
                 });
@@ -3277,10 +3282,7 @@ public class NhiRuleCheckUtil {
                     NhiRuleCheckSourceType.CURRENT_DISPOSAL,
                     dto.getNhiExtendTreatmentProcedure().getA73(),
                     matches.get(0),
-                    dto.getNhiExtendDisposal().getA19() != null &&
-                        dto.getNhiExtendDisposal().getA19() == "2"
-                        ? dto.getNhiExtendDisposal().getReplenishmentDate()
-                        : dto.getNhiExtendDisposal().getDate(),
+                    this.getNhiExtendDisposalDateInDTO(dto),
                     limitDisplayDuration
                 );
 
@@ -3355,6 +3357,121 @@ public class NhiRuleCheckUtil {
         return result;
     }
 
+    public NhiRuleCheckResultDTO isCodeBeforeDateV2InDifferentTooth(
+        NhiRuleCheckDTO dto,
+        NhiRuleCheckSourceType onlySourceType,
+        List<String> codes,
+        LocalDateDuration duration,
+        String limitDisplayDuration,
+        NhiRuleCheckFormat format
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("指定 patient id, codes, tooth 並排除 disposal")
+            .validated(true);
+
+        // 當前 disposal
+        if (dto.getTxSnapshots() != null &&
+            dto.getTxSnapshots().size() > 0
+        ) {
+            boolean ignoreTheFirstSameData = true;
+            List<NhiRuleCheckTxSnapshot> ignoreTheFirstSameDataTxSnapshots = new ArrayList<>();
+            for (NhiRuleCheckTxSnapshot snapshot : dto.getTxSnapshots()) {
+                if (snapshot.equalsNhiExtendTreatmentProcedure(dto.getNhiExtendTreatmentProcedure()) &&
+                    ignoreTheFirstSameData
+                ) {
+                    ignoreTheFirstSameData = false;
+                } else {
+                    ignoreTheFirstSameDataTxSnapshots.add(snapshot);
+                }
+            }
+
+            List<String> duplicatedTooth = new ArrayList<>();
+            NhiRuleCheckTxSnapshot matchedTxSnapshot = null;
+            for (NhiRuleCheckTxSnapshot snapshot : ignoreTheFirstSameDataTxSnapshots) {
+                duplicatedTooth = ToothUtil.listDuplicatedTooth(
+                    dto.getNhiExtendTreatmentProcedure().getA74(),
+                    snapshot.getTeeth()
+                );
+                if (duplicatedTooth.size() > 0) {
+                    matchedTxSnapshot = snapshot;
+                    break;
+                }
+            }
+            if (duplicatedTooth.size() > 0) {
+                return result.validated(false)
+                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_3.getLevel())
+                    .message(
+                        String.format(
+                            NhiRuleCheckFormat.D1_3.getFormat(),
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            String.join(",", duplicatedTooth),
+                            matchedTxSnapshot.getNhiCode(),
+                            NhiRuleCheckSourceType.CURRENT_DISPOSAL,
+                            this.getNhiExtendDisposalDateInDTO(dto).format(DateTimeUtil.localDateDisplayFormat)
+                        )
+                    );
+            }
+        }
+
+        // 其他
+        List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            codes,
+            Arrays.asList(
+                dto.getNhiExtendDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal().getId() != null
+                    ? dto.getNhiExtendDisposal().getDisposal().getId()
+                    : 0L
+            )
+        ).stream()
+            .filter(
+                d -> d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                    d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                    d.getRecordDateTime().isEqual(duration.getEnd())
+            )
+            .collect(Collectors.toList());
+
+        if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(onlySourceType)) {
+            sourceData = sourceData.stream()
+                .filter(d -> "SYS".equals(d.getRecordSource()))
+                .collect(Collectors.toList());
+        }
+
+        List<String> duplicatedTooth = new ArrayList<>();
+        NhiHybridRecordDTO matchedRecord = null;
+        for (NhiHybridRecordDTO record : sourceData) {
+            ToothUtil.listDuplicatedTooth(
+                dto.getNhiExtendTreatmentProcedure().getA74(),
+                record.getTooth()
+            );
+            if (duplicatedTooth.size() > 0) {
+                matchedRecord = record;
+                break;
+            }
+        }
+
+        if (duplicatedTooth.size() > 0 &&
+            matchedRecord != null
+        ) {
+            result.validated(false)
+                .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_3.getLevel())
+                .message(
+                    String.format(
+                        NhiRuleCheckFormat.D1_3.getFormat(),
+                        NhiRuleCheckFormat.D1_3.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        String.join(",", duplicatedTooth),
+                        matchedRecord.getCode(),
+                        NhiRuleCheckSourceType.CURRENT_DISPOSAL,
+                        matchedRecord.getRecordDateTime().format(DateTimeUtil.localDateDisplayFormat)
+                    )
+                );
+        }
+
+        return result;
+    }
+
     public String generateErrorMessage(
         NhiRuleCheckFormat format,
         NhiRuleCheckSourceType sourceType,
@@ -3417,4 +3534,18 @@ public class NhiRuleCheckUtil {
         return m;
     }
 
+    private LocalDate getNhiExtendDisposalDateInDTO(NhiRuleCheckDTO dto) {
+        return dto.getNhiExtendDisposal().getA19() != null &&
+            dto.getNhiExtendDisposal().getA19() == "2"
+            ? dto.getNhiExtendDisposal().getReplenishmentDate()
+            : dto.getNhiExtendDisposal().getDate();
+    }
+
+    private Long getDisposalIdInDTO(NhiRuleCheckDTO dto) {
+        return dto.getNhiExtendDisposal() != null &&
+            dto.getNhiExtendDisposal().getDisposal() != null &&
+            dto.getNhiExtendDisposal().getDisposal().getId() != null
+            ? dto.getNhiExtendDisposal().getDisposal().getId()
+            : 0L;
+    }
 }
