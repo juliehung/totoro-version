@@ -22,6 +22,8 @@ public class PatientSearchVM {
 
     private Boolean vipPatient;
 
+    public PatientSearchVM() {}
+
     public PatientSearchVM(Long id, String name, String medicalId, LocalDate birth, String phone, String nationalId, Gender gender, Boolean vipPatient) {
         this.id = id;
         this.name = name;

@@ -167,6 +167,7 @@ public class RegistrationService {
                     appointmentService.delete(appointment.getId());
                 }
 
+                patientService.setNewPatient(appointment.getPatient());
             });
     }
 

@@ -15,6 +15,7 @@ import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.dto.PatientDTO;
 import io.dentall.totoro.service.dto.table.PatientTable;
 import io.dentall.totoro.service.mapper.PatientMapper;
+import io.dentall.totoro.service.util.LogUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.errors.InternalServerErrorException;
 import io.dentall.totoro.web.rest.util.AvatarUtil;
@@ -99,6 +100,12 @@ public class PatientResource {
         Patient result = patientService.save(patient);
         broadcastService.broadcastDomainId(result.getId(), Patient.class);
 
+        try {
+            log.info(LogUtil.RECORD_SNAPSHOT_MESSAGE_STRING_FORMAT, "Patient", result.getId(), result);
+        } catch (Exception e) {
+            log.error("Patient snap fail: " + e.getMessage());
+        }
+
         return ResponseEntity.created(new URI("/api/patients/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -123,6 +130,12 @@ public class PatientResource {
 
         Patient result = patientService.update(patient);
         broadcastService.broadcastDomainId(result.getId(), Patient.class);
+
+        try {
+            log.info(LogUtil.RECORD_SNAPSHOT_MESSAGE_STRING_FORMAT, "Patient", result.getId(), result);
+        } catch (Exception e) {
+            log.error("Patient snap fail: " + e.getMessage());
+        }
 
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))

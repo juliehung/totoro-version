@@ -16,6 +16,7 @@ import java.util.Objects;
 
 /**
  * A Registration.
+ * 2021-05-24, weichen: 要改寫 registration 需要注意 new patient 機制，需要被實作
  */
 @Entity
 @Table(name = "registration")
