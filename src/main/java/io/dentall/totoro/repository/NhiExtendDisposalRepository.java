@@ -556,7 +556,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "         left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "         left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "         where  a.patient_id = :patientId " +
-            "         and    nhi_code in (:codes) " +
+            "         and    netp.a73 in (:codes) " +
+            "         and    trim(ned.a18) <> '' " +
             "         and    d.id not in (:excludeDisposalIds)" +
             "     ) " +
             "select sum_records.recordSource, " +

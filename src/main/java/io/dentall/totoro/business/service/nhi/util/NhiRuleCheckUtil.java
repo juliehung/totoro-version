@@ -8,10 +8,7 @@ import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.config.TimeConfig;
-import io.dentall.totoro.domain.NhiExtendDisposal;
-import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
-import io.dentall.totoro.domain.NhiMedicalRecord;
-import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
@@ -3239,8 +3236,7 @@ public class NhiRuleCheckUtil {
         List<String> codes,
         LocalDateDuration duration,
         String limitDisplayDuration,
-        NhiRuleCheckFormat format,
-        List<Long> excludeDisposalIds
+        NhiRuleCheckFormat format
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validateTitle("指定 patient id, codes, 並排除 disposal")
@@ -3299,7 +3295,13 @@ public class NhiRuleCheckUtil {
         List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
             dto.getPatient().getId(),
             codes,
-            excludeDisposalIds
+            Arrays.asList(
+                dto.getNhiExtendDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal().getId() != null
+                        ? dto.getNhiExtendDisposal().getDisposal().getId()
+                        : 0L
+            )
         );
 
         if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(onlySourceType)) {
