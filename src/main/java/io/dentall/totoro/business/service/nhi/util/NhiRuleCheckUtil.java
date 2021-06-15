@@ -2558,8 +2558,8 @@ public class NhiRuleCheckUtil {
                             NhiRuleCheckFormat.D1_2.getFormat(),
                             dto.getNhiExtendTreatmentProcedure().getA73(),
                             "89006C",
-                            sourceType,
-                            detected89006C.getRecordDateTime(),
+                            sourceType.getValue(),
+                            detected89006C.getRecordDateTime().format(DateTimeUtil.localDateDisplayFormat),
                             "30",
                             dto.getNhiExtendTreatmentProcedure().getA73()
                         )
