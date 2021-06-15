@@ -538,7 +538,7 @@ public class NhiRuleCheckScript89XXXC {
 
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isMustIncludeNhiCode(dto,
+                nhiRuleCheckUtil.isTreatmentDependOnCodeToday(dto,
                     Arrays.asList("89001C~89015C", "89101C~89115C")),
                 vm
             );

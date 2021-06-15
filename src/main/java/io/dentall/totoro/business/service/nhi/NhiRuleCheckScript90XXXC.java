@@ -7,7 +7,6 @@ import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import org.springframework.stereotype.Service;
 
-import java.time.Period;
 import java.util.Arrays;
 
 @Service
@@ -627,7 +626,7 @@ public class NhiRuleCheckScript90XXXC {
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("90015C"),
+                    Arrays.asList("90005C"),
                     DateTimeUtil.NHI_2_MONTH,
                     NhiRuleCheckFormat.D1_2
                 ),
@@ -638,7 +637,7 @@ public class NhiRuleCheckScript90XXXC {
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("90015C"),
+                    Arrays.asList("90005C"),
                     DateTimeUtil.NHI_2_MONTH,
                     NhiRuleCheckFormat.D1_2
                 ),
@@ -649,7 +648,7 @@ public class NhiRuleCheckScript90XXXC {
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                    Arrays.asList("90005C"),
+                    Arrays.asList("90015C"),
                     DateTimeUtil.NHI_2_MONTH,
                     NhiRuleCheckFormat.D4_1
                 ),
@@ -660,9 +659,19 @@ public class NhiRuleCheckScript90XXXC {
         if (vm.isValidated()) {
             nhiRuleCheckUtil.addResultToVm(
                 nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                    Arrays.asList("90005C"),
+                    Arrays.asList("90015C"),
                     DateTimeUtil.NHI_2_MONTH,
                     NhiRuleCheckFormat.D4_1
+                ),
+                vm
+            );
+        }
+
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isAllLimitedTooth(
+                    dto,
+                    ToothConstraint.GENERAL_TOOTH
                 ),
                 vm
             );

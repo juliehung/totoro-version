@@ -153,5 +153,25 @@ public class ToothUtil {
             return String.join("/", ToothUtil.splitA74(teeth));
         }
     }
+
+    public static List<String> listDuplicatedTooth(String a74A, String a74B) {
+        List<String> result = new ArrayList<>();
+
+        List<String> toothListA = ToothUtil.splitA74(
+            a74A
+        );
+        List<String> toothListB = ToothUtil.splitA74(
+            a74B
+        );
+
+        toothListA.stream()
+            .forEach(t -> {
+                if (toothListB.contains(t)) {
+                    result.add(t);
+                }
+            });
+
+        return result;
+    }
 }
 

@@ -28,57 +28,36 @@ public class NhiRuleCheckScript8X {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoSelfConflictNhiCode(dto),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBetweenDuration(
-                    dto,
-                    Arrays.asList("81"),
-                    nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_6),
-                    DateTimeUtil.NUMBERS_OF_MONTH_6
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBetweenDuration(
-                    dto,
-                    Arrays.asList("81"),
-                    nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_6),
-                    DateTimeUtil.NUMBERS_OF_MONTH_6
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("81"),
+                nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_6),
+                String.valueOf(DateTimeUtil.NUMBERS_OF_MONTH_6),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
 
         return vm;
     }
 
-
     public NhiRuleCheckResultVM validate87(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"87"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"87"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBetweenDuration(
+                    dto,
+                    Arrays.asList("87"),
+                    nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_3),
+                    DateTimeUtil.NUMBERS_OF_MONTH_3
+                ),
+                vm
+            );
+        }
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.lessThanAge12(dto),
@@ -88,23 +67,20 @@ public class NhiRuleCheckScript8X {
         return vm;
     }
 
-
     public NhiRuleCheckResultVM validate88(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                Arrays.asList(new String[]{"88"}.clone()),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"88"}.clone()),
-                DateTimeUtil.NHI_6_MONTH),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBetweenDuration(
+                    dto,
+                    Arrays.asList("88"),
+                    nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_3),
+                    DateTimeUtil.NUMBERS_OF_MONTH_3
+                ),
+                vm
+            );
+        }
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.lessThanAge6(dto),
@@ -114,27 +90,25 @@ public class NhiRuleCheckScript8X {
         return vm;
     }
 
-
     public NhiRuleCheckResultVM validate89(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDate(
-                dto,
-                Arrays.asList(new String[]{"89"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm);
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                Arrays.asList(new String[]{"89"}.clone()),
-                DateTimeUtil.NHI_3_MONTH),
-            vm
-        );
+        if (vm.isValidated()) {
+            nhiRuleCheckUtil.addResultToVm(
+                nhiRuleCheckUtil.isCodeBetweenDuration(
+                    dto,
+                    Arrays.asList("81", "87", "88", "89"),
+                    nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_3),
+                    DateTimeUtil.NUMBERS_OF_MONTH_3
+                ),
+                vm
+            );
+        }
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.lessThanAge12(dto),
-            vm);
+            vm
+        );
 
         return vm;
     }
