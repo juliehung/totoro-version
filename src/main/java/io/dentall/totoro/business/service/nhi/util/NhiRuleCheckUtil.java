@@ -2477,51 +2477,90 @@ public class NhiRuleCheckUtil {
             .validated(true)
             .validateTitle("89XXX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外");
 
-        NhiExtendTreatmentProcedure targetTp =
-            this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
-                dto.getPatient().getId(),
-                dto.getNhiExtendTreatmentProcedure().getId(),
-                DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
-                Arrays.asList("89006C"),
-                DateTimeUtil.NHI_1_MONTH,
-                dto.getExcludeTreatmentProcedureIds()
-            );
+        List<String> specificCodes = Arrays.asList("89006C", "90001C", "90002C", "90003C", "90019C", "90020C");
 
-        if (targetTp != null) {
-            NhiExtendTreatmentProcedure outOfLimitationClause =
-                this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
-                    dto.getPatient().getId(),
-                    dto.getNhiExtendTreatmentProcedure().getId(),
-                    DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
-                    Arrays.asList("90001C~90003C", "90019C", "90020C"),
-                    DateTimeUtil.NHI_1_MONTH,
-                    dto.getExcludeTreatmentProcedureIds()
-                );
+        List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            specificCodes,
+            Arrays.asList(
+                this.getDisposalIdInDTO(dto)
+            )
+        );
 
-            if (outOfLimitationClause == null ||
-                DateTimeUtil.transformROCDateToLocalDate(outOfLimitationClause.getA71())
-                    .isAfter(
-                        DateTimeUtil.transformROCDateToLocalDate(
-                            targetTp.getA71()
-                        )
-                    )
+        LocalDate currentDate = DateTimeUtil.transformROCDateToLocalDate(
+            dto.getNhiExtendTreatmentProcedure().getA71()
+        );
+
+        Optional<NhiHybridRecordDTO> detected89006COptional = sourceData.stream()
+            .filter(d -> {
+                if ("89006C".equals(d.getCode())) {
+                    if (
+                        d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isEqual(currentDate) ||
+                            d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isAfter(currentDate)
+                    ) {
+                        return true;
+                    }
+                }
+
+                return false;
+            })
+            .findFirst();
+
+        if (detected89006COptional.isPresent()) {
+            NhiHybridRecordDTO detected89006C = detected89006COptional.get();
+            boolean pass = true;
+            if (detected89006C.getRecordDateTime().isEqual(this.getNhiExtendDisposalDateInDTO(dto))) {
+                pass = false;
+            } else if (
+                sourceData.stream()
+                    .filter(d -> specificCodes.contains(d.getCode()))
+                    .count() < 1
             ) {
+                pass = false;
+            } else {
+                List<NhiHybridRecordDTO> availableClauseResults = new ArrayList<>();
+                for (NhiHybridRecordDTO data : sourceData) {
+                    if (specificCodes.contains(data.getCode()) &&
+                        data.getRecordDateTime().isAfter(detected89006C.getRecordDateTime()) &&
+                        data.getRecordDateTime().isBefore(this.getNhiExtendDisposalDateInDTO(dto))
+                    ) {
+                        availableClauseResults.add(data);
+                    }
+                }
+                if (availableClauseResults.size() == 0) {
+                    pass = false;
+                }
+            }
+
+            if (!pass) {
+                NhiRuleCheckSourceType sourceType;
+                if (
+                    detected89006C.getDisposalId() != null &&
+                    detected89006C.getDisposalId().equals(this.getDisposalIdInDTO(dto))
+                ) {
+                    sourceType = NhiRuleCheckSourceType.CURRENT_DISPOSAL;
+                } else if (
+                    "SYS".equals(detected89006C.getRecordSource()) &&
+                    detected89006C.getRecordDateTime().isEqual(this.getNhiExtendDisposalDateInDTO(dto))
+                ) {
+                    sourceType = NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL;
+                } else if (
+                    "SYS".equals(detected89006C.getRecordSource())
+                ) {
+                    sourceType = NhiRuleCheckSourceType.SYSTEM_RECORD;
+                } else {
+                    sourceType = NhiRuleCheckSourceType.NHI_CARD_RECORD;
+                }
                 result.validated(false)
+                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_2.getLevel())
                     .message(
                         String.format(
                             NhiRuleCheckFormat.D1_2.getFormat(),
                             dto.getNhiExtendTreatmentProcedure().getA73(),
                             "89006C",
-                            this.classifySourceType(
-                                NhiRuleCheckSourceType.SYSTEM_RECORD,
-                                DateTimeUtil.transformROCDateToLocalDate(outOfLimitationClause.getA71()),
-                                outOfLimitationClause.getNhiExtendDisposal() != null
-                                    ? outOfLimitationClause.getNhiExtendDisposal().getId()
-                                    : null,
-                                dto
-                            ),
-                            DateTimeUtil.transformA71ToDisplay(targetTp.getA71()),
-                            DateTimeUtil.NHI_1_MONTH.getDays(),
+                            sourceType,
+                            detected89006C.getRecordDateTime(),
+                            "30",
                             dto.getNhiExtendTreatmentProcedure().getA73()
                         )
                     );
