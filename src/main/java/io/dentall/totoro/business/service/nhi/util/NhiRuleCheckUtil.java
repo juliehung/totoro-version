@@ -3361,9 +3361,7 @@ public class NhiRuleCheckUtil {
         NhiRuleCheckDTO dto,
         NhiRuleCheckSourceType onlySourceType,
         List<String> codes,
-        LocalDateDuration duration,
-        String limitDisplayDuration,
-        NhiRuleCheckFormat format
+        LocalDateDuration duration
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
             .validateTitle("指定 patient id, codes, tooth 並排除 disposal")
