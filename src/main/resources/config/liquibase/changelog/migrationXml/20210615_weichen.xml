@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210615-weichen" author="WeiChen">
+        <sql>
+            UPDATE nhi_procedure
+            SET expiration_time = '2021-06-30T16:00:00Z'
+            WHERE id IN (55, 179, 53, 159, 160, 161, 54)
+        </sql>
+        <insert tableName="nhi_procedure">
+            <column  name="id"  value="229"/>
+            <column  name="code"  value="90001C"/>
+            <column  name="name"  value="恆牙根管治療（單根）"/>
+            <column  name="point"  value="1210"/>
+            <column  name="english_name"  value="Endodontic treatment of a permanent tooth with single root canal"/>
+            <column  name="default_icd_10_cm_id"  value="1"/>
+            <column  name="description"  value="RD isolation,access opening,WL/MAF:                (1個數值),\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions."/>
+            <column  name="nhi_procedure_type_id"  value="15"/>
+            <column  name="specific_code"  value="P1"/>
+            <column  name="chief_complaint"  value="Continous root canal therapy"/>
+        </insert>
+        <insert tableName="nhi_procedure">
+            <column  name="id"  value="230"/>
+            <column  name="code"  value="90002C"/>
+            <column  name="name"  value="恆牙根管治療（雙根）"/>
+            <column  name="point"  value="2410"/>
+            <column  name="english_name"  value="Endodontic treatment of a permanent tooth with two root canals"/>
+            <column  name="default_icd_10_cm_id"  value="1"/>
+            <column  name="description"  value="RD isolation,access opening,WL/MAF:                (2個數值),\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions."/>
+            <column  name="nhi_procedure_type_id"  value="15"/>
+            <column  name="specific_code"  value="P1"/>
+            <column  name="chief_complaint"  value="Continous root canal therapy"/>
+        </insert>
+        <insert tableName="nhi_procedure">
+            <column  name="id"  value="231"/>
+            <column  name="code"  value="90003C"/>
+            <column  name="name"  value="恆牙根管治療（三根以上）"/>
+            <column  name="point"  value="3610"/>
+            <column  name="english_name"  value="Endodontics treatment of a permanent tooth with three root canals"/>
+            <column  name="default_icd_10_cm_id"  value="1"/>
+            <column  name="description"  value="RD isolation,access opening,WL/MAF:                (3個數值),\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp.\nfilling,post procedure instructions."/>
+            <column  name="nhi_procedure_type_id"  value="15"/>
+            <column  name="specific_code"  value="P1"/>
+            <column  name="chief_complaint"  value="Continous root canal therapy"/>
+        </insert>
+        <insert tableName="nhi_procedure">
+            <column  name="id"  value="232"/>
+            <column  name="code"  value="90018C"/>
+            <column  name="name"  value="乳牙多根管治療"/>
+            <column  name="point"  value="1690"/>
+            <column  name="english_name"  value="Endodontic treatment of a primary tooth with multiple canals"/>
+            <column  name="default_icd_10_cm_id"  value="10"/>
+            <column  name="description"  value="Canal debride and enlarge with NaOCl irrigation,vitapex pulpectomy and IRM filling."/>
+            <column  name="nhi_procedure_type_id"  value="14"/>
+            <column  name="specific_code"  value="P1"/>
+            <column  name="chief_complaint"  value="Toothache"/>
+        </insert>
+        <insert tableName="nhi_procedure">
+            <column  name="id"  value="233"/>
+            <column  name="code"  value="90019C"/>
+            <column  name="name"  value="恆牙根管治療（四根）"/>
+            <column  name="point"  value="4810"/>
+            <column  name="english_name"  value="Endodontic treatment of a permanent tooth with four root canals"/>
+            <column  name="default_icd_10_cm_id"  value="10"/>
+            <column  name="description"  value="RD isolation,access opening,WL/MAF:                (4個數值),\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions."/>
+            <column  name="nhi_procedure_type_id"  value="15"/>
+            <column  name="specific_code"  value="P1"/>
+            <column  name="chief_complaint"  value="Continous root canal therapy"/>
+        </insert>
+        <insert tableName="nhi_procedure">
+            <column  name="id"  value="234"/>
+            <column  name="code"  value="90020C"/>
+            <column  name="name"  value="恆牙根管治療（五根以上）"/>
+            <column  name="point"  value="6010"/>
+            <column  name="english_name"  value="Endodontic treatment of a permanent tooth with five(and above) root canals"/>
+            <column  name="default_icd_10_cm_id"  value="10"/>
+            <column  name="description"  value="RD isolation,access opening,WL/MAF:                (至少5個數值),\nRCE with copious NaOCl irrigation,lateral RCF with G.P and sealer,caviton temp. filling,post procedure instructions."/>
+            <column  name="nhi_procedure_type_id"  value="15"/>
+            <column  name="specific_code"  value="P1"/>
+            <column  name="chief_complaint"  value=""/>
+        </insert>
+        <insert tableName="nhi_procedure">
+            <column  name="id"  value="235"/>
+            <column  name="code"  value="92006C"/>
+            <column  name="name"  value="固定鋼線移除"/>
+            <column  name="point"  value="500"/>
+            <column  name="english_name"  value="Removal of splinting wire"/>
+            <column  name="default_icd_10_cm_id"  value="46"/>
+            <column  name="description"  value=""/>
+            <column  name="nhi_procedure_type_id"  value="140"/>
+            <column  name="chief_complaint"  value=""/>
+        </insert>
+        <insert tableName="nhi_procedure">
+            <column  name="id"  value="236"/>
+            <column  name="code"  value="91089C"/>
+            <column  name="name"  value="糖尿病患者牙結石清除-全口"/>
+            <column  name="point"  value="700"/>
+            <column  name="english_name"  value="Full mouth scaling for patients with diabetes mellitus"/>
+            <column  name="default_icd_10_cm_id"  value="14"/>
+            <column  name="description"  value="FM ultrasonic scaling &amp; OHI."/>
+            <column  name="nhi_procedure_type_id"  value="130"/>
+            <column  name="chief_complaint"  value="Gum discomfort/calculus."/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
