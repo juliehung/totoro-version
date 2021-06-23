@@ -2,8 +2,6 @@ package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -62,6 +60,9 @@ public class NhiProcedure implements Serializable {
     @Column(name = "expiration_time")
     private Instant expirationTime;
 
+    @Column(name = "effective_time")
+    private Instant effectiveTime;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private NhiProcedureType nhiProcedureType;
@@ -73,6 +74,14 @@ public class NhiProcedure implements Serializable {
     @OneToMany(mappedBy = "nhiProcedure", fetch = FetchType.EAGER)
     private Set<NhiIcd10Pcs> nhiIcd10Pcs = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
+    public Instant getEffectiveTime() {
+        return effectiveTime;
+    }
+
+    public void setEffectiveTime(Instant effectiveTime) {
+        this.effectiveTime = effectiveTime;
+    }
 
     public Instant getExpirationTime() {
         return expirationTime;
