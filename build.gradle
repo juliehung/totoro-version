@@ -309,6 +309,7 @@ dependencies {
     liquibaseRuntime "org.postgresql:postgresql"
     compile "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen"
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
@@ -326,6 +327,9 @@ dependencies {
     testCompile "com.mattbertolini:liquibase-slf4j"
     testCompile "org.hamcrest:hamcrest-library"
     testCompile "com.h2database:h2"
+    testCompile 'io.cucumber:cucumber-java:6.8.1'
+    testCompile 'io.cucumber:cucumber-junit:6.8.1'
+    testCompile 'io.cucumber:cucumber-spring:6.8.1'
     liquibaseRuntime "com.h2database:h2"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 
@@ -349,6 +353,12 @@ dependencies {
     runtime "com.google.cloud.sql:postgres-socket-factory:1.0.15"
     compile "com.google.cloud:google-cloud-storage:1.105.1"
     compile "com.google.auth:google-auth-library-oauth2-http:0.20.0"
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor'org.projectlombok:lombok:1.18.16'
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
 

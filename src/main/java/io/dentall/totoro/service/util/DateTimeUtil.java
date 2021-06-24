@@ -105,8 +105,7 @@ public final class DateTimeUtil {
         return LocalDate.of(year, month, day);
     }
 
-    public static Integer getAge(LocalDate birthday, LocalDate now)
-    {
+    public static Integer getAge(LocalDate birthday, LocalDate now) {
         int yearGap = now.getYear() - birthday.getYear();
         LocalDate birthDateThisYear = birthday.plusYears(yearGap);
         return now.isAfter(birthDateThisYear) || now.isEqual(birthDateThisYear)
@@ -154,9 +153,13 @@ public final class DateTimeUtil {
         }
 
         return format;
-    };
+    }
 
     public static Period startDayOfMonthDiff(LocalDate current) {
         return Period.between(LocalDate.of(current.getYear(), current.getMonth(), 1), current);
+    }
+
+    public static Instant pastInstant(int pastDays) {
+        return Instant.now().minus(pastDays, ChronoUnit.DAYS);
     }
 }
