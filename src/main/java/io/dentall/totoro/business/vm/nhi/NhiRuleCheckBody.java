@@ -16,9 +16,19 @@ public class NhiRuleCheckBody {
     @NotNull
     private Long patientId;
 
+    private Long doctorId;
+
     private List<NhiRuleCheckTxSnapshot> txSnapshots;
 
     private String nhiCategory;
+
+    public Long getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(Long doctorId) {
+        this.doctorId = doctorId;
+    }
 
     public Long getDisposalId() {
         return disposalId;

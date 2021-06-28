@@ -62,22 +62,24 @@ public class ToothUtil {
      */
     public static List<ToothPhase> markAsPhase(List<String> teeth) {
         List<ToothPhase> result = new ArrayList<>();
+        HashSet<ToothPhase> h = new HashSet<>();
 
         teeth.stream().forEach(t -> {
             if (t.matches(ToothPhase.P1.getRegex())) {
-                result.add(ToothPhase.P1);
+                h.add(ToothPhase.P1);
             }
             if (t.matches(ToothPhase.P2.getRegex())) {
-                result.add(ToothPhase.P2);
+                h.add(ToothPhase.P2);
             }
             if (t.matches(ToothPhase.P3.getRegex())) {
-                result.add(ToothPhase.P3);
+                h.add(ToothPhase.P3);
             }
             if (t.matches(ToothPhase.P4.getRegex())) {
-                result.add(ToothPhase.P4);
+                h.add(ToothPhase.P4);
             }
         });
 
+        h.forEach(p -> result.add(p));
         result.sort((o1, o2) -> o1.ordinal() <= o2.ordinal() ?-1 : 1);
 
         return result;
@@ -167,6 +169,31 @@ public class ToothUtil {
         toothListA.stream()
             .forEach(t -> {
                 if (toothListB.contains(t)) {
+                    result.add(t);
+                }
+            });
+
+        return result;
+    }
+
+    public static List<ToothPhase> listDuplicatedToothPhase(String a74A, String a74B) {
+        List<ToothPhase> result = new ArrayList<>();
+
+        List<ToothPhase> listA = ToothUtil.markAsPhase(
+            ToothUtil.splitA74(
+                a74A
+            )
+        );
+
+        List<ToothPhase> listB = ToothUtil.markAsPhase(
+            ToothUtil.splitA74(
+                a74B
+            )
+        );
+
+        listA.stream()
+            .forEach(t -> {
+                if (listB.contains(t)) {
                     result.add(t);
                 }
             });

@@ -578,14 +578,68 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "where sys_records.recordDateTime is null " +
             "    and sum_records.recordDateTime is not null " +
             "    and sum_records.code is not null " +
-            "    and sum_records.tooth is not null " +
-            "    and sum_records.surface is not null " +
             "order by sum_records.recordDateTime desc " +
             ";"
     )
     List<NhiHybridRecord> findNhiHybridRecord(
         @Param("patientId") Long patientId,
         @Param("codes") List<String> codes,
+        @Param("excludeDisposalIds") List<Long> excludeDisposalIds
+    );
+
+    @Query(
+        nativeQuery = true,
+        value = "with ic_records as ( " +
+            "        select 'IC' as recordSource, " +
+            "               0 as disposalId, " +
+            "               0 as doctorId, " +
+            "               jhi_date as recordDateTime, " +
+            "               nhi_code as code, " +
+            "               part as tooth, " +
+            "               jhi_usage as surface " +
+            "        from nhi_medical_record " +
+            "        where  nhi_extend_patient_patient_id = :patientId" +
+            "    ), " +
+            "     sys_records as ( " +
+            "         select 'SYS' as recordSource, " +
+            "                d.id as disposalId, " +
+            "                a.doctor_user_id as doctorId, " +
+            "                netp.a71 as recordDateTime, " +
+            "                netp.a73 as code, " +
+            "                netp.a74 as tooth, " +
+            "                netp.a75 as surface " +
+            "         from disposal d " +
+            "         left join appointment a on d.registration_id = a.registration_id " +
+            "         left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "         left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "         left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "         where  a.patient_id = :patientId " +
+            "         and    trim(ned.a18) <> '' " +
+            "         and    d.id not in (:excludeDisposalIds)" +
+            "     ) " +
+            "select sum_records.recordSource, " +
+            "       sum_records.disposalId, " +
+            "       sum_records.doctorId, " +
+            "       sum_records.recordDateTime, " +
+            "       sum_records.code, " +
+            "       sum_records.tooth, " +
+            "       sum_records.surface " +
+            "from ( " +
+            "         select * from sys_records " +
+            "         union " +
+            "         select * from ic_records " +
+            "     ) sum_records " +
+            "left join sys_records " +
+            "    on  sum_records.recordSource = 'IC' " +
+            "    and sum_records.recordDateTime = sys_records.recordDateTime " +
+            "where sys_records.recordDateTime is null " +
+            "    and sum_records.recordDateTime is not null " +
+            "    and sum_records.code is not null " +
+            "order by sum_records.recordDateTime desc " +
+            ";"
+    )
+    List<NhiHybridRecord> findNhiHybridRecord(
+        @Param("patientId") Long patientId,
         @Param("excludeDisposalIds") List<Long> excludeDisposalIds
     );
 }
