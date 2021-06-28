@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.vm.nhi;
 
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import org.apache.commons.lang3.StringUtils;
 
 public class NhiRuleCheckTxSnapshot {
     private Long id;
@@ -44,11 +45,47 @@ public class NhiRuleCheckTxSnapshot {
     }
 
     public boolean equalsNhiExtendTreatmentProcedure(NhiExtendTreatmentProcedure o) {
+
         if (o == null) {
             return false;
         }
-        return this.nhiCode.equals(o.getA73()) &&
-            this.teeth.equals(o.getA74()) &&
-            this.surface.equals(o.getA75());
+
+        if (StringUtils.isBlank(this.nhiCode) &&
+            StringUtils.isNotBlank(o.getA73())
+        ) {
+            return false;
+        }
+
+        if (StringUtils.isBlank(this.teeth) &&
+            StringUtils.isNotBlank(o.getA74())
+        ) {
+            return false;
+        }
+
+        if (StringUtils.isBlank(this.surface) &&
+            StringUtils.isNotBlank(o.getA75())
+        ) {
+            return false;
+        }
+
+        if (this.nhiCode != null &&
+            !this.nhiCode.equals(o.getA73())
+        ) {
+            return false;
+        }
+
+        if (this.teeth != null &&
+            !this.teeth.equals(o.getA74())
+        ) {
+            return false;
+        }
+
+        if (this.surface != null &&
+            !this.surface.equals(o.getA75())
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }
