@@ -713,7 +713,7 @@ public class NhiRuleCheckUtil {
 
         LocalDate currentTxDate = this.getNhiExtendDisposalDateInDTO(dto);
         begin = currentTxDate.withDayOfMonth(1).minusMonths(limitationMonth - 1);
-        end = currentTxDate.withDayOfMonth(currentTxDate.lengthOfMonth()).minusDays(1);
+        end = currentTxDate.withDayOfMonth(currentTxDate.lengthOfMonth());
 
         return new LocalDateDuration()
             .begin(begin)
