@@ -534,6 +534,22 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkResult(resultActions, passOrNot, message);
     }
 
+    @Then("病患是否在診療 {word} 當下年紀未滿 30 歲，確認結果是否為 {passOrNot}")
+    public void checkLessThanAge30(String issueNhiCode, Boolean passOrNot) throws Exception {
+        String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
+        ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
+        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D3_1, new Object[]{nhiCode, "未滿三十歲"});
+        checkResult(resultActions, passOrNot, message);
+    }
+
+    @Then("病患是否在診療 {word} 當下年紀未滿 30 歲及大於 17 歲，確認結果是否為 {passOrNot}")
+    public void checkLessThanAge30AndGreatThanAge17(String issueNhiCode, Boolean passOrNot) throws Exception {
+        String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
+        ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
+        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D3_1, new Object[]{nhiCode, "未滿三十歲"});
+        checkResult(resultActions, passOrNot, message);
+    }
+
     @Then("確認診療代碼 {word} 是否有自身健保診療重複突衝 ，確認結果是否為 {passOrNot}")
     public void checkNoDuplicatedNhiCodes(String issueNhiCode, Boolean passOrNot) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();

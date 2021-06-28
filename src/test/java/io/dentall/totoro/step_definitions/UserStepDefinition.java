@@ -72,7 +72,7 @@ public class UserStepDefinition extends AbstractStepDefinition {
         userTestInfoHolder.setUser(user);
     }
 
-    @Given("確認使用者建立成功")
+    @Given("確認醫師建立成功")
     public void checkUser() {
         User user = userTestInfoHolder.getUser();
         assertThat(user.getId()).isNotNull();
