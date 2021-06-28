@@ -13,13 +13,16 @@ public enum NhiRuleCheckFormat {
     D1_2("%s:  %s(%s-%s) %s 天內不得申報 %s", NhiRuleCheckInfoType.DANGER),
 
     // 91004C:  91015C(來源-110/01/01) 90天內不得申報 91004C。
-    D1_2_2("%s:  %s(%s-%s) %s 月內不得申報 %s", NhiRuleCheckInfoType.DANGER),
+    D1_2_2("%s:  %s(%s-%s) %s 個月內不得申報 %s", NhiRuleCheckInfoType.DANGER),
 
     // 90012C:  37 已申報 92013C(來源-110/01/01)
     D1_3("%s:  %s 已申報 %s(%s-%s)", NhiRuleCheckInfoType.DANGER),
 
     // 91022C: 需在 91021C (來源-110/01/01) 申報 152 天內
     D1_4("%s: 需在 %s(%s-%s) 申報 %s 天內", NhiRuleCheckInfoType.DANGER),
+
+    // 00316C:  往前 365 天內不得申報任何牙科處置
+    D1_5("%s:  往前 %s 天內不得申報任何牙科處置", NhiRuleCheckInfoType.DANGER),
 
     // 34004C: 每人限給付一次(含跨院所) (來源-110/01/01)
     D2_1("%s: 每人限給付一次(含跨院所) (%s-%s)", NhiRuleCheckInfoType.DANGER),
@@ -43,10 +46,10 @@ public enum NhiRuleCheckFormat {
     D5_1("%s: 申報次數已達本月上限。(%s)", NhiRuleCheckInfoType.DANGER),
 
     // 91003C、91004C、91005C、91017C、91103C、91104C 不得同日申報
-    D6_1("%s 不得同日申報", NhiRuleCheckInfoType.DANGER),
+    D6_1("%s: %s 不得同日申報", NhiRuleCheckInfoType.DANGER),
 
     // 91003C: 180 天內曾申報(來源-110/01/01) ，就醫類別請選 AB
-    D7_1("%s: %s 天內曾申報 %s (%s-%s), 就醫類別請選 AB", NhiRuleCheckInfoType.DANGER),
+    D7_1("%s: %s 天內曾申報(%s-%s), 就醫類別請選 AB", NhiRuleCheckInfoType.DANGER),
 
     // 90001C: 60 內已申報 90015C (來源-110/01/01) 的 37 , 就醫類別請選 AB
     D7_2("%s: %s 天內曾申報 %s (%s-%s) 的 %s, 就醫類別請選 AB", NhiRuleCheckInfoType.DANGER),
@@ -55,7 +58,7 @@ public enum NhiRuleCheckFormat {
     D8_1("%s: 前 %s 天內須曾申報 %s", NhiRuleCheckInfoType.DANGER),
 
     //8I: 需曾申報 8A
-    D8_2("需曾申報 %s", NhiRuleCheckInfoType.DANGER),
+    D8_2("%s: 需曾申報 %s", NhiRuleCheckInfoType.DANGER),
 
     /**
      * WARNING LEVEL
@@ -67,7 +70,7 @@ public enum NhiRuleCheckFormat {
     W2_1("%s: 限填牙位 %s", NhiRuleCheckInfoType.WARNING),
 
     // 需併同 91003C/91004C/91020C 申報
-    W3_1("需併同 %s 申報", NhiRuleCheckInfoType.WARNING),
+    W3_1("%s: 需併同 %s 申報", NhiRuleCheckInfoType.WARNING),
 
     // 96001C: 項目費用已涵蓋於 90001C(來源-110/01/01) 內
     W4_1("%s: 項目費用已涵蓋於 %s(%s-%s) 內", NhiRuleCheckInfoType.WARNING),
@@ -112,7 +115,16 @@ public enum NhiRuleCheckFormat {
     PT5("%s: 限精神病及精神分裂患者", NhiRuleCheckInfoType.INFO),
 
     // 92094C: 限週六、日及國定假日申報, 當月看診需≦二十六日, 前月於健保VPN完成登錄
-    HOLIDAY("%s: 限週六、日及國定假日申報, 當月看診需≦二十六日, 前月於健保VPN完成登錄", NhiRuleCheckInfoType.INFO)
+    HOLIDAY("%s: 限週六、日及國定假日申報, 當月看診需≦二十六日, 前月於健保VPN完成登錄", NhiRuleCheckInfoType.INFO),
+
+    // 91022C: 檢附牙菌斑控制紀錄表、牙周病檢查紀錄表
+    PERIO_REC_1("%s: 檢附牙菌斑控制紀錄表、牙周病檢查紀錄表", NhiRuleCheckInfoType.INFO),
+
+    // 91011C: 檢附牙周囊袋記錄表
+    PERIO_REC_2("%s: 檢附牙周囊袋記錄表", NhiRuleCheckInfoType.INFO),
+
+    //92043C: 檢附手術紀錄
+    OS_REC_1("%s: 檢附手術紀錄", NhiRuleCheckInfoType.INFO),
     ;
 
     private String format;

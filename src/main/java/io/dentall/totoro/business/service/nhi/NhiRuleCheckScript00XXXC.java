@@ -1,6 +1,5 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckFormat;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
@@ -10,17 +9,16 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 
 @Service
-public class NhiRuleCheckScript012XXC {
-
+public class NhiRuleCheckScript00XXXC {
     private final NhiRuleCheckUtil nhiRuleCheckUtil;
 
-    public NhiRuleCheckScript012XXC(
+    public NhiRuleCheckScript00XXXC(
         NhiRuleCheckUtil nhiRuleCheckUtil
     ) {
         this.nhiRuleCheckUtil = nhiRuleCheckUtil;
     }
 
-    public NhiRuleCheckResultVM validate01271C(NhiRuleCheckDTO dto) {
+    public NhiRuleCheckResultVM validate00315C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
@@ -31,7 +29,7 @@ public class NhiRuleCheckScript012XXC {
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_1095_DAY),
                 String.valueOf(DateTimeUtil.NHI_1095_DAY.getDays()),
                 1,
-                NhiRuleCheckFormat.D1_2
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -39,8 +37,8 @@ public class NhiRuleCheckScript012XXC {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
-                NhiRuleCheckSourceType.SYSTEM_RECORD,
-                Arrays.asList("01271C"),
+                null,
+                Arrays.asList("00315C"),
                 null,
                 null,
                 1,
@@ -63,7 +61,7 @@ public class NhiRuleCheckScript012XXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("01272C", "01273C", "00315C", "00316C", "00317C"),
+                Arrays.asList("01271C", "01272C", "01273C", "00316C", "00317C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
                 String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
                 1,
@@ -75,7 +73,7 @@ public class NhiRuleCheckScript012XXC {
         return vm;
     }
 
-    public NhiRuleCheckResultVM validate01272C(NhiRuleCheckDTO dto) {
+    public NhiRuleCheckResultVM validate00316C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
@@ -97,7 +95,7 @@ public class NhiRuleCheckScript012XXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("01271C", "01273C", "00315C", "00316C", "00317C"),
+                Arrays.asList("01271C", "01272C", "01273C", "00315C", "00317C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
                 String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
                 1,
@@ -109,14 +107,14 @@ public class NhiRuleCheckScript012XXC {
         return vm;
     }
 
-    public NhiRuleCheckResultVM validate01273C(NhiRuleCheckDTO dto) {
+    public NhiRuleCheckResultVM validate00317C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("01273C"),
+                Arrays.asList("00317C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
                 String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
                 1,
@@ -139,11 +137,11 @@ public class NhiRuleCheckScript012XXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("01271C", "01272C", "00315C", "00316C", "00317C"),
+                Arrays.asList("01271C", "01272C", "01273C", "00315C", "00316C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
-                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_365_DAY),
                 1,
-                NhiRuleCheckFormat.D4_1
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );

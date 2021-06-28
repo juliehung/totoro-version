@@ -1,9 +1,7 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckFormat;
-import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
-import io.dentall.totoro.business.service.nhi.util.SurfaceConstraint;
-import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
+import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
+import io.dentall.totoro.business.service.nhi.util.*;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import org.springframework.stereotype.Service;
@@ -25,87 +23,49 @@ public class NhiRuleCheckScript89XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                null,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_1_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_1_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(dto),
+            vm
+        );
 
         return vm;
     }
@@ -114,87 +74,51 @@ public class NhiRuleCheckScript89XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                null,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_2_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_2_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(
+                dto
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -203,87 +127,49 @@ public class NhiRuleCheckScript89XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                null,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_3_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_3_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(dto),
+            vm
+        );
 
         return vm;
     }
@@ -292,97 +178,59 @@ public class NhiRuleCheckScript89XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                null,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_1_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_1_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.FRONT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -391,97 +239,59 @@ public class NhiRuleCheckScript89XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                null,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_2_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_2_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.FRONT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -490,25 +300,26 @@ public class NhiRuleCheckScript89XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                null,
                 Arrays.asList("89006C"),
-                DateTimeUtil.NHI_6_MONTH,
-                DateTimeUtil.NHI_6_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY),
+                String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
                 NhiRuleCheckFormat.D4_1
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -526,23 +337,25 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isTreatmentDependOnCodeToday(dto,
-                    Arrays.asList("89001C~89015C", "89101C~89115C")),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isDependOnCodeBeforeDate(
+                dto,
+                null,
+                Arrays.asList("89001C~89015C", "89101C~89115C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
+                String.valueOf(DateTimeUtil.NHI_0_DAY.getDays()),
+                NhiRuleCheckFormat.W3_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -551,97 +364,59 @@ public class NhiRuleCheckScript89XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                NhiRuleCheckSourceType.SYSTEM_RECORD,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_1_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_1_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.BACK_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -650,97 +425,59 @@ public class NhiRuleCheckScript89XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                NhiRuleCheckSourceType.SYSTEM_RECORD,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_2_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_2_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.BACK_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -748,98 +485,61 @@ public class NhiRuleCheckScript89XXXC {
     public NhiRuleCheckResultVM validate89010C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
+
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                NhiRuleCheckSourceType.SYSTEM_RECORD,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_2_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_3_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.BACK_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -848,77 +548,43 @@ public class NhiRuleCheckScript89XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                null,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(
+                dto
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -927,97 +593,59 @@ public class NhiRuleCheckScript89XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                NhiRuleCheckSourceType.SYSTEM_RECORD,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_3_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_3_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.FRONT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1035,17 +663,18 @@ public class NhiRuleCheckScript89XXXC {
             );
         }
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("89013C"),
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                NhiRuleCheckSourceType.SYSTEM_RECORD,
+                Arrays.asList("89013C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1054,203 +683,120 @@ public class NhiRuleCheckScript89XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                NhiRuleCheckSourceType.SYSTEM_RECORD,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.EQUAL_4_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.EQUAL_4_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.FRONT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
 
     public NhiRuleCheckResultVM validate89015C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriod(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
+                null,
                 Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                DateTimeUtil.NHI_12_MONTH,
-                DateTimeUtil.NHI_18_MONTH,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("89001C~89005C", "89008C~89012C", "89014C~89015C"),
-                    DateTimeUtil.NHI_12_MONTH,
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D1_2
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.EQUAL_4_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.EQUAL_4_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("90007C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D1_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatment(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isNoRemovedTeeth(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentByNhiMedicalRecord(
-                    dto,
-                    Arrays.asList("90007C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(dto),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH_EXCLUDE_WISDOM_TOOTH
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoNhiMedicalRecordAtSpecificTooth(
-                    dto,
-                    Arrays.asList("92013C~92015C")
-                ),
-                vm
-            );
-        }
-
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.BACK_TOOTH
-                ),
-                vm
-            );
-        }
-
-        return vm;
-    }
-
-    public NhiRuleCheckResultVM validate89088C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-        // Do nothing
         return vm;
     }
 
@@ -1267,34 +813,28 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_1_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_1_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.GENERAL_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1312,34 +852,28 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_2_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_2_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.GENERAL_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1357,34 +891,28 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_3_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_3_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.GENERAL_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1402,34 +930,28 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_1_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_1_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.FRONT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1447,34 +969,28 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_2_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_2_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.FRONT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1492,34 +1008,28 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_1_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_1_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.BACK_TOOTH
-                ),
-                vm
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH
+            ),
+            vm
             );
-        }
 
         return vm;
     }
@@ -1537,34 +1047,28 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_2_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_2_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.BACK_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1582,34 +1086,28 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_3_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_3_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.BACK_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.BACK_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1627,24 +1125,20 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.GENERAL_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1662,34 +1156,28 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedSurface(
-                    dto,
-                    SurfaceConstraint.MIN_3_SURFACES
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedSurface(
+                dto,
+                SurfaceConstraint.MIN_3_SURFACES
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.FRONT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1707,24 +1195,20 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1742,24 +1226,20 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.FRONT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FRONT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -1777,24 +1257,20 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.specificRule_1_for89XXXC(
-                    dto
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleFor89XXXC(
+                dto
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.BACK_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH_EXCLUDE_WISDOM_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }

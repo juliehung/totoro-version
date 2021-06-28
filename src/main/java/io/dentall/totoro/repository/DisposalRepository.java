@@ -67,6 +67,7 @@ public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSp
         "    left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
         "    right join patient_doctor_filter pdf on pdf.patientNid = ned.a12 and pdf.doctorNid = ned.a15 " +
         "where a73 = :code " +
+        "and trim(a18) <> '' " +
         "order by netp.a71 desc"
     )
     List<NhiExtendTreatmentProcedureTable> findDoctorOperationForPatientWithOnceWholeLifeLimitation(

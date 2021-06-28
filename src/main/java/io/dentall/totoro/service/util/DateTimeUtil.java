@@ -10,6 +10,8 @@ import java.util.function.Supplier;
 
 public final class DateTimeUtil {
 
+    public static final Period NHI_0_DAY = Period.ofDays(0);
+
     public static final Period NHI_3_DAY = Period.ofDays(3);
 
     public static final Period NHI_7_DAY = Period.ofDays(7);
@@ -61,11 +63,17 @@ public final class DateTimeUtil {
     @Deprecated
     public static final Period NHI_36_MONTH = Period.ofDays(1095);
 
+    public static final long NUMBERS_OF_MONTH_1 = 1L;
+
     public static final long NUMBERS_OF_MONTH_3 = 3L;
 
     public static final long NUMBERS_OF_MONTH_6 = 6L;
 
     public static final long NUMBERS_OF_MONTH_12 = 12L;
+
+    public static final long NUMBERS_OF_YEAR_2 = 24L;
+
+    public static final long NUMBERS_OF_YEAR_1 = 12L;
 
     public static final DateTimeFormatter localDateDisplayFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
@@ -79,12 +87,22 @@ public final class DateTimeUtil {
         return String.format("%s/%s/%s", a71.substring(0, 3), a71.substring(3, 5), a71.substring(5, 7));
     }
 
+    public static String transformLocalDateToRocDateForDisplay(LocalDate dateTime) {
+        return dateTime
+            .minus(1911, ChronoUnit.YEARS)
+            .format(
+                DateTimeFormatter.ofPattern("yyyy/MM/dd")
+            )
+            .substring(1);
+    }
+
     public static String transformLocalDateToRocDateForDisplay(Instant dateTime) {
         return dateTime
             .atOffset(TimeConfig.ZONE_OFF_SET)
             .minus(1911, ChronoUnit.YEARS)
             .format(
-                DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+                DateTimeFormatter.ofPattern("yyyy/MM/dd")
+            )
             .substring(1);
     }
 

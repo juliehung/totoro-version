@@ -1,6 +1,5 @@
 package io.dentall.totoro.business.service.nhi;
 
-import io.dentall.totoro.business.service.nhi.util.LocalDateDuration;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckFormat;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
@@ -8,7 +7,6 @@ import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 
 @Service
@@ -24,30 +22,30 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92001C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92001C"),
-                    DateTimeUtil.NHI_3_DAY,
-                    NhiRuleCheckFormat.D7_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92001C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_3_DAY),
+                String.valueOf(DateTimeUtil.NHI_3_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D7_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDateWithMaxTimes(
-                    dto,
-                    Arrays.asList("92001C"),
-                    DateTimeUtil.NHI_1_MONTH,
-                    2,
-                    NhiRuleCheckFormat.D5_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isD5_1(
+                dto,
+                null,
+                Arrays.asList("92001C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_30_DAY),
+                String.valueOf(DateTimeUtil.NHI_30_DAY.getDays()),
+                3
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -65,15 +63,83 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.GENERAL_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate92003C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.VALIDATED_ALL_EXCLUDE_FM
+            ),
+            vm
+        );
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate92004C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PARTIAL_ZONE_AND_99
+            ),
+            vm
+        );
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate92005C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.VALIDATED_ALL_EXCLUDE_FM
+            ),
+            vm
+        );
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate92006C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.VALIDATED_ALL_EXCLUDE_FM
+            ),
+            vm
+        );
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate92012C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PARTIAL_ZONE
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -97,15 +163,13 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92014C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH
+            ),
+            vm
+        );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(
@@ -133,15 +197,13 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -149,15 +211,23 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92016C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.GENERAL_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.XRAY.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -207,27 +277,26 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_FRONT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_FRONT_TOOTH
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92030C"),
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92030C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_730_DAY),
+                String.valueOf(DateTimeUtil.NHI_730_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -245,27 +314,26 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_PREMOLAR_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_PREMOLAR_TOOTH
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92031C"),
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92031C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_730_DAY),
+                String.valueOf(DateTimeUtil.NHI_730_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -283,27 +351,26 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_MOLAR_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_MOLAR_TOOTH
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92032C"),
-                    DateTimeUtil.NHI_18_MONTH,
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92032C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_730_DAY),
+                String.valueOf(DateTimeUtil.NHI_730_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -321,15 +388,13 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -369,20 +434,24 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92043C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        LocalDateDuration ldd = new LocalDateDuration();
-        ldd.setBegin(
-            LocalDate.of(
-                dto.getNhiExtendDisposal().getDate().getYear(),
-                1,
-                1
-            )
-        );
-        ldd.setEnd(dto.getNhiExtendDisposal().getDate());
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBetweenDuration(
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.OS_REC_1.getFormat(),
+                    nhiRuleCheckUtil.getCurrentTxNhiCode(dto)
+                )
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
+                null,
                 Arrays.asList("92043C"),
-                ldd,
+                nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_YEAR_1),
+                String.valueOf(DateTimeUtil.NUMBERS_OF_YEAR_1),
+                1,
                 NhiRuleCheckFormat.D4_1
             ),
             vm
@@ -394,25 +463,36 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92050C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.XRAY.getFormat(),
+                    nhiRuleCheckUtil.getCurrentTxNhiCode(dto)
+                )
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isOnceInWholeLife(
-                    dto,
-                    Arrays.asList("92050C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92050C"),
+                null,
+                null,
+                1,
+                NhiRuleCheckFormat.D2_2
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -420,15 +500,13 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92055C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.DECIDUOUS_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.DECIDUOUS_TOOTH
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -494,15 +572,13 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isOnceInWholeLifeAtDoctor(
-                    dto,
-                    "92059C"
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isOnceInWholeLifeAtDoctor(
+                dto,
+                "92059C"
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -536,15 +612,13 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isOnceInWholeLifeAtDoctor(
-                    dto,
-                    "92064C"
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isOnceInWholeLifeAtDoctor(
+                dto,
+                "92064C"
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -552,23 +626,46 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92066C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92066C"),
-                    DateTimeUtil.NHI_3_DAY,
-                    NhiRuleCheckFormat.D7_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92066C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_3_DAY),
+                String.valueOf(DateTimeUtil.NHI_3_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D7_1
+            ),
+            vm
+        );
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate92071C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.VALIDATED_ALL_EXCLUDE_FM
+            ),
+            vm
+        );
 
         return vm;
     }
 
     public NhiRuleCheckResultVM validate92072C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FULL_ZONE
+            ),
+            vm
+        );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(
@@ -580,17 +677,18 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92072C"),
-                    DateTimeUtil.NHI_3_MONTH,
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92072C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
+                String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -608,27 +706,31 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92073C"),
-                    DateTimeUtil.NHI_1_WEEK,
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92073C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_7_DAY),
+                String.valueOf(DateTimeUtil.NHI_7_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentOnCodeToday(
-                    dto,
-                    Arrays.asList("92001C", "92066C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92001C", "92066C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
+                String.valueOf(DateTimeUtil.NHI_0_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D6_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -646,28 +748,31 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentOnCodeToday(
-                    dto,
-                    Arrays.asList("92091C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92091C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
+                String.valueOf(DateTimeUtil.NHI_0_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D6_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92090C"),
-                    DateTimeUtil.NHI_2_MONTH,
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
-
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92090C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_60_DAY),
+                String.valueOf(DateTimeUtil.NHI_60_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -675,27 +780,31 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92091C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentOnCodeToday(
-                    dto,
-                    Arrays.asList("92090C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92090C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
+                String.valueOf(DateTimeUtil.NHI_0_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D6_1
+            ),
+            vm
+        );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92091C"),
-                    DateTimeUtil.NHI_6_MONTH,
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92091C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY),
+                String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -703,15 +812,13 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92092C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.DECIDUOUS_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.DECIDUOUS_TOOTH_AND_PERMANENT_WEIRD_TOOTH
+            ),
+            vm
+        );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(
@@ -739,15 +846,18 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isNoTreatmentOnCodeToday(
-                    dto,
-                    Arrays.asList("34001C", "34002C", "90004C", "91001C", "92001C", "92012C", "92043C", "92066C", "92071C", "92093B", "92096C")
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("34001C", "34002C", "90004C", "91001C", "92001C", "92012C", "92043C", "92066C", "92071C", "92093B", "92096C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
+                String.valueOf(DateTimeUtil.NHI_0_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D6_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -765,17 +875,18 @@ public class NhiRuleCheckScript92XXXC {
             vm
         );
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92095C"),
-                    DateTimeUtil.NHI_3_DAY,
-                    NhiRuleCheckFormat.D7_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92095C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_3_DAY),
+                String.valueOf(DateTimeUtil.NHI_3_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D7_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -783,15 +894,36 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92096C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isAllLimitedTooth(
-                    dto,
-                    ToothConstraint.PERMANENT_TOOTH
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.addNotification(
+                String.format(
+                    NhiRuleCheckFormat.XRAY.getFormat(),
+                    nhiRuleCheckUtil.getCurrentTxNhiCode(dto)
+                )
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("89006C", "90004C", "92002C", "92094C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
+                String.valueOf(DateTimeUtil.NHI_0_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D6_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -799,17 +931,18 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92097C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92097C"),
-                    DateTimeUtil.NHI_36_MONTH,
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92097C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_1095_DAY),
+                String.valueOf(DateTimeUtil.NHI_1095_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
 
         return vm;
     }
@@ -817,17 +950,18 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92098C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        if (vm.isValidated()) {
-            nhiRuleCheckUtil.addResultToVm(
-                nhiRuleCheckUtil.isCodeBeforeDate(
-                    dto,
-                    Arrays.asList("92098C"),
-                    DateTimeUtil.NHI_1_MONTH,
-                    NhiRuleCheckFormat.D4_1
-                ),
-                vm
-            );
-        }
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("92098C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_30_DAY),
+                String.valueOf(DateTimeUtil.NHI_30_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
 
         return vm;
     }
