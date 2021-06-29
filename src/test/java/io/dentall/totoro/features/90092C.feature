@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90092C 難症特別處理－有額外根管者(1)前牙及下顎小臼齒有超過一根管者。(2)上顎小臼齒有超過二根管者。(3)大臼齒有超過三根管者。(4)以實際超過根管數計算。
 
     Scenario Outline: 全部檢核成功
@@ -15,6 +16,21 @@ Feature: 90092C 難症特別處理－有額外根管者(1)前牙及下顎小臼�
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 90092C       | 11         | MOB          | Pass      |
 
+    Scenario Outline: 提醒須檢附影像
+        Given 建立醫師
+        Given Wind 24 歲病人
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | 90001C         | <IssueTeeth> | <IssueSurface> |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 提醒"須檢附影像"，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
+            | 90092C       | 11         | MOB          | Pass      |
+
     Scenario Outline: （Disposal）同日得同時有 90001C~90003C/90019C/90020C
         Given 建立醫師
         Given Wind 24 歲病人
@@ -25,7 +41,7 @@ Feature: 90092C 難症特別處理－有額外根管者(1)前牙及下顎小臼�
             | NhiCode | Teeth | Surface | NewNhiCode         | NewTeeth         | NewSurface         |
             |         |       |         | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> |
             |         |       |         | <IssueNhiCode>     | <IssueTeeth>     | <IssueSurface>     |
-        Then 同日得有 91004C/91005C/91020C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日得有 90001C/90002C/90003C/90019C/90020C 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 90092C       | 11         | MOB          | 90001C           | 11             | MOB              | Pass      |
@@ -172,9 +188,9 @@ Feature: 90092C 難症特別處理－有額外根管者(1)前牙及下顎小臼�
             | 90092C       | FM         | DL           | NotPass   |
             | 90092C       | UR         | DL           | NotPass   |
             | 90092C       | UL         | DL           | NotPass   |
+            | 90092C       | UA         | DL           | NotPass   |
             | 90092C       | LL         | DL           | NotPass   |
             | 90092C       | LR         | DL           | NotPass   |
-            | 90092C       | UA         | DL           | NotPass   |
             | 90092C       | LA         | DL           | NotPass   |
             # 非法牙位
             | 90092C       | 00         | DL           | NotPass   |

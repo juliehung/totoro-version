@@ -720,7 +720,8 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     @Then("同日得有 {nhiCodeList} 診療項目，確認結果是否為 {passOrNot}")
     public void checkTreatmentDependOnCodeToday(List<String> dependNhiCodes, Boolean passOrNot) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.W3_1, new Object[]{join(", ", dependNhiCodes)});
+        String issueNhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
+        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.W3_1, new Object[]{issueNhiCode, join("/", dependNhiCodes)});
         checkResult(resultActions, passOrNot, message);
     }
 

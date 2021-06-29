@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90008C 去除釘柱
 
     Scenario Outline: 全部檢核成功
@@ -10,6 +11,20 @@ Feature: 90008C 去除釘柱
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
         Then 確認診療代碼 <IssueNhiCode> ，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
+            | 90008C       | 11         | MOB          | Pass      |
+
+    Scenario Outline: 提醒須檢附影像
+        Given 建立醫師
+        Given Wind 24 歲病人
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 提醒"須檢附影像"，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 90008C       | 11         | MOB          | Pass      |
@@ -96,9 +111,9 @@ Feature: 90008C 去除釘柱
             | 90008C       | FM         | DL           | NotPass   |
             | 90008C       | UR         | DL           | NotPass   |
             | 90008C       | UL         | DL           | NotPass   |
+            | 90008C       | UA         | DL           | NotPass   |
             | 90008C       | LL         | DL           | NotPass   |
             | 90008C       | LR         | DL           | NotPass   |
-            | 90008C       | UA         | DL           | NotPass   |
             | 90008C       | LA         | DL           | NotPass   |
             # 非法牙位
             | 90008C       | 00         | DL           | NotPass   |

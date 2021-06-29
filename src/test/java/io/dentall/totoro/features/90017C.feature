@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90017C 恆牙斷髓處理
 
     Scenario Outline: 全部檢核成功
@@ -66,6 +67,9 @@ Feature: 90017C 恆牙斷髓處理
             | 90017C       | 11         | MO           | 當日                | 90001C           | 11             | MO               | NotPass   |
             | 90017C       | 11         | MO           | 當日                | 90002C           | 11             | MO               | NotPass   |
             | 90017C       | 11         | MO           | 當日                | 90003C           | 11             | MO               | NotPass   |
+            | 90017C       | 11         | MO           | 昨日                | 90001C           | 11             | MO               | Pass      |
+            | 90017C       | 11         | MO           | 昨日                | 90002C           | 11             | MO               | Pass      |
+            | 90017C       | 11         | MO           | 昨日                | 90003C           | 11             | MO               | Pass      |
 
     Scenario Outline: 檢查治療的牙位是否為 PERMANENT_TOOTH
         Given 建立醫師
@@ -149,9 +153,9 @@ Feature: 90017C 恆牙斷髓處理
             | 90017C       | FM         | DL           | NotPass   |
             | 90017C       | UR         | DL           | NotPass   |
             | 90017C       | UL         | DL           | NotPass   |
+            | 90017C       | UA         | DL           | NotPass   |
             | 90017C       | LL         | DL           | NotPass   |
             | 90017C       | LR         | DL           | NotPass   |
-            | 90017C       | UA         | DL           | NotPass   |
             | 90017C       | LA         | DL           | NotPass   |
             # 非法牙位
             | 90017C       | 00         | DL           | NotPass   |

@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90112C 特殊狀況橡皮障防濕裝置
 
     Scenario Outline: 全部檢核成功
@@ -110,9 +111,9 @@ Feature: 90112C 特殊狀況橡皮障防濕裝置
             | 90112C       | FM         | DL           | NotPass   |
             | 90112C       | UR         | DL           | NotPass   |
             | 90112C       | UL         | DL           | NotPass   |
+            | 90112C       | UA         | DL           | NotPass   |
             | 90112C       | LL         | DL           | NotPass   |
             | 90112C       | LR         | DL           | NotPass   |
-            | 90112C       | UA         | DL           | NotPass   |
             | 90112C       | LA         | DL           | NotPass   |
             # 非法牙位
             | 90112C       | 00         | DL           | NotPass   |

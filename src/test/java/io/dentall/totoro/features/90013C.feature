@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90013C 根尖成形術或根尖生成術-前牙
 
     Scenario Outline: 全部檢核成功
@@ -110,9 +111,9 @@ Feature: 90013C 根尖成形術或根尖生成術-前牙
             | 90013C       | FM         | DL           | NotPass   |
             | 90013C       | UR         | DL           | NotPass   |
             | 90013C       | UL         | DL           | NotPass   |
+            | 90013C       | UA         | DL           | NotPass   |
             | 90013C       | LL         | DL           | NotPass   |
             | 90013C       | LR         | DL           | NotPass   |
-            | 90013C       | UA         | DL           | NotPass   |
             | 90013C       | LA         | DL           | NotPass   |
             # 非法牙位
             | 90013C       | 00         | DL           | NotPass   |
