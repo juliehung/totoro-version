@@ -1,3 +1,4 @@
+@nhi-89-series
 Feature: 89013C 複合體充填
 
     Scenario Outline: 全部檢核成功

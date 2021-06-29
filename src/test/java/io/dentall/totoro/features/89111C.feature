@@ -1,3 +1,4 @@
+@nhi-89-series
 Feature: 89111C 特殊狀況之玻璃離子體充填
 
     Scenario Outline: 全部檢核成功

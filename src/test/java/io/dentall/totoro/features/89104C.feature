@@ -1,3 +1,4 @@
+@nhi-89-series
 Feature: 89104C 特殊狀況之前牙複合樹脂充填-單面
 
     Scenario Outline: 全部檢核成功
