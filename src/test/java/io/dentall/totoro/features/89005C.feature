@@ -29,7 +29,7 @@ Feature: 89005C 前牙複合樹脂充填-雙面
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）病患的牙齒 <TreatmentTeeth> 在 <PastTreatmentDays> 天前，被申報 <TreatmentNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵獨同顆牙齒在 <DayRange> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
+        Then 病患的牙齒 <TreatmentTeeth> 在 <PastTreatmentDays> 天前，被申報 <TreatmentNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵觸同顆牙齒在 <DayRange> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | DayRange | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             # 前乳牙
@@ -74,7 +74,7 @@ Feature: 89005C 前牙複合樹脂充填-雙面
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）病患的牙齒 <MedicalTeeth> 在 <PastMedicalDays> 天前，被申報 <MedicalNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵獨同顆牙齒在 <DayRange> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
+        Then 病患的牙齒 <MedicalTeeth> 在 <PastMedicalDays> 天前，被申報 <MedicalNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵觸同顆牙齒在 <DayRange> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | DayRange | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
             # 前乳牙
@@ -163,7 +163,7 @@ Feature: 89005C 前牙複合樹脂充填-雙面
             | 89005C       | 51         | DL           | 30              | 90007C         | NotPass   |
             | 89005C       | 51         | DL           | 30              | 01271C         | Pass      |
 
-    Scenario Outline: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
+    Scenario Outline: （HIS）前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
         Given 建立醫師
         Given Wind 24 歲病人
         Given 在過去第 <89006CTreatmentDay> 天，建立預約
@@ -210,6 +210,45 @@ Feature: 89005C 前牙複合樹脂充填-雙面
             | 89005C       | 51         | DL           | 30                | 90019C           | 30                 | NotPass   |
             | 89005C       | 51         | DL           | 30                | 90020C           | 30                 | NotPass   |
 
+    Scenario Outline: （IC）前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
+        Given 建立醫師
+        Given Wind 24 歲病人
+        Given 新增健保醫療:
+            | PastDays                | NhiCode          | Teeth |
+            | <89006CPastMedicalDays> | 89006C           | 11    |
+            | <PastMedicalDays>       | <MedicalNhiCode> | 11    |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 89006C 在前 <89006CPastMedicalDays> 天建立， <MedicalNhiCode> 在前 <PastMedicalDays> 天建立，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | 89006CPastMedicalDays | PassOrNot |
+            # 測試TreatmentNhiCode為非指定代碼
+            | 89005C       | 51         | MOB          | 15              | 01271C         | 30                    | NotPass   |
+            # 測試89006C在超過30天前建立
+            | 89005C       | 51         | MOB          | 15              | 01271C         | 31                    | Pass      |
+            # 測試TreatmentNhiCode是產生在89006C之後，但在30天內
+            | 89005C       | 51         | MOB          | 29              | 90001C         | 30                    | Pass      |
+            | 89005C       | 51         | MOB          | 29              | 90002C         | 30                    | Pass      |
+            | 89005C       | 51         | MOB          | 29              | 90003C         | 30                    | Pass      |
+            | 89005C       | 51         | MOB          | 29              | 90019C         | 30                    | Pass      |
+            | 89005C       | 51         | MOB          | 29              | 90020C         | 30                    | Pass      |
+            # 測試TreatmentNhiCode是產生在89006C之前，但超過30天
+            | 89005C       | 51         | MOB          | 31              | 90001C         | 30                    | NotPass   |
+            | 89005C       | 51         | MOB          | 31              | 90002C         | 30                    | NotPass   |
+            | 89005C       | 51         | MOB          | 31              | 90003C         | 30                    | NotPass   |
+            | 89005C       | 51         | MOB          | 31              | 90019C         | 30                    | NotPass   |
+            | 89005C       | 51         | MOB          | 31              | 90020C         | 30                    | NotPass   |
+            # 測試TreatmentNhiCode與89006C都在同一天
+            | 89005C       | 51         | MOB          | 30              | 90001C         | 30                    | NotPass   |
+            | 89005C       | 51         | MOB          | 30              | 90002C         | 30                    | NotPass   |
+            | 89005C       | 51         | MOB          | 30              | 90003C         | 30                    | NotPass   |
+            | 89005C       | 51         | MOB          | 30              | 90019C         | 30                    | NotPass   |
+            | 89005C       | 51         | MOB          | 30              | 90020C         | 30                    | NotPass   |
+
     Scenario Outline: （HIS）同牙未曾申報過 92013C~92015C
         Given 建立醫師
         Given Wind 24 歲病人
@@ -225,7 +264,7 @@ Feature: 89005C 前牙複合樹脂充填-雙面
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）同牙 <IssueTeeth> 未曾申報過，指定代碼 <TreatmentNhiCode> ，確認結果是否為 <PassOrNot>
+        Then 同牙 <IssueTeeth> 未曾申報過，指定代碼 <TreatmentNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             # 測試同牙
@@ -249,7 +288,7 @@ Feature: 89005C 前牙複合樹脂充填-雙面
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）同牙 <IssueTeeth> 未曾申報過，指定代碼 <MedicalNhiCode> ，確認結果是否為 <PassOrNot>
+        Then 同牙 <IssueTeeth> 未曾申報過，指定代碼 <MedicalNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | TreatmentTeeth | PassOrNot |
             # 測試同牙
@@ -273,62 +312,60 @@ Feature: 89005C 前牙複合樹脂充填-雙面
         Then 檢查 <IssueTeeth> 牙位，依 FRONT_TOOTH 判定是否為核可牙位，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
-            # 後恆牙
+            # 乳牙
+            | 89005C       | 51         | DL           | Pass      |
+            | 89005C       | 52         | DL           | Pass      |
+            | 89005C       | 53         | DL           | Pass      |
+            | 89005C       | 54         | DL           | NotPass   |
+            | 89005C       | 55         | DL           | NotPass   |
+            | 89005C       | 61         | DL           | Pass      |
+            | 89005C       | 62         | DL           | Pass      |
+            | 89005C       | 63         | DL           | Pass      |
+            | 89005C       | 64         | DL           | NotPass   |
+            | 89005C       | 65         | DL           | NotPass   |
+            | 89005C       | 71         | DL           | Pass      |
+            | 89005C       | 72         | DL           | Pass      |
+            | 89005C       | 73         | DL           | Pass      |
+            | 89005C       | 74         | DL           | NotPass   |
+            | 89005C       | 75         | DL           | NotPass   |
+            | 89005C       | 81         | DL           | Pass      |
+            | 89005C       | 82         | DL           | Pass      |
+            | 89005C       | 83         | DL           | Pass      |
+            | 89005C       | 84         | DL           | NotPass   |
+            | 89005C       | 85         | DL           | NotPass   |
+            # 恆牙
+            | 89005C       | 11         | DL           | Pass      |
+            | 89005C       | 12         | DL           | Pass      |
+            | 89005C       | 13         | DL           | Pass      |
             | 89005C       | 14         | DL           | NotPass   |
             | 89005C       | 15         | DL           | NotPass   |
             | 89005C       | 16         | DL           | NotPass   |
             | 89005C       | 17         | DL           | NotPass   |
             | 89005C       | 18         | DL           | NotPass   |
+            | 89005C       | 21         | DL           | Pass      |
+            | 89005C       | 22         | DL           | Pass      |
+            | 89005C       | 23         | DL           | Pass      |
             | 89005C       | 24         | DL           | NotPass   |
             | 89005C       | 25         | DL           | NotPass   |
             | 89005C       | 26         | DL           | NotPass   |
             | 89005C       | 27         | DL           | NotPass   |
             | 89005C       | 28         | DL           | NotPass   |
+            | 89005C       | 31         | DL           | Pass      |
+            | 89005C       | 32         | DL           | Pass      |
+            | 89005C       | 33         | DL           | Pass      |
             | 89005C       | 34         | DL           | NotPass   |
             | 89005C       | 35         | DL           | NotPass   |
             | 89005C       | 36         | DL           | NotPass   |
             | 89005C       | 37         | DL           | NotPass   |
             | 89005C       | 38         | DL           | NotPass   |
+            | 89005C       | 41         | DL           | Pass      |
+            | 89005C       | 42         | DL           | Pass      |
+            | 89005C       | 43         | DL           | Pass      |
             | 89005C       | 44         | DL           | NotPass   |
             | 89005C       | 45         | DL           | NotPass   |
             | 89005C       | 46         | DL           | NotPass   |
             | 89005C       | 47         | DL           | NotPass   |
             | 89005C       | 48         | DL           | NotPass   |
-            # 後乳牙
-            | 89005C       | 54         | DL           | NotPass   |
-            | 89005C       | 55         | DL           | NotPass   |
-            | 89005C       | 64         | DL           | NotPass   |
-            | 89005C       | 65         | DL           | NotPass   |
-            | 89005C       | 74         | DL           | NotPass   |
-            | 89005C       | 75         | DL           | NotPass   |
-            | 89005C       | 84         | DL           | NotPass   |
-            | 89005C       | 85         | DL           | NotPass   |
-            # 前恆牙
-            | 89005C       | 11         | DL           | Pass      |
-            | 89005C       | 12         | DL           | Pass      |
-            | 89005C       | 13         | DL           | Pass      |
-            | 89005C       | 21         | DL           | Pass      |
-            | 89005C       | 22         | DL           | Pass      |
-            | 89005C       | 23         | DL           | Pass      |
-            | 89005C       | 31         | DL           | Pass      |
-            | 89005C       | 32         | DL           | Pass      |
-            | 89005C       | 33         | DL           | Pass      |
-            | 89005C       | 41         | DL           | Pass      |
-            | 89005C       | 42         | DL           | Pass      |
-            | 89005C       | 43         | DL           | Pass      |
-            # 前乳牙
-            | 89005C       | 51         | DL           | Pass      |
-            | 89005C       | 52         | DL           | Pass      |
-            | 89005C       | 53         | DL           | Pass      |
-            | 89005C       | 61         | DL           | Pass      |
-            | 89005C       | 62         | DL           | Pass      |
-            | 89005C       | 63         | DL           | Pass      |
-            | 89005C       | 71         | DL           | Pass      |
-            | 89005C       | 72         | DL           | Pass      |
-            | 89005C       | 73         | DL           | Pass      |
-            | 89005C       | 81         | DL           | Pass      |
-            | 89005C       | 82         | DL           | Pass      |
-            | 89005C       | 83         | DL           | Pass      |
             # 無牙
             | 89005C       |            | DL           | NotPass   |
             #
@@ -336,13 +373,19 @@ Feature: 89005C 前牙複合樹脂充填-雙面
             | 89005C       | 29         | DL           | Pass      |
             | 89005C       | 39         | DL           | Pass      |
             | 89005C       | 49         | DL           | Pass      |
-            | 89005C       | 59         | DL           | Pass      |
-            | 89005C       | 69         | DL           | Pass      |
-            | 89005C       | 79         | DL           | Pass      |
-            | 89005C       | 89         | DL           | Pass      |
+            | 89005C       | 59         | DL           | NotPass   |
+            | 89005C       | 69         | DL           | NotPass   |
+            | 89005C       | 79         | DL           | NotPass   |
+            | 89005C       | 89         | DL           | NotPass   |
             | 89005C       | 99         | DL           | Pass      |
             # 牙位為區域型態
             | 89005C       | FM         | DL           | NotPass   |
+            | 89005C       | UR         | DL           | NotPass   |
+            | 89005C       | UL         | DL           | NotPass   |
+            | 89005C       | UA         | DL           | NotPass   |
+            | 89005C       | LR         | DL           | NotPass   |
+            | 89005C       | LL         | DL           | NotPass   |
+            | 89005C       | LA         | DL           | NotPass   |
             # 非法牙位
             | 89005C       | 00         | DL           | NotPass   |
             | 89005C       | 01         | DL           | NotPass   |
