@@ -1,3 +1,4 @@
+@nhi-91-series
 Feature: 91023C 牙周病統合治療第三階段支付
 
     Scenario Outline: 全部檢核成功
@@ -19,6 +20,26 @@ Feature: 91023C 牙周病統合治療第三階段支付
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91023C       | 11         | MOB          | Pass      |
+
+    Scenario Outline: 提醒檢附牙菌斑控制紀錄表、牙周病檢查紀錄表
+        Given 建立醫師
+        Given Kelly 24 歲病人
+        Given 在過去第 180 天，建立預約
+        Given 在過去第 180 天，建立掛號
+        Given 在過去第 180 天，產生診療計畫
+        And 新增診療代碼:
+            | PastDays | A72 | A73    | A74 | A75 | A76 | A77 | A78 | A79 |
+            | 180      | 3   | 91021C | 11  | MOB | 0   | 1.0 | 03  |     |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 提醒"檢附牙菌斑控制紀錄表、牙周病檢查紀錄表"，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
+            | 91023C       | FM         | MOB          | Pass      |
 
     Scenario Outline: （HIS）180天內，得有91021C治療項目
         Given 建立醫師

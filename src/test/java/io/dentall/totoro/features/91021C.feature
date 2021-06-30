@@ -1,3 +1,4 @@
+@nhi-91-series
 Feature: 91021C 牙周病統合治療第一階段支付
 
     Scenario Outline: 全部檢核成功
@@ -33,9 +34,9 @@ Feature: 91021C 牙周病統合治療第一階段支付
     Scenario Outline: 在同一診所兩年內有申報91021C項目，提醒須檢附影像
         Given 建立醫師
         Given Kelly 35 歲病人
-        Given 在過去第 60 天，建立預約
-        Given 在過去第 60 天，建立掛號
-        Given 在過去第 60 天，產生診療計畫
+        Given 在過去第 <PastTreatmentDays> 天，建立預約
+        Given 在過去第 <PastTreatmentDays> 天，建立掛號
+        Given 在過去第 <PastTreatmentDays> 天，產生診療計畫
         And 新增診療代碼:
             | PastDays            | A72 | A73            | A74          | A75            | A76 | A77 | A78 | A79 |
             | <PastTreatmentDays> | 3   | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> | 0   | 1.0 | 03  |     |

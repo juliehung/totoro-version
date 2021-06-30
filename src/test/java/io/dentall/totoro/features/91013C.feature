@@ -1,3 +1,4 @@
+@nhi-91-series
 Feature: 91013C 牙齦切除術-施行根管治療或牙體復形時，所需之牙齦切除術
 
     Scenario Outline: 全部檢核成功
@@ -26,7 +27,7 @@ Feature: 91013C 牙齦切除術-施行根管治療或牙體復形時，所需之
             |         |       |         | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> |
             |         |       |         | 90001C             | <IssueTeeth>     | <IssueSurface>     |
             |         |       |         | <IssueNhiCode>     | <IssueTeeth>     | <IssueSurface>     |
-        Then 同日不得有 91011C/91012C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日不得有 <TreatmentNhiCode> 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 91013C       | 11         | MOB          | 91011C           | 11             | MOB              | NotPass   |
@@ -48,7 +49,7 @@ Feature: 91013C 牙齦切除術-施行根管治療或牙體復形時，所需之
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | 90001C         | <IssueTeeth> | <IssueSurface> |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 同日不得有 91011C/91012C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日不得有 <TreatmentNhiCode> 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDate | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 91013C       | 11         | MOB          | 當日                | 91011C           | 11             | MOB              | NotPass   |
@@ -69,7 +70,7 @@ Feature: 91013C 牙齦切除術-施行根管治療或牙體復形時，所需之
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | 90001C         | <IssueTeeth> | <IssueSurface> |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 同日不得有 91011C/91012C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日不得有 <MedicalNhiCode> 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 91013C       | 11         | MOB          | 當日              | 91011C         | 11           | NotPass   |

@@ -1,3 +1,4 @@
+@nhi-91-series
 Feature: 91020C 牙菌斑去除照護
 
     Scenario Outline: 全部檢核成功
@@ -67,6 +68,6 @@ Feature: 91020C 牙菌斑去除照護
         Then 病患是否在診療 <IssueNhiCode> 當下年紀未滿 12 歲，確認結果是否為 <PassOrNot>
         Examples:
             | PatientAge | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
-            | 11         | 87           | 51         | FM           | Pass      |
-            | 12         | 87           | 51         | FM           | NotPass   |
-            | 13         | 87           | 51         | FM           | NotPass   |
+            | 11         | 87           | 51         | DL           | Pass      |
+            | 12         | 87           | 51         | DL           | NotPass   |
+            | 13         | 87           | 51         | DL           | NotPass   |

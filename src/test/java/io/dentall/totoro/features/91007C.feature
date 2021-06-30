@@ -1,3 +1,4 @@
+@nhi-91-series
 Feature: 91007C 齒齦下括除術(含牙根整平術)-1/2 顎
 
     Scenario Outline: 全部檢核成功
@@ -93,15 +94,88 @@ Feature: 91007C 齒齦下括除術(含牙根整平術)-1/2 顎
         Then 檢查 <IssueTeeth> 牙位，依 PARTIAL_ZONE 判定是否為核可牙位，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
+            # 乳牙
+            | 91007C       | 51         | DL           | NotPass   |
+            | 91007C       | 52         | DL           | NotPass   |
+            | 91007C       | 53         | DL           | NotPass   |
+            | 91007C       | 54         | DL           | NotPass   |
+            | 91007C       | 55         | DL           | NotPass   |
+            | 91007C       | 61         | DL           | NotPass   |
+            | 91007C       | 62         | DL           | NotPass   |
+            | 91007C       | 63         | DL           | NotPass   |
+            | 91007C       | 64         | DL           | NotPass   |
+            | 91007C       | 65         | DL           | NotPass   |
+            | 91007C       | 71         | DL           | NotPass   |
+            | 91007C       | 72         | DL           | NotPass   |
+            | 91007C       | 73         | DL           | NotPass   |
+            | 91007C       | 74         | DL           | NotPass   |
+            | 91007C       | 75         | DL           | NotPass   |
+            | 91007C       | 81         | DL           | NotPass   |
+            | 91007C       | 82         | DL           | NotPass   |
+            | 91007C       | 83         | DL           | NotPass   |
+            | 91007C       | 84         | DL           | NotPass   |
+            | 91007C       | 85         | DL           | NotPass   |
+            # 恆牙
+            | 91007C       | 11         | DL           | NotPass   |
+            | 91007C       | 12         | DL           | NotPass   |
+            | 91007C       | 13         | DL           | NotPass   |
+            | 91007C       | 14         | DL           | NotPass   |
+            | 91007C       | 15         | DL           | NotPass   |
+            | 91007C       | 16         | DL           | NotPass   |
+            | 91007C       | 17         | DL           | NotPass   |
+            | 91007C       | 18         | DL           | NotPass   |
+            | 91007C       | 21         | DL           | NotPass   |
+            | 91007C       | 22         | DL           | NotPass   |
+            | 91007C       | 23         | DL           | NotPass   |
+            | 91007C       | 24         | DL           | NotPass   |
+            | 91007C       | 25         | DL           | NotPass   |
+            | 91007C       | 26         | DL           | NotPass   |
+            | 91007C       | 27         | DL           | NotPass   |
+            | 91007C       | 28         | DL           | NotPass   |
+            | 91007C       | 31         | DL           | NotPass   |
+            | 91007C       | 32         | DL           | NotPass   |
+            | 91007C       | 33         | DL           | NotPass   |
+            | 91007C       | 34         | DL           | NotPass   |
+            | 91007C       | 35         | DL           | NotPass   |
+            | 91007C       | 36         | DL           | NotPass   |
+            | 91007C       | 37         | DL           | NotPass   |
+            | 91007C       | 38         | DL           | NotPass   |
+            | 91007C       | 41         | DL           | NotPass   |
+            | 91007C       | 42         | DL           | NotPass   |
+            | 91007C       | 43         | DL           | NotPass   |
+            | 91007C       | 44         | DL           | NotPass   |
+            | 91007C       | 45         | DL           | NotPass   |
+            | 91007C       | 46         | DL           | NotPass   |
+            | 91007C       | 47         | DL           | NotPass   |
+            | 91007C       | 48         | DL           | NotPass   |
+            # 無牙
+            | 91007C       |            | DL           | NotPass   |
+            #
+            | 91007C       | 19         | DL           | NotPass   |
+            | 91007C       | 29         | DL           | NotPass   |
+            | 91007C       | 39         | DL           | NotPass   |
+            | 91007C       | 49         | DL           | NotPass   |
+            | 91007C       | 59         | DL           | NotPass   |
+            | 91007C       | 69         | DL           | NotPass   |
+            | 91007C       | 79         | DL           | NotPass   |
+            | 91007C       | 89         | DL           | NotPass   |
+            | 91007C       | 99         | DL           | NotPass   |
+            # 牙位為區域型態
+            | 91007C       | FM         | DL           | NotPass   |
             | 91007C       | UR         | DL           | Pass      |
             | 91007C       | UL         | DL           | Pass      |
-            | 91007C       | LR         | DL           | Pass      |
-            | 91007C       | LL         | DL           | Pass      |
             | 91007C       | UA         | DL           | Pass      |
             | 91007C       | UB         | DL           | NotPass   |
+            | 91007C       | LL         | DL           | Pass      |
+            | 91007C       | LR         | DL           | Pass      |
             | 91007C       | LA         | DL           | Pass      |
             | 91007C       | LB         | DL           | NotPass   |
-            | 91007C       | FM         | DL           | NotPass   |
-            | 91007C       | 14         | DL           | NotPass   |
-            | 91007C       | 35         | DL           | NotPass   |
-            | 91007C       | 53         | DL           | NotPass   |
+            # 非法牙位
+            | 91007C       | 00         | DL           | NotPass   |
+            | 91007C       | 01         | DL           | NotPass   |
+            | 91007C       | 10         | DL           | NotPass   |
+            | 91007C       | 56         | DL           | NotPass   |
+            | 91007C       | 66         | DL           | NotPass   |
+            | 91007C       | 76         | DL           | NotPass   |
+            | 91007C       | 86         | DL           | NotPass   |
+            | 91007C       | 91         | DL           | NotPass   |

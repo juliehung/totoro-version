@@ -1,3 +1,4 @@
+@nhi-91-series
 Feature: 91104C 特殊狀況牙結石清除-全口
 
     Scenario Outline: 全部檢核成功

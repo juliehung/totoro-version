@@ -1,3 +1,4 @@
+@nhi-91-series
 Feature: 91014C 牙周暨齲齒控制基本處置
 
     Scenario Outline: 全部檢核成功
@@ -82,7 +83,7 @@ Feature: 91014C 牙周暨齲齒控制基本處置
             | 91014C       | FM         | MOB          | 昨日              | 91005C         | FM           | NotPass   |
             | 91014C       | FM         | MOB          | 昨日              | 91020C         | FM           | NotPass   |
 
-    Scenario Outline: （HIS）91014C與91004C或91005C同時申報時，每360天限申報一次。與91020C同時申報時，則每180天限申報一次
+    Scenario Outline: （HIS）與91004C或91005C同時申報時，每360天限申報一次。與91020C同時申報時，則每180天限申報一次
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -112,7 +113,7 @@ Feature: 91014C 牙周暨齲齒控制基本處置
             | 91014C       | FM         | MOB          | 180               | 91020C           | FM             | MOB              | 180    | NotPass   |
             | 91014C       | FM         | MOB          | 181               | 91020C           | FM             | MOB              | 180    | Pass      |
 
-    Scenario Outline: （IC）91014C與91004C或91005C同時申報時，每360天限申報一次。與91020C同時申報時，則每180天限申報一次
+    Scenario Outline: （IC）與91004C或91005C同時申報時，每360天限申報一次。與91020C同時申報時，則每180天限申報一次
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 新增健保醫療:
@@ -141,7 +142,7 @@ Feature: 91014C 牙周暨齲齒控制基本處置
 
     Scenario Outline: 檢查治療的牙位是否為 FULL_ZONE
         Given 建立醫師
-        Given Wind 24 歲病人
+        Given Kelly 24 歲病人
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫
@@ -155,62 +156,60 @@ Feature: 91014C 牙周暨齲齒控制基本處置
         Then 檢查 <IssueTeeth> 牙位，依 FULL_ZONE 判定是否為核可牙位，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
-            # 後恆牙
+            # 乳牙
+            | 91014C       | 51         | DL           | NotPass   |
+            | 91014C       | 52         | DL           | NotPass   |
+            | 91014C       | 53         | DL           | NotPass   |
+            | 91014C       | 54         | DL           | NotPass   |
+            | 91014C       | 55         | DL           | NotPass   |
+            | 91014C       | 61         | DL           | NotPass   |
+            | 91014C       | 62         | DL           | NotPass   |
+            | 91014C       | 63         | DL           | NotPass   |
+            | 91014C       | 64         | DL           | NotPass   |
+            | 91014C       | 65         | DL           | NotPass   |
+            | 91014C       | 71         | DL           | NotPass   |
+            | 91014C       | 72         | DL           | NotPass   |
+            | 91014C       | 73         | DL           | NotPass   |
+            | 91014C       | 74         | DL           | NotPass   |
+            | 91014C       | 75         | DL           | NotPass   |
+            | 91014C       | 81         | DL           | NotPass   |
+            | 91014C       | 82         | DL           | NotPass   |
+            | 91014C       | 83         | DL           | NotPass   |
+            | 91014C       | 84         | DL           | NotPass   |
+            | 91014C       | 85         | DL           | NotPass   |
+            # 恆牙
+            | 91014C       | 11         | DL           | NotPass   |
+            | 91014C       | 12         | DL           | NotPass   |
+            | 91014C       | 13         | DL           | NotPass   |
             | 91014C       | 14         | DL           | NotPass   |
             | 91014C       | 15         | DL           | NotPass   |
             | 91014C       | 16         | DL           | NotPass   |
             | 91014C       | 17         | DL           | NotPass   |
             | 91014C       | 18         | DL           | NotPass   |
+            | 91014C       | 21         | DL           | NotPass   |
+            | 91014C       | 22         | DL           | NotPass   |
+            | 91014C       | 23         | DL           | NotPass   |
             | 91014C       | 24         | DL           | NotPass   |
             | 91014C       | 25         | DL           | NotPass   |
             | 91014C       | 26         | DL           | NotPass   |
             | 91014C       | 27         | DL           | NotPass   |
             | 91014C       | 28         | DL           | NotPass   |
+            | 91014C       | 31         | DL           | NotPass   |
+            | 91014C       | 32         | DL           | NotPass   |
+            | 91014C       | 33         | DL           | NotPass   |
             | 91014C       | 34         | DL           | NotPass   |
             | 91014C       | 35         | DL           | NotPass   |
             | 91014C       | 36         | DL           | NotPass   |
             | 91014C       | 37         | DL           | NotPass   |
             | 91014C       | 38         | DL           | NotPass   |
+            | 91014C       | 41         | DL           | NotPass   |
+            | 91014C       | 42         | DL           | NotPass   |
+            | 91014C       | 43         | DL           | NotPass   |
             | 91014C       | 44         | DL           | NotPass   |
             | 91014C       | 45         | DL           | NotPass   |
             | 91014C       | 46         | DL           | NotPass   |
             | 91014C       | 47         | DL           | NotPass   |
             | 91014C       | 48         | DL           | NotPass   |
-            # 後乳牙
-            | 91014C       | 54         | DL           | NotPass   |
-            | 91014C       | 55         | DL           | NotPass   |
-            | 91014C       | 64         | DL           | NotPass   |
-            | 91014C       | 65         | DL           | NotPass   |
-            | 91014C       | 74         | DL           | NotPass   |
-            | 91014C       | 75         | DL           | NotPass   |
-            | 91014C       | 84         | DL           | NotPass   |
-            | 91014C       | 85         | DL           | NotPass   |
-            # 前恆牙
-            | 91014C       | 11         | DL           | NotPass   |
-            | 91014C       | 12         | DL           | NotPass   |
-            | 91014C       | 13         | DL           | NotPass   |
-            | 91014C       | 21         | DL           | NotPass   |
-            | 91014C       | 22         | DL           | NotPass   |
-            | 91014C       | 23         | DL           | NotPass   |
-            | 91014C       | 31         | DL           | NotPass   |
-            | 91014C       | 32         | DL           | NotPass   |
-            | 91014C       | 33         | DL           | NotPass   |
-            | 91014C       | 41         | DL           | NotPass   |
-            | 91014C       | 42         | DL           | NotPass   |
-            | 91014C       | 43         | DL           | NotPass   |
-            # 前乳牙
-            | 91014C       | 51         | DL           | NotPass   |
-            | 91014C       | 52         | DL           | NotPass   |
-            | 91014C       | 53         | DL           | NotPass   |
-            | 91014C       | 61         | DL           | NotPass   |
-            | 91014C       | 62         | DL           | NotPass   |
-            | 91014C       | 63         | DL           | NotPass   |
-            | 91014C       | 71         | DL           | NotPass   |
-            | 91014C       | 72         | DL           | NotPass   |
-            | 91014C       | 73         | DL           | NotPass   |
-            | 91014C       | 81         | DL           | NotPass   |
-            | 91014C       | 82         | DL           | NotPass   |
-            | 91014C       | 83         | DL           | NotPass   |
             # 無牙
             | 91014C       |            | DL           | NotPass   |
             #
@@ -227,9 +226,11 @@ Feature: 91014C 牙周暨齲齒控制基本處置
             | 91014C       | FM         | DL           | Pass      |
             | 91014C       | UR         | DL           | NotPass   |
             | 91014C       | UL         | DL           | NotPass   |
-            | 91014C       | LR         | DL           | NotPass   |
-            | 91014C       | LL         | DL           | NotPass   |
+            | 91014C       | UA         | DL           | NotPass   |
             | 91014C       | UB         | DL           | NotPass   |
+            | 91014C       | LL         | DL           | NotPass   |
+            | 91014C       | LR         | DL           | NotPass   |
+            | 91014C       | LA         | DL           | NotPass   |
             | 91014C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 91014C       | 00         | DL           | NotPass   |
