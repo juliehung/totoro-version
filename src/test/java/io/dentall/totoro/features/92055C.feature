@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92055C 乳牙拔除
 
     Scenario Outline: 全部檢核成功
@@ -96,10 +97,12 @@ Feature: 92055C 乳牙拔除
             | 92055C       | FM         | DL           | NotPass   |
             | 92055C       | UR         | DL           | NotPass   |
             | 92055C       | UL         | DL           | NotPass   |
+            | 92055C       | UA         | DL           | NotPass   |
+            | 92055C       | UB         | DL           | NotPass   |
             | 92055C       | LL         | DL           | NotPass   |
             | 92055C       | LR         | DL           | NotPass   |
-            | 92055C       | UA         | DL           | NotPass   |
             | 92055C       | LA         | DL           | NotPass   |
+            | 92055C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 92055C       | 00         | DL           | NotPass   |
             | 92055C       | 01         | DL           | NotPass   |

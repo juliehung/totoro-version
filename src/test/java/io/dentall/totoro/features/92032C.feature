@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92032C 大臼齒根尖切除術
 
     Scenario Outline: 全部檢核成功
@@ -110,10 +111,12 @@ Feature: 92032C 大臼齒根尖切除術
             | 92032C       | FM         | DL           | NotPass   |
             | 92032C       | UR         | DL           | NotPass   |
             | 92032C       | UL         | DL           | NotPass   |
+            | 92032C       | UA         | DL           | NotPass   |
+            | 92032C       | UB         | DL           | NotPass   |
             | 92032C       | LL         | DL           | NotPass   |
             | 92032C       | LR         | DL           | NotPass   |
-            | 92032C       | UA         | DL           | NotPass   |
             | 92032C       | LA         | DL           | NotPass   |
+            | 92032C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 92032C       | 00         | DL           | NotPass   |
             | 92032C       | 01         | DL           | NotPass   |
@@ -124,7 +127,7 @@ Feature: 92032C 大臼齒根尖切除術
             | 92032C       | 86         | DL           | NotPass   |
             | 92032C       | 91         | DL           | NotPass   |
 
-    Scenario Outline: （HIS）545天內，不應有 92032C 診療項目
+    Scenario Outline: （HIS）730天內，不應有 92032C 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -142,7 +145,7 @@ Feature: 92032C 大臼齒根尖切除術
         Then （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
-            | 92032C       | 16         | DL           | 0                 | 92032C           | 16             | 545    | NotPass   |
-            | 92032C       | 16         | DL           | 544               | 92032C           | 16             | 545    | NotPass   |
-            | 92032C       | 16         | DL           | 545               | 92032C           | 16             | 545    | NotPass   |
-            | 92032C       | 16         | DL           | 546               | 92032C           | 16             | 545    | Pass      |
+            | 92032C       | 16         | DL           | 0                 | 92032C           | 16             | 730    | NotPass   |
+            | 92032C       | 16         | DL           | 729               | 92032C           | 16             | 730    | NotPass   |
+            | 92032C       | 16         | DL           | 730               | 92032C           | 16             | 730    | NotPass   |
+            | 92032C       | 16         | DL           | 731               | 92032C           | 16             | 730    | Pass      |

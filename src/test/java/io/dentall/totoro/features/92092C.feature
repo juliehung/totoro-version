@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92092C 乳牙複雜性拔牙
 
     Scenario Outline: 全部檢核成功
@@ -28,7 +29,7 @@ Feature: 92092C 乳牙複雜性拔牙
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 92092C       | 51         | MOB          | Pass      |
 
-    Scenario Outline: 檢查治療的牙位是否為 DECIDUOUS_TOOTH
+    Scenario Outline: 檢查治療的牙位是否為 DECIDUOUS_TOOTH_AND_PERMANENT_WEIRD_TOOTH
         Given 建立醫師
         Given Scott 24 歲病人
         Given 建立預約
@@ -37,7 +38,7 @@ Feature: 92092C 乳牙複雜性拔牙
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueTeeth> 牙位，依 DECIDUOUS_TOOTH 判定是否為核可牙位，確認結果是否為 <PassOrNot>
+        Then 檢查 <IssueTeeth> 牙位，依 DECIDUOUS_TOOTH_AND_PERMANENT_WEIRD_TOOTH 判定是否為核可牙位，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             # 乳牙
@@ -97,15 +98,15 @@ Feature: 92092C 乳牙複雜性拔牙
             # 無牙
             | 92092C       |            | DL           | NotPass   |
             #
-            | 92092C       | 19         | DL           | NotPass   |
-            | 92092C       | 29         | DL           | NotPass   |
-            | 92092C       | 39         | DL           | NotPass   |
-            | 92092C       | 49         | DL           | NotPass   |
+            | 92092C       | 19         | DL           | Pass      |
+            | 92092C       | 29         | DL           | Pass      |
+            | 92092C       | 39         | DL           | Pass      |
+            | 92092C       | 49         | DL           | Pass      |
             | 92092C       | 59         | DL           | NotPass   |
             | 92092C       | 69         | DL           | NotPass   |
             | 92092C       | 79         | DL           | NotPass   |
             | 92092C       | 89         | DL           | NotPass   |
-            | 92092C       | 99         | DL           | NotPass   |
+            | 92092C       | 99         | DL           | Pass      |
             # 牙位為區域型態
             | 92092C       | FM         | DL           | NotPass   |
             | 92092C       | UR         | DL           | NotPass   |

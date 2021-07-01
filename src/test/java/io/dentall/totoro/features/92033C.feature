@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92033C 牙齒切半術或牙根切斷術
 
     Scenario Outline: 全部檢核成功
@@ -110,10 +111,12 @@ Feature: 92033C 牙齒切半術或牙根切斷術
             | 92033C       | FM         | DL           | NotPass   |
             | 92033C       | UR         | DL           | NotPass   |
             | 92033C       | UL         | DL           | NotPass   |
+            | 92033C       | UA         | DL           | NotPass   |
+            | 92033C       | UB         | DL           | NotPass   |
             | 92033C       | LL         | DL           | NotPass   |
             | 92033C       | LR         | DL           | NotPass   |
-            | 92033C       | UA         | DL           | NotPass   |
             | 92033C       | LA         | DL           | NotPass   |
+            | 92033C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 92033C       | 00         | DL           | NotPass   |
             | 92033C       | 01         | DL           | NotPass   |

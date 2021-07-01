@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92066C 特定局部治療
 
     Scenario Outline: 全部檢核成功
@@ -16,7 +17,7 @@ Feature: 92066C 特定局部治療
 
     Scenario Outline: （HIS）3天內，不應有 92066C 診療項目
         Given 建立醫師
-        Given Kelly 24 歲病人
+        Given Scott 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
         Given 在過去第 <PastTreatmentDays> 天，建立掛號
         Given 在過去第 <PastTreatmentDays> 天，產生診療計畫
@@ -35,3 +36,22 @@ Feature: 92066C 特定局部治療
             | 92066C       | 11         | DL           | 2                 | 92066C           | 11             | 3      | NotPass   |
             | 92066C       | 11         | DL           | 3                 | 92066C           | 11             | 3      | NotPass   |
             | 92066C       | 11         | DL           | 4                 | 92066C           | 11             | 3      | Pass      |
+
+    Scenario Outline: （IC）3天內，不應有 92066C 診療項目
+        Given 建立醫師
+        Given Scott 24 歲病人
+        Given 新增健保醫療:
+            | PastDate          | NhiCode          | Teeth          |
+            | <PastMedicalDays> | <MedicalNhiCode> | <MedicalTeeth> |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D7_1
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
+            | 92066C       | 11         | DL           | 2               | 92066C         | 11           | 3      | NotPass   |
+            | 92066C       | 11         | DL           | 3               | 92066C         | 11           | 3      | NotPass   |
+            | 92066C       | 11         | DL           | 4               | 92066C         | 11           | 3      | Pass      |

@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92015C 單純齒切除術
 
     Scenario Outline: 全部檢核成功
@@ -110,10 +111,12 @@ Feature: 92015C 單純齒切除術
             | 92015C       | FM         | DL           | NotPass   |
             | 92015C       | UR         | DL           | NotPass   |
             | 92015C       | UL         | DL           | NotPass   |
+            | 92015C       | UA         | DL           | NotPass   |
+            | 92015C       | UB         | DL           | NotPass   |
             | 92015C       | LL         | DL           | NotPass   |
             | 92015C       | LR         | DL           | NotPass   |
-            | 92015C       | UA         | DL           | NotPass   |
             | 92015C       | LA         | DL           | NotPass   |
+            | 92015C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 92015C       | 00         | DL           | NotPass   |
             | 92015C       | 01         | DL           | NotPass   |

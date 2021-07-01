@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92058C 骨瘤切除術＞ 2 cm
 
     Scenario Outline: 全部檢核成功

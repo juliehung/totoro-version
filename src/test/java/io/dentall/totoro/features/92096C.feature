@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92096C 牙齒外傷急症處理
 
     Scenario Outline: 全部檢核成功
@@ -13,6 +14,20 @@ Feature: 92096C 牙齒外傷急症處理
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 92096C       | 11         | DL           | Pass      |
+
+    Scenario Outline: 提醒須檢附影像
+        Given 建立醫師
+        Given Scott 24 歲病人
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 提醒"須檢附影像"，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
+            | 92096C       | 11         | MOB          | Pass      |
 
     Scenario Outline: 檢查治療的牙位是否為 PERMANENT_TOOTH
         Given 建立醫師
@@ -109,3 +124,72 @@ Feature: 92096C 牙齒外傷急症處理
             | 92096C       | 76         | DL           | NotPass   |
             | 92096C       | 86         | DL           | NotPass   |
             | 92096C       | 91         | DL           | NotPass   |
+
+    Scenario Outline: （Disposal）同日不得同時有 89006C/90004C/92002C/92094C 診療項目
+        Given 建立醫師
+        Given Scott 24 歲病人
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode         | NewTeeth         | NewSurface         |
+            |         |       |         | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> |
+            |         |       |         | <IssueNhiCode>     | <IssueTeeth>     | <IssueSurface>     |
+        Then 同日不得有 <TreatmentNhiCode> 診療項目，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
+            | 92096C       | 11         | MOB          | 89006C           | 11             | MOB              | NotPass   |
+            | 92096C       | 11         | MOB          | 90004C           | 11             | MOB              | NotPass   |
+            | 92096C       | 11         | MOB          | 92002C           | 11             | MOB              | NotPass   |
+            | 92096C       | 11         | MOB          | 92094C           | 11             | MOB              | NotPass   |
+
+    Scenario Outline: （HIS-Today）同日不得同時有 89006C/90004C/92002C/92094C 診療項目
+        Given 建立醫師
+        Given Scott 24 歲病人
+        Given 在 <PastTreatmentDate> ，建立預約
+        Given 在 <PastTreatmentDate> ，建立掛號
+        Given 在 <PastTreatmentDate> ，產生診療計畫
+        And 新增診療代碼:
+            | PastDate            | A72 | A73                | A74              | A75                | A76 | A77 | A78 | A79 |
+            | <PastTreatmentDate> | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> | 0   | 1.0 | 03  |     |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 同日不得有 <TreatmentNhiCode> 診療項目，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDate | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
+            | 92096C       | 11         | MOB          | 當日                | 89006C           | 11             | MOB              | NotPass   |
+            | 92096C       | 11         | MOB          | 當日                | 90004C           | 11             | MOB              | NotPass   |
+            | 92096C       | 11         | MOB          | 當日                | 92002C           | 11             | MOB              | NotPass   |
+            | 92096C       | 11         | MOB          | 當日                | 92094C           | 11             | MOB              | NotPass   |
+            | 92096C       | 11         | MOB          | 昨日                | 89006C           | 11             | MOB              | Pass      |
+            | 92096C       | 11         | MOB          | 昨日                | 90004C           | 11             | MOB              | Pass      |
+            | 92096C       | 11         | MOB          | 昨日                | 92002C           | 11             | MOB              | Pass      |
+            | 92096C       | 11         | MOB          | 昨日                | 92094C           | 11             | MOB              | Pass      |
+
+    Scenario Outline: （IC）同日不得同時有 89006C/90004C/92002C/92094C 診療項目
+        Given 建立醫師
+        Given Scott 24 歲病人
+        Given 新增健保醫療:
+            | PastDate          | NhiCode          | Teeth          |
+            | <PastMedicalDate> | <MedicalNhiCode> | <MedicalTeeth> |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 同日不得有 <MedicalNhiCode> 診療項目，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | PassOrNot |
+            | 92096C       | 11         | MOB          | 當日              | 89006C         | 11           | NotPass   |
+            | 92096C       | 11         | MOB          | 當日              | 90004C         | 11           | NotPass   |
+            | 92096C       | 11         | MOB          | 當日              | 92002C         | 11           | NotPass   |
+            | 92096C       | 11         | MOB          | 當日              | 92094C         | 11           | NotPass   |
+            | 92096C       | 11         | MOB          | 昨日              | 89006C         | 11           | Pass      |
+            | 92096C       | 11         | MOB          | 昨日              | 90004C         | 11           | Pass      |
+            | 92096C       | 11         | MOB          | 昨日              | 92002C         | 11           | Pass      |
+            | 92096C       | 11         | MOB          | 昨日              | 92094C         | 11           | Pass      |

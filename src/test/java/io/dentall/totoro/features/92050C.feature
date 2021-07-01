@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92050C 埋伏齒露出手術
 
     Scenario Outline: 全部檢核成功
@@ -13,6 +14,20 @@ Feature: 92050C 埋伏齒露出手術
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 92050C       | 11         | DL           | Pass      |
+
+    Scenario Outline: 提醒須檢附影像
+        Given 建立醫師
+        Given Scott 24 歲病人
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 提醒"須檢附影像"，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
+            | 92050C       | 16         | MOB          | Pass      |
 
     Scenario Outline: 檢查治療的牙位是否為 PERMANENT_TOOTH
         Given 建立醫師
@@ -96,10 +111,12 @@ Feature: 92050C 埋伏齒露出手術
             | 92050C       | FM         | DL           | NotPass   |
             | 92050C       | UR         | DL           | NotPass   |
             | 92050C       | UL         | DL           | NotPass   |
+            | 92050C       | UA         | DL           | NotPass   |
+            | 92050C       | UB         | DL           | NotPass   |
             | 92050C       | LL         | DL           | NotPass   |
             | 92050C       | LR         | DL           | NotPass   |
-            | 92050C       | UA         | DL           | NotPass   |
             | 92050C       | LA         | DL           | NotPass   |
+            | 92050C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 92050C       | 00         | DL           | NotPass   |
             | 92050C       | 01         | DL           | NotPass   |
@@ -120,7 +137,7 @@ Feature: 92050C 埋伏齒露出手術
             | NhiCode | Teeth | Surface | NewNhiCode         | NewTeeth         | NewSurface         |
             |         |       |         | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> |
             |         |       |         | <IssueNhiCode>     | <IssueTeeth>     | <IssueSurface>     |
-        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot>
+        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D2_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 92050C       | 16         | MOB          | 92050C           | 16             | MOB              | NotPass   |
@@ -141,7 +158,7 @@ Feature: 92050C 埋伏齒露出手術
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot>
+        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D2_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 92050C       | 16         | FM           | 92050C           | 16             | MO               | NotPass   |
@@ -159,7 +176,7 @@ Feature: 92050C 埋伏齒露出手術
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot>
+        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D2_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 92050C       | 16         | FM           | 92050C         | 16           | NotPass   |
@@ -180,7 +197,7 @@ Feature: 92050C 埋伏齒露出手術
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot>
+        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D2_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 92050C       | 16         | FM           | 92050C           | 16             | MO               | NotPass   |
@@ -198,7 +215,7 @@ Feature: 92050C 埋伏齒露出手術
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot>
+        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D2_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 92050C       | 16         | FM           | 92050C         | 16           | NotPass   |

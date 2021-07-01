@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92094C 週六、日及國定假日牙醫門診急症處置
 
     Scenario Outline: 全部檢核成功
@@ -38,7 +39,7 @@ Feature: 92094C 週六、日及國定假日牙醫門診急症處置
             | NhiCode | Teeth | Surface | NewNhiCode         | NewTeeth         | NewSurface         |
             |         |       |         | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> |
             |         |       |         | <IssueNhiCode>     | <IssueTeeth>     | <IssueSurface>     |
-        Then 同日不得有 34001C/34002C/90004C/91001C/92001C/92012C/92043C/92066C/92071C/92093B/92096C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日不得有 <TreatmentNhiCode> 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 92094C       | 11         | MOB          | 34001C           | 11             | MOB              | NotPass   |
@@ -68,7 +69,7 @@ Feature: 92094C 週六、日及國定假日牙醫門診急症處置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 同日不得有 34001C/34002C/90004C/91001C/92001C/92012C/92043C/92066C/92071C/92093B/92096C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日不得有 <TreatmentNhiCode> 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDate | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 92094C       | 11         | MOB          | 當日                | 34001C           | 11             | MOB              | NotPass   |
@@ -106,7 +107,7 @@ Feature: 92094C 週六、日及國定假日牙醫門診急症處置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 同日不得有 34001C/34002C/90004C/91001C/92001C/92012C/92043C/92066C/92071C/92093B/92096C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日不得有 <MedicalNhiCode> 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 92094C       | 11         | MOB          | 當日              | 34001C         | 11           | NotPass   |

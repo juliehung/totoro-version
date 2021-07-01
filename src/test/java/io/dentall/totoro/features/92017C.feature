@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92017C 囊腫摘除術-小< 2cm
 
     Scenario Outline: 全部檢核成功

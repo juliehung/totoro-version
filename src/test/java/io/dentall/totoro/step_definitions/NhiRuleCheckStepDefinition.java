@@ -17,14 +17,12 @@ import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
 import io.dentall.totoro.service.util.DateTimeUtil;
-import io.dentall.totoro.step_definitions.holders.DisposalTestInfoHolder;
-import io.dentall.totoro.step_definitions.holders.NhiMedicalRecordTestInfoHolder;
-import io.dentall.totoro.step_definitions.holders.NhiRuleCheckTestInfoHolder;
-import io.dentall.totoro.step_definitions.holders.PatientTestInfoHolder;
+import io.dentall.totoro.step_definitions.holders.*;
 import io.dentall.totoro.test.TestUtils;
 import io.dentall.totoro.test.dao.NhiTreatment;
 import io.dentall.totoro.test.mapper.NhiTreatmentTestMapper;
 import io.dentall.totoro.web.rest.NhiRuleCheckResource;
+import org.assertj.core.api.Assertions;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
@@ -42,11 +40,14 @@ import static io.dentall.totoro.business.service.NhiRuleCheckSourceType.*;
 import static io.dentall.totoro.business.service.nhi.util.ToothUtil.markAsPhase;
 import static io.dentall.totoro.business.service.nhi.util.ToothUtil.multipleToothToDisplay;
 import static io.dentall.totoro.service.util.DateTimeUtil.*;
+import static io.dentall.totoro.step_definitions.StepDefinitionUtil.*;
+import static io.dentall.totoro.step_definitions.StepDefinitionUtil.Snapshot_SourceType;
 import static io.dentall.totoro.test.TestUtils.parseMonthGap;
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static java.lang.String.join;
 import static java.util.Collections.singletonList;
 import static java.util.Comparator.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -55,6 +56,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
+
+    @Autowired
+    private UserTestInfoHolder userTestInfoHolder;
 
     @Autowired
     private PatientTestInfoHolder patientTestInfoHolder;
@@ -179,12 +183,14 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkNhiCode(String code, List<NhiRuleCheckTxSnapshot> nhiRuleCheckTxSnapshotList) throws Exception {
         Disposal disposal = disposalTestInfoHolder.getDisposal();
         Patient patient = patientTestInfoHolder.getPatient();
+        User doctor = userTestInfoHolder.getUser();
 
         NhiRuleCheckBody nhiRuleCheckBody = new NhiRuleCheckBody();
         nhiRuleCheckBody.setDisposalId(disposal.getId());
         nhiRuleCheckBody.setPatientId(patient.getId());
         nhiRuleCheckBody.setTxSnapshots(nhiRuleCheckTxSnapshotList);
         nhiRuleCheckBody.setDisposalTime(transformLocalDateToRocDate(disposal.getDateTime()));
+        nhiRuleCheckBody.setDoctorId(doctor.getId());
 
         String apiPath = "/api/validation";
         String fullApiPath = apiPath + "/" + code;
@@ -361,7 +367,6 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         NhiTreatment violationNhiTreatment = findLastViolationNhiTreatment(treatmentNhiCode).get();
         String type = findSourceType(violationNhiTreatment);
         String pastTreatmentDate = transformA71ToDisplay(violationNhiTreatment.getDatetime());
-
         Object[] msgArgs = null;
 
         if (msgFormat == NhiRuleCheckFormat.D1_2) {
@@ -535,7 +540,6 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     @Then("在 {word} 的紀錄中，牙位 {word} 在同一象限中，最多只能申報 {int} 次 {word} 健保代碼，確認結果是否為 {passOrNot}")
     public void checkNoSameNhiCodesInLimitDaysAndSamePhase(String period, String issueTeeth, int times, String issueNhiCode, Boolean passOrNot) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        List<Disposal> disposalList = disposalTestInfoHolder.getDisposalHistoryList();
         NhiTreatment violationNhiTreatment = findLastViolationNhiTreatment(issueNhiCode).get();
         String type = findSourceType(violationNhiTreatment);
         ToothPhase toothPhase = markAsPhase(singletonList(violationNhiTreatment.getTooth())).get(0);
@@ -591,6 +595,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkCodeBeforeDateWithMaxTimes(String period, String issueNhiCode, int times, Boolean passOrNot) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
         String dates = findViolationNhiTreatment(issueNhiCode)
+            .stream()
             .map(NhiTreatment::getDatetime)
             .sorted(reverseOrder())
             .map(DateTimeUtil::transformA71ToDisplay)
@@ -705,58 +710,43 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkResult(resultActions, passOrNot, message);
     }
 
-    @Then("{word} 終生只能申報一次，確認結果是否為 {passOrNot}")
-    public void checkOnceInWholeLife(String issueNhiCode, Boolean passOrNot) throws Exception {
+    @Then("{word} 終生只能申報一次，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
+    public void checkOnceInWholeLife(String issueNhiCode, Boolean passOrNot, NhiRuleCheckFormat msgFormat) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        Disposal disposal = disposalTestInfoHolder.getDisposal();
-        List<NhiMedicalRecord> nhiMedicalRecordList = nhiMedicalRecordTestInfoHolder.getNhiMedicalRecordList();
-        String issueDisposalDate = disposal.getNhiExtendDisposals().stream().findFirst().map(NhiExtendDisposal::getA17).map(DateTimeUtil::transformA71ToDisplay).get();
-        List<NhiRuleCheckTxSnapshot> nhiRuleCheckTxSnapshotList = nhiRuleCheckTestInfoHolder.getNhiRuleCheckTxSnapshotList();
-        List<NhiRuleCheckTxSnapshot> snapshotsOfIssueNhiCode = nhiRuleCheckTxSnapshotList.stream().filter(snapshot -> issueNhiCode.equals(snapshot.getNhiCode())).collect(Collectors.toList());
-        List<NhiTreatment> nhiTreatments = mergeTreatmentAndMedical();
-        String date = nhiTreatments.stream()
-            .filter(nt -> !disposal.getId().equals(nt.getDisposalId()))
-            .filter(nt -> issueNhiCode.equals(nt.getCode()))
-            .map(NhiTreatment::getDatetime).max(naturalOrder()).map(DateTimeUtil::transformA71ToDisplay).orElse("Date Not Found");
-        String type;
+        Optional<NhiTreatment> violationNhiTreatmentOpt = findLastViolationNhiTreatment(issueNhiCode);
+        String message = null;
 
-        if (nhiMedicalRecordList.size() == 1) {
-            type = NHI_CARD_RECORD.getValue();
-        } else if (snapshotsOfIssueNhiCode.size() > 1) {
-            date = disposal.getNhiExtendDisposals().stream().findFirst().map(NhiExtendDisposal::getA17).map(DateTimeUtil::transformA71ToDisplay).get();
-            type = CURRENT_DISPOSAL.getValue();
-        } else {
-            if (date.equals(issueDisposalDate)) {
-                type = TODAY_OTHER_DISPOSAL.getValue();
-            } else {
-                type = SYSTEM_RECORD.getValue();
+        if (violationNhiTreatmentOpt.isPresent()) {
+            NhiTreatment violationNhiTreatment = violationNhiTreatmentOpt.get();
+            String date = transformA71ToDisplay(violationNhiTreatment.getDatetime());
+            String type = findSourceType(violationNhiTreatment);
+            Object[] msgArgs = null;
+
+            if (msgFormat == NhiRuleCheckFormat.D2_1) {
+                msgArgs = new Object[]{issueNhiCode, type, date};
+            } else if (msgFormat == NhiRuleCheckFormat.D2_2) {
+                msgArgs = new Object[]{issueNhiCode, type, date};
             }
+
+            message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
         }
 
-        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D2_1, new Object[]{issueNhiCode, type, date});
         checkResult(resultActions, passOrNot, message);
     }
 
     @Then("每位醫生限申報一次 {word} 代碼，確認結果是否為 {passOrNot}")
     public void checkOnceInWholeLifeAtDoctor(String issueNhiCode, Boolean passOrNot) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        List<NhiRuleCheckTxSnapshot> nhiRuleCheckTxSnapshotList = nhiRuleCheckTestInfoHolder.getNhiRuleCheckTxSnapshotList();
-        List<NhiRuleCheckTxSnapshot> snapshotsOfIssueNhiCode = nhiRuleCheckTxSnapshotList.stream().filter(snapshot -> issueNhiCode.equals(snapshot.getNhiCode())).collect(Collectors.toList());
-        Disposal disposal = disposalTestInfoHolder.getDisposal();
-        List<NhiTreatment> nhiTreatments = mergeTreatmentAndMedical();
-        String date = nhiTreatments.stream()
-            .filter(nt -> !disposal.getId().equals(nt.getDisposalId()))
-            .filter(nt -> issueNhiCode.equals(nt.getCode()))
-            .map(NhiTreatment::getDatetime).max(naturalOrder()).map(DateTimeUtil::transformA71ToDisplay).orElse("Date Not Found");
-        String type;
+        Optional<NhiTreatment> violationNhiTreatmentOpt = findLastViolationNhiTreatment(issueNhiCode);
+        String message = null;
 
-        if (snapshotsOfIssueNhiCode.size() > 0) {
-            type = CURRENT_DISPOSAL.getValue();
-        } else {
-            type = SYSTEM_RECORD.getValue();
+        if (violationNhiTreatmentOpt.isPresent()) {
+            NhiTreatment violationNhiTreatment = violationNhiTreatmentOpt.get();
+            String type = findSourceType(violationNhiTreatment);
+            String date = DateTimeUtil.transformA71ToDisplay(violationNhiTreatment.getDatetime());
+            message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D2_3, new Object[]{issueNhiCode, type, date});
         }
 
-        String message = formatMsg(passOrNot).apply(NhiRuleCheckFormat.D2_3, new Object[]{issueNhiCode, type, date});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -784,9 +774,10 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
 //        暫不檢查 validated，因為目前代碼檢查機制是每項檢核有錯誤，都會讓validated為false，所以即使測試檢核A通過，但也有可能被檢核B測試不通過影響到
 //        resultActions.andExpect(jsonPath("$.validated").value(equalTo(passOrNot)));
 
-        if (message != null) {
+        if (innerPassOrNot == false) {
+            assertThat(message).isNotEmpty();
             resultActions.andExpect(jsonPath(innerPath + ".message").value(hasItem(message)));
-            resultActions.andExpect(jsonPath(innerPath + ".validated").value(hasItem(innerPassOrNot)));
+            resultActions.andExpect(jsonPath(innerPath + ".validated").value(hasItem(false)));
         }
     }
 
@@ -818,35 +809,49 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         return Stream.of(stream1, stream2).flatMap(stream -> stream).collect(Collectors.toList());
     }
 
-    private Stream<NhiTreatment> findViolationNhiTreatment(String violationNhiCode) {
-        List<NhiTreatment> nhiTreatments = mergeTreatmentAndMedical();
-        return nhiTreatments.stream()
+    private List<NhiTreatment> nhiSnapshotToNhiTreatment() {
+        return nhiRuleCheckTestInfoHolder.getNhiRuleCheckTxSnapshotList().stream()
+            .map(NhiTreatmentTestMapper.INSTANCE::snapshotToNhiTreatment)
+            .collect(Collectors.toList());
+    }
+
+    private List<NhiTreatment> findViolationNhiTreatment(String violationNhiCode) {
+        String validationNhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
+
+        List<NhiTreatment> violationSnapshot = nhiSnapshotToNhiTreatment().stream()
+            .filter(nt -> nt.getNhiExtendTreatmentProcedureId() == null)
+            .filter(nt -> violationNhiCode.equals(nt.getCode()))
+            .collect(Collectors.toList());
+
+        List<NhiTreatment> violationHistory = mergeTreatmentAndMedical().stream()
             .filter(nt -> !disposalTestInfoHolder.getDisposal().getId().equals(nt.getDisposalId()))
             .filter(nt -> violationNhiCode.equals(nt.getCode()))
-            .sorted((nt1, nt2) -> nt2.getDatetime().compareTo(nt1.getDatetime()));
+            .collect(Collectors.toList());
+
+        if (validationNhiCode.equals(violationNhiCode) && violationSnapshot.size() > 0) {
+            violationSnapshot.remove(0); // 受檢的代碼與違規的代碼一樣的話，要把Snapshot上受檢代碼的資料先移除，但有可能多筆，所以先暫時移除第一筆
+        }
+
+        violationSnapshot.addAll(violationHistory);
+
+        return violationSnapshot;
     }
 
     private Optional<NhiTreatment> findLastViolationNhiTreatment(String violationNhiCode) {
-        return findViolationNhiTreatment(violationNhiCode).findFirst();
+        List<NhiTreatment> violations = findViolationNhiTreatment(violationNhiCode);
+        return violations.stream().min((nt1, nt2) -> nt2.getDatetime().compareTo(nt1.getDatetime()));
     }
 
     private String findSourceType(NhiTreatment nhiTreatment) {
         Disposal issueDisposal = disposalTestInfoHolder.getDisposal();
-        String issueNhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
-        List<NhiRuleCheckTxSnapshot> nhiRuleCheckTxSnapshotList = nhiRuleCheckTestInfoHolder.getNhiRuleCheckTxSnapshotList();
-        List<NhiRuleCheckTxSnapshot> snapshotsOfIssueNhiCode = nhiRuleCheckTxSnapshotList.stream()
-            .filter(snapshot -> nhiTreatment.getCode().equals(snapshot.getNhiCode()))
-            .collect(Collectors.toList());
 
-        if ("IC".equals(nhiTreatment.getSourceType())) {
+        if (IC_SourceType.equals(nhiTreatment.getSourceType())) {
             return NHI_CARD_RECORD.getValue();
-        } else if (issueNhiCode.equals(nhiTreatment.getCode()) && snapshotsOfIssueNhiCode.size() > 1) {
-            return CURRENT_DISPOSAL.getValue();
-        } else if (!issueNhiCode.equals(nhiTreatment.getCode()) && snapshotsOfIssueNhiCode.size() > 0) {
+        } else if (Snapshot_SourceType.equals(nhiTreatment.getSourceType())) {
             return CURRENT_DISPOSAL.getValue();
         } else if (transformLocalDateToRocDateForDisplay(issueDisposal.getDateTime()).equals(transformA71ToDisplay(nhiTreatment.getDatetime()))) {
             return TODAY_OTHER_DISPOSAL.getValue();
-        } else if ("HIS".equals(nhiTreatment.getSourceType())) {
+        } else if (HIS_SourceType.equals(nhiTreatment.getSourceType())) {
             return SYSTEM_RECORD.getValue();
         } else {
             return "SourceTypeNotFound";

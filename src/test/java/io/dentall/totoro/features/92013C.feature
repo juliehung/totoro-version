@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92013C 簡單性拔牙
 
     Scenario Outline: 全部檢核成功
@@ -96,10 +97,12 @@ Feature: 92013C 簡單性拔牙
             | 92013C       | FM         | DL           | NotPass   |
             | 92013C       | UR         | DL           | NotPass   |
             | 92013C       | UL         | DL           | NotPass   |
+            | 92013C       | UA         | DL           | NotPass   |
+            | 92013C       | UB         | DL           | NotPass   |
             | 92013C       | LL         | DL           | NotPass   |
             | 92013C       | LR         | DL           | NotPass   |
-            | 92013C       | UA         | DL           | NotPass   |
             | 92013C       | LA         | DL           | NotPass   |
+            | 92013C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 92013C       | 00         | DL           | NotPass   |
             | 92013C       | 01         | DL           | NotPass   |

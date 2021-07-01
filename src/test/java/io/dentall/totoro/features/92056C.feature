@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92056C 骨瘤切除術＜ 1 cm
 
     Scenario Outline: 全部檢核成功
