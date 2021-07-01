@@ -49,6 +49,7 @@ Feature: 90093C 難症特別處理-根管特別彎曲、根管鈣化，器械斷
             | 90093C       | 11         | MOB          | 90003C           | 11             | MOB              | Pass      |
             | 90093C       | 11         | MOB          | 90019C           | 11             | MOB              | Pass      |
             | 90093C       | 11         | MOB          | 90020C           | 11             | MOB              | Pass      |
+            | 90093C       | 11         | MOB          | 01271C           | 11             | MOB              | NotPass   |
 
     Scenario Outline: （HIS-Today）同日得同時有 90001C~90003C/90019C/90020C
         Given 建立醫師

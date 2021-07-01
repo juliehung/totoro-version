@@ -778,6 +778,9 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             assertThat(message).isNotEmpty();
             resultActions.andExpect(jsonPath(innerPath + ".message").value(hasItem(message)));
             resultActions.andExpect(jsonPath(innerPath + ".validated").value(hasItem(false)));
+        } else {
+            // 這邊檢查會有盲點，因為參數 message 有可能與回傳的檢查訊息本來就是不一樣，所以測試會照樣通過，所以測案至少要有反例最好
+            resultActions.andExpect(jsonPath(innerPath).value(empty()));
         }
     }
 

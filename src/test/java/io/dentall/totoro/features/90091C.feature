@@ -49,6 +49,7 @@ Feature: 90091C 難症特別處理-大臼齒(C－Shaped)根管
             | 90091C       | 16         | MOB          | 90003C           | 16             | MOB              | Pass      |
             | 90091C       | 16         | MOB          | 90019C           | 16             | MOB              | Pass      |
             | 90091C       | 16         | MOB          | 90020C           | 16             | MOB              | Pass      |
+            | 90091C       | 16         | MOB          | 01271C           | 16             | MOB              | NotPass   |
 
     Scenario Outline: （HIS-Today）同日得同時有 90001C~90003C/90019C/90020C
         Given 建立醫師
