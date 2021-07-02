@@ -602,24 +602,8 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkResult(resultActions, passOrNot, message);
     }
 
-    @Then("（HIS）檢查 {int} 天內，應有 {word} 診療項目存在，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
+    @Then("檢查 {int} 天內，應有 {word} 診療項目存在，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
     public void checkTreatmentDependOnCodeInDuration2(Integer dayRange, String treatmentNhiCode, Boolean passOrNot, NhiRuleCheckFormat msgFormat) throws Exception {
-        String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
-        ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        Object[] msgArgs = null;
-
-        if (msgFormat == NhiRuleCheckFormat.PERIO_1) {
-            msgArgs = new Object[]{nhiCode};
-        } else if (msgFormat == NhiRuleCheckFormat.D8_1) {
-            msgArgs = new Object[]{nhiCode, dayRange, treatmentNhiCode};
-        }
-
-        String message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
-        checkResult(resultActions, passOrNot, message);
-    }
-
-    @Then("（IC）檢查 {int} 天內，應有 {word} 診療項目存在，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
-    public void checkNhiMedicalRecordDependOnCodeInDuration(Integer dayRange, String treatmentNhiCode, Boolean passOrNot, NhiRuleCheckFormat msgFormat) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
         Object[] msgArgs = null;

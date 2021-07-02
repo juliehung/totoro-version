@@ -98,7 +98,7 @@ Feature: 91018C 牙周病支持性治療
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）檢查 90 天內，應有 <TreatmentNhiCode> 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 PERIO_1
+        Then 檢查 90 天內，應有 <TreatmentNhiCode> 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 PERIO_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             | 91018C       | FM         | MOB          | 89                | 91023C           | FM             | Pass      |
@@ -120,7 +120,7 @@ Feature: 91018C 牙周病支持性治療
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）檢查 90 天內，應有 <MedicalNhiCode> 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 PERIO_1
+        Then 檢查 90 天內，應有 <MedicalNhiCode> 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 PERIO_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 91018C       | FM         | MOB          | 89              | 91023C         | FM           | Pass      |
