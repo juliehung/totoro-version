@@ -29,7 +29,7 @@ Feature: 01271C 環口全景X光初診診察
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）在過去 <PastTreatmentDays> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot>
+        Then 在過去 <PastTreatmentDays> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | PassOrNot |
             | 01271C       | 51         | DO           | 1094              | NotPass   |

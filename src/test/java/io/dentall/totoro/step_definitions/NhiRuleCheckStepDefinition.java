@@ -212,16 +212,14 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkValidatedResult(resultActions, passOrNot);
     }
 
-    @Then("（HIS）在過去 {int} 天，應沒有任何治療紀錄，確認結果是否為 {passOrNot}")
+    @Then("在過去 {int} 天，應沒有任何治療紀錄，確認結果是否為 {passOrNot}")
     public void checkNoTreatmentInPeriod(int pastDays, Boolean passOrNot) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         List<Disposal> disposalList = disposalTestInfoHolder.getDisposalHistoryList();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-
-        TreatmentProcedure newestTreatmentProcedure =
-            mergeDisposalToTreatmentProcedure(disposalList).stream().min(comparing(tp -> tp.getDisposal().getDateTime())).get();
-
-        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D1_3, new Object[]{nhiCode, multipleToothToDisplay(newestTreatmentProcedure.getNhiExtendTreatmentProcedure().getA74()), nhiCode, SYSTEM_RECORD.getValue(), transformLocalDateToRocDateForDisplay(pastInstant(pastDays))});
+        NhiTreatment violationNhiTreatment = findLastViolationNhiTreatment(nhiCode).get();
+        String type = findSourceType(violationNhiTreatment);
+        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D1_3, new Object[]{nhiCode, multipleToothToDisplay(violationNhiTreatment.getTooth()), nhiCode, type, transformLocalDateToRocDateForDisplay(pastInstant(pastDays))});
         checkResult(resultActions, passOrNot, message);
     }
 

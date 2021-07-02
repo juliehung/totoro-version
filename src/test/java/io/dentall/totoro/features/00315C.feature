@@ -29,7 +29,7 @@ Feature: 00315C 符合牙醫門診加強感染管制實施方案之環口全景X
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）在過去 <PastTreatmentDays> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot>
+        Then 在過去 <PastTreatmentDays> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | PassOrNot |
             | 00315C       | 11         | FM           | 1094              | NotPass   |
