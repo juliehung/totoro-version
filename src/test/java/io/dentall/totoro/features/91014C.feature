@@ -100,7 +100,7 @@ Feature: 91014C 牙周暨齲齒控制基本處置
             | NhiCode | Teeth | Surface | NewNhiCode         | NewTeeth         | NewSurface         |
             |         |       |         | <IssueNhiCode>     | <IssueTeeth>     | <IssueSurface>     |
             |         |       |         | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> |
-        Then （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | GapDay | PassOrNot |
             | 91014C       | FM         | MOB          | 359               | 91004C           | FM             | MOB              | 360    | NotPass   |
@@ -127,7 +127,7 @@ Feature: 91014C 牙周暨齲齒控制基本處置
             | NhiCode | Teeth | Surface | NewNhiCode       | NewTeeth       | NewSurface     |
             |         |       |         | <IssueNhiCode>   | <IssueTeeth>   | <IssueSurface> |
             |         |       |         | <MedicalNhiCode> | <MedicalTeeth> | <IssueSurface> |
-        Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
             | 91014C       | FM         | MOB          | 359             | 91004C         | FM           | 360    | NotPass   |

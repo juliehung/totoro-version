@@ -29,7 +29,7 @@ Feature: 95 口腔黏膜檢查
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | GapDay | PassOrNot |
             | 95           | 11         | MOB          | 544               | 95               | 11             | MOB              | 545    | NotPass   |
@@ -48,7 +48,7 @@ Feature: 95 口腔黏膜檢查
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
             | 95           | 11         | MOB          | 544             | 95             | 11           | 545    | NotPass   |

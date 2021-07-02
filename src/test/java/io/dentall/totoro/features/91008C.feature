@@ -30,7 +30,7 @@ Feature: 91008C 齒齦下括除術(含牙根整平術)-局部(3齒以內)
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
             | 91008C       | 11         | DL           | 89                | 91015C           | 11             | 90     | NotPass   |
@@ -55,7 +55,7 @@ Feature: 91008C 齒齦下括除術(含牙根整平術)-局部(3齒以內)
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
             | 91008C       | 11         | DL           | 89              | 91015C         | 11           | 90     | NotPass   |

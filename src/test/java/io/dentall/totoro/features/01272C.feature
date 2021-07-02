@@ -36,7 +36,7 @@ Feature: 01272C 年度初診X光檢查
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
         Then 在過去 <PastAnyTreatmentDays> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot>
-        And （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <Past01272CGapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        And 檢查 <IssueNhiCode> 診療項目，在病患過去 <Past01272CGapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastAnyTreatmentDays | Past01272CTreatmentDays | Past01272CGapDay | PassOrNot |
             | 01272C       | 11         | DO           | 364                  | 544                     | 545              | NotPass   |
@@ -78,7 +78,7 @@ Feature: 01272C 年度初診X光檢查
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | GapDay | PassOrNot |
             | 01272C       | 11         | MOB          | 364               | 01271C           | 11             | MOB              | 365    | NotPass   |
@@ -109,7 +109,7 @@ Feature: 01272C 年度初診X光檢查
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
             | 01272C       | 11         | MOB          | 364             | 01271C         | 11           | 365    | NotPass   |

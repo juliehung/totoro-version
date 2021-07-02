@@ -355,7 +355,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkResult(resultActions, passOrNot, message);
     }
 
-    @Then("（HIS）檢查 {word} 診療項目，在病患過去 {int} 天紀錄中，不應包含特定的 {word} 診療代碼，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
+    @Then("檢查 {word} 診療項目，在病患過去 {int} 天紀錄中，不應包含特定的 {word} 診療代碼，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
     public void checkCodeBeforeDate(String issueNhiCode, int dayGap, String treatmentNhiCode, Boolean passOrNot, NhiRuleCheckFormat msgFormat) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
         Disposal issueDisposal = disposalTestInfoHolder.getDisposal();
@@ -372,31 +372,6 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             msgArgs = new Object[]{issueNhiCode, dayGap, type, pastTreatmentDate};
         } else if (msgFormat == NhiRuleCheckFormat.W1_1) {
             msgArgs = new Object[]{issueNhiCode, treatmentNhiCode, type, pastTreatmentDate, dayGap, issueNhiCode, transformLocalDateToRocDateForDisplay(issueDisposal.getDateTime())};
-        } else if (msgFormat == NhiRuleCheckFormat.PERIO_1) {
-            msgArgs = new Object[]{issueNhiCode};
-        }
-
-        String message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
-        checkResult(resultActions, passOrNot, message);
-    }
-
-    @Then("（IC）檢查 {word} 診療項目，在病患過去 {int} 天紀錄中，不應包含特定的 {word} 診療代碼，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
-    public void checkCodeBeforeDateByNhiMedicalRecord(String issueNhiCode, int dayGap, String treatmentNhiCode, Boolean passOrNot, NhiRuleCheckFormat msgFormat) throws Exception {
-        ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        Disposal issueDisposal = disposalTestInfoHolder.getDisposal();
-        NhiTreatment violationNhiTreatment = findLastViolationNhiTreatment(treatmentNhiCode).get();
-        String type = findSourceType(violationNhiTreatment);
-        String pastMedicalDate = transformA71ToDisplay(violationNhiTreatment.getDatetime());
-        Object[] msgArgs = null;
-
-        if (msgFormat == NhiRuleCheckFormat.D1_2) {
-            msgArgs = new Object[]{issueNhiCode, treatmentNhiCode, type, pastMedicalDate, dayGap, issueNhiCode};
-        } else if (msgFormat == NhiRuleCheckFormat.D4_1) {
-            msgArgs = new Object[]{issueNhiCode, type, pastMedicalDate};
-        } else if (msgFormat == NhiRuleCheckFormat.D7_1) {
-            msgArgs = new Object[]{issueNhiCode, dayGap, type, pastMedicalDate};
-        } else if (msgFormat == NhiRuleCheckFormat.W1_1) {
-            msgArgs = new Object[]{issueNhiCode, treatmentNhiCode, type, pastMedicalDate, dayGap, issueNhiCode, transformLocalDateToRocDateForDisplay(issueDisposal.getDateTime())};
         } else if (msgFormat == NhiRuleCheckFormat.PERIO_1) {
             msgArgs = new Object[]{issueNhiCode};
         }
