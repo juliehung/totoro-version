@@ -120,9 +120,11 @@ Feature: 8P 一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩�
             | 8P           | FM         | DL           | NotPass   |
             | 8P           | UR         | DL           | NotPass   |
             | 8P           | UL         | DL           | NotPass   |
+            | 8P           | UA         | DL           | NotPass   |
+            | 8P           | UB         | DL           | NotPass   |
             | 8P           | LR         | DL           | NotPass   |
             | 8P           | LL         | DL           | NotPass   |
-            | 8P           | UB         | DL           | NotPass   |
+            | 8P           | LA         | DL           | NotPass   |
             | 8P           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8P           | 00         | DL           | NotPass   |

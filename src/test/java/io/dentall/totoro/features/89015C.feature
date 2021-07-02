@@ -339,10 +339,12 @@ Feature: 89015C 後牙雙鄰接面複合樹脂充填
             | 89015C       | FM         | MOBL         | NotPass   |
             | 89015C       | UR         | MOBL         | NotPass   |
             | 89015C       | UL         | MOBL         | NotPass   |
+            | 89015C       | UA         | MOBL         | NotPass   |
+            | 89015C       | UB         | MOBL         | NotPass   |
             | 89015C       | LL         | MOBL         | NotPass   |
             | 89015C       | LR         | MOBL         | NotPass   |
-            | 89015C       | UA         | MOBL         | NotPass   |
             | 89015C       | LA         | MOBL         | NotPass   |
+            | 89015C       | LB         | MOBL         | NotPass   |
             # 非法牙位
             | 89015C       | 00         | MOBL         | NotPass   |
             | 89015C       | 01         | MOBL         | NotPass   |

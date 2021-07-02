@@ -111,10 +111,12 @@ Feature: 92096C 牙齒外傷急症處理
             | 92096C       | FM         | DL           | NotPass   |
             | 92096C       | UR         | DL           | NotPass   |
             | 92096C       | UL         | DL           | NotPass   |
+            | 92096C       | UA         | DL           | NotPass   |
+            | 92096C       | UB         | DL           | NotPass   |
             | 92096C       | LL         | DL           | NotPass   |
             | 92096C       | LR         | DL           | NotPass   |
-            | 92096C       | UA         | DL           | NotPass   |
             | 92096C       | LA         | DL           | NotPass   |
+            | 92096C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 92096C       | 00         | DL           | NotPass   |
             | 92096C       | 01         | DL           | NotPass   |

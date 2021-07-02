@@ -198,9 +198,11 @@ Feature: 89114C 特殊狀況之前牙雙鄰接面複合樹脂充填
             | 89114C       | UR         | DL           | NotPass   |
             | 89114C       | UL         | DL           | NotPass   |
             | 89114C       | UA         | DL           | NotPass   |
+            | 89114C       | UB         | DL           | NotPass   |
             | 89114C       | LR         | DL           | NotPass   |
             | 89114C       | LL         | DL           | NotPass   |
             | 89114C       | LA         | DL           | NotPass   |
+            | 89114C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 89114C       | 00         | DL           | NotPass   |
             | 89114C       | 01         | DL           | NotPass   |

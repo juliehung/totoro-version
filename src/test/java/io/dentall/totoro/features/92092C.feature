@@ -111,10 +111,12 @@ Feature: 92092C 乳牙複雜性拔牙
             | 92092C       | FM         | DL           | NotPass   |
             | 92092C       | UR         | DL           | NotPass   |
             | 92092C       | UL         | DL           | NotPass   |
+            | 92092C       | UA         | DL           | NotPass   |
+            | 92092C       | UB         | DL           | NotPass   |
             | 92092C       | LL         | DL           | NotPass   |
             | 92092C       | LR         | DL           | NotPass   |
-            | 92092C       | UA         | DL           | NotPass   |
             | 92092C       | LA         | DL           | NotPass   |
+            | 92092C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 92092C       | 00         | DL           | NotPass   |
             | 92092C       | 01         | DL           | NotPass   |

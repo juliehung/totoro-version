@@ -108,9 +108,11 @@ Feature: 8I 一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩�
             | 8I           | FM         | DL           | NotPass   |
             | 8I           | UR         | DL           | NotPass   |
             | 8I           | UL         | DL           | NotPass   |
+            | 8I           | UA         | DL           | NotPass   |
+            | 8I           | UB         | DL           | NotPass   |
             | 8I           | LR         | DL           | NotPass   |
             | 8I           | LL         | DL           | NotPass   |
-            | 8I           | UB         | DL           | NotPass   |
+            | 8I           | LA         | DL           | NotPass   |
             | 8I           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8I           | 00         | DL           | NotPass   |

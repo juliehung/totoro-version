@@ -96,9 +96,11 @@ Feature: 8H 一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩�
             | 8H           | FM         | DL           | NotPass   |
             | 8H           | UR         | DL           | NotPass   |
             | 8H           | UL         | DL           | NotPass   |
+            | 8H           | UA         | DL           | NotPass   |
+            | 8H           | UB         | DL           | NotPass   |
             | 8H           | LR         | DL           | NotPass   |
             | 8H           | LL         | DL           | NotPass   |
-            | 8H           | UB         | DL           | NotPass   |
+            | 8H           | LA         | DL           | NotPass   |
             | 8H           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8H           | 00         | DL           | NotPass   |

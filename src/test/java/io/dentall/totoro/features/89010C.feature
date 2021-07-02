@@ -339,9 +339,11 @@ Feature: 89010C 後牙複合樹脂充填-三面
             | 89010C       | UR         | MOB          | NotPass   |
             | 89010C       | UL         | MOB          | NotPass   |
             | 89010C       | UA         | MOB          | NotPass   |
+            | 89010C       | UB         | MOB          | NotPass   |
             | 89010C       | LR         | MOB          | NotPass   |
             | 89010C       | LL         | MOB          | NotPass   |
             | 89010C       | LA         | MOB          | NotPass   |
+            | 89010C       | LB         | MOB          | NotPass   |
             # 非法牙位
             | 89010C       | 00         | MOB          | NotPass   |
             | 89010C       | 01         | MOB          | NotPass   |

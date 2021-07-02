@@ -173,9 +173,11 @@ Feature: 90019C 恆牙根管治療（四根）
             | 90019C       | UR         | DL           | NotPass   |
             | 90019C       | UL         | DL           | NotPass   |
             | 90019C       | UA         | DL           | NotPass   |
+            | 90019C       | UB         | DL           | NotPass   |
             | 90019C       | LR         | DL           | NotPass   |
             | 90019C       | LL         | DL           | NotPass   |
             | 90019C       | LA         | DL           | NotPass   |
+            | 90019C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90019C       | 00         | DL           | NotPass   |
             | 90019C       | 01         | DL           | NotPass   |

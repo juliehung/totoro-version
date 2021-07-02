@@ -112,9 +112,11 @@ Feature: 90006C 去除縫成牙冠
             | 90006C       | UR         | DL           | NotPass   |
             | 90006C       | UL         | DL           | NotPass   |
             | 90006C       | UA         | DL           | NotPass   |
+            | 90006C       | UB         | DL           | NotPass   |
             | 90006C       | LL         | DL           | NotPass   |
             | 90006C       | LR         | DL           | NotPass   |
             | 90006C       | LA         | DL           | NotPass   |
+            | 90006C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90006C       | 00         | DL           | NotPass   |
             | 90006C       | 01         | DL           | NotPass   |

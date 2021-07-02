@@ -190,9 +190,11 @@ Feature: 90094C 難症特別處理-根管重新治療在Ｘ光片上root canal�
             | 90094C       | UR         | DL           | NotPass   |
             | 90094C       | UL         | DL           | NotPass   |
             | 90094C       | UA         | DL           | NotPass   |
+            | 90094C       | UB         | DL           | NotPass   |
             | 90094C       | LL         | DL           | NotPass   |
             | 90094C       | LR         | DL           | NotPass   |
             | 90094C       | LA         | DL           | NotPass   |
+            | 90094C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90094C       | 00         | DL           | NotPass   |
             | 90094C       | 01         | DL           | NotPass   |

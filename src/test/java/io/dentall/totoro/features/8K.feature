@@ -108,9 +108,11 @@ Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
             | 8K           | FM         | DL           | NotPass   |
             | 8K           | UR         | DL           | NotPass   |
             | 8K           | UL         | DL           | NotPass   |
+            | 8K           | UA         | DL           | NotPass   |
+            | 8K           | UB         | DL           | NotPass   |
             | 8K           | LR         | DL           | NotPass   |
             | 8K           | LL         | DL           | NotPass   |
-            | 8K           | UB         | DL           | NotPass   |
+            | 8K           | LA         | DL           | NotPass   |
             | 8K           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8K           | 00         | DL           | NotPass   |

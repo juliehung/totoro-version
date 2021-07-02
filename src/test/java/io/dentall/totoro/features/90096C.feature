@@ -190,9 +190,11 @@ Feature: 90096C 難症特別處理-符合附表3.3.1標準之多根管根管治�
             | 90096C       | UR         | DL           | NotPass   |
             | 90096C       | UL         | DL           | NotPass   |
             | 90096C       | UA         | DL           | NotPass   |
+            | 90096C       | UB         | DL           | NotPass   |
             | 90096C       | LL         | DL           | NotPass   |
             | 90096C       | LR         | DL           | NotPass   |
             | 90096C       | LA         | DL           | NotPass   |
+            | 90096C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90096C       | 00         | DL           | NotPass   |
             | 90096C       | 01         | DL           | NotPass   |

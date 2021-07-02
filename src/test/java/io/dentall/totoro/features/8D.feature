@@ -96,9 +96,11 @@ Feature: 8D 一、施作牙位：46二、服務項目1.恆牙第一大臼齒窩�
             | 8D           | FM         | DL           | NotPass   |
             | 8D           | UR         | DL           | NotPass   |
             | 8D           | UL         | DL           | NotPass   |
+            | 8D           | UA         | DL           | NotPass   |
+            | 8D           | UB         | DL           | NotPass   |
             | 8D           | LR         | DL           | NotPass   |
             | 8D           | LL         | DL           | NotPass   |
-            | 8D           | UB         | DL           | NotPass   |
+            | 8D           | LA         | DL           | NotPass   |
             | 8D           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8D           | 00         | DL           | NotPass   |

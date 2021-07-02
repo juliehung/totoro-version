@@ -108,9 +108,11 @@ Feature: 8J 一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩�
             | 8J           | FM         | DL           | NotPass   |
             | 8J           | UR         | DL           | NotPass   |
             | 8J           | UL         | DL           | NotPass   |
+            | 8J           | UA         | DL           | NotPass   |
+            | 8J           | UB         | DL           | NotPass   |
             | 8J           | LR         | DL           | NotPass   |
             | 8J           | LL         | DL           | NotPass   |
-            | 8J           | UB         | DL           | NotPass   |
+            | 8J           | LA         | DL           | NotPass   |
             | 8J           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8J           | 00         | DL           | NotPass   |

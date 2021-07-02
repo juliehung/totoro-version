@@ -189,10 +189,12 @@ Feature: 90016C 乳牙根管治療
             | 90016C       | FM         | DL           | NotPass   |
             | 90016C       | UR         | DL           | NotPass   |
             | 90016C       | UL         | DL           | NotPass   |
+            | 90016C       | UA         | DL           | NotPass   |
+            | 90016C       | UB         | DL           | NotPass   |
             | 90016C       | LL         | DL           | NotPass   |
             | 90016C       | LR         | DL           | NotPass   |
-            | 90016C       | UA         | DL           | NotPass   |
             | 90016C       | LA         | DL           | NotPass   |
+            | 90016C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90016C       | 00         | DL           | NotPass   |
             | 90016C       | 01         | DL           | NotPass   |

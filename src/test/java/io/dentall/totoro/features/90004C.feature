@@ -98,9 +98,11 @@ Feature: 90004C 齒內治療緊急處理
             | 90004C       | UR         | DL           | NotPass   |
             | 90004C       | UL         | DL           | NotPass   |
             | 90004C       | UA         | DL           | NotPass   |
+            | 90004C       | UB         | DL           | NotPass   |
             | 90004C       | LR         | DL           | NotPass   |
             | 90004C       | LL         | DL           | NotPass   |
             | 90004C       | LA         | DL           | NotPass   |
+            | 90004C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90004C       | 00         | DL           | NotPass   |
             | 90004C       | 01         | DL           | NotPass   |

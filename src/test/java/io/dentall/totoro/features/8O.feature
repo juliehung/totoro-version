@@ -120,9 +120,11 @@ Feature: 8O 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
             | 8O           | FM         | DL           | NotPass   |
             | 8O           | UR         | DL           | NotPass   |
             | 8O           | UL         | DL           | NotPass   |
+            | 8O           | UA         | DL           | NotPass   |
+            | 8O           | UB         | DL           | NotPass   |
             | 8O           | LR         | DL           | NotPass   |
             | 8O           | LL         | DL           | NotPass   |
-            | 8O           | UB         | DL           | NotPass   |
+            | 8O           | LA         | DL           | NotPass   |
             | 8O           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8O           | 00         | DL           | NotPass   |

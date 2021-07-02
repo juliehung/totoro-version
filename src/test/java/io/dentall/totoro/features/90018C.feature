@@ -204,9 +204,11 @@ Feature: 90018C 乳牙多根管治療
             | 90018C       | UR         | DL           | NotPass   |
             | 90018C       | UL         | DL           | NotPass   |
             | 90018C       | UA         | DL           | NotPass   |
+            | 90018C       | UB         | DL           | NotPass   |
             | 90018C       | LL         | DL           | NotPass   |
             | 90018C       | LR         | DL           | NotPass   |
             | 90018C       | LA         | DL           | NotPass   |
+            | 90018C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90018C       | 00         | DL           | NotPass   |
             | 90018C       | 01         | DL           | NotPass   |

@@ -195,6 +195,14 @@ Feature: 89113C 特殊狀況之複合體充填
             | 89113C       | 99         | DL           | Pass      |
             # 牙位為區域型態
             | 89113C       | FM         | DL           | NotPass   |
+            | 89113C       | UR         | DL           | NotPass   |
+            | 89113C       | UL         | DL           | NotPass   |
+            | 89113C       | UA         | DL           | NotPass   |
+            | 89113C       | UB         | DL           | NotPass   |
+            | 89113C       | LL         | DL           | NotPass   |
+            | 89113C       | LR         | DL           | NotPass   |
+            | 89113C       | LA         | DL           | NotPass   |
+            | 89113C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 89113C       | 00         | DL           | NotPass   |
             | 89113C       | 01         | DL           | NotPass   |

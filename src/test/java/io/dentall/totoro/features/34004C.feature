@@ -155,10 +155,12 @@ Feature: 34004C 齒顎全景 X光片攝影
             | 34004C       | FM         | DL           | Pass      |
             | 34004C       | UR         | DL           | Pass      |
             | 34004C       | UL         | DL           | Pass      |
+            | 34004C       | UA         | DL           | Pass      |
+            | 34004C       | UB         | DL           | NotPass   |
             | 34004C       | LL         | DL           | Pass      |
             | 34004C       | LR         | DL           | Pass      |
-            | 34004C       | UA         | DL           | Pass      |
             | 34004C       | LA         | DL           | Pass      |
+            | 34004C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 34004C       | 00         | DL           | NotPass   |
             | 34004C       | 01         | DL           | NotPass   |

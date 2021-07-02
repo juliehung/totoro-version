@@ -190,9 +190,11 @@ Feature: 90093C 難症特別處理-根管特別彎曲、根管鈣化，器械斷
             | 90093C       | UR         | DL           | NotPass   |
             | 90093C       | UL         | DL           | NotPass   |
             | 90093C       | UA         | DL           | NotPass   |
+            | 90093C       | UB         | DL           | NotPass   |
             | 90093C       | LL         | DL           | NotPass   |
             | 90093C       | LR         | DL           | NotPass   |
             | 90093C       | LA         | DL           | NotPass   |
+            | 90093C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90093C       | 00         | DL           | NotPass   |
             | 90093C       | 01         | DL           | NotPass   |

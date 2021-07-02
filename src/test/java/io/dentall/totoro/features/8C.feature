@@ -96,9 +96,11 @@ Feature: 8C 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
             | 8C           | FM         | DL           | NotPass   |
             | 8C           | UR         | DL           | NotPass   |
             | 8C           | UL         | DL           | NotPass   |
+            | 8C           | UA         | DL           | NotPass   |
+            | 8C           | UB         | DL           | NotPass   |
             | 8C           | LR         | DL           | NotPass   |
             | 8C           | LL         | DL           | NotPass   |
-            | 8C           | UB         | DL           | NotPass   |
+            | 8C           | LA         | DL           | NotPass   |
             | 8C           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8C           | 00         | DL           | NotPass   |

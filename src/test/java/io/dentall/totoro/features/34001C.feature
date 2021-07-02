@@ -322,10 +322,12 @@ Feature: 34001C 根尖周 X光攝影
             | 34001C       | FM         | DL           | Pass      |
             | 34001C       | UR         | DL           | Pass      |
             | 34001C       | UL         | DL           | Pass      |
+            | 34001C       | UA         | DL           | Pass      |
+            | 34001C       | UB         | DL           | NotPass   |
             | 34001C       | LL         | DL           | Pass      |
             | 34001C       | LR         | DL           | Pass      |
-            | 34001C       | UA         | DL           | Pass      |
             | 34001C       | LA         | DL           | Pass      |
+            | 34001C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 34001C       | 00         | DL           | NotPass   |
             | 34001C       | 01         | DL           | NotPass   |

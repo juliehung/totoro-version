@@ -173,9 +173,11 @@ Feature: 90002C 恆牙根管治療（雙根）
             | 90002C       | UR         | DL           | NotPass   |
             | 90002C       | UL         | DL           | NotPass   |
             | 90002C       | UA         | DL           | NotPass   |
+            | 90002C       | UB         | DL           | NotPass   |
             | 90002C       | LR         | DL           | NotPass   |
             | 90002C       | LL         | DL           | NotPass   |
             | 90002C       | LA         | DL           | NotPass   |
+            | 90002C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90002C       | 00         | DL           | NotPass   |
             | 90002C       | 01         | DL           | NotPass   |

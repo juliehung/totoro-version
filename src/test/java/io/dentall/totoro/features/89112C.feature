@@ -215,9 +215,11 @@ Feature: 89112C 特殊狀況之前牙三面複合樹脂充填
             | 89112C       | UR         | MOB          | NotPass   |
             | 89112C       | UL         | MOB          | NotPass   |
             | 89112C       | UA         | MOB          | NotPass   |
+            | 89112C       | UB         | MOB          | NotPass   |
             | 89112C       | LL         | MOB          | NotPass   |
             | 89112C       | LR         | MOB          | NotPass   |
             | 89112C       | LA         | MOB          | NotPass   |
+            | 89112C       | LB         | MOB          | NotPass   |
             # 非法牙位
             | 89112C       | 00         | MOB          | NotPass   |
             | 89112C       | 01         | MOB          | NotPass   |

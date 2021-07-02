@@ -384,9 +384,11 @@ Feature: 89004C 前牙複合樹脂充填-單面
             | 89004C       | UR         | DL           | NotPass   |
             | 89004C       | UL         | DL           | NotPass   |
             | 89004C       | UA         | DL           | NotPass   |
+            | 89004C       | UB         | DL           | NotPass   |
             | 89004C       | LR         | DL           | NotPass   |
             | 89004C       | LL         | DL           | NotPass   |
             | 89004C       | LA         | DL           | NotPass   |
+            | 89004C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 89004C       | 00         | DL           | NotPass   |
             | 89004C       | 01         | DL           | NotPass   |

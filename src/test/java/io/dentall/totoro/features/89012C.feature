@@ -339,9 +339,11 @@ Feature: 89012C 前牙三面複合樹脂充填
             | 89012C       | UR         | MOB          | NotPass   |
             | 89012C       | UL         | MOB          | NotPass   |
             | 89012C       | UA         | MOB          | NotPass   |
+            | 89012C       | UB         | MOB          | NotPass   |
             | 89012C       | LR         | MOB          | NotPass   |
             | 89012C       | LL         | MOB          | NotPass   |
             | 89012C       | LA         | MOB          | NotPass   |
+            | 89012C       | LB         | MOB          | NotPass   |
             # 非法牙位
             | 89012C       | 00         | MOB          | NotPass   |
             | 89012C       | 01         | MOB          | NotPass   |

@@ -173,9 +173,11 @@ Feature: 90020C 恆牙根管治療（五根以上）
             | 90020C       | UR         | DL           | NotPass   |
             | 90020C       | UL         | DL           | NotPass   |
             | 90020C       | UA         | DL           | NotPass   |
+            | 90020C       | UB         | DL           | NotPass   |
             | 90020C       | LR         | DL           | NotPass   |
             | 90020C       | LL         | DL           | NotPass   |
             | 90020C       | LA         | DL           | NotPass   |
+            | 90020C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90020C       | 00         | DL           | NotPass   |
             | 90020C       | 01         | DL           | NotPass   |

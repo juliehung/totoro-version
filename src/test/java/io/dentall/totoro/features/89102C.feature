@@ -215,9 +215,11 @@ Feature: 89102C 特殊狀況之銀粉充填 -雙面
             | 89102C       | UR         | DL           | NotPass   |
             | 89102C       | UL         | DL           | NotPass   |
             | 89102C       | UA         | DL           | NotPass   |
+            | 89102C       | UB         | DL           | NotPass   |
             | 89102C       | LL         | DL           | NotPass   |
             | 89102C       | LR         | DL           | NotPass   |
             | 89102C       | LA         | DL           | NotPass   |
+            | 89102C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 89102C       | 00         | DL           | NotPass   |
             | 89102C       | 01         | DL           | NotPass   |

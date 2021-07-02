@@ -117,6 +117,14 @@ Feature: 89013C 複合體充填
             | 89013C       | 99         | DL           | Pass      |
             # 牙位為區域型態
             | 89013C       | FM         | DL           | NotPass   |
+            | 89013C       | UR         | DL           | NotPass   |
+            | 89013C       | UL         | DL           | NotPass   |
+            | 89013C       | UA         | DL           | NotPass   |
+            | 89013C       | UB         | DL           | NotPass   |
+            | 89013C       | LR         | DL           | NotPass   |
+            | 89013C       | LL         | DL           | NotPass   |
+            | 89013C       | LA         | DL           | NotPass   |
+            | 89013C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 89013C       | 00         | DL           | NotPass   |
             | 89013C       | 01         | DL           | NotPass   |

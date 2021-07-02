@@ -112,9 +112,11 @@ Feature: 90010C 根尖逆充填術
             | 90010C       | UR         | DL           | NotPass   |
             | 90010C       | UL         | DL           | NotPass   |
             | 90010C       | UA         | DL           | NotPass   |
+            | 90010C       | UB         | DL           | NotPass   |
             | 90010C       | LL         | DL           | NotPass   |
             | 90010C       | LR         | DL           | NotPass   |
             | 90010C       | LA         | DL           | NotPass   |
+            | 90010C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90010C       | 00         | DL           | NotPass   |
             | 90010C       | 01         | DL           | NotPass   |

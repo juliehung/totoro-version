@@ -96,9 +96,11 @@ Feature: 8A 一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩�
             | 8A           | FM         | DL           | NotPass   |
             | 8A           | UR         | DL           | NotPass   |
             | 8A           | UL         | DL           | NotPass   |
+            | 8A           | UA         | DL           | NotPass   |
+            | 8A           | UB         | DL           | NotPass   |
             | 8A           | LR         | DL           | NotPass   |
             | 8A           | LL         | DL           | NotPass   |
-            | 8A           | UB         | DL           | NotPass   |
+            | 8A           | LA         | DL           | NotPass   |
             | 8A           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8A           | 00         | DL           | NotPass   |

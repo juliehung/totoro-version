@@ -215,9 +215,11 @@ Feature: 89103C 特殊狀況之銀粉充填 -三面
             | 89103C       | UR         | MOB          | NotPass   |
             | 89103C       | UL         | MOB          | NotPass   |
             | 89103C       | UA         | MOB          | NotPass   |
+            | 89103C       | UB         | MOB          | NotPass   |
             | 89103C       | LL         | MOB          | NotPass   |
             | 89103C       | LR         | MOB          | NotPass   |
             | 89103C       | LA         | MOB          | NotPass   |
+            | 89103C       | LB         | MOB          | NotPass   |
             # 非法牙位
             | 89103C       | 00         | MOB          | NotPass   |
             | 89103C       | 01         | MOB          | NotPass   |

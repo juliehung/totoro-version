@@ -198,9 +198,11 @@ Feature: 89111C 特殊狀況之玻璃離子體充填
             | 89111C       | UR         | MOB          | NotPass   |
             | 89111C       | UL         | MOB          | NotPass   |
             | 89111C       | UA         | MOB          | NotPass   |
+            | 89111C       | UB         | MOB          | NotPass   |
             | 89111C       | LL         | MOB          | NotPass   |
             | 89111C       | LR         | MOB          | NotPass   |
             | 89111C       | LA         | MOB          | NotPass   |
+            | 89111C       | LB         | MOB          | NotPass   |
             # 非法牙位
             | 89111C       | 00         | MOB          | NotPass   |
             | 89111C       | 01         | MOB          | NotPass   |

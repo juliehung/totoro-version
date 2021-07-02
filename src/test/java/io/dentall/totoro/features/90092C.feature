@@ -190,9 +190,11 @@ Feature: 90092C 難症特別處理－有額外根管者(1)前牙及下顎小臼�
             | 90092C       | UR         | DL           | NotPass   |
             | 90092C       | UL         | DL           | NotPass   |
             | 90092C       | UA         | DL           | NotPass   |
+            | 90092C       | UB         | DL           | NotPass   |
             | 90092C       | LL         | DL           | NotPass   |
             | 90092C       | LR         | DL           | NotPass   |
             | 90092C       | LA         | DL           | NotPass   |
+            | 90092C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90092C       | 00         | DL           | NotPass   |
             | 90092C       | 01         | DL           | NotPass   |

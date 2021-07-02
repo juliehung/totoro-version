@@ -112,9 +112,11 @@ Feature: 90008C 去除釘柱
             | 90008C       | UR         | DL           | NotPass   |
             | 90008C       | UL         | DL           | NotPass   |
             | 90008C       | UA         | DL           | NotPass   |
+            | 90008C       | UB         | DL           | NotPass   |
             | 90008C       | LL         | DL           | NotPass   |
             | 90008C       | LR         | DL           | NotPass   |
             | 90008C       | LA         | DL           | NotPass   |
+            | 90008C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90008C       | 00         | DL           | NotPass   |
             | 90008C       | 01         | DL           | NotPass   |

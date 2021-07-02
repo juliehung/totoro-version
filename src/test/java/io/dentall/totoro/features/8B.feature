@@ -96,9 +96,11 @@ Feature: 8B 一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩�
             | 8B           | FM         | DL           | NotPass   |
             | 8B           | UR         | DL           | NotPass   |
             | 8B           | UL         | DL           | NotPass   |
+            | 8B           | UA         | DL           | NotPass   |
+            | 8B           | UB         | DL           | NotPass   |
             | 8B           | LR         | DL           | NotPass   |
             | 8B           | LL         | DL           | NotPass   |
-            | 8B           | UB         | DL           | NotPass   |
+            | 8B           | LA         | DL           | NotPass   |
             | 8B           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8B           | 00         | DL           | NotPass   |

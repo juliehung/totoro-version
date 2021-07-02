@@ -194,9 +194,11 @@ Feature: 90015C 根管開擴及清創
             | 90015C       | UR         | DL           | NotPass   |
             | 90015C       | UL         | DL           | NotPass   |
             | 90015C       | UA         | DL           | NotPass   |
+            | 90015C       | UB         | DL           | NotPass   |
             | 90015C       | LL         | DL           | NotPass   |
             | 90015C       | LR         | DL           | NotPass   |
             | 90015C       | LA         | DL           | NotPass   |
+            | 90015C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90015C       | 00         | DL           | NotPass   |
             | 90015C       | 01         | DL           | NotPass   |

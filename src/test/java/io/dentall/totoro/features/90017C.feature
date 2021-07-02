@@ -154,9 +154,11 @@ Feature: 90017C 恆牙斷髓處理
             | 90017C       | UR         | DL           | NotPass   |
             | 90017C       | UL         | DL           | NotPass   |
             | 90017C       | UA         | DL           | NotPass   |
+            | 90017C       | UB         | DL           | NotPass   |
             | 90017C       | LL         | DL           | NotPass   |
             | 90017C       | LR         | DL           | NotPass   |
             | 90017C       | LA         | DL           | NotPass   |
+            | 90017C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90017C       | 00         | DL           | NotPass   |
             | 90017C       | 01         | DL           | NotPass   |

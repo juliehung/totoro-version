@@ -163,9 +163,11 @@ Feature: 90012C 橡皮障防濕裝置
             | 90012C       | UR         | DL           | NotPass   |
             | 90012C       | UL         | DL           | NotPass   |
             | 90012C       | UA         | DL           | NotPass   |
+            | 90012C       | UB         | DL           | NotPass   |
             | 90012C       | LL         | DL           | NotPass   |
             | 90012C       | LR         | DL           | NotPass   |
             | 90012C       | LA         | DL           | NotPass   |
+            | 90012C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90012C       | 00         | DL           | NotPass   |
             | 90012C       | 01         | DL           | NotPass   |

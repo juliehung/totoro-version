@@ -173,9 +173,11 @@ Feature: 90003C 恆牙根管治療（三根）
             | 90003C       | UR         | DL           | NotPass   |
             | 90003C       | UL         | DL           | NotPass   |
             | 90003C       | UA         | DL           | NotPass   |
+            | 90003C       | UB         | DL           | NotPass   |
             | 90003C       | LR         | DL           | NotPass   |
             | 90003C       | LL         | DL           | NotPass   |
             | 90003C       | LA         | DL           | NotPass   |
+            | 90003C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90003C       | 00         | DL           | NotPass   |
             | 90003C       | 01         | DL           | NotPass   |

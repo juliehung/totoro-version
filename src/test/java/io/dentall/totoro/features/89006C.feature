@@ -157,9 +157,11 @@ Feature: 89006C 覆髓
             | 89006C       | UR         | DL           | NotPass   |
             | 89006C       | UL         | DL           | NotPass   |
             | 89006C       | UA         | DL           | NotPass   |
+            | 89006C       | UB         | DL           | NotPass   |
             | 89006C       | LR         | DL           | NotPass   |
             | 89006C       | LL         | DL           | NotPass   |
             | 89006C       | LA         | DL           | NotPass   |
+            | 89006C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 89006C       | 00         | DL           | NotPass   |
             | 89006C       | 01         | DL           | NotPass   |

@@ -115,9 +115,11 @@ Feature: 89007C 釘強化術（每支）
             | 89007C       | UR         | DL           | NotPass   |
             | 89007C       | UL         | DL           | NotPass   |
             | 89007C       | UA         | DL           | NotPass   |
+            | 89007C       | UB         | DL           | NotPass   |
             | 89007C       | LR         | DL           | NotPass   |
             | 89007C       | LL         | DL           | NotPass   |
             | 89007C       | LA         | DL           | NotPass   |
+            | 89007C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 89007C       | 00         | DL           | NotPass   |
             | 89007C       | 01         | DL           | NotPass   |

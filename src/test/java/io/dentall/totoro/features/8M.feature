@@ -120,9 +120,11 @@ Feature: 8M 一、施作牙位：16二、服務項目1.恆牙第一大臼齒窩�
             | 8M           | FM         | DL           | NotPass   |
             | 8M           | UR         | DL           | NotPass   |
             | 8M           | UL         | DL           | NotPass   |
+            | 8M           | UA         | DL           | NotPass   |
+            | 8M           | UB         | DL           | NotPass   |
             | 8M           | LR         | DL           | NotPass   |
             | 8M           | LL         | DL           | NotPass   |
-            | 8M           | UB         | DL           | NotPass   |
+            | 8M           | LA         | DL           | NotPass   |
             | 8M           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8M           | 00         | DL           | NotPass   |

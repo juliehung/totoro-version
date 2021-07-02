@@ -340,9 +340,11 @@ Feature: 89014C 前牙雙鄰接面複合樹脂充填
             | 89014C       | UR         | MOBL         | NotPass   |
             | 89014C       | UL         | MOBL         | NotPass   |
             | 89014C       | UA         | MOBL         | NotPass   |
+            | 89014C       | UB         | MOBL         | NotPass   |
             | 89014C       | LR         | MOBL         | NotPass   |
             | 89014C       | LL         | MOBL         | NotPass   |
             | 89014C       | LA         | MOBL         | NotPass   |
+            | 89014C       | LB         | MOBL         | NotPass   |
             # 非法牙位
             | 89014C       | 00         | MOBL         | NotPass   |
             | 89014C       | 01         | MOBL         | NotPass   |

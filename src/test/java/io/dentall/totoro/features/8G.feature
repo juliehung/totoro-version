@@ -96,9 +96,11 @@ Feature: 8G 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
             | 8G           | FM         | DL           | NotPass   |
             | 8G           | UR         | DL           | NotPass   |
             | 8G           | UL         | DL           | NotPass   |
+            | 8G           | UA         | DL           | NotPass   |
+            | 8G           | UB         | DL           | NotPass   |
             | 8G           | LR         | DL           | NotPass   |
             | 8G           | LL         | DL           | NotPass   |
-            | 8G           | UB         | DL           | NotPass   |
+            | 8G           | LA         | DL           | NotPass   |
             | 8G           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8G           | 00         | DL           | NotPass   |

@@ -322,10 +322,12 @@ Feature: 34002C 咬翼式 X光攝影
             | 34002C       | FM         | DL           | Pass      |
             | 34002C       | UR         | DL           | Pass      |
             | 34002C       | UL         | DL           | Pass      |
+            | 34002C       | UA         | DL           | Pass      |
+            | 34002C       | UB         | DL           | NotPass   |
             | 34002C       | LL         | DL           | Pass      |
             | 34002C       | LR         | DL           | Pass      |
-            | 34002C       | UA         | DL           | Pass      |
             | 34002C       | LA         | DL           | Pass      |
+            | 34002C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 34002C       | 00         | DL           | NotPass   |
             | 34002C       | 01         | DL           | NotPass   |

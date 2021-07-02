@@ -120,9 +120,11 @@ Feature: 8N 一、施作牙位：26二、服務項目1.恆牙第一大臼齒窩�
             | 8N           | FM         | DL           | NotPass   |
             | 8N           | UR         | DL           | NotPass   |
             | 8N           | UL         | DL           | NotPass   |
+            | 8N           | UA         | DL           | NotPass   |
+            | 8N           | UB         | DL           | NotPass   |
             | 8N           | LR         | DL           | NotPass   |
             | 8N           | LL         | DL           | NotPass   |
-            | 8N           | UB         | DL           | NotPass   |
+            | 8N           | LA         | DL           | NotPass   |
             | 8N           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8N           | 00         | DL           | NotPass   |

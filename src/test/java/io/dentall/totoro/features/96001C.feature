@@ -97,9 +97,11 @@ Feature: 96001C 牙科局部麻醉
             | 96001C       | UR         | DL           | Pass      |
             | 96001C       | UL         | DL           | Pass      |
             | 96001C       | UA         | DL           | Pass      |
+            | 96001C       | UB         | DL           | NotPass   |
             | 96001C       | LR         | DL           | Pass      |
             | 96001C       | LL         | DL           | Pass      |
             | 96001C       | LA         | DL           | Pass      |
+            | 96001C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 96001C       | 00         | DL           | NotPass   |
             | 96001C       | 01         | DL           | NotPass   |

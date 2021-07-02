@@ -190,9 +190,11 @@ Feature: 90091C 難症特別處理-大臼齒(C－Shaped)根管
             | 90091C       | UR         | DL           | NotPass   |
             | 90091C       | UL         | DL           | NotPass   |
             | 90091C       | UA         | DL           | NotPass   |
+            | 90091C       | UB         | DL           | NotPass   |
             | 90091C       | LL         | DL           | NotPass   |
             | 90091C       | LR         | DL           | NotPass   |
             | 90091C       | LA         | DL           | NotPass   |
+            | 90091C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90091C       | 00         | DL           | NotPass   |
             | 90091C       | 01         | DL           | NotPass   |
