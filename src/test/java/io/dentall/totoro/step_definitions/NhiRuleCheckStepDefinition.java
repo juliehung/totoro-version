@@ -266,23 +266,20 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkResult(resultActions, passOrNot, message);
     }
 
-    @Then("（HIS）任意時間點未曾申報過指定代碼 {word}，確認結果是否為 {passOrNot}")
-    public void checkNoTreatment(String specificNhiCode, Boolean passOrNot) throws Exception {
+    @Then("任意時間點未曾申報過指定代碼 {word}，確認結果是否為 {passOrNot}")
+    public void checkNoTreatment(String treatmentNhiCode, Boolean passOrNot) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
-        List<Disposal> disposalList = disposalTestInfoHolder.getDisposalHistoryList();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        TreatmentProcedure newestTreatmentProcedure = mergeDisposalToTreatmentProcedure(disposalList).stream().min(comparing(tp -> tp.getDisposal().getDateTime())).get();
-        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D1_1, new Object[]{nhiCode, specificNhiCode, "系統", transformA71ToDisplay(newestTreatmentProcedure.getNhiExtendTreatmentProcedure().getA71()), nhiCode});
-        checkResult(resultActions, passOrNot, message);
-    }
+        Optional<NhiTreatment> nhiTreatmentOpt = findLastViolationNhiTreatment(treatmentNhiCode);
+        String message = null;
 
-    @Then("（IC）任意時間點未曾申報過指定代碼 {word}，確認結果是否為 {passOrNot}")
-    public void checkNoTreatmentByNhiMedicalRecord(String specificNhiCode, Boolean passOrNot) throws Exception {
-        String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
-        List<NhiMedicalRecord> nhiMedicalRecordList = nhiMedicalRecordTestInfoHolder.getNhiMedicalRecordList();
-        ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        NhiMedicalRecord nhiMedicalRecord = nhiMedicalRecordList.stream().min(comparing(NhiMedicalRecord::getDate)).get();
-        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D1_1, new Object[]{nhiCode, specificNhiCode, NHI_CARD_RECORD.getValue(), transformA71ToDisplay(nhiMedicalRecord.getDate()), nhiCode});
+        if (nhiTreatmentOpt.isPresent()) {
+            NhiTreatment nhiTreatment = nhiTreatmentOpt.get();
+            String type = findSourceType(nhiTreatment);
+            String date = transformA71ToDisplay(nhiTreatment.getDatetime());
+            message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D1_1, new Object[]{nhiCode, treatmentNhiCode, type, date, nhiCode});
+        }
+
         checkResult(resultActions, passOrNot, message);
     }
 
