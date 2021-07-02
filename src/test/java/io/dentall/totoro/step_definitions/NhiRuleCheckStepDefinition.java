@@ -405,41 +405,17 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkResult(resultActions, passOrNot, message);
     }
 
-    @Then("（HIS）在同月份中，不得申報 {word} 診療代碼，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
+    @Then("在同月份中，不得申報 {word} 診療代碼，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
     public void checkCodeBeforeDate2(String treatmentNhiCode, Boolean passOrNot, NhiRuleCheckFormat msgFormat) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        List<Disposal> disposals = disposalTestInfoHolder.getDisposalHistoryList();
-        Disposal issueDisposal = disposalTestInfoHolder.getDisposal();
-        NhiExtendTreatmentProcedure pastNhiExtendTreatmentProcedure = disposals.get(0).getTreatmentProcedures().stream().findFirst().get().getNhiExtendTreatmentProcedure();
-        String type = SYSTEM_RECORD.getValue();
-        String pastTreatmentDate = transformA71ToDisplay(pastNhiExtendTreatmentProcedure.getA71());
-
-        if (transformLocalDateToRocDate(issueDisposal.getDateTime()).equals(pastNhiExtendTreatmentProcedure.getA71())) {
-            type = TODAY_OTHER_DISPOSAL.getValue();
-        }
-
+        NhiTreatment violationNhiTreatment = findLastViolationNhiTreatment(treatmentNhiCode).get();
+        String type = findSourceType(violationNhiTreatment);
+        String pastTreatmentDate = transformA71ToDisplay(violationNhiTreatment.getDatetime());
         Object[] msgArgs = null;
 
         if (msgFormat == NhiRuleCheckFormat.W4_1) {
             msgArgs = new Object[]{nhiCode, treatmentNhiCode, type, pastTreatmentDate};
-        }
-
-        String message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
-        checkResult(resultActions, passOrNot, message);
-    }
-
-    @Then("（IC）在同月份中，不得申報 {word} 診療代碼，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
-    public void checkCodeBeforeDateByNhiMedicalRecord2(String treatmentNhiCode, Boolean passOrNot, NhiRuleCheckFormat msgFormat) throws Exception {
-        String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
-        ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        List<NhiMedicalRecord> nhiMedicalRecords = nhiMedicalRecordTestInfoHolder.getNhiMedicalRecordList();
-        String type = NHI_CARD_RECORD.getValue();
-        String pastMedicalDate = transformA71ToDisplay(nhiMedicalRecords.get(0).getDate());
-        Object[] msgArgs = null;
-
-        if (msgFormat == NhiRuleCheckFormat.W4_1) {
-            msgArgs = new Object[]{nhiCode, treatmentNhiCode, type, pastMedicalDate};
         }
 
         String message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
