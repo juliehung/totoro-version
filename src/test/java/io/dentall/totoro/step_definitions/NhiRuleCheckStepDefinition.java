@@ -519,38 +519,14 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkResult(resultActions, passOrNot, message);
     }
 
-    @Then("（HIS）檢查 {word} 診療項目，在病患過去 {word} 紀錄中，不應包含特定的 {word} 診療代碼，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
+    @Then("檢查 {word} 診療項目，在病患過去 {word} 紀錄中，不應包含特定的 {word} 診療代碼，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
     public void checkCodeBetweenDuration(String issueNhiCode, String gapMonth, String treatmentNhiCode, Boolean passOrNot, NhiRuleCheckFormat msgFormat) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        List<Disposal> disposalList = disposalTestInfoHolder.getDisposalHistoryList();
-
-        TreatmentProcedure newestTreatmentProcedure =
-            mergeDisposalToTreatmentProcedure(disposalList).stream()
-                .filter(tp -> treatmentNhiCode.equals(tp.getNhiExtendTreatmentProcedure().getA73())).min(comparing(tp -> tp.getDisposal().getDateTime()))
-                .get();
-
-        String pastTreatmentDate = transformA71ToDisplay(newestTreatmentProcedure.getNhiExtendTreatmentProcedure().getA71());
+        NhiTreatment violationNhiTreatment = findLastViolationNhiTreatment(treatmentNhiCode).get();
+        String type = findSourceType(violationNhiTreatment);
+        String pastTreatmentDate = transformA71ToDisplay(violationNhiTreatment.getDatetime());
         Object[] msgArgs = null;
-        String type = SYSTEM_RECORD.getValue();
-        if (msgFormat == NhiRuleCheckFormat.D4_1) {
-            msgArgs = new Object[]{nhiCode, type, pastTreatmentDate};
-        } else if (msgFormat == NhiRuleCheckFormat.D1_2_2) {
-            msgArgs = new Object[]{issueNhiCode, treatmentNhiCode, type, pastTreatmentDate, parseMonthGap(gapMonth), issueNhiCode};
-        }
-
-        String message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
-        checkResult(resultActions, passOrNot, message);
-    }
-
-    @Then("（IC）檢查 {word} 診療項目，在病患過去 {word} 紀錄中，不應包含特定的 {word} 診療代碼，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
-    public void checkCodeBetweenDurationByNhiMedicalRecord(String issueNhiCode, String gapMonth, String treatmentNhiCode, Boolean passOrNot, NhiRuleCheckFormat msgFormat) throws Exception {
-        String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
-        List<NhiMedicalRecord> nhiMedicalRecords = nhiMedicalRecordTestInfoHolder.getNhiMedicalRecordList();
-        ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String pastTreatmentDate = transformA71ToDisplay(nhiMedicalRecords.stream().map(NhiMedicalRecord::getDate).max(naturalOrder()).get());
-        Object[] msgArgs = null;
-        String type = NHI_CARD_RECORD.getValue();
 
         if (msgFormat == NhiRuleCheckFormat.D4_1) {
             msgArgs = new Object[]{nhiCode, type, pastTreatmentDate};
