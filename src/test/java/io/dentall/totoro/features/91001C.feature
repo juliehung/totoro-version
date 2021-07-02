@@ -109,7 +109,7 @@ Feature: 91001C 牙周病緊急處置
         Given Wind 24 歲病人
         Given 新增健保醫療:
             | PastDate          | NhiCode          | Teeth          |
-            | <PastMedicalDays> | <MedicalNhiCode> | <MedicalTeeth> |
+            | <PastMedicalDate> | <MedicalNhiCode> | <MedicalTeeth> |
         Given 在 當月底 ，建立預約
         Given 在 當月底 ，建立掛號
         Given 在 當月底 ，產生診療計畫
@@ -118,7 +118,7 @@ Feature: 91001C 牙周病緊急處置
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
         Then 在 每月 的紀錄中，牙位 <IssueTeeth> 在同一象限中，最多只能申報 1 次 <IssueNhiCode> 健保代碼，確認結果是否為 <PassOrNot>
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | PassOrNot |
             # 象限一 恆牙
             | 91001C       | 11         | MOB          | 當月初             | 91001C         | 21           | Pass      |
             | 91001C       | 11         | MOB          | 當月初             | 91001C         | 11           | NotPass   |

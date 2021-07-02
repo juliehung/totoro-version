@@ -36,9 +36,9 @@ Feature: 00316C 符合牙醫門診加強感染管制實施方案之年度初診X
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
         Then （HIS）在過去 <PastAnyTreatmentDays> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot>
-        And （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <Past00316CDayGap> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        And （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <Past00316CGapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastAnyTreatmentDays | Past00316CTreatmentDays | Past00316CDayGap | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastAnyTreatmentDays | Past00316CTreatmentDays | Past00316CGapDay | PassOrNot |
             | 00316C       | 11         | DO           | 364                  | 544                     | 545              | NotPass   |
             | 00316C       | 11         | DO           | 365                  | 544                     | 545              | NotPass   |
             | 00316C       | 11         | DO           | 366                  | 544                     | 545              | Pass      |

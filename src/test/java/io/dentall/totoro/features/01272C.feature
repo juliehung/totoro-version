@@ -36,9 +36,9 @@ Feature: 01272C 年度初診X光檢查
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
         Then （HIS）在過去 <PastAnyTreatmentDays> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot>
-        And （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <Past01272CDayGap> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        And （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <Past01272CGapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastAnyTreatmentDays | Past01272CTreatmentDays | Past01272CDayGap | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastAnyTreatmentDays | Past01272CTreatmentDays | Past01272CGapDay | PassOrNot |
             | 01272C       | 11         | DO           | 364                  | 544                     | 545              | NotPass   |
             | 01272C       | 11         | DO           | 365                  | 544                     | 545              | NotPass   |
             | 01272C       | 11         | DO           | 366                  | 544                     | 545              | Pass      |

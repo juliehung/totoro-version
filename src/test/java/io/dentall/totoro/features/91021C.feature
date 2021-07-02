@@ -84,9 +84,9 @@ Feature: 91021C 牙周病統合治療第一階段支付
         Then （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
-            | 91021C       | 11         | DL           | 364               | 91021C           | 11             | 180    | NotPass   |
-            | 91021C       | 11         | DL           | 365               | 91021C           | 11             | 180    | NotPass   |
-            | 91021C       | 11         | DL           | 366               | 91021C           | 11             | 180    | Pass      |
+            | 91021C       | 11         | DL           | 364               | 91021C           | 11             | 365    | NotPass   |
+            | 91021C       | 11         | DL           | 365               | 91021C           | 11             | 365    | NotPass   |
+            | 91021C       | 11         | DL           | 366               | 91021C           | 11             | 365    | Pass      |
 
     Scenario Outline: （IC）365天內，不應有 91021C 診療項目
         Given 建立醫師
@@ -103,9 +103,9 @@ Feature: 91021C 牙周病統合治療第一階段支付
         Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
-            | 91021C       | 11         | DL           | 364             | 91021C         | 11           | 180    | NotPass   |
-            | 91021C       | 11         | DL           | 365             | 91021C         | 11           | 180    | NotPass   |
-            | 91021C       | 11         | DL           | 366             | 91021C         | 11           | 180    | Pass      |
+            | 91021C       | 11         | DL           | 364             | 91021C         | 11           | 365    | NotPass   |
+            | 91021C       | 11         | DL           | 365             | 91021C         | 11           | 365    | NotPass   |
+            | 91021C       | 11         | DL           | 366             | 91021C         | 11           | 365    | Pass      |
 
     Scenario Outline: （HIS）已申報91006C或91007C三次以上者，一年內不得申報牙周病統合性治療方案91021C~91023C
         Given 建立醫師
@@ -135,7 +135,7 @@ Feature: 91021C 牙周病統合治療第一階段支付
         Given 建立醫師
         Given Stan 24 歲病人
         Given 新增 <Nums> 筆健保醫療:
-            | PastDate | NhiCode            | Teeth |
+            | PastDays | NhiCode            | Teeth |
             | 100      | <TreatmentNhiCode> | 11    |
             | 364      | <TreatmentNhiCode> | 11    |
             | 365      | <TreatmentNhiCode> | 11    |

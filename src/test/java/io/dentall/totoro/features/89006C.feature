@@ -30,9 +30,9 @@ Feature: 89006C 覆髓
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 在 <DayGap> 天中，不應該有同顆牙 <IssueTeeth> 的 <IssueNhiCode> 診療項目，確認結果是否為 <PassOrNot>
+        Then 在 <GapDay> 天中，不應該有同顆牙 <IssueTeeth> 的 <IssueNhiCode> 診療項目，確認結果是否為 <PassOrNot>
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | DayGap | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | GapDay | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             # 同一個診療項目、同顆牙
             | 89006C       | 11         | DL           | 180    | 0                 | 89006C           | 11             | NotPass   |
             | 89006C       | 11         | DL           | 180    | 180               | 89006C           | 11             | NotPass   |
@@ -58,9 +58,9 @@ Feature: 89006C 覆髓
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 在 <DayGap> 天中，不應該有同顆牙 <IssueTeeth> 的 <IssueNhiCode> 診療項目，確認結果是否為 <PassOrNot>
+        Then 在 <GapDay> 天中，不應該有同顆牙 <IssueTeeth> 的 <IssueNhiCode> 診療項目，確認結果是否為 <PassOrNot>
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | DayGap | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | GapDay | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
             # 同一個診療項目、同顆牙
             | 89006C       | 11         | DL           | 180    | 0               | 89006C         | 11           | NotPass   |
             | 89006C       | 11         | DL           | 180    | 180             | 89006C         | 11           | NotPass   |

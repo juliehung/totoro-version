@@ -79,7 +79,7 @@ Feature: 81 氟化防齲處理(包括牙醫師專業塗氟處理、一般性口�
         Given Kelly 5 歲病人
         Given 新增健保醫療:
             | PastDate          | NhiCode          | Teeth          |
-            | <PastMedicalDays> | <MedicalNhiCode> | <MedicalTeeth> |
+            | <PastMedicalDate> | <MedicalNhiCode> | <MedicalTeeth> |
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫
@@ -88,7 +88,7 @@ Feature: 81 氟化防齲處理(包括牙醫師專業塗氟處理、一般性口�
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
         Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapMonth> 紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapMonth | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | GapMonth | PassOrNot |
             | 81           | 11         | DL           | 6個月前            | 81             | 11           | 6個月      | Pass      |
             | 81           | 11         | DL           | 5個月前            | 81             | 11           | 6個月      | NotPass   |
             | 81           | 11         | DL           | 4個月前            | 81             | 11           | 6個月      | NotPass   |

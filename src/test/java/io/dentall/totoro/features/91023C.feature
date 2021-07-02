@@ -122,7 +122,7 @@ Feature: 91023C 牙周病統合治療第三階段支付
             | PastDays | A72 | A73    | A74 | A75 | A76 | A77 | A78 | A79 |
             | 180      | 3   | 91021C | 11  | MOB | 0   | 1.0 | 03  |     |
         Given 新增 <Nums> 筆健保醫療:
-            | PastDate | NhiCode            | Teeth |
+            | PastDays | NhiCode            | Teeth |
             | 100      | <TreatmentNhiCode> | 11    |
             | 364      | <TreatmentNhiCode> | 11    |
             | 365      | <TreatmentNhiCode> | 11    |

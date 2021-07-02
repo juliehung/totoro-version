@@ -344,7 +344,7 @@ Feature: 8O 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
         Given Kelly 5 歲病人
         Given 新增健保醫療:
             | PastDate          | NhiCode          | Teeth          |
-            | <PastMedicalDays> | <MedicalNhiCode> | <MedicalTeeth> |
+            | <PastMedicalDate> | <MedicalNhiCode> | <MedicalTeeth> |
         Given 在 6個月前 ，建立預約
         Given 在 6個月前 ，建立掛號
         Given 在 6個月前 ，產生診療計畫
@@ -359,7 +359,7 @@ Feature: 8O 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
         Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapMonth> 紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2_2
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapMonth | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | GapMonth | PassOrNot |
             | 8O           | 36         | DL           | 12個月前           | 8C             | 36           | 12個月     | Pass      |
             | 8O           | 36         | DL           | 11個月前           | 8C             | 36           | 12個月     | NotPass   |
             | 8O           | 36         | DL           | 10個月前           | 8C             | 36           | 12個月     | NotPass   |
@@ -430,7 +430,7 @@ Feature: 8O 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
             | 12個月前    | 3   | 8C  | <IssueTeeth> | <IssueSurface> | 0   | 1.0 | 03  |     |
         Given 新增健保醫療:
             | PastDate          | NhiCode          | Teeth          |
-            | <PastMedicalDays> | <MedicalNhiCode> | <MedicalTeeth> |
+            | <PastMedicalDate> | <MedicalNhiCode> | <MedicalTeeth> |
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫
@@ -439,7 +439,7 @@ Feature: 8O 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
         Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapMonth> 紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2_2
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapMonth | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | GapMonth | PassOrNot |
             | 8O           | 36         | DL           | 6個月前            | 8K             | 36           | 6個月      | Pass      |
             | 8O           | 36         | DL           | 5個月前            | 8K             | 36           | 6個月      | NotPass   |
             | 8O           | 36         | DL           | 4個月前            | 8K             | 36           | 6個月      | NotPass   |
