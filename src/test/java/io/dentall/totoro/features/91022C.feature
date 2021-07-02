@@ -102,7 +102,7 @@ Feature: 91022C 牙周病統合治療第二階段支付
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）365 天內的記錄中，<TreatmentNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
+        Then 在 365 天內的記錄中，<TreatmentNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | Nums | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 91022C       | 11         | MOB          | 1    | 91006C           | 11             | MOB              | Pass      |
@@ -132,7 +132,7 @@ Feature: 91022C 牙周病統合治療第二階段支付
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）365 天內的記錄中，<TreatmentNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
+        Then 在 365 天內的記錄中，<TreatmentNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | Nums | TreatmentNhiCode | PassOrNot |
             | 91022C       | 11         | MOB          | 1    | 91006C           | Pass      |

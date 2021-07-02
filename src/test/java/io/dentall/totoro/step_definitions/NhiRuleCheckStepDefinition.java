@@ -576,37 +576,13 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkResult(resultActions, passOrNot, message);
     }
 
-    @Then("（HIS）{word} 天內的記錄中，{word} 診療代碼已達 {int} 次以上，不得申報 {word}，確認結果是否為 {passOrNot}")
+    @Then("在 {word} 天內的記錄中，{word} 診療代碼已達 {int} 次以上，不得申報 {word}，確認結果是否為 {passOrNot}")
     public void checkCodeBeforeDateWithMaxTimes2(String period, String treatmentNhiCode, int times, String issueNhiCode, Boolean passOrNot) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        List<Disposal> disposalList = disposalTestInfoHolder.getDisposalHistoryList();
-        Disposal disposal = disposalTestInfoHolder.getDisposal();
-
-        List<String> dates = mergeDisposalToTreatmentProcedure(disposalList)
-            .stream()
-            .filter(tp -> !disposal.getId().equals(tp.getDisposal().getId()))
-            .map(tp -> tp.getNhiExtendTreatmentProcedure().getA71())
-            .sorted(reverseOrder())
-            .map(DateTimeUtil::transformA71ToDisplay)
-            .collect(Collectors.toList());
-
-        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D1_2, new Object[]{issueNhiCode, treatmentNhiCode, SYSTEM_RECORD.getValue(), dates.get(0), period, issueNhiCode});
-        checkResult(resultActions, passOrNot, message);
-    }
-
-    @Then("（IC）{word} 天內的記錄中，{word} 診療代碼已達 {int} 次以上，不得申報 {word}，確認結果是否為 {passOrNot}")
-    public void checkCodeBeforeDateByNhiMedicalRecordWithMaxTimes2(String period, String treatmentNhiCode, int times, String issueNhiCode, Boolean passOrNot) throws Exception {
-        ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        List<NhiMedicalRecord> nhiMedicalRecords = nhiMedicalRecordTestInfoHolder.getNhiMedicalRecordList();
-
-        List<String> dates = nhiMedicalRecords
-            .stream()
-            .map(NhiMedicalRecord::getDate)
-            .sorted(reverseOrder())
-            .map(DateTimeUtil::transformA71ToDisplay)
-            .collect(Collectors.toList());
-
-        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D1_2, new Object[]{issueNhiCode, treatmentNhiCode, NHI_CARD_RECORD.getValue(), dates.get(0), period, issueNhiCode});
+        NhiTreatment violationNhiTreatment = findLastViolationNhiTreatment(treatmentNhiCode).get();
+        String type = findSourceType(violationNhiTreatment);
+        String date = DateTimeUtil.transformA71ToDisplay(violationNhiTreatment.getDatetime());
+        String message = formatMsg(!passOrNot).apply(NhiRuleCheckFormat.D1_2, new Object[]{issueNhiCode, treatmentNhiCode, type, date, period, issueNhiCode});
         checkResult(resultActions, passOrNot, message);
     }
 
