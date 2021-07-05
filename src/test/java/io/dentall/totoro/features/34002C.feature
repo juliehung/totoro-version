@@ -1,3 +1,4 @@
+@nhi @nhi-34-series
 Feature: 34002C 咬翼式 X光攝影
 
     Scenario Outline: 全部檢核成功
@@ -250,62 +251,60 @@ Feature: 34002C 咬翼式 X光攝影
         Then 檢查 <IssueTeeth> 牙位，依 VALIDATED_ALL 判定是否為核可牙位，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
-            # 後恆牙
+            # 乳牙
+            | 34002C       | 51         | DL           | Pass      |
+            | 34002C       | 52         | DL           | Pass      |
+            | 34002C       | 53         | DL           | Pass      |
+            | 34002C       | 54         | DL           | Pass      |
+            | 34002C       | 55         | DL           | Pass      |
+            | 34002C       | 61         | DL           | Pass      |
+            | 34002C       | 62         | DL           | Pass      |
+            | 34002C       | 63         | DL           | Pass      |
+            | 34002C       | 64         | DL           | Pass      |
+            | 34002C       | 65         | DL           | Pass      |
+            | 34002C       | 71         | DL           | Pass      |
+            | 34002C       | 72         | DL           | Pass      |
+            | 34002C       | 73         | DL           | Pass      |
+            | 34002C       | 74         | DL           | Pass      |
+            | 34002C       | 75         | DL           | Pass      |
+            | 34002C       | 81         | DL           | Pass      |
+            | 34002C       | 82         | DL           | Pass      |
+            | 34002C       | 83         | DL           | Pass      |
+            | 34002C       | 84         | DL           | Pass      |
+            | 34002C       | 85         | DL           | Pass      |
+            # 恆牙
+            | 34002C       | 11         | DL           | Pass      |
+            | 34002C       | 12         | DL           | Pass      |
+            | 34002C       | 13         | DL           | Pass      |
             | 34002C       | 14         | DL           | Pass      |
             | 34002C       | 15         | DL           | Pass      |
             | 34002C       | 16         | DL           | Pass      |
             | 34002C       | 17         | DL           | Pass      |
             | 34002C       | 18         | DL           | Pass      |
+            | 34002C       | 21         | DL           | Pass      |
+            | 34002C       | 22         | DL           | Pass      |
+            | 34002C       | 23         | DL           | Pass      |
             | 34002C       | 24         | DL           | Pass      |
             | 34002C       | 25         | DL           | Pass      |
             | 34002C       | 26         | DL           | Pass      |
             | 34002C       | 27         | DL           | Pass      |
             | 34002C       | 28         | DL           | Pass      |
+            | 34002C       | 31         | DL           | Pass      |
+            | 34002C       | 32         | DL           | Pass      |
+            | 34002C       | 33         | DL           | Pass      |
             | 34002C       | 34         | DL           | Pass      |
             | 34002C       | 35         | DL           | Pass      |
             | 34002C       | 36         | DL           | Pass      |
             | 34002C       | 37         | DL           | Pass      |
             | 34002C       | 38         | DL           | Pass      |
+            | 34002C       | 41         | DL           | Pass      |
+            | 34002C       | 42         | DL           | Pass      |
+            | 34002C       | 43         | DL           | Pass      |
             | 34002C       | 44         | DL           | Pass      |
             | 34002C       | 45         | DL           | Pass      |
             | 34002C       | 46         | DL           | Pass      |
             | 34002C       | 47         | DL           | Pass      |
             | 34002C       | 48         | DL           | Pass      |
-            # 後乳牙
-            | 34002C       | 54         | DL           | Pass      |
-            | 34002C       | 55         | DL           | Pass      |
-            | 34002C       | 64         | DL           | Pass      |
-            | 34002C       | 65         | DL           | Pass      |
-            | 34002C       | 74         | DL           | Pass      |
-            | 34002C       | 75         | DL           | Pass      |
-            | 34002C       | 84         | DL           | Pass      |
-            | 34002C       | 85         | DL           | Pass      |
-            # 前恆牙
-            | 34002C       | 11         | DL           | Pass      |
-            | 34002C       | 12         | DL           | Pass      |
-            | 34002C       | 13         | DL           | Pass      |
-            | 34002C       | 21         | DL           | Pass      |
-            | 34002C       | 22         | DL           | Pass      |
-            | 34002C       | 23         | DL           | Pass      |
-            | 34002C       | 31         | DL           | Pass      |
-            | 34002C       | 32         | DL           | Pass      |
-            | 34002C       | 33         | DL           | Pass      |
-            | 34002C       | 41         | DL           | Pass      |
-            | 34002C       | 42         | DL           | Pass      |
-            | 34002C       | 43         | DL           | Pass      |
-            # 前乳牙
-            | 34002C       | 51         | DL           | Pass      |
-            | 34002C       | 52         | DL           | Pass      |
-            | 34002C       | 53         | DL           | Pass      |
-            | 34002C       | 61         | DL           | Pass      |
-            | 34002C       | 62         | DL           | Pass      |
-            | 34002C       | 63         | DL           | Pass      |
-            | 34002C       | 71         | DL           | Pass      |
-            | 34002C       | 72         | DL           | Pass      |
-            | 34002C       | 73         | DL           | Pass      |
-            | 34002C       | 81         | DL           | Pass      |
-            | 34002C       | 82         | DL           | Pass      |
-            | 34002C       | 83         | DL           | Pass      |
             # 無牙
             | 34002C       |            | DL           | NotPass   |
             #
@@ -313,10 +312,10 @@ Feature: 34002C 咬翼式 X光攝影
             | 34002C       | 29         | DL           | Pass      |
             | 34002C       | 39         | DL           | Pass      |
             | 34002C       | 49         | DL           | Pass      |
-            | 34002C       | 59         | DL           | Pass      |
-            | 34002C       | 69         | DL           | Pass      |
-            | 34002C       | 79         | DL           | Pass      |
-            | 34002C       | 89         | DL           | Pass      |
+            | 34002C       | 59         | DL           | NotPass   |
+            | 34002C       | 69         | DL           | NotPass   |
+            | 34002C       | 79         | DL           | NotPass   |
+            | 34002C       | 89         | DL           | NotPass   |
             | 34002C       | 99         | DL           | Pass      |
             # 牙位為區域型態
             | 34002C       | FM         | DL           | Pass      |
