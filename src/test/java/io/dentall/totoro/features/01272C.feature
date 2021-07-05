@@ -1,3 +1,4 @@
+@nhi @nhi-01-series
 Feature: 01272C 年度初診X光檢查
 
     Scenario Outline: 全部檢核成功
@@ -35,19 +36,48 @@ Feature: 01272C 年度初診X光檢查
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 在過去 <PastAnyTreatmentDays> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot>
+        Then 在過去 <PastAnyTreatmentDayGap> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_5
         And 檢查 <IssueNhiCode> 診療項目，在病患過去 <Past01272CGapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastAnyTreatmentDays | Past01272CTreatmentDays | Past01272CGapDay | PassOrNot |
-            | 01272C       | 11         | DO           | 364                  | 544                     | 545              | NotPass   |
-            | 01272C       | 11         | DO           | 365                  | 544                     | 545              | NotPass   |
-            | 01272C       | 11         | DO           | 366                  | 544                     | 545              | Pass      |
-            | 01272C       | 11         | DO           | 364                  | 545                     | 545              | NotPass   |
-            | 01272C       | 11         | DO           | 365                  | 545                     | 545              | NotPass   |
-            | 01272C       | 11         | DO           | 366                  | 545                     | 545              | Pass      |
-            | 01272C       | 11         | DO           | 364                  | 546                     | 545              | Pass      |
-            | 01272C       | 11         | DO           | 365                  | 546                     | 545              | Pass      |
-            | 01272C       | 11         | DO           | 366                  | 546                     | 545              | Pass      |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastAnyTreatmentDays | PastAnyTreatmentDayGap | Past01272CTreatmentDays | Past01272CGapDay | PassOrNot |
+            | 01272C       | 11         | DO           | 364                  | 365                    | 544                     | 545              | NotPass   |
+            | 01272C       | 11         | DO           | 365                  | 365                    | 544                     | 545              | NotPass   |
+            | 01272C       | 11         | DO           | 366                  | 365                    | 544                     | 545              | Pass      |
+            | 01272C       | 11         | DO           | 364                  | 365                    | 545                     | 545              | NotPass   |
+            | 01272C       | 11         | DO           | 365                  | 365                    | 545                     | 545              | NotPass   |
+            | 01272C       | 11         | DO           | 366                  | 365                    | 545                     | 545              | Pass      |
+            | 01272C       | 11         | DO           | 364                  | 365                    | 546                     | 545              | Pass      |
+            | 01272C       | 11         | DO           | 365                  | 365                    | 546                     | 545              | Pass      |
+            | 01272C       | 11         | DO           | 366                  | 365                    | 546                     | 545              | Pass      |
+
+    Scenario Outline: （IC）365天內沒有任何治療紀錄及545天內沒有01272C治療記錄
+        Given 建立醫師
+        Given Scott 24 歲病人
+        Given 新增健保醫療:
+            | PastDays                | NhiCode        | Teeth |
+            | <Past01272CMedicalDays> | <IssueNhiCode> | 11    |
+        Given 新增健保醫療:
+            | PastDays             | NhiCode | Teeth |
+            | <PastAnyMedicalDays> | 89001C  | 11    |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 在過去 <PastAnyMedicalDayGap> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_5
+        And 檢查 <IssueNhiCode> 診療項目，在病患過去 <Past01272CGapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastAnyMedicalDays | PastAnyMedicalDayGap | Past01272CMedicalDays | Past01272CGapDay | PassOrNot |
+            | 01272C       | 11         | DO           | 364                | 365                  | 544                   | 545              | NotPass   |
+            | 01272C       | 11         | DO           | 365                | 365                  | 544                   | 545              | NotPass   |
+            | 01272C       | 11         | DO           | 366                | 365                  | 544                   | 545              | Pass      |
+            | 01272C       | 11         | DO           | 364                | 365                  | 545                   | 545              | NotPass   |
+            | 01272C       | 11         | DO           | 365                | 365                  | 545                   | 545              | NotPass   |
+            | 01272C       | 11         | DO           | 366                | 365                  | 545                   | 545              | Pass      |
+            | 01272C       | 11         | DO           | 364                | 365                  | 546                   | 545              | Pass      |
+            | 01272C       | 11         | DO           | 365                | 365                  | 546                   | 545              | Pass      |
+            | 01272C       | 11         | DO           | 366                | 365                  | 546                   | 545              | Pass      |
 
     Scenario Outline: 提醒須檢附影像
         Given 建立醫師
