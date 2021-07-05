@@ -1,4 +1,4 @@
-@nhi-90-series
+@nhi @nhi-90-series
 Feature: 90112C 特殊狀況橡皮障防濕裝置
 
     Scenario Outline: 全部檢核成功

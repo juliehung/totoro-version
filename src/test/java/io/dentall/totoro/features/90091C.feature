@@ -1,4 +1,4 @@
-@nhi-90-series
+@nhi @nhi-90-series
 Feature: 90091C 難症特別處理-大臼齒(C－Shaped)根管
 
     Scenario Outline: 全部檢核成功

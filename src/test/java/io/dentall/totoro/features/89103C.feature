@@ -1,4 +1,4 @@
-@nhi-89-series
+@nhi @nhi-89-series
 Feature: 89103C 特殊狀況之銀粉充填 -三面
 
     Scenario Outline: 全部檢核成功

@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92072C 口乾症塗氟
 
     Scenario Outline: 全部檢核成功

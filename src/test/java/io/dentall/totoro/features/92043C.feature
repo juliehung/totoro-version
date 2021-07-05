@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92043C 顳顎關節脫臼整復－ 無固定
 
     Scenario Outline: 全部檢核成功

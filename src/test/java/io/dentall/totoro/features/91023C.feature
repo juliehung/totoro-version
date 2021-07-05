@@ -1,4 +1,4 @@
-@nhi-91-series
+@nhi @nhi-91-series
 Feature: 91023C 牙周病統合治療第三階段支付
 
     Scenario Outline: 全部檢核成功

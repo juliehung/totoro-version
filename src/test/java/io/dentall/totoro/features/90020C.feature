@@ -1,4 +1,4 @@
-@nhi-90-series
+@nhi @nhi-90-series
 Feature: 90020C 恆牙根管治療（五根以上）
 
     Scenario Outline: 全部檢核成功

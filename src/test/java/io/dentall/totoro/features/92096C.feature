@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92096C 牙齒外傷急症處理
 
     Scenario Outline: 全部檢核成功

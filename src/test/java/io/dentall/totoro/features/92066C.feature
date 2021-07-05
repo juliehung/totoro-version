@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92066C 特定局部治療
 
     Scenario Outline: 全部檢核成功

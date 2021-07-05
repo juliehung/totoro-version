@@ -1,4 +1,4 @@
-@nhi-91-series
+@nhi @nhi-91-series
 Feature: 91007C 齒齦下括除術(含牙根整平術)-1/2 顎
 
     Scenario Outline: 全部檢核成功

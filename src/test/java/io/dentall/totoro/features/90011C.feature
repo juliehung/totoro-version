@@ -1,4 +1,4 @@
-@nhi-90-series
+@nhi @nhi-90-series
 Feature: 90011C 牙齒再植術
 
     Scenario Outline: 全部檢核成功

@@ -1,4 +1,4 @@
-@nhi-91-series
+@nhi @nhi-91-series
 Feature: 91002C 牙周敷料 每次
 
     Scenario Outline: 全部檢核成功

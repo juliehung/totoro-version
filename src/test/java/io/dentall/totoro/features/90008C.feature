@@ -1,4 +1,4 @@
-@nhi-90-series
+@nhi @nhi-90-series
 Feature: 90008C 去除釘柱
 
     Scenario Outline: 全部檢核成功

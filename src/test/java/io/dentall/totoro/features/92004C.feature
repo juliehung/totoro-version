@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92004C 口內切開排膿
 
     Scenario Outline: 全部檢核成功

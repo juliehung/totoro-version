@@ -1,4 +1,4 @@
-@nhi-91-series
+@nhi @nhi-91-series
 Feature: 91020C 牙菌斑去除照護
 
     Scenario Outline: 全部檢核成功

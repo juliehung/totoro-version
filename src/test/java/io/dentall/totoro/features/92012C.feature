@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92012C 齒齦下括除術(含牙根整平術)-1/2 顎
 
     Scenario Outline: 全部檢核成功

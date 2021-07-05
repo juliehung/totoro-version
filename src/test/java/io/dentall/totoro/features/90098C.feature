@@ -1,4 +1,4 @@
-@nhi-90-series
+@nhi @nhi-90-series
 Feature: 90098C 難症特別處理-符合附表3.3.1標準之多根管根管治療。(五根及五根以上根管)
 
     Scenario Outline: 全部檢核成功

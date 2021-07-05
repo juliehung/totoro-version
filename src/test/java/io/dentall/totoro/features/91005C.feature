@@ -1,4 +1,4 @@
-@nhi-91-series
+@nhi @nhi-91-series
 Feature: 91005C 口乾症牙結石清除-全口
 
     Scenario Outline: 全部檢核成功

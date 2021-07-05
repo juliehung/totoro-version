@@ -1,4 +1,4 @@
-@nhi-91-series
+@nhi @nhi-91-series
 Feature: 91016C 特定牙周保存治療-全口總齒數4-8顆
 
     Scenario Outline: 全部檢核成功

@@ -1,4 +1,4 @@
-@nhi-90-series
+@nhi @nhi-90-series
 Feature: 90017C 恆牙斷髓處理
 
     Scenario Outline: 全部檢核成功

@@ -1,4 +1,4 @@
-@nhi-91-series
+@nhi @nhi-91-series
 Feature: 91114C 特殊牙周暨齲齒控制基本處置
 
     Scenario Outline: 全部檢核成功
