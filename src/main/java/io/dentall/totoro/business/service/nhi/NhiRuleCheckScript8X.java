@@ -103,7 +103,7 @@ public class NhiRuleCheckScript8X {
                 nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_3),
                 String.valueOf(DateTimeUtil.NUMBERS_OF_MONTH_3),
                 1,
-                NhiRuleCheckFormat.D4_1
+                NhiRuleCheckFormat.D1_2_2
             ),
             vm
         );
