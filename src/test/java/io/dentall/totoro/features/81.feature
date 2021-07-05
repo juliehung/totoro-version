@@ -1,3 +1,4 @@
+@nhi @nhi-8-series
 Feature: 81 氟化防齲處理(包括牙醫師專業塗氟處理、一般性口腔檢查、衛生教育）
 
     Scenario Outline: 全部檢核成功
@@ -29,24 +30,6 @@ Feature: 81 氟化防齲處理(包括牙醫師專業塗氟處理、一般性口�
             | 5          | 81           | 51         | FM           | Pass      |
             | 6          | 81           | 51         | FM           | NotPass   |
             | 7          | 81           | 51         | FM           | NotPass   |
-
-    Scenario Outline: 檢查同一處置單，是否沒有健保定義的其他衝突診療
-        Given 建立醫師
-        Given Kelly 5 歲病人
-        Given 建立預約
-        Given 建立掛號
-        Given 產生診療計畫
-        And 新增診療代碼:
-            | A72 | A73 | A74 | A75 | A76 | A77 | A78 | A79 |
-            | 3   | 81  | FM  | DO  | 0   | 1.0 | 03  |     |
-        When 執行診療代碼 <IssueNhiCode> 檢查:
-            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
-            | 81      | FM    | DO      |                |              |                |
-            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查同一處置單，是否沒有健保定義的 <IssueNhiCode> 重複診療衝突，確認結果是否為 <PassOrNot>
-        Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
-            | 81           | 14         | MOB          | NotPass   |
 
     Scenario Outline: （HIS）半年內，不應有 81 診療項目
         Given 建立醫師
