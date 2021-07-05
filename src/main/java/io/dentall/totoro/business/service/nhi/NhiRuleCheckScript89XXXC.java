@@ -503,7 +503,7 @@ public class NhiRuleCheckScript89XXXC {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedSurface(
                 dto,
-                SurfaceConstraint.MIN_2_SURFACES
+                SurfaceConstraint.MIN_3_SURFACES
             ),
             vm
         );
@@ -1267,7 +1267,7 @@ public class NhiRuleCheckScript89XXXC {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.GENERAL_TOOTH_EXCLUDE_WISDOM_TOOTH
+                ToothConstraint.BACK_TOOTH_EXCLUDE_WISDOM_TOOTH
             ),
             vm
         );
