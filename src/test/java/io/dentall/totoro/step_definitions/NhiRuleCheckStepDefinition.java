@@ -210,15 +210,29 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkValidatedResult(resultActions, passOrNot);
     }
 
-    @Then("在過去 {int} 天，應沒有任何治療紀錄，確認結果是否為 {passOrNot}")
-    public void checkNoTreatmentInPeriod(int pastDays, Boolean passOrNot) throws Exception {
+    @Then("在過去 {int} 天，應沒有任何治療紀錄，確認結果是否為 {passOrNot} 且檢查訊息類型為 {msgFormat}")
+    public void checkNoTreatmentInPeriod(int dayGap, Boolean passOrNot, NhiRuleCheckFormat msgFormat) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        NhiTreatment violationNhiTreatment = findLastNhiTreatment(nhiCode).get();
-        String type = findSourceType(violationNhiTreatment);
-        String date = transformLocalDateToRocDateForDisplay(pastInstant(pastDays));
-        String tooth = multipleToothToDisplay(violationNhiTreatment.getTooth());
-        String message = formatMsg(!passOrNot).apply(D1_3, new Object[]{nhiCode, tooth, nhiCode, type, date});
+        List<NhiTreatment> nhiTreatments = findNhiTreatment();
+        Object[] msgArgs = null;
+        String message = null;
+
+        if (nhiTreatments.size() > 0) {
+            NhiTreatment violationNhiTreatment = nhiTreatments.stream().min((nt1, nt2) -> nt2.getDatetime().compareTo(nt1.getDatetime())).get();
+            String type = findSourceType(violationNhiTreatment);
+            String date = transformLocalDateToRocDateForDisplay(pastInstant(dayGap));
+            String tooth = multipleToothToDisplay(violationNhiTreatment.getTooth());
+
+            if (msgFormat == D1_3) {
+                msgArgs = new Object[]{nhiCode, tooth, nhiCode, type, date};
+            } else if (msgFormat == D1_5) {
+                msgArgs = new Object[]{nhiCode, dayGap};
+            }
+
+            message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
+        }
+
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -674,42 +688,47 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             .collect(Collectors.toList());
     }
 
-    private List<NhiTreatment> findNhiTreatment(String nhiCodes) {
-        return findNhiTreatment(Arrays.asList(nhiCodes));
+    private List<NhiTreatment> nhiSnapshotToNhiTreatmentExcludeValidationNhiCode() {
+        String validationNhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
+        List<NhiTreatment> snapshot = nhiSnapshotToNhiTreatment();
+        Iterator<NhiTreatment> itor = snapshot.iterator();
+        while (itor.hasNext()) {
+            NhiTreatment nt = itor.next();
+            if (nt.getCode().equals(validationNhiCode)) {
+                // 要把Snapshot上受檢代碼的資料先移除，但有可能多筆，所以先暫時移除第一筆
+                itor.remove();
+                break;
+            }
+        }
+        return snapshot;
     }
 
-    private List<NhiTreatment> findNhiTreatment(List<String> nhiCodes) {
-        String validationNhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
-
-        List<NhiTreatment> snapshot = nhiSnapshotToNhiTreatment().stream()
+    private List<NhiTreatment> findNhiTreatment() {
+        List<NhiTreatment> snapshot = nhiSnapshotToNhiTreatmentExcludeValidationNhiCode().stream()
             .filter(nt -> nt.getNhiExtendTreatmentProcedureId() == null)
-            .filter(nt -> nhiCodes.contains(nt.getCode()))
             .collect(Collectors.toList());
 
         List<NhiTreatment> history = mergeTreatmentAndMedical().stream()
             .filter(nt -> !disposalTestInfoHolder.getDisposal().getId().equals(nt.getDisposalId()))
-            .filter(nt -> nhiCodes.contains(nt.getCode()))
             .collect(Collectors.toList());
-
-        if (nhiCodes.size() > 0 && snapshot.size() > 0 && nhiCodes.contains(validationNhiCode)) {
-            Iterator<NhiTreatment> itor = snapshot.iterator();
-            while (itor.hasNext()) {
-                NhiTreatment nt = itor.next();
-                if (nt.getCode().equals(validationNhiCode)) {
-                    // 受檢的代碼與搜查的代碼一樣的話，要把Snapshot上受檢代碼的資料先移除，但有可能多筆，所以先暫時移除第一筆
-                    itor.remove();
-                    break;
-                }
-            }
-        }
 
         snapshot.addAll(history);
 
         return snapshot;
     }
 
-    private Optional<NhiTreatment> findLastNhiTreatment(String violationNhiCode) {
-        List<NhiTreatment> violations = findNhiTreatment(violationNhiCode);
+    private List<NhiTreatment> findNhiTreatment(String nhiCodes) {
+        return findNhiTreatment(Arrays.asList(nhiCodes));
+    }
+
+    private List<NhiTreatment> findNhiTreatment(List<String> nhiCodes) {
+        return findNhiTreatment().stream()
+            .filter(nt -> nhiCodes.contains(nt.getCode()))
+            .collect(Collectors.toList());
+    }
+
+    private Optional<NhiTreatment> findLastNhiTreatment(String nhiCode) {
+        List<NhiTreatment> violations = findNhiTreatment(nhiCode);
         return violations.stream().min((nt1, nt2) -> nt2.getDatetime().compareTo(nt1.getDatetime()));
     }
 
