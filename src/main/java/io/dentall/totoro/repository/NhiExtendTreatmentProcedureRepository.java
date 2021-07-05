@@ -1,5 +1,6 @@
 package io.dentall.totoro.repository;
 
+import io.dentall.totoro.business.service.nhi.NhiRuleCheckMonthDeclarationTxDTO;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.service.dto.HistoricalNhiTxDispInfoDTO;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
@@ -69,4 +70,33 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
     // 查詢所有 nhi extend procedure，且包含輸入之健保代碼，且在指定病患下
     List<NhiExtendTreatmentProcedureTable> findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(Long patientId, List<String> a73s);
 
+    @Query(
+        nativeQuery = true,
+        value = "select d.id as disposalId, " +
+            "       a.patient_id as patientId, " +
+            "       p.name as patientName, " +
+            "       a.doctor_user_id as doctorId, " +
+            "       ju.first_name as doctorName, " +
+            "       ned.a17 as disposalTime, " +
+            "       ned.a23 as nhiCategory, " +
+            "       tp.id as treatmentProcedureId, " +
+            "       netp.a73 as nhiCode, " +
+            "       netp.a74 as teeth, " +
+            "       netp.a75 as surface " +
+            "from disposal d " +
+            "left join appointment a on d.registration_id = a.registration_id " +
+            "left join patient p on p.id = a.patient_id " +
+            "left join jhi_user ju on ju.id = a.doctor_user_id " +
+            "left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "where trim(ned.a18) <> '' and a19 = '1' and a17 like :yearMonthQueryClause and d.id is not null and netp.treatment_procedure_id is not null and d.id not in (:excludeDisposals) " +
+            "or trim(ned.a18) <> '' and a19 = '2' and a54 like :yearMonthQueryClause and d.id is not null and netp.treatment_procedure_id is not null and d.id not in (:excludeDisposals)" +
+            "order by d.date_time, doctorId, patientId" +
+            ";"
+    )
+    List<NhiRuleCheckMonthDeclarationTxDTO> findNhiMonthDeclarationTx(
+        @Param(value = "yearMonthQueryClause") String yearMonthQueryClause,
+        @Param(value = "excludeDisposals") List<Long> excludeDisposals
+    );
 }

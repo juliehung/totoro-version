@@ -29,12 +29,30 @@ public class ImageGcsBusinessService extends ImageBusinessService {
 
     private final String BUCKET_NAME;
 
+    /**
+     * GOOGLE API url for make api call to communicate with GCS
+     */
     private final String GCS_BASE_URL;
 
-    public ImageGcsBusinessService(ImageRepository imageRepository, @Value("${gcp.bucket-name}") String bucketName) {
+    /**
+     * GOOGLE url for direct access files from GCS with authentication.
+     * This mechanism is unsafe need to impl with new method to do so.
+     * Or maybe there is a way to authenticate user to access files.
+     */
+    private final String READ_GCS_BASE_URL;
+
+    private final String CLINIC_NAME;
+
+    public ImageGcsBusinessService(
+        ImageRepository imageRepository,
+        @Value("${gcp.bucket-name}") String bucketName,
+        @Value("#{environment.IMAGE_BASIC_FOLDER_PATH}") String clinicName
+    ) {
         super(imageRepository);
         BUCKET_NAME = bucketName;
         GCS_BASE_URL = "https://storage.googleapis.com/" + bucketName + "/";
+        READ_GCS_BASE_URL = "https://storage.cloud.google.com/" + bucketName + "/";
+        CLINIC_NAME = clinicName;
     }
 
 
@@ -95,4 +113,15 @@ public class ImageGcsBusinessService extends ImageBusinessService {
         original
     }
 
+    public String getUrlForUpload() {
+        return this.GCS_BASE_URL;
+    }
+
+    public String getUrlForDownload() {
+        return this.READ_GCS_BASE_URL;
+    }
+
+    public String getClinicName() {
+        return this.CLINIC_NAME;
+    }
 }

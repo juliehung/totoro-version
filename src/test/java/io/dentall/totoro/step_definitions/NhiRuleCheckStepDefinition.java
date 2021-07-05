@@ -25,6 +25,7 @@ import io.dentall.totoro.test.mapper.NhiTreatmentTestMapper;
 import io.dentall.totoro.web.rest.NhiRuleCheckResource;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -69,10 +70,16 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     @Autowired
     private NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NhiRuleCheckResource resource = new NhiRuleCheckResource(nhiRuleCheckUtil);
+        final NhiRuleCheckResource resource = new NhiRuleCheckResource(
+            nhiRuleCheckUtil,
+            applicationContext
+        );
         this.mvc = MockMvcBuilders.standaloneSetup(resource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
