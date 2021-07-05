@@ -20,13 +20,26 @@ public class NhiRuleCheckDTO {
     @NotNull
     private NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure;
 
-    private List<Long> excludeTreatmentProcedureIds;
+    private List<Long> excludeDisposalIds;
 
     private List<String> includeNhiCodes;
 
     private List<NhiRuleCheckTxSnapshot> txSnapshots;
 
     private boolean referral;
+
+    /**
+     * 主要用來提升月申報速度，使得重複查詢的次數減少，未來期望在處置單檢查時也可以改用這個方式。
+     */
+    private List<NhiHybridRecordDTO> sourceData;
+
+    public List<NhiHybridRecordDTO> getSourceData() {
+        return sourceData;
+    }
+
+    public void setSourceData(List<NhiHybridRecordDTO> sourceData) {
+        this.sourceData = sourceData;
+    }
 
     public Long getDoctorId() {
         return doctorId;
@@ -110,11 +123,11 @@ public class NhiRuleCheckDTO {
         this.nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedure;
     }
 
-    public List<Long> getExcludeTreatmentProcedureIds() {
-        return excludeTreatmentProcedureIds;
+    public List<Long> getExcludeDisposalIds() {
+        return excludeDisposalIds;
     }
 
-    public void setExcludeTreatmentProcedureIds(List<Long> excludeTreatmentProcedureIds) {
-        this.excludeTreatmentProcedureIds = excludeTreatmentProcedureIds;
+    public void setExcludeDisposalIds(List<Long> excludeDisposalIds) {
+        this.excludeDisposalIds = excludeDisposalIds;
     }
 }

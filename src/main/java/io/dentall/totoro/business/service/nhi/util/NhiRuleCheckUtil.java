@@ -1,33 +1,38 @@
 package io.dentall.totoro.business.service.nhi.util;
 
+import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.business.service.NhiRuleCheckInfoType;
 import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
-import io.dentall.totoro.business.service.nhi.NhiHybridRecordDTO;
-import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
-import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
+import io.dentall.totoro.business.service.nhi.*;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
+import io.dentall.totoro.domain.NhiMonthDeclarationRuleCheckReport;
 import io.dentall.totoro.domain.Patient;
-import io.dentall.totoro.repository.DisposalRepository;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
-import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.domain.enumeration.BackupFileCatalog;
+import io.dentall.totoro.domain.enumeration.BatchStatus;
+import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.ConfigurationMapQueryService;
+import io.dentall.totoro.service.ConfigurationMapService;
 import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.service.dto.table.PatientTable;
 import io.dentall.totoro.service.mapper.DisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
 import io.dentall.totoro.service.mapper.PatientMapper;
+import io.dentall.totoro.service.util.CsvUtil;
 import io.dentall.totoro.service.util.DateTimeUtil;
+import io.micrometer.core.annotation.Timed;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -56,13 +61,16 @@ public class NhiRuleCheckUtil {
 
     private final DisposalRepository disposalRepository;
 
+    private final NhiMonthDeclarationRuleCheckReportRepository nhiMonthDeclarationRuleCheckReportRepository;
+
     public NhiRuleCheckUtil(
         ApplicationContext applicationContext,
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
         PatientRepository patientRepository,
         NhiExtendDisposalMapper nhiExtendDisposalMapper,
-        DisposalRepository disposalRepository
+        DisposalRepository disposalRepository,
+        NhiMonthDeclarationRuleCheckReportRepository nhiMonthDeclarationRuleCheckReportRepository
     ) {
         this.applicationContext = applicationContext;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
@@ -70,6 +78,7 @@ public class NhiRuleCheckUtil {
         this.patientRepository = patientRepository;
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
         this.disposalRepository = disposalRepository;
+        this.nhiMonthDeclarationRuleCheckReportRepository = nhiMonthDeclarationRuleCheckReportRepository;
     }
 
     public NhiRuleCheckResultVM dispatch(
@@ -246,9 +255,15 @@ public class NhiRuleCheckUtil {
         if (body.getDisposalId() != null) {
             Optional<DisposalTable> optionalDt = disposalRepository.findDisposalById(body.getDisposalId());
             if (optionalDt.isPresent()) {
-                // TODO: 這段效能很差，若有反應檢查很慢可以先調整此項
-                nhiExtendTreatmentProcedureRepository.findNhiExtendTreatmentProcedureByTreatmentProcedure_Disposal_Id(optionalDt.get().getId())
-                    .forEach(netp -> oldNetpMap.put(netp.getId(), netp));
+                /**
+                 * 為了可以偵測為儲存的資料用，效能非常差，所以在月申報檢核時必須跳過。
+                 */
+                if (body.getSourceData() == null ||
+                    body.getSourceData().size() == 0
+                ) {
+                    nhiExtendTreatmentProcedureRepository.findNhiExtendTreatmentProcedureByTreatmentProcedure_Disposal_Id(optionalDt.get().getId())
+                        .forEach(netp -> oldNetpMap.put(netp.getId(), netp));
+                }
 
                 List<NhiExtendDisposalTable> nedts =
                     nhiExtendDisposalRepository.findByDisposal_IdOrderByIdDesc(optionalDt.get().getId(), NhiExtendDisposalTable.class).stream().collect(Collectors.toList());
@@ -279,12 +294,26 @@ public class NhiRuleCheckUtil {
             }
 
             dto.getNhiExtendDisposal().setA23(body.getNhiCategory());
+
+            List<Long> excludeDisposalIdsAndCurrentDisposalId = null;
+            if (body.getExcludeDisposalIds() != null) {
+                excludeDisposalIdsAndCurrentDisposalId = new ArrayList<>(body.getExcludeDisposalIds());
+            } else {
+               excludeDisposalIdsAndCurrentDisposalId = new ArrayList<>();
+            }
+            excludeDisposalIdsAndCurrentDisposalId.add(
+                body.getDisposalId() != null
+                    ? body.getDisposalId()
+                    : 0L
+            );
+            dto.setExcludeDisposalIds(excludeDisposalIdsAndCurrentDisposalId);
         } else {
             NhiExtendDisposal ned = new NhiExtendDisposal();
             ned.setA17(
                 body.getDisposalTime()
             );
             dto.setNhiExtendDisposal(ned);
+            dto.setExcludeDisposalIds(body.getExcludeDisposalIds());
         }
 
         // Assign nhi treatment procedure a.k.a target treatment procedure
@@ -335,13 +364,217 @@ public class NhiRuleCheckUtil {
             dto.setTxSnapshots(new ArrayList());
         }
 
-        dto.setExcludeTreatmentProcedureIds(excludeTreatmentProcedureIds);
         dto.setIncludeNhiCodes(includeNhiCode);
         if (body.getDoctorId() != null) {
             dto.setDoctorId(body.getDoctorId());
         }
 
+        // Assign source data
+        dto.setSourceData(body.getSourceData());
+
         return dto;
+    }
+
+    @Transactional
+    @Timed
+    public NhiMonthDeclarationRuleCheckReport createMonthDeclarationRuleCheckReportStatus(String yearMonthString) {
+        NhiMonthDeclarationRuleCheckReport report = new NhiMonthDeclarationRuleCheckReport();
+        report.setStatus(BatchStatus.LOCK);
+        report.setYearMonth(yearMonthString);
+        report.setComment("");
+        return nhiMonthDeclarationRuleCheckReportRepository.save(report);
+    }
+
+    @Transactional
+    @Timed
+    public NhiMonthDeclarationRuleCheckReport updateMonthDeclarationRuleCheckReportStatus(
+        Long id,
+        BatchStatus status,
+        String url
+    ) {
+        NhiMonthDeclarationRuleCheckReport result = null;
+        Optional<NhiMonthDeclarationRuleCheckReport> report = nhiMonthDeclarationRuleCheckReportRepository.findById(id);
+        if (report.isPresent()) {
+            result = report.get();
+            result.setStatus(status);
+            result.setComment(url);
+        }
+
+        return result;
+    }
+
+    @Transactional
+    @Timed
+    public List<NhiMonthDeclarationRuleCheckReport> getMonthDeclarationRuleCheckReport(String yearMonthString) {
+        return this.nhiMonthDeclarationRuleCheckReportRepository.findByYearMonthEquals(yearMonthString);
+    }
+
+    public synchronized String generateMonthDeclarationRuleCheckReport(
+        Integer partialACDateTime,
+        List<Long> excludeDisposals,
+        ImageGcsBusinessService imageGcsBusinessService
+    ) {
+        List<String> csvRecords = new ArrayList<>();
+        List<Long> keiesOrderByDisposalDateTime = new ArrayList<>();
+        List<String> errorReport = new ArrayList<>();
+        String fileUrl = "";
+
+        // Csv header
+        csvRecords.add(
+            CsvUtil.convertDataToCsvRecord(
+                Arrays.asList(
+                    "編號",
+                    "就醫治療時間",
+                    "病患姓名",
+                    "醫師姓名",
+                    "內容"
+                )
+            )
+        );
+
+        // Csv records
+        Map<Long, List<NhiRuleCheckMonthDeclarationTx>> disposalTx = nhiExtendTreatmentProcedureRepository.findNhiMonthDeclarationTx(
+            String.valueOf(partialACDateTime).concat("%"),
+            excludeDisposals != null &&
+                excludeDisposals.size() > 0
+                ? excludeDisposals
+                : Arrays.asList(0L)
+        ).stream()
+            .map(d -> {
+                if (!keiesOrderByDisposalDateTime.contains(d.getDisposalId())) {
+                    keiesOrderByDisposalDateTime.add(d.getDisposalId());
+                }
+                return new NhiRuleCheckMonthDeclarationTx(
+                    d.getDisposalId(),
+                    d.getDisposalTime(),
+                    d.getNhiCategory(),
+                    d.getDoctorId(),
+                    d.getDoctorName(),
+                    d.getPatientId(),
+                    d.getPatientName(),
+                    d.getTreatmentProcedureId(),
+                    d.getNhiCode(),
+                    d.getTeeth(),
+                    d.getSurface()
+                );
+            })
+            .collect(Collectors.groupingBy(d -> d.getDisposalId()));
+
+        int seq = 1;
+        for (Long key : keiesOrderByDisposalDateTime) {
+            List<NhiRuleCheckMonthDeclarationTx> vs = disposalTx.get(key);
+
+            List<NhiRuleCheckTxSnapshot> txSnapshots = new ArrayList<>();
+            NhiRuleCheckBody body = new NhiRuleCheckBody();
+            boolean isFirst = true;
+            String disposalTime = "";
+            String patientName = "";
+            String doctorName = "";
+            String checkedMessage = "";
+            Long patientId = 0L;
+
+            // Assemble NRC body
+            for (NhiRuleCheckMonthDeclarationTx v : vs) {
+                if (isFirst) {
+                    body = NhiRuleCheckMapper.INSTANCE.convertToNhiRuleCheckBody(v);
+                    patientId = v.getPatientId();
+                    disposalTime = v.getDisposalTime();
+                    patientName = v.getPatientName();
+                    doctorName = v.getDoctorName();
+                    isFirst = false;
+                }
+                txSnapshots.add(
+                    NhiRuleCheckMapper.INSTANCE.convertToNhiRuleCheckTxSnapshot(v)
+                );
+            }
+
+            List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+                patientId,
+                excludeDisposals
+            );
+
+            body.setTxSnapshots(txSnapshots);
+            body.setSourceData(sourceData);
+            body.setExcludeDisposalIds(excludeDisposals);
+
+            // Operate NRC logic for current disposal's treatment procedures
+            for (NhiRuleCheckMonthDeclarationTx v : vs) {
+                try {
+                    NhiRuleCheckResultVM vm = this.dispatch(v.getNhiCode(), body);
+                    checkedMessage = checkedMessage
+                        .concat(
+                            String.join(
+                                "\n",
+                                vm.getMessages()
+                            )
+                        )
+                        .concat("\n");
+                }catch (Exception e) {
+                    errorReport.add(
+                        String.valueOf(
+                            v.toString()
+                        )
+                        .concat(" :")
+                        .concat(
+                            e.getMessage() == null
+                                ? ""
+                                : e.getMessage()
+                        )
+                    );
+                }
+
+            }
+
+            csvRecords.add(
+                CsvUtil.convertDataToCsvRecord(
+                    Arrays.asList(
+                        String.valueOf(seq),
+                        DateTimeUtil.transformA71ToDisplayWithTime(
+                            disposalTime
+                        ),
+                        patientName,
+                        doctorName,
+                        "\"".concat(
+                            checkedMessage
+                        )
+                            .concat(
+                                "\""
+                            )
+                    )
+                )
+            );
+            seq++;
+        }
+
+        try {
+            String fileName = Instant.now().toString()
+                .concat(".csv");
+            imageGcsBusinessService.uploadFile(
+                    imageGcsBusinessService.getClinicName()
+                    .concat("/")
+                    .concat(BackupFileCatalog.MONTH_DECLARE_RULE_CHECK_REPORT.getRemotePath())
+                    .concat("/"),
+                fileName,
+                CsvUtil.convertCsvStringToInputStream(csvRecords),
+                "text/csv"
+            );
+            fileUrl = imageGcsBusinessService.getUrlForDownload()
+                .concat(imageGcsBusinessService.getClinicName())
+                .concat("/")
+                .concat(BackupFileCatalog.MONTH_DECLARE_RULE_CHECK_REPORT.getRemotePath())
+                .concat("/")
+                .concat(fileName);
+        } catch (Exception e) {
+            errorReport.add(
+                "Something go wrong when upload file to GCP"
+                    .concat(" :")
+                    .concat(
+                        e.getMessage()
+                    )
+            );
+        }
+
+        return fileUrl;
     }
 
     /**
@@ -894,7 +1127,9 @@ public class NhiRuleCheckUtil {
             }
         }
 
-        List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData()
+            : this.findNhiHypeRecordsDTO(
             dto.getPatient().getId(),
             Arrays.asList(
                 this.getDisposalIdInDTO(dto)
@@ -981,7 +1216,9 @@ public class NhiRuleCheckUtil {
         List<String> queryCodes = Arrays.asList("89006C", "90001C", "90002C", "90003C", "90019C", "90020C");
         List<String> mustIncludeCodes = Arrays.asList("90001C", "90002C", "90003C", "90019C", "90020C");
 
-        List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> queryCodes.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
             dto.getPatient().getId(),
             queryCodes,
             Arrays.asList(
@@ -1108,8 +1345,13 @@ public class NhiRuleCheckUtil {
         }
 
         // 當日其他處置 91004C, 91005C, 91020C
+        List<String> queryCode = Arrays.asList(
+            "91004C", "91005C", "91020C"
+        );
         if (!foundTargetInCurrentDisposal) {
-            List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+            List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> queryCode.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
                 dto.getPatient().getId(),
                 Arrays.asList(
                     "91004C", "91005C", "91020C"
@@ -1173,7 +1415,9 @@ public class NhiRuleCheckUtil {
 
             }
 
-            List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+            List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> queryCode.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
                 dto.getPatient().getId(),
                 Arrays.asList(
                     "91014C"
@@ -1225,7 +1469,13 @@ public class NhiRuleCheckUtil {
             .validateTitle("special rule for 91018C")
             .validated(true);
 
-        List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+        List<String> queryCode = Arrays.asList(
+            "91022C", "91023C"
+        );
+
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> queryCode.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
             dto.getPatient().getId(),
             Arrays.asList(
                 "91022C", "91023C"
@@ -1345,7 +1595,9 @@ public class NhiRuleCheckUtil {
         }
 
         // 其他處置
-        List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> codes.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
             dto.getPatient().getId(),
             codes,
             Arrays.asList(
@@ -1433,7 +1685,9 @@ public class NhiRuleCheckUtil {
         }
 
         // 其他處置
-        List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> codes.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
             dto.getPatient().getId(),
             codes,
             Arrays.asList(
@@ -1521,7 +1775,10 @@ public class NhiRuleCheckUtil {
         }
 
         // 其他處置
-        List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+        List<String> queryCode = Arrays.asList("91004C");
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> queryCode.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
             dto.getPatient().getId(),
             Arrays.asList("91004C"),
             Arrays.asList(
@@ -1657,7 +1914,9 @@ public class NhiRuleCheckUtil {
         }
 
         // 其他處置
-        List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> codes.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
             dto.getPatient().getId(),
             codes,
             Arrays.asList(
@@ -1803,7 +2062,9 @@ public class NhiRuleCheckUtil {
         }
 
         // Past disposal
-        List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> codes.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
             dto.getPatient().getId(),
             codes,
             Arrays.asList(
@@ -2125,7 +2386,9 @@ public class NhiRuleCheckUtil {
             dto.getNhiExtendDisposal().getDisposal() != null &&
             dto.getNhiExtendDisposal().getDisposal().getId() != null
         ) {
-            List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+            List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> code.equals(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
                 dto.getPatient().getId(),
                 Arrays.asList(
                     code

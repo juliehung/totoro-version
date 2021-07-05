@@ -83,6 +83,27 @@ public final class DateTimeUtil {
     public static Supplier<LocalDate> localMonthFirstDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.firstDayOfMonth()).toLocalDate();
     public static Supplier<LocalDate> localMonthLastDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.lastDayOfMonth()).toLocalDate();
 
+    public static String transformA71ToDisplayWithTime(String a71) {
+        String result = "";
+
+        if (
+            a71 != null &&
+            a71.length() > 11
+        ) {
+            result = result.concat(a71.substring(0, 3))
+                .concat("/")
+                .concat(a71.substring(3, 5))
+                .concat("/")
+                .concat(a71.substring(5, 7))
+                .concat(" ")
+                .concat(a71.substring(7, 9))
+                .concat(":")
+                .concat(a71.substring(9, 11));
+        }
+
+        return result;
+    }
+
     public static String transformA71ToDisplay(String a71) {
         return String.format("%s/%s/%s", a71.substring(0, 3), a71.substring(3, 5), a71.substring(5, 7));
     }
