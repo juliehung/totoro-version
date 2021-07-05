@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90016C 乳牙根管治療
 
     Scenario Outline: 全部檢核成功
@@ -29,14 +30,14 @@ Feature: 90016C 乳牙根管治療
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
             | 90016C       | 51         | DL           | 0                 | 90016C           | 51             | 90     | NotPass   |
             | 90016C       | 51         | DL           | 90                | 90016C           | 51             | 90     | NotPass   |
             | 90016C       | 51         | DL           | 91                | 90016C           | 51             | 90     | Pass      |
 
-    Scenario Outline: （IC）60天內，不應有 90016C 診療項目
+    Scenario Outline: （IC）90天內，不應有 90016C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 新增健保醫療:
@@ -48,7 +49,7 @@ Feature: 90016C 乳牙根管治療
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
             | 90016C       | 51         | DL           | 0               | 90016C         | 51           | 90     | NotPass   |
@@ -70,7 +71,7 @@ Feature: 90016C 乳牙根管治療
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）同牙 <IssueTeeth> 未曾申報過，指定代碼 <TreatmentNhiCode> ，確認結果是否為 <PassOrNot>
+        Then 同牙 <IssueTeeth> 未曾申報過，指定代碼 <TreatmentNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             # 測試同牙
@@ -94,7 +95,7 @@ Feature: 90016C 乳牙根管治療
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）同牙 <IssueTeeth> 未曾申報過，指定代碼 <MedicalNhiCode> ，確認結果是否為 <PassOrNot>
+        Then 同牙 <IssueTeeth> 未曾申報過，指定代碼 <MedicalNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | TreatmentTeeth | PassOrNot |
             # 測試同牙
@@ -186,6 +187,14 @@ Feature: 90016C 乳牙根管治療
             | 90016C       | 99         | DL           | Pass      |
             # 牙位為區域型態
             | 90016C       | FM         | DL           | NotPass   |
+            | 90016C       | UR         | DL           | NotPass   |
+            | 90016C       | UL         | DL           | NotPass   |
+            | 90016C       | UA         | DL           | NotPass   |
+            | 90016C       | UB         | DL           | NotPass   |
+            | 90016C       | LL         | DL           | NotPass   |
+            | 90016C       | LR         | DL           | NotPass   |
+            | 90016C       | LA         | DL           | NotPass   |
+            | 90016C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90016C       | 00         | DL           | NotPass   |
             | 90016C       | 01         | DL           | NotPass   |

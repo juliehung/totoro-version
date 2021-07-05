@@ -1,3 +1,4 @@
+@nhi-91-series
 Feature: 91001C 牙周病緊急處置
 
     Scenario Outline: 全部檢核成功
@@ -14,7 +15,6 @@ Feature: 91001C 牙周病緊急處置
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91001C       | 14         | MOB          | Pass      |
 
-#        如果是診所與健保卡合併計算，是否也要測試？
     Scenario Outline: （HIS）每月只能申報2次 91001C 健保代碼
         Given 建立醫師
         Given Stan 24 歲病人
@@ -28,7 +28,7 @@ Feature: 91001C 牙周病緊急處置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）每月 的記錄中，<IssueNhiCode> 診療代碼最多只能 2 次，確認結果是否為 <PassOrNot>
+        Then 在 每月 的記錄中，<IssueNhiCode> 診療代碼最多只能 2 次，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | Nums | PassOrNot |
             | 91001C       | 11         | MOB          | 1    | Pass      |
@@ -47,7 +47,7 @@ Feature: 91001C 牙周病緊急處置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）每月 的記錄中，<IssueNhiCode> 診療代碼最多只能 2 次，確認結果是否為 <PassOrNot>
+        Then 在 每月 的記錄中，<IssueNhiCode> 診療代碼最多只能 2 次，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | Nums | PassOrNot |
             | 91001C       | 11         | MOB          | 1    | Pass      |
@@ -68,7 +68,7 @@ Feature: 91001C 牙周病緊急處置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）每月 的紀錄中，牙位 <IssueTeeth> 在同一象限中，最多只能申報 1 次 <IssueNhiCode> 健保代碼，確認結果是否為 <PassOrNot>
+        Then 在 每月 的紀錄中，牙位 <IssueTeeth> 在同一象限中，最多只能申報 1 次 <IssueNhiCode> 健保代碼，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDate | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             # 象限一 恆牙
@@ -109,16 +109,16 @@ Feature: 91001C 牙周病緊急處置
         Given Wind 24 歲病人
         Given 新增健保醫療:
             | PastDate          | NhiCode          | Teeth          |
-            | <PastMedicalDays> | <MedicalNhiCode> | <MedicalTeeth> |
+            | <PastMedicalDate> | <MedicalNhiCode> | <MedicalTeeth> |
         Given 在 當月底 ，建立預約
         Given 在 當月底 ，建立掛號
         Given 在 當月底 ，產生診療計畫
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）每月 的紀錄中，牙位 <IssueTeeth> 在同一象限中，最多只能申報 1 次 <IssueNhiCode> 健保代碼，確認結果是否為 <PassOrNot>
+        Then 在 每月 的紀錄中，牙位 <IssueTeeth> 在同一象限中，最多只能申報 1 次 <IssueNhiCode> 健保代碼，確認結果是否為 <PassOrNot>
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | PassOrNot |
             # 象限一 恆牙
             | 91001C       | 11         | MOB          | 當月初             | 91001C         | 21           | Pass      |
             | 91001C       | 11         | MOB          | 當月初             | 91001C         | 11           | NotPass   |
@@ -162,7 +162,7 @@ Feature: 91001C 牙周病緊急處置
             | NhiCode | Teeth | Surface | NewNhiCode         | NewTeeth         | NewSurface         |
             |         |       |         | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> |
             |         |       |         | <IssueNhiCode>     | <IssueTeeth>     | <IssueSurface>     |
-        Then 同日不得有 91003C~91005C/91017C/91019C/91103C/91104C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日不得有 <TreatmentNhiCode> 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 91001C       | 11         | MOB          | 91003C           | 11             | MOB              | NotPass   |
@@ -188,7 +188,7 @@ Feature: 91001C 牙周病緊急處置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 同日不得有 91003C~91005C/91017C/91019C/91103C/91104C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日不得有 <TreatmentNhiCode> 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDate | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 91001C       | 11         | MOB          | 當日                | 91003C           | 11             | MOB              | NotPass   |
@@ -218,7 +218,7 @@ Feature: 91001C 牙周病緊急處置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 同日不得有 91003C~91005C/91017C/91019C/91103C/91104C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日不得有 <MedicalNhiCode> 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 91001C       | 11         | MOB          | 當日              | 91003C         | 11           | NotPass   |
@@ -236,3 +236,100 @@ Feature: 91001C 牙周病緊急處置
             | 91001C       | 11         | MOB          | 昨日              | 91103C         | 11           | Pass      |
             | 91001C       | 11         | MOB          | 昨日              | 91104C         | 11           | Pass      |
 
+    Scenario Outline: 檢查治療的牙位是否為 VALIDATED_ALL_EXCLUDE_FM
+        Given 建立醫師
+        Given Wind 24 歲病人
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 檢查 <IssueTeeth> 牙位，依 VALIDATED_ALL_EXCLUDE_FM 判定是否為核可牙位，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
+            # 乳牙
+            | 91001C       | 51         | DL           | Pass      |
+            | 91001C       | 52         | DL           | Pass      |
+            | 91001C       | 53         | DL           | Pass      |
+            | 91001C       | 54         | DL           | Pass      |
+            | 91001C       | 55         | DL           | Pass      |
+            | 91001C       | 61         | DL           | Pass      |
+            | 91001C       | 62         | DL           | Pass      |
+            | 91001C       | 63         | DL           | Pass      |
+            | 91001C       | 64         | DL           | Pass      |
+            | 91001C       | 65         | DL           | Pass      |
+            | 91001C       | 71         | DL           | Pass      |
+            | 91001C       | 72         | DL           | Pass      |
+            | 91001C       | 73         | DL           | Pass      |
+            | 91001C       | 74         | DL           | Pass      |
+            | 91001C       | 75         | DL           | Pass      |
+            | 91001C       | 81         | DL           | Pass      |
+            | 91001C       | 82         | DL           | Pass      |
+            | 91001C       | 83         | DL           | Pass      |
+            | 91001C       | 84         | DL           | Pass      |
+            | 91001C       | 85         | DL           | Pass      |
+            # 恆牙
+            | 91001C       | 11         | DL           | Pass      |
+            | 91001C       | 12         | DL           | Pass      |
+            | 91001C       | 13         | DL           | Pass      |
+            | 91001C       | 14         | DL           | Pass      |
+            | 91001C       | 15         | DL           | Pass      |
+            | 91001C       | 16         | DL           | Pass      |
+            | 91001C       | 17         | DL           | Pass      |
+            | 91001C       | 18         | DL           | Pass      |
+            | 91001C       | 21         | DL           | Pass      |
+            | 91001C       | 22         | DL           | Pass      |
+            | 91001C       | 23         | DL           | Pass      |
+            | 91001C       | 24         | DL           | Pass      |
+            | 91001C       | 25         | DL           | Pass      |
+            | 91001C       | 26         | DL           | Pass      |
+            | 91001C       | 27         | DL           | Pass      |
+            | 91001C       | 28         | DL           | Pass      |
+            | 91001C       | 31         | DL           | Pass      |
+            | 91001C       | 32         | DL           | Pass      |
+            | 91001C       | 33         | DL           | Pass      |
+            | 91001C       | 34         | DL           | Pass      |
+            | 91001C       | 35         | DL           | Pass      |
+            | 91001C       | 36         | DL           | Pass      |
+            | 91001C       | 37         | DL           | Pass      |
+            | 91001C       | 38         | DL           | Pass      |
+            | 91001C       | 41         | DL           | Pass      |
+            | 91001C       | 42         | DL           | Pass      |
+            | 91001C       | 43         | DL           | Pass      |
+            | 91001C       | 44         | DL           | Pass      |
+            | 91001C       | 45         | DL           | Pass      |
+            | 91001C       | 46         | DL           | Pass      |
+            | 91001C       | 47         | DL           | Pass      |
+            | 91001C       | 48         | DL           | Pass      |
+            # 無牙
+            | 91001C       |            | DL           | NotPass   |
+            #
+            | 91001C       | 19         | DL           | Pass      |
+            | 91001C       | 29         | DL           | Pass      |
+            | 91001C       | 39         | DL           | Pass      |
+            | 91001C       | 49         | DL           | Pass      |
+            | 91001C       | 59         | DL           | NotPass   |
+            | 91001C       | 69         | DL           | NotPass   |
+            | 91001C       | 79         | DL           | NotPass   |
+            | 91001C       | 89         | DL           | NotPass   |
+            | 91001C       | 99         | DL           | Pass      |
+            # 牙位為區域型態
+            | 91001C       | FM         | DL           | NotPass   |
+            | 91001C       | UR         | DL           | Pass      |
+            | 91001C       | UL         | DL           | Pass      |
+            | 91001C       | UA         | DL           | Pass      |
+            | 91001C       | UB         | DL           | NotPass   |
+            | 91001C       | LL         | DL           | Pass      |
+            | 91001C       | LR         | DL           | Pass      |
+            | 91001C       | LA         | DL           | Pass      |
+            | 91001C       | LB         | DL           | NotPass   |
+            # 非法牙位
+            | 91001C       | 00         | DL           | NotPass   |
+            | 91001C       | 01         | DL           | NotPass   |
+            | 91001C       | 10         | DL           | NotPass   |
+            | 91001C       | 56         | DL           | NotPass   |
+            | 91001C       | 66         | DL           | NotPass   |
+            | 91001C       | 76         | DL           | NotPass   |
+            | 91001C       | 86         | DL           | NotPass   |
+            | 91001C       | 91         | DL           | NotPass   |

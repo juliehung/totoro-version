@@ -1,3 +1,4 @@
+@nhi-91-series
 Feature: 91022C 牙周病統合治療第二階段支付
 
     Scenario Outline: 全部檢核成功
@@ -20,6 +21,26 @@ Feature: 91022C 牙周病統合治療第二階段支付
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91022C       | 11         | MOB          | Pass      |
 
+    Scenario Outline: 提醒檢附牙菌斑控制紀錄表、牙周病檢查紀錄表
+        Given 建立醫師
+        Given Kelly 24 歲病人
+        Given 在過去第 152 天，建立預約
+        Given 在過去第 152 天，建立掛號
+        Given 在過去第 152 天，產生診療計畫
+        And 新增診療代碼:
+            | PastDays | A72 | A73    | A74 | A75 | A76 | A77 | A78 | A79 |
+            | 152      | 3   | 91021C | 11  | MOB | 0   | 1.0 | 03  |     |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 提醒"檢附牙菌斑控制紀錄表、牙周病檢查紀錄表"，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
+            | 91022C       | FM         | MOB          | Pass      |
+
     Scenario Outline: （HIS）152天內，得有91021C治療項目
         Given 建立醫師
         Given Kelly 30 歲病人
@@ -35,7 +56,7 @@ Feature: 91022C 牙周病統合治療第二階段支付
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）檢查 152 天內，應有 <TreatmentNhiCode> 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D8_1
+        Then 檢查 152 天內，應有 <TreatmentNhiCode> 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D8_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             | 91022C       | 11         | MOB          | 151               | 91021C           | 11             | Pass      |
@@ -54,7 +75,7 @@ Feature: 91022C 牙周病統合治療第二階段支付
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）檢查 152 天內，應有 <MedicalNhiCode> 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D8_1
+        Then 檢查 152 天內，應有 <MedicalNhiCode> 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D8_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 91022C       | 11         | MOB          | 151             | 91021C         | 11           | Pass      |
@@ -81,7 +102,7 @@ Feature: 91022C 牙周病統合治療第二階段支付
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）365 天內的記錄中，<TreatmentNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
+        Then 在 365 天內的記錄中，<TreatmentNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | Nums | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 91022C       | 11         | MOB          | 1    | 91006C           | 11             | MOB              | Pass      |
@@ -101,7 +122,7 @@ Feature: 91022C 牙周病統合治療第二階段支付
             | PastDays | A72 | A73    | A74 | A75 | A76 | A77 | A78 | A79 |
             | 152      | 3   | 91021C | 11  | MOB | 0   | 1.0 | 03  |     |
         Given 新增 <Nums> 筆健保醫療:
-            | PastDate | NhiCode            | Teeth |
+            | PastDays | NhiCode            | Teeth |
             | 100      | <TreatmentNhiCode> | 11    |
             | 364      | <TreatmentNhiCode> | 11    |
             | 365      | <TreatmentNhiCode> | 11    |
@@ -111,7 +132,7 @@ Feature: 91022C 牙周病統合治療第二階段支付
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）365 天內的記錄中，<TreatmentNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
+        Then 在 365 天內的記錄中，<TreatmentNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | Nums | TreatmentNhiCode | PassOrNot |
             | 91022C       | 11         | MOB          | 1    | 91006C           | Pass      |

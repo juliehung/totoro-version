@@ -1,3 +1,4 @@
+@nhi-89-series
 Feature: 89102C 特殊狀況之銀粉充填 -雙面
 
     Scenario Outline: 全部檢核成功
@@ -45,7 +46,7 @@ Feature: 89102C 特殊狀況之銀粉充填 -雙面
             | 89102C       | 51         | O            | NotPass   |
             | 89102C       | 51         |              | NotPass   |
 
-    Scenario Outline: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
+    Scenario Outline: （HIS）前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
         Given 建立醫師
         Given Wind 24 歲病人
         Given 在過去第 <89006CTreatmentDay> 天，建立預約
@@ -91,6 +92,45 @@ Feature: 89102C 特殊狀況之銀粉充填 -雙面
             | 89102C       | 54         | MOB          | 30                | 90003C           | 30                 | NotPass   |
             | 89102C       | 54         | MOB          | 30                | 90019C           | 30                 | NotPass   |
             | 89102C       | 54         | MOB          | 30                | 90020C           | 30                 | NotPass   |
+
+    Scenario Outline: （IC）前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
+        Given 建立醫師
+        Given Wind 24 歲病人
+        Given 新增健保醫療:
+            | PastDays                | NhiCode          | Teeth |
+            | <89006CPastMedicalDays> | 89006C           | 14    |
+            | <PastMedicalDays>       | <MedicalNhiCode> | 14    |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 89006C 在前 <89006CPastMedicalDays> 天建立， <MedicalNhiCode> 在前 <PastMedicalDays> 天建立，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | 89006CPastMedicalDays | PassOrNot |
+            # 測試TreatmentNhiCode為非指定代碼
+            | 89102C       | 14         | MOBL         | 15              | 01271C         | 30                    | NotPass   |
+            # 測試89006C在超過30天前建立
+            | 89102C       | 14         | MOBL         | 15              | 01271C         | 31                    | Pass      |
+            # 測試TreatmentNhiCode是產生在89006C之後，但在30天內
+            | 89102C       | 14         | MOBL         | 29              | 90001C         | 30                    | Pass      |
+            | 89102C       | 14         | MOBL         | 29              | 90002C         | 30                    | Pass      |
+            | 89102C       | 14         | MOBL         | 29              | 90003C         | 30                    | Pass      |
+            | 89102C       | 14         | MOBL         | 29              | 90019C         | 30                    | Pass      |
+            | 89102C       | 14         | MOBL         | 29              | 90020C         | 30                    | Pass      |
+            # 測試TreatmentNhiCode是產生在89006C之前，但超過30天
+            | 89102C       | 14         | MOBL         | 31              | 90001C         | 30                    | NotPass   |
+            | 89102C       | 14         | MOBL         | 31              | 90002C         | 30                    | NotPass   |
+            | 89102C       | 14         | MOBL         | 31              | 90003C         | 30                    | NotPass   |
+            | 89102C       | 14         | MOBL         | 31              | 90019C         | 30                    | NotPass   |
+            | 89102C       | 14         | MOBL         | 31              | 90020C         | 30                    | NotPass   |
+            # 測試TreatmentNhiCode與89006C都在同一天
+            | 89102C       | 14         | MOBL         | 30              | 90001C         | 30                    | NotPass   |
+            | 89102C       | 14         | MOBL         | 30              | 90002C         | 30                    | NotPass   |
+            | 89102C       | 14         | MOBL         | 30              | 90003C         | 30                    | NotPass   |
+            | 89102C       | 14         | MOBL         | 30              | 90019C         | 30                    | NotPass   |
+            | 89102C       | 14         | MOBL         | 30              | 90020C         | 30                    | NotPass   |
 
     Scenario Outline: 檢查治療的牙位是否為 GENERAL_TOOTH
         Given 建立醫師
@@ -165,13 +205,21 @@ Feature: 89102C 特殊狀況之銀粉充填 -雙面
             | 89102C       | 29         | DL           | Pass      |
             | 89102C       | 39         | DL           | Pass      |
             | 89102C       | 49         | DL           | Pass      |
-            | 89102C       | 59         | DL           | Pass      |
-            | 89102C       | 69         | DL           | Pass      |
-            | 89102C       | 79         | DL           | Pass      |
-            | 89102C       | 89         | DL           | Pass      |
+            | 89102C       | 59         | DL           | NotPass   |
+            | 89102C       | 69         | DL           | NotPass   |
+            | 89102C       | 79         | DL           | NotPass   |
+            | 89102C       | 89         | DL           | NotPass   |
             | 89102C       | 99         | DL           | Pass      |
             # 牙位為區域型態
             | 89102C       | FM         | DL           | NotPass   |
+            | 89102C       | UR         | DL           | NotPass   |
+            | 89102C       | UL         | DL           | NotPass   |
+            | 89102C       | UA         | DL           | NotPass   |
+            | 89102C       | UB         | DL           | NotPass   |
+            | 89102C       | LL         | DL           | NotPass   |
+            | 89102C       | LR         | DL           | NotPass   |
+            | 89102C       | LA         | DL           | NotPass   |
+            | 89102C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 89102C       | 00         | DL           | NotPass   |
             | 89102C       | 01         | DL           | NotPass   |

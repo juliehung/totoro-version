@@ -14,7 +14,7 @@ import static io.dentall.totoro.test.TestUtils.parseDays;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.assertj.core.api.Assertions.*;
 
-public class DateStepDefinition {
+public class DateStepDefinition extends AbstractStepDefinition {
 
     private LocalDate baseDate = LocalDate.of(2020, 06, 15);
 

@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90012C 橡皮障防濕裝置
 
     Scenario Outline: 全部檢核成功
@@ -43,7 +44,7 @@ Feature: 90012C 橡皮障防濕裝置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）同牙 <IssueTeeth> 未曾申報過，指定代碼 <TreatmentNhiCode> ，確認結果是否為 <PassOrNot>
+        Then 同牙 <IssueTeeth> 未曾申報過，指定代碼 <TreatmentNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             # 測試同牙
@@ -67,17 +68,17 @@ Feature: 90012C 橡皮障防濕裝置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）同牙 <IssueTeeth> 未曾申報過，指定代碼 <MedicalNhiCode> ，確認結果是否為 <PassOrNot>
+        Then 同牙 <IssueTeeth> 未曾申報過，指定代碼 <MedicalNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | TreatmentTeeth | PassOrNot |
             # 測試同牙
-            | 90012C       | 51         | MOB          | 3650            | 92013C         | 51             | NotPass   |
-            | 90012C       | 51         | MOB          | 3650            | 92014C         | 51             | NotPass   |
-            | 90012C       | 51         | MOB          | 3650            | 92015C         | 51             | NotPass   |
+            | 90012C       | 11         | MOB          | 3650            | 92013C         | 11             | NotPass   |
+            | 90012C       | 11         | MOB          | 3650            | 92014C         | 11             | NotPass   |
+            | 90012C       | 11         | MOB          | 3650            | 92015C         | 11             | NotPass   |
             # 測試不同牙
-            | 90012C       | 51         | MOB          | 3650            | 92013C         | 11             | Pass      |
-            | 90012C       | 51         | MOB          | 3650            | 92014C         | 11             | Pass      |
-            | 90012C       | 51         | MOB          | 3650            | 92015C         | 11             | Pass      |
+            | 90012C       | 11         | MOB          | 3650            | 92013C         | 51             | Pass      |
+            | 90012C       | 11         | MOB          | 3650            | 92014C         | 51             | Pass      |
+            | 90012C       | 11         | MOB          | 3650            | 92015C         | 51             | Pass      |
 
     Scenario Outline: 檢查治療的牙位是否為 GENERAL_TOOTH
         Given 建立醫師
@@ -159,6 +160,14 @@ Feature: 90012C 橡皮障防濕裝置
             | 90012C       | 99         | DL           | Pass      |
             # 牙位為區域型態
             | 90012C       | FM         | DL           | NotPass   |
+            | 90012C       | UR         | DL           | NotPass   |
+            | 90012C       | UL         | DL           | NotPass   |
+            | 90012C       | UA         | DL           | NotPass   |
+            | 90012C       | UB         | DL           | NotPass   |
+            | 90012C       | LL         | DL           | NotPass   |
+            | 90012C       | LR         | DL           | NotPass   |
+            | 90012C       | LA         | DL           | NotPass   |
+            | 90012C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90012C       | 00         | DL           | NotPass   |
             | 90012C       | 01         | DL           | NotPass   |

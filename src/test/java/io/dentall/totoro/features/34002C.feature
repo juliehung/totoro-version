@@ -29,7 +29,7 @@ Feature: 34002C 咬翼式 X光攝影
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）在同月份中，不得申報 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 W4_1
+        Then 在同月份中，不得申報 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 W4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDate | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 34002C       | 11         | MO           | 上個月初              | 34002C           | 11             | MO               | Pass      |
@@ -97,7 +97,7 @@ Feature: 34002C 咬翼式 X光攝影
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）在同月份中，不得申報 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 W4_1
+        Then 在同月份中，不得申報 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 W4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 34002C       | 11         | MO           | 上個月初            | 34002C         | 11           | Pass      |
@@ -322,10 +322,12 @@ Feature: 34002C 咬翼式 X光攝影
             | 34002C       | FM         | DL           | Pass      |
             | 34002C       | UR         | DL           | Pass      |
             | 34002C       | UL         | DL           | Pass      |
+            | 34002C       | UA         | DL           | Pass      |
+            | 34002C       | UB         | DL           | NotPass   |
             | 34002C       | LL         | DL           | Pass      |
             | 34002C       | LR         | DL           | Pass      |
-            | 34002C       | UA         | DL           | Pass      |
             | 34002C       | LA         | DL           | Pass      |
+            | 34002C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 34002C       | 00         | DL           | NotPass   |
             | 34002C       | 01         | DL           | NotPass   |

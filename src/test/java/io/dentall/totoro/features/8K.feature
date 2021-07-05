@@ -1,3 +1,4 @@
+@nhi @nhi-8-series
 Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩溝封填評估或脫落補施作2.一般口腔檢查、口腔保健衛教指導三、補助對象第一次評估檢查（同一牙位窩溝封填施作間隔6個月(含)以上）
 
     Scenario Outline: 全部檢核成功
@@ -108,9 +109,11 @@ Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
             | 8K           | FM         | DL           | NotPass   |
             | 8K           | UR         | DL           | NotPass   |
             | 8K           | UL         | DL           | NotPass   |
+            | 8K           | UA         | DL           | NotPass   |
+            | 8K           | UB         | DL           | NotPass   |
             | 8K           | LR         | DL           | NotPass   |
             | 8K           | LL         | DL           | NotPass   |
-            | 8K           | UB         | DL           | NotPass   |
+            | 8K           | LA         | DL           | NotPass   |
             | 8K           | LB         | DL           | NotPass   |
             # 非法牙位
             | 8K           | 00         | DL           | NotPass   |
@@ -138,7 +141,7 @@ Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
             | NhiCode | Teeth | Surface | NewNhiCode         | NewTeeth         | NewSurface         |
             |         |       |         | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> |
             |         |       |         | <IssueNhiCode>     | <IssueTeeth>     | <IssueSurface>     |
-        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot>
+        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D2_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 8K           | 36         | MOB          | 8K               | 36             | MOB              | NotPass   |
@@ -165,7 +168,7 @@ Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot>
+        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D2_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 8K           | 36         | FM           | 8K               | 36             | MO               | NotPass   |
@@ -189,7 +192,7 @@ Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot>
+        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D2_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 8K           | 36         | FM           | 8K             | 36           | NotPass   |
@@ -216,7 +219,7 @@ Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot>
+        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D2_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 8K           | 36         | FM           | 8K               | 36             | MO               | NotPass   |
@@ -240,7 +243,7 @@ Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot>
+        Then <IssueNhiCode> 終生只能申報一次，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D2_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 8K           | 36         | FM           | 8K             | 36           | NotPass   |
@@ -261,7 +264,7 @@ Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapMonth> 紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2_2
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapMonth> 紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDate | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | GapMonth | PassOrNot |
             | 8K           | 36         | DL           | 6個月前              | 8C               | 36             | DL               | 6個月      | Pass      |
@@ -291,7 +294,7 @@ Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapMonth> 紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2_2
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapMonth> 紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapMonth | PassOrNot |
             | 8K           | 36         | DL           | 6個月前            | 8C             | 36           | 6個月      | Pass      |
@@ -324,7 +327,7 @@ Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then <TreatmentNhiCode> 診療項目曾經申報過，確認結果是否為 <PassOrNot>
+        Then 需曾經申報過 8C/8G，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 8K           | 36         | FM           | 8C               | 36             | MO               | Pass      |
@@ -343,7 +346,7 @@ Feature: 8K 一、施作牙位：36二、服務項目1.恆牙第一大臼齒窩�
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then <MedicalNhiCode> 診療項目曾經申報過，確認結果是否為 <PassOrNot>
+        Then 需曾經申報過 8C/8G，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 8K           | 36         | FM           | 8C             | 36           | Pass      |

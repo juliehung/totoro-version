@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90097C 難症特別處理-符合附表3.3.1標準之多根管根管治療。(四根管)
 
     Scenario Outline: 全部檢核成功
@@ -15,6 +16,21 @@ Feature: 90097C 難症特別處理-符合附表3.3.1標準之多根管根管治�
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 90097C       | 11         | MOB          | Pass      |
 
+    Scenario Outline: 提醒須檢附影像
+        Given 建立醫師
+        Given Wind 24 歲病人
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | 90001C         | <IssueTeeth> | <IssueSurface> |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 提醒"須檢附影像"，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
+            | 90097C       | 11         | MOB          | Pass      |
+
     Scenario Outline: （Disposal）同日得同時有 90001C~90003C/90019C/90020C
         Given 建立醫師
         Given Wind 24 歲病人
@@ -25,7 +41,7 @@ Feature: 90097C 難症特別處理-符合附表3.3.1標準之多根管根管治�
             | NhiCode | Teeth | Surface | NewNhiCode         | NewTeeth         | NewSurface         |
             |         |       |         | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> |
             |         |       |         | <IssueNhiCode>     | <IssueTeeth>     | <IssueSurface>     |
-        Then 同日得有 91004C/91005C/91020C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日得有 90001C/90002C/90003C/90019C/90020C 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 90097C       | 11         | MOB          | 90001C           | 11             | MOB              | Pass      |
@@ -33,6 +49,7 @@ Feature: 90097C 難症特別處理-符合附表3.3.1標準之多根管根管治�
             | 90097C       | 11         | MOB          | 90003C           | 11             | MOB              | Pass      |
             | 90097C       | 11         | MOB          | 90019C           | 11             | MOB              | Pass      |
             | 90097C       | 11         | MOB          | 90020C           | 11             | MOB              | Pass      |
+            | 90097C       | 11         | MOB          | 01271C           | 11             | MOB              | NotPass   |
 
     Scenario Outline: （HIS-Today）同日得同時有 90001C~90003C/90019C/90020C
         Given 建立醫師
@@ -172,10 +189,12 @@ Feature: 90097C 難症特別處理-符合附表3.3.1標準之多根管根管治�
             | 90097C       | FM         | DL           | NotPass   |
             | 90097C       | UR         | DL           | NotPass   |
             | 90097C       | UL         | DL           | NotPass   |
+            | 90097C       | UA         | DL           | NotPass   |
+            | 90097C       | UB         | DL           | NotPass   |
             | 90097C       | LL         | DL           | NotPass   |
             | 90097C       | LR         | DL           | NotPass   |
-            | 90097C       | UA         | DL           | NotPass   |
             | 90097C       | LA         | DL           | NotPass   |
+            | 90097C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90097C       | 00         | DL           | NotPass   |
             | 90097C       | 01         | DL           | NotPass   |

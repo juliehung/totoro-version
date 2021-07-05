@@ -6,6 +6,8 @@ public class NhiTreatment {
 
     private Long disposalId;
 
+    private Long nhiExtendTreatmentProcedureId;
+
     private String code;
 
     private String datetime;
@@ -29,6 +31,14 @@ public class NhiTreatment {
 
     public void setDisposalId(Long disposalId) {
         this.disposalId = disposalId;
+    }
+
+    public Long getNhiExtendTreatmentProcedureId() {
+        return nhiExtendTreatmentProcedureId;
+    }
+
+    public void setNhiExtendTreatmentProcedureId(Long nhiExtendTreatmentProcedureId) {
+        this.nhiExtendTreatmentProcedureId = nhiExtendTreatmentProcedureId;
     }
 
     public String getCode() {

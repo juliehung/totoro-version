@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90005C 乳牙斷髓處理
 
     Scenario Outline: 全部檢核成功
@@ -110,10 +111,12 @@ Feature: 90005C 乳牙斷髓處理
             | 90005C       | FM         | DL           | NotPass   |
             | 90005C       | UR         | DL           | NotPass   |
             | 90005C       | UL         | DL           | NotPass   |
+            | 90005C       | UA         | DL           | NotPass   |
+            | 90005C       | UB         | DL           | NotPass   |
             | 90005C       | LL         | DL           | NotPass   |
             | 90005C       | LR         | DL           | NotPass   |
-            | 90005C       | UA         | DL           | NotPass   |
             | 90005C       | LA         | DL           | NotPass   |
+            | 90005C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90005C       | 00         | DL           | NotPass   |
             | 90005C       | 01         | DL           | NotPass   |

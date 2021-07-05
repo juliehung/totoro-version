@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90018C 乳牙多根管治療
 
     Scenario Outline: 全部檢核成功
@@ -14,6 +15,20 @@ Feature: 90018C 乳牙多根管治療
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 90018C       | 51         | MOB          | Pass      |
 
+    Scenario Outline: 提醒須檢附影像
+        Given 建立醫師
+        Given Wind 24 歲病人
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 提醒"須檢附影像"，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
+            | 90018C       | 11         | MOB          | Pass      |
+
     Scenario Outline: （HIS）90天內，不應有 90018C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
@@ -29,7 +44,7 @@ Feature: 90018C 乳牙多根管治療
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
             | 90018C       | 51         | DL           | 0                 | 90018C           | 51             | 90     | NotPass   |
@@ -48,7 +63,7 @@ Feature: 90018C 乳牙多根管治療
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
             | 90018C       | 51         | DL           | 0               | 90018C         | 51           | 90     | NotPass   |
@@ -70,7 +85,7 @@ Feature: 90018C 乳牙多根管治療
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （HIS）同牙 <IssueTeeth> 未曾申報過，指定代碼 <TreatmentNhiCode> ，確認結果是否為 <PassOrNot>
+        Then 同牙 <IssueTeeth> 未曾申報過，指定代碼 <TreatmentNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             # 測試同牙
@@ -94,7 +109,7 @@ Feature: 90018C 乳牙多根管治療
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then （IC）同牙 <IssueTeeth> 未曾申報過，指定代碼 <MedicalNhiCode> ，確認結果是否為 <PassOrNot>
+        Then 同牙 <IssueTeeth> 未曾申報過，指定代碼 <MedicalNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | TreatmentTeeth | PassOrNot |
             # 測試同牙
@@ -186,6 +201,14 @@ Feature: 90018C 乳牙多根管治療
             | 90018C       | 99         | DL           | Pass      |
             # 牙位為區域型態
             | 90018C       | FM         | DL           | NotPass   |
+            | 90018C       | UR         | DL           | NotPass   |
+            | 90018C       | UL         | DL           | NotPass   |
+            | 90018C       | UA         | DL           | NotPass   |
+            | 90018C       | UB         | DL           | NotPass   |
+            | 90018C       | LL         | DL           | NotPass   |
+            | 90018C       | LR         | DL           | NotPass   |
+            | 90018C       | LA         | DL           | NotPass   |
+            | 90018C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90018C       | 00         | DL           | NotPass   |
             | 90018C       | 01         | DL           | NotPass   |

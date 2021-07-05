@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90011C 牙齒再植術
 
     Scenario Outline: 全部檢核成功
@@ -110,10 +111,12 @@ Feature: 90011C 牙齒再植術
             | 90011C       | FM         | DL           | NotPass   |
             | 90011C       | UR         | DL           | NotPass   |
             | 90011C       | UL         | DL           | NotPass   |
+            | 90011C       | UA         | DL           | NotPass   |
+            | 90011C       | UB         | DL           | NotPass   |
             | 90011C       | LL         | DL           | NotPass   |
             | 90011C       | LR         | DL           | NotPass   |
-            | 90011C       | UA         | DL           | NotPass   |
             | 90011C       | LA         | DL           | NotPass   |
+            | 90011C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90011C       | 00         | DL           | NotPass   |
             | 90011C       | 01         | DL           | NotPass   |

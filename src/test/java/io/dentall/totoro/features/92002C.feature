@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92002C 齒間暫時固定術，每齒
 
     Scenario Outline: 全部檢核成功
@@ -110,10 +111,12 @@ Feature: 92002C 齒間暫時固定術，每齒
             | 92002C       | FM         | DL           | NotPass   |
             | 92002C       | UR         | DL           | NotPass   |
             | 92002C       | UL         | DL           | NotPass   |
+            | 92002C       | UA         | DL           | NotPass   |
+            | 92002C       | UB         | DL           | NotPass   |
             | 92002C       | LL         | DL           | NotPass   |
             | 92002C       | LR         | DL           | NotPass   |
-            | 92002C       | UA         | DL           | NotPass   |
             | 92002C       | LA         | DL           | NotPass   |
+            | 92002C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 92002C       | 00         | DL           | NotPass   |
             | 92002C       | 01         | DL           | NotPass   |

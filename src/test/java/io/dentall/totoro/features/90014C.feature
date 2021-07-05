@@ -1,3 +1,4 @@
+@nhi-90-series
 Feature: 90014C 根尖成形術或根尖生成術-後牙
 
     Scenario Outline: 全部檢核成功
@@ -110,10 +111,12 @@ Feature: 90014C 根尖成形術或根尖生成術-後牙
             | 90014C       | FM         | DL           | NotPass   |
             | 90014C       | UR         | DL           | NotPass   |
             | 90014C       | UL         | DL           | NotPass   |
+            | 90014C       | UA         | DL           | NotPass   |
+            | 90014C       | UB         | DL           | NotPass   |
             | 90014C       | LL         | DL           | NotPass   |
             | 90014C       | LR         | DL           | NotPass   |
-            | 90014C       | UA         | DL           | NotPass   |
             | 90014C       | LA         | DL           | NotPass   |
+            | 90014C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 90014C       | 00         | DL           | NotPass   |
             | 90014C       | 01         | DL           | NotPass   |

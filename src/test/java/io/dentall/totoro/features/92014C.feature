@@ -1,3 +1,4 @@
+@nhi-92-series
 Feature: 92014C 複雜性拔牙
 
     Scenario Outline: 全部檢核成功
@@ -110,10 +111,12 @@ Feature: 92014C 複雜性拔牙
             | 92014C       | FM         | DL           | NotPass   |
             | 92014C       | UR         | DL           | NotPass   |
             | 92014C       | UL         | DL           | NotPass   |
+            | 92014C       | UA         | DL           | NotPass   |
+            | 92014C       | UB         | DL           | NotPass   |
             | 92014C       | LL         | DL           | NotPass   |
             | 92014C       | LR         | DL           | NotPass   |
-            | 92014C       | UA         | DL           | NotPass   |
             | 92014C       | LA         | DL           | NotPass   |
+            | 92014C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 92014C       | 00         | DL           | NotPass   |
             | 92014C       | 01         | DL           | NotPass   |
