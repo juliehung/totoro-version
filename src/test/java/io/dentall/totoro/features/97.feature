@@ -1,3 +1,4 @@
+@nhi @nhi-9-series
 Feature: 97 口腔黏膜檢查
 
     Scenario Outline: 全部檢核成功
@@ -14,7 +15,7 @@ Feature: 97 口腔黏膜檢查
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 97           | 11         | MOB          | Pass      |
 
-    Scenario Outline: （HIS）545天內，不應有 97 診療項目
+    Scenario Outline: （HIS）730天內，不應有 97 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -32,11 +33,11 @@ Feature: 97 口腔黏膜檢查
         Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | GapDay | PassOrNot |
-            | 97           | 11         | MOB          | 544               | 97               | 11             | MOB              | 545    | NotPass   |
-            | 97           | 11         | MOB          | 545               | 97               | 11             | MOB              | 545    | NotPass   |
-            | 97           | 11         | MOB          | 546               | 97               | 11             | MOB              | 545    | Pass      |
+            | 97           | 11         | MOB          | 729               | 97               | 11             | MOB              | 730    | NotPass   |
+            | 97           | 11         | MOB          | 730               | 97               | 11             | MOB              | 730    | NotPass   |
+            | 97           | 11         | MOB          | 731               | 97               | 11             | MOB              | 730    | Pass      |
 
-    Scenario Outline: （IC）545天內，不應有 97 診療項目
+    Scenario Outline: （IC）730天內，不應有 97 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 新增健保醫療:
@@ -51,9 +52,9 @@ Feature: 97 口腔黏膜檢查
         Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
-            | 97           | 11         | MOB          | 544             | 97             | 11           | 545    | NotPass   |
-            | 97           | 11         | MOB          | 545             | 97             | 11           | 545    | NotPass   |
-            | 97           | 11         | MOB          | 546             | 97             | 11           | 545    | Pass      |
+            | 97           | 11         | MOB          | 729             | 97             | 11           | 730    | NotPass   |
+            | 97           | 11         | MOB          | 730             | 97             | 11           | 730    | NotPass   |
+            | 97           | 11         | MOB          | 731             | 97             | 11           | 730    | Pass      |
 
     Scenario Outline: 病患在診療當下年紀需未滿 30 歲及大於 17 歲
         Given 建立醫師

@@ -443,11 +443,11 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkResult(resultActions, passOrNot, message);
     }
 
-    @Then("病患是否在診療 {word} 當下年紀未滿 30 歲，確認結果是否為 {passOrNot}")
+    @Then("病患是否在診療 {word} 當下年紀年滿 30 歲，確認結果是否為 {passOrNot}")
     public void checkLessThanAge30(String issueNhiCode, Boolean passOrNot) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String message = formatMsg(!passOrNot).apply(D3_1, new Object[]{nhiCode, "未滿三十歲"});
+        String message = formatMsg(!passOrNot).apply(D3_1, new Object[]{nhiCode, "年滿三十歲"});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -455,7 +455,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkLessThanAge30AndGreatThanAge17(String issueNhiCode, Boolean passOrNot) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String message = formatMsg(!passOrNot).apply(D3_1, new Object[]{nhiCode, "未滿三十歲"});
+        String message = formatMsg(!passOrNot).apply(D3_1, new Object[]{nhiCode, "年滿十八歲且未滿三十歲"});
         checkResult(resultActions, passOrNot, message);
     }
 

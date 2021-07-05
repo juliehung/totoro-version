@@ -1,8 +1,9 @@
+@nhi @nhi-9-series
 Feature: 95 口腔黏膜檢查
 
     Scenario Outline: 全部檢核成功
         Given 建立醫師
-        Given Scott 24 歲病人
+        Given Scott 30 歲病人
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫
@@ -16,7 +17,7 @@ Feature: 95 口腔黏膜檢查
 
     Scenario Outline: （HIS）545天內，不應有 95 診療項目
         Given 建立醫師
-        Given Scott 24 歲病人
+        Given Scott 30 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
         Given 在過去第 <PastTreatmentDays> 天，建立掛號
         Given 在過去第 <PastTreatmentDays> 天，產生診療計畫
@@ -38,7 +39,7 @@ Feature: 95 口腔黏膜檢查
 
     Scenario Outline: （IC）545天內，不應有 95 診療項目
         Given 建立醫師
-        Given Scott 24 歲病人
+        Given Scott 30 歲病人
         Given 新增健保醫療:
             | PastDays          | NhiCode          | Teeth          |
             | <PastMedicalDays> | <MedicalNhiCode> | <MedicalTeeth> |
@@ -55,7 +56,7 @@ Feature: 95 口腔黏膜檢查
             | 95           | 11         | MOB          | 545             | 95             | 11           | 545    | NotPass   |
             | 95           | 11         | MOB          | 546             | 95             | 11           | 545    | Pass      |
 
-    Scenario Outline: 病患在診療當下年紀需未滿 30 歲
+    Scenario Outline: 病患在診療當下年紀需年滿 30 歲
         Given 建立醫師
         Given Scott <PatientAge> 歲病人
         Given 建立預約
@@ -64,9 +65,9 @@ Feature: 95 口腔黏膜檢查
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 病患是否在診療 <IssueNhiCode> 當下年紀未滿 30 歲，確認結果是否為 <PassOrNot>
+        Then 病患是否在診療 <IssueNhiCode> 當下年紀年滿 30 歲，確認結果是否為 <PassOrNot>
         Examples:
             | PatientAge | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
-            | 29         | 95           | 11         | MOB          | Pass      |
-            | 30         | 95           | 11         | MOB          | NotPass   |
-            | 31         | 95           | 11         | MOB          | NotPass   |
+            | 29         | 95           | 11         | MOB          | NotPass   |
+            | 30         | 95           | 11         | MOB          | Pass      |
+            | 31         | 95           | 11         | MOB          | Pass      |
