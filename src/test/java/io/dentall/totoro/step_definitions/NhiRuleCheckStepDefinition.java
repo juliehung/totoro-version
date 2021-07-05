@@ -585,7 +585,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     @Then("{word} 不得單獨申報，確認結果是否為 {passOrNot}")
     public void checkAnyOtherTreatment(String issueNhiCode, Boolean passOrNot) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String message = formatMsg(passOrNot).apply(W5_1, new Object[]{issueNhiCode});
+        String message = formatMsg(!passOrNot).apply(W5_1, new Object[]{issueNhiCode});
         checkResult(resultActions, passOrNot, message);
     }
 
