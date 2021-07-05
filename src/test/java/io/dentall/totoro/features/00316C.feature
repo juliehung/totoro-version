@@ -54,8 +54,8 @@ Feature: 00316C 符合牙醫門診加強感染管制實施方案之年度初診X
         Given 建立醫師
         Given Scott 24 歲病人
         Given 新增健保醫療:
-            | PastDays                  | NhiCode        | Teeth |
-            | <Past00316CTreatmentDays> | <IssueNhiCode> | 11    |
+            | PastDays                | NhiCode        | Teeth |
+            | <Past00316CMedicalDays> | <IssueNhiCode> | 11    |
         Given 新增健保醫療:
             | PastDays             | NhiCode | Teeth |
             | <PastAnyMedicalDays> | 89001C  | 11    |
@@ -68,16 +68,16 @@ Feature: 00316C 符合牙醫門診加強感染管制實施方案之年度初診X
         Then 在過去 <PastAnyMedicalDayGap> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_5
         And 檢查 <IssueNhiCode> 診療項目，在病患過去 <Past00316CGapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastAnyMedicalDays | PastAnyMedicalDayGap | Past00316CTreatmentDays | Past00316CGapDay | PassOrNot |
-            | 00316C       | 11         | DO           | 364                | 365                  | 544                     | 545              | NotPass   |
-            | 00316C       | 11         | DO           | 365                | 365                  | 544                     | 545              | NotPass   |
-            | 00316C       | 11         | DO           | 366                | 365                  | 544                     | 545              | Pass      |
-            | 00316C       | 11         | DO           | 364                | 365                  | 545                     | 545              | NotPass   |
-            | 00316C       | 11         | DO           | 365                | 365                  | 545                     | 545              | NotPass   |
-            | 00316C       | 11         | DO           | 366                | 365                  | 545                     | 545              | Pass      |
-            | 00316C       | 11         | DO           | 364                | 365                  | 546                     | 545              | Pass      |
-            | 00316C       | 11         | DO           | 365                | 365                  | 546                     | 545              | Pass      |
-            | 00316C       | 11         | DO           | 366                | 365                  | 546                     | 545              | Pass      |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastAnyMedicalDays | PastAnyMedicalDayGap | Past00316CMedicalDays | Past00316CGapDay | PassOrNot |
+            | 00316C       | 11         | DO           | 364                | 365                  | 544                   | 545              | NotPass   |
+            | 00316C       | 11         | DO           | 365                | 365                  | 544                   | 545              | NotPass   |
+            | 00316C       | 11         | DO           | 366                | 365                  | 544                   | 545              | Pass      |
+            | 00316C       | 11         | DO           | 364                | 365                  | 545                   | 545              | NotPass   |
+            | 00316C       | 11         | DO           | 365                | 365                  | 545                   | 545              | NotPass   |
+            | 00316C       | 11         | DO           | 366                | 365                  | 545                   | 545              | Pass      |
+            | 00316C       | 11         | DO           | 364                | 365                  | 546                   | 545              | Pass      |
+            | 00316C       | 11         | DO           | 365                | 365                  | 546                   | 545              | Pass      |
+            | 00316C       | 11         | DO           | 366                | 365                  | 546                   | 545              | Pass      |
 
     Scenario Outline: 提醒須檢附影像
         Given 建立醫師
