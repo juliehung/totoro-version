@@ -14,8 +14,6 @@ import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.enumeration.BackupFileCatalog;
 import io.dentall.totoro.domain.enumeration.BatchStatus;
 import io.dentall.totoro.repository.*;
-import io.dentall.totoro.service.ConfigurationMapQueryService;
-import io.dentall.totoro.service.ConfigurationMapService;
 import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.service.dto.table.PatientTable;
@@ -2022,11 +2020,13 @@ public class NhiRuleCheckUtil {
                         boolean isRuleConflict = true;
 
                         if (format.equals(NhiRuleCheckFormat.D7_1) ||
-                            format.equals(NhiRuleCheckFormat.D7_2) &&
-                            dto.getNhiExtendDisposal().getA23() != null &&
-                            dto.getNhiExtendDisposal().getA23().equals("AB")
+                            format.equals(NhiRuleCheckFormat.D7_2)
                         ) {
-                            isRuleConflict = false;
+                            if (dto.getNhiExtendDisposal().getA23() != null &&
+                                dto.getNhiExtendDisposal().getA23().equals("AB")
+                            ) {
+                                isRuleConflict = false;
+                            }
                         }
 
                         if (isRuleConflict) {
@@ -2106,11 +2106,13 @@ public class NhiRuleCheckUtil {
                         boolean isRuleConflict = true;
 
                         if (format.equals(NhiRuleCheckFormat.D7_1) ||
-                            format.equals(NhiRuleCheckFormat.D7_2) &&
-                                dto.getNhiExtendDisposal().getA23() != null &&
-                                dto.getNhiExtendDisposal().getA23().equals("AB")
+                            format.equals(NhiRuleCheckFormat.D7_2)
                         ) {
-                            isRuleConflict = false;
+                            if (dto.getNhiExtendDisposal().getA23() != null &&
+                                dto.getNhiExtendDisposal().getA23().equals("AB")
+                            ) {
+                                isRuleConflict = false;
+                            }
                         }
 
                         if (isRuleConflict) {
