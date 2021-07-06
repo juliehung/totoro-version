@@ -1,35 +1,40 @@
 package io.dentall.totoro.business.service.nhi.util;
 
+import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.business.service.NhiRuleCheckInfoType;
 import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
-import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
-import io.dentall.totoro.business.service.nhi.NhiRuleCheckResultDTO;
+import io.dentall.totoro.business.service.nhi.*;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
-import io.dentall.totoro.config.TimeConfig;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
-import io.dentall.totoro.domain.NhiMedicalRecord;
+import io.dentall.totoro.domain.NhiMonthDeclarationRuleCheckReport;
 import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.enumeration.BackupFileCatalog;
+import io.dentall.totoro.domain.enumeration.BatchStatus;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
-import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
+import io.dentall.totoro.service.dto.table.PatientTable;
 import io.dentall.totoro.service.mapper.DisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
-import io.dentall.totoro.service.mapper.NhiExtendTreatmentProcedureMapper;
 import io.dentall.totoro.service.mapper.PatientMapper;
+import io.dentall.totoro.service.util.CsvUtil;
 import io.dentall.totoro.service.util.DateTimeUtil;
-import io.dentall.totoro.web.rest.errors.ResourceNotFoundException;
+import io.micrometer.core.annotation.Timed;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
+import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -42,8 +47,7 @@ import java.util.stream.Collectors;
 @Service
 public class NhiRuleCheckUtil {
 
-    // 申報時常用說明
-    public static final String DESC_MUST_FULFILL_SURFACE = "應於病歷詳列充填牙面部位";
+    private final ApplicationContext applicationContext;
 
     private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
 
@@ -51,66 +55,56 @@ public class NhiRuleCheckUtil {
 
     private final PatientRepository patientRepository;
 
-    private final NhiMedicalRecordRepository nhiMedicalRecordRepository;
-
     private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
-
-    private final NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper;
 
     private final DisposalRepository disposalRepository;
 
+    private final NhiMonthDeclarationRuleCheckReportRepository nhiMonthDeclarationRuleCheckReportRepository;
+
     public NhiRuleCheckUtil(
+        ApplicationContext applicationContext,
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
         PatientRepository patientRepository,
-        NhiMedicalRecordRepository nhiMedicalRecordRepository,
         NhiExtendDisposalMapper nhiExtendDisposalMapper,
-        NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
-        DisposalRepository disposalRepository
+        DisposalRepository disposalRepository,
+        NhiMonthDeclarationRuleCheckReportRepository nhiMonthDeclarationRuleCheckReportRepository
     ) {
+        this.applicationContext = applicationContext;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
         this.patientRepository = patientRepository;
-        this.nhiMedicalRecordRepository = nhiMedicalRecordRepository;
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
-        this.nhiExtendTreatmentProcedureMapper = nhiExtendTreatmentProcedureMapper;
         this.disposalRepository = disposalRepository;
+        this.nhiMonthDeclarationRuleCheckReportRepository = nhiMonthDeclarationRuleCheckReportRepository;
     }
 
-    /**
-     * 單顆牙齒是否為 乳牙（字串兩碼且為 51-59, 61-69, 71-79, 81-89）
-     *
-     * @param singleToothPosition 單一牙位
-     * @return boolean 是否為乳牙
-     */
-    private boolean isDeciduousTeeth(String singleToothPosition) {
-        if (singleToothPosition.length() != 2) {
-            return false;
-        }
+    public NhiRuleCheckResultVM dispatch(
+        String code,
+        NhiRuleCheckBody body
+    ) throws NoSuchFieldException,
+        NoSuchMethodException,
+        InvocationTargetException,
+        IllegalAccessException {
+        // 轉換至統一入口 Object
+        NhiRuleCheckDTO dto = this.convertVmToDto(code, body);
 
-        if (!singleToothPosition.matches("^[5|6|7|8][1-5]$")) {
-            return false;
-        }
+        // 分派到號碼群的腳本當中
+        NhiRuleCheckScriptType scriptType =
+            Arrays.stream(NhiRuleCheckScriptType.values())
+                .filter(e -> e.getRegex().matcher(code).matches())
+                .findFirst()
+                .orElseThrow(NoSuchFieldException::new);
 
-        return true;
-    }
+        Object scriptBean = applicationContext.getBean(scriptType.getScriptClass());
 
-    /**
-     * 單顆牙齒是否為 恆牙（字串兩碼且為 11-19, 21-29, 31-39, 41-49）
-     *
-     * @param singleToothPosition 單一牙位
-     * @return boolean 是否為恆牙
-     */
-    private boolean isPermanentTeeth(String singleToothPosition) {
-        if (singleToothPosition.length() != 2) {
-            return false;
-        }
+        // 並在該腳本中找到對應函式
+        NhiRuleCheckResultVM rvm = (NhiRuleCheckResultVM) scriptBean
+            .getClass()
+            .getMethod("validate".concat(code), NhiRuleCheckDTO.class)
+            .invoke(scriptBean, dto);
 
-        if (!singleToothPosition.matches("^[1|2|3|4][1-9]$")) {
-            return false;
-        }
-
-        return true;
+        return rvm;
     }
 
     /**
@@ -217,84 +211,14 @@ public class NhiRuleCheckUtil {
 
     }
 
-    /**
-     * 查詢 patient 並將取得資料塞入 dto 以利後續使用，或 response as not found
-     *
-     * @param dto       dto.patient 將會被 assign db data
-     * @param patientId 病患 id for query db
-     */
-    private void assignDtoByPatientId(@NotNull NhiRuleCheckDTO dto, @NotNull Long patientId) {
-        dto.setPatient(
-            PatientMapper.patientTableToPatient(
-                patientRepository.findPatientById(patientId)
-                    .orElseThrow(() -> new ResourceNotFoundException("patient with " + patientId))));
-    }
-
-    /**
-     * 查詢 nhi extend disposal 並將取得資料塞入 dto 以利後續使用。當還未寫卡時，會查詢 disposal 以及 patient 以取得 patient identity，
-     * 若查無 patient 則自動帶入 H10
-     *
-     * @param dto         dto.nhiExtendDisposal 將會被 assign db data
-     * @param treatmentId 診療 id
-     */
-    private void assignDtoByNhiExtendDisposalId(@NotNull NhiRuleCheckDTO dto, @NotNull Long treatmentId) {
-        Optional<NhiExtendDisposalTable> optNed = nhiExtendDisposalRepository.findByDisposal_TreatmentProcedures_Id(treatmentId, NhiExtendDisposalTable.class)
-            .stream()
-            .filter(Objects::nonNull)
-            .findAny();
-
-        if (optNed.isPresent()) {
-            dto.setNhiExtendDisposal(nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(optNed.get()));
-        } else {
-            NhiExtendDisposal ned = new NhiExtendDisposal();
-
-            Optional<DisposalTable> optD = disposalRepository.findByTreatmentProcedures_Id(treatmentId);
-            if (optD.isPresent()) {
-                Optional<Patient> optP = patientRepository.findByAppointments_Registration_Disposal_id(optD.get().getId());
-                if (optP.isPresent()) {
-                    ned.setPatientIdentity(optP.get().getPatientIdentity().getCode());
-                } else {
-                    ned.setPatientIdentity("H10");
-                }
-
-                ned.setDisposal(DisposalMapper.disposalTableToDisposal(optD.get()));
-            }
+    public void addResultToVm(@NotNull List<NhiRuleCheckResultDTO> dtos, @NotNull NhiRuleCheckResultVM vm) {
+        for (NhiRuleCheckResultDTO d : dtos) {
+            this.addResultToVm(d, vm);
         }
     }
 
     /**
-     * 檢核輸入 code(a73), patient, 是否存在且關係匹，並將取得資料塞入 dto 以利後續使用配，或 response as not found
-     *
-     * @param dto                           dto.nhiExtendTreatmentProcedure 將會被 assign db data
-     * @param code                          a.k.a a73 健保代碼
-     * @param nhiExtendTreatmentProcedureId 診療 id
-     * @param patientId                     病患 id
-     */
-    private void assignDtoByNhiExtendTreatmentProcedureId(
-        @NotNull NhiRuleCheckDTO dto,
-        @NotNull String code,
-        @NotNull Long nhiExtendTreatmentProcedureId,
-        @NotNull Long patientId
-    ) {
-        dto.setNhiExtendTreatmentProcedure(
-            nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(
-                nhiExtendTreatmentProcedureRepository.findByIdAndA73AndTreatmentProcedure_Disposal_Registration_Appointment_Patient_Id(
-                    nhiExtendTreatmentProcedureId,
-                    code,
-                    patientId,
-                    NhiExtendTreatmentProcedureTable.class)
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                        "Treatment Procedure Id with "
-                            .concat(nhiExtendTreatmentProcedureId.toString())
-                            .concat(", Patient Id with ")
-                            .concat(patientId.toString())
-                            .concat(", Code(a73 from api path) ")
-                            .concat(code)
-                    ))));
-    }
-
-    /**
-     * 作用是轉化 vm 取得到的值，檢核、查詢對應 Nhi Disposal, Nhi Treatment Procedure, Patient 資料，以利後續功能使用。
+     * 作用是轉化 body 取得到的值，檢核、查詢對應 Nhi Disposal, Nhi Treatment Procedure, Patient 資料，以利後續功能使用。
      * 此 method 使用情境有二
      * 1. 診療項目 尚未被產生，需要預先進行確認，所需資料會用到 patientId, a71, a73, a74, a75，a71, a73
      * 這邊會自動計算帶入；a73 則是打 api 時就會認定想驗證的目標在 api path。
@@ -303,103 +227,356 @@ public class NhiRuleCheckUtil {
      * 並查詢取得對應資料。
      *
      * @param code 來源於 api path，及其預計想檢核的目標
-     * @param vm   來自於前端的輸入
+     * @param body 來自於前端的輸入
      * @return 後續檢核統一 `輸入` 的介面
      */
-    public NhiRuleCheckDTO convertVmToDto(@NotNull String code, @NotNull NhiRuleCheckVM vm) {
+    public NhiRuleCheckDTO convertVmToDto(
+        @NotNull String code,
+        @NotNull NhiRuleCheckBody body
+    ) {
         NhiRuleCheckDTO dto = new NhiRuleCheckDTO();
+        HashMap<Long, NhiExtendTreatmentProcedure> oldNetpMap = new HashMap<>();
+        ArrayList<Long> excludeTreatmentProcedureIds = new ArrayList<>();
+        ArrayList<String> includeNhiCode = new ArrayList<>();
 
-        // 若有指定排除的 treatment procedure id，在後續的 query result 將會排除所列項目。（應用於前端刪除項目但尚未改動到資料）
-        dto.setExcludeTreatmentProcedureIds(vm.getExcludeTreatmentProcedureIds());
-        // assign 指定同處置底下的 nhi code，以利後續規則使用
-        dto.setIncludeNhiCodes(vm.getIncludeNhiCodes());
-        // assign 轉診註記，以利後續規則使用
-        dto.setReferral(vm.isReferral());
-
-        if (vm.getPatientId() != null) {
-            assignDtoByPatientId(dto, vm.getPatientId());
-        }
-
-        if (vm.getTreatmentProcedureId() != null) {
-            assignDtoByNhiExtendTreatmentProcedureId(dto, code, vm.getTreatmentProcedureId(), vm.getPatientId());
-            assignDtoByNhiExtendDisposalId(dto, dto.getNhiExtendTreatmentProcedure().getId());
-
-            // 若有給定 a74 且 與查詢結果不同，則將 其改為 前端傳入之牙位
-            if (
-                StringUtils.isNotBlank(vm.getA74()) &&
-                !dto.getNhiExtendTreatmentProcedure().getA74().equals(vm.getA74())
-            ) {
-                dto.getNhiExtendTreatmentProcedure().setA74(vm.getA74());
-            }
-            // 若有給定 a75 且 與查詢結果不同，則將 其改為 前端傳入之牙位
-            if (
-                StringUtils.isNotBlank(vm.getA75()) &&
-                !dto.getNhiExtendTreatmentProcedure().getA75().equals(vm.getA75())
-            ) {
-                dto.getNhiExtendTreatmentProcedure().setA75(vm.getA75());
-            }
-
-            // 將自身加入 exclude list
-            if (dto.getExcludeTreatmentProcedureIds() == null) {
-                List<Long> ids = new ArrayList<>();
-                ids.add(vm.getTreatmentProcedureId());
-                dto.setExcludeTreatmentProcedureIds(ids);
+        // Assign patient
+        if (body.getPatientId() != null) {
+            Optional<PatientTable> optionalPt = patientRepository.findPatientById(body.getPatientId());
+            if (optionalPt.isPresent()) {
+                dto.setPatient(PatientMapper.patientTableToPatient(optionalPt.get()));
             } else {
-                dto.getExcludeTreatmentProcedureIds().add(vm.getTreatmentProcedureId());
+                dto.setPatient(new Patient());
             }
         }
 
-        // 產生暫時的 treatment 資料，在後續的檢驗中被檢核所需
-        if (vm.getPatientId() != null && vm.getTreatmentProcedureId() == null) {
-            dto.setNhiExtendTreatmentProcedure(
-                new NhiExtendTreatmentProcedure()
-                    .a71(StringUtils.isNotBlank(vm.getA71()) ? vm.getA71() : DateTimeUtil.transformLocalDateToRocDate(Instant.now()))
-                    .a73(code)
-                    .a74(vm.getA74())
-                    .a75(vm.getA75()));
+        // Assign nhi extend disposal
+        if (body.getDisposalId() != null) {
+            Optional<DisposalTable> optionalDt = disposalRepository.findDisposalById(body.getDisposalId());
+            if (optionalDt.isPresent()) {
+                /**
+                 * 為了可以偵測為儲存的資料用，效能非常差，所以在月申報檢核時必須跳過。
+                 */
+                if (body.getSourceData() == null ||
+                    body.getSourceData().size() == 0
+                ) {
+                    nhiExtendTreatmentProcedureRepository.findNhiExtendTreatmentProcedureByTreatmentProcedure_Disposal_Id(optionalDt.get().getId())
+                        .forEach(netp -> oldNetpMap.put(netp.getId(), netp));
+                }
+
+                List<NhiExtendDisposalTable> nedts =
+                    nhiExtendDisposalRepository.findByDisposal_IdOrderByIdDesc(optionalDt.get().getId(), NhiExtendDisposalTable.class).stream().collect(Collectors.toList());
+                if (nedts != null &&
+                    nedts.size() > 0
+                ) {
+                    NhiExtendDisposal ned = nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(
+                        nedts.get(0)
+                    );
+                    dto.setNhiExtendDisposal(
+                        ned
+                    );
+
+                }
+            }
+
+            if (dto.getNhiExtendDisposal() == null) {
+                NhiExtendDisposal ned = new NhiExtendDisposal();
+                if (optionalDt.isPresent()) {
+                    ned.setDisposal(
+                        DisposalMapper.disposalTableToDisposal(optionalDt.get())
+                    );
+                }
+                ned.setA17(
+                    body.getDisposalTime()
+                );
+                dto.setNhiExtendDisposal(ned);
+            }
+
+            dto.getNhiExtendDisposal().setA23(body.getNhiCategory());
+
+            List<Long> excludeDisposalIdsAndCurrentDisposalId = null;
+            if (body.getExcludeDisposalIds() != null) {
+                excludeDisposalIdsAndCurrentDisposalId = new ArrayList<>(body.getExcludeDisposalIds());
+            } else {
+               excludeDisposalIdsAndCurrentDisposalId = new ArrayList<>();
+            }
+            excludeDisposalIdsAndCurrentDisposalId.add(
+                body.getDisposalId() != null
+                    ? body.getDisposalId()
+                    : 0L
+            );
+            dto.setExcludeDisposalIds(excludeDisposalIdsAndCurrentDisposalId);
+        } else {
+            NhiExtendDisposal ned = new NhiExtendDisposal();
+            ned.setA17(
+                body.getDisposalTime()
+            );
+            dto.setNhiExtendDisposal(ned);
+            dto.setExcludeDisposalIds(body.getExcludeDisposalIds());
         }
+
+        // Assign nhi treatment procedure a.k.a target treatment procedure
+        if (body.getTxSnapshots() != null &&
+            body.getTxSnapshots().size() > 0
+        ) {
+            body.getTxSnapshots().stream()
+                .filter(Objects::nonNull)
+                .forEach(txSnapshot -> {
+                    // General
+                    includeNhiCode.add(txSnapshot.getNhiCode());
+                    // Update
+                    if (txSnapshot.getId() != null &&
+                        oldNetpMap.containsKey(txSnapshot.getId()) &&
+                        !txSnapshot.equalsNhiExtendTreatmentProcedure(oldNetpMap.get(txSnapshot.getId()))
+                    ) {
+                        excludeTreatmentProcedureIds.add(txSnapshot.getId());
+                    }
+                    // Delete
+                    if (txSnapshot.getId() != null &&
+                        !oldNetpMap.containsKey(txSnapshot.getId())
+                    ) {
+                        excludeTreatmentProcedureIds.add(txSnapshot.getId());
+                    }
+
+                    // Check if it is belong to target nhi code
+                    if (code.equals(txSnapshot.getNhiCode())) {
+                        NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure()
+                            .a71(body.getDisposalTime())
+                            .a73(txSnapshot.getNhiCode())
+                            .a74(txSnapshot.getTeeth())
+                            .a75(txSnapshot.getSurface());
+
+                        dto.setNhiExtendTreatmentProcedure(netp);
+
+                        if (txSnapshot.getId() != null &&
+                            oldNetpMap.containsKey(txSnapshot.getId())
+                        ) {
+                            dto.getNhiExtendTreatmentProcedure().setId(txSnapshot.getId());
+                            excludeTreatmentProcedureIds.add(txSnapshot.getId());
+                        }
+                    }
+                });
+            dto.setTxSnapshots(body.getTxSnapshots());
+        }
+
+        if (dto.getTxSnapshots() == null) {
+            dto.setTxSnapshots(new ArrayList());
+        }
+
+        dto.setIncludeNhiCodes(includeNhiCode);
+        if (body.getDoctorId() != null) {
+            dto.setDoctorId(body.getDoctorId());
+        }
+
+        // Assign source data
+        dto.setSourceData(body.getSourceData());
 
         return dto;
     }
 
-    /**
-     * 病患 是否在 診療 當下年紀 >= 12 歲
-     *
-     * @param dto 使用 patient.birth, nhiExtendTreatmentProcedure.A71
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO equalsOrGreaterThanAge12(@NotNull NhiRuleCheckDTO dto) {
+    @Transactional
+    @Timed
+    public NhiMonthDeclarationRuleCheckReport createMonthDeclarationRuleCheckReportStatus(String yearMonthString) {
+        NhiMonthDeclarationRuleCheckReport report = new NhiMonthDeclarationRuleCheckReport();
+        report.setStatus(BatchStatus.LOCK);
+        report.setYearMonth(yearMonthString);
+        report.setComment("");
+        return nhiMonthDeclarationRuleCheckReportRepository.save(report);
+    }
 
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("病患是否在診療當下年紀小於 12 歲")
-            .validated(true);
-
-        if (dto.getPatient().getBirth() == null) {
-            result.validated(false);
-        } else {
-            Period p = Period.between(
-                dto.getPatient().getBirth(),
-                DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
-
-            result.validated(p.getYears() >= 12);
-        }
-
-        if (!result.isValidated()) {
-            result
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .message(
-                    String.format(
-                        "%s 須在病患年滿 12 歲，方能申報",
-                        dto.getNhiExtendTreatmentProcedure().getA73()
-                    )
-                );
+    @Transactional
+    @Timed
+    public NhiMonthDeclarationRuleCheckReport updateMonthDeclarationRuleCheckReportStatus(
+        Long id,
+        BatchStatus status,
+        String url
+    ) {
+        NhiMonthDeclarationRuleCheckReport result = null;
+        Optional<NhiMonthDeclarationRuleCheckReport> report = nhiMonthDeclarationRuleCheckReportRepository.findById(id);
+        if (report.isPresent()) {
+            result = report.get();
+            result.setStatus(status);
+            result.setComment(url);
         }
 
         return result;
     }
 
+    @Transactional
+    @Timed
+    public List<NhiMonthDeclarationRuleCheckReport> getMonthDeclarationRuleCheckReport(String yearMonthString) {
+        return this.nhiMonthDeclarationRuleCheckReportRepository.findByYearMonthEquals(yearMonthString);
+    }
+
+    public synchronized String generateMonthDeclarationRuleCheckReport(
+        Integer partialACDateTime,
+        List<Long> excludeDisposals,
+        ImageGcsBusinessService imageGcsBusinessService
+    ) {
+        List<String> csvRecords = new ArrayList<>();
+        List<Long> keiesOrderByDisposalDateTime = new ArrayList<>();
+        List<String> errorReport = new ArrayList<>();
+        String fileUrl = "";
+
+        // Csv header
+        csvRecords.add(
+            CsvUtil.convertDataToCsvRecord(
+                Arrays.asList(
+                    "編號",
+                    "就醫治療時間",
+                    "病患姓名",
+                    "醫師姓名",
+                    "內容"
+                )
+            )
+        );
+
+        // Csv records
+        Map<Long, List<NhiRuleCheckMonthDeclarationTx>> disposalTx = nhiExtendTreatmentProcedureRepository.findNhiMonthDeclarationTx(
+            String.valueOf(partialACDateTime).concat("%"),
+            excludeDisposals != null &&
+                excludeDisposals.size() > 0
+                ? excludeDisposals
+                : Arrays.asList(0L)
+        ).stream()
+            .map(d -> {
+                if (!keiesOrderByDisposalDateTime.contains(d.getDisposalId())) {
+                    keiesOrderByDisposalDateTime.add(d.getDisposalId());
+                }
+                return new NhiRuleCheckMonthDeclarationTx(
+                    d.getDisposalId(),
+                    d.getDisposalTime(),
+                    d.getNhiCategory(),
+                    d.getDoctorId(),
+                    d.getDoctorName(),
+                    d.getPatientId(),
+                    d.getPatientName(),
+                    d.getTreatmentProcedureId(),
+                    d.getNhiCode(),
+                    d.getTeeth(),
+                    d.getSurface()
+                );
+            })
+            .collect(Collectors.groupingBy(d -> d.getDisposalId()));
+
+        int seq = 1;
+        for (Long key : keiesOrderByDisposalDateTime) {
+            List<NhiRuleCheckMonthDeclarationTx> vs = disposalTx.get(key);
+
+            List<NhiRuleCheckTxSnapshot> txSnapshots = new ArrayList<>();
+            NhiRuleCheckBody body = new NhiRuleCheckBody();
+            boolean isFirst = true;
+            String disposalTime = "";
+            String patientName = "";
+            String doctorName = "";
+            String checkedMessage = "";
+            Long patientId = 0L;
+
+            // Assemble NRC body
+            for (NhiRuleCheckMonthDeclarationTx v : vs) {
+                if (isFirst) {
+                    body = NhiRuleCheckMapper.INSTANCE.convertToNhiRuleCheckBody(v);
+                    patientId = v.getPatientId();
+                    disposalTime = v.getDisposalTime();
+                    patientName = v.getPatientName();
+                    doctorName = v.getDoctorName();
+                    isFirst = false;
+                }
+                txSnapshots.add(
+                    NhiRuleCheckMapper.INSTANCE.convertToNhiRuleCheckTxSnapshot(v)
+                );
+            }
+
+            List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
+                patientId,
+                excludeDisposals
+            );
+
+            body.setTxSnapshots(txSnapshots);
+            body.setSourceData(sourceData);
+            body.setExcludeDisposalIds(excludeDisposals);
+
+            // Operate NRC logic for current disposal's treatment procedures
+            for (NhiRuleCheckMonthDeclarationTx v : vs) {
+                try {
+                    NhiRuleCheckResultVM vm = this.dispatch(v.getNhiCode(), body);
+                    checkedMessage = checkedMessage
+                        .concat(
+                            String.join(
+                                "\n",
+                                vm.getMessages()
+                            )
+                        )
+                        .concat("\n");
+                }catch (Exception e) {
+                    errorReport.add(
+                        String.valueOf(
+                            v.toString()
+                        )
+                        .concat(" :")
+                        .concat(
+                            e.getMessage() == null
+                                ? ""
+                                : e.getMessage()
+                        )
+                    );
+                }
+
+            }
+
+            csvRecords.add(
+                CsvUtil.convertDataToCsvRecord(
+                    Arrays.asList(
+                        String.valueOf(seq),
+                        DateTimeUtil.transformA71ToDisplayWithTime(
+                            disposalTime
+                        ),
+                        patientName,
+                        doctorName,
+                        "\"".concat(
+                            checkedMessage
+                        )
+                            .concat(
+                                "\""
+                            )
+                    )
+                )
+            );
+            seq++;
+        }
+
+        try {
+            String fileName = Instant.now().toString()
+                .concat(".csv");
+            imageGcsBusinessService.uploadFile(
+                    imageGcsBusinessService.getClinicName()
+                    .concat("/")
+                    .concat(BackupFileCatalog.MONTH_DECLARE_RULE_CHECK_REPORT.getRemotePath())
+                    .concat("/"),
+                fileName,
+                CsvUtil.convertCsvStringToInputStream(csvRecords),
+                "text/csv"
+            );
+            fileUrl = imageGcsBusinessService.getUrlForDownload()
+                .concat(imageGcsBusinessService.getClinicName())
+                .concat("/")
+                .concat(BackupFileCatalog.MONTH_DECLARE_RULE_CHECK_REPORT.getRemotePath())
+                .concat("/")
+                .concat(fileName);
+        } catch (Exception e) {
+            errorReport.add(
+                "Something go wrong when upload file to GCP"
+                    .concat(" :")
+                    .concat(
+                        e.getMessage()
+                    )
+            );
+        }
+
+        return fileUrl;
+    }
+
     /**
-     * 病患 是否在 診療 當下年紀 >= 12 歲
+     * 病患 是否在 診療 當下年紀 < 12 歲
      *
      * @param dto 使用 patient.birth, nhiExtendTreatmentProcedure.A71
      * @return 後續檢核統一 `回傳` 的介面
@@ -407,7 +584,7 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO lessThanAge12(@NotNull NhiRuleCheckDTO dto) {
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("病患是否在診療當下年紀大於 12 歲")
+            .validateTitle("病患是否在診療當下年紀小於 12 歲")
             .validated(true);
 
         if (dto.getPatient().getBirth() == null) {
@@ -425,8 +602,9 @@ public class NhiRuleCheckUtil {
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
                     String.format(
-                        "%s 須在病患未滿 12 歲，方能申報",
-                        dto.getNhiExtendTreatmentProcedure().getA73()
+                        NhiRuleCheckFormat.D3_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        "未滿十二歲"
                     )
                 );
         }
@@ -443,7 +621,7 @@ public class NhiRuleCheckUtil {
     public NhiRuleCheckResultDTO lessThanAge6(@NotNull NhiRuleCheckDTO dto) {
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("病患是否在診療當下年紀大於等於 6 歲")
+            .validateTitle("病患是否在診療當下年紀小於 6 歲")
             .validated(true);
 
         if (dto.getPatient().getBirth() == null) {
@@ -460,8 +638,9 @@ public class NhiRuleCheckUtil {
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
                     String.format(
-                        "%s 須在病患未滿 6 歲，方能申報",
-                        dto.getNhiExtendTreatmentProcedure().getA73()
+                        NhiRuleCheckFormat.D3_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        "未滿六歲"
                     )
                 );
         }
@@ -470,252 +649,34 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 尋找 患者 在 時間區間 內，屬於 建制的健保代碼清單中，且 未超過時間區間 的 NhiExtendTreatmentProcedure
+     * 病患 是否在 診療 當下年紀 <= 30 歲
      *
-     * @param patientId                     病患 id
-     * @param treatmentProcedureId          欲檢驗的處置 id
-     * @param currentTreatmentProcedureDate 當前處置的日期 a71 （此項是為了減少重複所加）
-     * @param codes                         被限制的健保代碼清單
-     * @param limitDays                     間隔時間
-     * @return null 或 有衝突的 NhiExtendTreatmentProcedure
-     */
-    public NhiExtendTreatmentProcedure findPatientTreatmentProcedureAtCodesAndBeforePeriod(
-        Long patientId,
-        Long treatmentProcedureId,
-        LocalDate currentTreatmentProcedureDate,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays,
-        List<Long> excludeTreatmentProcedureIds
-    ) {
-        List<NhiExtendTreatmentProcedure> matchedNhiExtendTreatmentProcedure = new ArrayList<>();
-
-        List<String> parsedCodes = this.parseNhiCode(codes);
-
-        nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
-            patientId,
-            parsedCodes)
-            .stream()
-            .filter(Objects::nonNull)
-            .filter(netp -> StringUtils.isNotBlank(netp.getA71()) && netp.getTreatmentProcedure_Id() != null)
-            .filter(netp -> !netp.getTreatmentProcedure_Id().equals(treatmentProcedureId))
-            .filter(netp -> currentTreatmentProcedureDate.isEqual(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())) ||
-                currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
-            .filter(netp -> excludeTreatmentProcedureIds == null ||
-                excludeTreatmentProcedureIds.size() == 0 ||
-                !excludeTreatmentProcedureIds.contains(netp.getTreatmentProcedure_Id()))
-            .forEach(netpt -> {
-                LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
-                if (pastTxDate.plus(limitDays).isEqual(currentTreatmentProcedureDate) || pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
-                    matchedNhiExtendTreatmentProcedure.add(
-                        nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(netpt));
-                }
-            });
-
-        return matchedNhiExtendTreatmentProcedure.size() > 0 ? matchedNhiExtendTreatmentProcedure.get(0) : null;
-    }
-
-    /**
-     * 尋找 患者 在 時間區間 內，屬於 建制的健保代碼清單中，且 未超過時間區間 多筆的 NhiExtendTreatmentProcedure
-     *
-     * @param patientId                     病患 id
-     * @param treatmentProcedureId          欲檢驗的處置 id
-     * @param currentTreatmentProcedureDate 當前處置的日期 a71 （此項是為了減少重複所加）
-     * @param codes                         被限制的健保代碼清單
-     * @param limitDays                     間隔時間
-     * @return null 或 有衝突的 NhiExtendTreatmentProcedure
-     */
-    public List<NhiExtendTreatmentProcedure> findMultiplePatientTreatmentProcedureAtCodesAndBeforePeriod(
-        Long patientId,
-        Long treatmentProcedureId,
-        LocalDate currentTreatmentProcedureDate,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays,
-        List<Long> excludeTreatmentProcedureIds
-    ) {
-        List<NhiExtendTreatmentProcedure> matchedNhiExtendTreatmentProcedure = new ArrayList<>();
-
-        List<String> parsedCodes = this.parseNhiCode(codes);
-
-        nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
-            patientId,
-            parsedCodes)
-            .stream()
-            .filter(Objects::nonNull)
-            .filter(netp -> StringUtils.isNotBlank(netp.getA71()) && netp.getTreatmentProcedure_Id() != null)
-            .filter(netp -> !netp.getTreatmentProcedure_Id().equals(treatmentProcedureId))
-            .filter(netp -> currentTreatmentProcedureDate.isEqual(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())) ||
-                currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
-            .filter(netp -> excludeTreatmentProcedureIds == null ||
-                excludeTreatmentProcedureIds.size() == 0 ||
-                !excludeTreatmentProcedureIds.contains(netp.getTreatmentProcedure_Id()))
-            .forEach(netpt -> {
-                LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
-                if (pastTxDate.plus(limitDays).isEqual(currentTreatmentProcedureDate) || pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
-                    matchedNhiExtendTreatmentProcedure.add(
-                        nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(netpt));
-                }
-            });
-
-        return matchedNhiExtendTreatmentProcedure;
-    }
-
-    /**
-     * 尋找 患者 在 時間區間 內，屬於 建制的健保代碼清單中，且 未超過時間區間 且 相同牙位 的 NhiExtendTreatmentProcedure
-     *
-     * @param patientId                     病患 id
-     * @param treatmentProcedureId          欲檢驗的處置 id
-     * @param currentTreatmentProcedureDate 當前處置的日期 a71 （此項是為了減少重複所加）
-     * @param codes                         被限制的健保代碼清單
-     * @param limitDays                     間隔時間
-     * @param tooth                         牙位
-     * @return null 或 有衝突的 NhiExtendTreatmentProcedure
-     */
-    public NhiExtendTreatmentProcedure findPatientTreatmentProcedureAtCodesAndBeforePeriodAndTooth(
-        Long patientId,
-        Long treatmentProcedureId,
-        LocalDate currentTreatmentProcedureDate,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays,
-        String tooth,
-        List<Long> excludeTreatmentProcedureIds
-    ) {
-        List<NhiExtendTreatmentProcedure> matchedNhiExtendTreatmentProcedure = new ArrayList<>();
-
-        List<String> parsedCodes = this.parseNhiCode(codes);
-
-        nhiExtendTreatmentProcedureRepository.findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(
-            patientId,
-            parsedCodes)
-            .stream()
-            .filter(Objects::nonNull)
-            .filter(netp -> StringUtils.isNotBlank(netp.getA71()) && netp.getTreatmentProcedure_Id() != null)
-            .filter(netp -> !netp.getTreatmentProcedure_Id().equals(treatmentProcedureId))
-            .filter(netp -> currentTreatmentProcedureDate.isEqual(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())) ||
-                currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(netp.getA71())))
-            .filter(netp -> ToothUtil.splitA74(netp.getA74()).contains(tooth))
-            .filter(netp -> excludeTreatmentProcedureIds == null ||
-                excludeTreatmentProcedureIds.size() == 0 ||
-                !excludeTreatmentProcedureIds.contains(netp.getTreatmentProcedure_Id()))
-            .forEach(netpt -> {
-                LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
-                if (pastTxDate.plus(limitDays).isEqual(currentTreatmentProcedureDate) || pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
-                    matchedNhiExtendTreatmentProcedure.add(
-                        nhiExtendTreatmentProcedureMapper.nhiExtendTreatmentProcedureTableToNhiExtendTreatmentProcedureTable(netpt));
-                }
-            });
-
-        return matchedNhiExtendTreatmentProcedure.size() > 0 ? matchedNhiExtendTreatmentProcedure.get(0) : null;
-    }
-
-    /**
-     * 尋找 患者 在 時間區間 內，屬於 建制的健保代碼清單中，且 未超過時間區間 的 NhiMedicalRecord
-     *
-     * @param patientId                     病患 id
-     * @param currentTreatmentProcedureDate 當前處置的日期 a71 （此項是為了減少重複所加）
-     * @param codes                         被限制的健保代碼清單
-     * @param limitDays                     間隔時間
-     * @return null 或 有衝突的 NhiMedicalRecord
-     */
-    public NhiMedicalRecord findPatientMediaRecordAtCodesAndBeforePeriod(
-        Long patientId,
-        LocalDate currentTreatmentProcedureDate,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays
-    ) {
-        List<NhiMedicalRecord> matchedNhiMedicalRecord = new ArrayList<>();
-
-        List<String> parsedCodes = this.parseNhiCode(codes);
-
-        nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
-            patientId,
-            parsedCodes)
-            .stream()
-            .filter(Objects::nonNull)
-            .filter(nmr -> currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(nmr.getDate())))
-            .forEach(nmr -> {
-                LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(nmr.getDate());
-                if (pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
-                    matchedNhiMedicalRecord.add(nmr);
-                }
-            });
-
-        return matchedNhiMedicalRecord.size() > 0 ? matchedNhiMedicalRecord.get(0) : null;
-    }
-
-    /**
-     * 尋找 患者 在 時間區間 內，屬於 建制的健保代碼清單中，且 未超過時間區間 的 NhiMedicalRecord
-     *
-     * @param patientId                     病患 id
-     * @param currentTreatmentProcedureDate 當前處置的日期 a71 （此項是為了減少重複所加）
-     * @param codes                         被限制的健保代碼清單
-     * @param limitDays                     間隔時間
-     * @return null 或 有衝突的 NhiMedicalRecord
-     */
-    public List<NhiMedicalRecord> findMultiplePatientMediaRecordAtCodesAndBeforePeriod(
-        Long patientId,
-        LocalDate currentTreatmentProcedureDate,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays
-    ) {
-        List<NhiMedicalRecord> matchedNhiMedicalRecord = new ArrayList<>();
-
-        List<String> parsedCodes = this.parseNhiCode(codes);
-
-        nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(
-            patientId,
-            parsedCodes)
-            .stream()
-            .filter(Objects::nonNull)
-            .filter(nmr -> currentTreatmentProcedureDate.isAfter(DateTimeUtil.transformROCDateToLocalDate(nmr.getDate())))
-            .forEach(nmr -> {
-                LocalDate pastTxDate = DateTimeUtil.transformROCDateToLocalDate(nmr.getDate());
-                if (pastTxDate.plus(limitDays).isAfter(currentTreatmentProcedureDate)) {
-                    matchedNhiMedicalRecord.add(nmr);
-                }
-            });
-
-        return matchedNhiMedicalRecord;
-    }
-
-    /**
-     * 指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。
-     *
-     * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
-     * @param codes     被限制的健保代碼清單
-     * @param limitDays 間隔時間
+     * @param dto 使用 patient.birth, nhiExtendTreatmentProcedure.A71
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO isCodeBeforeDate(
-        @NotNull NhiRuleCheckDTO dto,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays
-    ) {
-        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-
-        // 檢核 nhi extend treatment procedure
-        NhiExtendTreatmentProcedure match =
-            this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
-                dto.getPatient().getId(),
-                dto.getNhiExtendTreatmentProcedure().getId(),
-                currentTxDate,
-                codes,
-                limitDays,
-                dto.getExcludeTreatmentProcedureIds());
+    public NhiRuleCheckResultDTO moreThanOrEqualToAge30(@NotNull NhiRuleCheckDTO dto) {
 
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
-            .validated(match == null);
+            .validateTitle("病患是否在診療當下年紀大於 30 歲")
+            .validated(true);
+
+        if (dto.getPatient().getBirth() == null) {
+            result.validated(false);
+        } else {
+            Period p = Period.between(
+                dto.getPatient().getBirth(),
+                DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
+            result.validated(p.getYears() >= 30);
+        }
 
         if (!result.isValidated()) {
-            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
-
             result
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
                 .message(
                     String.format(
-                        "建議 %s 後再行申報，近一次處置為系統中 %s",
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+                        NhiRuleCheckFormat.D3_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        "年滿三十歲"
                     )
                 );
         }
@@ -724,255 +685,87 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays，且超過 maxTimes。
+     * 病患 是否在 診療 當下年紀 >= 18 and < 30 歲
      *
-     * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
-     * @param codes     被限制的健保代碼清單
-     * @param limitDays 間隔時間
-     * @param maxTimes  時間內最大次數
+     * @param dto 使用 patient.birth, nhiExtendTreatmentProcedure.A71
      * @return 後續檢核統一 `回傳` 的介面
      */
-    public NhiRuleCheckResultDTO isCodeBeforeDateWithMaxTimes(
-        @NotNull NhiRuleCheckDTO dto,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays,
-        int maxTimes
-    ) {
+    public NhiRuleCheckResultDTO moreOrEqualToAge18AndLessThan30(@NotNull NhiRuleCheckDTO dto) {
+
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
+            .validateTitle("病患是否在診療當下年紀大於等於 18 小於 30 歲")
             .validated(true);
 
-        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-
-        // 檢核 nhi extend treatment procedure
-        List<NhiExtendTreatmentProcedure> match =
-            this.findMultiplePatientTreatmentProcedureAtCodesAndBeforePeriod(
-                dto.getPatient().getId(),
-                dto.getNhiExtendTreatmentProcedure().getId(),
-                currentTxDate,
-                codes,
-                limitDays,
-                dto.getExcludeTreatmentProcedureIds());
-
-
-        if (match.size() > maxTimes) {
-            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.get(0).getA71());
-
-            result
-                .validated(false)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .message(
-                    String.format(
-                        "建議 %s 再行申報，近一次處置為系統中 %s",
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
-                    )
-                );
+        if (dto.getPatient().getBirth() == null) {
+            result.validated(false);
+        } else {
+            Period p = Period.between(
+                dto.getPatient().getBirth(),
+                DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
+            result.validated(p.getYears() >= 18 && p.getYears() < 30);
         }
-
-        return result;
-    }
-
-    /**
-     * 指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays，且相同象限。
-     *
-     * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
-     * @param codes     被限制的健保代碼清單
-     * @param limitDays 間隔時間
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isCodeBeforeDateWithSamePhase(
-        @NotNull NhiRuleCheckDTO dto,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays
-    ) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays，且相同象限")
-            .validated(true);
-
-        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-
-        // 列出被驗證之牙位所佔象限
-        List<String> teeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
-        Set<ToothUtil.ToothPhase> currentPhaseSet = ToothUtil.markAsPhase(teeth);
-
-        // 檢核 nhi extend treatment procedure
-        NhiExtendTreatmentProcedure match =
-            this.findPatientTreatmentProcedureAtCodesAndBeforePeriod(
-                dto.getPatient().getId(),
-                dto.getNhiExtendTreatmentProcedure().getId(),
-                currentTxDate,
-                codes,
-                limitDays,
-                dto.getExcludeTreatmentProcedureIds());
-
-        if (match != null) {
-            Set<ToothUtil.ToothPhase> matchPhaseSet = ToothUtil.markAsPhase(
-                ToothUtil.splitA74(match.getA74()));
-
-            if (currentPhaseSet.stream().anyMatch(matchPhaseSet::contains)) {
-                LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
-
-                result
-                    .validated(false)
-                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                    .message(
-                        String.format(
-                            "建議 %s 再行申報，近一次處置為系統中 %s",
-                            DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                            DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
-                        )
-                    );
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * 指定的診療項目，在病患過去紀錄中（來自IC卡資料的紀錄），是否已經包含 codes，且未達間隔 limitDays，且相同象限。
-     *
-     * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
-     * @param codes     被限制的健保代碼清單
-     * @param limitDays 間隔時間
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isCodeBeforeDateByNhiMedicalRecordWithSamePhase(
-        @NotNull NhiRuleCheckDTO dto,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays
-    ) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("指定的診療項目，在病患過去紀錄中（來自IC卡資料的紀錄），是否已經包含 codes，且未達間隔 limitDays，且相同象限")
-            .validated(true);
-
-        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-
-        // 列出被驗證之牙位所佔象限
-        List<String> teeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
-        Set<ToothUtil.ToothPhase> currentPhaseSet = ToothUtil.markAsPhase(teeth);
-
-        // 檢核 nhi extend treatment procedure
-        NhiMedicalRecord match = this.findPatientMediaRecordAtCodesAndBeforePeriod(
-            dto.getPatient().getId(),
-            currentTxDate,
-            codes,
-            limitDays);
-
-        if (match != null) {
-            Set<ToothUtil.ToothPhase> matchPhaseSet = ToothUtil.markAsPhase(
-                ToothUtil.splitA74(match.getPart()));
-
-            if (currentPhaseSet.stream().anyMatch(matchPhaseSet::contains)) {
-                LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getPart());
-
-                result
-                    .validated(false)
-                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                    .message(
-                        String.format(
-                            "建議次月再行申報，近一次處置為系統中 %s",
-                            DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                            DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
-                        )
-                    );
-            }
-
-        }
-
-        return result;
-    }
-
-    /**
-     * 指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays，且超過 maxTimes。
-     *
-     * @param dto       使用 patient.id, nhiExtendTreatmentProcedure.id/.a71
-     * @param codes     被限制的健保代碼清單
-     * @param limitDays 間隔時間
-     * @param maxTimes  時間內最大次數
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isCodeBeforeDateByNhiMedicalRecordWithMaxTimes(
-        @NotNull NhiRuleCheckDTO dto,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays,
-        int maxTimes
-    ) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("指定的診療項目，在病患過去紀錄中（來自診所系統產生的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
-            .validated(true);
-
-        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-
-        // 檢核 nhi extend treatment procedure
-        List<NhiMedicalRecord> match =
-            this.findMultiplePatientMediaRecordAtCodesAndBeforePeriod(
-                dto.getPatient().getId(),
-                currentTxDate,
-                codes,
-                limitDays);
-
-
-        if (match.size() > maxTimes) {
-            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.get(0).getDate());
-
-            result
-                .validated(false)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .message(
-                    String.format(
-                        "建議次月再行申報，近一次處置為健保IC卡中 %s",
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
-                    )
-                );
-        }
-
-        return result;
-    }
-
-    /**
-     * 指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達間隔 limitDays。
-     *
-     * @param dto       使用 patient.id
-     * @param codes     被限制的健保代碼清單
-     * @param limitDays 間隔時間
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isCodeBeforeDateByNhiMedicalRecord(
-        @NotNull NhiRuleCheckDTO dto,
-        @NotNull List<String> codes,
-        @NotNull Period limitDays
-    ) {
-        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-
-        NhiMedicalRecord match = this.findPatientMediaRecordAtCodesAndBeforePeriod(
-            dto.getPatient().getId(),
-            currentTxDate,
-            codes,
-            limitDays);
-
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("指定的診療項目，在病患過去紀錄中（來自健保卡讀取的紀錄），是否已經包含 codes，且未達間隔 limitDays。")
-            .validated(match == null);
 
         if (!result.isValidated()) {
-            LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getDate());
-
             result
-                .validated(false)
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .nhiRuleCheckSourceType(NhiRuleCheckSourceType.NHI_CARD_RECORD)
                 .message(
                     String.format(
-                        "建議 %s 後再行申報，近一次處置為健保IC卡中 %s",
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(limitDays.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
+                        NhiRuleCheckFormat.D3_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        "年滿十八歲且未滿三十歲"
                     )
                 );
         }
 
         return result;
+    }
+
+    // 找該病患所有混合資料，並排除指定 codes, disposal id
+    public List<NhiHybridRecordDTO> findNhiHypeRecordsDTO(
+        Long patientId,
+        List<String> codes,
+        List<Long> excludeDisposalIds
+    ) {
+        return nhiExtendDisposalRepository.findNhiHybridRecord(
+            patientId,
+            codes,
+            excludeDisposalIds
+        ).stream()
+            .map(
+                nhr -> new NhiHybridRecordDTO(
+                    nhr.getRecordSource(),
+                    nhr.getDisposalId(),
+                    nhr.getDoctorId(),
+                    nhr.getRecordDateTime(),
+                    nhr.getCode(),
+                    nhr.getTooth(),
+                    nhr.getSurface()
+                )
+            )
+            .collect(Collectors.toList());
+    }
+
+    // 找該病患所有混合資料，並排除指定 disposal id
+    public List<NhiHybridRecordDTO> findNhiHypeRecordsDTO(
+        Long patientId,
+        List<Long> excludeDisposalIds
+    ) {
+        return nhiExtendDisposalRepository.findNhiHybridRecord(
+            patientId,
+            excludeDisposalIds
+        ).stream()
+            .map(
+                nhr -> new NhiHybridRecordDTO(
+                    nhr.getRecordSource(),
+                    nhr.getDisposalId(),
+                    nhr.getDoctorId(),
+                    nhr.getRecordDateTime(),
+                    nhr.getCode(),
+                    nhr.getTooth(),
+                    nhr.getSurface()
+                )
+            )
+            .collect(Collectors.toList());
     }
 
     /**
@@ -992,33 +785,6 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 具有條件地，回訊息作為提醒用，檢核狀況算審核通過
-     *
-     * @param dto 根據 predicate 的不同許用不同的內容
-     * @param message 應回傳訊息
-     * @param predicates 條件式
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO addNotificationWithClause(
-        NhiRuleCheckDTO dto,
-        String message,
-        Predicate<NhiRuleCheckDTO>...predicates
-    ) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.NONE)
-            .validateTitle("具有條件地，回訊息作為提醒用，檢核狀況算審核通過")
-            .validated(true)
-            .message(message);
-
-        if (Arrays.stream(predicates).allMatch(p -> p.test(dto))) {
-            result.nhiRuleCheckInfoType(NhiRuleCheckInfoType.INFO)
-                .message(message);
-        }
-
-        return result;
-    }
-
-    /**
      * 限制牙面在 isAllLimitedSurface 以下
      *
      * @param dto 使用 nhiExtendTreatmentProcedure.a75
@@ -1030,9 +796,46 @@ public class NhiRuleCheckUtil {
         SurfaceConstraint sc
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
             .validateTitle("限制牙面在 isAllLimitedSurface 以下");
 
         switch (sc) {
+            case MIN_1_SURFACES:
+                result
+                    .validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
+                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_1_SURFACES.getLimitNumber()
+                    );
+
+                if (!result.isValidated()) {
+                    result.message(SurfaceConstraint.MIN_1_SURFACES.getErrorMessage());
+                }
+
+                break;
+            case MIN_2_SURFACES:
+                result
+                    .validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
+                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_2_SURFACES.getLimitNumber()
+                    );
+
+                if (!result.isValidated()) {
+                    result.message(SurfaceConstraint.MIN_2_SURFACES.getErrorMessage());
+                }
+
+                break;
+            case MIN_3_SURFACES:
+                result
+                    .validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
+                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_3_SURFACES.getLimitNumber()
+                    );
+
+                if (!result.isValidated()) {
+                    result.message(SurfaceConstraint.MIN_3_SURFACES.getErrorMessage());
+                }
+
+                break;
             case MAX_2_SURFACES:
                 result
                     .validated(
@@ -1067,6 +870,19 @@ public class NhiRuleCheckUtil {
                         .message(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage());
                 }
                 break;
+            case EQUAL_4_SURFACES:
+                result
+                    .validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() ==
+                            SurfaceConstraint.EQUAL_4_SURFACES.getLimitNumber()
+                    );
+
+                if (!result.isValidated()) {
+                    result.message(SurfaceConstraint.EQUAL_4_SURFACES.getErrorMessage());
+                }
+
+                break;
             default:
                 break;
         }
@@ -1099,141 +915,191 @@ public class NhiRuleCheckUtil {
         if (!result.isValidated()) {
             result
                 .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                .message(ToothUtil.getToothConstraintsFailureMessage(tc));
+                .message(
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                        .concat(
+                            ": "
+                        )
+                        .concat(
+                            ToothUtil.getToothConstraintsFailureMessage(
+                                tc
+                            )
+                        )
+                );
         }
 
         return result;
     }
 
     /**
-     * 病患 牙齒 是否有 健保代碼 於某時間前已被申報過
+     * 適用於，81, etc,. 這類非常規時間區間，事先在檢查前，算出最大間隔區間
+     * example,
+     * 7/15 --limitationMonth is 3 months--> 4/1, 6/30
      *
-     * @param dto                     使用 nhiExtendTreatmentProcedure.id/a71/a73/a74, patient.id,
-     * @param codes                   被限制的健保代碼清單
-     * @param deciduousToothLimitDays 為乳牙時，所需時間間隔
-     * @param permanentToothLimitDays 為恆牙時，所需時間間隔
-     * @return 後續檢核統一 `回傳` 的介面
+     * @return
      */
-    public NhiRuleCheckResultDTO isPatientToothAtCodesBeforePeriod(
-        NhiRuleCheckDTO dto,
-        List<String> codes,
-        Period deciduousToothLimitDays,
-        Period permanentToothLimitDays
-    ) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("病患 牙齒 是否有 健保代碼 於某時間前已被申報過")
-            .validated(true);
+    public LocalDateDuration specialMonthDurationCalculation(NhiRuleCheckDTO dto, long limitationMonth) {
+        LocalDate begin = LocalDate.now();
+        LocalDate end = begin;
 
-        List<String> teeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
+        LocalDate currentTxDate = this.getNhiExtendDisposalDateInDTO(dto);
+        begin = currentTxDate.withDayOfMonth(1).minusMonths(limitationMonth - 1);
+        end = currentTxDate.withDayOfMonth(currentTxDate.lengthOfMonth());
 
-        teeth.stream()
-            .forEach(tooth -> {
-                Period selectedLimitDay = isDeciduousTeeth(tooth) ? deciduousToothLimitDays : permanentToothLimitDays;
-                NhiExtendTreatmentProcedure match = this.findPatientTreatmentProcedureAtCodesAndBeforePeriodAndTooth(
-                    dto.getPatient().getId(),
-                    dto.getNhiExtendTreatmentProcedure().getId(),
-                    DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
-                    codes,
-                    selectedLimitDay,
-                    tooth,
-                    dto.getExcludeTreatmentProcedureIds()
-                );
-
-                if (match != null) {
-                    LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getA71());
-                    result
-                        .validated(false)
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                        .message(
-                            String.format(
-                                "建議 %s 後再行申報，近一次處置為系統中 %s",
-                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
-                                    matchDate.plusDays(selectedLimitDay.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
-                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
-                            )
-                        );
-                }
-            });
-
-        return result;
+        return new LocalDateDuration()
+            .begin(begin)
+            .end(end);
     }
 
-    /**
-     * 病患 牙齒 是否有 健保代碼 於某時間前已被申報過 in IC card
-     *
-     * @param dto                     使用 nhiExtendTreatmentProcedure.id/a71/a73/a74, patient.id,
-     * @param codes                   被限制的健保代碼清單
-     * @param deciduousToothLimitDays 為乳牙時，所需時間間隔
-     * @param permanentToothLimitDays 為恆牙時，所需時間間隔
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isPatientToothAtCodesBeforePeriodByNhiMedicalRecord(
+    public LocalDateDuration regularDayDurationCalculation(NhiRuleCheckDTO dto, Period days) {
+        LocalDate begin = LocalDate.now();
+        LocalDate end = begin;
+
+        LocalDate currentTxDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+        begin = currentTxDate.minus(days);
+        end = currentTxDate;
+
+        return new LocalDateDuration()
+            .begin(begin)
+            .end(end);
+    }
+
+    public NhiRuleCheckResultDTO isCodeBeforeDateV2(
         NhiRuleCheckDTO dto,
-        List<String> codes,
-        Period deciduousToothLimitDays,
-        Period permanentToothLimitDays
+        NhiRuleCheckSourceType onlySourceType,
+        List<String> originCodes,
+        LocalDateDuration duration,
+        String limitDisplayDuration,
+        int limitTimes,
+        NhiRuleCheckFormat format
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("病患 牙齒 是否有 健保代碼 於某時間前已被申報過 in IC card")
+            .validateTitle("指定 patient id, codes, 並排除 disposal")
             .validated(true);
 
-        List<String> teeth = ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74());
+        List<String> codes = this.parseNhiCode(originCodes);
+        List<NhiRuleCheckTxSnapshot> currentDisposalMatches = new ArrayList<>();
 
-        teeth.stream()
-            .forEach(tooth -> {
-                Period selectedLimitDay = isDeciduousTeeth(tooth) ? deciduousToothLimitDays : permanentToothLimitDays;
-                NhiMedicalRecord match = this.findPatientMediaRecordAtCodesAndBeforePeriod(
-                    dto.getPatient().getId(),
-                    DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()),
-                    codes,
-                    selectedLimitDay
+        // 當前 disposal
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().size() > 0
+        ) {
+            List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
+            currentDisposalMatches = ignoreTargetTxSnapshots.stream()
+                .filter(d -> codes.contains(d.getNhiCode()))
+                .collect(Collectors.toList());
+
+            if (currentDisposalMatches.size() >= limitTimes) {
+                String m = this.generateErrorMessage(
+                    format,
+                    NhiRuleCheckSourceType.CURRENT_DISPOSAL,
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    currentDisposalMatches.get(0).getNhiCode(),
+                    this.getNhiExtendDisposalDateInDTO(dto),
+                    limitDisplayDuration,
+                    null,
+                    null
                 );
 
-                if (match == null) {
-                    return;
-                } else if (
-                    match != null &&
-                        ToothUtil.splitA74(match.getPart()).contains(tooth)
+                return result
+                    .validated(false)
+                    .nhiRuleCheckInfoType(format.getLevel())
+                    .message(m);
+            }
+        }
+
+        // 其他處置
+        List<NhiHybridRecordDTO> sourceData = originCodes != null
+            ? this.findNhiHypeRecordsDTO(
+                    dto.getPatient().getId(),
+                    codes,
+                    Arrays.asList(
+                        dto.getNhiExtendDisposal() != null &&
+                            dto.getNhiExtendDisposal().getDisposal() != null &&
+                            dto.getNhiExtendDisposal().getDisposal().getId() != null
+                                ? dto.getNhiExtendDisposal().getDisposal().getId()
+                                : 0L
+                    )
+                )
+            : this.findNhiHypeRecordsDTO(
+                    dto.getPatient().getId(),
+                    Arrays.asList(
+                        dto.getNhiExtendDisposal() != null &&
+                            dto.getNhiExtendDisposal().getDisposal() != null &&
+                            dto.getNhiExtendDisposal().getDisposal().getId() != null
+                            ? dto.getNhiExtendDisposal().getDisposal().getId()
+                            : 0L
+                    )
+                );
+
+        if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(onlySourceType)) {
+            sourceData = sourceData.stream()
+                .filter(d -> "SYS".equals(d.getRecordSource()))
+                .collect(Collectors.toList());
+        }
+
+        List<NhiHybridRecordDTO> matches = duration != null
+            ? sourceData.stream()
+                .filter(
+                    d -> d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                        d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                        d.getRecordDateTime().isEqual(duration.getEnd())
+                )
+                .collect(Collectors.toList())
+            : sourceData;
+
+        if (matches != null &&
+            matches.size() + currentDisposalMatches.size() >= limitTimes
+        ) {
+            if (currentDisposalMatches.size() == 0) {
+
+                NhiRuleCheckSourceType matchedSourceType = NhiRuleCheckSourceType.SYSTEM_RECORD;
+                NhiHybridRecordDTO latestNhiHybridRecord = matches.get(0);
+                if (
+                    "IC".equals(latestNhiHybridRecord.getRecordSource())
                 ) {
-                    LocalDate matchDate = DateTimeUtil.transformROCDateToLocalDate(match.getPart());
-                    result
-                        .validated(false)
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                        .message(
-                            String.format(
-                                "建議 %s 後再行申報，近一次處置為健保IC卡中 %s",
-                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
-                                    matchDate.plusDays(selectedLimitDay.getDays()).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET)),
-                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
-                                    matchDate.atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET))
-                            )
-                        );
+                    matchedSourceType = NhiRuleCheckSourceType.NHI_CARD_RECORD;
+                } else if (
+                    latestNhiHybridRecord.getRecordDateTime().isEqual(
+                        DateTimeUtil.transformROCDateToLocalDate(
+                            dto.getNhiExtendTreatmentProcedure().getA71()
+                        )
+                    )
+                ) {
+                    matchedSourceType = NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL;
                 }
-            });
 
-        return result;
-    }
+                String m = this.generateErrorMessage(
+                    format,
+                    matchedSourceType,
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    latestNhiHybridRecord.getCode(),
+                    latestNhiHybridRecord.getRecordDateTime(),
+                    limitDisplayDuration,
+                    null,
+                    null
+                );
 
-    /**
-     * 檢查 nhi extend disposal 是否被調整為 指定部分代碼
-     *
-     * @param dto 使用 nhiExtendDisposal.patientIdentity
-     * @param cc  部分負擔代碼 a.k.a patientIdentity
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isPatientIdentityInclude(NhiRuleCheckDTO dto, CopaymentCode cc) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("檢查 nhi extend disposal 是否被調整為 指定部分代碼")
-            .validated(
-                StringUtils.isNotBlank(dto.getNhiExtendDisposal().getPatientIdentity()) &&
-                    dto.getNhiExtendDisposal().getPatientIdentity().equals(cc.getCode()));
-
-        if (!result.isValidated()) {
-            if (CopaymentCode._001.getCode().equals(cc.getCode())) {
                 result
-                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                    .message(CopaymentCode._001.getNotification());
+                    .validated(false)
+                    .nhiRuleCheckInfoType(format.getLevel())
+                    .message(m);
+            } else {
+                String m = this.generateErrorMessage(
+                    format,
+                    NhiRuleCheckSourceType.CURRENT_DISPOSAL,
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    currentDisposalMatches.get(0).getNhiCode(),
+                    this.getNhiExtendDisposalDateInDTO(dto),
+                    limitDisplayDuration,
+                    null,
+                    null
+                );
+
+                result
+                    .validated(false)
+                    .nhiRuleCheckInfoType(format.getLevel())
+                    .message(m);
             }
         }
 
@@ -1241,272 +1107,1662 @@ public class NhiRuleCheckUtil {
     }
 
     /**
-     * 當檢核都成功的狀況下，呼叫此 method 。查詢最近一筆的治療紀錄，並回傳成功訊息。
-     *
-     * @param dto 使用 patient.id, nhiExtendTreatmentProcedure.a73, nhiExtendDisposal.disposal.id
-     * @return 後續檢核統一 `回傳` 的介面
+     * For 00316C, 01272C
+     * @param dto
+     * @return
      */
-    public NhiRuleCheckResultDTO appendSuccessSourceInfo(NhiRuleCheckDTO dto) {
+    public List<NhiRuleCheckResultDTO> isSpecialRuleForXray(NhiRuleCheckDTO dto) {
+        List<NhiRuleCheckResultDTO> results = new ArrayList<>();
+        String title = "Special rule for Xray";
+
+        List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
+        NhiRuleCheckTxSnapshot currentMatch00316C = null;
+
+        for (NhiRuleCheckTxSnapshot ignoreTargetTxSnapshot : ignoreTargetTxSnapshots) {
+            if ("00316C".equals(ignoreTargetTxSnapshot.getNhiCode())) {
+                currentMatch00316C = ignoreTargetTxSnapshot;
+                break;
+            }
+        }
+
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData()
+            : this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            Arrays.asList(
+                this.getDisposalIdInDTO(dto)
+            )
+        );
+
+        List<NhiHybridRecordDTO> foundAnyInPast365Days = getSourceDataByDuration(
+            sourceData,
+            this.regularDayDurationCalculation(
+                dto,
+                DateTimeUtil.NHI_365_DAY
+            )
+        );
+
+        List<NhiHybridRecordDTO> foundAny00316CInPast545Days = getSourceDataByDuration(
+            sourceData,
+            this.regularDayDurationCalculation(
+                dto,
+                DateTimeUtil.NHI_545_DAY
+            )
+        ).stream()
+            .filter(d -> "00316C".equals(d.getCode()))
+            .collect(Collectors.toList());
+
+        if (foundAnyInPast365Days.size() != 0) {
+            if (currentMatch00316C != null ||
+                foundAny00316CInPast545Days.size() != 0
+            ) {
+                NhiRuleCheckResultDTO r1 = new NhiRuleCheckResultDTO()
+                    .validateTitle(title)
+                    .validated(false)
+                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_5.getLevel())
+                    .message(
+                        String.format(
+                            NhiRuleCheckFormat.D1_5.getFormat(),
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            String.valueOf(DateTimeUtil.NHI_365_DAY.getDays())
+                        )
+                    );
+                NhiRuleCheckResultDTO r2 = new NhiRuleCheckResultDTO()
+                    .validateTitle(title)
+                    .validated(false)
+                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D4_1.getLevel())
+                    .message(
+                        this.generateErrorMessage(
+                            NhiRuleCheckFormat.D4_1,
+                            currentMatch00316C != null
+                                ? NhiRuleCheckSourceType.CURRENT_DISPOSAL
+                                : this.getSourceDataType(
+                                    dto,
+                                    foundAny00316CInPast545Days.get(0)
+                                ),
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            "00316C",
+                            currentMatch00316C != null
+                                ? this.getNhiExtendDisposalDateInDTO(dto)
+                                : foundAny00316CInPast545Days.get(0).getRecordDateTime(),
+                            String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
+                            null,
+                            null
+                        )
+                    );
+
+                results.add(r1);
+                results.add(r2);
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * 89XXX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
+     *
+     * @param dto patient.id, netp.id, excludeTreamentProcedureId
+     * @return
+     */
+    public NhiRuleCheckResultDTO isSpecialRuleFor89XXXC(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.SUCCESS)
-            .validateTitle("當檢核都成功的狀況下，呼叫此 method 。查詢最近一筆的治療紀錄，並回傳成功訊息")
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validated(true)
+            .validateTitle("89XXX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外");
+
+        List<String> queryCodes = Arrays.asList("89006C", "90001C", "90002C", "90003C", "90019C", "90020C");
+        List<String> mustIncludeCodes = Arrays.asList("90001C", "90002C", "90003C", "90019C", "90020C");
+
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> queryCodes.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            queryCodes,
+            Arrays.asList(
+                this.getDisposalIdInDTO(dto)
+            )
+        );
+
+        LocalDate currentDate = DateTimeUtil.transformROCDateToLocalDate(
+            dto.getNhiExtendTreatmentProcedure().getA71()
+        );
+
+        Optional<NhiHybridRecordDTO> detected89006COptional = sourceData.stream()
+            .filter(d -> {
+                if ("89006C".equals(d.getCode())) {
+                    if (
+                        d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isEqual(currentDate) ||
+                            d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isAfter(currentDate)
+                    ) {
+                        return true;
+                    }
+                }
+
+                return false;
+            })
+            .findFirst();
+
+        if (detected89006COptional.isPresent()) {
+            NhiHybridRecordDTO detected89006C = detected89006COptional.get();
+            boolean pass = true;
+            if (detected89006C.getRecordDateTime().isEqual(this.getNhiExtendDisposalDateInDTO(dto))) {
+                pass = false;
+            } else if (
+                sourceData.stream()
+                    .filter(d -> mustIncludeCodes.contains(d.getCode()))
+                    .count() < 1
+            ) {
+                pass = false;
+            } else {
+                List<NhiHybridRecordDTO> availableClauseResults = new ArrayList<>();
+                for (NhiHybridRecordDTO data : sourceData) {
+                    if (mustIncludeCodes.contains(data.getCode()) &&
+                        data.getRecordDateTime().isAfter(detected89006C.getRecordDateTime()) &&
+                        data.getRecordDateTime().isBefore(this.getNhiExtendDisposalDateInDTO(dto)) ||
+                        data.getRecordDateTime().isEqual(this.getNhiExtendDisposalDateInDTO(dto))
+                    ) {
+                        availableClauseResults.add(data);
+                    }
+                }
+                if (availableClauseResults.size() == 0) {
+                    pass = false;
+                }
+            }
+
+            if (!pass) {
+                NhiRuleCheckSourceType sourceType;
+                if (
+                    detected89006C.getDisposalId() != null &&
+                        detected89006C.getDisposalId().equals(this.getDisposalIdInDTO(dto))
+                ) {
+                    sourceType = NhiRuleCheckSourceType.CURRENT_DISPOSAL;
+                } else if (
+                    "SYS".equals(detected89006C.getRecordSource()) &&
+                        detected89006C.getRecordDateTime().isEqual(this.getNhiExtendDisposalDateInDTO(dto))
+                ) {
+                    sourceType = NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL;
+                } else if (
+                    "SYS".equals(detected89006C.getRecordSource())
+                ) {
+                    sourceType = NhiRuleCheckSourceType.SYSTEM_RECORD;
+                } else {
+                    sourceType = NhiRuleCheckSourceType.NHI_CARD_RECORD;
+                }
+                result.validated(false)
+                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_2.getLevel())
+                    .message(
+                        String.format(
+                            NhiRuleCheckFormat.D1_2.getFormat(),
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            "89006C",
+                            sourceType.getValue(),
+                            DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                detected89006C.getRecordDateTime()
+                            ),
+                            "30",
+                            dto.getNhiExtendTreatmentProcedure().getA73()
+                        )
+                    );
+            }
+        }
+
+        return result;
+    }
+
+    public NhiRuleCheckResultDTO isSpecialRuleFor91014C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("Special rule for 91014C")
             .validated(true);
 
-        LocalDate currentDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
+        List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
+        LocalDateDuration duration = new LocalDateDuration();
+        String displayLimit = "";
+        boolean foundTargetInCurrentDisposal = false;
 
-        // 查詢系統最新一筆資料
-        List<NhiExtendTreatmentProcedureTable> netpts;
+        // 當前處置
+        for (NhiRuleCheckTxSnapshot ignoreTargetTxSnapshot : ignoreTargetTxSnapshots) {
+            String snapshotCode = ignoreTargetTxSnapshot.getNhiCode();
+            if ("91004C".equals(snapshotCode) ||
+                "91005C".equals(snapshotCode)
+            ) {
+                duration = this.regularDayDurationCalculation(
+                    dto,
+                    DateTimeUtil.NHI_360_DAY
+                );
+                foundTargetInCurrentDisposal = true;
+                displayLimit = String.valueOf(DateTimeUtil.NHI_360_DAY.getDays());
+                break;
+            } else if ("91020C".equals(snapshotCode)) {
+                duration = this.regularDayDurationCalculation(
+                    dto,
+                    DateTimeUtil.NHI_180_DAY
+                );
+                foundTargetInCurrentDisposal = true;
+                displayLimit = String.valueOf(DateTimeUtil.NHI_180_DAY.getDays());
+                break;
+            }
+        }
+
+        // 當日其他處置 91004C, 91005C, 91020C
+        List<String> queryCode = Arrays.asList(
+            "91004C", "91005C", "91020C"
+        );
+        if (!foundTargetInCurrentDisposal) {
+            List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> queryCode.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
+                dto.getPatient().getId(),
+                Arrays.asList(
+                    "91004C", "91005C", "91020C"
+                ),
+                Arrays.asList(
+                    this.getDisposalIdInDTO(dto)
+                )
+            );
+
+            LocalDateDuration todayDuration = this.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY);
+
+            if (sourceData.stream()
+                .filter(
+                    d -> d.getRecordDateTime().isAfter(todayDuration.getBegin()) && d.getRecordDateTime().isBefore(todayDuration.getEnd()) ||
+                        d.getRecordDateTime().isEqual(todayDuration.getBegin()) ||
+                        d.getRecordDateTime().isEqual(todayDuration.getEnd())
+                )
+                .count() > 0
+            ) {
+                String clauseDataCode = sourceData.get(0).getCode();
+                if ("91004C".equals(clauseDataCode) ||
+                    "91005C".equals(clauseDataCode)
+                ) {
+                    duration = this.regularDayDurationCalculation(
+                        dto,
+                        DateTimeUtil.NHI_360_DAY
+                    );
+                    foundTargetInCurrentDisposal = true;
+                } else if ("91020C".equals(clauseDataCode)) {
+                    duration = this.regularDayDurationCalculation(
+                        dto,
+                        DateTimeUtil.NHI_180_DAY
+                    );
+                    foundTargetInCurrentDisposal = true;
+                }
+            }
+        }
+
+        // 查詢所有 91014C
+        if (foundTargetInCurrentDisposal) {
+
+            if (ignoreTargetTxSnapshots.stream()
+                .filter(s -> "91014C".equals(s.getNhiCode()))
+                .count() > 0
+            ) {
+                String m = this.generateErrorMessage(
+                    NhiRuleCheckFormat.D4_1,
+                    NhiRuleCheckSourceType.CURRENT_DISPOSAL,
+                    "91014C",
+                    "91014C",
+                    this.getNhiExtendDisposalDateInDTO(dto),
+                    displayLimit,
+                    null,
+                    null
+                );
+
+                return result
+                    .validated(false)
+                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D4_1.getLevel())
+                    .message(m);
+
+            }
+
+            List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> queryCode.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
+                dto.getPatient().getId(),
+                Arrays.asList(
+                    "91014C"
+                ),
+                Arrays.asList(
+                    this.getDisposalIdInDTO(dto)
+                )
+            );
+
+            LocalDateDuration finalDuration = duration;
+            List<NhiHybridRecordDTO> matches = duration != null
+                ? sourceData.stream()
+                .filter(
+                    d -> d.getRecordDateTime().isAfter(finalDuration.getBegin()) && d.getRecordDateTime().isBefore(finalDuration.getEnd()) ||
+                        d.getRecordDateTime().isEqual(finalDuration.getBegin()) ||
+                        d.getRecordDateTime().isEqual(finalDuration.getEnd())
+                )
+                .collect(Collectors.toList())
+                : sourceData;
+
+            if (matches.size() > 0) {
+                String m = this.generateErrorMessage(
+                    NhiRuleCheckFormat.D4_1,
+                    this.getSourceDataType(
+                        dto,
+                        matches.get(0)
+                    ),
+                    "91014C",
+                    "91014C",
+                    matches.get(0).getRecordDateTime(),
+                    displayLimit,
+                    null,
+                    null
+                );
+
+                result
+                    .validated(false)
+                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D4_1.getLevel())
+                    .message(m);
+            }
+
+        }
+
+        return result;
+    }
+
+    public NhiRuleCheckResultDTO isSpecialRuleFor91018C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("special rule for 91018C")
+            .validated(true);
+
+        List<String> queryCode = Arrays.asList(
+            "91022C", "91023C"
+        );
+
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> queryCode.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            Arrays.asList(
+                "91022C", "91023C"
+            ),
+            Arrays.asList(
+                this.getDisposalIdInDTO(dto)
+            )
+        );
+
+        LocalDateDuration duration = this.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY);
+        boolean has91022C = false;
+        LocalDate date91022C = null;
+        for (NhiHybridRecordDTO d : sourceData) {
+            if ("91022C".equals(d.getCode()) &&
+                d.getRecordDateTime().isBefore(duration.getBegin())
+            ) {
+                has91022C = true;
+                date91022C = d.getRecordDateTime();
+                break;
+            }
+        }
+
+        boolean has91023C = false;
+        if (has91022C) {
+            for (NhiHybridRecordDTO d : sourceData) {
+                if ("91023C".equals(d.getCode())) {
+                    if (!d.getRecordDateTime().isEqual(date91022C) ||
+                        !d.getRecordDateTime().isEqual(duration.getEnd())
+                    ) {
+                        if (d.getRecordDateTime().isAfter(date91022C) &&
+                            d.getRecordDateTime().isBefore(duration.getEnd())
+                        ) {
+                            has91023C = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!has91023C) {
+            result
+                .validated(false)
+                .nhiRuleCheckInfoType(NhiRuleCheckFormat.PERIO_1.getLevel())
+                .message(
+                    String.format(
+                        NhiRuleCheckFormat.PERIO_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73()
+                    )
+                );
+        }
+
+        return result;
+    }
+
+    public List<NhiRuleCheckResultDTO> isD4_2(
+        NhiRuleCheckDTO dto,
+        NhiRuleCheckSourceType onlySourceType,
+        List<String> originCodes,
+        LocalDateDuration duration,
+        String limitDisplayDuration
+    ) {
+        List<NhiRuleCheckResultDTO> results = new ArrayList<>();
+
+        List<String> codes = this.parseNhiCode(originCodes);
+
+        // 當前 disposal
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().size() > 0
+        ) {
+            List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
+            List<NhiRuleCheckTxSnapshot> currentDisposalMatches = ignoreTargetTxSnapshots.stream()
+                .filter(d -> dto.getNhiExtendTreatmentProcedure().getA73().equals(d.getNhiCode()))
+                .collect(Collectors.toList());
+
+            for (NhiRuleCheckTxSnapshot snapshot : currentDisposalMatches) {
+                if (
+                    !codes.contains(
+                        snapshot.getNhiCode()
+                    )
+                ) {
+                    continue;
+                }
+
+                List<ToothUtil.ToothPhase> duplicatedToothPhase = ToothUtil.listDuplicatedToothPhase(
+                    dto.getNhiExtendTreatmentProcedure().getA74(),
+                    snapshot.getTeeth()
+                );
+
+                if (duplicatedToothPhase.size() > 0) {
+                    duplicatedToothPhase.forEach(d -> {
+                        String m = this.generateErrorMessage(
+                            NhiRuleCheckFormat.D4_2,
+                            NhiRuleCheckSourceType.CURRENT_DISPOSAL,
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            this.getNhiExtendDisposalDateInDTO(dto),
+                            limitDisplayDuration,
+                            d.getNameOfPhase(),
+                            null
+                        );
+
+                        results.add(
+                            new NhiRuleCheckResultDTO()
+                                .validateTitle("指定代碼 於 指定時間 內，只得申報單一象限")
+                                .nhiRuleCheckInfoType(NhiRuleCheckFormat.D4_2.getLevel())
+                                .validated(false)
+                                .message(m)
+                        );
+                    });
+                }
+
+                return results;
+            }
+        }
+
+        // 其他處置
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> codes.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            codes,
+            Arrays.asList(
+                dto.getNhiExtendDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal().getId() != null
+                    ? dto.getNhiExtendDisposal().getDisposal().getId()
+                    : 0L
+            )
+        );
+
+        if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(onlySourceType)) {
+            sourceData = sourceData.stream()
+                .filter(d -> "SYS".equals(d.getRecordSource()))
+                .collect(Collectors.toList());
+        }
+
+        List<NhiHybridRecordDTO> matches = duration != null
+            ? sourceData.stream()
+            .filter(
+                d -> d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                    d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                    d.getRecordDateTime().isEqual(duration.getEnd())
+            )
+            .collect(Collectors.toList())
+            : sourceData;
+
+
+        for (NhiHybridRecordDTO record : matches) {
+            List<ToothUtil.ToothPhase> duplicatedToothPhase = ToothUtil.listDuplicatedToothPhase(
+                dto.getNhiExtendTreatmentProcedure().getA74(),
+                record.getTooth()
+            );
+
+            if (duplicatedToothPhase.size() > 0) {
+                duplicatedToothPhase.forEach(d -> {
+                    String m = this.generateErrorMessage(
+                        NhiRuleCheckFormat.D4_2,
+                        this.getSourceDataType(dto, record),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        record.getRecordDateTime(),
+                        limitDisplayDuration,
+                        d.getNameOfPhase(),
+                        null
+                    );
+
+                    results.add(
+                        new NhiRuleCheckResultDTO()
+                            .validateTitle("指定代碼 於 指定時間 內，只得申報單一象限")
+                            .nhiRuleCheckInfoType(NhiRuleCheckFormat.D4_2.getLevel())
+                            .validated(false)
+                            .message(m)
+                    );
+                });
+            }
+        }
+
+        return results;
+    }
+
+    public NhiRuleCheckResultDTO isD5_1(
+        NhiRuleCheckDTO dto,
+        NhiRuleCheckSourceType onlySourceType,
+        List<String> originCodes,
+        LocalDateDuration duration,
+        String limitDisplayDuration,
+        int limitTimes
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("D5_1")
+            .validated(true);
+
+        List<String> codes = this.parseNhiCode(originCodes);
+        List<NhiRuleCheckTxSnapshot> currentDisposalMatches = new ArrayList<>();
+
+        // 當前 disposal
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().size() > 0
+        ) {
+            currentDisposalMatches = dto.getTxSnapshots().stream()
+                .filter(d -> codes.contains(d.getNhiCode()))
+                .collect(Collectors.toList());
+        }
+
+        // 其他處置
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> codes.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            codes,
+            Arrays.asList(
+                dto.getNhiExtendDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal().getId() != null
+                    ? dto.getNhiExtendDisposal().getDisposal().getId()
+                    : 0L
+            )
+        );
+
+        if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(onlySourceType)) {
+            sourceData = sourceData.stream()
+                .filter(d -> "SYS".equals(d.getRecordSource()))
+                .collect(Collectors.toList());
+        }
+
+        List<NhiHybridRecordDTO> matches = duration != null
+            ? sourceData.stream()
+            .filter(
+                d -> d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                    d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                    d.getRecordDateTime().isEqual(duration.getEnd())
+            )
+            .collect(Collectors.toList())
+            : sourceData;
+
+        if (currentDisposalMatches.size() +
+            matches.size() >= limitTimes
+        ) {
+            List<String> stringDateList = new ArrayList<>();
+
+            if (currentDisposalMatches.size() > 0) {
+                stringDateList.add(
+                    DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                        this.getNhiExtendDisposalDateInDTO(dto)
+                    )
+                );
+            }
+
+            matches.forEach(m -> {
+                stringDateList.add(
+                    DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                        m.getRecordDateTime()
+                    )
+                );
+            });
+
+            String m = this.generateErrorMessage(
+                NhiRuleCheckFormat.D5_1,
+                null,
+                dto.getNhiExtendTreatmentProcedure().getA73(),
+                null,
+                null,
+                limitDisplayDuration,
+                null,
+                String.join(", ", stringDateList)
+            );
+
+            result
+                .validated(false)
+                .nhiRuleCheckInfoType(NhiRuleCheckFormat.D5_1.getLevel())
+                .message(m);
+        }
+
+        return result;
+    }
+
+    public NhiRuleCheckResultDTO isSpecialRuleFor91003C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("special rule for 91003C")
+            .validated(true);
+
+        List<NhiRuleCheckTxSnapshot> currentDisposalMatches = new ArrayList<>();
+        List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = new ArrayList<>();
+
+        // 當前 disposal
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().size() > 0
+        ) {
+            ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
+            currentDisposalMatches = ignoreTargetTxSnapshots.stream()
+                .filter(d -> "91004C".contains(d.getNhiCode()))
+                .collect(Collectors.toList());
+        }
+
+        // 其他處置
+        List<String> queryCode = Arrays.asList("91004C");
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> queryCode.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            Arrays.asList("91004C"),
+            Arrays.asList(
+                this.getDisposalIdInDTO(dto)
+            )
+        );
+
+        LocalDateDuration duration = this.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY);
+
+        List<NhiHybridRecordDTO> matches = duration != null
+            ? sourceData.stream()
+            .filter(
+                d -> d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                    d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                    d.getRecordDateTime().isEqual(duration.getEnd())
+            )
+            .collect(Collectors.toList())
+            : sourceData;
+
+        if (currentDisposalMatches != null &&
+            currentDisposalMatches.size() > 0 ||
+            matches != null &&
+            matches.size() > 0
+        ) {
+            List<String> stringDateList = new ArrayList<>();
+
+            List<NhiHybridRecordDTO> past91003C = this.findNhiHypeRecordsDTO(
+                dto.getPatient().getId(),
+                Arrays.asList("91003C"),
+                Arrays.asList(
+                    this.getDisposalIdInDTO(dto)
+                )
+            );
+
+            if (dto.getIncludeNhiCodes().stream().anyMatch(c -> "91003C".equals(c))) {
+                stringDateList.add(
+                    DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                        this.getNhiExtendDisposalDateInDTO(dto)
+                    )
+                );
+            }
+
+            this.getSourceDataByDuration(
+                past91003C,
+                this.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY)
+            ).forEach(pd -> {
+                stringDateList.add(
+                    DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                        pd.getRecordDateTime()
+                    )
+                );
+            });
+
+            String m = this.generateErrorMessage(
+                NhiRuleCheckFormat.W1_1,
+                currentDisposalMatches != null && currentDisposalMatches.size() > 0
+                    ? NhiRuleCheckSourceType.CURRENT_DISPOSAL
+                    : this.getSourceDataType(dto, matches.get(0)),
+                "91003C",
+                "91004C",
+                this.getNhiExtendDisposalDateInDTO(dto),
+                String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
+                null,
+                String.join(", ", stringDateList)
+            );
+
+            result.validated(false)
+                .nhiRuleCheckInfoType(NhiRuleCheckFormat.W1_1.getLevel())
+                .message(m);
+        }
+
+        return result;
+    }
+
+    /**
+     * 當前處置單包含任意其他處置
+     * @param dto
+     * @return
+     */
+    public NhiRuleCheckResultDTO isW5_1(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+            .validateTitle("當前處置單包含任意其他處置")
+            .validated(true);
+
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().size() == 1
+        ) {
+            result.message(
+                String.format(
+                    NhiRuleCheckFormat.W5_1.getFormat(),
+                    dto.getNhiExtendTreatmentProcedure().getA73()
+                )
+            );
+        }
+
+        return result;
+    }
+
+    /**
+     * 需依賴某個時間點上，曾經存在某個代碼
+     * @param dto
+     * @param onlySourceType 全查(by pass null) or 只有 sys
+     * @param originCodes
+     * @param duration
+     * @param limitDisplayDuration
+     * @param format 應為 D8_1 or D8_2
+     * @return
+     */
+    public NhiRuleCheckResultDTO isDependOnCodeBeforeDate(
+        NhiRuleCheckDTO dto,
+        NhiRuleCheckSourceType onlySourceType,
+        List<String> originCodes,
+        LocalDateDuration duration,
+        String limitDisplayDuration,
+        NhiRuleCheckFormat format
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("需依賴某個時間點上，曾經存在某個代碼")
+            .validated(true);
+
+        List<String> codes = this.parseNhiCode(originCodes);
+        List<NhiRuleCheckTxSnapshot> currentDisposalMatches = new ArrayList<>();
+
+        // 當前 disposal
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().size() > 0
+        ) {
+            List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
+            currentDisposalMatches = ignoreTargetTxSnapshots.stream()
+                .filter(d -> codes.contains(d.getNhiCode()))
+                .collect(Collectors.toList());
+        }
+
+        // 其他處置
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> codes.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            codes,
+            Arrays.asList(
+                dto.getNhiExtendDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal().getId() != null
+                    ? dto.getNhiExtendDisposal().getDisposal().getId()
+                    : 0L
+            )
+        );
+
+        if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(onlySourceType)) {
+            sourceData = sourceData.stream()
+                .filter(d -> "SYS".equals(d.getRecordSource()))
+                .collect(Collectors.toList());
+        }
+
+        List<NhiHybridRecordDTO> matches = duration != null
+            ? sourceData.stream()
+            .filter(
+                d -> d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                    d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                    d.getRecordDateTime().isEqual(duration.getEnd())
+            )
+            .collect(Collectors.toList())
+            : sourceData;
+
+        if (matches != null &&
+            matches.size() == 0 && currentDisposalMatches.size() == 0
+        ) {
+            String m = "";
+            if (currentDisposalMatches.size() == 0) {
+                m = this.generateErrorMessage(
+                    format,
+                    NhiRuleCheckSourceType.CURRENT_DISPOSAL, // 避免 null 出錯，此項分配到的 message 其實理論上應當用不到
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    String.join("/", codes),
+                    this.getNhiExtendDisposalDateInDTO(dto),
+                    limitDisplayDuration,
+                    null,
+                    null
+                );
+            } else {
+                m = this.generateErrorMessage(
+                    format,
+                    NhiRuleCheckSourceType.CURRENT_DISPOSAL, // 避免 null 出錯，此項分配到的 message 其實理論上應當用不到
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    String.join("/", codes),
+                    this.getNhiExtendDisposalDateInDTO(dto),
+                    limitDisplayDuration,
+                    null,
+                    null
+                );
+            }
+
+            result
+                .validated(false)
+                .nhiRuleCheckInfoType(format.getLevel())
+                .message(m);
+        }
+
+        return result;
+    }
+
+    /**
+     * 指定 patient id, codes, tooth 並排除 disposal，提示訊息不顯示牙齒
+     * @param dto
+     * @param onlySourceType
+     * @param originCodes
+     * @param deciduousToothDuration
+     * @param permanentToothDuration
+     * @param deciduousLimitDisplayDuration
+     * @param permanentLimitDisplayDuration
+     * @return
+     */
+    public List<NhiRuleCheckResultDTO> isNoCodeWithToothBeforeDate(
+        NhiRuleCheckDTO dto,
+        NhiRuleCheckSourceType onlySourceType,
+        List<String> originCodes,
+        LocalDateDuration deciduousToothDuration,
+        LocalDateDuration permanentToothDuration,
+        String deciduousLimitDisplayDuration,
+        String permanentLimitDisplayDuration,
+        NhiRuleCheckFormat format
+    ) {
+        List<NhiRuleCheckResultDTO> results = new ArrayList<>();
+
+        List<String> codes = this.parseNhiCode(originCodes);
+        List<String> targetTeeth = ToothUtil.splitA74(
+            dto.getNhiExtendTreatmentProcedure().getA74()
+        );
+        List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
+
+        // Current disposal
+        ignoreTargetTxSnapshots.stream()
+            .filter(d -> codes.contains(d.getNhiCode()))
+            .forEach(d -> {
+                List<String> dt = ToothUtil.splitA74(
+                    d.getTeeth()
+                );
+                dt.forEach(t -> {
+                    if (targetTeeth.contains(t)) {
+                        boolean isRuleConflict = true;
+
+                        if (format.equals(NhiRuleCheckFormat.D7_1) ||
+                            format.equals(NhiRuleCheckFormat.D7_2)
+                        ) {
+                            if (dto.getNhiExtendDisposal().getA23() != null &&
+                                dto.getNhiExtendDisposal().getA23().equals("AB")
+                            ) {
+                                isRuleConflict = false;
+                            }
+                        }
+
+                        if (isRuleConflict) {
+                            String limitDisplayDuration = ToothUtil.validatedToothConstraint(
+                                ToothConstraint.DECIDUOUS_TOOTH,
+                                t
+                            )
+                                ? deciduousLimitDisplayDuration
+                                : permanentLimitDisplayDuration;
+                            String m = this.generateErrorMessage(
+                                format,
+                                NhiRuleCheckSourceType.CURRENT_DISPOSAL,
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
+                                d.getNhiCode(),
+                                this.getNhiExtendDisposalDateInDTO(dto),
+                                limitDisplayDuration,
+                                t,
+                                null
+                            );
+                            NhiRuleCheckResultDTO r = new NhiRuleCheckResultDTO()
+                                .validateTitle("指定 patient id, codes, tooth 並排除 disposal")
+                                .validated(false)
+                                .nhiRuleCheckInfoType(format.getLevel())
+                                .message(m);
+                            results.add(r);
+                        }
+                    }
+                });
+            });
+
+        if (results.size() > 0) {
+            return results;
+        }
+
+        // Past disposal
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> codes.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            codes,
+            Arrays.asList(
+                this.getDisposalIdInDTO(dto)
+            )
+        );
+
+        if (onlySourceType != null &&
+            onlySourceType.equals(NhiRuleCheckSourceType.SYSTEM_RECORD)
+        ) {
+            sourceData = sourceData.stream()
+                .filter(d -> "SYS".equals(d.getRecordSource()))
+                .collect(Collectors.toList());
+        }
+
+        sourceData.forEach(d -> {
+            List<String> dt = ToothUtil.splitA74(
+                d.getTooth()
+            );
+            dt.forEach(t -> {
+                if (targetTeeth.contains(t)) {
+                    LocalDateDuration duration = ToothUtil.validatedToothConstraint(
+                        ToothConstraint.DECIDUOUS_TOOTH,
+                        t
+                    )
+                        ? deciduousToothDuration
+                        : permanentToothDuration;
+                    String limitDisplayDuration = ToothUtil.validatedToothConstraint(
+                        ToothConstraint.DECIDUOUS_TOOTH,
+                        t
+                    )
+                        ? deciduousLimitDisplayDuration
+                        : permanentLimitDisplayDuration;
+
+                    if (d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                        d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                        d.getRecordDateTime().isEqual(duration.getEnd())
+                    ) {
+                        boolean isRuleConflict = true;
+
+                        if (format.equals(NhiRuleCheckFormat.D7_1) ||
+                            format.equals(NhiRuleCheckFormat.D7_2)
+                        ) {
+                            if (dto.getNhiExtendDisposal().getA23() != null &&
+                                dto.getNhiExtendDisposal().getA23().equals("AB")
+                            ) {
+                                isRuleConflict = false;
+                            }
+                        }
+
+                        if (isRuleConflict) {
+                            String m = this.generateErrorMessage(
+                                format,
+                                this.getSourceDataType(
+                                    dto,
+                                    d
+                                ),
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
+                                d.getCode(),
+                                d.getRecordDateTime(),
+                                limitDisplayDuration,
+                                t,
+                                null
+                            );
+                            NhiRuleCheckResultDTO r = new NhiRuleCheckResultDTO()
+                                .validateTitle("指定 patient id, codes, tooth 並排除 disposal")
+                                .validated(false)
+                                .nhiRuleCheckInfoType(format.getLevel())
+                                .message(m);
+                            results.add(r);
+                        }
+                    }
+                }
+            });
+        });
+
+        return results;
+    }
+
+    /**
+     * 檢查該牙齒是否曾做過 92013C, 92014C, 92015C 等處置
+     * @param dto
+     * @return
+     */
+    public List<NhiRuleCheckResultDTO> isNoRemovedTeeth(NhiRuleCheckDTO dto) {
+        List<NhiRuleCheckResultDTO> results = new ArrayList<>();
+
+        Map<String, LocalDate> removeTeethFrom92013C = new HashMap<>();
+        Map<String, LocalDate> removeTeethFrom92014C = new HashMap<>();
+        Map<String, LocalDate> removeTeethFrom92015C = new HashMap<>();
+        List<String> targetTooth = ToothUtil.splitA74(
+            dto.getNhiExtendTreatmentProcedure().getA74()
+        );
+
+        // Cuurent disposal
+        this.getIgnoreTargetTxSnapshots(dto).stream()
+            .forEach(d -> {
+                switch (d.getNhiCode()) {
+                    case "92013C":
+                        ToothUtil.splitA74(
+                            d.getTeeth()
+                        ).forEach(t -> {
+                            if (targetTooth.contains(t) &&
+                                !removeTeethFrom92013C.containsKey(t)
+                            ) {
+                                removeTeethFrom92013C.put(t, this.getNhiExtendDisposalDateInDTO(dto));
+                                NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+                                    .validateTitle("檢查該牙齒是否曾做過 92013C, 92014C, 92015C 等處置")
+                                    .validated(false)
+                                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_3.getLevel())
+                                    .message(
+                                        String.format(
+                                            NhiRuleCheckFormat.D1_3.getFormat(),
+                                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                                            t,
+                                            "92013C",
+                                            NhiRuleCheckSourceType.CURRENT_DISPOSAL.getValue(),
+                                            DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                                this.getNhiExtendDisposalDateInDTO(dto)
+                                            )
+                                        )
+                                    );
+                                results.add(result);
+                            }
+                        });
+                        break;
+                    case "92014C":
+                        ToothUtil.splitA74(
+                            d.getTeeth()
+                        ).forEach(t -> {
+                            if (targetTooth.contains(t) &&
+                                !removeTeethFrom92014C.containsKey(t)
+                            ) {
+                                removeTeethFrom92014C.put(t, this.getNhiExtendDisposalDateInDTO(dto));
+                                NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+                                    .validateTitle("檢查該牙齒是否曾做過 92013C, 92014C, 92015C 等處置")
+                                    .validated(false)
+                                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_3.getLevel())
+                                    .message(
+                                        String.format(
+                                            NhiRuleCheckFormat.D1_3.getFormat(),
+                                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                                            t,
+                                            "92014C",
+                                            NhiRuleCheckSourceType.CURRENT_DISPOSAL.getValue(),
+                                            DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                                this.getNhiExtendDisposalDateInDTO(dto)
+                                            )
+                                        )
+                                    );
+                                results.add(result);
+                            }
+                        });
+                        break;
+                    case "92015C":
+                        ToothUtil.splitA74(
+                            d.getTeeth()
+                        ).forEach(t -> {
+                            if (targetTooth.contains(t) &&
+                                !removeTeethFrom92015C.containsKey(t)
+                            ) {
+                                removeTeethFrom92015C.put(t, this.getNhiExtendDisposalDateInDTO(dto));
+                                NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+                                    .validateTitle("檢查該牙齒是否曾做過 92013C, 92014C, 92015C 等處置")
+                                    .validated(false)
+                                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_3.getLevel())
+                                    .message(
+                                        String.format(
+                                            NhiRuleCheckFormat.D1_3.getFormat(),
+                                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                                            t,
+                                            "92015C",
+                                            NhiRuleCheckSourceType.CURRENT_DISPOSAL.getValue(),
+                                            DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                                this.getNhiExtendDisposalDateInDTO(dto)
+                                            )
+                                        )
+                                    );
+                                results.add(result);
+                            }
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+        // Past disposal
+        this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            Arrays.asList("92013C", "92014C", "92015C"),
+            Arrays.asList(
+                this.getDisposalIdInDTO(dto)
+            )
+        ).forEach(d -> {
+            switch (d.getCode()) {
+                case "92013C":
+                    ToothUtil.splitA74(
+                        d.getTooth()
+                    ).forEach(t -> {
+                        if (targetTooth.contains(t) &&
+                            !removeTeethFrom92013C.containsKey(t)
+                        ) {
+                            removeTeethFrom92013C.put(t, this.getNhiExtendDisposalDateInDTO(dto));
+                            NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+                                .validateTitle("檢查該牙齒是否曾做過 92013C, 92014C, 92015C 等處置")
+                                .validated(false)
+                                .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_3.getLevel())
+                                .message(
+                                    String.format(
+                                        NhiRuleCheckFormat.D1_3.getFormat(),
+                                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                                        t,
+                                        "92013C",
+                                        this.determinateSourceType(dto, d).getValue(),
+                                        DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                            d.getRecordDateTime()
+                                        )
+                                    )
+                                );
+                            results.add(result);
+                        }
+                    });
+                    break;
+                case "92014C":
+                    ToothUtil.splitA74(
+                        d.getTooth()
+                    ).forEach(t -> {
+                        if (targetTooth.contains(t) &&
+                            !removeTeethFrom92014C.containsKey(t)
+                        ) {
+                            removeTeethFrom92014C.put(t, this.getNhiExtendDisposalDateInDTO(dto));
+                            NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+                                .validateTitle("檢查該牙齒是否曾做過 92013C, 92014C, 92015C 等處置")
+                                .validated(false)
+                                .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_3.getLevel())
+                                .message(
+                                    String.format(
+                                        NhiRuleCheckFormat.D1_3.getFormat(),
+                                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                                        t,
+                                        "92014C",
+                                        this.determinateSourceType(dto, d).getValue(),
+                                        DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                            d.getRecordDateTime()
+                                        )
+                                    )
+                                );
+                            results.add(result);
+                        }
+                    });
+                    break;
+                case "92015C":
+                    ToothUtil.splitA74(
+                        d.getTooth()
+                    ).forEach(t -> {
+                        if (targetTooth.contains(t) &&
+                            !removeTeethFrom92015C.containsKey(t)
+                        ) {
+                            removeTeethFrom92015C.put(t, this.getNhiExtendDisposalDateInDTO(dto));
+                            NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+                                .validateTitle("檢查該牙齒是否曾做過 92013C, 92014C, 92015C 等處置")
+                                .validated(false)
+                                .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_3.getLevel())
+                                .message(
+                                    String.format(
+                                        NhiRuleCheckFormat.D1_3.getFormat(),
+                                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                                        t,
+                                        "92015C",
+                                        this.determinateSourceType(dto, d).getValue(),
+                                        DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                            d.getRecordDateTime()
+                                        )
+                                    )
+                                );
+                            results.add(result);
+                        }
+                    });
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        return results;
+    }
+
+    /**
+     * 醫生對病患，終生一次
+     */
+    public NhiRuleCheckResultDTO isOnceInWholeLifeAtDoctor(
+        NhiRuleCheckDTO dto,
+        String code
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .validated(true)
+            .validateTitle("醫生對病患，終生一次");
+
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().stream()
+                .filter(c -> c.equals(code))
+                .count() > 1
+        ) {
+            result
+                .validated(false)
+                .message(
+                    String.format(
+                        NhiRuleCheckFormat.D2_3.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73(),
+                        NhiRuleCheckSourceType.CURRENT_DISPOSAL.getValue(),
+                        DateTimeUtil.transformA71ToDisplay(
+                            dto.getNhiExtendDisposal().getA17()
+                        )
+                    )
+                );
+        }
+
         if (dto.getNhiExtendDisposal() != null &&
             dto.getNhiExtendDisposal().getDisposal() != null &&
             dto.getNhiExtendDisposal().getDisposal().getId() != null
         ) {
-            netpts = nhiExtendTreatmentProcedureRepository
-                .findByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_Disposal_IdNotAndTreatmentProcedure_IdNotInOrderByA71Desc(
-                    dto.getPatient().getId(),
-                    dto.getNhiExtendTreatmentProcedure().getA73(),
-                    dto.getNhiExtendDisposal().getDisposal().getId(),
-                    dto.getExcludeTreatmentProcedureIds() == null ? Arrays.asList(0L) : dto.getExcludeTreatmentProcedureIds()
-                );
-        } else {
-            netpts = nhiExtendTreatmentProcedureRepository
-                .findByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73AndTreatmentProcedure_IdNotInOrderByA71Desc(
-                    dto.getPatient().getId(),
-                    dto.getNhiExtendTreatmentProcedure().getA73(),
-                    dto.getExcludeTreatmentProcedureIds() == null ? Arrays.asList(0L) : dto.getExcludeTreatmentProcedureIds()
-                );
-        }
-        // 取得紀錄中，離處置單時間最近的資料
-        Optional<NhiExtendTreatmentProcedureTable> optionalNhiExtendTreatmentProcedureTable = netpts.stream()
-            .filter(netpt -> {
-                LocalDate historyDate = null;
-                if (netpt != null &&
-                    netpt.getA71() != null
-                ) {
-                    historyDate = DateTimeUtil.transformROCDateToLocalDate(netpt.getA71());
-                }
-                return historyDate != null && historyDate.isEqual(currentDate) || historyDate != null && historyDate.isBefore(currentDate);
-            })
-            .findFirst();
-
-        if (optionalNhiExtendTreatmentProcedureTable.isPresent()) {
-            result.message(
-                String.format(
-                    "目前可申報, 近一次處置為系統中 %s （為提升準確率，請常讀取 IC 卡取得最新資訊）",
-                    DateTimeUtil.transformA71ToDisplay(optionalNhiExtendTreatmentProcedureTable.get().getA71())
-                )
-            );
-            return result;
-        }
-
-        // 查詢已紀錄健保IC卡最新一筆資料
-        Optional<NhiMedicalRecord> optionalNhiMedicalRecord = nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeOrderByDateDesc(
-            dto.getPatient().getId(),
-            dto.getNhiExtendTreatmentProcedure().getA73()).stream()
-            .filter(nmr -> {
-                LocalDate historyDate = null;
-                if (nmr != null &&
-                    nmr.getDate() != null
-                ) {
-                    historyDate = DateTimeUtil.transformROCDateToLocalDate(nmr.getDate());
-                }
-                return historyDate != null && historyDate.isEqual(currentDate) || historyDate != null && historyDate.isBefore(currentDate);
-            })
-            .findFirst();
-
-        if (optionalNhiMedicalRecord.isPresent()) {
-            result.message(
-                String.format(
-                    "目前可申報, 近一次處置為健保IC卡中 %s （為提升準確率，請常讀取 IC 卡取得最新資訊）",
-                    DateTimeUtil.transformA71ToDisplay(optionalNhiMedicalRecord.get().getDate())
-                )
-            );
-            return result;
-        }
-
-        return result.message("系統及健保卡皆無紀錄，請查詢雲端藥歷取得正確資訊");
-    }
-
-    /**
-     * 檢查同一處置單，是否沒有健保定義的其他衝突診療
-     *
-     * @param dto 使用 includeNhiCodes
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isNoConflictNhiCode(NhiRuleCheckDTO dto, List<String> conflictCodes) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("檢查同一處置單，是否沒有健保定義的其他衝突診療")
-            .validated(true);
-
-        List<String> parsedCodes = this.parseNhiCode(conflictCodes);
-
-        if (dto.getIncludeNhiCodes() != null &&
-            dto.getIncludeNhiCodes().stream()
-            .filter(Objects::nonNull)
-            .anyMatch(parsedCodes::contains)) {
-            result.validated(false)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .message(
-              String.format(
-                  "不得與 %s 同時申報",
-                  conflictCodes.toString()
-              )
-            );
-        }
-
-        return result;
-    }
-
-    /**
-     * 檢查同一處置單，是否沒有健保定義 必須 包含的診療
-     *
-     * @param dto 使用 includeNhiCodes
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isMustIncludeNhiCode(NhiRuleCheckDTO dto, List<String> mustIncludeCodes) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("檢查同一處置單，是否沒有健保定義必須包含的診療")
-            .validated(true);
-
-        List<String> parsedCodes = this.parseNhiCode(mustIncludeCodes);
-
-        if (dto.getIncludeNhiCodes() == null ||
-            dto.getIncludeNhiCodes().stream()
-                .filter(Objects::nonNull)
-                .filter(parsedCodes::contains)
-                .collect(Collectors.toList())
-                .size() != 1
-        ) {
-            result.validated(false)
-                .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                .message(
-                String.format(
-                    "必須且僅能與 %s 其一，同時申報",
-                    mustIncludeCodes.toString()
-                )
-            );
-        }
-
-        return result;
-    }
-
-    /**
-     * 檢查系統資料，過去時間，包含任何治療紀錄
-     *
-     * @param dto 使用 patient id
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isNoTreatmentInPeriod(NhiRuleCheckDTO dto, Period limitDays) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("檢查系統資料，過去時間，包含任何治療紀錄查過去時間")
-            .validated(true);
-
-
-        LocalDate currentDate = null;
-        if (dto.getNhiExtendTreatmentProcedure() != null &&
-            dto.getNhiExtendTreatmentProcedure().getA71() != null
-        ) {
-            currentDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-        }
-
-        if (dto.getPatient() != null &&
-            dto.getPatient().getId() != null &&
-            currentDate != null
-        ) {
-            Optional<NhiExtendTreatmentProcedureTable> optionalNetpt = nhiExtendTreatmentProcedureRepository
-                .findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndTreatmentProcedure_Disposal_DateTimeBetween(
-                    dto.getPatient().getId(),
-                    currentDate,
-                    currentDate.plus(limitDays)
-                );
-
-            if (optionalNetpt.isPresent()) {
-                result.validated(false)
-                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-                    .message(
-                        String.format(
-                            "建議 %s 後再行申報，近一次處置為系統中 %s",
-                            currentDate.plus(limitDays),
-                            DateTimeUtil.transformA71ToDisplay(optionalNetpt.get().getA71())
-                        )
-                    );
-            }
-
-        }
-
-        return result;
-    }
-
-    /**
-     * 檢查IC紀錄，過去三年時間，包含任何治療紀錄
-     *
-     * @param dto 使用 patient id
-     * @return 後續檢核統一 `回傳` 的介面
-     */
-    public NhiRuleCheckResultDTO isNoTreatmentInPeriodByNhiMedicalRecord(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validateTitle("檢查IC紀錄，過去時間，包含任何治療紀錄")
-            .validated(true);
-
-
-        LocalDate currentDate = null;
-        if (dto.getNhiExtendTreatmentProcedure() != null &&
-            dto.getNhiExtendTreatmentProcedure().getA71() != null
-        ) {
-            currentDate = DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71());
-        }
-
-        if (dto.getPatient() != null &&
-            dto.getPatient().getId() != null &&
-            currentDate != null
-        ) {
-            String ym1st = DateTimeUtil.transformLocalDateToRocDate(Instant.from(currentDate)).substring(0, 5).concat("%");
-            String ym2nd = DateTimeUtil.transformLocalDateToRocDate(Instant.from(currentDate.minusYears(1))).substring(0, 5).concat("%");
-            String ym3th = DateTimeUtil.transformLocalDateToRocDate(Instant.from(currentDate.minusYears(2))).substring(0, 5).concat("%");
-
-            Optional<NhiMedicalRecord> optionalNmr = nhiMedicalRecordRepository.findTop1ByNhiExtendPatient_Patient_IdAndDateLikeOrDateLikeOrDateLike(
+            List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> code.equals(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
                 dto.getPatient().getId(),
-                ym1st,
-                ym2nd,
-                ym3th
-            );
+                Arrays.asList(
+                    code
+                ),
+                Arrays.asList(
+                    this.getDisposalIdInDTO(dto)
+                )
+            ).stream()
+                .filter(d -> "SYS".equals(d.getRecordSource())) // 因為 IC 卡不會知道哪個醫師
+                .filter(d -> dto.getDoctorId() != null && dto.getDoctorId().equals(d.getDoctorId()))
+                .collect(Collectors.toList());
 
-            if (optionalNmr.isPresent()) {
-                result.validated(false)
-                    .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            if (sourceData != null &&
+                sourceData.size() > 0
+            ) {
+                result
+                    .validated(false)
                     .message(
                         String.format(
-                            "建議 %s 後再行申報，近一次處置為健保IC卡中 %s",
-                            currentDate.plus(DateTimeUtil.NHI_36_MONTH),
-                            DateTimeUtil.transformA71ToDisplay(optionalNmr.get().getDate())
+                            NhiRuleCheckFormat.D2_3.getFormat(),
+                            dto.getNhiExtendTreatmentProcedure().getA73(),
+                            NhiRuleCheckSourceType.SYSTEM_RECORD.getValue(),
+                            DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                sourceData.get(0).getRecordDateTime()
+                            )
                         )
                     );
             }
-
         }
 
         return result;
     }
 
-    /**
-     * 條件式群
-     */
-    // 小於 12 歲
-    public Predicate<NhiRuleCheckDTO> clauseIsLessThanAge12 = (dto) -> {
-        if (dto.getPatient().getBirth() == null) {
-            return false;
-        } else {
-            Period p = Period.between(
-                dto.getPatient().getBirth(),
-                DateTimeUtil.transformROCDateToLocalDate(dto.getNhiExtendTreatmentProcedure().getA71()));
-
-            return p.getYears() < 12;
+    public NhiRuleCheckSourceType determinateSourceType(
+        NhiRuleCheckDTO dto,
+        NhiHybridRecordDTO data
+    ) {
+        NhiRuleCheckSourceType matchedSourceType = NhiRuleCheckSourceType.SYSTEM_RECORD;
+        NhiHybridRecordDTO latestNhiHybridRecord = data;
+        if (
+            "IC".equals(latestNhiHybridRecord.getRecordSource())
+        ) {
+            matchedSourceType = NhiRuleCheckSourceType.NHI_CARD_RECORD;
+        } else if (
+            latestNhiHybridRecord.getRecordDateTime().isEqual(
+                DateTimeUtil.transformROCDateToLocalDate(
+                    dto.getNhiExtendTreatmentProcedure().getA71()
+                )
+            )
+        ) {
+            matchedSourceType = NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL;
         }
-    };
 
-    // 屬於 轉診
-    public Predicate<NhiRuleCheckDTO> clauseIsReferral = NhiRuleCheckDTO::isReferral;
+        return matchedSourceType;
+    }
+
+    public String generateErrorMessage(
+        NhiRuleCheckFormat format,
+        NhiRuleCheckSourceType sourceType,
+        String targetCode,
+        String matchCode,
+        LocalDate matchDate,
+        String limitValueString,
+        String tooth,
+        String customizedString
+    ) {
+        String m = "";
+        try {
+            switch (format) {
+                case D1_1:
+                    m = String.format(
+                        NhiRuleCheckFormat.D1_1.getFormat(),
+                        targetCode,
+                        matchCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate),
+                        targetCode
+                    );
+                    break;
+                case D1_2:
+                    m = String.format(
+                        NhiRuleCheckFormat.D1_2.getFormat(),
+                        targetCode,
+                        matchCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate),
+                        limitValueString,
+                        targetCode
+                    );
+                    break;
+                case D1_2_2:
+                    m = String.format(
+                        NhiRuleCheckFormat.D1_2_2.getFormat(),
+                        targetCode,
+                        matchCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate),
+                        limitValueString,
+                        targetCode
+                    );
+                    break;
+                case D1_2_3:
+                    m = String.format(
+                        NhiRuleCheckFormat.D1_2_3.getFormat(),
+                        targetCode,
+                        matchCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate),
+                        limitValueString,
+                        targetCode
+                    );
+                    break;
+                case D2_1:
+                    m = String.format(
+                        NhiRuleCheckFormat.D2_1.getFormat(),
+                        targetCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate)
+                    );
+                    break;
+                case D4_1:
+                    m = String.format(
+                        NhiRuleCheckFormat.D4_1.getFormat(),
+                        targetCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate)
+                    );
+                    break;
+                case D4_2:
+                    m = String.format(
+                        NhiRuleCheckFormat.D4_2.getFormat(),
+                        targetCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate),
+                        tooth
+                    );
+                    break;
+                case D5_1:
+                    m = String.format(
+                        NhiRuleCheckFormat.D5_1.getFormat(),
+                        targetCode,
+                        customizedString
+                    );
+                    break;
+                case D6_1:
+                    m = String.format(
+                        NhiRuleCheckFormat.D6_1.getFormat(),
+                        targetCode,
+                        matchCode
+                    );
+                    break;
+                case D7_1:
+                    m = String.format(
+                        NhiRuleCheckFormat.D7_1.getFormat(),
+                        targetCode,
+                        limitValueString,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate)
+                    );
+                    break;
+                case D7_2:
+                    m = String.format(
+                        NhiRuleCheckFormat.D7_2.getFormat(),
+                        targetCode,
+                        limitValueString,
+                        matchCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate),
+                        tooth
+                    );
+                    break;
+                case D8_1:
+                    m = String.format(
+                        NhiRuleCheckFormat.D8_1.getFormat(),
+                        targetCode,
+                        limitValueString,
+                        matchCode
+                    );
+                    break;
+                case D8_2:
+                    m = String.format(
+                        NhiRuleCheckFormat.D8_2.getFormat(),
+                        targetCode,
+                        matchCode
+                    );
+                    break;
+                case W1_1:
+                    m = String.format(
+                        NhiRuleCheckFormat.W1_1.getFormat(),
+                        targetCode,
+                        matchCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                            matchDate
+                        ),
+                        limitValueString,
+                        targetCode,
+                        customizedString
+                    );
+                    break;
+                case W3_1:
+                    m = String.format(
+                        NhiRuleCheckFormat.W3_1.getFormat(),
+                        targetCode,
+                        matchCode
+                    );
+                    break;
+                case W4_1:
+                    m = String.format(
+                        NhiRuleCheckFormat.W4_1.getFormat(),
+                        targetCode,
+                        matchCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate)
+                    );
+                    break;
+                case W6_1:
+                    m = String.format(
+                        NhiRuleCheckFormat.W6_1.getFormat(),
+                        targetCode,
+                        limitValueString,
+                        matchCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate),
+                        tooth
+                    );
+                    break;
+                default:
+                    m = "";
+                    break;
+            }
+        } catch (Exception e) {
+        }
+
+        return m;
+    }
+
+    private LocalDate getNhiExtendDisposalDateInDTO(NhiRuleCheckDTO dto) {
+        return dto.getNhiExtendDisposal().getA19() != null &&
+            dto.getNhiExtendDisposal().getA19() == "2"
+            ? dto.getNhiExtendDisposal().getReplenishmentDate()
+            : dto.getNhiExtendDisposal().getDate();
+    }
+
+    private Long getDisposalIdInDTO(NhiRuleCheckDTO dto) {
+        return dto.getNhiExtendDisposal() != null &&
+            dto.getNhiExtendDisposal().getDisposal() != null &&
+            dto.getNhiExtendDisposal().getDisposal().getId() != null
+            ? dto.getNhiExtendDisposal().getDisposal().getId()
+            : 0L;
+    }
+
+    private List<NhiRuleCheckTxSnapshot> getIgnoreTargetTxSnapshots(NhiRuleCheckDTO dto) {
+        List<NhiRuleCheckTxSnapshot> result = new ArrayList<>();
+        boolean ignoreTheFirstSameData = true;
+
+        for (NhiRuleCheckTxSnapshot snapshot : dto.getTxSnapshots()) {
+            if (snapshot.equalsNhiExtendTreatmentProcedure(dto.getNhiExtendTreatmentProcedure()) &&
+                ignoreTheFirstSameData
+            ) {
+                ignoreTheFirstSameData = false;
+            } else {
+                result.add(snapshot);
+            }
+        }
+
+        return result;
+    }
+
+    private NhiRuleCheckSourceType getSourceDataType(
+        NhiRuleCheckDTO dto,
+        NhiHybridRecordDTO match
+    ) {
+        NhiRuleCheckSourceType matchedSourceType = NhiRuleCheckSourceType.SYSTEM_RECORD;
+        if (
+            "IC".equals(match.getRecordSource())
+        ) {
+            matchedSourceType = NhiRuleCheckSourceType.NHI_CARD_RECORD;
+        } else if (
+            match.getRecordDateTime().isEqual(
+                DateTimeUtil.transformROCDateToLocalDate(
+                    dto.getNhiExtendTreatmentProcedure().getA71()
+                )
+            )
+        ) {
+            matchedSourceType = NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL;
+        }
+
+        return matchedSourceType;
+    }
+
+    public Period getPatientAge(NhiRuleCheckDTO dto) {
+        int age = 0;
+        if (dto.getPatient().getBirth() != null) {
+            return Period.between(
+                dto.getPatient().getBirth(),
+                this.getNhiExtendDisposalDateInDTO(dto)
+            );
+        }
+
+        return Period.of(0, 0, 0);
+    }
+
+    public List<NhiRuleCheckTxSnapshot> getCurrentDisposalTxSnapshotByOnlySourceTypeAndCodes(
+        NhiRuleCheckDTO dto,
+        NhiRuleCheckSourceType onlySourceType,
+        List<String> codes
+    ) {
+        List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
+        return ignoreTargetTxSnapshots.stream()
+            .filter(d -> codes.contains(d.getNhiCode()))
+            .collect(Collectors.toList());
+    }
+
+    public List<NhiHybridRecordDTO> getSourceDataByOnlySourceTypeAndCodesAndDuration(
+        NhiRuleCheckDTO dto,
+        NhiRuleCheckSourceType onlySourceType,
+        List<String> codes,
+        LocalDateDuration duration
+    ) {
+        boolean result = false;
+
+        List<NhiHybridRecordDTO> sourceData = codes != null
+            ? this.findNhiHypeRecordsDTO(
+                    dto.getPatient().getId(),
+                    codes,
+                    Arrays.asList(
+                        this.getDisposalIdInDTO(dto)
+                    )
+                )
+            : this.findNhiHypeRecordsDTO(
+                    dto.getPatient().getId(),
+                    codes,
+                    Arrays.asList(
+                        this.getDisposalIdInDTO(dto)
+                    )
+                );
+
+        if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(onlySourceType)) {
+            sourceData = sourceData.stream()
+                .filter(d -> "SYS".equals(d.getRecordSource()))
+                .collect(Collectors.toList());
+        }
+
+        List<NhiHybridRecordDTO> matches = duration != null
+            ? sourceData.stream()
+            .filter(
+                d -> d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                    d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                    d.getRecordDateTime().isEqual(duration.getEnd())
+            )
+            .collect(Collectors.toList())
+            : sourceData;
+
+        return matches;
+    }
+
+    public List<NhiHybridRecordDTO> getSourceDataByDuration(
+        List<NhiHybridRecordDTO> sourceData,
+        LocalDateDuration duration
+    ) {
+        return duration != null
+            ? sourceData.stream()
+            .filter(
+                d -> d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                    d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                    d.getRecordDateTime().isEqual(duration.getEnd())
+            )
+            .collect(Collectors.toList())
+            : sourceData;
+    }
+
+    public String getCurrentTxNhiCode(NhiRuleCheckDTO dto) {
+        return dto.getNhiExtendTreatmentProcedure().getA73();
+    }
 }

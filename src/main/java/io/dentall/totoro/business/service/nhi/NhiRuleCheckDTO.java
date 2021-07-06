@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi;
 
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.domain.Patient;
@@ -12,16 +13,49 @@ public class NhiRuleCheckDTO {
     @NotNull
     private Patient patient;
 
+    private Long doctorId;
+
     private NhiExtendDisposal nhiExtendDisposal;
 
     @NotNull
     private NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure;
 
-    private List<Long> excludeTreatmentProcedureIds;
+    private List<Long> excludeDisposalIds;
 
     private List<String> includeNhiCodes;
 
+    private List<NhiRuleCheckTxSnapshot> txSnapshots;
+
     private boolean referral;
+
+    /**
+     * 主要用來提升月申報速度，使得重複查詢的次數減少，未來期望在處置單檢查時也可以改用這個方式。
+     */
+    private List<NhiHybridRecordDTO> sourceData;
+
+    public List<NhiHybridRecordDTO> getSourceData() {
+        return sourceData;
+    }
+
+    public void setSourceData(List<NhiHybridRecordDTO> sourceData) {
+        this.sourceData = sourceData;
+    }
+
+    public Long getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(Long doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public List<NhiRuleCheckTxSnapshot> getTxSnapshots() {
+        return txSnapshots;
+    }
+
+    public void setTxSnapshots(List<NhiRuleCheckTxSnapshot> txSnapshots) {
+        this.txSnapshots = txSnapshots;
+    }
 
     public List<String> getIncludeNhiCodes() {
         return includeNhiCodes;
@@ -89,11 +123,11 @@ public class NhiRuleCheckDTO {
         this.nhiExtendTreatmentProcedure = nhiExtendTreatmentProcedure;
     }
 
-    public List<Long> getExcludeTreatmentProcedureIds() {
-        return excludeTreatmentProcedureIds;
+    public List<Long> getExcludeDisposalIds() {
+        return excludeDisposalIds;
     }
 
-    public void setExcludeTreatmentProcedureIds(List<Long> excludeTreatmentProcedureIds) {
-        this.excludeTreatmentProcedureIds = excludeTreatmentProcedureIds;
+    public void setExcludeDisposalIds(List<Long> excludeDisposalIds) {
+        this.excludeDisposalIds = excludeDisposalIds;
     }
 }

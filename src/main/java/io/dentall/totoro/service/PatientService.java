@@ -1,9 +1,7 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
@@ -29,7 +27,9 @@ import javax.persistence.criteria.*;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -571,12 +571,13 @@ public class PatientService extends QueryService<Patient> {
 
     /**
      * 特殊 rule check 只實作指定代碼(81/91004C)，部分檢核，若原生代碼有異動，則需一併調整
+     * TODO: Fix this later
      */
     public NhiRuleCheckResultVM getPatientNhiStatus(
         String code,
         Long patientId
     ) {
-
+        /**
         NhiRuleCheckVM vm = new NhiRuleCheckVM();
         vm.setPatientId(patientId);
 
@@ -685,6 +686,8 @@ public class PatientService extends QueryService<Patient> {
             default:
                 break;
         }
+         **/
+        NhiRuleCheckResultVM rvm = new NhiRuleCheckResultVM();
 
         return rvm;
     }

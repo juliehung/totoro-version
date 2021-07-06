@@ -3,10 +3,7 @@ package io.dentall.totoro.business.service.nhi.util;
 import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -21,20 +18,42 @@ public class ToothUtil {
     private static Pattern toothPositionRegexPattern = Pattern.compile(toothPositionRegexLiteral);
 
     public enum ToothPhase {
-        P1("[1|5][1-9]|UR|UA|UB|FM"),
-        P2("[2|6][1-9]|UL|UA|UB|FM"),
-        P3("[3|7][1-9]|LL|LA|LB|FM"),
-        P4("[4|8][1-9]|LR|LA|LB|FM");
+        P1("[1|5][1-9]|UR|UA|UB|FM", "第一象限"),
+        P2("[2|6][1-9]|UL|UA|UB|FM", "第二象限"),
+        P3("[3|7][1-9]|LL|LA|LB|FM", "第三象限"),
+        P4("[4|8][1-9]|LR|LA|LB|FM", "第四象限");
 
         private final String regex;
 
-        ToothPhase(String regex) {
+        private final String nameOfPhase;
+
+        ToothPhase(String regex, String nameOfPhase) {
             this.regex = regex;
+            this.nameOfPhase = nameOfPhase;
         }
 
         public String getRegex() {
             return regex;
         }
+
+        public String getNameOfPhase() {
+            return nameOfPhase;
+        }
+
+        public String toString() {
+            return this.nameOfPhase;
+        }
+
+    }
+
+    public static class ToothPhaseComparator implements Comparator<ToothPhase> {
+        public int compare(ToothPhase o1, ToothPhase o2) {
+            return o1.ordinal() <= o2.ordinal() ? -1 : 1;
+        }
+    }
+
+    public static Comparator<ToothPhase> toothPhaseComparator() {
+        return new ToothPhaseComparator();
     }
 
     /**
@@ -42,23 +61,27 @@ public class ToothUtil {
      * @param teeth 牙位
      * @return 回傳輸入牙位所佔據的牙位象限
      */
-    public static HashSet<ToothPhase> markAsPhase(List<String> teeth) {
-        HashSet<ToothPhase> result = new HashSet<>();
+    public static List<ToothPhase> markAsPhase(List<String> teeth) {
+        List<ToothPhase> result = new ArrayList<>();
+        HashSet<ToothPhase> h = new HashSet<>();
 
         teeth.stream().forEach(t -> {
             if (t.matches(ToothPhase.P1.getRegex())) {
-                result.add(ToothPhase.P1);
+                h.add(ToothPhase.P1);
             }
             if (t.matches(ToothPhase.P2.getRegex())) {
-                result.add(ToothPhase.P2);
+                h.add(ToothPhase.P2);
             }
             if (t.matches(ToothPhase.P3.getRegex())) {
-                result.add(ToothPhase.P3);
+                h.add(ToothPhase.P3);
             }
             if (t.matches(ToothPhase.P4.getRegex())) {
-                result.add(ToothPhase.P4);
+                h.add(ToothPhase.P4);
             }
         });
+
+        h.forEach(p -> result.add(p));
+        result.sort((o1, o2) -> o1.ordinal() <= o2.ordinal() ?-1 : 1);
 
         return result;
     }
@@ -124,19 +147,57 @@ public class ToothUtil {
             .count();
     }
 
-    public static String parseToothSurfaceToNhiSurface(String toothSurface) {
-        String result = "";
-
-        try {
-            result = Arrays.stream(toothSurface.split("[*]"))
-                .map(toothSurfaceInfo -> {
-                    String[] toothSurfaceInfoSplit = toothSurfaceInfo.split("[_]");
-                    return toothSurfaceInfoSplit[toothSurfaceInfoSplit.length - 1];
-                })
-                .collect(Collectors.joining());
-        } catch (Exception e) {
-            // do nothing;
+    public static String multipleToothToDisplay(String teeth) {
+        if (StringUtils.isBlank(teeth) ||
+            teeth.length() % 2 != 0
+        ) {
+            return "";
+        } else {
+            return String.join("/", ToothUtil.splitA74(teeth));
         }
+    }
+
+    public static List<String> listDuplicatedTooth(String a74A, String a74B) {
+        List<String> result = new ArrayList<>();
+
+        List<String> toothListA = ToothUtil.splitA74(
+            a74A
+        );
+        List<String> toothListB = ToothUtil.splitA74(
+            a74B
+        );
+
+        toothListA.stream()
+            .forEach(t -> {
+                if (toothListB.contains(t)) {
+                    result.add(t);
+                }
+            });
+
+        return result;
+    }
+
+    public static List<ToothPhase> listDuplicatedToothPhase(String a74A, String a74B) {
+        List<ToothPhase> result = new ArrayList<>();
+
+        List<ToothPhase> listA = ToothUtil.markAsPhase(
+            ToothUtil.splitA74(
+                a74A
+            )
+        );
+
+        List<ToothPhase> listB = ToothUtil.markAsPhase(
+            ToothUtil.splitA74(
+                a74B
+            )
+        );
+
+        listA.stream()
+            .forEach(t -> {
+                if (listB.contains(t)) {
+                    result.add(t);
+                }
+            });
 
         return result;
     }

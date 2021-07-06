@@ -260,4 +260,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
     List<AccountingDTO> findByRegistration_Accounting_TransactionTimeBetween(Instant begin, Instant end);
 
     List<AppointmentTable> findByExpectedArrivalTimeAfterAndPatient_IdAndRegistrationIsNullOrderByExpectedArrivalTime(Instant targetTime, Long patientId);
+
+    Optional<AppointmentTable> findByRegistration_Disposal_Id(Long disposalId);
 }

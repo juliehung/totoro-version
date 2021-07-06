@@ -340,6 +340,10 @@ Business Logic
 - First/Last doctor，改由 disposal 下 appointment 中 第一跟最新一個預約醫生
 - Nhi tx/medicine 是完整匯入，來源自健保局公開資料
 
+Nhi rule check
+---
+- 開發，當有新的類型的健保需要被增加時，需新增 `NhiRuleCheckScript<健保代碼群組>` 且實作，以及 `NhiRuleCheckScriptType` 增加新的 enum 讓 resource 可以找到正確對應的 `NhiRuleCheckScript<健保代碼群組>`
+
 
 Image
 ---

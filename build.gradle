@@ -46,7 +46,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
 apply from: 'gradle/sonar.gradle'
 apply from: 'gradle/docker.gradle'
-apply from: project.hasProperty('prod') ? 'gradle/profile_prod.gradle': 'gradle/profile_dev.gradle'
+apply from: project.hasProperty('prod') ? 'gradle/profile_prod.gradle' : 'gradle/profile_dev.gradle'
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'org.springframework.boot'
@@ -142,6 +142,9 @@ liquibase {
 configurations {
     providedRuntime
     compile.exclude module: "spring-boot-starter-tomcat"
+    cucumberRuntime {
+        extendsFrom testRuntime
+    }
 }
 
 repositories {
@@ -303,6 +306,7 @@ dependencies {
     liquibaseRuntime "org.postgresql:postgresql"
     compile "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen"
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
@@ -320,13 +324,18 @@ dependencies {
     testCompile "com.mattbertolini:liquibase-slf4j"
     testCompile "org.hamcrest:hamcrest-library"
     testCompile "com.h2database:h2"
+    testCompile 'io.cucumber:cucumber-java:6.8.1'
+    testCompile 'io.cucumber:cucumber-junit:6.8.1'
+    testCompile 'io.cucumber:cucumber-spring:6.8.1'
+    testCompile 'de.monochromata.cucumber:reporting-plugin:4.0.103'
+
     liquibaseRuntime "com.h2database:h2"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 
     compile "com.vladmihalcea:hibernate-types-52:2.4.0"
     compile "ru.yandex.qatools.embed:postgresql-embedded:2.10"
     compile "com.univocity:univocity-parsers:2.8.2"
-    compile ("org.springframework.integration:spring-integration-mqtt") {
+    compile("org.springframework.integration:spring-integration-mqtt") {
         exclude group: 'org.eclipse.paho', module: 'org.eclipse.paho.client.mqttv3'
     }
     compile "org.springframework.boot:spring-boot-starter-artemis"
@@ -346,16 +355,35 @@ dependencies {
     compile 'com.google.cloud:sqlcommenter:1.0.0'
     compile 'io.micrometer:micrometer-core:1.5.5'
     compile 'io.micrometer:micrometer-registry-prometheus:1.5.0'
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
+task cucumber() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--plugin', 'html:build/reports/cucumber/cucumber.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
+            environment = ['spring.profiles.active': 'dev,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml', 'cucumber.filter.tags': '@nhi']
+        }
+    }
+}
 
 /**
  * Execute flow
  */
 defaultTasks 'bootRun'
 compileJava.dependsOn processResources
-processResources.dependsOn cleanResources,bootBuildInfo,autoGenVersion
+processResources.dependsOn cleanResources, bootBuildInfo, autoGenVersion
 bootBuildInfo.mustRunAfter cleanResources
 checkstyleMain.include 'io/dentall/totoro/business/**'
+checkstyleMain.exclude 'io/dentall/totoro/business/service/nhi/util/**'
+checkstyleMain.exclude 'io/dentall/totoro/repository'
 compileJava.finalizedBy checkstyleMain
 test.finalizedBy testReport, jacocoTestReport
