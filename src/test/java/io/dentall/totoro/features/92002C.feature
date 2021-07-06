@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92002C 齒間暫時固定術，每齒
 
     Scenario Outline: 全部檢核成功

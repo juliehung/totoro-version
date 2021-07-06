@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92030C 前齒根尖切除術
 
     Scenario Outline: 全部檢核成功

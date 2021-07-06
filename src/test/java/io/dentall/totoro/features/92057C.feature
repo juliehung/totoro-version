@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92057C 骨瘤切除術
 
     Scenario Outline: 全部檢核成功

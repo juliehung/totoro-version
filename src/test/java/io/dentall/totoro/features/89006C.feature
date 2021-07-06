@@ -1,4 +1,4 @@
-@nhi-89-series
+@nhi @nhi-89-series
 Feature: 89006C 覆髓
 
     Scenario Outline: 全部檢核成功

@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92050C 埋伏齒露出手術
 
     Scenario Outline: 全部檢核成功

@@ -1,4 +1,4 @@
-@nhi-90-series
+@nhi @nhi-90-series
 Feature: 90021C 特殊狀況—保護性肢體制約
 
     Scenario Outline: 全部檢核成功

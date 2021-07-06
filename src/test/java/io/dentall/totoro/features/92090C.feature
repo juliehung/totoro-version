@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92090C 定期性口腔癌與癌前病變追蹤治療
 
     Scenario Outline: 全部檢核成功

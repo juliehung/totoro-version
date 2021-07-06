@@ -1,4 +1,4 @@
-@nhi-90-series
+@nhi @nhi-90-series
 Feature: 90088C 根管治療轉出醫療院所之轉診費用
 
     Scenario Outline: 全部檢核成功

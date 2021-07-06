@@ -1,4 +1,4 @@
-@nhi-90-series
+@nhi @nhi-90-series
 Feature: 90094C 難症特別處理-根管重新治療在Ｘ光片上root canal內顯現出radioopaque等有obstruction之根管等個案，以根管數計算
 
     Scenario Outline: 全部檢核成功

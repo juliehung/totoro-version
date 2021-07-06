@@ -1,4 +1,4 @@
-@nhi-89-series
+@nhi @nhi-89-series
 Feature: 89112C 特殊狀況之前牙三面複合樹脂充填
 
     Scenario Outline: 全部檢核成功

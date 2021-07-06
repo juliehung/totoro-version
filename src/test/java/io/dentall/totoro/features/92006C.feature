@@ -1,4 +1,4 @@
-@nhi-92-series
+@nhi @nhi-92-series
 Feature: 92006C 拆線 每次
 
     Scenario Outline: 全部檢核成功

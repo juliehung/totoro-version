@@ -1,4 +1,4 @@
-@nhi-90-series
+@nhi @nhi-90-series
 Feature: 90013C 根尖成形術或根尖生成術-前牙
 
     Scenario Outline: 全部檢核成功

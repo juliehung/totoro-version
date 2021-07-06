@@ -1,3 +1,4 @@
+@nhi @nhi-P3-series
 Feature: P30002 牙醫特殊服務試辦計畫身心障礙牙醫服務-氟化物防齲處理
 
     Scenario Outline: 全部檢核成功
