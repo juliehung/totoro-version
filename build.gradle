@@ -333,6 +333,8 @@ dependencies {
     testCompile 'io.cucumber:cucumber-java:6.8.1'
     testCompile 'io.cucumber:cucumber-junit:6.8.1'
     testCompile 'io.cucumber:cucumber-spring:6.8.1'
+    testCompile 'de.monochromata.cucumber:reporting-plugin:4.0.103'
+
     liquibaseRuntime "com.h2database:h2"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 
@@ -370,8 +372,8 @@ task cucumber() {
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'pretty', '--plugin', 'html:build/reports/cucumber/cucumber.html', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
-            environment = ['spring.profiles.active': 'dev,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml', 'cucumber.filter.tags': '@registration']
+            args = ['--plugin', 'pretty', '--plugin', 'html:build/reports/cucumber/cucumber.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
+            environment = ['spring.profiles.active': 'dev,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml', 'cucumber.filter.tags': '@nhi']
         }
     }
 }
