@@ -531,13 +531,13 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkResult(resultActions, passOrNot, message);
     }
 
-    @Then("在 {word} 天內的記錄中，{word} 診療代碼已達 {int} 次以上，不得申報 {word}，確認結果是否為 {passOrNot}")
+    @Then("在 {word} 年內的記錄中，{word} 診療代碼已達 {int} 次以上，不得申報 {word}，確認結果是否為 {passOrNot}")
     public void checkCodeBeforeDateWithMaxTimes2(String period, String treatmentNhiCode, int times, String issueNhiCode, Boolean passOrNot) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
         NhiTreatment violationNhiTreatment = findLastNhiTreatment(treatmentNhiCode).get();
         String type = findSourceType(violationNhiTreatment);
         String date = transformA71ToDisplay(violationNhiTreatment.getDatetime());
-        String message = formatMsg(!passOrNot).apply(D1_2, new Object[]{issueNhiCode, treatmentNhiCode, type, date, period, issueNhiCode});
+        String message = formatMsg(!passOrNot).apply(D1_2_3, new Object[]{issueNhiCode, treatmentNhiCode, type, date, period, issueNhiCode});
         checkResult(resultActions, passOrNot, message);
     }
 

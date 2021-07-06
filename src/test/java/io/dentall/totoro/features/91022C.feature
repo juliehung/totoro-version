@@ -36,7 +36,7 @@ Feature: 91022C 牙周病統合治療第二階段支付
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 提醒"檢附牙菌斑控制紀錄表、牙周病檢查紀錄表"，確認結果是否為 <PassOrNot>
+        Then 提醒"需檢附牙菌斑控制紀錄表、牙周病檢查紀錄表"，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91022C       | FM         | MOB          | Pass      |
@@ -92,25 +92,28 @@ Feature: 91022C 牙周病統合治療第二階段支付
             | PastDays | A72 | A73    | A74 | A75 | A76 | A77 | A78 | A79 |
             | 152      | 3   | 91021C | 11  | MOB | 0   | 1.0 | 03  |     |
         Given 新增 <Nums> 筆診療處置:
-            | Id | PastDays | A72 | A73                | A74              | A75                | A76 | A77 | A78 | A79 |
-            | 1  | 100      | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> | 0   | 1.0 | 03  |     |
-            | 2  | 364      | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> | 0   | 1.0 | 03  |     |
-            | 3  | 365      | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> | 0   | 1.0 | 03  |     |
+            | Id | PastDate | A72 | A73                | A74              | A75                | A76 | A77 | A78 | A79 |
+            | 1  | 12個月前月底  | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> | 0   | 1.0 | 03  |     |
+            | 2  | 11個月前月初  | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> | 0   | 1.0 | 03  |     |
+            | 3  | 11個月前月中  | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> | 0   | 1.0 | 03  |     |
+            | 4  | 11個月前月底  | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | <TreatmentSurface> | 0   | 1.0 | 03  |     |
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 在 365 天內的記錄中，<TreatmentNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
+        Then 在 1 年內的記錄中，<TreatmentNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | Nums | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 91022C       | 11         | MOB          | 1    | 91006C           | 11             | MOB              | Pass      |
             | 91022C       | 11         | MOB          | 2    | 91006C           | 11             | MOB              | Pass      |
-            | 91022C       | 11         | MOB          | 3    | 91006C           | 11             | MOB              | NotPass   |
+            | 91022C       | 11         | MOB          | 3    | 91006C           | 11             | MOB              | Pass      |
+            | 91022C       | 11         | MOB          | 4    | 91006C           | 11             | MOB              | NotPass   |
             | 91022C       | 11         | MOB          | 1    | 91007C           | 11             | MOB              | Pass      |
             | 91022C       | 11         | MOB          | 2    | 91007C           | 11             | MOB              | Pass      |
-            | 91022C       | 11         | MOB          | 3    | 91007C           | 11             | MOB              | NotPass   |
+            | 91022C       | 11         | MOB          | 3    | 91007C           | 11             | MOB              | Pass      |
+            | 91022C       | 11         | MOB          | 4    | 91007C           | 11             | MOB              | NotPass   |
 
     Scenario Outline: （IC）已申報91006C或91007C三次以上者，一年內不得申報牙周病統合性治療方案91021C~91023C
         Given 建立醫師
@@ -122,22 +125,25 @@ Feature: 91022C 牙周病統合治療第二階段支付
             | PastDays | A72 | A73    | A74 | A75 | A76 | A77 | A78 | A79 |
             | 152      | 3   | 91021C | 11  | MOB | 0   | 1.0 | 03  |     |
         Given 新增 <Nums> 筆健保醫療:
-            | PastDays | NhiCode            | Teeth |
-            | 100      | <TreatmentNhiCode> | 11    |
-            | 364      | <TreatmentNhiCode> | 11    |
-            | 365      | <TreatmentNhiCode> | 11    |
+            | PastDate | NhiCode          | Teeth |
+            | 12個月前月底  | <MedicalNhiCode> | 11    |
+            | 11個月前月初  | <MedicalNhiCode> | 11    |
+            | 11個月前月中  | <MedicalNhiCode> | 11    |
+            | 11個月前月底  | <MedicalNhiCode> | 11    |
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 在 365 天內的記錄中，<TreatmentNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
+        Then 在 1 年內的記錄中，<MedicalNhiCode> 診療代碼已達 3 次以上，不得申報 <IssueNhiCode>，確認結果是否為 <PassOrNot>
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | Nums | TreatmentNhiCode | PassOrNot |
-            | 91022C       | 11         | MOB          | 1    | 91006C           | Pass      |
-            | 91022C       | 11         | MOB          | 2    | 91006C           | Pass      |
-            | 91022C       | 11         | MOB          | 3    | 91006C           | NotPass   |
-            | 91022C       | 11         | MOB          | 1    | 91007C           | Pass      |
-            | 91022C       | 11         | MOB          | 2    | 91007C           | Pass      |
-            | 91022C       | 11         | MOB          | 3    | 91007C           | NotPass   |
+            | IssueNhiCode | IssueTeeth | IssueSurface | Nums | MedicalNhiCode | PassOrNot |
+            | 91022C       | 11         | MOB          | 1    | 91006C         | Pass      |
+            | 91022C       | 11         | MOB          | 2    | 91006C         | Pass      |
+            | 91022C       | 11         | MOB          | 3    | 91006C         | Pass      |
+            | 91022C       | 11         | MOB          | 4    | 91006C         | NotPass   |
+            | 91022C       | 11         | MOB          | 1    | 91007C         | Pass      |
+            | 91022C       | 11         | MOB          | 2    | 91007C         | Pass      |
+            | 91022C       | 11         | MOB          | 3    | 91007C         | Pass      |
+            | 91022C       | 11         | MOB          | 4    | 91007C         | NotPass   |
