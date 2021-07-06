@@ -1311,7 +1311,9 @@ public class NhiRuleCheckUtil {
     }
 
     public NhiRuleCheckResultDTO isSpecialRuleFor91014C(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO();
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("Special rule for 91014C")
+            .validated(true);
 
         List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
         LocalDateDuration duration = new LocalDateDuration();
@@ -1500,11 +1502,15 @@ public class NhiRuleCheckUtil {
         if (has91022C) {
             for (NhiHybridRecordDTO d : sourceData) {
                 if ("91023C".equals(d.getCode())) {
-                    if (d.getRecordDateTime().isAfter(date91022C) ||
-                        d.getRecordDateTime().isBefore(duration.getEnd())
+                    if (!d.getRecordDateTime().isEqual(date91022C) ||
+                        !d.getRecordDateTime().isEqual(duration.getEnd())
                     ) {
-                        has91023C = true;
-                        break;
+                        if (d.getRecordDateTime().isAfter(date91022C) &&
+                            d.getRecordDateTime().isBefore(duration.getEnd())
+                        ) {
+                            has91023C = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -1535,12 +1541,6 @@ public class NhiRuleCheckUtil {
         List<NhiRuleCheckResultDTO> results = new ArrayList<>();
 
         List<String> codes = this.parseNhiCode(originCodes);
-
-        List<ToothUtil.ToothPhase> targetPhases = ToothUtil.markAsPhase(
-            ToothUtil.splitA74(
-                dto.getNhiExtendTreatmentProcedure().getA74()
-            )
-        );
 
         // 當前 disposal
         if (dto.getIncludeNhiCodes() != null &&
@@ -1637,7 +1637,7 @@ public class NhiRuleCheckUtil {
                         this.getSourceDataType(dto, record),
                         dto.getNhiExtendTreatmentProcedure().getA73(),
                         dto.getNhiExtendTreatmentProcedure().getA73(),
-                        this.getNhiExtendDisposalDateInDTO(dto),
+                        record.getRecordDateTime(),
                         limitDisplayDuration,
                         d.getNameOfPhase(),
                         null
@@ -1676,8 +1676,7 @@ public class NhiRuleCheckUtil {
         if (dto.getIncludeNhiCodes() != null &&
             dto.getIncludeNhiCodes().size() > 0
         ) {
-            List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
-            currentDisposalMatches = ignoreTargetTxSnapshots.stream()
+            currentDisposalMatches = dto.getTxSnapshots().stream()
                 .filter(d -> codes.contains(d.getNhiCode()))
                 .collect(Collectors.toList());
         }
@@ -2484,6 +2483,17 @@ public class NhiRuleCheckUtil {
                 case D1_2_2:
                     m = String.format(
                         NhiRuleCheckFormat.D1_2_2.getFormat(),
+                        targetCode,
+                        matchCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate),
+                        limitValueString,
+                        targetCode
+                    );
+                    break;
+                case D1_2_3:
+                    m = String.format(
+                        NhiRuleCheckFormat.D1_2_3.getFormat(),
                         targetCode,
                         matchCode,
                         sourceType.getValue(),

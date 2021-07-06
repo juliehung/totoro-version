@@ -76,6 +76,14 @@ public class NhiRuleCheckScript91XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.ALL_ZONE
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isW5_1(dto),
             vm
         );
@@ -405,7 +413,7 @@ public class NhiRuleCheckScript91XXXC {
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                 String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
                 1,
-                NhiRuleCheckFormat.D1_2
+                NhiRuleCheckFormat.D6_1
             ),
             vm
         );
@@ -627,7 +635,7 @@ public class NhiRuleCheckScript91XXXC {
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY),
                 String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
                 1,
-                NhiRuleCheckFormat.D4_1
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -729,8 +737,8 @@ public class NhiRuleCheckScript91XXXC {
                 dto,
                 null,
                 Arrays.asList("91021C"),
-                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_360_DAY),
-                String.valueOf(DateTimeUtil.NHI_360_DAY.getDays()),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
                 1,
                 NhiRuleCheckFormat.D4_1
             ),
@@ -742,10 +750,10 @@ public class NhiRuleCheckScript91XXXC {
                 dto,
                 null,
                 Arrays.asList("91006C", "91007C"),
-                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_360_DAY),
-                String.valueOf(DateTimeUtil.NHI_360_DAY.getDays()),
-                4,
-                NhiRuleCheckFormat.D1_2
+                nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_YEAR_1),
+                String.valueOf(1),
+                3,
+                NhiRuleCheckFormat.D1_2_3
             ),
             vm
         );
@@ -783,10 +791,10 @@ public class NhiRuleCheckScript91XXXC {
                 dto,
                 null,
                 Arrays.asList("91006C", "91007C"),
-                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_360_DAY),
-                String.valueOf(DateTimeUtil.NHI_360_DAY.getDays()),
-                4,
-                NhiRuleCheckFormat.D1_2
+                nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_YEAR_1),
+                String.valueOf(1),
+                3,
+                NhiRuleCheckFormat.D1_2_3
             ),
             vm
         );
@@ -824,10 +832,10 @@ public class NhiRuleCheckScript91XXXC {
                 dto,
                 null,
                 Arrays.asList("91006C", "91007C"),
-                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_360_DAY),
-                String.valueOf(DateTimeUtil.NHI_360_DAY.getDays()),
-                4,
-                NhiRuleCheckFormat.D1_2
+                nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_YEAR_1),
+                String.valueOf(1),
+                3,
+                NhiRuleCheckFormat.D1_2_3
             ),
             vm
         );
@@ -926,6 +934,14 @@ public class NhiRuleCheckScript91XXXC {
 
     public NhiRuleCheckResultVM validate91114C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FULL_ZONE
+            ),
+            vm
+        );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(

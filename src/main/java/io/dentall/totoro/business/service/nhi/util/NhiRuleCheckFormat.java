@@ -9,11 +9,14 @@ public enum NhiRuleCheckFormat {
     // 89009C: 曾申報 90007C(來源-110/01/01)，不得再報 89009C
     D1_1("%s: 曾申報 %s(%s-%s)，不得再報 %s", NhiRuleCheckInfoType.DANGER),
 
-    // 91004C:  91015C(來源-110/01/01) 90天內不得申報 91004C。
+    // 91004C:  91015C(來源-110/01/01) 90 天內不得申報 91004C。
     D1_2("%s:  %s(%s-%s) %s 天內不得申報 %s", NhiRuleCheckInfoType.DANGER),
 
-    // 91004C:  91015C(來源-110/01/01) 90天內不得申報 91004C。
+    // 91004C:  91015C(來源-110/01/01) 3 個月內不得申報 91004C。
     D1_2_2("%s:  %s(%s-%s) %s 個月內不得申報 %s", NhiRuleCheckInfoType.DANGER),
+
+    // 91004C:  91015C(來源-110/01/01) 1 年內不得申報 91004C。
+    D1_2_3("%s:  %s(%s-%s) %s 年內不得申報 %s", NhiRuleCheckInfoType.DANGER),
 
     // 90012C:  37 已申報 92013C(來源-110/01/01)
     D1_3("%s:  %s 已申報 %s(%s-%s)", NhiRuleCheckInfoType.DANGER),
@@ -118,13 +121,13 @@ public enum NhiRuleCheckFormat {
     HOLIDAY("%s: 限週六、日及國定假日申報, 當月看診需≦二十六日, 前月於健保VPN完成登錄", NhiRuleCheckInfoType.INFO),
 
     // 91022C: 檢附牙菌斑控制紀錄表、牙周病檢查紀錄表
-    PERIO_REC_1("%s: 檢附牙菌斑控制紀錄表、牙周病檢查紀錄表", NhiRuleCheckInfoType.INFO),
+    PERIO_REC_1("%s: 需檢附牙菌斑控制紀錄表、牙周病檢查紀錄表", NhiRuleCheckInfoType.INFO),
 
     // 91011C: 檢附牙周囊袋記錄表
-    PERIO_REC_2("%s: 檢附牙周囊袋記錄表", NhiRuleCheckInfoType.INFO),
+    PERIO_REC_2("%s: 需檢附牙周囊袋記錄表", NhiRuleCheckInfoType.INFO),
 
     //92043C: 檢附手術紀錄
-    OS_REC_1("%s: 檢附手術紀錄", NhiRuleCheckInfoType.INFO),
+    OS_REC_1("%s: 需檢附手術紀錄", NhiRuleCheckInfoType.INFO),
     ;
 
     private String format;

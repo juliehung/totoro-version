@@ -26,7 +26,7 @@ public enum ToothConstraint {
 
     // All validated
     VALIDATED_ALL("^[1-4][1-8]$|^[5-8][1-5]$|^[1-9]9$|UR|UL|LR|LL|UA|LA|FM", "牙位限填: 11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99,UR,UL,LR,LL,UA,LA,FM"),
-    VALIDATED_ALL_EXCLUDE_FM("^[1-4][1-8]$|^[5-8][1-5]$|^[1-9]9$|UR|UL|LR|LL|UA|LA", "牙位限填: 11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99,UR,UL,LR,LL,UA,LA"),
+    VALIDATED_ALL_EXCLUDE_FM("^[1-4][1-8]$|^[5-8][1-5]$|^[1-4]9$|99|UR|UL|LR|LL|UA|LA", "牙位限填: 11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99,UR,UL,LR,LL,UA,LA"),
 
     // IC81
     ONLY_16("16", "牙位限填: 16"),
