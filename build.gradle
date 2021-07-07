@@ -365,9 +365,9 @@ dependencies {
 
 task cucumber() {
     def cucumberTags = project.getProperties().get("cucumber.filter.tags", "")
-    assert cucumberTags.length() > 0
     dependsOn assemble, testClasses
     doLast {
+        assert cucumberTags.length() > 0
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
