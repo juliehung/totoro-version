@@ -1116,11 +1116,11 @@ public class NhiRuleCheckUtil {
         String title = "Special rule for Xray";
 
         List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
-        NhiRuleCheckTxSnapshot currentMatch00316C = null;
+        NhiRuleCheckTxSnapshot currentMatchTargetCode = null;
 
         for (NhiRuleCheckTxSnapshot ignoreTargetTxSnapshot : ignoreTargetTxSnapshots) {
-            if ("00316C".equals(ignoreTargetTxSnapshot.getNhiCode())) {
-                currentMatch00316C = ignoreTargetTxSnapshot;
+            if (this.getCurrentTxNhiCode(dto).equals(ignoreTargetTxSnapshot.getNhiCode())) {
+                currentMatchTargetCode = ignoreTargetTxSnapshot;
                 break;
             }
         }
@@ -1142,19 +1142,19 @@ public class NhiRuleCheckUtil {
             )
         );
 
-        List<NhiHybridRecordDTO> foundAny00316CInPast545Days = getSourceDataByDuration(
+        List<NhiHybridRecordDTO> foundAnyTargetCodeInPast545Days = getSourceDataByDuration(
             sourceData,
             this.regularDayDurationCalculation(
                 dto,
                 DateTimeUtil.NHI_545_DAY
             )
         ).stream()
-            .filter(d -> "00316C".equals(d.getCode()))
+            .filter(d -> this.getCurrentTxNhiCode(dto).equals(d.getCode()))
             .collect(Collectors.toList());
 
         if (foundAnyInPast365Days.size() != 0) {
-            if (currentMatch00316C != null ||
-                foundAny00316CInPast545Days.size() != 0
+            if (currentMatchTargetCode != null ||
+                foundAnyTargetCodeInPast545Days.size() != 0
             ) {
                 NhiRuleCheckResultDTO r1 = new NhiRuleCheckResultDTO()
                     .validateTitle(title)
@@ -1174,17 +1174,17 @@ public class NhiRuleCheckUtil {
                     .message(
                         this.generateErrorMessage(
                             NhiRuleCheckFormat.D4_1,
-                            currentMatch00316C != null
+                            currentMatchTargetCode != null
                                 ? NhiRuleCheckSourceType.CURRENT_DISPOSAL
                                 : this.getSourceDataType(
                                     dto,
-                                    foundAny00316CInPast545Days.get(0)
+                                foundAnyTargetCodeInPast545Days.get(0)
                                 ),
                             dto.getNhiExtendTreatmentProcedure().getA73(),
-                            "00316C",
-                            currentMatch00316C != null
+                            this.getCurrentTxNhiCode(dto),
+                            currentMatchTargetCode != null
                                 ? this.getNhiExtendDisposalDateInDTO(dto)
-                                : foundAny00316CInPast545Days.get(0).getRecordDateTime(),
+                                : foundAnyTargetCodeInPast545Days.get(0).getRecordDateTime(),
                             String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
                             null,
                             null
