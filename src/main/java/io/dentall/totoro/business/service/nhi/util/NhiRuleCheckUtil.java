@@ -2510,6 +2510,14 @@ public class NhiRuleCheckUtil {
                         DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate)
                     );
                     break;
+                case D2_2:
+                    m = String.format(
+                        NhiRuleCheckFormat.D2_2.getFormat(),
+                        targetCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate)
+                    );
+                    break;
                 case D4_1:
                     m = String.format(
                         NhiRuleCheckFormat.D4_1.getFormat(),

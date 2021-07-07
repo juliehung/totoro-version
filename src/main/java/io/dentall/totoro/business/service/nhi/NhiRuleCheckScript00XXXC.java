@@ -29,7 +29,7 @@ public class NhiRuleCheckScript00XXXC {
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_1095_DAY),
                 String.valueOf(DateTimeUtil.NHI_1095_DAY.getDays()),
                 1,
-                NhiRuleCheckFormat.D1_3
+                NhiRuleCheckFormat.D1_2
             ),
             vm
         );
@@ -139,7 +139,7 @@ public class NhiRuleCheckScript00XXXC {
                 null,
                 Arrays.asList("01271C", "01272C", "01273C", "00315C", "00316C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
-                String.valueOf(DateTimeUtil.NHI_365_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
                 1,
                 NhiRuleCheckFormat.D1_2
             ),
