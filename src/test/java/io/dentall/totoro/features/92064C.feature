@@ -63,20 +63,3 @@ Feature: 92064C 手術去除解剖間隙內異物或牙齒
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDate | PassOrNot |
             | 92064C       | 11         | MOB          | 10年前              | NotPass   |
-
-    Scenario Outline: （IC）每位醫生限申報一次 92059C 代碼
-        Given 建立醫師
-        Given Scott 24 歲病人
-        Given 新增健保醫療:
-            | PastDate          | NhiCode        | Teeth          |
-            | <PastMedicalDate> | <IssueNhiCode> | <IssueNhiCode> |
-        Given 建立預約
-        Given 建立掛號
-        Given 產生診療計畫
-        When 執行診療代碼 <IssueNhiCode> 檢查:
-            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
-            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 每位醫生限申報一次 <IssueNhiCode> 代碼，確認結果是否為 <PassOrNot>
-        Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | PassOrNot |
-            | 92064C       | 11         | MOB          | 10年前            | NotPass   |
