@@ -364,13 +364,15 @@ dependencies {
 }
 
 task cucumber() {
+    def cucumberTags = project.getProperties().get("cucumber.filter.tags", "")
+    assert cucumberTags.length() > 0
     dependsOn assemble, testClasses
     doLast {
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
             args = ['--plugin', 'pretty', '--plugin', 'html:build/reports/cucumber/cucumber.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
-            environment = ['spring.profiles.active': 'dev,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml', 'cucumber.filter.tags': '@nhi']
+            environment = ['spring.profiles.active': 'test,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml', 'cucumber.filter.tags': "${cucumberTags}"]
         }
     }
 }
