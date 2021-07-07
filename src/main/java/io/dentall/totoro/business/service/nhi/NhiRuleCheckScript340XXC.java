@@ -86,7 +86,7 @@ public class NhiRuleCheckScript340XXC {
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
                 String.valueOf(DateTimeUtil.NHI_0_DAY),
                 1,
-                NhiRuleCheckFormat.D2_1
+                NhiRuleCheckFormat.W4_1
             ),
             vm
         );
