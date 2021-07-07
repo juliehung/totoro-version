@@ -1864,12 +1864,13 @@ public class NhiRuleCheckUtil {
         if (dto.getIncludeNhiCodes() != null &&
             dto.getIncludeNhiCodes().size() == 1
         ) {
-            result.message(
-                String.format(
-                    NhiRuleCheckFormat.W5_1.getFormat(),
-                    dto.getNhiExtendTreatmentProcedure().getA73()
-                )
-            );
+            result.validated(false)
+                .message(
+                    String.format(
+                        NhiRuleCheckFormat.W5_1.getFormat(),
+                        dto.getNhiExtendTreatmentProcedure().getA73()
+                    )
+                );
         }
 
         return result;
