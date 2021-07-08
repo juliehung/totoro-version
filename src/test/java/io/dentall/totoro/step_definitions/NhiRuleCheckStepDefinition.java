@@ -275,12 +275,13 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
 
     @Then("限制牙面在 {int} 以上，確認結果是否為 {passOrNot}")
     public void checkAllLimitedSurface(int surfaceCount, Boolean passOrNot) throws Exception {
+        String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
         String message;
         if (surfaceCount == 4) {
-            message = passOrNot ? null : "牙面面數應為4面";
+            message = passOrNot ? null : nhiCode + ": 牙面面數應為4面";
         } else {
-            message = passOrNot ? null : "牙面數不可小於 " + surfaceCount;
+            message = passOrNot ? null : nhiCode + ": 牙面數不可小於 " + surfaceCount;
         }
         checkResult(resultActions, passOrNot, message);
     }

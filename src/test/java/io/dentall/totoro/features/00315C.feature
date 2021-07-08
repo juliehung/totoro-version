@@ -30,7 +30,7 @@ Feature: 00315C 符合牙醫門診加強感染管制實施方案之環口全景X
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 在過去 <PastTreatmentDayGap> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_3
+        Then 在過去 <PastTreatmentDayGap> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | PastTreatmentDayGap | PassOrNot |
             | 00315C       | 11         | DL           | 1094              | 1095                | NotPass   |
@@ -49,7 +49,7 @@ Feature: 00315C 符合牙醫門診加強感染管制實施方案之環口全景X
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 在過去 <PastMedicalDayGap> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_3
+        Then 在過去 <PastMedicalDayGap> 天，應沒有任何治療紀錄，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | PastMedicalDayGap | PassOrNot |
             | 00315C       | 11         | DL           | 1094            | 1095              | NotPass   |
