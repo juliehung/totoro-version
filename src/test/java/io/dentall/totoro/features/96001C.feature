@@ -9,6 +9,7 @@ Feature: 96001C 牙科局部麻醉
         Given 產生診療計畫
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | 89001C         | <IssueTeeth> | <IssueSurface> |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
         Then 確認診療代碼 <IssueNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:

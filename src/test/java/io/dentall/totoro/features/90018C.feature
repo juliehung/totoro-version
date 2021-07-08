@@ -27,7 +27,7 @@ Feature: 90018C 乳牙多根管治療
         Then 提醒"須檢附影像"，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
-            | 90018C       | 11         | MOB          | Pass      |
+            | 90018C       | 51         | MOB          | Pass      |
 
     Scenario Outline: （HIS）90天內，不應有 90018C 診療項目
         Given 建立醫師

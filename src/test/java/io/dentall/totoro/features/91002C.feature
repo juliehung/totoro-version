@@ -13,7 +13,7 @@ Feature: 91002C 牙周敷料 每次
         Then 確認診療代碼 <IssueNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
-            | 91002C       | 14         | MOB          | Pass      |
+            | 91002C       | UR         | MOB          | Pass      |
 
     Scenario Outline: 91002C 不得單獨申報
         Given 建立醫師
@@ -27,7 +27,7 @@ Feature: 91002C 牙周敷料 每次
         Then <IssueNhiCode> 不得單獨申報，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
-            | 91002C       | 14         | MOB          | NotPass   |
+            | 91002C       | UR         | MOB          | NotPass   |
 
     Scenario Outline: 檢查治療的牙位是否為 ALL_ZONE
         Given 建立醫師
