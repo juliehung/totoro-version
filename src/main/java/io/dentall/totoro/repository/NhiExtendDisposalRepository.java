@@ -691,8 +691,10 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "               nhi_code as code, " +
             "               part as tooth, " +
             "               jhi_usage as surface " +
-            "        from nhi_medical_record " +
-            "        where  nhi_extend_patient_patient_id = :patientId" +
+            "        from nhi_medical_record nmr " +
+            "        left join nhi_procedure np on np.code = nmr.nhi_code" +
+            "        where  nhi_extend_patient_patient_id = :patientId " +
+            "        and    np.id is not null " +
             "        and    nhi_code in (:codes) " +
             "    ), " +
             "     sys_records as ( " +
@@ -750,8 +752,10 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "               nhi_code as code, " +
             "               part as tooth, " +
             "               jhi_usage as surface " +
-            "        from nhi_medical_record " +
-            "        where  nhi_extend_patient_patient_id = :patientId" +
+            "        from nhi_medical_record nmr " +
+            "        left join nhi_procedure np on np.code = nmr.nhi_code" +
+            "        where  nhi_extend_patient_patient_id = :patientId " +
+            "        and    np.id is not null " +
             "    ), " +
             "     sys_records as ( " +
             "         select 'SYS' as recordSource, " +

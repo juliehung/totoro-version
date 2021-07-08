@@ -486,24 +486,33 @@ public class NhiRuleCheckUtil {
                 );
             }
 
+            List<Long> excludeDisposalIdsAndSelfDisposalId = new ArrayList<>(excludeDisposals);
+            excludeDisposalIdsAndSelfDisposalId.add(key);
+
             List<NhiHybridRecordDTO> sourceData = this.findNhiHypeRecordsDTO(
                 patientId,
-                excludeDisposals
+                excludeDisposalIdsAndSelfDisposalId
             );
 
             body.setTxSnapshots(txSnapshots);
             body.setSourceData(sourceData);
-            body.setExcludeDisposalIds(excludeDisposals);
+            body.setExcludeDisposalIds(excludeDisposalIdsAndSelfDisposalId);
 
             // Operate NRC logic for current disposal's treatment procedures
             for (NhiRuleCheckMonthDeclarationTx v : vs) {
                 try {
                     NhiRuleCheckResultVM vm = this.dispatch(v.getNhiCode(), body);
+                    List<String> distinctMessage = new ArrayList<>();
+                    for (String vmMsg : vm.getMessages()) {
+                        if (!checkedMessage.contains(vmMsg)) {
+                            distinctMessage.add(vmMsg);
+                        }
+                    }
                     checkedMessage = checkedMessage
                         .concat(
                             String.join(
                                 "\n",
-                                vm.getMessages()
+                                distinctMessage
                             )
                         )
                         .concat("\n");
@@ -796,95 +805,72 @@ public class NhiRuleCheckUtil {
         SurfaceConstraint sc
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+            .validated(true)
             .validateTitle("限制牙面在 isAllLimitedSurface 以下");
 
         switch (sc) {
             case MIN_1_SURFACES:
-                result
-                    .validated(
+                result.validated(
                         dto.getNhiExtendTreatmentProcedure().getA75() != null &&
-                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_1_SURFACES.getLimitNumber()
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_1_SURFACES.getLimitNumber()
                     );
-
-                if (!result.isValidated()) {
-                    result.message(SurfaceConstraint.MIN_1_SURFACES.getErrorMessage());
-                }
 
                 break;
             case MIN_2_SURFACES:
-                result
-                    .validated(
+                result.validated(
                         dto.getNhiExtendTreatmentProcedure().getA75() != null &&
-                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_2_SURFACES.getLimitNumber()
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_2_SURFACES.getLimitNumber()
                     );
-
-                if (!result.isValidated()) {
-                    result.message(SurfaceConstraint.MIN_2_SURFACES.getErrorMessage());
-                }
 
                 break;
             case MIN_3_SURFACES:
-                result
-                    .validated(
+                result.validated(
                         dto.getNhiExtendTreatmentProcedure().getA75() != null &&
-                            dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_3_SURFACES.getLimitNumber()
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() >= SurfaceConstraint.MIN_3_SURFACES.getLimitNumber()
                     );
-
-                if (!result.isValidated()) {
-                    result.message(SurfaceConstraint.MIN_3_SURFACES.getErrorMessage());
-                }
 
                 break;
             case MAX_2_SURFACES:
-                result
-                    .validated(
+                result.validated(
                         dto.getNhiExtendTreatmentProcedure().getA75() == null ||
-                            dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_2_SURFACES.getLimitNumber());
-                if (!result.isValidated()) {
-                    result
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                        .message(SurfaceConstraint.MAX_2_SURFACES.getErrorMessage());
-                }
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_2_SURFACES.getLimitNumber()
+                    );
 
                 break;
             case MAX_3_SURFACES:
-                result
-                    .validated(
+                result.validated(
                         dto.getNhiExtendTreatmentProcedure().getA75() == null ||
-                            dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_3_SURFACES.getLimitNumber());
-                if (!result.isValidated()) {
-                    result
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                        .message(SurfaceConstraint.MAX_3_SURFACES.getErrorMessage());
-                }
-                break;
-            case MUST_HAVE_M_D_O:
-                result
-                    .validated(
-                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
-                            dto.getNhiExtendTreatmentProcedure().getA75().matches(SurfaceConstraint.MUST_HAVE_M_D_O.getLimitRegex()));
-                if (!result.isValidated()) {
-                    result
-                        .nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
-                        .message(SurfaceConstraint.MUST_HAVE_M_D_O.getErrorMessage());
-                }
-                break;
-            case EQUAL_4_SURFACES:
-                result
-                    .validated(
-                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
-                        dto.getNhiExtendTreatmentProcedure().getA75().length() ==
-                            SurfaceConstraint.EQUAL_4_SURFACES.getLimitNumber()
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() <= SurfaceConstraint.MAX_3_SURFACES.getLimitNumber()
                     );
 
-                if (!result.isValidated()) {
-                    result.message(SurfaceConstraint.EQUAL_4_SURFACES.getErrorMessage());
-                }
+                break;
+            case MUST_HAVE_M_D_O:
+                result.validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
+                        dto.getNhiExtendTreatmentProcedure().getA75().matches(SurfaceConstraint.MUST_HAVE_M_D_O.getLimitRegex())
+                    );
+
+                break;
+            case EQUAL_4_SURFACES:
+                result.validated(
+                        dto.getNhiExtendTreatmentProcedure().getA75() != null &&
+                        dto.getNhiExtendTreatmentProcedure().getA75().length() == SurfaceConstraint.EQUAL_4_SURFACES.getLimitNumber()
+                    );
 
                 break;
             default:
                 break;
+        }
+
+        if (!result.isValidated()) {
+            result.nhiRuleCheckInfoType(NhiRuleCheckInfoType.WARNING)
+                .message(
+                    this.getCurrentTxNhiCode(dto)
+                        .concat(": ")
+                        .concat(
+                            sc.getErrorMessage()
+                        )
+                );
         }
 
         return result;
@@ -1353,9 +1339,7 @@ public class NhiRuleCheckUtil {
             ? dto.getSourceData().stream().filter(d -> queryCode.contains(d.getCode())).collect(Collectors.toList())
             : this.findNhiHypeRecordsDTO(
                 dto.getPatient().getId(),
-                Arrays.asList(
-                    "91004C", "91005C", "91020C"
-                ),
+                queryCode,
                 Arrays.asList(
                     this.getDisposalIdInDTO(dto)
                 )
@@ -1416,7 +1400,7 @@ public class NhiRuleCheckUtil {
             }
 
             List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
-            ? dto.getSourceData().stream().filter(d -> queryCode.contains(d.getCode())).collect(Collectors.toList())
+            ? dto.getSourceData().stream().filter(d -> "91014C".equals(d.getCode())).collect(Collectors.toList())
             : this.findNhiHypeRecordsDTO(
                 dto.getPatient().getId(),
                 Arrays.asList(
@@ -1777,7 +1761,7 @@ public class NhiRuleCheckUtil {
             ? dto.getSourceData().stream().filter(d -> queryCode.contains(d.getCode())).collect(Collectors.toList())
             : this.findNhiHypeRecordsDTO(
             dto.getPatient().getId(),
-            Arrays.asList("91004C"),
+            queryCode,
             Arrays.asList(
                 this.getDisposalIdInDTO(dto)
             )
@@ -2678,11 +2662,8 @@ public class NhiRuleCheckUtil {
         ) {
             matchedSourceType = NhiRuleCheckSourceType.NHI_CARD_RECORD;
         } else if (
-            match.getRecordDateTime().isEqual(
-                DateTimeUtil.transformROCDateToLocalDate(
-                    dto.getNhiExtendTreatmentProcedure().getA71()
-                )
-            )
+            match.getDisposalId() != null &&
+            match.getDisposalId().equals(this.getDisposalIdInDTO(dto))
         ) {
             matchedSourceType = NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL;
         }
