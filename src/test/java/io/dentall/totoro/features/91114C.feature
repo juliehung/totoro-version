@@ -13,7 +13,7 @@ Feature: 91114C 特殊牙周暨齲齒控制基本處置
         Then 確認診療代碼 <IssueNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
-            | 91114C       | 11         | MOB          | Pass      |
+            | 91114C       | FM         | MOB          | Pass      |
 
     Scenario Outline: 提醒適用於健保特殊醫療服務對象、化療、放射線治療患者
         Given 建立醫師
@@ -27,7 +27,7 @@ Feature: 91114C 特殊牙周暨齲齒控制基本處置
         Then 提醒"適用於健保特殊醫療服務對象、化療、放射線治療患者"，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
-            | 91114C       | 11         | MOB          | Pass      |
+            | 91114C       | FM         | MOB          | Pass      |
 
     Scenario Outline: （HIS）90天內，不應有 91114C 診療項目
         Given 建立醫師
@@ -47,9 +47,9 @@ Feature: 91114C 特殊牙周暨齲齒控制基本處置
         Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
-            | 91114C       | 11         | DL           | 89                | 91114C           | 11             | 90     | NotPass   |
-            | 91114C       | 11         | DL           | 90                | 91114C           | 11             | 90     | NotPass   |
-            | 91114C       | 11         | DL           | 91                | 91114C           | 11             | 90     | Pass      |
+            | 91114C       | FM         | DL           | 89                | 91114C           | FM             | 90     | NotPass   |
+            | 91114C       | FM         | DL           | 90                | 91114C           | FM             | 90     | NotPass   |
+            | 91114C       | FM         | DL           | 91                | 91114C           | FM             | 90     | Pass      |
 
     Scenario Outline: （IC）90天內，不應有 91114C 診療項目
         Given 建立醫師
@@ -66,9 +66,9 @@ Feature: 91114C 特殊牙周暨齲齒控制基本處置
         Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
-            | 91114C       | 11         | DL           | 89              | 91114C         | 11           | 90     | NotPass   |
-            | 91114C       | 11         | DL           | 90              | 91114C         | 11           | 90     | NotPass   |
-            | 91114C       | 11         | DL           | 91              | 91114C         | 11           | 90     | Pass      |
+            | 91114C       | FM         | DL           | 89              | 91114C         | FM           | 90     | NotPass   |
+            | 91114C       | FM         | DL           | 90              | 91114C         | FM           | 90     | NotPass   |
+            | 91114C       | FM         | DL           | 91              | 91114C         | FM           | 90     | Pass      |
 
     Scenario Outline: 檢查治療的牙位是否為 FULL_ZONE
         Given 建立醫師

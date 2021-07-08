@@ -94,7 +94,7 @@ Feature: 91015C 特定牙周保存治療-全口總齒數9-15顆
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91015C       | FM         | MOB          | Pass      |
 
-    Scenario Outline: 提醒檢附牙菌斑控制紀錄表、牙周病檢查紀錄表
+    Scenario Outline: 提醒需檢附牙菌斑控制紀錄表、牙周病檢查紀錄表
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 建立預約
@@ -103,7 +103,7 @@ Feature: 91015C 特定牙周保存治療-全口總齒數9-15顆
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 提醒"檢附牙菌斑控制紀錄表、牙周病檢查紀錄表"，確認結果是否為 <PassOrNot>
+        Then 提醒"需檢附牙菌斑控制紀錄表、牙周病檢查紀錄表"，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91015C       | FM         | MOB          | Pass      |

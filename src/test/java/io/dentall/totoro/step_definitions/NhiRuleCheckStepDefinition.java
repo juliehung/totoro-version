@@ -228,10 +228,13 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         if (nhiTreatments.size() > 0) {
             NhiTreatment violationNhiTreatment = nhiTreatments.stream().min((nt1, nt2) -> nt2.getDatetime().compareTo(nt1.getDatetime())).get();
             String type = findSourceType(violationNhiTreatment);
+            String violationNhiCode = violationNhiTreatment.getCode();
             String date = transformA71ToDisplay(violationNhiTreatment.getDatetime());
             String tooth = multipleToothToDisplay(violationNhiTreatment.getTooth());
 
-            if (msgFormat == D1_3) {
+            if (msgFormat == D1_2) {
+                msgArgs = new Object[]{nhiCode, violationNhiCode, type, date, dayGap, nhiCode};
+            } else if (msgFormat == D1_3) {
                 msgArgs = new Object[]{nhiCode, tooth, nhiCode, type, date};
             } else if (msgFormat == D1_5) {
                 msgArgs = new Object[]{nhiCode, dayGap};

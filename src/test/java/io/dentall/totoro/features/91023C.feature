@@ -21,7 +21,7 @@ Feature: 91023C 牙周病統合治療第三階段支付
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91023C       | 11         | MOB          | Pass      |
 
-    Scenario Outline: 提醒檢附牙菌斑控制紀錄表、牙周病檢查紀錄表
+    Scenario Outline: 提醒需檢附牙菌斑控制紀錄表、牙周病檢查紀錄表
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 在過去第 180 天，建立預約

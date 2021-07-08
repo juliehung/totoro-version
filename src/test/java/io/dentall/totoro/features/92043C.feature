@@ -15,7 +15,7 @@ Feature: 92043C 顳顎關節脫臼整復－ 無固定
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 92043C       | 11         | DL           | Pass      |
 
-    Scenario Outline: 提醒檢附手術紀錄
+    Scenario Outline: 提醒需檢附手術紀錄
         Given 建立醫師
         Given Scott 24 歲病人
         Given 建立預約
@@ -24,7 +24,7 @@ Feature: 92043C 顳顎關節脫臼整復－ 無固定
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 提醒"檢附手術紀錄"，確認結果是否為 <PassOrNot>
+        Then 提醒"需檢附手術紀錄"，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 92043C       | 16         | MOB          | Pass      |
