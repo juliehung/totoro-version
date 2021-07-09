@@ -15,6 +15,28 @@ Feature: 91001C 牙周病緊急處置
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91001C       | 14         | MOB          | Pass      |
 
+    Scenario Outline: （Disposal）每月只能申報2次 91001C 健保代碼
+        Given 建立醫師
+        Given Stan 24 歲病人
+        Given 新增 <Nums> 筆診療處置:
+            | Id | PastDate | A72 | A73            | A74 | A75            | A76 | A77 | A78 | A79 |
+            | 1  | 當月1號     | 3   | <IssueNhiCode> | 21  | <IssueSurface> | 0   | 1.0 | 03  |     |
+            | 2  | 當月10號    | 3   | <IssueNhiCode> | 31  | <IssueSurface> | 0   | 1.0 | 03  |     |
+        Given 在 當月底 ，建立預約
+        Given 在 當月底 ，建立掛號
+        Given 在 當月底 ，產生診療計畫
+        And 新增診療代碼:
+            | PastDate | A72 | A73            | A74          | A75            | A76 | A77 | A78 | A79 |
+            | 當月底      | 3   | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> | 0   | 1.0 | 03  |     |
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode        | Teeth        | Surface        | NewNhiCode | NewTeeth | NewSurface |
+            | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |            |          |            |
+        Then 在 每月 的記錄中，<IssueNhiCode> 診療代碼最多只能 2 次，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | Nums | PassOrNot |
+            | 91001C       | 11         | MOB          | 1    | Pass      |
+            | 91001C       | 11         | MOB          | 2    | NotPass   |
+
     Scenario Outline: （HIS）每月只能申報2次 91001C 健保代碼
         Given 建立醫師
         Given Stan 24 歲病人
