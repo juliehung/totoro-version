@@ -2665,6 +2665,12 @@ public class NhiRuleCheckUtil {
             match.getDisposalId() != null &&
             match.getDisposalId().equals(this.getDisposalIdInDTO(dto))
         ) {
+            matchedSourceType = NhiRuleCheckSourceType.CURRENT_DISPOSAL;
+        } else if (
+            match.getRecordDateTime().isEqual(
+                this.getNhiExtendDisposalDateInDTO(dto)
+            )
+        ) {
             matchedSourceType = NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL;
         }
 
