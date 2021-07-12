@@ -1701,7 +1701,9 @@ public class NhiRuleCheckUtil {
         ) {
             List<String> stringDateList = new ArrayList<>();
 
-            if (currentDisposalMatches.size() > 0) {
+            if (currentDisposalMatches.size() > 0 &&
+                this.isCreatedDisposal(dto)
+            ) {
                 stringDateList.add(
                     DateTimeUtil.transformLocalDateToRocDateForDisplay(
                         this.getNhiExtendDisposalDateInDTO(dto)
@@ -1751,7 +1753,7 @@ public class NhiRuleCheckUtil {
         ) {
             ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
             currentDisposalMatches = ignoreTargetTxSnapshots.stream()
-                .filter(d -> "91004C".contains(d.getNhiCode()))
+                .filter(d -> "91004C".equals(d.getNhiCode()))
                 .collect(Collectors.toList());
         }
 
@@ -1820,7 +1822,9 @@ public class NhiRuleCheckUtil {
                     : this.getSourceDataType(dto, matches.get(0)),
                 "91003C",
                 "91004C",
-                this.getNhiExtendDisposalDateInDTO(dto),
+                currentDisposalMatches != null && currentDisposalMatches.size() > 0
+                    ? this.getNhiExtendDisposalDateInDTO(dto)
+                    : matches.get(0).getRecordDateTime(),
                 String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
                 null,
                 String.join(", ", stringDateList)
@@ -2633,6 +2637,12 @@ public class NhiRuleCheckUtil {
             dto.getNhiExtendDisposal().getDisposal().getId() != null
             ? dto.getNhiExtendDisposal().getDisposal().getId()
             : 0L;
+    }
+
+    private boolean isCreatedDisposal(NhiRuleCheckDTO dto) {
+        return dto.getNhiExtendDisposal() != null &&
+            dto.getNhiExtendDisposal().getDisposal() != null &&
+            dto.getNhiExtendDisposal().getId() != null;
     }
 
     private List<NhiRuleCheckTxSnapshot> getIgnoreTargetTxSnapshots(NhiRuleCheckDTO dto) {
