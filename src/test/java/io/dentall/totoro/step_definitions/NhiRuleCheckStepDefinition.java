@@ -523,6 +523,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
 
     @Then("在 {word} 的記錄中，{word} 診療代碼最多只能 {int} 次，確認結果是否為 {passOrNot}")
     public void checkCodeBeforeDateWithMaxTimes(String period, String issueNhiCode, int times, Boolean passOrNot) throws Exception {
+        boolean presentInSnapshot = nhiRuleCheckTestInfoHolder.getNhiRuleCheckTxSnapshotList().stream().filter(snapshot -> snapshot.getNhiCode().equals(issueNhiCode)).findFirst().isPresent();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
         String dates = findNhiTreatment(issueNhiCode)
             .stream()
@@ -530,6 +531,13 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             .sorted(reverseOrder())
             .map(DateTimeUtil::transformA71ToDisplay)
             .collect(joining(", "));
+
+        if (presentInSnapshot) {
+            String current = DateTimeUtil.transformLocalDateToRocDateForDisplay(disposalTestInfoHolder.getDisposal().getDateTime());
+            if (!dates.contains(current)) {
+                dates = current.concat(", ").concat(dates);
+            }
+        }
 
         String message = formatMsg(!passOrNot).apply(D5_1, new Object[]{issueNhiCode, dates});
         checkResult(resultActions, passOrNot, message);

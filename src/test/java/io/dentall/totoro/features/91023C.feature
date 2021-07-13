@@ -56,7 +56,7 @@ Feature: 91023C 牙周病統合治療第三階段支付
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 180 天內，應有 <TreatmentNhiCode> 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D8_1
+        Then 檢查 180 天內，應有 91021C/91022C 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D8_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             | 91023C       | 11         | MOB          | 178               | 91021C           | 11             | Pass      |
@@ -75,7 +75,7 @@ Feature: 91023C 牙周病統合治療第三階段支付
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 180 天內，應有 <MedicalNhiCode> 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D8_1
+        Then 檢查 180 天內，應有 91021C/91022C 診療項目存在，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D8_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 91023C       | 11         | MOB          | 179             | 91021C         | 11           | Pass      |
