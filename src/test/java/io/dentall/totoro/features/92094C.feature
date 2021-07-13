@@ -29,7 +29,7 @@ Feature: 92094C 週六、日及國定假日牙醫門診急症處置
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 92094C       | 11         | MOB          | Pass      |
 
-    Scenario Outline: （Disposal）同日不得同時有 34001C/34002C/90004C/91001C/92001C/92012C/92043C/92066C/92071C/92093B/92096C 診療項目
+    Scenario Outline: （Disposal）同日不得同時有 34001C/34002C/90004C/91001C/92001C/92012C/92043C/92066C/92071C/92096C 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 建立預約
@@ -53,7 +53,7 @@ Feature: 92094C 週六、日及國定假日牙醫門診急症處置
             | 92094C       | 11         | MOB          | 92071C           | 11             | MOB              | NotPass   |
             | 92094C       | 11         | MOB          | 92096C           | 11             | MOB              | NotPass   |
 
-    Scenario Outline: （HIS-Today）同日不得同時有 34001C/34002C/90004C/91001C/92001C/92012C/92043C/92066C/92071C/92093B/92096C 診療項目
+    Scenario Outline: （HIS-Today）同日不得同時有 34001C/34002C/90004C/91001C/92001C/92012C/92043C/92066C/92071C/92096C 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 在 <PastTreatmentDate> ，建立預約
@@ -80,7 +80,6 @@ Feature: 92094C 週六、日及國定假日牙醫門診急症處置
             | 92094C       | 11         | MOB          | 當日                | 92043C           | 11             | MOB              | NotPass   |
             | 92094C       | 11         | MOB          | 當日                | 92066C           | 11             | MOB              | NotPass   |
             | 92094C       | 11         | MOB          | 當日                | 92071C           | 11             | MOB              | NotPass   |
-            | 92094C       | 11         | MOB          | 當日                | 92093B           | 11             | MOB              | NotPass   |
             | 92094C       | 11         | MOB          | 當日                | 92096C           | 11             | MOB              | NotPass   |
             | 92094C       | 11         | MOB          | 昨日                | 34001C           | 11             | MOB              | Pass      |
             | 92094C       | 11         | MOB          | 昨日                | 34002C           | 11             | MOB              | Pass      |
@@ -93,7 +92,7 @@ Feature: 92094C 週六、日及國定假日牙醫門診急症處置
             | 92094C       | 11         | MOB          | 昨日                | 92071C           | 11             | MOB              | Pass      |
             | 92094C       | 11         | MOB          | 昨日                | 92096C           | 11             | MOB              | Pass      |
 
-    Scenario Outline: （IC）同日不得同時有 34001C/34002C/90004C/91001C/92001C/92012C/92043C/92066C/92071C/92093B/92096C 診療項目
+    Scenario Outline: （IC）同日不得同時有 34001C/34002C/90004C/91001C/92001C/92012C/92043C/92066C/92071C/92096C 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 新增健保醫療:
@@ -117,7 +116,6 @@ Feature: 92094C 週六、日及國定假日牙醫門診急症處置
             | 92094C       | 11         | MOB          | 當日              | 92043C         | 11           | NotPass   |
             | 92094C       | 11         | MOB          | 當日              | 92066C         | 11           | NotPass   |
             | 92094C       | 11         | MOB          | 當日              | 92071C         | 11           | NotPass   |
-            | 92094C       | 11         | MOB          | 當日              | 92093B         | 11           | NotPass   |
             | 92094C       | 11         | MOB          | 當日              | 92096C         | 11           | NotPass   |
             | 92094C       | 11         | MOB          | 昨日              | 34001C         | 11           | Pass      |
             | 92094C       | 11         | MOB          | 昨日              | 34002C         | 11           | Pass      |
