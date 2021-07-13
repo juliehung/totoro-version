@@ -30,7 +30,7 @@ Feature: 91004C 牙結石清除－全口
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 在 180天 的紀錄中，牙位 <IssueTeeth> 在同一象限中，最多只能申報 1 次 <IssueNhiCode> 健保代碼，確認結果是否為 <PassOrNot>
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 180 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             | 91004C       | FM         | MOB          | 179               | 91004C           | FM             | NotPass   |
@@ -65,7 +65,7 @@ Feature: 91004C 牙結石清除－全口
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 在 180天 的紀錄中，牙位 <IssueTeeth> 在同一象限中，最多只能申報 1 次 <IssueNhiCode> 健保代碼，確認結果是否為 <PassOrNot>
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 180 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 91004C       | FM         | MOB          | 179             | 91004C         | FM           | NotPass   |
@@ -244,9 +244,6 @@ Feature: 91004C 牙結石清除－全口
             | 91004C       | FM         | DL           | 89                | 91104C           | UL             | 90     | NotPass   |
             | 91004C       | FM         | DL           | 90                | 91104C           | UL             | 90     | NotPass   |
             | 91004C       | FM         | DL           | 91                | 91104C           | UL             | 90     | Pass      |
-            | 91004C       | FM         | DL           | 89                | 91105C           | UL             | 90     | NotPass   |
-            | 91004C       | FM         | DL           | 90                | 91105C           | UL             | 90     | NotPass   |
-            | 91004C       | FM         | DL           | 91                | 91105C           | UL             | 90     | Pass      |
 
     Scenario Outline: （IC）90天內，不應有 91003C/91005C/91015C~91018C/91103C~91105C 診療項目
         Given 建立醫師
@@ -287,6 +284,3 @@ Feature: 91004C 牙結石清除－全口
             | 91004C       | FM         | DL           | 89              | 91104C         | FM           | 90     | NotPass   |
             | 91004C       | FM         | DL           | 90              | 91104C         | FM           | 90     | NotPass   |
             | 91004C       | FM         | DL           | 91              | 91104C         | FM           | 90     | Pass      |
-            | 91004C       | FM         | DL           | 89              | 91105C         | FM           | 90     | NotPass   |
-            | 91004C       | FM         | DL           | 90              | 91105C         | FM           | 90     | NotPass   |
-            | 91004C       | FM         | DL           | 91              | 91105C         | FM           | 90     | Pass      |

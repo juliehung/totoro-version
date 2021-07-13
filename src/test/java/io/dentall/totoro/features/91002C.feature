@@ -9,6 +9,7 @@ Feature: 91002C 牙周敷料 每次
         Given 產生診療計畫
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | 96001C         | <IssueTeeth> | <IssueSurface> |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
         Then 確認診療代碼 <IssueNhiCode> ，確認結果是否為 <PassOrNot>
         Examples:
@@ -37,6 +38,7 @@ Feature: 91002C 牙周敷料 每次
         Given 產生診療計畫
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | 96001C         | <IssueTeeth> | <IssueSurface> |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
         Then 檢查 <IssueTeeth> 牙位，依 ALL_ZONE 判定是否為核可牙位，確認結果是否為 <PassOrNot>
         Examples:
