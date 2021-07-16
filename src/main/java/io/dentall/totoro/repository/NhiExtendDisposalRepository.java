@@ -733,8 +733,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "    and sum_records.recordDateTime is not null " +
             "    and sum_records.code is not null " +
             "    and sum_records.disposalId not in (:excludeDisposalIds)" +
-            "order by sum_records.recordDateTime desc " +
-            ";"
+            "order by sum_records.recordDateTime desc "
     )
     List<NhiHybridRecord> findNhiHybridRecord(
         @Param("patientId") Long patientId,
@@ -792,8 +791,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "    and sum_records.recordDateTime is not null " +
             "    and sum_records.code is not null " +
             "    and sum_records.disposalId not in (:excludeDisposalIds)" +
-            "order by sum_records.recordDateTime desc " +
-            ";"
+            "order by sum_records.recordDateTime desc "
     )
     List<NhiHybridRecord> findNhiHybridRecord(
         @Param("patientId") Long patientId,
