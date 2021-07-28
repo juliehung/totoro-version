@@ -4,6 +4,12 @@ Feature: 90093C 難症特別處理-根管特別彎曲、根管鈣化，器械斷
     Scenario Outline: 全部檢核成功
         Given 建立醫師
         Given Wind 24 歲病人
+        Given 在過去第 60 天，建立預約
+        Given 在過去第 60 天，建立掛號
+        Given 在過去第 60 天，產生診療計畫
+        And 新增診療代碼:
+            | PastDays | A72 | A73    | A74 | A75 | A76 | A77 | A78 | A79 |
+            | 60       | 3   | 90015C | 11  | MOB | 0   | 1.0 | 03  |     |
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫
@@ -19,6 +25,12 @@ Feature: 90093C 難症特別處理-根管特別彎曲、根管鈣化，器械斷
     Scenario Outline: 提醒須檢附影像
         Given 建立醫師
         Given Wind 24 歲病人
+        Given 在過去第 60 天，建立預約
+        Given 在過去第 60 天，建立掛號
+        Given 在過去第 60 天，產生診療計畫
+        And 新增診療代碼:
+            | PastDays | A72 | A73    | A74 | A75 | A76 | A77 | A78 | A79 |
+            | 60       | 3   | 90015C | 11  | MOB | 0   | 1.0 | 03  |     |
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫

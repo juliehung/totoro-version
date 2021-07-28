@@ -82,7 +82,7 @@ Feature: 91007C 齒齦下括除術(含牙根整平術)-1/2 顎
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91007C       | UR         | MOB          | Pass      |
 
-    Scenario Outline: 檢查治療的牙位是否為 PARTIAL_ZONE
+    Scenario Outline: 檢查治療的牙位是否為 FOUR_PHASE_ZONE
         Given 建立醫師
         Given Stan 24 歲病人
         Given 建立預約
@@ -91,7 +91,7 @@ Feature: 91007C 齒齦下括除術(含牙根整平術)-1/2 顎
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueTeeth> 牙位，依 PARTIAL_ZONE 判定是否為核可牙位，確認結果是否為 <PassOrNot>
+        Then 檢查 <IssueTeeth> 牙位，依 FOUR_PHASE_ZONE 判定是否為核可牙位，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             # 乳牙
@@ -164,11 +164,11 @@ Feature: 91007C 齒齦下括除術(含牙根整平術)-1/2 顎
             | 91007C       | FM         | DL           | NotPass   |
             | 91007C       | UR         | DL           | Pass      |
             | 91007C       | UL         | DL           | Pass      |
-            | 91007C       | UA         | DL           | Pass      |
+            | 91007C       | UA         | DL           | NotPass   |
             | 91007C       | UB         | DL           | NotPass   |
             | 91007C       | LL         | DL           | Pass      |
             | 91007C       | LR         | DL           | Pass      |
-            | 91007C       | LA         | DL           | Pass      |
+            | 91007C       | LA         | DL           | NotPass   |
             | 91007C       | LB         | DL           | NotPass   |
             # 非法牙位
             | 91007C       | 00         | DL           | NotPass   |

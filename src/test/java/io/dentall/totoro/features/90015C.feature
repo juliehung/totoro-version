@@ -29,7 +29,7 @@ Feature: 90015C 根管開擴及清創
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 90015C       | 11         | MOB          | Pass      |
 
-    Scenario Outline: （HIS）60天內，不應有 90015C 診療項目
+    Scenario Outline: （HIS）60天內，同牙位不應有 90015C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -44,14 +44,19 @@ Feature: 90015C 根管開擴及清創
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 病患的牙齒 <TreatmentTeeth> 在 <PastTreatmentDays> 天前，被申報 <TreatmentNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵觸同顆牙齒在 <GapDay> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_3
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
+            # 同牙
             | 90015C       | 11         | DL           | 0                 | 90015C           | 11             | 60     | NotPass   |
             | 90015C       | 11         | DL           | 60                | 90015C           | 11             | 60     | NotPass   |
             | 90015C       | 11         | DL           | 61                | 90015C           | 11             | 60     | Pass      |
+            # 不同牙
+            | 90015C       | 11         | DL           | 0                 | 90015C           | 12             | 60     | Pass      |
+            | 90015C       | 11         | DL           | 60                | 90015C           | 12             | 60     | Pass      |
+            | 90015C       | 11         | DL           | 61                | 90015C           | 12             | 60     | Pass      |
 
-    Scenario Outline: （IC）60天內，不應有 90015C 診療項目
+    Scenario Outline: （IC）60天內，同牙位不應有 90015C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 新增健保醫療:
@@ -63,14 +68,19 @@ Feature: 90015C 根管開擴及清創
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 病患的牙齒 <MedicalTeeth> 在 <PastMedicalDays> 天前，被申報 <MedicalNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵觸同顆牙齒在 <GapDay> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_3
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
+            # 同牙
             | 90015C       | 11         | DL           | 0               | 90015C         | 11           | 60     | NotPass   |
             | 90015C       | 11         | DL           | 60              | 90015C         | 11           | 60     | NotPass   |
             | 90015C       | 11         | DL           | 61              | 90015C         | 11           | 60     | Pass      |
+            # 不同牙
+            | 90015C       | 11         | DL           | 0               | 90015C         | 12           | 60     | Pass      |
+            | 90015C       | 11         | DL           | 60              | 90015C         | 12           | 60     | Pass      |
+            | 90015C       | 11         | DL           | 61              | 90015C         | 12           | 60     | Pass      |
 
-    Scenario Outline: （HIS）60天內，不應有 90005C 診療項目
+    Scenario Outline: （HIS）60天內，同牙位不應有 90005C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -85,14 +95,19 @@ Feature: 90015C 根管開擴及清創
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
+        Then 病患的牙齒 <TreatmentTeeth> 在 <PastTreatmentDays> 天前，被申報 <TreatmentNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵觸同顆牙齒在 <DayRange> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_3
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | DayRange | PassOrNot |
+            # 同牙
             | 90015C       | 11         | DL           | 0                 | 90005C           | 11             | 60     | NotPass   |
             | 90015C       | 11         | DL           | 60                | 90005C           | 11             | 60     | NotPass   |
             | 90015C       | 11         | DL           | 61                | 90005C           | 11             | 60     | Pass      |
+            # 不同牙
+            | 90015C       | 11         | DL           | 0                 | 90005C           | 12             | 60     | Pass      |
+            | 90015C       | 11         | DL           | 60                | 90005C           | 12             | 60     | Pass      |
+            | 90015C       | 11         | DL           | 61                | 90005C           | 12             | 60     | Pass      |
 
-    Scenario Outline: （IC）60天內，不應有 90005C 診療項目
+    Scenario Outline: （IC）60天內，同牙位不應有 90005C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 新增健保醫療:
@@ -104,12 +119,17 @@ Feature: 90015C 根管開擴及清創
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
+        Then 病患的牙齒 <MedicalTeeth> 在 <PastMedicalDays> 天前，被申報 <MedicalNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵觸同顆牙齒在 <DayRange> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_3
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | DayRange | PassOrNot |
+            # 同牙
             | 90015C       | 11         | DL           | 0               | 90005C         | 11           | 60     | NotPass   |
             | 90015C       | 11         | DL           | 60              | 90005C         | 11           | 60     | NotPass   |
             | 90015C       | 11         | DL           | 61              | 90005C         | 11           | 60     | Pass      |
+            # 不同牙
+            | 90015C       | 11         | DL           | 0               | 90005C         | 12           | 60     | Pass      |
+            | 90015C       | 11         | DL           | 60              | 90005C         | 12           | 60     | Pass      |
+            | 90015C       | 11         | DL           | 61              | 90005C         | 12           | 60     | Pass      |
 
     Scenario Outline: 檢查治療的牙位是否為 GENERAL_TOOTH
         Given 建立醫師

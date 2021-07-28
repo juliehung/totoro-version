@@ -15,7 +15,7 @@ Feature: 91006C 齒齦下括除術(含牙根整平術)-全口
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91006C       | FM         | MOB          | Pass      |
 
-    Scenario Outline: （HIS）90天內，不應有 91006C~91008/91015C/91016C/91018C 診療項目
+    Scenario Outline: （HIS）90天內，不應有 91006C~91008/91015C/91016C/91018C/91089C 診療項目
         Given 建立醫師
         Given Stan 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -51,8 +51,11 @@ Feature: 91006C 齒齦下括除術(含牙根整平術)-全口
             | 91006C       | FM         | DL           | 89                | 91018C           | FM             | 90     | NotPass   |
             | 91006C       | FM         | DL           | 90                | 91018C           | FM             | 90     | NotPass   |
             | 91006C       | FM         | DL           | 91                | 91018C           | FM             | 90     | Pass      |
+            | 91006C       | FM         | DL           | 89                | 91089C           | FM             | 90     | NotPass   |
+            | 91006C       | FM         | DL           | 90                | 91089C           | FM             | 90     | NotPass   |
+            | 91006C       | FM         | DL           | 91                | 91089C           | FM             | 90     | Pass      |
 
-    Scenario Outline: （IC）90天內，不應有 91006C~91008/91015C/91016C/91018C 診療項目
+    Scenario Outline: （IC）90天內，不應有 91006C~91008/91015C/91016C/91018C/91089C 診療項目
         Given 建立醫師
         Given Stan 24 歲病人
         Given 新增健保醫療:
@@ -85,6 +88,9 @@ Feature: 91006C 齒齦下括除術(含牙根整平術)-全口
             | 91006C       | FM         | DL           | 89              | 91018C         | FM           | 90     | NotPass   |
             | 91006C       | FM         | DL           | 90              | 91018C         | FM           | 90     | NotPass   |
             | 91006C       | FM         | DL           | 91              | 91018C         | FM           | 90     | Pass      |
+            | 91006C       | FM         | DL           | 89              | 91089C         | FM           | 90     | NotPass   |
+            | 91006C       | FM         | DL           | 90              | 91089C         | FM           | 90     | NotPass   |
+            | 91006C       | FM         | DL           | 91              | 91089C         | FM           | 90     | Pass      |
 
     Scenario Outline: 提醒須檢附影像
         Given 建立醫師

@@ -15,7 +15,7 @@ Feature: 89013C 複合體充填
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 89013C       | 11         | MOB          | Pass      |
 
-    Scenario Outline: （HIS）545天內，不應有 89013C 診療項目
+    Scenario Outline: （HIS）545天內，同牙位不應有 89013C 診療項目
         Given 建立醫師
         Given Wind 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -30,12 +30,21 @@ Feature: 89013C 複合體充填
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 病患的牙齒 <TreatmentTeeth> 在 <PastTreatmentDays> 天前，被申報 <TreatmentNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵觸同顆牙齒在 <DayRange> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_3
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
-            | 89013C       | 11         | DL           | 544               | 89013C           | 11             | 545    | NotPass   |
-            | 89013C       | 11         | DL           | 545               | 89013C           | 11             | 545    | NotPass   |
-            | 89013C       | 11         | DL           | 546               | 89013C           | 11             | 545    | Pass      |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | DayRange | PassOrNot |
+            # 同牙
+            | 89013C       | 11         | DL           | 544               | 89013C           | 11             | 545      | NotPass   |
+            | 89013C       | 11         | DL           | 545               | 89013C           | 11             | 545      | NotPass   |
+            | 89013C       | 11         | DL           | 546               | 89013C           | 11             | 545      | Pass      |
+            # 不同牙
+            | 89013C       | 11         | DL           | 544               | 89013C           | 12             | 545      | Pass      |
+            | 89013C       | 11         | DL           | 545               | 89013C           | 12             | 545      | Pass      |
+            | 89013C       | 11         | DL           | 546               | 89013C           | 12             | 545      | Pass      |
+            # 非同一個診療項目
+            | 89006C       | 11         | DL           | 179               | 01271C           | 11             | 545      | Pass      |
+            | 89006C       | 11         | DL           | 180               | 01271C           | 11             | 545      | Pass      |
+            | 89006C       | 11         | DL           | 181               | 01271C           | 11             | 545      | Pass      |
 
     Scenario Outline: 檢查治療的牙位是否為 PERMANENT_TOOTH
         Given 建立醫師

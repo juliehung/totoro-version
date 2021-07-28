@@ -220,7 +220,7 @@ Feature: 91003C 牙結石清除－局部
             | 91003C       | UR         | MOB          | 12  | Pass      | 不顯示       |
             | 91003C       | UR         | MOB          | 13  | Pass      | 不顯示       |
 
-    Scenario Outline: （HIS）90天內，不應有 91003C/91005C/91015C~91018C/91103C~91105C 診療項目
+    Scenario Outline: （HIS）90天內，不應有 91003C/91005C/91015C~91018C/91089C/91103C~91105C 診療項目
         Given 建立醫師
         Given Stan 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -256,6 +256,9 @@ Feature: 91003C 牙結石清除－局部
             | 91003C       | UR         | DL           | 89                | 91018C           | UL             | 90     | NotPass   |
             | 91003C       | UR         | DL           | 90                | 91018C           | UL             | 90     | NotPass   |
             | 91003C       | UR         | DL           | 91                | 91018C           | UL             | 90     | Pass      |
+            | 91003C       | UR         | DL           | 89                | 91089C           | UL             | 90     | NotPass   |
+            | 91003C       | UR         | DL           | 90                | 91089C           | UL             | 90     | NotPass   |
+            | 91003C       | UR         | DL           | 91                | 91089C           | UL             | 90     | Pass      |
             | 91003C       | UR         | DL           | 89                | 91103C           | UL             | 90     | NotPass   |
             | 91003C       | UR         | DL           | 90                | 91103C           | UL             | 90     | NotPass   |
             | 91003C       | UR         | DL           | 91                | 91103C           | UL             | 90     | Pass      |
@@ -263,7 +266,7 @@ Feature: 91003C 牙結石清除－局部
             | 91003C       | UR         | DL           | 90                | 91104C           | UL             | 90     | NotPass   |
             | 91003C       | UR         | DL           | 91                | 91104C           | UL             | 90     | Pass      |
 
-    Scenario Outline: （IC）90天內，不應有 91003C/91005C/91015C~91018C/91103C~91105C 診療項目
+    Scenario Outline: （IC）90天內，不應有 91003C/91005C/91015C~91018C/91089C/91103C~91105C 診療項目
         Given 建立醫師
         Given Stan 24 歲病人
         Given 新增健保醫療:
@@ -296,6 +299,9 @@ Feature: 91003C 牙結石清除－局部
             | 91003C       | UR         | DL           | 89              | 91018C         | UL           | 90     | NotPass   |
             | 91003C       | UR         | DL           | 90              | 91018C         | UL           | 90     | NotPass   |
             | 91003C       | UR         | DL           | 91              | 91018C         | UL           | 90     | Pass      |
+            | 91003C       | UR         | DL           | 89              | 91089C         | UL           | 90     | NotPass   |
+            | 91003C       | UR         | DL           | 90              | 91089C         | UL           | 90     | NotPass   |
+            | 91003C       | UR         | DL           | 91              | 91089C         | UL           | 90     | Pass      |
             | 91003C       | UR         | DL           | 89              | 91103C         | UL           | 90     | NotPass   |
             | 91003C       | UR         | DL           | 90              | 91103C         | UL           | 90     | NotPass   |
             | 91003C       | UR         | DL           | 91              | 91103C         | UL           | 90     | Pass      |

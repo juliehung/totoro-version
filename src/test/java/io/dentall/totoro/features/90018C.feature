@@ -47,9 +47,14 @@ Feature: 90018C 乳牙多根管治療
         Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
+            # 同牙
             | 90018C       | 51         | DL           | 0                 | 90018C           | 51             | 90     | NotPass   |
             | 90018C       | 51         | DL           | 90                | 90018C           | 51             | 90     | NotPass   |
             | 90018C       | 51         | DL           | 91                | 90018C           | 51             | 90     | Pass      |
+            # 不同牙
+            | 90018C       | 51         | DL           | 0                 | 90018C           | 52             | 90     | Pass      |
+            | 90018C       | 51         | DL           | 90                | 90018C           | 52             | 90     | Pass      |
+            | 90018C       | 51         | DL           | 91                | 90018C           | 52             | 90     | Pass      |
 
     Scenario Outline: （IC）90天內，不應有 90018C 診療項目
         Given 建立醫師
@@ -66,9 +71,14 @@ Feature: 90018C 乳牙多根管治療
         Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
+            # 同牙
             | 90018C       | 51         | DL           | 0               | 90018C         | 51           | 90     | NotPass   |
             | 90018C       | 51         | DL           | 90              | 90018C         | 51           | 90     | NotPass   |
             | 90018C       | 51         | DL           | 91              | 90018C         | 51           | 90     | Pass      |
+            # 不同牙
+            | 90018C       | 51         | DL           | 0               | 90018C         | 52           | 90     | Pass      |
+            | 90018C       | 51         | DL           | 90              | 90018C         | 52           | 90     | Pass      |
+            | 90018C       | 51         | DL           | 91              | 90018C         | 52           | 90     | Pass      |
 
     Scenario Outline: （HIS）同牙未曾申報過 92013C~92015C
         Given 建立醫師

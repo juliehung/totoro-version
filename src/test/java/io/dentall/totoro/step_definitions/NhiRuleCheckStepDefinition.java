@@ -43,6 +43,7 @@ import static io.dentall.totoro.step_definitions.StepDefinitionUtil.*;
 import static io.dentall.totoro.test.TestUtils.parseMonthGap;
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static java.lang.String.join;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.joining;
@@ -93,6 +94,10 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter)
             .build();
+    }
+
+    private BiFunction<NhiRuleCheckFormat, Object[], String> formatMsg() {
+        return formatMsg(true);
     }
 
     private BiFunction<NhiRuleCheckFormat, Object[], String> formatMsg(final boolean showMsg) {
@@ -147,7 +152,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
 
     @ParameterType(value = ".+")
     public List<String> nhiCodeList(String nhiCodes) {
-        return Arrays.asList(nhiCodes.split("/"));
+        return asList(nhiCodes.split("/"));
     }
 
     @DataTableType
@@ -198,8 +203,8 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         nhiRuleCheckBody.setDoctorId(doctor.getId());
 
         String apiPath = "/api/validation";
-        String fullApiPath = apiPath + "/" + code;
-        MockHttpServletRequestBuilder requestBuilder = post(fullApiPath)
+//        String fullApiPath = apiPath + "/" + code;
+        MockHttpServletRequestBuilder requestBuilder = post(apiPath)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsBytes(nhiRuleCheckBody));
 
@@ -240,7 +245,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
                 msgArgs = new Object[]{nhiCode, dayGap};
             }
 
-            message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
+            message = formatMsg().apply(msgFormat, msgArgs);
         }
 
         checkResult(resultActions, passOrNot, message);
@@ -259,7 +264,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void doCheckPatientToothAtCodesBeforePeriod(String pastTeeth, int pastDays, String pastNhiCode, String issueTeeth, String issueNhiCode, int dayRange, Boolean passOrNot, Boolean innerPassOrNot, NhiRuleCheckFormat msgFormat) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        NhiTreatment nhiTreatment = findLastNhiTreatment(pastNhiCode).get();
+        NhiTreatment nhiTreatment = findLastNhiTreatment(pastNhiCode, asList(pastTeeth)).get();
         String type = findSourceType(nhiTreatment);
         String date = transformLocalDateToRocDateForDisplay(pastInstant(pastDays));
         Object[] msgArgs = null;
@@ -272,7 +277,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             msgArgs = new Object[]{nhiCode, pastNhiCode, type, date, dayRange, nhiCode};
         }
 
-        String message = formatMsg(!innerPassOrNot).apply(msgFormat, msgArgs);
+        String message = formatMsg().apply(msgFormat, msgArgs);
         checkResult(resultActions, passOrNot, innerPassOrNot, message);
     }
 
@@ -300,7 +305,24 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             NhiTreatment nhiTreatment = nhiTreatmentOpt.get();
             String type = findSourceType(nhiTreatment);
             String date = transformA71ToDisplay(nhiTreatment.getDatetime());
-            message = formatMsg(!passOrNot).apply(D1_1, new Object[]{nhiCode, treatmentNhiCode, type, date, nhiCode});
+            message = formatMsg().apply(D1_1, new Object[]{nhiCode, treatmentNhiCode, type, date, nhiCode});
+        }
+
+        checkResult(resultActions, passOrNot, message);
+    }
+
+    @Then("任意時間點牙位 {word} 未曾申報過指定代碼 {word}，確認結果是否為 {passOrNot}")
+    public void checkNoTreatment2(String tooth, String treatmentNhiCode, Boolean passOrNot) throws Exception {
+        String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
+        ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
+        Optional<NhiTreatment> nhiTreatmentOpt = findLastNhiTreatment(treatmentNhiCode);
+        String message = null;
+
+        if (nhiTreatmentOpt.isPresent()) {
+            NhiTreatment nhiTreatment = nhiTreatmentOpt.get();
+            String type = findSourceType(nhiTreatment);
+            String date = transformA71ToDisplay(nhiTreatment.getDatetime());
+            message = formatMsg().apply(D1_3, new Object[]{nhiCode, tooth, treatmentNhiCode, type, date});
         }
 
         checkResult(resultActions, passOrNot, message);
@@ -313,7 +335,18 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         NhiTreatment violationNhiTreatment = findLastNhiTreatment("89006C").get();
         String type = findSourceType(violationNhiTreatment);
         String date = transformLocalDateToRocDateForDisplay(pastInstant(_89006CTreatmentDay));
-        String message = formatMsg(!passOrNot).apply(D1_2, new Object[]{nhiCode, "89006C", type, date, "30", nhiCode});
+        String message = formatMsg().apply(D1_2, new Object[]{nhiCode, "89006C", type, date, "30", nhiCode});
+        checkResult(resultActions, passOrNot, message);
+    }
+
+    @Then("89006C 在前 {int} 天建立， {word} 在前 {int} 天建立，治療牙位為 {word} ，確認結果是否為 {passOrNot}")
+    public void checkSpecificRule_1_for89XXXC(int _89006CTreatmentDay, String treatmentNhiCode, int pastTreatmentDays, String tooth, Boolean passOrNot) throws Exception {
+        String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
+        ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
+        NhiTreatment violationNhiTreatment = findLastNhiTreatment("89006C").get();
+        String type = findSourceType(violationNhiTreatment);
+        String date = transformLocalDateToRocDateForDisplay(pastInstant(_89006CTreatmentDay));
+        String message = formatMsg().apply(D1_3, new Object[]{nhiCode, tooth, "89006C", type, date});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -324,7 +357,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         NhiTreatment violationNhiTreatment = findLastNhiTreatment(treatmentNhiCode).get();
         String type = findSourceType(violationNhiTreatment);
         String date = transformA71ToDisplay(violationNhiTreatment.getDatetime());
-        String message = formatMsg(!passOrNot).apply(D1_3, new Object[]{nhiCode, issueTeeth, treatmentNhiCode, type, date});
+        String message = formatMsg().apply(D1_3, new Object[]{nhiCode, issueTeeth, treatmentNhiCode, type, date});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -365,7 +398,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         String nhiCodesStr = join("/", parseNhiCode(nhiCodeList));
-        String message = formatMsg(!passOrNot).apply(W3_1, new Object[]{nhiCode, nhiCodesStr});
+        String message = formatMsg().apply(W3_1, new Object[]{nhiCode, nhiCodesStr});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -379,7 +412,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             NhiTreatment violationNhiTreatment = violationNhiTreatmentOpt.get();
             String type = findSourceType(violationNhiTreatment);
             String date = transformA71ToDisplay(violationNhiTreatment.getDatetime());
-            message = formatMsg(!passOrNot).apply(D4_1, new Object[]{issueNhiCode, type, date});
+            message = formatMsg().apply(D4_1, new Object[]{issueNhiCode, type, date});
         }
 
         checkResult(resultActions, passOrNot, message);
@@ -406,7 +439,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             msgArgs = new Object[]{issueNhiCode};
         }
 
-        String message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
+        String message = formatMsg().apply(msgFormat, msgArgs);
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -423,7 +456,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             msgArgs = new Object[]{nhiCode, treatmentNhiCode, type, pastTreatmentDate};
         }
 
-        String message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
+        String message = formatMsg().apply(msgFormat, msgArgs);
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -440,7 +473,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             msgArgs = new Object[]{nhiCode, treatmentNhiCode, type, pastTreatmentDate};
         }
 
-        String message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
+        String message = formatMsg().apply(msgFormat, msgArgs);
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -456,7 +489,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkLessThanAge6(String issueNhiCode, Boolean passOrNot) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String message = formatMsg(!passOrNot).apply(D3_1, new Object[]{nhiCode, "未滿六歲"});
+        String message = formatMsg().apply(D3_1, new Object[]{nhiCode, "未滿六歲"});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -464,7 +497,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkLessThanAge12(String issueNhiCode, Boolean passOrNot) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String message = formatMsg(!passOrNot).apply(D3_1, new Object[]{nhiCode, "未滿十二歲"});
+        String message = formatMsg().apply(D3_1, new Object[]{nhiCode, "未滿十二歲"});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -472,7 +505,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkLessThanAge30(String issueNhiCode, Boolean passOrNot) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String message = formatMsg(!passOrNot).apply(D3_1, new Object[]{nhiCode, "年滿三十歲"});
+        String message = formatMsg().apply(D3_1, new Object[]{nhiCode, "年滿三十歲"});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -480,7 +513,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkLessThanAge30AndGreatThanAge17(String issueNhiCode, Boolean passOrNot) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String message = formatMsg(!passOrNot).apply(D3_1, new Object[]{nhiCode, "年滿十八歲且未滿三十歲"});
+        String message = formatMsg().apply(D3_1, new Object[]{nhiCode, "年滿十八歲且未滿三十歲"});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -498,7 +531,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         String type = findSourceType(violationNhiTreatment);
         ToothPhase toothPhase = markAsPhase(singletonList(violationNhiTreatment.getTooth())).get(0);
         String issueDate = transformA71ToDisplay(violationNhiTreatment.getDatetime());
-        String message = formatMsg(!passOrNot).apply(D4_2, new Object[]{issueNhiCode, type, issueDate, toothPhase.getNameOfPhase()});
+        String message = formatMsg().apply(D4_2, new Object[]{issueNhiCode, type, issueDate, toothPhase.getNameOfPhase()});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -517,7 +550,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             msgArgs = new Object[]{issueNhiCode, treatmentNhiCode, type, pastTreatmentDate, parseMonthGap(gapMonth), issueNhiCode};
         }
 
-        String message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
+        String message = formatMsg().apply(msgFormat, msgArgs);
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -525,7 +558,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkCodeBeforeDateWithMaxTimes(String period, String issueNhiCode, int times, Boolean passOrNot) throws Exception {
         boolean presentInSnapshot = nhiRuleCheckTestInfoHolder.getNhiRuleCheckTxSnapshotList().stream().filter(snapshot -> snapshot.getNhiCode().equals(issueNhiCode)).findFirst().isPresent();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String dates = findNhiTreatment(issueNhiCode)
+        String dates = findSpecificNhiTreatment(asList(issueNhiCode))
             .stream()
             .map(NhiTreatment::getDatetime)
             .sorted(reverseOrder())
@@ -539,7 +572,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             }
         }
 
-        String message = formatMsg(!passOrNot).apply(D5_1, new Object[]{issueNhiCode, dates});
+        String message = formatMsg().apply(D5_1, new Object[]{issueNhiCode, dates});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -549,7 +582,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         NhiTreatment violationNhiTreatment = findLastNhiTreatment(treatmentNhiCode).get();
         String type = findSourceType(violationNhiTreatment);
         String date = transformA71ToDisplay(violationNhiTreatment.getDatetime());
-        String message = formatMsg(!passOrNot).apply(D1_2_3, new Object[]{issueNhiCode, treatmentNhiCode, type, date, period, issueNhiCode});
+        String message = formatMsg().apply(D1_2_3, new Object[]{issueNhiCode, treatmentNhiCode, type, date, period, issueNhiCode});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -557,7 +590,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkTreatmentDependOnCode(List<String> treatmentNhiCodes, Boolean passOrNot) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String message = formatMsg(!passOrNot).apply(D8_2, new Object[]{nhiCode, join("/", treatmentNhiCodes)});
+        String message = formatMsg().apply(D8_2, new Object[]{nhiCode, join("/", treatmentNhiCodes)});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -565,7 +598,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkTreatmentDependOnCodeInDuration(Integer dayRange, String treatmentNhiCode, Boolean passOrNot) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String message = formatMsg(!passOrNot).apply(D8_1, new Object[]{nhiCode, dayRange, treatmentNhiCode});
+        String message = formatMsg().apply(D8_1, new Object[]{nhiCode, dayRange, treatmentNhiCode});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -581,7 +614,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             msgArgs = new Object[]{nhiCode, dayRange, treatmentNhiCode};
         }
 
-        String message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
+        String message = formatMsg().apply(msgFormat, msgArgs);
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -589,7 +622,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkNoTreatmentOnCodeToday(List<String> forbiddenNhiCodes, Boolean passOrNot) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
         String issueNhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
-        String message = formatMsg(!passOrNot).apply(D6_1, new Object[]{issueNhiCode, join("/", forbiddenNhiCodes)});
+        String message = formatMsg().apply(D6_1, new Object[]{issueNhiCode, join("/", forbiddenNhiCodes)});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -597,14 +630,14 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     public void checkTreatmentDependOnCodeToday(List<String> dependNhiCodes, Boolean passOrNot) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
         String issueNhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
-        String message = formatMsg(!passOrNot).apply(W3_1, new Object[]{issueNhiCode, join("/", parseNhiCode(dependNhiCodes))});
+        String message = formatMsg().apply(W3_1, new Object[]{issueNhiCode, join("/", parseNhiCode(dependNhiCodes))});
         checkResult(resultActions, passOrNot, message);
     }
 
     @Then("{word} 不得單獨申報，確認結果是否為 {passOrNot}")
     public void checkAnyOtherTreatment(String issueNhiCode, Boolean passOrNot) throws Exception {
         ResultActions resultActions = nhiRuleCheckTestInfoHolder.getResultActions();
-        String message = formatMsg(!passOrNot).apply(W5_1, new Object[]{issueNhiCode});
+        String message = formatMsg().apply(W5_1, new Object[]{issueNhiCode});
         checkResult(resultActions, passOrNot, message);
     }
 
@@ -626,7 +659,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
                 msgArgs = new Object[]{issueNhiCode, type, date};
             }
 
-            message = formatMsg(!passOrNot).apply(msgFormat, msgArgs);
+            message = formatMsg().apply(msgFormat, msgArgs);
         }
 
         checkResult(resultActions, passOrNot, message);
@@ -642,7 +675,7 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             NhiTreatment violationNhiTreatment = violationNhiTreatmentOpt.get();
             String type = findSourceType(violationNhiTreatment);
             String date = transformA71ToDisplay(violationNhiTreatment.getDatetime());
-            message = formatMsg(!passOrNot).apply(D2_3, new Object[]{issueNhiCode, type, date});
+            message = formatMsg().apply(D2_3, new Object[]{issueNhiCode, type, date});
         }
 
         checkResult(resultActions, passOrNot, message);
@@ -707,23 +740,28 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             .collect(Collectors.toList());
     }
 
-    private List<NhiTreatment> nhiSnapshotToNhiTreatmentExcludeValidationNhiCode() {
+    private List<NhiTreatment> nhiSnapshotToNhiTreatmentExcludeValidationNhiCode(List<String> teeth) {
         String validationNhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();
         List<NhiTreatment> snapshot = nhiSnapshotToNhiTreatment();
         Iterator<NhiTreatment> itor = snapshot.iterator();
         while (itor.hasNext()) {
             NhiTreatment nt = itor.next();
             if (nt.getCode().equals(validationNhiCode)) {
-                // 要把Snapshot上受檢代碼的資料先移除，但有可能多筆，所以先暫時移除第一筆
-                itor.remove();
-                break;
+                if (teeth.size() == 0 || teeth.stream().anyMatch(tooth -> nt.getTooth().contains(tooth))) {
+                    itor.remove();
+                    break;
+                }
             }
         }
         return snapshot;
     }
 
     private List<NhiTreatment> findNhiTreatment() {
-        List<NhiTreatment> snapshot = nhiSnapshotToNhiTreatmentExcludeValidationNhiCode().stream()
+        return findNhiTreatment(new ArrayList<>(0));
+    }
+
+    private List<NhiTreatment> findNhiTreatment(List<String> teeth) {
+        List<NhiTreatment> snapshot = nhiSnapshotToNhiTreatmentExcludeValidationNhiCode(teeth).stream()
             .filter(nt -> nt.getNhiExtendTreatmentProcedureId() == null)
             .collect(Collectors.toList());
 
@@ -736,18 +774,23 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         return snapshot;
     }
 
-    private List<NhiTreatment> findNhiTreatment(String nhiCodes) {
-        return findNhiTreatment(Arrays.asList(nhiCodes));
+    private List<NhiTreatment> findSpecificNhiTreatment(List<String> nhiCodes) {
+        return findSpecificNhiTreatment(nhiCodes, new ArrayList<>(0));
     }
 
-    private List<NhiTreatment> findNhiTreatment(List<String> nhiCodes) {
-        return findNhiTreatment().stream()
+    private List<NhiTreatment> findSpecificNhiTreatment(List<String> nhiCodes, List<String> teeth) {
+        return findNhiTreatment(teeth).stream()
             .filter(nt -> nhiCodes.contains(nt.getCode()))
+            .filter(nt -> teeth.size() == 0 || teeth.stream().anyMatch(tooth -> nt.getTooth().contains(tooth)))
             .collect(Collectors.toList());
     }
 
     private Optional<NhiTreatment> findLastNhiTreatment(String nhiCode) {
-        List<NhiTreatment> violations = findNhiTreatment(nhiCode);
+        return findLastNhiTreatment(nhiCode, new ArrayList<>(0));
+    }
+
+    private Optional<NhiTreatment> findLastNhiTreatment(String nhiCode, List<String> teeth) {
+        List<NhiTreatment> violations = findSpecificNhiTreatment(asList(nhiCode), teeth);
         return violations.stream().min((nt1, nt2) -> nt2.getDatetime().compareTo(nt1.getDatetime()));
     }
 

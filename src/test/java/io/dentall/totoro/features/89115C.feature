@@ -115,7 +115,7 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
             | 89115C       | 14         | MOB          | 30              | 90019C         | 30                    | NotPass   |
             | 89115C       | 14         | MOB          | 30              | 90020C         | 30                    | NotPass   |
 
-    Scenario Outline: 檢查治療的牙位是否為 BACK_TOOTH_EXCLUDE_WISDOM_TOOTH
+    Scenario Outline: 檢查治療的牙位是否為 BACK_TOOTH
         Given 建立醫師
         Given Wind 24 歲病人
         Given 建立預約
@@ -124,7 +124,7 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueTeeth> 牙位，依 BACK_TOOTH_EXCLUDE_WISDOM_TOOTH 判定是否為核可牙位，確認結果是否為 <PassOrNot>
+        Then 檢查 <IssueTeeth> 牙位，依 BACK_TOOTH 判定是否為核可牙位，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             # 乳牙
@@ -156,7 +156,7 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
             | 89115C       | 15         | DL           | Pass      |
             | 89115C       | 16         | DL           | Pass      |
             | 89115C       | 17         | DL           | Pass      |
-            | 89115C       | 18         | DL           | NotPass   |
+            | 89115C       | 18         | DL           | Pass      |
             | 89115C       | 21         | DL           | NotPass   |
             | 89115C       | 22         | DL           | NotPass   |
             | 89115C       | 23         | DL           | NotPass   |
@@ -164,7 +164,7 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
             | 89115C       | 25         | DL           | Pass      |
             | 89115C       | 26         | DL           | Pass      |
             | 89115C       | 27         | DL           | Pass      |
-            | 89115C       | 28         | DL           | NotPass   |
+            | 89115C       | 28         | DL           | Pass      |
             | 89115C       | 31         | DL           | NotPass   |
             | 89115C       | 32         | DL           | NotPass   |
             | 89115C       | 33         | DL           | NotPass   |
@@ -172,7 +172,7 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
             | 89115C       | 35         | DL           | Pass      |
             | 89115C       | 36         | DL           | Pass      |
             | 89115C       | 37         | DL           | Pass      |
-            | 89115C       | 38         | DL           | NotPass   |
+            | 89115C       | 38         | DL           | Pass      |
             | 89115C       | 41         | DL           | NotPass   |
             | 89115C       | 42         | DL           | NotPass   |
             | 89115C       | 43         | DL           | NotPass   |
@@ -180,7 +180,7 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
             | 89115C       | 45         | DL           | Pass      |
             | 89115C       | 46         | DL           | Pass      |
             | 89115C       | 47         | DL           | Pass      |
-            | 89115C       | 48         | DL           | NotPass   |
+            | 89115C       | 48         | DL           | Pass      |
             # 無牙
             | 89115C       |            | DL           | NotPass   |
             #
