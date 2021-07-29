@@ -344,4 +344,25 @@ public final class DateTimeUtil {
     public static Instant pastInstant(int pastDays) {
         return Instant.now().minus(pastDays, ChronoUnit.DAYS);
     }
+
+    public static LocalDate beginOfMonth(LocalDate date) {
+        return Instant.now()
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .with(LocalTime.MIN)
+            .withYear(date.getYear())
+            .withMonth(date.getMonthValue())
+            .withDayOfMonth(1)
+            .toLocalDate();
+    }
+
+    public static LocalDate endOfMonth(LocalDate date) {
+        return Instant.now()
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .with(LocalTime.MAX)
+            .withYear(date.getYear())
+            .withMonth(date.getMonthValue())
+            .withDayOfMonth(date.lengthOfMonth())
+            .toLocalDate();
+    }
+
 }

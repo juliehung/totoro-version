@@ -3,6 +3,7 @@ package io.dentall.totoro.repository;
 import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository;
 import io.dentall.totoro.business.vm.nhi.NhiMetricBaseVM;
 import io.dentall.totoro.business.service.nhi.NhiHybridRecord;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.CalculateBaseData;
@@ -797,6 +798,54 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
     )
     List<NhiHybridRecord> findNhiHybridRecord(
         @Param("patientId") Long patientId,
+        @Param("excludeDisposalIds") List<Long> excludeDisposalIds
+    );
+
+    @Query(
+        nativeQuery = true,
+        value = "select" +
+            " p.id as patientId," +
+            " p.birth as patientBirth," +
+            " d.id as disposalId, " +
+            " ned.jhi_date as disposalDate," +
+            " ned.a18 as cardNumber," +
+            " ned.a19 as cardReplenishment," +
+            " ned.a23 as nhiCategory," +
+            " ned.a32 as partialBurden," +
+            " ned.replenishment_date as cardReplenishmentDisposalDate," +
+            " ned.examination_code as examCode," +
+            " ned.examination_point as examPoint," +
+            " ned.patient_identity as patientIdentity," +
+            " ned.serial_number as serialNumber," +
+            " tp.total as treatmentProcedureTotal," +
+            " np.specific_code as treatmentProcedureSpecificCode," +
+            " netp.a73 as treatmentProcedureCode," +
+            " netp.a74 as treatmentProcedureTooth," +
+            " netp.a75 as treatmentProcedureSurface, " +
+            " eu.user_id as doctorId, " +
+            " ju.first_name as doctorName " +
+            "from disposal d " +
+            "left join registration r on r.id = d.registration_id " +
+            "left join appointment a on r.id = a.registration_id " +
+            "left join patient p on p.id = a.patient_id " +
+            "left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "left join nhi_procedure np on np.id = tp.nhi_procedure_id " +
+            "left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "left join extend_user eu on ned.a15 = eu.national_id " +
+            "left join jhi_user ju on eu.user_id = ju.id " +
+            "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
+            "   and d.id not in :excludeDisposalIds " +
+            "   and tp.nhi_procedure_id is not null " +
+            "   and trim(ned.a18) <> '' " +
+            "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
+            "   and d.id not in :excludeDisposalIds " +
+            "   and tp.nhi_procedure_id is not null " +
+            "   and trim(ned.a18) <> '' "
+    )
+    List<NhiMetricRawVM> findMetricRaw(
+        @Param("begin") Instant begin,
+        @Param("end") Instant end,
         @Param("excludeDisposalIds") List<Long> excludeDisposalIds
     );
 }
