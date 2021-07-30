@@ -22,9 +22,9 @@ public class Collector {
     }
 
     public Collector apply(Filter filter) {
-        if (!isSourceExist(filter.filterKey().output())) {
-            List<NhiMetricRawVM> filtered = filter.doFilter(retrieveSource(filter.filterKey().input()));
-            cacheSource(filter.filterKey().output(), filtered);
+        if (!isSourceExist(filter.outputKey())) {
+            List<NhiMetricRawVM> filtered = filter.doFilter(retrieveSource(filter.inputKey()));
+            cacheSource(filter.outputKey(), filtered);
         }
 
         return this;

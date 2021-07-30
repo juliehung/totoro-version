@@ -4,13 +4,15 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static io.dentall.totoro.business.service.nhi.metric.filter.FilterKey.MonthSelected;
 import static io.dentall.totoro.service.util.DateTimeUtil.beginOfMonth;
 import static io.dentall.totoro.service.util.DateTimeUtil.endOfMonth;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * date-15 月(自選案件)
+ */
 public class MonthSelectedFilter implements Filter {
 
     private final LocalDate begin;
@@ -33,7 +35,12 @@ public class MonthSelectedFilter implements Filter {
     }
 
     @Override
-    public FilterKey filterKey() {
-        return MonthSelected;
+    public String inputKey() {
+        return MonthSelected.input();
+    }
+
+    @Override
+    public String outputKey() {
+        return MonthSelected.output();
     }
 }

@@ -9,7 +9,8 @@ public enum MetaType {
 
     HighestExam1Patient, HighestExam2Patient, HighestExam3Patient, HighestExam4Patient,
     HighestPoint1ByPatient, HighestPoint3ByPatient,
-    CourseCase
+    CourseCase,
+    EndoTreatment, Endo90015CTreatment, EndoTreatmentByTooth, EndoReTreatmentByTooth
 }
 
 

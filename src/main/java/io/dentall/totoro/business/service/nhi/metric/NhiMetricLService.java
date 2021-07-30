@@ -11,6 +11,7 @@ import io.dentall.totoro.service.util.DateTimeUtil.BeginEnd;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.String;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -53,13 +54,25 @@ public class NhiMetricLService {
 
         List<MetricLVM> metricLVMList = doctors.parallelStream()
             .map(doctor -> {
-                DoctorFilter doctorFilter = new DoctorFilter(doctor.getId());
+                Filter doctorFilter = new DoctorFilter(doctor.getId());
                 Filter monthSelectedFilter = new MonthSelectedFilter(baseDate);
                 Filter quarterFilter = new QuarterFilter(quarterRange);
+                Filter threeMonthNearFilter = new ThreeMonthNearFilter(baseDate);
+                Filter oneYearNearFilter = new OneYearNearFilter(baseDate);
+                Filter halfYearNearFilter = new HalfYearNearFilter(baseDate);
 
-                Collector collector = new Collector(nhiMetricRawVMList).apply(doctorFilter).apply(monthSelectedFilter).apply(quarterFilter);
-                String monthSelectedSourceName = monthSelectedFilter.filterKey().output();
-                String quarterSourceName = quarterFilter.filterKey().output();
+                Collector collector = new Collector(nhiMetricRawVMList)
+                    .apply(doctorFilter)
+                    .apply(monthSelectedFilter)
+                    .apply(quarterFilter)
+                    .apply(threeMonthNearFilter)
+                    .apply(oneYearNearFilter)
+                    .apply(halfYearNearFilter);
+                String monthSelectedSourceName = monthSelectedFilter.outputKey();
+                String quarterSourceName = quarterFilter.outputKey();
+                String threeMonthNearSourceName = threeMonthNearFilter.outputKey();
+                String oneYearNearSourceName = oneYearNearFilter.outputKey();
+                String halfYearNearSourceName = halfYearNearFilter.outputKey();
 
                 BigDecimal metricL1 = new L1Formula(monthSelectedSourceName).calculate(collector);
                 BigDecimal metricL2 = new L2Formula(monthSelectedSourceName).calculate(collector);
@@ -79,6 +92,11 @@ public class NhiMetricLService {
                 BigDecimal metricL17 = new L17Formula(monthSelectedSourceName).calculate(collector);
                 BigDecimal metricL18 = new L18Formula(quarterSourceName).calculate(collector);
                 BigDecimal metricL19 = new L19Formula(quarterSourceName).calculate(collector);
+                BigDecimal metricL20 = new L20Formula(monthSelectedSourceName).calculate(collector);
+                BigDecimal metricL21 = new L21Formula(threeMonthNearSourceName).calculate(collector);
+                BigDecimal metricL22 = new L22Formula(quarterSourceName).calculate(collector);
+                BigDecimal metricL23 = new L23Formula(oneYearNearSourceName).calculate(collector);
+                BigDecimal metricL24 = new L24Formula(halfYearNearSourceName).calculate(collector);
 
                 Section5 section5 = new Section5();
                 section5.setL1(metricL1);
@@ -108,6 +126,15 @@ public class NhiMetricLService {
                 section10.setL18(metricL18);
                 section10.setL19(metricL19);
 
+                Section12 section12 = new Section12();
+                section12.setL20(metricL20);
+                section12.setL21(metricL21);
+                section12.setL22(metricL22);
+                section12.setL23(metricL23);
+
+                Section13 section13 = new Section13();
+                section13.setL24(metricL24);
+
                 MetricLVM metricLVM = new MetricLVM();
                 metricLVM.setDoctor(doctor);
                 metricLVM.setSection5(section5);
@@ -115,6 +142,8 @@ public class NhiMetricLService {
                 metricLVM.setSection7(section7);
                 metricLVM.setSection8(section8);
                 metricLVM.setSection10(section10);
+                metricLVM.setSection12(section12);
+                metricLVM.setSection13(section13);
 
                 return metricLVM;
             }).collect(toList());

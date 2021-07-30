@@ -31,7 +31,7 @@ public class HighestExam1ByPatient extends Exam1 {
             .filter(vm -> codes.contains(vm.getExamCode()))
             .collect(groupingBy(NhiMetricRawVM::getPatientId, groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId)))))
             .entrySet().stream()
-            .reduce(new HashMap<Long, Long>(), (map, entry) -> {
+            .reduce(new HashMap<>(), (map, entry) -> {
                 long patientId = entry.getKey();
 
                 map.compute(patientId, (key, point) -> {

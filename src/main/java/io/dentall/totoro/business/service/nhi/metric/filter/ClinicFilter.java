@@ -12,7 +12,12 @@ public class ClinicFilter extends SubjectFilter {
     }
 
     @Override
-    public FilterKey filterKey() {
-        return this.filterKey;
+    public String inputKey() {
+        return this.filterKey.input();
+    }
+
+    @Override
+    public String outputKey() {
+        return this.filterKey.output();
     }
 }

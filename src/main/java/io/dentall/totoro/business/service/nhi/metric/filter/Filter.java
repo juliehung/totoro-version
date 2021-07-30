@@ -8,6 +8,8 @@ public interface Filter {
 
     List<NhiMetricRawVM> doFilter(List<NhiMetricRawVM> nhiMetricRawVMList);
 
-    FilterKey filterKey();
+    String inputKey();
+
+    String outputKey();
 
 }

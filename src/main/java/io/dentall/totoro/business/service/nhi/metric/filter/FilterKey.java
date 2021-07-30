@@ -4,15 +4,21 @@ public enum FilterKey {
 
     Subject(FilterKey.initial, FilterKey.subject),
     MonthSelected(Subject.output, FilterKey.monthSelected),
-    Quarter(Subject.output, FilterKey.quarter);
+    Quarter(Subject.output, FilterKey.quarter),
+    ThreeMonthNear(Subject.output, FilterKey.threeMonthNear),
+    OneYearNear(Subject.output, FilterKey.oneYearNear),
+    HalfYearNear(Subject.output, FilterKey.halfYearNear);
 
     private static final String initial = "initial";
     private static final String subject = "subject";
     private static final String monthSelected = "monthSelected";
     private static final String quarter = "quarter";
+    private static final String threeMonthNear = "threeMonthNear";
+    private static final String oneYearNear= "oneYearNear";
+    private static final String halfYearNear= "halfYearNear";
 
-    private String input;
-    private String output;
+    private final String input;
+    private final String output;
 
     FilterKey(String input, String output) {
         this.input = input;

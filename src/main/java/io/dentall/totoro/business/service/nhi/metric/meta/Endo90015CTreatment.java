@@ -1,0 +1,31 @@
+package io.dentall.totoro.business.service.nhi.metric.meta;
+
+import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
+
+import java.util.List;
+
+import static java.util.Arrays.asList;
+
+public class Endo90015CTreatment extends AbstractCalculator {
+
+    private static final List<String> codes = asList("90015C");
+
+    public Endo90015CTreatment(String sourceName) {
+        super(sourceName);
+    }
+
+    @Override
+    public Long doCalculate(Collector collector) {
+        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
+
+        return nhiMetricRawVMList.stream()
+            .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
+            .count();
+    }
+
+    @Override
+    public MetaType metaType() {
+        return MetaType.Endo90015CTreatment;
+    }
+}
