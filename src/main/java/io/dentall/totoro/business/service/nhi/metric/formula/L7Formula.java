@@ -12,7 +12,7 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.di
 /**
  * 申報件數 ＠date-15＠ 的 @IC-3@
  */
-public class L7Formula implements Formula {
+public class L7Formula extends AbstractFormula {
 
     private final String sourceName;
 
@@ -21,9 +21,8 @@ public class L7Formula implements Formula {
     }
 
     @Override
-    public BigDecimal calculate(Collector collector) {
-        Ic3 ic3 = new Ic3(sourceName);
-        collector.apply(ic3);
+    public BigDecimal doCalculate() {
+        Ic3 ic3 = apply(new Ic3(sourceName));
         return new BigDecimal(ic3.getResult());
     }
 }

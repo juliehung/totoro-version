@@ -365,4 +365,8 @@ public final class DateTimeUtil {
             .toLocalDate();
     }
 
+    public static LocalDate toLocalDate(Instant instant) {
+       return instant.atOffset(TimeConfig.ZONE_OFF_SET).toLocalDate();
+    }
+
 }

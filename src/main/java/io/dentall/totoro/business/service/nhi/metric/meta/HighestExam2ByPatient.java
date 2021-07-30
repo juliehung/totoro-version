@@ -1,26 +1,27 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
-import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
-import io.dentall.totoro.web.rest.vm.NhiIndexEndoVM;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import static io.dentall.totoro.business.service.nhi.util.ToothUtil.getToothCount;
 import static java.lang.Long.valueOf;
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.naturalOrder;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.maxBy;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
- * 一般牙科門診診察費(不含Xray)
+ * 一般牙科門診診察費(Xray)  病患點數(最高者)
  */
-public class Exam1ByPatient extends Exam1 {
+public class HighestExam2ByPatient extends Exam2 {
 
-    public Exam1ByPatient(String sourceName) {
+    public HighestExam2ByPatient(String sourceName) {
         super(sourceName);
     }
 
@@ -53,14 +54,12 @@ public class Exam1ByPatient extends Exam1 {
                 return accMap;
             });
 
-        return null;
-
-
+        return examPointByPatient.values().stream().max(naturalOrder()).orElse(0L);
     }
 
     @Override
     public MetaType metaType() {
-        return MetaType.Exam1Patient;
+        return MetaType.HighestExam2Patient;
     }
 
 }

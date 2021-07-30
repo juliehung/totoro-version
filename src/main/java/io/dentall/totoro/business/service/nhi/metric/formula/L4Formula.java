@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * 申請點數 ＠date-15＠ 的 @Point-2@
  */
-public class L4Formula implements Formula {
+public class L4Formula extends AbstractFormula {
 
     private final String sourceName;
 
@@ -18,9 +18,8 @@ public class L4Formula implements Formula {
     }
 
     @Override
-    public BigDecimal calculate(Collector collector) {
-        Point2 point2 = new Point2(sourceName);
-        collector.apply(point2);
+    public BigDecimal doCalculate() {
+        Point2 point2 = apply(new Point2(sourceName));
         return new BigDecimal(point2.getResult());
     }
 }

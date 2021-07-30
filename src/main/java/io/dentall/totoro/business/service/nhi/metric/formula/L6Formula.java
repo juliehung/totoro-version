@@ -13,7 +13,7 @@ import static java.math.BigDecimal.ZERO;
 /**
  * 平均每位醫療耗用值 @date-15@ 的 @Point-2@/@PT-1@
  */
-public class L6Formula implements Formula {
+public class L6Formula extends AbstractFormula {
 
     private final String sourceName;
 
@@ -22,10 +22,9 @@ public class L6Formula implements Formula {
     }
 
     @Override
-    public BigDecimal calculate(Collector collector) {
-        Point2 point2 = new Point2(sourceName);
-        Pt1 pt1 = new Pt1(sourceName);
-        collector.apply(point2).apply(pt1);
+    public BigDecimal doCalculate() {
+        Point2 point2 = apply(new Point2(sourceName));
+        Pt1 pt1 = apply(new Pt1(sourceName));
         try {
             return divide(point2.getResult(), pt1.getResult());
         } catch (ArithmeticException e) {

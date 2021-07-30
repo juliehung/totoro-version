@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 /**
  * 診療費點數 ＠date-15＠ 的 @Point-3@
  */
-public class L3Formula implements Formula {
+public class L3Formula extends AbstractFormula {
 
     private final String sourceName;
 
@@ -17,9 +17,8 @@ public class L3Formula implements Formula {
     }
 
     @Override
-    public BigDecimal calculate(Collector collector) {
-        Point3 point3 = new Point3(sourceName);
-        collector.apply(point3);
+    public BigDecimal doCalculate() {
+        Point3 point3 = apply(new Point3(sourceName));
         return new BigDecimal(point3.getResult());
     }
 }

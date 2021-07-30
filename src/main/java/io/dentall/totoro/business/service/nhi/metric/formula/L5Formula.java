@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * 看診人數 ＠date-15＠ 的 @PT-1@
  */
-public class L5Formula implements Formula {
+public class L5Formula extends AbstractFormula {
 
     private final String sourceName;
 
@@ -18,9 +18,8 @@ public class L5Formula implements Formula {
     }
 
     @Override
-    public BigDecimal calculate(Collector collector) {
-        Pt1 pt1 = new Pt1(sourceName);
-        collector.apply(pt1);
+    public BigDecimal doCalculate() {
+        Pt1 pt1 = apply(new Pt1(sourceName));
         return new BigDecimal(pt1.getResult());
     }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -29,7 +30,7 @@ public class Ic3 extends AbstractCalculator {
         return (long) nhiMetricRawVMList.stream()
             .filter(vm -> vm.getDisposalDate() != null && isNotBlank(vm.getCardNumber()))
             .map(vm -> vm.getDisposalDate() + vm.getCardNumber())
-            .collect(Collectors.groupingBy(key -> key))
+            .collect(groupingBy(key -> key))
             .keySet().size();
     }
 

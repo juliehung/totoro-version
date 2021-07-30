@@ -3,11 +3,13 @@ package io.dentall.totoro.business.service.nhi.metric.filter;
 public enum FilterKey {
 
     Subject(FilterKey.initial, FilterKey.subject),
-    MonthSelected(Subject.output, FilterKey.monthSelected);
+    MonthSelected(Subject.output, FilterKey.monthSelected),
+    Quarter(Subject.output, FilterKey.quarter);
 
     private static final String initial = "initial";
     private static final String subject = "subject";
     private static final String monthSelected = "monthSelected";
+    private static final String quarter = "quarter";
 
     private String input;
     private String output;
