@@ -54,49 +54,45 @@ public class NhiMetricLService {
 
         List<MetricLVM> metricLVMList = doctors.parallelStream()
             .map(doctor -> {
-                Filter doctorFilter = new DoctorFilter(doctor.getId());
-                Filter monthSelectedFilter = new MonthSelectedFilter(baseDate);
-                Filter quarterFilter = new QuarterFilter(quarterRange);
-                Filter threeMonthNearFilter = new ThreeMonthNearFilter(baseDate);
-                Filter oneYearNearFilter = new OneYearNearFilter(baseDate);
-                Filter halfYearNearFilter = new HalfYearNearFilter(baseDate);
+                Collector collector = new Collector(nhiMetricRawVMList);
+                Source<NhiMetricRawVM, NhiMetricRawVM> doctorSource = new DoctorSource(collector, doctor.getId());
+                Source<NhiMetricRawVM, NhiMetricRawVM> monthSelectedSource = new MonthSelectedSource(collector, baseDate);
+                Source<NhiMetricRawVM, NhiMetricRawVM> quarterSource = new QuarterSource(collector, quarterRange);
+                Source<NhiMetricRawVM, NhiMetricRawVM> threeMonthNearSource = new ThreeMonthNearSource(collector, baseDate);
+                Source<NhiMetricRawVM, NhiMetricRawVM> oneYearNearSource = new OneYearNearSource(collector, baseDate);
+                Source<NhiMetricRawVM, NhiMetricRawVM> halfYearNearSource = new HalfYearNearSource(collector, baseDate);
 
-                Collector collector = new Collector(nhiMetricRawVMList)
-                    .apply(doctorFilter)
-                    .apply(monthSelectedFilter)
-                    .apply(quarterFilter)
-                    .apply(threeMonthNearFilter)
-                    .apply(oneYearNearFilter)
-                    .apply(halfYearNearFilter);
-                String monthSelectedSourceName = monthSelectedFilter.outputKey();
-                String quarterSourceName = quarterFilter.outputKey();
-                String threeMonthNearSourceName = threeMonthNearFilter.outputKey();
-                String oneYearNearSourceName = oneYearNearFilter.outputKey();
-                String halfYearNearSourceName = halfYearNearFilter.outputKey();
+                collector
+                    .apply(doctorSource)
+                    .apply(monthSelectedSource)
+                    .apply(quarterSource)
+                    .apply(threeMonthNearSource)
+                    .apply(oneYearNearSource)
+                    .apply(halfYearNearSource);
 
-                BigDecimal metricL1 = new L1Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL2 = new L2Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL3 = new L3Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL4 = new L4Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL5 = new L5Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL6 = new L6Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL7 = new L7Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL8 = new L8Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL10 = new L10Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL11 = new L11Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL12 = new L12Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL13 = new L13Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL14 = new L14Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL15 = new L15Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL16 = new L16Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL17 = new L17Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL18 = new L18Formula(quarterSourceName).calculate(collector);
-                BigDecimal metricL19 = new L19Formula(quarterSourceName).calculate(collector);
-                BigDecimal metricL20 = new L20Formula(monthSelectedSourceName).calculate(collector);
-                BigDecimal metricL21 = new L21Formula(threeMonthNearSourceName).calculate(collector);
-                BigDecimal metricL22 = new L22Formula(quarterSourceName).calculate(collector);
-                BigDecimal metricL23 = new L23Formula(oneYearNearSourceName).calculate(collector);
-                BigDecimal metricL24 = new L24Formula(halfYearNearSourceName).calculate(collector);
+                BigDecimal metricL1 = new L1Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL2 = new L2Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL3 = new L3Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL4 = new L4Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL5 = new L5Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL6 = new L6Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL7 = new L7Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL8 = new L8Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL10 = new L10Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL11 = new L11Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL12 = new L12Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL13 = new L13Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL14 = new L14Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL15 = new L15Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL16 = new L16Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL17 = new L17Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL18 = new L18Formula(collector, quarterSource).calculate();
+                BigDecimal metricL19 = new L19Formula(collector, quarterSource).calculate();
+                BigDecimal metricL20 = new L20Formula(collector, monthSelectedSource).calculate();
+                BigDecimal metricL21 = new L21Formula(collector, threeMonthNearSource).calculate();
+                BigDecimal metricL22 = new L22Formula(collector, quarterSource).calculate();
+                BigDecimal metricL23 = new L23Formula(collector, oneYearNearSource).calculate();
+                BigDecimal metricL24 = new L24Formula(collector, halfYearNearSource).calculate();
 
                 Section5 section5 = new Section5();
                 section5.setL1(metricL1);

@@ -9,10 +9,10 @@ import java.util.Objects;
 /**
  * 部分負擔點數
  */
-public class Point4 extends AbstractCalculator {
+public class Point4 extends SingleSourceCalculator {
 
-    public Point4(String sourceName) {
-        super(sourceName);
+    public Point4(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override

@@ -21,8 +21,8 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public class HighestExam4ByPatient extends Exam4 {
 
-    public HighestExam4ByPatient(String sourceName) {
-        super(sourceName);
+    public HighestExam4ByPatient(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override

@@ -6,11 +6,12 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class DoctorFilter extends SubjectFilter {
+public class DoctorSource extends SubjectSource<NhiMetricRawVM, NhiMetricRawVM> {
 
-    private Long doctorId;
+    private final Long doctorId;
 
-    public DoctorFilter(Long doctorId) {
+    public DoctorSource(Collector collector, Long doctorId) {
+        super(collector);
         this.doctorId = doctorId;
     }
 

@@ -11,11 +11,10 @@ import static java.lang.Integer.parseInt;
 /**
  * 診療費
  */
-public class Point3 extends AbstractCalculator {
+public class Point3 extends SingleSourceCalculator {
 
-
-    public Point3(String sourceName) {
-        super(sourceName);
+    public Point3(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override

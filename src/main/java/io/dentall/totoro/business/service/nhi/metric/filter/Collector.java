@@ -1,6 +1,5 @@
 package io.dentall.totoro.business.service.nhi.metric.filter;
 
-import io.dentall.totoro.business.service.nhi.metric.meta.Calculator;
 import io.dentall.totoro.business.service.nhi.metric.meta.Meta;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -13,33 +12,27 @@ import static io.dentall.totoro.business.service.nhi.metric.filter.FilterKey.Sub
 
 public class Collector {
 
-    private Map<String, List<NhiMetricRawVM>> cached = new HashMap<>();
+    private final Map<String, List<?>> cached = new HashMap<>();
 
-    private Map<String, Meta> metaMap = new HashMap<>();
+    private final Map<String, Meta> metaMap = new HashMap<>();
 
     public Collector(List<NhiMetricRawVM> nhiMetricRawVMList) {
         this.cached.put(Subject.input(), nhiMetricRawVMList);
     }
 
-    public Collector apply(Filter filter) {
-        if (!isSourceExist(filter.outputKey())) {
-            List<NhiMetricRawVM> filtered = filter.doFilter(retrieveSource(filter.inputKey()));
-            cacheSource(filter.outputKey(), filtered);
+    public <S, T> Collector apply(Source<S, T> source) {
+        if (!isSourceExist(source.outputKey())) {
+            List<?> filtered = source.doFilter(retrieveSource(source.inputKey()));
+            cacheSource(source.outputKey(), filtered);
         }
-
         return this;
     }
 
-    public Collector apply(Calculator calculator) {
-        calculator.calculate(this);
-        return this;
+    public <T> List<T> retrieveSource(String name) {
+        return (List<T>) this.cached.get(name);
     }
 
-    public List<NhiMetricRawVM> retrieveSource(String name) {
-        return this.cached.get(name);
-    }
-
-    public void cacheSource(String key, List<NhiMetricRawVM> value) {
+    public void cacheSource(String key, List<?> value) {
         this.cached.put(key, value);
     }
 

@@ -2,18 +2,18 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 
-public abstract class AbstractCalculator implements Calculator {
+public abstract class AbstractCalculator implements Calculator<Meta> {
 
-    private final String sourceName;
+    private final Collector collector;
 
     private Meta meta;
 
-    public AbstractCalculator(String sourceName) {
-        this.sourceName = sourceName;
+    public AbstractCalculator(Collector collector) {
+        this.collector = collector;
     }
 
     @Override
-    public Meta calculate(Collector collector) {
+    public Meta calculate() {
         String key = storeKey();
 
         if (!collector.isMetaExist(key)) {
@@ -26,16 +26,8 @@ public abstract class AbstractCalculator implements Calculator {
         return this.meta;
     }
 
-    public String sourceName() {
-        return this.sourceName;
-    }
-
     public String storeKey() {
-        return storeKey(metaType());
-    }
-
-    public String storeKey(MetaType metaType) {
-        return sourceName() + ":" + metaType.name();
+        return sourceName() + ":" + metaType().name();
     }
 
     public Meta getMeta() {
@@ -49,4 +41,6 @@ public abstract class AbstractCalculator implements Calculator {
     public abstract Long doCalculate(Collector collector);
 
     public abstract MetaType metaType();
+
+    public abstract String sourceName();
 }

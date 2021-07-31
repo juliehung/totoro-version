@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 /**
  * 看診人數/就醫人數 不重複病患數量
  */
-public class Pt1 extends AbstractCalculator {
+public class Pt1 extends SingleSourceCalculator {
 
-    public Pt1(String sourceName) {
-        super(sourceName);
+    public Pt1(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override

@@ -1,7 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.*;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
@@ -10,18 +12,19 @@ import java.math.BigDecimal;
  */
 public class L2Formula extends AbstractFormula {
 
-    private final String sourceName;
+    private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    public L2Formula(String sourceName) {
-        this.sourceName = sourceName;
+    public L2Formula(Collector collector, Source<NhiMetricRawVM, NhiMetricRawVM> source) {
+        super(collector);
+        this.source = source;
     }
 
     @Override
-    public BigDecimal doCalculate() {
-        Exam1 exam1 = apply(new Exam1(sourceName));
-        Exam2 exam2 = apply(new Exam2(sourceName));
-        Exam3 exam3 = apply(new Exam3(sourceName));
-        Exam4 exam4 = apply(new Exam4(sourceName));
+    public BigDecimal doCalculate(Collector collector) {
+        Exam1 exam1 = new Exam1(collector, source.outputKey()).apply();
+        Exam2 exam2 = new Exam2(collector, source.outputKey()).apply();
+        Exam3 exam3 = new Exam3(collector, source.outputKey()).apply();
+        Exam4 exam4 = new Exam4(collector, source.outputKey()).apply();
         long result = exam1.getResult() + exam2.getResult() + exam3.getResult() + exam4.getResult();
 
         return new BigDecimal(result);

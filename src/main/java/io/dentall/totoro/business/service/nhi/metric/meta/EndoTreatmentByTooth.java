@@ -17,8 +17,8 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public class EndoTreatmentByTooth extends EndoTreatment {
 
-    public EndoTreatmentByTooth(String sourceName) {
-        super(sourceName);
+    public EndoTreatmentByTooth(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override

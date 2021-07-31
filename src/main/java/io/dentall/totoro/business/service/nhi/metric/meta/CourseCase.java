@@ -15,10 +15,10 @@ import static java.util.stream.Collectors.maxBy;
 /**
  * 就醫類別為 AA, AB 的處置單數量總和
  */
-public class CourseCase extends AbstractCalculator {
+public class CourseCase extends SingleSourceCalculator {
 
-    public CourseCase(String sourceName) {
-        super(sourceName);
+    public CourseCase(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override

@@ -5,21 +5,19 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 /**
  * 診療費
  */
-public class Point1 extends AbstractCalculator {
+public class Point1 extends SingleSourceCalculator {
 
-
-    public Point1(String sourceName) {
-        super(sourceName);
+    public Point1(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override
     public Long doCalculate(Collector collector) {
-        Exam1 exam1 = new Exam1(sourceName());
-        Exam2 exam2 = new Exam2(sourceName());
-        Exam3 exam3 = new Exam3(sourceName());
-        Exam4 exam4 = new Exam4(sourceName());
-        Point3 point3 = new Point3(sourceName());
-        collector.apply(exam1).apply(exam2).apply(exam3).apply(exam4).apply(point3);
+        Exam1 exam1 = new Exam1(collector, sourceName()).apply();
+        Exam2 exam2 = new Exam2(collector, sourceName()).apply();
+        Exam3 exam3 = new Exam3(collector, sourceName()).apply();
+        Exam4 exam4 = new Exam4(collector, sourceName()).apply();
+        Point3 point3 = new Point3(collector, sourceName()).apply();
 
         return point3.getResult() + exam1.getResult() + exam2.getResult() + exam3.getResult() + exam4.getResult();
     }

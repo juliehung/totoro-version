@@ -1,9 +1,11 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.Ic2;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point2;
 import io.dentall.totoro.business.service.nhi.metric.meta.Pt1;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
@@ -15,16 +17,17 @@ import static java.math.BigDecimal.ZERO;
  */
 public class L16Formula extends AbstractFormula {
 
-    private final String sourceName;
+    private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    public L16Formula(String sourceName) {
-        this.sourceName = sourceName;
+    public L16Formula(Collector collector, Source<NhiMetricRawVM, NhiMetricRawVM> source) {
+        super(collector);
+        this.source = source;
     }
 
     @Override
-    public BigDecimal doCalculate() {
-        Point2 point2 = apply(new Point2(sourceName));
-        Pt1 pt1 = apply(new Pt1(sourceName));
+    public BigDecimal doCalculate(Collector collector) {
+        Point2 point2 = new Point2(collector, source.outputKey()).apply();
+        Pt1 pt1 = new Pt1(collector, source.outputKey()).apply();
         try {
             return divide(point2.getResult(), pt1.getResult());
         } catch (ArithmeticException e) {

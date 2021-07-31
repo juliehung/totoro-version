@@ -13,12 +13,12 @@ import static java.util.Arrays.asList;
 /**
  * 90001C+90002C+90003C+90016C+90018C+90019C+90020C
  */
-public class EndoTreatment extends AbstractCalculator {
+public class EndoTreatment extends SingleSourceCalculator {
 
     public static final List<String> codes = asList("90001C", "90002C", "90003C", "90016C", "90018C", "90019C", "90020C");
 
-    public EndoTreatment(String sourceName) {
-        super(sourceName);
+    public EndoTreatment(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override

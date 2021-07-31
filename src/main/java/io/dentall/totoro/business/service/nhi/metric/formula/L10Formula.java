@@ -1,7 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.*;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
@@ -13,16 +15,17 @@ import static java.math.BigDecimal.ZERO;
  */
 public class L10Formula extends AbstractFormula {
 
-    private final String sourceName;
+    private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    public L10Formula(String sourceName) {
-        this.sourceName = sourceName;
+    public L10Formula(Collector collector, Source<NhiMetricRawVM, NhiMetricRawVM> source) {
+        super(collector);
+        this.source = source;
     }
 
     @Override
-    public BigDecimal doCalculate() {
-        Point1 point1 = apply(new Point1(sourceName));
-        HighestPoint1ByPatient highestPoint1ByPatient = apply(new HighestPoint1ByPatient(sourceName));
+    public BigDecimal doCalculate(Collector collector) {
+        Point1 point1 = new Point1(collector, source.outputKey()).apply();
+        HighestPoint1ByPatient highestPoint1ByPatient = new HighestPoint1ByPatient(collector, source.outputKey()).apply();
         try {
             return divide(highestPoint1ByPatient.getResult(), point1.getResult());
         } catch (ArithmeticException e) {

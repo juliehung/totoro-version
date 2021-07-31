@@ -1,35 +1,28 @@
 package io.dentall.totoro.business.service.nhi.metric.filter;
 
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
+import io.dentall.totoro.service.util.DateTimeUtil.BeginEnd;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.filter.FilterKey.OneYearNear;
-import static io.dentall.totoro.business.service.nhi.metric.filter.FilterKey.ThreeMonthNear;
+import static io.dentall.totoro.business.service.nhi.metric.filter.FilterKey.Quarter;
 import static io.dentall.totoro.service.util.DateTimeUtil.*;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.util.stream.Collectors.toList;
 
 /**
- * date-3 一年 0~365天
+ * date-10 當季(Q1,Q2,Q3,Q4)
  */
-public class OneYearNearFilter implements Filter {
+public class QuarterSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM>  {
 
     private final LocalDate begin;
 
     private final LocalDate end;
 
-    public OneYearNearFilter(LocalDate date) {
-        if (isSameMonth(date)) {
-            this.begin = date.minus(365, DAYS);
-            this.end = date;
-        } else {
-            this.begin = endOfMonth(date).minus(365, DAYS);
-            this.end = endOfMonth(date);
-        }
+    public QuarterSource(Collector collector, BeginEnd quarterRange) {
+        super(collector);
+        this.begin = toLocalDate(quarterRange.getBegin());
+        this.end = toLocalDate(quarterRange.getEnd());
     }
 
     @Override
@@ -44,11 +37,11 @@ public class OneYearNearFilter implements Filter {
 
     @Override
     public String inputKey() {
-        return OneYearNear.input();
+        return Quarter.input();
     }
 
     @Override
     public String outputKey() {
-        return OneYearNear.output();
+        return Quarter.output();
     }
 }

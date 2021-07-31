@@ -1,8 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.CourseCase;
 import io.dentall.totoro.business.service.nhi.metric.meta.Ic2;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
@@ -11,15 +13,16 @@ import java.math.BigDecimal;
  */
 public class L12Formula extends AbstractFormula {
 
-    private final String sourceName;
+    private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    public L12Formula(String sourceName) {
-        this.sourceName = sourceName;
+    public L12Formula(Collector collector, Source<NhiMetricRawVM, NhiMetricRawVM> source) {
+        super(collector);
+        this.source = source;
     }
 
     @Override
-    public BigDecimal doCalculate() {
-        Ic2 ic2 = apply(new Ic2(sourceName));
+    public BigDecimal doCalculate(Collector collector) {
+        Ic2 ic2 = new Ic2(collector, source.outputKey()).apply();
         return new BigDecimal(ic2.getResult());
     }
 }

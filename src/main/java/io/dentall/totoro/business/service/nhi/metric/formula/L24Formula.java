@@ -1,9 +1,12 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.Endo90015CTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoReTreatmentByTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatmentByTooth;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
@@ -17,16 +20,17 @@ import static java.math.BigDecimal.ZERO;
  */
 public class L24Formula extends AbstractFormula {
 
-    private final String sourceName;
+    private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    public L24Formula(String sourceName) {
-        this.sourceName = sourceName;
+    public L24Formula(Collector collector, Source<NhiMetricRawVM, NhiMetricRawVM> source) {
+        super(collector);
+        this.source = source;
     }
 
     @Override
-    public BigDecimal doCalculate() {
-        EndoTreatmentByTooth endoTreatmentByTooth = apply(new EndoTreatmentByTooth(sourceName));
-        EndoReTreatmentByTooth endoReTreatmentByTooth = apply(new EndoReTreatmentByTooth(sourceName));
+    public BigDecimal doCalculate(Collector collector) {
+        EndoTreatmentByTooth endoTreatmentByTooth = new EndoTreatmentByTooth(collector, source.outputKey()).apply();
+        EndoReTreatmentByTooth endoReTreatmentByTooth = new EndoReTreatmentByTooth(collector, source.outputKey()).apply();
         try {
             return divide(endoReTreatmentByTooth.getResult(), endoTreatmentByTooth.getResult());
         } catch (ArithmeticException e) {

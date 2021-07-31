@@ -16,11 +16,10 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 /**
  * 診療費 病患點數(最高者)
  */
-public class HighestPoint3ByPatient extends AbstractCalculator {
+public class HighestPoint3ByPatient extends SingleSourceCalculator {
 
-
-    public HighestPoint3ByPatient(String sourceName) {
-        super(sourceName);
+    public HighestPoint3ByPatient(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override

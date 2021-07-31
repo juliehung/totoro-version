@@ -16,14 +16,14 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 /**
  * 一般牙科門診診察費(不含Xray)
  */
-public class Exam1 extends AbstractCalculator {
+public class Exam1 extends SingleSourceCalculator {
 
     public final List<String> codes = Arrays.asList(
         "00121C", "00122C", "00123C", "00124C", "00125C", "00126C", "00128C", "00129C", "00130C", "00133C", "00134C", "00301C", "00302C", "00303C", "00304C"
     );
 
-    public Exam1(String sourceName) {
-        super(sourceName);
+    public Exam1(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override

@@ -1,7 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.Endo90015CTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatment;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
@@ -15,16 +18,17 @@ import static java.math.BigDecimal.ZERO;
  */
 public class L23Formula extends AbstractFormula {
 
-    private final String sourceName;
+    private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    public L23Formula(String sourceName) {
-        this.sourceName = sourceName;
+    public L23Formula(Collector collector, Source<NhiMetricRawVM, NhiMetricRawVM> source) {
+        super(collector);
+        this.source = source;
     }
 
     @Override
-    public BigDecimal doCalculate() {
-        EndoTreatment endoTreatment = apply(new EndoTreatment(sourceName));
-        Endo90015CTreatment endo90015CTreatment = apply(new Endo90015CTreatment(sourceName));
+    public BigDecimal doCalculate(Collector collector) {
+        EndoTreatment endoTreatment = new EndoTreatment(collector, source.outputKey()).apply();
+        Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(collector, source.outputKey()).apply();
         try {
             BigDecimal tmp = divide(endoTreatment.getResult(), endo90015CTreatment.getResult());
             return BigDecimal.valueOf(100L).multiply(ONE.subtract(tmp));

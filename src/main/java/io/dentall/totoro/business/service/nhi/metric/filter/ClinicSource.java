@@ -4,7 +4,11 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
-public class ClinicFilter extends SubjectFilter {
+public class ClinicSource extends SubjectSource<NhiMetricRawVM, NhiMetricRawVM> {
+
+    public ClinicSource(Collector collector) {
+        super(collector);
+    }
 
     @Override
     public List<NhiMetricRawVM> doFilter(List<NhiMetricRawVM> nhiMetricRawVMList) {

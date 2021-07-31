@@ -1,9 +1,11 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+public interface Calculator<R> {
 
-public interface Calculator {
+    R calculate();
 
-    Meta calculate(Collector collector);
-
+    default <T extends Calculator<R>> T apply() {
+        calculate();
+        return (T) this;
+    }
 }

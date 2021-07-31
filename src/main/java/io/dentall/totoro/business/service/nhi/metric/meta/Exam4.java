@@ -16,14 +16,14 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 /**
  * 符合牙醫門診加強感染管制實施方案之牙科門診診察費(Xray)
  */
-public class Exam4 extends AbstractCalculator {
+public class Exam4 extends SingleSourceCalculator {
 
     public final List<String> codes = Arrays.asList(
         "00315C", "00316C", "00317C"
     );
 
-    public Exam4(String sourceName) {
-        super(sourceName);
+    public Exam4(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override

@@ -7,12 +7,12 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-public class Endo90015CTreatment extends AbstractCalculator {
+public class Endo90015CTreatment extends SingleSourceCalculator {
 
     private static final List<String> codes = asList("90015C");
 
-    public Endo90015CTreatment(String sourceName) {
-        super(sourceName);
+    public Endo90015CTreatment(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override

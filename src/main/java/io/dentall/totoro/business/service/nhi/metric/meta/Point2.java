@@ -6,17 +6,17 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.util.List;
 import java.util.Objects;
 
-public class Point2 extends AbstractCalculator {
+public class Point2 extends SingleSourceCalculator {
 
-    public Point2(String sourceName) {
-        super(sourceName);
+
+    public Point2(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override
     public Long doCalculate(Collector collector) {
-        Point1 point1 = new Point1(sourceName());
-        Point4 point4 = new Point4(sourceName());
-        collector.apply(point1).apply(point4);
+        Point1 point1 = new Point1(collector, sourceName()).apply();
+        Point4 point4 = new Point4(collector, sourceName()).apply();
 
         return point1.getResult() - point4.getResult();
     }

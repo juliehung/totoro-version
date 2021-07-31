@@ -13,10 +13,10 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * <p>
  * 有處置單的不重複日期總和
  */
-public class Ic2 extends AbstractCalculator {
+public class Ic2 extends SingleSourceCalculator {
 
-    public Ic2(String sourceName) {
-        super(sourceName);
+    public Ic2(Collector collector, String sourceName) {
+        super(collector, sourceName);
     }
 
     @Override
