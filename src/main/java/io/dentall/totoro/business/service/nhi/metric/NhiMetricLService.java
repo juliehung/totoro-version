@@ -11,7 +11,6 @@ import io.dentall.totoro.service.util.DateTimeUtil.BeginEnd;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.String;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -55,12 +54,12 @@ public class NhiMetricLService {
         List<MetricLVM> metricLVMList = doctors.parallelStream()
             .map(doctor -> {
                 Collector collector = new Collector(nhiMetricRawVMList);
-                Source<NhiMetricRawVM, NhiMetricRawVM> doctorSource = new DoctorSource(collector, doctor.getId());
-                Source<NhiMetricRawVM, NhiMetricRawVM> monthSelectedSource = new MonthSelectedSource(collector, baseDate);
-                Source<NhiMetricRawVM, NhiMetricRawVM> quarterSource = new QuarterSource(collector, quarterRange);
-                Source<NhiMetricRawVM, NhiMetricRawVM> threeMonthNearSource = new ThreeMonthNearSource(collector, baseDate);
-                Source<NhiMetricRawVM, NhiMetricRawVM> oneYearNearSource = new OneYearNearSource(collector, baseDate);
-                Source<NhiMetricRawVM, NhiMetricRawVM> halfYearNearSource = new HalfYearNearSource(collector, baseDate);
+                Source<NhiMetricRawVM, NhiMetricRawVM> doctorSource = new DoctorSource(doctor.getId());
+                Source<NhiMetricRawVM, NhiMetricRawVM> monthSelectedSource = new MonthSelectedSource(baseDate);
+                Source<NhiMetricRawVM, NhiMetricRawVM> quarterSource = new QuarterSource(quarterRange);
+                Source<NhiMetricRawVM, NhiMetricRawVM> threeMonthNearSource = new ThreeMonthNearSource(baseDate);
+                Source<NhiMetricRawVM, NhiMetricRawVM> oneYearNearSource = new OneYearNearSource(baseDate);
+                Source<NhiMetricRawVM, NhiMetricRawVM> halfYearNearSource = new HalfYearNearSource(baseDate);
 
                 collector
                     .apply(doctorSource)

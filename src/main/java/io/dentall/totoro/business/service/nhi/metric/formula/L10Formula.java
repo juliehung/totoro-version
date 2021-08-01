@@ -2,7 +2,8 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.service.nhi.metric.filter.Source;
-import io.dentall.totoro.business.service.nhi.metric.meta.*;
+import io.dentall.totoro.business.service.nhi.metric.meta.HighestPoint1ByPatient;
+import io.dentall.totoro.business.service.nhi.metric.meta.Point1;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;

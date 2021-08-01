@@ -1,10 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
-
-import java.util.List;
-import java.util.Objects;
 
 public class Point2 extends SingleSourceCalculator {
 

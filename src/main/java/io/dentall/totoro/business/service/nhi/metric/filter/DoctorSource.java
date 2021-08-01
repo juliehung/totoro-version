@@ -10,8 +10,7 @@ public class DoctorSource extends SubjectSource<NhiMetricRawVM, NhiMetricRawVM> 
 
     private final Long doctorId;
 
-    public DoctorSource(Collector collector, Long doctorId) {
-        super(collector);
+    public DoctorSource(Long doctorId) {
         this.doctorId = doctorId;
     }
 

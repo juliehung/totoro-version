@@ -25,7 +25,7 @@ public class Ic2 extends SingleSourceCalculator {
 
         return (long) nhiMetricRawVMList.stream()
             .filter(vm -> isNotBlank(vm.getCardNumber()))
-            .map(vm -> vm.getDisposalDate())
+            .map(NhiMetricRawVM::getDisposalDate)
             .collect(Collectors.groupingBy(key -> key))
             .keySet().size();
     }

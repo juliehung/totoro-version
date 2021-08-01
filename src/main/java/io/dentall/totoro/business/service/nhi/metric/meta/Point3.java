@@ -6,8 +6,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.util.List;
 import java.util.Objects;
 
-import static java.lang.Integer.parseInt;
-
 /**
  * 診療費
  */

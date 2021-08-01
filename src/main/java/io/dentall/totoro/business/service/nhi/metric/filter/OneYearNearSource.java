@@ -3,14 +3,12 @@ package io.dentall.totoro.business.service.nhi.metric.filter;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static io.dentall.totoro.business.service.nhi.metric.filter.FilterKey.OneYearNear;
-import static io.dentall.totoro.business.service.nhi.metric.filter.FilterKey.ThreeMonthNear;
-import static io.dentall.totoro.service.util.DateTimeUtil.*;
+import static io.dentall.totoro.service.util.DateTimeUtil.endOfMonth;
+import static io.dentall.totoro.service.util.DateTimeUtil.isSameMonth;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -22,8 +20,7 @@ public class OneYearNearSource extends AbstractSource<NhiMetricRawVM, NhiMetricR
 
     private final LocalDate end;
 
-    public OneYearNearSource(Collector collector, LocalDate date) {
-        super(collector);
+    public OneYearNearSource(LocalDate date) {
         if (isSameMonth(date)) {
             this.begin = date.minus(365, DAYS);
             this.end = date;

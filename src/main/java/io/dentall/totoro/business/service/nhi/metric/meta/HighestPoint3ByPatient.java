@@ -3,15 +3,14 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-import static java.lang.Long.valueOf;
-import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.maxBy;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * 診療費 病患點數(最高者)
@@ -29,7 +28,7 @@ public class HighestPoint3ByPatient extends SingleSourceCalculator {
         Map<Long, Long> pointByPatient = nhiMetricRawVMList.stream()
             .collect(groupingBy(NhiMetricRawVM::getPatientId))
             .entrySet().stream()
-            .reduce(new HashMap<Long, Long>(), (map, entry) -> {
+            .reduce(new HashMap<>(), (map, entry) -> {
                 long patientId = entry.getKey();
 
                 map.compute(patientId, (key, point) -> {

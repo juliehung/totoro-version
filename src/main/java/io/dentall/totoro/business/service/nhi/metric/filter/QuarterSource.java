@@ -19,8 +19,7 @@ public class QuarterSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM
 
     private final LocalDate end;
 
-    public QuarterSource(Collector collector, BeginEnd quarterRange) {
-        super(collector);
+    public QuarterSource(BeginEnd quarterRange) {
         this.begin = toLocalDate(quarterRange.getBegin());
         this.end = toLocalDate(quarterRange.getEnd());
     }

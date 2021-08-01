@@ -2,7 +2,10 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.service.nhi.metric.filter.Source;
-import io.dentall.totoro.business.service.nhi.metric.meta.*;
+import io.dentall.totoro.business.service.nhi.metric.meta.Exam1;
+import io.dentall.totoro.business.service.nhi.metric.meta.Exam2;
+import io.dentall.totoro.business.service.nhi.metric.meta.Exam3;
+import io.dentall.totoro.business.service.nhi.metric.meta.Exam4;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;

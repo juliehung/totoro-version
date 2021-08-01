@@ -20,8 +20,7 @@ public class HalfYearNearSource extends AbstractSource<NhiMetricRawVM, NhiMetric
 
     private final LocalDate end;
 
-    public HalfYearNearSource(Collector collector, LocalDate date) {
-        super(collector);
+    public HalfYearNearSource(LocalDate date) {
         if (isSameMonth(date)) {
             this.begin = date.minus(180, DAYS);
             this.end = date;

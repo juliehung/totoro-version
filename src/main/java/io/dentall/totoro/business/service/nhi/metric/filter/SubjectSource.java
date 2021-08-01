@@ -6,7 +6,4 @@ public abstract class SubjectSource<S, R> extends AbstractSource<S, R> {
 
     protected FilterKey filterKey = Subject;
 
-    public SubjectSource(Collector collector) {
-        super(collector);
-    }
 }

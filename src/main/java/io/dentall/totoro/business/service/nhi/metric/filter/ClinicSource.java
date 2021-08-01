@@ -6,10 +6,6 @@ import java.util.List;
 
 public class ClinicSource extends SubjectSource<NhiMetricRawVM, NhiMetricRawVM> {
 
-    public ClinicSource(Collector collector) {
-        super(collector);
-    }
-
     @Override
     public List<NhiMetricRawVM> doFilter(List<NhiMetricRawVM> nhiMetricRawVMList) {
         return nhiMetricRawVMList;

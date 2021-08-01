@@ -19,8 +19,7 @@ public class MonthSelectedSource extends AbstractSource<NhiMetricRawVM, NhiMetri
 
     private final LocalDate end;
 
-    public MonthSelectedSource(Collector collector, LocalDate date) {
-        super(collector);
+    public MonthSelectedSource(LocalDate date) {
         this.begin = beginOfMonth(date);
         this.end = endOfMonth(date);
     }

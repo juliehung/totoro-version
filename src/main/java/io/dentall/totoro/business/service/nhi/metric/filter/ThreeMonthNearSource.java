@@ -20,8 +20,7 @@ public class ThreeMonthNearSource extends AbstractSource<NhiMetricRawVM, NhiMetr
 
     private final LocalDate end;
 
-    public ThreeMonthNearSource(Collector collector, LocalDate date) {
-        super(collector);
+    public ThreeMonthNearSource(LocalDate date) {
         this.begin = beginOfMonth(date).minus(2, MONTHS);
         this.end = endOfMonth(date);
     }
