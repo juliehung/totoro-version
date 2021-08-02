@@ -1191,11 +1191,8 @@ public class NhiRuleCheckUtil {
      * @param dto patient.id, netp.id, excludeTreamentProcedureId
      * @return
      */
-    public NhiRuleCheckResultDTO isSpecialRuleFor89XXXC(NhiRuleCheckDTO dto) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
-            .validated(true)
-            .validateTitle("89XXX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外");
+    public List<NhiRuleCheckResultDTO> isSpecialRuleFor89XXXC(NhiRuleCheckDTO dto) {
+        List<NhiRuleCheckResultDTO> result = new ArrayList<>();
 
         List<String> queryCodes = Arrays.asList("89006C", "90001C", "90002C", "90003C", "90019C", "90020C");
         List<String> mustIncludeCodes = Arrays.asList("90001C", "90002C", "90003C", "90019C", "90020C");
@@ -1214,82 +1211,74 @@ public class NhiRuleCheckUtil {
             dto.getNhiExtendTreatmentProcedure().getA71()
         );
 
-        Optional<NhiHybridRecordDTO> detected89006COptional = sourceData.stream()
-            .filter(d -> {
-                if ("89006C".equals(d.getCode())) {
-                    if (
-                        d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isEqual(currentDate) ||
-                            d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isAfter(currentDate)
-                    ) {
-                        return true;
+        Map<String, NhiHybridRecordDTO> detected89006CToothTxMap = new HashMap<>();
+        for (NhiHybridRecordDTO d : sourceData) {
+            List<String> duplicatedTooth = ToothUtil.listDuplicatedTooth(
+                d.getTooth(),
+                dto.getNhiExtendTreatmentProcedure().getA74()
+            );
+            duplicatedTooth.stream().forEach(t -> {
+                if (d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isEqual(currentDate) ||
+                    d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isAfter(currentDate)
+                ) {
+                    if (!detected89006CToothTxMap.containsKey(t)) {
+                        detected89006CToothTxMap.put(t, d);
                     }
                 }
+            });
+        }
 
-                return false;
-            })
-            .findFirst();
-
-        if (detected89006COptional.isPresent()) {
-            NhiHybridRecordDTO detected89006C = detected89006COptional.get();
-            boolean pass = true;
-            if (detected89006C.getRecordDateTime().isEqual(this.getNhiExtendDisposalDateInDTO(dto))) {
-                pass = false;
-            } else if (
-                sourceData.stream()
-                    .filter(d -> mustIncludeCodes.contains(d.getCode()))
-                    .count() < 1
-            ) {
-                pass = false;
-            } else {
-                List<NhiHybridRecordDTO> availableClauseResults = new ArrayList<>();
-                for (NhiHybridRecordDTO data : sourceData) {
-                    if (mustIncludeCodes.contains(data.getCode()) &&
-                        data.getRecordDateTime().isAfter(detected89006C.getRecordDateTime()) &&
-                        data.getRecordDateTime().isBefore(this.getNhiExtendDisposalDateInDTO(dto)) ||
-                        data.getRecordDateTime().isEqual(this.getNhiExtendDisposalDateInDTO(dto))
-                    ) {
-                        availableClauseResults.add(data);
-                    }
-                }
-                if (availableClauseResults.size() == 0) {
-                    pass = false;
+        if (detected89006CToothTxMap.size() > 0) {
+            for (NhiHybridRecordDTO data : sourceData) {
+                if (mustIncludeCodes.contains(data.getCode())) {
+                    ToothUtil.splitA74(data.getTooth()).forEach(t -> {
+                        if (detected89006CToothTxMap.containsKey(t)) {
+                            if (data.getRecordDateTime().isAfter(detected89006CToothTxMap.get(t).getRecordDateTime()) &&
+                                data.getRecordDateTime().isBefore(this.getNhiExtendDisposalDateInDTO(dto)) ||
+                                data.getRecordDateTime().isEqual(this.getNhiExtendDisposalDateInDTO(dto))
+                            ) {
+                                detected89006CToothTxMap.remove(t);
+                            }
+                        }
+                    });
                 }
             }
 
-            if (!pass) {
-                NhiRuleCheckSourceType sourceType;
-                if (
-                    detected89006C.getDisposalId() != null &&
-                        detected89006C.getDisposalId().equals(this.getDisposalIdInDTO(dto))
-                ) {
-                    sourceType = NhiRuleCheckSourceType.CURRENT_DISPOSAL;
-                } else if (
-                    "SYS".equals(detected89006C.getRecordSource()) &&
-                        detected89006C.getRecordDateTime().isEqual(this.getNhiExtendDisposalDateInDTO(dto))
-                ) {
-                    sourceType = NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL;
-                } else if (
-                    "SYS".equals(detected89006C.getRecordSource())
-                ) {
-                    sourceType = NhiRuleCheckSourceType.SYSTEM_RECORD;
-                } else {
-                    sourceType = NhiRuleCheckSourceType.NHI_CARD_RECORD;
-                }
-                result.validated(false)
-                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_2.getLevel())
-                    .message(
-                        String.format(
-                            NhiRuleCheckFormat.D1_2.getFormat(),
-                            dto.getNhiExtendTreatmentProcedure().getA73(),
-                            "89006C",
-                            sourceType.getValue(),
-                            DateTimeUtil.transformLocalDateToRocDateForDisplay(
-                                detected89006C.getRecordDateTime()
-                            ),
-                            "30",
-                            dto.getNhiExtendTreatmentProcedure().getA73()
+            if (detected89006CToothTxMap.size() > 0) {
+                detected89006CToothTxMap.forEach((k, v) -> {
+                    NhiRuleCheckSourceType sourceType;
+                    if (v.getDisposalId() != null &&
+                        v.getDisposalId().equals(this.getDisposalIdInDTO(dto))
+                    ) {
+                        sourceType = NhiRuleCheckSourceType.CURRENT_DISPOSAL;
+                    } else if ("SYS".equals(v.getRecordSource()) &&
+                        v.getRecordDateTime().isEqual(this.getNhiExtendDisposalDateInDTO(dto))
+                    ) {
+                        sourceType = NhiRuleCheckSourceType.TODAY_OTHER_DISPOSAL;
+                    } else if ("SYS".equals(v.getRecordSource())
+                    ) {
+                        sourceType = NhiRuleCheckSourceType.SYSTEM_RECORD;
+                    } else {
+                        sourceType = NhiRuleCheckSourceType.NHI_CARD_RECORD;
+                    }
+                    result.add(new NhiRuleCheckResultDTO()
+                        .validated(false)
+                        .validateTitle("89XXX special: 前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外")
+                        .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_3.getLevel())
+                        .message(
+                            String.format(
+                                NhiRuleCheckFormat.D1_3.getFormat(),
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
+                                k,
+                                "89006C",
+                                sourceType.getValue(),
+                                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                                    v.getRecordDateTime()
+                                )
+                            )
                         )
                     );
+                });
             }
         }
 
