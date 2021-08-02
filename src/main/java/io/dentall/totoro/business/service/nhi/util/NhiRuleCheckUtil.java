@@ -2076,7 +2076,8 @@ public class NhiRuleCheckUtil {
                         ? deciduousLimitDisplayDuration
                         : permanentLimitDisplayDuration;
 
-                    if (d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                    if (duration == null ||
+                        d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
                         d.getRecordDateTime().isEqual(duration.getBegin()) ||
                         d.getRecordDateTime().isEqual(duration.getEnd())
                     ) {
@@ -2478,6 +2479,16 @@ public class NhiRuleCheckUtil {
                         DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate),
                         limitValueString,
                         targetCode
+                    );
+                    break;
+                case D1_3:
+                    m = String.format(
+                        NhiRuleCheckFormat.D1_3.getFormat(),
+                        targetCode,
+                        tooth,
+                        matchCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate)
                     );
                     break;
                 case D2_1:
