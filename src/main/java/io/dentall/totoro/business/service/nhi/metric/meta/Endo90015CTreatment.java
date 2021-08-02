@@ -5,11 +5,11 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 public class Endo90015CTreatment extends SingleSourceCalculator {
 
-    private static final List<String> codes = asList("90015C");
+    private static final List<String> codes = singletonList("90015C");
 
     public Endo90015CTreatment(Collector collector, String sourceName) {
         super(collector, sourceName);

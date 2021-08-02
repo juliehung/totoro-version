@@ -3,11 +3,12 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static java.lang.Long.valueOf;
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.maxBy;
@@ -18,9 +19,9 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public class Exam2 extends SingleSourceCalculator {
 
-    public final List<String> codes = Arrays.asList(
+    public final List<String> codes = unmodifiableList(asList(
         "01271C", "01272C", "01273C"
-    );
+    ));
 
     public Exam2(Collector collector, String sourceName) {
         super(collector, sourceName);

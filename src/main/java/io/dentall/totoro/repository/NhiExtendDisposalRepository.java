@@ -19,6 +19,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -843,6 +844,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "   and tp.nhi_procedure_id is not null " +
             "   and trim(ned.a18) <> '' "
     )
+    @Transactional(readOnly = true)
     List<NhiMetricRawVM> findMetricRaw(
         @Param("begin") Instant begin,
         @Param("end") Instant end,

@@ -24,6 +24,8 @@ public class MetricLVM {
 
     private Section13 section13;
 
+    private Section14 section14;
+
     public String getType() {
         return type;
     }
@@ -94,5 +96,13 @@ public class MetricLVM {
 
     public void setSection13(Section13 section13) {
         this.section13 = section13;
+    }
+
+    public Section14 getSection14() {
+        return section14;
+    }
+
+    public void setSection14(Section14 section14) {
+        this.section14 = section14;
     }
 }

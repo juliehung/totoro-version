@@ -2,12 +2,12 @@ package io.dentall.totoro.business.service.nhi.metric;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.*;
 import io.dentall.totoro.business.service.nhi.metric.formula.*;
+import io.dentall.totoro.business.service.nhi.metric.util.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.vm.*;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
-import io.dentall.totoro.service.util.DateTimeUtil.BeginEnd;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +16,11 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 
 import static io.dentall.totoro.security.AuthoritiesConstants.DOCTOR;
-import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
-import static io.dentall.totoro.service.util.DateTimeUtil.getCurrentQuarterMonthsRangeInstant;
-import static java.util.Arrays.asList;
+import static io.dentall.totoro.service.util.DateTimeUtil.*;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
@@ -41,7 +41,7 @@ public class NhiMetricLService {
     }
 
     public List<MetricLVM> metric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
-        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(asList(0L));
+        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
         BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         List<User> doctors = findAllDoctor();
         Instant begin = quarterRange.getBegin().minus(1095, ChronoUnit.DAYS);
@@ -55,19 +55,51 @@ public class NhiMetricLService {
             .map(doctor -> {
                 Collector collector = new Collector(nhiMetricRawVMList);
                 Source<NhiMetricRawVM, NhiMetricRawVM> doctorSource = new DoctorSource(doctor.getId());
-                Source<NhiMetricRawVM, NhiMetricRawVM> monthSelectedSource = new MonthSelectedSource(baseDate);
-                Source<NhiMetricRawVM, NhiMetricRawVM> quarterSource = new QuarterSource(quarterRange);
-                Source<NhiMetricRawVM, NhiMetricRawVM> threeMonthNearSource = new ThreeMonthNearSource(baseDate);
+                Source<NhiMetricRawVM, NhiMetricRawVM> threeYearNearSource = new ThreeYearNearSource(baseDate);
+                Source<NhiMetricRawVM, NhiMetricRawVM> twoYearNearSource = new TwoYearNearSource(baseDate);
                 Source<NhiMetricRawVM, NhiMetricRawVM> oneYearNearSource = new OneYearNearSource(baseDate);
                 Source<NhiMetricRawVM, NhiMetricRawVM> halfYearNearSource = new HalfYearNearSource(baseDate);
+                Source<NhiMetricRawVM, NhiMetricRawVM> quarterSource = new QuarterSource(quarterRange);
+                Source<NhiMetricRawVM, NhiMetricRawVM> threeMonthNearSource = new ThreeMonthNearSource(baseDate);
+                Source<NhiMetricRawVM, NhiMetricRawVM> monthSelectedSource = new MonthSelectedSource(baseDate);
+
+                Source<NhiMetricRawVM, OdDto> odThreeYearNearSource = new OdThreeYearNearSource(toLocalDate(quarterRange.getBegin()));
+                Source<OdDto, Map<Long, List<OdDto>>> odPermanentThreeYearNearByPatientSource = new OdPermanentThreeYearNearByPatientSource();
+                Source<OdDto, Map<Long, List<OdDto>>> odDeciduousThreeYearNearByPatientSource = new OdDeciduousThreeYearNearByPatientSource();
+
+                Source<OdDto, OdDto> odTwoYearNearSource = new OdTwoYearNearSource(baseDate, toLocalDate(quarterRange.getBegin()));
+                Source<OdDto, Map<Long, List<OdDto>>> odPermanentTwoYearNearByPatientSource = new OdPermanentTwoYearNearByPatientSource();
+                Source<OdDto, Map<Long, List<OdDto>>> odDeciduousTwoYearNearByPatientSource = new OdDeciduousTwoYearNearByPatientSource();
+
+                Source<OdDto, OdDto> odOneYearNearSource = new OdOneYearNearSource(baseDate, toLocalDate(quarterRange.getBegin()));
+                Source<OdDto, Map<Long, List<OdDto>>> odPermanentOneYearNearByPatientSource = new OdPermanentOneYearNearByPatientSource();
+                Source<OdDto, Map<Long, List<OdDto>>> odDeciduousOneYearNearByPatientSource = new OdDeciduousOneYearNearByPatientSource();
+
+                Source<NhiMetricRawVM, OdDto> odQuarterSource = new OdQuarterSource();
+                Source<OdDto, Map<Long, List<OdDto>>> odPermanentQuarterByPatientSource = new OdPermanentQuarterByPatientSource();
+                Source<OdDto, Map<Long, List<OdDto>>> odDeciduousQuarterByPatientSource = new OdDeciduousQuarterByPatientSource();
 
                 collector
                     .apply(doctorSource)
-                    .apply(monthSelectedSource)
+                    .apply(threeYearNearSource)
+                    .apply(twoYearNearSource)
+                    .apply(oneYearNearSource)
+                    .apply(halfYearNearSource)
                     .apply(quarterSource)
                     .apply(threeMonthNearSource)
-                    .apply(oneYearNearSource)
-                    .apply(halfYearNearSource);
+                    .apply(monthSelectedSource)
+                    .apply(odThreeYearNearSource)
+                    .apply(odPermanentThreeYearNearByPatientSource)
+                    .apply(odDeciduousThreeYearNearByPatientSource)
+                    .apply(odTwoYearNearSource)
+                    .apply(odPermanentTwoYearNearByPatientSource)
+                    .apply(odDeciduousTwoYearNearByPatientSource)
+                    .apply(odOneYearNearSource)
+                    .apply(odPermanentOneYearNearByPatientSource)
+                    .apply(odDeciduousOneYearNearByPatientSource)
+                    .apply(odQuarterSource)
+                    .apply(odPermanentQuarterByPatientSource)
+                    .apply(odDeciduousQuarterByPatientSource);
 
                 BigDecimal metricL1 = new L1Formula(collector, monthSelectedSource).calculate();
                 BigDecimal metricL2 = new L2Formula(collector, monthSelectedSource).calculate();
@@ -92,6 +124,12 @@ public class NhiMetricLService {
                 BigDecimal metricL22 = new L22Formula(collector, quarterSource).calculate();
                 BigDecimal metricL23 = new L23Formula(collector, oneYearNearSource).calculate();
                 BigDecimal metricL24 = new L24Formula(collector, halfYearNearSource).calculate();
+                BigDecimal metricL25 = new L25Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousOneYearNearByPatientSource).calculate();
+                BigDecimal metricL27 = new L27Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousTwoYearNearByPatientSource).calculate();
+                BigDecimal metricL29 = new L29Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousThreeYearNearByPatientSource).calculate();
+                BigDecimal metricL31 = new L31Formula(collector, odPermanentQuarterByPatientSource, odPermanentOneYearNearByPatientSource).calculate();
+                BigDecimal metricL33 = new L33Formula(collector, odPermanentQuarterByPatientSource, odPermanentTwoYearNearByPatientSource).calculate();
+                BigDecimal metricL35 = new L35Formula(collector, odPermanentQuarterByPatientSource, odPermanentThreeYearNearByPatientSource).calculate();
 
                 Section5 section5 = new Section5();
                 section5.setL1(metricL1);
@@ -130,6 +168,14 @@ public class NhiMetricLService {
                 Section13 section13 = new Section13();
                 section13.setL24(metricL24);
 
+                Section14 section14 = new Section14();
+                section14.setL25(metricL25);
+                section14.setL27(metricL27);
+                section14.setL29(metricL29);
+                section14.setL31(metricL31);
+                section14.setL33(metricL33);
+                section14.setL35(metricL35);
+
                 MetricLVM metricLVM = new MetricLVM();
                 metricLVM.setDoctor(doctor);
                 metricLVM.setSection5(section5);
@@ -139,6 +185,7 @@ public class NhiMetricLService {
                 metricLVM.setSection10(section10);
                 metricLVM.setSection12(section12);
                 metricLVM.setSection13(section13);
+                metricLVM.setSection14(section14);
 
                 return metricLVM;
             }).collect(toList());
