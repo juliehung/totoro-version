@@ -44,21 +44,6 @@ public class NhiRuleCheckScript89XXXC {
             vm
         );
 
-        /**
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
-                dto,
-                null,
-                Arrays.asList("90007C"),
-                null,
-                null,
-                1,
-                NhiRuleCheckFormat.D1_1
-            ),
-            vm
-        );
-         **/
-
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
@@ -112,14 +97,15 @@ public class NhiRuleCheckScript89XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90007C"),
                 null,
                 null,
-                1,
-                NhiRuleCheckFormat.D1_1
+                null,
+                null,
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -165,14 +151,15 @@ public class NhiRuleCheckScript89XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90007C"),
                 null,
                 null,
-                1,
-                NhiRuleCheckFormat.D1_1
+                null,
+                null,
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -216,14 +203,15 @@ public class NhiRuleCheckScript89XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90007C"),
                 null,
                 null,
-                1,
-                NhiRuleCheckFormat.D1_1
+                null,
+                null,
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -277,14 +265,15 @@ public class NhiRuleCheckScript89XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90007C"),
                 null,
                 null,
-                1,
-                NhiRuleCheckFormat.D1_1
+                null,
+                null,
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -402,14 +391,15 @@ public class NhiRuleCheckScript89XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90007C"),
                 null,
                 null,
-                1,
-                NhiRuleCheckFormat.D1_1
+                null,
+                null,
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -463,14 +453,15 @@ public class NhiRuleCheckScript89XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90007C"),
                 null,
                 null,
-                1,
-                NhiRuleCheckFormat.D1_1
+                null,
+                null,
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -525,14 +516,15 @@ public class NhiRuleCheckScript89XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90007C"),
                 null,
                 null,
-                1,
-                NhiRuleCheckFormat.D1_1
+                null,
+                null,
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -578,14 +570,15 @@ public class NhiRuleCheckScript89XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90007C"),
                 null,
                 null,
-                1,
-                NhiRuleCheckFormat.D1_1
+                null,
+                null,
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -631,14 +624,15 @@ public class NhiRuleCheckScript89XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90007C"),
                 null,
                 null,
-                1,
-                NhiRuleCheckFormat.D1_1
+                null,
+                null,
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -721,14 +715,15 @@ public class NhiRuleCheckScript89XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90007C"),
                 null,
                 null,
-                1,
-                NhiRuleCheckFormat.D1_1
+                null,
+                null,
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -781,14 +776,15 @@ public class NhiRuleCheckScript89XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90007C"),
                 null,
                 null,
-                1,
-                NhiRuleCheckFormat.D1_1
+                null,
+                null,
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
