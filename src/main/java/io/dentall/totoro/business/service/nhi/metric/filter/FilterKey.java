@@ -25,7 +25,9 @@ public enum FilterKey {
 
     OdQuarter(Quarter.output, FilterKey.odQuarter),
     OdPermanentQuarter(OdQuarter.output, FilterKey.odPermanentQuarter),
-    OdDeciduousQuarter(OdQuarter.output, FilterKey.odDeciduousQuarter);
+    OdDeciduousQuarter(OdQuarter.output, FilterKey.odDeciduousQuarter),
+
+    OdMonthSelected(OdQuarter.output, FilterKey.odMonthSelected);
 
     private static final String initial = "initial";
     private static final String subject = "subject";
@@ -52,6 +54,8 @@ public enum FilterKey {
     private static final String odQuarter = "odQuarter";
     private static final String odPermanentQuarter = "odPermanentQuarter";
     private static final String odDeciduousQuarter = "odDeciduousQuarter";
+
+    private static final String odMonthSelected = "odMonthSelected";
 
     private final String input;
     private final String output;

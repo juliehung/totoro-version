@@ -1,7 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.filter;
 
-import io.dentall.totoro.business.service.nhi.metric.util.OdDto;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
+import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package io.dentall.totoro.business.service.nhi.metric.util;
+package io.dentall.totoro.business.service.nhi.metric.dto;
 
 import java.time.LocalDate;
 import java.util.Date;

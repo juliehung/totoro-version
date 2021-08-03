@@ -12,7 +12,9 @@ public enum MetaType {
     CourseCase,
     EndoTreatment, Endo90015CTreatment, EndoTreatmentByTooth, EndoReTreatmentByTooth,
     OdDeciduousTreatment, OdDeciduousReTreatment,
-    OdPermanentTreatment, OdPermanentReTreatment
+    OdPermanentTreatment, OdPermanentReTreatment,
+    Od1ToothCount, Od4ToothCount, Od5ToothCount, Od6ToothCount, Od456SurfaceCount,
+    Od1Pt1
 }
 
 

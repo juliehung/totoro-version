@@ -5,7 +5,8 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * 看診人數/就醫人數 不重複病患數量
@@ -23,7 +24,7 @@ public class Pt1 extends SingleSourceCalculator {
         return (long) nhiMetricRawVMList.stream()
             .map(NhiMetricRawVM::getPatientId)
             .filter(Objects::nonNull)
-            .collect(Collectors.groupingBy(id -> id))
+            .collect(groupingBy(id -> id))
             .keySet().size();
     }
 

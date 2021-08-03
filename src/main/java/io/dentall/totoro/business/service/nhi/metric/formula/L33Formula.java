@@ -4,7 +4,7 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentTreatment;
-import io.dentall.totoro.business.service.nhi.metric.util.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,11 +21,13 @@ import static java.math.BigDecimal.ZERO;
  */
 public class L33Formula extends AbstractFormula {
 
-    private final Source<OdDto, Map<Long, List<OdDto>>> odQuarterSource;
+    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource;
 
-    private final Source<OdDto, Map<Long, List<OdDto>>> odTwoYearNearSource;
+    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odTwoYearNearSource;
 
-    public L33Formula(Collector collector, Source<OdDto, Map<Long, List<OdDto>>> odQuarterSource, Source<OdDto, Map<Long, List<OdDto>>> odTwoYearNearSource) {
+    public L33Formula(Collector collector,
+                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource,
+                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odTwoYearNearSource) {
         super(collector);
         this.odQuarterSource = odQuarterSource;
         this.odTwoYearNearSource = odTwoYearNearSource;

@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
-import io.dentall.totoro.business.service.nhi.metric.util.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 
 import java.time.Period;
 import java.util.*;
@@ -34,31 +34,29 @@ public class OdDeciduousReTreatment extends AbstractCalculator {
 
     @Override
     public Long doCalculate(Collector collector) {
-        List<Map<Long, List<OdDto>>> odSource = collector.retrieveSource(odSourceName);
-        List<Map<Long, List<OdDto>>> odPastSource = collector.retrieveSource(odPastSourceName);
-        Map<Long, List<OdDto>> odSourceMap = odSource.get(0);
-        Map<Long, List<OdDto>> odPastSourceMap = odPastSource.get(0);
+        List<Map<Long, Map<String, List<OdDto>>>> odSource = collector.retrieveSource(odSourceName);
+        List<Map<Long, Map<String, List<OdDto>>>> odPastSource = collector.retrieveSource(odPastSourceName);
+        Map<Long, Map<String, List<OdDto>>> odSourceMap = odSource.get(0);
+        Map<Long, Map<String, List<OdDto>>> odPastSourceMap = odPastSource.get(0);
 
         return odSourceMap.entrySet().stream()
             .filter(entry -> odPastSourceMap.get(entry.getKey()) != null && odPastSourceMap.get(entry.getKey()).size() > 0)
             .mapToLong(entry -> {
                 Long patientId = entry.getKey();
-                List<OdDto> odList = entry.getValue();
-                List<OdDto> odPastList = odPastSourceMap.get(patientId);
+                Map<String, List<OdDto>> odToothMap = entry.getValue();
+                Map<String, List<OdDto>> odToothPastMap = odPastSourceMap.get(patientId);
 
                 // 該季中如果同顆牙有多次，則取最後一次
-                Map<String, Optional<OdDto>> odMap = odList.stream()
+                Map<String, Optional<OdDto>> odMap = odToothMap.values().stream()
+                    .flatMap(Collection::stream)
                     .collect(groupingBy(OdDto::getTooth, maxBy(comparing(OdDto::getDisposalDate))));
-
-                Map<String, List<OdDto>> odPastMap = odPastList.stream()
-                    .collect(groupingBy(OdDto::getTooth));
 
                 return odMap.entrySet().stream()
                     .filter(entryOd -> entryOd.getValue().isPresent())
-                    .filter(entryOd -> odPastMap.get(entryOd.getKey()) != null)
+                    .filter(entryOd -> odToothPastMap.get(entryOd.getKey()) != null)
                     .filter(entryOd -> {
                         OdDto odDto = entryOd.getValue().get();
-                        Iterator<OdDto> existReDtoItor = odPastMap.get(entryOd.getKey()).iterator();
+                        Iterator<OdDto> existReDtoItor = odToothPastMap.get(entryOd.getKey()).iterator();
                         boolean found = false;
 
                         while (existReDtoItor.hasNext() && !found) {

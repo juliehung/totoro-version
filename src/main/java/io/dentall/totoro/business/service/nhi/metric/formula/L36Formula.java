@@ -1,10 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentTreatment;
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,29 +14,29 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.di
 import static java.math.BigDecimal.ZERO;
 
 /**
- * 一年恆牙重補率
- * 分子：＠date-10＠＠OD-2＠＠deta-3＠
+ * 第三年恆牙重補率
+ * 分子：＠date-10＠@OD-2@＠deta-13＠
  * 分母：＠date-10＠@OD-1@@tooth-1@
- * (分子 / 分母) x 100%"
+ * (分子 / 分母) x 100%"""
  */
-public class L31Formula extends AbstractFormula {
+public class L36Formula extends AbstractFormula {
 
     private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odOneYearNearSource;
+    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odThreeYearNearSource;
 
-    public L31Formula(Collector collector,
+    public L36Formula(Collector collector,
                       Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource,
-                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odOneYearNearSource) {
+                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odThreeYearNearSource) {
         super(collector);
         this.odQuarterSource = odQuarterSource;
-        this.odOneYearNearSource = odOneYearNearSource;
+        this.odThreeYearNearSource = odThreeYearNearSource;
     }
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
         OdPermanentTreatment odPermanentTreatment = new OdPermanentTreatment(collector, odQuarterSource.outputKey()).apply();
-        OdPermanentReTreatment odPermanentReTreatment = new OdPermanentReTreatment(collector, odQuarterSource.outputKey(), odOneYearNearSource.outputKey(), 0, 365).apply();
+        OdPermanentReTreatment odPermanentReTreatment = new OdPermanentReTreatment(collector, odQuarterSource.outputKey(), odThreeYearNearSource.outputKey(), 731, 1095).apply();
         try {
             return divide(odPermanentReTreatment.getResult(), odPermanentTreatment.getResult()).multiply(new BigDecimal(100L));
         } catch (ArithmeticException e) {
