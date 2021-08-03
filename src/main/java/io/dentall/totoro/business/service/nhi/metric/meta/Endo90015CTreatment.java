@@ -7,7 +7,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-public class Endo90015CTreatment extends SingleSourceCalculator {
+public class Endo90015CTreatment extends SingleSourceCalculator<Long> {
 
     private static final List<String> codes = singletonList("90015C");
 

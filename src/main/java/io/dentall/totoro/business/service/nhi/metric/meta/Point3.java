@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * 診療費
  */
-public class Point3 extends SingleSourceCalculator {
+public class Point3 extends SingleSourceCalculator<Long> {
 
     public Point3(Collector collector, String sourceName) {
         super(collector, sourceName);

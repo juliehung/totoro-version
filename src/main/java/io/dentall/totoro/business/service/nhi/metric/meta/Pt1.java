@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.groupingBy;
 /**
  * 看診人數/就醫人數 不重複病患數量
  */
-public class Pt1 extends SingleSourceCalculator {
+public class Pt1 extends SingleSourceCalculator<Long> {
 
     public Pt1(Collector collector, String sourceName) {
         super(collector, sourceName);

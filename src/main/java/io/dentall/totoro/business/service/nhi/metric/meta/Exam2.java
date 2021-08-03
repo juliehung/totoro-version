@@ -17,7 +17,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 /**
  * 一般牙科門診診察費(Xray)
  */
-public class Exam2 extends SingleSourceCalculator {
+public class Exam2 extends SingleSourceCalculator<Long> {
 
     public final List<String> codes = unmodifiableList(asList(
         "01271C", "01272C", "01273C"

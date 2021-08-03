@@ -11,7 +11,7 @@ import static java.util.Collections.unmodifiableList;
 /**
  * @ OD-5@齒數
  */
-public class Od5ToothCount extends SingleSourceCalculator {
+public class Od5ToothCount extends SingleSourceCalculator<Long> {
 
     private static final List<String> codes = unmodifiableList(asList("89002C", "89005C", "89009C"));
 

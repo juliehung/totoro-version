@@ -13,4 +13,8 @@ public class NumericUtils {
     public static BigDecimal divide(Long val1, Long val2) {
         return divide(new BigDecimal(val1), new BigDecimal(val2));
     }
+
+    public static BigDecimal divide(int val1, int val2) {
+        return divide(new BigDecimal(val1), new BigDecimal(val2));
+    }
 }

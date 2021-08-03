@@ -40,8 +40,8 @@ public class Collector {
         return this.cached.containsKey(key);
     }
 
-    public Meta retrieveMeta(String key) {
-        return this.metaMap.get(key);
+    public <T> Meta<T> retrieveMeta(String key) {
+        return (Meta<T>)this.metaMap.get(key);
     }
 
     public void storeMeta(String key, Meta meta) {

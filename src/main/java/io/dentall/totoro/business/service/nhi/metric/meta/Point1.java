@@ -5,7 +5,7 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 /**
  * 診療費
  */
-public class Point1 extends SingleSourceCalculator {
+public class Point1 extends SingleSourceCalculator<Long> {
 
     public Point1(Collector collector, String sourceName) {
         super(collector, sourceName);

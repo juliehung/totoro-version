@@ -7,7 +7,7 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
  * @ OD-5@齒數
  * @ OD-6@齒數
  */
-public class Od456SurfaceCount extends SingleSourceCalculator {
+public class Od456SurfaceCount extends SingleSourceCalculator<Long> {
 
     public Od456SurfaceCount(Collector collector, String sourceName) {
         super(collector, sourceName);

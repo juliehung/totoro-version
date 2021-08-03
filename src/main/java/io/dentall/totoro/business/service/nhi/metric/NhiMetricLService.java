@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
+import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
 import io.dentall.totoro.business.service.nhi.metric.filter.*;
 import io.dentall.totoro.business.service.nhi.metric.formula.*;
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
@@ -63,6 +64,8 @@ public class NhiMetricLService {
                 Source<NhiMetricRawVM, NhiMetricRawVM> threeMonthNearSource = new ThreeMonthNearSource(baseDate);
                 Source<NhiMetricRawVM, NhiMetricRawVM> monthSelectedSource = new MonthSelectedSource(baseDate);
 
+                Source<NhiMetricRawVM, Map<NhiSpecialCode, List<NhiMetricRawVM>>> specialCodeMonthSelectedSource = new SpecialCodeMonthSelectedSource();
+
                 Source<NhiMetricRawVM, OdDto> odThreeYearNearSource = new OdThreeYearNearSource(toLocalDate(quarterRange.getBegin()));
                 Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentThreeYearNearByPatientSource = new OdPermanentThreeYearNearByPatientSource();
                 Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousThreeYearNearByPatientSource = new OdDeciduousThreeYearNearByPatientSource();
@@ -90,6 +93,7 @@ public class NhiMetricLService {
                     .apply(quarterSource)
                     .apply(threeMonthNearSource)
                     .apply(monthSelectedSource)
+                    .apply(specialCodeMonthSelectedSource)
                     .apply(odThreeYearNearSource)
                     .apply(odPermanentThreeYearNearByPatientSource)
                     .apply(odDeciduousThreeYearNearByPatientSource)

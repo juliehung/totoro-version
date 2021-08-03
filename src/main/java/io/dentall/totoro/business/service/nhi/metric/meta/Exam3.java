@@ -17,7 +17,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 /**
  * 符合牙醫門診加強感染管制實施方案之牙科門診診察費(不含Xray)
  */
-public class Exam3 extends SingleSourceCalculator {
+public class Exam3 extends SingleSourceCalculator<Long> {
 
     public final List<String> codes = unmodifiableList(asList(
         "00305C", "00306C", "00307C", "00308C", "00309C", "00310C", "00311C", "00312C", "00313C", "00314C"

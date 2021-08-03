@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * 部分負擔點數
  */
-public class Point4 extends SingleSourceCalculator {
+public class Point4 extends SingleSourceCalculator<Long> {
 
     public Point4(Collector collector, String sourceName) {
         super(collector, sourceName);

@@ -2,7 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 
-public abstract class SingleSourceCalculator extends AbstractCalculator {
+public abstract class SingleSourceCalculator<T> extends AbstractCalculator<T> {
 
     private final String sourceName;
 

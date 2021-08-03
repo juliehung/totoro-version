@@ -1,5 +1,9 @@
 package io.dentall.totoro.business.vm.nhi;
 
+import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDate;
 
 public interface NhiMetricRawVM {
@@ -45,7 +49,8 @@ public interface NhiMetricRawVM {
     Long getTreatmentProcedureTotal();
 
     // 特定治療代碼
-    String getTreatmentProcedureSpecificCode();
+    @Enumerated(EnumType.STRING)
+    NhiSpecialCode getTreatmentProcedureSpecificCode();
 
     Long getDoctorId();
 

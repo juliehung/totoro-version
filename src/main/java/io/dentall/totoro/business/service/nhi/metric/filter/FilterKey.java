@@ -11,6 +11,8 @@ public enum FilterKey {
     ThreeMonthNear(HalfYearNear.output, FilterKey.threeMonthNear),
     MonthSelected(Quarter.output, FilterKey.monthSelected),
 
+    SpecialCodeMonthSelected(MonthSelected.output, FilterKey.specialCodeMonthSelected),
+
     OdThreeYearNear(ThreeYearNear.output, FilterKey.odThreeYearNear),
     OdPermanentThreeYearNear(OdThreeYearNear.output, FilterKey.odPermanentThreeYearNear),
     OdDeciduousThreeYearNear(OdThreeYearNear.output, FilterKey.odDeciduousThreeYearNear),
@@ -38,6 +40,8 @@ public enum FilterKey {
     private static final String twoYearNear = "twoYearNear";
     private static final String threeYearNear = "threeYearNear";
     private static final String halfYearNear = "halfYearNear";
+
+    private static final String specialCodeMonthSelected = "specialCodeMonthSelected";
 
     private static final String odOneYearNear = "odOneYearNear";
     private static final String odPermanentOneYearNear = "odPermanentOneYearNear";

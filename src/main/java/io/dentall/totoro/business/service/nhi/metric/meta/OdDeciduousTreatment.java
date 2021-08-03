@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 申報OD之乳牙顆數
  */
-public class OdDeciduousTreatment extends SingleSourceCalculator {
+public class OdDeciduousTreatment extends SingleSourceCalculator<Long> {
 
     public OdDeciduousTreatment(Collector collector, String sourceName) {
         super(collector, sourceName);

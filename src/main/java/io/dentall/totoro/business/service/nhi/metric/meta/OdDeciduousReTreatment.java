@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.maxBy;
 /**
  * 往前追溯發生在特定時間區間之自家同患者同牙位乳牙有申請過OD之顆數。
  */
-public class OdDeciduousReTreatment extends AbstractCalculator {
+public class OdDeciduousReTreatment extends AbstractCalculator<Long> {
 
     private final String odSourceName;
 

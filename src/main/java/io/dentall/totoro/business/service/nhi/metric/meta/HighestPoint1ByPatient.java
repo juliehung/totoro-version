@@ -5,7 +5,7 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 /**
  * 診療費 病患點數(最高者)
  */
-public class HighestPoint1ByPatient extends SingleSourceCalculator {
+public class HighestPoint1ByPatient extends SingleSourceCalculator<Long> {
 
     public HighestPoint1ByPatient(Collector collector, String sourceName) {
         super(collector, sourceName);

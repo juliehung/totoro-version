@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.groupingBy;
 /**
  * 診療費 病患點數(最高者)
  */
-public class HighestPoint3ByPatient extends SingleSourceCalculator {
+public class HighestPoint3ByPatient extends SingleSourceCalculator<Long> {
 
     public HighestPoint3ByPatient(Collector collector, String sourceName) {
         super(collector, sourceName);

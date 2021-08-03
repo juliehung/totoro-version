@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @ OD-1@齒數
  */
-public class Od1ToothCount extends SingleSourceCalculator {
+public class Od1ToothCount extends SingleSourceCalculator<Long> {
 
     public Od1ToothCount(Collector collector, String sourceName) {
         super(collector, sourceName);

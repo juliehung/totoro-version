@@ -10,7 +10,7 @@ import static java.util.stream.Collectors.groupingBy;
 /**
  * @ OD-1@@PT-1@
  */
-public class Od1Pt1 extends SingleSourceCalculator {
+public class Od1Pt1 extends SingleSourceCalculator<Long> {
 
     public Od1Pt1(Collector collector, String sourceName) {
         super(collector, sourceName);

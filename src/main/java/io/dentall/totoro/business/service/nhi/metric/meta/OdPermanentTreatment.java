@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 申報OD之恆牙顆數
  */
-public class OdPermanentTreatment extends SingleSourceCalculator {
+public class OdPermanentTreatment extends SingleSourceCalculator<Long> {
 
     public OdPermanentTreatment(Collector collector, String sourceName) {
         super(collector, sourceName);

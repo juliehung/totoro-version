@@ -1,17 +1,17 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-public class Meta {
+public class Meta<T> {
 
     private final MetaType name;
 
-    private final Long value;
+    private final T value;
 
-    public Meta(MetaType name, Long value) {
+    public Meta(MetaType name, T value) {
         this.name = name;
         this.value = value;
     }
 
-    public Long value() {
+    public T value() {
         return this.value;
     }
 

@@ -14,7 +14,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * 有卡號＋異常代碼之處置單數量總和
  * 同一療程在當月完成以一件計算，跨月完成則以二件計算
  */
-public class Ic3 extends SingleSourceCalculator {
+public class Ic3 extends SingleSourceCalculator<Long> {
 
     public Ic3(Collector collector, String sourceName) {
         super(collector, sourceName);
