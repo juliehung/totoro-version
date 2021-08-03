@@ -1966,7 +1966,7 @@ public class NhiRuleCheckUtil {
      * @param format 應為 D8_1 or D8_2
      * @return
      */
-    public NhiRuleCheckResultDTO isDependOnCodeWithToothBeforeDate(
+    public List<NhiRuleCheckResultDTO> isDependOnCodeWithToothBeforeDate(
         NhiRuleCheckDTO dto,
         NhiRuleCheckSourceType onlySourceType,
         List<String> originCodes,
@@ -1974,13 +1974,15 @@ public class NhiRuleCheckUtil {
         String limitDisplayDuration,
         NhiRuleCheckFormat format
     ) {
-        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
-            .validateTitle("需依賴某個時間點上，曾經存在某個代碼，且為某個牙位")
-            .validated(true);
+
+        List<NhiRuleCheckResultDTO> result = new ArrayList<>();
 
         List<String> codes = this.parseNhiCode(originCodes);
-        List<NhiRuleCheckTxSnapshot> currentDisposalMatches = new ArrayList<>();
-        Set<String> notMatchedTooth = new HashSet<>(ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74()));
+        Set<String> notMatchedTooth = new HashSet<>(
+            ToothUtil.splitA74(
+                dto.getNhiExtendTreatmentProcedure().getA74()
+            )
+        );
 
         // 當前 disposal
         if (dto.getIncludeNhiCodes() != null &&
@@ -2023,6 +2025,12 @@ public class NhiRuleCheckUtil {
         }
 
         sourceData.stream()
+            .filter(
+                d -> duration == null ||
+                    d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                    d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                    d.getRecordDateTime().isEqual(duration.getEnd())
+            )
             .forEach(d -> {
                 List<String> duplicatedTeeth = ToothUtil.listDuplicatedTooth(
                     d.getTooth(),
@@ -2032,21 +2040,10 @@ public class NhiRuleCheckUtil {
                     notMatchedTooth.remove(t);
                 });
             });
-        List<NhiHybridRecordDTO> matches = duration != null
-            ? sourceData.stream()
-            .filter(
-                d -> d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
-                    d.getRecordDateTime().isEqual(duration.getBegin()) ||
-                    d.getRecordDateTime().isEqual(duration.getEnd())
-            )
-            .filter(d -> ToothUtil.listDuplicatedTooth(d.getTooth(), dto.getNhiExtendTreatmentProcedure().getA74()).size() != 0)
-            .collect(Collectors.toList())
-            : sourceData;
 
-        if (notMatchedTooth.size() != 0) {
-            String m = "";
-            if (currentDisposalMatches.size() == 0) {
-                m = this.generateErrorMessage(
+        notMatchedTooth.stream()
+            .forEach(t -> {
+                String m = this.generateErrorMessage(
                     format,
                     NhiRuleCheckSourceType.CURRENT_DISPOSAL, // 避免 null 出錯，此項分配到的 message 其實理論上應當用不到
                     dto.getNhiExtendTreatmentProcedure().getA73(),
@@ -2056,24 +2053,14 @@ public class NhiRuleCheckUtil {
                     null,
                     null
                 );
-            } else {
-                m = this.generateErrorMessage(
-                    format,
-                    NhiRuleCheckSourceType.CURRENT_DISPOSAL, // 避免 null 出錯，此項分配到的 message 其實理論上應當用不到
-                    dto.getNhiExtendTreatmentProcedure().getA73(),
-                    String.join("/", codes),
-                    this.getNhiExtendDisposalDateInDTO(dto),
-                    limitDisplayDuration,
-                    null,
-                    null
-                );
-            }
 
-            result
-                .validated(false)
-                .nhiRuleCheckInfoType(format.getLevel())
-                .message(m);
-        }
+                result.add(new NhiRuleCheckResultDTO()
+                    .validateTitle("需依賴某個時間點上，曾經存在某個代碼，且為某個牙位")
+                    .validated(false)
+                    .nhiRuleCheckInfoType(format.getLevel())
+                    .message(m)
+                );
+            });
 
         return result;
     }
