@@ -648,7 +648,7 @@ public class NhiRuleCheckScript90XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isDependOnCodeBeforeDate(
+            nhiRuleCheckUtil.isDependOnCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90015C"),

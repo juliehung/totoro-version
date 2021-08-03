@@ -1957,6 +1957,128 @@ public class NhiRuleCheckUtil {
     }
 
     /**
+     * 需依賴某個時間點上，曾經存在某個代碼，且為某個牙位
+     * @param dto
+     * @param onlySourceType 全查(by pass null) or 只有 sys
+     * @param originCodes
+     * @param duration
+     * @param limitDisplayDuration
+     * @param format 應為 D8_1 or D8_2
+     * @return
+     */
+    public NhiRuleCheckResultDTO isDependOnCodeWithToothBeforeDate(
+        NhiRuleCheckDTO dto,
+        NhiRuleCheckSourceType onlySourceType,
+        List<String> originCodes,
+        LocalDateDuration duration,
+        String limitDisplayDuration,
+        NhiRuleCheckFormat format
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO()
+            .validateTitle("需依賴某個時間點上，曾經存在某個代碼，且為某個牙位")
+            .validated(true);
+
+        List<String> codes = this.parseNhiCode(originCodes);
+        List<NhiRuleCheckTxSnapshot> currentDisposalMatches = new ArrayList<>();
+        Set<String> notMatchedTooth = new HashSet<>(ToothUtil.splitA74(dto.getNhiExtendTreatmentProcedure().getA74()));
+
+        // 當前 disposal
+        if (dto.getIncludeNhiCodes() != null &&
+            dto.getIncludeNhiCodes().size() > 0
+        ) {
+            List<NhiRuleCheckTxSnapshot> ignoreTargetTxSnapshots = this.getIgnoreTargetTxSnapshots(dto);
+            ignoreTargetTxSnapshots.stream()
+                .forEach(d -> {
+                    if (codes.contains(d.getNhiCode())) {
+                        List<String> duplicatedTeeth = ToothUtil.listDuplicatedTooth(
+                            d.getTeeth(),
+                            dto.getNhiExtendTreatmentProcedure().getA74()
+                        );
+                        duplicatedTeeth.forEach(t -> {
+                            notMatchedTooth.remove(t);
+                        });
+                    }
+                });
+        }
+
+        // 其他處置
+        List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
+            ? dto.getSourceData().stream().filter(d -> codes.contains(d.getCode())).collect(Collectors.toList())
+            : this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            codes,
+            Arrays.asList(
+                dto.getNhiExtendDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal() != null &&
+                    dto.getNhiExtendDisposal().getDisposal().getId() != null
+                    ? dto.getNhiExtendDisposal().getDisposal().getId()
+                    : 0L
+            )
+        );
+
+        if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(onlySourceType)) {
+            sourceData = sourceData.stream()
+                .filter(d -> "SYS".equals(d.getRecordSource()))
+                .collect(Collectors.toList());
+        }
+
+        sourceData.stream()
+            .forEach(d -> {
+                List<String> duplicatedTeeth = ToothUtil.listDuplicatedTooth(
+                    d.getTooth(),
+                    dto.getNhiExtendTreatmentProcedure().getA74()
+                );
+                duplicatedTeeth.forEach(t -> {
+                    notMatchedTooth.remove(t);
+                });
+            });
+        List<NhiHybridRecordDTO> matches = duration != null
+            ? sourceData.stream()
+            .filter(
+                d -> d.getRecordDateTime().isAfter(duration.getBegin()) && d.getRecordDateTime().isBefore(duration.getEnd()) ||
+                    d.getRecordDateTime().isEqual(duration.getBegin()) ||
+                    d.getRecordDateTime().isEqual(duration.getEnd())
+            )
+            .filter(d -> ToothUtil.listDuplicatedTooth(d.getTooth(), dto.getNhiExtendTreatmentProcedure().getA74()).size() != 0)
+            .collect(Collectors.toList())
+            : sourceData;
+
+        if (notMatchedTooth.size() != 0) {
+            String m = "";
+            if (currentDisposalMatches.size() == 0) {
+                m = this.generateErrorMessage(
+                    format,
+                    NhiRuleCheckSourceType.CURRENT_DISPOSAL, // 避免 null 出錯，此項分配到的 message 其實理論上應當用不到
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    String.join("/", codes),
+                    this.getNhiExtendDisposalDateInDTO(dto),
+                    limitDisplayDuration,
+                    null,
+                    null
+                );
+            } else {
+                m = this.generateErrorMessage(
+                    format,
+                    NhiRuleCheckSourceType.CURRENT_DISPOSAL, // 避免 null 出錯，此項分配到的 message 其實理論上應當用不到
+                    dto.getNhiExtendTreatmentProcedure().getA73(),
+                    String.join("/", codes),
+                    this.getNhiExtendDisposalDateInDTO(dto),
+                    limitDisplayDuration,
+                    null,
+                    null
+                );
+            }
+
+            result
+                .validated(false)
+                .nhiRuleCheckInfoType(format.getLevel())
+                .message(m);
+        }
+
+        return result;
+    }
+
+    /**
      * 指定 patient id, codes, tooth 並排除 disposal，提示訊息不顯示牙齒
      * @param dto
      * @param onlySourceType
