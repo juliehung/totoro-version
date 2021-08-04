@@ -684,13 +684,13 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
     @Query(
         nativeQuery = true,
         value = "with ic_records as ( " +
-            "        select 'IC' as recordSource, " +
-            "               0 as disposalId, " +
-            "               0 as doctorId, " +
-            "               jhi_date as recordDateTime, " +
-            "               nhi_code as code, " +
-            "               part as tooth, " +
-            "               jhi_usage as surface " +
+            "        select cast('IC' as text) as recordSource, " +
+            "               cast(0 as bigint) as disposalId, " +
+            "               cast(0 as bigint) as doctorId, " +
+            "               cast(jhi_date as text) as recordDateTime, " +
+            "               cast(nhi_code as text) as code, " +
+            "               cast(part as text) as tooth, " +
+            "               cast(jhi_usage as text) as surface " +
             "        from nhi_medical_record nmr " +
             "        left join nhi_procedure np on np.code = nmr.nhi_code" +
             "        where  nhi_extend_patient_patient_id = :patientId " +
@@ -698,13 +698,13 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "        and    nhi_code in (:codes) " +
             "    ), " +
             "     sys_records as ( " +
-            "         select 'SYS' as recordSource, " +
-            "                d.id as disposalId, " +
-            "                a.doctor_user_id as doctorId, " +
-            "                netp.a71 as recordDateTime, " +
-            "                netp.a73 as code, " +
-            "                netp.a74 as tooth, " +
-            "                netp.a75 as surface " +
+            "         select cast('SYS' as text) as recordSource, " +
+            "                cast(d.id as bigint) as disposalId, " +
+            "                cast(a.doctor_user_id as bigint) as doctorId, " +
+            "                cast(netp.a71 as text) as recordDateTime, " +
+            "                cast(netp.a73 as text) as code, " +
+            "                cast(netp.a74 as text) as tooth, " +
+            "                cast(netp.a75 as text) as surface " +
             "         from disposal d " +
             "         left join appointment a on d.registration_id = a.registration_id " +
             "         left join treatment_procedure tp on d.id = tp.disposal_id " +
@@ -713,6 +713,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "         where  a.patient_id = :patientId " +
             "         and    netp.a73 in (:codes) " +
             "         and    trim(ned.a18) <> '' " +
+            "         and    tp.nhi_procedure_id is not null " +
             "     ) " +
             "select sum_records.recordSource, " +
             "       sum_records.disposalId, " +
@@ -732,7 +733,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "where sys_records.recordDateTime is null " +
             "    and sum_records.recordDateTime is not null " +
             "    and sum_records.code is not null " +
-            "    and sum_records.disposalId not in (:excludeDisposalIds)" +
+            "    and sum_records.disposalId not in (:excludeDisposalIds) " +
             "order by sum_records.recordDateTime desc "
     )
     List<NhiHybridRecord> findNhiHybridRecord(
@@ -744,26 +745,26 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
     @Query(
         nativeQuery = true,
         value = "with ic_records as ( " +
-            "        select 'IC' as recordSource, " +
-            "               0 as disposalId, " +
-            "               0 as doctorId, " +
-            "               jhi_date as recordDateTime, " +
-            "               nhi_code as code, " +
-            "               part as tooth, " +
-            "               jhi_usage as surface " +
+            "        select cast('IC' as text) as recordSource, " +
+            "               cast(0 as bigint) as disposalId, " +
+            "               cast(0 as bigint) as doctorId, " +
+            "               cast(jhi_date as text) as recordDateTime, " +
+            "               cast(nhi_code as text) as code, " +
+            "               cast(part as text) as tooth, " +
+            "               cast(jhi_usage as text) as surface " +
             "        from nhi_medical_record nmr " +
             "        left join nhi_procedure np on np.code = nmr.nhi_code" +
             "        where  nhi_extend_patient_patient_id = :patientId " +
             "        and    np.id is not null " +
             "    ), " +
             "     sys_records as ( " +
-            "         select 'SYS' as recordSource, " +
-            "                d.id as disposalId, " +
-            "                a.doctor_user_id as doctorId, " +
-            "                netp.a71 as recordDateTime, " +
-            "                netp.a73 as code, " +
-            "                netp.a74 as tooth, " +
-            "                netp.a75 as surface " +
+            "         select cast('SYS' as text) as recordSource, " +
+            "                cast(d.id as bigint) as disposalId, " +
+            "                cast(a.doctor_user_id as bigint) as doctorId, " +
+            "                cast(netp.a71 as text) as recordDateTime, " +
+            "                cast(netp.a73 as text) as code, " +
+            "                cast(netp.a74 as text) as tooth, " +
+            "                cast(netp.a75 as text) as surface " +
             "         from disposal d " +
             "         left join appointment a on d.registration_id = a.registration_id " +
             "         left join treatment_procedure tp on d.id = tp.disposal_id " +
@@ -771,6 +772,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "         left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "         where  a.patient_id = :patientId " +
             "         and    trim(ned.a18) <> '' " +
+            "         and    tp.nhi_procedure_id is not null " +
             "     ) " +
             "select sum_records.recordSource, " +
             "       sum_records.disposalId, " +
@@ -790,7 +792,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "where sys_records.recordDateTime is null " +
             "    and sum_records.recordDateTime is not null " +
             "    and sum_records.code is not null " +
-            "    and sum_records.disposalId not in (:excludeDisposalIds)" +
+            "    and sum_records.disposalId not in (:excludeDisposalIds) " +
             "order by sum_records.recordDateTime desc "
     )
     List<NhiHybridRecord> findNhiHybridRecord(
