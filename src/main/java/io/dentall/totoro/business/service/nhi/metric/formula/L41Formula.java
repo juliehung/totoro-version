@@ -17,7 +17,7 @@ import static java.math.BigDecimal.ZERO;
  * 三年恆牙重補顆數
  * ＠date-10＠＠OD-2＠＠deta-12＠
  */
-public class L41Formula extends AbstractFormula {
+public class L41Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource;
 

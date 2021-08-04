@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * 申請點數 ＠date-15＠ 的 @Point-2@
  */
-public class L4Formula extends AbstractFormula {
+public class L4Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

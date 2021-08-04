@@ -1,126 +1,138 @@
 package io.dentall.totoro.business.service.nhi.metric.vm;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Section15 {
 
-    private BigDecimal L37;
+    private MetricData L37;
 
-    private BigDecimal L38;
+    private MetricData L38;
 
-    private BigDecimal L39;
+    private MetricData L39;
 
-    private BigDecimal L40;
+    private MetricData L40;
 
-    private BigDecimal L41;
+    private MetricData L41;
 
-    private BigDecimal L42;
+    private MetricData L42;
 
-    private BigDecimal L43;
+    private MetricData L43;
 
-    private BigDecimal L44;
+    private MetricData L44;
 
-    private BigDecimal L45;
+    private MetricData L45;
 
-    private BigDecimal L46;
+    private MetricData L46;
 
-    private BigDecimal L47;
+    private MetricData L47;
 
-    private BigDecimal L48;
+    private MetricData L48;
 
-    public BigDecimal getL37() {
+    @JsonProperty("Lp37")
+    public MetricData getL37() {
         return L37;
     }
 
-    public void setL37(BigDecimal l37) {
+    public void setL37(MetricData l37) {
         L37 = l37;
     }
 
-    public BigDecimal getL38() {
+    @JsonProperty("Lp38")
+    public MetricData getL38() {
         return L38;
     }
 
-    public void setL38(BigDecimal l38) {
+    public void setL38(MetricData l38) {
         L38 = l38;
     }
 
-    public BigDecimal getL39() {
+    @JsonProperty("Lp39")
+    public MetricData getL39() {
         return L39;
     }
 
-    public void setL39(BigDecimal l39) {
+    public void setL39(MetricData l39) {
         L39 = l39;
     }
 
-    public BigDecimal getL40() {
+    @JsonProperty("Lp40")
+    public MetricData getL40() {
         return L40;
     }
 
-    public void setL40(BigDecimal l40) {
+    public void setL40(MetricData l40) {
         L40 = l40;
     }
 
-    public BigDecimal getL41() {
+    @JsonProperty("Lp41")
+    public MetricData getL41() {
         return L41;
     }
 
-    public void setL41(BigDecimal l41) {
+    public void setL41(MetricData l41) {
         L41 = l41;
     }
 
-    public BigDecimal getL42() {
+    @JsonProperty("Lp42")
+    public MetricData getL42() {
         return L42;
     }
 
-    public void setL42(BigDecimal l42) {
+    public void setL42(MetricData l42) {
         L42 = l42;
     }
 
-    public BigDecimal getL43() {
+    @JsonProperty("Lp43")
+    public MetricData getL43() {
         return L43;
     }
 
-    public void setL43(BigDecimal l43) {
+    public void setL43(MetricData l43) {
         L43 = l43;
     }
 
-    public BigDecimal getL44() {
+    @JsonProperty("Lp44")
+    public MetricData getL44() {
         return L44;
     }
 
-    public void setL44(BigDecimal l44) {
+    public void setL44(MetricData l44) {
         L44 = l44;
     }
 
-    public BigDecimal getL45() {
+    @JsonProperty("Lp45")
+    public MetricData getL45() {
         return L45;
     }
 
-    public void setL45(BigDecimal l45) {
+    public void setL45(MetricData l45) {
         L45 = l45;
     }
 
-    public BigDecimal getL46() {
+    @JsonProperty("Lp46")
+    public MetricData getL46() {
         return L46;
     }
 
-    public void setL46(BigDecimal l46) {
+    public void setL46(MetricData l46) {
         L46 = l46;
     }
 
-    public BigDecimal getL47() {
+    @JsonProperty("Lp47")
+    public MetricData getL47() {
         return L47;
     }
 
-    public void setL47(BigDecimal l47) {
+    public void setL47(MetricData l47) {
         L47 = l47;
     }
 
-    public BigDecimal getL48() {
+    @JsonProperty("Lp48")
+    public MetricData getL48() {
         return L48;
     }
 
-    public void setL48(BigDecimal l48) {
+    public void setL48(MetricData l48) {
         L48 = l48;
     }
 }

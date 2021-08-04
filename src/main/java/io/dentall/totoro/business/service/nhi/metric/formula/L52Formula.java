@@ -14,7 +14,7 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.di
  * 當月補牙患者平均填補面數
  * ＠date-15＠ 的(1*@OD-4@醫令數量＋2*@OD-5@醫令數量+3*@OD-6@醫令數量)/@OD-1@@PT-1@
  */
-public class L52Formula extends AbstractFormula {
+public class L52Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<OdDto, OdDto> source;
 

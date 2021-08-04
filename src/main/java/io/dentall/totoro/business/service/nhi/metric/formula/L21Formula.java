@@ -15,7 +15,7 @@ import static java.math.BigDecimal.ZERO;
 /**
  * 近三月根管未完成率 ＠date-15＠ 的 [1–(90001C+90002C+90003C+90016C+90018C+90019C+90020C) ∕ 90015C]*100%
  */
-public class L21Formula extends AbstractFormula {
+public class L21Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

@@ -14,7 +14,7 @@ import static java.math.BigDecimal.ZERO;
 /**
  * 季平均就醫>2次 ＠date-10@ 的 ＠IC-3＠/@PT-1@
  */
-public class L19Formula extends AbstractFormula {
+public class L19Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

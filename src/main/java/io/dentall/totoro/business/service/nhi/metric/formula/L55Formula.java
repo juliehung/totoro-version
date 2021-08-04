@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * 當季全部病患
  * ＠date-10＠ 的 @OD-1@@PT-1@
  */
-public class L55Formula extends AbstractFormula {
+public class L55Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, OdDto> source;
 

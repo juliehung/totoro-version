@@ -1,14 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.vm;
 
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import io.dentall.totoro.domain.User;
-
 public class MetricLVM {
 
     private String type;
 
-    @JsonIncludeProperties({"id", "firstName"})
-    private User doctor;
+    private DoctorData doctor;
 
     private Section5 section5;
 
@@ -19,6 +15,8 @@ public class MetricLVM {
     private Section8 section8;
 
     private Section10 section10;
+
+    private Section11 section11;
 
     private Section12 section12;
 
@@ -40,11 +38,11 @@ public class MetricLVM {
         this.type = type;
     }
 
-    public User getDoctor() {
+    public DoctorData getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(User doctor) {
+    public void setDoctor(DoctorData doctor) {
         this.doctor = doctor;
     }
 
@@ -86,6 +84,14 @@ public class MetricLVM {
 
     public void setSection10(Section10 section10) {
         this.section10 = section10;
+    }
+
+    public Section11 getSection11() {
+        return section11;
+    }
+
+    public void setSection11(Section11 section11) {
+        this.section11 = section11;
     }
 
     public Section12 getSection12() {

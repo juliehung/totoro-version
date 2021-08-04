@@ -32,7 +32,7 @@ public class SpecialTreatment extends SingleSourceCalculator<SpecialTreatmentAna
                 .reduce(new HashMap<>(), (map, entry) -> {
                         SpecialTreatmentItem item = summary(entry.getValue());
                         map.put(entry.getKey(), item);
-                        summary.setCaseNumber(summary.getCaseNumber() + item.getCaseNumber());
+                        summary.setCaseCount(summary.getCaseCount() + item.getCaseCount());
                         summary.setPoints(summary.getPoints() + item.getPoints());
                         return map;
                     },
@@ -54,11 +54,11 @@ public class SpecialTreatment extends SingleSourceCalculator<SpecialTreatmentAna
         return list.stream().reduce(new SpecialTreatmentItem(0, 0L),
             (item, vm) -> {
                 item.setPoints(item.getPoints() + ofNullable(vm.getTreatmentProcedureTotal()).orElse(0L));
-                item.setCaseNumber(item.getCaseNumber() + 1);
+                item.setCaseCount(item.getCaseCount() + 1);
                 return item;
             },
             (item1, item2) -> {
-                item1.setCaseNumber(item1.getCaseNumber() + item2.getCaseNumber());
+                item1.setCaseCount(item1.getCaseCount() + item2.getCaseCount());
                 item1.setPoints(item1.getPoints() + item2.getPoints());
                 return item1;
             }
@@ -79,63 +79,63 @@ public class SpecialTreatment extends SingleSourceCalculator<SpecialTreatmentAna
 
     private void combineItem(SpecialTreatmentAnalysis analysis) {
         SpecialTreatmentItem p1p5 = new SpecialTreatmentItem(
-            analysis.getP1().getCaseNumber() + analysis.getP5().getCaseNumber(),
+            analysis.getP1().getCaseCount() + analysis.getP5().getCaseCount(),
             analysis.getP1().getPoints() + analysis.getP5().getPoints());
         analysis.setP1p5(p1p5);
 
         SpecialTreatmentItem p2p3 = new SpecialTreatmentItem(
-            analysis.getP2().getCaseNumber() + analysis.getP3().getCaseNumber(),
+            analysis.getP2().getCaseCount() + analysis.getP3().getCaseCount(),
             analysis.getP2().getPoints() + analysis.getP3().getPoints());
         analysis.setP2p3(p2p3);
 
         SpecialTreatmentItem p4p8 = new SpecialTreatmentItem(
-            analysis.getP4().getCaseNumber() + analysis.getP8().getCaseNumber(),
+            analysis.getP4().getCaseCount() + analysis.getP8().getCaseCount(),
             analysis.getP4().getPoints() + analysis.getP8().getPoints());
         analysis.setP4p8(p4p8);
 
         SpecialTreatmentItem p6p7AndOther = new SpecialTreatmentItem(
-            analysis.getP6().getCaseNumber() + analysis.getP7().getCaseNumber() + analysis.getOther().getCaseNumber(),
+            analysis.getP6().getCaseCount() + analysis.getP7().getCaseCount() + analysis.getOther().getCaseCount(),
             analysis.getP6().getPoints() + analysis.getP7().getPoints() + analysis.getOther().getPoints());
         analysis.setP6p7AndOther(p6p7AndOther);
     }
 
     private void percentage(SpecialTreatmentAnalysis analysis) {
         long totalPoints = analysis.getSummary().getPoints();
-        int totalCaseNumber = analysis.getSummary().getCaseNumber();
+        int totalCaseNumber = analysis.getSummary().getCaseCount();
 
         analysis.getP1().calculatePercentageOfPoints(totalPoints);
-        analysis.getP1().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP1().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getP2().calculatePercentageOfPoints(totalPoints);
-        analysis.getP2().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP2().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getP3().calculatePercentageOfPoints(totalPoints);
-        analysis.getP3().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP3().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getP4().calculatePercentageOfPoints(totalPoints);
-        analysis.getP4().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP4().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getP5().calculatePercentageOfPoints(totalPoints);
-        analysis.getP5().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP5().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getP6().calculatePercentageOfPoints(totalPoints);
-        analysis.getP6().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP6().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getP7().calculatePercentageOfPoints(totalPoints);
-        analysis.getP7().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP7().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getP8().calculatePercentageOfPoints(totalPoints);
-        analysis.getP8().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP8().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getOther().calculatePercentageOfPoints(totalPoints);
-        analysis.getOther().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getOther().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getSummary().calculatePercentageOfPoints(totalPoints);
-        analysis.getSummary().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getSummary().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getP1p5().calculatePercentageOfPoints(totalPoints);
-        analysis.getP1p5().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP1p5().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getP2p3().calculatePercentageOfPoints(totalPoints);
-        analysis.getP2p3().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP2p3().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getP4p8().calculatePercentageOfPoints(totalPoints);
-        analysis.getP4p8().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP4p8().calculatePercentageOfCaseCount(totalCaseNumber);
         analysis.getP6p7AndOther().calculatePercentageOfPoints(totalPoints);
-        analysis.getP6p7AndOther().calculatePercentageOfCaseNumber(totalCaseNumber);
+        analysis.getP6p7AndOther().calculatePercentageOfCaseCount(totalCaseNumber);
     }
 
 
     @Override
     public MetaType metaType() {
-        return MetaType.Pt1;
+        return MetaType.SpecialTreatment;
     }
 }

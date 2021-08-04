@@ -16,7 +16,7 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.di
  * 當季平均一顆面數
  * @ date-10@ 的 (1*@OD-4@醫令數量＋2*@OD-5@醫令數量+3*@OD-6@醫令數量)/@OD-1@齒數
  */
-public class L53Formula extends AbstractFormula {
+public class L53Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, OdDto> source;
 

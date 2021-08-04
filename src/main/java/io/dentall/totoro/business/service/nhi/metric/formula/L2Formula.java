@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 /**
  * 診察費點數 ＠date-15＠ (@Exam-1@+@Exam-2@+@Exam-3@+@Exam-4@)
  */
-public class L2Formula extends AbstractFormula {
+public class L2Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

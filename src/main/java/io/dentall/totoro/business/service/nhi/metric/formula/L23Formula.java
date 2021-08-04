@@ -16,7 +16,7 @@ import static java.math.BigDecimal.ZERO;
  * 一年根管未完成率
  * [1–(＠date-3＠ 90001C+ ＠date-3＠ 90002C+ ＠date-3＠ 90003C+ ＠date-3＠ 90016C+ ＠date-3＠ 90018C+ ＠date-3＠ 90019C+＠date-3＠ 90020C) ∕ ＠date-3＠  90015C]*100%
  */
-public class L23Formula extends AbstractFormula {
+public class L23Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

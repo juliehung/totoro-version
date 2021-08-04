@@ -14,7 +14,7 @@ import static java.math.BigDecimal.ZERO;
 /**
  * 一日平均件數 ＠date-15＠ 的 @IC-3@/@IC-2@
  */
-public class L8Formula extends AbstractFormula {
+public class L8Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

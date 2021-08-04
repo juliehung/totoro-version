@@ -19,7 +19,7 @@ import static java.math.BigDecimal.ZERO;
  * 分母：＠date-10＠@OD-1@@tooth-2@
  * (分子 / 分母) x 100%"""
  */
-public class L26Formula extends AbstractFormula {
+public class L26Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource;
 

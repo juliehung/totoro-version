@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * 看診天數 ＠date-15＠ 的 @IC-2@
  */
-public class L12Formula extends AbstractFormula {
+public class L12Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * 當季補牙面數
  * (1*@OD-4@醫令數量＋2*@OD-5@醫令數量+3*@OD-6@醫令數量)
  */
-public class L54Formula extends AbstractFormula {
+public class L54Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, OdDto> source;
 

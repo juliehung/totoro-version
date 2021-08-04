@@ -14,7 +14,7 @@ import static java.math.BigDecimal.ZERO;
 /**
  * 病患最高總點數佔比 ＠date-15＠ 的 病患合計點數(最高者)/@Point-1@
  */
-public class L10Formula extends AbstractFormula {
+public class L10Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

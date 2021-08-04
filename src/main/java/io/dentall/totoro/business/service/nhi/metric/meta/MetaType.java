@@ -14,7 +14,8 @@ public enum MetaType {
     OdDeciduousTreatment, OdDeciduousReTreatment,
     OdPermanentTreatment, OdPermanentReTreatment,
     Od1ToothCount, Od4ToothCount, Od5ToothCount, Od6ToothCount, Od456SurfaceCount,
-    Od1Pt1
+    Od1Pt1,
+    SpecialTreatment
 }
 
 

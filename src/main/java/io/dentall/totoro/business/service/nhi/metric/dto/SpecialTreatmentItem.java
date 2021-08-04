@@ -1,32 +1,30 @@
 package io.dentall.totoro.business.service.nhi.metric.dto;
 
-import io.dentall.totoro.business.service.nhi.metric.util.NumericUtils;
-
 import java.math.BigDecimal;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 
 public class SpecialTreatmentItem {
 
-    private int caseNumber;
+    private int caseCount;
 
-    private BigDecimal percentageOfCaseNumber;
+    private BigDecimal percentageOfCaseCount;
 
     private long points;
 
     private BigDecimal percentageOfPoints;
 
-    public SpecialTreatmentItem(int caseNumber, long points) {
-        this.caseNumber = caseNumber;
+    public SpecialTreatmentItem(int caseCount, long points) {
+        this.caseCount = caseCount;
         this.points = points;
     }
 
-    public int getCaseNumber() {
-        return caseNumber;
+    public int getCaseCount() {
+        return caseCount;
     }
 
-    public void setCaseNumber(int caseNumber) {
-        this.caseNumber = caseNumber;
+    public void setCaseCount(int caseCount) {
+        this.caseCount = caseCount;
     }
 
     public long getPoints() {
@@ -37,15 +35,15 @@ public class SpecialTreatmentItem {
         this.points = points;
     }
 
-    public BigDecimal getPercentageOfCaseNumber() {
-        return percentageOfCaseNumber;
+    public BigDecimal getPercentageOfCaseCount() {
+        return percentageOfCaseCount;
     }
 
-    public void calculatePercentageOfCaseNumber(int totalCaseNumber) {
+    public void calculatePercentageOfCaseCount(int totalCaseNumber) {
         try {
-            percentageOfCaseNumber = divide(caseNumber, totalCaseNumber);
+            percentageOfCaseCount = divide(caseCount, totalCaseNumber);
         } catch (ArithmeticException e) {
-            percentageOfCaseNumber = BigDecimal.ZERO;
+            percentageOfCaseCount = BigDecimal.ZERO;
         }
     }
 

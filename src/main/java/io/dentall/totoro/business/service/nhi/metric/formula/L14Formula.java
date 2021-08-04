@@ -14,7 +14,7 @@ import static java.math.BigDecimal.ZERO;
 /**
  * 一件平均合計點數 ＠date-15＠ 的 @Point-1@/@IC-3@
  */
-public class L14Formula extends AbstractFormula {
+public class L14Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

@@ -5,7 +5,7 @@ import io.dentall.totoro.business.service.nhi.metric.meta.Calculator;
 
 import java.math.BigDecimal;
 
-public abstract class AbstractFormula implements Calculator<BigDecimal> {
+public abstract class AbstractFormula<R> implements Calculator<R> {
 
     private final Collector collector;
 
@@ -14,9 +14,9 @@ public abstract class AbstractFormula implements Calculator<BigDecimal> {
     }
 
     @Override
-    public BigDecimal calculate() {
+    public R calculate() {
         return doCalculate(collector);
     }
 
-    protected abstract BigDecimal doCalculate(Collector collector);
+    protected abstract R doCalculate(Collector collector);
 }

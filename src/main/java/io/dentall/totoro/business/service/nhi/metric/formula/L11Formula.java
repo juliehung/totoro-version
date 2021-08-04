@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * 同療程件數 ＠date-15＠ 的 就醫類別為 AA, AB 的處置單數量總和
  */
-public class L11Formula extends AbstractFormula {
+public class L11Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

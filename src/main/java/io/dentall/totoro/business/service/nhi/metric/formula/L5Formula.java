@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * 看診人數 ＠date-15＠ 的 @PT-1@
  */
-public class L5Formula extends AbstractFormula {
+public class L5Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

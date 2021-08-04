@@ -14,7 +14,7 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.di
  * 當月補牙面數
  * (1*@OD-4@醫令數量＋2*@OD-5@醫令數量+3*@OD-6@醫令數量)
  */
-public class L50Formula extends AbstractFormula {
+public class L50Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<OdDto, OdDto> source;
 

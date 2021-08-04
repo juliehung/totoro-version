@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * 診療費點數 ＠date-15＠ 的 @Point-3@
  */
-public class L3Formula extends AbstractFormula {
+public class L3Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

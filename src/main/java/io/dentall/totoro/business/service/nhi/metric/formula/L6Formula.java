@@ -14,7 +14,7 @@ import static java.math.BigDecimal.ZERO;
 /**
  * 平均每位醫療耗用值 @date-15@ 的 @Point-2@/@PT-1@
  */
-public class L6Formula extends AbstractFormula {
+public class L6Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

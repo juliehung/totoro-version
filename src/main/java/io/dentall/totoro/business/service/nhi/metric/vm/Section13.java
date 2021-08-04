@@ -1,16 +1,17 @@
 package io.dentall.totoro.business.service.nhi.metric.vm;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Section13 {
 
-    private BigDecimal L24;
+    private MetricData L24;
 
-    public BigDecimal getL24() {
+    @JsonProperty("Lp24")
+    public MetricData getL24() {
         return L24;
     }
 
-    public void setL24(BigDecimal l24) {
+    public void setL24(MetricData l24) {
         L24 = l24;
     }
 }

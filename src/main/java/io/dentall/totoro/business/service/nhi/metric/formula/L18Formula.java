@@ -13,7 +13,7 @@ import static java.math.BigDecimal.ZERO;
 /**
  * 季平均費用點數 @date-10@@Point-1@/3
  */
-public class L18Formula extends AbstractFormula {
+public class L18Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 

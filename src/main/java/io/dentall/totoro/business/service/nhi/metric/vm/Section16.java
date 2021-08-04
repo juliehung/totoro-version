@@ -1,46 +1,50 @@
 package io.dentall.totoro.business.service.nhi.metric.vm;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Section16 {
 
-    private BigDecimal L49;
+    private MetricData L49;
 
-    private BigDecimal L50;
+    private MetricData L50;
 
-    private BigDecimal L51;
+    private MetricData L51;
 
-    private BigDecimal L52;
+    private MetricData L52;
 
-    public BigDecimal getL49() {
+    @JsonProperty("Lp49")
+    public MetricData getL49() {
         return L49;
     }
 
-    public void setL49(BigDecimal l49) {
+    public void setL49(MetricData l49) {
         L49 = l49;
     }
 
-    public BigDecimal getL50() {
+    @JsonProperty("Lp50")
+    public MetricData getL50() {
         return L50;
     }
 
-    public void setL50(BigDecimal l50) {
+    public void setL50(MetricData l50) {
         L50 = l50;
     }
 
-    public BigDecimal getL51() {
+    @JsonProperty("Lp51")
+    public MetricData getL51() {
         return L51;
     }
 
-    public void setL51(BigDecimal l51) {
+    public void setL51(MetricData l51) {
         L51 = l51;
     }
 
-    public BigDecimal getL52() {
+    @JsonProperty("Lp52")
+    public MetricData getL52() {
         return L52;
     }
 
-    public void setL52(BigDecimal l52) {
+    public void setL52(MetricData l52) {
         L52 = l52;
     }
 }
