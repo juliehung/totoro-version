@@ -3,7 +3,9 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 public enum MetaType {
 
     Exam1, Exam2, Exam3, Exam4,
+    Exam1ByDaily, Exam2ByDaily, Exam3ByDaily, Exam4ByDaily,
     Point1, Point2, Point3, Point4,
+    Point1ByDaily, Point2ByDaily, Point3ByDaily, Point4ByDaily,
     Pt1,
     Ic2, Ic3,
 

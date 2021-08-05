@@ -3,8 +3,12 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.codesByExam1;
 import static java.lang.Long.valueOf;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
@@ -28,7 +32,7 @@ public class HighestExam1ByPatient extends Exam1 {
 
         Map<Long, Long> examPointByPatient = nhiMetricRawVMList.stream()
             .filter(vm -> isNotBlank(vm.getExamPoint()))
-            .filter(vm -> codes.contains(vm.getExamCode()))
+            .filter(vm -> codesByExam1.contains(vm.getExamCode()))
             .collect(groupingBy(NhiMetricRawVM::getPatientId, groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId)))))
             .entrySet().stream()
             .reduce(new HashMap<>(), (map, entry) -> {

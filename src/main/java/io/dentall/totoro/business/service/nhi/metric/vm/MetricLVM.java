@@ -14,6 +14,8 @@ public class MetricLVM {
 
     private Section8 section8;
 
+    private Section9 section9;
+
     private Section10 section10;
 
     private Section11 section11;
@@ -76,6 +78,14 @@ public class MetricLVM {
 
     public void setSection8(Section8 section8) {
         this.section8 = section8;
+    }
+
+    public Section9 getSection9() {
+        return section9;
+    }
+
+    public void setSection9(Section9 section9) {
+        this.section9 = section9;
     }
 
     public Section10 getSection10() {

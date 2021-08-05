@@ -6,6 +6,7 @@ import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentAnalysi
 import io.dentall.totoro.business.service.nhi.metric.filter.*;
 import io.dentall.totoro.business.service.nhi.metric.formula.*;
 import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapper;
+import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
 import io.dentall.totoro.business.service.nhi.metric.vm.*;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.User;
@@ -65,6 +66,7 @@ public class NhiMetricLService {
                 Source<NhiMetricRawVM, NhiMetricRawVM> quarterSource = new QuarterSource(quarterRange);
                 Source<NhiMetricRawVM, NhiMetricRawVM> threeMonthNearSource = new ThreeMonthNearSource(baseDate);
                 Source<NhiMetricRawVM, NhiMetricRawVM> monthSelectedSource = new MonthSelectedSource(baseDate);
+                Source<NhiMetricRawVM, Map<LocalDate, List<NhiMetricRawVM>>> dailyByMonthSelectedSource = new DailyByMonthSelectedSource(baseDate);
 
                 Source<NhiMetricRawVM, Map<NhiSpecialCode, List<NhiMetricRawVM>>> specialCodeMonthSelectedSource = new SpecialCodeMonthSelectedSource();
 
@@ -95,6 +97,7 @@ public class NhiMetricLService {
                     .apply(quarterSource)
                     .apply(threeMonthNearSource)
                     .apply(monthSelectedSource)
+                    .apply(dailyByMonthSelectedSource)
                     .apply(specialCodeMonthSelectedSource)
                     .apply(odThreeYearNearSource)
                     .apply(odPermanentThreeYearNearByPatientSource)
@@ -166,6 +169,7 @@ public class NhiMetricLService {
                 BigDecimal metricL55 = new L55Formula(collector, odQuarterSource).calculate();
                 BigDecimal metricL56 = new L56Formula(collector, odQuarterSource).calculate();
                 SpecialTreatmentAnalysis specialTreatmentAnalysis = new SpecialTreatmentFormula(collector, specialCodeMonthSelectedSource).calculate();
+                Map<LocalDate, BigDecimal> dailyPoints = new DailyPointsFormula(collector, dailyByMonthSelectedSource).calculate();
 
                 Section5 section5 = new Section5();
                 section5.setL1(new MetricData(metricL1));
@@ -183,6 +187,9 @@ public class NhiMetricLService {
 
                 Section8 section8 = new Section8();
                 section8.setL10(new MetricData(metricL10));
+
+                Section9 section9 = new Section9();
+                section9.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dailyPoints.entrySet()));
 
                 Section10 section10 = new Section10();
                 section10.setL11(new MetricData(metricL11));
@@ -270,6 +277,7 @@ public class NhiMetricLService {
                 metricLVM.setSection6(section6);
                 metricLVM.setSection7(section7);
                 metricLVM.setSection8(section8);
+                metricLVM.setSection9(section9);
                 metricLVM.setSection10(section10);
                 metricLVM.setSection11(section11);
                 metricLVM.setSection12(section12);

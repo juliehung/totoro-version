@@ -10,6 +10,7 @@ public enum FilterKey {
     Quarter(Subject.output, FilterKey.quarter),
     ThreeMonthNear(HalfYearNear.output, FilterKey.threeMonthNear),
     MonthSelected(Quarter.output, FilterKey.monthSelected),
+    DailyByMonthSelected(MonthSelected.output, FilterKey.dailyByMonthSelected),
 
     SpecialCodeMonthSelected(MonthSelected.output, FilterKey.specialCodeMonthSelected),
 
@@ -34,6 +35,7 @@ public enum FilterKey {
     private static final String initial = "initial";
     private static final String subject = "subject";
     private static final String monthSelected = "monthSelected";
+    private static final String dailyByMonthSelected = "dailyByMonthSelected";
     private static final String quarter = "quarter";
     private static final String threeMonthNear = "threeMonthNear";
     private static final String oneYearNear = "oneYearNear";

@@ -4,24 +4,13 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
-import java.util.Optional;
 
-import static java.lang.Long.valueOf;
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableList;
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.maxBy;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.codesByExam3;
 
 /**
  * 符合牙醫門診加強感染管制實施方案之牙科門診診察費(不含Xray)
  */
 public class Exam3 extends SingleSourceCalculator<Long> {
-
-    public final List<String> codes = unmodifiableList(asList(
-        "00305C", "00306C", "00307C", "00308C", "00309C", "00310C", "00311C", "00312C", "00313C", "00314C"
-    ));
 
     public Exam3(Collector collector, String sourceName) {
         super(collector, sourceName);
@@ -29,18 +18,8 @@ public class Exam3 extends SingleSourceCalculator<Long> {
 
     @Override
     public Long doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
-
-        return nhiMetricRawVMList.stream()
-            .filter(vm -> isNotBlank(vm.getExamPoint()))
-            .filter(vm -> codes.contains(vm.getExamCode()))
-            .collect(groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))))
-            .values().stream()
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .map(vm -> valueOf(vm.getExamPoint()))
-            .reduce(Long::sum)
-            .orElse(0L);
+        List<NhiMetricRawVM> source = collector.retrieveSource(sourceName());
+        return ExamHelper.calculate(source, codesByExam3).get();
     }
 
     @Override
