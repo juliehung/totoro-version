@@ -166,6 +166,8 @@ jobs:
                     name: ${{ env.ARTIFACT_NAME }}
             -   name: "Rename war"
                 run: |-
+                    ls
+                    echo ======
                     mv ${WAR_NAME} src/main/docker/app.war
                 env:
                     WAR_NAME: ${{ env.WAR_NAME }}
