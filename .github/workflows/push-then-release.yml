@@ -160,6 +160,8 @@ jobs:
             WAR_NAME: ${{ needs.Props.outputs.war-name }}
             TAG_NAME: ${{ needs.Props.outputs.tag-name }}
         steps:
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v2
             -   name: "Download his war"
                 uses: actions/download-artifact@v2
                 with:
