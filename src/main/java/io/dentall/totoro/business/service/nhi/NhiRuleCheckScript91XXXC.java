@@ -898,7 +898,6 @@ public class NhiRuleCheckScript91XXXC {
         return vm;
     }
 
-
     public NhiRuleCheckResultVM validate91088C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
@@ -906,6 +905,33 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
                 ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
+
+        return vm;
+    }
+
+    public NhiRuleCheckResultVM validate91089C(NhiRuleCheckDTO dto) {
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("91089C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
+                String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D4_1
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FULL_ZONE
             ),
             vm
         );
