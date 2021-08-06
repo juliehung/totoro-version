@@ -25,13 +25,14 @@ public class NhiRuleCheckScript340XXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 this.getConflictList(),
                 nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_1),
+                nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_1),
                 String.valueOf(DateTimeUtil.NUMBERS_OF_MONTH_1),
-                1,
+                String.valueOf(DateTimeUtil.NUMBERS_OF_MONTH_1),
                 NhiRuleCheckFormat.W4_1
             ),
             vm
@@ -52,13 +53,14 @@ public class NhiRuleCheckScript340XXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 this.getConflictList(),
                 nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_1),
+                nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_1),
                 String.valueOf(DateTimeUtil.NUMBERS_OF_MONTH_1),
-                1,
+                String.valueOf(DateTimeUtil.NUMBERS_OF_MONTH_1),
                 NhiRuleCheckFormat.W4_1
             ),
             vm
@@ -79,17 +81,19 @@ public class NhiRuleCheckScript340XXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 this.getConflictList(),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
                 String.valueOf(DateTimeUtil.NHI_0_DAY),
-                1,
+                String.valueOf(DateTimeUtil.NHI_0_DAY),
                 NhiRuleCheckFormat.W4_1
             ),
             vm
         );
+
 
         return vm;
     }
