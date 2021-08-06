@@ -22,6 +22,7 @@ public enum ToothConstraint {
     PARTIAL_ZONE("UR|UL|LR|LL|UA|LA", "牙位限填: UR,UL,LR,LL,UA,LA"),
     PARTIAL_ZONE_AND_99("UR|UL|LR|LL|UA|LA|99", "牙位限填: UR,UL,LR,LL,UA,LA,99"),
     FOUR_PHASE_ZONE("UR|UL|LR|LL", "牙位限填: UR,UL,LR,LL"),
+    FOUR_PHASE_ZONE_AND_PERMANENT_TOOTH("^[1-4][1-9]$|99|UR|UL|LR|LL", "牙位限填: 11-19,21-29,31-39,41-49,99,UR,UL,LR,LL"),
     FULL_ZONE("FM", "牙位限填: FM"),
 
     // All validated

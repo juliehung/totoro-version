@@ -60,7 +60,7 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("91003C", "91004C", "91005C", "91017C", "91103C", "91104C", "91019C"),
+                Arrays.asList("91003C", "91004C", "91005C", "91017C", "91103C", "91104C", "91019C", "91089C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
                 String.valueOf(DateTimeUtil.NHI_0_DAY.getDays()),
                 1,
@@ -129,7 +129,7 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("91003C", "91104C", "91015C", "91016C", "91017C", "91018C", "91005C", "91103C"),
+                Arrays.asList("91003C", "91104C", "91015C", "91016C", "91017C", "91018C", "91005C", "91103C", "91089C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                 String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
                 1,
@@ -227,6 +227,19 @@ public class NhiRuleCheckScript91XXXC {
             vm
         );
 
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("91089C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
+                String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D1_2
+            ),
+            vm
+        );
+
         return vm;
     }
 
@@ -237,7 +250,7 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("91018C", "91015C", "91016C"),
+                Arrays.asList("91018C", "91015C", "91016C", "91089C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                 String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
                 1,
@@ -309,7 +322,7 @@ public class NhiRuleCheckScript91XXXC {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.PARTIAL_ZONE
+                ToothConstraint.FOUR_PHASE_ZONE
             ),
             vm
         );
@@ -333,7 +346,7 @@ public class NhiRuleCheckScript91XXXC {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.GENERAL_TOOTH
+                ToothConstraint.FOUR_PHASE_ZONE_AND_PERMANENT_TOOTH
             ),
             vm
         );
@@ -358,6 +371,14 @@ public class NhiRuleCheckScript91XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FOUR_PHASE_ZONE_AND_PERMANENT_TOOTH
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(
                 String.format(
                     NhiRuleCheckFormat.PERIO_REC_2.getFormat(),
@@ -374,6 +395,14 @@ public class NhiRuleCheckScript91XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PARTIAL_ZONE
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(
                 String.format(
                     NhiRuleCheckFormat.PERIO_REC_2.getFormat(),
@@ -388,6 +417,14 @@ public class NhiRuleCheckScript91XXXC {
 
     public NhiRuleCheckResultVM validate91013C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.GENERAL_TOOTH
+            ),
+            vm
+        );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateV2(
@@ -579,6 +616,19 @@ public class NhiRuleCheckScript91XXXC {
             vm
         );
 
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("91089C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
+                String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D1_2
+            ),
+            vm
+        );
+
         return vm;
     }
 
@@ -615,7 +665,7 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("91006C~91008C"),
+                Arrays.asList("91006C~91008C", "91089C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY),
                 String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
                 1,
@@ -651,11 +701,32 @@ public class NhiRuleCheckScript91XXXC {
             vm
         );
 
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("91089C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
+                String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D1_2
+            ),
+            vm
+        );
+
         return vm;
     }
 
     public NhiRuleCheckResultVM validate91020C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.FULL_ZONE
+            ),
+            vm
+        );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateV2(
@@ -846,6 +917,19 @@ public class NhiRuleCheckScript91XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("91089C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
+                String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D1_2
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
                 ToothConstraint.FOUR_PHASE_ZONE
@@ -881,6 +965,19 @@ public class NhiRuleCheckScript91XXXC {
 
     public NhiRuleCheckResultVM validate91104C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
+                Arrays.asList("91089C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
+                String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D1_2
+            ),
+            vm
+        );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(
