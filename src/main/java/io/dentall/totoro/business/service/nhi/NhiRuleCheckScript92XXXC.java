@@ -23,6 +23,14 @@ public class NhiRuleCheckScript92XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PARTIAL_ZONE_AND_GENERAL_TOOTH
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
@@ -119,14 +127,6 @@ public class NhiRuleCheckScript92XXXC {
     public NhiRuleCheckResultVM validate92006C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.VALIDATED_ALL_EXCLUDE_FM
-            ),
-            vm
-        );
-
         return vm;
     }
 
@@ -136,7 +136,7 @@ public class NhiRuleCheckScript92XXXC {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.PARTIAL_ZONE
+                ToothConstraint.PERMANENT_TOOTH
             ),
             vm
         );
@@ -627,6 +627,14 @@ public class NhiRuleCheckScript92XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PARTIAL_ZONE_AND_GENERAL_TOOTH
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
@@ -893,6 +901,14 @@ public class NhiRuleCheckScript92XXXC {
 
     public NhiRuleCheckResultVM validate92096C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH
+            ),
+            vm
+        );
 
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(

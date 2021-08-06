@@ -25,6 +25,14 @@ public class NhiRuleCheckScript96XXXC {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
+                ToothConstraint.PARTIAL_ZONE
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
                 ToothConstraint.DECIDUOUS_TOOTH_AND_PERMANENT_WEIRD_TOOTH
             ),
             vm
