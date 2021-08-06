@@ -2,14 +2,19 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.lang.Long.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.naturalOrder;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.maxBy;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -46,5 +51,34 @@ public class ExamHelper {
             .map(vm -> valueOf(vm.getExamPoint()))
             .reduce(Long::sum)
             .orElse(0L);
+    }
+
+    public static Map<Long, Long> calculateByClassifier(List<NhiMetricRawVM> source, List<String> codes, Function<NhiMetricRawVM, Long> classifier) {
+        return source.stream()
+            .filter(vm -> isNotBlank(vm.getExamPoint()))
+            .filter(vm -> codes.contains(vm.getExamCode()))
+            .collect(groupingBy(classifier, groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId)))))
+            .entrySet().stream()
+            .reduce(new HashMap<>(),
+                (map, entry) -> {
+                    long keyId = entry.getKey();
+
+                    map.compute(keyId, (key, point) -> {
+                        Map<Long, Optional<NhiMetricRawVM>> subMap = entry.getValue();
+                        Long examPoint = subMap.values().stream()
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .map(vm -> valueOf(vm.getExamPoint()))
+                            .reduce(Long::sum)
+                            .orElse(0L);
+                        return ofNullable(point).orElse(0L) + examPoint;
+                    });
+
+                    return map;
+                },
+                (accMap, map) -> {
+                    accMap.putAll(map);
+                    return accMap;
+                });
     }
 }

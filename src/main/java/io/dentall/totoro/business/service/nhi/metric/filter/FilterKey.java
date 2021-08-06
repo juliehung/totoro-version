@@ -14,7 +14,7 @@ public enum FilterKey {
 
     SpecialCodeMonthSelected(MonthSelected.output, FilterKey.specialCodeMonthSelected),
 
-    OdThreeYearNear(ThreeYearNear.output, FilterKey.odThreeYearNear),
+    OdThreeYearNear(Subject.output, FilterKey.odThreeYearNear),
     OdPermanentThreeYearNear(OdThreeYearNear.output, FilterKey.odPermanentThreeYearNear),
     OdDeciduousThreeYearNear(OdThreeYearNear.output, FilterKey.odDeciduousThreeYearNear),
 

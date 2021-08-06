@@ -1,6 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
 import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
+import io.dentall.totoro.business.service.nhi.metric.dto.HighestDoctor;
+import io.dentall.totoro.business.service.nhi.metric.dto.HighestPatient;
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentAnalysis;
 import io.dentall.totoro.business.service.nhi.metric.filter.*;
@@ -11,7 +13,9 @@ import io.dentall.totoro.business.service.nhi.metric.vm.*;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
+import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.service.dto.table.PatientTable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +25,9 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import static io.dentall.totoro.business.service.nhi.metric.filter.MetricSubjectType.CLINIC;
 import static io.dentall.totoro.security.AuthoritiesConstants.DOCTOR;
 import static io.dentall.totoro.service.util.DateTimeUtil.*;
 import static java.util.Collections.singletonList;
@@ -36,12 +42,15 @@ public class NhiMetricLService {
 
     private final UserRepository userRepository;
 
+    private final PatientRepository patientRepository;
+
     public NhiMetricLService(
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
-        UserRepository userRepository
-    ) {
+        UserRepository userRepository,
+        PatientRepository patientRepository) {
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.userRepository = userRepository;
+        this.patientRepository = patientRepository;
     }
 
     public List<MetricLVM> metric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
@@ -58,7 +67,14 @@ public class NhiMetricLService {
         List<MetricLVM> metricLVMList = doctors.parallelStream()
             .map(doctor -> {
                 Collector collector = new Collector(nhiMetricRawVMList);
-                Source<NhiMetricRawVM, NhiMetricRawVM> doctorSource = new DoctorSource(doctor.getId());
+                Source<NhiMetricRawVM, NhiMetricRawVM> subjectSource = doctor.getId().equals(Long.MIN_VALUE) ? new ClinicSource() : new DoctorSource(doctor.getId());
+                collector.apply(subjectSource);
+
+                if (!collector.isSourceExist(subjectSource.outputKey()) || collector.retrieveSource(subjectSource.outputKey()).size() == 0) {
+                    return null;
+                }
+
+                MetricSubjectType metricSubjectType = subjectSource.getClass().isAssignableFrom(ClinicSource.class) ? CLINIC : MetricSubjectType.DOCTOR;
                 Source<NhiMetricRawVM, NhiMetricRawVM> threeYearNearSource = new ThreeYearNearSource(baseDate);
                 Source<NhiMetricRawVM, NhiMetricRawVM> twoYearNearSource = new TwoYearNearSource(baseDate);
                 Source<NhiMetricRawVM, NhiMetricRawVM> oneYearNearSource = new OneYearNearSource(baseDate);
@@ -89,7 +105,6 @@ public class NhiMetricLService {
                 Source<OdDto, OdDto> odMonthSelectedSource = new OdMonthSelectedSource(baseDate);
 
                 collector
-                    .apply(doctorSource)
                     .apply(threeYearNearSource)
                     .apply(twoYearNearSource)
                     .apply(oneYearNearSource)
@@ -121,7 +136,18 @@ public class NhiMetricLService {
                 BigDecimal metricL6 = new L6Formula(collector, monthSelectedSource).calculate();
                 BigDecimal metricL7 = new L7Formula(collector, monthSelectedSource).calculate();
                 BigDecimal metricL8 = new L8Formula(collector, monthSelectedSource).calculate();
-                BigDecimal metricL10 = new L10Formula(collector, monthSelectedSource).calculate();
+
+                NameValue nameValue = new NameValue();
+                if (metricSubjectType == CLINIC) {
+                    HighestDoctor highestDoctor = new L9Formula(collector, monthSelectedSource).calculate();
+                    doctors.stream().filter(val -> val.getId().equals(highestDoctor.getId())).map(User::getFirstName).findFirst().ifPresent(nameValue::setName);
+                    nameValue.setValue(highestDoctor.getValue());
+                } else {
+                    HighestPatient highestPatient = new L10Formula(collector, monthSelectedSource).calculate();
+                    patientRepository.findPatientById(highestPatient.getId()).map(PatientTable::getName).ifPresent(nameValue::setName);
+                    nameValue.setValue(highestPatient.getValue());
+                }
+
                 BigDecimal metricL11 = new L11Formula(collector, monthSelectedSource).calculate();
                 BigDecimal metricL12 = new L12Formula(collector, monthSelectedSource).calculate();
                 BigDecimal metricL13 = new L13Formula(collector, monthSelectedSource).calculate();
@@ -170,6 +196,8 @@ public class NhiMetricLService {
                 BigDecimal metricL56 = new L56Formula(collector, odQuarterSource).calculate();
                 SpecialTreatmentAnalysis specialTreatmentAnalysis = new SpecialTreatmentFormula(collector, specialCodeMonthSelectedSource).calculate();
                 Map<LocalDate, BigDecimal> dailyPoints = new DailyPointsFormula(collector, dailyByMonthSelectedSource).calculate();
+                Map<LocalDate, BigDecimal> dailyPt1 = new DailyPt1Formula(collector, dailyByMonthSelectedSource).calculate();
+                Map<LocalDate, BigDecimal> dailyIc3 = new DailyIc3Formula(collector, dailyByMonthSelectedSource).calculate();
 
                 Section5 section5 = new Section5();
                 section5.setL1(new MetricData(metricL1));
@@ -180,13 +208,19 @@ public class NhiMetricLService {
                 Section6 section6 = new Section6();
                 section6.setL5(new MetricData(metricL5));
                 section6.setL6(new MetricData(metricL6));
+                section6.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dailyPt1.entrySet()));
 
                 Section7 section7 = new Section7();
                 section7.setL7(new MetricData(metricL7));
                 section7.setL8(new MetricData(metricL8));
+                section7.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dailyIc3.entrySet()));
 
                 Section8 section8 = new Section8();
-                section8.setL10(new MetricData(metricL10));
+                if (metricSubjectType == CLINIC) {
+                    section8.setL9(nameValue);
+                } else {
+                    section8.setL10(nameValue);
+                }
 
                 Section9 section9 = new Section9();
                 section9.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dailyPoints.entrySet()));
@@ -271,7 +305,9 @@ public class NhiMetricLService {
                 doctorData.setDoctorId(doctor.getId());
                 doctorData.setDoctorName(doctor.getFirstName());
 
+
                 MetricLVM metricLVM = new MetricLVM();
+                metricLVM.setType(metricSubjectType.name().toLowerCase());
                 metricLVM.setDoctor(doctorData);
                 metricLVM.setSection5(section5);
                 metricLVM.setSection6(section6);
@@ -288,16 +324,24 @@ public class NhiMetricLService {
                 metricLVM.setSection17(section17);
 
                 return metricLVM;
-            }).collect(toList());
+            })
+            .filter(Objects::nonNull)
+            .collect(toList());
 
         return metricLVMList;
     }
 
     private List<User> findAllDoctor() {
         List<User> doctors = userRepository.findAllByActivatedIsTrue();
-        return doctors.stream()
+        List<User> result = doctors.stream()
             .filter(doctor -> doctor.getAuthorities().stream().anyMatch(authority -> DOCTOR.equals(authority.getName())))
             .collect(toList());
+
+        User clinic = new User();
+        clinic.setId(Long.MIN_VALUE);
+        result.add(clinic);
+
+        return result;
     }
 
 }
