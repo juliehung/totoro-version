@@ -1131,13 +1131,25 @@ public class NhiRuleCheckUtil {
         List<NhiHybridRecordDTO> foundAnyInPastDays = getSourceDataByDuration(
             sourceData,
             noOtherTxDuration
-        );
+        ).stream()
+            .filter(d -> !this.getCurrentTxNhiCode(dto).equals(d.getCode()))
+            .filter(d -> noOtherTxDuration == null ||
+                d.getRecordDateTime().isAfter(noOtherTxDuration.getBegin()) && d.getRecordDateTime().isBefore(noOtherTxDuration.getEnd()) ||
+                d.getRecordDateTime().isEqual(noOtherTxDuration.getBegin()) ||
+                d.getRecordDateTime().isEqual(noOtherTxDuration.getEnd())
+            )
+            .collect(Collectors.toList());
 
-        List<NhiHybridRecordDTO> foundAnyTargetCodeInPastDays = getSourceDataByDuration(
-            sourceData,
-            latestSelfDuration
+        List<NhiHybridRecordDTO> foundAnyTargetCodeInPastDays = this.getSourceDataByDuration(
+                sourceData,
+                latestSelfDuration
         ).stream()
             .filter(d -> this.getCurrentTxNhiCode(dto).equals(d.getCode()))
+            .filter(d -> latestSelfDuration == null ||
+                d.getRecordDateTime().isAfter(latestSelfDuration.getBegin()) && d.getRecordDateTime().isBefore(latestSelfDuration.getEnd()) ||
+                d.getRecordDateTime().isEqual(latestSelfDuration.getBegin()) ||
+                d.getRecordDateTime().isEqual(latestSelfDuration.getEnd())
+            )
             .collect(Collectors.toList());
 
         if (foundAnyInPastDays.size() != 0) {
@@ -1150,11 +1162,22 @@ public class NhiRuleCheckUtil {
                     .nhiRuleCheckInfoType(noOtherTxCheckFormat.getLevel())
                     .message(
                         String.format(
-                            noOtherTxCheckFormat.getFormat(),
-                            dto.getNhiExtendTreatmentProcedure().getA73(),
-                            noOtherTxDisplayDuration
+                            this.generateErrorMessage(
+                                noOtherTxCheckFormat,
+                                this.getSourceDataType(
+                                    dto,
+                                    foundAnyInPastDays.get(0)
+                                ),
+                                dto.getNhiExtendTreatmentProcedure().getA73(),
+                                this.getCurrentTxNhiCode(dto),
+                                foundAnyInPastDays.get(0).getRecordDateTime(),
+                                noOtherTxDisplayDuration,
+                                null,
+                                null
+                            )
                         )
                     );
+
                 NhiRuleCheckResultDTO r2 = new NhiRuleCheckResultDTO()
                     .validateTitle(title)
                     .validated(false)
