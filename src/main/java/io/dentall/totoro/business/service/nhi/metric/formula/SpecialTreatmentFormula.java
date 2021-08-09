@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
-import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentAnalysis;
+import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentAnalysisDto;
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.SpecialTreatment;
@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 特定治療項目
  */
-public class SpecialTreatmentFormula extends AbstractFormula<SpecialTreatmentAnalysis> {
+public class SpecialTreatmentFormula extends AbstractFormula<SpecialTreatmentAnalysisDto> {
 
     private final Source<NhiMetricRawVM, Map<NhiSpecialCode, List<NhiMetricRawVM>>> source;
 
@@ -25,7 +25,7 @@ public class SpecialTreatmentFormula extends AbstractFormula<SpecialTreatmentAna
     }
 
     @Override
-    public SpecialTreatmentAnalysis doCalculate(Collector collector) {
+    public SpecialTreatmentAnalysisDto doCalculate(Collector collector) {
         SpecialTreatment specialTreatment = new SpecialTreatment(collector, source.outputKey()).apply();
         return specialTreatment.getResult();
     }

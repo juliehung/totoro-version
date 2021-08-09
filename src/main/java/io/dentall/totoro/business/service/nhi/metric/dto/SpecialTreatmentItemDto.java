@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 
-public class SpecialTreatmentItem {
+public class SpecialTreatmentItemDto {
 
     private int caseCount;
 
@@ -14,7 +14,7 @@ public class SpecialTreatmentItem {
 
     private BigDecimal percentageOfPoints;
 
-    public SpecialTreatmentItem(int caseCount, long points) {
+    public SpecialTreatmentItemDto(int caseCount, long points) {
         this.caseCount = caseCount;
         this.points = points;
     }

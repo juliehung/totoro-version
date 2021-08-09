@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.HighestDoctor;
+import io.dentall.totoro.business.service.nhi.metric.dto.HighestDoctorDto;
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -19,14 +19,14 @@ import static java.util.Optional.ofNullable;
 /**
  * 診療費 醫師點數(最高者)
  */
-public class HighestPoint1Doctor extends SingleSourceCalculator<HighestDoctor> {
+public class HighestPoint1Doctor extends SingleSourceCalculator<HighestDoctorDto> {
 
     public HighestPoint1Doctor(Collector collector, String sourceName) {
         super(collector, sourceName);
     }
 
     @Override
-    public HighestDoctor doCalculate(Collector collector) {
+    public HighestDoctorDto doCalculate(Collector collector) {
         Function<NhiMetricRawVM, Long> classifier = NhiMetricRawVM::getDoctorId;
         Exam1ByClassifier exam1 = new Exam1ByClassifier(collector, HighestExam1Doctor, sourceName(), classifier).apply();
         Exam2ByClassifier exam2 = new Exam2ByClassifier(collector, HighestExam2Doctor, sourceName(), classifier).apply();
@@ -51,7 +51,7 @@ public class HighestPoint1Doctor extends SingleSourceCalculator<HighestDoctor> {
             value = ZERO;
         }
 
-        return new HighestDoctor(entry.getKey(), value);
+        return new HighestDoctorDto(entry.getKey(), value);
     }
 
     @Override

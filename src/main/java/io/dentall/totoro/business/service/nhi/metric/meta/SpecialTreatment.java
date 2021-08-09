@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
-import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentAnalysis;
-import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentItem;
+import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentAnalysisDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentItemDto;
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -16,21 +16,21 @@ import static java.util.Optional.ofNullable;
 /**
  * 特定治療項目
  */
-public class SpecialTreatment extends SingleSourceCalculator<SpecialTreatmentAnalysis> {
+public class SpecialTreatment extends SingleSourceCalculator<SpecialTreatmentAnalysisDto> {
 
     public SpecialTreatment(Collector collector, String sourceName) {
         super(collector, sourceName);
     }
 
     @Override
-    public SpecialTreatmentAnalysis doCalculate(Collector collector) {
+    public SpecialTreatmentAnalysisDto doCalculate(Collector collector) {
         List<Map<NhiSpecialCode, List<NhiMetricRawVM>>> source = collector.retrieveSource(sourceName());
-        SpecialTreatmentItem summary = new SpecialTreatmentItem(0, 0);
+        SpecialTreatmentItemDto summary = new SpecialTreatmentItemDto(0, 0);
 
-        Map<NhiSpecialCode, SpecialTreatmentItem> itemMap =
+        Map<NhiSpecialCode, SpecialTreatmentItemDto> itemMap =
             source.get(0).entrySet().stream()
                 .reduce(new HashMap<>(), (map, entry) -> {
-                        SpecialTreatmentItem item = summary(entry.getValue());
+                        SpecialTreatmentItemDto item = summary(entry.getValue());
                         map.put(entry.getKey(), item);
                         summary.setCaseCount(summary.getCaseCount() + item.getCaseCount());
                         summary.setPoints(summary.getPoints() + item.getPoints());
@@ -41,7 +41,7 @@ public class SpecialTreatment extends SingleSourceCalculator<SpecialTreatmentAna
                         return map1;
                     });
 
-        SpecialTreatmentAnalysis analysis = new SpecialTreatmentAnalysis();
+        SpecialTreatmentAnalysisDto analysis = new SpecialTreatmentAnalysisDto();
         analysis.setSummary(summary);
         applyItem(analysis, itemMap);
         combineItem(analysis);
@@ -50,8 +50,8 @@ public class SpecialTreatment extends SingleSourceCalculator<SpecialTreatmentAna
         return analysis;
     }
 
-    private SpecialTreatmentItem summary(List<NhiMetricRawVM> list) {
-        return list.stream().reduce(new SpecialTreatmentItem(0, 0L),
+    private SpecialTreatmentItemDto summary(List<NhiMetricRawVM> list) {
+        return list.stream().reduce(new SpecialTreatmentItemDto(0, 0L),
             (item, vm) -> {
                 item.setPoints(item.getPoints() + ofNullable(vm.getTreatmentProcedureTotal()).orElse(0L));
                 item.setCaseCount(item.getCaseCount() + 1);
@@ -65,7 +65,7 @@ public class SpecialTreatment extends SingleSourceCalculator<SpecialTreatmentAna
         );
     }
 
-    private void applyItem(SpecialTreatmentAnalysis analysis, Map<NhiSpecialCode, SpecialTreatmentItem> itemMap) {
+    private void applyItem(SpecialTreatmentAnalysisDto analysis, Map<NhiSpecialCode, SpecialTreatmentItemDto> itemMap) {
         ofNullable(itemMap.get(P1)).ifPresent(analysis::setP1);
         ofNullable(itemMap.get(P2)).ifPresent(analysis::setP2);
         ofNullable(itemMap.get(P3)).ifPresent(analysis::setP3);
@@ -77,29 +77,29 @@ public class SpecialTreatment extends SingleSourceCalculator<SpecialTreatmentAna
         ofNullable(itemMap.get(OTHER)).ifPresent(analysis::setOther);
     }
 
-    private void combineItem(SpecialTreatmentAnalysis analysis) {
-        SpecialTreatmentItem p1p5 = new SpecialTreatmentItem(
+    private void combineItem(SpecialTreatmentAnalysisDto analysis) {
+        SpecialTreatmentItemDto p1p5 = new SpecialTreatmentItemDto(
             analysis.getP1().getCaseCount() + analysis.getP5().getCaseCount(),
             analysis.getP1().getPoints() + analysis.getP5().getPoints());
         analysis.setP1p5(p1p5);
 
-        SpecialTreatmentItem p2p3 = new SpecialTreatmentItem(
+        SpecialTreatmentItemDto p2p3 = new SpecialTreatmentItemDto(
             analysis.getP2().getCaseCount() + analysis.getP3().getCaseCount(),
             analysis.getP2().getPoints() + analysis.getP3().getPoints());
         analysis.setP2p3(p2p3);
 
-        SpecialTreatmentItem p4p8 = new SpecialTreatmentItem(
+        SpecialTreatmentItemDto p4p8 = new SpecialTreatmentItemDto(
             analysis.getP4().getCaseCount() + analysis.getP8().getCaseCount(),
             analysis.getP4().getPoints() + analysis.getP8().getPoints());
         analysis.setP4p8(p4p8);
 
-        SpecialTreatmentItem p6p7AndOther = new SpecialTreatmentItem(
+        SpecialTreatmentItemDto p6p7AndOther = new SpecialTreatmentItemDto(
             analysis.getP6().getCaseCount() + analysis.getP7().getCaseCount() + analysis.getOther().getCaseCount(),
             analysis.getP6().getPoints() + analysis.getP7().getPoints() + analysis.getOther().getPoints());
         analysis.setP6p7AndOther(p6p7AndOther);
     }
 
-    private void percentage(SpecialTreatmentAnalysis analysis) {
+    private void percentage(SpecialTreatmentAnalysisDto analysis) {
         long totalPoints = analysis.getSummary().getPoints();
         int totalCaseNumber = analysis.getSummary().getCaseCount();
 

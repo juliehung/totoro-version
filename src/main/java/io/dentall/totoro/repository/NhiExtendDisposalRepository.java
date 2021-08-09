@@ -807,6 +807,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
         value = "select" +
             " p.id as patientId," +
             " p.birth as patientBirth," +
+            " p.name as patientName, " +
             " d.id as disposalId, " +
             " ned.jhi_date as disposalDate," +
             " ned.a18 as cardNumber," +

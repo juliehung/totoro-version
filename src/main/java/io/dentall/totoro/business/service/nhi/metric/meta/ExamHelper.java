@@ -13,7 +13,6 @@ import static java.lang.Long.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Comparator.comparing;
-import static java.util.Comparator.naturalOrder;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.maxBy;

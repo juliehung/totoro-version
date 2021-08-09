@@ -2,13 +2,13 @@ package io.dentall.totoro.business.service.nhi.metric.dto;
 
 import java.math.BigDecimal;
 
-public class HighestDoctor {
+public class HighestDoctorDto {
 
     private final Long id;
 
     private final BigDecimal value;
 
-    public HighestDoctor(Long id, BigDecimal value) {
+    public HighestDoctorDto(Long id, BigDecimal value) {
         this.id = id;
         this.value = value;
     }

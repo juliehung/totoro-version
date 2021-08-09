@@ -10,6 +10,8 @@ public interface NhiMetricRawVM {
 
     Long getPatientId();
 
+    String getPatientName();
+
     LocalDate getPatientBirth();
 
     Long getDisposalId();
@@ -54,5 +56,5 @@ public interface NhiMetricRawVM {
 
     Long getDoctorId();
 
-    Long getDoctorName();
+    String getDoctorName();
 }
