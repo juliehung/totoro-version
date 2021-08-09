@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi;
 
+import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckFormat;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
@@ -29,7 +30,8 @@ public class NhiRuleCheckScript00XXXC {
                 NhiRuleCheckFormat.D1_2,
                 null,
                 null,
-                NhiRuleCheckFormat.D1_1
+                NhiRuleCheckFormat.D1_1,
+                NhiRuleCheckSourceType.SYSTEM_RECORD
             ),
             vm
         );
@@ -71,7 +73,8 @@ public class NhiRuleCheckScript00XXXC {
                 NhiRuleCheckFormat.D1_5,
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
                 String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
-                NhiRuleCheckFormat.D4_1
+                NhiRuleCheckFormat.D4_1,
+                null
             ),
             vm
         );

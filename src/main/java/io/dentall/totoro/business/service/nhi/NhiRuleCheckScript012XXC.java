@@ -31,7 +31,8 @@ public class NhiRuleCheckScript012XXC {
                 NhiRuleCheckFormat.D1_2,
                 null,
                 null,
-                NhiRuleCheckFormat.D1_1
+                NhiRuleCheckFormat.D1_1,
+                NhiRuleCheckSourceType.SYSTEM_RECORD
             ),
             vm
         );
@@ -99,7 +100,8 @@ public class NhiRuleCheckScript012XXC {
                 NhiRuleCheckFormat.D1_5,
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
                 String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
-                NhiRuleCheckFormat.D4_1
+                NhiRuleCheckFormat.D4_1,
+                null
             ),
             vm
         );

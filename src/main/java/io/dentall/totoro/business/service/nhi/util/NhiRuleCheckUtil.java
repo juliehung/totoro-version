@@ -1104,7 +1104,8 @@ public class NhiRuleCheckUtil {
         NhiRuleCheckFormat noOtherTxCheckFormat,
         LocalDateDuration latestSelfDuration,
         String latestSelfDisplayDuration,
-        NhiRuleCheckFormat latestSelfCheckFormat
+        NhiRuleCheckFormat latestSelfCheckFormat,
+        NhiRuleCheckSourceType onlySystemDataWhenLatestSelfCheck
     ) {
         List<NhiRuleCheckResultDTO> results = new ArrayList<>();
         String title = "Special rule for Xray";
@@ -1144,6 +1145,11 @@ public class NhiRuleCheckUtil {
                 sourceData,
                 latestSelfDuration
         ).stream()
+            .filter(d -> onlySystemDataWhenLatestSelfCheck == null ||
+                onlySystemDataWhenLatestSelfCheck != null &&
+                    onlySystemDataWhenLatestSelfCheck.equals(NhiRuleCheckSourceType.SYSTEM_RECORD) &&
+                    "SYS".equals(d.getRecordSource())
+            )
             .filter(d -> this.getCurrentTxNhiCode(dto).equals(d.getCode()))
             .filter(d -> latestSelfDuration == null ||
                 d.getRecordDateTime().isAfter(latestSelfDuration.getBegin()) && d.getRecordDateTime().isBefore(latestSelfDuration.getEnd()) ||
