@@ -1097,7 +1097,15 @@ public class NhiRuleCheckUtil {
      * @param dto
      * @return
      */
-    public List<NhiRuleCheckResultDTO> isSpecialRuleForXray(NhiRuleCheckDTO dto) {
+    public List<NhiRuleCheckResultDTO> isSpecialRuleForXray(
+        NhiRuleCheckDTO dto,
+        LocalDateDuration noOtherTxDuration,
+        String noOtherTxDisplayDuration,
+        NhiRuleCheckFormat noOtherTxCheckFormat,
+        LocalDateDuration latestSelfDuration,
+        String latestSelfDisplayDuration,
+        NhiRuleCheckFormat latestSelfCheckFormat
+    ) {
         List<NhiRuleCheckResultDTO> results = new ArrayList<>();
         String title = "Special rule for Xray";
 
@@ -1120,58 +1128,52 @@ public class NhiRuleCheckUtil {
             )
         );
 
-        List<NhiHybridRecordDTO> foundAnyInPast365Days = getSourceDataByDuration(
+        List<NhiHybridRecordDTO> foundAnyInPastDays = getSourceDataByDuration(
             sourceData,
-            this.regularDayDurationCalculation(
-                dto,
-                DateTimeUtil.NHI_365_DAY
-            )
+            noOtherTxDuration
         );
 
-        List<NhiHybridRecordDTO> foundAnyTargetCodeInPast545Days = getSourceDataByDuration(
+        List<NhiHybridRecordDTO> foundAnyTargetCodeInPastDays = getSourceDataByDuration(
             sourceData,
-            this.regularDayDurationCalculation(
-                dto,
-                DateTimeUtil.NHI_545_DAY
-            )
+            latestSelfDuration
         ).stream()
             .filter(d -> this.getCurrentTxNhiCode(dto).equals(d.getCode()))
             .collect(Collectors.toList());
 
-        if (foundAnyInPast365Days.size() != 0) {
+        if (foundAnyInPastDays.size() != 0) {
             if (currentMatchTargetCode != null ||
-                foundAnyTargetCodeInPast545Days.size() != 0
+                foundAnyTargetCodeInPastDays.size() != 0
             ) {
                 NhiRuleCheckResultDTO r1 = new NhiRuleCheckResultDTO()
                     .validateTitle(title)
                     .validated(false)
-                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D1_5.getLevel())
+                    .nhiRuleCheckInfoType(noOtherTxCheckFormat.getLevel())
                     .message(
                         String.format(
-                            NhiRuleCheckFormat.D1_5.getFormat(),
+                            noOtherTxCheckFormat.getFormat(),
                             dto.getNhiExtendTreatmentProcedure().getA73(),
-                            String.valueOf(DateTimeUtil.NHI_365_DAY.getDays())
+                            noOtherTxDisplayDuration
                         )
                     );
                 NhiRuleCheckResultDTO r2 = new NhiRuleCheckResultDTO()
                     .validateTitle(title)
                     .validated(false)
-                    .nhiRuleCheckInfoType(NhiRuleCheckFormat.D4_1.getLevel())
+                    .nhiRuleCheckInfoType(latestSelfCheckFormat.getLevel())
                     .message(
                         this.generateErrorMessage(
-                            NhiRuleCheckFormat.D4_1,
+                            latestSelfCheckFormat,
                             currentMatchTargetCode != null
                                 ? NhiRuleCheckSourceType.CURRENT_DISPOSAL
                                 : this.getSourceDataType(
                                     dto,
-                                foundAnyTargetCodeInPast545Days.get(0)
+                                    foundAnyTargetCodeInPastDays.get(0)
                                 ),
                             dto.getNhiExtendTreatmentProcedure().getA73(),
                             this.getCurrentTxNhiCode(dto),
                             currentMatchTargetCode != null
                                 ? this.getNhiExtendDisposalDateInDTO(dto)
-                                : foundAnyTargetCodeInPast545Days.get(0).getRecordDateTime(),
-                            String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
+                                : foundAnyTargetCodeInPastDays.get(0).getRecordDateTime(),
+                            latestSelfDisplayDuration,
                             null,
                             null
                         )
