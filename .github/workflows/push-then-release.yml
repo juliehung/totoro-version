@@ -149,8 +149,8 @@ jobs:
                     SECRET: ${{ secrets.HIS_LOCAL_DEV_MACHINE_KEY }}
                     SOURCE_PATH: ${{ github.workspace }}/${{ env.WAR_NAME }}
                     TARGET_HOST: dev.dentall.site
-                    TARGET_USER: deploy
-                    TARGET_PATH: /home/deploy/dora-monitor/storage/wars/
+                    TARGET_USER: dentallio
+                    TARGET_PATH: /home/dentallio/Dentall/dora-monitor/storage/wars/
 
     Release-Image-To-GCP:
         runs-on: ubuntu-18.04
