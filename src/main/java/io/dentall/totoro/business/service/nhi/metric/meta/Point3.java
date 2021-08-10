@@ -18,13 +18,18 @@ public class Point3 extends SingleSourceCalculator<Long> {
     @Override
     public Long doCalculate(Collector collector) {
         List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
+        Exam1 exam1 = new Exam1(collector, sourceName()).apply();
+        Exam2 exam2 = new Exam2(collector, sourceName()).apply();
+        Exam3 exam3 = new Exam3(collector, sourceName()).apply();
+        Exam4 exam4 = new Exam4(collector, sourceName()).apply();
 
-        //  雖然公式是「全部代碼-(@Exam-1@+@Exam-2@+@Exam-3@+@Exam-4@)」，但因為examination code，不會出現在treatment procedure資料表裡，所以就不需要特別扣除examination code的點數
-        return nhiMetricRawVMList.stream()
+        long points = nhiMetricRawVMList.stream()
             .map(NhiMetricRawVM::getTreatmentProcedureTotal)
             .filter(Objects::nonNull)
             .reduce(Long::sum)
             .orElse(0L);
+
+        return points - exam1.getResult() - exam2.getResult() - exam3.getResult() - exam4.getResult();
     }
 
     @Override

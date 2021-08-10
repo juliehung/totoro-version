@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
-import static java.util.Comparator.naturalOrder;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 
@@ -31,6 +30,15 @@ public class Point3ByClassifier extends SingleSourceCalculator<Map<Long, Long>> 
     @Override
     public Map<Long, Long> doCalculate(Collector collector) {
         List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
+        Exam1ByClassifier exam1 = new Exam1ByClassifier(collector, metaType, sourceName(), classifier).apply();
+        Exam2ByClassifier exam2 = new Exam2ByClassifier(collector, metaType, sourceName(), classifier).apply();
+        Exam3ByClassifier exam3 = new Exam3ByClassifier(collector, metaType, sourceName(), classifier).apply();
+        Exam4ByClassifier exam4 = new Exam4ByClassifier(collector, metaType, sourceName(), classifier).apply();
+
+        Map<Long, Long> exam1Map = exam1.getResult();
+        Map<Long, Long> exam2Map = exam2.getResult();
+        Map<Long, Long> exam3Map = exam3.getResult();
+        Map<Long, Long> exam4Map = exam4.getResult();
 
         return nhiMetricRawVMList.stream()
             .collect(groupingBy(classifier))
@@ -45,6 +53,13 @@ public class Point3ByClassifier extends SingleSourceCalculator<Map<Long, Long>> 
                             .filter(Objects::nonNull)
                             .reduce(Long::sum)
                             .orElse(0L);
+
+                        points = points
+                            - ofNullable(exam1Map.get(key)).orElse(0L)
+                            - ofNullable(exam2Map.get(key)).orElse(0L)
+                            - ofNullable(exam3Map.get(key)).orElse(0L)
+                            - ofNullable(exam4Map.get(key)).orElse(0L);
+
                         return ofNullable(point).orElse(0L) + points;
                     });
 

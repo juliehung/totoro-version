@@ -23,6 +23,15 @@ public class Point3ByDaily extends SingleSourceCalculator<Map<LocalDate, Long>> 
     @Override
     public Map<LocalDate, Long> doCalculate(Collector collector) {
         List<Map<LocalDate, List<NhiMetricRawVM>>> source = collector.retrieveSource(sourceName());
+        Exam1ByDaily exam1 = new Exam1ByDaily(collector, sourceName()).apply();
+        Exam2ByDaily exam2 = new Exam2ByDaily(collector, sourceName()).apply();
+        Exam3ByDaily exam3 = new Exam3ByDaily(collector, sourceName()).apply();
+        Exam4ByDaily exam4 = new Exam4ByDaily(collector, sourceName()).apply();
+
+        Map<LocalDate, Long> exam1Map = exam1.getResult();
+        Map<LocalDate, Long> exam2Map = exam2.getResult();
+        Map<LocalDate, Long> exam3Map = exam3.getResult();
+        Map<LocalDate, Long> exam4Map = exam4.getResult();
 
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
@@ -33,6 +42,7 @@ public class Point3ByDaily extends SingleSourceCalculator<Map<LocalDate, Long>> 
                     .filter(Objects::nonNull)
                     .reduce(Long::sum)
                     .orElse(0L);
+                points = points - exam1Map.get(date)- exam2Map.get(date)- exam3Map.get(date)- exam4Map.get(date);
                 map.put(date, points);
                 return map;
             },
