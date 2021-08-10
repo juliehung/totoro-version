@@ -73,7 +73,7 @@ public enum NhiRuleCheckFormat {
     W2_1("%s: 限填牙位 %s", NhiRuleCheckInfoType.WARNING),
 
     // 需併同 91003C/91004C/91020C 申報
-    W3_1("%s: 需併同 %s 申報", NhiRuleCheckInfoType.WARNING),
+    W3_1("%s: 建議併同 %s 申報", NhiRuleCheckInfoType.WARNING),
 
     // 96001C: 項目費用已涵蓋於 90001C(來源-110/01/01) 內
     W4_1("%s: 項目費用已涵蓋於 %s(%s-%s) 內", NhiRuleCheckInfoType.WARNING),

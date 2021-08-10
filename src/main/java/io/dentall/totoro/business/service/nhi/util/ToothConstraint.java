@@ -2,7 +2,7 @@ package io.dentall.totoro.business.service.nhi.util;
 
 public enum ToothConstraint {
     // Tooth
-    SPECIFIC_TOOTH("^[1-4][1-8]$|^[5-8][1-5]$", "牙位限填: 11-18,21-28,31-38,41-48,51- 5,61-65,71-75,81-85"),
+    SPECIFIC_TOOTH("^[1-4][1-8]$|^[5-8][1-5]$", "牙位限填: 11-18,21-28,31-38,41-48,51-55,61-65,71-75,81-85"),
     GENERAL_TOOTH("^[1-4][1-8]$|^[5-8][1-5]$|^[1-4]9$|^99$", "牙位限填: 11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99"),
     GENERAL_TOOTH_EXCLUDE_WISDOM_TOOTH("^[1-4][1-7]$|^[5-8][1-5]$|^[1-4]9$|^99$", "牙位限填: 11-17,21-27,31-37,41-47,51-55,61-65,71-75,81-85,19,29,39,49,99"),
     GENERAL_TOOTH_AND_FM("^[1-4][1-8]$|^[5-8][1-5]$|^[1-4]9$|^99$|^FM$", "牙位限填: 11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99,FM"),
@@ -21,7 +21,9 @@ public enum ToothConstraint {
     ALL_ZONE("UR|UL|LR|LL|UA|LA|FM|UB|LB", "牙位限填: UA,LA,FM,UR,UL,LL,LR,UB,LB"),
     PARTIAL_ZONE("UR|UL|LR|LL|UA|LA", "牙位限填: UR,UL,LR,LL,UA,LA"),
     PARTIAL_ZONE_AND_99("UR|UL|LR|LL|UA|LA|99", "牙位限填: UR,UL,LR,LL,UA,LA,99"),
+    PARTIAL_ZONE_AND_GENERAL_TOOTH("^[1-4][1-8]$|^[5-8][1-5]$|^[1-4]9$|^99$|UR|UL|LR|LL|UA|LA", "牙位限填: 11-19,21-29,31-39,41-49,51-55,61-65,71-75,81-85,99,UR,UL,LR,LL,UA,LA"),
     FOUR_PHASE_ZONE("UR|UL|LR|LL", "牙位限填: UR,UL,LR,LL"),
+    FOUR_PHASE_ZONE_AND_PERMANENT_TOOTH("^[1-4][1-9]$|99|UR|UL|LR|LL", "牙位限填: 11-19,21-29,31-39,41-49,99,UR,UL,LR,LL"),
     FULL_ZONE("FM", "牙位限填: FM"),
 
     // All validated

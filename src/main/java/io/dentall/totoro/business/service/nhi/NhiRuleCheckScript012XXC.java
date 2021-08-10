@@ -24,6 +24,20 @@ public class NhiRuleCheckScript012XXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isSpecialRuleForXray(
+                dto,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_1095_DAY),
+                String.valueOf(DateTimeUtil.NHI_1095_DAY.getDays()),
+                NhiRuleCheckFormat.D1_2,
+                null,
+                null,
+                NhiRuleCheckFormat.D1_1,
+                NhiRuleCheckSourceType.SYSTEM_RECORD
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
@@ -79,7 +93,16 @@ public class NhiRuleCheckScript012XXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isSpecialRuleForXray(dto),
+            nhiRuleCheckUtil.isSpecialRuleForXray(
+                dto,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_365_DAY),
+                String.valueOf(DateTimeUtil.NHI_365_DAY.getDays()),
+                NhiRuleCheckFormat.D1_5,
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
+                NhiRuleCheckFormat.D4_1,
+                null
+            ),
             vm
         );
 

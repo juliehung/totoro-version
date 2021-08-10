@@ -302,6 +302,14 @@ public class NhiRuleCheckScript90XXXC {
             vm
         );
 
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isAllLimitedTooth(
+                dto,
+                ToothConstraint.PERMANENT_TOOTH
+            ),
+            vm
+        );
+
         return vm;
     }
 
@@ -484,14 +492,15 @@ public class NhiRuleCheckScript90XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90015C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_60_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_60_DAY),
                 String.valueOf(DateTimeUtil.NHI_60_DAY.getDays()),
-                1,
-                NhiRuleCheckFormat.D4_1
+                String.valueOf(DateTimeUtil.NHI_60_DAY.getDays()),
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -511,13 +520,14 @@ public class NhiRuleCheckScript90XXXC {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90016C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                 String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
-                1,
+                String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
                 NhiRuleCheckFormat.D4_1
             ),
             vm
@@ -592,13 +602,14 @@ public class NhiRuleCheckScript90XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90018C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                 String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
-                1,
+                String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
                 NhiRuleCheckFormat.D4_1
             ),
             vm
@@ -637,7 +648,7 @@ public class NhiRuleCheckScript90XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isDependOnCodeBeforeDate(
+            nhiRuleCheckUtil.isDependOnCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90015C"),
