@@ -1123,39 +1123,29 @@ public class NhiRuleCheckUtil {
         List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
             ? dto.getSourceData()
             : this.findNhiHypeRecordsDTO(
-            dto.getPatient().getId(),
-            Arrays.asList(
-                this.getDisposalIdInDTO(dto)
-            )
-        );
+                dto.getPatient().getId(),
+                Arrays.asList(
+                    this.getDisposalIdInDTO(dto)
+                )
+            );
 
-        List<NhiHybridRecordDTO> foundAnyInPastDays = getSourceDataByDuration(
+        List<NhiHybridRecordDTO> foundAnyInPastDays = this.getSourceDataByDuration(
             sourceData,
             noOtherTxDuration
         ).stream()
             .filter(d -> !this.getCurrentTxNhiCode(dto).equals(d.getCode()))
-            .filter(d -> noOtherTxDuration == null ||
-                d.getRecordDateTime().isAfter(noOtherTxDuration.getBegin()) && d.getRecordDateTime().isBefore(noOtherTxDuration.getEnd()) ||
-                d.getRecordDateTime().isEqual(noOtherTxDuration.getBegin()) ||
-                d.getRecordDateTime().isEqual(noOtherTxDuration.getEnd())
-            )
             .collect(Collectors.toList());
 
         List<NhiHybridRecordDTO> foundAnyTargetCodeInPastDays = this.getSourceDataByDuration(
-                sourceData,
-                latestSelfDuration
+            sourceData,
+            latestSelfDuration
         ).stream()
             .filter(d -> onlySystemDataWhenLatestSelfCheck == null ||
                 onlySystemDataWhenLatestSelfCheck != null &&
-                    onlySystemDataWhenLatestSelfCheck.equals(NhiRuleCheckSourceType.SYSTEM_RECORD) &&
-                    "SYS".equals(d.getRecordSource())
+                onlySystemDataWhenLatestSelfCheck.equals(NhiRuleCheckSourceType.SYSTEM_RECORD) &&
+                "SYS".equals(d.getRecordSource())
             )
             .filter(d -> this.getCurrentTxNhiCode(dto).equals(d.getCode()))
-            .filter(d -> latestSelfDuration == null ||
-                d.getRecordDateTime().isAfter(latestSelfDuration.getBegin()) && d.getRecordDateTime().isBefore(latestSelfDuration.getEnd()) ||
-                d.getRecordDateTime().isEqual(latestSelfDuration.getBegin()) ||
-                d.getRecordDateTime().isEqual(latestSelfDuration.getEnd())
-            )
             .collect(Collectors.toList());
 
         if (foundAnyInPastDays.size() != 0) {
@@ -1231,12 +1221,12 @@ public class NhiRuleCheckUtil {
         List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
             ? dto.getSourceData().stream().filter(d -> queryCodes.contains(d.getCode())).collect(Collectors.toList())
             : this.findNhiHypeRecordsDTO(
-            dto.getPatient().getId(),
-            queryCodes,
-            Arrays.asList(
-                this.getDisposalIdInDTO(dto)
-            )
-        );
+                dto.getPatient().getId(),
+                queryCodes,
+                Arrays.asList(
+                    this.getDisposalIdInDTO(dto)
+                )
+            );
 
         LocalDate currentDate = DateTimeUtil.transformROCDateToLocalDate(
             dto.getNhiExtendTreatmentProcedure().getA71()
@@ -1921,18 +1911,18 @@ public class NhiRuleCheckUtil {
 
         // 其他處置
         List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
-            ? dto.getSourceData().stream().filter(d -> codes.contains(d.getCode())).collect(Collectors.toList())
+            ? dto.getSourceData()
             : this.findNhiHypeRecordsDTO(
-            dto.getPatient().getId(),
-            codes,
-            Arrays.asList(
-                dto.getNhiExtendDisposal() != null &&
-                    dto.getNhiExtendDisposal().getDisposal() != null &&
-                    dto.getNhiExtendDisposal().getDisposal().getId() != null
-                    ? dto.getNhiExtendDisposal().getDisposal().getId()
-                    : 0L
-            )
-        );
+                dto.getPatient().getId(),
+                codes,
+                Arrays.asList(
+                    dto.getNhiExtendDisposal() != null &&
+                        dto.getNhiExtendDisposal().getDisposal() != null &&
+                        dto.getNhiExtendDisposal().getDisposal().getId() != null
+                        ? dto.getNhiExtendDisposal().getDisposal().getId()
+                        : 0L
+                )
+            );
 
         if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(onlySourceType)) {
             sourceData = sourceData.stream()
@@ -2038,16 +2028,16 @@ public class NhiRuleCheckUtil {
         List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
             ? dto.getSourceData().stream().filter(d -> codes.contains(d.getCode())).collect(Collectors.toList())
             : this.findNhiHypeRecordsDTO(
-            dto.getPatient().getId(),
-            codes,
-            Arrays.asList(
-                dto.getNhiExtendDisposal() != null &&
-                    dto.getNhiExtendDisposal().getDisposal() != null &&
-                    dto.getNhiExtendDisposal().getDisposal().getId() != null
-                    ? dto.getNhiExtendDisposal().getDisposal().getId()
-                    : 0L
-            )
-        );
+                dto.getPatient().getId(),
+                codes,
+                Arrays.asList(
+                    dto.getNhiExtendDisposal() != null &&
+                        dto.getNhiExtendDisposal().getDisposal() != null &&
+                        dto.getNhiExtendDisposal().getDisposal().getId() != null
+                        ? dto.getNhiExtendDisposal().getDisposal().getId()
+                        : 0L
+                )
+            );
 
         if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(onlySourceType)) {
             sourceData = sourceData.stream()
