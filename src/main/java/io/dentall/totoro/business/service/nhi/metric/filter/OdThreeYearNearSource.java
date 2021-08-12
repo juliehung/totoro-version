@@ -1,10 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.filter;
 
-import io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper;
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,17 +14,12 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class OdThreeYearNearSource extends OdSource<NhiMetricRawVM> {
 
-    private final LocalDate endDate; // 這邊通常都應該是要拿到當季的第一天，如1/1、4/1、7/1、10/1
-
-    public OdThreeYearNearSource(LocalDate endDate) {
-        this.endDate = endDate;
+    public OdThreeYearNearSource() {
     }
 
     @Override
     public List<OdDto> doFilter(List<NhiMetricRawVM> source) {
         return source.stream().parallel()
-            // 因為資料來源是ThreeYearNearSource，它是用季的最後一天或是當天當基準點往前推1095天，這邊所以要排除該季的所有處置單
-            .filter(vm -> endDate.isAfter(vm.getDisposalDate()))
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
             .filter(vm -> isNotBlank(vm.getTreatmentProcedureTooth()))
             .map(vm -> {

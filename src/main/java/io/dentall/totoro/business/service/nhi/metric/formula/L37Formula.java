@@ -33,7 +33,7 @@ public class L37Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        OdPermanentReTreatment odPermanentReTreatment = new OdPermanentReTreatment(collector, odQuarterSource.outputKey(), odOneYearNearSource.outputKey(), 0, 365).apply();
+        OdPermanentReTreatment odPermanentReTreatment = new OdPermanentReTreatment(collector, odQuarterSource.outputKey(), odOneYearNearSource.outputKey(), 1, 365).apply();
         return new BigDecimal(odPermanentReTreatment.getResult());
     }
 }

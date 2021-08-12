@@ -36,7 +36,7 @@ public class L33Formula extends AbstractFormula<BigDecimal> {
     @Override
     public BigDecimal doCalculate(Collector collector) {
         OdPermanentTreatment odPermanentTreatment = new OdPermanentTreatment(collector, odQuarterSource.outputKey()).apply();
-        OdPermanentReTreatment odPermanentReTreatment = new OdPermanentReTreatment(collector, odQuarterSource.outputKey(), odTwoYearNearSource.outputKey(), 0, 730).apply();
+        OdPermanentReTreatment odPermanentReTreatment = new OdPermanentReTreatment(collector, odQuarterSource.outputKey(), odTwoYearNearSource.outputKey(), 1, 730).apply();
         try {
             return divide(odPermanentReTreatment.getResult(), odPermanentTreatment.getResult()).multiply(new BigDecimal(100L));
         } catch (ArithmeticException e) {

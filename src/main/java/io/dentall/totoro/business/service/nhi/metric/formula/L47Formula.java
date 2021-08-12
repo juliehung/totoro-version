@@ -33,7 +33,7 @@ public class L47Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        OdDeciduousReTreatment odDeciduousReTreatment = new OdDeciduousReTreatment(collector, odQuarterSource.outputKey(), odThreeYearNearSource.outputKey(), 0, 1095).apply();
+        OdDeciduousReTreatment odDeciduousReTreatment = new OdDeciduousReTreatment(collector, odQuarterSource.outputKey(), odThreeYearNearSource.outputKey(), 1, 1095).apply();
         return new BigDecimal(odDeciduousReTreatment.getResult());
     }
 }

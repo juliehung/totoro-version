@@ -7,6 +7,8 @@ public class SummaryDto {
     private Long infectionExaminationPoint = 0L;
     // 一般診察點數
     private Long regularExaminationPoint = 0L;
+    // 診察費合計(扣除感控差額)
+    private Long pureExaminationPoint = 0L;
     // 診療費
     private Long treatmentPoint = 0L;
     // 部份負擔
@@ -40,6 +42,14 @@ public class SummaryDto {
 
     public void setRegularExaminationPoint(Long regularExaminationPoint) {
         this.regularExaminationPoint = regularExaminationPoint;
+    }
+
+    public Long getPureExaminationPoint() {
+        return pureExaminationPoint;
+    }
+
+    public void setPureExaminationPoint(Long pureExaminationPoint) {
+        this.pureExaminationPoint = pureExaminationPoint;
     }
 
     public Long getTreatmentPoint() {

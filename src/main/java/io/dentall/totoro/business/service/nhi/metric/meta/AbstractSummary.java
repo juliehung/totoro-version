@@ -6,6 +6,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiHelper.purgePoint;
 import static io.dentall.totoro.business.service.nhi.util.NhiProcedureUtil.*;
 import static java.lang.Long.parseLong;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -52,6 +53,7 @@ public abstract class AbstractSummary<T> extends SingleSourceCalculator<List<T>>
             } else {
                 summaryDto.setRegularExaminationPoint(summaryDto.getRegularExaminationPoint() + examPoint);
             }
+            summaryDto.setPureExaminationPoint(summaryDto.getPureExaminationPoint() + purgePoint(vm.getExamCode(), examPoint));
             summaryDto.setTotal(summaryDto.getTotal() + examPoint);
         }
 
