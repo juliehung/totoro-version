@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi;
 
+import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckFormat;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
@@ -286,14 +287,15 @@ public class NhiRuleCheckScript92XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
-                null,
+                NhiRuleCheckSourceType.SYSTEM_RECORD,
                 Arrays.asList("92030C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_730_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_730_DAY),
                 String.valueOf(DateTimeUtil.NHI_730_DAY.getDays()),
-                1,
-                NhiRuleCheckFormat.D4_1
+                String.valueOf(DateTimeUtil.NHI_730_DAY.getDays()),
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -323,14 +325,15 @@ public class NhiRuleCheckScript92XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
-                null,
+                NhiRuleCheckSourceType.SYSTEM_RECORD,
                 Arrays.asList("92031C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_730_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_730_DAY),
                 String.valueOf(DateTimeUtil.NHI_730_DAY.getDays()),
-                1,
-                NhiRuleCheckFormat.D4_1
+                String.valueOf(DateTimeUtil.NHI_730_DAY.getDays()),
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -360,14 +363,15 @@ public class NhiRuleCheckScript92XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
-                null,
-                Arrays.asList("92032C"),
+                NhiRuleCheckSourceType.SYSTEM_RECORD,
+                Arrays.asList("92031C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_730_DAY),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_730_DAY),
                 String.valueOf(DateTimeUtil.NHI_730_DAY.getDays()),
-                1,
-                NhiRuleCheckFormat.D4_1
+                String.valueOf(DateTimeUtil.NHI_730_DAY.getDays()),
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );

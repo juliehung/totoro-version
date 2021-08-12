@@ -479,13 +479,14 @@ public class NhiRuleCheckScript90XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 null,
                 Arrays.asList("90005C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_60_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_60_DAY),
                 String.valueOf(DateTimeUtil.NHI_60_DAY.getDays()),
-                1,
+                String.valueOf(DateTimeUtil.NHI_60_DAY.getDays()),
                 NhiRuleCheckFormat.D1_2
             ),
             vm

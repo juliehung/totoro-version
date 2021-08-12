@@ -313,7 +313,7 @@ public class NhiRuleCheckScript89XXXC {
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY),
                 String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
                 String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
-                NhiRuleCheckFormat.D4_1
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
@@ -674,14 +674,15 @@ public class NhiRuleCheckScript89XXXC {
         }
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
+            nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 NhiRuleCheckSourceType.SYSTEM_RECORD,
                 Arrays.asList("89013C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_545_DAY),
                 String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
-                1,
-                NhiRuleCheckFormat.D4_1
+                String.valueOf(DateTimeUtil.NHI_545_DAY.getDays()),
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
