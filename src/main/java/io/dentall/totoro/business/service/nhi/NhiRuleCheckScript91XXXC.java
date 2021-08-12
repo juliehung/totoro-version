@@ -373,7 +373,7 @@ public class NhiRuleCheckScript91XXXC {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.FOUR_PHASE_ZONE_AND_PERMANENT_TOOTH
+                ToothConstraint.PARTIAL_ZONE_AND_PERMANENT_TOOTH
             ),
             vm
         );
