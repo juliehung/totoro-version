@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -310,6 +311,7 @@ public class AppointmentService {
         return dtoList.stream()
                 .map(appointmentDTO -> {
                     MonthAppointmentVM monthAppointmentVM = new MonthAppointmentVM(appointmentDTO);
+                    monthAppointmentVM.getDoctor().setAvatar("".getBytes(StandardCharsets.UTF_8));
                     monthAppointmentVM.setTags(handlePatientTag(tags, appointmentDTO));
                     return monthAppointmentVM;
                 })
