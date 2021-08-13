@@ -82,7 +82,8 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
             "       tp.id as treatmentProcedureId, " +
             "       netp.a73 as nhiCode, " +
             "       netp.a74 as teeth, " +
-            "       netp.a75 as surface " +
+            "       netp.a75 as surface ," +
+            "       np.name as nhiTxName " +
             "from disposal d " +
             "left join appointment a on d.registration_id = a.registration_id " +
             "left join patient p on p.id = a.patient_id " +
@@ -90,8 +91,9 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
             "left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "left join treatment_procedure tp on d.id = tp.disposal_id " +
             "left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
-            "where trim(ned.a18) <> '' and a19 = '1' and a17 like :yearMonthQueryClause and d.id is not null and netp.treatment_procedure_id is not null and d.id not in (:excludeDisposals) " +
-            "or trim(ned.a18) <> '' and a19 = '2' and a54 like :yearMonthQueryClause and d.id is not null and netp.treatment_procedure_id is not null and d.id not in (:excludeDisposals)" +
+            "left join nhi_procedure np on np.id = tp.nhi_procedure_id " +
+            "where tp.nhi_procedure_id is not null and trim(ned.a18) <> '' and a19 = '1' and a17 like :yearMonthQueryClause and d.id is not null and netp.treatment_procedure_id is not null and d.id not in (:excludeDisposals) " +
+            "or tp.nhi_procedure_id is not null and trim(ned.a18) <> '' and a19 = '2' and a54 like :yearMonthQueryClause and d.id is not null and netp.treatment_procedure_id is not null and d.id not in (:excludeDisposals)" +
             "order by d.date_time, doctorId, patientId" +
             ";"
     )

@@ -425,6 +425,7 @@ public class NhiRuleCheckUtil {
                     "就醫治療時間",
                     "病患姓名",
                     "醫師姓名",
+                    "健保代碼",
                     "內容"
                 )
             )
@@ -453,7 +454,8 @@ public class NhiRuleCheckUtil {
                     d.getTreatmentProcedureId(),
                     d.getNhiCode(),
                     d.getTeeth(),
-                    d.getSurface()
+                    d.getSurface(),
+                    d.getNhiTxName()
                 );
             })
             .collect(Collectors.groupingBy(d -> d.getDisposalId()));
@@ -469,9 +471,11 @@ public class NhiRuleCheckUtil {
             String patientName = "";
             String doctorName = "";
             String checkedMessage = "";
+            String txString = "";
             Long patientId = 0L;
 
-            // Assemble NRC body
+            // Assemble NRC body and nhi tx string
+            List<String> txStringList = new ArrayList<>();
             for (NhiRuleCheckMonthDeclarationTx v : vs) {
                 if (isFirst) {
                     body = NhiRuleCheckMapper.INSTANCE.convertToNhiRuleCheckBody(v);
@@ -484,7 +488,11 @@ public class NhiRuleCheckUtil {
                 txSnapshots.add(
                     NhiRuleCheckMapper.INSTANCE.convertToNhiRuleCheckTxSnapshot(v)
                 );
+                txStringList.add(
+                    String.join("/", v.getNhiCode(), v.getTeeth(), v.getSurface(), v.getNhiTxName())
+                );
             }
+            txString = String.join("\n", txStringList);
 
             List<Long> excludeDisposalIdsAndSelfDisposalId = new ArrayList<>(excludeDisposals);
             excludeDisposalIdsAndSelfDisposalId.add(key);
@@ -541,12 +549,8 @@ public class NhiRuleCheckUtil {
                         ),
                         patientName,
                         doctorName,
-                        "\"".concat(
-                            checkedMessage
-                        )
-                            .concat(
-                                "\""
-                            )
+                        "\"".concat(txString).concat("\""),
+                        "\"".concat(checkedMessage).concat("\"")
                     )
                 )
             );

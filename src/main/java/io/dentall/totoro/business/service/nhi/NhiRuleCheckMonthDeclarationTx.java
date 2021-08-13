@@ -26,6 +26,8 @@ public class NhiRuleCheckMonthDeclarationTx {
 
     private String surface;
 
+    private String nhiTxName;
+
     public NhiRuleCheckMonthDeclarationTx(
         Long disposalId,
         String disposalTime,
@@ -37,7 +39,8 @@ public class NhiRuleCheckMonthDeclarationTx {
         Long treatmentProcedureId,
         String nhiCode,
         String teeth,
-        String surface
+        String surface,
+        String nhiTxName
     ) {
         this.disposalId = disposalId;
         this.disposalTime = disposalTime;
@@ -50,6 +53,15 @@ public class NhiRuleCheckMonthDeclarationTx {
         this.nhiCode = nhiCode;
         this.teeth = teeth;
         this.surface = surface;
+        this.nhiTxName = nhiTxName;
+    }
+
+    public String getNhiTxName() {
+        return nhiTxName;
+    }
+
+    public void setNhiTxName(String nhiTxName) {
+        this.nhiTxName = nhiTxName;
     }
 
     public Long getDisposalId() {

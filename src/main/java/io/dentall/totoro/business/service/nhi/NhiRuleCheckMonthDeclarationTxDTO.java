@@ -25,4 +25,6 @@ public interface NhiRuleCheckMonthDeclarationTxDTO {
     String getTeeth();
 
     String getSurface();
+
+    String getNhiTxName();
 }
