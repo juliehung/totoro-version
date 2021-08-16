@@ -129,7 +129,10 @@ public class NhiMedicalRecordResource {
     @Timed
     public ResponseEntity<List<NhiMedicalRecordVM>> getAllNhiMedicalRecords(NhiMedicalRecordCriteria criteria, Pageable pageable) {
         log.debug("REST request to get NhiMedicalRecords by criteria: {}", criteria);
+        // TODO: This method has some bug. Sometime it will found no data. If there has chance to integrate all ui to
+        // one api. Then remove this one and ensure all ui using the same interface
         Page<NhiMedicalRecordVM> entityList = nhiMedicalRecordQueryService.findVmByCriteria(criteria, pageable);
+
         List<NhiMedicalRecordVM> contents = entityList.getContent();
         if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(criteria.getIgnoreSourceType()) &&
             criteria.getNhiExtendPatientId() != null &&
