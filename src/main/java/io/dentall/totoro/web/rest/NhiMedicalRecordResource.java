@@ -1,7 +1,10 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
+import io.dentall.totoro.business.service.nhi.NhiHybridRecord;
 import io.dentall.totoro.domain.NhiMedicalRecord;
+import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.NhiMedicineRepository;
 import io.dentall.totoro.repository.NhiTxRepository;
 import io.dentall.totoro.service.NhiMedicalRecordQueryService;
@@ -23,8 +26,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing NhiMedicalRecord.
@@ -41,6 +46,8 @@ public class NhiMedicalRecordResource {
 
     private final NhiMedicalRecordQueryService nhiMedicalRecordQueryService;
 
+    private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
+
     private final NhiTxRepository nhiTxRepository;
 
     private final NhiMedicineRepository nhiMedicineRepository;
@@ -49,12 +56,14 @@ public class NhiMedicalRecordResource {
         NhiMedicalRecordService nhiMedicalRecordService,
         NhiMedicalRecordQueryService nhiMedicalRecordQueryService,
         NhiTxRepository nhiTxRepository,
-        NhiMedicineRepository nhiMedicineRepository
+        NhiMedicineRepository nhiMedicineRepository,
+        NhiExtendDisposalRepository nhiExtendDisposalRepository
     ) {
         this.nhiMedicalRecordService = nhiMedicalRecordService;
         this.nhiMedicalRecordQueryService = nhiMedicalRecordQueryService;
         this.nhiTxRepository = nhiTxRepository;
         this.nhiMedicineRepository = nhiMedicineRepository;
+        this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
     }
 
     /**
@@ -121,8 +130,24 @@ public class NhiMedicalRecordResource {
     public ResponseEntity<List<NhiMedicalRecordVM>> getAllNhiMedicalRecords(NhiMedicalRecordCriteria criteria, Pageable pageable) {
         log.debug("REST request to get NhiMedicalRecords by criteria: {}", criteria);
         Page<NhiMedicalRecordVM> entityList = nhiMedicalRecordQueryService.findVmByCriteria(criteria, pageable);
+        List<NhiMedicalRecordVM> contents = entityList.getContent();
+        if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(criteria.getIgnoreSourceType()) &&
+            criteria.getNhiExtendPatientId() != null &&
+            criteria.getNhiExtendPatientId().getEquals() != null
+        ) {
+           List<String> recordDateList = nhiExtendDisposalRepository.findNhiHybridRecord(
+               criteria.getNhiExtendPatientId().getEquals().longValue(),
+               Arrays.asList(0L)
+           ).stream()
+               .map(NhiHybridRecord::getRecordDateTime)
+               .collect(Collectors.toList());
+
+           contents = entityList.stream()
+               .filter(e -> !recordDateList.contains(e.getNhiMedicalRecord().getDate()))
+               .collect(Collectors.toList());
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(entityList, "/api/nhi-medical-records");
-        return ResponseEntity.ok().headers(headers).body(entityList.getContent());
+        return ResponseEntity.ok().headers(headers).body(contents);
     }
 
     /**
