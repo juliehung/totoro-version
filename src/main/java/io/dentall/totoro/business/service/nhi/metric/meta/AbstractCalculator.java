@@ -8,8 +8,15 @@ public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
 
     private Meta<T> meta;
 
+    private Exclude exclude;
+
     public AbstractCalculator(Collector collector) {
         this.collector = collector;
+    }
+
+    public AbstractCalculator(Collector collector, Exclude exclude) {
+        this.collector = collector;
+        this.exclude = exclude;
     }
 
     @Override
@@ -26,7 +33,15 @@ public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
         return this.meta;
     }
 
+    public Exclude getExclude() {
+        return exclude;
+    }
+
     public String storeKey() {
+        Exclude exclude = getExclude();
+        if (exclude != null) {
+            return sourceName() + ":" + metaType().name() + ":" + exclude.name();
+        }
         return sourceName() + ":" + metaType().name();
     }
 

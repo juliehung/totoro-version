@@ -1,5 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.dto;
 
+import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
+
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -14,6 +16,10 @@ public class OdDto {
     private String tooth;
 
     private String surface;
+
+    private String category;
+
+    private NhiSpecialCode specificCode;
 
     public long getPatientId() {
         return patientId;
@@ -53,5 +59,21 @@ public class OdDto {
 
     public void setSurface(String surface) {
         this.surface = surface;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public NhiSpecialCode getSpecificCode() {
+        return specificCode;
+    }
+
+    public void setSpecificCode(NhiSpecialCode specificCode) {
+        this.specificCode = specificCode;
     }
 }

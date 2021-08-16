@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper.INSTANCE;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -17,17 +18,19 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public class EndoReTreatmentByTooth extends EndoTreatment {
 
-    public EndoReTreatmentByTooth(Collector collector, String sourceName) {
-        super(collector, sourceName);
+    public EndoReTreatmentByTooth(Collector collector, Exclude exclude, String sourceName) {
+        super(collector, exclude, sourceName);
     }
 
     @Override
     public Long doCalculate(Collector collector) {
         List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
+        Exclude exclude = getExclude();
 
         // 先取得每個病人的每個處置的牙齒
         Map<String, List<String>> teethByPatientTreatment = nhiMetricRawVMList.stream()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
+            .filter(vm -> ofNullable(exclude).map(exclude1 -> exclude1.test(INSTANCE.mapToExcludeDto(vm))).orElse(true))
             .collect(groupingBy(vm -> vm.getPatientId() + vm.getTreatmentProcedureCode()))
             .entrySet().stream()
             .reduce(new HashMap<>(), (map, entry) -> {

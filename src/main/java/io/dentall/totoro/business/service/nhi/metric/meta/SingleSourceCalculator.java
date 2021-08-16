@@ -11,6 +11,12 @@ public abstract class SingleSourceCalculator<T> extends AbstractCalculator<T> {
         this.sourceName = sourceName;
     }
 
+
+    public SingleSourceCalculator(Collector collector, Exclude exclude, String sourceName) {
+        super(collector, exclude);
+        this.sourceName = sourceName;
+    }
+
     @Override
     public String sourceName() {
         return sourceName;

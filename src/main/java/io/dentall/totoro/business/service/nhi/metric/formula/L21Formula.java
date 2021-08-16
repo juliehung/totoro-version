@@ -8,6 +8,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
@@ -26,8 +27,8 @@ public class L21Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        EndoTreatment endoTreatment = new EndoTreatment(collector, source.outputKey()).apply();
-        Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(collector, source.outputKey()).apply();
+        EndoTreatment endoTreatment = new EndoTreatment(collector, Tro1, source.outputKey()).apply();
+        Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(collector, Tro1, source.outputKey()).apply();
         try {
             BigDecimal tmp = divide(endoTreatment.getResult(), endo90015CTreatment.getResult());
             return BigDecimal.valueOf(100L).multiply(ONE.subtract(tmp));
