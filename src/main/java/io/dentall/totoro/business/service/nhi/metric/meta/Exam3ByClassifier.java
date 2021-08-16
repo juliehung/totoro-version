@@ -13,7 +13,7 @@ import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.code
 /**
  * 符合牙醫門診加強感染管制實施方案之牙科門診診察費(不含Xray)  病患點數 or 醫師點數
  */
-public class Exam3ByClassifier extends SingleSourceCalculator<Map<Long, Long>> {
+public class Exam3ByClassifier extends Exam<Map<Long, Long>> {
 
     private final Function<NhiMetricRawVM, Long> classifier;
 
@@ -25,10 +25,16 @@ public class Exam3ByClassifier extends SingleSourceCalculator<Map<Long, Long>> {
         this.metaType = metaType;
     }
 
+    public Exam3ByClassifier(Collector collector, MetaType metaType, String sourceName, Function<NhiMetricRawVM, Long> classifier, boolean use00121CPoint) {
+        super(collector, sourceName, use00121CPoint);
+        this.classifier = classifier;
+        this.metaType = metaType;
+    }
+
     @Override
     public Map<Long, Long> doCalculate(Collector collector) {
         List<NhiMetricRawVM> source = collector.retrieveSource(sourceName());
-        return calculateByClassifier(source, codesByExam3, classifier);
+        return calculateByClassifier(source, codesByExam3, classifier, use00121CPoint);
     }
 
     @Override

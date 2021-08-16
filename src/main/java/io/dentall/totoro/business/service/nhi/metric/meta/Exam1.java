@@ -10,16 +10,20 @@ import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.code
 /**
  * 一般牙科門診診察費(不含Xray)
  */
-public class Exam1 extends SingleSourceCalculator<Long> {
+public class Exam1 extends Exam<Long> {
 
     public Exam1(Collector collector, String sourceName) {
         super(collector, sourceName);
     }
 
+    public Exam1(Collector collector, String sourceName, boolean use00121CPoint) {
+        super(collector, sourceName, use00121CPoint);
+    }
+
     @Override
     public Long doCalculate(Collector collector) {
         List<NhiMetricRawVM> source = collector.retrieveSource(sourceName());
-        return ExamHelper.calculate(source, codesByExam1).get();
+        return ExamHelper.calculate(source, codesByExam1, use00121CPoint);
     }
 
     @Override

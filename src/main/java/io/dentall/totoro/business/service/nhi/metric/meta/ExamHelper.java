@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-import static java.lang.Long.valueOf;
+import static java.lang.Long.parseLong;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Comparator.comparing;
@@ -39,20 +39,24 @@ public class ExamHelper {
         "00315C", "00316C", "00317C"
     ));
 
-    public static Supplier<Long> calculate(List<NhiMetricRawVM> source, List<String> codes) {
-        return () -> source.stream()
-            .filter(vm -> isNotBlank(vm.getExamPoint()))
-            .filter(vm -> codes.contains(vm.getExamCode()))
-            .collect(groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))))
-            .values().stream()
-            .filter(Optional::isPresent)
+    private static Long doCalculate(Stream<Optional<NhiMetricRawVM>> stream, boolean use00121CPoint) {
+        return stream.filter(Optional::isPresent)
             .map(Optional::get)
-            .map(vm -> valueOf(vm.getExamPoint()))
+            .map(vm -> use00121CPoint ? 230L : parseLong(vm.getExamPoint()))
             .reduce(Long::sum)
             .orElse(0L);
     }
 
-    public static Map<Long, Long> calculateByClassifier(List<NhiMetricRawVM> source, List<String> codes, Function<NhiMetricRawVM, Long> classifier) {
+    public static Long calculate(List<NhiMetricRawVM> source, List<String> codes, boolean use00121CPoint) {
+        Stream<Optional<NhiMetricRawVM>> stream = source.stream()
+            .filter(vm -> isNotBlank(vm.getExamPoint()))
+            .filter(vm -> codes.contains(vm.getExamCode()))
+            .collect(groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))))
+            .values().stream();
+        return doCalculate(stream, use00121CPoint);
+    }
+
+    public static Map<Long, Long> calculateByClassifier(List<NhiMetricRawVM> source, List<String> codes, Function<NhiMetricRawVM, Long> classifier, boolean use00121CPoint) {
         return source.stream()
             .filter(vm -> isNotBlank(vm.getExamPoint()))
             .filter(vm -> codes.contains(vm.getExamCode()))
@@ -64,12 +68,8 @@ public class ExamHelper {
 
                     map.compute(keyId, (key, point) -> {
                         Map<Long, Optional<NhiMetricRawVM>> subMap = entry.getValue();
-                        Long examPoint = subMap.values().stream()
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .map(vm -> valueOf(vm.getExamPoint()))
-                            .reduce(Long::sum)
-                            .orElse(0L);
+                        Stream<Optional<NhiMetricRawVM>> stream = subMap.values().stream();
+                        Long examPoint = doCalculate(stream, use00121CPoint);
                         return ofNullable(point).orElse(0L) + examPoint;
                     });
 

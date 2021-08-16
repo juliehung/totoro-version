@@ -3,11 +3,10 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 
-import java.time.Period;
 import java.util.*;
 
 import static io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper.INSTANCE;
-import static java.time.Period.between;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
@@ -75,8 +74,8 @@ public class OdPermanentReTreatment extends AbstractCalculator<Long> {
 
                         while (existReDtoItor.hasNext() && !found) {
                             OdDto reDoDto = existReDtoItor.next();
-                            Period period = between(reDoDto.getDisposalDate(), odDto.getDisposalDate());
-                            if (period.getDays() >= dayShiftBegin && period.getDays() <= dayShiftEnd) {
+                            long days = DAYS.between(reDoDto.getDisposalDate(), odDto.getDisposalDate());
+                            if (days >= dayShiftBegin && days <= dayShiftEnd) {
                                 found = true;
                             }
                         }
@@ -93,6 +92,6 @@ public class OdPermanentReTreatment extends AbstractCalculator<Long> {
 
     @Override
     public String sourceName() {
-        return odSourceName + "-" + odPastSourceName;
+        return odSourceName + "+" + odPastSourceName;
     }
 }

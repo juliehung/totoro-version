@@ -38,11 +38,18 @@ public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
     }
 
     public String storeKey() {
+        String key = sourceName() + ":" + metaType().name();
+
+        String extractKey = extractKey();
+        if (extractKey != null) {
+            key += "+" + extractKey;
+        }
+
         Exclude exclude = getExclude();
         if (exclude != null) {
-            return sourceName() + ":" + metaType().name() + ":" + exclude.name();
+            key += ":" + exclude.name();
         }
-        return sourceName() + ":" + metaType().name();
+        return key;
     }
 
     public Meta<T> getMeta() {
@@ -58,4 +65,8 @@ public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
     public abstract MetaType metaType();
 
     public abstract String sourceName();
+
+    public String extractKey() {
+        return null;
+    }
 }
