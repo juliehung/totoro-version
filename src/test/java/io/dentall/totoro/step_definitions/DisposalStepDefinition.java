@@ -112,9 +112,6 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
     @Autowired
     private RegistrationStepDefinition registrationStepDefinition;
 
-    @Autowired
-    private NhiExtendDisposalRepository nhiExtendDisposalRepository;
-
     private String disposalApiPath = "/api/disposals";
 
     private String nhiExtendsDisposalApiPath = "/api/nhi-extend-disposals";
