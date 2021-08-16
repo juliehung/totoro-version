@@ -1,14 +1,12 @@
 package io.dentall.totoro.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
+import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
-import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the NhiMedicalRecord entity. This class is used in NhiMedicalRecordResource to
@@ -41,6 +39,8 @@ public class NhiMedicalRecordCriteria implements Serializable {
     private StringFilter days;
 
     private LongFilter nhiExtendPatientId;
+
+    private NhiRuleCheckSourceType ignoreSourceType;
 
     public LongFilter getId() {
         return id;
@@ -122,6 +122,13 @@ public class NhiMedicalRecordCriteria implements Serializable {
         this.nhiExtendPatientId = nhiExtendPatientId;
     }
 
+    public NhiRuleCheckSourceType getIgnoreSourceType() {
+        return ignoreSourceType;
+    }
+
+    public void setIgnoreSourceType(NhiRuleCheckSourceType ignoreSourceType) {
+        this.ignoreSourceType = ignoreSourceType;
+    }
 
     @Override
     public boolean equals(Object o) {
