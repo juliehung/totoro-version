@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
@@ -28,7 +29,7 @@ public class DisposalSummary extends AbstractSummary<DisposalSummaryDto> {
         Map<Long, List<NhiMetricRawVM>> sourceByDisposal = source.stream().collect(groupingBy(NhiMetricRawVM::getDisposalId));
 
         return sourceByDisposal.entrySet().stream()
-            .reduce(new ArrayList<>(),
+            .reduce(new ArrayList<DisposalSummaryDto>(),
                 (list, entry) -> {
                     List<NhiMetricRawVM> subSource = entry.getValue();
                     Map<Long, Optional<NhiMetricRawVM>> disposalList =
@@ -55,7 +56,10 @@ public class DisposalSummary extends AbstractSummary<DisposalSummaryDto> {
                 (list1, list2) -> {
                     list1.addAll(list2);
                     return list1;
-                });
+                })
+            .stream()
+            .sorted(comparing(dto -> dto.getDisposalDate().toString() + dto.getPatientId()))
+            .collect(Collectors.toList());
     }
 
     @Override

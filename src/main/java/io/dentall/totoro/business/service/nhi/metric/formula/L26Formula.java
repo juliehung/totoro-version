@@ -6,6 +6,7 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousTreatment;
+import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,7 +38,7 @@ public class L26Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        MetaConfig config = new MetaConfig().setExclude(Tro1);
+        MetaConfig config = new Tro1Config();
         OdDeciduousTreatment odDeciduousTreatment = new OdDeciduousTreatment(collector, config, odQuarterSource.outputKey()).apply();
         OdDeciduousReTreatment odDeciduousReTreatment = new OdDeciduousReTreatment(collector, config, odQuarterSource.outputKey(), odTwoYearNearSource.outputKey(), 1, 450).apply();
         try {

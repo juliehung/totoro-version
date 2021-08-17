@@ -5,6 +5,7 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoReTreatmentByTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatmentByTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
+import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
@@ -28,7 +29,7 @@ public class L24Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        MetaConfig config = new MetaConfig().setExclude(Tro1);
+        MetaConfig config = new Tro1Config();
         EndoTreatmentByTooth endoTreatmentByTooth = new EndoTreatmentByTooth(collector, config, source.outputKey()).apply();
         EndoReTreatmentByTooth endoReTreatmentByTooth = new EndoReTreatmentByTooth(collector, config, source.outputKey()).apply();
         try {
