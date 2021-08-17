@@ -1,7 +1,10 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
+import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckFormat;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
@@ -27,6 +30,7 @@ import javax.persistence.criteria.*;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -577,7 +581,6 @@ public class PatientService extends QueryService<Patient> {
         String code,
         Long patientId
     ) {
-        /**
         NhiRuleCheckVM vm = new NhiRuleCheckVM();
         vm.setPatientId(patientId);
 
@@ -596,25 +599,32 @@ public class PatientService extends QueryService<Patient> {
 
                 if (rvm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
-                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                            Arrays.asList(new String[]{"81"}.clone()),
-                            DateTimeUtil.NHI_6_MONTH),
+                        nhiRuleCheckUtil.lessThanAge6(dto),
                         rvm
                     );
                 }
 
                 if (rvm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
-                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                            Arrays.asList(new String[]{"81"}.clone()),
-                            DateTimeUtil.NHI_6_MONTH),
+                        nhiRuleCheckUtil.isCodeBeforeDateV2(
+                            dto,
+                            null,
+                            Arrays.asList("81"),
+                            nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_6),
+                            String.valueOf(DateTimeUtil.NUMBERS_OF_MONTH_6),
+                            1,
+                            NhiRuleCheckFormat.D4_1
+                        ),
                         rvm
                     );
                 }
 
                 if (rvm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
-                        nhiRuleCheckUtil.appendSuccessSourceInfo(dto),
+                        nhiRuleCheckUtil.appendSuccessSourceInfo(
+                            dto,
+                            "81"
+                        ),
                         rvm
                     );
                 }
@@ -678,7 +688,10 @@ public class PatientService extends QueryService<Patient> {
 
                 if (rvm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
-                        nhiRuleCheckUtil.appendSuccessSourceInfo(dto),
+                        nhiRuleCheckUtil.appendSuccessSourceInfo(
+                            dto,
+                            "91004C"
+                        ),
                         rvm
                     );
                 }
@@ -686,8 +699,6 @@ public class PatientService extends QueryService<Patient> {
             default:
                 break;
         }
-         **/
-        NhiRuleCheckResultVM rvm = new NhiRuleCheckResultVM();
 
         return rvm;
     }
