@@ -7,24 +7,31 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
-import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.codesByExam1;
+import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.calculateByClassifier;
 
 public abstract class Exam<T> extends SingleSourceCalculator<T> {
 
-    protected boolean use00121CPoint = false;
-
-    public Exam(Collector collector, String sourceName) {
-        super(collector, sourceName);
+    public Exam(Collector collector, MetaConfig config, String sourceName) {
+        super(collector, config, sourceName);
     }
 
-    public Exam(Collector collector, String sourceName, boolean use00121CPoint) {
-        super(collector, sourceName);
-        this.use00121CPoint = use00121CPoint;
+    protected Long doCalculateRegular(Collector collector, List<String> codes) {
+        List<NhiMetricRawVM> source = collector.retrieveSource(sourceName());
+        boolean use00121CPoint = getConfig().isUse00121CPoint();
+        return ExamHelper.calculate(source, codes, use00121CPoint);
+    }
+
+    protected Map<Long, Long> doCalculateByClassifier(Collector collector, List<String> codes, Function<NhiMetricRawVM, Long> classifier) {
+        List<NhiMetricRawVM> source = collector.retrieveSource(sourceName());
+        boolean use00121CPoint = getConfig().isUse00121CPoint();
+        return calculateByClassifier(source, codes, classifier, use00121CPoint);
     }
 
     protected Map<LocalDate, Long> doCalculateByDaily(Collector collector, List<String> codes) {
         List<Map<LocalDate, List<NhiMetricRawVM>>> source = collector.retrieveSource(sourceName());
+        boolean use00121CPoint = getConfig().isUse00121CPoint();
 
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
@@ -41,7 +48,7 @@ public abstract class Exam<T> extends SingleSourceCalculator<T> {
     }
 
     @Override
-    public String extractKey() {
-        return use00121CPoint ? "use00121CPoint" : null;
+    public String extraKey() {
+        return getConfig().isUse00121CPoint() ? "use00121CPoint" : null;
     }
 }

@@ -16,8 +16,8 @@ import static java.util.Optional.ofNullable;
  */
 public class EndoTreatmentByTooth extends EndoTreatment {
 
-    public EndoTreatmentByTooth(Collector collector, Exclude exclude, String sourceName) {
-        super(collector, exclude, sourceName);
+    public EndoTreatmentByTooth(Collector collector, MetaConfig config, String sourceName) {
+        super(collector, config, sourceName);
     }
 
     @Override

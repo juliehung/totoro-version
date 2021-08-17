@@ -4,7 +4,6 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
-import java.util.Optional;
 
 import static io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper.INSTANCE;
 import static java.util.Collections.singletonList;
@@ -15,11 +14,11 @@ public class Endo90015CTreatment extends SingleSourceCalculator<Long> {
     private static final List<String> codes = singletonList("90015C");
 
     public Endo90015CTreatment(Collector collector, String sourceName) {
-        super(collector, sourceName);
+        this(collector, null, sourceName);
     }
 
-    public Endo90015CTreatment(Collector collector, Exclude exclude, String sourceName) {
-        super(collector, exclude, sourceName);
+    public Endo90015CTreatment(Collector collector, MetaConfig config, String sourceName) {
+        super(collector, config, sourceName);
     }
 
     @Override

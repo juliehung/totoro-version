@@ -16,11 +16,11 @@ import static java.util.Optional.ofNullable;
 public class OdDeciduousTreatment extends SingleSourceCalculator<Long> {
 
     public OdDeciduousTreatment(Collector collector, String sourceName) {
-        super(collector, sourceName);
+        this(collector, null, sourceName);
     }
 
-    public OdDeciduousTreatment(Collector collector, Exclude exclude, String sourceName) {
-        super(collector, exclude, sourceName);
+    public OdDeciduousTreatment(Collector collector, MetaConfig config, String sourceName) {
+        super(collector, config, sourceName);
     }
 
     @Override

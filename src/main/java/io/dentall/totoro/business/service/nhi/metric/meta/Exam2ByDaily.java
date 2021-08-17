@@ -13,11 +13,11 @@ import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.code
 public class Exam2ByDaily extends Exam<Map<LocalDate, Long>> {
 
     public Exam2ByDaily(Collector collector, String sourceName) {
-        super(collector, sourceName);
+        this(collector, null, sourceName);
     }
 
-    public Exam2ByDaily(Collector collector, String sourceName, boolean use00121CPoint) {
-        super(collector, sourceName, use00121CPoint);
+    public Exam2ByDaily(Collector collector, MetaConfig config, String sourceName) {
+        super(collector, config, sourceName);
     }
 
     @Override

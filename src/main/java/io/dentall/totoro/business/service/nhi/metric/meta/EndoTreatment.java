@@ -19,11 +19,11 @@ public class EndoTreatment extends SingleSourceCalculator<Long> {
     public static final List<String> codes = unmodifiableList(asList("90001C", "90002C", "90003C", "90016C", "90018C", "90019C", "90020C"));
 
     public EndoTreatment(Collector collector, String sourceName) {
-        super(collector, sourceName);
+        this(collector, null, sourceName);
     }
 
-    public EndoTreatment(Collector collector, Exclude exclude, String sourceName) {
-        super(collector, exclude, sourceName);
+    public EndoTreatment(Collector collector, MetaConfig config, String sourceName) {
+        super(collector, config, sourceName);
     }
 
     @Override

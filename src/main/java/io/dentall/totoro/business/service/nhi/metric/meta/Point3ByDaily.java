@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.codesByExam3;
-
 /**
  * 診療費
  */
@@ -42,7 +40,7 @@ public class Point3ByDaily extends SingleSourceCalculator<Map<LocalDate, Long>> 
                     .filter(Objects::nonNull)
                     .reduce(Long::sum)
                     .orElse(0L);
-                points = points - exam1Map.get(date)- exam2Map.get(date)- exam3Map.get(date)- exam4Map.get(date);
+                points = points - exam1Map.get(date) - exam2Map.get(date) - exam3Map.get(date) - exam4Map.get(date);
                 map.put(date, points);
                 return map;
             },

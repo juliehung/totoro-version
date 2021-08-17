@@ -7,13 +7,11 @@ public abstract class SingleSourceCalculator<T> extends AbstractCalculator<T> {
     private final String sourceName;
 
     public SingleSourceCalculator(Collector collector, String sourceName) {
-        super(collector);
-        this.sourceName = sourceName;
+        this(collector, null, sourceName);
     }
 
-
-    public SingleSourceCalculator(Collector collector, Exclude exclude, String sourceName) {
-        super(collector, exclude);
+    public SingleSourceCalculator(Collector collector, MetaConfig config, String sourceName) {
+        super(collector, config);
         this.sourceName = sourceName;
     }
 

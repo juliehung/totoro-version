@@ -3,6 +3,7 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.service.nhi.metric.filter.Source;
+import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentTreatment;
 
@@ -36,9 +37,10 @@ public class L35Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        OdPermanentTreatment odPermanentTreatment = new OdPermanentTreatment(collector, Tro1, odQuarterSource.outputKey()).apply();
+        MetaConfig config = new MetaConfig().setExclude(Tro1);
+        OdPermanentTreatment odPermanentTreatment = new OdPermanentTreatment(collector, config, odQuarterSource.outputKey()).apply();
         OdPermanentReTreatment odPermanentReTreatment =
-            new OdPermanentReTreatment(collector, Tro1, odQuarterSource.outputKey(), odThreeYearNearSource.outputKey(), 1, 1095).apply();
+            new OdPermanentReTreatment(collector, config, odQuarterSource.outputKey(), odThreeYearNearSource.outputKey(), 1, 1095).apply();
         try {
             return divide(odPermanentReTreatment.getResult(), odPermanentTreatment.getResult()).multiply(new BigDecimal(100L));
         } catch (ArithmeticException e) {

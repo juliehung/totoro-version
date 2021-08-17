@@ -26,15 +26,11 @@ public class OdDeciduousReTreatment extends AbstractCalculator<Long> {
     private final int dayShiftEnd;
 
     public OdDeciduousReTreatment(Collector collector, String odSourceName, String odPastSourceName, int dayShiftBegin, int dayShiftEnd) {
-        super(collector);
-        this.odSourceName = odSourceName;
-        this.odPastSourceName = odPastSourceName;
-        this.dayShiftBegin = dayShiftBegin;
-        this.dayShiftEnd = dayShiftEnd;
+        this(collector, null, odSourceName, odPastSourceName, dayShiftBegin, dayShiftEnd);
     }
 
-    public OdDeciduousReTreatment(Collector collector, Exclude exclude, String odSourceName, String odPastSourceName, int dayShiftBegin, int dayShiftEnd) {
-        super(collector, exclude);
+    public OdDeciduousReTreatment(Collector collector, MetaConfig config, String odSourceName, String odPastSourceName, int dayShiftBegin, int dayShiftEnd) {
+        super(collector, config);
         this.odSourceName = odSourceName;
         this.odPastSourceName = odPastSourceName;
         this.dayShiftBegin = dayShiftBegin;

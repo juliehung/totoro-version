@@ -4,6 +4,7 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.Endo90015CTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatment;
+import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
@@ -27,8 +28,9 @@ public class L21Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        EndoTreatment endoTreatment = new EndoTreatment(collector, Tro1, source.outputKey()).apply();
-        Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(collector, Tro1, source.outputKey()).apply();
+        MetaConfig config = new MetaConfig().setExclude(Tro1);
+        EndoTreatment endoTreatment = new EndoTreatment(collector, config, source.outputKey()).apply();
+        Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(collector, config, source.outputKey()).apply();
         try {
             BigDecimal tmp = divide(endoTreatment.getResult(), endo90015CTreatment.getResult());
             return BigDecimal.valueOf(100L).multiply(ONE.subtract(tmp));

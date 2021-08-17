@@ -26,15 +26,11 @@ public class OdPermanentReTreatment extends AbstractCalculator<Long> {
     private final int dayShiftEnd;
 
     public OdPermanentReTreatment(Collector collector, String odSourceName, String odPastSourceName, int dayShiftBegin, int dayShiftEnd) {
-        super(collector);
-        this.odSourceName = odSourceName;
-        this.odPastSourceName = odPastSourceName;
-        this.dayShiftBegin = dayShiftBegin;
-        this.dayShiftEnd = dayShiftEnd;
+        this(collector, null, odSourceName, odPastSourceName, dayShiftBegin, dayShiftEnd);
     }
 
-    public OdPermanentReTreatment(Collector collector, Exclude exclude, String odSourceName, String odPastSourceName, int dayShiftBegin, int dayShiftEnd) {
-        super(collector, exclude);
+    public OdPermanentReTreatment(Collector collector, MetaConfig config, String odSourceName, String odPastSourceName, int dayShiftBegin, int dayShiftEnd) {
+        super(collector, config);
         this.odSourceName = odSourceName;
         this.odPastSourceName = odPastSourceName;
         this.dayShiftBegin = dayShiftBegin;

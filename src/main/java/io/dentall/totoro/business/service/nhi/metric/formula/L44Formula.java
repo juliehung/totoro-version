@@ -3,6 +3,7 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.service.nhi.metric.filter.Source;
+import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReTreatment;
 
 import java.math.BigDecimal;
@@ -13,7 +14,7 @@ import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.NhiCate
 
 /**
  * 一年半乳牙重補顆數
- * ＠date-10＠@OD-3@＠deta-4＠
+ * ＠date-10＠@OD-3@＠date-4＠
  */
 public class L44Formula extends AbstractFormula<BigDecimal> {
 
@@ -31,8 +32,9 @@ public class L44Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
+        MetaConfig config = new MetaConfig().setExclude(NhiCategory_SpecificCode_Group1);
         OdDeciduousReTreatment odDeciduousReTreatment =
-            new OdDeciduousReTreatment(collector, NhiCategory_SpecificCode_Group1, odQuarterSource.outputKey(), odTwoYearNearSource.outputKey(), 1, 450).apply();
+            new OdDeciduousReTreatment(collector, config, odQuarterSource.outputKey(), odTwoYearNearSource.outputKey(), 1, 450).apply();
         return new BigDecimal(odDeciduousReTreatment.getResult());
     }
 }

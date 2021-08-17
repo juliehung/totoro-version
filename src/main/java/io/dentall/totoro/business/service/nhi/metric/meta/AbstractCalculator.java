@@ -2,6 +2,8 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 
+import java.util.Optional;
+
 public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
 
     private final Collector collector;
@@ -10,13 +12,16 @@ public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
 
     private Exclude exclude;
 
+    private MetaConfig config;
+
     public AbstractCalculator(Collector collector) {
-        this.collector = collector;
+        this(collector, new MetaConfig());
     }
 
-    public AbstractCalculator(Collector collector, Exclude exclude) {
+    public AbstractCalculator(Collector collector, MetaConfig config) {
         this.collector = collector;
-        this.exclude = exclude;
+        this.config = Optional.ofNullable(config).orElse(new MetaConfig());
+        this.exclude = this.config.getExclude();
     }
 
     @Override
@@ -40,7 +45,7 @@ public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
     public String storeKey() {
         String key = sourceName() + ":" + metaType().name();
 
-        String extractKey = extractKey();
+        String extractKey = extraKey();
         if (extractKey != null) {
             key += "+" + extractKey;
         }
@@ -50,6 +55,10 @@ public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
             key += ":" + exclude.name();
         }
         return key;
+    }
+
+    protected MetaConfig getConfig() {
+        return this.config;
     }
 
     public Meta<T> getMeta() {
@@ -66,7 +75,7 @@ public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
 
     public abstract String sourceName();
 
-    public String extractKey() {
+    public String extraKey() {
         return null;
     }
 }
