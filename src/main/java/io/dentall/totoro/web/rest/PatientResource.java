@@ -22,6 +22,7 @@ import io.dentall.totoro.web.rest.util.AvatarUtil;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.AvatarVM;
+import io.dentall.totoro.web.rest.vm.PatientFirstLatestVisitDateVM;
 import io.dentall.totoro.web.rest.vm.PatientNationalIdValidationVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -174,6 +175,13 @@ public class PatientResource {
         }
 
         return ResponseUtil.wrapOrNotFound(patient);
+    }
+
+    @GetMapping("/patients/{id}/visitDate")
+    @Timed
+    public ResponseEntity<PatientFirstLatestVisitDateVM> getPatientFirstLatestVisitDate(@PathVariable Long id) {
+        log.debug("REST request to get Patient : {}", id);
+        return ResponseEntity.ok(patientService.findPatientFirstLatestVisitDate(id));
     }
 
     /**

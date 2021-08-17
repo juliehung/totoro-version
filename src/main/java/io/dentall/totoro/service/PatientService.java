@@ -6,11 +6,13 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.PatientCriteria;
+import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.FilterUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.vm.PatientFirstLatestVisitDateVM;
 import io.github.jhipster.service.QueryService;
 import io.github.jhipster.service.filter.InstantFilter;
 import org.slf4j.Logger;
@@ -65,6 +67,8 @@ public class PatientService extends QueryService<Patient> {
 
     private final NhiRuleCheckUtil nhiRuleCheckUtil;
 
+    private final DisposalRepository disposalRepository;
+
     public PatientService(
         PatientRepository patientRepository,
         TagRepository tagRepository,
@@ -76,8 +80,8 @@ public class PatientService extends QueryService<Patient> {
         TreatmentTaskRepository treatmentTaskRepository,
         RelationshipService relationshipService,
         NhiExtendPatientRepository nhiExtendPatientRepository,
-        NhiRuleCheckUtil nhiRuleCheckUtil
-    ) {
+        NhiRuleCheckUtil nhiRuleCheckUtil,
+        DisposalRepository disposalRepository) {
         this.patientRepository = patientRepository;
         this.tagRepository = tagRepository;
         this.questionnaireRepository = questionnaireRepository;
@@ -89,6 +93,7 @@ public class PatientService extends QueryService<Patient> {
         this.relationshipService = relationshipService;
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
         this.nhiRuleCheckUtil = nhiRuleCheckUtil;
+        this.disposalRepository = disposalRepository;
     }
 
     /**
@@ -702,4 +707,17 @@ public class PatientService extends QueryService<Patient> {
         );
     }
 
+    public PatientFirstLatestVisitDateVM findPatientFirstLatestVisitDate(Long patientId) {
+        PatientFirstLatestVisitDateVM vm = new PatientFirstLatestVisitDateVM();
+
+        Optional<DisposalTable> fd = disposalRepository.findFirstByRegistration_Appointment_Patient_IdOrderByDateTime(patientId);
+        Optional<DisposalTable> ld = disposalRepository.findFirstByRegistration_Appointment_Patient_IdOrderByDateTimeDesc(patientId);
+
+        if (fd.isPresent() && ld.isPresent()) {
+            vm.setFirstVisitDate(fd.get().getDateTime());
+            vm.setLatestVisitDate(ld.get().getDateTime());
+        }
+
+        return vm;
+    }
 }

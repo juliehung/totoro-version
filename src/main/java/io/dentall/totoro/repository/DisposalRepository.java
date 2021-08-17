@@ -74,4 +74,8 @@ public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSp
         @Param("disposalId") Long disposalId,
         @Param("code") String code
     );
+
+    Optional<DisposalTable> findFirstByRegistration_Appointment_Patient_IdOrderByDateTime(Long id);
+
+    Optional<DisposalTable> findFirstByRegistration_Appointment_Patient_IdOrderByDateTimeDesc(Long id);
 }
