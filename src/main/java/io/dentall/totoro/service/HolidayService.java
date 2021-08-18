@@ -34,7 +34,7 @@ public class HolidayService {
 
     private final int baseYear = 2013; // api返回資料裡，最久年份為2013，所以當做基準年，用來推估之後的年份的起始頁
 
-    private final int maxRecursiveCount = 4;
+    private final int maxRecursiveCount = 10;
 
     private final RestTemplate restTemplate;
 
@@ -111,6 +111,9 @@ public class HolidayService {
     }
 
     private int getPage(Year year) {
+        if (year.getValue() <= this.baseYear) {
+            return 0;
+        }
         return year.getValue() - this.baseYear - 1; // 推估欲取得年份的起始頁
     }
 

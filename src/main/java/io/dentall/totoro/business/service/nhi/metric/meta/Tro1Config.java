@@ -7,6 +7,7 @@ public class Tro1Config extends MetaConfig {
     public Tro1Config() {
         this.setUse00121CPoint(true);
         this.setUseOriginPoint(true);
+        this.setExcludeHolidayPoint(true);
         this.setExclude(Tro1);
     }
 

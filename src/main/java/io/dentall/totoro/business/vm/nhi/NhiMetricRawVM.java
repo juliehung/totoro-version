@@ -50,6 +50,8 @@ public interface NhiMetricRawVM {
 
     Long getTreatmentProcedureTotal();
 
+    Long getNhiOriginPoint();
+
     // 特定治療代碼
     @Enumerated(EnumType.STRING)
     NhiSpecialCode getTreatmentProcedureSpecificCode();

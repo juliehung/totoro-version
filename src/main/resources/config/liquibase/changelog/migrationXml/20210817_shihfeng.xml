@@ -31,5 +31,9 @@
         <createIndex tableName="holiday" indexName="idx_holiday_year" unique="false">
             <column name="year"/>
         </createIndex>
+        <createIndex tableName="holiday" indexName="idx_holiday_year_date" unique="true">
+            <column name="year"/>
+            <column name="date"/>
+        </createIndex>
     </changeSet>
 </databaseChangeLog>

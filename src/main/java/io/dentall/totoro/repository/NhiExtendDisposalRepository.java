@@ -820,6 +820,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             " ned.patient_identity as patientIdentity," +
             " ned.serial_number as serialNumber," +
             " tp.total as treatmentProcedureTotal," +
+            " np.point as nhiOriginPoint," +
             " np.specific_code as treatmentProcedureSpecificCode," +
             " netp.a73 as treatmentProcedureCode," +
             " netp.a74 as treatmentProcedureTooth," +

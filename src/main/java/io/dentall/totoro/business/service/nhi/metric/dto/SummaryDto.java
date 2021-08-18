@@ -14,7 +14,7 @@ public class SummaryDto {
     // 部份負擔
     private Long copayment = 0L;
     // 牙周專科
-    private Long periodPoint = 0L;
+    private Long perioPoint = 0L;
     // 兒童專科
     private Long pedoPoint = 0L;
     // 根管專科
@@ -68,12 +68,12 @@ public class SummaryDto {
         this.copayment = copayment;
     }
 
-    public Long getPeriodPoint() {
-        return periodPoint;
+    public Long getPerioPoint() {
+        return perioPoint;
     }
 
-    public void setPeriodPoint(Long periodPoint) {
-        this.periodPoint = periodPoint;
+    public void setPerioPoint(Long perioPoint) {
+        this.perioPoint = perioPoint;
     }
 
     public Long getPedoPoint() {

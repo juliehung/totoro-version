@@ -25,7 +25,7 @@ public abstract class AbstractSummary<T> extends SingleSourceCalculator<List<T>>
                 Long points = vm.getTreatmentProcedureTotal();
 
                 if (isPeriodAtSalary(code)) {
-                    dto.setPeriodPoint(dto.getPeriodPoint() + points);
+                    dto.setPerioPoint(dto.getPerioPoint() + points);
                 } else if (isEndoAtSalary(code)) {
                     dto.setEndoPoint(dto.getEndoPoint() + points);
                 }
@@ -38,7 +38,7 @@ public abstract class AbstractSummary<T> extends SingleSourceCalculator<List<T>>
                 return dto;
             },
             (dto1, dto2) -> {
-                dto1.setPeriodPoint(dto1.getPeriodPoint() + dto2.getPeriodPoint());
+                dto1.setPerioPoint(dto1.getPerioPoint() + dto2.getPerioPoint());
                 dto1.setEndoPoint(dto1.getEndoPoint() + dto2.getEndoPoint());
                 dto1.setTreatmentPoint(dto1.getTreatmentPoint() + dto2.getTreatmentPoint());
                 return dto1;

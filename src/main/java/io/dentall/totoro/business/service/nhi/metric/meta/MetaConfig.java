@@ -6,6 +6,8 @@ public class MetaConfig {
 
     private boolean useOriginPoint = false;
 
+    private boolean excludeHolidayPoint = false;
+
     private Exclude exclude;
 
 
@@ -25,6 +27,14 @@ public class MetaConfig {
     public MetaConfig setUseOriginPoint(boolean useOriginPoint) {
         this.useOriginPoint = useOriginPoint;
         return this;
+    }
+
+    public boolean isExcludeHolidayPoint() {
+        return excludeHolidayPoint;
+    }
+
+    public void setExcludeHolidayPoint(boolean excludeHolidayPoint) {
+        this.excludeHolidayPoint = excludeHolidayPoint;
     }
 
     public Exclude getExclude() {
