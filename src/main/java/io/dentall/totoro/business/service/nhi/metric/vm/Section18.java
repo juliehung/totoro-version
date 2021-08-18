@@ -7,9 +7,29 @@ import java.util.List;
 
 public class Section18 {
 
+    private int count;
+
+    private long total;
+
     List<DoctorSummaryDto> doctorSummary;
 
     List<DisposalSummaryDto> disposalSummary;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public long getTotal() {
+        return total;
+    }
+
+    public void setTotal(long total) {
+        this.total = total;
+    }
 
     public List<DoctorSummaryDto> getDoctorSummary() {
         return doctorSummary;

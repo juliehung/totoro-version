@@ -5,10 +5,9 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 
 import java.util.*;
 
-import static io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper.INSTANCE;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByDto;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Comparator.comparing;
-import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.maxBy;
 
@@ -55,7 +54,7 @@ public class OdDeciduousReTreatment extends AbstractCalculator<Long> {
                 // 該季中如果同顆牙有多次，則取最後一次
                 Map<String, Optional<OdDto>> odMap = odToothMap.values().stream()
                     .flatMap(Collection::stream)
-                    .filter(dto -> ofNullable(exclude).map(exclude1 -> exclude1.test(INSTANCE.mapToExcludeDto(dto))).orElse(true))
+                    .filter(applyExcludeByDto(exclude))
                     .collect(groupingBy(OdDto::getTooth, maxBy(comparing(OdDto::getDisposalDate))));
 
                 return odMap.entrySet().stream()
@@ -64,7 +63,7 @@ public class OdDeciduousReTreatment extends AbstractCalculator<Long> {
                     .filter(entryOd -> {
                         OdDto odDto = entryOd.getValue().get();
                         Iterator<OdDto> existReDtoItor = odToothPastMap.get(entryOd.getKey()).stream()
-                            .filter(dto -> ofNullable(exclude).map(exclude1 -> exclude1.test(INSTANCE.mapToExcludeDto(dto))).orElse(true))
+                            .filter(applyExcludeByDto(exclude))
                             .iterator();
                         boolean found = false;
 

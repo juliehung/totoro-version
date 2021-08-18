@@ -5,10 +5,9 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper.INSTANCE;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
-import static java.util.Optional.ofNullable;
 
 /**
  * 90001C+90002C+90003C+90016C+90018C+90019C+90020C
@@ -32,7 +31,7 @@ public class EndoTreatment extends SingleSourceCalculator<Long> {
 
         return nhiMetricRawVMList.stream()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
-            .filter(vm -> ofNullable(exclude).map(exclude1 -> exclude1.test(INSTANCE.mapToExcludeDto(vm))).orElse(true))
+            .filter(applyExcludeByVM(exclude))
             .count();
     }
 

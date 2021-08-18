@@ -309,8 +309,15 @@ public class NhiMetricLService {
         section17.setL56(new MetricData(metricL56));
 
         Section18 section18 = new Section18();
-        section18.setDoctorSummary(doctorSummaryDtoList);
-        section18.setDisposalSummary(disposalSummaryDtoList);
+        if (metricSubjectType == CLINIC) {
+            section18.setCount(doctorSummaryDtoList.size());
+            section18.setTotal(doctorSummaryDtoList.stream().mapToLong(DoctorSummaryDto::getTotal).sum());
+            section18.setDoctorSummary(doctorSummaryDtoList);
+        } else {
+            section18.setCount(disposalSummaryDtoList.size());
+            section18.setTotal(disposalSummaryDtoList.stream().mapToLong(DisposalSummaryDto::getTotal).sum());
+            section18.setDisposalSummary(disposalSummaryDtoList);
+        }
 
         MetricLVM metricLVM = new MetricLVM();
         metricLVM.setType(metricSubjectType.name().toLowerCase());

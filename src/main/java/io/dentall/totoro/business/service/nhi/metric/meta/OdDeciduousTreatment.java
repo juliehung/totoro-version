@@ -7,8 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper.INSTANCE;
-import static java.util.Optional.ofNullable;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByDto;
 
 /**
  * 申報OD之乳牙顆數
@@ -31,7 +30,7 @@ public class OdDeciduousTreatment extends SingleSourceCalculator<Long> {
             .map(Map::values)
             .flatMap(Collection::stream)
             .flatMap(Collection::stream)
-            .filter(dto -> ofNullable(exclude).map(exclude1 -> exclude1.test(INSTANCE.mapToExcludeDto(dto))).orElse(true))
+            .filter(applyExcludeByDto(exclude))
             .count();
     }
 
