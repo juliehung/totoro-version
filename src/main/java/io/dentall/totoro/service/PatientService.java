@@ -3,8 +3,9 @@ package io.dentall.totoro.service;
 import io.dentall.totoro.business.service.nhi.NhiRuleCheckDTO;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckFormat;
 import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
@@ -30,10 +31,7 @@ import javax.persistence.criteria.*;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -581,30 +579,35 @@ public class PatientService extends QueryService<Patient> {
         String code,
         Long patientId
     ) {
-        NhiRuleCheckVM vm = new NhiRuleCheckVM();
-        vm.setPatientId(patientId);
+        NhiRuleCheckBody body = new NhiRuleCheckBody();
+        List<NhiRuleCheckTxSnapshot> snapshots = new ArrayList();
+        NhiRuleCheckTxSnapshot snapshot = new NhiRuleCheckTxSnapshot();
+        snapshots.add(snapshot);
+        body.setTxSnapshots(snapshots);
+        body.setPatientId(patientId);
+        body.setDisposalTime(
+            DateTimeUtil.transformLocalDateToRocDate(
+                Instant.now()
+            )
+        );
 
-        NhiRuleCheckResultVM rvm = new NhiRuleCheckResultVM();
-        NhiRuleCheckDTO dto = nhiRuleCheckUtil.convertVmToDto(code, vm);
+        NhiRuleCheckDTO dto = null;
+        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         switch(code) {
             case "81":
                 // 檢查 81
-                if (rvm.isValidated()) {
+                snapshot.setNhiCode("81");
+                dto = nhiRuleCheckUtil.convertVmToDto(code, body);
+
+                if (vm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
                         nhiRuleCheckUtil.lessThanAge6(dto),
-                        rvm
+                        vm
                     );
                 }
 
-                if (rvm.isValidated()) {
-                    nhiRuleCheckUtil.addResultToVm(
-                        nhiRuleCheckUtil.lessThanAge6(dto),
-                        rvm
-                    );
-                }
-
-                if (rvm.isValidated()) {
+                if (vm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
                         nhiRuleCheckUtil.isCodeBeforeDateV2(
                             dto,
@@ -615,84 +618,77 @@ public class PatientService extends QueryService<Patient> {
                             1,
                             NhiRuleCheckFormat.D4_1
                         ),
-                        rvm
+                        vm
                     );
                 }
 
-                if (rvm.isValidated()) {
+                if (vm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
                         nhiRuleCheckUtil.appendSuccessSourceInfo(
                             dto,
                             "81"
                         ),
-                        rvm
+                        vm
                     );
                 }
 
                 break;
             case "91004C":
                 // 檢查 91004C
-                if (rvm.isValidated()) {
+                snapshot.setNhiCode("91004C");
+                dto = nhiRuleCheckUtil.convertVmToDto(code, body);
+
+                if (vm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
-                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                            Arrays.asList("91004C", "91003C"),
-                            DateTimeUtil.NHI_6_MONTH),
-                        rvm
+                        nhiRuleCheckUtil.isCodeBeforeDateV2(
+                            dto,
+                            null,
+                            Arrays.asList("91004C"),
+                            nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY),
+                            String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
+                            1,
+                            NhiRuleCheckFormat.D4_1
+                        ),
+                        vm
                     );
                 }
 
-                if (rvm.isValidated()) {
+                if (vm.isValidated()) {
+                    if (nhiRuleCheckUtil.getPatientAge(dto).getYears() < 12) {
+                        nhiRuleCheckUtil.addResultToVm(
+                            nhiRuleCheckUtil.addNotification(
+                                String.format(
+                                    NhiRuleCheckFormat.XRAY.getFormat(),
+                                    dto.getNhiExtendTreatmentProcedure().getA73()
+                                )
+                            ),
+                            vm
+                        );
+                    }
+                }
+
+                if (vm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
-                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                            Arrays.asList("91004C", "91003C"),
-                            DateTimeUtil.NHI_6_MONTH),
-                        rvm
+                        nhiRuleCheckUtil.isCodeBeforeDateV2(
+                            dto,
+                            null,
+                            Arrays.asList("91003C", "91104C", "91015C", "91016C", "91017C", "91018C", "91005C", "91103C"),
+                            nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
+                            String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
+                            1,
+                            NhiRuleCheckFormat.D1_2
+                        ),
+                        vm
                     );
                 }
 
-                if (rvm.isValidated()) {
-                    nhiRuleCheckUtil.addResultToVm(
-                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                            Arrays.asList("91015C~91018C"),
-                            DateTimeUtil.NHI_3_MONTH),
-                        rvm
-                    );
-                }
-
-                if (rvm.isValidated()) {
-                    nhiRuleCheckUtil.addResultToVm(
-                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                            Arrays.asList("91015C~91018C"),
-                            DateTimeUtil.NHI_3_MONTH),
-                        rvm
-                    );
-                }
-
-                if (rvm.isValidated()) {
-                    nhiRuleCheckUtil.addResultToVm(
-                        nhiRuleCheckUtil.isCodeBeforeDate(dto,
-                            Arrays.asList("91103C", "91104C"),
-                            DateTimeUtil.NHI_2_MONTH),
-                        rvm
-                    );
-                }
-
-                if (rvm.isValidated()) {
-                    nhiRuleCheckUtil.addResultToVm(
-                        nhiRuleCheckUtil.isCodeBeforeDateByNhiMedicalRecord(dto,
-                            Arrays.asList("91103C", "91104C"),
-                            DateTimeUtil.NHI_2_MONTH),
-                        rvm
-                    );
-                }
-
-                if (rvm.isValidated()) {
+                if (vm.isValidated()) {
                     nhiRuleCheckUtil.addResultToVm(
                         nhiRuleCheckUtil.appendSuccessSourceInfo(
                             dto,
                             "91004C"
                         ),
-                        rvm
+                        vm
                     );
                 }
                 break;
@@ -700,7 +696,7 @@ public class PatientService extends QueryService<Patient> {
                 break;
         }
 
-        return rvm;
+        return vm;
     }
 
     public void setNewPatient(Patient patient) {
