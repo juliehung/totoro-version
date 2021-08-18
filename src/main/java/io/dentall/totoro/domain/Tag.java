@@ -1,19 +1,15 @@
 package io.dentall.totoro.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.dentall.totoro.domain.enumeration.TagType;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
-
-import io.dentall.totoro.domain.enumeration.TagType;
+import java.util.Set;
 
 /**
  * A Tag.
@@ -165,7 +161,6 @@ public class Tag implements Serializable {
             .concat(name == null ? "" : ", \"name\": \"" + name + "\"")
             .concat(modifiable == null ? "" : ", \"modifiable\": \"" + modifiable + "\"")
             .concat(order == null ? "" : ", \"order\": \"" + order + "\"")
-            .concat(patients == null ? "" : ", \"patients\": \"" + patients + "\"")
             .concat("}");
     }
 }
