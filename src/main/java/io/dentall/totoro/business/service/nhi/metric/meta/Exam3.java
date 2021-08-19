@@ -2,7 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 
-import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.codesByExam3;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.codesByExam3;
 
 /**
  * 符合牙醫門診加強感染管制實施方案之牙科門診診察費(不含Xray)

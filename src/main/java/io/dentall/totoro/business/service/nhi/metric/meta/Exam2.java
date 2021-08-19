@@ -2,7 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 
-import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.codesByExam2;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.codesByExam2;
 
 /**
  * 一般牙科門診診察費(Xray)

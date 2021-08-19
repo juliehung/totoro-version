@@ -29,7 +29,7 @@ public class L21Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        MetaConfig config = new Tro1Config();
+        MetaConfig config = new Tro1Config(collector);
         EndoTreatment endoTreatment = new EndoTreatment(collector, config, source.outputKey()).apply();
         Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(collector, config, source.outputKey()).apply();
         try {

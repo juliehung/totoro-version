@@ -6,7 +6,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.util.Map;
 import java.util.function.Function;
 
-import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.codesByExam2;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.codesByExam2;
 
 /**
  * 一般牙科門診診察費(Xray)  病患點數 or 醫師點數

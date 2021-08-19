@@ -5,7 +5,7 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import java.time.LocalDate;
 import java.util.Map;
 
-import static io.dentall.totoro.business.service.nhi.metric.meta.ExamHelper.codesByExam1;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.codesByExam1;
 
 /**
  * 一般牙科門診診察費(不含Xray)

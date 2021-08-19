@@ -2,10 +2,13 @@ package io.dentall.totoro.business.service.nhi.metric.filter;
 
 import io.dentall.totoro.business.service.nhi.metric.meta.Meta;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
+import io.dentall.totoro.domain.Holiday;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static io.dentall.totoro.business.service.nhi.metric.filter.FilterKey.Subject;
 
@@ -15,6 +18,8 @@ public class Collector {
     private final Map<String, List<?>> cached = new HashMap<>();
 
     private final Map<String, Meta> metaMap = new HashMap<>();
+
+    private final Map<LocalDate, Optional<Holiday>> holidayMap = new HashMap<>(500);
 
     public Collector(List<NhiMetricRawVM> nhiMetricRawVMList) {
         this.cached.put(Subject.input(), nhiMetricRawVMList);
@@ -41,7 +46,7 @@ public class Collector {
     }
 
     public <T> Meta<T> retrieveMeta(String key) {
-        return (Meta<T>)this.metaMap.get(key);
+        return (Meta<T>) this.metaMap.get(key);
     }
 
     public void storeMeta(String key, Meta meta) {
@@ -50,6 +55,14 @@ public class Collector {
 
     public boolean isMetaExist(String key) {
         return this.metaMap.containsKey(key);
+    }
+
+    public void applyHolidayMap(Map<LocalDate, Optional<Holiday>> holidayMap) {
+        this.holidayMap.putAll(holidayMap);
+    }
+
+    public Map<LocalDate, Optional<Holiday>> getHolidayMap() {
+        return this.holidayMap;
     }
 
 }

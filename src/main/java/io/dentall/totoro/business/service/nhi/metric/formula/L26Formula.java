@@ -38,7 +38,7 @@ public class L26Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        MetaConfig config = new Tro1Config();
+        MetaConfig config = new Tro1Config(collector);
         OdDeciduousTreatment odDeciduousTreatment = new OdDeciduousTreatment(collector, config, odQuarterSource.outputKey()).apply();
         OdDeciduousReTreatment odDeciduousReTreatment = new OdDeciduousReTreatment(collector, config, odQuarterSource.outputKey(), odTwoYearNearSource.outputKey(), 1, 450).apply();
         try {

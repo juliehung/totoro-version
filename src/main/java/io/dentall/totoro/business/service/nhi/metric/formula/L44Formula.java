@@ -32,7 +32,7 @@ public class L44Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        MetaConfig config = new MetaConfig().setExclude(NhiCategory_SpecificCode_Group1);
+        MetaConfig config = new MetaConfig(collector).setExclude(NhiCategory_SpecificCode_Group1);
         OdDeciduousReTreatment odDeciduousReTreatment =
             new OdDeciduousReTreatment(collector, config, odQuarterSource.outputKey(), odTwoYearNearSource.outputKey(), 1, 450).apply();
         return new BigDecimal(odDeciduousReTreatment.getResult());

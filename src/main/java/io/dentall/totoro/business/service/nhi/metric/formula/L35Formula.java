@@ -38,7 +38,7 @@ public class L35Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        MetaConfig config = new Tro1Config();
+        MetaConfig config = new Tro1Config(collector);
         OdPermanentTreatment odPermanentTreatment = new OdPermanentTreatment(collector, config, odQuarterSource.outputKey()).apply();
         OdPermanentReTreatment odPermanentReTreatment =
             new OdPermanentReTreatment(collector, config, odQuarterSource.outputKey(), odThreeYearNearSource.outputKey(), 1, 1095).apply();

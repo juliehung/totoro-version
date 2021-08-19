@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyNewTreatmentPoint;
+import static io.dentall.totoro.business.service.nhi.util.NhiProcedureUtil.isExaminationCodeAtSalary;
+
 /**
  * 診療費
  */
@@ -21,26 +24,18 @@ public class Point3ByDaily extends SingleSourceCalculator<Map<LocalDate, Long>> 
     @Override
     public Map<LocalDate, Long> doCalculate(Collector collector) {
         List<Map<LocalDate, List<NhiMetricRawVM>>> source = collector.retrieveSource(sourceName());
-        Exam1ByDaily exam1 = new Exam1ByDaily(collector, sourceName()).apply();
-        Exam2ByDaily exam2 = new Exam2ByDaily(collector, sourceName()).apply();
-        Exam3ByDaily exam3 = new Exam3ByDaily(collector, sourceName()).apply();
-        Exam4ByDaily exam4 = new Exam4ByDaily(collector, sourceName()).apply();
-
-        Map<LocalDate, Long> exam1Map = exam1.getResult();
-        Map<LocalDate, Long> exam2Map = exam2.getResult();
-        Map<LocalDate, Long> exam3Map = exam3.getResult();
-        Map<LocalDate, Long> exam4Map = exam4.getResult();
+        MetaConfig config = getConfig();
 
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
                 LocalDate date = entry.getKey();
                 List<NhiMetricRawVM> sourceByDate = entry.getValue();
                 Long points = sourceByDate.stream()
-                    .map(NhiMetricRawVM::getTreatmentProcedureTotal)
+                    .filter(vm -> !isExaminationCodeAtSalary(vm.getTreatmentProcedureCode()))
+                    .map(vm -> applyNewTreatmentPoint(vm, config))
                     .filter(Objects::nonNull)
                     .reduce(Long::sum)
                     .orElse(0L);
-                points = points - exam1Map.get(date) - exam2Map.get(date) - exam3Map.get(date) - exam4Map.get(date);
                 map.put(date, points);
                 return map;
             },

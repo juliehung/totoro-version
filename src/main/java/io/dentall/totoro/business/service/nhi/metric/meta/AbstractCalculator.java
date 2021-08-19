@@ -15,12 +15,12 @@ public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
     private MetaConfig config;
 
     public AbstractCalculator(Collector collector) {
-        this(collector, new MetaConfig());
+        this(collector, new MetaConfig(collector));
     }
 
     public AbstractCalculator(Collector collector, MetaConfig config) {
         this.collector = collector;
-        this.config = Optional.ofNullable(config).orElse(new MetaConfig());
+        this.config = Optional.ofNullable(config).orElse(new MetaConfig(this.collector));
         this.exclude = this.config.getExclude();
     }
 
