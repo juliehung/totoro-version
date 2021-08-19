@@ -7,6 +7,7 @@ public enum MetaType {
     Point1, Point2, Point3, Point4,
     Point1ByDaily, Point2ByDaily, Point3ByDaily, Point4ByDaily,
     Pt1, Pt1ByDaily,
+    Pt2,
     Ic2, Ic3, Ic3ByDaily,
 
     HighestExam1Patient, HighestExam2Patient, HighestExam3Patient, HighestExam4Patient,

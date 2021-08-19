@@ -9,6 +9,8 @@ public class OdDto {
 
     private long patientId;
 
+    private long disposalId;
+
     private LocalDate disposalDate;
 
     private String code;
@@ -21,12 +23,22 @@ public class OdDto {
 
     private NhiSpecialCode specificCode;
 
+    private String cardNumber;
+
     public long getPatientId() {
         return patientId;
     }
 
     public void setPatientId(long patientId) {
         this.patientId = patientId;
+    }
+
+    public long getDisposalId() {
+        return disposalId;
+    }
+
+    public void setDisposalId(long disposalId) {
+        this.disposalId = disposalId;
     }
 
     public LocalDate getDisposalDate() {
@@ -75,5 +87,13 @@ public class OdDto {
 
     public void setSpecificCode(NhiSpecialCode specificCode) {
         this.specificCode = specificCode;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 }

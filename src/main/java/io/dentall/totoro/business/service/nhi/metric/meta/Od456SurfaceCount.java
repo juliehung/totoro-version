@@ -15,10 +15,10 @@ public class Od456SurfaceCount extends SingleSourceCalculator<Long> {
 
     @Override
     public Long doCalculate(Collector collector) {
-        Od4ToothCount od4ToothCount = new Od4ToothCount(collector, sourceName()).apply();
-        Od5ToothCount od5ToothCount = new Od5ToothCount(collector, sourceName()).apply();
-        Od6ToothCount od6ToothCount = new Od6ToothCount(collector, sourceName()).apply();
-        return od4ToothCount.getResult() + 2 * od5ToothCount.getResult() + 3 * od6ToothCount.getResult();
+        Od4TreatmentCount od4TreatmentCount = new Od4TreatmentCount(collector, sourceName()).apply();
+        Od5TreatmentCount od5TreatmentCount = new Od5TreatmentCount(collector, sourceName()).apply();
+        Od6TreatmentCount od6TreatmentCount = new Od6TreatmentCount(collector, sourceName()).apply();
+        return od4TreatmentCount.getResult() + 2 * od5TreatmentCount.getResult() + 3 * od6TreatmentCount.getResult();
     }
 
     @Override

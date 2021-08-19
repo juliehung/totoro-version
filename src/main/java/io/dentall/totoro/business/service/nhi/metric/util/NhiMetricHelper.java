@@ -11,6 +11,7 @@ import io.dentall.totoro.service.HolidayService;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -21,7 +22,7 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class NhiMetricHelper {
 
@@ -161,4 +162,50 @@ public class NhiMetricHelper {
             .stream()
             .collect(groupingBy(Holiday::getDate, maxBy(comparing(Holiday::getDate))));
     }
+
+    public static boolean isNumericCardNumber(String cardNumber) {
+        return isNumeric(cardNumber);
+    }
+
+    public static boolean isErrorCardNumber(String cardNumber) {
+        return !isNumericCardNumber(cardNumber) && isPreventionCardNumber(cardNumber);
+    }
+
+    public static boolean isPreventionCardNumber(String cardNumber) {
+        try {
+            return cardNumber.startsWith("IC");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static BiFunction<Long, NhiMetricRawVM, Long> calculatePt() {
+        List<String> existPatientCardNumber = new ArrayList<>();
+        return (count, vm) -> calculatePtCount(vm.getDisposalDate(), vm.getPatientId(), vm.getCardNumber(), count, existPatientCardNumber);
+    }
+
+    public static BiFunction<Long, OdDto, Long> calculateOdPt() {
+        List<String> existPatientCardNumber = new ArrayList<>();
+        return (count, dto) -> calculatePtCount(dto.getDisposalDate(), dto.getPatientId(), dto.getCardNumber(), count, existPatientCardNumber);
+    }
+
+    private static long calculatePtCount(LocalDate date, long patientId, String cardNumber, long count, List<String> existPatientCardNumber) {
+        if (isBlank(cardNumber) || date == null) {
+            return count;
+        }
+
+        String key = date.getMonth().getValue() + patientId + cardNumber;
+        boolean isNumeric = isNumericCardNumber(cardNumber);
+
+        if (isNumeric) {
+            if (existPatientCardNumber.contains(key)) {
+                return count;
+            } else {
+                existPatientCardNumber.add(key);
+            }
+        }
+
+        return count + 1L;
+    }
+
 }

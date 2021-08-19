@@ -7,26 +7,30 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
+import static java.util.stream.Collectors.groupingBy;
 
 /**
- * @ OD-5@齒數
+ * @ OD-6@醫令數
  */
-public class Od5ToothCount extends SingleSourceCalculator<Long> {
+public class Od6TreatmentCount extends SingleSourceCalculator<Long> {
 
-    private static final List<String> codes = unmodifiableList(asList("89002C", "89005C", "89009C"));
+    private static final List<String> codes = unmodifiableList(asList("89003C", "89010C", "89012C"));
 
-    public Od5ToothCount(Collector collector, String sourceName) {
+    public Od6TreatmentCount(Collector collector, String sourceName) {
         super(collector, sourceName);
     }
 
     @Override
     public Long doCalculate(Collector collector) {
         List<OdDto> odDtoList = collector.retrieveSource(sourceName());
-        return odDtoList.stream().filter(dto -> codes.contains(dto.getCode())).count();
+        return (long) odDtoList.stream()
+            .filter(dto -> codes.contains(dto.getCode()))
+            .collect(groupingBy(dto -> dto.getDisposalId() + dto.getCode()))
+            .size();
     }
 
     @Override
     public MetaType metaType() {
-        return MetaType.Od5ToothCount;
+        return MetaType.Od6ToothCount;
     }
 }

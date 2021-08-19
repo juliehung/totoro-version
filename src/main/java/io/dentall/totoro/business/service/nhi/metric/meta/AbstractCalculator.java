@@ -2,7 +2,11 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
 
@@ -20,7 +24,7 @@ public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
 
     public AbstractCalculator(Collector collector, MetaConfig config) {
         this.collector = collector;
-        this.config = Optional.ofNullable(config).orElse(new MetaConfig(this.collector));
+        this.config = ofNullable(config).orElse(new MetaConfig(this.collector));
         this.exclude = this.config.getExclude();
     }
 
@@ -76,6 +80,27 @@ public abstract class AbstractCalculator<T> implements Calculator<Meta<T>> {
     public abstract String sourceName();
 
     public String extraKey() {
-        return null;
+        MetaConfig config = getConfig();
+        List<String> keys = new ArrayList<>();
+
+        if (config.isUse00121CPoint()) {
+            keys.add("use00121CPoint");
+        }
+
+        if (config.isUseOriginPoint()) {
+            keys.add("useOriginPoint");
+        }
+
+        if (config.isExcludeHideoutPoint()) {
+            keys.add("excludeHideoutPoint");
+        }
+
+        if (config.isExcludeHolidayPoint()) {
+            keys.add("excludeHolidayPoint");
+        }
+
+        String keyStr = keys.stream().reduce("", (str1, str2) -> str1.concat("/").concat(str2));
+
+        return keyStr.length() == 0 ? null : keyStr;
     }
 }

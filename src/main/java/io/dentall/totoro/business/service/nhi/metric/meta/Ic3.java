@@ -5,8 +5,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.groupingBy;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.calculatePt;
 
 /**
  * 申報件數
@@ -24,11 +23,8 @@ public class Ic3 extends SingleSourceCalculator<Long> {
     public Long doCalculate(Collector collector) {
         List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
 
-        return (long) nhiMetricRawVMList.stream()
-            .filter(vm -> vm.getDisposalDate() != null && isNotBlank(vm.getCardNumber()))
-            .map(vm -> vm.getDisposalDate() + vm.getCardNumber())
-            .collect(groupingBy(key -> key))
-            .keySet().size();
+        return nhiMetricRawVMList.stream()
+            .reduce(0L, calculatePt(), Long::sum);
     }
 
     @Override

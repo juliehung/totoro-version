@@ -45,8 +45,4 @@ public abstract class Exam<T> extends SingleSourceCalculator<T> {
             });
     }
 
-    @Override
-    public String extraKey() {
-        return getConfig().isUse00121CPoint() ? "use00121CPoint" : null;
-    }
 }

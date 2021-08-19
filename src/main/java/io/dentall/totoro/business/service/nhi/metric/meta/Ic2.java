@@ -4,8 +4,8 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -26,7 +26,7 @@ public class Ic2 extends SingleSourceCalculator<Long> {
         return (long) nhiMetricRawVMList.stream()
             .filter(vm -> isNotBlank(vm.getCardNumber()))
             .map(NhiMetricRawVM::getDisposalDate)
-            .collect(Collectors.groupingBy(key -> key))
+            .collect(groupingBy(key -> key))
             .keySet().size();
     }
 

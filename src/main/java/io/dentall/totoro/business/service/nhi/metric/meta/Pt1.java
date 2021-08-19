@@ -3,11 +3,10 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
-import static java.util.stream.Collectors.groupingBy;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.*;
 
 /**
  * 看診人數/就醫人數 不重複病患數量
@@ -27,12 +26,9 @@ public class Pt1 extends SingleSourceCalculator<Long> {
         List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
         Exclude exclude = getExclude();
 
-        return (long) nhiMetricRawVMList.stream()
+        return nhiMetricRawVMList.stream()
             .filter(applyExcludeByVM(exclude))
-            .map(NhiMetricRawVM::getPatientId)
-            .filter(Objects::nonNull)
-            .collect(groupingBy(id -> id))
-            .keySet().size();
+            .reduce(0L, calculatePt(), Long::sum);
     }
 
     @Override

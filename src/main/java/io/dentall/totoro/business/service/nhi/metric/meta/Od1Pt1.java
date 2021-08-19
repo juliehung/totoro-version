@@ -5,7 +5,7 @@ import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.groupingBy;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.calculateOdPt;
 
 /**
  * @ OD-1@@PT-1@
@@ -20,10 +20,8 @@ public class Od1Pt1 extends SingleSourceCalculator<Long> {
     public Long doCalculate(Collector collector) {
         List<OdDto> odDtoList = collector.retrieveSource(sourceName());
 
-        return (long) odDtoList.stream()
-            .map(OdDto::getPatientId)
-            .collect(groupingBy(id -> id))
-            .keySet().size();
+        return odDtoList.stream()
+            .reduce(0L, calculateOdPt(), Long::sum);
     }
 
     @Override

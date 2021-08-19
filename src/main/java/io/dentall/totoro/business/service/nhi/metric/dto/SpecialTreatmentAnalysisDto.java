@@ -22,12 +22,16 @@ public class SpecialTreatmentAnalysisDto {
 
     private SpecialTreatmentItemDto summary = new SpecialTreatmentItemDto(0, 0L);
 
+    // p1 + p5 的資料
     private SpecialTreatmentItemDto p1p5 = new SpecialTreatmentItemDto(0, 0L);
 
+    // p2 + p3 的資料
     private SpecialTreatmentItemDto p2p3 = new SpecialTreatmentItemDto(0, 0L);
 
+    // p4 + p8 的資料
     private SpecialTreatmentItemDto p4p8 = new SpecialTreatmentItemDto(0, 0L);
 
+    // p6 + p7 + other 的資料
     private SpecialTreatmentItemDto p6p7AndOther = new SpecialTreatmentItemDto(0, 0L);
 
     public SpecialTreatmentItemDto getP1() {
