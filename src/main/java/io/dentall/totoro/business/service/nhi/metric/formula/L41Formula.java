@@ -1,10 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
-import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReTreatment;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,7 +34,7 @@ public class L41Formula extends AbstractFormula<BigDecimal> {
     public BigDecimal doCalculate(Collector collector) {
         MetaConfig config = new MetaConfig(collector).setExclude(N89013C);
         OdPermanentReTreatment odPermanentReTreatment =
-            new OdPermanentReTreatment(collector, config, odQuarterSource.outputKey(), odThreeYearNearSource.outputKey(), 1, 1095).apply();
+            new OdPermanentReTreatment(collector, config, odQuarterSource, odThreeYearNearSource, 1, 1095).apply();
         return new BigDecimal(odPermanentReTreatment.getResult());
     }
 }

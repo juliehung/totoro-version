@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import static io.dentall.totoro.business.service.nhi.NhiSpecialCode.OTHER;
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.SpecialCodeMonthSelected;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 
@@ -16,7 +15,8 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public class SpecialCodeMonthSelectedSource extends AbstractSource<NhiMetricRawVM, Map<NhiSpecialCode, List<NhiMetricRawVM>>> {
 
-    public SpecialCodeMonthSelectedSource() {
+    public SpecialCodeMonthSelectedSource(InputSource<NhiMetricRawVM> inputSource) {
+        super(inputSource);
     }
 
     @Override
@@ -26,13 +26,4 @@ public class SpecialCodeMonthSelectedSource extends AbstractSource<NhiMetricRawV
             .collect(groupingBy(vm -> vm.getTreatmentProcedureSpecificCode() != null ? vm.getTreatmentProcedureSpecificCode() : OTHER)));
     }
 
-    @Override
-    public String inputKey() {
-        return SpecialCodeMonthSelected.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return SpecialCodeMonthSelected.output();
-    }
 }

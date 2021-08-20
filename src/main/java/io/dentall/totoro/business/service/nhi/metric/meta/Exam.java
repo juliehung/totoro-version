@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.time.LocalDate;
@@ -14,22 +15,22 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper
 
 public abstract class Exam<T> extends SingleSourceCalculator<T> {
 
-    public Exam(Collector collector, MetaConfig config, String sourceName) {
-        super(collector, config, sourceName);
+    public Exam(Collector collector, MetaConfig config, Source<?, ?> source) {
+        super(collector, config, source);
     }
 
     protected Long doCalculateRegular(Collector collector, List<String> codes) {
-        List<NhiMetricRawVM> source = collector.retrieveSource(sourceName());
+        List<NhiMetricRawVM> source = collector.retrieveSource(source());
         return calculateExamRegular(source, codes, getConfig());
     }
 
     protected Map<Long, Long> doCalculateByClassifier(Collector collector, List<String> codes, Function<NhiMetricRawVM, Long> classifier) {
-        List<NhiMetricRawVM> source = collector.retrieveSource(sourceName());
+        List<NhiMetricRawVM> source = collector.retrieveSource(source());
         return calculateExamByClassifier(source, codes, classifier, getConfig());
     }
 
     protected Map<LocalDate, Long> doCalculateByDaily(Collector collector, List<String> codes) {
-        List<Map<LocalDate, List<NhiMetricRawVM>>> source = collector.retrieveSource(sourceName());
+        List<Map<LocalDate, List<NhiMetricRawVM>>> source = collector.retrieveSource(source());
 
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {

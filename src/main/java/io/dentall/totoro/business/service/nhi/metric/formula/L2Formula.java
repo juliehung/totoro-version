@@ -1,11 +1,11 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
-import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exam1;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exam2;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exam3;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exam4;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
@@ -24,10 +24,10 @@ public class L2Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        Exam1 exam1 = new Exam1(collector, source.outputKey()).apply();
-        Exam2 exam2 = new Exam2(collector, source.outputKey()).apply();
-        Exam3 exam3 = new Exam3(collector, source.outputKey()).apply();
-        Exam4 exam4 = new Exam4(collector, source.outputKey()).apply();
+        Exam1 exam1 = new Exam1(collector, source).apply();
+        Exam2 exam2 = new Exam2(collector, source).apply();
+        Exam3 exam3 = new Exam3(collector, source).apply();
+        Exam4 exam4 = new Exam4(collector, source).apply();
         long result = exam1.getResult() + exam2.getResult() + exam3.getResult() + exam4.getResult();
 
         return new BigDecimal(result);

@@ -1,10 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
-import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od456SurfaceCount;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
 
@@ -27,8 +27,8 @@ public class L49Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        Od1ToothCount od1ToothCount = new Od1ToothCount(collector, source.outputKey()).apply();
-        Od456SurfaceCount od456SurfaceCount = new Od456SurfaceCount(collector, source.outputKey()).apply();
+        Od1ToothCount od1ToothCount = new Od1ToothCount(collector, source).apply();
+        Od456SurfaceCount od456SurfaceCount = new Od456SurfaceCount(collector, source).apply();
         try {
             return divide(od456SurfaceCount.getResult(), od1ToothCount.getResult());
         } catch (ArithmeticException e) {

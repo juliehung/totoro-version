@@ -1,10 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
-import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousTreatment;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,8 +36,8 @@ public class L30Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        OdDeciduousTreatment odDeciduousTreatment = new OdDeciduousTreatment(collector, odQuarterSource.outputKey()).apply();
-        OdDeciduousReTreatment odDeciduousReTreatment = new OdDeciduousReTreatment(collector, odQuarterSource.outputKey(), odThreeYearNearSource.outputKey(), 731, 1095).apply();
+        OdDeciduousTreatment odDeciduousTreatment = new OdDeciduousTreatment(collector, odQuarterSource).apply();
+        OdDeciduousReTreatment odDeciduousReTreatment = new OdDeciduousReTreatment(collector, odQuarterSource, odThreeYearNearSource, 731, 1095).apply();
         try {
             return toPercentage(divide(odDeciduousReTreatment.getResult(), odDeciduousTreatment.getResult()));
         } catch (ArithmeticException e) {

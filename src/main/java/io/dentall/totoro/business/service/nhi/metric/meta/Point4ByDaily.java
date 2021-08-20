@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.time.LocalDate;
@@ -14,13 +15,13 @@ import java.util.Objects;
  */
 public class Point4ByDaily extends SingleSourceCalculator<Map<LocalDate, Long>> {
 
-    public Point4ByDaily(Collector collector, String sourceName) {
-        super(collector, sourceName);
+    public Point4ByDaily(Collector collector, Source<?, ?> source) {
+        super(collector, source);
     }
 
     @Override
     public Map<LocalDate, Long> doCalculate(Collector collector) {
-        List<Map<LocalDate, List<NhiMetricRawVM>>> source = collector.retrieveSource(sourceName());
+        List<Map<LocalDate, List<NhiMetricRawVM>>> source = collector.retrieveSource(source());
 
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {

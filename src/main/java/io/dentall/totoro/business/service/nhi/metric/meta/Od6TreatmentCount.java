@@ -2,6 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.List;
 
@@ -17,17 +18,17 @@ public class Od6TreatmentCount extends SingleSourceCalculator<Long> {
 
     private static final List<String> codes = unmodifiableList(asList("89003C", "89010C", "89012C"));
 
-    public Od6TreatmentCount(Collector collector, String sourceName) {
-        this(collector, null, sourceName);
+    public Od6TreatmentCount(Collector collector, Source<?, ?> source) {
+        this(collector, null, source);
     }
 
-    public Od6TreatmentCount(Collector collector, MetaConfig config, String sourceName) {
-        super(collector, config, sourceName);
+    public Od6TreatmentCount(Collector collector, MetaConfig config, Source<?, ?> source) {
+        super(collector, config, source);
     }
 
     @Override
     public Long doCalculate(Collector collector) {
-        List<OdDto> odDtoList = collector.retrieveSource(sourceName());
+        List<OdDto> odDtoList = collector.retrieveSource(source());
         Exclude exclude = getExclude();
         return (long) odDtoList.stream()
             .filter(dto -> codes.contains(dto.getCode()))

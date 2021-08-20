@@ -30,8 +30,8 @@ public class L24Formula extends AbstractFormula<BigDecimal> {
     @Override
     public BigDecimal doCalculate(Collector collector) {
         MetaConfig config = new Tro1Config(collector);
-        EndoTreatmentByTooth endoTreatmentByTooth = new EndoTreatmentByTooth(collector, config, source.outputKey()).apply();
-        EndoReTreatmentByTooth endoReTreatmentByTooth = new EndoReTreatmentByTooth(collector, config, source.outputKey()).apply();
+        EndoTreatmentByTooth endoTreatmentByTooth = new EndoTreatmentByTooth(collector, config, source).apply();
+        EndoReTreatmentByTooth endoReTreatmentByTooth = new EndoReTreatmentByTooth(collector, config, source).apply();
         try {
             return toPercentage(divide(endoReTreatmentByTooth.getResult(), endoTreatmentByTooth.getResult()));
         } catch (ArithmeticException e) {

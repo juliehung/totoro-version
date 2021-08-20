@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.HashMap;
@@ -23,15 +24,15 @@ public class Point3ByClassifier extends SingleSourceCalculator<Map<Long, Long>> 
 
     private final MetaType metaType;
 
-    public Point3ByClassifier(Collector collector, MetaType metaType, String sourceName, Function<NhiMetricRawVM, Long> classifier) {
-        super(collector, sourceName);
+    public Point3ByClassifier(Collector collector, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
+        super(collector, source);
         this.classifier = classifier;
         this.metaType = metaType;
     }
 
     @Override
     public Map<Long, Long> doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
+        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(source());
         MetaConfig config = getConfig();
 
         return nhiMetricRawVMList.stream()

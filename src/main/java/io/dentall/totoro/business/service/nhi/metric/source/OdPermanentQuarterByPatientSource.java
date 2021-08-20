@@ -1,16 +1,11 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.OdPermanentQuarterByPatient;
+import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 
 public class OdPermanentQuarterByPatientSource extends OdPermanentSource {
 
-    @Override
-    public String inputKey() {
-        return OdPermanentQuarterByPatient.input();
+    public OdPermanentQuarterByPatientSource(InputSource<OdDto> inputSource) {
+        super(inputSource);
     }
 
-    @Override
-    public String outputKey() {
-        return OdPermanentQuarterByPatient.output();
-    }
 }

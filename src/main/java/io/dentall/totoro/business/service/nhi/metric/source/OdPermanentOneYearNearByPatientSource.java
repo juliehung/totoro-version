@@ -1,16 +1,11 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.OdPermanentOneYearNearByPatient;
+import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 
 public class OdPermanentOneYearNearByPatientSource extends OdPermanentSource {
 
-    @Override
-    public String inputKey() {
-        return OdPermanentOneYearNearByPatient.input();
+    public OdPermanentOneYearNearByPatientSource(InputSource<OdDto> inputSource) {
+        super(inputSource);
     }
 
-    @Override
-    public String outputKey() {
-        return OdPermanentOneYearNearByPatient.output();
-    }
 }

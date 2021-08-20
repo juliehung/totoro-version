@@ -1,15 +1,13 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReTreatment;
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReTreatment;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 
 /**
  * 三年乳牙重補顆數
@@ -31,7 +29,7 @@ public class L47Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        OdDeciduousReTreatment odDeciduousReTreatment = new OdDeciduousReTreatment(collector, odQuarterSource.outputKey(), odThreeYearNearSource.outputKey(), 1, 1095).apply();
+        OdDeciduousReTreatment odDeciduousReTreatment = new OdDeciduousReTreatment(collector, odQuarterSource, odThreeYearNearSource, 1, 1095).apply();
         return new BigDecimal(odDeciduousReTreatment.getResult());
     }
 }

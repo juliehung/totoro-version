@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
@@ -15,13 +16,13 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public class Ic2 extends SingleSourceCalculator<Long> {
 
-    public Ic2(Collector collector, String sourceName) {
-        super(collector, sourceName);
+    public Ic2(Collector collector, Source<?, ?> source) {
+        super(collector, source);
     }
 
     @Override
     public Long doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
+        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(source());
 
         return (long) nhiMetricRawVMList.stream()
             .filter(vm -> isNotBlank(vm.getCardNumber()))

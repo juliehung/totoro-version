@@ -5,7 +5,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.time.LocalDate;
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.MonthSelected;
 import static io.dentall.totoro.service.util.DateTimeUtil.beginOfMonth;
 import static io.dentall.totoro.service.util.DateTimeUtil.endOfMonth;
 import static java.util.stream.Collectors.toList;
@@ -19,7 +18,8 @@ public class MonthSelectedSource extends AbstractSource<NhiMetricRawVM, NhiMetri
 
     private final LocalDate end;
 
-    public MonthSelectedSource(LocalDate date) {
+    public MonthSelectedSource(InputSource<NhiMetricRawVM> inputSource, LocalDate date) {
+        super(inputSource);
         this.begin = beginOfMonth(date);
         this.end = endOfMonth(date);
     }
@@ -34,13 +34,4 @@ public class MonthSelectedSource extends AbstractSource<NhiMetricRawVM, NhiMetri
             .collect(toList());
     }
 
-    @Override
-    public String inputKey() {
-        return MonthSelected.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return MonthSelected.output();
-    }
 }

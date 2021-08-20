@@ -27,8 +27,8 @@ public class L20Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        EndoTreatment endoTreatment = new EndoTreatment(collector, source.outputKey()).apply();
-        Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(collector, source.outputKey()).apply();
+        EndoTreatment endoTreatment = new EndoTreatment(collector, source).apply();
+        Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(collector, source).apply();
         try {
             BigDecimal tmp = divide(endoTreatment.getResult(), endo90015CTreatment.getResult());
             return toPercentage(ONE.subtract(tmp));

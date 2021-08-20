@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.meta.Point1;
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.service.nhi.metric.meta.Point1;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
@@ -21,7 +21,7 @@ public class L1Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     protected BigDecimal doCalculate(Collector collector) {
-        Point1 point1 = new Point1(collector, source.outputKey()).apply();
+        Point1 point1 = new Point1(collector, source).apply();
         return new BigDecimal(point1.getResult());
     }
 

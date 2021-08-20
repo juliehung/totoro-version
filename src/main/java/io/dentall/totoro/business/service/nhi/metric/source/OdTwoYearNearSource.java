@@ -5,7 +5,6 @@ import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import java.time.LocalDate;
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.OdTwoYearNear;
 import static io.dentall.totoro.service.util.DateTimeUtil.endOfMonth;
 import static io.dentall.totoro.service.util.DateTimeUtil.isSameMonth;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -16,7 +15,8 @@ public class OdTwoYearNearSource extends OdSource<OdDto> {
 
     private final LocalDate begin;
 
-    public OdTwoYearNearSource(LocalDate baseDate) {
+    public OdTwoYearNearSource(InputSource<OdDto> inputSource, LocalDate baseDate) {
+        super(inputSource);
         if (isSameMonth(baseDate)) {
             this.begin = baseDate.minus(730, DAYS);
         } else {
@@ -33,13 +33,4 @@ public class OdTwoYearNearSource extends OdSource<OdDto> {
             .collect(toList());
     }
 
-    @Override
-    public String inputKey() {
-        return OdTwoYearNear.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return OdTwoYearNear.output();
-    }
 }

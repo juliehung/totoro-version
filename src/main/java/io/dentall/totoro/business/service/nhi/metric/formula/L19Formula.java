@@ -1,9 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
-import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.Ic3;
 import io.dentall.totoro.business.service.nhi.metric.meta.Pt1;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
@@ -25,8 +25,8 @@ public class L19Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        Pt1 pt1 = new Pt1(collector, source.outputKey()).apply();
-        Ic3 ic3 = new Ic3(collector, source.outputKey()).apply();
+        Pt1 pt1 = new Pt1(collector, source).apply();
+        Ic3 ic3 = new Ic3(collector, source).apply();
         try {
             return divide(ic3.getResult(), pt1.getResult());
         } catch (ArithmeticException e) {

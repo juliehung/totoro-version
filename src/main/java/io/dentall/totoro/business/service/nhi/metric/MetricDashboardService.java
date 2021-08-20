@@ -2,10 +2,10 @@ package io.dentall.totoro.business.service.nhi.metric;
 
 import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
-import io.dentall.totoro.business.service.nhi.metric.source.*;
 import io.dentall.totoro.business.service.nhi.metric.formula.*;
 import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapper;
 import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
+import io.dentall.totoro.business.service.nhi.metric.source.*;
 import io.dentall.totoro.business.service.nhi.metric.vm.*;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.User;
@@ -75,58 +75,62 @@ public class MetricDashboardService {
     }
 
     private MetricLVM buildMetricL(LocalDate baseDate, BeginEnd quarterRange, List<User> allSubject, User subject, List<NhiMetricRawVM> source) {
-        Collector collector = new Collector(source);
-        Source<NhiMetricRawVM, NhiMetricRawVM> subjectSource = subject.getId().equals(Long.MIN_VALUE) ? new ClinicSource() : new DoctorSource(subject.getId());
+        Source<NhiMetricRawVM, NhiMetricRawVM> initialSource = new InitialSource();
+        Collector collector = new Collector(initialSource.asInputSource(), source);
+        Source<NhiMetricRawVM, NhiMetricRawVM> subjectSource =
+            subject.getId().equals(Long.MIN_VALUE) ?
+                new ClinicSource(initialSource.asInputSource()) :
+                new DoctorSource(initialSource.asInputSource(), subject.getId());
         collector.apply(subjectSource);
 
-        if (!collector.isSourceExist(subjectSource.outputKey()) || collector.retrieveSource(subjectSource.outputKey()).size() == 0) {
+        if (!collector.isSourceExist(subjectSource.asInputSource()) || collector.retrieveSource(subjectSource.asInputSource()).size() == 0) {
             return null;
         }
 
         MetricSubjectType metricSubjectType = subjectSource.getClass().isAssignableFrom(ClinicSource.class) ? CLINIC : MetricSubjectType.DOCTOR;
-        Source<NhiMetricRawVM, NhiMetricRawVM> threeYearNearSource = new ThreeYearNearSource(baseDate);
-        Source<NhiMetricRawVM, NhiMetricRawVM> twoYearNearSource = new TwoYearNearSource(baseDate);
-        Source<NhiMetricRawVM, NhiMetricRawVM> oneYearNearSource = new OneYearNearSource(baseDate);
-        Source<NhiMetricRawVM, NhiMetricRawVM> halfYearNearSource = new HalfYearNearSource(baseDate);
-        Source<NhiMetricRawVM, NhiMetricRawVM> quarterSource = new QuarterSource(quarterRange);
-        Source<NhiMetricRawVM, NhiMetricRawVM> threeMonthNearSource = new ThreeMonthNearSource(baseDate);
-        Source<NhiMetricRawVM, NhiMetricRawVM> monthSelectedSource = new MonthSelectedSource(baseDate);
-        Source<NhiMetricRawVM, Map<LocalDate, List<NhiMetricRawVM>>> dailyByMonthSelectedSource = new DailyByMonthSelectedSource(baseDate);
-        Source<NhiMetricRawVM, Map<NhiSpecialCode, List<NhiMetricRawVM>>> specialCodeMonthSelectedSource = new SpecialCodeMonthSelectedSource();
-        Source<NhiMetricRawVM, OdDto> odThreeYearNearSource = new OdThreeYearNearSource();
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentThreeYearNearByPatientSource = new OdPermanentThreeYearNearByPatientSource();
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousThreeYearNearByPatientSource = new OdDeciduousThreeYearNearByPatientSource();
-        Source<OdDto, OdDto> odTwoYearNearSource = new OdTwoYearNearSource(baseDate);
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentTwoYearNearByPatientSource = new OdPermanentTwoYearNearByPatientSource();
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousTwoYearNearByPatientSource = new OdDeciduousTwoYearNearByPatientSource();
-        Source<OdDto, OdDto> odOneYearNearSource = new OdOneYearNearSource(baseDate);
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentOneYearNearByPatientSource = new OdPermanentOneYearNearByPatientSource();
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousOneYearNearByPatientSource = new OdDeciduousOneYearNearByPatientSource();
-        Source<NhiMetricRawVM, OdDto> odQuarterSource = new OdQuarterSource();
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentQuarterByPatientSource = new OdPermanentQuarterByPatientSource();
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousQuarterByPatientSource = new OdDeciduousQuarterByPatientSource();
-        Source<OdDto, OdDto> odMonthSelectedSource = new OdMonthSelectedSource(baseDate);
+        Source<NhiMetricRawVM, NhiMetricRawVM> threeYearNearSource = new ThreeYearNearSource(subjectSource.asInputSource(), baseDate);
+        Source<NhiMetricRawVM, NhiMetricRawVM> twoYearNearSource = new TwoYearNearSource(threeYearNearSource.asInputSource(), baseDate);
+        Source<NhiMetricRawVM, NhiMetricRawVM> oneYearNearSource = new OneYearNearSource(twoYearNearSource.asInputSource(), baseDate);
+        Source<NhiMetricRawVM, NhiMetricRawVM> halfYearNearSource = new HalfYearNearSource(oneYearNearSource.asInputSource(), baseDate);
+        Source<NhiMetricRawVM, NhiMetricRawVM> quarterSource = new QuarterSource(subjectSource.asInputSource(), quarterRange);
+        Source<NhiMetricRawVM, NhiMetricRawVM> threeMonthNearSource = new ThreeMonthNearSource(halfYearNearSource.asInputSource(), baseDate);
+        Source<NhiMetricRawVM, NhiMetricRawVM> monthSelectedSource = new MonthSelectedSource(quarterSource.asInputSource(), baseDate);
+        Source<NhiMetricRawVM, Map<LocalDate, List<NhiMetricRawVM>>> dailyByMonthSelectedSource =
+            new DailyByMonthSelectedSource(monthSelectedSource.asInputSource(), baseDate);
+        Source<NhiMetricRawVM, Map<NhiSpecialCode, List<NhiMetricRawVM>>> specialCodeMonthSelectedSource =
+            new SpecialCodeMonthSelectedSource(monthSelectedSource.asInputSource());
+        Source<NhiMetricRawVM, OdDto> odThreeYearNearSource = new OdThreeYearNearSource(subjectSource.asInputSource());
+        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentThreeYearNearByPatientSource =
+            new OdPermanentThreeYearNearByPatientSource(odThreeYearNearSource.asInputSource());
+        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousThreeYearNearByPatientSource =
+            new OdDeciduousThreeYearNearByPatientSource(odThreeYearNearSource.asInputSource());
+        Source<OdDto, OdDto> odTwoYearNearSource = new OdTwoYearNearSource(odThreeYearNearSource.asInputSource(), baseDate);
+        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentTwoYearNearByPatientSource =
+            new OdPermanentTwoYearNearByPatientSource(odTwoYearNearSource.asInputSource());
+        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousTwoYearNearByPatientSource =
+            new OdDeciduousTwoYearNearByPatientSource(odTwoYearNearSource.asInputSource());
+        Source<OdDto, OdDto> odOneYearNearSource = new OdOneYearNearSource(odTwoYearNearSource.asInputSource(), baseDate);
+        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentOneYearNearByPatientSource =
+            new OdPermanentOneYearNearByPatientSource(odOneYearNearSource.asInputSource());
+        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousOneYearNearByPatientSource =
+            new OdDeciduousOneYearNearByPatientSource(odOneYearNearSource.asInputSource());
+        Source<NhiMetricRawVM, OdDto> odQuarterSource = new OdQuarterSource(quarterSource.asInputSource());
+        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentQuarterByPatientSource =
+            new OdPermanentQuarterByPatientSource(odQuarterSource.asInputSource());
+        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousQuarterByPatientSource =
+            new OdDeciduousQuarterByPatientSource(odQuarterSource.asInputSource());
+        Source<OdDto, OdDto> odMonthSelectedSource = new OdMonthSelectedSource(odQuarterSource.asInputSource(), baseDate);
 
         collector
-            .apply(threeYearNearSource)
-            .apply(twoYearNearSource)
-            .apply(oneYearNearSource)
-            .apply(halfYearNearSource)
-            .apply(quarterSource)
             .apply(threeMonthNearSource)
-            .apply(monthSelectedSource)
             .apply(dailyByMonthSelectedSource)
             .apply(specialCodeMonthSelectedSource)
-            .apply(odThreeYearNearSource)
             .apply(odPermanentThreeYearNearByPatientSource)
             .apply(odDeciduousThreeYearNearByPatientSource)
-            .apply(odTwoYearNearSource)
             .apply(odPermanentTwoYearNearByPatientSource)
             .apply(odDeciduousTwoYearNearByPatientSource)
-            .apply(odOneYearNearSource)
             .apply(odPermanentOneYearNearByPatientSource)
             .apply(odDeciduousOneYearNearByPatientSource)
-            .apply(odQuarterSource)
             .apply(odPermanentQuarterByPatientSource)
             .apply(odDeciduousQuarterByPatientSource)
             .apply(odMonthSelectedSource);
@@ -200,7 +204,7 @@ public class MetricDashboardService {
             doctorSummaryDtoList = new DoctorSummaryFormula(collector, monthSelectedSource).calculate();
         } else {
             HighestPatientDto highestPatientDto = new L10Formula(collector, monthSelectedSource).calculate();
-            List<NhiMetricRawVM> list = collector.retrieveSource(monthSelectedSource.outputKey());
+            List<NhiMetricRawVM> list = collector.retrieveSource(monthSelectedSource.asInputSource());
             list.stream().filter(vm -> highestPatientDto.getId().equals(vm.getPatientId())).map(NhiMetricRawVM::getPatientName).findAny().ifPresent(nameValue::setName);
             nameValue.setValue(highestPatientDto.getValue());
             disposalSummaryDtoList = new DisposalSummaryFormula(collector, monthSelectedSource).calculate();

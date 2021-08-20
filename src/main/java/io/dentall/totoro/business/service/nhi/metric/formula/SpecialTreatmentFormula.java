@@ -2,9 +2,9 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
 import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentAnalysisDto;
+import io.dentall.totoro.business.service.nhi.metric.meta.SpecialTreatment;
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.service.nhi.metric.meta.SpecialTreatment;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class SpecialTreatmentFormula extends AbstractFormula<SpecialTreatmentAna
 
     @Override
     public SpecialTreatmentAnalysisDto doCalculate(Collector collector) {
-        SpecialTreatment specialTreatment = new SpecialTreatment(collector, source.outputKey()).apply();
+        SpecialTreatment specialTreatment = new SpecialTreatment(collector, source).apply();
         return specialTreatment.getResult();
     }
 }

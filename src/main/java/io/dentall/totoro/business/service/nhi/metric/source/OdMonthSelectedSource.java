@@ -5,7 +5,6 @@ import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import java.time.LocalDate;
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.OdMonthSelected;
 import static io.dentall.totoro.service.util.DateTimeUtil.beginOfMonth;
 import static io.dentall.totoro.service.util.DateTimeUtil.endOfMonth;
 import static java.util.stream.Collectors.toList;
@@ -19,7 +18,8 @@ public class OdMonthSelectedSource extends OdSource<OdDto>  {
 
     private final LocalDate end;
 
-    public OdMonthSelectedSource(LocalDate date) {
+    public OdMonthSelectedSource(InputSource<OdDto> inputSource, LocalDate date) {
+        super(inputSource);
         this.begin = beginOfMonth(date);
         this.end = endOfMonth(date);
     }
@@ -34,13 +34,4 @@ public class OdMonthSelectedSource extends OdSource<OdDto>  {
             .collect(toList());
     }
 
-    @Override
-    public String inputKey() {
-        return OdMonthSelected.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return OdMonthSelected.output();
-    }
 }

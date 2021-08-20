@@ -2,6 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.*;
 
@@ -16,30 +17,30 @@ import static java.util.stream.Collectors.maxBy;
  */
 public class OdReTreatment extends AbstractCalculator<Long> {
 
-    private final String odSourceName;
+    private final Source<?, ?> odSource;
 
-    private final String odPastSourceName;
+    private final Source<?, ?> odPastSource;
 
     private final int dayShiftBegin;
 
     private final int dayShiftEnd;
 
-    public OdReTreatment(Collector collector, String odSourceName, String odPastSourceName, int dayShiftBegin, int dayShiftEnd) {
-        this(collector, null, odSourceName, odPastSourceName, dayShiftBegin, dayShiftEnd);
+    public OdReTreatment(Collector collector, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
+        this(collector, null, odSource, odPastSource, dayShiftBegin, dayShiftEnd);
     }
 
-    public OdReTreatment(Collector collector, MetaConfig config, String odSourceName, String odPastSourceName, int dayShiftBegin, int dayShiftEnd) {
+    public OdReTreatment(Collector collector, MetaConfig config, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
         super(collector, config);
-        this.odSourceName = odSourceName;
-        this.odPastSourceName = odPastSourceName;
+        this.odSource = odSource;
+        this.odPastSource = odPastSource;
         this.dayShiftBegin = dayShiftBegin;
         this.dayShiftEnd = dayShiftEnd;
     }
 
     @Override
     public Long doCalculate(Collector collector) {
-        List<Map<Long, Map<String, List<OdDto>>>> odSource = collector.retrieveSource(odSourceName);
-        List<Map<Long, Map<String, List<OdDto>>>> odPastSource = collector.retrieveSource(odPastSourceName);
+        List<Map<Long, Map<String, List<OdDto>>>> odSource = collector.retrieveSource(this.odSource);
+        List<Map<Long, Map<String, List<OdDto>>>> odPastSource = collector.retrieveSource(this.odPastSource);
         Map<Long, Map<String, List<OdDto>>> odSourceMap = odSource.get(0);
         Map<Long, Map<String, List<OdDto>>> odPastSourceMap = odPastSource.get(0);
         Exclude exclude = getExclude();
@@ -87,6 +88,6 @@ public class OdReTreatment extends AbstractCalculator<Long> {
 
     @Override
     public String sourceName() {
-        return odSourceName + "+" + odPastSourceName;
+        return odSource.name() + "+" + odPastSource.name();
     }
 }

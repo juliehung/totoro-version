@@ -1,9 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
-import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.Endo90015CTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatment;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
@@ -28,8 +28,8 @@ public class L23Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(Collector collector) {
-        EndoTreatment endoTreatment = new EndoTreatment(collector, source.outputKey()).apply();
-        Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(collector, source.outputKey()).apply();
+        EndoTreatment endoTreatment = new EndoTreatment(collector, source).apply();
+        Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(collector, source).apply();
         try {
             BigDecimal tmp = divide(endoTreatment.getResult(), endo90015CTreatment.getResult());
             return toPercentage(ONE.subtract(tmp));

@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.meta.Ic3ByDaily;
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.service.nhi.metric.meta.Ic3ByDaily;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
@@ -26,7 +26,7 @@ public class DailyIc3Formula extends AbstractFormula<Map<LocalDate, BigDecimal>>
 
     @Override
     public Map<LocalDate, BigDecimal> doCalculate(Collector collector) {
-        Ic3ByDaily ic3ByDaily = new Ic3ByDaily(collector, source.outputKey()).apply();
+        Ic3ByDaily ic3ByDaily = new Ic3ByDaily(collector, source).apply();
         return ic3ByDaily.getResult().entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
                 map.put(entry.getKey(), new BigDecimal(entry.getValue()));

@@ -10,46 +10,48 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.Initial;
-
 
 public class Collector {
 
-    private final Map<String, List<?>> cached = new HashMap<>();
+    private final Map<InputSource<?>, List<?>> cached = new HashMap<>();
 
-    private final Map<String, Meta> metaMap = new HashMap<>();
+    private final Map<String, Meta<?>> metaMap = new HashMap<>();
 
     private final Map<LocalDate, Optional<Holiday>> holidayMap = new HashMap<>(500);
 
-    public Collector(List<NhiMetricRawVM> nhiMetricRawVMList) {
-        this.cached.put(Initial.output(), nhiMetricRawVMList);
+    public Collector(InputSource<?> inputSource, List<NhiMetricRawVM> nhiMetricRawVMList) {
+        this.cached.put(inputSource, nhiMetricRawVMList);
     }
 
-    public <S, T> Collector apply(Source<S, T> source) {
-        if (!isSourceExist(source.outputKey())) {
-            List<?> filtered = source.doFilter(retrieveSource(source.inputKey()));
-            cacheSource(source.outputKey(), filtered);
+    public Collector apply(Source<?, ?> source) {
+        if (!isSourceExist(source.asInputSource())) {
+            if (!isSourceExist(source.getInputSource()) && Source.class.isAssignableFrom(source.getInputSource().getClass())) {
+                apply((Source<?, ?>) source.getInputSource());
+            }
+
+            List<?> filtered = source.doFilter(retrieveSource(source.getInputSource()));
+            cacheSource(source.asInputSource(), filtered);
         }
         return this;
     }
 
-    public <T> List<T> retrieveSource(String name) {
-        return (List<T>) this.cached.get(name);
+    public <T> List<T> retrieveSource(InputSource<?> inputSource) {
+        return (List<T>) this.cached.get(inputSource);
     }
 
-    public void cacheSource(String key, List<?> value) {
-        this.cached.put(key, value);
+    public void cacheSource(InputSource<?> inputSource, List<?> value) {
+        this.cached.put(inputSource, value);
     }
 
-    public boolean isSourceExist(String key) {
-        return this.cached.containsKey(key);
+    public boolean isSourceExist(InputSource<?> inputSource) {
+        return this.cached.containsKey(inputSource);
     }
 
     public <T> Meta<T> retrieveMeta(String key) {
         return (Meta<T>) this.metaMap.get(key);
     }
 
-    public void storeMeta(String key, Meta meta) {
+    public void storeMeta(String key, Meta<?> meta) {
         this.metaMap.put(key, meta);
     }
 

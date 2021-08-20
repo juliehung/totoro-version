@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.meta.Point2ByDaily;
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.service.nhi.metric.meta.Point2ByDaily;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
@@ -26,7 +26,7 @@ public class DailyPointsFormula extends AbstractFormula<Map<LocalDate, BigDecima
 
     @Override
     public Map<LocalDate, BigDecimal> doCalculate(Collector collector) {
-        Point2ByDaily point2 = new Point2ByDaily(collector, source.outputKey()).apply();
+        Point2ByDaily point2 = new Point2ByDaily(collector, source).apply();
         return point2.getResult().entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
                 map.put(entry.getKey(), new BigDecimal(entry.getValue()));

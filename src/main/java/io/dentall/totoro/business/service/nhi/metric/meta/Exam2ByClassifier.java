@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.Map;
@@ -17,12 +18,12 @@ public class Exam2ByClassifier extends Exam<Map<Long, Long>> {
 
     private final MetaType metaType;
 
-    public Exam2ByClassifier(Collector collector, MetaType metaType, String sourceName, Function<NhiMetricRawVM, Long> classifier) {
-        this(collector, null, metaType, sourceName, classifier);
+    public Exam2ByClassifier(Collector collector, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
+        this(collector, null, metaType, source, classifier);
     }
 
-    public Exam2ByClassifier(Collector collector, MetaConfig config, MetaType metaType, String sourceName, Function<NhiMetricRawVM, Long> classifier) {
-        super(collector, config, sourceName);
+    public Exam2ByClassifier(Collector collector, MetaConfig config, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
+        super(collector, config, source);
         this.classifier = classifier;
         this.metaType = metaType;
     }

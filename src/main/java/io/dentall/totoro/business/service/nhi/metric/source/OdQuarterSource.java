@@ -8,12 +8,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.OdQuarter;
 import static io.dentall.totoro.business.service.nhi.util.ToothUtil.splitA74;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class OdQuarterSource extends OdSource<NhiMetricRawVM> {
+
+    public OdQuarterSource(InputSource<NhiMetricRawVM> inputSource) {
+        super(inputSource);
+    }
 
     @Override
     public List<OdDto> doFilter(List<NhiMetricRawVM> source) {
@@ -36,13 +39,4 @@ public class OdQuarterSource extends OdSource<NhiMetricRawVM> {
             .collect(toList());
     }
 
-    @Override
-    public String inputKey() {
-        return OdQuarter.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return OdQuarter.output();
-    }
 }

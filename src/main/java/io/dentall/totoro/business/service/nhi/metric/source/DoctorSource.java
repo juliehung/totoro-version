@@ -10,7 +10,8 @@ public class DoctorSource extends SubjectSource<NhiMetricRawVM, NhiMetricRawVM> 
 
     private final Long doctorId;
 
-    public DoctorSource(Long doctorId) {
+    public DoctorSource(InputSource<NhiMetricRawVM> inputSource, Long doctorId) {
+        super(inputSource);
         this.doctorId = doctorId;
     }
 
@@ -21,13 +22,4 @@ public class DoctorSource extends SubjectSource<NhiMetricRawVM, NhiMetricRawVM> 
             .collect(toList());
     }
 
-    @Override
-    public String inputKey() {
-        return this.sourceId.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return this.sourceId.output();
-    }
 }

@@ -4,6 +4,7 @@ import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
 import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentAnalysisDto;
 import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentItemDto;
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.HashMap;
@@ -18,13 +19,13 @@ import static java.util.Optional.ofNullable;
  */
 public class SpecialTreatment extends SingleSourceCalculator<SpecialTreatmentAnalysisDto> {
 
-    public SpecialTreatment(Collector collector, String sourceName) {
-        super(collector, sourceName);
+    public SpecialTreatment(Collector collector, Source<?, ?> source) {
+        super(collector, source);
     }
 
     @Override
     public SpecialTreatmentAnalysisDto doCalculate(Collector collector) {
-        List<Map<NhiSpecialCode, List<NhiMetricRawVM>>> source = collector.retrieveSource(sourceName());
+        List<Map<NhiSpecialCode, List<NhiMetricRawVM>>> source = collector.retrieveSource(source());
         SpecialTreatmentItemDto summary = new SpecialTreatmentItemDto(0, 0);
 
         Map<NhiSpecialCode, SpecialTreatmentItemDto> itemMap =

@@ -8,14 +8,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.OdThreeYearNear;
 import static io.dentall.totoro.business.service.nhi.util.ToothUtil.splitA74;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class OdThreeYearNearSource extends OdSource<NhiMetricRawVM> {
 
-    public OdThreeYearNearSource() {
+    public OdThreeYearNearSource(InputSource<NhiMetricRawVM> inputSource) {
+        super(inputSource);
     }
 
     @Override
@@ -39,13 +39,4 @@ public class OdThreeYearNearSource extends OdSource<NhiMetricRawVM> {
             .collect(toList());
     }
 
-    @Override
-    public String inputKey() {
-        return OdThreeYearNear.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return OdThreeYearNear.output();
-    }
 }

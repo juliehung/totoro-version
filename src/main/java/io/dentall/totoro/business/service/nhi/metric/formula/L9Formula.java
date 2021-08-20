@@ -1,9 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.HighestDoctorDto;
+import io.dentall.totoro.business.service.nhi.metric.meta.HighestPoint1Doctor;
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.service.nhi.metric.meta.HighestPoint1Doctor;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 /**
@@ -20,7 +20,7 @@ public class L9Formula extends AbstractFormula<HighestDoctorDto> {
 
     @Override
     public HighestDoctorDto doCalculate(Collector collector) {
-        HighestPoint1Doctor highestPoint1Doctor = new HighestPoint1Doctor(collector, source.outputKey()).apply();
+        HighestPoint1Doctor highestPoint1Doctor = new HighestPoint1Doctor(collector, source).apply();
         return highestPoint1Doctor.getResult();
     }
 }

@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
@@ -17,13 +18,13 @@ import static java.util.stream.Collectors.maxBy;
  */
 public class CourseCase extends SingleSourceCalculator<Long> {
 
-    public CourseCase(Collector collector, String sourceName) {
-        super(collector, sourceName);
+    public CourseCase(Collector collector, Source<?, ?> source) {
+        super(collector, source);
     }
 
     @Override
     public Long doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
+        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(source());
 
         return nhiMetricRawVMList.stream()
             .filter(vm -> AA.getValue().equals(vm.getNhiCategory()) || AB.getValue().equals(vm.getNhiCategory()))

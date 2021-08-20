@@ -2,6 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.Comparator;
 import java.util.List;
@@ -16,17 +17,17 @@ import static java.util.stream.Collectors.maxBy;
  */
 public class Od1Pt2 extends SingleSourceCalculator<Long> {
 
-    public Od1Pt2(Collector collector, String sourceName) {
-        this(collector, null, sourceName);
+    public Od1Pt2(Collector collector, Source<?, ?> source) {
+        this(collector, null, source);
     }
 
-    public Od1Pt2(Collector collector, MetaConfig config, String sourceName) {
-        super(collector, config, sourceName);
+    public Od1Pt2(Collector collector, MetaConfig config, Source<?, ?> source) {
+        super(collector, config, source);
     }
 
     @Override
     public Long doCalculate(Collector collector) {
-        List<OdDto> nhiMetricRawVMList = collector.retrieveSource(sourceName());
+        List<OdDto> nhiMetricRawVMList = collector.retrieveSource(source());
         Exclude exclude = getExclude();
 
         return nhiMetricRawVMList.stream()

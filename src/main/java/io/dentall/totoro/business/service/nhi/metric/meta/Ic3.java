@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
@@ -15,13 +16,13 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper
  */
 public class Ic3 extends SingleSourceCalculator<Long> {
 
-    public Ic3(Collector collector, String sourceName) {
-        super(collector, sourceName);
+    public Ic3(Collector collector, Source<?, ?> source) {
+        super(collector, source);
     }
 
     @Override
     public Long doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
+        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(source());
 
         return nhiMetricRawVMList.stream()
             .reduce(0L, calculatePt(), Long::sum);

@@ -5,7 +5,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.time.LocalDate;
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.*;
 import static io.dentall.totoro.service.util.DateTimeUtil.endOfMonth;
 import static io.dentall.totoro.service.util.DateTimeUtil.isSameMonth;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -14,13 +13,14 @@ import static java.util.stream.Collectors.toList;
 /**
  * date-12 一年 0~1095天
  */
-public class ThreeYearNearSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM>  {
+public class ThreeYearNearSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM> {
 
     private final LocalDate begin;
 
     private final LocalDate end;
 
-    public ThreeYearNearSource(LocalDate date) {
+    public ThreeYearNearSource(InputSource<NhiMetricRawVM> inputSource, LocalDate date) {
+        super(inputSource);
         if (isSameMonth(date)) {
             this.begin = date.minus(1095, DAYS);
             this.end = date;
@@ -40,13 +40,4 @@ public class ThreeYearNearSource extends AbstractSource<NhiMetricRawVM, NhiMetri
             .collect(toList());
     }
 
-    @Override
-    public String inputKey() {
-        return ThreeYearNear.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return ThreeYearNear.output();
-    }
 }

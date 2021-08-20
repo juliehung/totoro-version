@@ -6,18 +6,13 @@ import java.util.List;
 
 public class ClinicSource extends SubjectSource<NhiMetricRawVM, NhiMetricRawVM> {
 
+    public ClinicSource(InputSource<NhiMetricRawVM> inputSource) {
+        super(inputSource);
+    }
+
     @Override
     public List<NhiMetricRawVM> doFilter(List<NhiMetricRawVM> nhiMetricRawVMList) {
         return nhiMetricRawVMList;
     }
 
-    @Override
-    public String inputKey() {
-        return this.sourceId.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return this.sourceId.output();
-    }
 }

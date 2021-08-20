@@ -20,6 +20,10 @@ public abstract class OdPermanentSource extends AbstractSource<OdDto, Map<Long, 
         "99"
     ));
 
+    public OdPermanentSource(InputSource<OdDto> inputSource) {
+        super(inputSource);
+    }
+
     @Override
     public List<Map<Long, Map<String, List<OdDto>>>> doFilter(List<OdDto> source) {
         return singletonList(source.stream().parallel()

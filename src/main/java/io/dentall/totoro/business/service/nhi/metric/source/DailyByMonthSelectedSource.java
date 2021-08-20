@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.DailyByMonthSelected;
 import static io.dentall.totoro.service.util.DateTimeUtil.beginOfMonth;
 import static io.dentall.totoro.service.util.DateTimeUtil.endOfMonth;
 import static java.util.Collections.emptyList;
@@ -22,7 +21,8 @@ public class DailyByMonthSelectedSource extends AbstractSource<NhiMetricRawVM, M
 
     private final LocalDate end;
 
-    public DailyByMonthSelectedSource(LocalDate date) {
+    public DailyByMonthSelectedSource(InputSource<NhiMetricRawVM> inputSource, LocalDate date) {
+        super(inputSource);
         this.begin = beginOfMonth(date);
         this.end = endOfMonth(date);
     }
@@ -39,13 +39,4 @@ public class DailyByMonthSelectedSource extends AbstractSource<NhiMetricRawVM, M
         return singletonList(map);
     }
 
-    @Override
-    public String inputKey() {
-        return DailyByMonthSelected.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return DailyByMonthSelected.output();
-    }
 }

@@ -5,7 +5,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.time.LocalDate;
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.ThreeMonthNear;
 import static io.dentall.totoro.service.util.DateTimeUtil.beginOfMonth;
 import static io.dentall.totoro.service.util.DateTimeUtil.endOfMonth;
 import static java.time.temporal.ChronoUnit.MONTHS;
@@ -20,7 +19,8 @@ public class ThreeMonthNearSource extends AbstractSource<NhiMetricRawVM, NhiMetr
 
     private final LocalDate end;
 
-    public ThreeMonthNearSource(LocalDate date) {
+    public ThreeMonthNearSource(InputSource<NhiMetricRawVM> inputSource, LocalDate date) {
+        super(inputSource);
         this.begin = beginOfMonth(date).minus(2, MONTHS);
         this.end = endOfMonth(date);
     }
@@ -35,13 +35,4 @@ public class ThreeMonthNearSource extends AbstractSource<NhiMetricRawVM, NhiMetr
             .collect(toList());
     }
 
-    @Override
-    public String inputKey() {
-        return ThreeMonthNear.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return ThreeMonthNear.output();
-    }
 }

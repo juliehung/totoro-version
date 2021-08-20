@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.service.nhi.util.ToothUtil;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import org.apache.commons.lang3.StringUtils;
@@ -15,13 +16,13 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper
  */
 public class EndoTreatmentByTooth extends EndoTreatment {
 
-    public EndoTreatmentByTooth(Collector collector, MetaConfig config, String sourceName) {
-        super(collector, config, sourceName);
+    public EndoTreatmentByTooth(Collector collector, MetaConfig config, Source<?, ?> source) {
+        super(collector, config, source);
     }
 
     @Override
     public Long doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
+        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(source());
         Exclude exclude = getExclude();
 
         // 加總所有病人的所有處置的牙數數目

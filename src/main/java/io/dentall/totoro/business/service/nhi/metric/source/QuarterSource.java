@@ -6,8 +6,7 @@ import io.dentall.totoro.service.util.DateTimeUtil.BeginEnd;
 import java.time.LocalDate;
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.Quarter;
-import static io.dentall.totoro.service.util.DateTimeUtil.*;
+import static io.dentall.totoro.service.util.DateTimeUtil.toLocalDate;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -19,7 +18,8 @@ public class QuarterSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM
 
     private final LocalDate end;
 
-    public QuarterSource(BeginEnd quarterRange) {
+    public QuarterSource(InputSource<NhiMetricRawVM> inputSource, BeginEnd quarterRange) {
+        super(inputSource);
         this.begin = toLocalDate(quarterRange.getBegin());
         this.end = toLocalDate(quarterRange.getEnd());
     }
@@ -34,13 +34,4 @@ public class QuarterSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM
             .collect(toList());
     }
 
-    @Override
-    public String inputKey() {
-        return Quarter.input();
-    }
-
-    @Override
-    public String outputKey() {
-        return Quarter.output();
-    }
 }

@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -12,12 +13,12 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper
  */
 public class Exam4ByDaily extends Exam<Map<LocalDate, Long>> {
 
-    public Exam4ByDaily(Collector collector, String sourceName) {
-        super(collector, null, sourceName);
+    public Exam4ByDaily(Collector collector, Source<?, ?> source) {
+        super(collector, null, source);
     }
 
-    public Exam4ByDaily(Collector collector, MetaConfig config, String sourceName) {
-        super(collector, config, sourceName);
+    public Exam4ByDaily(Collector collector, MetaConfig config, Source<?, ?> source) {
+        super(collector, config, source);
     }
 
     @Override
