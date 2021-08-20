@@ -141,6 +141,18 @@ public class NhiMetricHelper {
         return vm.getTreatmentProcedureTotal();
     }
 
+    public static Long applyNewTreatmentPoint(OdDto dto, MetaConfig config) {
+        if (config.isUseOriginPoint()) {
+            return dto.getNhiOriginPoint();
+        }
+
+        if (config.isExcludeHolidayPoint()) {
+            return isDayOffHoliday(dto.getDisposalDate(), config.getHolidayMap()) ? 0L : dto.getTreatmentProcedureTotal();
+        }
+
+        return dto.getTreatmentProcedureTotal();
+    }
+
     public static boolean isDayOffHoliday(LocalDate date, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return ofNullable(holidayMap.get(date)).filter(Optional::isPresent).map(Optional::get).map(h -> h.getDayOff().equals("Y")).orElse(false);
     }

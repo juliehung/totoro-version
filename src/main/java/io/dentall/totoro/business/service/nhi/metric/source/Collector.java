@@ -1,0 +1,68 @@
+package io.dentall.totoro.business.service.nhi.metric.source;
+
+import io.dentall.totoro.business.service.nhi.metric.meta.Meta;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
+import io.dentall.totoro.domain.Holiday;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static io.dentall.totoro.business.service.nhi.metric.source.SourceId.Initial;
+
+
+public class Collector {
+
+    private final Map<String, List<?>> cached = new HashMap<>();
+
+    private final Map<String, Meta> metaMap = new HashMap<>();
+
+    private final Map<LocalDate, Optional<Holiday>> holidayMap = new HashMap<>(500);
+
+    public Collector(List<NhiMetricRawVM> nhiMetricRawVMList) {
+        this.cached.put(Initial.output(), nhiMetricRawVMList);
+    }
+
+    public <S, T> Collector apply(Source<S, T> source) {
+        if (!isSourceExist(source.outputKey())) {
+            List<?> filtered = source.doFilter(retrieveSource(source.inputKey()));
+            cacheSource(source.outputKey(), filtered);
+        }
+        return this;
+    }
+
+    public <T> List<T> retrieveSource(String name) {
+        return (List<T>) this.cached.get(name);
+    }
+
+    public void cacheSource(String key, List<?> value) {
+        this.cached.put(key, value);
+    }
+
+    public boolean isSourceExist(String key) {
+        return this.cached.containsKey(key);
+    }
+
+    public <T> Meta<T> retrieveMeta(String key) {
+        return (Meta<T>) this.metaMap.get(key);
+    }
+
+    public void storeMeta(String key, Meta meta) {
+        this.metaMap.put(key, meta);
+    }
+
+    public boolean isMetaExist(String key) {
+        return this.metaMap.containsKey(key);
+    }
+
+    public void applyHolidayMap(Map<LocalDate, Optional<Holiday>> holidayMap) {
+        this.holidayMap.putAll(holidayMap);
+    }
+
+    public Map<LocalDate, Optional<Holiday>> getHolidayMap() {
+        return this.holidayMap;
+    }
+
+}

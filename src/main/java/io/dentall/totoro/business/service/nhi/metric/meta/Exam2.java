@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.codesByExam2;
 

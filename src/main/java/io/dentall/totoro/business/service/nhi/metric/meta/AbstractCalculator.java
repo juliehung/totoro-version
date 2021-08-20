@@ -1,10 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 

@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.SummaryDto;
-import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;

@@ -1,17 +1,17 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
-import io.dentall.totoro.business.service.nhi.metric.filter.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoReTreatmentByTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatmentByTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
-import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
+import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
 /**
@@ -33,7 +33,7 @@ public class L24Formula extends AbstractFormula<BigDecimal> {
         EndoTreatmentByTooth endoTreatmentByTooth = new EndoTreatmentByTooth(collector, config, source.outputKey()).apply();
         EndoReTreatmentByTooth endoReTreatmentByTooth = new EndoReTreatmentByTooth(collector, config, source.outputKey()).apply();
         try {
-            return divide(endoReTreatmentByTooth.getResult(), endoTreatmentByTooth.getResult());
+            return toPercentage(divide(endoReTreatmentByTooth.getResult(), endoTreatmentByTooth.getResult()));
         } catch (ArithmeticException e) {
             return ZERO;
         }

@@ -3,7 +3,6 @@ package io.dentall.totoro.business.service.nhi.metric.dto;
 import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class OdDto {
 
@@ -24,6 +23,14 @@ public class OdDto {
     private NhiSpecialCode specificCode;
 
     private String cardNumber;
+
+    private Long treatmentProcedureTotal;
+
+    private Long nhiOriginPoint;
+
+    // 需要有方法可以辨別出，同一處置單不同處置(但同一個健保代碼)，所以利用該屬性，只要是同一處置，就會是一樣的seq
+    // 即使是相同的健保代碼，但不同處置就會不一樣的seq
+    private int treatmentSeq;
 
     public long getPatientId() {
         return patientId;
@@ -95,5 +102,29 @@ public class OdDto {
 
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
+    }
+
+    public Long getTreatmentProcedureTotal() {
+        return treatmentProcedureTotal;
+    }
+
+    public void setTreatmentProcedureTotal(Long treatmentProcedureTotal) {
+        this.treatmentProcedureTotal = treatmentProcedureTotal;
+    }
+
+    public Long getNhiOriginPoint() {
+        return nhiOriginPoint;
+    }
+
+    public void setNhiOriginPoint(Long nhiOriginPoint) {
+        this.nhiOriginPoint = nhiOriginPoint;
+    }
+
+    public int getTreatmentSeq() {
+        return treatmentSeq;
+    }
+
+    public void setTreatmentSeq(int treatmentSeq) {
+        this.treatmentSeq = treatmentSeq;
     }
 }

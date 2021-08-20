@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
-import io.dentall.totoro.business.service.nhi.metric.filter.Source;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentTreatment;
 
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
+import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
 /**
@@ -38,7 +39,7 @@ public class L34Formula extends AbstractFormula<BigDecimal> {
         OdPermanentTreatment odPermanentTreatment = new OdPermanentTreatment(collector, odQuarterSource.outputKey()).apply();
         OdPermanentReTreatment odPermanentReTreatment = new OdPermanentReTreatment(collector, odQuarterSource.outputKey(), odTwoYearNearSource.outputKey(), 366, 730).apply();
         try {
-            return divide(odPermanentReTreatment.getResult(), odPermanentTreatment.getResult()).multiply(new BigDecimal(100L));
+            return toPercentage(divide(odPermanentReTreatment.getResult(), odPermanentTreatment.getResult()));
         } catch (ArithmeticException e) {
             return ZERO;
         }

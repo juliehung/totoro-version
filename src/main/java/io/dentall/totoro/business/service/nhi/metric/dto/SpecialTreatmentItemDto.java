@@ -3,6 +3,7 @@ package io.dentall.totoro.business.service.nhi.metric.dto;
 import java.math.BigDecimal;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
+import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 
 public class SpecialTreatmentItemDto {
 
@@ -41,7 +42,7 @@ public class SpecialTreatmentItemDto {
 
     public void calculatePercentageOfCaseCount(int totalCaseNumber) {
         try {
-            percentageOfCaseCount = divide(caseCount, totalCaseNumber);
+            percentageOfCaseCount = toPercentage(divide(caseCount, totalCaseNumber));
         } catch (ArithmeticException e) {
             percentageOfCaseCount = BigDecimal.ZERO;
         }
@@ -53,7 +54,7 @@ public class SpecialTreatmentItemDto {
 
     public void calculatePercentageOfPoints(Long totalPoints) {
         try {
-            percentageOfPoints = divide(points, totalPoints);
+            percentageOfPoints = toPercentage(divide(points, totalPoints));
         } catch (ArithmeticException e) {
             percentageOfPoints = BigDecimal.ZERO;
         }

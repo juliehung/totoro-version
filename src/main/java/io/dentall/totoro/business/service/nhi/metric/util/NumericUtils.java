@@ -4,7 +4,14 @@ import java.math.BigDecimal;
 
 public class NumericUtils {
 
-    private NumericUtils() {}
+    public static final BigDecimal ONE_THOUSAND = new BigDecimal(100);
+
+    private NumericUtils() {
+    }
+
+    public static BigDecimal toPercentage(BigDecimal val) {
+        return val.multiply(ONE_THOUSAND);
+    }
 
     public static BigDecimal divide(BigDecimal val1, BigDecimal val2) {
         return val1.divide(val2, 2, BigDecimal.ROUND_HALF_UP);

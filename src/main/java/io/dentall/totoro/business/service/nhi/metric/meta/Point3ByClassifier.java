@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.HashMap;
@@ -33,11 +33,6 @@ public class Point3ByClassifier extends SingleSourceCalculator<Map<Long, Long>> 
     public Map<Long, Long> doCalculate(Collector collector) {
         List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(sourceName());
         MetaConfig config = getConfig();
-
-        Exam1ByClassifier exam1 = new Exam1ByClassifier(collector, metaType, sourceName(), classifier).apply();
-        Exam2ByClassifier exam2 = new Exam2ByClassifier(collector, metaType, sourceName(), classifier).apply();
-        Exam3ByClassifier exam3 = new Exam3ByClassifier(collector, metaType, sourceName(), classifier).apply();
-        Exam4ByClassifier exam4 = new Exam4ByClassifier(collector, metaType, sourceName(), classifier).apply();
 
         return nhiMetricRawVMList.stream()
             .collect(groupingBy(classifier))

@@ -1,9 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 import io.dentall.totoro.business.service.nhi.metric.meta.Calculator;
-
-import java.math.BigDecimal;
 
 public abstract class AbstractFormula<R> implements Calculator<R> {
 

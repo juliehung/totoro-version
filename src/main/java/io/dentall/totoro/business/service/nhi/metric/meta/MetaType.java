@@ -18,8 +18,10 @@ public enum MetaType {
     EndoTreatment, Endo90015CTreatment, EndoTreatmentByTooth, EndoReTreatmentByTooth,
     OdDeciduousTreatment, OdDeciduousReTreatment,
     OdPermanentTreatment, OdPermanentReTreatment,
-    Od1ToothCount, Od4ToothCount, Od5ToothCount, Od6ToothCount, Od456SurfaceCount,
-    Od1Pt1,
+    OdTreatment, OdReTreatment,
+    Od1ToothCount, Od4TreatmentCount, Od5TreatmentCount, Od6TreatmentCount, Od456SurfaceCount,
+    Od1Pt1, Od1Point,
+    Od1Pt2,
     SpecialTreatment, DoctorSummary, DisposalSummary
 }
 

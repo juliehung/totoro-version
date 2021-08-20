@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.filter.Collector;
-import io.dentall.totoro.business.service.nhi.metric.filter.Source;
+import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.service.nhi.metric.meta.Endo90015CTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
@@ -10,8 +10,8 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
-import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
+import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 
@@ -34,7 +34,7 @@ public class L22Formula extends AbstractFormula<BigDecimal> {
         Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(collector, config, source.outputKey()).apply();
         try {
             BigDecimal tmp = divide(endoTreatment.getResult(), endo90015CTreatment.getResult());
-            return BigDecimal.valueOf(100L).multiply(ONE.subtract(tmp));
+            return toPercentage(ONE.subtract(tmp));
         } catch (ArithmeticException e) {
             return ZERO;
         }
