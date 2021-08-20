@@ -10,8 +10,8 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class OdThreeYearNearByPatientSource extends AbstractSource<OdDto, Map<Long, Map<String, List<OdDto>>>> {
 
-    public OdThreeYearNearByPatientSource(Source<?, ?> inputSource) {
-        super(inputSource);
+    public OdThreeYearNearByPatientSource(MetricConfig metricConfig) {
+        super(new OdThreeYearNearSource(metricConfig));
     }
 
     @Override

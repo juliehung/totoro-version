@@ -10,67 +10,25 @@ import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 import io.dentall.totoro.business.service.nhi.metric.vm.NameValue;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.User;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import io.dentall.totoro.repository.UserRepository;
-import io.dentall.totoro.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.CLINIC;
-import static io.dentall.totoro.security.AuthoritiesConstants.ADMIN;
-import static io.dentall.totoro.security.AuthoritiesConstants.DOCTOR;
-import static io.dentall.totoro.service.util.DateTimeUtil.*;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
 public class MetricDashboardService {
 
-    private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
-
-    private final UserService userService;
-
-    private final UserRepository userRepository;
-
-    public MetricDashboardService(
-        NhiExtendDisposalRepository nhiExtendDisposalRepository,
-        UserService userService, UserRepository userRepository) {
-        this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
-        this.userService = userService;
-        this.userRepository = userRepository;
-    }
-
-    public List<GiantMetricDto> metric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
-        Optional<User> userOptional = this.userService.getUserWithAuthorities();
-        if (!userOptional.isPresent()) {
-            return emptyList();
-        }
-
-        User user = userOptional.get();
-        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
-        BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        List<User> allSubject = findAllSubject(user);
-        Instant begin = quarterRange.getBegin().minus(1095, DAYS);
-        List<NhiMetricRawVM> nhiMetricRawVMList = nhiExtendDisposalRepository.findMetricRaw(
-            begin,
-            quarterRange.getEnd(),
-            excludeDisposalIds
-        );
-
-        return allSubject.parallelStream()
-            .map(subject -> buildMetric(baseDate, allSubject, subject, nhiMetricRawVMList))
+    public List<GiantMetricDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source) {
+        return subjects.parallelStream()
+            .map(subject -> buildMetric(baseDate, subjects, subject, source))
             .filter(Objects::nonNull)
             .collect(toList());
     }
@@ -235,30 +193,6 @@ public class MetricDashboardService {
         }
 
         return giantMetricDto;
-    }
-
-    private List<User> findAllSubject(User user) {
-        boolean isDoctor = user.getAuthorities().stream().anyMatch(authority -> DOCTOR.equals(authority.getName()));
-        boolean isAdmin = user.getAuthorities().stream().anyMatch(authority -> ADMIN.equals(authority.getName()));
-
-        if (!isDoctor && !isAdmin) {
-            return emptyList();
-        }
-
-        List<User> usersActivated = userRepository.findAllByActivatedIsTrue();
-        List<User> doctors = usersActivated.stream()
-            .filter(userActivated -> userActivated.getAuthorities().stream().anyMatch(authority -> DOCTOR.equals(authority.getName())))
-            .collect(toList());
-
-        if (isDoctor) {
-            doctors = doctors.stream().filter(doctor -> doctor.getId().equals(user.getId())).collect(toList());
-        } else {
-            User clinic = new User();
-            clinic.setId(Long.MIN_VALUE);
-            doctors.add(clinic);
-        }
-
-        return doctors;
     }
 
 }

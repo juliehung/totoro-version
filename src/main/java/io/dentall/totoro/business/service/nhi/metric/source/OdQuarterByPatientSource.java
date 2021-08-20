@@ -10,8 +10,8 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class OdQuarterByPatientSource extends AbstractSource<OdDto, Map<Long, Map<String, List<OdDto>>>> {
 
-    public OdQuarterByPatientSource(Source<?, ?> inputSource) {
-        super(inputSource);
+    public OdQuarterByPatientSource(MetricConfig metricConfig) {
+        super(new OdQuarterSource(metricConfig));
     }
 
     @Override

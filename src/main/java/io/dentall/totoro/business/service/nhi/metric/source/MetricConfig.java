@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CLINIC_ID;
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.CLINIC;
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.DOCTOR;
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;

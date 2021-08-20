@@ -8,29 +8,85 @@ import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapp
 import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
 import io.dentall.totoro.business.service.nhi.metric.vm.*;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
+import io.dentall.totoro.domain.Holiday;
+import io.dentall.totoro.domain.User;
+import io.dentall.totoro.repository.NhiExtendDisposalRepository;
+import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.security.AuthoritiesConstants;
+import io.dentall.totoro.service.HolidayService;
+import io.dentall.totoro.service.UserService;
+import io.dentall.totoro.service.util.DateTimeUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CLINIC_ID;
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.CLINIC;
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.DOCTOR;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.getHolidayMap;
+import static io.dentall.totoro.security.AuthoritiesConstants.ADMIN;
+import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
+import static io.dentall.totoro.service.util.DateTimeUtil.getCurrentQuarterMonthsRangeInstant;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
 public class MetricService {
 
+    private final UserService userService;
+
+    private final UserRepository userRepository;
+
+    private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
+
+    private final HolidayService holidayService;
+
     private final MetricDashboardService metricDashboardService;
 
-    public MetricService(MetricDashboardService metricDashboardService) {
+    private final TaipeiDistrictService taipeiDistrictService;
+
+    public MetricService(UserService userService,
+                         UserRepository userRepository,
+                         NhiExtendDisposalRepository nhiExtendDisposalRepository,
+                         HolidayService holidayService, MetricDashboardService metricDashboardService,
+                         TaipeiDistrictService taipeiDistrictService) {
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
+        this.holidayService = holidayService;
         this.metricDashboardService = metricDashboardService;
+        this.taipeiDistrictService = taipeiDistrictService;
     }
 
     public List<MetricLVM> getDashboardMetric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
+        Optional<User> userOptional = this.userService.getUserWithAuthorities();
+        if (!userOptional.isPresent()) {
+            return emptyList();
+        }
 
-        List<GiantMetricDto> giantMetricDtoList = metricDashboardService.metric(baseDate, excludeDisposalIds);
+        User user = userOptional.get();
+        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
+        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
+        List<User> subjects = findAllSubject(user);
+        Instant begin = quarterRange.getBegin().minus(1095, DAYS);
+        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
+            begin,
+            quarterRange.getEnd(),
+            excludeDisposalIds
+        );
+
+        List<GiantMetricDto> giantMetricDtoList = metricDashboardService.metric(baseDate, subjects, source);
 
         return giantMetricDtoList.stream().map(giantDto -> {
             MetricSubjectType metricSubjectType = giantDto.getType();
@@ -171,5 +227,59 @@ public class MetricService {
             return metricLVM;
         }).collect(Collectors.toList());
     }
+
+    public List<GiantMetricDto> getTaipeiDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+        Optional<User> userOptional = this.userService.getUserWithAuthorities();
+        if (!userOptional.isPresent()) {
+            return emptyList();
+        }
+
+        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
+        User user = userOptional.get();
+        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
+        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
+        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
+        Instant begin = quarterRange.getBegin().minus(1095, DAYS);
+        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
+            begin,
+            quarterRange.getEnd(),
+            excludeDisposalIds
+        );
+        int baseYear = baseDate.getYear();
+        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
+
+        return taipeiDistrictService.metric(baseDate, subjects, source, holidayMap);
+    }
+
+    private List<User> findSpecificSubject(User user, List<Long> subjectIds) {
+        List<User> userList = findAllSubject(user);
+        return subjectIds.size() == 0 ?
+            userList : userList.stream().filter(s -> !s.getId().equals(CLINIC_ID)).filter(s -> subjectIds.contains(s.getId())).collect(toList());
+    }
+
+    private List<User> findAllSubject(User user) {
+        boolean isDoctor = user.getAuthorities().stream().anyMatch(authority -> AuthoritiesConstants.DOCTOR.equals(authority.getName()));
+        boolean isAdmin = user.getAuthorities().stream().anyMatch(authority -> ADMIN.equals(authority.getName()));
+
+        if (!isDoctor && !isAdmin) {
+            return emptyList();
+        }
+
+        List<User> usersActivated = userRepository.findAllByActivatedIsTrue();
+        List<User> doctors = usersActivated.stream()
+            .filter(userActivated -> userActivated.getAuthorities().stream().anyMatch(authority -> AuthoritiesConstants.DOCTOR.equals(authority.getName())))
+            .collect(toList());
+
+        if (isDoctor) {
+            doctors = doctors.stream().filter(doctor -> doctor.getId().equals(user.getId())).collect(toList());
+        } else {
+            User clinic = new User();
+            clinic.setId(CLINIC_ID);
+            doctors.add(clinic);
+        }
+
+        return doctors;
+    }
+
 
 }
