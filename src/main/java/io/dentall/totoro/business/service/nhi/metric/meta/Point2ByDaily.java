@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.time.LocalDate;
@@ -8,17 +8,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class Point2ByDaily extends SingleSourceCalculator<Map<LocalDate, Long>> {
+public class Point2ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>> {
 
 
-    public Point2ByDaily(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public Point2ByDaily(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @Override
-    public Map<LocalDate, Long> doCalculate(Collector collector) {
-        Point1ByDaily point1 = new Point1ByDaily(collector, source()).apply();
-        Point4ByDaily point4 = new Point4ByDaily(collector, source()).apply();
+    public Map<LocalDate, Long> doCalculate(MetricConfig metricConfig) {
+        Point1ByDaily point1 = new Point1ByDaily(metricConfig, source()).apply();
+        Point4ByDaily point4 = new Point4ByDaily(metricConfig, source()).apply();
         Map<LocalDate, Long> point1Map = point1.getResult();
         Map<LocalDate, Long> point4Map = point4.getResult();
 

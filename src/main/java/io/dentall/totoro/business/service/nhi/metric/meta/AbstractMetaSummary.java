@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.SummaryDto;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -12,10 +12,10 @@ import static io.dentall.totoro.business.service.nhi.util.NhiProcedureUtil.*;
 import static java.lang.Long.parseLong;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public abstract class AbstractSummary<T> extends SingleSourceCalculator<List<T>> {
+public abstract class AbstractMetaSummary<T> extends SingleSourceMetaCalculator<List<T>> {
 
-    public AbstractSummary(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public AbstractMetaSummary(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

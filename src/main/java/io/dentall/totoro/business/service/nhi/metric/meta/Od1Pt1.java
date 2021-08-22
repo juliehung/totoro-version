@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.Comparator;
@@ -15,15 +15,15 @@ import static java.util.stream.Collectors.maxBy;
 /**
  * @ OD-1@@PT-1@
  */
-public class Od1Pt1 extends SingleSourceCalculator<Long> {
+public class Od1Pt1 extends SingleSourceMetaCalculator<Long> {
 
-    public Od1Pt1(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public Od1Pt1(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @Override
-    public Long doCalculate(Collector collector) {
-        List<OdDto> odDtoList = collector.retrieveSource(source());
+    public Long doCalculate(MetricConfig metricConfig) {
+        List<OdDto> odDtoList = metricConfig.retrieveSource(source().key());
 
         return odDtoList.stream()
             // 因為資料是從Treatment層級，依牙齒切成多筆，所以需要先依 disposalId + code + treatmentSeq 做 group

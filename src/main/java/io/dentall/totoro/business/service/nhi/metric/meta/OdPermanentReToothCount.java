@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.*;
@@ -13,9 +13,9 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.maxBy;
 
 /**
- * 往前追溯發生在特定時間區間之自家同患者同牙位乳牙有申請過OD之顆數。
+ * 往前追溯發生在特定時間區間之自家同患者同牙位恆牙有申請過OD之顆數。
  */
-public class OdDeciduousReTreatment extends AbstractCalculator<Long> {
+public class OdPermanentReToothCount extends AbstractMetaCalculator<Long> {
 
     private final Source<?, ?> odSource;
 
@@ -25,12 +25,12 @@ public class OdDeciduousReTreatment extends AbstractCalculator<Long> {
 
     private final int dayShiftEnd;
 
-    public OdDeciduousReTreatment(Collector collector, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
-        this(collector, null, odSource, odPastSource, dayShiftBegin, dayShiftEnd);
+    public OdPermanentReToothCount(MetricConfig metricConfig, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
+        this(metricConfig, null, odSource, odPastSource, dayShiftBegin, dayShiftEnd);
     }
 
-    public OdDeciduousReTreatment(Collector collector, MetaConfig config, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
-        super(collector, config);
+    public OdPermanentReToothCount(MetricConfig metricConfig, MetaConfig config, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
+        super(metricConfig, config, new Source[]{odSource, odPastSource});
         this.odSource = odSource;
         this.odPastSource = odPastSource;
         this.dayShiftBegin = dayShiftBegin;
@@ -38,9 +38,9 @@ public class OdDeciduousReTreatment extends AbstractCalculator<Long> {
     }
 
     @Override
-    public Long doCalculate(Collector collector) {
-        List<Map<Long, Map<String, List<OdDto>>>> odSource = collector.retrieveSource(this.odSource);
-        List<Map<Long, Map<String, List<OdDto>>>> odPastSource = collector.retrieveSource(this.odPastSource);
+    public Long doCalculate(MetricConfig metricConfig) {
+        List<Map<Long, Map<String, List<OdDto>>>> odSource = metricConfig.retrieveSource(this.odSource.key());
+        List<Map<Long, Map<String, List<OdDto>>>> odPastSource = metricConfig.retrieveSource(this.odPastSource.key());
         Map<Long, Map<String, List<OdDto>>> odSourceMap = odSource.get(0);
         Map<Long, Map<String, List<OdDto>>> odPastSourceMap = odPastSource.get(0);
         Exclude exclude = getExclude();
@@ -83,11 +83,7 @@ public class OdDeciduousReTreatment extends AbstractCalculator<Long> {
 
     @Override
     public MetaType metaType() {
-        return MetaType.OdDeciduousReTreatment;
+        return MetaType.OdPermanentReToothCount;
     }
 
-    @Override
-    public String sourceName() {
-        return odSource.name() + "+" + odPastSource.name();
-    }
 }

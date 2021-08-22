@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -14,15 +14,15 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * <p>
  * 有處置單的不重複日期總和
  */
-public class Ic2 extends SingleSourceCalculator<Long> {
+public class Ic2 extends SingleSourceMetaCalculator<Long> {
 
-    public Ic2(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public Ic2(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @Override
-    public Long doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(source());
+    public Long doCalculate(MetricConfig metricConfig) {
+        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
 
         return (long) nhiMetricRawVMList.stream()
             .filter(vm -> isNotBlank(vm.getCardNumber()))

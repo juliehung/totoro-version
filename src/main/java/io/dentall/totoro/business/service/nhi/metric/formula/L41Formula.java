@@ -2,8 +2,10 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
-import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReTreatment;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReToothCount;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentQuarterByPatientSource;
+import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentThreeYearNearByPatientSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
@@ -22,19 +24,17 @@ public class L41Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odThreeYearNearSource;
 
-    public L41Formula(Collector collector,
-                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource,
-                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odThreeYearNearSource) {
-        super(collector);
-        this.odQuarterSource = odQuarterSource;
-        this.odThreeYearNearSource = odThreeYearNearSource;
+    public L41Formula(MetricConfig metricConfig) {
+        super(metricConfig);
+        this.odQuarterSource = new OdPermanentQuarterByPatientSource(metricConfig);
+        this.odThreeYearNearSource = new OdPermanentThreeYearNearByPatientSource(metricConfig);
     }
 
     @Override
-    public BigDecimal doCalculate(Collector collector) {
-        MetaConfig config = new MetaConfig(collector).setExclude(N89013C);
-        OdPermanentReTreatment odPermanentReTreatment =
-            new OdPermanentReTreatment(collector, config, odQuarterSource, odThreeYearNearSource, 1, 1095).apply();
-        return new BigDecimal(odPermanentReTreatment.getResult());
+    public BigDecimal doCalculate(MetricConfig metricConfig) {
+        MetaConfig config = new MetaConfig(metricConfig).setExclude(N89013C);
+        OdPermanentReToothCount odPermanentReToothCount =
+            new OdPermanentReToothCount(metricConfig, config, odQuarterSource, odThreeYearNearSource, 1, 1095).apply();
+        return new BigDecimal(odPermanentReToothCount.getResult());
     }
 }

@@ -2,7 +2,8 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.DisposalSummaryDto;
 import io.dentall.totoro.business.service.nhi.metric.meta.DisposalSummary;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -12,14 +13,14 @@ public class DisposalSummaryFormula extends AbstractFormula<List<DisposalSummary
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    public DisposalSummaryFormula(Collector collector, Source<NhiMetricRawVM, NhiMetricRawVM> source) {
-        super(collector);
-        this.source = source;
+    public DisposalSummaryFormula(MetricConfig metricConfig) {
+        super(metricConfig);
+        this.source = new MonthSelectedSource(metricConfig);
     }
 
     @Override
-    protected List<DisposalSummaryDto> doCalculate(Collector collector) {
-        DisposalSummary disposalSummary = new DisposalSummary(collector, source).apply();
+    protected List<DisposalSummaryDto> doCalculate(MetricConfig metricConfig) {
+        DisposalSummary disposalSummary = new DisposalSummary(metricConfig, source).apply();
         return disposalSummary.getResult();
     }
 }

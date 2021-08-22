@@ -14,18 +14,18 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class OdQuarterSource extends OdSource<NhiMetricRawVM> {
 
-    public OdQuarterSource(InputSource<NhiMetricRawVM> inputSource) {
-        super(inputSource);
+    public OdQuarterSource(MetricConfig metricConfig) {
+        super(new QuarterSource(metricConfig));
     }
 
     @Override
-    public List<OdDto> doFilter(List<NhiMetricRawVM> source) {
+    public List<OdDto> filter(List<NhiMetricRawVM> source) {
         AtomicInteger i = new AtomicInteger();
         return source.stream().parallel()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
             .filter(vm -> isNotBlank(vm.getTreatmentProcedureTooth()))
             .map(vm -> {
-                    List<String> teeth = splitA74(vm.getTreatmentProcedureTooth());
+                List<String> teeth = splitA74(vm.getTreatmentProcedureTooth());
                     int seq = i.getAndIncrement();
                     return teeth.stream().map(tooth -> {
                             OdDto odDto = NhiMetricRawMapper.INSTANCE.mapToOdDto(vm);

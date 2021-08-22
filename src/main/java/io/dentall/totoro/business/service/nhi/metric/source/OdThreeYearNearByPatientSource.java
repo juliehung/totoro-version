@@ -10,12 +10,12 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class OdThreeYearNearByPatientSource extends AbstractSource<OdDto, Map<Long, Map<String, List<OdDto>>>> {
 
-    public OdThreeYearNearByPatientSource(InputSource<OdDto> inputSource) {
+    public OdThreeYearNearByPatientSource(Source<?, ?> inputSource) {
         super(inputSource);
     }
 
     @Override
-    public List<Map<Long, Map<String, List<OdDto>>>> doFilter(List<OdDto> source) {
+    public List<Map<Long, Map<String, List<OdDto>>>> filter(List<OdDto> source) {
         return singletonList(source.stream().parallel()
             .collect(groupingBy(OdDto::getPatientId, groupingBy(OdDto::getTooth))));
     }

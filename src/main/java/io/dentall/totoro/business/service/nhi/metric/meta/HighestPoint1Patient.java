@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.HighestPatientDto;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -21,21 +21,21 @@ import static java.util.Optional.ofNullable;
 /**
  * 診療費 病患點數(最高者)
  */
-public class HighestPoint1Patient extends SingleSourceCalculator<HighestPatientDto> {
+public class HighestPoint1Patient extends SingleSourceMetaCalculator<HighestPatientDto> {
 
-    public HighestPoint1Patient(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public HighestPoint1Patient(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @Override
-    public HighestPatientDto doCalculate(Collector collector) {
+    public HighestPatientDto doCalculate(MetricConfig metricConfig) {
         Function<NhiMetricRawVM, Long> classifier = NhiMetricRawVM::getPatientId;
-        Exam1ByClassifier exam1 = new Exam1ByClassifier(collector, HighestExam1Patient, source(), classifier).apply();
-        Exam2ByClassifier exam2 = new Exam2ByClassifier(collector, HighestExam2Patient, source(), classifier).apply();
-        Exam3ByClassifier exam3 = new Exam3ByClassifier(collector, HighestExam3Patient, source(), classifier).apply();
-        Exam4ByClassifier exam4 = new Exam4ByClassifier(collector, HighestExam4Patient, source(), classifier).apply();
-        Point3ByClassifier point3 = new Point3ByClassifier(collector, HighestPoint3ByPatient, source(), classifier).apply();
-        Point1 point1 = new Point1(collector, source()).apply();
+        Exam1ByClassifier exam1 = new Exam1ByClassifier(metricConfig, HighestExam1Patient, source(), classifier).apply();
+        Exam2ByClassifier exam2 = new Exam2ByClassifier(metricConfig, HighestExam2Patient, source(), classifier).apply();
+        Exam3ByClassifier exam3 = new Exam3ByClassifier(metricConfig, HighestExam3Patient, source(), classifier).apply();
+        Exam4ByClassifier exam4 = new Exam4ByClassifier(metricConfig, HighestExam4Patient, source(), classifier).apply();
+        Point3ByClassifier point3 = new Point3ByClassifier(metricConfig, HighestPoint3ByPatient, source(), classifier).apply();
+        Point1 point1 = new Point1(metricConfig, source()).apply();
 
         Map<Long, Long> map = new HashMap<>(exam1.getResult().size());
         exam1.getResult().forEach((keyId, point) -> map.compute(keyId, (key, value) -> ofNullable(value).orElse(0L) + point));

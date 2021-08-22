@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -16,15 +16,15 @@ import static io.dentall.totoro.business.service.nhi.util.NhiProcedureUtil.isExa
 /**
  * 診療費
  */
-public class Point3ByDaily extends SingleSourceCalculator<Map<LocalDate, Long>> {
+public class Point3ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>> {
 
-    public Point3ByDaily(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public Point3ByDaily(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @Override
-    public Map<LocalDate, Long> doCalculate(Collector collector) {
-        List<Map<LocalDate, List<NhiMetricRawVM>>> source = collector.retrieveSource(source());
+    public Map<LocalDate, Long> doCalculate(MetricConfig metricConfig) {
+        List<Map<LocalDate, List<NhiMetricRawVM>>> source = metricConfig.retrieveSource(source().key());
         MetaConfig config = getConfig();
 
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),

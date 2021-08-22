@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -13,24 +13,24 @@ import java.util.function.Function;
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.calculateExamByClassifier;
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.calculateExamRegular;
 
-public abstract class Exam<T> extends SingleSourceCalculator<T> {
+public abstract class Exam<T> extends SingleSourceMetaCalculator<T> {
 
-    public Exam(Collector collector, MetaConfig config, Source<?, ?> source) {
-        super(collector, config, source);
+    public Exam(MetricConfig metricConfig, MetaConfig config, Source<?, ?> source) {
+        super(metricConfig, config, source);
     }
 
-    protected Long doCalculateRegular(Collector collector, List<String> codes) {
-        List<NhiMetricRawVM> source = collector.retrieveSource(source());
+    protected Long doCalculateRegular(MetricConfig metricConfig, List<String> codes) {
+        List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
         return calculateExamRegular(source, codes, getConfig());
     }
 
-    protected Map<Long, Long> doCalculateByClassifier(Collector collector, List<String> codes, Function<NhiMetricRawVM, Long> classifier) {
-        List<NhiMetricRawVM> source = collector.retrieveSource(source());
+    protected Map<Long, Long> doCalculateByClassifier(MetricConfig metricConfig, List<String> codes, Function<NhiMetricRawVM, Long> classifier) {
+        List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
         return calculateExamByClassifier(source, codes, classifier, getConfig());
     }
 
-    protected Map<LocalDate, Long> doCalculateByDaily(Collector collector, List<String> codes) {
-        List<Map<LocalDate, List<NhiMetricRawVM>>> source = collector.retrieveSource(source());
+    protected Map<LocalDate, Long> doCalculateByDaily(MetricConfig metricConfig, List<String> codes) {
+        List<Map<LocalDate, List<NhiMetricRawVM>>> source = metricConfig.retrieveSource(source().key());
 
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {

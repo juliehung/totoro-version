@@ -1,9 +1,11 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReTreatment;
-import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentTreatment;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReToothCount;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentToothCount;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentOneYearNearByPatientSource;
+import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentQuarterByPatientSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
@@ -26,20 +28,18 @@ public class L31Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odOneYearNearSource;
 
-    public L31Formula(Collector collector,
-                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource,
-                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odOneYearNearSource) {
-        super(collector);
-        this.odQuarterSource = odQuarterSource;
-        this.odOneYearNearSource = odOneYearNearSource;
+    public L31Formula(MetricConfig metricConfig) {
+        super(metricConfig);
+        this.odQuarterSource = new OdPermanentQuarterByPatientSource(metricConfig);
+        this.odOneYearNearSource = new OdPermanentOneYearNearByPatientSource(metricConfig);
     }
 
     @Override
-    public BigDecimal doCalculate(Collector collector) {
-        OdPermanentTreatment odPermanentTreatment = new OdPermanentTreatment(collector, odQuarterSource).apply();
-        OdPermanentReTreatment odPermanentReTreatment = new OdPermanentReTreatment(collector, odQuarterSource, odOneYearNearSource, 1, 365).apply();
+    public BigDecimal doCalculate(MetricConfig metricConfig) {
+        OdPermanentToothCount odPermanentToothCount = new OdPermanentToothCount(metricConfig, odQuarterSource).apply();
+        OdPermanentReToothCount odPermanentReToothCount = new OdPermanentReToothCount(metricConfig, odQuarterSource, odOneYearNearSource, 1, 365).apply();
         try {
-            return toPercentage(divide(odPermanentReTreatment.getResult(), odPermanentTreatment.getResult()));
+            return toPercentage(divide(odPermanentReToothCount.getResult(), odPermanentToothCount.getResult()));
         } catch (ArithmeticException e) {
             return ZERO;
         }

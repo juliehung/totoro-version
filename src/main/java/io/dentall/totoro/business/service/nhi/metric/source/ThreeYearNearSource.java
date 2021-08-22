@@ -19,8 +19,9 @@ public class ThreeYearNearSource extends AbstractSource<NhiMetricRawVM, NhiMetri
 
     private final LocalDate end;
 
-    public ThreeYearNearSource(InputSource<NhiMetricRawVM> inputSource, LocalDate date) {
-        super(inputSource);
+    public ThreeYearNearSource(MetricConfig metricConfig) {
+        super(metricConfig.getSubjectSource());
+        LocalDate date = metricConfig.getBaseDate();
         if (isSameMonth(date)) {
             this.begin = date.minus(1095, DAYS);
             this.end = date;
@@ -31,7 +32,7 @@ public class ThreeYearNearSource extends AbstractSource<NhiMetricRawVM, NhiMetri
     }
 
     @Override
-    public List<NhiMetricRawVM> doFilter(List<NhiMetricRawVM> nhiMetricRawVMList) {
+    public List<NhiMetricRawVM> filter(List<NhiMetricRawVM> nhiMetricRawVMList) {
         return nhiMetricRawVMList.stream().parallel()
             .filter(vm ->
                 begin.isEqual(vm.getDisposalDate())

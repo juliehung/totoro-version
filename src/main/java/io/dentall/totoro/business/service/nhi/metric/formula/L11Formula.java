@@ -1,7 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.meta.CourseCase;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -14,14 +15,14 @@ public class L11Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    public L11Formula(Collector collector, Source<NhiMetricRawVM, NhiMetricRawVM> source) {
-        super(collector);
-        this.source = source;
+    public L11Formula(MetricConfig metricConfig) {
+        super(metricConfig);
+        this.source = new MonthSelectedSource(metricConfig);
     }
 
     @Override
-    public BigDecimal doCalculate(Collector collector) {
-        CourseCase courseCase = new CourseCase(collector, source).apply();
+    public BigDecimal doCalculate(MetricConfig metricConfig) {
+        CourseCase courseCase = new CourseCase(metricConfig, source).apply();
         return new BigDecimal(courseCase.getResult());
     }
 }

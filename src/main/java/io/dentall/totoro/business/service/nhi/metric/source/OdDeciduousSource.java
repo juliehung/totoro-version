@@ -19,12 +19,12 @@ public abstract class OdDeciduousSource extends AbstractSource<OdDto, Map<Long, 
         "81", "82", "83", "84", "85"
     ));
 
-    public OdDeciduousSource(InputSource<OdDto> inputSource) {
+    public OdDeciduousSource(Source<?, ?> inputSource) {
         super(inputSource);
     }
 
     @Override
-    public List<Map<Long, Map<String, List<OdDto>>>> doFilter(List<OdDto> source) {
+    public List<Map<Long, Map<String, List<OdDto>>>> filter(List<OdDto> source) {
         return singletonList(source.stream().parallel()
             .filter(dto -> teeth.contains(dto.getTooth()))
             .collect(groupingBy(OdDto::getPatientId, groupingBy(OdDto::getTooth))));

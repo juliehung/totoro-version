@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.DoctorSummaryDto;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -17,15 +17,15 @@ import static java.util.stream.Collectors.maxBy;
 /**
  *
  */
-public class DoctorSummary extends AbstractSummary<DoctorSummaryDto> {
+public class DoctorSummary extends AbstractMetaSummary<DoctorSummaryDto> {
 
-    public DoctorSummary(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public DoctorSummary(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @Override
-    public List<DoctorSummaryDto> doCalculate(Collector collector) {
-        List<NhiMetricRawVM> source = collector.retrieveSource(source());
+    public List<DoctorSummaryDto> doCalculate(MetricConfig metricConfig) {
+        List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
         Map<Long, List<NhiMetricRawVM>> sourceByDoctor = source.stream().collect(groupingBy(NhiMetricRawVM::getDoctorId));
 
         return sourceByDoctor.entrySet().stream()

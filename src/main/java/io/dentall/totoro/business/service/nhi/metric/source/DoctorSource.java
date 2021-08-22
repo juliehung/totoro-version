@@ -10,13 +10,13 @@ public class DoctorSource extends SubjectSource<NhiMetricRawVM, NhiMetricRawVM> 
 
     private final Long doctorId;
 
-    public DoctorSource(InputSource<NhiMetricRawVM> inputSource, Long doctorId) {
-        super(inputSource);
-        this.doctorId = doctorId;
+    public DoctorSource(MetricConfig metricConfig) {
+        super(metricConfig.getInitialSource());
+        this.doctorId = metricConfig.getSubject().getId();
     }
 
     @Override
-    public List<NhiMetricRawVM> doFilter(List<NhiMetricRawVM> nhiMetricRawVMList) {
+    public List<NhiMetricRawVM> filter(List<NhiMetricRawVM> nhiMetricRawVMList) {
         return nhiMetricRawVMList.stream().parallel()
             .filter(vm -> this.doctorId.equals(vm.getDoctorId()))
             .collect(toList());

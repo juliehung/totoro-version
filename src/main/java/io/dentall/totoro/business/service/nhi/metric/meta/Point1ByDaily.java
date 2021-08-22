@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.time.LocalDate;
@@ -11,19 +11,19 @@ import java.util.Set;
 /**
  * 診療費
  */
-public class Point1ByDaily extends SingleSourceCalculator<Map<LocalDate, Long>> {
+public class Point1ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>> {
 
-    public Point1ByDaily(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public Point1ByDaily(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @Override
-    public Map<LocalDate, Long> doCalculate(Collector collector) {
-        Exam1ByDaily exam1 = new Exam1ByDaily(collector, source()).apply();
-        Exam2ByDaily exam2 = new Exam2ByDaily(collector, source()).apply();
-        Exam3ByDaily exam3 = new Exam3ByDaily(collector, source()).apply();
-        Exam4ByDaily exam4 = new Exam4ByDaily(collector, source()).apply();
-        Point3ByDaily point3 = new Point3ByDaily(collector, source()).apply();
+    public Map<LocalDate, Long> doCalculate(MetricConfig metricConfig) {
+        Exam1ByDaily exam1 = new Exam1ByDaily(metricConfig, source()).apply();
+        Exam2ByDaily exam2 = new Exam2ByDaily(metricConfig, source()).apply();
+        Exam3ByDaily exam3 = new Exam3ByDaily(metricConfig, source()).apply();
+        Exam4ByDaily exam4 = new Exam4ByDaily(metricConfig, source()).apply();
+        Point3ByDaily point3 = new Point3ByDaily(metricConfig, source()).apply();
 
         Map<LocalDate, Long> exam1Map = exam1.getResult();
         Map<LocalDate, Long> exam2Map = exam2.getResult();

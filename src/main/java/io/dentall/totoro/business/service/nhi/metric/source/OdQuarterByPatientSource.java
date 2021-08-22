@@ -10,12 +10,12 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class OdQuarterByPatientSource extends AbstractSource<OdDto, Map<Long, Map<String, List<OdDto>>>> {
 
-    public OdQuarterByPatientSource(InputSource<OdDto> inputSource) {
+    public OdQuarterByPatientSource(Source<?, ?> inputSource) {
         super(inputSource);
     }
 
     @Override
-    public List<Map<Long, Map<String, List<OdDto>>>> doFilter(List<OdDto> source) {
+    public List<Map<Long, Map<String, List<OdDto>>>> filter(List<OdDto> source) {
         return singletonList(source.stream().parallel()
             .collect(groupingBy(OdDto::getPatientId, groupingBy(OdDto::getTooth))));
     }

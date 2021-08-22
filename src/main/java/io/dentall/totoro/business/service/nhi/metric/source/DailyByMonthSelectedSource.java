@@ -21,14 +21,15 @@ public class DailyByMonthSelectedSource extends AbstractSource<NhiMetricRawVM, M
 
     private final LocalDate end;
 
-    public DailyByMonthSelectedSource(InputSource<NhiMetricRawVM> inputSource, LocalDate date) {
-        super(inputSource);
+    public DailyByMonthSelectedSource(MetricConfig metricConfig) {
+        super(new MonthSelectedSource(metricConfig));
+        LocalDate date = metricConfig.getBaseDate();
         this.begin = beginOfMonth(date);
         this.end = endOfMonth(date);
     }
 
     @Override
-    public List<Map<LocalDate, List<NhiMetricRawVM>>> doFilter(List<NhiMetricRawVM> nhiMetricRawVMList) {
+    public List<Map<LocalDate, List<NhiMetricRawVM>>> filter(List<NhiMetricRawVM> nhiMetricRawVMList) {
         Map<LocalDate, List<NhiMetricRawVM>> map = nhiMetricRawVMList.stream().collect(groupingBy(NhiMetricRawVM::getDisposalDate));
 
         // 補齊沒有資料的日期

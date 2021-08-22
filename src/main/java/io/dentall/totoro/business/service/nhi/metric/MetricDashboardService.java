@@ -1,11 +1,13 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
-import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.formula.*;
 import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapper;
 import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
-import io.dentall.totoro.business.service.nhi.metric.source.*;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
+import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
+import io.dentall.totoro.business.service.nhi.metric.source.SourceKey;
 import io.dentall.totoro.business.service.nhi.metric.vm.*;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.User;
@@ -69,145 +71,92 @@ public class MetricDashboardService {
         );
 
         return allSubject.parallelStream()
-            .map(subject -> buildMetricL(baseDate, quarterRange, allSubject, subject, nhiMetricRawVMList))
+            .map(subject -> buildMetricL(baseDate, allSubject, subject, nhiMetricRawVMList))
             .filter(Objects::nonNull)
             .collect(toList());
     }
 
-    private MetricLVM buildMetricL(LocalDate baseDate, BeginEnd quarterRange, List<User> allSubject, User subject, List<NhiMetricRawVM> source) {
-        Source<NhiMetricRawVM, NhiMetricRawVM> initialSource = new InitialSource();
-        Collector collector = new Collector(initialSource.asInputSource(), source);
-        Source<NhiMetricRawVM, NhiMetricRawVM> subjectSource =
-            subject.getId().equals(Long.MIN_VALUE) ?
-                new ClinicSource(initialSource.asInputSource()) :
-                new DoctorSource(initialSource.asInputSource(), subject.getId());
-        collector.apply(subjectSource);
+    private MetricLVM buildMetricL(LocalDate baseDate, List<User> allSubject, User subject, List<NhiMetricRawVM> source) {
+        MetricConfig metricConfig = new MetricConfig(subject, baseDate, source);
 
-        if (!collector.isSourceExist(subjectSource.asInputSource()) || collector.retrieveSource(subjectSource.asInputSource()).size() == 0) {
+        if (!metricConfig.isSourceExist(metricConfig.getSubjectSource().key()) || metricConfig.retrieveSource(metricConfig.getSubjectSource().key()).size() == 0) {
             return null;
         }
 
-        MetricSubjectType metricSubjectType = subjectSource.getClass().isAssignableFrom(ClinicSource.class) ? CLINIC : MetricSubjectType.DOCTOR;
-        Source<NhiMetricRawVM, NhiMetricRawVM> threeYearNearSource = new ThreeYearNearSource(subjectSource.asInputSource(), baseDate);
-        Source<NhiMetricRawVM, NhiMetricRawVM> twoYearNearSource = new TwoYearNearSource(threeYearNearSource.asInputSource(), baseDate);
-        Source<NhiMetricRawVM, NhiMetricRawVM> oneYearNearSource = new OneYearNearSource(twoYearNearSource.asInputSource(), baseDate);
-        Source<NhiMetricRawVM, NhiMetricRawVM> halfYearNearSource = new HalfYearNearSource(oneYearNearSource.asInputSource(), baseDate);
-        Source<NhiMetricRawVM, NhiMetricRawVM> quarterSource = new QuarterSource(subjectSource.asInputSource(), quarterRange);
-        Source<NhiMetricRawVM, NhiMetricRawVM> threeMonthNearSource = new ThreeMonthNearSource(halfYearNearSource.asInputSource(), baseDate);
-        Source<NhiMetricRawVM, NhiMetricRawVM> monthSelectedSource = new MonthSelectedSource(quarterSource.asInputSource(), baseDate);
-        Source<NhiMetricRawVM, Map<LocalDate, List<NhiMetricRawVM>>> dailyByMonthSelectedSource =
-            new DailyByMonthSelectedSource(monthSelectedSource.asInputSource(), baseDate);
-        Source<NhiMetricRawVM, Map<NhiSpecialCode, List<NhiMetricRawVM>>> specialCodeMonthSelectedSource =
-            new SpecialCodeMonthSelectedSource(monthSelectedSource.asInputSource());
-        Source<NhiMetricRawVM, OdDto> odThreeYearNearSource = new OdThreeYearNearSource(subjectSource.asInputSource());
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentThreeYearNearByPatientSource =
-            new OdPermanentThreeYearNearByPatientSource(odThreeYearNearSource.asInputSource());
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousThreeYearNearByPatientSource =
-            new OdDeciduousThreeYearNearByPatientSource(odThreeYearNearSource.asInputSource());
-        Source<OdDto, OdDto> odTwoYearNearSource = new OdTwoYearNearSource(odThreeYearNearSource.asInputSource(), baseDate);
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentTwoYearNearByPatientSource =
-            new OdPermanentTwoYearNearByPatientSource(odTwoYearNearSource.asInputSource());
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousTwoYearNearByPatientSource =
-            new OdDeciduousTwoYearNearByPatientSource(odTwoYearNearSource.asInputSource());
-        Source<OdDto, OdDto> odOneYearNearSource = new OdOneYearNearSource(odTwoYearNearSource.asInputSource(), baseDate);
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentOneYearNearByPatientSource =
-            new OdPermanentOneYearNearByPatientSource(odOneYearNearSource.asInputSource());
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousOneYearNearByPatientSource =
-            new OdDeciduousOneYearNearByPatientSource(odOneYearNearSource.asInputSource());
-        Source<NhiMetricRawVM, OdDto> odQuarterSource = new OdQuarterSource(quarterSource.asInputSource());
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPermanentQuarterByPatientSource =
-            new OdPermanentQuarterByPatientSource(odQuarterSource.asInputSource());
-        Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odDeciduousQuarterByPatientSource =
-            new OdDeciduousQuarterByPatientSource(odQuarterSource.asInputSource());
-        Source<OdDto, OdDto> odMonthSelectedSource = new OdMonthSelectedSource(odQuarterSource.asInputSource(), baseDate);
-
-        collector
-            .apply(threeMonthNearSource)
-            .apply(dailyByMonthSelectedSource)
-            .apply(specialCodeMonthSelectedSource)
-            .apply(odPermanentThreeYearNearByPatientSource)
-            .apply(odDeciduousThreeYearNearByPatientSource)
-            .apply(odPermanentTwoYearNearByPatientSource)
-            .apply(odDeciduousTwoYearNearByPatientSource)
-            .apply(odPermanentOneYearNearByPatientSource)
-            .apply(odDeciduousOneYearNearByPatientSource)
-            .apply(odPermanentQuarterByPatientSource)
-            .apply(odDeciduousQuarterByPatientSource)
-            .apply(odMonthSelectedSource);
-
-        BigDecimal metricL1 = new L1Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL2 = new L2Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL3 = new L3Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL4 = new L4Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL5 = new L5Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL6 = new L6Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL7 = new L7Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL8 = new L8Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL11 = new L11Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL12 = new L12Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL13 = new L13Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL14 = new L14Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL15 = new L15Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL16 = new L16Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL17 = new L17Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL18 = new L18Formula(collector, quarterSource).calculate();
-        BigDecimal metricL19 = new L19Formula(collector, quarterSource).calculate();
-        BigDecimal metricL20 = new L20Formula(collector, monthSelectedSource).calculate();
-        BigDecimal metricL21 = new L21Formula(collector, threeMonthNearSource).calculate();
-        BigDecimal metricL22 = new L22Formula(collector, quarterSource).calculate();
-        BigDecimal metricL23 = new L23Formula(collector, oneYearNearSource).calculate();
-        BigDecimal metricL24 = new L24Formula(collector, halfYearNearSource).calculate();
-        BigDecimal metricL25 = new L25Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousOneYearNearByPatientSource).calculate();
-        BigDecimal metricL26 = new L26Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL27 = new L27Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL28 = new L28Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL29 = new L29Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousThreeYearNearByPatientSource).calculate();
-        BigDecimal metricL30 = new L30Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousThreeYearNearByPatientSource).calculate();
-        BigDecimal metricL31 = new L31Formula(collector, odPermanentQuarterByPatientSource, odPermanentOneYearNearByPatientSource).calculate();
-        BigDecimal metricL32 = new L32Formula(collector, odPermanentQuarterByPatientSource, odPermanentTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL33 = new L33Formula(collector, odPermanentQuarterByPatientSource, odPermanentTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL34 = new L34Formula(collector, odPermanentQuarterByPatientSource, odPermanentTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL35 = new L35Formula(collector, odPermanentQuarterByPatientSource, odPermanentThreeYearNearByPatientSource).calculate();
-        BigDecimal metricL36 = new L36Formula(collector, odPermanentQuarterByPatientSource, odPermanentThreeYearNearByPatientSource).calculate();
-        BigDecimal metricL37 = new L37Formula(collector, odPermanentQuarterByPatientSource, odPermanentOneYearNearByPatientSource).calculate();
-        BigDecimal metricL38 = new L38Formula(collector, odPermanentQuarterByPatientSource, odPermanentTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL39 = new L39Formula(collector, odPermanentQuarterByPatientSource, odPermanentTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL40 = new L40Formula(collector, odPermanentQuarterByPatientSource, odPermanentTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL41 = new L41Formula(collector, odPermanentQuarterByPatientSource, odPermanentThreeYearNearByPatientSource).calculate();
-        BigDecimal metricL42 = new L42Formula(collector, odPermanentQuarterByPatientSource, odPermanentThreeYearNearByPatientSource).calculate();
-        BigDecimal metricL43 = new L43Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousOneYearNearByPatientSource).calculate();
-        BigDecimal metricL44 = new L44Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL45 = new L45Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL46 = new L46Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousTwoYearNearByPatientSource).calculate();
-        BigDecimal metricL47 = new L47Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousThreeYearNearByPatientSource).calculate();
-        BigDecimal metricL48 = new L48Formula(collector, odDeciduousQuarterByPatientSource, odDeciduousThreeYearNearByPatientSource).calculate();
-        BigDecimal metricL49 = new L49Formula(collector, odMonthSelectedSource).calculate();
-        BigDecimal metricL50 = new L50Formula(collector, odMonthSelectedSource).calculate();
-        BigDecimal metricL51 = new L51Formula(collector, odMonthSelectedSource).calculate();
-        BigDecimal metricL52 = new L52Formula(collector, odMonthSelectedSource).calculate();
-        BigDecimal metricL53 = new L53Formula(collector, odQuarterSource).calculate();
-        BigDecimal metricL54 = new L54Formula(collector, odQuarterSource).calculate();
-        BigDecimal metricL55 = new L55Formula(collector, odQuarterSource).calculate();
-        BigDecimal metricL56 = new L56Formula(collector, odQuarterSource).calculate();
-        SpecialTreatmentAnalysisDto specialTreatmentAnalysisDto = new SpecialTreatmentFormula(collector, specialCodeMonthSelectedSource).calculate();
-        Map<LocalDate, BigDecimal> dailyPoints = new DailyPointsFormula(collector, dailyByMonthSelectedSource).calculate();
-        Map<LocalDate, BigDecimal> dailyPt1 = new DailyPt1Formula(collector, dailyByMonthSelectedSource).calculate();
-        Map<LocalDate, BigDecimal> dailyIc3 = new DailyIc3Formula(collector, dailyByMonthSelectedSource).calculate();
+        MetricSubjectType metricSubjectType = metricConfig.getSubjectType();
+        BigDecimal metricL1 = new L1Formula(metricConfig).calculate();
+        BigDecimal metricL2 = new L2Formula(metricConfig).calculate();
+        BigDecimal metricL3 = new L3Formula(metricConfig).calculate();
+        BigDecimal metricL4 = new L4Formula(metricConfig).calculate();
+        BigDecimal metricL5 = new L5Formula(metricConfig).calculate();
+        BigDecimal metricL6 = new L6Formula(metricConfig).calculate();
+        BigDecimal metricL7 = new L7Formula(metricConfig).calculate();
+        BigDecimal metricL8 = new L8Formula(metricConfig).calculate();
+        BigDecimal metricL11 = new L11Formula(metricConfig).calculate();
+        BigDecimal metricL12 = new L12Formula(metricConfig).calculate();
+        BigDecimal metricL13 = new L13Formula(metricConfig).calculate();
+        BigDecimal metricL14 = new L14Formula(metricConfig).calculate();
+        BigDecimal metricL15 = new L15Formula(metricConfig).calculate();
+        BigDecimal metricL16 = new L16Formula(metricConfig).calculate();
+        BigDecimal metricL17 = new L17Formula(metricConfig).calculate();
+        BigDecimal metricL18 = new L18Formula(metricConfig).calculate();
+        BigDecimal metricL19 = new L19Formula(metricConfig).calculate();
+        BigDecimal metricL20 = new L20Formula(metricConfig).calculate();
+        BigDecimal metricL21 = new L21Formula(metricConfig).calculate();
+        BigDecimal metricL22 = new L22Formula(metricConfig).calculate();
+        BigDecimal metricL23 = new L23Formula(metricConfig).calculate();
+        BigDecimal metricL24 = new L24Formula(metricConfig).calculate();
+        BigDecimal metricL25 = new L25Formula(metricConfig).calculate();
+        BigDecimal metricL26 = new L26Formula(metricConfig).calculate();
+        BigDecimal metricL27 = new L27Formula(metricConfig).calculate();
+        BigDecimal metricL28 = new L28Formula(metricConfig).calculate();
+        BigDecimal metricL29 = new L29Formula(metricConfig).calculate();
+        BigDecimal metricL30 = new L30Formula(metricConfig).calculate();
+        BigDecimal metricL31 = new L31Formula(metricConfig).calculate();
+        BigDecimal metricL32 = new L32Formula(metricConfig).calculate();
+        BigDecimal metricL33 = new L33Formula(metricConfig).calculate();
+        BigDecimal metricL34 = new L34Formula(metricConfig).calculate();
+        BigDecimal metricL35 = new L35Formula(metricConfig).calculate();
+        BigDecimal metricL36 = new L36Formula(metricConfig).calculate();
+        BigDecimal metricL37 = new L37Formula(metricConfig).calculate();
+        BigDecimal metricL38 = new L38Formula(metricConfig).calculate();
+        BigDecimal metricL39 = new L39Formula(metricConfig).calculate();
+        BigDecimal metricL40 = new L40Formula(metricConfig).calculate();
+        BigDecimal metricL41 = new L41Formula(metricConfig).calculate();
+        BigDecimal metricL42 = new L42Formula(metricConfig).calculate();
+        BigDecimal metricL43 = new L43Formula(metricConfig).calculate();
+        BigDecimal metricL44 = new L44Formula(metricConfig).calculate();
+        BigDecimal metricL45 = new L45Formula(metricConfig).calculate();
+        BigDecimal metricL46 = new L46Formula(metricConfig).calculate();
+        BigDecimal metricL47 = new L47Formula(metricConfig).calculate();
+        BigDecimal metricL48 = new L48Formula(metricConfig).calculate();
+        BigDecimal metricL49 = new L49Formula(metricConfig).calculate();
+        BigDecimal metricL50 = new L50Formula(metricConfig).calculate();
+        BigDecimal metricL51 = new L51Formula(metricConfig).calculate();
+        BigDecimal metricL52 = new L52Formula(metricConfig).calculate();
+        BigDecimal metricL53 = new L53Formula(metricConfig).calculate();
+        BigDecimal metricL54 = new L54Formula(metricConfig).calculate();
+        BigDecimal metricL55 = new L55Formula(metricConfig).calculate();
+        BigDecimal metricL56 = new L56Formula(metricConfig).calculate();
+        SpecialTreatmentAnalysisDto specialTreatmentAnalysisDto = new SpecialTreatmentFormula(metricConfig).calculate();
+        Map<LocalDate, BigDecimal> dailyPoints = new DailyPointsFormula(metricConfig).calculate();
+        Map<LocalDate, BigDecimal> dailyPt1 = new DailyPt1Formula(metricConfig).calculate();
+        Map<LocalDate, BigDecimal> dailyIc3 = new DailyIc3Formula(metricConfig).calculate();
 
         NameValue nameValue = new NameValue();
         List<DoctorSummaryDto> doctorSummaryDtoList = null;
         List<DisposalSummaryDto> disposalSummaryDtoList = null;
         if (metricSubjectType == CLINIC) {
-            HighestDoctorDto highestDoctorDto = new L9Formula(collector, monthSelectedSource).calculate();
+            HighestDoctorDto highestDoctorDto = new L9Formula(metricConfig).calculate();
             allSubject.stream().filter(val -> val.getId().equals(highestDoctorDto.getId())).map(User::getFirstName).findFirst().ifPresent(nameValue::setName);
             nameValue.setValue(highestDoctorDto.getValue());
-            doctorSummaryDtoList = new DoctorSummaryFormula(collector, monthSelectedSource).calculate();
+            doctorSummaryDtoList = new DoctorSummaryFormula(metricConfig).calculate();
         } else {
-            HighestPatientDto highestPatientDto = new L10Formula(collector, monthSelectedSource).calculate();
-            List<NhiMetricRawVM> list = collector.retrieveSource(monthSelectedSource.asInputSource());
+            HighestPatientDto highestPatientDto = new L10Formula(metricConfig).calculate();
+            List<NhiMetricRawVM> list = metricConfig.retrieveSource(new SourceKey(new MonthSelectedSource(metricConfig)));
             list.stream().filter(vm -> highestPatientDto.getId().equals(vm.getPatientId())).map(NhiMetricRawVM::getPatientName).findAny().ifPresent(nameValue::setName);
             nameValue.setValue(highestPatientDto.getValue());
-            disposalSummaryDtoList = new DisposalSummaryFormula(collector, monthSelectedSource).calculate();
+            disposalSummaryDtoList = new DisposalSummaryFormula(metricConfig).calculate();
         }
 
         Section5 section5 = new Section5();
@@ -328,8 +277,8 @@ public class MetricDashboardService {
 
         if (metricSubjectType == MetricSubjectType.DOCTOR) {
             DoctorData doctorData = new DoctorData();
-            doctorData.setDoctorId(subject.getId());
-            doctorData.setDoctorName(subject.getFirstName());
+            doctorData.setDoctorId(metricConfig.getSubject().getId());
+            doctorData.setDoctorName(metricConfig.getSubject().getFirstName());
             metricLVM.setDoctor(doctorData);
         }
 

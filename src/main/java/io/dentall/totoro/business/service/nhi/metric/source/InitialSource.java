@@ -7,12 +7,11 @@ import java.util.List;
 public class InitialSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM> {
 
     public InitialSource() {
-        super(new InputSource<NhiMetricRawVM>() {
-        });
+        super(null);
     }
 
     @Override
-    public List<NhiMetricRawVM> doFilter(List<NhiMetricRawVM> source) {
+    public List<NhiMetricRawVM> filter(List<NhiMetricRawVM> source) {
         return source;
     }
 

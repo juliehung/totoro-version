@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -15,15 +15,15 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper
 /**
  * 每天看診人數/就醫人數 不重複病患數量
  */
-public class Pt1ByDaily extends SingleSourceCalculator<Map<LocalDate, Long>> {
+public class Pt1ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>> {
 
-    public Pt1ByDaily(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public Pt1ByDaily(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @Override
-    public Map<LocalDate, Long> doCalculate(Collector collector) {
-        List<Map<LocalDate, List<NhiMetricRawVM>>> source = collector.retrieveSource(source());
+    public Map<LocalDate, Long> doCalculate(MetricConfig metricConfig) {
+        List<Map<LocalDate, List<NhiMetricRawVM>>> source = metricConfig.retrieveSource(source().key());
         Exclude exclude = getExclude();
 
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),

@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -18,19 +18,19 @@ public class Exam1ByClassifier extends Exam<Map<Long, Long>> {
 
     private final MetaType metaType;
 
-    public Exam1ByClassifier(Collector collector, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
-        this(collector, null, metaType, source, classifier);
+    public Exam1ByClassifier(MetricConfig metricConfig, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
+        this(metricConfig, null, metaType, source, classifier);
     }
 
-    public Exam1ByClassifier(Collector collector, MetaConfig config, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
-        super(collector, config, source);
+    public Exam1ByClassifier(MetricConfig metricConfig, MetaConfig config, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
+        super(metricConfig, config, source);
         this.classifier = classifier;
         this.metaType = metaType;
     }
 
     @Override
-    public Map<Long, Long> doCalculate(Collector collector) {
-        return doCalculateByClassifier(collector, codesByExam1, classifier);
+    public Map<Long, Long> doCalculate(MetricConfig metricConfig) {
+        return doCalculateByClassifier(metricConfig, codesByExam1, classifier);
     }
 
     @Override

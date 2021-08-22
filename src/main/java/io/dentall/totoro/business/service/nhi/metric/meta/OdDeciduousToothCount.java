@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.Collection;
@@ -13,19 +13,19 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper
 /**
  * 申報OD之乳牙顆數
  */
-public class OdDeciduousTreatment extends SingleSourceCalculator<Long> {
+public class OdDeciduousToothCount extends SingleSourceMetaCalculator<Long> {
 
-    public OdDeciduousTreatment(Collector collector, Source<?, ?> source) {
-        this(collector, null, source);
+    public OdDeciduousToothCount(MetricConfig metricConfig, Source<?, ?> source) {
+        this(metricConfig, null, source);
     }
 
-    public OdDeciduousTreatment(Collector collector, MetaConfig config, Source<?, ?> source) {
-        super(collector, config, source);
+    public OdDeciduousToothCount(MetricConfig metricConfig, MetaConfig config, Source<?, ?> source) {
+        super(metricConfig, config, source);
     }
 
     @Override
-    public Long doCalculate(Collector collector) {
-        List<Map<Long, Map<String, List<OdDto>>>> source = collector.retrieveSource(source());
+    public Long doCalculate(MetricConfig metricConfig) {
+        List<Map<Long, Map<String, List<OdDto>>>> source = metricConfig.retrieveSource(source().key());
         Exclude exclude = getExclude();
         return source.get(0).values().stream()
             .map(Map::values)
@@ -37,6 +37,6 @@ public class OdDeciduousTreatment extends SingleSourceCalculator<Long> {
 
     @Override
     public MetaType metaType() {
-        return MetaType.OdDeciduousTreatment;
+        return MetaType.OdDeciduousToothCount;
     }
 }

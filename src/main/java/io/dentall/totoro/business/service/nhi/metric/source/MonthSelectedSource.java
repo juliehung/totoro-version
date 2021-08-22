@@ -12,20 +12,20 @@ import static java.util.stream.Collectors.toList;
 /**
  * date-15 月(自選案件)
  */
-public class MonthSelectedSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM>  {
+public class MonthSelectedSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM> {
 
     private final LocalDate begin;
 
     private final LocalDate end;
 
-    public MonthSelectedSource(InputSource<NhiMetricRawVM> inputSource, LocalDate date) {
-        super(inputSource);
-        this.begin = beginOfMonth(date);
-        this.end = endOfMonth(date);
+    public MonthSelectedSource(MetricConfig metricConfig) {
+        super(new QuarterSource(metricConfig));
+        this.begin = beginOfMonth(metricConfig.getBaseDate());
+        this.end = endOfMonth(metricConfig.getBaseDate());
     }
 
     @Override
-    public List<NhiMetricRawVM> doFilter(List<NhiMetricRawVM> nhiMetricRawVMList) {
+    public List<NhiMetricRawVM> filter(List<NhiMetricRawVM> nhiMetricRawVMList) {
         return nhiMetricRawVMList.stream().parallel()
             .filter(vm ->
                 begin.isEqual(vm.getDisposalDate())

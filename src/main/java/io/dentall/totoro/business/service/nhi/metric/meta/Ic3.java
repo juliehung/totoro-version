@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -14,15 +14,15 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper
  * 有卡號＋異常代碼之處置單數量總和
  * 同一療程在當月完成以一件計算，跨月完成則以二件計算
  */
-public class Ic3 extends SingleSourceCalculator<Long> {
+public class Ic3 extends SingleSourceMetaCalculator<Long> {
 
-    public Ic3(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public Ic3(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @Override
-    public Long doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(source());
+    public Long doCalculate(MetricConfig metricConfig) {
+        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
 
         return nhiMetricRawVMList.stream()
             .reduce(0L, calculatePt(), Long::sum);

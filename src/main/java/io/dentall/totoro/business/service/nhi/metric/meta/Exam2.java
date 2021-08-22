@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.codesByExam2;
@@ -10,17 +10,17 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper
  */
 public class Exam2 extends Exam<Long> {
 
-    public Exam2(Collector collector, Source<?, ?> source) {
-        this(collector, null, source);
+    public Exam2(MetricConfig metricConfig, Source<?, ?> source) {
+        this(metricConfig, null, source);
     }
 
-    public Exam2(Collector collector, MetaConfig config, Source<?, ?> source) {
-        super(collector, config, source);
+    public Exam2(MetricConfig metricConfig, MetaConfig config, Source<?, ?> source) {
+        super(metricConfig, config, source);
     }
 
     @Override
-    public Long doCalculate(Collector collector) {
-        return doCalculateRegular(collector, codesByExam2);
+    public Long doCalculate(MetricConfig metricConfig) {
+        return doCalculateRegular(metricConfig, codesByExam2);
     }
 
     @Override

@@ -1,20 +1,20 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
 import io.dentall.totoro.business.service.nhi.metric.meta.Calculator;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 
 public abstract class AbstractFormula<R> implements Calculator<R> {
 
-    private final Collector collector;
+    private final MetricConfig metricConfig;
 
-    public AbstractFormula(Collector collector) {
-        this.collector = collector;
+    public AbstractFormula(MetricConfig metricConfig) {
+        this.metricConfig = metricConfig;
     }
 
     @Override
     public R calculate() {
-        return doCalculate(collector);
+        return doCalculate(metricConfig);
     }
 
-    protected abstract R doCalculate(Collector collector);
+    protected abstract R doCalculate(MetricConfig metricConfig);
 }

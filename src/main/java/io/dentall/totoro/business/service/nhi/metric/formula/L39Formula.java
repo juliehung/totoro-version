@@ -1,8 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReTreatment;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReToothCount;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentQuarterByPatientSource;
+import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentTwoYearNearByPatientSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
@@ -19,17 +21,15 @@ public class L39Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odTwoYearNearSource;
 
-    public L39Formula(Collector collector,
-                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource,
-                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odTwoYearNearSource) {
-        super(collector);
-        this.odQuarterSource = odQuarterSource;
-        this.odTwoYearNearSource = odTwoYearNearSource;
+    public L39Formula(MetricConfig metricConfig) {
+        super(metricConfig);
+        this.odQuarterSource = new OdPermanentQuarterByPatientSource(metricConfig);
+        this.odTwoYearNearSource = new OdPermanentTwoYearNearByPatientSource(metricConfig);
     }
 
     @Override
-    public BigDecimal doCalculate(Collector collector) {
-        OdPermanentReTreatment odPermanentReTreatment = new OdPermanentReTreatment(collector, odQuarterSource, odTwoYearNearSource, 1, 730).apply();
-        return new BigDecimal(odPermanentReTreatment.getResult());
+    public BigDecimal doCalculate(MetricConfig metricConfig) {
+        OdPermanentReToothCount odPermanentReToothCount = new OdPermanentReToothCount(metricConfig, odQuarterSource, odTwoYearNearSource, 1, 730).apply();
+        return new BigDecimal(odPermanentReToothCount.getResult());
     }
 }

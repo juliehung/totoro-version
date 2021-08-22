@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.List;
@@ -16,19 +16,19 @@ import static java.util.stream.Collectors.maxBy;
 /**
  * @ OD-1@總點數
  */
-public class Od1Point extends SingleSourceCalculator<Long> {
+public class Od1Point extends SingleSourceMetaCalculator<Long> {
 
-    public Od1Point(Collector collector, Source<?, ?> source) {
-        this(collector, null, source);
+    public Od1Point(MetricConfig metricConfig, Source<?, ?> source) {
+        this(metricConfig, null, source);
     }
 
-    public Od1Point(Collector collector, MetaConfig config, Source<?, ?> source) {
-        super(collector, config, source);
+    public Od1Point(MetricConfig metricConfig, MetaConfig config, Source<?, ?> source) {
+        super(metricConfig, config, source);
     }
 
     @Override
-    public Long doCalculate(Collector collector) {
-        List<OdDto> odDtoList = collector.retrieveSource(source());
+    public Long doCalculate(MetricConfig metricConfig) {
+        List<OdDto> odDtoList = metricConfig.retrieveSource(source().key());
         MetaConfig config = getConfig();
         Exclude exclude = getExclude();
 

@@ -19,14 +19,15 @@ public class ThreeMonthNearSource extends AbstractSource<NhiMetricRawVM, NhiMetr
 
     private final LocalDate end;
 
-    public ThreeMonthNearSource(InputSource<NhiMetricRawVM> inputSource, LocalDate date) {
-        super(inputSource);
+    public ThreeMonthNearSource(MetricConfig metricConfig) {
+        super(new HalfYearNearSource(metricConfig));
+        LocalDate date = metricConfig.getBaseDate();
         this.begin = beginOfMonth(date).minus(2, MONTHS);
         this.end = endOfMonth(date);
     }
 
     @Override
-    public List<NhiMetricRawVM> doFilter(List<NhiMetricRawVM> nhiMetricRawVMList) {
+    public List<NhiMetricRawVM> filter(List<NhiMetricRawVM> nhiMetricRawVMList) {
         return nhiMetricRawVMList.stream().parallel()
             .filter(vm ->
                 begin.isEqual(vm.getDisposalDate())

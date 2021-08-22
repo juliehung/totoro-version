@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.service.nhi.util.ToothUtil;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
@@ -19,13 +19,13 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public class EndoReTreatmentByTooth extends EndoTreatment {
 
-    public EndoReTreatmentByTooth(Collector collector, MetaConfig config, Source<?, ?> source) {
-        super(collector, config, source);
+    public EndoReTreatmentByTooth(MetricConfig metricConfig, MetaConfig config, Source<?, ?> source) {
+        super(metricConfig, config, source);
     }
 
     @Override
-    public Long doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(source());
+    public Long doCalculate(MetricConfig metricConfig) {
+        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
         Exclude exclude = getExclude();
 
         // 先取得每個病人的每個處置的牙齒

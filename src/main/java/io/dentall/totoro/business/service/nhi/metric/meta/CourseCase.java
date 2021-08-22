@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -16,15 +16,15 @@ import static java.util.stream.Collectors.maxBy;
 /**
  * 就醫類別為 AA, AB 的處置單數量總和
  */
-public class CourseCase extends SingleSourceCalculator<Long> {
+public class CourseCase extends SingleSourceMetaCalculator<Long> {
 
-    public CourseCase(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public CourseCase(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @Override
-    public Long doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(source());
+    public Long doCalculate(MetricConfig metricConfig) {
+        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
 
         return nhiMetricRawVMList.stream()
             .filter(vm -> AA.getValue().equals(vm.getNhiCategory()) || AB.getValue().equals(vm.getNhiCategory()))

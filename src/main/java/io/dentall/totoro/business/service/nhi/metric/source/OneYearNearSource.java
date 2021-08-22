@@ -13,14 +13,15 @@ import static java.util.stream.Collectors.toList;
 /**
  * date-3 一年 0~365天
  */
-public class OneYearNearSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM>  {
+public class OneYearNearSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM> {
 
     private final LocalDate begin;
 
     private final LocalDate end;
 
-    public OneYearNearSource(InputSource<NhiMetricRawVM> inputSource, LocalDate date) {
-        super(inputSource);
+    public OneYearNearSource(MetricConfig metricConfig) {
+        super(new TwoYearNearSource(metricConfig));
+        LocalDate date = metricConfig.getBaseDate();
         if (isSameMonth(date)) {
             this.begin = date.minus(365, DAYS);
             this.end = date;
@@ -31,7 +32,7 @@ public class OneYearNearSource extends AbstractSource<NhiMetricRawVM, NhiMetricR
     }
 
     @Override
-    public List<NhiMetricRawVM> doFilter(List<NhiMetricRawVM> nhiMetricRawVMList) {
+    public List<NhiMetricRawVM> filter(List<NhiMetricRawVM> nhiMetricRawVMList) {
         return nhiMetricRawVMList.stream().parallel()
             .filter(vm ->
                 begin.isEqual(vm.getDisposalDate())

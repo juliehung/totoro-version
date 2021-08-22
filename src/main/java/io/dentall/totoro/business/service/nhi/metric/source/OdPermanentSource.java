@@ -20,12 +20,12 @@ public abstract class OdPermanentSource extends AbstractSource<OdDto, Map<Long, 
         "99"
     ));
 
-    public OdPermanentSource(InputSource<OdDto> inputSource) {
+    public OdPermanentSource(Source<?, ?> inputSource) {
         super(inputSource);
     }
 
     @Override
-    public List<Map<Long, Map<String, List<OdDto>>>> doFilter(List<OdDto> source) {
+    public List<Map<Long, Map<String, List<OdDto>>>> filter(List<OdDto> source) {
         return singletonList(source.stream().parallel()
             .filter(dto -> teeth.contains(dto.getTooth()))
             .collect(groupingBy(OdDto::getPatientId, groupingBy(OdDto::getTooth))));

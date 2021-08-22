@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -18,21 +18,21 @@ import static java.util.stream.Collectors.groupingBy;
 /**
  * 診療費 病患點數  or 醫師點數
  */
-public class Point3ByClassifier extends SingleSourceCalculator<Map<Long, Long>> {
+public class Point3ByClassifier extends SingleSourceMetaCalculator<Map<Long, Long>> {
 
     private final Function<NhiMetricRawVM, Long> classifier;
 
     private final MetaType metaType;
 
-    public Point3ByClassifier(Collector collector, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
-        super(collector, source);
+    public Point3ByClassifier(MetricConfig metricConfig, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
+        super(metricConfig, source);
         this.classifier = classifier;
         this.metaType = metaType;
     }
 
     @Override
-    public Map<Long, Long> doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(source());
+    public Map<Long, Long> doCalculate(MetricConfig metricConfig) {
+        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
         MetaConfig config = getConfig();
 
         return nhiMetricRawVMList.stream()

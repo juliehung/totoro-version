@@ -15,8 +15,9 @@ public class OdTwoYearNearSource extends OdSource<OdDto> {
 
     private final LocalDate begin;
 
-    public OdTwoYearNearSource(InputSource<OdDto> inputSource, LocalDate baseDate) {
-        super(inputSource);
+    public OdTwoYearNearSource(MetricConfig metricConfig) {
+        super(new OdThreeYearNearSource(metricConfig));
+        LocalDate baseDate = metricConfig.getBaseDate();
         if (isSameMonth(baseDate)) {
             this.begin = baseDate.minus(730, DAYS);
         } else {
@@ -25,7 +26,7 @@ public class OdTwoYearNearSource extends OdSource<OdDto> {
     }
 
     @Override
-    public List<OdDto> doFilter(List<OdDto> source) {
+    public List<OdDto> filter(List<OdDto> source) {
         return source.stream().parallel()
             .filter(dto -> begin.isBefore(dto.getDisposalDate()) || begin.isEqual(dto.getDisposalDate()))
             .filter(dto -> codes.contains(dto.getCode()))

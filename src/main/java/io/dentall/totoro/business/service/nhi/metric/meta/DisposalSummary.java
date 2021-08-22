@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.DisposalSummaryDto;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -18,15 +18,15 @@ import static java.util.stream.Collectors.maxBy;
 /**
  *
  */
-public class DisposalSummary extends AbstractSummary<DisposalSummaryDto> {
+public class DisposalSummary extends AbstractMetaSummary<DisposalSummaryDto> {
 
-    public DisposalSummary(Collector collector, Source<?, ?> source) {
-        super(collector, source);
+    public DisposalSummary(MetricConfig metricConfig, Source<?, ?> source) {
+        super(metricConfig, source);
     }
 
     @Override
-    public List<DisposalSummaryDto> doCalculate(Collector collector) {
-        List<NhiMetricRawVM> source = collector.retrieveSource(source());
+    public List<DisposalSummaryDto> doCalculate(MetricConfig metricConfig) {
+        List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
         Map<Long, List<NhiMetricRawVM>> sourceByDisposal = source.stream().collect(groupingBy(NhiMetricRawVM::getDisposalId));
 
         return sourceByDisposal.entrySet().stream()

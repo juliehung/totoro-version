@@ -1,10 +1,11 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.domain.Holiday;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class MetaConfig {
@@ -23,11 +24,11 @@ public class MetaConfig {
 
     private Exclude exclude;
 
-    private Map<LocalDate, Optional<Holiday>> holidayMap;
+    private final Map<LocalDate, Optional<Holiday>> holidayMap;
 
 
-    public MetaConfig(Collector collector) {
-        this.holidayMap = collector.getHolidayMap();
+    public MetaConfig(MetricConfig metricConfig) {
+        this.holidayMap = metricConfig.getHolidayMap();
     }
 
     public boolean isUse00121CPoint() {
@@ -77,4 +78,25 @@ public class MetaConfig {
         return holidayMap;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MetaConfig that = (MetaConfig) o;
+        return use00121CPoint == that.use00121CPoint
+            && excludeHideoutPoint == that.excludeHideoutPoint
+            && useOriginPoint == that.useOriginPoint
+            && excludeHolidayPoint == that.excludeHolidayPoint
+            && exclude == that.exclude
+            && Objects.equals(holidayMap, that.holidayMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(use00121CPoint, excludeHideoutPoint, useOriginPoint, excludeHolidayPoint, exclude, holidayMap);
+    }
 }

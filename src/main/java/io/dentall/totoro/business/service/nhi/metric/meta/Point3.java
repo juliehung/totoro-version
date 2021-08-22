@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -14,19 +14,19 @@ import static io.dentall.totoro.business.service.nhi.util.NhiProcedureUtil.isExa
 /**
  * 診療費
  */
-public class Point3 extends SingleSourceCalculator<Long> {
+public class Point3 extends SingleSourceMetaCalculator<Long> {
 
-    public Point3(Collector collector, Source<?, ?> source) {
-        this(collector, null, source);
+    public Point3(MetricConfig metricConfig, Source<?, ?> source) {
+        this(metricConfig, null, source);
     }
 
-    public Point3(Collector collector, MetaConfig config, Source<?, ?> source) {
-        super(collector, config, source);
+    public Point3(MetricConfig metricConfig, MetaConfig config, Source<?, ?> source) {
+        super(metricConfig, config, source);
     }
 
     @Override
-    public Long doCalculate(Collector collector) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = collector.retrieveSource(source());
+    public Long doCalculate(MetricConfig metricConfig) {
+        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
         Exclude exclude = getExclude();
         MetaConfig config = getConfig();
 

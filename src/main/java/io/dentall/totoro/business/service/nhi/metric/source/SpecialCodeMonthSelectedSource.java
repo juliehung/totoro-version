@@ -15,12 +15,12 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public class SpecialCodeMonthSelectedSource extends AbstractSource<NhiMetricRawVM, Map<NhiSpecialCode, List<NhiMetricRawVM>>> {
 
-    public SpecialCodeMonthSelectedSource(InputSource<NhiMetricRawVM> inputSource) {
-        super(inputSource);
+    public SpecialCodeMonthSelectedSource(MetricConfig metricConfig) {
+        super(new MonthSelectedSource(metricConfig));
     }
 
     @Override
-    public List<Map<NhiSpecialCode, List<NhiMetricRawVM>>> doFilter(List<NhiMetricRawVM> source) {
+    public List<Map<NhiSpecialCode, List<NhiMetricRawVM>>> filter(List<NhiMetricRawVM> source) {
         return singletonList(source.stream().parallel()
             .filter(vm -> vm.getTreatmentProcedureSpecificCode() != null)
             .collect(groupingBy(vm -> vm.getTreatmentProcedureSpecificCode() != null ? vm.getTreatmentProcedureSpecificCode() : OTHER)));

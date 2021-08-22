@@ -2,25 +2,23 @@ package io.dentall.totoro.business.service.nhi.metric.source;
 
 public abstract class AbstractSource<S, R> implements Source<S, R> {
 
-    private final InputSource<S> inputSource;
+    private final Source<?, ?> inputSource;
 
-    public AbstractSource(InputSource<S> inputSource) {
+    private final SourceKey key;
+
+    public AbstractSource(Source<?, ?> inputSource) {
         this.inputSource = inputSource;
+        this.key = new SourceKey(this);
     }
 
     @Override
-    public String name() {
-        return this.getClass().getSimpleName();
+    public SourceKey key() {
+        return key;
     }
 
     @Override
-    public InputSource<S> getInputSource() {
+    public Source<?, ?> getInputSource() {
         return this.inputSource;
-    }
-
-    @Override
-    public InputSource<R> asInputSource() {
-        return (InputSource<R>) this;
     }
 
 }

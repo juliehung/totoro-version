@@ -4,7 +4,8 @@ import io.dentall.totoro.business.service.nhi.metric.meta.EndoReTreatmentByTooth
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatmentByTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.HalfYearNearSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -22,16 +23,16 @@ public class L24Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    public L24Formula(Collector collector, Source<NhiMetricRawVM, NhiMetricRawVM> source) {
-        super(collector);
-        this.source = source;
+    public L24Formula(MetricConfig metricConfig) {
+        super(metricConfig);
+        this.source = new HalfYearNearSource(metricConfig);
     }
 
     @Override
-    public BigDecimal doCalculate(Collector collector) {
-        MetaConfig config = new Tro1Config(collector);
-        EndoTreatmentByTooth endoTreatmentByTooth = new EndoTreatmentByTooth(collector, config, source).apply();
-        EndoReTreatmentByTooth endoReTreatmentByTooth = new EndoReTreatmentByTooth(collector, config, source).apply();
+    public BigDecimal doCalculate(MetricConfig metricConfig) {
+        MetaConfig config = new Tro1Config(metricConfig);
+        EndoTreatmentByTooth endoTreatmentByTooth = new EndoTreatmentByTooth(metricConfig, config, source).apply();
+        EndoReTreatmentByTooth endoReTreatmentByTooth = new EndoReTreatmentByTooth(metricConfig, config, source).apply();
         try {
             return toPercentage(divide(endoReTreatmentByTooth.getResult(), endoTreatmentByTooth.getResult()));
         } catch (ArithmeticException e) {

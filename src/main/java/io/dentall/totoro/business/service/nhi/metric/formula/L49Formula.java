@@ -3,7 +3,8 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od456SurfaceCount;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.OdMonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
@@ -18,17 +19,15 @@ public class L49Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<OdDto, OdDto> source;
 
-
-    public L49Formula(Collector collector,
-                      Source<OdDto, OdDto> source) {
-        super(collector);
-        this.source = source;
+    public L49Formula(MetricConfig metricConfig) {
+        super(metricConfig);
+        this.source = new OdMonthSelectedSource(metricConfig);
     }
 
     @Override
-    public BigDecimal doCalculate(Collector collector) {
-        Od1ToothCount od1ToothCount = new Od1ToothCount(collector, source).apply();
-        Od456SurfaceCount od456SurfaceCount = new Od456SurfaceCount(collector, source).apply();
+    public BigDecimal doCalculate(MetricConfig metricConfig) {
+        Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, source).apply();
+        Od456SurfaceCount od456SurfaceCount = new Od456SurfaceCount(metricConfig, source).apply();
         try {
             return divide(od456SurfaceCount.getResult(), od1ToothCount.getResult());
         } catch (ArithmeticException e) {

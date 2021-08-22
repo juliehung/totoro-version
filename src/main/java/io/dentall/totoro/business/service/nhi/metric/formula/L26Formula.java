@@ -2,10 +2,12 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
-import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReTreatment;
-import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousTreatment;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReToothCount;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
-import io.dentall.totoro.business.service.nhi.metric.source.Collector;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.OdDeciduousQuarterByPatientSource;
+import io.dentall.totoro.business.service.nhi.metric.source.OdDeciduousTwoYearNearByPatientSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
@@ -28,21 +30,19 @@ public class L26Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odTwoYearNearSource;
 
-    public L26Formula(Collector collector,
-                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource,
-                      Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odTwoYearNearSource) {
-        super(collector);
-        this.odQuarterSource = odQuarterSource;
-        this.odTwoYearNearSource = odTwoYearNearSource;
+    public L26Formula(MetricConfig metricConfig) {
+        super(metricConfig);
+        this.odQuarterSource = new OdDeciduousQuarterByPatientSource(metricConfig);
+        this.odTwoYearNearSource = new OdDeciduousTwoYearNearByPatientSource(metricConfig);
     }
 
     @Override
-    public BigDecimal doCalculate(Collector collector) {
-        MetaConfig config = new Tro1Config(collector);
-        OdDeciduousTreatment odDeciduousTreatment = new OdDeciduousTreatment(collector, config, odQuarterSource).apply();
-        OdDeciduousReTreatment odDeciduousReTreatment = new OdDeciduousReTreatment(collector, config, odQuarterSource, odTwoYearNearSource, 1, 450).apply();
+    public BigDecimal doCalculate(MetricConfig metricConfig) {
+        MetaConfig config = new Tro1Config(metricConfig);
+        OdDeciduousToothCount odDeciduousToothCount = new OdDeciduousToothCount(metricConfig, config, odQuarterSource).apply();
+        OdDeciduousReToothCount odDeciduousReToothCount = new OdDeciduousReToothCount(metricConfig, config, odQuarterSource, odTwoYearNearSource, 1, 450).apply();
         try {
-            return toPercentage(divide(odDeciduousReTreatment.getResult(), odDeciduousTreatment.getResult()));
+            return toPercentage(divide(odDeciduousReToothCount.getResult(), odDeciduousToothCount.getResult()));
         } catch (ArithmeticException e) {
             return ZERO;
         }
