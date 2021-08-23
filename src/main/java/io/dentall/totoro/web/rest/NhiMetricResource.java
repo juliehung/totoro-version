@@ -28,7 +28,7 @@ public class NhiMetricResource {
         this.metricService = metricService;
     }
 
-    @GetMapping("/L")
+    @GetMapping("/dashboard")
     @Timed
     public ResponseEntity<Map<String, List<MetricLVM>>> getMetricL(
         @RequestParam LocalDate begin,
